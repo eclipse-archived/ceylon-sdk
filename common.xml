@@ -1,0 +1,70 @@
+<project>
+  <echo message="${ant.project.name} basedir:${basedir}, build: ${build}"/>
+  
+  <property file="../build.properties"/>
+  <property file="build.properties"/>
+  <!-- set these if not already set by the master build.xml.
+       build dir is different if you do a top-level build or a module specific 
+       build. This allows you to build each module independently. 
+       But only if you've done a top-level ant build first, so the 
+       repo.dependencies repo is populated --> 
+  <property name="build" location="build"/>
+  <property name="build.modules" location="${build}/modules"/>
+  <property name="test.reports" location="${build}/test-reports"/>
+  <property name="repo.dependancies" location="../build/modules"/>
+  
+  <path id="ant-tasks">
+    <pathelement location="${ceylon.ant.lib}"/>
+  </path>
+  
+  <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
+  <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
+  <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
+
+  <target name="clean">
+    <echo message="${ant.project.name} clean basedir:${basedir}, build: ${build}"/>
+    <delete dir="${build}"/>
+  </target>
+  
+  <target name="-init">
+    <echo message="${ant.project.name} -init basedir:${basedir}, build: ${build}"/>
+    <mkdir dir="${build}"/>
+  </target>
+  
+  <target name="compile" depends="-init">
+    <echo message="${ant.project.name} compile basedir:${basedir}, build: ${build}"/>
+    <ceylonc executable="/home/tom/ceylon/ceylon-compiler/build/bin/ceylonc"
+      out="${build.modules}">
+      <rep url="${repo.dependancies}"/>
+      <module name="${module.name}"/>
+    </ceylonc>
+  </target>
+    
+  <target name="test" depends="compile" if="module.tests.name">
+    <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
+    <!-- compile the tests -->
+    <ceylonc executable="/home/tom/ceylon/ceylon-compiler/build/bin/ceylonc"
+      src="test"
+      out="${build.modules}">
+      <rep url="${repo.dependancies}"/>
+      <module name="${module.tests.name}"/>
+    </ceylonc>
+    <!-- Run the tests -->
+    <ceylon executable="/home/tom/ceylon/ceylon-runtime/build/dist/bin/ceylon"
+        run="${module.tests.name}.run" module="${module.tests.name}/${module.version}">
+        <rep url="${repo.dependancies}"/>
+        <rep url="${build.modules}"/>
+    </ceylon>
+  </target>
+  
+  <target name="doc" depends="-init">
+    <echo message="${ant.project.name} doc basedir:${basedir}, build: ${build}"/>
+    <mkdir dir="${build.apidoc}"/>
+    <ceylond executable="/home/tom/ceylon/ceylon-compiler/build/bin/ceylond"
+        out="${build.modules}">
+      <rep url="${repo.dependancies}"/>
+      <module name="${module.name}"/>
+    </ceylond>
+  </target>
+
+</project>

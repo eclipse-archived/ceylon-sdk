@@ -1,0 +1,38 @@
+<project name="Ceylon SDK" basedir=".">
+
+  <!-- the modules, in dependency order -->
+  <filelist id="module.dirs">
+  	<file name="sdk-test"/>
+    <file name="math"/>
+  </filelist>
+  
+  <macrodef name="iterate">
+    <attribute name="target"/>
+    <sequential>
+      <subant target="@{target}">
+      	<filelist refid="module.dirs"/>
+          <property name="build" location="build"/>
+          <property name="build.modules" location="build/modules"/>
+          <property name="test.reports" location="build/test-reports"/>
+          <property name="repo.dependancies" location="build/modules"/>
+      </subant>
+    </sequential>
+  </macrodef>
+
+  <target name="compile">
+    <iterate target="compile"/>
+  </target>
+	
+  <target name="clean">
+    <iterate target="clean"/>
+  </target>
+	
+  <target name="test">
+    <iterate target="test"/>
+  </target>
+	
+  <target name="doc">
+    <iterate target="doc"/>
+  </target>
+
+</project>
