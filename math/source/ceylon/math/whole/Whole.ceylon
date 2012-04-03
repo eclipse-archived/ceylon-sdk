@@ -1,4 +1,6 @@
-import java.lang{NumberFormatException}
+import java.lang{
+    JInt=Integer {maxInt=\iMAX_VALUE},
+    NumberFormatException}
 import java.math{
     BigInteger{
         fromLong=valueOf, 
@@ -9,131 +11,196 @@ import java.math{
 import ceylon.math.decimal{Decimal}
 
 doc "An arbitrary precision integer"
-shared class Whole(Integer|BigInteger num)
-        extends IdentifiableObject()
+shared interface Whole of WholeImpl
+        //extends IdentifiableObject()
         satisfies //Castable<Whole|Decimal> &
                   Integral<Whole> {
-    BigInteger val;
-    switch(num)
-    case(is Integer) {
-        val = fromLong(num);
-    }
-    case(is BigInteger) {
-	    val = num;
-    }
+
+    doc "The platform specific implementation object, if any. 
+         This is provided for the purposes of interoperation with the 
+         runtime platform."
+    shared formal Object? implementation;
+    
+    doc "The result of raising this number to the given
+         power.
+         
+         Special cases:
+         
+         * Returns one if `this` is one (or all powers)
+         * Returns one if `this` is minus one and the power is even
+         * Returns minus one if `this` is minus one and the power is odd
+         * Returns one if the power is zero.
+         * Otherwise negative powers result in an `Exception` being thrown
+    "
+    throws(Exception, "If passed a negative or large positive exponent")
+    shared formal actual Whole power(Whole exponent);
+    
+    doc "The result of `(this**exponent) % modulus`."
+    throws(Exception, "If passed a negative modulus")
+    shared formal Whole powerRemainder(Whole exponent, Whole modulus);
+}
+
+class WholeImpl(BigInteger num)
+        extends IdentifiableObject()
+        satisfies //Castable<Whole|Decimal> &
+                  Whole {
+
+    shared actual BigInteger implementation = num;
     
     shared actual String string {
-        return val.string;
+        return implementation.string;
     }
          
-    shared actual Whole successor {
-        return Whole(this.val.add(bione));
+    shared actual WholeImpl successor {
+        return WholeImpl(this.implementation.add(bione));
     }
     
-    shared actual Whole predecessor {
-        return Whole(this.val.subtract(bione));
+    shared actual WholeImpl predecessor {
+        return WholeImpl(this.implementation.subtract(bione));
     }
     
-    shared actual Whole positiveValue {
+    shared actual WholeImpl positiveValue {
         return this;
     }
     
-    shared actual Whole negativeValue {
-        throw;
+    shared actual WholeImpl negativeValue {
+        return WholeImpl(this.implementation.negate());
     }
     
     shared actual Boolean positive {
-        return this.val.signum() > 0;
+        return this.implementation.signum() > 0;
     }
     
     shared actual Boolean negative {
-        return this.val.signum() < 0;
+        return this.implementation.signum() < 0;
     }
     
     shared actual Boolean zero {
-        return val === bizero || val.equals(bizero);
+        return implementation === bizero || implementation.equals(bizero);
     }
     
     shared actual Boolean unit {
-        return val === bione || val.equals(bione);
+        return implementation === bione || implementation.equals(bione);
     }
     
     shared actual Float float {
-        return this.val.doubleValue();
+        return this.implementation.doubleValue();
     }
     
     shared actual Integer integer {
-        return this.val.longValue();
+        return this.implementation.longValue();
     }
     
-    shared actual Whole magnitude { 
-        if (this.val.signum() < 0) {
-            return Whole(this.val.negate());
+    shared actual WholeImpl magnitude { 
+        if (this.implementation.signum() < 0) {
+            return WholeImpl(this.implementation.negate());
         } else {
             return this;
         }
     }
     
-    shared actual Whole wholePart { 
+    shared actual WholeImpl wholePart { 
         return this;
     }
     
     shared actual Whole fractionalPart { 
-        return Whole(bizero); // TODO Preallocate zero
+        return zeroImpl;
     }
     
     shared actual Integer sign { 
-        return this.val.signum();
+        return this.implementation.signum();
     }
     
     shared actual Integer hash {
-        return this.val.hash;
+        return this.implementation.hash;
     }
     
     shared actual Boolean equals(Object other) {
-        if (is Whole other) {
-            return this.val.equals(other.val);
+        if (is WholeImpl other) {
+            return this.implementation.equals(other.implementation);
         }
         return false;
     }
     
     shared actual Comparison compare(Whole other) { 
-        Integer cmp = this.val.compareTo(other.val);
-        if (cmp > 0) {
-            return larger;
-        } else if (cmp < 0) {
-            return smaller;
-        } else {
-            return equal;
+        if (is WholeImpl other) {
+            Integer cmp = this.implementation.compareTo(other.implementation);
+            if (cmp > 0) {
+                return larger;
+            } else if (cmp < 0) {
+                return smaller;
+            } else {
+                return equal;
+            }
         }
+        throw;
     }
     
-    shared actual Whole plus(Whole other) {
-        return Whole(this.val.add(other.val));
+    shared actual WholeImpl plus(Whole other) {
+        if (is WholeImpl other) {
+            return WholeImpl(this.implementation.add(other.implementation));
+        }
+        throw;
     }
     
-    shared actual Whole minus(Whole other) {
-        return Whole(this.val.subtract(other.val));
+    shared actual WholeImpl minus(Whole other) {
+        if (is WholeImpl other) {
+            return WholeImpl(this.implementation.subtract(other.implementation));
+        }
+        throw;
     }
     
-    shared actual Whole times(Whole other) {
-        return Whole(this.val.multiply(other.val));
+    shared actual WholeImpl times(Whole other) {
+        if (is WholeImpl other) {
+            return WholeImpl(this.implementation.multiply(other.implementation));
+        }
+        throw;
     }
     
-    shared actual Whole divided(Whole other) {
-        return Whole(this.val.divide(other.val));
+    shared actual WholeImpl divided(Whole other) {
+        if (is WholeImpl other) {
+            return WholeImpl(this.implementation.divide(other.implementation));
+        }
+        throw;
     }
     
-    shared actual Whole remainder(Whole other) {
-        return Whole(this.val.remainder(other.val));
+    shared actual WholeImpl remainder(Whole other) {
+        if (is WholeImpl other) {
+            return WholeImpl(this.implementation.remainder(other.implementation));
+        } 
+        throw;
     }
-    
+
     shared actual Whole power(Whole other) {
-        if (other.sign == -1) {
-    		throw;
-    	}
-    	// TODO Worry about other > Integer.MAX_VALUE
-        return Whole(this.val.pow(other.val.intValue()));
+        if (is WholeImpl other) {
+            if (this == -oneImpl) {
+                if (other % twoImpl == zeroImpl) {
+                    return oneImpl;
+                } else {
+                    return -oneImpl;
+                }
+            } else if (this == oneImpl) {
+                return oneImpl;
+            }
+            if (other < zeroImpl) {
+                throw Exception("Unsupported power " this "**" other "");
+            } else if (other == 0) {
+                return oneImpl;
+            } else if (other > maxIntImpl) {
+                throw Exception("Unsupported power " this "**" other "");
+            }
+            return WholeImpl(this.implementation.pow(other.implementation.intValue()));
+        }
+        throw;
+    }
+    
+    shared actual Whole powerRemainder(Whole exponent, Whole modulus) {
+        if (is WholeImpl exponent) {
+            if (is WholeImpl modulus) {
+                return WholeImpl(this.implementation.modPow(exponent.implementation, modulus.implementation));
+            }
+        } 
+        throw;
     }
     /*shared actual CastValue castTo<CastValue>() {
         // TODO what do I do here?
@@ -143,12 +210,6 @@ shared class Whole(Integer|BigInteger num)
     }*/
     
 }
-
-doc "A Whole instance representing zero."
-shared Whole zero = Whole(bizero);
-
-doc "A Whole instance representing one."
-shared Whole one = Whole(bione);
 
 doc "The Whole repesented by the given string, or null if the given string
      does not represent a Whole."
@@ -160,7 +221,19 @@ shared Whole? parseWhole(String num) {
     } catch (NumberFormatException e) {
         return null;
     }
-    return Whole(bi);
+    return WholeImpl(bi);
+}
+
+doc "The `number.integer` converted to a Whole"
+shared Whole toWhole(Number number) {
+    Integer int = number.integer;
+    if (int == 0) {
+        return zeroImpl;
+    } else if (int == 1) {
+        return oneImpl;
+    } else {
+        return WholeImpl(fromLong(int));
+    }
 }
 
 /*
