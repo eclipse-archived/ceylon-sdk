@@ -3,6 +3,15 @@ import java.math{
         bdone=\iONE, bdzero=\iZERO, bdten=\iTEN
     }
 }
+import java.lang{
+    JInteger=Integer{
+        maxInt = \iMAX_VALUE,
+        minInt = \iMIN_VALUE
+    }
+}
+
+Decimal intMax = toDecimal(maxInt);
+Decimal intMin = toDecimal(minInt);
 
 doc "A Decimal instance representing zero."
 shared Decimal zero = DecimalImpl(bdzero);

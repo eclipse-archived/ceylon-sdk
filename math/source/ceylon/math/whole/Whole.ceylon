@@ -4,13 +4,13 @@ import java.lang{
 import java.math{
     BigInteger{
         fromLong=valueOf, 
-        bizero=\iZERO, 
-        bione=\iONE},
+        jzero=\iZERO, 
+        jone=\iONE},
     BigDecimal
 }
 import ceylon.math.decimal{Decimal}
 
-doc "An arbitrary precision integer"
+doc "An arbitrary precision integer."
 shared interface Whole of WholeImpl
         //extends IdentifiableObject()
         satisfies //Castable<Whole|Decimal> &
@@ -19,6 +19,7 @@ shared interface Whole of WholeImpl
     doc "The platform specific implementation object, if any. 
          This is provided for the purposes of interoperation with the 
          runtime platform."
+    see(fromImplementation)
     shared formal Object? implementation;
     
     doc "The result of raising this number to the given
@@ -52,11 +53,11 @@ class WholeImpl(BigInteger num)
     }
          
     shared actual WholeImpl successor {
-        return WholeImpl(this.implementation.add(bione));
+        return WholeImpl(this.implementation.add(jone));
     }
     
     shared actual WholeImpl predecessor {
-        return WholeImpl(this.implementation.subtract(bione));
+        return WholeImpl(this.implementation.subtract(jone));
     }
     
     shared actual WholeImpl positiveValue {
@@ -76,11 +77,11 @@ class WholeImpl(BigInteger num)
     }
     
     shared actual Boolean zero {
-        return implementation === bizero || implementation.equals(bizero);
+        return implementation === jzero || implementation.equals(jzero);
     }
     
     shared actual Boolean unit {
-        return implementation === bione || implementation.equals(bione);
+        return implementation === jone || implementation.equals(jone);
     }
     
     shared actual Float float {
@@ -224,7 +225,7 @@ shared Whole? parseWhole(String num) {
     return WholeImpl(bi);
 }
 
-doc "The `number.integer` converted to a Whole"
+doc "The `number.integer` converted to a Whole."
 shared Whole toWhole(Number number) {
     Integer int = number.integer;
     if (int == 0) {
@@ -234,6 +235,17 @@ shared Whole toWhole(Number number) {
     } else {
         return WholeImpl(fromLong(int));
     }
+}
+
+doc "Converts a platform specific implementation object to a `Whole` instance. 
+     This is provided for the purposes of interoperation with the 
+     runtime platform."
+see(Whole.implementation)
+shared Whole fromImplementation(Object implementation) {
+    if(is BigInteger implementation) {
+        return WholeImpl(implementation);
+    }
+    throw;
 }
 
 /*

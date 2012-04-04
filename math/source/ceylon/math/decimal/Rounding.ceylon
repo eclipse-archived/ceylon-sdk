@@ -34,6 +34,7 @@ doc "Holds precision and rounding information for use in decimal arithmetic.
      A precision of 0 means unlimited precision."
 throws(Exception, "The precision is negative.")
 see(Decimal)
+see(unlimitedPrecision)
 shared class Rounding(Integer precision, Mode mode) {
     if (precision < 0) { 
         throw Exception("Precision cannot be negative");
@@ -52,3 +53,7 @@ shared class Rounding(Integer precision, Mode mode) {
         return "" precision " " mode "";
     } 
 }
+
+doc "Unlimited precision"
+shared Rounding unlimitedPrecision = Rounding(0, halfUp);
+

@@ -1,5 +1,5 @@
-import ceylon.math.whole{Whole}
-import java.lang{NumberFormatException}
+import ceylon.math.whole{Whole, wrapBigInteger=fromImplementation}
+import java.lang{NumberFormatException, ThreadLocal}
 import java.math{
     BigDecimal {
         bdone=\iONE, bdzero=\iZERO, bdten=\iTEN
@@ -15,6 +15,32 @@ import java.math{
         jHalfUp=\iHALF_UP,
         jHalfEven=\iHALF_EVEN,
         jUnnecessary=\iUNNECESSARY
+    }
+}
+
+ThreadLocal<Rounding?> defaultRounding = ThreadLocal<Rounding?>();
+
+doc "Performs an arbitrary computation using the given rounding used implicity 
+     when arithmetic operators are applied to `Decimal` operands.
+
+     During a call to this method the `Decimal` operators 
+     `+`, `-`, `*`, `/` and `**`
+     (or equivalently, the `Decimal` methods 
+     `plus()`, `minus()`, `times()`, `divided()` and `power()`) 
+     will implicitly use the given rounding. 
+     This implicit rounding will only take affect on the current thread. 
+     The `calculate()` function may itself call `computeWithRounding()`
+     to apply a different implicit rounding for a subcalculation.  
+     The behaviour of `Decimal` methods which take an explicit 
+     `Rounding` argument, such as `plusWithRounding()`, 
+     are *not* changed during a call to this function."
+shared Decimal computeWithRounding(Decimal calculate(), Rounding rounding) {
+    Rounding? prev = defaultRounding.get();
+    try {
+        defaultRounding.set(rounding);
+        return calculate();
+    } finally {
+        defaultRounding.set(prev);
     }
 }
 
@@ -39,27 +65,100 @@ shared interface Decimal
     see(equals)
     shared formal Boolean strictlyEquals(Decimal that);
     
-    // operators with context
+    doc "The hash value of this `Decimal`. Due to the definition of `equals()`
+         trailing zeros do not contribute to the hash calculation so 1 and 1.0
+         have the same hash."
+    shared formal actual Integer hash;
+    
+    doc "The quotient obtained by dividing this Decimal by 
+         the given Decimal. Unless invoked within `computeWithRounding()` 
+         the preferred scale of the result is the difference between this
+         Decimal's scale and the given Decimal's scale; it may be larger 
+         if necessary; an exception is thrown if the result would have 
+         a nonterminating decimal representation."
+    see(dividedWithRounding)
+    see(computeWithRounding)
+    shared formal actual Decimal divided(Decimal other);
+    
+    doc "The quotient obtained by dividing this `Decimal` by 
+         the given `Decimal` with the given 
+         rounding."
+    see(divided)
     shared formal Decimal dividedWithRounding(Decimal other, Rounding rounding);
+    
+    doc "The product of this `Decimal` and the given `Decimal`.
+         Unless invoked within `computeWithRounding()` the scale of the result is 
+         the sum of the scale of the operands."
+    see(timesWithRounding)
+    see(computeWithRounding)
+    shared formal actual Decimal times(Decimal other);
+    
+    doc "The product of this `Decimal` and the given `Decimal` with the given 
+         rounding."
+    see(times)
     shared formal Decimal timesWithRounding(Decimal other, Rounding rounding);
+    
+    doc "The sum of this `Decimal` and the given `Decimal`.
+         Unless invoked within `computeWithRounding()` the scale of the result is 
+         the maximum of the scale of the operands."
+    see(plusWithRounding)
+    see(computeWithRounding)
+    shared formal actual Decimal plus(Decimal other);
+    
+    doc "The sum of this `Decimal` and the given `Decimal` with the given 
+         rounding."
+    see(plus)
     shared formal Decimal plusWithRounding(Decimal other, Rounding rounding);
+    
+    doc "The difference of this `Decimal` and the given `Decimal`.
+         Unless invoked within `computeWithRounding()` the scale of the result is 
+         the maximum of the scale of the operands."
+    see(minusWithRounding)
+    see(computeWithRounding)
+    shared formal actual Decimal minus(Decimal other);
+    
+    doc "The difference of this `Decimal` and the given `Decimal` with the given 
+         rounding."
+    see(minus)
     shared formal Decimal minusWithRounding(Decimal other, Rounding rounding);
+    
+    doc "The result of raising this number to the given
+         power. Fractional powers are not supported.
+         Unless invoked within `computeWithRounding()` the 
+         result is computed to unlimited precision."
+    see(powerWithRounding)
+    throws(Exception, "The exponent has a non-zero fractional part")
+    throws(Exception, "The exponent is too large or too small")
+    shared formal actual Decimal power(Decimal other);
+    
+    doc "The result of raising this number to the given
+         power with the given rounding. Fractional powers are not supported."
+    see(power)
     shared formal Decimal powerWithRounding(Integer other, Rounding rounding);
     
-    //shared formal Whole dividedToWholeWithRounding(Decimal other, Rounding context);
-    shared formal Decimal remainderWithRounding(Decimal other, Rounding rounding);
+    //shared formal Whole dividedAndRounded(Decimal other, Rounding context);
+    shared formal Decimal remainder(Decimal other, Rounding rounding);
     
     doc "The precision of this decimal."
     shared formal Integer precision;
+    
     doc "The scale of this decimal."
     shared formal Integer scale;
+    
     doc "This value rounded according to the given context."
     shared formal Decimal round(Rounding rounding);
+    
+    doc "The number, represented as an `Whole`, after 
+         truncation of any fractional part."
+    see(Whole)
+    see(integer)
+    shared formal Whole whole;
+    
 }
 
-MathContext mc(Integer precision, Mode mode) {
+MathContext mc(Rounding rounding) {
     JRoundingMode jmode;
-    switch(mode) 
+    switch(rounding.mode) 
     case (floor) {jmode = jFloor;}
     case (ceiling) {jmode = jCeiling;}
     case (up) {jmode = jUp;}
@@ -69,7 +168,7 @@ MathContext mc(Integer precision, Mode mode) {
     case (halfEven) {jmode = jHalfEven;}
     case (unnecessary) {jmode = jUnnecessary;}
     
-    return MathContext(precision, jmode);
+    return MathContext(rounding.precision, jmode);
 }
 
 class DecimalImpl(BigDecimal num)
@@ -79,15 +178,18 @@ class DecimalImpl(BigDecimal num)
 
     shared actual BigDecimal implementation = num;
 	
-    // operators with context
-    shared actual Decimal dividedWithRounding(Decimal other, Rounding rounding) { throw; }
-    shared actual Decimal timesWithRounding(Decimal other, Rounding rounding) { throw; }
-    shared actual Decimal plusWithRounding(Decimal other, Rounding rounding) { throw; }
-    shared actual Decimal minusWithRounding(Decimal other, Rounding rounding) { throw; }
-    shared actual Decimal powerWithRounding(Integer other, Rounding rounding) { throw; }
     
-    //shared Whole dividedToWholeWithRounding(Decimal other, Rounding context) { throw; }
-    shared actual Decimal remainderWithRounding(Decimal other, Rounding rounding) { throw; }
+    shared actual Decimal remainder(Decimal other, Rounding rounding) { 
+        if (is DecimalImpl other) {
+            //Rounding? rounding = defaultRounding.get();
+            //if (exists rounding) {
+                return DecimalImpl(this.implementation.remainder(other.implementation, mc(rounding)));
+            //} 
+            //return DecimalImpl(this.implementation.divide(other.implementation));
+        }
+        throw;
+    }
+    
 	
     doc "The precision of this decimal."
     shared actual Integer precision {
@@ -99,7 +201,7 @@ class DecimalImpl(BigDecimal num)
 	}
 	doc "This value rounded according to the given context."
 	shared actual Decimal round(Rounding rounding) {
-        return DecimalImpl(this.implementation.round(mc(rounding.precision, rounding.mode)));    
+        return DecimalImpl(this.implementation.round(mc(rounding)));    
 	}	
 	shared actual Comparison compare(Decimal other) {
 		if (is DecimalImpl other) {
@@ -115,10 +217,20 @@ class DecimalImpl(BigDecimal num)
 	}
 	shared actual Decimal divided(Decimal other) {
         if (is DecimalImpl other) {
-		    return DecimalImpl(this.implementation.divide(other.implementation));
+            Rounding? rounding = defaultRounding.get();
+            if (exists rounding) {
+                return dividedWithRounding(other, rounding);
+            }
+            return DecimalImpl(this.implementation.divide(other.implementation));
 	    }
 	    throw;
 	}
+	shared actual Decimal dividedWithRounding(Decimal other, Rounding rounding) {
+		 if (is DecimalImpl other) {
+            return DecimalImpl(this.implementation.divide(other.implementation, mc(rounding)));    
+        }
+        throw;
+    }
     shared actual Boolean equals(Object that) {
 		if (is DecimalImpl that) {
 		    return this.implementation === that.implementation || this.implementation.compareTo(that.implementation) == 0;
@@ -135,20 +247,33 @@ class DecimalImpl(BigDecimal num)
 		return implementation.doubleValue();
 	}
 	shared actual Integer hash {
-		return implementation.hash;
+		return implementation.stripTrailingZeros().hash;
 	}
 	shared actual Integer integer {
 		return implementation.longValue();
 	}
+	shared actual Whole whole {
+        return wrapBigInteger(implementation.toBigInteger());
+    }
 	shared actual Decimal magnitude {
 		return DecimalImpl(this.implementation.round(MathContext(this.implementation.scale(), jDown)));
 	}
 	shared actual Decimal minus(Decimal other) {
         if (is DecimalImpl other) {
+            Rounding? rounding = defaultRounding.get();
+            if (exists rounding) {
+                return minusWithRounding(other, rounding);
+            }
             return DecimalImpl(this.implementation.subtract(other.implementation));
         }
         throw;
 	}
+	shared actual Decimal minusWithRounding(Decimal other, Rounding rounding) {
+         if (is DecimalImpl other) {
+            return DecimalImpl(this.implementation.subtract(other.implementation, mc(rounding)));
+        }
+        throw;
+    }
     shared actual Decimal fractionalPart {
         return this.minus(this.magnitude);
     }
@@ -160,10 +285,20 @@ class DecimalImpl(BigDecimal num)
     }
     shared actual Decimal plus(Decimal other) {
         if (is DecimalImpl other) {
+            Rounding? rounding = defaultRounding.get();
+            if (exists rounding) {
+                return plusWithRounding(other, rounding);
+            }
             return DecimalImpl(this.implementation.add(other.implementation));
 	    }
 	    throw;
 	}
+	shared actual Decimal plusWithRounding(Decimal other, Rounding rounding) {
+         if (is DecimalImpl other) {
+            return DecimalImpl(this.implementation.add(other.implementation, mc(rounding)));
+        }
+        throw;
+    }
 	shared actual Boolean positive {
 		return implementation.signum() > 0;
 	}
@@ -171,12 +306,24 @@ class DecimalImpl(BigDecimal num)
 		return this;
 	}
     shared actual Decimal power(Decimal other) {
+        if (other.fractionalPart != zero) {
+            throw Exception("Fractional powers are not supported");
+        } else if (other > intMax || other < intMin) {
+            throw Exception("Exponent too large");
+        }
         if (is DecimalImpl other) {
-            // TODO What if converting other to an int looses information?
             Integer pow = other.implementation.longValue();
+            Rounding? rounding = defaultRounding.get();
+            if (exists rounding) {
+                return powerWithRounding(pow, rounding);
+            }
+            // TODO Special cases
             return DecimalImpl(this.implementation.pow(pow));
         }
         throw;
+    }
+    shared actual Decimal powerWithRounding(Integer other, Rounding rounding) {
+        return DecimalImpl(this.implementation.pow(other, mc(rounding)));
     }
     shared actual Integer sign {
         return this.implementation.signum();
@@ -186,7 +333,17 @@ class DecimalImpl(BigDecimal num)
     }
 	shared actual Decimal times(Decimal other) {
         if (is DecimalImpl other) {
+            Rounding? rounding = defaultRounding.get();
+            if (exists rounding) {
+                return timesWithRounding(other, rounding);
+            }
             return DecimalImpl(this.implementation.multiply(other.implementation));
+        }
+        throw;
+    }
+    shared actual Decimal timesWithRounding(Decimal other, Rounding rounding) {
+         if (is DecimalImpl other) {
+            return DecimalImpl(this.implementation.multiply(other.implementation, mc(rounding)));
         }
         throw;
     }
@@ -209,7 +366,7 @@ shared Decimal toDecimal(Whole|Integer|Float number, Rounding? rounding = null) 
         if (exists rounding) {
             Object? bi = number.implementation;
             if (is BigInteger bi) {
-                val = BigDecimal(bi).plus(mc(rounding.precision, rounding.mode));
+                val = BigDecimal(bi).plus(mc(rounding));
             } else {
                 throw;
             }
@@ -224,14 +381,14 @@ shared Decimal toDecimal(Whole|Integer|Float number, Rounding? rounding = null) 
     }
     case(is Integer) {
         if (exists rounding) {
-            val = BigDecimal(number, mc(rounding.precision, rounding.mode));
+            val = BigDecimal(number, mc(rounding));
         } else {
             val = BigDecimal(number);
         }    
     }
     case(is Float) {
         if (exists rounding) {
-            val = BigDecimal(number, mc(rounding.precision, rounding.mode));
+            val = BigDecimal(number, mc(rounding));
         } else {
             val = BigDecimal(number);
         }
