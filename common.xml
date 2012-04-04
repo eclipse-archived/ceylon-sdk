@@ -66,5 +66,19 @@
       <module name="${module.name}"/>
     </ceylond>
   </target>
+  
+  <target name="publish" depends="compile, doc">
+    <echo message="${ant.project.name} publish basedir:${basedir}, build: ${build}"/>
+    <echo message="${publish.username}"/>
+    <echo message="${publish.password}"/>
+    <ceylonr executable="/home/tom/ceylon/ceylon-compiler/build/bin/ceylond"
+        out="${publish.repo}"
+        pass="${publish.password}"
+        user="${publish.username}">
+      <rep url="${build.modules}"/>
+      <rep url="${repo.dependancies}"/>
+      <module name="${module.name}" version="${module.version}"/>
+    </ceylonr>
+  </target>
 
 </project>

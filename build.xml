@@ -11,10 +11,13 @@
     <sequential>
       <subant target="@{target}">
       	<filelist refid="module.dirs"/>
-          <property name="build" location="build"/>
-          <property name="build.modules" location="build/modules"/>
-          <property name="test.reports" location="build/test-reports"/>
-          <property name="repo.dependancies" location="build/modules"/>
+        <property name="build" location="build"/>
+        <property name="build.modules" location="build/modules"/>
+        <property name="test.reports" location="build/test-reports"/>
+        <property name="repo.dependancies" location="build/modules"/>
+        <property name="publish.username" value="${publish.username}"/>
+        <property name="publish.password" value="${publish.password}"/>
+        <property name="publish.repo" value="${publish.repo}"/>
       </subant>
     </sequential>
   </macrodef>
@@ -33,6 +36,15 @@
 	
   <target name="doc">
     <iterate target="doc"/>
+  </target>
+  
+  <target name="publish">
+    <input message="modules.ceylon-lang.org username:>" addproperty="publish.username"/>
+    <input message="modules.ceylon-lang.org password:>" addproperty="publish.password">
+      <handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
+    </input>
+    <property name="publish.repo" value="https://modules.ceylon-lang.org"/>
+    <iterate target="publish"/>
   </target>
 
 </project>
