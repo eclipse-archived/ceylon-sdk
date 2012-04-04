@@ -1,6 +1,6 @@
 import com.redhat.ceylon.sdk.test{...}
 import ceylon.math.decimal{
-    Decimal, Rounding,
+    Decimal, rounding,
     halfUp, halfDown, halfEven, up, down, ceiling, floor,  
     parseDecimal, toDecimal, zero, one, ten, computeWithRounding}
 import java.lang{ArithmeticException}
@@ -70,7 +70,7 @@ shared void decimalTests() {
         return numerator / denominator;
     }
     numerator := one+one;
-    assertEquals(parseDecimal("0.67"), computeWithRounding(division, Rounding(2, halfUp)));
+    assertEquals(parseDecimal("0.67"), computeWithRounding(division, rounding(2, halfUp)));
 
     print("hash");    
     assertEquals(parseOrFail("2").hash, parseOrFail("2.0").hash, "2.hash==2.0.hash");

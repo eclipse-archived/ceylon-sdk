@@ -1,3 +1,17 @@
+import java.math{
+    JRoundingMode=RoundingMode{
+        jDown=\iDOWN,
+        jUp=\iUP,
+        jFloor=\iFLOOR,
+        jCeiling=\iCEILING,
+        jHalfDown=\iHALF_DOWN,
+        jHalfUp=\iHALF_UP,
+        jHalfEven=\iHALF_EVEN,
+        jUnnecessary=\iUNNECESSARY
+    },
+    MathContext
+}
+
 doc "The ways of rounding a result"
 shared abstract class Mode() of floor | ceiling | halfUp | halfDown | halfEven | down | up | unnecessary {
 }
@@ -35,7 +49,7 @@ doc "Holds precision and rounding information for use in decimal arithmetic.
 throws(Exception, "The precision is negative.")
 see(Decimal)
 see(unlimitedPrecision)
-shared class Rounding(Integer precision, Mode mode) {
+shared abstract class Rounding(Integer precision, Mode mode) of RoundingImpl {
     if (precision < 0) { 
         throw Exception("Precision cannot be negative");
     }
@@ -51,9 +65,31 @@ shared class Rounding(Integer precision, Mode mode) {
             return "unlimited";
         }
         return "" precision " " mode "";
-    } 
+    }
+    
+    shared formal Object? implementation;
+}
+
+class RoundingImpl(Integer precision, Mode mode) extends Rounding(precision, mode) {
+    JRoundingMode jmode;
+    switch(mode) 
+    case (floor) {jmode = jFloor;}
+    case (ceiling) {jmode = jCeiling;}
+    case (up) {jmode = jUp;}
+    case (down) {jmode = jDown;}
+    case (halfUp) {jmode = jHalfUp;}
+    case (halfDown) {jmode = jHalfDown;}
+    case (halfEven) {jmode = jHalfEven;}
+    case (unnecessary) {jmode = jUnnecessary;}
+    
+    shared actual MathContext implementation = MathContext(precision, jmode);
+}
+
+doc "Creates a rouding with the given precision and mode."
+shared Rounding rounding(Integer precision, Mode mode) {
+    return RoundingImpl(precision, mode);
 }
 
 doc "Unlimited precision"
-shared Rounding unlimitedPrecision = Rounding(0, halfUp);
+shared Rounding unlimitedPrecision = RoundingImpl(0, halfUp);
 
