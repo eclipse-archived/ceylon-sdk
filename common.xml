@@ -59,7 +59,6 @@
   
   <target name="doc" depends="-init">
     <echo message="${ant.project.name} doc basedir:${basedir}, build: ${build}"/>
-    <mkdir dir="${build.apidoc}"/>
     <ceylond executable="/home/tom/ceylon/ceylon-compiler/build/bin/ceylond"
         out="${build.modules}">
       <rep url="${repo.dependancies}"/>
