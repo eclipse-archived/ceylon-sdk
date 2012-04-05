@@ -3,8 +3,8 @@ import java.lang{
     NumberFormatException}
 import java.math{
     BigInteger{
-        fromLong=valueOf, 
-        jzero=\iZERO, 
+        fromLong=valueOf,
+        jzero=\iZERO,
         jone=\iONE},
     BigDecimal
 }
@@ -16,17 +16,17 @@ shared interface Whole of WholeImpl
         satisfies //Castable<Whole|Decimal> &
                   Integral<Whole> {
 
-    doc "The platform specific implementation object, if any. 
-         This is provided for the purposes of interoperation with the 
+    doc "The platform specific implementation object, if any.
+         This is provided for the purposes of interoperation with the
          runtime platform."
     see(fromImplementation)
     shared formal Object? implementation;
-    
+
     doc "The result of raising this number to the given
          power.
-         
+
          Special cases:
-         
+
          * Returns one if `this` is one (or all powers)
          * Returns one if `this` is minus one and the power is even
          * Returns minus one if `this` is minus one and the power is odd
@@ -35,7 +35,7 @@ shared interface Whole of WholeImpl
     "
     throws(Exception, "If passed a negative or large positive exponent")
     shared formal actual Whole power(Whole exponent);
-    
+
     doc "The result of `(this**exponent) % modulus`."
     throws(Exception, "If passed a negative modulus")
     shared formal Whole powerRemainder(Whole exponent, Whole modulus);
@@ -47,83 +47,83 @@ class WholeImpl(BigInteger num)
                   Whole {
 
     shared actual BigInteger implementation = num;
-    
+
     shared actual String string {
         return implementation.string;
     }
-         
+
     shared actual WholeImpl successor {
         return WholeImpl(this.implementation.add(jone));
     }
-    
+
     shared actual WholeImpl predecessor {
         return WholeImpl(this.implementation.subtract(jone));
     }
-    
+
     shared actual WholeImpl positiveValue {
         return this;
     }
-    
+
     shared actual WholeImpl negativeValue {
         return WholeImpl(this.implementation.negate());
     }
-    
+
     shared actual Boolean positive {
         return this.implementation.signum() > 0;
     }
-    
+
     shared actual Boolean negative {
         return this.implementation.signum() < 0;
     }
-    
+
     shared actual Boolean zero {
         return implementation === jzero || implementation.equals(jzero);
     }
-    
+
     shared actual Boolean unit {
         return implementation === jone || implementation.equals(jone);
     }
-    
+
     shared actual Float float {
         return this.implementation.doubleValue();
     }
-    
+
     shared actual Integer integer {
         return this.implementation.longValue();
     }
-    
-    shared actual WholeImpl magnitude { 
+
+    shared actual WholeImpl magnitude {
         if (this.implementation.signum() < 0) {
             return WholeImpl(this.implementation.negate());
         } else {
             return this;
         }
     }
-    
-    shared actual WholeImpl wholePart { 
+
+    shared actual WholeImpl wholePart {
         return this;
     }
-    
-    shared actual Whole fractionalPart { 
+
+    shared actual Whole fractionalPart {
         return zeroImpl;
     }
-    
-    shared actual Integer sign { 
+
+    shared actual Integer sign {
         return this.implementation.signum();
     }
-    
+
     shared actual Integer hash {
         return this.implementation.hash;
     }
-    
+
     shared actual Boolean equals(Object other) {
         if (is WholeImpl other) {
             return this.implementation.equals(other.implementation);
         }
         return false;
     }
-    
-    shared actual Comparison compare(Whole other) { 
+
+    shared actual Comparison compare(Whole other) {
         if (is WholeImpl other) {
             Integer cmp = this.implementation.compareTo(other.implementation);
             if (cmp > 0) {
@@ -136,39 +136,39 @@ class WholeImpl(BigInteger num)
         }
         throw;
     }
-    
+
     shared actual WholeImpl plus(Whole other) {
         if (is WholeImpl other) {
             return WholeImpl(this.implementation.add(other.implementation));
         }
         throw;
     }
-    
+
     shared actual WholeImpl minus(Whole other) {
         if (is WholeImpl other) {
             return WholeImpl(this.implementation.subtract(other.implementation));
         }
         throw;
     }
-    
+
     shared actual WholeImpl times(Whole other) {
         if (is WholeImpl other) {
             return WholeImpl(this.implementation.multiply(other.implementation));
         }
         throw;
     }
-    
+
     shared actual WholeImpl divided(Whole other) {
         if (is WholeImpl other) {
             return WholeImpl(this.implementation.divide(other.implementation));
         }
         throw;
     }
-    
+
     shared actual WholeImpl remainder(Whole other) {
         if (is WholeImpl other) {
             return WholeImpl(this.implementation.remainder(other.implementation));
-        } 
+        }
         throw;
     }
 
@@ -194,13 +194,13 @@ class WholeImpl(BigInteger num)
         }
         throw;
     }
-    
+
     shared actual Whole powerRemainder(Whole exponent, Whole modulus) {
         if (is WholeImpl exponent) {
             if (is WholeImpl modulus) {
                 return WholeImpl(this.implementation.modPow(exponent.implementation, modulus.implementation));
             }
-        } 
+        }
         throw;
     }
     /*shared actual CastValue castTo<CastValue>() {
@@ -209,7 +209,7 @@ class WholeImpl(BigInteger num)
         //return this;
         //return Decimal(BigDecimal(this.val));
     }*/
-    
+
 }
 
 doc "The Whole repesented by the given string, or null if the given string
@@ -237,8 +237,8 @@ shared Whole toWhole(Number number) {
     }
 }
 
-doc "Converts a platform specific implementation object to a `Whole` instance. 
-     This is provided for the purposes of interoperation with the 
+doc "Converts a platform specific implementation object to a `Whole` instance.
+     This is provided for the purposes of interoperation with the
      runtime platform."
 see(Whole.implementation)
 shared Whole fromImplementation(Object implementation) {

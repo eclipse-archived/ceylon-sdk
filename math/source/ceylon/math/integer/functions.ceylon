@@ -19,7 +19,7 @@ shared Integer lcm(Integer a, Integer b) {
     return (a*b) / gcd(a, b);
 }
 
-doc "Calculate the logarithm (base 2) of the argument, rounded down. 
+doc "Calculate the logarithm (base 2) of the argument, rounded down.
      This is effectively the number of digits in the number."
 throws(Exception, "Argument is less than 1")
 shared Integer log2(Integer num) {

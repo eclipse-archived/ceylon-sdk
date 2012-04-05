@@ -19,28 +19,28 @@ Boolean approx(Object? expect, Object? got) {
 void testSin() {
     print("sin");
     assertEquals{
-        expected=0.0; 
-        got=sin(0.0); 
+        expected=0.0;
+        got=sin(0.0);
         compare=approx;
     };
     assertEquals{
-        expected=1.0; 
-        got=sin(pi/2); 
+        expected=1.0;
+        got=sin(pi/2);
         compare=approx;
     };
     assertEquals{
-        expected=0.0; 
-        got=sin(pi); 
+        expected=0.0;
+        got=sin(pi);
         compare=approx;
     };
     assertEquals{
-        expected=-1.0; 
-        got=sin(pi*1.5); 
+        expected=-1.0;
+        got=sin(pi*1.5);
         compare=approx;
     };
     assertEquals{
-        expected=0.0; 
-        got=sin(2*pi); 
+        expected=0.0;
+        got=sin(2*pi);
         compare=approx;
     };
     // TODO special cases (e.g. undefined, +/-infinity)
@@ -49,28 +49,28 @@ void testSin() {
 void testCos() {
     print("cos");
     assertEquals{
-        expected=1.0; 
-        got=cos(0.0); 
+        expected=1.0;
+        got=cos(0.0);
         compare=approx;
     };
     assertEquals{
-        expected=0.0; 
-        got=cos(pi/2); 
+        expected=0.0;
+        got=cos(pi/2);
         compare=approx;
     };
     assertEquals{
-        expected=-1.0; 
-        got=cos(pi); 
+        expected=-1.0;
+        got=cos(pi);
         compare=approx;
     };
     assertEquals{
-        expected=0.0; 
-        got=cos(pi*1.5); 
+        expected=0.0;
+        got=cos(pi*1.5);
         compare=approx;
     };
     assertEquals{
-        expected=1.0; 
-        got=cos(2*pi); 
+        expected=1.0;
+        got=cos(2*pi);
         compare=approx;
     };
     // TODO special cases (e.g. undefined, +/-infinity)
@@ -79,29 +79,29 @@ void testCos() {
 void testTan() {
     print("tan");
     assertEquals{
-        expected=0.0; 
-        got=tan(0.0); 
+        expected=0.0;
+        got=tan(0.0);
         compare=approx;
     };
     assertEquals{
-        expected=1.0; 
-        got=tan(pi/4); 
+        expected=1.0;
+        got=tan(pi/4);
         compare=approx;
     };
     assertEquals{
-        expected=-1.0; 
-        got=tan(0.75*pi); 
+        expected=-1.0;
+        got=tan(0.75*pi);
         compare=approx;
     };
     assertEquals{
-        expected=0.0; 
-        got=tan(pi); 
+        expected=0.0;
+        got=tan(pi);
         compare=approx;
     };
     // TODO special cases (e.g. undefined, +/-infinity)
 }
 
-shared void floatTests() {   
+shared void floatTests() {
     testSin();
     testCos();
     testTan();

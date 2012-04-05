@@ -1,7 +1,7 @@
 import com.redhat.ceylon.sdk.test{...}
 import ceylon.math.decimal{
     Decimal, rounding,
-    halfUp, halfDown, halfEven, up, down, ceiling, floor,  
+    halfUp, halfDown, halfEven, up, down, ceiling, floor,
     parseDecimal, toDecimal, zero, one, ten, computeWithRounding}
 import java.lang{ArithmeticException}
 
@@ -131,7 +131,7 @@ void divided() {
     }
     assertEquals(parseDecimal("0.333"), toDecimal(1).dividedWithRounding(toDecimal(3), r), "1.dividedWithRounding(3, r)", strictly);
     assertEquals(parseDecimal("0.667"), toDecimal(2).dividedWithRounding(toDecimal(3), r), "2.dividedWithRounding(3, r)", strictly);
-    
+
     variable Decimal numerator := one;
     variable Decimal denominator :=  toDecimal(3);
     function calculation() {
@@ -144,11 +144,11 @@ void divided() {
 
 shared void decimalTests() {
 
-    instantiationAndEquality();    
+    instantiationAndEquality();
     parse();
     strictEqualsAndHash();
     plus();
     minus();
-    times();   
-    divided();   
+    times();
+    divided();
 }

@@ -5,7 +5,7 @@ shared abstract class Suite(String name) {
     variable Integer errorCount := 0;
     variable Integer passCount := 0;
     variable Integer runCount := 0;
-    
+
     String banner(String text) {
         Character ch = `=`;
         StringBuilder sb = StringBuilder();
@@ -23,7 +23,7 @@ shared abstract class Suite(String name) {
         }
         return sb.string;
     }
-    
+
     void printResults() {
         print(banner("TEST RESULTS"));
         print("run:     " runCount "");
@@ -41,7 +41,7 @@ shared abstract class Suite(String name) {
             print(banner("TESTS PASSED"));
         }
     }
-    
+
     void runTest(void test()) {
         try {
             test();
@@ -58,11 +58,11 @@ shared abstract class Suite(String name) {
             runCount += 1;
         }
     }
-    
-    doc "The tests to be run. Entry keys are a test description, items are the 
+
+    doc "The tests to be run. Entry keys are a test description, items are the
          test function."
     shared formal Iterable<Entry<String, Callable<Void>>> suite;
-    
+
     doc "Run the Tests."
     shared void run() {
         print(banner(name));

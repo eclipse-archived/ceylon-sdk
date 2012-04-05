@@ -26,11 +26,11 @@ doc "Round towards the nearest neighbour, or round up if there are two nearest
      neighbours."
 shared object halfUp extends Mode() {}
 
-doc "Round towards the nearest neighbour, or round down if there are two 
+doc "Round towards the nearest neighbour, or round down if there are two
      nearest neighbours."
 shared object halfDown extends Mode() {}
 
-doc "Round towards the nearest neighbour, or round towards the even neighbour 
+doc "Round towards the nearest neighbour, or round towards the even neighbour
      if there are two nearest neighbours."
 shared object halfEven extends Mode() {}
 
@@ -40,7 +40,7 @@ shared object down extends Mode() {}
 doc "Round away from zero."
 shared object up extends Mode() {}
 
-doc "Asserts that rounding will not be required causing an exception to be 
+doc "Asserts that rounding will not be required causing an exception to be
      thrown if it is."
 shared object unnecessary extends Mode() {}
 
@@ -50,29 +50,29 @@ throws(Exception, "The precision is negative.")
 see(Decimal)
 see(unlimitedPrecision)
 shared abstract class Rounding(Integer precision, Mode mode) of RoundingImpl {
-    if (precision < 0) { 
+    if (precision < 0) {
         throw Exception("Precision cannot be negative");
     }
-    
+
     doc "The precision to apply when rounding."
     shared Integer precision = precision;
-    
+
     doc "The kind of rounding to apply."
     shared Mode mode = mode;
-    
+
     shared actual String string {
         if (precision == 0) {
             return "unlimited";
         }
         return "" precision " " mode "";
     }
-    
+
     shared formal Object? implementation;
 }
 
 class RoundingImpl(Integer precision, Mode mode) extends Rounding(precision, mode) {
     JRoundingMode jmode;
-    switch(mode) 
+    switch(mode)
     case (floor) {jmode = jFloor;}
     case (ceiling) {jmode = jCeiling;}
     case (up) {jmode = jUp;}
@@ -81,7 +81,7 @@ class RoundingImpl(Integer precision, Mode mode) extends Rounding(precision, mod
     case (halfDown) {jmode = jHalfDown;}
     case (halfEven) {jmode = jHalfEven;}
     case (unnecessary) {jmode = jUnnecessary;}
-    
+
     shared actual MathContext implementation = MathContext(precision, jmode);
 }
 

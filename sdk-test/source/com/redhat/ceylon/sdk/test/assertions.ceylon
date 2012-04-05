@@ -37,8 +37,8 @@ String str(Object? obj) {
 }
 
 doc "Fails the test if the two objects are not equal"
-shared void assertEquals(Object? expected, Object? got, 
-        String message="", 
+shared void assertEquals(Object? expected, Object? got,
+        String message="",
         Callable<Boolean, Object?, Object?> compare = nullSafeCompare) {
     // TODO Use type params
     function cmp(Object? expected, Object? got) = compare;
