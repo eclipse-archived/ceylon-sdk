@@ -51,6 +51,10 @@ shared interface Decimal
         //extends Object()
         satisfies //Castable<Decimal> &
                   Numeric<Decimal> {
+
+    doc "The platform specific implementation object, if any.
+         This is provided for the purposes of interoperation with the
+         runtime platform."
     shared formal Object? implementation;
 
     doc "Determine whether two instances have equal value.
@@ -321,7 +325,7 @@ class DecimalImpl(BigDecimal num)
                 throw Exception("Negative powers are not supported with unlimited precision");
             }
             // TODO Special cases
-            return DecimalImpl(this.implementation.pow(pow));    
+            return DecimalImpl(this.implementation.pow(pow));
         }
         throw;
     }

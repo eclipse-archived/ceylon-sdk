@@ -48,6 +48,7 @@ doc "Holds precision and rounding information for use in decimal arithmetic.
      A precision of 0 means unlimited precision."
 throws(Exception, "The precision is negative.")
 see(Decimal)
+see(rounding)
 see(unlimitedPrecision)
 shared abstract class Rounding(Integer precision, Mode mode) of RoundingImpl {
     if (precision < 0) {
@@ -85,7 +86,7 @@ class RoundingImpl(Integer precision, Mode mode) extends Rounding(precision, mod
     shared actual MathContext implementation = MathContext(precision, jmode);
 }
 
-doc "Creates a rouding with the given precision and mode."
+doc "Creates a rounding with the given precision and mode."
 shared Rounding rounding(Integer precision, Mode mode) {
     return RoundingImpl(precision, mode);
 }
