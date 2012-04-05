@@ -193,6 +193,23 @@ void remainder() {
     assertEquals(parseDecimal("1"), toDecimal(3).remainderRounded(toDecimal(2), r), "3.remainder(2)", strictly);
 }
 
+void scalePrecision() {
+    print("Decimal.scale and .precision");
+    assertEquals(3, parseOrFail("0.001").scale);
+    assertEquals(1, parseOrFail("0.001").precision);
+    assertEquals(2, parseOrFail("0.01").scale);
+    assertEquals(1, parseOrFail("0.01").precision);
+    assertEquals(1, parseOrFail("0.1").scale);
+    assertEquals(1, parseOrFail("0.1").precision);
+    assertEquals(0, toDecimal(1).scale);
+    assertEquals(1, toDecimal(1).precision);
+    assertEquals(0, toDecimal(10).scale);
+    assertEquals(2, toDecimal(10).precision);
+    assertEquals(0, toDecimal(100).scale);
+    assertEquals(3, toDecimal(100).precision);
+    
+}
+
 shared void decimalTests() {
 
     instantiationAndEquality();
@@ -205,4 +222,5 @@ shared void decimalTests() {
     power();
     dividedAndTruncated();
     remainder();
+    scalePrecision();
 }
