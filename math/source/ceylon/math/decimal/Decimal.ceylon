@@ -45,10 +45,17 @@ shared Decimal implicitRounding(Decimal calculate(), Rounding rounding) {
 }
 
 doc "A decimal floating point number. This class provides support for fixed
-     and arbitrary precision numbers."
+     and arbitrary precision numbers. Values are immuatable and 
+     represented as `unscaled * 10**(-scale)`. Methods without an explicit 
+     `Rounding` parameter use `unlimitedPrecision` (unless documented 
+     otherwise) except for `plus()`, `minus()`, `times()`, `divided()` 
+     and `power()` whose implicit rounding is subject to the rules of 
+     `implicitRounding()`."
+see(implicitRounding)
+see(Rounding)
+see(unlimitedPrecision)
 shared interface Decimal
         of DecimalImpl
-        //extends Object()
         satisfies //Castable<Decimal> &
                   Numeric<Decimal> {
 
@@ -169,11 +176,20 @@ shared interface Decimal
     throws(Exception, "The given divisor is zero")
     shared formal Decimal[] dividedAndRemainder(Decimal other, Rounding? rounding = null);
     
-    doc "The precision of this decimal."
+    doc "The precision of this decimal. This is the number of digits in the unscaled value."
+    see(scale)
     shared formal Integer precision;
 
-    doc "The scale of this decimal."
+    doc "The scale of this decimal. This is the number of digits to the right the 
+    decimal point (for a positive scale) or the power of ten by which the 
+    unscaled value is multiplied (for a negative scale)."
+    see(unscaled)
+    see(precision)
     shared formal Integer scale;
+    
+    doc "The unscaled value of this `Decimal`."
+    see(scale)
+    shared formal Whole unscaled;
 
     doc "This value rounded according to the given context."
     shared formal Decimal round(Rounding rounding);
@@ -243,6 +259,10 @@ class DecimalImpl(BigDecimal num)
     doc "The scale of this decimal."
     shared actual Integer scale {
         return this.implementation.scale();
+    }
+    doc "The unscaled value."
+    shared actual Whole unscaled {
+        return wrapBigInteger(this.implementation.unscaledValue());
     }
     doc "This value rounded according to the given context."
     shared actual Decimal round(Rounding rounding) {
