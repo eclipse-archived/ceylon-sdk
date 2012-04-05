@@ -251,26 +251,26 @@ shared Whole fromImplementation(Object implementation) {
 /*
 doc "The greatest common divisor of the arguments."
 shared Whole gcd(Whole a, Whole b) {
-	// TODO return Whole(a.val.gcd(b.val));
-	throw;
+    // TODO return Whole(a.val.gcd(b.val));
+    throw;
 }
 
 doc "The least common multiple of the arguments."
 shared Whole lcm(Whole a, Whole b) {
-	return (a*b) / gcd(a, b);
+    return (a*b) / gcd(a, b);
 }
 
 doc "The factorial of the argument."
 shared Whole factorial(Whole a) {
-	if (a <= Whole(0)) {
-		throw;
-	}
-	variable Whole b := a;
-	variable Whole result := a;
-	while (b >= Whole(2)) {
-		b := b.predecessor;
-		result *= b;
-	}
-	return result;
+    if (a <= Whole(0)) {
+        throw;
+    }
+    variable Whole b := a;
+    variable Whole result := a;
+    while (b >= Whole(2)) {
+        b := b.predecessor;
+        result *= b;
+    }
+    return result;
 }
 */
