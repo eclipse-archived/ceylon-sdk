@@ -125,10 +125,13 @@ shared interface Decimal
     doc "The result of raising this number to the given
          power. Fractional powers are not supported.
          Unless invoked within `computeWithRounding()` the
-         result is computed to unlimited precision."
+         result is computed to unlimited precision and negative powers are
+         not supported."
     see(powerWithRounding)
     throws(Exception, "The exponent has a non-zero fractional part")
     throws(Exception, "The exponent is too large or too small")
+    throws(Exception, "The exponent was negative when attempting to compute
+                       a result to unlimited precision")
     shared formal actual Decimal power(Decimal other);
 
     doc "The result of raising this number to the given
@@ -314,8 +317,11 @@ class DecimalImpl(BigDecimal num)
             if (exists rounding) {
                 return powerWithRounding(pow, rounding);
             }
+            if (other.sign < 0) {
+                throw Exception("Negative powers are not supported with unlimited precision");
+            }
             // TODO Special cases
-            return DecimalImpl(this.implementation.pow(pow));
+            return DecimalImpl(this.implementation.pow(pow));    
         }
         throw;
     }

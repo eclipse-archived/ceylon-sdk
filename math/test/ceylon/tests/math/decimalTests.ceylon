@@ -142,6 +142,30 @@ void divided() {
     assertEquals(parseDecimal("0.667"), computeWithRounding(calculation, r), "", strictly);
 }
 
+void power() {
+    print("Decimal.power");
+    assertEquals(toDecimal(4), toDecimal(2)**toDecimal(2), "2**2");
+    assertEquals(toDecimal(8), toDecimal(2)**toDecimal(3), "2**3");
+    assertEquals(parseOrFail("0.25"), parseOrFail("0.5")**toDecimal(2), "0.5**2");
+    try {
+        Decimal d = toDecimal(2)**toDecimal(-2);
+        fail();
+    } catch (Exception e) {
+    }
+    try {
+        Decimal d = toDecimal(2)**parseOrFail("0.5");
+        fail();
+    } catch (Exception e) {
+        
+    }
+    try {
+        Decimal d = toDecimal(2)**parseOrFail("100000000000000000000000000000000000000000000");
+        fail();
+    } catch (Exception e) {
+        
+    }
+}
+
 shared void decimalTests() {
 
     instantiationAndEquality();
@@ -151,4 +175,6 @@ shared void decimalTests() {
     minus();
     times();
     divided();
+    power();
+
 }
