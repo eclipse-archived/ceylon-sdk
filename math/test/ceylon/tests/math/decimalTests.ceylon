@@ -2,7 +2,7 @@ import com.redhat.ceylon.sdk.test{...}
 import ceylon.math.decimal{
     Decimal, rounding,
     halfUp, halfDown, halfEven, up, down, ceiling, floor,
-    parseDecimal, toDecimal, zero, one, ten, implicitRounding}
+    parseDecimal, toDecimal, zero, one, ten, implicitlyRounded}
 import java.lang{ArithmeticException}
 
 Boolean strictly(Object? expect, Object? got) {
@@ -77,9 +77,9 @@ void plus() {
         return a + b;
     }
     r := rounding(2, halfUp);
-    assertEquals(parseDecimal("0.11"), implicitRounding(calculation, r), "0.100+0.01", strictly);
+    assertEquals(parseDecimal("0.11"), implicitlyRounded(calculation, r), "0.100+0.01", strictly);
     a := parseOrFail("0.105");
-    assertEquals(parseDecimal("0.12"), implicitRounding(calculation, r), "0.105+0.01", strictly);
+    assertEquals(parseDecimal("0.12"), implicitlyRounded(calculation, r), "0.105+0.01", strictly);
 }
 
 void minus() {
@@ -96,9 +96,9 @@ void minus() {
         return a - b;
     }
     r := rounding(2, halfUp);
-    assertEquals(parseDecimal("0.090"), implicitRounding(calculation, r), "0.100-0.01", strictly);
+    assertEquals(parseDecimal("0.090"), implicitlyRounded(calculation, r), "0.100-0.01", strictly);
     a := parseOrFail("0.105");
-    assertEquals(parseDecimal("0.095"), implicitRounding(calculation, r), "0.105-0.01", strictly);
+    assertEquals(parseDecimal("0.095"), implicitlyRounded(calculation, r), "0.105-0.01", strictly);
 }
 
 void times() {
@@ -113,9 +113,9 @@ void times() {
     function calculation() {
         return a * b;
     }
-    assertEquals(parseDecimal("0.0100"), implicitRounding(calculation, r), "0.100 * 0.01", strictly);
+    assertEquals(parseDecimal("0.0100"), implicitlyRounded(calculation, r), "0.100 * 0.01", strictly);
     a := parseOrFail("0.105");
-    assertEquals(parseDecimal("0.0105"), implicitRounding(calculation, r), "0.105 * 0.01", strictly);
+    assertEquals(parseDecimal("0.0105"), implicitlyRounded(calculation, r), "0.105 * 0.01", strictly);
 }
 
 void divided() {
@@ -137,9 +137,9 @@ void divided() {
     function calculation() {
         return numerator / denominator;
     }
-    assertEquals(parseDecimal("0.333"), implicitRounding(calculation, r), "", strictly);
+    assertEquals(parseDecimal("0.333"), implicitlyRounded(calculation, r), "", strictly);
     numerator := one+one;
-    assertEquals(parseDecimal("0.667"), implicitRounding(calculation, r), "", strictly);
+    assertEquals(parseDecimal("0.667"), implicitlyRounded(calculation, r), "", strictly);
 }
 
 void power() {
@@ -175,7 +175,7 @@ void power() {
     function calculation() {
         return a ** b;
     }
-    assertEquals(parseDecimal("0.25"), implicitRounding(calculation, r), "2 ** -2", strictly);
+    assertEquals(parseDecimal("0.25"), implicitlyRounded(calculation, r), "2 ** -2", strictly);
 }
 
 void dividedAndTruncated() {

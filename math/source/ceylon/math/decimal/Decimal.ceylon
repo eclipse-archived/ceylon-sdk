@@ -20,7 +20,7 @@ import java.math{
 
 ThreadLocal<Rounding?> defaultRounding = ThreadLocal<Rounding?>();
 
-doc "Performs an arbitrary calcuation using the given rounding used implicity
+doc "Performs an arbitrary calcuation with the given rounding used implicity
      when arithmetic operators are applied to `Decimal` operands.
 
      During a call to this method the `Decimal` operators
@@ -32,9 +32,10 @@ doc "Performs an arbitrary calcuation using the given rounding used implicity
      during a call to this function.
      
      The implicit rounding will only take affect on the current thread.
-     The `calculate()` function may itself call `implicitRounding()`
+     The `calculate()` function may itself call `implicitlyRounded()`
      to apply a different implicit rounding for a subcalculation."
-shared Decimal implicitRounding(Decimal calculate(), Rounding rounding) {
+see(implicitRounding)
+shared Decimal implicitlyRounded(Decimal calculate(), Rounding rounding) {
     Rounding? prev = defaultRounding.get();
     try {
         defaultRounding.set(rounding);
@@ -44,14 +45,25 @@ shared Decimal implicitRounding(Decimal calculate(), Rounding rounding) {
     }
 }
 
+doc "The rounding currently being used implicitly by 
+     the `Decimal` operators
+     `+`, `-`, `*`, `/` and `**`
+     (or equivalently, the `Decimal` methods
+     `plus()`, `minus()`, `times()`, `divided()` and `power()`).
+"
+see(implicitlyRounded)
+shared Rounding? implicitRounding {
+    return defaultRounding.get();
+}
+
 doc "A decimal floating point number. This class provides support for fixed
      and arbitrary precision numbers. Values are immuatable and 
      represented as `unscaled * 10**(-scale)`. Methods without an explicit 
      `Rounding` parameter use `unlimitedPrecision` (unless documented 
      otherwise) except for `plus()`, `minus()`, `times()`, `divided()` 
      and `power()` whose implicit rounding is subject to the rules of 
-     `implicitRounding()`."
-see(implicitRounding)
+     `implicitlyRounded()`."
+see(implicitlyRounded)
 see(Rounding)
 see(unlimitedPrecision)
 shared interface Decimal
@@ -82,14 +94,14 @@ shared interface Decimal
     shared formal actual Integer hash;
 
     doc "The quotient obtained by dividing this Decimal by
-         the given Decimal. Unless invoked within `implicitRounding()`
+         the given Decimal. Unless invoked within `implicitlyRounded()`
          the preferred scale of the result is the difference between this
          Decimal's scale and the given Decimal's scale; it may be larger
          if necessary; an exception is thrown if the result would have
          a nonterminating decimal representation."
     see(dividedRounded)
     see(dividedTruncated)
-    see(implicitRounding)
+    see(implicitlyRounded)
     shared formal actual Decimal divided(Decimal other);
 
     doc "The quotient obtained by dividing this `Decimal` by
@@ -100,10 +112,10 @@ shared interface Decimal
     shared formal Decimal dividedRounded(Decimal other, Rounding? rounding = null);
 
     doc "The product of this `Decimal` and the given `Decimal`.
-         Unless invoked within `implicitRounding()` the scale of the result is
+         Unless invoked within `implicitlyRounded()` the scale of the result is
          the sum of the scale of the operands."
     see(timesRounded)
-    see(implicitRounding)
+    see(implicitlyRounded)
     shared formal actual Decimal times(Decimal other);
 
     doc "The product of this `Decimal` and the given `Decimal` with the given
@@ -112,10 +124,10 @@ shared interface Decimal
     shared formal Decimal timesRounded(Decimal other, Rounding? rounding = null);
 
     doc "The sum of this `Decimal` and the given `Decimal`.
-         Unless invoked within `implicitRounding()` the scale of the result is
+         Unless invoked within `implicitlyRounded()` the scale of the result is
          the maximum of the scale of the operands."
     see(plusRounded)
-    see(implicitRounding)
+    see(implicitlyRounded)
     shared formal actual Decimal plus(Decimal other);
 
     doc "The sum of this `Decimal` and the given `Decimal` with the given
@@ -124,10 +136,10 @@ shared interface Decimal
     shared formal Decimal plusRounded(Decimal other, Rounding? rounding = null);
 
     doc "The difference of this `Decimal` and the given `Decimal`.
-         Unless invoked within `implicitRounding()` the scale of the result is
+         Unless invoked within `implicitlyRounded()` the scale of the result is
          the maximum of the scale of the operands."
     see(minusRounded)
-    see(implicitRounding)
+    see(implicitlyRounded)
     shared formal actual Decimal minus(Decimal other);
 
     doc "The difference of this `Decimal` and the given `Decimal` with the given
@@ -137,7 +149,7 @@ shared interface Decimal
 
     doc "The result of raising this number to the given
          power. Fractional powers are not supported.
-         Unless invoked within `implicitRounding()` the
+         Unless invoked within `implicitlyRounded()` the
          result is computed to unlimited precision and negative powers are
          not supported."
     see(powerRounded)
