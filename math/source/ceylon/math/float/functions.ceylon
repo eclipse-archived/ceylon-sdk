@@ -252,29 +252,3 @@ see(ceiling)
 shared Float halfEven(Float num) {
     return jrint(num);
 }
-
-doc "The closest value to the argument that is equal to a mathematical integer,
-     with ties rounding up (half up rounding).
-     
-     * `halfUp(-infinity)` is `-infinity`
-     * `halfUp(-0)` is `-0` 
-     * `halfUp(+0)` is `+0`
-     * `halfUp(+infinity)` is `+infinity`
-     * `halfUp(undefined)` is `undefined`
-"
-shared Float halfUp(Float num) {
-    return jround(num).float;
-}
-
-doc "The closest value to the argument that is equal to a mathematical integer,
-     with ties rounding up (half up rounding).
-     
-     * `halfDown(-infinity)` is `-infinity`
-     * `halfDown(-0)` is `-0` 
-     * `halfDown(+0)` is `+0`
-     * `halfDown(+infinity)` is `+infinity`
-     * `halfDown(undefined)` is `undefined`
-"
-shared Float halfDown(Float num) {
-    return jceiling(num-0.5);
-}
