@@ -14,7 +14,8 @@ doc "An arbitrary precision integer."
 shared interface Whole of WholeImpl
         //extends IdentifiableObject()
         satisfies //Castable<Whole|Decimal> &
-                  Integral<Whole> {
+                  Integral<Whole> & Scalar<Whole> &
+                  Exponentiable<Whole, Whole> {
 
     doc "The platform specific implementation object, if any.
          This is provided for the purposes of interoperation with the
@@ -240,7 +241,7 @@ shared Whole toWhole(Number number) {
 doc "Converts a platform specific implementation object to a `Whole` instance.
      This is provided for the purposes of interoperation with the
      runtime platform."
-see(Whole.implementation)
+//see(Whole.implementation)
 shared Whole fromImplementation(Object implementation) {
     if(is BigInteger implementation) {
         return WholeImpl(implementation);

@@ -50,16 +50,16 @@ throws(Exception, "The precision is negative.")
 see(Decimal)
 see(rounding)
 see(unlimitedPrecision)
-shared abstract class Rounding(Integer precision, Mode mode) of RoundingImpl {
+shared abstract class Rounding(precision, mode) of RoundingImpl {
     if (precision < 0) {
         throw Exception("Precision cannot be negative");
     }
 
     doc "The precision to apply when rounding."
-    shared Integer precision = precision;
+    shared Integer precision;
 
     doc "The kind of rounding to apply."
-    shared Mode mode = mode;
+    shared Mode mode;
 
     shared actual String string {
         if (precision == 0) {

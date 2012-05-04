@@ -69,7 +69,7 @@ see(unlimitedPrecision)
 shared interface Decimal
         of DecimalImpl
         satisfies //Castable<Decimal> &
-                  Numeric<Decimal> {
+                  Scalar<Decimal> & Exponentiable<Decimal,Decimal> {
 
     doc "The platform specific implementation object, if any.
          This is provided for the purposes of interoperation with the

@@ -1,6 +1,6 @@
 doc "A collection of tests that can be run."
 shared abstract class Suite(String name) {
-    String name = name;
+
     variable Integer failureCount := 0;
     variable Integer errorCount := 0;
     variable Integer passCount := 0;
