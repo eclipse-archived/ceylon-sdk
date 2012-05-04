@@ -474,7 +474,7 @@ class DecimalImpl(BigDecimal num)
 
 doc "The number `number` converted to a Decimal"
 // TODO Document peculiarities of passing a Float or switch to using valueOf(double)
-shared Decimal toDecimal(Whole|Integer|Float number, Rounding? rounding = null) {
+shared Decimal decimal(Whole|Integer|Float number, Rounding? rounding = null) {
     BigDecimal val;
     switch(number)
     case(is Whole) {

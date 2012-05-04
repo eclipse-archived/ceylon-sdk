@@ -7,8 +7,8 @@ import java.math{
         jone=\iONE}
 }
 
-Whole maxIntImpl = toWhole(maxInt);
-Whole twoImpl = toWhole(2);
+Whole maxIntImpl = whole(maxInt);
+Whole twoImpl = whole(2);
 
 WholeImpl zeroImpl = WholeImpl(jzero);
 doc "A Whole instance representing zero."

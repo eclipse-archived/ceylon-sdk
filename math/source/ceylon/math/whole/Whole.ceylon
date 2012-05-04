@@ -227,7 +227,7 @@ shared Whole? parseWhole(String num) {
 }
 
 doc "The `number.integer` converted to a Whole."
-shared Whole toWhole(Number number) {
+shared Whole whole(Number number) {
     Integer int = number.integer;
     if (int == 0) {
         return zeroImpl;
