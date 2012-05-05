@@ -8,7 +8,8 @@ import java.lang{ Math {
     jrandom=random,
     jfloor=floor, jceiling=ceil,
     jround=round, jrint=rint,
-    jmin=min, jmax=max
+    jmin=min, jmax=max,
+    jscalb=scalb
 } }
 
 doc "\{0001D452} raised to the power of the argument.
@@ -317,4 +318,11 @@ doc "The larger of the two arguments.
 see(min)
 shared Float max(Float x, Float y) {
     return jmax(x, y);
+}
+
+doc "The value of `x \{00D7} 2\{207F}`, 
+     calculated exactly for reasonable
+     values of `n`."
+shared Float scalb(Float x, Integer n) {
+    return jscalb(x, n);
 }
