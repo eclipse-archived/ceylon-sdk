@@ -1,11 +1,14 @@
-import java.lang{ Math {jsin=sin, jcos=cos, jtan=tan,
+import java.lang{ Math {
+    jsin=sin, jcos=cos, jtan=tan,
+    jsinh=sinh, jcosh=cosh, jtanh=tanh,
     jasin=asin, jacos=acos, jatan=atan,
     jatan2=atan2, jhypot=hypot,
     jexp=exp, jlog=log, jlog10=log10,
     jsqrt=sqrt, jcbrt=cbrt,
     jrandom=random,
     jfloor=floor, jceiling=ceil,
-    jround=round, jrint=rint}}
+    jround=round, jrint=rint
+} }
 
 doc "\{0001D452} raised to the power of the argument.
 
@@ -86,6 +89,41 @@ doc "The tangent of the given angle specified in radians.
 "
 shared Float tan(Float num) {
     return jtan(num);
+}
+
+doc "The hyperbolic sine of the given angle specified in radians.
+
+     * `sinh(-0)` is `-0`,
+     * `sinh(+0)` is `+0`,
+     * `sin(-infinity)` is `-infinity`,
+     * `sin(+infinity)` is `+infinity`,
+     * `sin(undefined)` is `undefined`.
+"
+shared Float sinh(Float num) {
+    return jsinh(num);
+}
+
+doc "The hyperbolic cosine of the given angle specified in radians.
+
+     * `cosh(0)` is `1`.
+     * `cosh(-infinity)` is `+infinity`,
+     * `cosh(+infinity)` is `+infinity`,
+     * `cosh(undefined)` is `undefined`.
+"
+shared Float cosh(Float num) {
+    return jcosh(num);
+}
+
+doc "The hyperbolic tangent of the given angle specified in radians.
+     
+     * `tanh(+infinity)` is `+1`,
+     * `tanh(-infinity)` is `-1`,
+     * `tanh(-0)` is `-0`,
+     * `tanh(+0)` is `+0`,
+     * `tanh(undefined)` is `undefined`.
+"
+shared Float tanh(Float num) {
+    return jtanh(num);
 }
 
 doc "The arc sine of the given number.
