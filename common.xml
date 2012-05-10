@@ -68,8 +68,15 @@
   
   <target name="publish" depends="compile, doc">
     <echo message="${ant.project.name} publish basedir:${basedir}, build: ${build}"/>
-    <echo message="${publish.username}"/>
-    <echo message="${publish.password}"/>
+    <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo"/>
+    <property name="publish.dir" location="${ceylon.repo.dir}/"/>
+    <echo message="Copying to ${publish.dir}"/>
+    <copy todir="${publish.dir}">
+        <fileset dir="${build.modules}">
+          <include name="**/${module.name}-${module.version}.*"/>
+        </fileset>
+    </copy>
+    <!--
     <ceylonr executable="../ceylon-runtime/build/bin/ceylonr"
         out="${publish.repo}"
         pass="${publish.password}"
@@ -77,7 +84,7 @@
       <rep url="${build.modules}"/>
       <rep url="${repo.dependancies}"/>
       <module name="${module.name}" version="${module.version}"/>
-    </ceylonr>
+    </ceylonr>-->
   </target>
 
 </project>

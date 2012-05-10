@@ -39,11 +39,11 @@
   </target>
   
   <target name="publish">
-    <input message="modules.ceylon-lang.org username:>" addproperty="publish.username"/>
+    <!--<input message="modules.ceylon-lang.org username:>" addproperty="publish.username"/>
     <input message="modules.ceylon-lang.org password:>" addproperty="publish.password">
       <handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
     </input>
-    <property name="publish.repo" value="https://modules.ceylon-lang.org"/>
+    <property name="publish.repo" value="https://modules.ceylon-lang.org"/>-->
     <iterate target="publish"/>
   </target>
 
