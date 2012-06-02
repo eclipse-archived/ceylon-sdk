@@ -4,6 +4,7 @@
   <filelist id="module.dirs">
   	<file name="sdk-test"/>
     <file name="math"/>
+    <file name="fs"/>
   </filelist>
   
   <macrodef name="iterate">
