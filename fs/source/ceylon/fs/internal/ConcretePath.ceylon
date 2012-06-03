@@ -1,8 +1,11 @@
-import java.nio.file { JPath=Path,
+import ceylon.fs { ... }
+import java.io { IOException }
+import java.nio.file { JPath=Path, FileVisitor, 
+                       FileVisitResult { \iCONTINUE, \iTERMINATE, \iSKIP_SUBTREE },
                        FileSystems { defaultFileSystem=default },
                        Files { isReadable, isWritable, isExecutable, 
-                               getFileStore } }
-import ceylon.fs { ... }
+                               getFileStore, walkFileTree } }
+import java.nio.file.attribute { BasicFileAttributes }
 import ceylon.fs.internal { Util { newPath, getLastModified,
                                    isDirectory, isRegularFile, isExisting,
                                    copyPath, deletePath, movePath, overwritePath,
@@ -271,5 +274,44 @@ class ConcretePath(jpath)
             }
             return nil;
         }
+    }
+    shared actual void visit(Visitor visitor) {
+        object fileVisitor satisfies FileVisitor<JPath> {
+            value result {
+                return visitor.terminated then \iTERMINATE else \iCONTINUE;
+            }
+            //TODO: eliminate inefficient calls to `ConcretePath(t).resource`
+            shared actual FileVisitResult preVisitDirectory(JPath? t, BasicFileAttributes? basicFileAttributes) {
+                if (exists t) {
+                    value r = ConcretePath(t).resource;
+                    if (is Directory r) {
+                        return visitor.beforeDirectory(r) then result else \iSKIP_SUBTREE;
+                    }
+                }
+                return result;
+            }
+            shared actual FileVisitResult postVisitDirectory(JPath? t, IOException? iOException) {
+                if (exists t) {
+                    value r = ConcretePath(t).resource;
+                    if (is Directory r) {
+                        visitor.afterDirectory(r);
+                    }
+                }
+                return result;
+            }
+            shared actual FileVisitResult visitFile(JPath? t, BasicFileAttributes? basicFileAttributes) {
+                if (exists t) {
+                    value r = ConcretePath(t).resource;
+                    if (is File r) {
+                        visitor.file(r);
+                    }
+                }
+                return result;
+            }
+            shared actual FileVisitResult visitFileFailed(JPath? t, IOException? iOException) {
+                return result;
+            }
+        }
+        walkFileTree(jpath, fileVisitor);
     }
 }

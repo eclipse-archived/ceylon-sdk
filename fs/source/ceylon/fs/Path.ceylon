@@ -14,6 +14,7 @@ shared abstract class Path() satisfies Comparable<Path> {
     shared formal Resource resource;
     shared formal Boolean parentOf(Path path);
     shared formal Boolean childOf(Path path);
+    shared formal void visit(Visitor visitor);
 }
 
 shared Path path(String pathString) = newPath;
@@ -21,3 +22,10 @@ shared Path path(String pathString) = newPath;
 shared Path home = path(getProperty("user.home"));
 
 shared Path[] rootPaths = allRootPaths;
+
+shared class Visitor() {
+    shared default Boolean beforeDirectory(Directory dir) { return true; }
+    shared default void afterDirectory(Directory dir) {}
+    shared default void file(File file) {}
+    shared default Boolean terminated { return false; }
+}
