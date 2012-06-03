@@ -109,7 +109,7 @@ class ConcretePath(jpath)
             }
         }
         else {
-            return ConcreteDirectory(jpath);
+            return ConcreteNil(jpath);
         }
     }
     shared actual void visit(Visitor visitor) {
@@ -118,26 +118,30 @@ class ConcretePath(jpath)
                 return visitor.terminated 
                         then \iTERMINATE else \iCONTINUE;
             }
-            shared actual FileVisitResult preVisitDirectory(JPath? t, BasicFileAttributes? basicFileAttributes) {
+            shared actual FileVisitResult preVisitDirectory(JPath? t, 
+                    BasicFileAttributes? basicFileAttributes) {
                 if (exists t) {
                     return visitor.beforeDirectory(ConcreteDirectory(t)) 
                             then result else \iSKIP_SUBTREE;
                 }
                 return result;
             }
-            shared actual FileVisitResult postVisitDirectory(JPath? t, IOException? iOException) {
+            shared actual FileVisitResult postVisitDirectory(JPath? t, 
+                    IOException? iOException) {
                 if (exists t) {
                     visitor.afterDirectory(ConcreteDirectory(t));
                 }
                 return result;
             }
-            shared actual FileVisitResult visitFile(JPath? t, BasicFileAttributes? basicFileAttributes) {
+            shared actual FileVisitResult visitFile(JPath? t, 
+                    BasicFileAttributes? basicFileAttributes) {
                 if (exists t) {
                     visitor.file(ConcreteFile(t));
                 }
                 return result;
             }
-            shared actual FileVisitResult visitFileFailed(JPath? t, IOException? iOException) {
+            shared actual FileVisitResult visitFileFailed(JPath? t, 
+                    IOException? iOException) {
                 return result;
             }
         }
