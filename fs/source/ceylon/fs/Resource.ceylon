@@ -34,3 +34,13 @@ shared interface Nil
     shared formal File createFile();
     shared formal Directory createDirectory();
 }
+
+shared Directory[] rootDirectories {
+    value sb = SequenceBuilder<Directory>();
+    for (r in rootPaths[].resource) {
+        if (is Directory r) {
+            sb.append(r);
+        }
+    }
+    return sb.sequence;
+}

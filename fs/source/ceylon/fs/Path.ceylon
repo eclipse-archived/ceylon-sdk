@@ -1,5 +1,5 @@
 import java.lang { System { getProperty } }
-import ceylon.fs.internal { newPath=path, allRoots=roots }
+import ceylon.fs.internal { newPath=path, allRootPaths=rootPaths }
 
 shared abstract class Path() satisfies Comparable<Path> {
     shared formal Path parent;
@@ -20,4 +20,4 @@ shared Path path(String pathString) = newPath;
 
 shared Path home = path(getProperty("user.home"));
 
-shared Path[] roots = allRoots;
+shared Path[] rootPaths = allRootPaths;

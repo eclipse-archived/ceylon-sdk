@@ -12,7 +12,7 @@ shared Path path(String pathString) {
     return ConcretePath(newPath(pathString));
 }
 
-shared Path[] roots {
+shared Path[] rootPaths {
     value sb = SequenceBuilder<Path>();
     value iter = defaultFileSystem.rootDirectories.iterator();
     while (iter.hasNext()) {
