@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 class Util {
     public static Path newPath(String pathString) {
@@ -30,10 +29,11 @@ class Util {
     }
     public static Path newDirectory(Path path) 
     		throws IOException {
-    	return Files.createDirectory(path);
+    	return Files.createDirectories(path);
     }
     public static Path newFile(Path path) 
     		throws IOException {
+    	Files.createDirectories(path.getParent());
     	return Files.createFile(path);
     }
     public static boolean isExisting(Path path) {
@@ -44,5 +44,8 @@ class Util {
     }
     public static boolean isDirectory(Path path) {
     	return Files.isDirectory(path);
+    }
+    public static long getLastModified(Path path) throws IOException {
+    	return Files.getLastModifiedTime(path).toMillis();
     }
 }

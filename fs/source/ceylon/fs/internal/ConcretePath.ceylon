@@ -1,12 +1,24 @@
-import java.nio.file { JPath=Path }
+import java.nio.file { JPath=Path,
+                       FileSystems { defaultFileSystem=default },
+                       Files { isReadable, isWritable, isExecutable, 
+                               getFileStore } }
 import ceylon.fs { ... }
-import ceylon.fs.internal { Util { newPath, 
+import ceylon.fs.internal { Util { newPath, getLastModified,
                                    isDirectory, isRegularFile, isExisting,
                                    copyPath, deletePath, movePath, overwritePath,
                                    newDirectory, newFile } }
 
 shared Path path(String pathString) {
     return ConcretePath(newPath(pathString));
+}
+
+shared Path[] roots {
+    value sb = SequenceBuilder<Path>();
+    value iter = defaultFileSystem.rootDirectories.iterator();
+    while (iter.hasNext()) {
+        sb.append(ConcretePath(iter.next()));
+    }
+    return sb.sequence;
 }
 
 JPath asJPath(String|Path path) {
@@ -25,7 +37,10 @@ class ConcretePath(jpath)
         return ConcretePath(jpath.parent);
     }
     shared actual Path childPath(String|Path subpath) {
-        return ConcretePath(asJPath(subpath));
+        return ConcretePath(jpath.resolve(asJPath(subpath)));
+    }
+    shared actual Path siblingPath(String|Path subpath) {
+        return ConcretePath(jpath.resolveSibling(asJPath(subpath)));
     }
     shared actual Path absolutePath {
         return ConcretePath(jpath.toAbsolutePath());
@@ -33,7 +48,12 @@ class ConcretePath(jpath)
     shared actual Path normalizedPath {
         return ConcretePath(jpath.normalize());
     }
-    
+    shared actual Boolean parentOf(Path path) {
+        return asJPath(path).startsWith(jpath);
+    }
+    shared actual Boolean childOf(Path path) {
+        return jpath.startsWith(asJPath(path));
+    }
     shared actual Path relativePath(String|Path path) {
         return ConcretePath(this.jpath.relativize(asJPath(path)));
     }
@@ -103,7 +123,8 @@ class ConcretePath(jpath)
                         }
                     }
                     shared actual File move(Directory dir) {
-                        value mp = movePath(jpath, asJPath(dir.path));
+                        value mp = movePath(jpath, 
+                                asJPath(dir.path).resolve(jpath.fileName));
                         if (is File file = ConcretePath(mp).resource) {
                             return file;
                         }
@@ -138,7 +159,24 @@ class ConcretePath(jpath)
                             throw Exception("delete failed");
                         }
                     }
-                    
+                    shared actual Boolean readable {
+                        return isReadable(jpath);
+                    }
+                    shared actual Boolean writable {
+                        return isWritable(jpath);
+                    }
+                    shared actual Boolean executable {
+                        return isExecutable(jpath);
+                    }
+                    shared actual Integer lastModifiedMilliseconds {
+                        return getLastModified(jpath);
+                    }
+                    shared actual String name {
+                        return jpath.fileName.string;
+                    }
+                    shared actual Store store {
+                        return ConcreteStore(getFileStore(jpath));
+                    }
                 }
                 return file;
             }
@@ -156,6 +194,52 @@ class ConcretePath(jpath)
                     shared actual Resource[] children {
                         return childPaths[].resource;
                     }
+                    shared actual Nil delete() {
+                        deletePath(jpath);
+                        if (is Nil nil = ConcretePath(jpath).resource) {
+                            return nil;
+                        }
+                        else {
+                            throw Exception("delete failed");
+                        }
+                    }
+                    shared actual File move(Directory dir) {
+                        value mp = movePath(jpath, 
+                                asJPath(dir.path).resolve(jpath.fileName));
+                        if (is File file = ConcretePath(mp).resource) {
+                            return file;
+                        }
+                        else {
+                            throw Exception("move failed");
+                        }
+                    }
+                    shared actual File rename(Nil nil) {
+                        value rp = movePath(jpath, asJPath(nil.path));
+                        if (is File result = ConcretePath(rp).resource) {
+                            return result;
+                        }
+                        else {
+                            throw Exception("rename failed");
+                        }
+                    }
+                    shared actual Directory createDirectory(String|Path name) {
+                        value d = newDirectory(jpath.resolve(asJPath(name)));
+                        if (is Directory dir = ConcretePath(d).resource) {
+                            return dir;
+                        }
+                        else {
+                            throw;
+                        }
+                    }
+                    shared actual File createFile(String|Path name) {
+                        value f = newFile(jpath.resolve(asJPath(name)));
+                        if (is File file = ConcretePath(f).resource) {
+                            return file;
+                        }
+                        else {
+                            throw;
+                        }
+                    }
                 }
                 return dir;
             }
@@ -167,8 +251,8 @@ class ConcretePath(jpath)
             object nil extends ResourceWithPath()
                     satisfies Nil {
                 shared actual Directory createDirectory() {
-                    value cp = newDirectory(jpath);
-                    if (is Directory dir = ConcretePath(cp).resource) {
+                    value d = newDirectory(jpath);
+                    if (is Directory dir = ConcretePath(d).resource) {
                         return dir;
                     }
                     else {
@@ -176,8 +260,8 @@ class ConcretePath(jpath)
                     }
                 }
                 shared actual File createFile() {
-                    value cp = newFile(jpath);
-                    if (is File file = ConcretePath(cp).resource) {
+                    value f = newFile(jpath);
+                    if (is File file = ConcretePath(f).resource) {
                         return file;
                     }
                     else {
