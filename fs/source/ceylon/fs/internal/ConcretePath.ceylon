@@ -101,6 +101,9 @@ class ConcretePath(jpath)
     shared actual Integer hash {
         return jpath.hash;
     }
+    shared actual String separator {
+        return jpath.fileSystem.separator;
+    }
     shared actual Resource resource {
         abstract class ResourceWithPath() 
                 satisfies Resource {

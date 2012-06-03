@@ -15,6 +15,7 @@ shared abstract class Path() satisfies Comparable<Path> {
     shared formal Boolean parentOf(Path path);
     shared formal Boolean childOf(Path path);
     shared formal void visit(Visitor visitor);
+    shared formal String separator;
 }
 
 shared Path path(String pathString) = newPath;
