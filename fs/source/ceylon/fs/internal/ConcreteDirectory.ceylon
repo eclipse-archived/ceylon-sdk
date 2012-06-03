@@ -42,48 +42,19 @@ class ConcreteDirectory(JPath jpath)
     }
     shared actual Nil delete() {
         deletePath(jpath);
-        if (is Nil nil = ConcretePath(jpath).resource) {
-            return nil;
-        }
-        else {
-            throw Exception("delete failed");
-        }
+        return ConcreteNil(jpath);
     }
     shared actual File move(Directory dir) {
-        value mp = movePath(jpath, 
-                asJPath(dir.path).resolve(jpath.fileName));
-        if (is File file = ConcretePath(mp).resource) {
-            return file;
-        }
-        else {
-            throw Exception("move failed");
-        }
+        return ConcreteFile( movePath(jpath, 
+                asJPath(dir.path).resolve(jpath.fileName)) );
     }
     shared actual File rename(Nil nil) {
-        value rp = movePath(jpath, asJPath(nil.path));
-        if (is File result = ConcretePath(rp).resource) {
-            return result;
-        }
-        else {
-            throw Exception("rename failed");
-        }
+        return ConcreteFile( movePath(jpath, asJPath(nil.path)) );
     }
     shared actual Directory createDirectory(String|Path name) {
-        value d = newDirectory(jpath.resolve(asJPath(name)));
-        if (is Directory dir = ConcretePath(d).resource) {
-            return dir;
-        }
-        else {
-            throw;
-        }
+        return ConcreteDirectory( newDirectory(jpath.resolve(asJPath(name))) );
     }
     shared actual File createFile(String|Path name) {
-        value f = newFile(jpath.resolve(asJPath(name)));
-        if (is File file = ConcretePath(f).resource) {
-            return file;
-        }
-        else {
-            throw;
-        }
+        return ConcreteFile( newFile(jpath.resolve(asJPath(name))) );
     }
 }

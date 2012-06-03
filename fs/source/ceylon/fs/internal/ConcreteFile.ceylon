@@ -8,50 +8,21 @@ class ConcreteFile(JPath jpath)
         extends ConcreteResource(jpath) 
         satisfies File {
     shared actual File copy(Directory dir) {
-        value cp = copyPath(jpath, asJPath(dir.path));
-        if (is File file = ConcretePath(cp).resource) {
-            return file;
-        }
-        else {
-            throw Exception("copy failed");
-        }
+        return ConcreteFile( copyPath(jpath, asJPath(dir.path)) );
     }
     shared actual File move(Directory dir) {
-        value mp = movePath(jpath, 
-                asJPath(dir.path).resolve(jpath.fileName));
-        if (is File file = ConcretePath(mp).resource) {
-            return file;
-        }
-        else {
-            throw Exception("move failed");
-        }
+        return ConcreteFile( movePath(jpath, 
+                asJPath(dir.path).resolve(jpath.fileName)) );
     }
     shared actual File overwrite(File file) {
-        value op = overwritePath(jpath, asJPath(file.path));
-        if (is File result = ConcretePath(op).resource) {
-            return result;
-        }
-        else {
-            throw Exception("overwrite failed");
-        }
+        return ConcreteFile( overwritePath(jpath, asJPath(file.path)) );
     }
     shared actual File rename(Nil nil) {
-        value rp = movePath(jpath, asJPath(nil.path));
-        if (is File result = ConcretePath(rp).resource) {
-            return result;
-        }
-        else {
-            throw Exception("rename failed");
-        }
+        return ConcreteFile( movePath(jpath, asJPath(nil.path)) );
     }
     shared actual Nil delete() {
         deletePath(jpath);
-        if (is Nil nil = ConcretePath(jpath).resource) {
-            return nil;
-        }
-        else {
-            throw Exception("delete failed");
-        }
+        return ConcreteNil(jpath);
     }
     shared actual Boolean readable {
         return isReadable(jpath);
