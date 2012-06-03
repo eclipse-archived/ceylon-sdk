@@ -42,4 +42,13 @@ class ConcreteFile(JPath jpath)
     shared actual Store store {
         return ConcreteStore(getFileStore(jpath));
     }
+    shared actual Reader reader(String? encoding) {
+        return ConcreteReader(jpath, encoding else "UTF-8");
+    }
+    shared actual Writer writer(String? encoding) {
+        return ConcreteWriter(jpath, encoding else "UTF-8");
+    }
+    shared actual Writer appender(String? encoding) {
+        return ConcreteAppendingWriter(jpath, encoding else "UTF-8");
+    }
 }

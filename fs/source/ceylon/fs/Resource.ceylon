@@ -16,6 +16,9 @@ shared interface File
     shared formal String name; 
     shared formal Integer lastModifiedMilliseconds;
     shared formal Store store;
+    shared formal Reader reader(String? encoding/*=null*/);
+    shared formal Writer writer(String? encoding/*=null*/);
+    shared formal Writer appender(String? encoding/*=null*/);
 }
 
 shared interface Directory 
