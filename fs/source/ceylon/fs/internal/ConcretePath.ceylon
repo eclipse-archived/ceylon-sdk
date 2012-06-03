@@ -83,16 +83,11 @@ class ConcretePath(jpath)
         return jpath.absolute;
     }
     shared actual Comparison compare(Path other) {
-        if (is ConcretePath other) {
-            return jpath.compareTo(other.jpath)<=>0;
-        }
-        else {
-            return string<=>other.string;
-        }
+        return jpath.compareTo(asJPath(other))<=>0;
     }
     shared actual Boolean equals(Object that) {
-        if (is ConcretePath that) {
-            return that.jpath==jpath;
+        if (is Path that) {
+            return asJPath(that)==jpath;
         }
         else {
             return false;
