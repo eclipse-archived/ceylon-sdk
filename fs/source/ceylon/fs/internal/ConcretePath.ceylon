@@ -9,6 +9,15 @@ shared Path path(String pathString) {
     return ConcretePath(newPath(pathString));
 }
 
+JPath asJPath(String|Path path) {
+    if (is ConcretePath path) {
+        return path.jpath;
+    }
+    else {
+        return newPath(path.string);
+    }
+}
+
 class ConcretePath(jpath)
         extends Path() {
     shared JPath jpath;
@@ -16,20 +25,7 @@ class ConcretePath(jpath)
         return ConcretePath(jpath.parent);
     }
     shared actual Path childPath(String|Path subpath) {
-        JPath p;
-        switch (subpath)
-        case (is String) {
-            p = jpath.resolve(subpath);
-        }
-        case (is Path) {
-            if (is ConcretePath subpath) {
-                p = jpath.resolve(subpath.jpath);
-            }
-            else {
-                p = jpath.resolve(subpath.string);
-            }
-        }
-        return ConcretePath(p);
+        return ConcretePath(asJPath(subpath));
     }
     shared actual Path absolutePath {
         return ConcretePath(jpath.toAbsolutePath());
@@ -37,21 +33,9 @@ class ConcretePath(jpath)
     shared actual Path normalizedPath {
         return ConcretePath(jpath.normalize());
     }
+    
     shared actual Path relativePath(String|Path path) {
-        JPath p;
-        switch (path)
-        case (is String) {
-            p = newPath(path);
-        }
-        case (is Path) {
-            if (is ConcretePath path) {
-                p = path.jpath;
-            }
-            else {
-                p = newPath(path.string);
-            }
-        }
-        return ConcretePath(this.jpath.relativize(p));
+        return ConcretePath(this.jpath.relativize(asJPath(path)));
     }
     shared actual String string {
         return jpath.string;
@@ -110,61 +94,39 @@ class ConcretePath(jpath)
                         extends ResourceWithPath() 
                         satisfies File {
                     shared actual File copy(Directory dir) {
-                        if (is ConcretePath dirPath = dir.path) {
-                            value cp = copyPath(jpath, dirPath.jpath);
-                            if (is File file = ConcretePath(cp).resource) {
-                                return file;
-                            }
-                            else {
-                                throw;
-                            }
+                        value cp = copyPath(jpath, asJPath(dir.path));
+                        if (is File file = ConcretePath(cp).resource) {
+                            return file;
                         }
                         else {
-                            throw; //TODO!
+                            throw Exception("copy failed");
                         }
                     }
                     shared actual File move(Directory dir) {
-                        if (is ConcretePath dirPath = dir.path) {
-                            value cp = movePath(jpath, dirPath.jpath);
-                            if (is File file = ConcretePath(cp).resource) {
-                                return file;
-                            }
-                            else {
-                                throw;
-                            }
+                        value mp = movePath(jpath, asJPath(dir.path));
+                        if (is File file = ConcretePath(mp).resource) {
+                            return file;
                         }
                         else {
-                            throw; //TODO!
+                            throw Exception("move failed");
                         }
                     }
-                
                     shared actual File overwrite(File file) {
-                        if (is ConcretePath filePath = file.path) {
-                            value cp = overwritePath(jpath, filePath.jpath);
-                            if (is File result = ConcretePath(cp).resource) {
-                                return result;
-                            }
-                            else {
-                                throw;
-                            }
+                        value op = overwritePath(jpath, asJPath(file.path));
+                        if (is File result = ConcretePath(op).resource) {
+                            return result;
                         }
                         else {
-                            throw; //TODO!
+                            throw Exception("overwrite failed");
                         }
                     }
-                
                     shared actual File rename(Nil nil) {
-                        if (is ConcretePath filePath = nil.path) {
-                            value cp = movePath(jpath, filePath.jpath);
-                            if (is File result = ConcretePath(cp).resource) {
-                                return result;
-                            }
-                            else {
-                                throw;
-                            }
+                        value rp = movePath(jpath, asJPath(nil.path));
+                        if (is File result = ConcretePath(rp).resource) {
+                            return result;
                         }
                         else {
-                            throw; //TODO!
+                            throw Exception("rename failed");
                         }
                     }
                     shared actual Nil delete() {
@@ -173,7 +135,7 @@ class ConcretePath(jpath)
                             return nil;
                         }
                         else {
-                            throw;
+                            throw Exception("delete failed");
                         }
                     }
                     
