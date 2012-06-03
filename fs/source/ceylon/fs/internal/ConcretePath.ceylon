@@ -192,8 +192,32 @@ class ConcretePath(jpath)
                         }
                         return sb.sequence;
                     }
-                    shared actual Resource[] children {
-                        return childPaths[].resource;
+                    shared actual Empty|Sequence<File|Directory> children {
+                        value sb = SequenceBuilder<File|Directory>();
+                        for (p in childPaths) {
+                            if (is File|Directory r=p.resource) {
+                                sb.append(r);
+                            }
+                        }
+                        return sb.sequence;
+                    }
+                    shared actual File[] files {
+                        value sb = SequenceBuilder<File>();
+                        for (p in childPaths) {
+                            if (is File r=p.resource) {
+                                sb.append(r);
+                            }
+                        }
+                        return sb.sequence;
+                    }
+                    shared actual Directory[] childDirectories {
+                        value sb = SequenceBuilder<Directory>();
+                        for (p in childPaths) {
+                            if (is Directory r=p.resource) {
+                                sb.append(r);
+                            }
+                        }
+                        return sb.sequence;
                     }
                     shared actual Nil delete() {
                         deletePath(jpath);

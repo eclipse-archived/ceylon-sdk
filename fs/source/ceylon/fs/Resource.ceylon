@@ -1,5 +1,5 @@
 shared interface Resource 
-        of File|Directory|Nil {
+        of File|Directory|Nil { //TODO: links!
 	shared formal Path path;
 }
 
@@ -20,7 +20,9 @@ shared interface File
 
 shared interface Directory 
         satisfies Resource {
-    shared formal Resource[] children;
+    shared formal Empty|Sequence<File|Directory> children;
+    shared formal File[] files;
+    shared formal Directory[] childDirectories;
     shared formal Path[] childPaths;
     shared formal File move(Directory dir);
     shared formal File rename(Nil nil);
