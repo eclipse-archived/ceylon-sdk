@@ -44,7 +44,7 @@ shared abstract class Path() satisfies Comparable<Path> {
     
     doc "Obtain a `Resource` representing the file or
          directory located at this path."
-    shared formal Resource resource;
+    shared formal Resource resource();
     
     doc "Determin if this path is a parent of the
          given path."

@@ -10,7 +10,7 @@ Module module {
          do the following:
          
              value dirPath = home.childPath(\"hello.txt\");
-             if (is Nil loc = dirPath.resource) {
+             if (is Nil loc = dirPath.resource()) {
                  value file = loc.createFile();
                  value writer = file.writer();
                  try {
@@ -24,7 +24,7 @@ Module module {
          To print the contents of the file we just created, we could do this:
          
              value filePath = home.childPath(\"hello.txt\");
-             if (is File file = filePath.resource) {
+             if (is File file = filePath.resource()) {
                  value reader = file.reader();
                  try {
                      print(reader.readLine());
@@ -37,9 +37,9 @@ Module module {
          Now, to move the file to a different directory:
          
              value newPath = path(\"/Users/Trompon/Documents/hello.txt\");
-             if (is Nil loc = newPath.resource) {
+             if (is Nil loc = newPath.resource()) {
                  value filePath = home.childPath(\"hello.txt\");
-                 if (is File file = filePath.resource) {
+                 if (is File file = filePath.resource()) {
                      file.move(dir);
                  }
              }
