@@ -1,4 +1,4 @@
-package ceylon.fs.internal;
+package ceylon.file.internal;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.nio.file.StandardOpenOption.APPEND;

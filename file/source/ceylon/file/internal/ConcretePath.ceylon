@@ -1,5 +1,5 @@
-import ceylon.fs { ... }
-import ceylon.fs.internal { Util { isDirectory, isRegularFile, isExisting,
+import ceylon.file { ... }
+import ceylon.file.internal { Util { isDirectory, isRegularFile, isExisting,
                                    newPath } }
 import java.io { IOException }
 import java.nio.file { JPath=Path, FileVisitor, Files { walkFileTree },

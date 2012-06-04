@@ -1,4 +1,4 @@
 Package package {
-    name='ceylon.fs';
+    name='ceylon.file';
     shared=true;
 }

@@ -1,5 +1,5 @@
 Module module {
-    name='ceylon.fs';
+    name='ceylon.file';
     version='1.0.0';
     doc="API for accessing hierarchical filesystems. Clients use `Path`s to
          obtain `Resource`s representing files or directories. It is usally

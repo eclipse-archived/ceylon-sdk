@@ -1,5 +1,5 @@
-import ceylon.fs { ... }
-import ceylon.fs.internal { Util { newDirectory, newFile } }
+import ceylon.file { ... }
+import ceylon.file.internal { Util { newDirectory, newFile } }
 import java.nio.file { JPath=Path }
 
 class ConcreteNil(JPath jpath) 

@@ -1,5 +1,5 @@
-import ceylon.fs { ... }
-import ceylon.fs.internal { Util { newPath, deletePath, movePath, 
+import ceylon.file { ... }
+import ceylon.file.internal { Util { newPath, deletePath, movePath, 
                                    newDirectory, newFile } }
 import java.nio.file { JPath=Path }
 

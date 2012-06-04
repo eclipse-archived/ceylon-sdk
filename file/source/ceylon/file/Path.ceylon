@@ -1,5 +1,5 @@
 import java.lang { System { getProperty } }
-import ceylon.fs.internal { newPath=path, allRootPaths=rootPaths }
+import ceylon.file.internal { newPath=path, allRootPaths=rootPaths }
 
 doc "Represents a path in a hierarchical filesystem. A 
      path is a sequence of path elements. A path may be 

@@ -1,4 +1,4 @@
-import ceylon.fs.internal { allStores=stores }
+import ceylon.file.internal { allStores=stores }
 
 doc "Represents a filesystem store."
 shared interface Store {

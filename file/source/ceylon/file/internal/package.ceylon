@@ -1,4 +1,4 @@
 Package package {
-    name='ceylon.fs.internal';
+    name='ceylon.file.internal';
     shared=false;
 }
