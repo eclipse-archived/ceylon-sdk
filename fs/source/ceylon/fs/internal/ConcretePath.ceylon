@@ -54,7 +54,7 @@ class ConcretePath(jpath)
         return jpath.startsWith(asJPath(path));
     }
     shared actual Path relativePath(String|Path path) {
-        return ConcretePath(this.jpath.relativize(asJPath(path)));
+        return ConcretePath(asJPath(path).relativize(jpath));
     }
     shared actual String string {
         return jpath.string;
