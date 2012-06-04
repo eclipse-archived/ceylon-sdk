@@ -60,10 +60,4 @@ class ConcreteDirectory(JPath jpath)
     shared actual Directory moveTo(Nil target) {
         return move(target);
     }
-    shared actual Directory createDirectory(String|Path name) {
-        return ConcreteDirectory( newDirectory(jpath.resolve(asJPath(name))) );
-    }
-    shared actual File createFile(String|Path name) {
-        return ConcreteFile( newFile(jpath.resolve(asJPath(name))) );
-    }
 }

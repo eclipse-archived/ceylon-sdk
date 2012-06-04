@@ -114,14 +114,6 @@ shared interface Directory
     doc "Delete this directory."
     shared formal Nil delete();
     
-    doc "Create a new file with the given name in this 
-         directory."
-    shared formal File createFile(String|Path name);
-    
-    doc "Create a new subdirectory with the given name in 
-         this directory."
-    shared formal Directory createDirectory(String|Path name);
-    
 }
 
 doc "Represents the absence of any existing file or directory 
