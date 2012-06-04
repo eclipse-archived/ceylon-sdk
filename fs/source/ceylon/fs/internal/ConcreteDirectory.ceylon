@@ -40,6 +40,9 @@ class ConcreteDirectory(JPath jpath)
         }
         return sb.sequence;
     }
+    shared actual Resource childResource(Path|String subpath) {
+        return path.childPath(subpath).resource();
+    }
     shared actual Nil delete() {
         deletePath(jpath);
         return ConcreteNil(jpath);

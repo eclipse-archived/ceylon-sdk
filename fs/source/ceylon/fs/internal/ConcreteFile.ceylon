@@ -42,6 +42,9 @@ class ConcreteFile(JPath jpath)
     shared actual Integer size {
         return getSize(jpath);
     }
+    shared actual Directory directory {
+        return ConcreteDirectory(jpath.parent);
+    }
     shared actual Store store {
         return ConcreteStore(getFileStore(jpath));
     }

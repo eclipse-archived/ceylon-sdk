@@ -13,6 +13,9 @@ doc "Represents a file in a hierarchical filesystem."
 shared interface File 
         satisfies Resource {
     
+    doc "The directory containing this file."
+    shared formal Directory directory;
+    
     doc "Move this file to the given location."
     shared formal File move(Nil target);
     
@@ -81,6 +84,9 @@ shared interface Directory
     doc "The paths of all files and subdirectories that 
          directly belong to this directory."
     shared formal Path[] childPaths;
+    
+    doc "Obtain a resource belonging to this directory."
+    shared formal Resource childResource(Path|String subpath);
     
     doc "Move this directory to the given location."
     shared formal Directory move(Nil target);
