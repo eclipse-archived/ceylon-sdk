@@ -1,15 +1,16 @@
 import ceylon.file { ... }
 import ceylon.file.internal { Util { newPath, deletePath, movePath, 
-                                   newDirectory, newFile } }
-import java.nio.file { JPath=Path }
+                                     newDirectory, newFile } }
+import java.nio.file { JPath=Path, Files { newDirectoryStream } }
 
 class ConcreteDirectory(JPath jpath)
         extends ConcreteResource(jpath) 
         satisfies Directory {
     shared actual Path[] childPaths {
         value sb = SequenceBuilder<Path>();
-        for (s in jpath.toFile().list()) {
-            sb.append(ConcretePath(newPath(s)));
+        value iter = newDirectoryStream(jpath).iterator();
+        while (iter.hasNext()) {
+            sb.append(ConcretePath(iter.next()));
         }
         return sb.sequence;
     }
