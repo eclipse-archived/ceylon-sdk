@@ -20,6 +20,11 @@ import java.math{
 
 ThreadLocal<Rounding?> defaultRounding = ThreadLocal<Rounding?>();
 
+shared class DividedWithRemainder(divided, remainder) {
+    shared Decimal divided;
+    shared Decimal remainder;
+}
+
 doc "Performs an arbitrary calcuation with the given rounding used implicity
      when arithmetic operators are applied to `Decimal` operands.
 
@@ -182,13 +187,14 @@ shared interface Decimal
     throws(Exception, "The given divisor is zero")
     shared formal Decimal remainderRounded(Decimal other, Rounding? rounding = null);
 
-    doc "A two-element sequence containing the same results as 
-         calling `dividedTruncated()` and `remainderRounded()` with the given 
-         arguments, except the division is only performed once."
+    doc "A pair containing the same results as calling `dividedTruncated()` and 
+         `remainderRounded()` with the given arguments, except the division is 
+         only performed once."
     throws(Exception, "The given divisor is zero")
-    shared formal Decimal[] dividedAndRemainder(Decimal other, Rounding? rounding = null);
+    shared formal DividedWithRemainder dividedAndRemainder(Decimal other, Rounding? rounding = null);
     
-    doc "The precision of this decimal. This is the number of digits in the unscaled value."
+    doc "The precision of this decimal. This is the number of digits in the 
+         unscaled value."
     see(scale)
     shared formal Integer precision;
 
@@ -247,7 +253,7 @@ class DecimalImpl(BigDecimal num)
         throw;
     }
 
-    shared actual Decimal[] dividedAndRemainder(Decimal other, Rounding? rounding) {
+    shared actual DividedWithRemainder dividedAndRemainder(Decimal other, Rounding? rounding) {
         if (is DecimalImpl other) {
             Array<BigDecimal> array;
             if (is RoundingImpl rounding) {
@@ -259,7 +265,8 @@ class DecimalImpl(BigDecimal num)
             } else {
                 throw;
             }
-            return {DecimalImpl(array[0] ? bdzero), DecimalImpl(array[1] ? bdzero)};
+            return DividedWithRemainder(DecimalImpl(array[0] ? bdzero), 
+                    DecimalImpl(array[1] ? bdzero));
         }
         throw;
     }
