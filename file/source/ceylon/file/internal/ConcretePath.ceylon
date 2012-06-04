@@ -7,7 +7,7 @@ import java.nio.file { JPath=Path, FileVisitor, Files { walkFileTree },
                        FileSystems { defaultFileSystem=default } }
 import java.nio.file.attribute { BasicFileAttributes }
 
-shared Path path(String pathString) {
+shared Path parsePath(String pathString) {
     return ConcretePath(newPath(pathString));
 }
 

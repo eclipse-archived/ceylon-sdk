@@ -1,11 +1,13 @@
 import java.lang { System { getProperty } }
-import ceylon.file.internal { newPath=path, allRootPaths=rootPaths }
+import ceylon.file.internal { parsePathInternal=parsePath, 
+                              rootPathsInternal=rootPaths }
 
 doc "Represents a path in a hierarchical filesystem. A 
      path is a sequence of path elements. A path may be 
      an absolute path that begins at the root of the 
      filesystem, or a relative path."
-shared abstract class Path() satisfies Comparable<Path> {
+shared abstract class Path() 
+        satisfies Comparable<Path> {
     
     doc "This path, after removing the last path element."
     shared formal Path parent;
@@ -69,14 +71,16 @@ shared abstract class Path() satisfies Comparable<Path> {
 
 doc "Obtain a `Path` given the string representation
      of a path."
-shared Path path(String pathString) = newPath;
+shared Path parsePath(String pathString) {
+    return parsePathInternal(pathString);
+}
 
 doc "The `Path` representing the user home directory."
-shared Path home = path(getProperty("user.home"));
+shared Path home = parsePath(getProperty("user.home"));
 
 doc "The `Path`s representing the root directories of
      the filesystem."
-shared Path[] rootPaths = allRootPaths;
+shared Path[] rootPaths = rootPathsInternal;
 
 doc "A file visitor."
 shared class Visitor() {

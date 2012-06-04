@@ -1,4 +1,4 @@
-import ceylon.file.internal { allStores=stores }
+import ceylon.file.internal { storesInternal=stores }
 
 doc "Represents a filesystem store."
 shared interface Store {
@@ -28,4 +28,4 @@ shared interface Store {
 
 doc "The `Store`s representing the stores of the
      filesystem."
-shared Store[] stores = allStores;
+shared Store[] stores = storesInternal;
