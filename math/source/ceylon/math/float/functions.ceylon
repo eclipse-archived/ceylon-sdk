@@ -320,6 +320,26 @@ shared Float max(Float x, Float y) {
     return jmax(x, y);
 }
 
+doc "The sum of the given values, or
+     `0.0` if there are no values."
+shared Float sum(Float... values) {
+    variable Float sum:=0.0;
+    for (x in values) {
+        sum+=x;
+    }
+    return sum;
+}
+
+doc "The product of the given values, or
+     `1.0` if there are no values."
+shared Float product(Float... values) {
+    variable Float sum:=1.0;
+    for (x in values) {
+        sum*=x;
+    }
+    return sum;
+}
+
 doc "The value of `x \{00D7} 2\{207F}`, 
      calculated exactly for reasonable
      values of `n`."

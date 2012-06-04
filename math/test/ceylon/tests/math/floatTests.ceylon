@@ -877,6 +877,31 @@ void testHalfEven() {
     };
 }
 
+void testSumProduct() {
+    print("Float.sum");
+    assertEquals { 
+        expected = 0.0; 
+        got = sum();
+        compare = exact; 
+    };
+    assertEquals { 
+        expected = 6.0; 
+        got = sum(1.0, 2.0, 3.0);
+        compare = exact; 
+    };
+    print("Float.product");
+    assertEquals { 
+        expected = 1.0; 
+        got = product();
+        compare = exact; 
+    };
+    assertEquals { 
+        expected = 6.0; 
+        got = product(1.0, 2.0, 3.0);
+        compare = exact; 
+    };
+}
+
 shared void floatTests() {
     assertFalse(exact(0.0, -0.0), "Oops! Test is broken because we can't distinguish 0.0 and -0.0");
     testExp();
@@ -896,4 +921,5 @@ shared void floatTests() {
     testFloor();
     testCeiling();
     testHalfEven();
+    testSumProduct();
 }
