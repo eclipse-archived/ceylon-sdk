@@ -44,12 +44,21 @@ class ConcreteDirectory(JPath jpath)
         deletePath(jpath);
         return ConcreteNil(jpath);
     }
-    shared actual File move(Directory dir) {
-        return ConcreteFile( movePath(jpath, 
-                asJPath(dir.path).resolve(jpath.fileName)) );
+    shared actual Directory move(Directory|Nil target) {
+        switch (target)
+        case (is Directory) {
+            return ConcreteDirectory( movePath(jpath, 
+                    asJPath(target.path).resolve(jpath.fileName)) );
+        }
+        case (is Nil) {
+            return ConcreteDirectory( movePath(jpath, asJPath(target.path)) );
+        }
     }
-    shared actual File rename(Nil nil) {
-        return ConcreteFile( movePath(jpath, asJPath(nil.path)) );
+    shared actual Directory moveInto(Directory target) {
+        return move(target);
+    }
+    shared actual Directory moveTo(Nil target) {
+        return move(target);
     }
     shared actual Directory createDirectory(String|Path name) {
         return ConcreteDirectory( newDirectory(jpath.resolve(asJPath(name))) );

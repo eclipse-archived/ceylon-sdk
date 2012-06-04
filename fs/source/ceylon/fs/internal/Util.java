@@ -33,6 +33,10 @@ class Util {
     		throws IOException {
     	return Files.move(source, target, REPLACE_EXISTING);
     }
+    public static Path copyAndOverwritePath(Path source, Path target) 
+    		throws IOException {
+    	return Files.copy(source, target, REPLACE_EXISTING);
+    }
     public static Path newDirectory(Path path) 
     		throws IOException {
     	return Files.createDirectories(path);
