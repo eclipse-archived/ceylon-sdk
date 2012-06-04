@@ -44,20 +44,7 @@ class ConcreteDirectory(JPath jpath)
         deletePath(jpath);
         return ConcreteNil(jpath);
     }
-    shared actual Directory move(Directory|Nil target) {
-        switch (target)
-        case (is Directory) {
-            return ConcreteDirectory( movePath(jpath, 
-                    asJPath(target.path).resolve(jpath.fileName)) );
-        }
-        case (is Nil) {
-            return ConcreteDirectory( movePath(jpath, asJPath(target.path)) );
-        }
-    }
-    shared actual Directory moveInto(Directory target) {
-        return move(target);
-    }
-    shared actual Directory moveTo(Nil target) {
-        return move(target);
+    shared actual Directory move(Nil target) {
+        return ConcreteDirectory( movePath(jpath, asJPath(target.path)) );
     }
 }

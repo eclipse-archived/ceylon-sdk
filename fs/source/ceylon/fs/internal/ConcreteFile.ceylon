@@ -7,44 +7,18 @@ import java.nio.file { JPath=Path, Files { isReadable, isWritable, isExecutable,
 class ConcreteFile(JPath jpath)
         extends ConcreteResource(jpath) 
         satisfies File {
-    shared actual File copy(Directory|File|Nil target) {
-        switch (target)
-        case (is Directory) {
-            return ConcreteFile( copyPath(jpath, 
-                    asJPath(target.path).resolve(jpath.fileName)) );
-        }
-        case (is File) {
+    shared actual File copy(Nil target) {
+            return ConcreteFile( copyPath(jpath, asJPath(target.path)) );
+    }
+    shared actual File copyOverwriting(File|Nil target) {
             return ConcreteFile( copyAndOverwritePath(jpath, 
                     asJPath(target.path)) );            
-        }
-        case (is Nil) {
-            return ConcreteFile( copyPath(jpath, asJPath(target.path)) );
-        }
     }
-    shared actual File copyInto(Directory target) {
-        return copy(target);
-    }
-    shared actual File copyTo(File|Nil target) {
-        return copy(target);
-    }
-    shared actual File move(Directory|File|Nil target) {
-        switch (target)
-        case (is Directory) {
-            return ConcreteFile( movePath(jpath, 
-                    asJPath(target.path).resolve(jpath.fileName)) );
-        }
-        case (is File) {
-            return ConcreteFile( overwritePath(jpath, asJPath(target.path)) );            
-        }
-        case (is Nil) {
+    shared actual File move(Nil target) {
             return ConcreteFile( movePath(jpath, asJPath(target.path)) );
-        }
     }
-    shared actual File moveInto(Directory target) {
-        return move(target);
-    }
-    shared actual File moveTo(File|Nil target) {
-        return move(target);
+    shared actual File moveOverwriting(File|Nil target) {
+            return ConcreteFile( overwritePath(jpath, asJPath(target.path)) );            
     }
     shared actual Nil delete() {
         deletePath(jpath);

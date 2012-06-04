@@ -36,11 +36,11 @@ Module module {
          
          Now, to move the file to a different directory:
          
-             value dirPath = path(\"/Users/Trompon/Documents\");
-             if (is Directory dir = dirPath.resource) {
+             value newPath = path(\"/Users/Trompon/Documents/hello.txt\");
+             if (is Nil loc = newPath.resource) {
                  value filePath = home.childPath(\"hello.txt\");
                  if (is File file = filePath.resource) {
-                     file.moveInto(dir);
+                     file.move(dir);
                  }
              }
          ";

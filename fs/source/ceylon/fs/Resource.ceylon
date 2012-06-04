@@ -13,33 +13,17 @@ doc "Represents a file in a hierarchical filesystem."
 shared interface File 
         satisfies Resource {
     
-    doc "Move this file. If the given resource is a
-         directory, move this file into the directory.
-         If the given resource is a file, overwrite
-         the file. If the given resource is nil, move
-         this file to the location it represents."
-    see (moveInto, moveTo)
-    shared formal File move(Directory|File|Nil target);
-    
-    doc "Move this file into the given directory."
-    shared formal File moveInto(Directory target);
+    doc "Move this file to the given location."
+    shared formal File move(Nil target);
     
     doc "Move this file to the given location."
-    shared formal File moveTo(File|Nil target);
-    
-    doc "Copy this file. If the given resource is a
-         directory, copy this file into the directory.
-         If the given resource is a file, overwrite
-         the file. If the given resource is nil, copy
-         this file to the location it represents."
-    see (copyInto, copyTo)
-    shared formal File copy(Directory|File|Nil target);
-        
-    doc "Copy this file into the given directory."
-    shared formal File copyInto(Directory target);
+    shared formal File moveOverwriting(File|Nil target);
     
     doc "Copy this file to the given location."
-    shared formal File copyTo(File|Nil target);
+    shared formal File copy(Nil target);
+    
+    doc "Copy this file to the given location."
+    shared formal File copyOverwriting(File|Nil target);
     
     doc "Delete this file."
     shared formal Nil delete();
@@ -98,18 +82,8 @@ shared interface Directory
          directly belong to this directory."
     shared formal Path[] childPaths;
     
-    doc "Move this directory. If the given resource is a
-         directory, move this directory into the directory.
-         If the given resource is nil, move this directory 
-         to the location it represents."
-    see (moveInto, moveTo)
-    shared formal Directory move(Directory|Nil target);
-    
-    doc "Move this directory into the given directory."
-    shared formal Directory moveInto(Directory target);
-    
     doc "Move this directory to the given location."
-    shared formal Directory moveTo(Nil target);
+    shared formal Directory move(Nil target);
     
     doc "Delete this directory."
     shared formal Nil delete();
