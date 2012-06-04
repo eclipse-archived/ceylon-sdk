@@ -9,8 +9,8 @@ Module module {
          To create a file named `hello.txt` in the home directory, we could 
          do the following:
          
-             value dirPath = home.childPath(\"hello.txt\");
-             if (is Nil loc = dirPath.resource()) {
+             value filePath = home.childPath(\"hello.txt\");
+             if (is Nil loc = filePath.resource()) {
                  value file = loc.createFile();
                  value writer = file.writer();
                  try {
@@ -40,7 +40,7 @@ Module module {
              if (is Nil loc = newPath.resource()) {
                  value filePath = home.childPath(\"hello.txt\");
                  if (is File file = filePath.resource()) {
-                     file.move(dir);
+                     file.move(loc);
                  }
              }
          ";
