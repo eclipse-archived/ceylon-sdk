@@ -30,7 +30,7 @@ JPath asJPath(String|Path path) {
 }
 
 class ConcretePath(jpath)
-        extends Path() {
+        satisfies Path {
     shared JPath jpath;
     shared actual Path parent {
         return ConcretePath(jpath.parent);

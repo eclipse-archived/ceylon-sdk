@@ -6,7 +6,7 @@ doc "Represents a path in a hierarchical filesystem. A
      path is a sequence of path elements. A path may be 
      an absolute path that begins at the root of the 
      filesystem, or a relative path."
-shared abstract class Path() 
+shared interface Path
         satisfies Comparable<Path> {
     
     doc "This path, after removing the last path element."
