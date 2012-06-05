@@ -6,36 +6,42 @@ import java.nio.file { JPath=Path, Files { newDirectoryStream } }
 class ConcreteDirectory(JPath jpath)
         extends ConcreteResource(jpath) 
         satisfies Directory {
-    shared actual Path[] childPaths {
+    shared actual Iterable<Path> childPaths(String filter) {
+        //TODO: efficient impl
         value sb = SequenceBuilder<Path>();
-        value iter = newDirectoryStream(jpath).iterator();
+        value stream = newDirectoryStream(jpath, filter);
+        value iter = stream.iterator();
         while (iter.hasNext()) {
             sb.append(ConcretePath(iter.next()));
         }
+        stream.close();
         return sb.sequence;
     }
-    shared actual Empty|Sequence<File|Directory> children {
+    shared actual Iterable<File|Directory> children(String filter) {
+        //TODO: efficient impl
         value sb = SequenceBuilder<File|Directory>();
-        for (p in childPaths) {
-            if (is File|Directory r=p.resource) {
+        for (p in childPaths(filter)) {
+            if (is File|Directory r=p.resource()) {
                 sb.append(r);
             }
         }
         return sb.sequence;
     }
-    shared actual File[] files {
+    shared actual Iterable<File> files(String filter) {
+        //TODO: efficient impl
         value sb = SequenceBuilder<File>();
-        for (p in childPaths) {
-            if (is File r=p.resource) {
+        for (p in childPaths(filter)) {
+            if (is File r=p.resource()) {
                 sb.append(r);
             }
         }
         return sb.sequence;
     }
-    shared actual Directory[] childDirectories {
+    shared actual Iterable<Directory> childDirectories(String filter) {
+        //TODO: efficient impl
         value sb = SequenceBuilder<Directory>();
-        for (p in childPaths) {
-            if (is Directory r=p.resource) {
+        for (p in childPaths(filter)) {
+            if (is Directory r=p.resource()) {
                 sb.append(r);
             }
         }

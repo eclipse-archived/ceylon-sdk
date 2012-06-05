@@ -4,18 +4,18 @@ shared interface Directory
     
     doc "The files and subdirectories that directly belong
          to this directory."
-    shared formal Empty|Sequence<File|Directory> children;
+    shared formal Iterable<File|Directory> children(String filter/*="*"*/);
     
     doc "The files that directly belong to this directory."
-    shared formal File[] files;
+    shared formal Iterable<File> files(String filter/*="*"*/);
     
     doc "The subdirectories that directly belong to this 
          directory."
-    shared formal Directory[] childDirectories;
+    shared formal Iterable<Directory> childDirectories(String filter/*="*"*/);
     
     doc "The paths of all files and subdirectories that 
          directly belong to this directory."
-    shared formal Path[] childPaths;
+    shared formal Iterable<Path> childPaths(String filter/*="*"*/);
     
     doc "Obtain a resource belonging to this directory."
     shared formal Resource childResource(Path|String subpath);
@@ -33,7 +33,7 @@ doc "The `Directory`s representing the root directories of
 shared Directory[] rootDirectories {
     value sb = SequenceBuilder<Directory>();
     for (p in rootPaths) {
-        if (is Directory r=p.resource) {
+        if (is Directory r=p.resource()) {
             sb.append(r);
         }
     }
