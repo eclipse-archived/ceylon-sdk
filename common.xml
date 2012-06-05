@@ -33,7 +33,7 @@
   
   <target name="compile" depends="-init">
     <echo message="${ant.project.name} compile basedir:${basedir}, build: ${build}"/>
-    <ceylonc executable="../ceylon-compiler/build/bin/ceylonc"
+    <ceylonc executable="${basedir}/../../ceylon-compiler/build/bin/ceylonc"
       out="${build.modules}">
       <rep url="${repo.dependancies}"/>
       <module name="${module.name}"/>
@@ -43,14 +43,14 @@
   <target name="test" depends="compile" if="module.tests.name">
     <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
     <!-- compile the tests -->
-    <ceylonc executable="../ceylon-compiler/build/bin/ceylonc"
+    <ceylonc executable="${basedir}/../../ceylon-compiler/build/bin/ceylonc"
       src="test"
       out="${build.modules}">
       <rep url="${repo.dependancies}"/>
       <module name="${module.tests.name}"/>
     </ceylonc>
     <!-- Run the tests -->
-    <ceylon executable="../ceylon-runtime/build/dist/bin/ceylon"
+    <ceylon executable="${basedir}/../../ceylon-runtime/build/dist/bin/ceylon"
         run="${module.tests.name}.run" module="${module.tests.name}/${module.version}">
         <rep url="${repo.dependancies}"/>
         <rep url="${build.modules}"/>
@@ -59,7 +59,7 @@
   
   <target name="doc" depends="-init">
     <echo message="${ant.project.name} doc basedir:${basedir}, build: ${build}"/>
-    <ceylond executable="../ceylon-compiler/build/bin/ceylond"
+    <ceylond executable="${basedir}/../../ceylon-compiler/build/bin/ceylond"
         out="${build.modules}">
       <rep url="${repo.dependancies}"/>
       <module name="${module.name}"/>
