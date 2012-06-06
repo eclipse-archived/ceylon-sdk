@@ -1,11 +1,12 @@
 import ceylon.file { Writer }
-import ceylon.file.internal { Util { newWriter, newAppendingWriter } }
 
-import java.nio.file { JPath=Path }
+import java.nio.file { JPath=Path, Files { newBufferedWriter },
+                       StandardOpenOption { WRITE, APPEND, TRUNCATE_EXISTING } }
+import java.nio.charset { Charset }
 
-class ConcreteWriter(JPath jpath, String encoding) 
+class ConcreteWriter(JPath jpath, Charset charset) 
         satisfies Writer {
-    value w = newWriter(jpath, encoding);
+    value w = newBufferedWriter(jpath, charset, \iWRITE, \iTRUNCATE_EXISTING);
     //shared actual void open() {}
     shared actual void close(/*Exception? exception*/) {
         w.close();
@@ -21,9 +22,9 @@ class ConcreteWriter(JPath jpath, String encoding)
     }
 }
 
-class ConcreteAppendingWriter(JPath jpath, String encoding) 
+class ConcreteAppendingWriter(JPath jpath, Charset charset) 
         satisfies Writer {
-    value w = newAppendingWriter(jpath, encoding);
+    value w = newBufferedWriter(jpath, charset, \iWRITE, \iAPPEND);
     //shared actual void open() {}
     shared actual void close(/*Exception? exception*/) {
         w.close();

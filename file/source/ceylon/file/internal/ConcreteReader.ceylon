@@ -1,11 +1,11 @@
 import ceylon.file { Reader }
-import ceylon.file.internal { Util { newReader } }
 
-import java.nio.file { JPath=Path }
+import java.nio.file { JPath=Path, Files { newBufferedReader } }
+import java.nio.charset { Charset }
 
-class ConcreteReader(JPath jpath, String encoding) 
+class ConcreteReader(JPath jpath, Charset charset) 
         satisfies Reader {
-    value r = newReader(jpath, encoding);
+    value r = newBufferedReader(jpath, charset);
     //shared actual void open() {}
     shared actual void close(/*Exception? exception*/) {
         r.close();

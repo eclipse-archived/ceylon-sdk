@@ -1,11 +1,11 @@
 import ceylon.file { Path, Resource, Visitor }
-import ceylon.file.internal { Util { isDirectory, isRegularFile, isExisting, 
-                                     newPath } }
 
 import java.io { IOException }
-import java.nio.file { JPath=Path, FileVisitor, Files { walkFileTree }, 
+import java.nio.file { JPath=Path, Paths { newPath=get }, FileVisitor, 
                        FileVisitResult { CONTINUE, TERMINATE, SKIP_SUBTREE }, 
-                       FileSystems { defaultFileSystem=default } }
+                       FileSystems { defaultFileSystem=default },
+                       Files { isDirectory, isRegularFile, isExisting=\iexists,
+                               walkFileTree } }
 import java.nio.file.attribute { BasicFileAttributes }
 
 shared Path parsePath(String pathString) {

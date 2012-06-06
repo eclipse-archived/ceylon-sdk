@@ -1,10 +1,20 @@
 import ceylon.file { File, Nil, Directory, Store, Reader, Writer }
-import ceylon.file.internal { Util { copyPath, deletePath, movePath, 
-                                     overwritePath, copyAndOverwritePath, 
-                                     getLastModified } }
 
 import java.nio.file { JPath=Path, Files { isReadable, isWritable, isExecutable, 
-                                           getFileStore, getSize=size } }
+                                           getFileStore, getSize=size, getLastModifiedTime,
+                                           copyPath=copy, movePath=move,
+                                           deletePath=delete },
+                       StandardCopyOption { REPLACE_EXISTING } }
+import java.nio.charset { Charset { defaultCharset, forName } }
+
+Charset parseCharset(String? encoding) {
+    if (exists encoding) {
+        return forName(encoding);
+    }
+    else {
+        return defaultCharset();
+    }
+}
 
 class ConcreteFile(JPath jpath)
         extends ConcreteResource(jpath) 
@@ -13,14 +23,15 @@ class ConcreteFile(JPath jpath)
             return ConcreteFile( copyPath(jpath, asJPath(target.path)) );
     }
     shared actual File copyOverwriting(File|Nil target) {
-            return ConcreteFile( copyAndOverwritePath(jpath, 
-                    asJPath(target.path)) );            
+            return ConcreteFile( copyPath(jpath, asJPath(target.path), 
+                    \iREPLACE_EXISTING) );            
     }
     shared actual File move(Nil target) {
             return ConcreteFile( movePath(jpath, asJPath(target.path)) );
     }
     shared actual File moveOverwriting(File|Nil target) {
-            return ConcreteFile( overwritePath(jpath, asJPath(target.path)) );            
+            return ConcreteFile( movePath(jpath, asJPath(target.path), 
+                    \iREPLACE_EXISTING) );            
     }
     shared actual Nil delete() {
         deletePath(jpath);
@@ -36,7 +47,7 @@ class ConcreteFile(JPath jpath)
         return isExecutable(jpath);
     }
     shared actual Integer lastModifiedMilliseconds {
-        return getLastModified(jpath);
+        return getLastModifiedTime(jpath).toMillis();
     }
     shared actual String name {
         return jpath.fileName.string;
@@ -51,12 +62,12 @@ class ConcreteFile(JPath jpath)
         return ConcreteStore(getFileStore(jpath));
     }
     shared actual Reader reader(String? encoding) {
-        return ConcreteReader(jpath, encoding else "UTF-8");
+        return ConcreteReader(jpath, parseCharset(encoding));
     }
     shared actual Writer writer(String? encoding) {
-        return ConcreteWriter(jpath, encoding else "UTF-8");
+        return ConcreteWriter(jpath, parseCharset(encoding));
     }
     shared actual Writer appender(String? encoding) {
-        return ConcreteAppendingWriter(jpath, encoding else "UTF-8");
+        return ConcreteAppendingWriter(jpath, parseCharset(encoding));
     }
 }

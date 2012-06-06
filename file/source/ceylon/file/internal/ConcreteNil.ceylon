@@ -1,7 +1,8 @@
 import ceylon.file { File, Nil, Directory }
-import ceylon.file.internal { Util { newDirectory, newFile } }
 
-import java.nio.file { JPath=Path }
+import java.nio.file { JPath=Path, 
+                       Files { newDirectory=createDirectory, 
+                               newFile=createFile } }
 
 class ConcreteNil(JPath jpath) 
         extends ConcreteResource(jpath)
