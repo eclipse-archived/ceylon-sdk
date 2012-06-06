@@ -71,9 +71,7 @@ shared interface Path
 
 doc "Obtain a `Path` given the string representation
      of a path."
-shared Path parsePath(String pathString) {
-    return parsePathInternal(pathString);
-}
+shared Path parsePath(String pathString) = parsePathInternal;
 
 doc "The `Path` representing the user home directory."
 shared Path home = parsePath(getProperty("user.home"));
