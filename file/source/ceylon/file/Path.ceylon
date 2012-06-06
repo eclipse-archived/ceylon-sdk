@@ -78,6 +78,10 @@ shared Path parsePath(String pathString) {
 doc "The `Path` representing the user home directory."
 shared Path home = parsePath(getProperty("user.home"));
 
+doc "The `Path` representing the user current working
+     directory."
+shared Path current = parsePath(getProperty("user.dir"));
+
 doc "The `Path`s representing the root directories of
      the filesystem."
 shared Path[] rootPaths = rootPathsInternal;
