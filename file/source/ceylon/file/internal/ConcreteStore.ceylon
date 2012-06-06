@@ -1,4 +1,5 @@
-import ceylon.file { ... }
+import ceylon.file { Store }
+
 import java.nio.file { JFileStore=FileStore, 
                        FileSystems { defaultFileSystem=default } }
 

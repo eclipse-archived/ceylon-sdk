@@ -1,6 +1,8 @@
-import ceylon.file { ... }
-import ceylon.file.internal { Util { copyPath, deletePath, movePath, overwritePath,
-                                   copyAndOverwritePath, getLastModified } }
+import ceylon.file { File, Nil, Directory, Store, Reader, Writer }
+import ceylon.file.internal { Util { copyPath, deletePath, movePath, 
+                                     overwritePath, copyAndOverwritePath, 
+                                     getLastModified } }
+
 import java.nio.file { JPath=Path, Files { isReadable, isWritable, isExecutable, 
                                            getFileStore, getSize=size } }
 

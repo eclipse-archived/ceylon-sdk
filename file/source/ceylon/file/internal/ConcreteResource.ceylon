@@ -1,4 +1,5 @@
-import ceylon.file { ... }
+import ceylon.file { Resource, Path }
+
 import java.nio.file { JPath=Path }
 
 abstract class ConcreteResource(JPath jpath) 

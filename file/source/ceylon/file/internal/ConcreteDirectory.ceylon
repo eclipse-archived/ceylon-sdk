@@ -1,6 +1,6 @@
-import ceylon.file { ... }
-import ceylon.file.internal { Util { newPath, deletePath, movePath, 
-                                     newDirectory, newFile } }
+import ceylon.file { Resource, File, Nil, Directory, Path }
+import ceylon.file.internal { Util { deletePath, movePath } }
+
 import java.nio.file { JPath=Path, Files { newDirectoryStream } }
 
 class ConcreteDirectory(JPath jpath)

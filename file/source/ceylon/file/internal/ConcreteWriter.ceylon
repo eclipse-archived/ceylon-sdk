@@ -1,5 +1,6 @@
 import ceylon.file { Writer }
 import ceylon.file.internal { Util { newWriter, newAppendingWriter } }
+
 import java.nio.file { JPath=Path }
 
 class ConcreteWriter(JPath jpath, String encoding) 

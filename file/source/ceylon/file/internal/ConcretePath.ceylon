@@ -1,8 +1,9 @@
-import ceylon.file { ... }
-import ceylon.file.internal { Util { isDirectory, isRegularFile, isExisting,
-                                   newPath } }
+import ceylon.file { Path, Resource, Visitor }
+import ceylon.file.internal { Util { isDirectory, isRegularFile, isExisting, 
+                                     newPath } }
+
 import java.io { IOException }
-import java.nio.file { JPath=Path, FileVisitor, Files { walkFileTree },
+import java.nio.file { JPath=Path, FileVisitor, Files { walkFileTree }, 
                        FileVisitResult { CONTINUE, TERMINATE, SKIP_SUBTREE }, 
                        FileSystems { defaultFileSystem=default } }
 import java.nio.file.attribute { BasicFileAttributes }
