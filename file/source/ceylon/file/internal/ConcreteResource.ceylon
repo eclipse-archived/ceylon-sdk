@@ -14,7 +14,7 @@ abstract class ConcreteResource(JPath jpath)
         value res = this;
         switch (res)
         case (is Link) {
-            return res.linkedPath.resource().linkedResource;
+            return res.linkedPath.resource.linkedResource;
         }
         case (is File|Directory|Nil) {
             return res;

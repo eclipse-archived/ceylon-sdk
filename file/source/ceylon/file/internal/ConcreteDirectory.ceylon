@@ -21,7 +21,7 @@ class ConcreteDirectory(JPath jpath)
         //TODO: efficient impl
         value sb = SequenceBuilder<File|Directory>();
         for (p in childPaths(filter)) {
-            if (is File|Directory r=p.resource()) {
+            if (is File|Directory r=p.resource) {
                 sb.append(r);
             }
         }
@@ -31,7 +31,7 @@ class ConcreteDirectory(JPath jpath)
         //TODO: efficient impl
         value sb = SequenceBuilder<File>();
         for (p in childPaths(filter)) {
-            if (is File r=p.resource()) {
+            if (is File r=p.resource) {
                 sb.append(r);
             }
         }
@@ -41,14 +41,14 @@ class ConcreteDirectory(JPath jpath)
         //TODO: efficient impl
         value sb = SequenceBuilder<Directory>();
         for (p in childPaths(filter)) {
-            if (is Directory r=p.resource()) {
+            if (is Directory r=p.resource) {
                 sb.append(r);
             }
         }
         return sb.sequence;
     }
     shared actual Resource childResource(Path|String subpath) {
-        return path.childPath(subpath).resource();
+        return path.childPath(subpath).resource;
     }
     shared actual Directory move(Nil target) {
         return ConcreteDirectory( movePath(jpath, asJPath(target.path)) );

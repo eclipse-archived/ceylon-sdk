@@ -107,7 +107,7 @@ class ConcretePath(jpath)
     shared actual String separator {
         return jpath.fileSystem.separator;
     }
-    shared actual Resource resource() {
+    shared actual Resource resource {
         if (isExisting(jpath)) {
             if (isRegularFile(jpath)) {
                 return ConcreteFile(jpath);

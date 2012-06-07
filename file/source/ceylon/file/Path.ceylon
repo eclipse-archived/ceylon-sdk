@@ -48,7 +48,7 @@ shared interface Path
     
     doc "Obtain a `Resource` representing the file or
          directory located at this path."
-    shared formal Resource resource();
+    shared formal Resource resource;
     
     doc "The `System` this is a path in."
     shared formal System system;

@@ -31,7 +31,7 @@ see (defaultSystem)
 shared Directory[] rootDirectories {
     value sb = SequenceBuilder<Directory>();
     for (p in rootPaths) {
-        if (is Directory r=p.resource()) {
+        if (is Directory r=p.resource) {
             sb.append(r);
         }
     }
