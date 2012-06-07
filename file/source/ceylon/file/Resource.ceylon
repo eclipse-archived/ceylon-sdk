@@ -7,6 +7,9 @@ shared interface Resource
     doc "The path of the file, link, or directory."
 	shared formal Path path;
     
+    doc "If this resource is a link, resolve the link."
+    shared formal File|Directory|Nil linkedResource;
+    
 }
 
 doc "A resource that actually exists, that is one that is

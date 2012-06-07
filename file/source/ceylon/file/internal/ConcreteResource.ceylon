@@ -1,5 +1,5 @@
-import ceylon.file { Resource, Path, ExistingResource, Nil, 
-                     NoSuchPrincipalException }
+import ceylon.file { Resource, ExistingResource, Nil, File, Directory, Link, 
+                     Path, NoSuchPrincipalException }
 
 import java.nio.file { JPath=Path, Files { getOwner, setOwner, 
                                            deletePath=delete } }
@@ -9,6 +9,16 @@ abstract class ConcreteResource(JPath jpath)
         satisfies Resource {
     shared actual Path path { 
         return ConcretePath(jpath); 
+    }
+    shared actual File|Directory|Nil linkedResource {
+        value res = this;
+        switch (res)
+        case (is Link) {
+            return res.linkedPath.resource().linkedResource;
+        }
+        case (is File|Directory|Nil) {
+            return res;
+        }
     }
     shared actual String string {
         return jpath.string;
