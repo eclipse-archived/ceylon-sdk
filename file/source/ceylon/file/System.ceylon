@@ -16,6 +16,9 @@ shared interface System {
     doc "The `Stores` belonging to this file system."
     shared formal Store[] stores;
     
+    doc "Determine if this system can be written to."
+    shared formal Boolean writeable;
+    
     doc "Close this `System`."
     shared formal void close();
 
@@ -60,6 +63,9 @@ shared object defaultSystem
         return defaultStores;
     }
     shared actual Boolean open {
+        return true;
+    }
+    shared actual Boolean writeable {
         return true;
     }
     shared actual void close() {

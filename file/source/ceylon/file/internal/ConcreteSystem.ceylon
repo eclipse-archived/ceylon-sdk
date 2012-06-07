@@ -13,6 +13,9 @@ class ConcreteSystem(FileSystem fs)
     shared actual Boolean open {
         return fs.open;
     }
+    shared actual Boolean writeable {
+        return !fs.readOnly;
+    }
     shared actual Path parsePath(String pathString) {
         return ConcretePath(fs.getPath(pathString));
     }   
