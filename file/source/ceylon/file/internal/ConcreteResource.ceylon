@@ -39,10 +39,7 @@ abstract class ConcreteExistingResource(JPath jpath)
         try {
             return upls.lookupPrincipalByName(name);
         }
-        catch (Exception e) {
-            if (!is UserPrincipalNotFoundException e) {
-                throw e;
-            }
+        catch (UserPrincipalNotFoundException e) {
             throw NoSuchPrincipalException(name, e);
         }
     }
