@@ -22,9 +22,9 @@ shared interface ExistingResource
     shared formal Nil delete();
     
     doc "The principal name of the owner of the file."
-    throws (NoSuchPrincipalException
-           -> "If set to a name for which there is no 
-               corresponding user.")
+    throws (NoSuchPrincipalException,
+            "If set to a name for which there is no 
+             corresponding user.")
     shared formal variable String owner;
     
 }
