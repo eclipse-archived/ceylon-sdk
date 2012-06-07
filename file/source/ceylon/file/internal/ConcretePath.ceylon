@@ -1,4 +1,4 @@
-import ceylon.file { Path, Resource, Visitor, FileSystem }
+import ceylon.file { Path, Resource, Visitor, System }
 
 import java.lang { JString=String }
 import java.net { URI { newURI=create } }
@@ -19,13 +19,13 @@ shared Path parseURI(String uriString) {
     return ConcretePath(newPath(newURI(uriString)));
 }
 
-shared FileSystem createFileSystem(String uriString, String->String... properties) {
+shared System createSystem(String uriString, String->String... properties) {
     value map = HashMap<JString,Object>();
     for (entry in properties) {
         map.put(JString(entry.key), JString(entry.item));
     }
     value fs = newFileSystem(newURI(uriString), map);
-    object fileSystem satisfies FileSystem {
+    object system satisfies System {
         shared actual void close() {
             fs.close();
         }
@@ -33,7 +33,7 @@ shared FileSystem createFileSystem(String uriString, String->String... propertie
             return ConcretePath(fs.getPath(pathString));
         }   
     }
-    return fileSystem;
+    return system;
 }
 
 shared Path[] rootPaths {
