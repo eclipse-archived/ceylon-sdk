@@ -12,8 +12,8 @@ shared interface Resource
 doc "A resource that actually exists, that is one that is
      not `Nil`."
 shared interface ExistingResource 
-        of File|Directory 
-        satisfies Resource { //TODO: links!
+        of File|Directory|Link
+        satisfies Resource {
     
     doc "The owner of the file."
     throws (NoSuchPrincipalException)

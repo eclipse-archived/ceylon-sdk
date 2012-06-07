@@ -1,9 +1,11 @@
-import ceylon.file { File, Nil, Directory, Store, Reader, Writer }
+import ceylon.file { File, Nil, Directory, Store, Reader, Writer, Link }
 
 import java.nio.file { JPath=Path, Files { isReadable, isWritable, isExecutable, 
                                            getFileStore, getSize=size, isHidden,
                                            getLastModifiedTime, probeContentType,
                                            copyPath=copy, movePath=move,
+                                           newLink=createLink, 
+                                           newSymbolicLink=createSymbolicLink,
                                            deletePath=delete, isSameFile },
                        StandardCopyOption { REPLACE_EXISTING } }
 import java.nio.charset { Charset { defaultCharset, forName } }
@@ -37,6 +39,12 @@ class ConcreteFile(JPath jpath)
     shared actual Nil delete() {
         deletePath(jpath);
         return ConcreteNil(jpath);
+    }
+    shared actual File createLink(Nil target) {
+        return ConcreteFile(newLink(asJPath(target.path), jpath));
+    }
+    shared actual Link createSymbolicLink(Nil target) {
+        return ConcreteLink(newSymbolicLink(asJPath(target.path), jpath));
     }
     shared actual Boolean readable {
         return isReadable(jpath);

@@ -19,6 +19,12 @@ shared interface File
     doc "Copy this file to the given location."
     shared formal File copyOverwriting(File|Nil target);
     
+    doc "Create a hard link to this file."
+    shared formal File createLink(Nil target);
+    
+    doc "Create a symbolic link to this file."
+    shared formal Link createSymbolicLink(Nil target);
+    
     doc "Delete this file."
     shared formal Nil delete();
     

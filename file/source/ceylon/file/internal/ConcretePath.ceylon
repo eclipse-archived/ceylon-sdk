@@ -5,7 +5,7 @@ import java.nio.file { JPath=Path, Paths { newPath=get }, FileVisitor,
                        FileVisitResult { CONTINUE, TERMINATE, SKIP_SUBTREE }, 
                        FileSystems { defaultFileSystem=default },
                        Files { isDirectory, isRegularFile, isExisting=\iexists,
-                               walkFileTree } }
+                               isSymbolicLink, walkFileTree } }
 import java.nio.file.attribute { BasicFileAttributes }
 
 shared Path parsePath(String pathString) {
@@ -90,9 +90,9 @@ class ConcretePath(jpath)
             return false;
         }
     }
-    shared actual Integer hash {
+    /*shared actual Integer hash {
         return jpath.hash;
-    }
+    }*/
     shared actual String separator {
         return jpath.fileSystem.separator;
     }
@@ -104,8 +104,10 @@ class ConcretePath(jpath)
             else if (isDirectory(jpath)) {
                 return ConcreteDirectory(jpath);
             }
+            else if (isSymbolicLink(jpath)) {
+                return ConcreteLink(jpath);
+            }
             else {
-                //TODO: links!
                 throw;
             }
         }
