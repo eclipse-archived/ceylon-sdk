@@ -1,15 +1,39 @@
-import ceylon.file { Path, Resource, Visitor }
+import ceylon.file { Path, Resource, Visitor, FileSystem }
 
+import java.lang { JString=String }
+import java.net { URI { newURI=create } }
 import java.io { IOException }
-import java.nio.file { JPath=Path, Paths { newPath=get }, FileVisitor, 
+import java.nio.file { JPath=Path, Paths { newPath=get }, JFileSystem=FileSystem, FileVisitor, 
                        FileVisitResult { CONTINUE, TERMINATE, SKIP_SUBTREE }, 
-                       FileSystems { defaultFileSystem=default },
+                       FileSystems { defaultFileSystem=default, newFileSystem },
                        Files { isDirectory, isRegularFile, isExisting=\iexists,
                                isSymbolicLink, walkFileTree } }
 import java.nio.file.attribute { BasicFileAttributes }
+import java.util { HashMap }
 
 shared Path parsePath(String pathString) {
     return ConcretePath(newPath(pathString));
+}
+
+shared Path parseURI(String uriString) {
+    return ConcretePath(newPath(newURI(uriString)));
+}
+
+shared FileSystem createFileSystem(String uriString, String->String... properties) {
+    value map = HashMap<JString,Object>();
+    for (entry in properties) {
+        map.put(JString(entry.key), JString(entry.item));
+    }
+    value fs = newFileSystem(newURI(uriString), map);
+    object fileSystem satisfies FileSystem {
+        shared actual void close() {
+            fs.close();
+        }
+        shared actual Path parsePath(String pathString) {
+            return ConcretePath(fs.getPath(pathString));
+        }   
+    }
+    return fileSystem;
 }
 
 shared Path[] rootPaths {

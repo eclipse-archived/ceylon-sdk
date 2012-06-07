@@ -1,5 +1,6 @@
 import java.lang { System { getProperty } }
 import ceylon.file.internal { parsePathInternal=parsePath, 
+                              parseURIInternal=parseURI,
                               rootPathsInternal=rootPaths }
 
 doc "Represents a path in a hierarchical filesystem. A 
@@ -72,6 +73,10 @@ shared interface Path
 doc "Obtain a `Path` given the string representation
      of a path."
 shared Path parsePath(String pathString) = parsePathInternal;
+
+doc "Obtain a `Path` given the string representation
+     of a URI."
+shared Path parseURI(String uriString) = parseURIInternal;
 
 doc "The `Path` representing the user home directory."
 shared Path home = parsePath(getProperty("user.home"));
