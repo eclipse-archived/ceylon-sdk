@@ -50,10 +50,6 @@ class ConcreteDirectory(JPath jpath)
     shared actual Resource childResource(Path|String subpath) {
         return path.childPath(subpath).resource();
     }
-    shared actual Nil delete() {
-        deletePath(jpath);
-        return ConcreteNil(jpath);
-    }
     shared actual Directory move(Nil target) {
         return ConcreteDirectory( movePath(jpath, asJPath(target.path)) );
     }

@@ -22,10 +22,7 @@ shared interface Directory
     
     doc "Move this directory to the given location."
     shared formal Directory move(Nil target);
-    
-    doc "Delete this directory."
-    shared formal Nil delete();
-    
+        
 }
 
 doc "The `Directory`s representing the root directories of

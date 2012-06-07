@@ -25,9 +25,6 @@ shared interface File
     doc "Create a symbolic link to this file."
     shared formal Link createSymbolicLink(Nil target);
     
-    doc "Delete this file."
-    shared formal Nil delete();
-    
     doc "Determine if this file may be written to."
     shared formal Boolean writable;
     

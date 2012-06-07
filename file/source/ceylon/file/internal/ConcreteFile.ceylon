@@ -36,10 +36,6 @@ class ConcreteFile(JPath jpath)
             return ConcreteFile( movePath(jpath, asJPath(target.path), 
                     \iREPLACE_EXISTING) );            
     }
-    shared actual Nil delete() {
-        deletePath(jpath);
-        return ConcreteNil(jpath);
-    }
     shared actual File createLink(Nil target) {
         return ConcreteFile(newLink(asJPath(target.path), jpath));
     }

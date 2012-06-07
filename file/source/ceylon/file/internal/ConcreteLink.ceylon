@@ -9,8 +9,4 @@ class ConcreteLink(JPath jpath)
     shared actual Path linkedPath {
         return ConcretePath(readSymbolicLink(jpath));
     }
-    shared actual Nil delete() {
-        deletePath(jpath);
-        return ConcreteNil(jpath);
-    }
 }

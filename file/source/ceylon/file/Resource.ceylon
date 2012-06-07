@@ -15,6 +15,9 @@ shared interface ExistingResource
         of File|Directory|Link
         satisfies Resource {
     
+    doc "Delete this resource."
+    shared formal Nil delete();
+    
     doc "The owner of the file."
     throws (NoSuchPrincipalException)
     shared formal variable Principal owner;

@@ -1,7 +1,8 @@
 import ceylon.file { Resource, Path, ExistingResource, NoSuchPrincipalException, 
-                     Principal, UserPrincipal, GroupPrincipal }
+                     Principal, UserPrincipal, GroupPrincipal, Nil }
 
-import java.nio.file { JPath=Path, Files { getOwner, setOwner } }
+import java.nio.file { JPath=Path, Files { getOwner, setOwner, 
+                                           deletePath=delete } }
 import java.nio.file.attribute { UserPrincipalNotFoundException, 
                                  JGroupPrincipal=GroupPrincipal }
 
@@ -19,6 +20,11 @@ abstract class ConcreteExistingResource(JPath jpath)
         extends ConcreteResource(jpath)
         satisfies ExistingResource {
     
+    shared actual Nil delete() {
+        deletePath(jpath);
+        return ConcreteNil(jpath);
+    }
+
     function jprincipal(Principal principal) {
         value upls = jpath.fileSystem.userPrincipalLookupService;
         value name = principal.name;
