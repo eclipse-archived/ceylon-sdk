@@ -1,10 +1,9 @@
-import ceylon.file { Resource, Path, ExistingResource, NoSuchPrincipalException, 
-                     Principal, UserPrincipal, GroupPrincipal, Nil }
+import ceylon.file { Resource, Path, ExistingResource, Nil, 
+                     NoSuchPrincipalException }
 
 import java.nio.file { JPath=Path, Files { getOwner, setOwner, 
                                            deletePath=delete } }
-import java.nio.file.attribute { UserPrincipalNotFoundException, 
-                                 JGroupPrincipal=GroupPrincipal }
+import java.nio.file.attribute { UserPrincipalNotFoundException }
 
 abstract class ConcreteResource(JPath jpath) 
         satisfies Resource {
@@ -24,18 +23,11 @@ abstract class ConcreteExistingResource(JPath jpath)
         deletePath(jpath);
         return ConcreteNil(jpath);
     }
-
-    function jprincipal(Principal principal) {
+    
+    function jprincipal(String name) {
         value upls = jpath.fileSystem.userPrincipalLookupService;
-        value name = principal.name;
         try {
-            switch (principal)
-                    case (is UserPrincipal) {
-                return upls.lookupPrincipalByName(name);
-            }
-            case (is GroupPrincipal) {
-                return upls.lookupPrincipalByGroupName(name);
-            }
+            return upls.lookupPrincipalByName(name);
         }
         catch (Exception e) {
             if (!is UserPrincipalNotFoundException e) {
@@ -44,15 +36,9 @@ abstract class ConcreteExistingResource(JPath jpath)
             throw NoSuchPrincipalException(name, e);
         }
     }
-
-    shared actual Principal owner {
-        value principal = getOwner(jpath);
-        if (principal is JGroupPrincipal) {
-            return GroupPrincipal(principal.name);
-        }
-        else {
-            return UserPrincipal(principal.name);
-        }
+    
+    shared actual String owner {
+        return getOwner(jpath).name;
     }
     assign owner {
         setOwner(jpath, jprincipal(owner));
