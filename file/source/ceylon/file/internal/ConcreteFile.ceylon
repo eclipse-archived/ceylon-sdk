@@ -1,14 +1,15 @@
 import ceylon.file { File, Nil, Directory, Store, Reader, Writer, Link }
 
-import java.nio.file { JPath=Path, Files { isReadable, isWritable, isExecutable, 
-                                           getFileStore, getSize=size, isHidden,
-                                           getLastModifiedTime, probeContentType,
-                                           copyPath=copy, movePath=move,
-                                           newLink=createLink, 
-                                           newSymbolicLink=createSymbolicLink,
-                                           deletePath=delete, isSameFile },
+import java.nio.file { JPath=Path, 
+                       Files { isReadable, isWritable, isExecutable, isSameFile,
+                               getFileStore, getSize=size, isHidden,
+                               getLastModifiedTime, setLastModifiedTime,
+                               probeContentType, copyPath=copy, movePath=move,
+                               deletePath=delete, newLink=createLink, 
+                               newSymbolicLink=createSymbolicLink },
                        StandardCopyOption { REPLACE_EXISTING } }
 import java.nio.charset { Charset { defaultCharset, forName } }
+import java.nio.file.attribute { FileTime { fromMillis } }
 
 Charset parseCharset(String? encoding) {
     if (exists encoding) {
@@ -53,6 +54,9 @@ class ConcreteFile(JPath jpath)
     }
     shared actual Integer lastModifiedMilliseconds {
         return getLastModifiedTime(jpath).toMillis();
+    }
+    assign lastModifiedMilliseconds {
+        setLastModifiedTime(jpath, fromMillis(lastModifiedMilliseconds));
     }
     shared actual String name {
         return jpath.fileName.string;

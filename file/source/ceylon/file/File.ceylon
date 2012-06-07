@@ -49,7 +49,7 @@ shared interface File
     
     doc "The timestamp of the last modification of this 
          file."
-    shared formal Integer lastModifiedMilliseconds;
+    shared formal variable Integer lastModifiedMilliseconds;
     
     doc "The store to which this file belongs."
     shared formal Store store;
