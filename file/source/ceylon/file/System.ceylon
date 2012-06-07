@@ -26,7 +26,12 @@ shared interface System {
 
 doc "Create a `System` given a URI and a sequence of 
      named values."
-shared System createSystem(String uriString, String->String... properties) 
+shared System createSystem(
+        doc "The URI, as a string."
+        String uriString,
+        doc "A sequence of file system-specific named 
+             values." 
+        String->String... properties) 
         = internalCreateSystem;
 
 doc "Create a `System` for accessing entries in a zip 

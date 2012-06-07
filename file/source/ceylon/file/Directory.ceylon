@@ -26,7 +26,8 @@ shared interface Directory
 }
 
 doc "The `Directory`s representing the root directories of
-     the filesystem."
+     the default file system."
+see (defaultSystem)
 shared Directory[] rootDirectories {
     value sb = SequenceBuilder<Directory>();
     for (p in rootPaths) {

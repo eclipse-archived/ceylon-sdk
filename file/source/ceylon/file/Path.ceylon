@@ -77,12 +77,16 @@ shared interface Path
     
 }
 
-doc "Obtain a `Path` given the string representation
-     of a path."
+doc "Obtain a `Path` in the default file system given 
+     the string representation of a path."
+see (defaultSystem)
 shared Path parsePath(String pathString) = parsePathInternal;
 
 doc "Obtain a `Path` given the string representation
-     of a URI."
+     of a URI. The scheme determines the file system
+     the path belongs to. The scheme `file:` refers
+     to the default file system."
+see (System)
 shared Path parseURI(String uriString) = parseURIInternal;
 
 doc "The `Path` representing the user home directory."
@@ -93,7 +97,8 @@ doc "The `Path` representing the user current working
 shared Path current = parsePath(getProperty("user.dir"));
 
 doc "The `Path`s representing the root directories of
-     the filesystem."
+     the default file system."
+see (defaultSystem)
 shared Path[] rootPaths = rootPathsInternal;
 
 doc "A file visitor."
