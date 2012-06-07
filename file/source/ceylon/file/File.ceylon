@@ -1,6 +1,8 @@
+import ceylon.file.internal { sameFileInternal=sameFile }
+
 doc "Represents a file in a hierarchical filesystem."
 shared interface File 
-        satisfies Resource {
+        satisfies ExistingResource {
     
     doc "The directory containing this file."
     shared formal Directory directory;
@@ -35,6 +37,13 @@ shared interface File
     doc "The size of this file, in bytes."
     shared formal Integer size;
     
+    doc "Determine if this file is considered hidden."
+    shared formal Boolean hidden;
+    
+    doc "Determine the content type of this file, if
+         possible."
+    shared formal String? contentType;
+    
     doc "The timestamp of the last modification of this 
          file."
     shared formal Integer lastModifiedMilliseconds;
@@ -54,3 +63,5 @@ shared interface File
     shared formal Writer appender(String? encoding/*=null*/);
     
 }
+
+shared Boolean sameFile(File x, File y) = sameFileInternal;

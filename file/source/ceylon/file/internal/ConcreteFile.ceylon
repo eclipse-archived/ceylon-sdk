@@ -1,9 +1,10 @@
 import ceylon.file { File, Nil, Directory, Store, Reader, Writer }
 
 import java.nio.file { JPath=Path, Files { isReadable, isWritable, isExecutable, 
-                                           getFileStore, getSize=size, getLastModifiedTime,
+                                           getFileStore, getSize=size, isHidden,
+                                           getLastModifiedTime, probeContentType,
                                            copyPath=copy, movePath=move,
-                                           deletePath=delete },
+                                           deletePath=delete, isSameFile },
                        StandardCopyOption { REPLACE_EXISTING } }
 import java.nio.charset { Charset { defaultCharset, forName } }
 
@@ -17,7 +18,7 @@ Charset parseCharset(String? encoding) {
 }
 
 class ConcreteFile(JPath jpath)
-        extends ConcreteResource(jpath) 
+        extends ConcreteExistingResource(jpath) 
         satisfies File {
     shared actual File copy(Nil target) {
             return ConcreteFile( copyPath(jpath, asJPath(target.path)) );
@@ -55,6 +56,12 @@ class ConcreteFile(JPath jpath)
     shared actual Integer size {
         return getSize(jpath);
     }
+    shared actual String? contentType {
+        return probeContentType(jpath);
+    }
+    shared actual Boolean hidden {
+        return isHidden(jpath);
+    }
     shared actual Directory directory {
         return ConcreteDirectory(jpath.parent);
     }
@@ -70,4 +77,8 @@ class ConcreteFile(JPath jpath)
     shared actual Writer appender(String? encoding) {
         return ConcreteAppendingWriter(jpath, parseCharset(encoding));
     }
+}
+
+shared Boolean sameFile(File x, File y) {
+    return isSameFile(asJPath(x.path), asJPath(y.path));
 }

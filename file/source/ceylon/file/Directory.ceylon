@@ -1,10 +1,10 @@
 doc "Represents a directory in a hierarchical filesystem."
 shared interface Directory 
-        satisfies Resource {
+        satisfies ExistingResource {
     
     doc "The files and subdirectories that directly belong
          to this directory."
-    shared formal Iterable<File|Directory> children(String filter/*="*"*/);
+    shared formal Iterable<ExistingResource> children(String filter/*="*"*/);
     
     doc "The files that directly belong to this directory."
     shared formal Iterable<File> files(String filter/*="*"*/);

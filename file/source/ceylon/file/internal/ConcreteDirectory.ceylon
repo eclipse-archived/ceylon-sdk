@@ -4,7 +4,7 @@ import java.nio.file { JPath=Path, Files { deletePath=delete, movePath=move,
                                            newDirectoryStream } }
 
 class ConcreteDirectory(JPath jpath)
-        extends ConcreteResource(jpath) 
+        extends ConcreteExistingResource(jpath) 
         satisfies Directory {
     shared actual Iterable<Path> childPaths(String filter) {
         //TODO: efficient impl
