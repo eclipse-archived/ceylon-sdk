@@ -1,4 +1,5 @@
-import ceylon.file { defaultParsePath=parsePath, defaultRootPaths=rootPaths }
+import ceylon.file { defaultParsePath=parsePath, defaultRootPaths=rootPaths, 
+                     defaultStores=stores }
 import ceylon.file.internal { internalCreateSystem=createSystem }
 
 doc "Represents a special-purpose file system."
@@ -11,9 +12,15 @@ shared interface System {
     doc "The `Path`s representing the root directories of
          the filesystem."
     shared formal Path[] rootPaths;
-
-    doc "Close this file system."
+    
+    doc "The `Stores` belonging to this file system."
+    shared formal Store[] stores;
+    
+    doc "Close this `System`."
     shared formal void close();
+
+    doc "Determine if this `System` is open."
+    shared formal Boolean open;
     
 }
 
@@ -43,6 +50,12 @@ shared object defaultSystem
     }
     shared actual Path[] rootPaths {
         return defaultRootPaths;
+    }
+    shared actual Store[] stores {
+        return defaultStores;
+    }
+    shared actual Boolean open {
+        return true;
     }
     shared actual void close() {
         throw;

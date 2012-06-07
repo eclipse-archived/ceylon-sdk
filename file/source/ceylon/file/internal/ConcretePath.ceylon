@@ -1,15 +1,13 @@
 import ceylon.file { Path, Resource, Visitor, System }
 
-import java.lang { JString=String }
 import java.net { URI { newURI=create } }
 import java.io { IOException }
-import java.nio.file { JPath=Path, Paths { newPath=get }, JFileSystem=FileSystem, FileVisitor, 
+import java.nio.file { JPath=Path, Paths { newPath=get }, FileVisitor, 
                        FileVisitResult { CONTINUE, TERMINATE, SKIP_SUBTREE }, 
-                       FileSystems { defaultFileSystem=default, newFileSystem },
+                       FileSystems { defaultFileSystem=default },
                        Files { isDirectory, isRegularFile, isExisting=\iexists,
                                isSymbolicLink, walkFileTree } }
 import java.nio.file.attribute { BasicFileAttributes }
-import java.util { HashMap }
 
 shared Path parsePath(String pathString) {
     return ConcretePath(newPath(pathString));
@@ -17,31 +15,6 @@ shared Path parsePath(String pathString) {
 
 shared Path parseURI(String uriString) {
     return ConcretePath(newPath(newURI(uriString)));
-}
-
-shared System createSystem(String uriString, String->String... properties) {
-    value map = HashMap<JString,Object>();
-    for (entry in properties) {
-        map.put(JString(entry.key), JString(entry.item));
-    }
-    value fs = newFileSystem(newURI(uriString), map);
-    object system satisfies System {
-        shared actual void close() {
-            fs.close();
-        }
-        shared actual Path parsePath(String pathString) {
-            return ConcretePath(fs.getPath(pathString));
-        }   
-        shared actual Path[] rootPaths {
-            value sb = SequenceBuilder<Path>();
-            value iter = fs.rootDirectories.iterator();
-            while (iter.hasNext()) {
-                sb.append(ConcretePath(iter.next()));
-            }
-            return sb.sequence;
-        }
-    }
-    return system;
 }
 
 shared Path[] rootPaths {
@@ -88,6 +61,9 @@ class ConcretePath(jpath)
     }
     shared actual Path relativePath(String|Path path) {
         return ConcretePath(asJPath(path).relativize(jpath));
+    }
+    shared actual System system {
+        return ConcreteSystem(jpath.fileSystem);
     }
     shared actual String string {
         return jpath.string;

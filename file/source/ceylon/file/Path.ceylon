@@ -1,4 +1,5 @@
-import java.lang { System { getProperty } }
+import java.lang { S=System { getProperty } }
+
 import ceylon.file.internal { parsePathInternal=parsePath, 
                               parseURIInternal=parseURI,
                               rootPathsInternal=rootPaths }
@@ -48,6 +49,9 @@ shared interface Path
     doc "Obtain a `Resource` representing the file or
          directory located at this path."
     shared formal Resource resource();
+    
+    doc "The `System` this is a path in."
+    shared formal System system;
     
     doc "Determin if this path is a parent of the
          given path."
