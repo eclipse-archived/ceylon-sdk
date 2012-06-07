@@ -32,6 +32,14 @@ shared System createSystem(String uriString, String->String... properties) {
         shared actual Path parsePath(String pathString) {
             return ConcretePath(fs.getPath(pathString));
         }   
+        shared actual Path[] rootPaths {
+            value sb = SequenceBuilder<Path>();
+            value iter = fs.rootDirectories.iterator();
+            while (iter.hasNext()) {
+                sb.append(ConcretePath(iter.next()));
+            }
+            return sb.sequence;
+        }
     }
     return system;
 }
@@ -83,6 +91,9 @@ class ConcretePath(jpath)
     }
     shared actual String string {
         return jpath.string;
+    }
+    shared actual String uriString {
+        return jpath.toUri().string;
     }
     shared actual Path[] elementPaths {
         value sb = SequenceBuilder<Path>();

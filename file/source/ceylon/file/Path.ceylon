@@ -68,6 +68,9 @@ shared interface Path
     doc "This path, expressed as a string."
     shared actual formal String string;
     
+    doc "This path, represented as a URI string."
+    shared formal String uriString;
+    
 }
 
 doc "Obtain a `Path` given the string representation
