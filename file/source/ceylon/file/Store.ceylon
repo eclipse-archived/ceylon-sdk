@@ -1,6 +1,6 @@
 import ceylon.file.internal { storesInternal=stores }
 
-doc "Represents a filesystem store."
+doc "Represents a file system store."
 shared interface Store {
     
     doc "The total number of bytes that can be
@@ -27,5 +27,6 @@ shared interface Store {
 }
 
 doc "The `Store`s representing the stores of the
-     filesystem."
+     default file system."
+see (defaultSystem)
 shared Store[] stores = storesInternal;
