@@ -49,20 +49,20 @@ Module module {
                  print(\"file does not exist\");
              }
          
-         Now, to move the file to a different directory:
+         Now, to rename the file:
          
-             value newPath = home.childPath(\"goodbye.txt\");
-             if (is Nil loc = newPath.resource) {
-                 value filePath = home.childPath(\"hello.txt\");
-                 if (is File file = filePath.resource()) {
-                     file.move(loc);
+             value filePath = home.childPath(\"hello.txt\");
+             if (is File file = filePath.resource()) {
+                 value newPath = filePath.siblingPath(\"goodbye.txt\");
+                 if (is Nil loc = newPath.resource) {
+                    file.move(loc);
                  }
                  else {
-                     print(\"source file does not exist\");
+                     print(\"target file already exists\");
                  }
              }
              else {
-                 print(\"target file already exists\");
+                 print(\"source file does not exist\");
              }
          
          To list the contents of a directory, we have two possibilities.
