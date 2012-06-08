@@ -19,33 +19,18 @@ class ConcreteDirectory(JPath jpath)
     }
     shared actual Iterable<File|Directory> children(String filter) {
         //TODO: efficient impl
-        value sb = SequenceBuilder<File|Directory>();
-        for (p in childPaths(filter)) {
-            if (is File|Directory r=p.resource) {
-                sb.append(r);
-            }
-        }
-        return sb.sequence;
+        return { for (p in childPaths(filter)) 
+                 if (is File|Directory r=p.resource) r };
     }
     shared actual Iterable<File> files(String filter) {
         //TODO: efficient impl
-        value sb = SequenceBuilder<File>();
-        for (p in childPaths(filter)) {
-            if (is File r=p.resource) {
-                sb.append(r);
-            }
-        }
-        return sb.sequence;
+        return { for (p in childPaths(filter))
+                 if (is File r=p.resource) r };
     }
     shared actual Iterable<Directory> childDirectories(String filter) {
         //TODO: efficient impl
-        value sb = SequenceBuilder<Directory>();
-        for (p in childPaths(filter)) {
-            if (is Directory r=p.resource) {
-                sb.append(r);
-            }
-        }
-        return sb.sequence;
+        return { for (p in childPaths(filter))
+                 if (is Directory r=p.resource) r };
     }
     shared actual Resource childResource(Path|String subpath) {
         return path.childPath(subpath).resource;
