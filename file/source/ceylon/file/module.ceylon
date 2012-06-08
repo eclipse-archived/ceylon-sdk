@@ -87,7 +87,7 @@ Module module {
              }
              home.visit(visitor);
          
-         File systems other then the default file system are supported. For 
+         File systems other than the default file system are supported. For 
          example, a file system for a zip file may be created using the
          convenience function `createZipFileSystem()`.
          
