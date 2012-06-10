@@ -7,8 +7,7 @@ import java.nio.charset { Charset }
 class ConcreteWriter(JPath jpath, Charset charset) 
         satisfies Writer {
     value w = newBufferedWriter(jpath, charset, \iWRITE, \iTRUNCATE_EXISTING);
-    //shared actual void open() {}
-    shared actual void close(/*Exception? exception*/) {
+    shared actual void destroy() {
         w.close();
     }
     shared actual void write(String string) {
@@ -25,8 +24,7 @@ class ConcreteWriter(JPath jpath, Charset charset)
 class ConcreteAppendingWriter(JPath jpath, Charset charset) 
         satisfies Writer {
     value w = newBufferedWriter(jpath, charset, \iWRITE, \iAPPEND);
-    //shared actual void open() {}
-    shared actual void close(/*Exception? exception*/) {
+    shared actual void destroy() {
         w.close();
     }
     shared actual void write(String string) {

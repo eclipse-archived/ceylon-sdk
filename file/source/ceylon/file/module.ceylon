@@ -26,7 +26,7 @@ Module module {
                      writer.writeLine(\"Hello, World!\");
                  }
                  finally {
-                     writer.close();
+                     writer.destroy();
                  }
              }
              else {
@@ -42,7 +42,7 @@ Module module {
                      print(reader.readLine());
                  }
                  finally {
-                     reader.close();
+                     reader.destroy();
                  }
              }
              else {
