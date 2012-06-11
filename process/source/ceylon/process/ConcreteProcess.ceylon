@@ -29,7 +29,7 @@ shared class ConcreteProcess(process, path, /*environment,*/
         return exitCode exists;
     }
     
-    actual shared Integer? waitForExit() {
+    actual shared Integer waitForExit() {
         return process.waitFor();
     }
     
