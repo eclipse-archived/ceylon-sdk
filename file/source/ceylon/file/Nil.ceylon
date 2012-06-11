@@ -1,5 +1,5 @@
 doc "Represents the absence of any existing file or directory 
-     at a certain path in a hierarchical filesystem."
+     at a certain path in a hierarchical file system."
 shared interface Nil 
         satisfies Resource {
     

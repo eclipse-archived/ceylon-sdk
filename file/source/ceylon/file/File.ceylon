@@ -1,6 +1,6 @@
 import ceylon.file.internal { sameFileInternal=sameFile }
 
-doc "Represents a file in a hierarchical filesystem."
+doc "Represents a file in a hierarchical file system."
 shared interface File 
         satisfies ExistingResource {
     
@@ -10,13 +10,15 @@ shared interface File
     doc "Move this file to the given location."
     shared formal File move(Nil target);
     
-    doc "Move this file to the given location."
+    doc "Move this file to the given location,
+         overwriting the target if it already exists."
     shared formal File moveOverwriting(File|Nil target);
     
     doc "Copy this file to the given location."
     shared formal File copy(Nil target);
     
-    doc "Copy this file to the given location."
+    doc "Copy this file to the given location,
+         overwriting the target if it already exists."
     shared formal File copyOverwriting(File|Nil target);
     
     doc "Create a hard link to this file."
