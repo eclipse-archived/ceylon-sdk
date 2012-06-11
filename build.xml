@@ -5,6 +5,7 @@
   	<file name="sdk-test"/>
     <file name="math"/>
     <file name="file"/>
+    <file name="process"/>
   </filelist>
   
   <macrodef name="iterate">
