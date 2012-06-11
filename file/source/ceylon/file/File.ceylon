@@ -58,14 +58,29 @@ shared interface File
     
     doc "A `Reader` for reading lines of text from this
          file."
-    shared formal Reader reader(String? encoding/*=null*/);
+    shared formal Reader reader(
+            doc "The character encoding to use, where
+                 `null` indicates that the platform 
+                 default character encoding should be
+                 used."
+            String? encoding=null);
     
     doc "A `Writer` for writing text to this file, after
          truncating the file to length 0."
-    shared formal Writer writer(String? encoding/*=null*/);
+    shared formal Writer writer(
+            doc "The character encoding to use, where
+                 `null` indicates that the platform 
+                 default character encoding should be
+                 used."
+            String? encoding=null);
     
     doc "A `Writer` for appending text to this file"
-    shared formal Writer appender(String? encoding/*=null*/);
+    shared formal Writer appender(
+            doc "The character encoding to use, where
+                 `null` indicates that the platform 
+                 default character encoding should be
+                 used."
+            String? encoding=null);
     
 }
 
