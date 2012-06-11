@@ -181,20 +181,20 @@ Special cases:
 <tr><td>-0</td>                       <td>&gt; 0</td>     <td>-0</td></tr>
 <tr><td>&lt; 0 and not -infinity</td> <td>+infinity</td>  <td>-0</td></tr>
 
-<tr><td>+0</td>                       <td>&lt; 0</td>     <td>The Float best approximating \{03C0}</td></tr>
-<tr><td>&gt; 0 and not +infinity</td> <td>-infinity</td>  <td>The Float best approximating \{03C0}</td></tr>
-<tr><td>-0</td>                       <td>&lt; 0</td>     <td>The Float best approximating -\{03C0}</td></tr>
-<tr><td>&lt; 0 and not -infinity</td> <td>-infinity</td>  <td>The Float best approximating -\{03C0}</td></tr>
+<tr><td>+0</td>                       <td>&lt; 0</td>     <td>The `Float` best approximating \{03C0}</td></tr>
+<tr><td>&gt; 0 and not +infinity</td> <td>-infinity</td>  <td>The `Float` best approximating \{03C0}</td></tr>
+<tr><td>-0</td>                       <td>&lt; 0</td>     <td>The `Float` best approximating -\{03C0}</td></tr>
+<tr><td>&lt; 0 and not -infinity</td> <td>-infinity</td>  <td>The `Float` best approximating -\{03C0}</td></tr>
 
-<tr><td>&gt; 0</td>    <td>+0 or -0</td>                   <td>The Float best approximating \{03C0}/2</td></tr>
-<tr><td>+infinity</td> <td>not +infinity or -infinity</td> <td>The Float best approximating \{03C0}/2</td></tr>
-<tr><td>&lt; 0</td>    <td>+0 or -0</td>                   <td>The Float best approximating -\{03C0}/2</td></tr>
-<tr><td>-infinity</td> <td>not +infinity or -infinity</td> <td>The Float best approximating -\{03C0}/2</td></tr>
+<tr><td>&gt; 0</td>    <td>+0 or -0</td>                   <td>The `Float` best approximating \{03C0}/2</td></tr>
+<tr><td>+infinity</td> <td>not +infinity or -infinity</td> <td>The `Float` best approximating \{03C0}/2</td></tr>
+<tr><td>&lt; 0</td>    <td>+0 or -0</td>                   <td>The `Float` best approximating -\{03C0}/2</td></tr>
+<tr><td>-infinity</td> <td>not +infinity or -infinity</td> <td>The `Float` best approximating -\{03C0}/2</td></tr>
 
-<tr><td>+infinity</td> <td>+infinity</td> <td>The Float best approximating \{03C0}/4</td></tr>
-<tr><td>+infinity</td> <td>-infinity</td> <td>The Float best approximating 3\{03C0}/4</td></tr>
-<tr><td>-infinity</td> <td>+infinity</td> <td>The Float best approximating -\{03C0}/4</td></tr>
-<tr><td>-infinity</td> <td>-infinity</td> <td>The Float best approximating -3\{03C0}/4</td></tr>
+<tr><td>+infinity</td> <td>+infinity</td> <td>The `Float` best approximating \{03C0}/4</td></tr>
+<tr><td>+infinity</td> <td>-infinity</td> <td>The `Float` best approximating 3\{03C0}/4</td></tr>
+<tr><td>-infinity</td> <td>+infinity</td> <td>The `Float` best approximating -\{03C0}/4</td></tr>
+<tr><td>-infinity</td> <td>-infinity</td> <td>The `Float` best approximating -3\{03C0}/4</td></tr>
 
 </tbody>
 </table>
@@ -242,7 +242,7 @@ shared Float cbrt(Float num) {
     return jcbrt(num);
 }
 
-doc "A number greater and or equal to positive zero and less than
+doc "A number greater than or equal to positive zero and less than
      1.0, chosen pseudorandomly and (approximately) uniformly distributed."
 shared Float random() {
     return jrandom();

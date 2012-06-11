@@ -17,8 +17,8 @@ shared interface Whole of WholeImpl
                   Integral<Whole> & Scalar<Whole> &
                   Exponentiable<Whole, Whole> {
 
-    doc "The platform specific implementation object, if any.
-         This is provided for the purposes of interoperation with the
+    doc "The platform-specific implementation object, if any.
+         This is provided for interoperation with the
          runtime platform."
     see(fromImplementation)
     shared formal Object? implementation;
@@ -213,8 +213,8 @@ class WholeImpl(BigInteger num)
 
 }
 
-doc "The Whole repesented by the given string, or null if the given string
-     does not represent a Whole."
+doc "The `Whole` repesented by the given string, or `null` if the given string
+     does not represent a `Whole`."
 shared Whole? parseWhole(String num) {
     BigInteger bi;
     try {
@@ -238,8 +238,8 @@ shared Whole whole(Number number) {
     }
 }
 
-doc "Converts a platform specific implementation object to a `Whole` instance.
-     This is provided for the purposes of interoperation with the
+doc "Converts a platform-specific implementation object to a `Whole` instance.
+     This is provided for interoperation with the
      runtime platform."
 //see(Whole.implementation)
 shared Whole fromImplementation(Object implementation) {

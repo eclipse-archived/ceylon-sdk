@@ -1,6 +1,6 @@
 import java.lang{ Math { je=\iE, jpi=\iPI } }
 
-doc "The Float which best approximates the 
+doc "The `Float` which best approximates the 
      mathematical constant \{0001D452}, the 
      base of the natural logarithm."
 see(exp, log)
