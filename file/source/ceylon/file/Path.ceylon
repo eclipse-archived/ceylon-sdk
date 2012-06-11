@@ -4,10 +4,10 @@ import ceylon.file.internal { parsePathInternal=parsePath,
                               parseURIInternal=parseURI,
                               rootPathsInternal=rootPaths }
 
-doc "Represents a path in a hierarchical filesystem. A 
+doc "Represents a path in a hierarchical file system. A 
      path is a sequence of path elements. A path may be 
      an absolute path that begins at the root of the 
-     filesystem, or a relative path."
+     file system, or a relative path."
 shared interface Path
         satisfies Comparable<Path> {
     
@@ -25,7 +25,7 @@ shared interface Path
     doc "This path, converted into an absolute path. If 
          this path is already absolute, return this path.
          Otherwise, if this path is a relative path, 
-         resolve it against the filesystem's default 
+         resolve it against the file system's default 
          directory."
     shared formal Path absolutePath;
     
@@ -53,7 +53,7 @@ shared interface Path
     doc "The `System` this is a path in."
     shared formal System system;
     
-    doc "Determin if this path is a parent of the
+    doc "Determine if this path is a parent of the
          given path."
     shared formal Boolean parentOf(Path path);
     

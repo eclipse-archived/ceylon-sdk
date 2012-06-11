@@ -10,10 +10,10 @@ shared interface System {
     shared formal Path parsePath(String pathString);
     
     doc "The `Path`s representing the root directories of
-         the filesystem."
+         the file system."
     shared formal Path[] rootPaths;
     
-    doc "The `Stores` belonging to this file system."
+    doc "The `Store`s belonging to this file system."
     shared formal Store[] stores;
     
     doc "Determine if this system can be written to."

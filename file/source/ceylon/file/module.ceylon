@@ -1,7 +1,7 @@
 Module module {
     name='ceylon.file';
     version='0.3';
-    doc="API for accessing hierarchical filesystems. Clients use `Path`s to
+    doc="API for accessing hierarchical file systems. Clients use `Path`s to
          obtain `Resource`s representing files or directories.
          
          `Path` contains many useful operations for manipulating paths:
@@ -12,7 +12,7 @@ Module module {
              value parent = path.parent;
          
          The attribute `resource` of `Path` is used to obtain a `Resource`. It 
-         is usally necessary to narrow a `Resource` to a `File`, `Directory`, 
+         is usually necessary to narrow a `Resource` to a `File`, `Directory`, 
          `Link`, or `Nil` before performing operations on it.
          
          To create a file named `hello.txt` in the home directory, we could do 
