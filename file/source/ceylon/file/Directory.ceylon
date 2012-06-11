@@ -1,4 +1,4 @@
-doc "Represents a directory in a hierarchical filesystem."
+doc "Represents a directory in a hierarchical file system."
 shared interface Directory 
         satisfies ExistingResource {
     

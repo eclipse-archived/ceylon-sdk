@@ -1,6 +1,6 @@
 doc "Represents a file, link, or directory located at a 
      certain path, or the absence of a file or directory 
-     at the path."
+     at that path."
 shared interface Resource 
         of ExistingResource|Nil {
     
@@ -12,7 +12,7 @@ shared interface Resource
     
 }
 
-doc "A resource that actually exists, that is one that is
+doc "A resource that actually exists&mdash;that is one that is
      not `Nil`."
 shared interface ExistingResource 
         of File|Directory|Link
