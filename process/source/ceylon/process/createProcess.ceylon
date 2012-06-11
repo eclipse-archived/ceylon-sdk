@@ -1,7 +1,8 @@
 import ceylon.file { Path, current }
 import ceylon.process { Util { redirectInherit } }
 
-import java.io { JFile=File, BufferedOutputStream, OutputStreamWriter, BufferedWriter, OutputStream, InputStream, InputStreamReader, BufferedReader }
+import java.io { OutputStream, OutputStreamWriter, InputStream, 
+                 InputStreamReader, BufferedReader, JFile=File }
 import java.lang { ProcessBuilder }
 
 shared Process createProcess(Path path=current,
@@ -50,7 +51,8 @@ shared Process createProcess(Path path=current,
     
     value p = builder.start();
     
-    class MyPipeSource(OutputStream stream) satisfies PipeSource {
+    class MyPipeSource(OutputStream stream)
+            satisfies PipeSource {
         value writer = OutputStreamWriter(stream);
         shared actual void destroy() {
             writer.close();
@@ -64,7 +66,8 @@ shared Process createProcess(Path path=current,
         }
     
     }
-    class MyPipeDestination(InputStream stream) satisfies PipeDestination {
+    class MyPipeDestination(InputStream stream) 
+            satisfies PipeDestination {
         value reader = BufferedReader(InputStreamReader(stream));
         shared actual void destroy() {
             reader.close();
@@ -74,10 +77,16 @@ shared Process createProcess(Path path=current,
         }
     }
     
-    return ConcreteProcess(p, path, /*environment,*/
-            inputSource else MyPipeSource(p.outputStream),
-            outputDestination else MyPipeDestination(p.inputStream),
-            errorDestination else MyPipeDestination(p.errorStream),
-            commands);
+    return ConcreteProcess {
+        process = p;
+        path = path;
+        inputSource = inputSource 
+                else MyPipeSource(p.outputStream);
+        outputDestination = outputDestination 
+                else MyPipeDestination(p.inputStream);
+        errorDestination = errorDestination 
+                else MyPipeDestination(p.errorStream);
+        commands = commands;
+    };
     
 }
