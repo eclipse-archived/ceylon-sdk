@@ -1,4 +1,4 @@
-import ceylon.file { System, Path, Store }
+import ceylon.file { ... }
 
 import java.lang { JString=String }
 import java.net { URI { newURI=create } }

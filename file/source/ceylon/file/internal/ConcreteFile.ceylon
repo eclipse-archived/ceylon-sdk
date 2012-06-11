@@ -1,4 +1,4 @@
-import ceylon.file { File, Nil, Directory, Store, Reader, Writer, Link }
+import ceylon.file { ... }
 
 import java.nio.file { JPath=Path, 
                        Files { isReadable, isWritable, isExecutable, isSameFile,

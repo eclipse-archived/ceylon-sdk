@@ -1,7 +1,8 @@
-import ceylon.file { Resource, File, Nil, Directory, Path }
+import ceylon.file { ... }
 
-import java.nio.file { JPath=Path, Files { deletePath=delete, movePath=move, 
-                                           newDirectoryStream } }
+import java.nio.file { JPath=Path, 
+                       Files { deletePath=delete, movePath=move, 
+                               newDirectoryStream } }
 
 class ConcreteDirectory(JPath jpath)
         extends ConcreteExistingResource(jpath) 

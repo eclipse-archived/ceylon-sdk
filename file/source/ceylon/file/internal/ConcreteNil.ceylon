@@ -1,4 +1,4 @@
-import ceylon.file { File, Nil, Directory }
+import ceylon.file { ... }
 
 import java.nio.file { JPath=Path, 
                        Files { newDirectory=createDirectory, 

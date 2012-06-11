@@ -1,4 +1,4 @@
-import ceylon.file { Path, Resource, Visitor, System }
+import ceylon.file { ... }
 
 import java.net { URI { newURI=create } }
 import java.io { IOException }

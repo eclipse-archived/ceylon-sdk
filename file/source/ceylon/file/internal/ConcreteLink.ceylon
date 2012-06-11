@@ -1,4 +1,4 @@
-import ceylon.file { Link, ExistingResource, Path, Nil }
+import ceylon.file { ... }
 
 import java.nio.file { JPath=Path, 
                        Files { readSymbolicLink, deletePath=delete } }
