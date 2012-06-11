@@ -1,5 +1,5 @@
 import ceylon.file { Path, current }
-import ceylon.process { Util { redirectInherit } }
+import ceylon.process { Util { redirectInherit, redirectToAppend, redirectToOverwrite } }
 
 import java.io { OutputStream, OutputStreamWriter, InputStream, 
                  InputStreamReader, BufferedReader, JFile=File }
@@ -30,10 +30,10 @@ shared Process createProcess(Path path=current,
         builder.redirectOutput(redirectInherit);
     }
     case (is AppendDestination) {
-        builder.redirectOutput(JFile(outputDestination.path.string));
+        builder.redirectOutput(redirectToAppend(JFile(outputDestination.path.string)));
     }
     case (is OverwriteDestination) {
-        builder.redirectOutput(JFile(outputDestination.path.string));
+        builder.redirectOutput(redirectToOverwrite(JFile(outputDestination.path.string)));
     }
     else {}
     
@@ -42,10 +42,10 @@ shared Process createProcess(Path path=current,
         builder.redirectOutput(redirectInherit);
     }
     case (is AppendDestination) {
-        builder.redirectError(JFile(errorDestination.path.string));
+        builder.redirectError(redirectToAppend(JFile(errorDestination.path.string)));
     }
     case (is OverwriteDestination) {
-        builder.redirectError(JFile(errorDestination.path.string));
+        builder.redirectError(redirectToOverwrite(JFile(errorDestination.path.string)));
     }
     else {}
     

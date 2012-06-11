@@ -19,7 +19,7 @@ shared interface Process {
 shared interface Source 
         of ReadSource | PipeSource | inheritSource {}
 
-shared object inheritSource 
+object inheritSource 
         satisfies Source {}
 
 shared interface PipeSource 
@@ -34,7 +34,7 @@ shared interface Destination
         of OverwriteDestination | AppendDestination | 
            PipeDestination | inheritDestination {}
 
-shared object inheritDestination 
+object inheritDestination 
         satisfies Destination {}
 
 shared interface PipeDestination 
@@ -48,3 +48,4 @@ shared class OverwriteDestination(path)
         satisfies Destination {
     shared Path path;
 }
+
