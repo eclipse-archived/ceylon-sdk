@@ -52,7 +52,7 @@ Module module {
          Now, to rename the file:
          
              value filePath = home.childPath(\"hello.txt\");
-             if (is File file = filePath.resource()) {
+             if (is File file = filePath.resource) {
                  value newPath = filePath.siblingPath(\"goodbye.txt\");
                  if (is Nil loc = newPath.resource) {
                     file.move(loc);
