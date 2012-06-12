@@ -40,7 +40,7 @@ shared interface Process {
     formal shared Boolean terminated;
     
     doc "Wait for the process to terminate."
-    formal shared Integer? waitForExit();
+    formal shared Integer waitForExit();
     
     doc "Force the process to terminate."
     formal shared void kill();

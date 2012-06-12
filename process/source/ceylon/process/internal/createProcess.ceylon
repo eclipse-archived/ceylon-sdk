@@ -59,7 +59,9 @@ shared Process createProcess(
         shared actual void destroy() {
             writer.close();
         }
-        shared actual void flush() {}
+        shared actual void flush() {
+            writer.flush();
+        }
         shared actual void write(String string) {
             writer.write(string);
         }
