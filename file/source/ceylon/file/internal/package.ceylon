@@ -1,5 +1,5 @@
 Package package {
     name='ceylon.file.internal';
-    shared=false;
-    doc="Internal implementation of the filesystem module, using the Java SDK.";
+    doc="Internal implementation of the file system module, 
+         using the Java SDK.";
 }

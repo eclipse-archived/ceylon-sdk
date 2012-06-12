@@ -1,4 +1,5 @@
 Package package {
     name='ceylon.process.internal';
-    shared=true;
+    doc="Internal implementation of the process module, 
+         using the Java SDK.";
 }
