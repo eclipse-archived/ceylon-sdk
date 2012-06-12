@@ -9,7 +9,7 @@ Module module {
                    path = home;
                    \"ls\"
                };
-            
+           
            By default, the standard input, output, and error 
            streams of the new forked process are piped to and
            from the current process by exposing a `Writer` and
@@ -27,8 +27,12 @@ Module module {
            
                Process process = createProcess { 
                    path = home;
-                   output = FileOutput(home.childPath(\"out.txt\"));
-                   error = FileOutput(home.childPath(\"err.txt\"));
+                   OverwriteFileOutput output { 
+                       path=home.childPath(\"out.txt\");
+                   }
+                   AppendFileOutput error { 
+                       path=home.childPath(\"err.txt\");
+                   }
                    \"ls\"
                };
            
@@ -46,6 +50,6 @@ Module module {
                };
            
            To wait for the forked process to terminate, call
-           the `waitForExit()`. method of `Process`.";
+           the `waitForExit()` method of `Process`.";
     Import { name = 'ceylon.file'; version = '0.3'; }
 }
