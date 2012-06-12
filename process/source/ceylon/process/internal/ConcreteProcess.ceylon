@@ -3,12 +3,12 @@ import ceylon.file { Path, Writer, Reader }
 
 import java.lang { JProcess=Process, IllegalThreadStateException }
 
-shared class ConcreteProcess(process, path, /*environment,*/ 
+shared class ConcreteProcess(process, path, environment, 
         input, output, error, commands) 
         satisfies Process {
 
     actual shared Path path;
-    //shared Map<String,String> environment;
+    actual shared Iterable<String->String> environment;
     actual shared Input|Writer input;
     actual shared Output|Reader output;
     actual shared Error|Reader error;

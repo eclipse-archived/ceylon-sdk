@@ -1,14 +1,37 @@
 import ceylon.file { Path, current, Writer, Reader }
-import ceylon.process { stdin=currentInput, stdout=currentOutput, stderr=currentError, ... }
-import ceylon.process.internal { Util { redirectInherit, redirectToAppend, redirectToOverwrite } }
+import ceylon.process { stdin=currentInput, stdout=currentOutput, 
+                        stderr=currentError, ... }
+import ceylon.process.internal { Util { redirectInherit, redirectToAppend, 
+                                        redirectToOverwrite } }
 
 import java.io { OutputStream, OutputStreamWriter, InputStream, 
                  InputStreamReader, BufferedReader, JFile=File }
-import java.lang { ProcessBuilder }
+import java.lang { ProcessBuilder, System { getenv }, JString=String }
+
+shared Iterable<String->String> buildEnvironment() {
+    object iterable satisfies Iterable<String->String> {    
+        shared actual Iterator<String->String> iterator {
+            value env = getenv().entrySet().iterator();
+            object iterator satisfies Iterator<String->String> {   
+                shared actual String->String|Finished next() {
+                    if (env.hasNext()) {
+                        value entry = env.next();
+                        return entry.key.string->entry.\ivalue.string;
+                    }
+                    else {
+                        return exhausted;
+                    }
+                }
+            }
+            return iterator; 
+        }
+    }
+    return iterable; 
+}
 
 shared Process createProcess(
         Path path,
-        //Map<String,String>? environment,
+        Iterable<String->String> environment,
         Input? input,
         Output? output,
         Error? error,
@@ -17,6 +40,10 @@ shared Process createProcess(
     value builder = ProcessBuilder();
     builder.command({commands...}...); //TODO: WTF?!
     builder.directory(JFile(path.string));
+    for (e in environment) {
+        builder.environment()
+                .put(JString(e.key), JString(e.item));
+    }
     
     switch (input)
     case (stdin) {
@@ -84,6 +111,7 @@ shared Process createProcess(
     return ConcreteProcess {
         process = newProcess;
         path = path;
+        environment = environment;
         input = input 
                 else IncomingPipe(newProcess.outputStream);
         output = output 

@@ -1,5 +1,6 @@
 import ceylon.file { Path, current, Reader, Writer }
-import ceylon.process.internal { internalCreateProcess=createProcess }
+import ceylon.process.internal { internalCreateProcess=createProcess, 
+                                 buildEnvironment }
 
 doc "Represents a separate native process."
 see (createProcess)
@@ -8,7 +9,8 @@ shared interface Process {
     doc "The directory in which the process runs."
     formal shared Path path;
     
-    //shared Map<String,String> environment;
+    doc "The environment variables of the process."
+    formal shared Iterable<String->String> environment;
     
     doc "The standard input stream of the process.
          This is a `Writer` in the case that the
@@ -52,7 +54,11 @@ doc "Create and start a new process, running the
 shared Process createProcess(
         doc "The directory in which the process runs."
         Path path=current,
-        //Map<String,String>? environment,
+        doc "Environment variables to pass to the
+             process. By default the process inherits 
+             the environment variables of the current
+             virtual machine process."
+        Iterable<String->String> environment = {},//currentEnvironment,
         doc "The source for the standard input stream
              of the process, or `null` if the standard 
              input should be piped from the current 
@@ -125,3 +131,7 @@ shared class OverwriteFileOutput(path)
     shared Path path;
 }
 
+doc "Environment variables of the current virtual 
+     machine process."
+shared Iterable<String->String> currentEnvironment 
+         = buildEnvironment();
