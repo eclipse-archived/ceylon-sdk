@@ -6,13 +6,8 @@ import java.nio.charset { Charset }
 class ConcreteReader(JPath jpath, Charset charset) 
         satisfies Reader {
     value r = newBufferedReader(jpath, charset);
-    shared actual String|Finished readLine() {
-        if (exists line=r.readLine()) {
-            return line;
-        }
-        else {
-            return exhausted;
-        }
+    shared actual String? readLine() {
+        return r.readLine();
     }
     shared actual void destroy() {
         r.close();

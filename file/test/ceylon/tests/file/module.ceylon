@@ -1,9 +1,9 @@
 Module module {
     name='ceylon.tests.file';
-    version='0.3';
+    version='0.3.1';
     Import {
         name = 'ceylon.file';
-        version = '0.3';
+        version = '0.3.1';
     },
     Import {
         name = 'com.redhat.ceylon.sdk.test';
