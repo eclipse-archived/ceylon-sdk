@@ -1,9 +1,10 @@
 Module module {
     name='ceylon.process';
-    version='0.3';
+    version='0.3.1';
     doc = "API for running native commands in a forked process.
            Clients simply create `Process`es using the
-           `createProcess()` method.
+           `createProcess()` method. The new process starts
+           executing immediately.
            
                Process process = createProcess { 
                    path = home;
@@ -16,7 +17,7 @@ Module module {
            `Reader`s.
            
                if (is Reader reader = process.output) {
-                   while (is String line = reader.readLine()) {
+                   while (exists line = reader.readLine()) {
                        print(line);
                    }
                }
@@ -51,5 +52,5 @@ Module module {
            
            To wait for the forked process to terminate, call
            the `waitForExit()` method of `Process`.";
-    Import { name = 'ceylon.file'; version = '0.3'; }
+    Import { name = 'ceylon.file'; version = '0.3.1'; }
 }

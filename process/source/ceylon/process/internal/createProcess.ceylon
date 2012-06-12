@@ -76,8 +76,8 @@ shared Process createProcess(
         shared actual void destroy() {
             reader.close();
         }
-        shared actual String|Finished readLine() {
-            return reader.readLine() else exhausted;
+        shared actual String? readLine() {
+            return reader.readLine();
         }
     }
     
