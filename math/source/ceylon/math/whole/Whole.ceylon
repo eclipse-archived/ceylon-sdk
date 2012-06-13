@@ -43,7 +43,6 @@ shared interface Whole of WholeImpl
 }
 
 class WholeImpl(BigInteger num)
-        extends IdentifiableObject()
         satisfies //Castable<Whole|Decimal> &
                   Whole {
 

@@ -221,7 +221,6 @@ shared interface Decimal
 }
 
 class DecimalImpl(BigDecimal num)
-        extends Object()
         satisfies //Castable<Decimal> &
                   Decimal {
 
