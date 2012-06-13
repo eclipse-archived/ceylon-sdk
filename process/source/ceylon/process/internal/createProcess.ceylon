@@ -81,34 +81,6 @@ shared Process createProcess(
     
     value newProcess = builder.start();
     
-    class IncomingPipe(OutputStream stream)
-            satisfies Writer {
-        value writer = OutputStreamWriter(stream);
-        shared actual void destroy() {
-            writer.close();
-        }
-        shared actual void flush() {
-            writer.flush();
-        }
-        shared actual void write(String string) {
-            writer.write(string);
-        }
-        shared actual void writeLine(String line) {
-            write(line); write(process.newline);
-        }
-    
-    }
-    class OutgoingPipe(InputStream stream) 
-            satisfies Reader {
-        value reader = BufferedReader(InputStreamReader(stream));
-        shared actual void destroy() {
-            reader.close();
-        }
-        shared actual String? readLine() {
-            return reader.readLine();
-        }
-    }
-    
     return ConcreteProcess {
         process = newProcess;
         path = path;
@@ -123,3 +95,33 @@ shared Process createProcess(
     };
     
 }
+
+class IncomingPipe(OutputStream stream)
+        satisfies Writer {
+    value writer = OutputStreamWriter(stream);
+    shared actual void destroy() {
+        writer.close();
+    }
+    shared actual void flush() {
+        writer.flush();
+    }
+    shared actual void write(String string) {
+        writer.write(string);
+    }
+    shared actual void writeLine(String line) {
+        write(line); write(process.newline);
+    }
+    
+}
+
+class OutgoingPipe(InputStream stream) 
+        satisfies Reader {
+    value reader = BufferedReader(InputStreamReader(stream));
+    shared actual void destroy() {
+        reader.close();
+    }
+    shared actual String? readLine() {
+        return reader.readLine();
+    }
+}
+
