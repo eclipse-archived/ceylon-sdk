@@ -1,6 +1,5 @@
 import ceylon.file { Path, current, Reader, Writer }
-import ceylon.process.internal { internalCreateProcess=createProcess, 
-                                 environment }
+import ceylon.process.internal { ConcreteProcess, environment }
 
 doc "Represents a separate native process."
 see (createProcess)
@@ -75,7 +74,7 @@ shared Process createProcess(
              current process."
         Error? error = null,
         doc "The commands to run in the new process."
-        String... commands) = internalCreateProcess;
+        String... commands) = ConcreteProcess;
 
 doc "A source for the standard input stream of
      a process."
