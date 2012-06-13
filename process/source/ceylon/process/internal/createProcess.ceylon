@@ -11,8 +11,8 @@ import java.lang { ProcessBuilder, System { getenv }, JString=String }
 shared Iterable<String->String> buildEnvironment() {
     object iterable satisfies Iterable<String->String> {    
         shared actual Iterator<String->String> iterator {
-            value env = getenv().entrySet().iterator();
             object iterator satisfies Iterator<String->String> {   
+                value env = getenv().entrySet().iterator();
                 shared actual String->String|Finished next() {
                     if (env.hasNext()) {
                         value entry = env.next();
@@ -37,8 +37,9 @@ shared Process createProcess(
         Error? error,
         String... commands) {
     
+    String[] temp = {commands...}; //TODO: WTF?!
     value builder = ProcessBuilder();
-    builder.command({commands...}...); //TODO: WTF?!
+    builder.command(temp...);
     builder.directory(JFile(path.string));
     for (e in environment) {
         builder.environment()
