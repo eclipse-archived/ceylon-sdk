@@ -1,6 +1,6 @@
 import ceylon.file { Path, current, Reader, Writer }
 import ceylon.process.internal { internalCreateProcess=createProcess, 
-                                 buildEnvironment }
+                                 environment }
 
 doc "Represents a separate native process."
 see (createProcess)
@@ -134,4 +134,4 @@ shared class OverwriteFileOutput(path)
 doc "Environment variables of the current virtual 
      machine process."
 shared Iterable<String->String> currentEnvironment 
-         = buildEnvironment();
+         = environment;

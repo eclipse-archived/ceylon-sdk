@@ -8,25 +8,23 @@ import java.io { OutputStream, OutputStreamWriter, InputStream,
                  InputStreamReader, BufferedReader, JFile=File }
 import java.lang { ProcessBuilder, System { getenv }, JString=String }
 
-shared Iterable<String->String> buildEnvironment() {
-    object iterable satisfies Iterable<String->String> {    
-        shared actual Iterator<String->String> iterator {
-            object iterator satisfies Iterator<String->String> {   
-                value env = getenv().entrySet().iterator();
-                shared actual String->String|Finished next() {
-                    if (env.hasNext()) {
-                        value entry = env.next();
-                        return entry.key.string->entry.\ivalue.string;
-                    }
-                    else {
-                        return exhausted;
-                    }
+shared object environment 
+        satisfies Iterable<String->String> {    
+    shared actual Iterator<String->String> iterator {
+        object iterator satisfies Iterator<String->String> {   
+            value env = getenv().entrySet().iterator();
+            shared actual String->String|Finished next() {
+                if (env.hasNext()) {
+                    value entry = env.next();
+                    return entry.key.string->entry.\ivalue.string;
+                }
+                else {
+                    return exhausted;
                 }
             }
-            return iterator; 
         }
+        return iterator; 
     }
-    return iterable; 
 }
 
 shared Process createProcess(
