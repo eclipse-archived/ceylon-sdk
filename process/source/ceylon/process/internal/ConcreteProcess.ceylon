@@ -8,23 +8,23 @@ import java.io { JFile=File }
 import java.lang { IllegalThreadStateException, ProcessBuilder, JString=String }
 
 shared class ConcreteProcess(
-        path, environment, 
+        command, path, 
         Input? inputOrNone, 
         Output? outputOrNone, 
         Error? errorOrNone, 
-        commands) 
+        environment) 
         satisfies Process {
 
+    actual shared String command;
     actual shared Path path;
-    actual shared Iterable<String->String> environment;
     actual shared Input|Writer input;
     actual shared Output|Reader output;
     actual shared Error|Reader error;
-    actual shared Iterable<String> commands;
+    actual shared Iterable<String->String> environment;
     
-    value commandArray = { commands... }; //TODO: WTF?!
     value builder = ProcessBuilder();
-    builder.command(commandArray...);
+    value commandWithArgs = command.split { discardSeparators=true; };
+    builder.command({ commandWithArgs... }...);
     builder.directory(JFile(path.string));
     for (e in environment) {
         builder.environment()

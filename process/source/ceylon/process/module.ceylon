@@ -8,7 +8,7 @@ Module module {
            
                Process process = createProcess { 
                    path = home;
-                   \"ls\"
+                   \"ls\", \"-l\"
                };
            
            By default, the standard input, output, and error 
@@ -34,7 +34,7 @@ Module module {
                    AppendFileOutput error { 
                        path=home.childPath(\"err.txt\");
                    }
-                   \"ls\"
+                   \"ls\", \"-l\"
                };
            
            The objects `currentInput`, `currentOutput`, and 
@@ -47,7 +47,7 @@ Module module {
                    path = home;
                    output = currentOutput;
                    error = currentError;
-                   \"ls\"
+                   \"ls\", \"-l\"
                };
            
            To wait for the forked process to terminate, call

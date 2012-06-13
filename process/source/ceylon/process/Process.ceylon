@@ -5,11 +5,12 @@ doc "Represents a separate native process."
 see (createProcess)
 shared interface Process {
     
+    doc "A _command_, usually a program with a list
+         of its arguments."
+    formal shared String command;
+    
     doc "The directory in which the process runs."
     formal shared Path path;
-    
-    doc "The environment variables of the process."
-    formal shared Iterable<String->String> environment;
     
     doc "The standard input stream of the process.
          This is a `Writer` in the case that the
@@ -29,8 +30,8 @@ shared interface Process {
          current process."
     formal shared Error|Reader error;
     
-    doc "The commands to be run."
-    formal shared Iterable<String> commands;
+    doc "The environment variables of the process."
+    formal shared Iterable<String->String> environment;
     
     doc "The exit code of the terminated process,
          or `null` if the process has not yet 
@@ -49,15 +50,14 @@ shared interface Process {
 }
 
 doc "Create and start a new process, running the
-     given sequence of commands."
+     given command."
 shared Process createProcess(
+        doc "The _command_ to be run in the new 
+             process, usually a program with a list 
+             of its arguments."
+        String command,
         doc "The directory in which the process runs."
         Path path=current,
-        doc "Environment variables to pass to the
-             process. By default the process inherits 
-             the environment variables of the current
-             virtual machine process."
-        Iterable<String->String> environment = {},//currentEnvironment,
         doc "The source for the standard input stream
              of the process, or `null` if the standard 
              input should be piped from the current 
@@ -73,8 +73,11 @@ shared Process createProcess(
              standard error should be piped to the 
              current process."
         Error? error = null,
-        doc "The commands to run in the new process."
-        String... commands) = ConcreteProcess;
+        doc "Environment variables to pass to the
+             process. By default the process inherits 
+             the environment variables of the current
+             virtual machine process."
+        String->String... environment) = ConcreteProcess;
 
 doc "A source for the standard input stream of
      a process."
