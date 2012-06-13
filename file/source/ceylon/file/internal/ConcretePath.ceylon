@@ -101,9 +101,9 @@ class ConcretePath(jpath)
             return false;
         }
     }
-    /*shared actual Integer hash {
+    shared actual Integer hash {
         return jpath.hash;
-    }*/
+    }
     shared actual String separator {
         return jpath.fileSystem.separator;
     }
