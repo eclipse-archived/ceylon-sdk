@@ -1,7 +1,7 @@
 Module module {
     name='ceylon.process';
     version='0.3.1';
-    doc = "API for running native commands in a forked process.
+    doc = "API for running native commands in a child process.
            Clients simply create `Process`es using the
            `createProcess()` method. The new process starts
            executing immediately.
@@ -12,7 +12,7 @@ Module module {
                };
            
            By default, the standard input, output, and error 
-           streams of the new forked process are piped to and
+           streams of the new child process are piped to and
            from the current process by exposing a `Writer` and
            `Reader`s.
            
@@ -50,7 +50,7 @@ Module module {
                    \"ls\", \"-l\"
                };
            
-           To wait for the forked process to terminate, call
+           To wait for the child process to terminate, call
            the `waitForExit()` method of `Process`.";
     Import { name = 'ceylon.file'; version = '0.3.1'; }
 }
