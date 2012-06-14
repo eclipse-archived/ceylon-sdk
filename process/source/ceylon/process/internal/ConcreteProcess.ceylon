@@ -1,11 +1,10 @@
 import ceylon.file { Path, Writer, Reader }
 import ceylon.process { stdin=currentInput, stdout=currentOutput, 
                         stderr=currentError,  ...  }
-import ceylon.process.internal { Util { redirectInherit, redirectToAppend, 
-                                        redirectToOverwrite } }
 
 import java.io { JFile=File }
-import java.lang { IllegalThreadStateException, ProcessBuilder, JString=String }
+import java.lang { IllegalThreadStateException, JString=String, 
+                   ProcessBuilder { Redirect { appendTo, to, INHERIT } } }
 
 shared class ConcreteProcess(
         command, path, 
@@ -69,7 +68,7 @@ shared class ConcreteProcess(
 void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
     switch (inputOrNone)
     case (stdin) {
-        builder.redirectInput(redirectInherit);
+        builder.redirectInput(\iINHERIT);
     }
     case (is FileInput) {
         builder.redirectInput(JFile(inputOrNone.path.string));
@@ -80,13 +79,13 @@ void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
 void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
     switch (outputOrNone)
     case (stdout) {
-        builder.redirectOutput(redirectInherit);
+        builder.redirectOutput(\iINHERIT);
     }
     case (is AppendFileOutput) {
-        builder.redirectOutput(redirectToAppend(JFile(outputOrNone.path.string)));
+        builder.redirectOutput(appendTo(JFile(outputOrNone.path.string)));
     }
     case (is OverwriteFileOutput) {
-        builder.redirectOutput(redirectToOverwrite(JFile(outputOrNone.path.string)));
+        builder.redirectOutput(to(JFile(outputOrNone.path.string)));
     }
     else {}
 }
@@ -94,13 +93,13 @@ void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
 void redirectError(Error? errorOrNone, ProcessBuilder builder) {
     switch (errorOrNone)
     case (stderr) {
-        builder.redirectError(redirectInherit);
+        builder.redirectError(\iINHERIT);
     }
     case (is AppendFileOutput) {
-        builder.redirectError(redirectToAppend(JFile(errorOrNone.path.string)));
+        builder.redirectError(appendTo(JFile(errorOrNone.path.string)));
     }
     case (is OverwriteFileOutput) {
-        builder.redirectError(redirectToOverwrite(JFile(errorOrNone.path.string)));
+        builder.redirectError(to(JFile(errorOrNone.path.string)));
     }
     else {}
 }
