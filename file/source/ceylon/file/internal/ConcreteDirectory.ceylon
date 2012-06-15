@@ -18,9 +18,9 @@ class ConcreteDirectory(JPath jpath)
         stream.close();
         return sb.sequence;
     }
-    shared actual Iterable<File|Directory> children(String filter) {
+    shared actual Iterable<ExistingResource> children(String filter) {
         return elements { for (p in childPaths(filter)) 
-                 if (is File|Directory r=p.resource) r };
+                 if (is ExistingResource r=p.resource) r };
     }
     shared actual Iterable<File> files(String filter) {
         return elements { for (p in childPaths(filter))
