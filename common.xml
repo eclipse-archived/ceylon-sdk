@@ -12,6 +12,11 @@
   <property name="build.modules" location="${build}/modules"/>
   <property name="test.reports" location="${build}/test-reports"/>
   <property name="repo.dependancies" location="../build/modules"/>
+  <condition property="tests.exist">
+    <resourceexists>
+      <file file="test"/>
+    </resourceexists>
+  </condition>
   
   <path id="ant-tasks">
     <pathelement location="${ceylon.ant.lib}"/>
@@ -40,9 +45,10 @@
     </ceylonc>
   </target>
     
-  <target name="test" depends="compile" if="module.tests.name">
+  <target name="test" depends="compile" if="module.tests.name, tests.exist">
     <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
     <!-- compile the tests -->
+    
     <ceylonc executable="${basedir}/../../ceylon-compiler/build/bin/ceylonc"
       src="test"
       out="${build.modules}">
