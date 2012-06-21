@@ -1,8 +1,8 @@
 Module module {
-    name='ceylon.tests.file';
+    name='test.ceylon.math';
     version='0.3.1';
     Import {
-        name = 'ceylon.file';
+        name = 'ceylon.math';
         version = '0.3.1';
     },
     Import {

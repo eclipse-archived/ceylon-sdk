@@ -1,4 +1,4 @@
 Package package {
-    name='ceylon.tests.file';
+    name='test.ceylon.math';
     shared=false;
 }
