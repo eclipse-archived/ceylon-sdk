@@ -1,0 +1,3 @@
+<project name="ceylon.net">
+    <import file="../common.xml"/>
+</project>

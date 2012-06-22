@@ -4,8 +4,11 @@
   <filelist id="module.dirs">
   	<file name="sdk-test"/>
     <file name="math"/>
+    <file name="collection"/>
     <file name="file"/>
     <file name="process"/>
+    <file name="json"/>
+    <file name="net"/>
   </filelist>
   
   <macrodef name="iterate">

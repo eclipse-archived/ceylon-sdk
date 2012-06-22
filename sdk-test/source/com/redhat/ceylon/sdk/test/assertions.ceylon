@@ -12,6 +12,10 @@ shared void assert(Boolean assertion, String message=", expected " + assertion.s
     }
 }
 
+// Simply because Stef's tests used assertTrue rather than assert
+doc "Fails the test if the assertion is false"
+shared void assertTrue(Boolean assertion, String message=", expected " + assertion.string) = assert;
+
 doc "Fails the test if the assertion is true"
 shared void assertFalse(Boolean assertion, String message=", expected " + assertion.string) {
     if (assertion) {

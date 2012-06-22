@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="sdk-test/source"/>
+	<classpathentry kind="src" path="collection/source"/>
+	<classpathentry kind="src" path="collection/test"/>
 	<classpathentry kind="src" path="file/source"/>
-	<classpathentry kind="src" path="math/test"/>
-	<classpathentry kind="src" path="math/source"/>
 	<classpathentry kind="src" path="file/test"/>
+	<classpathentry kind="src" path="json/source"/>
+	<classpathentry kind="src" path="json/test"/>
+	<classpathentry kind="src" path="math/source"/>
+	<classpathentry kind="src" path="math/test"/>
+	<classpathentry kind="src" path="net/source"/>
+	<classpathentry kind="src" path="net/test"/>
 	<classpathentry kind="src" path="process/source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.redhat.ceylon.eclipse.ui.cpcontainer.CEYLON_CONTAINER/default"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ceylon.language"/>
 	<classpathentry kind="output" path="modules"/>
 </classpath>
