@@ -43,13 +43,12 @@
     <iterate target="doc-module"/>
   </target>
   
-  <target name="publish">
-    <!--<input message="modules.ceylon-lang.org username:>" addproperty="publish.username"/>
-    <input message="modules.ceylon-lang.org password:>" addproperty="publish.password">
-      <handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
-    </input>
-    <property name="publish.repo" value="https://modules.ceylon-lang.org"/>-->
-    <iterate target="publish-module"/>
+  <target name="local">
+    <iterate target="local-module"/>
+  </target>
+  
+  <target name="herd">
+    <iterate target="herd-module"/>
   </target>
 
 </project>
