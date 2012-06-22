@@ -29,14 +29,14 @@ Decimal parseOrFail(String str) {
 
 void instantiationAndEquality() {
     print("Decimal instantiation, equality");
-    assert(zero == zero, "zero==zero");
-    assert(zero != one, "zero!=one");
-    assert(one == one, "one==one");
-    assert(zero== decimal(0), "zero==0");
-    assert(one == decimal(1), "one==1");
-    assert(decimal(1) == decimal(1), "1==1");
-    assert(decimal(0) != decimal(1), "0!=1");
-    assert(decimal(1) != decimal(2), "1!=2");
+    assertTrue(zero == zero, "zero==zero");
+    assertTrue(zero != one, "zero!=one");
+    assertTrue(one == one, "one==one");
+    assertTrue(zero== decimal(0), "zero==0");
+    assertTrue(one == decimal(1), "one==1");
+    assertTrue(decimal(1) == decimal(1), "1==1");
+    assertTrue(decimal(0) != decimal(1), "0!=1");
+    assertTrue(decimal(1) != decimal(2), "1!=2");
 }
 
 void parse() {

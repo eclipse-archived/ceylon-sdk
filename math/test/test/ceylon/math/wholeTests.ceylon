@@ -12,16 +12,16 @@ shared void wholeTests() {
     }
 
     print("Whole instantiation, equality");
-    assert(zero == zero, "zero==zero");
-    assert(one == one, "one==one");
-    assert(zero != one, "zero!=one");
-    assert(zero == whole(0), "zero==0");
-    assert(one == whole(1), "one==1");
-    assert(zero != whole(2), "zero!=2");
-    assert(one != whole(2), "one!=2");
-    assert(whole(1) == whole(1), "1==1");
-    assert(whole(1) != whole(2), "1!=2");
-    assert(whole(2) == whole(2), "2==2");
+    assertTrue(zero == zero, "zero==zero");
+    assertTrue(one == one, "one==one");
+    assertTrue(zero != one, "zero!=one");
+    assertTrue(zero == whole(0), "zero==0");
+    assertTrue(one == whole(1), "one==1");
+    assertTrue(zero != whole(2), "zero!=2");
+    assertTrue(one != whole(2), "one!=2");
+    assertTrue(whole(1) == whole(1), "1==1");
+    assertTrue(whole(1) != whole(2), "1!=2");
+    assertTrue(whole(2) == whole(2), "2==2");
 
     print("parseWhole");
     assertEquals(whole(1), parseWhole("1"), "parseWhole");
@@ -36,25 +36,25 @@ shared void wholeTests() {
     assertNull(parseWhole("1.-0"));
 
     print("Whole.string");
-    assert("1" == whole(1).string, "1.string");
-    assert("-1" == whole(-1).string, "-1.string");
+    assertTrue("1" == whole(1).string, "1.string");
+    assertTrue("-1" == whole(-1).string, "-1.string");
     assertEquals("1000000000000000000000000000000000000", parseOrFail("1000000000000000000000000000000000000").string, ".string");
 
     print("Whole.plus");
-    assert(whole(2) == whole(1).plus(whole(1)), "1.plus(1)");
-    assert(whole(2) == whole(1) + whole(1), "1+1");
+    assertTrue(whole(2) == whole(1).plus(whole(1)), "1.plus(1)");
+    assertTrue(whole(2) == whole(1) + whole(1), "1+1");
 
     print("Whole.minus");
-    assert(whole(0) == whole(1).minus(whole(1)), "1.minus(1)");
-    assert(whole(0) == whole(1) - whole(1), "1-1");
+    assertTrue(whole(0) == whole(1).minus(whole(1)), "1.minus(1)");
+    assertTrue(whole(0) == whole(1) - whole(1), "1-1");
 
     print("Whole.times");
-    assert(whole(4) == whole(2).times(whole(2)), "2.times(2)");
-    assert(whole(4) == whole(2) * whole(2), "2*2");
+    assertTrue(whole(4) == whole(2).times(whole(2)), "2.times(2)");
+    assertTrue(whole(4) == whole(2) * whole(2), "2*2");
 
     print("Whole.divided");
-    assert(whole(2) == whole(4).divided(whole(2)), "4.divided(2)");
-    assert(whole(2) == whole(4) / whole(2), "4/2");
+    assertTrue(whole(2) == whole(4).divided(whole(2)), "4.divided(2)");
+    assertTrue(whole(2) == whole(4) / whole(2), "4/2");
 
     print("Whole.remainder");
     assertEquals(whole(0), whole(4).remainder(whole(2)), "4.remainder(2)");
@@ -97,22 +97,22 @@ shared void wholeTests() {
     } catch (Exception e){}
 
     print("Whole comparison");
-    assert(larger == whole(2).compare(whole(1)), "2.compare(1)");
-    assert(whole(2) > whole(1), "2>1");
-    assert(smaller == whole(1).compare(whole(2)), "1.compare(2)");
-    assert(whole(1) < whole(2), "1<2");
+    assertTrue(larger == whole(2).compare(whole(1)), "2.compare(1)");
+    assertTrue(whole(2) > whole(1), "2>1");
+    assertTrue(smaller == whole(1).compare(whole(2)), "1.compare(2)");
+    assertTrue(whole(1) < whole(2), "1<2");
 
     print("Whole predicates");
-    assert(whole(2).positive, "2.positive");
-    assert(!whole(-2).positive, "-2.positive");
-    assert(!zero.positive, "zero.positive");
-    assert(!whole(2).negative, "2.negative");
-    assert(whole(-2).negative, "-2.negative");
-    assert(!zero.negative, "zero.negative");
-    assert(!whole(1).zero, "1.zero");
-    assert(whole(0).zero, "0.zero");
-    assert(whole(1).unit, "1.unit");
-    assert(!whole(0).unit, "0.unit");
+    assertTrue(whole(2).positive, "2.positive");
+    assertTrue(!whole(-2).positive, "-2.positive");
+    assertTrue(!zero.positive, "zero.positive");
+    assertTrue(!whole(2).negative, "2.negative");
+    assertTrue(whole(-2).negative, "-2.negative");
+    assertTrue(!zero.negative, "zero.negative");
+    assertTrue(!whole(1).zero, "1.zero");
+    assertTrue(whole(0).zero, "0.zero");
+    assertTrue(whole(1).unit, "1.unit");
+    assertTrue(!whole(0).unit, "0.unit");
 
     print("Whole.hash");
     assertEquals(0, whole(0).hash, "0.hash");

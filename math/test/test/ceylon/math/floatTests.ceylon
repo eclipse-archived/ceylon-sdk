@@ -631,8 +631,8 @@ void testRandom() {
     print("Float.cbrt");
     for (Integer ii in 0..1000) {
         Float r = random();
-        assert(r >= +0.0, "random() returned " r " (must be >= +0)");
-        assert(r < 1.0,  "random() returned " r " (must be < 1)");
+        assertTrue(r >= +0.0, "random() returned " r " (must be >= +0)");
+        assertTrue(r < 1.0,  "random() returned " r " (must be < 1)");
     }
 }
 
