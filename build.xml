@@ -28,19 +28,19 @@
   </macrodef>
 
   <target name="compile">
-    <iterate target="compile"/>
+    <iterate target="compile-module"/>
   </target>
 	
   <target name="clean">
-    <iterate target="clean"/>
+    <iterate target="clean-module"/>
   </target>
 	
   <target name="test">
-    <iterate target="test"/>
+    <iterate target="test-module"/>
   </target>
 	
   <target name="doc">
-    <iterate target="doc"/>
+    <iterate target="doc-module"/>
   </target>
   
   <target name="publish">
@@ -49,7 +49,7 @@
       <handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
     </input>
     <property name="publish.repo" value="https://modules.ceylon-lang.org"/>-->
-    <iterate target="publish"/>
+    <iterate target="publish-module"/>
   </target>
 
 </project>

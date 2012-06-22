@@ -26,7 +26,7 @@
   <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
   <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
 
-  <target name="clean">
+  <target name="clean-module">
     <echo message="${ant.project.name} clean basedir:${basedir}, build: ${build}"/>
     <delete dir="${build}"/>
   </target>
@@ -36,7 +36,7 @@
     <mkdir dir="${build}"/>
   </target>
   
-  <target name="compile" depends="-init">
+  <target name="compile-module" depends="-init">
     <echo message="${ant.project.name} compile basedir:${basedir}, build: ${build}"/>
     <ceylonc executable="${basedir}/../../ceylon-compiler/build/bin/ceylonc"
       out="${build.modules}">
@@ -45,7 +45,7 @@
     </ceylonc>
   </target>
     
-  <target name="test" depends="compile" if="tests.exist">
+  <target name="test-module" depends="compile-module" if="tests.exist">
     <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
     <!-- compile the tests -->
     
@@ -63,7 +63,7 @@
     </ceylon>
   </target>
   
-  <target name="doc" depends="-init">
+  <target name="doc-module" depends="-init">
     <echo message="${ant.project.name} doc basedir:${basedir}, build: ${build}"/>
     <ceylond executable="${basedir}/../../ceylon-compiler/build/bin/ceylond"
         out="${build.modules}">
@@ -72,7 +72,7 @@
     </ceylond>
   </target>
   
-  <target name="publish" depends="compile, doc">
+  <target name="publish-module" depends="compile-module, doc-module">
     <echo message="${ant.project.name} publish basedir:${basedir}, build: ${build}"/>
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo"/>
     <property name="publish.dir" location="${ceylon.repo.dir}/"/>
