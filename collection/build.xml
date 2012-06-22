@@ -1,3 +1,3 @@
-<project name="ceylon.collection">
+<project name="collection">
     <import file="../common.xml"/>
 </project>

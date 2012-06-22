@@ -2,7 +2,17 @@
   <echo message="${ant.project.name} basedir:${basedir}, build: ${build}"/>
   
   <property file="../build.properties"/>
-  <property file="build.properties"/>
+  <property name="module.build.properties" value="${ant.project.name}.build.properties"/>
+  <available file="${module.build.properties}" property="module.build.properties.exist"/>
+  <fail message="${module.build.properties} file doesn't exist in ${ant.project.name}" unless="module.build.properties.exist"/>
+  <property file="${ant.project.name}.build.properties"/>
+  <fail message="${module.build.properties} didn't specify a module.version property" unless="module.version"/>
+  
+  <!-- usually the modules build properties don't need to set a module.name
+  because the following default just works, but not for sdk-test -->
+  <property name="module.name" value="ceylon.${ant.project.name}"/>
+  <echo message="######### module = ${module.name}"/>
+  
   <!-- set these if not already set by the master build.xml.
        build dir is different if you do a top-level build or a module specific 
        build. This allows you to build each module independently. 

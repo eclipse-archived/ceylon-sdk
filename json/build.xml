@@ -1,3 +1,3 @@
-<project name="ceylon.json">
+<project name="json">
     <import file="../common.xml"/>
 </project>
