@@ -3,10 +3,7 @@
   
   <property file="../build.properties"/>
   <property name="module.build.properties" value="${ant.project.name}.build.properties"/>
-  <available file="${module.build.properties}" property="module.build.properties.exist"/>
-  <fail message="${module.build.properties} file doesn't exist in ${ant.project.name}" unless="module.build.properties.exist"/>
   <property file="${ant.project.name}.build.properties"/>
-  <fail message="${module.build.properties} didn't specify a module.version property" unless="module.version"/>
   
   <!-- usually the modules build properties don't need to set a module.name
   because the following default just works, but not for sdk-test -->
@@ -35,6 +32,7 @@
   <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
   <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
   <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
+  <taskdef name="ceylonmd" classname="com.redhat.ceylon.ant.CeylonModuleDescriptorTask" classpathref="ant-tasks"/>
 
   <target name="clean-module">
     <echo message="${ant.project.name} clean basedir:${basedir}, build: ${build}"/>
@@ -44,6 +42,9 @@
   <target name="-init">
     <echo message="${ant.project.name} -init basedir:${basedir}, build: ${build}"/>
     <mkdir dir="${build}"/>
+    <ceylonmd versionProperty="module.version" module="${module.name}"/>
+    <fail unless="module.version" 
+      message="${module.build.properties} didn't specify a module.version property and the module descriptors version couldn't be found either"/>
   </target>
   
   <target name="compile-module" depends="-init">
