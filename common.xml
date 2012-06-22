@@ -38,7 +38,7 @@
   
   <target name="compile-module" depends="-init">
     <echo message="${ant.project.name} compile basedir:${basedir}, build: ${build}"/>
-    <ceylonc executable="${basedir}/../../ceylon-compiler/build/bin/ceylonc"
+    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/ceylonc"
       out="${build.modules}">
       <rep url="${repo.dependancies}"/>
       <module name="${module.name}"/>
@@ -49,14 +49,14 @@
     <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
     <!-- compile the tests -->
     
-    <ceylonc executable="${basedir}/../../ceylon-compiler/build/bin/ceylonc"
+    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/ceylonc"
       src="test"
       out="${build.modules}">
       <rep url="${repo.dependancies}"/>
       <module name="test.${module.name}"/>
     </ceylonc>
     <!-- Run the tests -->
-    <ceylon executable="${basedir}/../../ceylon-runtime/build/dist/bin/ceylon"
+    <ceylon executable="${basedir}/../../ceylon-dist/dist/bin/ceylon"
         run="test.${module.name}.run" module="test.${module.name}/${module.version}">
         <rep url="${repo.dependancies}"/>
         <rep url="${build.modules}"/>
@@ -65,7 +65,7 @@
   
   <target name="doc-module" depends="-init">
     <echo message="${ant.project.name} doc basedir:${basedir}, build: ${build}"/>
-    <ceylond executable="${basedir}/../../ceylon-compiler/build/bin/ceylond"
+    <ceylond executable="${basedir}/../../ceylon-dist/dist/bin/ceylond"
         out="${build.modules}">
       <rep url="${repo.dependancies}"/>
       <module name="${module.name}"/>
@@ -83,7 +83,7 @@
         </fileset>
     </copy>
     <!--
-    <ceylonr executable="../ceylon-runtime/build/bin/ceylonr"
+    <ceylonr executable="../ceylon-dist/dist/bin/ceylonr"
         out="${publish.repo}"
         pass="${publish.password}"
         user="${publish.username}">
