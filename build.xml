@@ -19,7 +19,7 @@
         <property name="build" location="build"/>
         <property name="build.modules" location="build/modules"/>
         <property name="test.reports" location="build/test-reports"/>
-        <property name="repo.dependancies" location="build/modules"/>
+        <property name="repo.dependencies" location="build/modules"/>
         <property name="publish.username" value="${publish.username}"/>
         <property name="publish.password" value="${publish.password}"/>
         <property name="publish.repo" value="${publish.repo}"/>
