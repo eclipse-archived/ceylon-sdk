@@ -1,4 +1,4 @@
-import ceylon.net { Parameter, URI, percentEncoder, Path, PathSegment, ... }
+import ceylon.net.uri { Parameter, URI, percentEncoder, Path, PathSegment, ... }
 import com.redhat.ceylon.sdk.test { ... }
 
 void testURL(String url, 

@@ -1,4 +1,4 @@
-import ceylon.net { URI }
+import ceylon.net.uri { URI }
 import ceylon.net.http { ... }
 import com.redhat.ceylon.sdk.test { ... }
 import ceylon.json { ... }

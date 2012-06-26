@@ -1,5 +1,5 @@
 import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
-import ceylon.net { URI }
+import ceylon.net.uri { URI }
 import ceylon.json { JSONObject = Object }
 
 import java.net { URL, HttpURLConnection, URLConnection }
