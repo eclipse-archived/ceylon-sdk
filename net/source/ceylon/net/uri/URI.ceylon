@@ -133,7 +133,7 @@ shared class URI(String? uri = null){
         if(nonempty pathPart){
             Path p = Path();
             variable Boolean first := true;
-            for(String part in split(pathPart, "/")){
+            for(String part in pathPart.split("/", true, false)){
                 if(first && part.empty){
                     p.absolute := true;
                     first := false;
@@ -151,7 +151,7 @@ shared class URI(String? uri = null){
     void parseQueryPart(String queryPart) {
         Query q = Query();
         query := q;
-        for(String part in split(queryPart, "&")){
+        for(String part in queryPart.split("&", true, false)){
             q.addRaw(part);
         }
     }
