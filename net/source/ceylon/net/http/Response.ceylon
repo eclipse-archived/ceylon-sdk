@@ -1,6 +1,5 @@
 import java.net { HttpURLConnection }
 import ceylon.net.iop { readString }
-import ceylon.net.iop { toOptionalString }
 import ceylon.json { JSONObject = Object, parseJSON = parse }
 
 by "Stéphane Épardaud"
@@ -28,7 +27,7 @@ shared class Response(HttpURLConnection con){
     
     doc "The response encoding as defined by the `Content-Type` header"
     shared String? encoding {
-        return toOptionalString(con.contentEncoding);
+        return con.contentEncoding;
     }
     
     doc "The response contents, as a String"
