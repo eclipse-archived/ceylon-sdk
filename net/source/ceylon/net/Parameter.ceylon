@@ -1,3 +1,5 @@
+import ceylon.net.iop { eq }
+
 doc "Represents a URI path segment or query parameter"
 by "Stéphane Épardaud"
 shared class Parameter(String initialName, String? initialValue = null) {

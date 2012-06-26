@@ -1,5 +1,5 @@
 
-Boolean eq(Object? a, Object? b){
+shared Boolean eq(Object? a, Object? b){
     if(exists a){
         if(exists b){
             return a == b;

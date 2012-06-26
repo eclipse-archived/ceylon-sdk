@@ -1,3 +1,5 @@
+import ceylon.net.iop { eq }
+
 doc "Represents a URI Authority part (user, password, host and port)"
 by "Stéphane Épardaud"
 shared class Authority(){
