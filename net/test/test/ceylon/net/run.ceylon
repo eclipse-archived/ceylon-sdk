@@ -7,8 +7,7 @@ class NetSuite() extends Suite("ceylon.net") {
         "URI Invalid port" -> testInvalidPort,
         "URI Invalid port2" -> testInvalidPort2,
         "URI Decoding test"-> testDecoding,
-        "HTTP testGet" -> testGET, 
-        "HTTP testGetJson" -> testGETJSON
+        "HTTP testGet" -> testGET
     };
 }
 

@@ -1,6 +1,5 @@
 import java.net { HttpURLConnection }
 import ceylon.net.iop { readString }
-import ceylon.json { JSONObject = Object, parseJSON = parse }
 
 by "Stéphane Épardaud"
 doc "Represents an HTTP Response"
@@ -62,14 +61,5 @@ shared class Response(HttpURLConnection con){
         }finally{
             istream.close();
         }
-    }
-
-    doc "The response contents, as a JSON Object"
-    throws(Exception, "If the response status is not 200")    
-    shared JSONObject getJSON() {
-        if(status == 200){
-            return parseJSON(contents);
-        }
-        throw Exception("Invalid response from server: " status " (expecting 200)");
     }
 }

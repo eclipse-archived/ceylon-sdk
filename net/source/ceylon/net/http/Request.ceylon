@@ -1,6 +1,5 @@
 import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
 import ceylon.net.uri { URI }
-import ceylon.json { JSONObject = Object }
 
 import java.net { URL, HttpURLConnection, URLConnection }
 
@@ -42,11 +41,5 @@ shared class Request(uri, method = "GET"){
         }else{
             throw;
         }
-    }
-
-    doc "Executes this request and returns the response as JSON"    
-    throws(Exception, "If the response status is not 200")    
-    shared JSONObject getJSON(){
-        return execute().getJSON();
     }
 }

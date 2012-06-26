@@ -23,8 +23,3 @@ void testGET(){
     testJSON(json);    
 }
 
-void testGETJSON(){
-    Object json = URI("https://api.github.com/repos/ceylon/ceylon-compiler").get().getJSON();
-    testJSON(json);    
-}
-

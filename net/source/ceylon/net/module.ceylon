@@ -7,9 +7,5 @@ Module module {
     Import {
         name = 'ceylon.collection';
         version = '0.3.0';
-    },
-    Import {
-        name = 'ceylon.json';
-        version = '0.3.0';
     }
 }
