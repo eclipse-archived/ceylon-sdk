@@ -2,8 +2,16 @@ import ceylon.collection { ... }
 
 by "Stéphane Épardaud"
 doc "Represents a JSON Array"
-shared class Array() satisfies Iterable<String|Boolean|Integer|Float|Object|Array|Nothing> {
-    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
+shared class Array(String|Boolean|Integer|Float|Object|Array|Nothing... values) satisfies Iterable<String|Boolean|Integer|Float|Object|Array|Nothing> {
+    MutableList<String|Boolean|Integer|Float|Object|Array|NullInstance> list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
+    
+    for(val in values){
+        if(exists val){
+            list.add(val);
+        }else{
+            list.add(nullInstance);
+        }
+    }
     
     doc "Adds a new value at the end of this array"
     shared void add(String|Boolean|Integer|Float|Object|Array|Nothing val){

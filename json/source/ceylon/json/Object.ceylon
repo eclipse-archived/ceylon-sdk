@@ -2,9 +2,13 @@ import ceylon.collection { ... }
 
 by "Stéphane Épardaud"
 doc "Represents a JSON Object"
-shared class Object() satisfies Iterable<String> {
+shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array>... values) satisfies Iterable<String> {
     
     value contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>();
+    
+    for(val in values){
+        contents.put(val.key, val.item);
+    }
     
     doc "Adds a new property mapping"
     shared void put(String key, String|Boolean|Integer|Float|Object|Array|Nothing val){
