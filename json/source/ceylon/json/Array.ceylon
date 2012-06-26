@@ -5,38 +5,20 @@ doc "Represents a JSON Array"
 shared class Array(String|Boolean|Integer|Float|Object|Array|Nothing... values) 
     satisfies Iterable<String|Boolean|Integer|Float|Object|Array|Nothing> {
     
-    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
+    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|Nothing>();
     
     for(val in values){
-        if(exists val){
-            list.add(val);
-        }else{
-            list.add(nullInstance);
-        }
+        list.add(val);
     }
     
     doc "Adds a new value at the end of this array"
     shared void add(String|Boolean|Integer|Float|Object|Array|Nothing val){
-        if(exists val){
-            list.add(val);
-        }else{
-            list.add(nil);
-        }
+        list.add(val);
     }
     
     doc "Gets the value at the given index, or `null` if it does not exist"
     shared String|Boolean|Integer|Float|Object|Array|Nothing get(Integer index){
-        value val = list[index];
-        if(is NullInstance val){
-            return null;
-        }
-        switch(val)
-        case (is String|Boolean|Integer|Float|Object|Array) {
-            return val;
-        }else{
-            // key does not exist
-            return null;
-        }
+        return list[index];
     }
     
     doc "Returns the number of elements in this array"
