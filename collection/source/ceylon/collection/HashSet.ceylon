@@ -184,6 +184,9 @@ shared class HashSet<Element>()
     }
     
     shared Boolean equalsTemp(Set<Element> that){
+        if(size != that.size){
+            return false;
+        }
         variable Integer index := 0;
         // walk every bucket
         while(index < store.size){

@@ -272,6 +272,9 @@ shared class HashMap<Key, Item>()
     }
     
     shared Boolean equalsTemp(Map<Key,Item> that){
+        if(size != that.size){
+            return false;
+        }
         variable Integer index := 0;
         // walk every bucket
         while(index < store.size){

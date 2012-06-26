@@ -213,7 +213,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     }
     
     shared actual Boolean empty {
-        return size > 0;
+        return size == 0;
     }
     
     shared actual Integer count(Object element) {
@@ -310,6 +310,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                         return false;
                     }
                 }
+                iter2 := cell2.cdr;
             }else{
                 return false;
             }
