@@ -1,5 +1,4 @@
-import ceylon.net.impl { JavaURLEncoder { jencodePart = encodePart }  }
-
+import java.lang { JString = String { format }, JByte = Byte }
 import java.util { BitSet }
 
 doc "Contains methods for percent-encoding. 
@@ -272,7 +271,19 @@ shared object percentEncoder {
         return encodePart(str, "UTF-8", fragment);
     }
     
-    String encodePart(String str, String encoding, BitSet fragment){
-        return jencodePart(str, encoding, fragment);
+    String encodePart(String str, String encoding, BitSet allowed){
+        StringBuilder encoded = StringBuilder();
+        for (Character c in str) {
+            if (allowed.get(c.integer)) {
+                encoded.append(c.string);
+            }
+            else {
+                Array<Integer> bytes = JString(c.string).getBytes(encoding);
+                for (Integer b in bytes) {
+                    encoded.append(format("%%%1$02X", JByte(b)));
+                }
+            }
+        }
+        return encoded.string;
     }
 }
