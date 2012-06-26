@@ -28,13 +28,13 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
         Integer? sep = part.firstCharacterOccurrence(`;`);
         String name;
         if(exists sep){
-            name = part.initial(sep);
+            name = part[0..sep-1];
         }else{
             name = part;
         }
         PathSegment path = PathSegment(decodePercentEncoded(name));
         if(exists sep){
-            for(String param in split(part.terminal(part.size - sep - 1), ";")){
+            for(String param in split(part[sep+1...], ";")){
                 path.parameters.add(parseParameter(param));
             }
         }

@@ -26,8 +26,8 @@ shared class URI(String? uri = null){
         Integer? sep = uri.firstOccurrence(":");
         if(exists sep){
             if(sep > 0){
-                scheme := uri.initial(sep);
-                return uri.terminal(uri.size - sep - 1);
+                scheme := uri[0..sep-1];
+                return uri[sep+1...];
             }
         }
         // no scheme, it must be relative
@@ -37,8 +37,8 @@ shared class URI(String? uri = null){
     void parseUserInfo(String userInfo) {
         Integer? sep = userInfo.firstCharacterOccurrence(`:`);
         if(exists sep){
-            authority.user := decodePercentEncoded(userInfo.initial(sep));
-            authority.password := decodePercentEncoded(userInfo.terminal(userInfo.size - sep - 1));
+            authority.user := decodePercentEncoded(userInfo[0..sep-1]);
+            authority.password := decodePercentEncoded(userInfo[sep+1...]);
         }else{
             authority.user := decodePercentEncoded(userInfo);
             authority.password := null;
@@ -52,10 +52,10 @@ shared class URI(String? uri = null){
             Integer? end = hostAndPort.firstCharacterOccurrence(`]`);
             if(exists end){
                 // eat the delimiters
-                authority.host := hostAndPort.terminal(hostAndPort.size - 1).initial(end - 1);
-                String rest = hostAndPort.terminal(hostAndPort.size - end - 1);
+                authority.host := hostAndPort[1..end-1];
+                String rest = hostAndPort[end+1...];
                 if(rest.startsWith(":")){
-                    portString = rest.terminal(rest.size - 1);
+                    portString = rest[1...];
                 }else{
                     portString = null;
                 }
@@ -66,8 +66,8 @@ shared class URI(String? uri = null){
             authority.ipLiteral := false;
             Integer? sep = hostAndPort.lastCharacterOccurrence(`:`);
             if(exists sep){
-                authority.host := decodePercentEncoded(hostAndPort.initial(sep));
-                portString = hostAndPort.terminal(hostAndPort.size - sep - 1);
+                authority.host := decodePercentEncoded(hostAndPort[0..sep-1]);
+                portString = hostAndPort[sep+1...];
             }else{
                 authority.host := decodePercentEncoded(hostAndPort);
                 portString = null;
@@ -92,15 +92,15 @@ shared class URI(String? uri = null){
             return uri;
         }
         // eat the two slashes
-        String part = uri.terminal(uri.size - 2);
+        String part = uri[2...];
         Integer? sep = part.firstCharacterOccurrence(`/`) 
             else part.firstCharacterOccurrence(`?`)
             else part.firstCharacterOccurrence(`#`);
         String authority;
         String remains;
         if(exists sep){
-            authority = part.initial(sep);
-            remains = part.terminal(part.size - sep);
+            authority = part[0..sep-1];
+            remains = part[sep...];
         }else{
             // no path part
             authority = part;
@@ -109,8 +109,8 @@ shared class URI(String? uri = null){
         Integer? userInfoSep = authority.firstCharacterOccurrence(`@`);
         String hostAndPort;
         if(exists userInfoSep){
-            parseUserInfo(authority.initial(userInfoSep));
-            hostAndPort = authority.terminal(authority.size - userInfoSep - 1); 
+            parseUserInfo(authority[0..userInfoSep-1]);
+            hostAndPort = authority[userInfoSep+1...]; 
         }else{
             hostAndPort = authority;
         }
@@ -123,8 +123,8 @@ shared class URI(String? uri = null){
         String pathPart;
         String remains;
         if(exists sep){
-            pathPart = uri.initial(sep);
-            remains = uri.terminal(uri.size - sep);
+            pathPart = uri[0..sep-1];
+            remains = uri[sep...];
         }else{
             // no query/fragment part
             pathPart = uri;
@@ -162,8 +162,8 @@ shared class URI(String? uri = null){
             if(c == `?`){
                 // we have a query part
                 Integer end = uri.firstCharacterOccurrence(`#`) else uri.size;
-                parseQueryPart(uri.terminal(uri.size - 1).initial(end - 1));
-                return uri.terminal(uri.size - end);
+                parseQueryPart(uri[1..end-1]);
+                return uri[end...];
             }
         }
         // no query/fragment part
@@ -175,7 +175,7 @@ shared class URI(String? uri = null){
         if(exists c){
             if(c == `#`){
                 // we have a fragment part
-                fragment := decodePercentEncoded(uri.terminal(uri.size - 1));
+                fragment := decodePercentEncoded(uri[1...]);
                 return "";
             }
         }
