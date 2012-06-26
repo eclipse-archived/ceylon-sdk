@@ -1,4 +1,4 @@
-import java.util{ List, ArrayList }
+import ceylon.collection { LinkedList }
 
 doc "Represents a URI Path segment part"
 by "Stéphane Épardaud"
@@ -8,7 +8,7 @@ shared class PathSegment(String initialName, Parameter... initialParameters) {
     shared variable String name := initialName;
     
     doc "The path segment paramters"
-    shared List<Parameter> parameters = ArrayList<Parameter>();
+    shared LinkedList<Parameter> parameters = LinkedList<Parameter>();
     
     for(Parameter p in initialParameters){
         parameters.add(p);
@@ -21,7 +21,7 @@ shared class PathSegment(String initialName, Parameter... initialParameters) {
                 return true;
             }
             return name == that.name
-                && parameters == that.parameters;
+                && parameters.equalsTemp(that.parameters);
         }
         return false;
     }
@@ -45,9 +45,9 @@ shared class PathSegment(String initialName, Parameter... initialParameters) {
         }else{
             StringBuilder b = StringBuilder();
             b.append(human then name else percentEncoder.encodePathSegmentName(name));
-            for(Integer i in 0..parameters.size()-1){
+            for(Parameter param in parameters){
                 b.appendCharacter(`;`);
-                b.append(serialiseParameter(parameters.get(i), human));
+                b.append(serialiseParameter(param, human));
             }
             return b.string;
         }

@@ -1,6 +1,5 @@
-import ceylon.net.iop { eq }
-import java.util{ List, ArrayList }
 import java.lang{ JInteger = Integer }
+import ceylon.net.iop { eq }
 import ceylon.net.http { Request }
 
 doc "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."

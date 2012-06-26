@@ -1,11 +1,11 @@
-import java.util{ List, ArrayList }
+import ceylon.collection { LinkedList }
 
 doc "Represents a URI Query part"
 by "Stéphane Épardaud"
 shared class Query(Parameter... initialParameters) {
     
     doc "The list of query parameters"
-    shared List<Parameter> parameters = ArrayList<Parameter>();
+    shared LinkedList<Parameter> parameters = LinkedList<Parameter>();
     
     for(Parameter p in initialParameters){
         parameters.add(p);
@@ -32,7 +32,7 @@ shared class Query(Parameter... initialParameters) {
             if(this === that){
                 return true;
             }
-            return parameters == that.parameters; 
+            return parameters.equalsTemp(that.parameters); 
         }
         return false;
     }
@@ -54,11 +54,12 @@ shared class Query(Parameter... initialParameters) {
             return "";
         }
         StringBuilder b = StringBuilder();
-        for(Integer i in 0..parameters.size()-1){
-            if(i > 0){
+        variable Integer i := 0;
+        for(Parameter p in parameters){
+            if(i++ > 0){
                 b.appendCharacter(`&`);
             }
-            b.append(serialiseParameter(parameters.get(i), human));
+            b.append(serialiseParameter(p, human));
         }
         return b.string;
     }

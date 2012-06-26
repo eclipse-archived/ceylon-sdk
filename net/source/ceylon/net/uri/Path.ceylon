@@ -1,11 +1,11 @@
-import java.util{ List, ArrayList }
+import ceylon.collection { LinkedList }
 
 doc "Represents a URI Path part"
 by "Stéphane Épardaud"
 shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegments) {
     
     doc "The list of path segments"
-    shared List<PathSegment> segments = ArrayList<PathSegment>();
+    shared LinkedList<PathSegment> segments = LinkedList<PathSegment>();
     
     doc "True if this URI is absolute (begins with a `/`)"
     shared variable Boolean absolute := initialAbsolute;
@@ -42,8 +42,8 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
     }
 
     doc "Returns a path segment"    
-    shared PathSegment get(Integer i){
-        return segments.get(i);
+    shared PathSegment? get(Integer i){
+        return segments[i];
     }
 
     doc "Remove a path segment"
@@ -63,7 +63,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
                 return true;
             }
             return absolute == that.absolute
-                && segments == that.segments; 
+                && segments.equalsTemp(that.segments); 
         }
         return false;
     }
@@ -77,11 +77,12 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
         if(absolute){
             b.appendCharacter(`/`);
         }
-        for(Integer i in 0..segments.size()-1){
-            if(i > 0){
+        variable Integer i := 0;
+        for(PathSegment segment in segments){
+            if(i++ > 0){
                 b.appendCharacter(`/`);
             }
-            b.append(segments.get(i).toRepresentation(human));
+            b.append(segment.toRepresentation(human));
         }
         return b.string;
     }
