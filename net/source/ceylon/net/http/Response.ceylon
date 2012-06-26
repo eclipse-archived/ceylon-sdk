@@ -21,7 +21,6 @@ shared class Response(HttpURLConnection con){
 
     doc "The `Content-Length` header value"    
     shared Integer contentLength {
-        // FIXME: this works on int only
         return con.contentLength;
     }
     
