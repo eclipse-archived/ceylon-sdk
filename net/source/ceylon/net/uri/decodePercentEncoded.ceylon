@@ -41,9 +41,3 @@ shared String decodePercentEncoded(String str){
     }
     return JString(array, 0, w, "UTF-8").string;
 }
-
-void test(){
-    print(decodePercentEncoded("foo"));
-    print(decodePercentEncoded("foo%2Fbar"));
-    print(decodePercentEncoded("%2Ffoo%2Fbar%2F"));
-}
