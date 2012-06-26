@@ -1,4 +1,4 @@
-import ceylon.net.uri { URI }
+import ceylon.net.uri { URI, parseURI }
 import ceylon.net.http { ... }
 import com.redhat.ceylon.sdk.test { ... }
 import ceylon.json { ... }
@@ -15,7 +15,7 @@ void testJSON(Object json){
 }
 
 void testGET(){
-    value request = URI("https://api.github.com/repos/ceylon/ceylon-compiler").get();
+    value request = parseURI("https://api.github.com/repos/ceylon/ceylon-compiler").get();
     value response = request.execute();
     assertTrue(nonempty response.contents, "Has contents");
 

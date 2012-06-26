@@ -1,4 +1,4 @@
-import ceylon.net.uri { Parameter, URI, percentEncoder, Path, PathSegment, ... }
+import ceylon.net.uri { Parameter, URI, parseURI, percentEncoder, Path, PathSegment, ... }
 import com.redhat.ceylon.sdk.test { ... }
 
 void testURL(String url, 
@@ -13,7 +13,7 @@ void testURL(String url,
             String? query = null,
             Query? decomposedQuery = null,
             String? fragment = null){
-    URI u = URI(url);
+    URI u = parseURI(url);
     assertEquals(scheme, u.scheme, "Scheme "+url);
     assertEquals(user, u.authority.user, "User "+url);
     assertEquals(pass, u.authority.password, "Password "+url);
@@ -141,16 +141,11 @@ void testDecomposition(){
 }
 
 void testComposition(){
-    URI u = URI();
-    u.scheme := "http";
-    u.authority.host := "192.168.1.1";
-    u.authority.port := 9000;
-    u.authority.user := "stef";
-    u.path.absolute := true;
-    u.path.add("a");
-    u.path.add("b", Parameter("c"), Parameter("d", "e"));
-    u.query.add(Parameter("q"));
-    u.query.add(Parameter("r","s"));
+    URI u = URI("http", 
+                Authority("stef", null, "192.168.1.1", 9000),
+                Path(true, PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
+                Query(Parameter("q"), Parameter("r","s")),
+                null);
     testURL{
         url = u.string;
         scheme = "http";
@@ -164,7 +159,7 @@ void testComposition(){
 
 void testInvalidPort(){
     try {
-        URI("http://foo:bar");
+        parseURI("http://foo:bar");
      } catch (Exception e) {
         assertEquals("Invalid port number: bar", e.message);
      }
@@ -172,7 +167,7 @@ void testInvalidPort(){
 
 void testInvalidPort2(){
     try {
-        URI("http://foo:-23");
+        parseURI("http://foo:-23");
      } catch (Exception e) {
         assertEquals("Invalid port number: -23", e.message);
      }
