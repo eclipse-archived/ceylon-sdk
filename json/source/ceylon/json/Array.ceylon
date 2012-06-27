@@ -3,7 +3,7 @@ import ceylon.collection { ... }
 by "Stéphane Épardaud"
 doc "Represents a JSON Array"
 shared class Array() satisfies Iterable<String|Boolean|Integer|Float|Object|Array|Nothing> {
-    MutableList<String|Boolean|Integer|Float|Object|Array|NullInstance> list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
+    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
     
     doc "Adds a new value at the end of this array"
     shared void add(String|Boolean|Integer|Float|Object|Array|Nothing val){

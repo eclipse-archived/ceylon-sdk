@@ -4,7 +4,7 @@ by "Stéphane Épardaud"
 doc "Represents a JSON Object"
 shared class Object() satisfies Iterable<String> {
     
-    MutableMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance> contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>();
+    value contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>();
     
     doc "Adds a new property mapping"
     shared void put(String key, String|Boolean|Integer|Float|Object|Array|Nothing val){

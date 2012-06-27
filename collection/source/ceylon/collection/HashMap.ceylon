@@ -54,8 +54,8 @@ shared class HashMap<Key, Item>()
     }
     
     doc "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
-    shared actual void putAll(Collection<Key->Item> map){
-        for(entry in map){
+    shared actual void putAll(Key->Item... entries){
+        for(entry in entries){
             put(entry.key, entry.item);
         }
     }

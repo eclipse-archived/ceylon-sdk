@@ -53,8 +53,8 @@ shared class HashSet<Element>()
     }
     
     doc "Adds every element from the given collection to this set, unless already present"
-    shared actual void addAll(Collection<Element> collection){
-        for(Element elem in collection){
+    shared actual void addAll(Element... elements){
+        for(Element elem in elements){
             add(elem);
         }
         checkRehash();
@@ -290,8 +290,8 @@ shared class HashSet<Element>()
     shared actual Set<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
-        ret.addAll(this);
-        ret.addAll(set);
+        ret.addAll(this...);
+        ret.addAll(set...);
         return ret;
     }
 

@@ -8,6 +8,9 @@ shared interface MutableList<T> satisfies List<T> {
     doc "Adds an item at the end of this list"
     shared formal void add(T val);
 
+    doc "Adds the items at the end of this list"
+    shared formal void addAll(T... values);
+
     doc "Inserts an item at specified index, list is expanded if index > size"    
     shared formal void insert(Integer index, T val);
 

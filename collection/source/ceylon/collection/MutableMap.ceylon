@@ -8,8 +8,8 @@ shared interface MutableMap<Key, Item>
     doc "Adds a key/value mapping to this map, may be used to modify an existing mapping"
     shared formal void put(Key key, Item item);
     
-    doc "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
-    shared formal void putAll(Collection<Key->Item> map);
+    doc "Adds the key/value mappings to this map, may be used to change existing mappings"
+    shared formal void putAll(Key->Item... entries);
     
     doc "Removes a key/value mapping if it exists"
     shared formal void remove(Key key);

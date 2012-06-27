@@ -89,6 +89,12 @@ shared class LinkedList<T>() satisfies MutableList<T> {
         _size++;
     }
     
+    shared actual void addAll(T... values) {
+        for (val in values) {
+            add(val);
+        }
+    }
+    
     doc "Removes the item at the specified index"
     shared actual void remove(Integer index){
         if(index < _size){
