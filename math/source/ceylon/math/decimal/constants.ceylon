@@ -10,8 +10,8 @@ import java.lang{
     }
 }
 
-Decimal intMax = decimal(maxInt);
-Decimal intMin = decimal(minInt);
+Decimal intMax = decimalNumber(maxInt);
+Decimal intMin = decimalNumber(minInt);
 
 doc "A `Decimal` instance representing zero."
 shared Decimal zero = DecimalImpl(bdzero);
