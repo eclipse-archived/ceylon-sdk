@@ -10,7 +10,7 @@ shared class Array() satisfies Iterable<String|Boolean|Integer|Float|Object|Arra
         if(exists val){
             list.add(val);
         }else{
-            list.add(nullInstance);
+            list.add(nil);
         }
     }
     

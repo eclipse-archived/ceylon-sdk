@@ -1,3 +1,3 @@
-abstract class NullInstance() of nullInstance {}
+abstract class NullInstance() of nil {}
 
-object nullInstance extends NullInstance() {}
+object nil extends NullInstance() {}

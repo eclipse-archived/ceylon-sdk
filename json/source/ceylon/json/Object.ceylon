@@ -11,7 +11,7 @@ shared class Object() satisfies Iterable<String> {
         if(exists val){
             contents.put(key, val);
         }else{
-            contents.put(key, nullInstance);
+            contents.put(key, nil);
         }
     }
 
