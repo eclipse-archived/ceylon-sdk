@@ -1,6 +1,6 @@
 Iterable<String> split(String val, String separators){
     object iterable satisfies Iterable<String>{
-        Iterable<String> iterableWithTokens = val.split(separators);
+        Iterable<String> iterableWithTokens = val.split((Character c) c in separators, false);
         shared actual Boolean empty = iterableWithTokens.empty;
         shared actual Iterator<String> iterator {
             object iterator satisfies Iterator<String> {
