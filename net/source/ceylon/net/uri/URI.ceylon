@@ -1,4 +1,3 @@
-import java.lang{ JInteger = Integer }
 import ceylon.net.iop { eq }
 import ceylon.net.http { Request }
 
