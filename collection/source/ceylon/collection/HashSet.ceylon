@@ -4,7 +4,7 @@ shared class HashSet<Element>()
     satisfies MutableSet<Element>
         given Element satisfies Object {
     
-    variable Array<Cell<Element>?> store := makeCellArray<Cell<Element>?>(16);
+    variable Array<Cell<Element>?> store := makeCellElementArray<Element>(16);
     variable Integer _size := 0;
     Float loadFactor = 0.75;
 
@@ -13,7 +13,7 @@ shared class HashSet<Element>()
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Element>?> newStore = makeCellArray<Cell<Element>?>(_size * 2);
+            Array<Cell<Element>?> newStore = makeCellElementArray<Element>(_size * 2);
             variable Integer index := 0;
             // walk every bucket
             while(index < store.size){
@@ -205,7 +205,7 @@ shared class HashSet<Element>()
     shared actual HashSet<Element> clone {
         HashSet<Element> clone = HashSet<Element>();
         clone._size := _size;
-        clone.store := makeCellArray<Cell<Element>?>(store.size);
+        clone.store := makeCellElementArray<Element>(store.size);
         variable Integer index := 0;
         // walk every bucket
         while(index < store.size){

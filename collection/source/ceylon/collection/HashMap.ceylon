@@ -5,7 +5,7 @@ shared class HashMap<Key, Item>()
         given Key satisfies Object 
         given Item satisfies Object {
     
-    variable Array<Cell<Key->Item>?> store := makeCellArray<Cell<Key->Item>?>(16);
+    variable Array<Cell<Key->Item>?> store := makeCellEntryArray<Key,Item>(16);
     variable Integer _size := 0;
     Float loadFactor = 0.75;
 
@@ -14,7 +14,7 @@ shared class HashMap<Key, Item>()
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Key->Item>?> newStore = makeCellArray<Cell<Key->Item>?>(_size * 2);
+            Array<Cell<Key->Item>?> newStore = makeCellEntryArray<Key,Item>(_size * 2);
             variable Integer index := 0;
             // walk every bucket
             while(index < store.size){
@@ -298,7 +298,7 @@ shared class HashMap<Key, Item>()
     shared actual Map<Key,Item> clone {
         HashMap<Key,Item> clone = HashMap<Key,Item>();
         clone._size := _size;
-        clone.store := makeCellArray<Cell<Key->Item>?>(store.size);
+        clone.store := makeCellEntryArray<Key,Item>(store.size);
         variable Integer index := 0;
         // walk every bucket
         while(index < store.size){
