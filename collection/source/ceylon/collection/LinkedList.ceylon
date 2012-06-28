@@ -318,4 +318,9 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         }
         return true;
     }
+
+    doc "Not implemented yet"
+    shared actual LinkedList<Element> reversed {
+        return bottom;
+    }
 }
