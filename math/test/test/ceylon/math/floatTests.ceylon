@@ -32,7 +32,7 @@ Boolean exact(Object? expect, Object? got) {
                         return true;
                     } else if (expect == 0.0
                         && got == 0.0
-                        && expect.hash != got.hash) { // consider 0.0 and -0.0 as different
+                        && expect.strictlyPositive != got.strictlyPositive) { // consider 0.0 and -0.0 as different
                         return false;
                     }
                     return expect == got;
