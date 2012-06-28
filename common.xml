@@ -14,7 +14,7 @@
        build. This allows you to build each module independently. 
        But only if you've done a top-level ant build first, so the 
        repo.dependencies repo is populated --> 
-  <property name="build" location="build"/>
+  <property name="build" location="../build"/>
   <property name="build.modules" location="${build}/modules"/>
   <property name="repo.out" location="${build}/modules"/>
   <property name="test.reports" location="${build}/test-reports"/>
