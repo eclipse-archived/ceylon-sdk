@@ -20,6 +20,11 @@ import java.math{
 
 ThreadLocal<Rounding?> defaultRounding = ThreadLocal<Rounding?>();
 
+shared class DividedWithRemainder(divided, remainder) {
+    shared Decimal divided;
+    shared Decimal remainder;
+}
+
 doc "Performs an arbitrary calcuation with the given rounding used implicity
      when arithmetic operators are applied to `Decimal` operands.
 
@@ -31,9 +36,9 @@ doc "Performs an arbitrary calcuation with the given rounding used implicity
      The behaviour of all other `Decimal` methods are unchanged 
      during a call to this function.
      
-     The implicit rounding will only take affect on the current thread.
+     The implicit rounding will only take effect on the current thread.
      The `calculate()` function may itself call `implicitlyRounded()`
-     to apply a different implicit rounding for a subcalculation."
+     to apply a different implicit rounding for a sub-calculation."
 see(implicitRounding)
 shared Decimal implicitlyRounded(Decimal calculate(), Rounding rounding) {
     Rounding? prev = defaultRounding.get();
@@ -57,7 +62,7 @@ shared Rounding? implicitRounding {
 }
 
 doc "A decimal floating point number. This class provides support for fixed
-     and arbitrary precision numbers. Values are immuatable and 
+     and arbitrary precision numbers. Values are immutable and 
      represented as `unscaled * 10**(-scale)`. Methods without an explicit 
      `Rounding` parameter use `unlimitedPrecision` (unless documented 
      otherwise) except for `plus()`, `minus()`, `times()`, `divided()` 
@@ -71,14 +76,14 @@ shared interface Decimal
         satisfies //Castable<Decimal> &
                   Scalar<Decimal> & Exponentiable<Decimal,Decimal> {
 
-    doc "The platform specific implementation object, if any.
-         This is provided for the purposes of interoperation with the
+    doc "The platform-specific implementation object, if any.
+         This is provided for interoperation with the
          runtime platform."
     shared formal Object? implementation;
 
     doc "Determine whether two instances have equal value.
          `equals()` considers 1 and 1.0 to
-         be the same, `strictlyEquals()` considers them to be the different."
+         be the same, `strictlyEquals()` considers them to be different."
     see(strictlyEquals)
     shared formal actual Boolean equals(Object that);
 
@@ -93,10 +98,10 @@ shared interface Decimal
          have the same hash."
     shared formal actual Integer hash;
 
-    doc "The quotient obtained by dividing this Decimal by
-         the given Decimal. Unless invoked within `implicitlyRounded()`
+    doc "The quotient obtained by dividing this `Decimal` by
+         the given `Decimal`. Unless invoked within `implicitlyRounded()`
          the preferred scale of the result is the difference between this
-         Decimal's scale and the given Decimal's scale; it may be larger
+         `Decimal`'s scale and the given `Decimal`'s scale; it may be larger
          if necessary; an exception is thrown if the result would have
          a nonterminating decimal representation."
     see(dividedRounded)
@@ -113,7 +118,7 @@ shared interface Decimal
 
     doc "The product of this `Decimal` and the given `Decimal`.
          Unless invoked within `implicitlyRounded()` the scale of the result is
-         the sum of the scale of the operands."
+         the sum of the scales of the operands."
     see(timesRounded)
     see(implicitlyRounded)
     shared formal actual Decimal times(Decimal other);
@@ -125,7 +130,7 @@ shared interface Decimal
 
     doc "The sum of this `Decimal` and the given `Decimal`.
          Unless invoked within `implicitlyRounded()` the scale of the result is
-         the maximum of the scale of the operands."
+         the greater of the scales of the operands."
     see(plusRounded)
     see(implicitlyRounded)
     shared formal actual Decimal plus(Decimal other);
@@ -135,14 +140,14 @@ shared interface Decimal
     see(plus)
     shared formal Decimal plusRounded(Decimal other, Rounding? rounding = null);
 
-    doc "The difference of this `Decimal` and the given `Decimal`.
+    doc "The difference between this `Decimal` and the given `Decimal`.
          Unless invoked within `implicitlyRounded()` the scale of the result is
-         the maximum of the scale of the operands."
+         the greater of the scales of the operands."
     see(minusRounded)
     see(implicitlyRounded)
     shared formal actual Decimal minus(Decimal other);
 
-    doc "The difference of this `Decimal` and the given `Decimal` with the given
+    doc "The difference between this `Decimal` and the given `Decimal` with the given
          rounding."
     see(minus)
     shared formal Decimal minusRounded(Decimal other, Rounding? rounding = null);
@@ -182,17 +187,18 @@ shared interface Decimal
     throws(Exception, "The given divisor is zero")
     shared formal Decimal remainderRounded(Decimal other, Rounding? rounding = null);
 
-    doc "A two-element sequence containing the same results as 
-         calling `dividedTruncated()` and `remainderRounded()` with the given 
-         arguments, except the division is only performed once."
+    doc "A pair containing the same results as calling `dividedTruncated()` and 
+         `remainderRounded()` with the given arguments, except the division is 
+         only performed once."
     throws(Exception, "The given divisor is zero")
-    shared formal Decimal[] dividedAndRemainder(Decimal other, Rounding? rounding = null);
+    shared formal DividedWithRemainder dividedAndRemainder(Decimal other, Rounding? rounding = null);
     
-    doc "The precision of this decimal. This is the number of digits in the unscaled value."
+    doc "The precision of this decimal. This is the number of digits in the 
+         unscaled value."
     see(scale)
     shared formal Integer precision;
 
-    doc "The scale of this decimal. This is the number of digits to the right the 
+    doc "The scale of this decimal. This is the number of digits to the right of the 
     decimal point (for a positive scale) or the power of ten by which the 
     unscaled value is multiplied (for a negative scale)."
     see(unscaled)
@@ -206,7 +212,7 @@ shared interface Decimal
     doc "This value rounded according to the given context."
     shared formal Decimal round(Rounding rounding);
 
-    doc "The number, represented as an `Whole`, after
+    doc "The number, represented as a `Whole`, after
          truncation of any fractional part."
     see(Whole)
     see(integer)
@@ -215,7 +221,6 @@ shared interface Decimal
 }
 
 class DecimalImpl(BigDecimal num)
-        extends Object()
         satisfies //Castable<Decimal> &
                   Decimal {
 
@@ -247,7 +252,7 @@ class DecimalImpl(BigDecimal num)
         throw;
     }
 
-    shared actual Decimal[] dividedAndRemainder(Decimal other, Rounding? rounding) {
+    shared actual DividedWithRemainder dividedAndRemainder(Decimal other, Rounding? rounding) {
         if (is DecimalImpl other) {
             Array<BigDecimal> array;
             if (is RoundingImpl rounding) {
@@ -259,7 +264,8 @@ class DecimalImpl(BigDecimal num)
             } else {
                 throw;
             }
-            return {DecimalImpl(array[0] ? bdzero), DecimalImpl(array[1] ? bdzero)};
+            return DividedWithRemainder(DecimalImpl(array[0] ? bdzero), 
+                    DecimalImpl(array[1] ? bdzero));
         }
         throw;
     }
@@ -474,7 +480,7 @@ class DecimalImpl(BigDecimal num)
 
 doc "The number `number` converted to a Decimal"
 // TODO Document peculiarities of passing a Float or switch to using valueOf(double)
-shared Decimal decimal(Whole|Integer|Float number, Rounding? rounding = null) {
+shared Decimal decimalNumber(Whole|Integer|Float number, Rounding? rounding = null) {
     BigDecimal val;
     switch(number)
     case(is Whole) {
@@ -511,8 +517,8 @@ shared Decimal decimal(Whole|Integer|Float number, Rounding? rounding = null) {
     return DecimalImpl(val);
 }
 
-doc "The Decimal repesented by the given string, or null if the given string
-     does not represent a Decimal."
+doc "The `Decimal` repesented by the given string, or `null` if the given string
+     does not represent a `Decimal`."
 shared Decimal? parseDecimal(String str) {
     BigDecimal bd;
     try {

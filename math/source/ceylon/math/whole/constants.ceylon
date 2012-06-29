@@ -7,13 +7,13 @@ import java.math{
         jone=\iONE}
 }
 
-Whole maxIntImpl = whole(maxInt);
-Whole twoImpl = whole(2);
+Whole maxIntImpl = wholeNumber(maxInt);
+Whole twoImpl = wholeNumber(2);
 
 WholeImpl zeroImpl = WholeImpl(jzero);
-doc "A Whole instance representing zero."
+doc "A `Whole` instance representing zero."
 shared Whole zero = zeroImpl;
 
 WholeImpl oneImpl = WholeImpl(jone);
-doc "A Whole instance representing one."
+doc "A `Whole` instance representing one."
 shared Whole one = oneImpl;

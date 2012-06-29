@@ -48,7 +48,7 @@ doc "Holds precision and rounding information for use in decimal arithmetic.
      A precision of 0 means unlimited precision."
 throws(Exception, "The precision is negative.")
 see(Decimal)
-see(rounding)
+see(round)
 see(unlimitedPrecision)
 shared abstract class Rounding(precision, mode) of RoundingImpl {
     if (precision < 0) {
@@ -87,7 +87,7 @@ class RoundingImpl(Integer precision, Mode mode) extends Rounding(precision, mod
 }
 
 doc "Creates a rounding with the given precision and mode."
-shared Rounding rounding(Integer precision, Mode mode) {
+shared Rounding round(Integer precision, Mode mode) {
     return RoundingImpl(precision, mode);
 }
 

@@ -10,14 +10,14 @@ import java.lang{
     }
 }
 
-Decimal intMax = decimal(maxInt);
-Decimal intMin = decimal(minInt);
+Decimal intMax = decimalNumber(maxInt);
+Decimal intMin = decimalNumber(minInt);
 
-doc "A Decimal instance representing zero."
+doc "A `Decimal` instance representing zero."
 shared Decimal zero = DecimalImpl(bdzero);
 
-doc "A Decimal instance representing one."
+doc "A `Decimal` instance representing one."
 shared Decimal one = DecimalImpl(bdone);
 
-doc "A Decimal instance representing ten."
+doc "A `Decimal` instance representing ten."
 shared Decimal ten = DecimalImpl(bdten);

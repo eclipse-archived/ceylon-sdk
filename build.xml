@@ -4,6 +4,11 @@
   <filelist id="module.dirs">
   	<file name="sdk-test"/>
     <file name="math"/>
+    <file name="collection"/>
+    <file name="file"/>
+    <file name="process"/>
+    <file name="json"/>
+    <file name="net"/>
   </filelist>
   
   <macrodef name="iterate">
@@ -14,7 +19,7 @@
         <property name="build" location="build"/>
         <property name="build.modules" location="build/modules"/>
         <property name="test.reports" location="build/test-reports"/>
-        <property name="repo.dependancies" location="build/modules"/>
+        <property name="repo.dependencies" location="build/modules"/>
         <property name="publish.username" value="${publish.username}"/>
         <property name="publish.password" value="${publish.password}"/>
         <property name="publish.repo" value="${publish.repo}"/>
@@ -23,28 +28,27 @@
   </macrodef>
 
   <target name="compile">
-    <iterate target="compile"/>
+    <iterate target="compile-module"/>
   </target>
 	
   <target name="clean">
-    <iterate target="clean"/>
+    <iterate target="clean-module"/>
   </target>
 	
   <target name="test">
-    <iterate target="test"/>
+    <iterate target="test-module"/>
   </target>
 	
   <target name="doc">
-    <iterate target="doc"/>
+    <iterate target="doc-module"/>
   </target>
   
-  <target name="publish">
-    <!--<input message="modules.ceylon-lang.org username:>" addproperty="publish.username"/>
-    <input message="modules.ceylon-lang.org password:>" addproperty="publish.password">
-      <handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
-    </input>
-    <property name="publish.repo" value="https://modules.ceylon-lang.org"/>-->
-    <iterate target="publish"/>
+  <target name="local">
+    <iterate target="local-module"/>
+  </target>
+  
+  <target name="herd">
+    <iterate target="herd-module"/>
   </target>
 
 </project>

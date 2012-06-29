@@ -15,19 +15,9 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.imp.smapifier.SmapieBuilder</name>
-			<arguments>
-				<dictionary>
-					<key>exten</key>
-					<value>ceylon</value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>com.redhat.ceylon.eclipse.ui.ceylonNature</nature>
-		<nature>org.eclipse.imp.smapifier.smapinature</nature>
 	</natures>
 </projectDescription>

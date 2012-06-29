@@ -2,16 +2,41 @@
   <echo message="${ant.project.name} basedir:${basedir}, build: ${build}"/>
   
   <property file="../build.properties"/>
-  <property file="build.properties"/>
+  <property name="module.build.properties" value="${ant.project.name}.build.properties"/>
+  <property file="${ant.project.name}.build.properties"/>
+  
+  <!-- usually the modules build properties don't need to set a module.name
+  because the following default just works, but not for sdk-test -->
+  <property name="module.name" value="ceylon.${ant.project.name}"/>
+  
   <!-- set these if not already set by the master build.xml.
        build dir is different if you do a top-level build or a module specific 
        build. This allows you to build each module independently. 
        But only if you've done a top-level ant build first, so the 
        repo.dependencies repo is populated --> 
-  <property name="build" location="build"/>
+  <property name="build" location="../build"/>
   <property name="build.modules" location="${build}/modules"/>
+  <property name="repo.out" location="${build}/modules"/>
   <property name="test.reports" location="${build}/test-reports"/>
-  <property name="repo.dependancies" location="../build/modules"/>
+  <property name="repo.dependencies" location="../build/modules"/>
+  
+  <propertyset id="props.debug">
+    <propertyref name="ant.project.name"/>
+    <propertyref name="basedir"/>
+    <propertyref name="build"/>
+    <propertyref prefix="build."/>
+    <propertyref prefix="module."/>
+    <propertyref prefix="repo."/>
+    <propertyref prefix="ceylon."/>
+    <propertyref prefix="publish.repo"/>
+    <propertyref prefix="publish.username"/>
+  </propertyset>
+  
+  <condition property="tests.exist">
+    <resourceexists>
+      <file file="test"/>
+    </resourceexists>
+  </condition>
   
   <path id="ant-tasks">
     <pathelement location="${ceylon.ant.lib}"/>
@@ -20,8 +45,10 @@
   <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
   <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
   <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
+  <taskdef name="ceylonmd" classname="com.redhat.ceylon.ant.CeylonModuleDescriptorTask" classpathref="ant-tasks"/>
 
-  <target name="clean">
+  <target name="clean-module"
+        description="Deletes the build directory">
     <echo message="${ant.project.name} clean basedir:${basedir}, build: ${build}"/>
     <delete dir="${build}"/>
   </target>
@@ -29,62 +56,161 @@
   <target name="-init">
     <echo message="${ant.project.name} -init basedir:${basedir}, build: ${build}"/>
     <mkdir dir="${build}"/>
+    <ceylonmd versionProperty="module.version" module="${module.name}"/>
+    <fail unless="module.version" 
+      message="${module.build.properties} didn't specify a module.version property and the module descriptors version couldn't be found either"/>
   </target>
   
-  <target name="compile" depends="-init">
+  <target name="compile-module" depends="-init"
+        description="Compiles the module">
     <echo message="${ant.project.name} compile basedir:${basedir}, build: ${build}"/>
-    <ceylonc executable="../ceylon-compiler/build/bin/ceylonc"
-      out="${build.modules}">
-      <rep url="${repo.dependancies}"/>
+    <echoproperties>
+      <propertyset refid="props.debug"/>
+    </echoproperties>
+    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/ceylonc"
+      out="${repo.out}"
+      user="${publish.username}"
+      pass="${publish.password}">
+      <rep url="${repo.dependencies}"/>
       <module name="${module.name}"/>
     </ceylonc>
   </target>
     
-  <target name="test" depends="compile" if="module.tests.name">
+  <target name="test-module" depends="compile-module" if="tests.exist"
+        description="Compiles and runs the test module, if it exists">
     <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
+    <echoproperties>
+      <propertyset refid="props.debug"/>
+    </echoproperties>
+    
     <!-- compile the tests -->
-    <ceylonc executable="../ceylon-compiler/build/bin/ceylonc"
+    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/ceylonc"
       src="test"
-      out="${build.modules}">
-      <rep url="${repo.dependancies}"/>
-      <module name="${module.tests.name}"/>
+      out="${repo.out}">
+      <rep url="${repo.dependencies}"/>
+      <module name="test.${module.name}"/>
     </ceylonc>
     <!-- Run the tests -->
-    <ceylon executable="../ceylon-runtime/build/dist/bin/ceylon"
-        run="${module.tests.name}.run" module="${module.tests.name}/${module.version}">
-        <rep url="${repo.dependancies}"/>
-        <rep url="${build.modules}"/>
+    <ceylon executable="${basedir}/../../ceylon-dist/dist/bin/ceylon"
+        run="test.${module.name}.run" module="test.${module.name}/${module.version}">
+        <rep url="${repo.dependencies}"/>
+        <rep url="${repo.out}"/>
     </ceylon>
   </target>
   
-  <target name="doc" depends="-init">
+  <target name="doc-module" depends="-init"
+        description="Generates module API documentation">
     <echo message="${ant.project.name} doc basedir:${basedir}, build: ${build}"/>
-    <ceylond executable="../ceylon-compiler/build/bin/ceylond"
-        out="${build.modules}">
-      <rep url="${repo.dependancies}"/>
+    <echoproperties>
+        <propertyset refid="props.debug"/>
+    </echoproperties>
+    
+    <ceylond executable="${basedir}/../../ceylon-dist/dist/bin/ceylond"
+        out="${repo.out}"
+        user="${publish.username}"
+        pass="${publish.password}">
+      <rep url="${repo.dependencies}"/>
       <module name="${module.name}"/>
     </ceylond>
   </target>
   
-  <target name="publish" depends="compile, doc">
-    <echo message="${ant.project.name} publish basedir:${basedir}, build: ${build}"/>
+  <target name="local-module" depends="-init" 
+        description="Publishes the module locally (~/.ceylon/repo)">
+    <echo message="${ant.project.name} local-module basedir:${basedir}, build: ${build}"/>
+    <echoproperties>
+      <propertyset refid="props.debug"/>
+    </echoproperties>
+    
+    <property name="publish.repo" value="${user.home}/.ceylon/repo"/>
+    <!-- first check the module tests docs ok -->
+    <antcall target="clean-module">
+      <param name="repo.out" value="${build.modules}"/> 
+    </antcall>
+    <antcall target="test-module">
+      <param name="repo.out" value="${build.modules}"/>
+      <!-- we need to be able to build with dependencies already deployed -->
+      <param name="repo.dependencies" value="${publish.repo}"/>
+    </antcall>
+    <antcall target="doc-module">
+      <param name="repo.out" value="${build.modules}"/>
+      <!-- we need to be able to build with dependencies already deployed -->
+      <param name="repo.dependencies" value="${publish.repo}"/>
+    </antcall>
+    
+    <!-- if we got this far we're good -->
+    <antcall target="compile-module">
+      <param name="repo.out" value="${publish.repo}"/>
+      <param name="repo.dependencies" value="${publish.repo}"/>
+    </antcall>
+    <antcall target="doc-module">
+      <param name="repo.out" value="${publish.repo}"/>
+      <param name="repo.dependencies" value="${publish.repo}"/>
+    </antcall>
+    
+    <zip destfile="${publish.repo}/ceylon/${ant.project.name}/${module.version}.zip">
+      <fileset dir="${publish.repo}" 
+        includes="ceylon/${ant.project.name}/${module.version}/**/*"/>
+    </zip>
+
+  </target>
+  
+  <target name="herd-module" depends="compile-module, doc-module"
+        description="Publishes the module to the Herd">
+    <echo message="${ant.project.name} herd-module basedir:${basedir}, build: ${build}"/>
+    <echoproperties>
+      <propertyset refid="props.debug"/>
+    </echoproperties>
+      
+    <input message="modules.ceylon-lang.org username:>" addproperty="upload.username"/>
+    <input message="modules.ceylon-lang.org password:>" addproperty="upload.password">
+      <handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
+    </input>
+    <input message="Upload URL:" addproperty="upload.url"/>
+      
+    <property name="publish.repo" value="https://modules.ceylon-lang.org/modules"/>    
+    <!-- first check the module tests docs ok -->
+    <antcall target="clean-module">
+      <param name="repo.out" value="${build.modules}"/> 
+    </antcall>
+    <antcall target="test-module">
+      <param name="repo.out" value="${build.modules}"/>
+      <!-- we need to be able to build with dependencies already deployed -->
+      <param name="repo.dependencies" value="${publish.repo}"/>
+    </antcall>
+    <antcall target="doc-module">
+      <param name="repo.out" value="${build.modules}"/>
+      <!-- we need to be able to build with dependencies already deployed -->
+      <param name="repo.dependencies" value="${publish.repo}"/>
+    </antcall>
+
+    <!-- if we got this far we're good -->
+    <!--<property name="publish.repo" value="https://modules.ceylon-lang.org/modules"/>-->
+    <antcall target="compile-module">
+      <param name="repo.out" value="${upload.url}"/>
+      <param name="repo.dependencies" value="${publish.repo}"/>
+      <param name="publish.username" value="${upload.username}"/>
+      <param name="publish.password" value="${upload.password}"/>
+    </antcall>
+    <antcall target="doc-module">
+      <param name="repo.out" value="${upload.url}"/>
+      <param name="repo.dependencies" value="${publish.repo}"/>
+      <param name="publish.username" value="${upload.username}"/>
+      <param name="publish.password" value="${upload.password}"/>
+    </antcall>
+    
+    <!--<echo message="${ant.project.name} publish basedir:${basedir}, build: ${build}"/>
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo"/>
-    <property name="publish.dir" location="${ceylon.repo.dir}/"/>
-    <echo message="Copying to ${publish.dir}"/>
-    <copy todir="${publish.dir}">
-        <fileset dir="${build.modules}">
-          <include name="**/${module.name}-${module.version}.*"/>
-        </fileset>
-    </copy>
-    <!--
-    <ceylonr executable="../ceylon-runtime/build/bin/ceylonr"
-        out="${publish.repo}"
-        pass="${publish.password}"
-        user="${publish.username}">
-      <rep url="${build.modules}"/>
-      <rep url="${repo.dependancies}"/>
-      <module name="${module.name}" version="${module.version}"/>
-    </ceylonr>-->
+    <property name="publish.dir" location="${ceylon.repo.dir}/"/>-->
+    <!-- TODO When publishing to Herd we want to:
+         1 Check everything is in git
+         2 Test and doc locally
+         3 Create a git tag locally
+         4 publish to Herd
+         5 Push the tag
+         6 Increment the module version
+         7 Commit and push the module descriptor change   
+    -->
+    
   </target>
 
 </project>
