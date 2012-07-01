@@ -385,27 +385,27 @@ shared Float halfEven(Float num) {
 
 doc "The smaller of the two arguments.
      
-     * `min(-1,+0)` is `-0`
-     * `min(undefined, x)` is `undefined`
-     * `min(x, x)` is `x`
-     * `min(+infinity,x) is `x`
-     * `min(-infinity,x) is `-infinity`
+     * `smallest(-1,+0)` is `-0`
+     * `smallest(undefined, x)` is `undefined`
+     * `smallest(x, x)` is `x`
+     * `smallest(+infinity,x) is `x`
+     * `smallest(-infinity,x) is `-infinity`
 "
-see(max)
-shared Float min(Float x, Float y) {
+see(largest)
+shared Float smallest(Float x, Float y) {
     return jmin(x, y);
 }
 
 doc "The larger of the two arguments.
      
-     * `max(-1,+0)` is `+0`
-     * `max(undefined, x)` is `undefined`
-     * `max(x, x)` is `x`
-     * `max(+infinity,x) is `+infinity`
-     * `max(-infinity,x) is `x`
+     * `largest(-1,+0)` is `+0`
+     * `largest(undefined, x)` is `undefined`
+     * `largest(x, x)` is `x`
+     * `largest(+infinity,x) is `+infinity`
+     * `largest(-infinity,x) is `x`
 "
-see(min)
-shared Float max(Float x, Float y) {
+see(smallest)
+shared Float largest(Float x, Float y) {
     return jmax(x, y);
 }
 
