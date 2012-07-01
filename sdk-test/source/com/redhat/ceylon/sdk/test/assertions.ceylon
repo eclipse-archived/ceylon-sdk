@@ -19,16 +19,6 @@ shared void assertFalse(Boolean assertion, String message=", expected " + assert
     }
 }
 
-Boolean nullSafeCompare(Object? a, Object? b){
-    if(exists a){
-        if(exists b){
-            return a == b;
-        }
-        return false;
-    }
-    return !exists b;
-}
-
 String str(Object? obj) {
     if (exists obj) {
         return obj.string;
@@ -36,14 +26,26 @@ String str(Object? obj) {
     return "null";
 }
 
+Boolean nullSafeEquals(Object? expected, Object? got) {
+    if (exists expected) {
+        if (exists got) {
+            return expected==got;
+        }
+    }
+    return exists got == exists expected;
+}
+
 doc "Fails the test if the two objects are not equal"
-shared void assertEquals(Object? expected, Object? got,
-        String message="",
-        Callable<Boolean, Object?, Object?> compare = nullSafeCompare) {
-    // TODO Use type params
-    function cmp(Object? expected, Object? got) = compare;
-    if (!cmp(expected,got)) {
-        throw AssertionFailed("assertion failed: " str(expected) " != " str(got) ": \"" message "\"");
+shared void assertEquals(Object? expected, Object? got, String? message=null,
+        Boolean compare(Object? expected, Object? got) = nullSafeEquals) {
+    Boolean cmp(Object? expected, Object? got) = nullSafeEquals;
+    if (!compare(expected,got)) {
+        if (exists message) {
+            throw AssertionFailed("assertion failed: " str(expected) " != " str(got) ": \"" message "\"");
+        }
+        else {
+            throw AssertionFailed("assertion failed: " str(expected) " != " str(got) "");
+        }
     }
 }
 
