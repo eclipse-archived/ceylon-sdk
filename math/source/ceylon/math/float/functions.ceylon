@@ -1,14 +1,14 @@
-import java.lang{ Math { jsin=sin, jcos=cos, jtan=tan,
-                         jsinh=sinh, jcosh=cosh, jtanh=tanh,
-                         jasin=asin, jacos=acos, jatan=atan,
-                         jatan2=atan2, jhypot=hypot,
-                         jexp=exp, jlog=log, jlog10=log10,
-                         jsqrt=sqrt, jcbrt=cbrt,
-                         jrandom=random,
-                         jfloor=floor, jceiling=ceil,
-                         jround=round, jrint=rint,
-                         jmin=min, jmax=max,
-                         jscalb=scalb } }
+import java.lang { Math { jsin=sin, jcos=cos, jtan=tan,
+                          jsinh=sinh, jcosh=cosh, jtanh=tanh,
+                          jasin=asin, jacos=acos, jatan=atan,
+                          jatan2=atan2, jhypot=hypot,
+                          jexp=exp, jlog=log, jlog10=log10,
+                          jsqrt=sqrt, jcbrt=cbrt,
+                          jrandom=random,
+                          jfloor=floor, jceiling=ceil,
+                          jround=round, jrint=rint,
+                          jmin=min, jmax=max,
+                          jscalb=scalb } }
 
 doc "\{0001D452} raised to the power of the argument.
 
