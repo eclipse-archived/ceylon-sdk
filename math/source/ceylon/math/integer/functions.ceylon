@@ -2,7 +2,7 @@ import java.lang{ Math { jmin=min, jmax=max } }
 
 doc "The smaller of the two arguments."
 see(largest)
-shared Float smallest(Float x, Float y) {
+shared Integer smallest(Integer x, Integer y) {
     return jmin(x, y);
 }
 
