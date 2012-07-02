@@ -6,7 +6,7 @@ Module module {
          
          - `ceylon.math.decimal`&mdash;an arbitrary-precision decimal
            numeric type,
-         - `ceylon.math.decimal`&mdash;an arbitrary-precision integer
+         - `ceylon.math.whole`&mdash;an arbitrary-precision integer
            numeric type,
          - `ceylon.math.float`&mdash;various common mathematical 
            functions for floating-point numbers, and
