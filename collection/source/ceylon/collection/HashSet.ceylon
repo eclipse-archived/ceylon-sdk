@@ -134,8 +134,21 @@ shared class HashSet<Element>()
         return iter;
     }
     
-    shared actual Integer count(Object element) {
-        return contains(element) then 1 else 0;
+    shared actual Integer count(Boolean selecting(Element element)) {
+        variable Integer c := 0;
+        variable Integer index := 0;
+        // walk every bucket
+        while(index < store.size){
+            variable Cell<Element>? bucket := store[index];
+            while(exists Cell<Element> cell = bucket){
+                if(selecting(cell.car)){
+                    c++;
+                }
+                bucket := cell.cdr;
+            }
+            index++;
+        }
+        return c;
     }
     
     shared actual String string {

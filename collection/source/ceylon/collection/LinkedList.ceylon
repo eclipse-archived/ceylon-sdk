@@ -216,14 +216,12 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         return size == 0;
     }
     
-    shared actual Integer count(Object element) {
+    shared actual Integer count(Boolean selecting(Element element)) {
         variable Cell<Element>? iter := head;
         variable Integer c := 0;
         while(exists Cell<Element> cell = iter){
-            if(is Object elem = cell.car){
-                if(elem == element){
-                    c++;
-                }
+            if(selecting(cell.car)){
+                c++;
             }
             iter := cell.cdr;
         }

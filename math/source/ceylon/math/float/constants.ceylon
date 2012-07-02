@@ -1,4 +1,4 @@
-import java.lang{ Math { je=\iE, jpi=\iPI } }
+import java.lang { Math { je=\iE, jpi=\iPI } }
 
 doc "The `Float` which best approximates the 
      mathematical constant \{0001D452}, the 

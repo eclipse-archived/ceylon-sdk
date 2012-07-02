@@ -1,16 +1,14 @@
-import java.lang{ Math {
-    jsin=sin, jcos=cos, jtan=tan,
-    jsinh=sinh, jcosh=cosh, jtanh=tanh,
-    jasin=asin, jacos=acos, jatan=atan,
-    jatan2=atan2, jhypot=hypot,
-    jexp=exp, jlog=log, jlog10=log10,
-    jsqrt=sqrt, jcbrt=cbrt,
-    jrandom=random,
-    jfloor=floor, jceiling=ceil,
-    jround=round, jrint=rint,
-    jmin=min, jmax=max,
-    jscalb=scalb
-} }
+import java.lang { Math { jsin=sin, jcos=cos, jtan=tan,
+                          jsinh=sinh, jcosh=cosh, jtanh=tanh,
+                          jasin=asin, jacos=acos, jatan=atan,
+                          jatan2=atan2, jhypot=hypot,
+                          jexp=exp, jlog=log, jlog10=log10,
+                          jsqrt=sqrt, jcbrt=cbrt,
+                          jrandom=random,
+                          jfloor=floor, jceiling=ceil,
+                          jround=round, jrint=rint,
+                          jmin=min, jmax=max,
+                          jscalb=scalb } }
 
 doc "\{0001D452} raised to the power of the argument.
 
@@ -93,7 +91,8 @@ shared Float tan(Float num) {
     return jtan(num);
 }
 
-doc "The hyperbolic sine of the given angle specified in radians.
+doc "The hyperbolic sine of the given angle specified in 
+     radians.
 
      * `sinh(-0)` is `-0`,
      * `sinh(+0)` is `+0`,
@@ -105,7 +104,8 @@ shared Float sinh(Float num) {
     return jsinh(num);
 }
 
-doc "The hyperbolic cosine of the given angle specified in radians.
+doc "The hyperbolic cosine of the given angle specified in 
+     radians.
 
      * `cosh(0)` is `1`.
      * `cosh(-infinity)` is `+infinity`,
@@ -116,7 +116,8 @@ shared Float cosh(Float num) {
     return jcosh(num);
 }
 
-doc "The hyperbolic tangent of the given angle specified in radians.
+doc "The hyperbolic tangent of the given angle specified in 
+     radians.
      
      * `tanh(+infinity)` is `+1`,
      * `tanh(-infinity)` is `-1`,
@@ -160,8 +161,8 @@ shared Float atan(Float num) {
     return jatan(num);
 }
 
-doc "The angle from converting rectangular coordinates `x` and `y` to polar
-     coordinates.
+doc "The angle from converting rectangular coordinates `x` 
+     and `y` to polar coordinates.
 
 Special cases:
 
@@ -173,28 +174,110 @@ Special cases:
 <th><code>atan2(y,x)</code></th>
 </tr>
 
-<tr><td>undefined</td>  <td>any value</td>  <td>undefined</td></tr>
-<tr><td>any value</td>  <td>undefined</td>  <td>undefined</td></tr>
+<tr>
+<td>undefined</td>  
+<td>any value</td>  
+<td>undefined</td>
+</tr>
 
-<tr><td>+0</td>                       <td>&gt; 0</td>     <td>+0</td></tr>
-<tr><td>&gt; 0 and not +infinity</td> <td>+infinity</td>  <td>+0</td></tr>
-<tr><td>-0</td>                       <td>&gt; 0</td>     <td>-0</td></tr>
-<tr><td>&lt; 0 and not -infinity</td> <td>+infinity</td>  <td>-0</td></tr>
+<tr>
+<td>any value</td>  
+<td>undefined</td>  
+<td>undefined</td>
+</tr>
 
-<tr><td>+0</td>                       <td>&lt; 0</td>     <td>The `Float` best approximating \{03C0}</td></tr>
-<tr><td>&gt; 0 and not +infinity</td> <td>-infinity</td>  <td>The `Float` best approximating \{03C0}</td></tr>
-<tr><td>-0</td>                       <td>&lt; 0</td>     <td>The `Float` best approximating -\{03C0}</td></tr>
-<tr><td>&lt; 0 and not -infinity</td> <td>-infinity</td>  <td>The `Float` best approximating -\{03C0}</td></tr>
+<tr><
+td>+0</td>                       
+<td>&gt; 0</td>     
+<td>+0</td>
+</tr>
 
-<tr><td>&gt; 0</td>    <td>+0 or -0</td>                   <td>The `Float` best approximating \{03C0}/2</td></tr>
-<tr><td>+infinity</td> <td>not +infinity or -infinity</td> <td>The `Float` best approximating \{03C0}/2</td></tr>
-<tr><td>&lt; 0</td>    <td>+0 or -0</td>                   <td>The `Float` best approximating -\{03C0}/2</td></tr>
-<tr><td>-infinity</td> <td>not +infinity or -infinity</td> <td>The `Float` best approximating -\{03C0}/2</td></tr>
+<tr>
+<td>&gt; 0 and not +infinity</td> 
+<td>+infinity</td>  
+<td>+0</td></tr>
 
-<tr><td>+infinity</td> <td>+infinity</td> <td>The `Float` best approximating \{03C0}/4</td></tr>
-<tr><td>+infinity</td> <td>-infinity</td> <td>The `Float` best approximating 3\{03C0}/4</td></tr>
-<tr><td>-infinity</td> <td>+infinity</td> <td>The `Float` best approximating -\{03C0}/4</td></tr>
-<tr><td>-infinity</td> <td>-infinity</td> <td>The `Float` best approximating -3\{03C0}/4</td></tr>
+<tr>
+<td>-0</td>                       
+<td>&gt; 0</td>     
+<td>-0</td>
+</tr>
+
+<tr>
+<td>&lt; 0 and not -infinity</td> 
+<td>+infinity</td>  
+<td>-0</td>
+</tr>
+
+<tr>
+<td>+0</td>                       
+<td>&lt; 0</td>     
+<td>The `Float` best approximating \{03C0}</td>
+</tr>
+
+<tr>
+<td>&gt; 0 and not +infinity</td> 
+<td>-infinity</td>  
+<td>The `Float` best approximating \{03C0}</td>
+</tr>
+
+<tr>
+<td>-0</td>                       
+<td>&lt; 0</td>     
+<td>The `Float` best approximating -\{03C0}</td>
+</tr>
+
+<tr>
+<td>&lt; 0 and not -infinity</td> 
+<td>-infinity</td>  
+<td>The `Float` best approximating -\{03C0}</td>
+</tr>
+
+<tr>
+<td>&gt; 0</td>    
+<td>+0 or -0</td>                   
+<td>The `Float` best approximating \{03C0}/2</td>
+</tr>
+
+<tr>
+<td>+infinity</td> 
+<td>not +infinity or -infinity</td> 
+<td>The `Float` best approximating \{03C0}/2</td>
+</tr>
+
+<tr>
+<td>&lt; 0</td>    
+<td>+0 or -0</td>                   
+<td>The `Float` best approximating -\{03C0}/2</td>
+</tr>
+
+<tr>
+<td>-infinity</td> 
+<td>not +infinity or -infinity</td> 
+<td>The `Float` best approximating -\{03C0}/2</td>
+</tr>
+
+<tr>
+<td>+infinity</td> <td>+infinity</td> 
+<td>The `Float` best approximating \{03C0}/4</td>
+</tr>
+
+<tr>
+<td>+infinity</td> <td>-infinity</td> 
+<td>The `Float` best approximating 3\{03C0}/4</td>
+</tr>
+
+<tr>
+<td>-infinity</td> 
+<td>+infinity</td> 
+<td>The `Float` best approximating -\{03C0}/4</td>
+</tr>
+
+<tr>
+<td>-infinity</td> 
+<td>-infinity</td> 
+<td>The `Float` best approximating -3\{03C0}/4</td>
+</tr>
 
 </tbody>
 </table>
@@ -203,21 +286,25 @@ shared Float atan2(Float y, Float x) {
     return jatan2(y, x);
 }
 
-doc "Returns the length of the hypotenuse of a right angle triangle with other
-     sides having lengths `x` and `y`. This method may be more accurate than
-     computing `sqrt(x**2 + x**2)` directly.
+doc "Returns the length of the hypotenuse of a right angle 
+     triangle with other sides having lengths `x` and `y`. 
+     This method may be more accurate than computing 
+     `sqrt(x**2 + x**2)` directly.
      
 `hypot(x,y)`:
 
-     * where x and/or y is `+infinity` or `-infinity`, is `+infinity`,
-     * otherwise, where x and/or y is `undefined`, is `undefined`.
+     * where `x` and/or `y` is `+infinity` or `-infinity`, is 
+       `+infinity`,
+     * otherwise, where x and/or y is `undefined`, is 
+       `undefined`.
 "
 shared Float hypot(Float x, Float y) {
     return jhypot(x, y);
 }
 
-doc "The positive square root of the given number. This method may be faster
-     and/or more accurate than computing `num.power(0.5)` directly.
+doc "The positive square root of the given number. This 
+     method may be faster and/or more accurate than 
+     `num**0.5`.
 
      * `sqrt(x)` for any x < 0 is `undefined`,
      * `sqrt(-0)` is `-0`,
@@ -229,8 +316,8 @@ shared Float sqrt(Float num) {
     return jsqrt(num);
 }
 
-doc "The cube root of the given number. This method may be faster and/or
-     more accurate than `num.power(1.0/3.0)`.
+doc "The cube root of the given number. This method may be 
+     faster and/or more accurate than `num**(1.0/3.0)`.
 
      * `cbrt(-infinity)` is `-infinity`,
      * `cbrt(-0)` is `-0`,
@@ -242,14 +329,15 @@ shared Float cbrt(Float num) {
     return jcbrt(num);
 }
 
-doc "A number greater than or equal to positive zero and less than
-     1.0, chosen pseudorandomly and (approximately) uniformly distributed."
+doc "A number greater than or equal to positive zero and less 
+     than `1.0`, chosen pseudorandomly and (approximately) 
+     uniformly distributed."
 shared Float random() {
     return jrandom();
 }
 
-doc "The largest value that is less than or equal to the argument and
-     equal to an integer.
+doc "The largest value that is less than or equal to the 
+     argument and equal to an integer.
 
      * `floor(-infinity)` is `-infinity`,
      * `floor(-0)` is `-0`,
@@ -263,8 +351,8 @@ shared Float floor(Float num) {
     return jfloor(num);
 }
 
-doc "The smallest value that is greater than or equal to the argument and
-     equal to an integer.
+doc "The smallest value that is greater than or equal to the 
+     argument and equal to an integer.
      
      * `ceiling(-infinity)` is `-infinity`,
      * `ceiling(x)` for -1.0 < x < -0 is `-0`,
@@ -279,8 +367,9 @@ shared Float ceiling(Float num) {
     return jceiling(num);
 }
 
-doc "The closest value to the argument that is equal to a mathematical integer,
-     with even values preferred in the event of a tie (half even rounding).
+doc "The closest value to the argument that is equal to a
+     mathematical integer, with even values preferred in the 
+     event of a tie (half even rounding).
      
      * `halfEven(-infinity)` is `-infinity`
      * `halfEven(-0)` is `-0` 
@@ -296,32 +385,32 @@ shared Float halfEven(Float num) {
 
 doc "The smaller of the two arguments.
      
-     * `min(-1,+0)` is `-0`
-     * `min(undefined, x)` is `undefined`
-     * `min(x, x)` is `x`
-     * `min(+infinity,x) is `x`
-     * `min(-infinity,x) is `-infinity`
+     * `smallest(-1,+0)` is `-0`
+     * `smallest(undefined, x)` is `undefined`
+     * `smallest(x, x)` is `x`
+     * `smallest(+infinity,x) is `x`
+     * `smallest(-infinity,x) is `-infinity`
 "
-see(max)
-shared Float min(Float x, Float y) {
+see(largest)
+shared Float smallest(Float x, Float y) {
     return jmin(x, y);
 }
 
 doc "The larger of the two arguments.
      
-     * `max(-1,+0)` is `+0`
-     * `max(undefined, x)` is `undefined`
-     * `max(x, x)` is `x`
-     * `max(+infinity,x) is `+infinity`
-     * `max(-infinity,x) is `x`
+     * `largest(-1,+0)` is `+0`
+     * `largest(undefined, x)` is `undefined`
+     * `largest(x, x)` is `x`
+     * `largest(+infinity,x) is `+infinity`
+     * `largest(-infinity,x) is `x`
 "
-see(min)
-shared Float max(Float x, Float y) {
+see(smallest)
+shared Float largest(Float x, Float y) {
     return jmax(x, y);
 }
 
-doc "The sum of the given values, or
-     `0.0` if there are no values."
+doc "The sum of the given values, or `0.0` if there are no 
+     arguments."
 shared Float sum(Float... values) {
     variable Float sum:=0.0;
     for (x in values) {
@@ -330,8 +419,8 @@ shared Float sum(Float... values) {
     return sum;
 }
 
-doc "The product of the given values, or
-     `1.0` if there are no values."
+doc "The product of the given values, or `1.0` if there are 
+     no arguments."
 shared Float product(Float... values) {
     variable Float sum:=1.0;
     for (x in values) {
@@ -340,9 +429,8 @@ shared Float product(Float... values) {
     return sum;
 }
 
-doc "The value of `x \{00D7} 2\{207F}`, 
-     calculated exactly for reasonable
-     values of `n`."
+doc "The value of `x \{00D7} 2\{207F}`, calculated exactly 
+     for reasonable values of `n`."
 shared Float scalb(Float x, Integer n) {
     return jscalb(x, n);
 }

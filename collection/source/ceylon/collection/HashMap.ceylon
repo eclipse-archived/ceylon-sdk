@@ -207,14 +207,14 @@ shared class HashMap<Key, Item>()
         return iter;
     }
     
-    shared actual Integer count(Object element) {
+    shared actual Integer count(Boolean selecting(Key->Item element)) {
         variable Integer index := 0;
         variable Integer count := 0;
         // walk every bucket
         while(index < store.size){
             variable Cell<Key->Item>? bucket := store[index];
             while(exists Cell<Key->Item> cell = bucket){
-                if(cell.car.item == element){
+                if(selecting(cell.car)){
                     count++;
                 }
                 bucket := cell.cdr;
