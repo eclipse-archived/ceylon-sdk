@@ -29,8 +29,8 @@ Module module {
              Decimal x = decimalNumber(66.0G);
              Decimal y = decimalNumber(100.0T);
              Decimal z = decimalNumber(66.0f);
-             Decimal d = implicitlyRounded(() (x+z)/y/x, round(40, down));
-             print(d); //prints 1.000000000000000000000000999999999999999E-14
+             Decimal d = implicitlyRounded(() (x+z)/y/x, round(40, halfUp));
+             print(d); //prints 1.000000000000000000000001E-14
          
          Here, the expression `(x+z)/y/x`, which has no terminating 
          decimal representation, is evaluated with the intermediate 
