@@ -2,13 +2,14 @@
 
   <!-- the modules, in dependency order -->
   <filelist id="module.dirs">
-  	<file name="sdk-test"/>
+    <file name="sdk-test"/>
     <file name="math"/>
     <file name="collection"/>
     <file name="file"/>
     <file name="process"/>
     <file name="json"/>
     <file name="net"/>
+    <file name="interop.java"/>
   </filelist>
   
   <macrodef name="iterate">
@@ -52,3 +53,4 @@
   </target>
 
 </project>
+

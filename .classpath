@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="sdk-test/source"/>
+	<classpathentry kind="src" path="interop.java/source"/>
+	<classpathentry kind="src" path="interop.java/test"/>
 	<classpathentry kind="src" path="math/source"/>
 	<classpathentry kind="src" path="math/test"/>
 	<classpathentry kind="src" path="collection/source"/>
