@@ -1,0 +1,3 @@
+<project name="interop.java">
+    <import file="../common.xml"/>
+</project>
