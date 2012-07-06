@@ -7,10 +7,10 @@ Module module {
     },
     Import {
         name = 'ceylon.net';
-        version = '0.5.0';
+        version = '0.3.1';
     },
     Import {
         name = 'ceylon.json';
-        version = '0.3.0';
+        version = '0.3.1';
     }
 }

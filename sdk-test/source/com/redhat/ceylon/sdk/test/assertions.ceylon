@@ -38,8 +38,7 @@ Boolean nullSafeEquals(Object? expected, Object? got) {
 doc "Fails the test if the two objects are not equal"
 shared void assertEquals(Object? expected, Object? got, String? message=null,
         Boolean compare(Object? expected, Object? got) = nullSafeEquals) {
-    Boolean cmp(Object? expected, Object? got) = nullSafeEquals;
-    if (!cmp(expected,got) && !compare(expected,got)) {
+    if (!compare(expected,got)) {
         if (exists message) {
             throw AssertionFailed("assertion failed: " str(expected) " != " str(got) ": \"" message "\"");
         }
