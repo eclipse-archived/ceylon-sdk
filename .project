@@ -6,12 +6,12 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>com.redhat.ceylon.eclipse.ui.ceylonBuilder</name>
+			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
+			<name>com.redhat.ceylon.eclipse.ui.ceylonBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
