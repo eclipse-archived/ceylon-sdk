@@ -207,7 +207,7 @@ void testSet2(){
 }
 
 class CollectionSuite() extends Suite("ceylon.collection") {
-    shared actual Iterable<Entry<String, Callable<Void>>> suite = {
+    shared actual Iterable<String->Void()> suite = {
         "Set" -> testSet,
         "Map" -> testMap,
         "List" -> testList,
