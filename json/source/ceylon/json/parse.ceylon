@@ -183,19 +183,19 @@ class Parser(String str){
             return c;
         }
         if(c == `b`){
-            return 8.character;
+            return `\b`;
         }
         if(c == `f`){
-            return 12.character;
+            return `\f`;
         }
         if(c == `r`){
-            return 13.character;
+            return `\r`;
         }
         if(c == `n`){
-            return 10.character;
+            return `\n`;
         }
         if(c == `t`){
-            return 9.character;
+            return `\t`;
         }
         if(c == `u`){
             return parseStringUnicode();
@@ -269,9 +269,9 @@ class Parser(String str){
     
     Boolean isSpace(Character c){
         return c == ` ` 
-            || c == 10.character
-            || c == 13.character
-            || c == 9.character;
+            || c == `\n`
+            || c == `\r`
+            || c == `\t`;
     }
 
     Boolean isDigit(Character c){
