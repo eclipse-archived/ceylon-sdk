@@ -3,22 +3,22 @@ import ceylon.net.http { Request }
 
 doc "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
 by "Stéphane Épardaud"
-shared class URI(String? _scheme, Authority _authority, Path _path, Query _query, String? _fragment){
+shared class URI(scheme = null, authority = Authority(), path = Path(), query = Query(), fragment = null){
     
     doc "The optional URI scheme: `http`, `https`, `mailto`…"
-    shared variable String? scheme := _scheme;
+    shared variable String? scheme;
     
     doc "The optional Authority part (contains user, password, host and port)"
-    shared variable Authority authority := _authority;
+    shared variable Authority authority;
     
     doc "The optional Path part"
-    shared variable Path path := _path;
+    shared variable Path path;
     
     doc "The optional query part"
-    shared variable Query query := _query;
+    shared variable Query query;
     
     doc "The optional fragment (hash) part"
-    shared variable String? fragment := _fragment;
+    shared variable String? fragment;
 
     doc "Returns true if this is a relative URI"
     shared Boolean relative {
