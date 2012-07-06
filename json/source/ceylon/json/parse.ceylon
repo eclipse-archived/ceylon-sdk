@@ -89,9 +89,9 @@ class Parser(String str){
             Float signedFloat = negative then float.negativeValue else float;
             Integer? exp = parseExponent();
             if(exists exp){
-                return float * (10.float ** exp.float);
+                return signedFloat * (10.float ** exp.float);
             }
-            return float;
+            return signedFloat;
         }
 
         Integer signedInteger = negative then wholePart.negativeValue else wholePart;
