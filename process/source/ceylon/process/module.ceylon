@@ -1,6 +1,6 @@
 Module module {
     name='ceylon.process';
-    version='0.3.1';
+    version='0.3.3';
     doc = "API for running native commands in a child process.
            Clients simply create `Process`es using the
            `createProcess()` method. The new process starts
@@ -52,5 +52,5 @@ Module module {
            
            To wait for the child process to terminate, call
            the `waitForExit()` method of `Process`.";
-    Import { name = 'ceylon.file'; version = '0.3.1'; }
+    Import { name = 'ceylon.file'; version = '0.3.3'; }
 }
