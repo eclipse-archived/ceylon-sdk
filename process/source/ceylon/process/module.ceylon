@@ -1,14 +1,14 @@
 Module module {
     name='ceylon.process';
-    version='0.3.1';
+    version='0.3.3';
     doc = "API for running native commands in a child process.
            Clients simply create `Process`es using the
            `createProcess()` method. The new process starts
            executing immediately.
            
                Process process = createProcess { 
+                   command = \"ls -l\";
                    path = home;
-                   \"ls\", \"-l\"
                };
            
            By default, the standard input, output, and error 
@@ -26,7 +26,8 @@ Module module {
            redirected by specifying an `Input` or `Output` to
            `createProcess()`.
            
-               Process process = createProcess { 
+               Process process = createProcess {
+                   command = \"ls -l\";
                    path = home;
                    OverwriteFileOutput output { 
                        path=home.childPath(\"out.txt\");
@@ -34,7 +35,6 @@ Module module {
                    AppendFileOutput error { 
                        path=home.childPath(\"err.txt\");
                    }
-                   \"ls\", \"-l\"
                };
            
            The objects `currentInput`, `currentOutput`, and 
@@ -43,14 +43,14 @@ Module module {
            output, and error streams of the current virtual
            machine process.
            
-               Process process = createProcess { 
+               Process process = createProcess {
+                   command = \"ls -l\";
                    path = home;
                    output = currentOutput;
                    error = currentError;
-                   \"ls\", \"-l\"
                };
            
            To wait for the child process to terminate, call
            the `waitForExit()` method of `Process`.";
-    Import { name = 'ceylon.file'; version = '0.3.1'; }
+    Import { name = 'ceylon.file'; version = '0.3.3'; }
 }

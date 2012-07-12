@@ -1,6 +1,6 @@
 Module module {
     name='ceylon.math';
-    version='0.3.1';
+    version='0.3.3';
     by={"Tom Bentley"};
     doc="This module provides four APIs:
          
