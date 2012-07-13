@@ -16,5 +16,5 @@
 	<classpathentry kind="src" path="net/test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.redhat.ceylon.eclipse.ui.cpcontainer.CEYLON_CONTAINER/default"/>
-	<classpathentry kind="output" path="classes"/>
+	<classpathentry kind="output" path="build/classes"/>
 </classpath>
