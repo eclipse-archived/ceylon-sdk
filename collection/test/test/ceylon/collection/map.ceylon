@@ -33,6 +33,23 @@ void testMap(){
     assertTrue(!map.defines("fu"), "f");
 }
 
+void testMapRemove(){
+    MutableMap<String,String> map = HashMap<String,String>();
+    map.put("a", "b");
+    map.put("c", "d");
+    assertEquals(2, map.size);
+    
+    map.remove("a");
+    assertEquals(1, map.size);
+    assertEquals("d", map["c"]);
+    assertEquals(null, map["a"]);
+
+    map.remove("c");
+    assertEquals(0, map.size);
+    assertEquals(null, map["c"]);
+    assertEquals(null, map["a"]);
+}
+
 void testMap2(){
     MutableMap<String,String|Integer> map = HashMap<String,String|Integer>();
     map.put("gravatar_id", "a38479e9dc888f68fb6911d4ce05d7cc");

@@ -29,6 +29,23 @@ void testSet(){
     assertTrue(!set.contains("fu"));
 }
 
+void testSetRemove(){
+    MutableSet<String> set = HashSet<String>();
+    set.add("a");
+    set.add("b");
+    assertEquals(2, set.size);
+    
+    set.remove("a");
+    assertEquals(1, set.size);
+    assertFalse(set.contains("a"));
+    assertTrue(set.contains("b"));
+
+    set.remove("b");
+    assertEquals(0, set.size);
+    assertFalse(set.contains("a"));
+    assertFalse(set.contains("b"));
+}
+
 void testSet2(){
     MutableSet<String> set = HashSet<String>();
     set.add("gravatar_id");
