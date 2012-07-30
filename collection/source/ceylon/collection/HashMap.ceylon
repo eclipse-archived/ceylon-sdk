@@ -64,7 +64,7 @@ shared class HashMap<Key, Item>()
     shared actual void remove(Key key){
         Integer index = storeIndex(key, store);
         variable Cell<Key->Item>? bucket := store[index];
-        variable Cell<Key->Item>? prev := bucket;
+        variable Cell<Key->Item>? prev := null;
         while(exists Cell<Key->Item> cell = bucket){
             if(cell.car.key == key){
                 // found it
@@ -76,6 +76,7 @@ shared class HashMap<Key, Item>()
                 _size--;
                 return;
             }
+            prev := cell;
             bucket := cell.cdr;
         }
     }

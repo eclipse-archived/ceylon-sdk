@@ -64,7 +64,7 @@ shared class HashSet<Element>()
     shared actual void remove(Element element){
         Integer index = storeIndex(element, store);
         variable Cell<Element>? bucket := store[index];
-        variable Cell<Element>? prev := bucket;
+        variable Cell<Element>? prev := null;
         while(exists Cell<Element> cell = bucket){
             if(cell.car == element){
                 // found it
@@ -76,6 +76,7 @@ shared class HashSet<Element>()
                 _size--;
                 return;
             }
+            prev := cell;
             bucket := cell.cdr;
         }
     }
