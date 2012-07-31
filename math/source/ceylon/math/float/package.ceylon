@@ -1,5 +1,2 @@
-Package package {
-    name='ceylon.math.float';
-    doc="Constants and functions supporting the `Float` type.";
-    shared=true;
-}
+doc "Constants and functions supporting the `Float` type."
+shared package ceylon.math.float;

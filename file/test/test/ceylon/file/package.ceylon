@@ -1,4 +1,1 @@
-Package package {
-    name='test.ceylon.file';
-    shared=false;
-}
+package test.ceylon.file;

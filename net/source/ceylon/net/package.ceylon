@@ -1,6 +1,3 @@
-Package package {
-    name='ceylon.net';
-    shared=true;
-    by = {"Stéphane Épardaud"};
-    doc = "A module that contains URI stuff";
-}
+doc "A module that contains URI stuff"
+by "Stéphane Épardaud"
+shared package ceylon.net;

@@ -1,4 +1,1 @@
-Package package {
-    name='ceylon.net.uri';
-    shared=true;
-}
+shared package ceylon.net.uri;

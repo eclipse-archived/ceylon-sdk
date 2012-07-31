@@ -1,6 +1,3 @@
-Package package {
-    name = 'ceylon.net.http';
-    shared = true;
-    by = {"Stéphane Épardaud"};
-    doc = "Contains HTTP-specific stuff";
-}
+doc "Contains HTTP-specific stuff"
+by "Stéphane Épardaud"
+shared package ceylon.net.http;

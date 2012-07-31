@@ -1,4 +1,1 @@
-Package package {
-    name='test.ceylon.interop.java';
-    shared=false;
-}
+package test.ceylon.interop.java;

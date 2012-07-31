@@ -1,4 +1,1 @@
-Package package {
-    name='test.ceylon.net';
-    shared=true;
-}
+shared package test.ceylon.net;

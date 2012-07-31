@@ -1,6 +1,3 @@
-Package package {
-    name='ceylon.json';
-    shared=true;
-    by = {"Stéphane Épardaud"};
-    doc = "A JSON parser / serialiser";
-}
+doc "A JSON parser / serialiser"
+by "Stéphane Épardaud"
+shared package ceylon.json;
