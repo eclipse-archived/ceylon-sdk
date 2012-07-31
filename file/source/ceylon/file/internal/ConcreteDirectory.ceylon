@@ -1,7 +1,7 @@
 import ceylon.file { ... }
 
 import java.nio.file { JPath=Path, 
-                       Files { deletePath=delete, movePath=move, 
+                       Files { movePath=move, 
                                newDirectoryStream } }
 
 class ConcreteDirectory(JPath jpath)

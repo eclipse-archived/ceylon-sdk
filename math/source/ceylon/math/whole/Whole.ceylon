@@ -1,9 +1,5 @@
-import java.lang{ JInt=Integer { maxInt=\iMAX_VALUE },
-                  NumberFormatException}
-import java.math { BigInteger { fromLong=valueOf,
-                                jzero=\iZERO, jone=\iONE },
-                   BigDecimal }
-import ceylon.math.decimal { Decimal }
+import java.lang { NumberFormatException }
+import java.math { BigInteger { fromLong=valueOf } }
 
 doc "An arbitrary precision integer."
 shared interface Whole of WholeImpl

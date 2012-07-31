@@ -5,7 +5,7 @@ import java.nio.file { JPath=Path,
                                getFileStore, getSize=size, isHidden,
                                getLastModifiedTime, setLastModifiedTime,
                                probeContentType, copyPath=copy, movePath=move,
-                               deletePath=delete, newLink=createLink, 
+                               newLink=createLink, 
                                newSymbolicLink=createSymbolicLink },
                        StandardCopyOption { REPLACE_EXISTING } }
 import java.nio.charset { Charset { defaultCharset, forName } }

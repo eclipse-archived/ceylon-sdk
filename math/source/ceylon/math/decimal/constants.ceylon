@@ -1,7 +1,7 @@
-import java.math{ BigDecimal { bdone=\iONE, bdzero=\iZERO, 
-                               bdten=\iTEN } }
-import java.lang{ JInteger=Integer{ maxInt = \iMAX_VALUE,
-                                    minInt = \iMIN_VALUE } }
+import java.math { BigDecimal { bdone=\iONE, bdzero=\iZERO, 
+                                bdten=\iTEN } }
+import java.lang { JInteger=Integer { maxInt = \iMAX_VALUE,
+                                      minInt = \iMIN_VALUE } }
 
 Decimal intMax = decimalNumber(maxInt);
 Decimal intMin = decimalNumber(minInt);

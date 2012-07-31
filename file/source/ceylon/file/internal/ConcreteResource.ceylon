@@ -1,7 +1,8 @@
 import ceylon.file { ... }
 
 import java.nio.file { JPath=Path, 
-                       Files { getOwner, setOwner, deletePath=delete } }
+                       Files { getOwner, setOwner, 
+                               deletePath=delete } }
 import java.nio.file.attribute { UserPrincipalNotFoundException }
 
 abstract class ConcreteResource(JPath jpath) 
