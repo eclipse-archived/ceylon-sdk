@@ -1,9 +1,7 @@
-import ceylon.math.whole { Whole, 
-                           wrapBigInteger=fromImplementation }
+import ceylon.math.whole { Whole }
+
 import java.lang { NumberFormatException }
-import java.math { BigInteger,
-                   BigDecimal { bdone=\iONE, bdzero=\iZERO, 
-                                bdten=\iTEN } }
+import java.math { BigInteger, BigDecimal }
 
 shared class DividedWithRemainder(divided, remainder) {
     shared Decimal divided;
