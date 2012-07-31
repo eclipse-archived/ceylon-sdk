@@ -1,12 +1,4 @@
-Module module {
-    name='test.ceylon.file';
-    version='0.3.3';
-    Import {
-        name = 'ceylon.file';
-        version = '0.3.3';
-    },
-    Import {
-        name = 'com.redhat.ceylon.sdk.test';
-        version = '0.1.1';
-    }
+module test.ceylon.file '0.3.3' {
+    import ceylon.file '0.3.3';
+    import com.redhat.ceylon.sdk.test '0.1.1';
 }

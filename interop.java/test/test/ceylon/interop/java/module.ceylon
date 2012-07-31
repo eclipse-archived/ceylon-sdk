@@ -1,12 +1,4 @@
-Module module {
-    name='test.ceylon.interop.java';
-    version='0.3.2';
-    Import {
-        name = 'ceylon.interop.java';
-        version = '0.3.2';
-    },
-    Import {
-        name = 'com.redhat.ceylon.sdk.test';
-        version = '0.1.1';
-    }
+module test.ceylon.interop.java '0.3.2' {
+    import ceylon.interop.java '0.3.2';
+    import com.redhat.ceylon.sdk.test '0.1.1';
 }

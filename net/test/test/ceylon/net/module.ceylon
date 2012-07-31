@@ -1,16 +1,5 @@
-Module module {
-    name='test.ceylon.net';
-    version='0.3.2';
-    Import {
-        name = 'com.redhat.ceylon.sdk.test';
-        version = '0.1.1';
-    },
-    Import {
-        name = 'ceylon.net';
-        version = '0.3.2';
-    },
-    Import {
-        name = 'ceylon.json';
-        version = '0.3.2';
-    }
+module test.ceylon.net '0.3.2' {
+    import com.redhat.ceylon.sdk.test '0.1.1';
+    import ceylon.net '0.3.2';
+    import ceylon.json '0.3.2';
 }
