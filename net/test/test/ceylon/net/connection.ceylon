@@ -4,7 +4,7 @@ import com.redhat.ceylon.sdk.test { ... }
 import ceylon.json { ... }
 
 void testJSON(Object json){
-    assertEquals(28, json.size, "Object size");
+    assertEquals(32, json.size, "Object size");
     assertEquals("http://ceylon-lang.org", json.get("homepage"), "Homepage");
     
     if(is Object owner = json.get("owner")){
