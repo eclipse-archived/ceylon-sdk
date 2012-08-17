@@ -1,0 +1,336 @@
+import javax.sql { DataSource }
+import java.sql { PreparedStatement, CallableStatement }
+import ceylon.math.decimal { Decimal }
+import ceylon.math.whole { Whole, fromImplementation }
+
+doc "A component that can perform queries and execute SQL statements on a
+     database, via connections obtained from a JDBC DataSource."
+by "Enrique Zamudio"
+shared class Sql(DataSource ds) {
+
+    value conns = ThreadLocalConnection(ds);
+
+    PreparedStatement prepareStatement(ConnectionStatus conn, String sql, Object... params) {
+        value ps = conn.connection().prepareStatement(sql);
+        //TODO set parameters
+        return ps;
+    }
+
+    CallableStatement prepareCall(ConnectionStatus conn, String sql, Object... params) {
+        value cs = conn.connection().prepareCall(sql);
+        //TODO set parameters
+        return cs;
+    }
+
+    doc "Execute a SQL statement, with the given parameters. The SQL string
+         must use the '?' parameter placeholders."
+    shared default Boolean execute(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            try {
+                return stmt.execute();
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL statement with the given parameters, and return
+         the number of rows that were affected. This is useful for
+         DELETE or UPDATE statements. The SQL string must use the '?'
+         parameter placeholders."
+    shared default Integer executeUpdate(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            try {
+                return stmt.executeUpdate();
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL INSERT statement with the given parameters, and return
+         the generated keys (if the JDBC driver supports it). The SQL string
+         must use the '?' parameter placeholders."
+    shared default Array<Array<Object>> executeInsert(String sql, Object... params) {
+        return array(array<Object>(0));
+    }
+
+    doc "Execute a SQL callable statement, returning the number of rows
+         that were affected. This is useful to call database functions or
+         stored procedures that update or delete rows. The SQL string must
+         use the '?' parameter placeholers."
+    shared default Integer callUpdate(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareCall(conn, sql, params);
+            try {
+                return stmt.executeUpdate();
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    shared default Map<Integer, Object>? call(String sql, Object... params) {
+        return null;
+    }
+
+    doc "Execute a SQL query with the given parameters and return the
+         resulting rows. The SQL string must use the '?' parameter placeholders."
+    shared default Map<String, Object>[] rows(
+            doc "The SQL query."
+            String sql,
+            doc "The limit of rows to return. Default is -1 which means return all rows."
+            Integer limit=-1,
+            doc "The number of rows to skip from the result. Default is 0."
+            Integer offset=0,
+            doc "The parameters passed to the SQL query."
+            Object... params) {
+        return empty;
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         row from the result only. The SQL string must use the '?' parameter
+         placeholders."
+    shared default Map<String, Object>? firstRow(String sql, Object... params) {
+        return null;
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as an Integer value. The SQL string must
+         use the '?' parameter placeholders."
+    shared default Integer? queryForInt(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    return rs.getInt(1);
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as a Float. The SQL string must
+         use the '?' parameter placeholders."
+    shared default Float? queryForFloat(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    return rs.getDouble(1);
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as a Boolean. The SQL string must
+         use the '?' parameter placeholders."
+    shared default Boolean? queryForBoolean(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    return rs.getBoolean(1);
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as a Decimal. The SQL string must
+         use the '?' parameter placeholders."
+    shared default Decimal? queryForDecimal(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    if (exists d=rs.getBigDecimal(1)) {
+                        return null;//TODO convert
+                    }
+                    return null;
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as a Whole. The SQL string must
+         use the '?' parameter placeholders."
+    shared default Whole? queryForWhole(String sql, Object... params) {
+        return null;
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as a String. The SQL string must
+         use the '?' parameter placeholders."
+    shared default String? queryForString(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    if (exists s=rs.getString(1)) {
+                        return s;
+                    }
+                    return null;
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute a SQL query with the given parameters, and return the first
+         column of the first result, as a Float. The SQL string must
+         use the '?' parameter placeholders."
+    shared default Value? queryForValue<Value>(String sql, Object... params)
+            given Value satisfies Object {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    /*if (is Value s=rs.getObject(1)) {
+                        return s;
+                    }*/
+                    return null;
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    doc "Execute the passed Callable within a database transaction. If any
+         exception is thrown from within the Callable, the transaction will
+         be rolled back; otherwise it is committed."
+    shared default void withTransaction(void body()) {
+        value conn = conns.get();
+        conn.beginTransaction();
+        variable value ok := false;
+        try {
+            body();
+            ok := true;
+        } finally {
+            try {
+                if (ok) {
+                    conn.commit();
+                } else {
+                    conn.rollback();
+                }
+            } finally {
+                conn.close();
+            }
+        }
+    }
+
+    doc "Execute a SQL query with the given parameters, and call the specified method
+         with each obtained row."
+    shared default void eachRow(
+            doc "The SQL query to execute."
+            String sql,
+            doc "The method to call with each row."
+            void body(Map<String, Object> row),
+            doc "The maximum number of rows to process. Default -1 which means all rows."
+            Integer limit=-1,
+            doc "The number of rows to skip from the result before starting processing. Default 0."
+            Integer offset=0,
+            doc "The parameters to pass to the SQL query."
+            Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params...);
+            if (limit > 0 && offset <= 0) {
+                stmt.maxRows:=limit;
+            }
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    value meta = rs.metaData;
+                    value range = 1..meta.columnCount;
+                    value cont = offset > 0 then (1..offset).every((Integer x) rs.next()) else true;
+                    if (limit > 0) {
+                        variable value count := 0;
+                        while (count < limit && rs.next()) {
+                            //TODO row
+                            //body(row);
+                            count++;
+                        }
+                    } else if (cont) {
+                        while (rs.next()) {
+                            //TODO row
+                            //body(row);
+                        }
+                    }
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+}
