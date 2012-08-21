@@ -32,6 +32,14 @@ doc "A component that can perform queries and execute SQL statements on a
          value query = sql.rows(\"SELECT * FROM mytable WHERE col=?\");
          value result1 = query({value1});
          value result2 = query({value2});
+         for (row in query({\"X\"}) {
+             if (is String c=row[\"some_column\"]) {
+                 //do something with this
+             }
+             if (is DbNull c=row[\"other_column\"]) {
+                 //nulls are represented with DbNull instances
+             }
+         }
 
      There are methods to retrieve just the first row, and even only one
      value. All these methods handle the SQL connection for you; it will be
@@ -60,6 +68,14 @@ doc "A component that can perform queries and execute SQL statements on a
                  return true;
              }
          };
+
+     To pass a NULL value in an update or insert statement, use a `DbNull` with the proper
+     SQL type (from the `java.sql.Types` class):
+
+          sql.update(\"UPDATE table SET col=? WHERE key=?\", DbNull(Types.INTEGER));
+
+     If a column is NULL on a row from the `rows`, `firstRow` or `eachRow` methods, it will
+     get mapped to a DbNull instance under the column's key.
      "
 by "Enrique Zamudio"
 shared class Sql(DataSource ds) {
