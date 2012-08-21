@@ -75,8 +75,10 @@
       <module name="${module.name}"/>
     </ceylonc>
   </target>
-    
-  <target name="test-module" depends="compile-module" if="tests.exist"
+
+  <extension-point name="setup-test-module"/>
+
+  <target name="test-module" depends="compile-module,setup-test-module" if="tests.exist"
         description="Compiles and runs the test module, if it exists">
     <echo message="${ant.project.name} test basedir:${basedir}, build: ${build}"/>
     <echoproperties>
