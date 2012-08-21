@@ -1,24 +1,123 @@
 import javax.sql { DataSource }
-import java.sql { PreparedStatement, CallableStatement }
-import ceylon.math.decimal { Decimal }
-import ceylon.math.whole { Whole, fromImplementation }
+import java.sql {
+    PreparedStatement, CallableStatement,
+    ResultSet, ResultSetMetaData,
+    Timestamp, SqlDate=Date
+}
+import java.util { Date }
+import java.math { BigDecimal, BigInteger }
+import ceylon.math.decimal { Decimal, parseDecimal }
+import ceylon.math.whole { Whole, fromImplementation, parseWhole }
 
 doc "A component that can perform queries and execute SQL statements on a
-     database, via connections obtained from a JDBC DataSource."
+     database, via connections obtained from a JDBC DataSource.
+
+     You can easily get a query result as a `Sequence` where each row is
+     a `Map`:
+
+         value rows = sql.rows(\"SELECT * FROM mytable\")({});
+
+     You can pass parameters to the query, using the '?' notation:
+
+         sql.rows(\"SELECT * FROM mytable WHERE col1=? AND col2=?\")({val1, val2});
+
+     And you can even limit the number of rows obtained, as well as the starting
+     offset (the number of rows to skip before the first retrieved result):
+
+         sql.rows(\"SELECT * FROM mytable WHERE date>?\", 5, 2)({date});
+
+     The `rows` method has two parameter lists because you can actually create
+     reusable queries:
+
+         value query = sql.rows(\"SELECT * FROM mytable WHERE col=?\");
+         value result1 = query({value1});
+         value result2 = query({value2});
+
+     There are methods to retrieve just the first row, and even only one
+     value. All these methods handle the SQL connection for you; it will be
+     closed even if an exception is thrown:
+
+         value row = sql.firstRow(\"SELECT * FROM mytable WHERE key=?\", key);
+         value count = sql.queryForInt(\"SELECT count(*) FROM mytable\");
+         value name = sql.queryForString(\"SELECT name FROM table WHERE key=?\", key);
+
+     And of course you can execute update and insert statements:
+
+         Integer changed = sql.update(\"UPDATE table SET col=? WHERE key=?\", newValue, key);
+         value newKeys = sql.insert(\"INSERT INTO table (key,col) VALUES (?, ?)\", key, col);
+
+     If you need to perform several operations within a transaction, you can pass a function
+     to the `transaction` method; it will be executed within a transaction, everything will
+     be performed using the same connection, and at the end the commit is performed if your
+     method returns `true`, or rolled back if you return `false`:
+
+         sql.transaction {
+             Boolean do() {
+                 sql.insert(\"INSERT...\");
+                 sql.update(\"UPDATE...\");
+                 sql.update(\"DELETE...\");
+                 //This will cause a commit - return false or throw to cause rollback
+                 return true;
+             }
+         };
+     "
 by "Enrique Zamudio"
 shared class Sql(DataSource ds) {
 
     value conns = ThreadLocalConnection(ds);
 
-    PreparedStatement prepareStatement(ConnectionStatus conn, String sql, Object... params) {
-        value ps = conn.connection().prepareStatement(sql);
-        //TODO set parameters
-        return ps;
+    PreparedStatement prepareStatement(ConnectionStatus conn, String sql, Iterable<Object> params) {
+        value stmt = conn.connection().prepareStatement(sql);
+        //Set parameters
+        variable value i:=1;
+        for (p in params) {
+            switch (p)
+            case (is Integer) { stmt.setLong(i,p); }
+            case (is Boolean) { stmt.setBoolean(i,p); }
+            //case (is Decimal) { stmt.setBigDecimal(i,p); }
+            case (is String)  { stmt.setString(i,p); }
+            case (is Date)    {
+                if (is Timestamp p) {
+                    stmt.setTimestamp(i,p, null);
+                } else if (is SqlDate p) {
+                    stmt.setDate(i, p, null);
+                } else {
+                    stmt.setDate(i, SqlDate(p.time), null);
+                }
+            }
+            case (is Float)   { stmt.setDouble(i, p); }
+            case (is DbNull)  { stmt.setNull(i, p.sqlType); }
+            //TODO reader, inputStream, byte array
+            else { stmt.setObject(i,p); }
+            i++;
+        }
+        return stmt;
     }
 
-    CallableStatement prepareCall(ConnectionStatus conn, String sql, Object... params) {
+    CallableStatement prepareCall(ConnectionStatus conn, String sql, Iterable<Object> params) {
         value cs = conn.connection().prepareCall(sql);
-        //TODO set parameters
+        variable value i:=1;
+        /*for (p in params) {
+            switch (p)
+            case (is Integer) { cs.setLong(i,p); }
+            case (is Boolean) { cs.setBoolean(i,p); }
+            //case (is Decimal) { cs.setBigDecimal(i,p); }
+            case (is String)  { cs.setString(i,p); }
+            case (is Date)    {
+                if (is Timestamp p) {
+                    cs.setTimestamp(i,p, null);
+                } else if (is SqlDate p) {
+                    cs.setDate(i, p, null);
+                } else {
+                    cs.setDate(i, SqlDate(p.time), null);
+                }
+            }
+            case (is Float)   { cs.setDouble(i, p); }
+            case (is DbNull)  { cs.setNull(i, p.sqlType); }
+            //TODO reader, inputStream, byte array
+            else { cs.setObject(i,p); }
+            i++;
+        }*/
         return cs;
     }
 
@@ -27,7 +126,7 @@ shared class Sql(DataSource ds) {
     shared default Boolean execute(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             try {
                 return stmt.execute();
             } finally {
@@ -42,10 +141,10 @@ shared class Sql(DataSource ds) {
          the number of rows that were affected. This is useful for
          DELETE or UPDATE statements. The SQL string must use the '?'
          parameter placeholders."
-    shared default Integer executeUpdate(String sql, Object... params) {
+    shared default Integer update(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             try {
                 return stmt.executeUpdate();
             } finally {
@@ -59,8 +158,8 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL INSERT statement with the given parameters, and return
          the generated keys (if the JDBC driver supports it). The SQL string
          must use the '?' parameter placeholders."
-    shared default Array<Array<Object>> executeInsert(String sql, Object... params) {
-        return array(array<Object>(0));
+    shared default Sequence<Sequence<Object>> insert(String sql, Object... params) {
+        return { { 0 } };
     }
 
     doc "Execute a SQL callable statement, returning the number of rows
@@ -93,16 +192,70 @@ shared class Sql(DataSource ds) {
             doc "The limit of rows to return. Default is -1 which means return all rows."
             Integer limit=-1,
             doc "The number of rows to skip from the result. Default is 0."
-            Integer offset=0,
-            doc "The parameters passed to the SQL query."
-            Object... params) {
-        return empty;
+            Integer offset=0)
+            (doc "The parameters passed to the SQL query."
+            Object[] params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params);
+            if (limit > 0 && offset <= 0) {
+                stmt.maxRows:=limit;
+            }
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    value meta = rs.metaData;
+                    value range = 1..meta.columnCount;
+                    value cont = offset > 0 then (1..offset).every((Integer x) rs.next()) else true;
+                    value sb = SequenceBuilder<Map<String, Object>>();
+                    if (limit > 0) {
+                        variable value count := 0;
+                        while (count < limit && rs.next()) {
+                            sb.append(LazyMap(for (i in range) mapColumn(rs, meta, i)));
+                            count++;
+                        }
+                    } else if (cont) {
+                        while (rs.next()) {
+                            sb.append(LazyMap(for (i in range) mapColumn(rs, meta, i)));
+                        }
+                    }
+                    return sb.sequence;
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
     }
 
     doc "Execute a SQL query with the given parameters, and return the first
          row from the result only. The SQL string must use the '?' parameter
          placeholders."
     shared default Map<String, Object>? firstRow(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = prepareStatement(conn, sql, params);
+            stmt.maxRows:=1;
+            try {
+                value rs = stmt.executeQuery();
+                try {
+                    value meta = rs.metaData;
+                    value range = 1..meta.columnCount;
+                    if (rs.next()) {
+                        return LazyMap(for (i in range) mapColumn(rs, meta, i));
+                    }
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
         return null;
     }
 
@@ -112,7 +265,7 @@ shared class Sql(DataSource ds) {
     shared default Integer? queryForInt(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             stmt.maxRows:=1;
             try {
                 value rs = stmt.executeQuery();
@@ -135,7 +288,7 @@ shared class Sql(DataSource ds) {
     shared default Float? queryForFloat(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             stmt.maxRows:=1;
             try {
                 value rs = stmt.executeQuery();
@@ -158,7 +311,7 @@ shared class Sql(DataSource ds) {
     shared default Boolean? queryForBoolean(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             stmt.maxRows:=1;
             try {
                 value rs = stmt.executeQuery();
@@ -181,13 +334,14 @@ shared class Sql(DataSource ds) {
     shared default Decimal? queryForDecimal(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             stmt.maxRows:=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
                     if (exists d=rs.getBigDecimal(1)) {
-                        return null;//TODO convert
+                        //TODO optimize this
+                        return parseDecimal(d.toPlainString());
                     }
                     return null;
                 } finally {
@@ -214,7 +368,7 @@ shared class Sql(DataSource ds) {
     shared default String? queryForString(String sql, Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             stmt.maxRows:=1;
             try {
                 value rs = stmt.executeQuery();
@@ -241,7 +395,7 @@ shared class Sql(DataSource ds) {
             given Value satisfies Object {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             stmt.maxRows:=1;
             try {
                 value rs = stmt.executeQuery();
@@ -264,13 +418,12 @@ shared class Sql(DataSource ds) {
     doc "Execute the passed Callable within a database transaction. If any
          exception is thrown from within the Callable, the transaction will
          be rolled back; otherwise it is committed."
-    shared default void withTransaction(void body()) {
+    shared default void transaction(Boolean body()) {
         value conn = conns.get();
         conn.beginTransaction();
         variable value ok := false;
         try {
-            body();
-            ok := true;
+            ok := body();
         } finally {
             try {
                 if (ok) {
@@ -299,7 +452,7 @@ shared class Sql(DataSource ds) {
             Object... params) {
         value conn = conns.get();
         try {
-            value stmt = prepareStatement(conn, sql, params...);
+            value stmt = prepareStatement(conn, sql, params);
             if (limit > 0 && offset <= 0) {
                 stmt.maxRows:=limit;
             }
@@ -312,16 +465,15 @@ shared class Sql(DataSource ds) {
                     if (limit > 0) {
                         variable value count := 0;
                         while (count < limit && rs.next()) {
-                            //TODO row
-                            //body(row);
+                            body(LazyMap(for (i in range) mapColumn(rs, meta, i)));
                             count++;
                         }
                     } else if (cont) {
                         while (rs.next()) {
-                            //TODO row
-                            //body(row);
+                            body(LazyMap(for (i in range) mapColumn(rs, meta, i)));
                         }
                     }
+                    return;
                 } finally {
                     rs.close();
                 }
@@ -331,6 +483,19 @@ shared class Sql(DataSource ds) {
         } finally {
             conn.close();
         }
+    }
+
+    doc "Create an `Entry` from the column data at the specified index."
+    String->Object mapColumn(ResultSet rs, ResultSetMetaData meta, Integer idx) {
+        String columnName = meta.getColumnName(idx);
+        Object? x = rs.getObject(idx);
+        Object? v;
+        //TODO optimize these conversions
+        switch (x)
+        case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
+        case (is BigInteger) { v = parseWhole(x.string); }
+        else { v = x; }
+        return meta.getColumnName(idx).lowercased -> (v else DbNull(meta.getColumnType(idx)));
     }
 
 }
