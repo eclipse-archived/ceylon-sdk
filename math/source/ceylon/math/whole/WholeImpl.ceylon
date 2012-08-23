@@ -175,6 +175,11 @@ class WholeImpl(BigInteger num)
         throw;
     }
     
+    shared actual Integer distanceFrom(Whole other) {
+        // See https://github.com/ceylon/ceylon.language/issues/92#issuecomment-7964218
+        throw;
+    }
+    
     /*shared actual CastValue castTo<CastValue>() {
         // TODO what do I do here?
         return bottom;
