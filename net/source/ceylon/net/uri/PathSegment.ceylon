@@ -41,7 +41,7 @@ shared class PathSegment(String initialName, Parameter... initialParameters) {
     doc "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human) { 
         if(parameters.empty){
-            return name;
+            return human then name else percentEncoder.encodePathSegmentName(name);
         }else{
             StringBuilder b = StringBuilder();
             b.append(human then name else percentEncoder.encodePathSegmentName(name));
