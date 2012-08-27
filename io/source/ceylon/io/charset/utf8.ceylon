@@ -1,4 +1,4 @@
-import ceylon.io.buffer { newByteBuffer, ByteBuffer }
+import ceylon.io.buffer { newByteBuffer, ByteBuffer, CharacterBuffer }
 
 shared object utf8 satisfies Charset {
     shared actual String name = "UTF-8";
@@ -10,8 +10,73 @@ shared object utf8 satisfies Charset {
         return UTF8Decoder(this);
     }
     shared actual Encoder newEncoder() {
-        // FIXME
-        return bottom;
+        return UTF8Encoder(this);
+    }
+}
+
+class UTF8Encoder(charset) satisfies Encoder {
+    
+    shared actual Charset charset;
+    ByteBuffer bytes = newByteBuffer(3);
+    // set its limit to 0 for reading
+    bytes.flip();
+
+    shared actual Boolean done {
+        return !bytes.hasAvailable;
+    }
+
+    shared actual void encode(CharacterBuffer input, ByteBuffer output) {
+        // give up if there's no input or no room for output
+        while((input.hasAvailable || bytes.hasAvailable) && output.hasAvailable){
+            // first flush our buffer
+            if(bytes.hasAvailable){
+                output.put(bytes.get());
+            }else{
+                // now read from input
+                value codePoint = input.get().integer;
+                // how many bytes?
+                if(codePoint < hex('80')){
+                    // single byte
+                    output.put(codePoint);
+                }else if(codePoint < hex('800')){
+                    // two bytes
+                    value b1 = codePoint.and(bin('11111000000')).rightLogicalShift(6).or(bin('11000000'));
+                    value b2 = codePoint.and(bin('11111')).or(bin('10000000'));
+                    output.put(b1);
+                    // save it for later
+                    bytes.clear();
+                    bytes.put(b2);
+                    bytes.flip();
+                }else if(codePoint < hex('10000')){
+                    // three bytes
+                    value b1 = codePoint.and(bin('1111000000000000')).rightLogicalShift(12).or(bin('11100000'));
+                    value b2 = codePoint.and(bin('111111000000')).rightLogicalShift(6).or(bin('10000000'));
+                    value b3 = codePoint.and(bin('111111')).or(bin('10000000'));
+                    output.put(b1);
+                    // save it for later
+                    bytes.clear();
+                    bytes.put(b2);
+                    bytes.put(b3);
+                    bytes.flip();
+                }else if(codePoint < hex('10FFFF')){
+                    // four bytes
+                    value b1 = codePoint.and(bin('111000000000000000000')).rightLogicalShift(18).or(bin('11110000'));
+                    value b2 = codePoint.and(bin('111111000000000000')).rightLogicalShift(12).or(bin('10000000'));
+                    value b3 = codePoint.and(bin('111111000000')).rightLogicalShift(6).or(bin('10000000'));
+                    value b4 = codePoint.and(bin('111111')).or(bin('10000000'));
+                    output.put(b1);
+                    // save it for later
+                    bytes.clear();
+                    bytes.put(b2);
+                    bytes.put(b3);
+                    bytes.put(b4);
+                    bytes.flip();
+                }else{
+                    // FIXME: type
+                    throw Exception("Invalid unicode code point");
+                }
+            }
+        }
     }
 }
 

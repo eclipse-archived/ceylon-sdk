@@ -1,4 +1,4 @@
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer { ByteBuffer, CharacterBuffer }
 shared object iso_8859_1 satisfies Charset {
     shared actual String name = "ISO_8859-1";
     shared actual Integer minimumBytesPerCharacter = 1;
@@ -9,9 +9,24 @@ shared object iso_8859_1 satisfies Charset {
         return ISO_8859_1Decoder(this);
     }
     shared actual Encoder newEncoder() {
-        // FIXME
-        return bottom;
+        return ISO_8859_1Encoder(this);
     }
+}
+
+class ISO_8859_1Encoder(charset) satisfies Encoder {
+    shared actual Charset charset;
+    
+    shared actual void encode(CharacterBuffer input, ByteBuffer output) {
+        // give up if there's no input or no room for output
+        while(input.hasAvailable && output.hasAvailable){
+            value char = input.get().integer;
+            if(char > 255){
+                // FIXME: type
+                throw Exception("Invalid ISO_8859-1 byte value: " char "");
+            }
+            output.put(char);
+        }
+    } 
 }
 
 class ISO_8859_1Decoder(charset) extends AbstractDecoder()  {
