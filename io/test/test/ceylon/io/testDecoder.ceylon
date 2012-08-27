@@ -1,6 +1,6 @@
 import com.redhat.ceylon.sdk.test { assertEquals }
 import ceylon.io.buffer { newByteBuffer, newByteBufferWithData }
-import ceylon.io.charset { Charset, utf8, utf16 }
+import ceylon.io.charset { Charset, utf8, utf16, iso_8859_1 }
 
 void testDecoder(Charset charset, String expected, Integer... bytes){
     // we put it in a buffer of 2 so we can test multiple calls to decode
@@ -29,6 +29,11 @@ void testDecoder(Charset charset, String expected, Integer... bytes){
     print("Decoded " expected " OK");
 }
 
+void testLatin1Decoder(){
+    testDecoder(iso_8859_1, "Stéphane Épardaud", 
+                            hex('53'), hex('74'), hex('E9'), hex('70'), hex('68'), hex('61'), hex('6E'), hex('65'), hex('20'),
+                            hex('C9'), hex('70'), hex('61'), hex('72'), hex('64'), hex('61'), hex('75'), hex('64'));
+}
 
 void testUTF8Decoder(){
     // samples from http://en.wikipedia.org/wiki/UTF-8
@@ -36,7 +41,7 @@ void testUTF8Decoder(){
     testDecoder(utf8, "¢", hex('C2'), hex('A2'));
     testDecoder(utf8, "€", hex('E2'), hex('82'), hex('AC'));
     testDecoder(utf8, "𤭢", hex('F0'), hex('A4'), hex('AD'), hex('A2'));
-    
+
     // samples from http://tools.ietf.org/html/rfc3629
     testDecoder(utf8, "A≢Α.", hex('41'), hex('E2'), hex('89'), hex('A2'), hex('CE'), hex('91'), hex('2E'));
     testDecoder(utf8, "한국어", hex('ED'), hex('95'), hex('9C'), hex('EA'), hex('B5'), hex('AD'), hex('EC'), hex('96'), hex('B4'));
