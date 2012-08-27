@@ -18,7 +18,7 @@ shared interface Charset {
         value output = newByteBuffer(string.size * averageBytesPerCharacter);
         value input = newCharacterBufferWithData(string);
         value encoder = newEncoder();
-        while(input.hasAvailable){
+        while(input.hasAvailable || !encoder.done){
             // grow the output buffer if our estimate turned out wrong
             if(!output.hasAvailable){
                 output.resize(string.size * maximumBytesPerCharacter);
@@ -39,6 +39,9 @@ shared interface Charset {
 
 shared interface Encoder {
     shared formal Charset charset;
+    shared default Boolean done {
+        return true;
+    }
     shared formal void encode(CharacterBuffer input, ByteBuffer output);
 }
 
