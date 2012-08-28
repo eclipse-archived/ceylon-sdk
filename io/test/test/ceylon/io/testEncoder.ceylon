@@ -1,5 +1,5 @@
 import com.redhat.ceylon.sdk.test { assertEquals }
-import ceylon.io.charset { ascii, Encoder, Charset, iso_8859_1, utf8 }
+import ceylon.io.charset { ascii, Encoder, Charset, iso_8859_1, utf8, utf16 }
 import ceylon.io.buffer { newCharacterBufferWithData, newByteBuffer }
 
 void testASCIIEncoder(){
@@ -53,4 +53,13 @@ void testUTF8Encoder(){
     testEncoder(utf8, "한국어", hex('ED'), hex('95'), hex('9C'), hex('EA'), hex('B5'), hex('AD'), hex('EC'), hex('96'), hex('B4'));
     testEncoder(utf8, "日本語", hex('E6'), hex('97'), hex('A5'), hex('E6'), hex('9C'), hex('AC'), hex('E8'), hex('AA'), hex('9E'));
     testEncoder(utf8, "𣎴", hex('F0'), hex('A3'), hex('8E'), hex('B4'));
+}
+
+void testUTF16Encoder(){
+    // samples from http://en.wikipedia.org/wiki/UTF-16
+    testEncoder(utf16, "z水𐀀𝄞􏿽", hex('00'), hex('7A'),
+                                    hex('6C'), hex('34'),
+                                    hex('D8'), 0, hex('DC'), 0,
+                                    hex('D8'), hex('34'), hex('DD'), hex('1E'),
+                                    hex('DB'), hex('FF'), hex('DF'), hex('FD'));
 }
