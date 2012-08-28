@@ -21,7 +21,7 @@ shared interface Charset {
         while(input.hasAvailable || !encoder.done){
             // grow the output buffer if our estimate turned out wrong
             if(!output.hasAvailable){
-                output.resize(string.size * maximumBytesPerCharacter);
+                output.resize(string.size * maximumBytesPerCharacter, true);
             }
             encoder.encode(input, output);
         }

@@ -44,7 +44,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         return b;
     }
     
-    shared actual void resize(Integer newSize) {
+    shared actual void resize(Integer newSize, Boolean growLimit) {
         if(newSize == capacity){
             return;
         }
@@ -59,8 +59,8 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         if(newSize < capacity){
             // shrink the limit
             limit = min({this.limit, newSize});
-        }else if(this.limit == capacity){
-            // grow the limit if it was the max
+        }else if(growLimit && this.limit == capacity){
+            // grow the limit if it was the max and we want that
             limit = newSize;
         }else{
             // keep it if it was less than max

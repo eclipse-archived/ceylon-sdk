@@ -1,11 +1,9 @@
-import ceylon.io.buffer.impl { ByteBufferImpl }
-
 shared abstract class Buffer<T>() satisfies Iterable<T> {
     shared formal Integer position;
     shared formal Integer capacity;
     shared formal Integer limit;
 
-    shared formal void resize(Integer newSize);
+    shared formal void resize(Integer newSize, Boolean growLimit = false);
 
     shared default Boolean writable = true;
     

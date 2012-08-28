@@ -29,7 +29,7 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
         throw Exception("Buffer is read-only");
     }
     
-    shared actual void resize(Integer integer) {
+    shared actual void resize(Integer newSize, Boolean growLimit) {
         // FIXME: type
         throw Exception("Buffer is read-only");
     }
