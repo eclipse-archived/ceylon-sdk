@@ -1,4 +1,4 @@
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer { ByteBuffer, newByteBuffer, CharacterBuffer }
 
 shared object utf16 satisfies Charset {
     shared actual String name = "UTF-16";
@@ -11,10 +11,69 @@ shared object utf16 satisfies Charset {
         return UTF16Decoder(this);
     }
     shared actual Encoder newEncoder() {
-        // FIXME
-        return bottom;
+        return UTF16Encoder(this);
     }
 }
+
+class UTF16Encoder(charset) satisfies Encoder {
+    
+    shared actual Charset charset;
+    ByteBuffer bytes = newByteBuffer(3);
+    // set its limit to 0 for reading
+    bytes.flip();
+
+    shared actual Boolean done {
+        return !bytes.hasAvailable;
+    }
+
+    shared actual void encode(CharacterBuffer input, ByteBuffer output) {
+        // give up if there's no input or no room for output
+        while((input.hasAvailable || bytes.hasAvailable) && output.hasAvailable){
+            // first flush our buffer
+            if(bytes.hasAvailable){
+                output.put(bytes.get());
+            }else{
+                // now read from input
+                value codePoint = input.get().integer;
+                // how many bytes?
+                if(codePoint < hex('10000')){
+                    // single 16-bit value
+                    // two bytes
+                    value b1 = codePoint.and(hex('FF00')).rightLogicalShift(8);
+                    value b2 = codePoint.and(hex('FF'));
+                    output.put(b1);
+                    // save it for later
+                    bytes.clear();
+                    bytes.put(b2);
+                    bytes.flip();
+                }else if(codePoint < hex('10FFFF')){
+                    // two 16-bit values
+                    value u = codePoint - hex('10000');
+                    // keep the high 10 bits
+                    value high = u.and(bin('11111111110000000000')).rightLogicalShift(10).or(hex('D800'));
+                    // and the low 10 bits
+                    value low = u.and(bin('1111111111')).or(hex('DC00'));
+                    // now turn them into four bytes
+                    value b1 = high.and(hex('FF00')).rightLogicalShift(8);
+                    value b2 = high.and(hex('FF'));
+                    value b3 = low.and(hex('FF00')).rightLogicalShift(8);
+                    value b4 = low.and(hex('FF'));
+                    output.put(b1);
+                    // save it for later
+                    bytes.clear();
+                    bytes.put(b2);
+                    bytes.put(b3);
+                    bytes.put(b4);
+                    bytes.flip();
+                }else{
+                    // FIXME: type
+                    throw Exception("Invalid unicode code point");
+                }
+            }
+        }
+    }
+}
+
 
 class UTF16Decoder(charset) extends AbstractDecoder()  {
     shared actual Charset charset;
