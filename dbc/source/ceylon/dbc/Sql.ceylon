@@ -472,12 +472,12 @@ shared class Sql(DataSource ds) {
     doc "Execute the passed Callable within a database transaction. If any
          exception is thrown from within the Callable, the transaction will
          be rolled back; otherwise it is committed."
-    shared default void transaction(Boolean body()) {
+    shared default void transaction(Boolean do()) {
         value conn = conns.get();
         conn.beginTransaction();
         variable value ok := false;
         try {
-            ok := body();
+            ok := do();
         } finally {
             try {
                 if (ok) {
