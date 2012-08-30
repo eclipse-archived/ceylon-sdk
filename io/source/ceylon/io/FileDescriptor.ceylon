@@ -25,7 +25,6 @@ shared abstract class FileDescriptor() {
     shared void writeFully(ByteBuffer buffer){
         while(buffer.hasAvailable
             && write(buffer) >= 0){
-            print("Wrote total bytes: " buffer.position ", remaining: " buffer.available "");
         }
     }
     
