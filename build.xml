@@ -8,8 +8,8 @@
     <file name="file"/>
     <file name="process"/>
     <file name="json"/>
-    <file name="net"/>
     <file name="io"/>
+    <file name="net"/>
     <file name="interop.java"/>
   </filelist>
   
