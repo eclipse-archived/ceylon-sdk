@@ -1,65 +1,189 @@
-import java.net { HttpURLConnection }
-import ceylon.net.iop { readString }
+import ceylon.io { FileDescriptor }
+import ceylon.io.buffer { ByteBuffer, newByteBuffer }
+import ceylon.io.readers { Reader, FileDescriptorReader }
+import ceylon.io.charset { ascii, getCharset }
 
 by "Stéphane Épardaud"
 doc "Represents an HTTP Response"
-shared class Response(HttpURLConnection con){
-    
-    doc "The HTTP response code"
-    shared Integer status = con.responseCode;
-    
-    doc "The HTTP message line (non-normative)"
-    shared String message = con.responseMessage;
-    
-    doc "The list of response headers"
-    shared Map<String,List<String>> headers = toMap(con.headerFields);
-    
-    variable String? cachedContents := null;
-    variable Exception? thrownException := null;
-    variable Boolean contentsRead := false;
+shared class Response(status, reason, major, minor, FileDescriptor socket, Parser parser) satisfies Correspondence<String, Header>{
+    shared Integer status;
+    shared String reason;
+    shared Integer major;
+    shared Integer minor;
 
-    doc "The `Content-Length` header value"    
-    shared Integer contentLength {
-        return con.contentLength;
-    }
+    variable Exception? readException := null;
+    variable String? readContents := null;
     
-    doc "The response encoding as defined by the `Content-Type` header"
-    shared String? encoding {
-        return con.contentEncoding;
+    shared List<Header> headers {
+        return parser.headers;
     }
-    
-    doc "The response contents, as a String"
-    shared String contents {
-        // did we already read?
-        if(contentsRead){
-            // use the cache
-            if(exists Exception x = thrownException){
-                throw x;
-            }
-            if(exists String contents = cachedContents){
-                return contents;
-            }
-            // can't happen
-            throw;
+
+    shared Map<String,Header> headersByName {
+        return parser.headersByName;
+    }
+
+    shared Boolean isText {
+        String? contentType = this.contentTypeLine;
+        if(exists contentType){
+            return contentType.startsWith("text/");
         }
-        // do the real reading
-        if(contentLength == 0){
-            contentsRead := true;
-            cachedContents := "";
-            return "";
+        return false;
+    }
+
+    shared String? contentType {
+        String? contentTypeLine = this.contentTypeLine;
+        if(exists contentTypeLine){
+            // split it if required
+            value sep = contentTypeLine.firstOccurrence(";");
+            if(exists sep){
+                return contentTypeLine.span(0, sep-1);
+            }else{
+                return contentTypeLine;
+            }
+        }
+        return null;
+    }
+
+    shared String? charset {
+        String? contentTypeLine = this.contentTypeLine;
+        if(exists contentTypeLine){
+            // split it if required
+            value params = contentTypeLine.split(";").rest;
+            for(param in params){
+                value trimmed = param.trimmed;
+                value keyValue = trimmed.split("=").sequence;
+                if(nonempty keyValue){
+                    if(keyValue.first == "charset"){
+                        return keyValue[1];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    shared String? getSingleHeader(String name){
+        Header? contentType = this[name];
+        if(exists contentType){
+            if(contentType.values.size != 1){
+                return null;
+            }
+            return contentType.values[0];
+        }else{
+            return null;
+        }
+    }
+
+    shared String? contentTypeLine {
+        return getSingleHeader("Content-Type");
+    }
+    
+    shared actual String string {
+        StringBuilder b = StringBuilder();
+        b.append("HTTP/" major "." minor " " status " " reason "\n");
+        for(header in headers){
+            for(val in header.values){
+                b.append(header.name).append(": ").append(val).append("\n");
+            }
+        }
+        return b.string;
+    }
+    
+    shared actual Header? item(String key) {
+        return headersByName[key.lowercased];
+    }
+    
+    shared Reader getReader(){
+        if(status != 200){
+            throw Exception("Status is not OK");
+        }
+        String? transferEncoding = getSingleHeader("Transfer-Encoding");
+        if(exists transferEncoding){
+            if(transferEncoding == "chunked"){
+                return ChunkedEntityReader(socket);
+            }
+        }
+        return FileDescriptorReader(socket);
+    }
+
+    class ChunkedEntityReader(FileDescriptor fileDescriptor) satisfies Reader {
+    
+        variable Boolean firstChunk := true;
+        variable Integer nextChunkSize := 0;
+        variable Boolean lastChunkRead := false;
+
+        void parseChunkHeader(){
+            nextChunkSize := parser.parseChunkHeader(firstChunk);
+            firstChunk := false;
+            lastChunkRead := nextChunkSize == 0;
+            if(lastChunkRead){
+                // add optional headers
+                parser.parseChunkTrailer();
+            }
         }
         
-        value istream = con.inputStream;
+        shared actual Integer read(ByteBuffer buffer) {
+            if(lastChunkRead){
+                return -1;
+            }
+            // did we deplete the last chunk?
+            if(nextChunkSize == 0){
+                // read a new chunk and goto 0
+                parseChunkHeader();
+                return read(buffer);
+            }
+            // only read up to the chunk size available
+            if(buffer.available > nextChunkSize){
+                buffer.limit := buffer.position + nextChunkSize;
+            }
+            Integer bytesRead = fileDescriptor.read(buffer);
+            // if we came to EOF, mark ourselves as EOF even though it's not normal
+            // FIXME: should we barf?
+            if(bytesRead == -1){
+                lastChunkRead := true;
+            }else{
+                nextChunkSize -= bytesRead;
+            }
+            return bytesRead;
+        }
+    }
+    
+    shared String contents {
+        if(exists x = readException){
+            throw x;
+        }
+        if(exists c = readContents){
+            return c;
+        }
         try{
-            contentsRead := true;
-            String c = readString(istream, contentLength, encoding else "UTF-8");
-            cachedContents := c;
+            String c = readEntityBody();
+            readContents := c;
             return c;
         }catch(Exception x){
-            thrownException := x;
+            readException := x;
             throw x;
-        }finally{
-            istream.close();
         }
+    }
+    
+    String readEntityBody() {
+        if(status == 200){
+            if(isText){
+                value reader = getReader();
+                ByteBuffer buffer = newByteBuffer(4096);
+                value encoding = getCharset(charset else "ASCII") else ascii;
+                value decoder = encoding.newDecoder();
+                while(reader.read(buffer) != -1){
+                    buffer.flip();
+                    decoder.decode(buffer);
+                    buffer.clear();
+                }
+                return decoder.done();
+            }
+        }
+        throw Exception("Failed to read contents");
+    }
+    
+    shared void close(){
+        socket.close();
     }
 }

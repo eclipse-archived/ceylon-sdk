@@ -1,11 +1,14 @@
-import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
+import ceylon.collection { MutableList, LinkedList }
 import ceylon.net.uri { URI }
-
-import java.net { URL, HttpURLConnection, URLConnection }
+import ceylon.io.charset { ascii }
+import ceylon.io { newSocketConnector, SocketAddress }
 
 by "Stéphane Épardaud"
 doc "Represents an HTTP Request"
 shared class Request(uri, method = "GET"){
+    // constant
+    String crLf = "\r\n";
+
     doc "This request URI, must be absolute"
     shared URI uri;
     
@@ -15,6 +18,8 @@ shared class Request(uri, method = "GET"){
     doc "The request method, such as `GET`, `POST`…"
     shared variable String method;
     
+    shared variable Integer port := 80;
+
     if(uri.relative){
         throw Exception("Can't request a relative URI");
     }
@@ -23,23 +28,88 @@ shared class Request(uri, method = "GET"){
             && scheme != "https"){
             throw Exception("Only HTTP and HTTPS schemes are supported");
         }
+        if(exists tmpPort = uri.authority.port){
+            port := tmpPort;
+        }else if(scheme == "http"){
+            port := 80;
+        }else if(scheme == "https"){
+            port := 443;
+            throw Exception("HTTPS not currently supported (sorry)");
+        }
     }else{
         throw Exception("Missing URI scheme");
     }
     
+    shared String host;
+    if(exists tmpHost = uri.authority.host){
+        host = tmpHost;
+    }else{
+        throw Exception("URI host is not set");
+    }
+    
+    shared Header? getHeader(String name){
+        String lc = name.lowercased;
+        for(header in headers){
+            if(header.name.lowercased == lc){
+                return header;
+            }
+        }
+        return null;
+    }
+    
+    shared void setHeader(String name, String... values){
+        Header? header = getHeader(name);
+        if(exists header){
+            header.values.clear();
+            header.values.addAll(values...);
+        }else{
+            headers.add(Header(name, values...));
+        }
+    }
+    
+    // initial headers
+    setHeader("Host", host);
+    setHeader("Accept", "*/*");
+    setHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11");
+    setHeader("Accept-Charset", "UTF-8");
+    
+    String prepareRequest() {
+        variable String path := uri.pathPart;
+        if(path.empty){
+            path := "/";
+        }
+        if(exists query = uri.queryPart){
+            path += "?"+query;
+        }
+
+        value builder = StringBuilder();
+        builder.append(method).append(" ").append(path).append(" ").append("HTTP/1.1").append(crLf);
+
+        // headers
+        for(header in headers){
+            for(val in header.values){
+                builder.append(header.name).append(": ").append(val).append(crLf);
+            }
+        }
+        builder.append(crLf);
+        return builder.string;
+    }
+    
     doc "Executes this request by connecting to the server and returns a Response"
     shared Response execute(){
-        URL javaURL = URL(uri.string);
-        URLConnection con = javaURL.openConnection();
-        if(is HttpURLConnection con){
-            con.requestMethod := method;
-            for(Header header in headers){
-                con.setRequestProperty(header.name, header.contents);
-            }
-            con.connect();
-            return Response(con);
-        }else{
-            throw;
-        }
+        // prepare the request
+        value requestContents = prepareRequest();
+        // ready to send, convert to a byte buffer
+        value requestBuffer = ascii.encode(requestContents);
+        
+        // now open a socket to the host
+        value connector = newSocketConnector(SocketAddress(host, port));
+        value socket = connector.connect();
+        
+        // send the full request
+        socket.writeFully(requestBuffer);
+        
+        // now parse the response
+        return Parser(socket).parseResponse();
     }
 }
