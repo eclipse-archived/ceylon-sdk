@@ -1,9 +1,13 @@
 import ceylon.io.buffer { newByteBuffer, ByteBuffer, CharacterBuffer, newCharacterBufferWithData }
 
 shared interface Charset {
-    shared formal Decoder newDecoder();
     shared formal String name;
-    
+
+    shared default String[] aliases {
+        return {};
+    }
+
+    shared formal Decoder newDecoder();
     shared formal Encoder newEncoder();
     
     shared formal Integer minimumBytesPerCharacter;

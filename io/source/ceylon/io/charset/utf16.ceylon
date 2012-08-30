@@ -2,6 +2,8 @@ import ceylon.io.buffer { ByteBuffer, newByteBuffer, CharacterBuffer }
 
 shared object utf16 satisfies Charset {
     shared actual String name = "UTF-16";
+
+    shared actual String[] aliases = {"utf16", "utf_16"};
     
     shared actual Integer minimumBytesPerCharacter = 2;
     shared actual Integer maximumBytesPerCharacter = 4;

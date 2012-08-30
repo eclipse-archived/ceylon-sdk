@@ -1,6 +1,8 @@
 import ceylon.io.buffer { ByteBuffer, CharacterBuffer }
+
 shared object ascii satisfies Charset {
     shared actual String name = "ASCII";
+
     shared actual Integer minimumBytesPerCharacter = 1;
     shared actual Integer maximumBytesPerCharacter = 1;
     shared actual Integer averageBytesPerCharacter = 1;

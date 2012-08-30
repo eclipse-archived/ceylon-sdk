@@ -2,6 +2,9 @@ import ceylon.io.buffer { newByteBuffer, ByteBuffer, CharacterBuffer }
 
 shared object utf8 satisfies Charset {
     shared actual String name = "UTF-8";
+    
+    shared actual String[] aliases = {"utf8", "utf_8"};
+    
     shared actual Integer minimumBytesPerCharacter = 1;
     shared actual Integer maximumBytesPerCharacter = 4;
     shared actual Integer averageBytesPerCharacter = 2;
