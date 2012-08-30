@@ -15,8 +15,14 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
     shared actual Integer limit {
         return buf.limit();
     }
+    assign limit {
+        buf.limit(limit);
+    }
     shared actual Integer position {
         return buf.position();
+    }
+    assign position {
+        buf.position(position);
     }
     shared actual Integer get() {
         return signedByteToUnsigned(buf.get());

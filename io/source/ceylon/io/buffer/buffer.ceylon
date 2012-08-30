@@ -1,7 +1,7 @@
 shared abstract class Buffer<T>() satisfies Iterable<T> {
-    shared formal Integer position;
+    shared formal variable Integer position;
     shared formal Integer capacity;
-    shared formal Integer limit;
+    shared formal variable Integer limit;
 
     shared formal void resize(Integer newSize, Boolean growLimit = false);
 
