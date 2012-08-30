@@ -1,8 +1,12 @@
 import javax.sql { DataSource }
+import java.lang { Long, JString=String }
 import java.sql {
     PreparedStatement, CallableStatement,
     ResultSet, ResultSetMetaData,
-    Timestamp, SqlDate=Date
+    Timestamp, SqlDate=Date,
+    Statement {
+        returnGeneratedKeys=RETURN_GENERATED_KEYS
+    }
 }
 import java.util { Date }
 import java.math { BigDecimal, BigInteger }
@@ -84,6 +88,10 @@ shared class Sql(DataSource ds) {
 
     PreparedStatement prepareStatement(ConnectionStatus conn, String sql, Iterable<Object> params) {
         value stmt = conn.connection().prepareStatement(sql);
+        return prepareExistingStatement(stmt, params);
+    }
+
+    PreparedStatement prepareExistingStatement(PreparedStatement stmt, Iterable<Object> params) {
         //Set parameters
         variable value i:=1;
         for (p in params) {
@@ -94,11 +102,11 @@ shared class Sql(DataSource ds) {
             case (is String)  { stmt.setString(i,p); }
             case (is Date)    {
                 if (is Timestamp p) {
-                    stmt.setTimestamp(i,p, null);
+                    stmt.setTimestamp(i,p);
                 } else if (is SqlDate p) {
-                    stmt.setDate(i, p, null);
+                    stmt.setDate(i, p);
                 } else {
-                    stmt.setDate(i, SqlDate(p.time), null);
+                    stmt.setDate(i, SqlDate(p.time));
                 }
             }
             case (is Float)   { stmt.setDouble(i, p); }
@@ -174,8 +182,32 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL INSERT statement with the given parameters, and return
          the generated keys (if the JDBC driver supports it). The SQL string
          must use the '?' parameter placeholders."
-    shared default Sequence<Sequence<Object>> insert(String sql, Object... params) {
-        return { { 0 } };
+    shared default Object[][] insert(String sql, Object... params) {
+        value conn = conns.get();
+        try {
+            value stmt = conn.connection().prepareStatement(sql, returnGeneratedKeys);
+            try {
+                prepareExistingStatement(stmt, params);
+                value count = 1..stmt.executeUpdate();
+                value rs = stmt.generatedKeys;
+                try {
+                    value meta = rs.metaData;
+                    value rango = 1..meta.columnCount;
+                    return count.collect {
+                        function collecting(Integer i) {
+                            rs.next();
+                            return { for (c in rango) mapColumn(rs, meta, c).item };
+                        }
+                    };
+                } finally {
+                    rs.close();
+                }
+            } finally {
+                stmt.close();
+            }
+        } finally {
+            conn.close();
+        }
     }
 
     doc "Execute a SQL callable statement, returning the number of rows
@@ -261,7 +293,7 @@ shared class Sql(DataSource ds) {
                     value meta = rs.metaData;
                     value range = 1..meta.columnCount;
                     if (rs.next()) {
-                        return LazyMap(for (i in range) mapColumn(rs, meta, i));
+                        return LazyMap({ for (i in range) mapColumn(rs, meta, i) }...);
                     }
                 } finally {
                     rs.close();
@@ -278,7 +310,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as an Integer value. The SQL string must
          use the '?' parameter placeholders."
-    shared default Integer? queryForInt(String sql, Object... params) {
+    shared default Integer? queryForInteger(String sql, Object... params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -286,7 +318,8 @@ shared class Sql(DataSource ds) {
             try {
                 value rs = stmt.executeQuery();
                 try {
-                    return rs.getInt(1);
+                    rs.next();
+                    return rs.getLong(1);
                 } finally {
                     rs.close();
                 }
@@ -309,6 +342,7 @@ shared class Sql(DataSource ds) {
             try {
                 value rs = stmt.executeQuery();
                 try {
+                    rs.next();
                     return rs.getDouble(1);
                 } finally {
                     rs.close();
@@ -332,6 +366,7 @@ shared class Sql(DataSource ds) {
             try {
                 value rs = stmt.executeQuery();
                 try {
+                    rs.next();
                     return rs.getBoolean(1);
                 } finally {
                     rs.close();
@@ -355,6 +390,7 @@ shared class Sql(DataSource ds) {
             try {
                 value rs = stmt.executeQuery();
                 try {
+                    rs.next();
                     if (exists d=rs.getBigDecimal(1)) {
                         //TODO optimize this
                         return parseDecimal(d.toPlainString());
@@ -389,6 +425,7 @@ shared class Sql(DataSource ds) {
             try {
                 value rs = stmt.executeQuery();
                 try {
+                    rs.next();
                     if (exists s=rs.getString(1)) {
                         return s;
                     }
@@ -416,6 +453,7 @@ shared class Sql(DataSource ds) {
             try {
                 value rs = stmt.executeQuery();
                 try {
+                    rs.next();
                     /*if (is Value s=rs.getObject(1)) {
                         return s;
                     }*/
@@ -503,15 +541,17 @@ shared class Sql(DataSource ds) {
 
     doc "Create an `Entry` from the column data at the specified index."
     String->Object mapColumn(ResultSet rs, ResultSetMetaData meta, Integer idx) {
-        String columnName = meta.getColumnName(idx);
+        String columnName = meta.getColumnName(idx).lowercased;
         Object? x = rs.getObject(idx);
         Object? v;
         //TODO optimize these conversions
         switch (x)
+        case (is Long) { v = x.longValue(); }
+        case (is JString) { v = x.string; }
         case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
         case (is BigInteger) { v = parseWhole(x.string); }
         else { v = x; }
-        return meta.getColumnName(idx).lowercased -> (v else DbNull(meta.getColumnType(idx)));
+        return columnName -> (v else DbNull(meta.getColumnType(idx)));
     }
 
 }
