@@ -1,6 +1,10 @@
 <project>
   <echo message="${ant.project.name} basedir:${basedir}, build: ${build}"/>
   
+  <property environment="env"/>
+  <condition property="ceylon.repo.dir">
+  	<isset property="${env.CEYLON_HOME}" />
+  </condition>
   <property file="../build.properties"/>
   <property name="module.build.properties" value="${ant.project.name}.build.properties"/>
   <property file="${ant.project.name}.build.properties"/>
