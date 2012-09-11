@@ -9,15 +9,17 @@ shared class Request(uri, method = "GET"){
     // constant
     String crLf = "\r\n";
 
-    doc "This request URI, must be absolute"
+    doc "This request URI, must be absolute."
     shared URI uri;
     
-    doc "The list of request headers"
+    doc "The list of request headers."
     shared MutableList<Header> headers = LinkedList<Header>();
     
     doc "The request method, such as `GET`, `POST`…"
     shared variable String method;
     
+    doc "The port to connect to. Defaults to 80 for `http` Uris and to 443 for `https` uris, unless
+         overridden in the [[uri]]."
     shared variable Integer port := 80;
 
     if(uri.relative){
@@ -40,6 +42,7 @@ shared class Request(uri, method = "GET"){
         throw Exception("Missing URI scheme");
     }
     
+    doc "The host to connect to. Extracted from the specified [[uri]]."
     shared String host;
     if(exists tmpHost = uri.authority.host){
         host = tmpHost;
@@ -47,6 +50,7 @@ shared class Request(uri, method = "GET"){
         throw Exception("URI host is not set");
     }
     
+    doc "Returns a request header, if it exists. Returns null otherwise."
     shared Header? getHeader(String name){
         String lc = name.lowercased;
         for(header in headers){
@@ -57,6 +61,7 @@ shared class Request(uri, method = "GET"){
         return null;
     }
     
+    doc "Sets a request header."
     shared void setHeader(String name, String... values){
         Header? header = getHeader(name);
         if(exists header){
@@ -95,7 +100,7 @@ shared class Request(uri, method = "GET"){
         return builder.string;
     }
     
-    doc "Executes this request by connecting to the server and returns a Response"
+    doc "Executes this request by connecting to the server and returns a [[Response]]."
     shared Response execute(){
         // prepare the request
         value requestContents = prepareRequest();

@@ -4,6 +4,7 @@ import ceylon.io.readers { ByteReader, FileDescriptorReader }
 import ceylon.io.charset { ascii }
 import ceylon.collection { LinkedList, HashMap, MutableMap }
 
+doc "Parses an HTTP message from the given [[FileDescriptor]]."
 shared class Parser(FileDescriptor socket){
     
     variable Integer byte := 0;
@@ -15,7 +16,11 @@ shared class Parser(FileDescriptor socket){
     variable String? reason := null;
     variable Integer? major := null;
     variable Integer? minor := null;
+    
+    doc "[[List]] of headers parsed."
     shared LinkedList<Header> headers = LinkedList<Header>();
+    
+    doc "[[Map]] of headers parsed, by name."
     shared MutableMap<String,Header> headersByName = HashMap<String,Header>();
     
     //
