@@ -53,5 +53,59 @@
     <iterate target="herd-module"/>
   </target>
 
+	  <property file="build.properties"/>   
+	  <path id="ant-tasks">
+	    <pathelement location="${basedir}/../ceylon-dist/dist/repo/${ceylon.ant.jar}"/>
+	  </path>
+	  
+	  <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
+	  <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
+	  <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
+	  <taskdef name="ceylonmd" classname="com.redhat.ceylon.ant.CeylonModuleDescriptorTask" classpathref="ant-tasks"/>
+
+	<target name="compile-all">
+    	<pathconvert property="sourcepath" refid="module.dirs">
+    		<globmapper from="*" to="*/source"/>
+    	</pathconvert>
+		<ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true">
+		    <module name="ceylon.math"/>
+		    <module name="ceylon.collection"/>
+		    <module name="ceylon.io"/>
+		    <module name="ceylon.file"/>
+		    <module name="ceylon.process"/>
+		    <module name="ceylon.json"/>
+		    <module name="ceylon.net"/>
+		    <module name="ceylon.interop.java"/>
+		</ceylonc>
+	</target>
+
+    <target name="publish">
+    	<echo>Herd: ${herd}</echo> 
+        <pathconvert property="sourcepath" refid="module.dirs">
+            <globmapper from="*" to="*/source"/>
+        </pathconvert>
+        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+        	out="${herd}" user="${user}" pass="${pass}">
+            <module name="ceylon.math"/>
+            <module name="ceylon.collection"/>
+            <module name="ceylon.io"/>
+            <module name="ceylon.file"/>
+            <module name="ceylon.process"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.net"/>
+            <module name="ceylon.interop.java"/>
+        </ceylonc>
+        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+            out="${herd}" user="${user}" pass="${pass}">
+            <module name="ceylon.math"/>
+            <module name="ceylon.collection"/>
+            <module name="ceylon.io"/>
+            <module name="ceylon.file"/>
+            <module name="ceylon.process"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.net"/>
+            <module name="ceylon.interop.java"/>
+        </ceylond>
+    </target>
 </project>
 
