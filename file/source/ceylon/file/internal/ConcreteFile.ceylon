@@ -85,6 +85,9 @@ class ConcreteFile(JPath jpath)
     shared actual Writer appender(String? encoding) {
         return ConcreteAppendingWriter(jpath, parseCharset(encoding));
     }
+    shared actual OpenFile open() {
+        return ConcreteOpenFile(this, jpath);
+    }
 }
 
 shared Boolean sameFile(File x, File y) {

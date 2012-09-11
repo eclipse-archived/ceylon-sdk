@@ -81,7 +81,9 @@ shared interface File
                  default character encoding should be
                  used."
             String? encoding=null);
-    
+
+    doc "An `OpenFile` for reading/writing to this file."
+    shared formal OpenFile open();    
 }
 
 shared Boolean sameFile(File x, File y) = sameFileInternal;
