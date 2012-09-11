@@ -5,10 +5,10 @@
     <file name="sdk-test"/>
     <file name="math"/>
     <file name="collection"/>
+    <file name="io"/>
     <file name="file"/>
     <file name="process"/>
     <file name="json"/>
-    <file name="io"/>
     <file name="net"/>
     <file name="interop.java"/>
   </filelist>
