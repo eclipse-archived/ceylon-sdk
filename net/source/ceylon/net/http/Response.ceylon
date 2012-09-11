@@ -183,6 +183,15 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         throw Exception("Failed to read contents");
     }
     
+    Integer? contentLength {
+        value header = getSingleHeader("Content-Length");
+        if(exists header){
+            return parseInteger(header);
+        }else{
+            return null;
+        }
+    }
+    
     shared void close(){
         socket.close();
     }
