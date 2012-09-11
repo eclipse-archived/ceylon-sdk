@@ -107,4 +107,6 @@ doc "API for accessing hierarchical file systems. Clients use `Path`s to
              zipSystem.close();
          }
      "
-module ceylon.file '0.3.3' {}
+module ceylon.file '0.3.3' {
+    import ceylon.io '0.3.3';
+}
