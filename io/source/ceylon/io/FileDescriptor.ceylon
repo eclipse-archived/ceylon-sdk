@@ -1,9 +1,28 @@
 import ceylon.io.buffer { ByteBuffer }
 
+doc "Represents anything that you can read/write to, much like the UNIX notion of file descriptor.
+     
+     This supports synchronous and asynchronous reading.
+     "
+see (Socket, SelectableFileDescriptor)
 shared interface FileDescriptor {
 
+    doc "Reads everything we can from this file descriptor into the specified buffer.
+         
+         If this file descriptor is in `blocking` mode, it will block the current thread
+         until the buffer is full, or until we reached end of file.
+         
+         If this file descriptor is in `non-blocking` mode, it will only read the data
+         that is available for reading without blocking, which may be less than the
+         buffer's available space.
+         
+         In both cases, it returns the number of bytes read, or `-1` when the end of
+         file is reached."
     shared formal Integer read(ByteBuffer buffer);
     
+    doc "Reads data until the end of file is reached, in a blocking way, by passing it to
+         the specified consumer. This method makes no sense if the file descriptor is in
+         `non-blocking` mode."
     shared void readFully(void consume(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         // FIXME: should we allocate the buffer ourselves?
         // FIXME: should we clear the buffer passed?
@@ -20,14 +39,33 @@ shared interface FileDescriptor {
         }
     }
     
+    doc "Writes everything we can from the specified buffer to this file descriptor.
+         
+         If this file descriptor is in `blocking` mode, it will block the current thread
+         until the buffer is written entirely, or until we reached end of file.
+         
+         If this file descriptor is in `non-blocking` mode, it will only write the data
+         that can be written without blocking, which may be less than the
+         buffer's available data.
+         
+         In both cases, it returns the number of bytes written, or `-1` when the end of
+         file is reached."
     shared formal Integer write(ByteBuffer buffer);
 
+    doc "Writes the given buffer to this file descriptor entirely, until either the buffer
+         has been entirely written, or until end of file. This method makes no sense if the
+         file descriptor is in `non-blocking` mode."
     shared void writeFully(ByteBuffer buffer){
         while(buffer.hasAvailable
             && write(buffer) >= 0){
         }
     }
     
+    doc "Writes all the data produced by the given producer to this file descriptor, until
+         the producer stops filling the buffer, or end of file. This method will repeatedly
+         invoke the producer so that it can push data to the buffer. If the producer wants
+         to indicate end of input, it only has to stop adding data to the buffer. This
+         method makes no sense in `non-blocking` mode."
     shared void writeFrom(void producer(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         // refill
         while(true){
@@ -44,6 +82,6 @@ shared interface FileDescriptor {
         }
     }
     
-
+    doc "Closes this file descriptor."
     shared formal void close();
 }

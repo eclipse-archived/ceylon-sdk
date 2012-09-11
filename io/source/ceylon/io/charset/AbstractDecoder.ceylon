@@ -1,5 +1,8 @@
-
-abstract class AbstractDecoder() satisfies Decoder{
+doc "Abstract class for [[Decoder]] objects, which abstracts
+     the [[StringBuilder]]."
+abstract class AbstractDecoder() satisfies Decoder {
+    
+    // FIXME: this shouldn't really be exposed, should it?
     shared StringBuilder builder = StringBuilder();
 
     shared actual String? consumeAvailable() {
