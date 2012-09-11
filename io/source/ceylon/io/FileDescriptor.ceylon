@@ -1,6 +1,6 @@
 import ceylon.io.buffer { ByteBuffer }
 
-shared abstract class FileDescriptor() {
+shared interface FileDescriptor {
 
     shared formal Integer read(ByteBuffer buffer);
     

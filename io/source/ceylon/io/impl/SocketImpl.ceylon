@@ -4,7 +4,7 @@ import ceylon.io.buffer.impl { ByteBufferImpl }
 
 import java.nio.channels { SocketChannel }
 
-shared class SocketImpl(channel) extends Socket() {
+shared class SocketImpl(channel) satisfies Socket {
     
     shared SocketChannel channel;
     

@@ -1,6 +1,6 @@
 import ceylon.io.buffer { ByteBuffer }
 
-shared abstract class SelectableFileDescriptor() extends FileDescriptor() {
+shared interface SelectableFileDescriptor satisfies FileDescriptor {
 
     shared void readAsync(Selector selector, void consume(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         setNonBlocking();

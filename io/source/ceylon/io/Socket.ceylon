@@ -1,3 +1,3 @@
 
-shared abstract class Socket() extends SelectableFileDescriptor(){
+shared interface Socket satisfies SelectableFileDescriptor {
 }
