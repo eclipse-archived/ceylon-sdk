@@ -103,7 +103,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
                 return ChunkedEntityReader(socket);
             }
         }
-        return FileDescriptorReader(socket);
+        return FileDescriptorReader(socket, contentLength);
     }
 
     class ChunkedEntityReader(FileDescriptor fileDescriptor) satisfies Reader {
