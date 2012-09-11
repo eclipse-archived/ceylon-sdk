@@ -166,19 +166,18 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
     
     String readEntityBody() {
+        // that's a bit of a simplification ;)
         if(status == 200){
-            if(isText){
-                value reader = getReader();
-                ByteBuffer buffer = newByteBuffer(4096);
-                value encoding = getCharset(charset else "ASCII") else ascii;
-                value decoder = encoding.newDecoder();
-                while(reader.read(buffer) != -1){
-                    buffer.flip();
-                    decoder.decode(buffer);
-                    buffer.clear();
-                }
-                return decoder.done();
+            value reader = getReader();
+            ByteBuffer buffer = newByteBuffer(4096);
+            value encoding = getCharset(charset else "ASCII") else ascii;
+            value decoder = encoding.newDecoder();
+            while(reader.read(buffer) != -1){
+                buffer.flip();
+                decoder.decode(buffer);
+                buffer.clear();
             }
+            return decoder.done();
         }
         throw Exception("Failed to read contents");
     }
