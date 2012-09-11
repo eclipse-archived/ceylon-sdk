@@ -183,12 +183,16 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
     
     Integer? contentLength {
+        // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13
         value header = getSingleHeader("Content-Length");
         if(exists header){
-            return parseInteger(header);
-        }else{
-            return null;
+            value int = parseInteger(header);
+            if(exists int){
+                // Spec says that negative numbers should not count
+                return int >= 0 then int;
+            }
         }
+        return null;
     }
     
     shared void close(){
