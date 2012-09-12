@@ -1,6 +1,6 @@
 by "Stéphane Épardaud"
 doc "A JSON Printer that prints to a `String`"
-shared class StringPrinter() extends Printer(){
+shared class StringPrinter(Boolean pretty = false) extends Printer(pretty){
     
     value builder = StringBuilder();
 

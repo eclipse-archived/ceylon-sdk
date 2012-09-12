@@ -1,6 +1,27 @@
 by "Stéphane Épardaud"
 doc "A JSON Printer"
-shared abstract class Printer(){
+shared abstract class Printer(Boolean pretty = false){
+    
+    variable Integer level := 0;
+    
+    void enter(){
+        level++;
+    }
+    
+    void leave(){
+        level--;
+    }
+    
+    void indent(){
+        if(pretty){
+            print("\n");
+            if(level > 0){
+                for(i in 0..level-1){
+                    print(" ");
+                }
+            }
+        }
+    }
     
     doc "Override to implement the printing part"
     shared formal void print(String string);
@@ -8,6 +29,7 @@ shared abstract class Printer(){
     doc "Prints an `Object`"
     shared default void printObject(Object o){
         print("{");
+        enter();
         variable Boolean once := true; 
         for(entry in o){
             if(once){
@@ -15,9 +37,17 @@ shared abstract class Printer(){
             }else{
                 print(",");
             }
+            indent();
             printString(entry.key);
             print(":");
+            if(pretty){
+                print(" ");
+            }
             printValue(entry.item);
+        }
+        leave();
+        if(!once){
+            indent();
         }
         print("}");
     }
@@ -25,6 +55,7 @@ shared abstract class Printer(){
     doc "Prints an `Array`"
     shared default void printArray(Array o){
         print("[");
+        enter();
         variable Boolean once := true; 
         for(elem in o){
             if(once){
@@ -32,7 +63,12 @@ shared abstract class Printer(){
             }else{
                 print(",");
             }
+            indent();
             printValue(elem);
+        }
+        leave();
+        if(!once){
+            indent();
         }
         print("]");
     }
