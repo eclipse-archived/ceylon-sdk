@@ -2,6 +2,7 @@ import ceylon.io.buffer { newByteBuffer, ByteBuffer, CharacterBuffer }
 
 doc "Represents a UTF-8 character set as defined by
      (the specification)[http://tools.ietf.org/html/rfc3629]."
+by "Stéphane Épardaud"
 shared object utf8 satisfies Charset {
     
     doc "Returns `UTF-8`."

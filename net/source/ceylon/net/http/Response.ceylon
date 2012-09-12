@@ -3,8 +3,8 @@ import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io.readers { Reader, FileDescriptorReader }
 import ceylon.io.charset { ascii, getCharset }
 
-by "Stéphane Épardaud"
 doc "Represents an HTTP Response"
+by "Stéphane Épardaud"
 shared class Response(status, reason, major, minor, FileDescriptor socket, Parser parser) satisfies Correspondence<String, Header>{
     
     doc "The HTTP status code"

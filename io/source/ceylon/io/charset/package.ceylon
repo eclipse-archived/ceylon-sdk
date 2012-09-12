@@ -19,4 +19,5 @@ doc "This package contains everything required to convert bytes to [[String]]s a
              throw Exception(\"Unknown character set\");
          }
      "
+by "Stéphane Épardaud"
 shared package ceylon.io.charset;

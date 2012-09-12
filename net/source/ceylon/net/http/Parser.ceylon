@@ -5,6 +5,7 @@ import ceylon.io.charset { ascii }
 import ceylon.collection { LinkedList, HashMap, MutableMap }
 
 doc "Parses an HTTP message from the given [[FileDescriptor]]."
+by "Stéphane Épardaud"
 shared class Parser(FileDescriptor socket){
     
     variable Integer byte := 0;

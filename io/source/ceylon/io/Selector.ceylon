@@ -25,6 +25,7 @@ doc "Represents a listener that can listen for read/write/connect/accept events
      
      You can instantiate new selectors with [[newSelector]].
      "
+by "Stéphane Épardaud"
 shared interface Selector {
     
     doc "Invokes all the listeners that are ready to be notified, until there are no more

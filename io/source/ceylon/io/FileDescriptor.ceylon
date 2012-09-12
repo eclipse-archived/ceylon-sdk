@@ -5,6 +5,7 @@ doc "Represents anything that you can read/write to, much like the UNIX notion o
      This supports synchronous and asynchronous reading.
      "
 see (Socket, SelectableFileDescriptor)
+by "Stéphane Épardaud"
 shared interface FileDescriptor {
 
     doc "Reads everything we can from this file descriptor into the specified buffer.

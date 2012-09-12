@@ -4,6 +4,7 @@ doc "Represents a [[FileDescriptor]] that you can `select`. This means that you 
      register listeners for this file descriptor on a given [[Selector]] object that
      will be called whenever there is data available to be read or written without
      blocking the reading/writing thread."
+by "Stéphane Épardaud"
 shared interface SelectableFileDescriptor satisfies FileDescriptor {
 
     doc "Register a reading listener to the given [[selector]]. The reading listener will

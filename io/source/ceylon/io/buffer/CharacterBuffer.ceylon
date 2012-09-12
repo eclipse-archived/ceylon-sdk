@@ -3,6 +3,7 @@ doc "Represents a read-only [[Character]] [[Buffer]] whose underlying data
      is read from the given [[string]]. This buffer starts ready to be read,
      with the [[position]] set to `0` and the [[limit]] set to size of the
      given [[string]]."
+by "Stéphane Épardaud"
 see (Buffer, newCharacterBufferWithData)
 shared class CharacterBuffer(String string) extends Buffer<Character>(){
     
@@ -62,6 +63,7 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
 }
 
 doc "Allocates a new [[CharacterBuffer]] with the underlying [[data]]."
+by "Stéphane Épardaud"
 see (CharacterBuffer)
 shared CharacterBuffer newCharacterBufferWithData(String data){
     return CharacterBuffer(data);

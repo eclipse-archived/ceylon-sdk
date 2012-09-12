@@ -5,6 +5,7 @@ doc "Represents a character set, which allows you to convert characters to bytes
      
      You can get the list of available character sets with [[charsets]] and
      get a character set by name (or alias) with [[getCharset]]."
+by "Stéphane Épardaud"
 shared interface Charset {
     
     doc "This character set's name. In general this is the _preferred MIME name_
@@ -67,6 +68,7 @@ shared interface Charset {
 }
 
 doc "Allows you to encode a sequence of characters into a sequence of bytes."
+by "Stéphane Épardaud"
 shared interface Encoder {
     
     doc "The character set for this encoder."
@@ -86,6 +88,7 @@ shared interface Encoder {
 }
 
 doc "Allows you to decode a sequence of bytes into a sequence of characters."
+by "Stéphane Épardaud"
 shared interface Decoder {
 
     doc "The character set for this decoder."

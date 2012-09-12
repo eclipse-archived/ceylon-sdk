@@ -2,6 +2,7 @@ import ceylon.io.buffer { newByteBuffer, ByteBuffer }
 
 doc "Reader that can be used to read one byte at a time from
      the specified [[reader]]."
+by "Stéphane Épardaud"
 shared class ByteReader(Reader reader) satisfies Reader {
     
     value buffer = newByteBuffer(1);

@@ -11,6 +11,7 @@ doc "Represents a server socket: a socket open on the current host that
      [[acceptAsync]].
      
      New server sockets are created with [[newServerSocket]]."
+by "Stéphane Épardaud"
 see (newServerSocket)
 shared abstract class ServerSocket(SocketAddress? bindAddress = null){
     

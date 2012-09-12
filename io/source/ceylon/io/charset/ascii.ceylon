@@ -2,6 +2,7 @@ import ceylon.io.buffer { ByteBuffer, CharacterBuffer }
 
 doc "Implementation of the ASCII character set. 
      See [the ASCII specification](http://tools.ietf.org/html/rfc20) for more information."
+by "Stéphane Épardaud"
 shared object ascii satisfies Charset {
     
     doc "Returns `US-ASCII`. This deviates a bit from 

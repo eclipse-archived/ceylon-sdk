@@ -64,4 +64,5 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              select.process();
          }
     "
+by "Stéphane Épardaud"
 shared package ceylon.io;

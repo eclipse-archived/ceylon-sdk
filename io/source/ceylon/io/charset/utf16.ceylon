@@ -7,6 +7,7 @@ doc "Represents a UTF-16 character set as defined by
      (_byte order mark_) markers for both big and little endian
      encodings, but encoders will generate big-endian UTF-16 with
      no `BOM` markers."
+by "Stéphane Épardaud"
 shared object utf16 satisfies Charset {
     
     doc "Returns `UTF-16`."

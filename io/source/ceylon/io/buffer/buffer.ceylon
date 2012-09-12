@@ -23,6 +23,7 @@ doc "Represents a memory buffer that can be read and written to with no
      Buffers can be resized (grown and expanded), which will cause an underlying
      array reallocation and copy.
      "
+by "Stéphane Épardaud"
 see (ByteBuffer, newByteBuffer, newByteBufferWithData,
      CharacterBuffer, newCharacterBufferWithData)
 shared abstract class Buffer<T>() satisfies Iterable<T> {

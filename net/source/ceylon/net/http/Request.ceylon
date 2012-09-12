@@ -3,8 +3,8 @@ import ceylon.net.uri { URI }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
 
-by "Stéphane Épardaud"
 doc "Represents an HTTP Request"
+by "Stéphane Épardaud"
 shared class Request(uri, method = "GET"){
     // constant
     String crLf = "\r\n";

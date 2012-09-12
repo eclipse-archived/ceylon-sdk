@@ -10,6 +10,7 @@ doc "Represents an object that you can use to connect to a remote host.
      
      You create new socket connectors with [[newSocketConnector]].
      "
+by "Stéphane Épardaud"
 see (newSocketConnector)
 shared abstract class SocketConnector(SocketAddress addr){
     

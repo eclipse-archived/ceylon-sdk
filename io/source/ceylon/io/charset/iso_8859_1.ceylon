@@ -2,6 +2,7 @@ import ceylon.io.buffer { ByteBuffer, CharacterBuffer }
 
 doc "Represents the ISO 8859-1 character set as defined 
      [by the specification](http://www.iso.org/iso/catalogue_detail?csnumber=28245)."
+by "Stéphane Épardaud"
 shared object iso_8859_1 satisfies Charset {
     
     doc "Returns `ISO-8859-1`. This deviates a bit from 
