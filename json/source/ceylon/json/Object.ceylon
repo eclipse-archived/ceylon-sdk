@@ -19,6 +19,13 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         return p.string;
     }
 
+    doc "Returns a pretty-printed serialised JSON representation"
+    shared String pretty {
+        StringPrinter p = StringPrinter(true);
+        p.printObject(this);
+        return p.string;
+    }
+    
     shared actual void clear() {
         contents.clear();
     }

@@ -27,6 +27,20 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance... val
         return list.size;
     }
 
+    doc "Returns a serialised JSON representation"
+    shared actual String string {
+        StringPrinter p = StringPrinter();
+        p.printArray(this);
+        return p.string;
+    }
+
+    doc "Returns a pretty-printed serialised JSON representation"
+    shared String pretty {
+        StringPrinter p = StringPrinter(true);
+        p.printArray(this);
+        return p.string;
+    }
+
     shared actual Array clone {
         return Array(list...);
     }
