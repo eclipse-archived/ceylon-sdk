@@ -7,13 +7,24 @@ shared object ascii satisfies Charset {
     doc "Returns `US-ASCII`. This deviates a bit from 
          [the internet registry](http://www.iana.org/assignments/character-sets) which defines it as
          `ANSI_X3.4-1968`, whereas we use its _preferred MIME name_ because that is more widely known."
-    shared actual String name = "ASCII";
+    shared actual String name = "US-ASCII";
 
     doc "The set of aliases, as defined by 
          [the internet registry](http://www.iana.org/assignments/character-sets). Note that
          because we use the _preferred MIME name_ (`US-ASCII`) as [[name]], we include the
          official character set name `ANSI_X3.4-1968` in the aliases, thereby deviating
          from the spec."
+    shared actual String[] aliases = {
+        "ANSI_X3.4-1968",
+        "iso-ir-6",
+        "ANSI_X3.4-1986",
+        "ISO_646.irv:1991",
+        "ISO646-US",
+        "ASCII",
+        "us",
+        "IBM367",
+        "cp367"
+    };
 
     doc "Returns 1."
     shared actual Integer minimumBytesPerCharacter = 1;
