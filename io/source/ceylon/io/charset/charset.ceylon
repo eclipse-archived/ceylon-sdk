@@ -7,10 +7,13 @@ doc "Represents a character set, which allows you to convert characters to bytes
      get a character set by name (or alias) with [[getCharset]]."
 shared interface Charset {
     
-    doc "This character set's name."
+    doc "This character set's name. In general this is the _preferred MIME name_
+         as defined by [the internet registry](http://www.iana.org/assignments/character-sets),
+         rather than the character set's official standard name, which we add to the aliases."
     shared formal String name;
 
-    doc "Returns this character set's name."
+    doc "Returns a list of aliases for this character set, as defined by 
+         [the internet registry](http://www.iana.org/assignments/character-sets)."
     shared default String[] aliases {
         return {};
     }
