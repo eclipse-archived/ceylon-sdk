@@ -7,14 +7,30 @@ shared object iso_8859_1 satisfies Charset {
     doc "Returns `ISO-8859-1`. This deviates a bit from 
          [the internet registry](http://www.iana.org/assignments/character-sets) which defines it as
          `ISO_8859-1:1987`, whereas we use its _preferred MIME name_ because that is more widely known."
-    shared actual String name = "ISO_8859-1";
+    shared actual String name = "ISO-8859-1";
 
     doc "The set of aliases, as defined by 
          [the internet registry](http://www.iana.org/assignments/character-sets). Note that
          because we use the _preferred MIME name_ (`ISO-8859-1`) as [[name]], we include the
          official character set name `ISO_8859-1:1987` in the aliases, thereby deviating
          from the spec."
-    shared actual String[] aliases = {"iso-8859-1", "iso-8859_1", "iso_8859_1", "iso8859-1", "iso8859_1", "latin1", "latin-1", "latin_1"};
+    shared actual String[] aliases = {
+        "ISO_8859-1:1987", // official name
+        "iso-ir-100",
+        "ISO_8859-1",
+        "latin1",
+        "l1",
+        "IBM819",
+        "CP819",
+        "csISOLatin1",
+        // idiot-proof aliases
+        "iso-8859_1", 
+        "iso_8859_1", 
+        "iso8859-1", 
+        "iso8859_1", 
+        "latin-1", 
+        "latin_1"
+    };
 
     doc "Returns 1."
     shared actual Integer minimumBytesPerCharacter = 1;
