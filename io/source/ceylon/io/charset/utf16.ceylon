@@ -1,17 +1,37 @@
 import ceylon.io.buffer { ByteBuffer, newByteBuffer, CharacterBuffer }
 
+doc "Represents a UTF-16 character set as defined by
+     (the specification)[http://www.ietf.org/rfc/rfc2781.txt].
+     
+     Decoders for UTF-16 will properly recognize `BOM` 
+     (_byte order mark_) markers for both big and little endian
+     encodings, but encoders will generate big-endian UTF-16 with
+     no `BOM` markers."
 shared object utf16 satisfies Charset {
+    
+    doc "Returns `UTF-16`."
     shared actual String name = "UTF-16";
 
+    doc "Returns a list of common aliases such as `utf16` and `utf_16` even
+         though these are not defined officially as aliases by
+         [the internet registry](http://www.iana.org/assignments/character-sets)."
     shared actual String[] aliases = {"utf16", "utf_16"};
     
+    doc "Returns 2."
     shared actual Integer minimumBytesPerCharacter = 2;
+
+    doc "Returns 4."
     shared actual Integer maximumBytesPerCharacter = 4;
+
+    doc "Returns 2."
     shared actual Integer averageBytesPerCharacter = 2;
 
+    doc "Returns a new UTF-16 decoder."
     shared actual Decoder newDecoder(){
         return UTF16Decoder(this);
     }
+
+    doc "Returns a new UTF-16 encoder."
     shared actual Encoder newEncoder() {
         return UTF16Encoder(this);
     }

@@ -1,17 +1,32 @@
 import ceylon.io.buffer { newByteBuffer, ByteBuffer, CharacterBuffer }
 
+doc "Represents a UTF-8 character set as defined by
+     (the specification)[http://tools.ietf.org/html/rfc3629]."
 shared object utf8 satisfies Charset {
+    
+    doc "Returns `UTF-8`."
     shared actual String name = "UTF-8";
     
+    doc "Returns a list of common aliases such as `utf8` and `utf_8` even
+         though these are not defined officially as aliases by
+         [the internet registry](http://www.iana.org/assignments/character-sets)."
     shared actual String[] aliases = {"utf8", "utf_8"};
     
+    doc "Returns 1."
     shared actual Integer minimumBytesPerCharacter = 1;
+
+    doc "Returns 4."
     shared actual Integer maximumBytesPerCharacter = 4;
+
+    doc "Returns 2."
     shared actual Integer averageBytesPerCharacter = 2;
 
+    doc "Returns a new UTF-8 decoder."
     shared actual Decoder newDecoder(){
         return UTF8Decoder(this);
     }
+
+    doc "Returns a new UTF-8 encoder."
     shared actual Encoder newEncoder() {
         return UTF8Encoder(this);
     }
