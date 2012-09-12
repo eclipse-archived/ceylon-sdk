@@ -9,15 +9,15 @@ shared abstract class Printer(){
     shared default void printObject(Object o){
         print("{");
         variable Boolean once := true; 
-        for(key in o){
+        for(entry in o){
             if(once){
                 once := false;
             }else{
                 print(",");
             }
-            printString(key);
+            printString(entry.key);
             print(":");
-            printValue(o.get(key));
+            printValue(entry.item);
         }
         print("}");
     }
@@ -80,7 +80,7 @@ shared abstract class Printer(){
     }
     
     doc "Prints a JSON value"
-    shared default void printValue(String|Boolean|Integer|Float|Object|Array|Nothing val){
+    shared default void printValue(String|Boolean|Integer|Float|Object|Array|NullInstance val){
         switch(val)
         case (is String){
             printString(val);
@@ -100,7 +100,7 @@ shared abstract class Printer(){
         case (is Array){
             printArray(val);
         }
-        case (is Nothing){
+        case (is NullInstance){
             printNull();
         }
     }

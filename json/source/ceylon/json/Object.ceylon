@@ -1,57 +1,15 @@
 import ceylon.collection { ... }
+import ceylon.language { LangObject = Object }
 
 by "Stéphane Épardaud"
 doc "Represents a JSON Object"
-shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array>... values) satisfies Iterable<String> {
+shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|NullInstance>... values) 
+    satisfies MutableMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance> {
     
     value contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>();
     
     for(val in values){
         contents.put(val.key, val.item);
-    }
-    
-    doc "Adds a new property mapping"
-    shared void put(String key, String|Boolean|Integer|Float|Object|Array|Nothing val){
-        if(exists val){
-            contents.put(key, val);
-        }else{
-            contents.put(key, nil);
-        }
-    }
-
-    doc "Gets a property value by name"
-    shared String|Boolean|Integer|Float|Object|Array|Nothing get(String key){
-        value val = contents[key];
-        if(is NullInstance val){
-            return null;
-        }
-        switch(val)
-        case (is String|Boolean|Integer|Float|Object|Array) {
-            return val;
-        }else{
-            // key does not exist
-            return null;
-        }
-    }
-    
-    doc "Returns the number of properties"
-    shared Integer size {
-        return contents.size;
-    }
-
-    doc "Returns true if the given property is defined, even if it's set to `null`"
-    shared Boolean defines(String key){
-        return contents.defines(key);
-    }
-
-    doc "Returns true if this object has no properties"
-    shared actual Boolean empty {
-        return contents.empty;
-    }
-    
-    doc "Returns a iterator for the property names"
-    shared actual Iterator<String> iterator {
-        return contents.keys.iterator;
     }
     
     doc "Returns a serialised JSON representation"
@@ -60,5 +18,47 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array>... 
         p.printObject(this);
         return p.string;
     }
-            
+
+    shared actual void clear() {
+        contents.clear();
+    }
+    
+    shared actual Object clone {
+        return Object(contents...);
+    }
+    
+    shared actual Nothing|String|Boolean|Integer|Float|Object|Array|NullInstance item(LangObject key) {
+        return contents[key];
+    }
+    
+    shared actual Iterator<Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>> iterator {
+        return contents.iterator;
+    }
+    
+    shared actual void put(String key, String|Boolean|Integer|Float|Object|Array|NullInstance item) {
+        contents.put(key, item);
+    }
+    
+    shared actual void putAll(Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>... entries) {
+        contents.putAll(entries...);
+    }
+    
+    shared actual void remove(String key) {
+        contents.remove(key);
+    }
+    
+    shared actual Integer size {
+        return contents.size;
+    }
+    
+    shared actual Integer hash {
+        return contents.hash;
+    }
+    
+    shared actual Boolean equals(LangObject that) {
+        if(is Object that){
+            return this === that || contents.equalsTemp(that.contents);
+        }
+        return false;
+    }
 }

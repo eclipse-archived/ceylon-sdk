@@ -11,7 +11,7 @@ class Parser(String str){
             while(true){
                 String key = parseString();
                 eatSpacesUntil(`:`);
-                String|Boolean|Integer|Float|Object|Array|Nothing val = parseValue();
+                String|Boolean|Integer|Float|Object|Array|NullInstance val = parseValue();
                 obj.put(key, val);
                 
                 eatSpaces();
@@ -33,7 +33,7 @@ class Parser(String str){
         eatSpaces();
         if(!check(`]`)){
             while(true){
-                String|Boolean|Integer|Float|Object|Array|Nothing val = parseValue();
+                String|Boolean|Integer|Float|Object|Array|NullInstance val = parseValue();
                 arr.add(val);
 
                 eatSpaces();
@@ -48,7 +48,7 @@ class Parser(String str){
         return arr;
     }
     
-    String|Boolean|Integer|Float|Object|Array|Nothing parseValue(){
+    String|Boolean|Integer|Float|Object|Array|NullInstance parseValue(){
         eatSpaces();
         Character c = char();
         if(c == `{`){
@@ -153,12 +153,12 @@ class Parser(String str){
         return false;
     }
 
-    Nothing parseNull(){
+    NullInstance parseNull(){
         eatSpacesUntil(`n`);
         eat(`u`);
         eat(`l`);
         eat(`l`);
-        return null;
+        return nil;
     }
     
     String parseString(){

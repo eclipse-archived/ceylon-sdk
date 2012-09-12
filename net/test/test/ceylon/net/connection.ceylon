@@ -5,10 +5,10 @@ import ceylon.json { ... }
 
 void testJSON(Object json){
     assertEquals(32, json.size, "Object size");
-    assertEquals("http://ceylon-lang.org", json.get("homepage"), "Homepage");
+    assertEquals("http://ceylon-lang.org", json["homepage"], "Homepage");
     
-    if(is Object owner = json.get("owner")){
-        assertEquals("ceylon", owner.get("login"), "Owner name");
+    if(is Object owner = json["owner"]){
+        assertEquals("ceylon", owner["login"], "Owner name");
     }else{
         fail("owner is not Object");
     }
