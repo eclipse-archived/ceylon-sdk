@@ -49,6 +49,7 @@ doc "API for running native commands in a child process.
        
        To wait for the child process to terminate, call
        the `waitForExit()` method of `Process`."
+by "Gavin King"
 module ceylon.process '0.3.3' {
     import ceylon.file '0.3.3';
 }
