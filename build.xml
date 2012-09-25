@@ -116,5 +116,34 @@
             <module name="ceylon.interop.java"/>
         </ceylond>
     </target>
+
+    <target name="publish" description="Publishes the whole SDK to your user repo">
+        <echo>Publishing SDK to your user repo</echo> 
+        <pathconvert property="sourcepath" refid="module.dirs">
+            <globmapper from="*" to="*/source"/>
+        </pathconvert>
+        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+            out="+USER">
+            <module name="ceylon.math"/>
+            <module name="ceylon.collection"/>
+            <module name="ceylon.io"/>
+            <module name="ceylon.file"/>
+            <module name="ceylon.process"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.net"/>
+            <module name="ceylon.interop.java"/>
+        </ceylonc>
+        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+            out="+USER">
+            <module name="ceylon.math"/>
+            <module name="ceylon.collection"/>
+            <module name="ceylon.io"/>
+            <module name="ceylon.file"/>
+            <module name="ceylon.process"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.net"/>
+            <module name="ceylon.interop.java"/>
+        </ceylond>
+    </target>
 </project>
 
