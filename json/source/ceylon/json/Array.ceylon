@@ -91,4 +91,84 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance... val
         }
         return false;
     }
+    
+    // auto-casting
+    
+    Object checkObject(LangObject val){
+        if(is Object val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting Object but got " val "");
+    }
+
+    doc "Returns this array as a sequence of [[Object]] elements."
+    throws "If one element in this array is not an [[Object]]."
+    shared Iterable<Object> objects {
+        return { for (elem in list) checkObject(elem) };
+    }
+
+    String checkString(LangObject val){
+        if(is String val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting String but got " val "");
+    }
+
+    doc "Returns this array as a sequence of [[String]] elements."
+    throws "If one element in this array is not a [[String]]."
+    shared Iterable<String> strings {
+        return { for (elem in list) checkString(elem) };
+    }
+
+    Integer checkInteger(LangObject val){
+        if(is Integer val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting Integer but got " val "");
+    }
+
+    doc "Returns this array as a sequence of [[Integer]] elements."
+    throws "If one element in this array is not a [[Integer]]."
+    shared Iterable<Integer> integers {
+        return { for (elem in list) checkInteger(elem) };
+    }
+
+    Float checkFloat(LangObject val){
+        if(is Float val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting Float but got " val "");
+    }
+
+    doc "Returns this array as a sequence of [[Float]] elements."
+    throws "If one element in this array is not a [[Float]]."
+    shared Iterable<Float> floats {
+        return { for (elem in list) checkFloat(elem) };
+    }
+
+    Boolean checkBoolean(LangObject val){
+        if(is Boolean val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting Boolean but got " val "");
+    }
+
+    doc "Returns this array as a sequence of [[Boolean]] elements."
+    throws "If one element in this array is not a [[Boolean]]."
+    shared Iterable<Boolean> booleans {
+        return { for (elem in list) checkBoolean(elem) };
+    }
+
+    Array checkArray(LangObject val){
+        if(is Array val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting Array but got " val "");
+    }
+
+    doc "Returns this array as a sequence of [[Array]] elements."
+    throws "If one element in this array is not an [[Array]]."
+    shared Iterable<Array> arrays {
+        return { for (elem in list) checkArray(elem) };
+    }
 }

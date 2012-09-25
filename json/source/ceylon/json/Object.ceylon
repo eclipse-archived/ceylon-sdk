@@ -68,4 +68,146 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         }
         return false;
     }
+    
+    // auto-casting
+    
+    doc "Returns an [[Integer]] value."
+    throws "If the key dot not exist or points to a type that is not [[Integer]]."
+    shared Integer getInteger(String key){
+        value val = item(key);
+        if(is Integer val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting an Integer but got: " val else "null" "");
+    }
+
+    doc "Returns an [[Float]] value."
+    throws "If the key dot not exist or points to a type that is not [[Float]]."
+    shared Float getFloat(String key){
+        value val = item(key);
+        if(is Float val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting a Float but got: " val else "null" "");
+    }
+
+    doc "Returns an [[Boolean]] value."
+    throws "If the key dot not exist or points to a type that is not [[Boolean]]."
+    shared Boolean getBoolean(String key){
+        value val = item(key);
+        if(is Boolean val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting a Boolean but got: " val else "null" "");
+    }
+
+    doc "Returns an [[String]] value."
+    throws "If the key dot not exist or points to a type that is not [[String]]."
+    shared String getString(String key){
+        value val = item(key);
+        if(is String val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting a String but got: " val else "null" "");
+    }
+
+    doc "Returns an [[Object]] value."
+    throws "If the key dot not exist or points to a type that is not [[Object]]."
+    shared Object getObject(String key){
+        value val = item(key);
+        if(is Object val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting an Object but got: " val else "null" "");
+    }
+    
+    doc "Returns an [[Array]] value."
+    throws "If the key dot not exist or points to a type that is not [[Array]]."
+    shared Array getArray(String key){
+        value val = item(key);
+        if(is Array val){
+            return val;
+        }
+        throw InvalidTypeException("Expecting an Array but got: " val else "null" "");
+    }
+    
+    // optional auto-casting
+    
+    doc "Returns an [[Integer]] value, unless the key does not exist, or the value is null."
+    throws "If the key points to a type that is neither [[Integer]] nor [[NullInstance]]."
+    shared Integer? getIntegerOrNull(String key){
+        value val = item(key);
+        if(is Integer|Nothing val){
+            return val;
+        }
+        if(is NullInstance val){
+            return null;
+        }
+        throw InvalidTypeException("Expecting an Integer but got: " val else "null" "");
+    }
+
+    doc "Returns an [[Float]] value, unless the key does not exist, or the value is null."
+    throws "If the key points to a type that is neither [[Float]] nor [[NullInstance]]."
+    shared Float? getFloatOrNull(String key){
+        value val = item(key);
+        if(is Float|Nothing val){
+            return val;
+        }
+        if(is NullInstance val){
+            return null;
+        }
+        throw InvalidTypeException("Expecting a Float but got: " val else "null" "");
+    }
+
+    doc "Returns an [[Boolean]] value, unless the key does not exist, or the value is null."
+    throws "If the key points to a type that is neither [[Boolean]] nor [[NullInstance]]."
+    shared Boolean? getBooleanOrNull(String key){
+        value val = item(key);
+        if(is Boolean|Nothing val){
+            return val;
+        }
+        if(is NullInstance val){
+            return null;
+        }
+        throw InvalidTypeException("Expecting a Boolean but got: " val else "null" "");
+    }
+
+    doc "Returns an [[String]] value, unless the key does not exist, or the value is null."
+    throws "If the key points to a type that is neither [[String]] nor [[NullInstance]]."
+    shared String? getStringOrNull(String key){
+        value val = item(key);
+        if(is String|Nothing val){
+            return val;
+        }
+        if(is NullInstance val){
+            return null;
+        }
+        throw InvalidTypeException("Expecting a String but got: " val else "null" "");
+    }
+
+    doc "Returns an [[Object]] value, unless the key does not exist, or the value is null."
+    throws "If the key points to a type that is neither [[Object]] nor [[NullInstance]]."
+    shared Object? getObjectOrNull(String key){
+        value val = item(key);
+        if(is Object|Nothing val){
+            return val;
+        }
+        if(is NullInstance val){
+            return null;
+        }
+        throw InvalidTypeException("Expecting an Object but got: " val else "null" "");
+    }
+    
+    doc "Returns an [[Array]] value, unless the key does not exist, or the value is null."
+    throws "If the key points to a type that is neither [[Array]] nor [[NullInstance]]."
+    shared Array? getArrayOrNull(String key){
+        value val = item(key);
+        if(is Array|Nothing val){
+            return val;
+        }
+        if(is NullInstance val){
+            return null;
+        }
+        throw InvalidTypeException("Expecting an Array but got: " val else "null" "");
+    }
 }
