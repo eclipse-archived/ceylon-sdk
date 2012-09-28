@@ -52,4 +52,5 @@ doc "API for running native commands in a child process.
 by "Gavin King"
 module ceylon.process '0.3.3' {
     import ceylon.file '0.3.3';
+    import java '7';
 }
