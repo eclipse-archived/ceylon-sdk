@@ -19,8 +19,8 @@ shared Charset? getCharset(String name){
         if(charset.name.lowercased == lc){
             return charset;
         }
-        for(alias in charset.aliases){
-            if(alias.lowercased == lc){
+        for(aliasName in charset.aliases){
+            if(aliasName.lowercased == lc){
                 return charset;
             }
         }
