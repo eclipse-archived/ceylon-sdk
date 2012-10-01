@@ -71,7 +71,7 @@
     <echoproperties>
       <propertyset refid="props.debug"/>
     </echoproperties>
-    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/cey"
+    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/ceylon"
       out="${repo.out}"
       user="${publish.username}"
       pass="${publish.password}">
@@ -90,14 +90,14 @@
     </echoproperties>
     
     <!-- compile the tests -->
-    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/cey"
+    <ceylonc executable="${basedir}/../../ceylon-dist/dist/bin/ceylon"
       src="test"
       out="${repo.out}">
       <rep url="${repo.dependencies}"/>
       <module name="test.${module.name}"/>
     </ceylonc>
     <!-- Run the tests -->
-    <ceylon executable="${basedir}/../../ceylon-dist/dist/bin/cey"
+    <ceylon executable="${basedir}/../../ceylon-dist/dist/bin/ceylon"
         run="test.${module.name}.run" module="test.${module.name}/${module.version}">
         <rep url="${repo.dependencies}"/>
         <rep url="${repo.out}"/>
@@ -111,7 +111,7 @@
         <propertyset refid="props.debug"/>
     </echoproperties>
     
-    <ceylond executable="${basedir}/../../ceylon-dist/dist/bin/cey"
+    <ceylond executable="${basedir}/../../ceylon-dist/dist/bin/ceylon"
         out="${repo.out}"
         user="${publish.username}"
         pass="${publish.password}">
