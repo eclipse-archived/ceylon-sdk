@@ -6,5 +6,6 @@ by "Enrique Zamudio"
 license "Apache Software License 2.0"
 module ceylon.dbc '0.3.3' {
     import ceylon.math '0.3.3';
-    import java '7';
+    import jdk.base '7';
+    import jdk.jdbc '7';
 }
