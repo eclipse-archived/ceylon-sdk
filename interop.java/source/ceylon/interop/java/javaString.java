@@ -11,10 +11,10 @@ public final class javaString {
 
     private javaString() {}
 
-    @TypeInfo("java.lang.String")
+    @TypeInfo("java.lang::String")
     public static java.lang.String javaString(
     @Name("string")
-    @TypeInfo("ceylon.language.String")
+    @TypeInfo("ceylon.language::String")
     final java.lang.String string) {
         return string;
     }
