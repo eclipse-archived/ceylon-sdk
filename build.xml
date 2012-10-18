@@ -67,7 +67,7 @@
     	<pathconvert property="sourcepath" refid="module.dirs">
     		<globmapper from="*" to="*/source"/>
     	</pathconvert>
-		<ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true">
+		<ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true">
 		    <module name="ceylon.math"/>
 		    <module name="ceylon.collection"/>
 		    <module name="ceylon.io"/>
@@ -93,7 +93,7 @@
         <pathconvert property="sourcepath" refid="module.dirs">
             <globmapper from="*" to="*/source"/>
         </pathconvert>
-        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
         	out="${herd}" user="${user}" pass="${pass}">
             <module name="ceylon.math"/>
             <module name="ceylon.collection"/>
@@ -104,7 +104,7 @@
             <module name="ceylon.net"/>
             <module name="ceylon.interop.java"/>
         </ceylonc>
-        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
             out="${herd}" user="${user}" pass="${pass}">
             <module name="ceylon.math"/>
             <module name="ceylon.collection"/>
@@ -122,7 +122,7 @@
         <pathconvert property="sourcepath" refid="module.dirs">
             <globmapper from="*" to="*/source"/>
         </pathconvert>
-        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
             out="+USER">
             <module name="ceylon.math"/>
             <module name="ceylon.collection"/>
@@ -133,7 +133,7 @@
             <module name="ceylon.net"/>
             <module name="ceylon.interop.java"/>
         </ceylonc>
-        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/cey" nomtimecheck="true"
+        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
             out="+USER">
             <module name="ceylon.math"/>
             <module name="ceylon.collection"/>
