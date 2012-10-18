@@ -5,17 +5,17 @@ import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
-@Ceylon(major = 2)
+@Ceylon(major = 3)
 @Method
-public final class javaString {
+public final class javaString_ {
 
-    private javaString() {}
+    private javaString_() {}
 
     @TypeInfo("java.lang::String")
     public static java.lang.String javaString(
-    @Name("string")
-    @TypeInfo("ceylon.language::String")
-    final java.lang.String string) {
+            @Name("string")
+            @TypeInfo("ceylon.language::String")
+            final java.lang.String string) {
         return string;
     }
     
