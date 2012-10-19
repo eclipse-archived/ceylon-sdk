@@ -25,9 +25,6 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
 	
     StreamSinkChannel getResponse() {
         if (exists r = response) {
-    //        if (!c.closed) {
-    //            return c;
-    //        }
     		return r;
         }
         response := createResponse();
@@ -46,13 +43,6 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         getResponse().write(wrapByteBuffer(bytes));
     }
     
-    shared actual void responseDone() {
-	    getResponse().shutdownWrites();
-	    //TODO always flush blocking ?
-	    chFlushBlocking(response);
-	    getResponse().close();
-	}
-    
     shared actual void addHeader(String headerName, String headerValue) {
     	exchange.responseHeaders.add(headerName, headerValue);
 	}
@@ -61,4 +51,20 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
 		exchange.responseCode := responseStatusCode;
 	}
 
+    shared void responseDone() {
+	    getResponse().shutdownWrites();
+	    chFlushBlocking(response);
+	    getResponse().close();
+	}
+    
+    //shared void closeSetter() {
+        //async file stream/channel closer
+        //object chListener satisfies ChannelListener<Channel> {
+        //    shared actual void handleEvent(Channel? channel) {
+        //        //TODO IoUtils.safeClose(fileChannel);
+        //    }
+        //}
+        //TODO response.getCloseSetter().set(chListener);
+    //}
+	
 }

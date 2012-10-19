@@ -26,10 +26,10 @@ import ceylon.net.httpd { Httpd, WebEndpointMapping, HttpdOptions }
 
 shared class DefaultHttpdServer() satisfies Httpd {
 	
-	CeylonRequestHandler contentHandler = CeylonRequestHandler();
+	CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
 
 	shared actual void addWebEndpointMapping(WebEndpointMapping webEndpointMapping) {
-		contentHandler.addWebEndpointMapping(webEndpointMapping);
+		ceylonHandler.addWebEndpointMapping(webEndpointMapping);
 	}
 
 	shared actual void start(Integer port, String host, HttpdOptions httpdOptions) {
@@ -37,7 +37,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		//TODO log
 		print("starting on " host ":" port "");
 
-		HttpHandler errPageHandler = SimpleErrorPageHandler(contentHandler);
+		HttpHandler errPageHandler = SimpleErrorPageHandler(ceylonHandler);
 		HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
 		HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);
 		

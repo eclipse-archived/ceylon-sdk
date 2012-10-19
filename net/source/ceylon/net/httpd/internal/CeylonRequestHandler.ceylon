@@ -11,7 +11,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 	shared actual void handleRequest(HttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
 		if (exists httpServerExchange, exists utCompletionHandler) {
 			HttpRequest request = HttpRequestImpl(httpServerExchange);
-			HttpResponse response = HttpResponseImpl(httpServerExchange);
+			HttpResponseImpl response = HttpResponseImpl(httpServerExchange);
 
 			try {
 				String requestPath = request.path();
@@ -34,7 +34,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 		}
 	}
 	
-	void invokeWebEndpoint(WebEndpointMapping webEndpointMapping, HttpRequest request, HttpResponse response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
+	void invokeWebEndpoint(WebEndpointMapping webEndpointMapping, HttpRequest request, HttpResponseImpl response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
 
 		String moduleName = webEndpointMapping.moduleName;
 		String className = webEndpointMapping.className;
@@ -50,17 +50,9 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 			response.responseDone();
 			utCompletionHandler.handleComplete();
 		} 
-        //async file stream/channel closer
-        //object chListener satisfies ChannelListener<Channel> {
-        //    shared actual void handleEvent(Channel? channel) {
-        //        //TODO IoUtils.safeClose(fileChannel);
-        //    }
-        //}
-        //TODO response.getCloseSetter().set(chListener);
-		
 	}
 		
-	class AsyncInvoker(WebEndpointAsync webApp, HttpRequest request, HttpResponse response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
+	class AsyncInvoker(WebEndpointAsync webApp, HttpRequest request, HttpResponseImpl response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
 		shared actual void run() {
 			object completionHandler satisfies HttpCompletionHandler {
 				shared actual void handleComplete() {
