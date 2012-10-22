@@ -2,6 +2,8 @@ import ceylon.io { SocketAddress }
 shared interface HttpRequest {
 
 	shared formal String? parameter(String name);
+
+	shared formal String[]|Empty parameters(String name);
 	
 	shared formal String? header(String name);
 
@@ -13,12 +15,14 @@ shared interface HttpRequest {
 	doc "Get the request URI scheme. {http, https}"
     shared formal String scheme();
 
-	//TODO return ceylon URI object
     doc "Gets the request URI, including hostname, protocol etc if specified by the client."
     shared formal String uri();
 
 	doc "Get the request URI path.  This is the whole original request path."
     shared formal String path();
+
+	doc "Return path relative to endpoint mapping path."
+	shared formal String relativePath();
 
     shared formal String queryString();
 

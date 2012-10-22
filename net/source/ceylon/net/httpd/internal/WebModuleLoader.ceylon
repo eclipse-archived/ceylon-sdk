@@ -1,4 +1,4 @@
-import ceylon.net.httpd { WebEndpoint, WebEndpointAsync, HttpdException }
+import ceylon.net.httpd { WebEndpoint, WebEndpointAsync, HttpdException, WebEndpointConfig }
 
 import com.redhat.ceylon.javaadapter { ClassLoaderHelper { clCreateInstance = createInstance }}
 import ceylon.collection { HashMap }
@@ -8,14 +8,16 @@ shared class WebModuleLoader() {
 
 	value cache = HashMap<String, WebEndpoint|WebEndpointAsync>(); 
 
-	shared WebEndpoint|WebEndpointAsync instance(String moduleName, String className, String? moduleSlot = null) {
+	shared WebEndpoint|WebEndpointAsync instance(WebEndpointConfig webEndpointConfig) {
 		
+		String moduleName = webEndpointConfig.moduleName;
+		String className = webEndpointConfig.className;
+		String moduleSlot = webEndpointConfig.moduleSlot;
+
 		value sb = StringBuilder();
 		sb.append(moduleName);
 		sb.append(className);
-		if (exists moduleSlot) {
-			sb.append(moduleSlot);
-		}
+		sb.append(moduleSlot);
 		String key = sb.string;
 
 		WebEndpoint|WebEndpointAsync|Nothing instance = cache.item(key);
@@ -27,6 +29,7 @@ shared class WebModuleLoader() {
 			try {
 				Object instanceObj = clCreateInstance(this, moduleName, className, moduleSlot);
 				if (is WebEndpoint|WebEndpointAsync instanceObj) {
+					instanceObj.init(webEndpointConfig);
 					cache.put(key, instanceObj);
 					return instanceObj;
 				} else {

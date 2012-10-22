@@ -22,14 +22,14 @@ import com.redhat.ceylon.javaadapter {XnioHelper {createStreamServer}}
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Httpd, WebEndpointMapping, HttpdOptions }
+import ceylon.net.httpd { Httpd, WebEndpointConfig, HttpdOptions }
 
 shared class DefaultHttpdServer() satisfies Httpd {
 	
 	CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
 
-	shared actual void addWebEndpointMapping(WebEndpointMapping webEndpointMapping) {
-		ceylonHandler.addWebEndpointMapping(webEndpointMapping);
+	shared actual void addWebEndpointConfig(WebEndpointConfig webEndpointConfig) {
+		ceylonHandler.addWebEndpointMapping(webEndpointConfig);
 	}
 
 	shared actual void start(Integer port, String host, HttpdOptions httpdOptions) {

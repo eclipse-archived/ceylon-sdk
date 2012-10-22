@@ -1,24 +1,25 @@
 import io.undertow.server { HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
-import ceylon.net.httpd { HttpRequest, HttpResponse, WebEndpoint, WebEndpointMapping, WebEndpointAsync, HttpCompletionHandler }
+import ceylon.net.httpd { HttpRequest, WebEndpoint, WebEndpointConfig, WebEndpointAsync, HttpCompletionHandler }
 import ceylon.collection { HashMap }
 import java.lang { Runnable }
 
 shared class CeylonRequestHandler() satisfies HttpHandler {
 
-	HashMap<String, WebEndpointMapping> webEndpointMapings = HashMap<String, WebEndpointMapping>();
+	HashMap<String, WebEndpointConfig> webEndpointConfigs = HashMap<String, WebEndpointConfig>();
 
 	shared actual void handleRequest(HttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
 		if (exists httpServerExchange, exists utCompletionHandler) {
-			HttpRequest request = HttpRequestImpl(httpServerExchange);
+			HttpRequestImpl request = HttpRequestImpl(httpServerExchange);
 			HttpResponseImpl response = HttpResponseImpl(httpServerExchange);
 
 			try {
 				String requestPath = request.path();
-				WebEndpointMapping? webEndpointMapping = getWebEndpointMapping(requestPath);
+				WebEndpointConfig? webEndpointConfig = getWebEndpointConfig(requestPath);
 				
-				if (exists webEndpointMapping) {
-					invokeWebEndpoint(webEndpointMapping, request, response, httpServerExchange, utCompletionHandler);
+				if (exists webEndpointConfig) {
+					request.webEndpointConfig(webEndpointConfig);
+					invokeWebEndpoint(webEndpointConfig, request, response, httpServerExchange, utCompletionHandler);
 				} else {
 					response.responseStatus(404);
 					response.responseDone();
@@ -34,14 +35,10 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 		}
 	}
 	
-	void invokeWebEndpoint(WebEndpointMapping webEndpointMapping, HttpRequest request, HttpResponseImpl response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
-
-		String moduleName = webEndpointMapping.moduleName;
-		String className = webEndpointMapping.className;
-		String moduleSlot = webEndpointMapping.moduleSlot;
+	void invokeWebEndpoint(WebEndpointConfig webEndpointConfig, HttpRequest request, HttpResponseImpl response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
 
 		WebModuleLoader webModuleLoader = WebModuleLoader();
-		WebEndpoint|WebEndpointAsync webApp = webModuleLoader.instance(moduleName, className, moduleSlot);
+		WebEndpoint|WebEndpointAsync webApp = webModuleLoader.instance(webEndpointConfig);
 		
 		if (is WebEndpointAsync webApp) {
 			wdDispatch(exchange, AsyncInvoker(webApp, request, response, exchange, utCompletionHandler));
@@ -64,12 +61,19 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 		}
 	}
 	
-	shared void addWebEndpointMapping(WebEndpointMapping webEndpointMapping) {
-		webEndpointMapings.put(webEndpointMapping.path, webEndpointMapping);
+	shared void addWebEndpointMapping(WebEndpointConfig webEndpointConfig) {
+		webEndpointConfigs.put(webEndpointConfig.path, webEndpointConfig);
 	}
 	
-	WebEndpointMapping? getWebEndpointMapping(String mappedPath) {
+	WebEndpointConfig? getWebEndpointConfig(String path) {
 		//TODO wildcard/regex matching path
-		return webEndpointMapings.item(mappedPath);
+		
+		for (config in webEndpointConfigs) {
+			if (path.contains(config.key)) {
+				return config.item;
+			}
+		}
+		//return webEndpointConfigs.item(path);
+		return null;
 	}
 }
