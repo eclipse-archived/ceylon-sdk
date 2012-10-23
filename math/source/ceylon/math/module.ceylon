@@ -34,5 +34,5 @@ doc "This module provides four APIs:
      decimal digits."
 by "Tom Bentley"
 module ceylon.math '0.3.3' {
-    import jdk.base '7';
+    import java.base '7';
 }

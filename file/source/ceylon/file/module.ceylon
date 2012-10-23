@@ -110,5 +110,5 @@ doc "API for accessing hierarchical file systems. Clients use `Path`s to
 by "Gavin King"
 module ceylon.file '0.3.3' {
     import ceylon.io '0.3.3';
-    import jdk.base '7';
+    import java.base '7';
 }
