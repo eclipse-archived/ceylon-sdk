@@ -5,8 +5,8 @@
     <file name="sdk-test"/>
     <file name="math"/>
     <file name="collection"/>
-    <file name="io"/>
     <file name="file"/>
+    <file name="io"/>
     <file name="process"/>
     <file name="json"/>
     <file name="net"/>
