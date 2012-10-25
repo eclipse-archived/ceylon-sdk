@@ -33,7 +33,6 @@ shared Callable<Void,ByteBuffer> stringToByteProducer(Charset charset, String st
     Encoder encoder = charset.newEncoder();
     CharacterBuffer input = newCharacterBufferWithData(string);
     void producer(ByteBuffer buffer){
-        print("Translator called");
         encoder.encode(input, buffer);
     }
     return producer;
