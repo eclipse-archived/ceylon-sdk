@@ -1,10 +1,12 @@
 import ceylon.io { FileDescriptor }
+import ceylon.file { File, Resource }
+import ceylon.io.impl { OpenFileImpl }
 
 doc "Represents a file object we can read/write to."
 shared interface OpenFile satisfies FileDescriptor {
 
-    doc "Returns the `File` object that contains metadata about this open file."
-    shared formal File file;
+    doc "Returns the `Resource` object that contains metadata about this open resource."
+    shared formal Resource resource;
 
     doc "The current position within this open file. The position is used to
          indicate where read/writes will start, and increases on every read/write
@@ -22,4 +24,11 @@ shared interface OpenFile satisfies FileDescriptor {
     // unless we also write there 
     shared formal void truncate(Integer size);
 
+}
+
+
+doc "Creates a new [[OpenFile]] to read/write to the given [[resource]]."
+see (OpenFile)
+shared OpenFile newOpenFile(Resource resource){
+    return OpenFileImpl(resource);
 }

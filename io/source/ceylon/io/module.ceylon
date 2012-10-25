@@ -7,6 +7,7 @@ doc "This module allows you to read and write to streams, such as files, sockets
 by "Stéphane Épardaud"
 license "Apache Software License"
 module ceylon.io '0.3.3' {
+    import ceylon.file '0.3.3';
     import ceylon.collection '0.3.3';
     import java.base '7';
 }
