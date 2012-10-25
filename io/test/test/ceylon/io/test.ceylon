@@ -12,7 +12,11 @@ class IoSuite() extends Suite("ceylon.io") {
         "UTF8 decoder test" -> testUTF8Decoder,
         "UTF8 encoder test" -> testUTF8Encoder,
         "UTF16 decoder test" -> testUTF16Decoder,
-        "UTF16 encoder test" -> testUTF16Encoder
+        "UTF16 encoder test" -> testUTF16Encoder,
+        "File create/write/read" -> testFileCreateWriteRead,
+        "File create/write/read no reopen" -> testFileCreateWriteReadWithoutReopen,
+        "File create/write/reset/write/read" -> testFileCreateWriteResetWriteRead,
+        "File create/truncate" -> testFileTruncate
     };
 }
 
