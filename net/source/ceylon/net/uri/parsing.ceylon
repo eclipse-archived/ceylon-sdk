@@ -22,7 +22,7 @@ shared URI parseURI(String uri){
         Integer? sep = uri.firstOccurrence(":");
         if(exists sep){
             if(sep > 0){
-                scheme := uri[0..sep-1];
+                scheme := uri.segment(0, sep);
                 return uri[sep+1...];
             }
         }
@@ -33,7 +33,7 @@ shared URI parseURI(String uri){
     void parseUserInfo(String userInfo) {
         Integer? sep = userInfo.firstCharacterOccurrence(`:`);
         if(exists sep){
-            authority.user := decodePercentEncoded(userInfo[0..sep-1]);
+            authority.user := decodePercentEncoded(userInfo.segment(0, sep));
             authority.password := decodePercentEncoded(userInfo[sep+1...]);
         }else{
             authority.user := decodePercentEncoded(userInfo);
@@ -48,7 +48,7 @@ shared URI parseURI(String uri){
             Integer? end = hostAndPort.firstCharacterOccurrence(`]`);
             if(exists end){
                 // eat the delimiters
-                authority.host := hostAndPort[1..end-1];
+                authority.host := hostAndPort.segment(1, end-1);
                 String rest = hostAndPort[end+1...];
                 if(rest.startsWith(":")){
                     portString = rest[1...];
@@ -62,7 +62,7 @@ shared URI parseURI(String uri){
             authority.ipLiteral := false;
             Integer? sep = hostAndPort.lastCharacterOccurrence(`:`);
             if(exists sep){
-                authority.host := decodePercentEncoded(hostAndPort[0..sep-1]);
+                authority.host := decodePercentEncoded(hostAndPort.segment(0, sep));
                 portString = hostAndPort[sep+1...];
             }else{
                 authority.host := decodePercentEncoded(hostAndPort);
@@ -95,7 +95,7 @@ shared URI parseURI(String uri){
         String authority;
         String remains;
         if(exists sep){
-            authority = part[0..sep-1];
+            authority = part.segment(0, sep);
             remains = part[sep...];
         }else{
             // no path part
@@ -105,7 +105,7 @@ shared URI parseURI(String uri){
         Integer? userInfoSep = authority.firstCharacterOccurrence(`@`);
         String hostAndPort;
         if(exists userInfoSep){
-            parseUserInfo(authority[0..userInfoSep-1]);
+            parseUserInfo(authority.segment(0, userInfoSep));
             hostAndPort = authority[userInfoSep+1...]; 
         }else{
             hostAndPort = authority;
@@ -119,7 +119,7 @@ shared URI parseURI(String uri){
         String pathPart;
         String remains;
         if(exists sep){
-            pathPart = uri[0..sep-1];
+            pathPart = uri.segment(0, sep);
             remains = uri[sep...];
         }else{
             // no query/fragment part
@@ -154,7 +154,7 @@ shared URI parseURI(String uri){
             if(c == `?`){
                 // we have a query part
                 Integer end = uri.firstCharacterOccurrence(`#`) else uri.size;
-                parseQueryPart(uri[1..end-1]);
+                parseQueryPart(uri.segment(1, end-1));
                 return uri[end...];
             }
         }
