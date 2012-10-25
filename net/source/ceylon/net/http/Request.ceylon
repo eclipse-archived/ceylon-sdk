@@ -75,7 +75,7 @@ shared class Request(uri, method = "GET"){
     // initial headers
     setHeader("Host", host);
     setHeader("Accept", "*/*");
-    setHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11");
+    setHeader("User-Agent", "curl/7.21.6 (x86_64-pc-linux-gnu) libcurl/7.21.6 OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3");
     setHeader("Accept-Charset", "UTF-8");
     
     String prepareRequest() {
