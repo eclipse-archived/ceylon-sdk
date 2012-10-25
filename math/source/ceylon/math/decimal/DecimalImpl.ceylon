@@ -215,25 +215,16 @@ class DecimalImpl(BigDecimal num)
     shared actual Decimal positiveValue {
         return this;
     }
-    shared actual Decimal power(Decimal other) {
-        if (other.fractionalPart != zero) {
-            throw Exception("Fractional powers are not supported");
-        } else if (other > intMax || other < intMin) {
-            throw Exception("Exponent too large");
+    shared actual Decimal power(Integer other) {
+        Rounding? rounding = defaultRounding.get();
+        if (exists rounding) {
+            return powerRounded(other, rounding);
         }
-        if (is DecimalImpl other) {
-            Integer pow = other.implementation.longValue();
-            Rounding? rounding = defaultRounding.get();
-            if (exists rounding) {
-                return powerRounded(pow, rounding);
-            }
-            if (other.sign < 0) {
-                throw Exception("Negative powers are not supported with unlimited precision");
-            }
-            // TODO Special cases
-            return DecimalImpl(implementation.pow(pow));
+        if (other.sign < 0) {
+            throw Exception("Negative powers are not supported with unlimited precision");
         }
-        throw;
+        // TODO Special cases
+        return DecimalImpl(implementation.pow(other));
     }
     shared actual Decimal powerRounded(Integer other, 
                                        Rounding? rounding) {

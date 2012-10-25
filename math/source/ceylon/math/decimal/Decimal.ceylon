@@ -57,7 +57,7 @@ shared interface Decimal
         of DecimalImpl
         satisfies //Castable<Decimal> &
                   Scalar<Decimal> & 
-                  Exponentiable<Decimal,Decimal> {
+                  Exponentiable<Decimal,Integer> {
 
     doc "The platform-specific implementation object, if any. This 
          is provided for interoperation with the runtime platform."
@@ -138,7 +138,7 @@ shared interface Decimal
                                        Rounding? rounding = null);
 
     doc "The result of raising this number to the given power. 
-         Fractional powers are not supported. Unless invoked within 
+         Unless invoked within 
          `implicitlyRounded()` the result is computed to unlimited 
          precision and negative powers are not supported."
     see(powerRounded)
@@ -146,7 +146,7 @@ shared interface Decimal
     throws(Exception, "The exponent is too large or too small")
     throws(Exception, "The exponent was negative when attempting to 
                        compute a result to unlimited precision")
-    shared formal actual Decimal power(Decimal other);
+    shared formal actual Decimal power(Integer other);
 
     doc "The result of raising this number to the given power with 
          the given rounding. Fractional powers are not supported."

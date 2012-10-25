@@ -1,9 +1,8 @@
-import com.redhat.ceylon.sdk.test{...}
-import ceylon.math.decimal{
-    Decimal, round,
-    halfUp, halfDown, halfEven, up, down, ceiling, floor,
-    parseDecimal, decimalNumber, zero, one, ten, implicitlyRounded}
-import java.lang{ArithmeticException}
+import ceylon.math.decimal { Decimal, round, halfUp, parseDecimal, decimalNumber, zero, one, implicitlyRounded }
+
+import com.redhat.ceylon.sdk.test { ... }
+
+import java.lang { ArithmeticException }
 
 Boolean strictly(Object? expect, Object? got) {
     if (exists expect) {
@@ -144,25 +143,13 @@ void divided() {
 
 void power() {
     print("Decimal.power");
-    assertEquals(decimalNumber(4), decimalNumber(2)**decimalNumber(2), "2**2");
-    assertEquals(decimalNumber(8), decimalNumber(2)**decimalNumber(3), "2**3");
-    assertEquals(parseOrFail("0.25"), parseOrFail("0.5")**decimalNumber(2), "0.5**2");
+    assertEquals(decimalNumber(4), decimalNumber(2)**2, "2**2");
+    assertEquals(decimalNumber(8), decimalNumber(2)**3, "2**3");
+    assertEquals(parseOrFail("0.25"), parseOrFail("0.5")**2, "0.5**2");
     try {
-        Decimal d = decimalNumber(2)**decimalNumber(-2);
+        Decimal d = decimalNumber(2)**(-2);
         fail();
     } catch (Exception e) {
-    }
-    try {
-        Decimal d = decimalNumber(2)**parseOrFail("0.5");
-        fail();
-    } catch (Exception e) {
-        
-    }
-    try {
-        Decimal d = decimalNumber(2)**parseOrFail("100000000000000000000000000000000000000000000");
-        fail();
-    } catch (Exception e) {
-        
     }
 
     value r = round(2, halfUp);
@@ -171,7 +158,7 @@ void power() {
         "0.25.powerWithRounding(-2, 2halfUp))", strictly);
         
     variable value a := parseOrFail("2");
-    variable value b := decimalNumber(-2);
+    variable value b := -2;
     function calculation() {
         return a ** b;
     }
