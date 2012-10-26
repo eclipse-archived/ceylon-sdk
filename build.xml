@@ -38,6 +38,7 @@
   </target>
   
   <target name="test">
+    <iterate target="compile-module"/>
     <iterate target="test-module"/>
   </target>
   
