@@ -17,7 +17,7 @@
     <attribute name="target"/>
     <sequential>
       <subant target="@{target}">
-      	<filelist refid="module.dirs"/>
+        <filelist refid="module.dirs"/>
         <property name="build" location="build"/>
         <property name="build.modules" location="build/modules"/>
         <property name="test.reports" location="build/test-reports"/>
@@ -32,15 +32,15 @@
   <target name="compile">
     <iterate target="compile-module"/>
   </target>
-	
+  
   <target name="clean">
     <iterate target="clean-module"/>
   </target>
-	
+  
   <target name="test">
     <iterate target="test-module"/>
   </target>
-	
+  
   <target name="doc">
     <iterate target="doc-module"/>
   </target>
@@ -53,31 +53,31 @@
     <iterate target="herd-module"/>
   </target>
 
-	  <property file="build.properties"/>   
-	  <path id="ant-tasks">
-	    <pathelement location="${basedir}/../ceylon-dist/dist/repo/${ceylon.ant.jar}"/>
-	  </path>
-	  
-	  <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
-	  <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
-	  <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
-	  <taskdef name="ceylonmd" classname="com.redhat.ceylon.ant.CeylonModuleDescriptorTask" classpathref="ant-tasks"/>
+    <property file="build.properties"/>   
+    <path id="ant-tasks">
+      <pathelement location="${basedir}/../ceylon-dist/dist/repo/${ceylon.ant.jar}"/>
+    </path>
+    
+    <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
+    <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
+    <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
+    <taskdef name="ceylonmd" classname="com.redhat.ceylon.ant.CeylonModuleDescriptorTask" classpathref="ant-tasks"/>
 
-	<target name="compile-all">
-    	<pathconvert property="sourcepath" refid="module.dirs">
-    		<globmapper from="*" to="*/source"/>
-    	</pathconvert>
-		<ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true">
-		    <module name="ceylon.math"/>
-		    <module name="ceylon.collection"/>
-		    <module name="ceylon.io"/>
-		    <module name="ceylon.file"/>
-		    <module name="ceylon.process"/>
-		    <module name="ceylon.json"/>
-		    <module name="ceylon.net"/>
-		    <module name="ceylon.interop.java"/>
-		</ceylonc>
-	</target>
+  <target name="compile-all">
+      <pathconvert property="sourcepath" refid="module.dirs">
+        <globmapper from="*" to="*/source"/>
+      </pathconvert>
+    <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true">
+        <module name="ceylon.math"/>
+        <module name="ceylon.collection"/>
+        <module name="ceylon.io"/>
+        <module name="ceylon.file"/>
+        <module name="ceylon.process"/>
+        <module name="ceylon.json"/>
+        <module name="ceylon.net"/>
+        <module name="ceylon.interop.java"/>
+    </ceylonc>
+  </target>
 
     <target name="publish-to-herd" description="Publishes the whole SDK to Herd">
         <fail message="Syntax: ant publish-to-herd -Dherd=HERD_UPLOAD_URL -Duser=HERD_USER -Dpass=HERD_PASSWORD. You must first obtain a Herd upload URL.">
@@ -89,12 +89,12 @@
                 </or>
             </condition>
         </fail>
-    	<echo>Herd: ${herd}</echo> 
+      <echo>Herd: ${herd}</echo> 
         <pathconvert property="sourcepath" refid="module.dirs">
             <globmapper from="*" to="*/source"/>
         </pathconvert>
         <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
-        	out="${herd}" user="${user}" pass="${pass}">
+          out="${herd}" user="${user}" pass="${pass}">
             <module name="ceylon.math"/>
             <module name="ceylon.collection"/>
             <module name="ceylon.io"/>
