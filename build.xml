@@ -1,4 +1,4 @@
-<project name="Ceylon SDK" basedir=".">
+<project name="Ceylon SDK" basedir="." default="test">
 
   <!-- the modules, in dependency order -->
   <filelist id="module.dirs">
