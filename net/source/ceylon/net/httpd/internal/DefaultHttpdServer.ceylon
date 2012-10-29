@@ -1,4 +1,9 @@
-import java.lang { JInt = Integer }
+import java.lang { 
+	JInt = Integer,
+	Runtime { jRuntime = runtime }, 
+	JThread = Thread, 
+	JRunnable = Runnable 
+}
 import java.net { InetSocketAddress }
 import org.xnio { 
 	Xnio { xnioInstance = instance }, 
@@ -70,5 +75,18 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		InetSocketAddress socketAddress = InetSocketAddress(host, port);
 		AcceptingChannel<ConnectedChannel> acceptingChannel = createStreamServer(worker, socketAddress, channelListener, optionMap);
 		acceptingChannel.resumeAccepts();
+		
+		object shutdownHook satisfies JRunnable {
+			shared actual void run() {
+				//TODO clean up
+	    		print("Httpd stopped.");
+	    	}
+		}
+		
+		JThread shutdownThread = JThread(shutdownHook, "Shutdown thread");
+	    shutdownThread.daemon := false;
+	    jRuntime.addShutdownHook(shutdownThread);
+
+		worker.awaitTermination();
 	}
 }
