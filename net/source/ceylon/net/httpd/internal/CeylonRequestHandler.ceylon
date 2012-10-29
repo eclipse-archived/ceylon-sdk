@@ -28,6 +28,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 			} catch(Exception e) {
 				//TODO write to log
 				process.writeErrorLine("" e.string "");
+				e.printStackTrace();
 				response.responseStatus(500);
 			    response.responseDone();
 				utCompletionHandler.handleComplete();

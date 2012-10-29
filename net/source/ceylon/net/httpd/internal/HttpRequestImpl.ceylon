@@ -1,6 +1,6 @@
 import ceylon.net.httpd { HttpRequest, WebEndpointConfig }
 import io.undertow.server { HttpServerExchange }
-import java.util { Deque }
+import java.util { Deque, JMap = Map }
 import java.lang { JString = String }
 import ceylon.io { SocketAddress }
 
@@ -25,16 +25,27 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	}
 
 	shared actual String? parameter(String name) {
-		return parameters(name).first;
+		value params = parameters(name);
+		if (nonempty params) {
+			return params.first;
+		} else {
+			return null;
+		}
 	}
 
 	shared actual String[]|Empty parameters(String name) {
-		Deque<JString> params = exchange.queryParameters.get(name);
 		SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
+
+		value paramName = JString(name);
+		JMap<JString,Deque<JString>> qp = exchange.queryParameters;
 		
-		value it = params.iterator();
-		while (exists param = it.next()) {
-			sequenceBuilder.append(param.string);
+		if (qp.containsKey(paramName)) {
+			Deque<JString> params = qp.get(paramName);
+			value it = params.iterator();
+			while (it.hasNext()) {
+				value param = it.next(); 
+				sequenceBuilder.append(param.string);
+			}
 		}
 		return sequenceBuilder.sequence;
 	}
