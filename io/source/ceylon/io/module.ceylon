@@ -6,8 +6,8 @@ doc "This module allows you to read and write to streams, such as files, sockets
      See the ceylon.io package for usage examples."
 by "Stéphane Épardaud"
 license "Apache Software License"
-module ceylon.io '0.3.3' {
-    import ceylon.file '0.3.3';
-    import ceylon.collection '0.3.3';
+module ceylon.io '0.4' {
+    import ceylon.file '0.4';
+    import ceylon.collection '0.4';
     import java.base '7';
 }

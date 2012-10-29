@@ -108,6 +108,6 @@ doc "API for accessing hierarchical file systems. Clients use `Path`s to
          }
      "
 by "Gavin King"
-module ceylon.file '0.3.3' {
+module ceylon.file '0.4' {
     import java.base '7';
 }
