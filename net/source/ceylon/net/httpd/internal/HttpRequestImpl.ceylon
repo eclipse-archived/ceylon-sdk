@@ -3,11 +3,22 @@ import io.undertow.server { HttpServerExchange }
 import java.util { Deque, JMap = Map }
 import java.lang { JString = String }
 import ceylon.io { SocketAddress }
+import io.undertow.util { Headers { headerConntentType = \iCONTENT_TYPE}}
+import io.undertow.server.handlers.form {
+	FormEncodedDataHandler {applicationXWwwFormUrlEncoded = \iAPPLICATION_X_WWW_FORM_URLENCODED}, 
+	MultiPartHandler {multiparFormData = \iMULTIPART_FORM_DATA},
+	FormDataParser {fdpAttachmentKey = \iATTACHMENT_KEY}, 
+	FormData 
+}
+import ceylon.collection { HashMap }
 
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest {
 	
 	variable WebEndpointConfig? endpointConfig := null;
-		
+	
+	HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
+	variable FormData? formData := null;
+								
 	shared actual String? header(String name) {
 		return exchange.requestHeaders.getFirst(name);
 	}
@@ -34,11 +45,17 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	}
 
 	shared actual String[]|Empty parameters(String name) {
+		
+		if (parametersMap.contains(name)) {
+			if (exists params = parametersMap.item(name)) {
+				return params;
+			}
+		}
+		
 		SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
-
 		value paramName = JString(name);
 		JMap<JString,Deque<JString>> qp = exchange.queryParameters;
-		
+			
 		if (qp.containsKey(paramName)) {
 			Deque<JString> params = qp.get(paramName);
 			value it = params.iterator();
@@ -47,7 +64,11 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 				sequenceBuilder.append(param.string);
 			}
 		}
-		return sequenceBuilder.sequence;
+		
+		addPostValues(sequenceBuilder, name);
+		value params = sequenceBuilder.sequence;
+		parametersMap.put(name, params);
+		return params;
 	}
 
 	shared actual String uri() {
@@ -93,5 +114,46 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		return SocketAddress(address.hostString, address.port);
 	}
 
+	shared actual String? mimeType() {
+		return header(headerConntentType);
+	}
+
+	void addPostValues(SequenceBuilder<String> sequenceBuilder, String paramName) {
+		if (exists formData = parseFormData()) {
+			if (formData.contains(paramName)) {
+				Deque<FormData.FormValue> params = formData.get(paramName);
+				value it = params.iterator();
+				while (it.hasNext()) {
+					FormData.FormValue param = it.next(); 
+					String? fileName = param.fileName;
+					if (exists fileName) {
+						//TODO handle uploaded file	
+					} else {
+						sequenceBuilder.append(param.\ivalue);
+					}
+				}
+			}
+		}
+	}
+
+	FormData? parseFormData() {
+		if (exists f = formData) {
+			return f;
+		} else { 
+			String? mimeType = this.mimeType();
+	       	if (exists mimeType) {
+	       		if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.equals(multiparFormData)) {
+	        		FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
+	        		//is EagerFormParsingHandler is in chanin, parsing is already done
+	        		formData := formDataParser.parseBlocking();
+	       		}
+	    	} 
+	    	//If not parsable construct empty
+	    	if (!exists formData) {
+	    		formData := FormData();
+	    	}
+		}
+    	return formData;
+	}
 	
 }

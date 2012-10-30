@@ -31,5 +31,7 @@ shared interface HttpRequest {
 
     doc "Get the destination address of the HTTP request."
     shared formal SocketAddress destinationAddress();
+
+	shared formal String? mimeType();
  
 }

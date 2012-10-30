@@ -28,6 +28,7 @@ import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpH
 import io.undertow.server.handlers { CanonicalPathHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.httpd { Httpd, WebEndpointConfig, HttpdOptions }
+import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 
 shared class DefaultHttpdServer() satisfies Httpd {
 	
@@ -42,7 +43,16 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		//TODO log
 		print("starting on " host ":" port "");
 
-		HttpHandler errPageHandler = SimpleErrorPageHandler(ceylonHandler);
+		EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
+		eagerFormParsingHandler.next := ceylonHandler;
+		
+		FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
+		formEncodedDataHandler.next := eagerFormParsingHandler;
+		
+		MultiPartHandler multiPartHandler = MultiPartHandler();
+		multiPartHandler.next := formEncodedDataHandler;
+		
+		HttpHandler errPageHandler = SimpleErrorPageHandler(multiPartHandler);
 		HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
 		HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);
 		
