@@ -142,7 +142,8 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		} else { 
 			String? mimeType = this.mimeType();
 	       	if (exists mimeType) {
-	       		if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.equals(multiparFormData)) {
+	       		//TODO use equals instead of startsWith (workaround for parsing bug)
+	       		if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.startsWith(multiparFormData)) {
 	        		FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
 	        		//is EagerFormParsingHandler is in chanin, parsing is already done
 	        		formData := formDataParser.parseBlocking();

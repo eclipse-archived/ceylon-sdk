@@ -1,6 +1,7 @@
 import ceylon.net.httpd { WebEndpointAsync, HttpResponse, HttpCompletionHandler, HttpRequest, WebEndpointConfig }
-import ceylon.file { Path, parsePath, File, OpenFile }
+import ceylon.file { Path, parsePath, File }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
+import ceylon.io { newOpenFile }
 shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	
 	variable String? basePath := null;
@@ -17,7 +18,7 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	            //TODO log
 	            print("Serving file: " filePath.absolutePath.string "");
 	
-	            OpenFile openFile = file.open();
+	            value openFile = newOpenFile(file);
 	            
 	            try {
 	                variable Integer available := file.size;
