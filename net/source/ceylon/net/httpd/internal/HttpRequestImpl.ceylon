@@ -1,4 +1,4 @@
-import ceylon.net.httpd { HttpRequest, WebEndpointConfig }
+import ceylon.net.httpd { HttpRequest, WebEndpointConfig, HttpSession }
 import io.undertow.server { HttpServerExchange }
 import java.util { Deque, JMap = Map }
 import java.lang { JString = String }
@@ -10,7 +10,17 @@ import io.undertow.server.handlers.form {
 	FormDataParser {fdpAttachmentKey = \iATTACHMENT_KEY}, 
 	FormData 
 }
+import io.undertow.server.handlers {
+	Cookie { utRequestCookies = getRequestCookies , utResponseCookies = getResponseCookies }
+}
+
+import io.undertow.server.session { 
+	SessionManager {smAttachmentKey = \iATTACHMENT_KEY}, 
+	UtSession = Session,
+	SessionCookieConfig { defaultSessionCookieName = \iDEFAULT_SESSION_ID }
+}
 import ceylon.collection { HashMap }
+import org.xnio { IoFuture }
 
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest {
 	
@@ -118,6 +128,29 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		return header(headerConntentType);
 	}
 
+	shared actual HttpSession session() {
+		variable UtSession? utSession := null;
+		SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
+   		if (exists String sessionId = findSessionId()) {
+   			IoFuture<UtSession> sessionFuture = sessionManager.getSession(exchange, sessionId);
+	   		sessionFuture.await();
+	   		utSession := sessionFuture.get();
+   		}
+
+		if (!exists utSession) {
+			IoFuture<UtSession> sessionFuture = sessionManager.createSession(exchange);
+			sessionFuture.await();
+	   		utSession := sessionFuture.get();
+		}
+		
+   		if (exists u = utSession) {
+   			return DefaultHttpSession(u);
+   		}
+   		
+   		//TODO
+   		throw Exception("Cannot get or create session.");
+	}
+
 	void addPostValues(SequenceBuilder<String> sequenceBuilder, String paramName) {
 		if (exists formData = parseFormData()) {
 			if (formData.contains(paramName)) {
@@ -156,5 +189,16 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		}
     	return formData;
 	}
+	
+	String? findSessionId() {
+        JMap<JString, Cookie>? cookies = utRequestCookies(exchange);
+        if(exists cookies) {
+            Cookie? sessionId = cookies.get(JString(defaultSessionCookieName));
+            if(exists sessionId) {
+                return sessionId.\ivalue;
+            }
+        }
+        return null;
+    }
 	
 }

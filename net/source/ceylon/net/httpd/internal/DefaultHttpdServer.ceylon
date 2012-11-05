@@ -25,10 +25,11 @@ import org.xnio {
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
 import com.redhat.ceylon.javaadapter {XnioHelper {createStreamServer}}
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
-import io.undertow.server.handlers { CanonicalPathHandler }
+import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.httpd { Httpd, WebEndpointConfig, HttpdOptions }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
+import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler }
 
 shared class DefaultHttpdServer() satisfies Httpd {
 	
@@ -43,15 +44,21 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		//TODO log
 		print("starting on " host ":" port "");
 
+        SessionAttachmentHandler session = SessionAttachmentHandler(InMemorySessionManager());
+        session.next := ceylonHandler;
+
+        CookieHandler cookieHandler = CookieHandler();
+        cookieHandler.next := session;
+		
 		EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
-		eagerFormParsingHandler.next := ceylonHandler;
+		eagerFormParsingHandler.next := cookieHandler;
 		
 		FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
 		formEncodedDataHandler.next := eagerFormParsingHandler;
 		
 		MultiPartHandler multiPartHandler = MultiPartHandler();
 		multiPartHandler.next := formEncodedDataHandler;
-		
+
 		HttpHandler errPageHandler = SimpleErrorPageHandler(multiPartHandler);
 		HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
 		HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);

@@ -33,5 +33,8 @@ shared interface HttpRequest {
     shared formal SocketAddress destinationAddress();
 
 	shared formal String? mimeType();
+
+	shared formal HttpSession session();
+
  
 }

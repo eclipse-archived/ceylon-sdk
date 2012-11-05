@@ -7,7 +7,7 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	variable String? basePath := null;
 		
 	shared actual void init(WebEndpointConfig webEndpointConfig) {
-		basePath := webEndpointConfig.parameter("filesDir");
+		basePath := webEndpointConfig.parameter("files-dir");
 	}
 	
 	shared actual void service(HttpRequest request, HttpResponse response, HttpCompletionHandler completionHandler) {

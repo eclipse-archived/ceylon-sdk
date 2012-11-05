@@ -14,7 +14,6 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 			HttpRequestImpl request = HttpRequestImpl(httpServerExchange);
 			HttpResponseImpl response = HttpResponseImpl(httpServerExchange);
 
-
 			try {
 				String requestPath = request.path();
 				WebEndpointConfig? webEndpointConfig = getWebEndpointConfig(requestPath);
