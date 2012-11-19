@@ -31,7 +31,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     }
     
     shared actual Object clone {
-        return Object(contents...);
+        return Object(contents.sequence...);
     }
     
     shared actual Nothing|String|Boolean|Integer|Float|Object|Array|NullInstance item(LangObject key) {

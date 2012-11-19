@@ -307,8 +307,8 @@ shared class HashSet<Element>()
     shared actual Set<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
-        ret.addAll(this...);
-        ret.addAll(set...);
+        ret.addAll(this.sequence...);
+        ret.addAll(set.sequence...);
         return ret;
     }
 

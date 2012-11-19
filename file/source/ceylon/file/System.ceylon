@@ -35,7 +35,7 @@ shared System createSystem(
         doc "A sequence of file system-specific named 
              values." 
         String->String... properties) 
-        = internalCreateSystem;
+        => internalCreateSystem(uriString, properties...);
 
 doc "Create a `System` for accessing entries in a zip 
      file."

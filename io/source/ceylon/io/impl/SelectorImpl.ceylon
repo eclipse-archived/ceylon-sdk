@@ -13,14 +13,14 @@ import ceylon.collection { HashMap, MutableMap }
 class Key(socket = null, onRead = null, onWrite = null, 
           connector = null, onConnect = null,
           acceptor = null, onAccept = null) {
-    shared variable Callable<Boolean, FileDescriptor>? onRead;
-    shared variable Callable<Boolean, FileDescriptor>? onWrite;
+    shared variable Callable<Boolean, <FileDescriptor>>? onRead;
+    shared variable Callable<Boolean, <FileDescriptor>>? onWrite;
     shared variable shared FileDescriptor? socket;
     
-    shared variable Callable<Void, Socket>? onConnect;
+    shared variable Callable<Void, <Socket>>? onConnect;
     shared variable SocketConnectorImpl? connector;
     
-    shared variable Callable<Boolean, Socket>? onAccept;
+    shared variable Callable<Boolean, <Socket>>? onAccept;
     shared variable ServerSocketImpl? acceptor;
 }
 

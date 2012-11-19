@@ -42,7 +42,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance... val
     }
 
     shared actual Array clone {
-        return Array(list...);
+        return Array(list.sequence...);
     }
 
     shared actual Integer? lastIndex {
@@ -50,7 +50,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance... val
     }
     
     shared actual Array reversed {
-        return Array(list.reversed...);
+        return Array(list.reversed.sequence...);
     }
     
     shared actual Array segment(Integer from, Integer length) {

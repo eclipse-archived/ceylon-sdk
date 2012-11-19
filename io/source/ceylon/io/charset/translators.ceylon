@@ -9,7 +9,7 @@ doc "Transforms a [consumer] method that accepts [[String]]s into a consumer met
      and passes them on to the given [[consumer]]
      method which accepts decoded [[String]] objects."
 by "Stéphane Épardaud"
-shared Callable<Void,ByteBuffer> byteConsumerToStringConsumer(Charset charset, void consumer(String buffer)){
+shared Callable<Void,<ByteBuffer>> byteConsumerToStringConsumer(Charset charset, void consumer(String buffer)){
     Decoder decoder = charset.newDecoder();
     void translator(ByteBuffer buffer){
         print("Translator called");
@@ -29,7 +29,7 @@ doc "Transforms a [[string]] into a producer method
      [[ByteBuffer]] parameters, and fills them with the given [[string]],
      encoded using the given [[charset]]."
 by "Stéphane Épardaud"
-shared Callable<Void,ByteBuffer> stringToByteProducer(Charset charset, String string){
+shared Callable<Void,<ByteBuffer>> stringToByteProducer(Charset charset, String string){
     Encoder encoder = charset.newEncoder();
     CharacterBuffer input = newCharacterBufferWithData(string);
     void producer(ByteBuffer buffer){

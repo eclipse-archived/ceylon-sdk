@@ -83,4 +83,4 @@ shared interface File
             String? encoding=null);
 }
 
-shared Boolean sameFile(File x, File y) = sameFileInternal;
+shared Boolean sameFile(File x, File y) => sameFileInternal(x, y);
