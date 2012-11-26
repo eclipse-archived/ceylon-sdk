@@ -243,6 +243,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     shared actual List<Element> clone {
         LinkedList<Element> ret = LinkedList<Element>();
         ret.head := head;
+        ret.tail := tail;
         ret._size := size;
         return ret;
     }
