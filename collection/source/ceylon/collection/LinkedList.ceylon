@@ -109,6 +109,10 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                         // changing the head
                         head := cell.cdr;
                     }
+                    // see if we need to update the tail
+                    if(!exists cell.cdr){
+                        tail := prev;
+                    }
                     _size--;
                     return;
                 }
