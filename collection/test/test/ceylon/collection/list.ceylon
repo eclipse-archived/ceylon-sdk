@@ -118,9 +118,16 @@ void testList(){
     assertEquals("empty", l[5]);
     assertEquals("last", l[8]);
 
+    l.remove(8);
+    assertEquals(8, l.size);
+    assertEquals("[foo, bar, empty, empty, empty, empty, last, last]", l.string);
+
+    l.add("end");
+    assertEquals("[foo, bar, empty, empty, empty, empty, last, last, end]", l.string);
+    assertEquals(9, l.size);
+
     l.clear();
     assertEquals("[]", l.string);
     assertEquals(0, l.size);
     assertTrue(!l.contains("foo"));
 }
-
