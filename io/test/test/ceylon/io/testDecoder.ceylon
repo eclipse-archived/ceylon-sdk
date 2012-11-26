@@ -39,6 +39,7 @@ void testUTF8Decoder(){
     // samples from http://en.wikipedia.org/wiki/UTF-8
     testDecoder(utf8, "$", hex('24'));
     testDecoder(utf8, "¢", hex('C2'), hex('A2'));
+    testDecoder(utf8, "ä", hex('C3'), hex('A4'));
     testDecoder(utf8, "€", hex('E2'), hex('82'), hex('AC'));
     testDecoder(utf8, "𤭢", hex('F0'), hex('A4'), hex('AD'), hex('A2'));
 

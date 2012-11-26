@@ -41,6 +41,11 @@ void testGetUtf8(){
     assertTrue(contents.contains("</html>"), "Contains end </html>");
 }
 
+void testGetUtf8_2(){
+    value contents = get("http://www.somatik.be/temp/me.php");
+    assertTrue(contents.contains("Fränçis De Brabandere"), "Contains Fränçis De Brabandere");
+}
+
 void testGetChunked(){
     value contents = get("http://www.google.fr");
     assertTrue(contents.contains("<title>Google</title>"), "Contains title");
