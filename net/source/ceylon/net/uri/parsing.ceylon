@@ -126,7 +126,7 @@ shared URI parseURI(String uri){
             pathPart = uri;
             remains = "";
         }
-        if(nonempty pathPart){
+        if(!pathPart.empty){
             variable Boolean first := true;
             for(String part in pathPart.split((Character ch) ch == `/`, true, false)){
                 if(first && part.empty){
