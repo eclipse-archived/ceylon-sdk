@@ -19,16 +19,16 @@ class ConcreteDirectory(JPath jpath)
         return sb.sequence;
     }
     shared actual Iterable<ExistingResource> children(String filter) {
-        return elements { for (p in childPaths(filter)) 
-                 if (is ExistingResource r=p.resource) r };
+        return elements { {for (p in childPaths(filter)) 
+                 if (is ExistingResource r=p.resource) r}... };
     }
     shared actual Iterable<File> files(String filter) {
-        return elements { for (p in childPaths(filter))
-                 if (is File r=p.resource) r };
+        return elements { {for (p in childPaths(filter))
+                 if (is File r=p.resource) r}... };
     }
     shared actual Iterable<Directory> childDirectories(String filter) {
-        return elements { for (p in childPaths(filter))
-                 if (is Directory r=p.resource) r };
+        return elements { {for (p in childPaths(filter))
+                 if (is Directory r=p.resource) r}... };
     }
     shared actual Resource childResource(Path|String subpath) {
         return path.childPath(subpath).resource;
