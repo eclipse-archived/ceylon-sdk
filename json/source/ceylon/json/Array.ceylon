@@ -57,8 +57,16 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance... val
         return Array(list.segment(from, length)...);
     }
     
-    shared actual Array span(Integer from, Integer? to) {
+    shared actual Array span(Integer from, Integer to) {
         return Array(list.span(from, to)...);
+    }
+    
+    shared actual Array spanFrom(Integer from) {
+        return Array(list.spanFrom(from)...);
+    }
+    
+    shared actual Array spanTo(Integer to) {
+        return Array(list.spanTo(to)...);
     }
     
     shared actual void addAll(String|Boolean|Integer|Float|Object|Array|NullInstance... values) {

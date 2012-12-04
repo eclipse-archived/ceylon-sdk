@@ -153,7 +153,17 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     
     doc "Not implemented yet"
     // FIXME
-    shared actual Sequence<Element> span(Integer from, Integer? to) {
+    shared actual Sequence<Element> span(Integer from, Integer to) {
+        return bottom;
+    }
+    doc "Not implemented yet"
+    // FIXME
+    shared actual Sequence<Element> spanFrom(Integer from) {
+        return bottom;
+    }
+    doc "Not implemented yet"
+    // FIXME
+    shared actual Sequence<Element> spanTo(Integer to) {
         return bottom;
     }
     doc "Not implemented yet"
