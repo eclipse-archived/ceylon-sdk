@@ -51,6 +51,6 @@ doc "API for running native commands in a child process.
        the `waitForExit()` method of `Process`."
 by "Gavin King"
 module ceylon.process '0.4' {
-    import ceylon.file '0.4';
+    export import ceylon.file '0.4';
     import java.base '7';
 }

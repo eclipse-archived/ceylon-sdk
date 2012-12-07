@@ -5,7 +5,7 @@ doc "This module offers some components for JDBC-based
 by "Enrique Zamudio"
 license "Apache Software License 2.0"
 module ceylon.dbc '0.4' {
-    import ceylon.math '0.4';
+    export import ceylon.math '0.4';
     import java.base '7';
-    import java.jdbc '7';
+    export import java.jdbc '7';
 }

@@ -29,5 +29,5 @@ doc "Contains everything required to parse and serialise JSON data.
 by "Stéphane Épardaud"
 license "Apache Software License"
 module ceylon.json '0.4' {
-    import ceylon.collection '0.4';
+    export import ceylon.collection '0.4';
 }

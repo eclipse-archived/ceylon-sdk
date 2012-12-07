@@ -12,7 +12,7 @@ doc "This module allows you to represent URIs, and to connect to HTTP servers.
 by "Stéphane Épardaud"
 license "Apache Software License"
 module ceylon.net '0.4' {
-    import ceylon.collection '0.4';
-    import ceylon.io '0.4';
+    export import ceylon.collection '0.4';
+    export import ceylon.io '0.4';
     import java.base '7';
 }
