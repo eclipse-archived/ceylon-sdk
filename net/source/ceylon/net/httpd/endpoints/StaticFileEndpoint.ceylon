@@ -7,13 +7,13 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	variable String? basePath := null;
 		
 	shared actual void init(WebEndpointConfig webEndpointConfig) {
-		basePath := webEndpointConfig.parameter("files-dir");
+		basePath := webEndpointConfig.attribute("files-dir");
 	}
 	
 	shared actual void service(HttpRequest request, HttpResponse response, HttpCompletionHandler completionHandler) {
 		String path = request.relativePath();
 		if (exists b = basePath) {
-			Path filePath = parsePath("" b "" path "");
+			Path filePath = parsePath(b + path);
 			if (is File file = filePath.resource) {
 	            //TODO log
 	            print("Serving file: " filePath.absolutePath.string "");
@@ -43,12 +43,12 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	        }
 	        else {
 	            response.responseStatus(404);
-	            //TODO
+	            //TODO log
 	            print("file does not exist");
 	        }
 	    } else {
             response.responseStatus(500);
-            //TODO
+            //TODO move to init
             print("Missing init param filesPath.");
 	    }
 		completionHandler.handleComplete();

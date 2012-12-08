@@ -2,7 +2,7 @@ import java.lang {
 	JInt = Integer,
 	Runtime { jRuntime = runtime }, 
 	JThread = Thread, 
-	JRunnable = Runnable 
+	JRunnable = Runnable, ClassLoader 
 }
 import java.net { InetSocketAddress }
 import org.xnio { 
@@ -27,16 +27,39 @@ import com.redhat.ceylon.javaadapter {XnioHelper {createStreamServer}}
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Httpd, WebEndpointConfig, HttpdOptions }
+import ceylon.net.httpd { Httpd, HttpdOptions, WebEndpointConfig }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler }
+import org.jboss.modules { ModuleClassLoader }
 
 shared class DefaultHttpdServer() satisfies Httpd {
+	
+	value jh = JavaHelper();
 	
 	CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
 
 	shared actual void addWebEndpointConfig(WebEndpointConfig webEndpointConfig) {
 		ceylonHandler.addWebEndpointMapping(webEndpointConfig);
+	}
+
+	shared actual void loadWebEndpointConfig(String? _moduleId, String pathToModuleConfig) {
+		variable String moduleId;
+
+		if (exists _moduleId) {
+			moduleId := _moduleId;
+		} else {
+			moduleId := getLocalModuleId();
+		}
+		
+		List<WebEndpointConfig> webEndpointConfigs = parseWebEndpointConfig(moduleId, pathToModuleConfig);
+		
+		for (WebEndpointConfig webEndpointConfig in webEndpointConfigs) {
+			ceylonHandler.addWebEndpointMapping(webEndpointConfig);
+		}
+	}
+
+	shared actual void scan() {
+	//TODO scan for configs
 	}
 
 	shared actual void start(Integer port, String host, HttpdOptions httpdOptions) {
@@ -106,4 +129,16 @@ shared class DefaultHttpdServer() satisfies Httpd {
 
 		worker.awaitTermination();
 	}
+
+	String getLocalModuleId() { 
+		ClassLoader cl = jh.getClassLoader(this);
+		if (is ModuleClassLoader cl) {
+			return cl.\imodule.identifier.string;
+		} else {
+			//running in IDE
+			return "--flat-class-loader--";
+		}
+	}
+	
+	
 }

@@ -1,4 +1,4 @@
-import ceylon.net.httpd { HttpRequest, WebEndpointConfig, HttpSession }
+import ceylon.net.httpd { HttpRequest, HttpSession, WebEndpointConfig }
 import io.undertow.server { HttpServerExchange }
 import java.util { Deque, JMap = Map }
 import java.lang { JString = String }
@@ -92,6 +92,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	shared actual String relativePath() {
 		String requestPath = path();
 		if (exists e = endpointConfig) {
+			//TODO path could be regex
 			String mappingPath = e.path;
 			return requestPath[mappingPath.size .. (requestPath.size - 1 )];
 		}
@@ -133,13 +134,11 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
    		if (exists String sessionId = findSessionId()) {
    			IoFuture<UtSession> sessionFuture = sessionManager.getSession(exchange, sessionId);
-	   		sessionFuture.await();
 	   		utSession := sessionFuture.get();
    		}
 
 		if (!exists utSession) {
 			IoFuture<UtSession> sessionFuture = sessionManager.createSession(exchange);
-			sessionFuture.await();
 	   		utSession := sessionFuture.get();
 		}
 		
@@ -147,7 +146,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
    			return DefaultHttpSession(u);
    		}
    		
-   		//TODO
+   		//TODO narrow exception
    		throw Exception("Cannot get or create session.");
 	}
 

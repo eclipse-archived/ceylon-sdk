@@ -32,8 +32,8 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         if (exists r = response) {
             return r;
         }
-        //TODO exception
-        throw;
+        //TODO narrow exception
+        throw Exception("response is not avaialble");
     }
 
     shared actual void writeString(String string) {
@@ -52,7 +52,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
 				try {
 					response.awaitWritable();
 				} catch(JIOException e) {
-					//TODO
+					//TODO log
 					print(e);
 				}
 			}

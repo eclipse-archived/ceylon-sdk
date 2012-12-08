@@ -10,7 +10,6 @@ class DefaultHttpSession(UtSession utSession) satisfies HttpSession {
     
     shared actual Object? item(String key) {
        	IoFuture<Object> attributeFuture = utSession.getAttribute(key.string);
-       	attributeFuture.await();
        	return attributeFuture.get();
     }
     

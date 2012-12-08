@@ -1,20 +1,19 @@
-import ceylon.collection { HashMap }
+import ceylon.net.httpd.internal { DefaultWebEndpointConfig }
 
+by("Matej Lazar")
+shared interface WebEndpointConfig {
+	
+	shared formal String path;
+	
+	shared formal String className;
 
-shared class WebEndpointConfig(path, moduleName, className, moduleSlot) {
+	shared formal String moduleId;
 
-	shared String path;
-	shared String moduleName;
-	shared String className;
-	shared String moduleSlot;
-	HashMap<String, String> parameters = HashMap<String, String>();
+	shared formal void addAttribute(String name, String paramValue);
 
-	shared void addParameter(String name, String paramValue) {
-		parameters.put(name, paramValue);
-	}
+	shared formal String? attribute(String name);
+}
 
-	shared String? parameter(String name) {
-		return parameters.item(name); 
-	}
-
+shared WebEndpointConfig newConfig(String path, String className, String moduleId) {
+	return DefaultWebEndpointConfig(path, className, moduleId);
 }

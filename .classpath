@@ -2,6 +2,24 @@
 <classpath>
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="src" path="test-source"/>
+	<classpathentry kind="src" path="sdk-test/source"/>
+	<classpathentry kind="src" path="interop.java/source"/>
+	<classpathentry kind="src" path="interop.java/test"/>
+	<classpathentry kind="src" path="math/source"/>
+	<classpathentry kind="src" path="math/test"/>
+	<classpathentry kind="src" path="collection/source"/>
+	<classpathentry kind="src" path="collection/test"/>
+	<classpathentry kind="src" path="file/source"/>
+	<classpathentry kind="src" path="file/test"/>
+	<classpathentry kind="src" path="process/source"/>
+	<classpathentry kind="src" path="json/source"/>
+	<classpathentry kind="src" path="json/test"/>
+	<classpathentry kind="src" path="net/source"/>
+	<classpathentry kind="src" path="net/test"/>
+	<classpathentry kind="src" path="io/source"/>
+	<classpathentry kind="src" path="io/test"/>
+	<classpathentry kind="src" path="dbc/source"/>
+	<classpathentry kind="src" path="util/source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.redhat.ceylon.eclipse.ui.cpcontainer.CEYLON_CONTAINER/default"/>
 	<classpathentry kind="output" path="build/classes"/>
