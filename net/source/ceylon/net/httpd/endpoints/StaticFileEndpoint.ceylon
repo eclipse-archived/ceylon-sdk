@@ -1,5 +1,5 @@
 import ceylon.net.httpd { WebEndpointAsync, HttpResponse, HttpCompletionHandler, HttpRequest, WebEndpointConfig, HttpdInternalException }
-import ceylon.file { Path, parsePath, File }
+import ceylon.file { Path, File, parsePath }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io { newOpenFile }
 shared class StaticFileEndpoint() satisfies WebEndpointAsync {

@@ -23,7 +23,6 @@ import org.xnio {
 	ChannelListener
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
-import com.redhat.ceylon.javaadapter {XnioHelper {createStreamServer}}
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
@@ -35,6 +34,8 @@ import org.jboss.modules { ModuleClassLoader }
 shared class DefaultHttpdServer() satisfies Httpd {
 	
 	CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
+
+	JavaHelper jh = JavaHelper();
 
 	shared actual void addWebEndpointConfig(WebEndpointConfig webEndpointConfig) {
 		ceylonHandler.addWebEndpointMapping(webEndpointConfig);
@@ -73,7 +74,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		print("starting on " host ":" port "");
 
         SessionAttachmentHandler session = SessionAttachmentHandler(InMemorySessionManager());
-        session.next := ceylonHandler;
+        session.setNext(ceylonHandler);
 
         CookieHandler cookieHandler = CookieHandler();
         cookieHandler.next := session;
@@ -91,7 +92,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
 		HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);
 		
-		HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192));
+		HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
 		openListener.rootHandler := httpTransferEncoding;
 		
 		object channelListener satisfies ChannelListener<AcceptingChannel<ConnectedStreamChannel>> {
@@ -118,12 +119,12 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		XnioWorker worker = xnioInstance.createWorker(optionMap);
 
 		InetSocketAddress socketAddress = InetSocketAddress(host, port);
-		AcceptingChannel<ConnectedChannel> acceptingChannel = createStreamServer(worker, socketAddress, channelListener, optionMap);
+		AcceptingChannel<ConnectedChannel> acceptingChannel = jh.createStreamServer(worker, socketAddress, channelListener, optionMap);
 		acceptingChannel.resumeAccepts();
 		
 		object shutdownHook satisfies JRunnable {
 			shared actual void run() {
-				//TODO clean up
+	    		//TODO log
 	    		print("Httpd stopped.");
 	    	}
 		}
@@ -136,7 +137,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 	}
 
 	String getLocalModuleId() { 
-		ClassLoader cl = JavaHelper().getClassLoader(this);
+		ClassLoader cl = jh.getClassLoader(this);
 		if (is ModuleClassLoader cl) {
 			return cl.\imodule.identifier.string;
 		} else {

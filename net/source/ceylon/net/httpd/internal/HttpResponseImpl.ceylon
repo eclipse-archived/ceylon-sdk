@@ -4,6 +4,7 @@ import org.xnio.channels { StreamSinkChannel, ChannelFactory, Channels {chFlushB
 import java.nio { JByteBuffer = ByteBuffer {wrapByteBuffer = wrap} }
 import java.lang { JString = String }
 import java.io { JIOException = IOException }
+import io.undertow.util { HttpString }
 
 shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpResponse {
 
@@ -57,7 +58,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
     }
     
     shared actual void addHeader(String headerName, String headerValue) {
-    	exchange.responseHeaders.add(headerName, headerValue);
+    	exchange.responseHeaders.add(HttpString(headerName), headerValue);
 	}
 
 	shared actual void responseStatus(Integer responseStatusCode) {

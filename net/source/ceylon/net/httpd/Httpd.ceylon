@@ -15,4 +15,4 @@ shared interface Httpd {
 	
 }
 
-shared Httpd newInstance() = DefaultHttpdServer;
+shared Httpd newInstance() => DefaultHttpdServer();

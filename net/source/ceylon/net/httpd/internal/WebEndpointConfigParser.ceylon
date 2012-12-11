@@ -1,6 +1,6 @@
 import org.jboss.modules { ModuleClassLoader, JModule = Module, ModuleIdentifier { miFromString = fromString} }
 import java.lang { ClassLoader }
-import ceylon.file { Reader, Path, parseURI, File }
+import ceylon.file { Reader, Path, File, parsePath }
 import ceylon.util.properties { Property, loadPropertiesFile, Properties }
 import java.net { URL }
 import ceylon.net.httpd { WebEndpointConfig, HttpdException, HttpdConfigurationException }
@@ -14,7 +14,7 @@ shared class WebEndpointConfigParser(String moduleId, String configFileName) {
 		//TODO use getResourceS and define properties overriding
 		URL? url = cl.getResource(configFileName);
 		if(exists url) { 
-			Path filePath = parseURI(url.toURI().string);
+			Path filePath = parsePath(url.toURI().string);
 			
 			if (is File file = filePath.resource) {
 				Reader reader = file.reader();

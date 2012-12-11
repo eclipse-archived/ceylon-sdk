@@ -63,17 +63,12 @@ public class JavaHelper {
     	return object.getClass().getClassLoader();
     }
     
-    public static InputStream openResourceStream(Object obj, String resourceName) throws IOException {
-    	ClassLoader cl = getClassLoader(obj);
-    	//TODO use get resources and define overriding
-    	URL url = cl.getResource(resourceName);
-    	return url.openStream();
-    }
-    
     /**
      * workaround for: ambiguous reference to overloaded method or class: InputStreamReader 
      */
     public static InputStreamReader newInputStreamReader(InputStream in) {
     	return new InputStreamReader(in);
     }
+    
+    
 }
