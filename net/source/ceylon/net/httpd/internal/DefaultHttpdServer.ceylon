@@ -27,14 +27,12 @@ import com.redhat.ceylon.javaadapter {XnioHelper {createStreamServer}}
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Httpd, HttpdOptions, WebEndpointConfig }
+import ceylon.net.httpd { Httpd, HttpdOptions, WebEndpointConfig, HttpdInternalException }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler }
 import org.jboss.modules { ModuleClassLoader }
 
 shared class DefaultHttpdServer() satisfies Httpd {
-	
-	value jh = JavaHelper();
 	
 	CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
 
@@ -43,18 +41,25 @@ shared class DefaultHttpdServer() satisfies Httpd {
 	}
 
 	shared actual void loadWebEndpointConfig(String? _moduleId, String pathToModuleConfig) {
-		variable String moduleId;
+		variable String? moduleId := null;
 
 		if (exists _moduleId) {
-			moduleId := _moduleId;
-		} else {
+			if (!_moduleId.empty) {
+				moduleId := _moduleId;
+			}
+		}
+		if (!exists moduleId) {
 			moduleId := getLocalModuleId();
 		}
-		
-		List<WebEndpointConfig> webEndpointConfigs = parseWebEndpointConfig(moduleId, pathToModuleConfig);
-		
-		for (WebEndpointConfig webEndpointConfig in webEndpointConfigs) {
-			ceylonHandler.addWebEndpointMapping(webEndpointConfig);
+
+		if (exists mid = moduleId) {
+			List<WebEndpointConfig> webEndpointConfigs = parseWebEndpointConfig(mid, pathToModuleConfig);
+			
+			for (WebEndpointConfig webEndpointConfig in webEndpointConfigs) {
+				ceylonHandler.addWebEndpointMapping(webEndpointConfig);
+			}
+		} else {
+			throw HttpdInternalException("ModuleId not defined.");
 		}
 	}
 
@@ -131,7 +136,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 	}
 
 	String getLocalModuleId() { 
-		ClassLoader cl = jh.getClassLoader(this);
+		ClassLoader cl = JavaHelper().getClassLoader(this);
 		if (is ModuleClassLoader cl) {
 			return cl.\imodule.identifier.string;
 		} else {
@@ -139,6 +144,4 @@ shared class DefaultHttpdServer() satisfies Httpd {
 			return "--flat-class-loader--";
 		}
 	}
-	
-	
 }

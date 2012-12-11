@@ -1,4 +1,4 @@
-import ceylon.net.httpd { HttpRequest, HttpSession, WebEndpointConfig }
+import ceylon.net.httpd { HttpRequest, HttpSession, WebEndpointConfig, HttpdInternalException }
 import io.undertow.server { HttpServerExchange }
 import java.util { Deque, JMap = Map }
 import java.lang { JString = String }
@@ -146,8 +146,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
    			return DefaultHttpSession(u);
    		}
    		
-   		//TODO narrow exception
-   		throw Exception("Cannot get or create session.");
+   		throw HttpdInternalException("Cannot get or create session.");
 	}
 
 	void addPostValues(SequenceBuilder<String> sequenceBuilder, String paramName) {

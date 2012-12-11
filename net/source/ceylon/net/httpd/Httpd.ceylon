@@ -3,9 +3,10 @@ import ceylon.net.httpd.internal { DefaultHttpdServer }
 by "Matej Lazar"
 shared interface Httpd {
 	
+	doc "Not implemented yet! Use addWebEndpointConfig."
 	shared formal void loadWebEndpointConfig(String? moduleId = null, String pathToModuleConfig = "web.properties");
 
-	doc "scan for endpoint configs"
+	doc "Not implemented yet! Use addWebEndpointConfig. Scan for endpoint configs."
 	shared formal void scan();
 	
 	shared formal void addWebEndpointConfig(WebEndpointConfig webEndpointConfig);

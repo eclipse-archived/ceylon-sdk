@@ -47,18 +47,6 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 			webEndpointConfig.setWebEndpoint(webEndpoint);
 		}
 
-		//if(!exists webEndpoint) {
-		//	//TODO use synchronized to make shure that WebEndpoint is singleton
-		//	webEndpoint := webModuleLoader.instance(webEndpointConfig);
-		//	webEndpointConfig.setWebEndpoint(webEndpoint);
-		//	
-		//	if (exists w = webEndpoint) {
-		//		webEndpointConfig.setWebEndpoint(w);
-		//	} else {
-		//		//TODO something is wrong 
-		//	}
-		//}
-		
 		value webEndpoint = webEndpointConfig.webEndpoint;
 		
 		if (is WebEndpointAsync w = webEndpoint) {

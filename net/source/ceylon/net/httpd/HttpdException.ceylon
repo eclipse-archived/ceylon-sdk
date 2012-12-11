@@ -1,2 +1,2 @@
-shared class HttpdException(String message) extends Exception(message) {
+shared class HttpdException(String description, Exception? cause = null) extends Exception(description, cause) {
 }

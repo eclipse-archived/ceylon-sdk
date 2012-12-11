@@ -1,21 +1,17 @@
-import ceylon.net.httpd.internal { JavaHelper }
 import org.jboss.modules { ModuleClassLoader, JModule = Module, ModuleIdentifier { miFromString = fromString} }
 import java.lang { ClassLoader }
 import ceylon.file { Reader, Path, parseURI, File }
-import ceylon.util.properties { Property }
-import ceylon.util.properties { loadPropertiesFile, Properties }
+import ceylon.util.properties { Property, loadPropertiesFile, Properties }
 import java.net { URL }
-import ceylon.net.httpd { WebEndpointConfig }
+import ceylon.net.httpd { WebEndpointConfig, HttpdException, HttpdConfigurationException }
 
 shared class WebEndpointConfigParser(String moduleId, String configFileName) {
 
-	JavaHelper jh = JavaHelper();
-	
 	shared WebEndpointConfig[] parse() {
 		SequenceBuilder<WebEndpointConfig> sb = SequenceBuilder<WebEndpointConfig>();
 		
 		ClassLoader cl = getModuleClassLoader(moduleId);
-
+		//TODO use getResourceS and define properties overriding
 		URL? url = cl.getResource(configFileName);
 		if(exists url) { 
 			Path filePath = parseURI(url.toURI().string);
@@ -33,14 +29,13 @@ shared class WebEndpointConfigParser(String moduleId, String configFileName) {
 				}
 			}
 		} else {
-			//TODO narrow exception
-			throw Exception("Properties file [" configFileName "] not found.");
+			throw HttpdException("Properties file [" configFileName "] not found.");
 		}
 		return sb.sequence;
 	} 
 
 	ClassLoader getModuleClassLoader(String moduleId) {
-		ClassLoader cl = jh.getClassLoader(this);
+		ClassLoader cl = JavaHelper().getClassLoader(this);
 		if (is ModuleClassLoader cl) {
 			value mi = miFromString(moduleId);
 			JModule m = cl.\imodule.getModule(mi);
@@ -57,15 +52,13 @@ shared class WebEndpointConfigParser(String moduleId, String configFileName) {
 		if (exists prop = endpoint.childItem("path")) {
 			path = prop.asString();
 		} else {
-			//TODO narrow exception
-			throw Exception("Missing enpoint path mapping.");
+			throw HttpdConfigurationException("Missing enpoint path mapping.");
 		}
 
 		if (exists prop = endpoint.childItem("className")) {
 			className = prop.asString();
 		} else {
-			//TODO narrow exception
-			throw Exception("Missing enpoint class name.");
+			throw HttpdConfigurationException("Missing enpoint class name.");
 		} 
 
 		if (exists prop = endpoint.childItem("module")) {

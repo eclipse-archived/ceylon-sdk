@@ -54,8 +54,7 @@ public class JavaHelper {
             OptionMap optionMap) throws IOException {
 
         @SuppressWarnings("rawtypes")
-        AcceptingChannel acceptingChannel =
-                worker.createStreamServer(bindAddress, acceptListener, optionMap);
+        AcceptingChannel acceptingChannel = worker.createStreamServer(bindAddress, acceptListener, optionMap);
         return acceptingChannel;
     }
 
@@ -64,12 +63,11 @@ public class JavaHelper {
     	return object.getClass().getClassLoader();
     }
     
-    public static void readResource(Object obj, String reourceName) throws IOException {
-    	ClassLoader cl = obj.getClass().getClassLoader();
+    public static InputStream openResourceStream(Object obj, String resourceName) throws IOException {
+    	ClassLoader cl = getClassLoader(obj);
     	//TODO use get resources and define overriding
-    	URL url = cl.getResource(reourceName);
-    	cl.getResource(reourceName);
-    	//url.
+    	URL url = cl.getResource(resourceName);
+    	return url.openStream();
     }
     
     /**

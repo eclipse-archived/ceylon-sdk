@@ -1,18 +1,35 @@
-import ceylon.net.httpd { WebEndpointAsync, HttpResponse, HttpCompletionHandler, HttpRequest, WebEndpointConfig }
+import ceylon.net.httpd { WebEndpointAsync, HttpResponse, HttpCompletionHandler, HttpRequest, WebEndpointConfig, HttpdInternalException }
 import ceylon.file { Path, parsePath, File }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io { newOpenFile }
 shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	
+	//root dir of external (not from car) location
+	variable String? externalPath := null;
+
+	variable String carPath := "static";
+
 	variable String? basePath := null;
 		
 	shared actual void init(WebEndpointConfig webEndpointConfig) {
-		basePath := webEndpointConfig.attribute("files-dir");
+		externalPath := webEndpointConfig.attribute("files-dir");
+		
+		if (exists c = webEndpointConfig.attribute("car-static-dir")) {
+			carPath := c;	
+		}
+		
+		if (exists ext = externalPath) {
+			basePath := ext; 
+		} else {
+			basePath := carPath;
+		}
 	}
 	
 	shared actual void service(HttpRequest request, HttpResponse response, HttpCompletionHandler completionHandler) {
 		String path = request.relativePath();
+
 		if (exists b = basePath) {
+			//TODO serve files from car: extract file loader, in init create object for reading files from filesystem or classloader
 			Path filePath = parsePath(b + path);
 			if (is File file = filePath.resource) {
 	            //TODO log
@@ -27,15 +44,15 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 						response.addHeader("content-type", cntType);                    
 	                }
 	                
-	                //TODO use org.xnio.channels.Channels.transferBlocking to transfer bytes efficiently between two channels
-	                //fails on large files
+	                //TODO transfer bytes efficiently between two channels. Use org.xnio.channels.Channels.transferBlocking
+	                //TODO fails on large files, XNIO bug test with new version
 	                ByteBuffer buffer = newByteBuffer(available);
-	//                while (available > 0) {
+	                //while (available > 0) {
 	                 	value read = openFile.read(buffer);
-	//                 	available -= read;
+	                 	//available -= read;
 	   	             	response.writeBytes(buffer.bytes());
-	//   	             	buffer.flip();
-	//             	}
+	   	             	//buffer.flip();
+	             	//}
 	            }
 	            finally {
 	                openFile.close();
@@ -47,11 +64,8 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	            print("file does not exist");
 	        }
 	    } else {
-            response.responseStatus(500);
-            //TODO move to init
-            print("Missing init param filesPath.");
+			throw HttpdInternalException("Cannot determine files path.");
 	    }
 		completionHandler.handleComplete();
 	}
-
 }

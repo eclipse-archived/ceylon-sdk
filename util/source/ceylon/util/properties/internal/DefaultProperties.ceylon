@@ -1,5 +1,5 @@
 import ceylon.file { Reader }
-import ceylon.util.properties { Properties, Property }
+import ceylon.util.properties { Properties, Property, ConfigurationException }
 
 shared class DefaultProperties(Reader reader) satisfies Properties {
 	
@@ -8,8 +8,7 @@ shared class DefaultProperties(Reader reader) satisfies Properties {
 	shared actual Property? item(String key) {
 		Property[] properties = items(key);
 		if (properties.size > 1) {
-			//TODO narrow exception
-			throw Exception("Expecting only one value for key: " + key );
+			throw ConfigurationException("Expecting only one value for key: " + key );
 		} else if (properties.size == 1) {
 			return properties.first;
 		} else {
