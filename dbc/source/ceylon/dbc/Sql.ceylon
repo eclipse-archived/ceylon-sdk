@@ -196,7 +196,7 @@ shared class Sql(DataSource ds) {
                     return count.collect {
                         function collecting(Integer i) {
                             rs.next();
-                            return { for (c in rango) mapColumn(rs, meta, c).item };
+                            return [ for (c in rango) mapColumn(rs, meta, c).item ];
                         }
                     };
                 } finally {
