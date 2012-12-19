@@ -28,7 +28,7 @@ import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.httpd { Httpd, HttpdOptions, WebEndpointConfig, HttpdInternalException }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
-import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler }
+import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import org.jboss.modules { ModuleClassLoader }
 
 by "Matej Lazar"
@@ -74,8 +74,11 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		//TODO log
 		print("starting on " host ":" port "");
 
-        SessionAttachmentHandler session = SessionAttachmentHandler(InMemorySessionManager());
-        session.setNext(ceylonHandler);
+
+		value sessionconfig = SessionCookieConfig();
+
+        SessionAttachmentHandler session = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
+		session.setNext(ceylonHandler);
 
         CookieHandler cookieHandler = CookieHandler();
         cookieHandler.next := session;
