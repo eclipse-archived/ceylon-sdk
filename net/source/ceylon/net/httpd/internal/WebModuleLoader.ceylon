@@ -2,9 +2,7 @@ import ceylon.net.httpd { WebEndpoint, WebEndpointAsync, HttpdException, WebEndp
 
 import java.lang { ClassNotFoundException }
 
-//import java.lang { ClassLoader, Class }
-//import org.jboss.modules { ModuleClassLoader, JModule = Module, ModuleLoader, ModuleIdentifier {miCreate = create} }
-
+by "Matej Lazar"
 shared class WebModuleLoader() {
 
 	value jh = JavaHelper(); 

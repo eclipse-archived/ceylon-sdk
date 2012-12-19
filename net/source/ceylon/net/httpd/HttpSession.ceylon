@@ -1,3 +1,4 @@
+by "Matej Lazar"
 shared interface HttpSession {
 
 	shared formal String id();

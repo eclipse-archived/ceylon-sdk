@@ -1,4 +1,6 @@
 import ceylon.io { SocketAddress }
+
+by "Matej Lazar"
 shared interface HttpRequest {
 
 	shared formal String? parameter(String name);

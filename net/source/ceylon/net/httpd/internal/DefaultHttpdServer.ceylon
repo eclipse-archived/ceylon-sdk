@@ -31,6 +31,7 @@ import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsi
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler }
 import org.jboss.modules { ModuleClassLoader }
 
+by "Matej Lazar"
 shared class DefaultHttpdServer() satisfies Httpd {
 	
 	CeylonRequestHandler ceylonHandler = CeylonRequestHandler();

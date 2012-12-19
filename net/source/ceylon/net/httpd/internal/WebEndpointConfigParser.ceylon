@@ -5,6 +5,7 @@ import ceylon.util.properties { Property, loadPropertiesFile, Properties }
 import java.net { URL }
 import ceylon.net.httpd { WebEndpointConfig, HttpdException, HttpdConfigurationException }
 
+by "Matej Lazar"
 shared class WebEndpointConfigParser(String moduleId, String configFileName) {
 
 	shared WebEndpointConfig[] parse() {

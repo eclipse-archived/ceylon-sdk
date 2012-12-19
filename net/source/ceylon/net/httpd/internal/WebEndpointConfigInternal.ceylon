@@ -1,5 +1,6 @@
 import ceylon.net.httpd { WebEndpoint, WebEndpointAsync, WebEndpointConfig}
 
+by "Matej Lazar"
 class WebEndpointConfigInternal(WebEndpointConfig webEndpointConfig) satisfies WebEndpointConfig {
 
 	shared variable WebEndpoint|WebEndpointAsync|Nothing webEndpoint := null;

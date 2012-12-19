@@ -6,6 +6,7 @@ import java.lang { JString = String }
 import java.io { JIOException = IOException }
 import io.undertow.util { HttpString }
 
+by "Matej Lazar"
 shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpResponse {
 
 	ChannelFactory<StreamSinkChannel>? factory = exchange.responseChannelFactory;

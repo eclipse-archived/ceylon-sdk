@@ -4,6 +4,7 @@ import ceylon.net.httpd { HttpRequest, WebEndpoint, WebEndpointAsync, HttpComple
 import ceylon.collection { MutableList, LinkedList }
 import java.lang { Runnable }
 
+by "Matej Lazar"
 shared class CeylonRequestHandler() satisfies HttpHandler {
 
 	MutableList<WebEndpointConfigInternal> webEndpointConfigs = LinkedList<WebEndpointConfigInternal>();

@@ -18,6 +18,7 @@ import io.undertow.server.session {
 import ceylon.collection { HashMap }
 import org.xnio { IoFuture }
 
+by "Matej Lazar"
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest {
 	
 	variable WebEndpointConfig? endpointConfig := null;

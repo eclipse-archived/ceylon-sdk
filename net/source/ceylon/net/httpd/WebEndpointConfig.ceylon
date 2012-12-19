@@ -1,6 +1,6 @@
 import ceylon.net.httpd.internal { DefaultWebEndpointConfig }
 
-by("Matej Lazar")
+by "Matej Lazar"
 shared interface WebEndpointConfig {
 	
 	shared formal String path;

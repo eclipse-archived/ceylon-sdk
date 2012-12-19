@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.URL;
 
 import org.xnio.ChannelListener;
 import org.xnio.OptionMap;
@@ -19,9 +18,9 @@ import org.xnio.channels.AcceptingChannel;
 import org.xnio.channels.ConnectedChannel;
 import org.xnio.channels.ConnectedStreamChannel;
 
-import com.redhat.ceylon.compiler.java.metadata.Ceylon;
-import com.redhat.ceylon.compiler.java.metadata.Method;
-
+/**
+ * @author Matej Lazar
+ */
 //@Ceylon
 public class JavaHelper {
 

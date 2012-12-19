@@ -2,6 +2,9 @@ import ceylon.net.httpd { WebEndpointAsync, HttpResponse, HttpCompletionHandler,
 import ceylon.file { Path, File, parsePath }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io { newOpenFile }
+
+
+by "Matej Lazar"
 shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	
 	//root dir of external (not from car) location
@@ -29,7 +32,7 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 		String path = request.relativePath();
 
 		if (exists b = basePath) {
-			//TODO serve files from car: extract file loader, in init create object for reading files from filesystem or classloader
+			//TODO serve files from car
 			Path filePath = parsePath(b + path);
 			if (is File file = filePath.resource) {
 	            //TODO log

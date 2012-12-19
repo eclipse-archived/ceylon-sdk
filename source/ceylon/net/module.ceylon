@@ -25,11 +25,11 @@ module ceylon.net '0.5' {
     import java.base '7';
     
     // -- java modules --
-    import 'org.jboss.xnio.xnio-api' '3.1.0.Beta7';
-    import 'org.jboss.xnio.xnio-nio' '3.1.0.Beta7';
     import io.undertow '1.0.0.Alpha1-SNAPSHOT';
     import org.jboss.modules 'main';
 
-    // -- dependent java modules --
-    //import org.jboss.logging '3.1.2.GA';
+    // -- java mvn modules --
+    import 'org.jboss.xnio.xnio-api' '3.1.0.Beta7';
+    import 'org.jboss.xnio.xnio-nio' '3.1.0.Beta7';
+
 }

@@ -2,6 +2,7 @@ import ceylon.net.httpd { HttpSession }
 import io.undertow.server.session { UtSession = Session }
 import org.xnio { IoFuture }
 
+by "Matej Lazar"
 class DefaultHttpSession(UtSession utSession) satisfies HttpSession {
 
     shared actual String id() {

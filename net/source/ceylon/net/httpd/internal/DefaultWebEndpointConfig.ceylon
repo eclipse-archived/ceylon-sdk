@@ -2,6 +2,8 @@ import ceylon.collection { HashMap }
 import ceylon.net.httpd.internal { WebEndpointConfigParser }
 import ceylon.net.httpd { WebEndpointConfig }
 
+by "Matej Lazar"
+
 shared List<WebEndpointConfig> parseWebEndpointConfig(String moduleId, String pathToModuleConfig) {
 	WebEndpointConfigParser webEndpointConfigParser = WebEndpointConfigParser(moduleId, pathToModuleConfig);
 	return webEndpointConfigParser.parse();

@@ -1,3 +1,4 @@
+by "Matej Lazar"
 shared class HttpdOptions() {
 	shared variable Integer workerWriteThreads := 2;
 	shared variable Integer workerReadThreads := 2;
