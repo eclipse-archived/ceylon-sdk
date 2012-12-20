@@ -133,7 +133,7 @@ shared class SelectorImpl() satisfies Selector {
                     print("Do we keep it for reading? " goOn "");
                     if(!goOn){
                         // are we still writing?
-                        if(exists key.onWrite){
+                        if(key.onWrite exists){
                             // drop the reading bits
                         print("Dropping read interest");
                             selectedKey.interestOps(selectedKey.interestOps().xor(javaReadOp));
@@ -161,7 +161,7 @@ shared class SelectorImpl() satisfies Selector {
                     print("Do we keep it for writing? " goOn "");
                     if(!goOn){
                         // are we still reading?
-                        if(exists key.onRead){
+                        if(key.onRead exists){
                             // drop the reading bits
                             print("Dropping write interest");
                             selectedKey.interestOps(selectedKey.interestOps().xor(javaWriteOp));
@@ -191,7 +191,7 @@ shared class SelectorImpl() satisfies Selector {
                     value socket = SocketImpl(connector.channel);
                     callback(socket);
                     // did we just register for read/write events?
-                    if(exists key.onRead || exists key.onWrite){
+                    if(key.onRead exists || key.onWrite exists){
                         // drop the connect bits
                         print("Dropping connect interest");
                         selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));
@@ -222,7 +222,7 @@ shared class SelectorImpl() satisfies Selector {
                     value goOn = callback(socket);
                     if(!goOn){
                         // did we just register for read/write events?
-                        if(exists key.onRead || exists key.onWrite){
+                        if(key.onRead exists || key.onWrite exists){
                             // drop the connect bits
                             print("Dropping connect interest");
                             selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));

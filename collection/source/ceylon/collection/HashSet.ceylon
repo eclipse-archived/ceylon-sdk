@@ -113,11 +113,11 @@ shared class HashSet<Element>()
             
             shared actual Element|Finished next() {
                 // do we need a new bucket?
-                if(!exists bucket){
+                if(!bucket exists){
                     // find the next non-empty bucket
                     while(++index < store.size){
                         bucket := store[index];
-                        if((exists bucket)){
+                        if(bucket exists){
                             break;
                         }
                     }

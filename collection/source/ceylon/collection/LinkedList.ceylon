@@ -110,7 +110,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                         head := cell.cdr;
                     }
                     // see if we need to update the tail
-                    if(!exists cell.cdr){
+                    if(!cell.cdr exists){
                         tail := prev;
                     }
                     _size--;
@@ -272,7 +272,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                 b.append("null");
             }
             iter := cell.cdr;
-            if((exists iter)){
+            if(iter exists){
                 b.append(", ");
             }
         }
@@ -319,7 +319,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                     }
                 }else{
                     // both must be non-objects?
-                    if((is Object cell2.car)){
+                    if(cell2.car is Object){
                         return false;
                     }
                 }

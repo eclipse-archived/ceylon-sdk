@@ -6,5 +6,5 @@ shared Boolean eq(Object? a, Object? b){
         }
         return false;
     }
-    return !exists b;
+    return !b exists;
 }

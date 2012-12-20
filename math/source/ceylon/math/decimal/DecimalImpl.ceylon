@@ -19,7 +19,7 @@ class DecimalImpl(BigDecimal num)
                 return DecimalImpl(implementation
                         .divideToIntegralValue(other.implementation, 
                                 rounding.implementation));
-            } else if (!exists rounding) {
+            } else if (!rounding exists) {
                 return DecimalImpl(implementation
                         .divideToIntegralValue(other.implementation));
             }
@@ -34,7 +34,7 @@ class DecimalImpl(BigDecimal num)
                 return DecimalImpl(implementation
                         .remainder(other.implementation, 
                                 rounding.implementation));
-            } else if (!exists rounding) {
+            } else if (!rounding exists) {
                 return DecimalImpl(implementation
                         .remainder(other.implementation));
             }
@@ -50,7 +50,7 @@ class DecimalImpl(BigDecimal num)
                 array = implementation
                         .divideAndRemainder(other.implementation, 
                                 rounding.implementation);
-            } else if (!exists rounding) {
+            } else if (!rounding exists) {
                 array = implementation
                         .divideAndRemainder(other.implementation);
             } else {
@@ -113,7 +113,7 @@ class DecimalImpl(BigDecimal num)
                 return DecimalImpl(implementation
                         .divide(other.implementation, 
                                 rounding.implementation));
-            } else if (!exists rounding) {
+            } else if (!rounding exists) {
                 return DecimalImpl(implementation
                         .divide(other.implementation));
             }
@@ -168,7 +168,7 @@ class DecimalImpl(BigDecimal num)
                  return DecimalImpl(implementation
                          .subtract(other.implementation, 
                                  rounding.implementation));
-             } else if (!exists rounding) {
+             } else if (!rounding exists) {
                  return DecimalImpl(implementation
                          .subtract(other.implementation));
              }
@@ -202,7 +202,7 @@ class DecimalImpl(BigDecimal num)
                 return DecimalImpl(implementation
                         .add(other.implementation, 
                                 rounding.implementation));
-            } else if (!exists rounding) {
+            } else if (!rounding exists) {
                 return DecimalImpl(implementation
                         .add(other.implementation));
             }
@@ -231,7 +231,7 @@ class DecimalImpl(BigDecimal num)
         if (is RoundingImpl rounding) {
             return DecimalImpl(implementation
                     .pow(other, rounding.implementation));
-        } else if (!exists rounding) {
+        } else if (!rounding exists) {
             return DecimalImpl(implementation.pow(other));
         }
         throw;
@@ -260,7 +260,7 @@ class DecimalImpl(BigDecimal num)
                 return DecimalImpl(implementation
                         .multiply(other.implementation, 
                                 rounding.implementation));
-            } else if (!exists rounding) {
+            } else if (!rounding exists) {
                 return DecimalImpl(implementation
                         .multiply(other.implementation));
             }

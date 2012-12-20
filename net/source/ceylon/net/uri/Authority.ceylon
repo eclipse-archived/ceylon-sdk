@@ -22,7 +22,7 @@ shared class Authority(user = null, password = null, host = null, port = null){
     
     doc "Returns true if the authority part is present (if the host is not null)"
     shared Boolean specified {
-        return exists host;
+        return host exists;
     }
     
     doc "Returns an externalisable (percent-encoded) representation of this part"    

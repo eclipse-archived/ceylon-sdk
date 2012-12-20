@@ -22,7 +22,7 @@ shared class URI(scheme = null, authority = Authority(), path = Path(), query = 
 
     doc "Returns true if this is a relative URI"
     shared Boolean relative {
-        return !exists scheme;
+        return !scheme exists;
     }
 
     doc "Returns the path as an externalisable (percent-encoded) string representation. Can be an empty string." 

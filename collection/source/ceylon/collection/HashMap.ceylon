@@ -186,11 +186,11 @@ shared class HashMap<Key, Item>()
             
             shared actual Entry<Key,Item>|Finished next() {
                 // do we need a new bucket?
-                if(!exists bucket){
+                if(!bucket exists){
                     // find the next non-empty bucket
                     while(++index < store.size){
                         bucket := store[index];
-                        if((exists bucket)){
+                        if(bucket exists){
                             break;
                         }
                     }
@@ -312,7 +312,7 @@ shared class HashMap<Key, Item>()
     }
     
     shared actual Boolean defines(Object key) {
-        return exists item(key);
+        return item(key) exists;
     }
     shared actual Boolean definesAny(Object... keys) {
         for(Object key in keys){
