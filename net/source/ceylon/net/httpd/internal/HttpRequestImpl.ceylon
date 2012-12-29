@@ -42,15 +42,6 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		return sequenceBuilder.sequence;
 	}
 
-	shared actual String? parameter(String name) {
-		value params = parameters(name);
-		if (nonempty params) {
-			return params.first;
-		} else {
-			return null;
-		}
-	}
-
 	shared actual String[]|Empty parameters(String name) {
 		
 		if (parametersMap.contains(name)) {
@@ -77,6 +68,16 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		parametersMap.put(name, params);
 		return params;
 	}
+
+	shared actual String? parameter(String name) {
+		value params = parameters(name);
+		if (nonempty params) {
+			return params.first;
+		} else {
+			return null;
+		}
+	}
+
 
 	shared actual String uri() {
 		return exchange.requestURI;
@@ -136,7 +137,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 		IoFuture<UtSession> sessionFuture = sessionManager.getSession(exchange, sessionCookieConfig);
    		utSession := sessionFuture.get();
 
-		if (!exists utSession) {
+		if (!utSession exists) {
 			IoFuture<UtSession> sessionFutureNew = sessionManager.createSession(exchange, sessionCookieConfig);
 	   		utSession := sessionFutureNew.get();
 		}
@@ -175,12 +176,12 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	       		//TODO use equals instead of startsWith (workaround for parsing bug)
 	       		if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.startsWith(multiparFormData)) {
 	        		FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
-	        		//is EagerFormParsingHandler is in chanin, parsing is already done
+	        		//is EagerFormParsingHandler is in chain, parsing is already done
 	        		formData := formDataParser.parseBlocking();
 	       		}
 	    	} 
-	    	//If not parsable construct empty
-	    	if (!exists formData) {
+	    	//If it is not parsable, construct empty
+	    	if (!formData exists) {
 	    		formData := FormData();
 	    	}
 		}

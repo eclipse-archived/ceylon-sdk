@@ -50,7 +50,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 				moduleId := _moduleId;
 			}
 		}
-		if (!exists moduleId) {
+		if (! moduleId exists) {
 			moduleId := getLocalModuleId();
 		}
 

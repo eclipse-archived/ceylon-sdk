@@ -20,7 +20,7 @@ shared class DefaultProperties(Reader reader) satisfies Properties {
 	shared actual Property[] items(String keyPath) {
 		value sbItems = SequenceBuilder<Property>();
 		
-		if (!exists properties) {
+		if (!properties exists ) {
 			//TODO synchronized properties parser
 			properties := parseProperties();
 		}

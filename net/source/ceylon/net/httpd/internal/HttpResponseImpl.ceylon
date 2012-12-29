@@ -10,7 +10,7 @@ by "Matej Lazar"
 shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpResponse {
 
 	ChannelFactory<StreamSinkChannel>? factory = exchange.responseChannelFactory;
-    if (!exists factory) {
+    if (!factory exists ) {
 		throw HttpdInternalException("Cannot get response ChannelFactory."); 
     } 
 
