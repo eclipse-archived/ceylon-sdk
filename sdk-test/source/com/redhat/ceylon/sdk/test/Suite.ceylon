@@ -61,12 +61,12 @@ shared abstract class Suite(String name) {
 
     doc "The tests to be run. Entry keys are a test description, items are the
          test function."
-    shared formal Iterable<Entry<String, Callable<Void,<>>>> suite;
+    shared formal Iterable<Entry<String, Callable<Void,[]>>> suite;
 
     doc "Run the Tests."
     shared void run() {
         print(banner(name));
-        for (Entry<String, Callable<Void,<>>> entry in suite) {
+        for (Entry<String, Callable<Void,[]>> entry in suite) {
             print(banner("Test: " entry.key ""));
             runTest(entry.item);
         }

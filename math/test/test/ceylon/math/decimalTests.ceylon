@@ -15,7 +15,7 @@ Boolean strictly(Object? expect, Object? got) {
             return false;
         }
     }
-    return !exists got;
+    return !got exists; 
 }
 
 Decimal parseOrFail(String str) {

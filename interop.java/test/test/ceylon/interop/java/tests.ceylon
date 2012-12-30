@@ -16,12 +16,12 @@ shared void run() {
 void testArray<T>(Array<T> array, String typename, T val) {
     process.write("Testing create" typename "Array() ");
     for (T item in array) {
-        if (!exists item) {
+        if (!item exists) {
             print("FAILED");
         }
     }
     for (i in 0..array.size-1) {
-        if (!exists array[i]) {
+        if (!array[i] exists) {
             print("FAILED");
         }
     }

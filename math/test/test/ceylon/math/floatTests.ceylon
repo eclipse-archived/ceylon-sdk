@@ -19,7 +19,7 @@ Boolean approx(Object? expect, Object? got) {
         }
         return false;
     }
-    return !exists got;
+    return !got exists;
 }
 
 Boolean exact(Object? expect, Object? got) {
@@ -41,7 +41,7 @@ Boolean exact(Object? expect, Object? got) {
         }
         return false;
     }
-    return !exists got;
+    return !got exists;
 }
 
 void testExp() {
