@@ -8,7 +8,7 @@ void queryTests() {
     assertTrue(r1.size > 0, "Rows with 'First");
     value r2 = q1({"Second"});
     assertTrue(r2.size > 0, "Rows with 'Second'");
-    assertFalse(nonempty q1({"whatever"}), "'whatever' should return empty");
+    assertFalse(q1({"whatever"}) nonempty, "'whatever' should return empty");
     assertTrue(sql.rows("SELECT * FROM test1")({}).size>=3, "all rows");
     value q2 = sql.rows("SELECT * FROM test1", 1, 2)({});
     assertEquals(1, q2.size, "rows with limit and offset");
