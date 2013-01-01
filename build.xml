@@ -1,150 +1,202 @@
 <project name="Ceylon SDK" basedir="." default="test">
 
-  <!-- the modules, in dependency order -->
-  <filelist id="module.dirs">
-    <file name="sdk-test"/>
-    <file name="math"/>
-    <file name="collection"/>
-    <file name="file"/>
-    <file name="io"/>
-    <file name="process"/>
-    <file name="json"/>
-    <file name="net"/>
-    <file name="interop.java"/>
-  </filelist>
-  
-  <macrodef name="iterate">
-    <attribute name="target"/>
-    <sequential>
-      <subant target="@{target}">
-        <filelist refid="module.dirs"/>
-        <property name="build" location="build"/>
-        <property name="build.modules" location="build/modules"/>
-        <property name="test.reports" location="build/test-reports"/>
-        <property name="repo.dependencies" location="build/modules"/>
-        <property name="publish.username" value="${publish.username}"/>
-        <property name="publish.password" value="${publish.password}"/>
-        <property name="publish.repo" value="${publish.repo}"/>
-      </subant>
-    </sequential>
-  </macrodef>
-
-  <target name="compile">
-    <iterate target="compile-module"/>
-  </target>
-  
-  <target name="clean">
-    <iterate target="clean-module"/>
-  </target>
-  
-  <target name="test">
-    <iterate target="compile-module"/>
-    <iterate target="test-module"/>
-  </target>
-  
-  <target name="doc">
-    <iterate target="doc-module"/>
-  </target>
-  
-  <target name="local">
-    <iterate target="local-module"/>
-  </target>
-  
-  <target name="herd">
-    <iterate target="herd-module"/>
-  </target>
-
-    <property file="build.properties"/>   
-    <path id="ant-tasks">
-      <pathelement location="${basedir}/../ceylon-dist/dist/repo/${ceylon.ant.jar}"/>
-    </path>
-    
-    <taskdef name="ceylonc" classname="com.redhat.ceylon.ant.Ceylonc" classpathref="ant-tasks"/>
-    <taskdef name="ceylond" classname="com.redhat.ceylon.ant.Ceylond" classpathref="ant-tasks"/>
-    <taskdef name="ceylon" classname="com.redhat.ceylon.ant.Ceylon" classpathref="ant-tasks"/>
-    <taskdef name="ceylonmd" classname="com.redhat.ceylon.ant.CeylonModuleDescriptorTask" classpathref="ant-tasks"/>
-
-  <target name="compile-all">
-      <pathconvert property="sourcepath" refid="module.dirs">
-        <globmapper from="*" to="*/source"/>
-      </pathconvert>
-    <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true">
-        <module name="ceylon.math"/>
+	<property file="build.properties" />
+	<property name="ceylon.verbosity" value="false"/>
+	<property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
+	<path id="ant-tasks">
+	    <pathelement location="${ceylon.ant.lib}"/>
+	</path>
+	
+	<typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
+	
+	<moduleset id="modules.sdk.jvm">
+		<!--<sourcemodules dir="source"/> TODO need to exclude com.redhat.ceylon.sdk.test -->
+		<module name="ceylon.math"/>
         <module name="ceylon.collection"/>
-        <module name="ceylon.io"/>
         <module name="ceylon.file"/>
-        <module name="ceylon.process"/>
+        <module name="ceylon.io"/>
         <module name="ceylon.json"/>
         <module name="ceylon.net"/>
+        <module name="ceylon.process"/>
+        <module name="ceylon.dbc"/>
         <module name="ceylon.interop.java"/>
-    </ceylonc>
-  </target>
-
-    <target name="publish-to-herd" description="Publishes the whole SDK to Herd">
-        <fail message="Syntax: ant publish-to-herd -Dherd=HERD_UPLOAD_URL -Duser=HERD_USER -Dpass=HERD_PASSWORD. You must first obtain a Herd upload URL.">
-            <condition>
-                <or>
-                    <not><isset property="herd"/></not>
-                    <not><isset property="user"/></not>
-                    <not><isset property="pass"/></not>
-                </or>
-            </condition>
-        </fail>
-      <echo>Herd: ${herd}</echo> 
-        <pathconvert property="sourcepath" refid="module.dirs">
-            <globmapper from="*" to="*/source"/>
-        </pathconvert>
-        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
-          out="${herd}" user="${user}" pass="${pass}">
-            <module name="ceylon.math"/>
-            <module name="ceylon.collection"/>
-            <module name="ceylon.io"/>
-            <module name="ceylon.file"/>
-            <module name="ceylon.process"/>
-            <module name="ceylon.json"/>
-            <module name="ceylon.net"/>
-            <module name="ceylon.interop.java"/>
-        </ceylonc>
-        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
-            out="${herd}" user="${user}" pass="${pass}">
-            <module name="ceylon.math"/>
-            <module name="ceylon.collection"/>
-            <module name="ceylon.io"/>
-            <module name="ceylon.file"/>
-            <module name="ceylon.process"/>
-            <module name="ceylon.json"/>
-            <module name="ceylon.net"/>
-            <module name="ceylon.interop.java"/>
-        </ceylond>
+	</moduleset>
+	
+	<moduleset id="modules.sdk.js">
+        <!--<module name="ceylon.math"/>-->
+        <module name="ceylon.collection"/>
+        <!--<module name="ceylon.file"/>-->
+        <!--<module name="ceylon.io"/>-->
+        <module name="ceylon.json"/>
+        <!--<module name="ceylon.net"/>-->
+        <!--<module name="ceylon.process"/>-->
+        <!--<module name="ceylon.dbc"/>-->
+        <!--<module name="ceylon.interop.java"/>-->
+    </moduleset>
+	
+	<moduleset id="modules.test.jvm">
+		<!--<module name="com.redhat.ceylon.sdk.test"/>-->
+		<module name="test.ceylon.math"/>
+        <module name="test.ceylon.collection"/>
+        <module name="test.ceylon.file"/>
+        <module name="test.ceylon.io"/>
+        <module name="test.ceylon.json"/>
+        <module name="test.ceylon.net"/>
+        <module name="test.ceylon.process"/>
+        <module name="test.ceylon.dbc"/>
+        <module name="test.ceylon.interop.java"/>
+    </moduleset>
+	
+    <moduleset id="modules.test.js">
+        <!--<module name="com.redhat.ceylon.sdk.test"/>-->
+        <!--<module name="test.ceylon.math"/>-->
+        <module name="test.ceylon.collection"/>
+        <!--<module name="test.ceylon.file"/>-->
+        <!--<module name="test.ceylon.io"/>-->
+        <module name="test.ceylon.json"/>
+        <!--<module name="test.ceylon.net"/>-->
+        <!--<module name="test.ceylon.process"/>-->
+        <!--<module name="test.ceylon.dbc"/>-->
+        <!--<module name="test.ceylon.interop"/>-->
+    </moduleset>
+	
+	<target name="clean"
+		description="Deletes the test-modules and modules directories">
+	    <delete dir="modules"/>
+		<delete dir="test-modules"/>
+	</target>
+	
+	<target name="-compile-test-modules">
+		<!-- description="Compiles the test modules to ${repo.out}" -->
+		
+		<ceylon-compile executable="${ceylon.executable}"
+		    out="${repo.out}"
+			verbose="${ceylon.verbosity}">
+            <module name="com.redhat.ceylon.sdk.test"/>
+	    </ceylon-compile>
+		<ceylon-compile-js executable="${ceylon.executable}"
+            out="${repo.out}"
+            verbose="${ceylon.verbosity}">
+            <module name="com.redhat.ceylon.sdk.test"/>
+        </ceylon-compile-js>
+		
+		<ceylon-compile executable="${ceylon.executable}"
+            src="test-source"
+            out="${repo.out}"
+			verbose="${ceylon.verbosity}">
+			<rep url="./test-deps"/>
+			<moduleset refid="modules.test.jvm"/>
+        </ceylon-compile>
+		<ceylon-compile-js executable="${ceylon.executable}"
+            src="test-source"
+            out="${repo.out}"
+            verbose="${ceylon.verbosity}">
+            <moduleset refid="modules.test.js"/>
+        </ceylon-compile-js>
+		
+	</target>
+	
+	<target name="-run-tests">
+		<!-- TODO support verbose attr on ceylon-run command -->
+		<!-- TODO run the js tests -->
+		<!-- TODO fix the dbc test -->
+        <ceylon-run module="test.ceylon.math/0.4" run="test.ceylon.math.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+        <ceylon-run module="test.ceylon.collection/0.4" run="test.ceylon.collection.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+		<ceylon-run module="test.ceylon.file/0.4" run="test.ceylon.file.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+		<ceylon-run module="test.ceylon.io/0.4" run="test.ceylon.io.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+		<ceylon-run module="test.ceylon.json/0.4" run="test.ceylon.json.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+		<ceylon-run module="test.ceylon.net/0.4" run="test.ceylon.net.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+        <ceylon-run module="test.ceylon.process/0.4" run="test.ceylon.process.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+		
+		<ceylon-run module="test.ceylon.dbc/0.4" run="test.ceylon.dbc.run"
+            executable="${ceylon.executable}">
+		  <rep url="./test-deps"/>
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+			
+		<ceylon-run module="test.ceylon.interop/0.4" run="test.ceylon.interop.run"
+            executable="${ceylon.executable}">
+          <rep url="${repo.out}"/>
+        </ceylon-run>
+	</target>
+	
+	<target name="test" 
+		description="Compiles the modules and test modules to the test-modules repository, and runs the tests">
+		
+		<property name="repo.out" location="test-modules"/>
+		
+		<ceylon-compile executable="${ceylon.executable}"
+            out="${repo.out}"
+            verbose="${ceylon.verbosity}">
+            <moduleset refid="modules.sdk.jvm"/>
+        </ceylon-compile>
+		<ceylon-compile-js executable="${ceylon.executable}"
+            out="${repo.out}"
+            verbose="${ceylon.verbosity}">
+            <moduleset refid="modules.sdk.js"/>
+        </ceylon-compile-js>
+		
+		<antcall target="-compile-test-modules"/>
+		<antcall target="-run-tests"/>
+		
     </target>
 
-    <target name="publish" description="Publishes the whole SDK to your user repo">
-        <echo>Publishing SDK to your user repo</echo> 
-        <pathconvert property="sourcepath" refid="module.dirs">
-            <globmapper from="*" to="*/source"/>
-        </pathconvert>
-        <ceylonc src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
-            out="+USER">
-            <module name="ceylon.math"/>
-            <module name="ceylon.collection"/>
-            <module name="ceylon.io"/>
-            <module name="ceylon.file"/>
-            <module name="ceylon.process"/>
-            <module name="ceylon.json"/>
-            <module name="ceylon.net"/>
-            <module name="ceylon.interop.java"/>
-        </ceylonc>
-        <ceylond src="${sourcepath}" executable="${basedir}/../ceylon-dist/dist/bin/ceylon" nomtimecheck="true"
-            out="+USER">
-            <module name="ceylon.math"/>
-            <module name="ceylon.collection"/>
-            <module name="ceylon.io"/>
-            <module name="ceylon.file"/>
-            <module name="ceylon.process"/>
-            <module name="ceylon.json"/>
-            <module name="ceylon.net"/>
-            <module name="ceylon.interop.java"/>
-        </ceylond>
+	<target name="compile" 
+	        description="Compiles the modules to the modules repository">
+		
+		<property name="repo.out" location="modules"/>
+		
+		<ceylon-compile executable="${ceylon.executable}"
+            out="${repo.out}"
+            verbose="${ceylon.verbosity}">
+            <moduleset refid="modules.sdk.jvm"/>
+        </ceylon-compile>
+        
+		<ceylon-compile-js executable="${ceylon.executable}"
+            out="${repo.out}"
+            verbose="${ceylon.verbosity}">
+			<moduleset refid="modules.sdk.js"/>
+        </ceylon-compile-js>
+		
     </target>
+	
+    <target name="doc" 
+            description="Documents the modules to the modules repository">
+        
+    	<property name="repo.out" location="modules"/>
+    	
+    	<ceylon-doc executable="${ceylon.executable}"
+            out="${repo.out}">
+            <moduleset refid="modules.sdk.jvm"/>
+        </ceylon-doc>
+    	
+    </target>
+	
 </project>
-
