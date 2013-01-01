@@ -10,4 +10,6 @@ doc "A selection of utility methods to improve Java interoperability.
      - `createCharArray(Integer size)` - creates a `char` array of the given size
 "
 by "The Ceylon Team"
-module ceylon.interop.java '0.4.1' {}
+module ceylon.interop.java '0.4.1' {
+    import ceylon.language '0.5';
+}
