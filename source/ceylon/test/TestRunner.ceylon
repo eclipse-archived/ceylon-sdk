@@ -1,22 +1,27 @@
 import ceylon.collection { LinkedList, MutableList }
 
+doc "Capable of running tests, notifying [[TestListener]]s about each test"
 shared class TestRunner() {
     
     MutableList<TestUnit> testList = LinkedList<TestUnit>();
     MutableList<TestListener> testListenerList = LinkedList<TestListener>();
     
+    doc "The tests held by this instance"
     shared List<TestUnit> tests { 
         return testList; 
     }
     
+    doc "Adds a test to be run"
     shared void addTest(String name, Void() callable) {
         testList.add(TestUnit(name, callable));
     }
     
+    doc "Adds a test listener to be notified about the execution of tests"
     shared void addTestListener(TestListener testListener) {
         testListenerList.add(testListener);
     }
     
+    doc "Runs the [[tests]]"
     shared TestResult run() {
         TestRunner runner = this;
         TestResult result = TestResult(this);

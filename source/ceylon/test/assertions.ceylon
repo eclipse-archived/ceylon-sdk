@@ -2,6 +2,9 @@ shared class AssertionFailed(String message) extends Exception(message, null) {}
 shared class AssertException(String message) extends Exception(message, null) {
 }
 
+doc "Subclass of `AssertException` for assertion failures dues to two things 
+     not being equal"
+see(assertEquals)
 shared class AssertComparisonException(String message, expectedValue, actualValue) extends AssertException(message) {
     
     shared String expectedValue;

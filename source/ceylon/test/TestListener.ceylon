@@ -1,3 +1,5 @@
+doc "Contract for things needing to be informed about the execution of tests 
+     by a [[TestRunner]]."
 shared interface TestListener {
     
     shared default void testRunStarted(TestRunner runner) {
@@ -14,6 +16,8 @@ shared interface TestListener {
     
 }
 
+doc "A [[TestListener]] which prints information about test execution to the 
+     standard output."
 shared class PrintingTestListener() satisfies TestListener {
     
     shared actual void testRunStarted(TestRunner runner) {
@@ -21,17 +25,19 @@ shared class PrintingTestListener() satisfies TestListener {
     }
     
     shared actual void testRunFinished(TestRunner runner, TestResult result) {
-        print(banner("TESTS RESULT"));
+        
         if( result.runCount == 0 ) {
+            print(banner("NO TESTS"));
             print("There were no tests!");
         } else {
+            print(banner("TESTS RESULT"));
             print("run:     " result.runCount "");
             print("success: " result.successCount "");
             print("failure: " result.failureCount "");
             print("error:   " result.errorCount "");
             
             if (result.isSuccess) {
-                print(banner("TESTS SECCESS"));
+                print(banner("TESTS SUCCESS"));
             } else {
                 print(banner("TESTS FAILED"));
             }
@@ -42,6 +48,12 @@ shared class PrintingTestListener() satisfies TestListener {
         print(test.name);
     }
     
+    doc "Generates a banner with the given text, like this:
+         
+         ```
+         ============ banner ============
+         ```
+         "
     String banner(String text) {
         Character ch = `=`;
         StringBuilder sb = StringBuilder();
