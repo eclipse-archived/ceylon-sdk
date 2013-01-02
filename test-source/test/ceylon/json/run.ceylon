@@ -1,5 +1,5 @@
 import ceylon.json { ... }
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 
 class CollectionSuite() extends Suite("ceylon.collection") {
     shared actual Iterable<String->Void()> suite = {

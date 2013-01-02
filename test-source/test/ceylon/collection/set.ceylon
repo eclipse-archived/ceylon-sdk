@@ -1,5 +1,5 @@
 import ceylon.collection { ... }
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 
 void testSet(){
     MutableSet<String> set = HashSet<String>();

@@ -1,5 +1,5 @@
 import ceylon.json { ... }
-import com.redhat.ceylon.sdk.test { assertEquals }
+import ceylon.test { assertEquals }
 
 void testPrint(){
     value o1 = Object{};

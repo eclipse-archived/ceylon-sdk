@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{...}
+import ceylon.test { ... }
 
 void transactionTests() {
     if (exists count0 = sql.queryForInteger("SELECT count(*) FROM test1")) {

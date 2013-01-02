@@ -1,6 +1,6 @@
 import ceylon.net.uri { URI, parseURI }
 import ceylon.net.http { ... }
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 import ceylon.json { ... }
 
 void testJSON(Object json){

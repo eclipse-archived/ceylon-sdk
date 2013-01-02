@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{...}
+import ceylon.test { ... }
 import ceylon.math.float{...}
 
 Float undefined = 0.0/0.0;

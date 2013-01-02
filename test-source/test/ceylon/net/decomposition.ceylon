@@ -1,5 +1,5 @@
 import ceylon.net.uri { Parameter, URI, parseURI, percentEncoder, Path, PathSegment, ... }
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 
 void testURL(String url, 
             String? scheme = null,

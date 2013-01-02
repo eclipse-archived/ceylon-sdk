@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{...}
+import ceylon.test { ... }
 import ceylon.math.decimal { decimalNumber }
 import java.util { Date }
 

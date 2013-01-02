@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{Suite}
+import ceylon.test {Suite}
 
 class MathSuite() extends Suite("ceylon.math") {
     shared actual Iterable<String->Void()> suite = {

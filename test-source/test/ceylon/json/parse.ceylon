@@ -1,5 +1,5 @@
 import ceylon.json { ... }
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 
 void testParse() {
     value o1 = parse("{}");

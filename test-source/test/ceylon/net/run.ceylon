@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test {Suite}
+import ceylon.test {Suite}
 
 class NetSuite() extends Suite("ceylon.net") {
     shared actual Iterable<String->Void()> suite = {

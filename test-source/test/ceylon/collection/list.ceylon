@@ -1,5 +1,5 @@
 import ceylon.collection { ... }
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 
 void testList(){
     MutableList<String> l = LinkedList<String>();

@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{...}
+import ceylon.test { ... }
 
 void updateTests() {
 }

@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{...}
+import ceylon.test { ... }
 import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, zero}
 
 shared void wholeTests() {

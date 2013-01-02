@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test { Suite }
+import ceylon.test { ... }
 
 class IoSuite() extends Suite("ceylon.io") {
     shared actual Iterable<String->Void()> suite = {

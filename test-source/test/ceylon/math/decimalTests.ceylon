@@ -1,6 +1,6 @@
 import ceylon.math.decimal { Decimal, round, halfUp, parseDecimal, decimalNumber, zero, one, implicitlyRounded }
 
-import com.redhat.ceylon.sdk.test { ... }
+import ceylon.test { ... }
 
 import java.lang { ArithmeticException }
 

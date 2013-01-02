@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test { assertEquals }
+import ceylon.test { assertEquals }
 import ceylon.io.charset { ascii, Encoder, Charset, iso_8859_1, utf8, utf16 }
 import ceylon.io.buffer { newCharacterBufferWithData, newByteBuffer }
 

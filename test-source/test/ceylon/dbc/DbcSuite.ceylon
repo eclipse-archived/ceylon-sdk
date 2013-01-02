@@ -1,4 +1,4 @@
-import com.redhat.ceylon.sdk.test{Suite}
+import ceylon.test {Suite}
 import ceylon.dbc { Sql }
 import org.h2.jdbcx { JdbcDataSource }
 

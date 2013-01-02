@@ -2,7 +2,7 @@ import ceylon.file { File, Path, parsePath }
 import ceylon.io { newOpenFile, OpenFile }
 import ceylon.io.charset { utf8, byteConsumerToStringConsumer, stringToByteProducer, Decoder }
 import ceylon.io.buffer { ByteBuffer }
-import com.redhat.ceylon.sdk.test { assertEquals }
+import ceylon.test { assertEquals }
 
 void testFileCreateWriteRead(){
 	// create a new file and write to it

@@ -66,9 +66,14 @@ shared abstract class Suite(String name) {
     doc "Run the Tests."
     shared void run() {
         print(banner(name));
+        variable Integer numtests := 0;
         for (String->Void() entry in suite) {
+            numtests++;
             print(banner("Test: " entry.key ""));
             runTest(entry.item);
+        }
+        if (numtests == 0) {
+            print(banner("NO TESTS!"));
         }
         printResults();
     }
