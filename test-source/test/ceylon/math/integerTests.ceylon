@@ -5,20 +5,20 @@ void testIntSumProduct() {
     print("Integer.sum");
     assertEquals { 
         expected = 0;
-        got = sum();
+        actual=sum();
     };
     assertEquals { 
         expected = 6; 
-        got = sum(1, 2, 3);
+        actual=sum(1, 2, 3);
     };
     print("Integer.product");
     assertEquals { 
         expected = 1; 
-        got = product();
+        actual=product();
     };
     assertEquals { 
         expected = 6; 
-        got = product(1, 2, 3);
+        actual=product(1, 2, 3);
     };
 }
 
