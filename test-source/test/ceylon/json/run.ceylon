@@ -1,15 +1,10 @@
-import ceylon.json { ... }
 import ceylon.test { ... }
 
-class CollectionSuite() extends Suite("ceylon.collection") {
-    shared actual Iterable<String->Void()> suite = {
+shared void run(){
+    suite("ceylon.collection", 
         "Parse" -> testParse,
         "Print" -> testPrint
-    };
-}
-
-shared void run(){
-    CollectionSuite().run();
+    );
 }
 
 

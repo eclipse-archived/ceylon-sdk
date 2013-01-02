@@ -1,16 +1,6 @@
-import ceylon.test {Suite}
+import ceylon.test {suite}
 import ceylon.dbc { Sql }
 import org.h2.jdbcx { JdbcDataSource }
-
-class DbcSuite() extends Suite("ceylon.dbc") {
-    shared actual Iterable<String->Void()> suite = {
-        "Insert" -> insertTests,
-        "Query" -> queryTests,
-        "Update/Delete" -> updateTests,
-        "Calls" -> callTests,
-        "Transactions" -> transactionTests
-    };
-}
 
 JdbcDataSource createDataSource() {
     value ds = JdbcDataSource();
@@ -31,6 +21,13 @@ shared void run() {
             throw ex;
         }
     }
-    DbcSuite().run();
+    suite("ceylon.dbc",
+        "Insert" -> insertTests,
+        "Query" -> queryTests,
+        "Update/Delete" -> updateTests,
+        "Calls" -> callTests,
+        "Transactions" -> transactionTests
+    );
 }
+
 

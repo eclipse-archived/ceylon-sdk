@@ -1,7 +1,7 @@
 import ceylon.test { ... }
 
-class IoSuite() extends Suite("ceylon.io") {
-    shared actual Iterable<String->Void()> suite = {
+void run() {
+    suite("ceylon.io",
         "Byte Buffer test" -> testByteBuffer,
         "Byte Buffer resize test" -> testByteBufferResize,
         "Character Buffer test" -> testCharacterBuffer,
@@ -17,9 +17,5 @@ class IoSuite() extends Suite("ceylon.io") {
         "File create/write/read no reopen" -> testFileCreateWriteReadWithoutReopen,
         "File create/write/reset/write/read" -> testFileCreateWriteResetWriteRead,
         "File create/truncate" -> testFileTruncate
-    };
-}
-
-void run() {
-    IoSuite().run();
+    );
 }
