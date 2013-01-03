@@ -1,4 +1,4 @@
-shared class AssertionFailed(String message) extends Exception(message, null) {}
+doc "Thrown when assertion failures"
 shared class AssertException(String message) extends Exception(message, null) {
 }
 

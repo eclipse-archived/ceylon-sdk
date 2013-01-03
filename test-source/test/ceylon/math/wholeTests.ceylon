@@ -8,7 +8,7 @@ shared void wholeTests() {
        if (exists result) {
            return result;
        }
-       throw AssertionFailed("" str " didn't parse");
+       throw AssertException("" str " didn't parse");
     }
 
     print("Whole instantiation, equality");
