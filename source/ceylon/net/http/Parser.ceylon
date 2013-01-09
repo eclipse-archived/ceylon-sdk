@@ -8,15 +8,15 @@ doc "Parses an HTTP message from the given [[FileDescriptor]]."
 by "Stéphane Épardaud"
 shared class Parser(FileDescriptor socket){
     
-    variable Integer byte := 0;
+    variable Integer byte = 0;
     value buffer = newByteBuffer(1024);
     value reader = ByteReader(FileDescriptorReader(socket));
     value decoder = ascii.newDecoder();
     
-    variable Integer? status := null;
-    variable String? reason := null;
-    variable Integer? major := null;
-    variable Integer? minor := null;
+    variable Integer? status = null;
+    variable String? reason = null;
+    variable Integer? major = null;
+    variable Integer? minor = null;
     
     doc "[[List]] of headers parsed."
     shared LinkedList<Header> headers = LinkedList<Header>();
@@ -80,7 +80,7 @@ shared class Parser(FileDescriptor socket){
     doc "Reads a byte"
     throws "On end of file"
     void readByte(){
-        byte := reader.readByte();
+        byte = reader.readByte();
         if(byte < 0){
             throw Exception("Premature EOF");
         }
@@ -189,9 +189,9 @@ shared class Parser(FileDescriptor socket){
     doc "Reads an HTTP version part"
     void parseHttpVersion(){
         readString("HTTP/");
-        major := parseDigit();
+        major = parseDigit();
         readChar(`.`);
-        minor := parseDigit();
+        minor = parseDigit();
     }
     
     doc "Reads a token plus one byte. Expects the current byte to be the start of token."
@@ -243,7 +243,7 @@ shared class Parser(FileDescriptor socket){
                 }
             }else if(byte == `\r`.integer){
                 atLws();
-                byte := ` `.integer;
+                byte = ` `.integer;
                 saveByte();
             }else if(isText()){
                 pushByte();
@@ -262,15 +262,15 @@ shared class Parser(FileDescriptor socket){
     void parseStatusLine(){
         parseHttpVersion();
         readSpace();
-        status := parseDigit() * 100 + parseDigit() * 10 + parseDigit();
+        status = parseDigit() * 100 + parseDigit() * 10 + parseDigit();
         readSpace();
         buffer.clear();
         saveByte();
         while(isText() && byte != `\r`.integer && byte != `\n`.integer){
             saveByte();
         }
-        buffer.position := buffer.position - 1;
-        reason := getString() else "";
+        buffer.position = buffer.position - 1;
+        reason = getString() else "";
         atCrLf();
     }
 
@@ -320,11 +320,11 @@ shared class Parser(FileDescriptor socket){
         }
         // size first
         readByte();
-        variable Integer size := atHexDigit();
+        variable Integer size = atHexDigit();
         readByte();
         while(isHexDigit()){
             value digit = atHexDigit();
-            size := 16 * size + digit;
+            size = 16 * size + digit;
             readByte();
         }
         // optional extensions

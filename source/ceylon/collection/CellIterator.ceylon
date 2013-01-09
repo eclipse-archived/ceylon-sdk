@@ -3,7 +3,7 @@ class CellIterator<T>(iter) satisfies Iterator<T> {
 
     shared actual T|Finished next() {
         if(exists Cell<T> iter = iter){
-            this.iter := iter.cdr;
+            this.iter = iter.cdr;
             return iter.car;
         }
         return exhausted;

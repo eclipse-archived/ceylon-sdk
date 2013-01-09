@@ -91,10 +91,10 @@ shared Whole factorial(Whole a) {
     if (a <= Whole(0)) {
         throw;
     }
-    variable Whole b := a;
-    variable Whole result := a;
+    variable Whole b = a;
+    variable Whole result = a;
     while (b >= Whole(2)) {
-        b := b.predecessor;
+        b = b.predecessor;
         result *= b;
     }
     return result;

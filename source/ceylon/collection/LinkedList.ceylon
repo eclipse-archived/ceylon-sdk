@@ -1,43 +1,43 @@
 by "Stéphane Épardaud"
 doc "A mutable Linked List"
 shared class LinkedList<Element>() satisfies MutableList<Element> {
-    variable Cell<Element>? head := null;
-    variable Cell<Element>? tail := null;
-    variable Integer _size := 0; 
+    variable Cell<Element>? head = null;
+    variable Cell<Element>? tail = null;
+    variable Integer _size = 0; 
 
     // Write
     
     doc "Sets an item at the given index. List is expanded if index > size"
     shared actual void setItem(Integer index, Element val){
         if(index < _size){
-            variable Cell<Element>? iter := head;
-            variable Integer i := 0;
+            variable Cell<Element>? iter = head;
+            variable Integer i = 0;
             while(exists Cell<Element> cell = iter){
                 if(i++ == index){
-                    cell.car := val;
+                    cell.car = val;
                     return;
                 }
-                iter := cell.cdr;
+                iter = cell.cdr;
             }
         }else{
             // need to grow
-            variable Integer need := index - _size;
+            variable Integer need = index - _size;
             Cell<Element> newTail = Cell<Element>(val, null);
-            variable Cell<Element> newHead := newTail;
+            variable Cell<Element> newHead = newTail;
             while(need-- > 0){
-                newHead := Cell<Element>(/*FIXME*/val, newHead);
+                newHead = Cell<Element>(/*FIXME*/val, newHead);
             }
             // now put it at the end
             if(exists Cell<Element> tail = tail){
-                tail.cdr := newHead;
+                tail.cdr = newHead;
             }else{
                 // if we don't have a tail, we also don't have a head
-                head := newHead;
+                head = newHead;
             }
             // change the tail
-            tail := newTail;
+            tail = newTail;
             // cache the size
-            _size := index+1;
+            _size = index+1;
         }
     }
 
@@ -48,19 +48,19 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         }else{
             Cell<Element> newCell = Cell<Element>(val, null);
             if(index == 0){
-                newCell.cdr := head;
-                head := newCell;
+                newCell.cdr = head;
+                head = newCell;
                 // we only have to update the tail if _size == 0 but that's not possible
                 // since it has already been checked
             }else{
-                variable Cell<Element>? iter := head;
-                variable Cell<Element>? prev := null;
-                variable Integer i := 0;
+                variable Cell<Element>? iter = head;
+                variable Cell<Element>? prev = null;
+                variable Integer i = 0;
                 while(exists Cell<Element> cell = iter){
                     if(i++ == index){
                         if(exists Cell<Element> prev2 = prev){
-                            prev2.cdr := newCell;
-                            newCell.cdr := cell;
+                            prev2.cdr = newCell;
+                            newCell.cdr = cell;
                             // no need to update the tail since we never modify the last element, we would
                             // have called setItem above instead
                         }else{
@@ -68,8 +68,8 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                         }
                         break;
                     }
-                    prev := iter;
-                    iter := cell.cdr;
+                    prev = iter;
+                    iter = cell.cdr;
                 }
             }
             _size++;
@@ -80,11 +80,11 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     shared actual void add(Element val){
         Cell<Element> newTail = Cell<Element>(val, null);
         if(exists Cell<Element> tail = tail){
-            tail.cdr := newTail;
-            this.tail := newTail;
+            tail.cdr = newTail;
+            this.tail = newTail;
         }else{
             // no tail means empty list
-            tail := head := newTail;
+            tail = head = newTail;
         }
         _size++;
     }
@@ -98,26 +98,26 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     doc "Removes the item at the specified index"
     shared actual void remove(Integer index){
         if(index < _size){
-            variable Cell<Element>? iter := head;
-            variable Cell<Element>? prev := null;
-            variable Integer i := 0;
+            variable Cell<Element>? iter = head;
+            variable Cell<Element>? prev = null;
+            variable Integer i = 0;
             while(exists Cell<Element> cell = iter){
                 if(i++ == index){
                     if(exists Cell<Element> prev2 = prev){
-                        prev2.cdr := cell.cdr;
+                        prev2.cdr = cell.cdr;
                     }else{
                         // changing the head
-                        head := cell.cdr;
+                        head = cell.cdr;
                     }
                     // see if we need to update the tail
                     if(!cell.cdr exists){
-                        tail := prev;
+                        tail = prev;
                     }
                     _size--;
                     return;
                 }
-                prev := iter;
-                iter := cell.cdr;
+                prev = iter;
+                iter = cell.cdr;
             }
         }else{
             // FIXME
@@ -127,20 +127,20 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
 
     doc "Remove every item"
     shared actual void clear(){
-        _size := 0;
-        head := tail := null;
+        _size = 0;
+        head = tail = null;
     }
     
     // Read
     
     shared actual Element? item(Integer index) {
-        variable Cell<Element>? iter := head;
-        variable Integer i := 0;
+        variable Cell<Element>? iter = head;
+        variable Integer i = 0;
         while(exists Cell<Element> cell = iter){
             if(i++ == index){
                 return cell.car;
             }
-            iter := cell.cdr;
+            iter = cell.cdr;
         }
         return null;
     }
@@ -193,14 +193,14 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     }
     
     shared actual Boolean contains(Object element) {
-        variable Cell<Element>? iter := head;
+        variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
             if(is Object elem = cell.car){
                 if(elem == element){
                     return true;
                 }
             }
-            iter := cell.cdr;
+            iter = cell.cdr;
         }
         return false;
     }
@@ -231,13 +231,13 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     }
     
     shared actual Integer count(Boolean selecting(Element element)) {
-        variable Cell<Element>? iter := head;
-        variable Integer c := 0;
+        variable Cell<Element>? iter = head;
+        variable Integer c = 0;
         while(exists Cell<Element> cell = iter){
             if(selecting(cell.car)){
                 c++;
             }
-            iter := cell.cdr;
+            iter = cell.cdr;
         }
         return c;
     }
@@ -252,9 +252,9 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     
     shared actual List<Element> clone {
         LinkedList<Element> ret = LinkedList<Element>();
-        ret.head := head;
-        ret.tail := tail;
-        ret._size := size;
+        ret.head = head;
+        ret.tail = tail;
+        ret._size = size;
         return ret;
     }
     shared actual Integer[] keys {
@@ -264,14 +264,14 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("[");
-        variable Cell<Element>? iter := head;
+        variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
             if(is Object car = cell.car){
                 b.append(car.string);
             }else{
                 b.append("null");
             }
-            iter := cell.cdr;
+            iter = cell.cdr;
             if(iter exists){
                 b.append(", ");
             }
@@ -281,15 +281,15 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     }
     
     shared actual Integer hash {
-        variable Integer h := 17;
-        variable Cell<Element>? iter := head;
+        variable Integer h = 17;
+        variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
             if(is Object car = cell.car){
-                h := h * 31 + car.hash;                
+                h = h * 31 + car.hash;                
             }else{
-                h := h * 31;
+                h = h * 31;
             }
-            iter := cell.cdr;
+            iter = cell.cdr;
         }
         return h;
     }
@@ -305,8 +305,8 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         if(_size != that._size){
             return false;
         }
-        variable Cell<Element>? iter := head;
-        variable Cell<Element>? iter2 := that.head;
+        variable Cell<Element>? iter = head;
+        variable Cell<Element>? iter2 = that.head;
         while(exists Cell<Element> cell = iter){
             if(exists Cell<Element> cell2 = iter2){
                 if(is Object car = cell.car){
@@ -323,11 +323,11 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
                         return false;
                     }
                 }
-                iter2 := cell2.cdr;
+                iter2 = cell2.cdr;
             }else{
                 return false;
             }
-            iter := cell.cdr;
+            iter = cell.cdr;
         }
         return true;
     }

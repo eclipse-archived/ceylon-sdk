@@ -12,17 +12,17 @@ shared Parameter parseParameter(String part){
 doc "Parses a URI"
 throws(InvalidURIException, "If the URI is invalid")
 shared URI parseURI(String uri){
-    variable String? scheme := null;
+    variable String? scheme = null;
     Authority authority = Authority(null, null, null, null);
     Path path = Path();
     Query query = Query();
-    variable String? fragment := null;
+    variable String? fragment = null;
     
     String parseScheme(String uri){
         Integer? sep = uri.firstOccurrence(":");
         if(exists sep){
             if(sep > 0){
-                scheme := uri.segment(0, sep);
+                scheme = uri.segment(0, sep);
                 return uri[sep+1...];
             }
         }
@@ -33,22 +33,22 @@ shared URI parseURI(String uri){
     void parseUserInfo(String userInfo) {
         Integer? sep = userInfo.firstCharacterOccurrence(`:`);
         if(exists sep){
-            authority.user := decodePercentEncoded(userInfo.segment(0, sep));
-            authority.password := decodePercentEncoded(userInfo[sep+1...]);
+            authority.user = decodePercentEncoded(userInfo.segment(0, sep));
+            authority.password = decodePercentEncoded(userInfo[sep+1...]);
         }else{
-            authority.user := decodePercentEncoded(userInfo);
-            authority.password := null;
+            authority.user = decodePercentEncoded(userInfo);
+            authority.password = null;
         }
     }
 
     void parseHostAndPort(String hostAndPort) {
         String? portString;
         if(hostAndPort.startsWith("[")){
-            authority.ipLiteral := true;
+            authority.ipLiteral = true;
             Integer? end = hostAndPort.firstCharacterOccurrence(`]`);
             if(exists end){
                 // eat the delimiters
-                authority.host := hostAndPort.segment(1, end-1);
+                authority.host = hostAndPort.segment(1, end-1);
                 String rest = hostAndPort[end+1...];
                 if(rest.startsWith(":")){
                     portString = rest[1...];
@@ -59,18 +59,18 @@ shared URI parseURI(String uri){
                 throw InvalidURIException("Invalid IP literal: " + hostAndPort);
             }
         }else{
-            authority.ipLiteral := false;
+            authority.ipLiteral = false;
             Integer? sep = hostAndPort.lastCharacterOccurrence(`:`);
             if(exists sep){
-                authority.host := decodePercentEncoded(hostAndPort.segment(0, sep));
+                authority.host = decodePercentEncoded(hostAndPort.segment(0, sep));
                 portString = hostAndPort[sep+1...];
             }else{
-                authority.host := decodePercentEncoded(hostAndPort);
+                authority.host = decodePercentEncoded(hostAndPort);
                 portString = null;
             }
         }
         if(exists portString){
-            authority.port := parseInteger(portString);
+            authority.port = parseInteger(portString);
             if(exists Integer port = authority.port){
                 if(port < 0){
                     throw InvalidURIException("Invalid port number: "+portString);
@@ -79,7 +79,7 @@ shared URI parseURI(String uri){
                 throw InvalidURIException("Invalid port number: "+portString);
             }
         }else{
-            authority.port := null;
+            authority.port = null;
         }
     }
     
@@ -127,14 +127,14 @@ shared URI parseURI(String uri){
             remains = "";
         }
         if(!pathPart.empty){
-            variable Boolean first := true;
+            variable Boolean first = true;
             for(String part in pathPart.split((Character ch) ch == `/`, true, false)){
                 if(first && part.empty){
-                    path.absolute := true;
-                    first := false;
+                    path.absolute = true;
+                    first = false;
                     continue;
                 }
-                first := false;
+                first = false;
                 path.addRawSegment(part);
             }
         }
@@ -167,7 +167,7 @@ shared URI parseURI(String uri){
         if(exists c){
             if(c == `#`){
                 // we have a fragment part
-                fragment := decodePercentEncoded(uri[1...]);
+                fragment = decodePercentEncoded(uri[1...]);
                 return "";
             }
         }
@@ -176,11 +176,11 @@ shared URI parseURI(String uri){
     }
     
     void parseURI(String uri) {
-        variable String remains := parseScheme(uri);
-        remains := parseAuthority(remains);
-        remains := parsePath(remains);
-        remains := parseQuery(remains);
-        remains := parseFragment(remains);
+        variable String remains = parseScheme(uri);
+        remains = parseAuthority(remains);
+        remains = parsePath(remains);
+        remains = parseQuery(remains);
+        remains = parseFragment(remains);
     }
 
     parseURI(uri);

@@ -19,8 +19,8 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     doc "The HTTP major number"
     shared Integer minor;
 
-    variable Exception? readException := null;
-    variable String? readContents := null;
+    variable Exception? readException = null;
+    variable String? readContents = null;
     
     doc "The HTTP headers as a [[List]]"
     shared List<Header> headers {
@@ -128,14 +128,14 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
 
     class ChunkedEntityReader(FileDescriptor fileDescriptor) satisfies Reader {
     
-        variable Boolean firstChunk := true;
-        variable Integer nextChunkSize := 0;
-        variable Boolean lastChunkRead := false;
+        variable Boolean firstChunk = true;
+        variable Integer nextChunkSize = 0;
+        variable Boolean lastChunkRead = false;
 
         void parseChunkHeader(){
-            nextChunkSize := parser.parseChunkHeader(firstChunk);
-            firstChunk := false;
-            lastChunkRead := nextChunkSize == 0;
+            nextChunkSize = parser.parseChunkHeader(firstChunk);
+            firstChunk = false;
+            lastChunkRead = nextChunkSize == 0;
             if(lastChunkRead){
                 // add optional headers
                 parser.parseChunkTrailer();
@@ -154,13 +154,13 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
             }
             // only read up to the chunk size available
             if(buffer.available > nextChunkSize){
-                buffer.limit := buffer.position + nextChunkSize;
+                buffer.limit = buffer.position + nextChunkSize;
             }
             Integer bytesRead = fileDescriptor.read(buffer);
             // if we came to EOF, mark ourselves as EOF even though it's not normal
             // FIXME: should we barf?
             if(bytesRead == -1){
-                lastChunkRead := true;
+                lastChunkRead = true;
             }else{
                 nextChunkSize -= bytesRead;
             }
@@ -179,10 +179,10 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         }
         try{
             String c = readEntityBody();
-            readContents := c;
+            readContents = c;
             return c;
         }catch(Exception x){
-            readException := x;
+            readException = x;
             throw x;
         }
     }

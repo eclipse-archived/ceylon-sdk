@@ -6,10 +6,10 @@ shared class TestUnit(name, callable) {
     doc "The test code."
     shared Void() callable;
     doc "The [[state|TestState]] of this unit."
-    shared variable TestState state := undefined;
+    shared variable TestState state = undefined;
     doc "The exception thrown by this unit, if any."
-    shared variable Exception? exception := null;
+    shared variable Exception? exception = null;
     doc "The time it took to execute this unit."
-    shared variable Integer elapsedTimeInMilis := -1;
+    shared variable Integer elapsedTimeInMilis = -1;
     
 }

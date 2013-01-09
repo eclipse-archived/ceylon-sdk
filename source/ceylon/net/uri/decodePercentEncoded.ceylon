@@ -17,8 +17,8 @@ doc "Decodes a percent-encoded ASCII string."
 by "Stéphane Épardaud"
 shared String decodePercentEncoded(String str){
     Array<Integer> array = JString(str).getBytes("ASCII");
-    variable Integer r := 0;
-    variable Integer w := 0;
+    variable Integer r = 0;
+    variable Integer w = 0;
     while(r < array.size){
         if(exists Integer char = array[r]){
             if(char == `%`.integer){

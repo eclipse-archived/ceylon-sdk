@@ -93,7 +93,7 @@ shared class Sql(DataSource ds) {
 
     PreparedStatement prepareExistingStatement(PreparedStatement stmt, Iterable<Object> params) {
         //Set parameters
-        variable value i:=1;
+        variable value i=1;
         for (p in params) {
             switch (p)
             case (is Integer) { stmt.setLong(i,p); }
@@ -120,7 +120,7 @@ shared class Sql(DataSource ds) {
 
     CallableStatement prepareCall(ConnectionStatus conn, String sql, Iterable<Object> params) {
         value cs = conn.connection().prepareCall(sql);
-        variable value i:=1;
+        variable value i=1;
         /*for (p in params) {
             switch (p)
             case (is Integer) { cs.setLong(i,p); }
@@ -247,7 +247,7 @@ shared class Sql(DataSource ds) {
         try {
             value stmt = prepareStatement(conn, sql, params);
             if (limit > 0 && offset <= 0) {
-                stmt.maxRows:=limit;
+                stmt.maxRows=limit;
             }
             try {
                 value rs = stmt.executeQuery();
@@ -257,7 +257,7 @@ shared class Sql(DataSource ds) {
                     value cont = offset > 0 then (1..offset).every((Integer x) rs.next()) else true;
                     value sb = SequenceBuilder<Map<String, Object>>();
                     if (limit > 0) {
-                        variable value count := 0;
+                        variable value count = 0;
                         while (count < limit && rs.next()) {
                             sb.append(LazyMap({for (i in range) mapColumn(rs, meta, i)}));
                             count++;
@@ -286,7 +286,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -314,7 +314,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -338,7 +338,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -362,7 +362,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -386,7 +386,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -421,7 +421,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -449,7 +449,7 @@ shared class Sql(DataSource ds) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
-            stmt.maxRows:=1;
+            stmt.maxRows=1;
             try {
                 value rs = stmt.executeQuery();
                 try {
@@ -475,9 +475,9 @@ shared class Sql(DataSource ds) {
     shared default void transaction(Boolean do()) {
         value conn = conns.get();
         conn.beginTransaction();
-        variable value ok := false;
+        variable value ok = false;
         try {
-            ok := do();
+            ok = do();
         } finally {
             try {
                 if (ok) {
@@ -508,7 +508,7 @@ shared class Sql(DataSource ds) {
         try {
             value stmt = prepareStatement(conn, sql, params);
             if (limit > 0 && offset <= 0) {
-                stmt.maxRows:=limit;
+                stmt.maxRows=limit;
             }
             try {
                 value rs = stmt.executeQuery();
@@ -517,7 +517,7 @@ shared class Sql(DataSource ds) {
                     value range = 1..meta.columnCount;
                     value cont = offset > 0 then (1..offset).every((Integer x) rs.next()) else true;
                     if (limit > 0) {
-                        variable value count := 0;
+                        variable value count = 0;
                         while (count < limit && rs.next()) {
                             body(LazyMap({for (i in range) mapColumn(rs, meta, i)}));
                             count++;

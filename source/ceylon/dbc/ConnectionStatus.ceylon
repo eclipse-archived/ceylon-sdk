@@ -4,9 +4,9 @@ import java.lang { ThreadLocal }
 
 class ConnectionStatus(DataSource ds) {
 
-    variable value tx:=false;
-    variable Connection? conn:=null;
-    variable value use:=0;
+    variable value tx=false;
+    variable Connection? conn=null;
+    variable value use=0;
 
     doc "Creates a new connection if needed and returns it."
     shared Connection connection() {
@@ -16,7 +16,7 @@ class ConnectionStatus(DataSource ds) {
                 return c;
             }
         }
-        conn := ds.connection;
+        conn = ds.connection;
         if (exists c=conn) {
 			use++;
             return c;
@@ -36,8 +36,8 @@ class ConnectionStatus(DataSource ds) {
 
     doc "Begins a transaction in the current connection."
     shared void beginTransaction() {
-        connection().autoCommit:=false;
-        tx := true;
+        connection().autoCommit=false;
+        tx = true;
     }
 
     doc "Commits the current transaction, clearing the transaction flag.
@@ -50,14 +50,14 @@ class ConnectionStatus(DataSource ds) {
             connection().rollback();
             throw ex;
         } finally {
-            tx := false;
+            tx = false;
         }
     }
 
     doc "Rolls back the current transaction, clearing the transaction flag."
     shared void rollback() {
         connection().rollback();
-        tx := false;
+        tx = false;
     }
 }
 

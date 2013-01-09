@@ -102,9 +102,9 @@ class UTF8Encoder(charset) satisfies Encoder {
 class UTF8Decoder(charset) extends AbstractDecoder()  {
     shared actual Charset charset;
     
-    variable Integer needsMoreBytes := 0;
+    variable Integer needsMoreBytes = 0;
     ByteBuffer bytes = newByteBuffer(3);
-    variable Boolean byteOrderMarkSeen := false;
+    variable Boolean byteOrderMarkSeen = false;
     
     shared actual String done() {
         if(needsMoreBytes > 0){
@@ -140,16 +140,16 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
                 // keep this byte in any case
                 bytes.put(byte);
                 if(byte < bin('11100000')){
-                    needsMoreBytes := 1;
+                    needsMoreBytes = 1;
                     continue;
                 }
                 if(byte < bin('11110000')){
-                    needsMoreBytes := 2;
+                    needsMoreBytes = 2;
                     continue;
                 }
                 // 0b1111 0000 <= byte < 0b1111 1000
                 if(byte < bin('11111000')){
-                    needsMoreBytes := 3;
+                    needsMoreBytes = 3;
                     continue;
                 }
             }
@@ -191,7 +191,7 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
             }
             // 0xFEFF is the Byte Order Mark in UTF8
             if(char == hex('FEFF') && builder.size == 0 && !byteOrderMarkSeen){
-                byteOrderMarkSeen := true;
+                byteOrderMarkSeen = true;
             }else{
                 builder.appendCharacter(char.character);
             }

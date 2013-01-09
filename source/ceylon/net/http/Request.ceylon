@@ -20,7 +20,7 @@ shared class Request(uri, method = "GET"){
     
     doc "The port to connect to. Defaults to 80 for `http` Uris and to 443 for `https` uris, unless
          overridden in the [[uri]]."
-    shared variable Integer port := 80;
+    shared variable Integer port = 80;
 
     if(uri.relative){
         throw Exception("Can't request a relative URI");
@@ -31,11 +31,11 @@ shared class Request(uri, method = "GET"){
             throw Exception("Only HTTP and HTTPS schemes are supported");
         }
         if(exists tmpPort = uri.authority.port){
-            port := tmpPort;
+            port = tmpPort;
         }else if(scheme == "http"){
-            port := 80;
+            port = 80;
         }else if(scheme == "https"){
-            port := 443;
+            port = 443;
             throw Exception("HTTPS not currently supported (sorry)");
         }
     }else{
@@ -79,9 +79,9 @@ shared class Request(uri, method = "GET"){
     setHeader("Accept-Charset", "UTF-8");
     
     String prepareRequest() {
-        variable String path := uri.pathPart;
+        variable String path = uri.pathPart;
         if(path.empty){
-            path := "/";
+            path = "/";
         }
         if(exists query = uri.queryPart){
             path += "?"+query;

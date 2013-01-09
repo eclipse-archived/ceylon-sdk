@@ -37,20 +37,20 @@ shared class TestRunner() {
     
     void runTest(TestUnit test) {
         value startTime = process.milliseconds;
-        test.state := running;
+        test.state = running;
         fire((TestListener l) l.testStarted(test));
         try {
             test.callable();
-            test.state := success;
+            test.state = success;
         } catch(AssertException e) {
-            test.state := failure;
-            test.exception := e;
+            test.state = failure;
+            test.exception = e;
         } catch(Exception e) {
-            test.state := error;
-            test.exception := e;
+            test.state = error;
+            test.exception = e;
         } finally {
           value finishTime = process.milliseconds;
-          test.elapsedTimeInMilis := finishTime - startTime;
+          test.elapsedTimeInMilis = finishTime - startTime;
         }
         fire((TestListener l) l.testFinished(test));
     }

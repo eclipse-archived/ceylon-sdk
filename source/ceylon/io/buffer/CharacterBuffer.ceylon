@@ -11,12 +11,12 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
     shared actual Integer capacity = string.size;
     
     doc "Initially set to the [[string]] size."
-    shared variable actual Integer limit := string.size;
+    shared variable actual Integer limit = string.size;
     
     doc "The current position index within this buffer. Starts at `0`
          and grows with each [[get]] or [[put]] operation, until it reaches
          the [[limit]]."
-    shared variable actual Integer position := 0;
+    shared variable actual Integer position = 0;
 
     doc "Returns false. This buffer is read-only."
     shared actual Boolean writable = false;
@@ -24,8 +24,8 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
     doc "Resets the [[position]] to `0` and the [[limit]] to the [[capacity]]. Use
          this after reading to start reading the whole buffer again."
     shared actual void clear() {
-        position := 0;
-        limit := capacity;
+        position = 0;
+        limit = capacity;
     }
 
     doc "This will and set its [[limit]] to the current [[position]],
@@ -33,8 +33,8 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
          to read from the beginning of the buffer until the last object you read with [[get]]
          while reading."
     shared actual void flip() {
-        limit := position;
-        position := 0;
+        limit = position;
+        position = 0;
     }
 
     doc "Reads a [[Character]] from this buffer at the current [[position]].

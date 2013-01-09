@@ -1,10 +1,10 @@
 doc "Holds the results of running the tests held by the given `runner`."
 shared class TestResult(TestRunner runner) {
     
-    variable Integer runCounter := 0;
-    variable Integer successCounter := 0;
-    variable Integer failureCounter := 0;
-    variable Integer errorCounter := 0;
+    variable Integer runCounter = 0;
+    variable Integer successCounter = 0;
+    variable Integer failureCounter = 0;
+    variable Integer errorCounter = 0;
     
     doc "Whether all the tests succeeded."
     shared Boolean isSuccess { 

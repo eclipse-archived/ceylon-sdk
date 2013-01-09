@@ -8,7 +8,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
     shared LinkedList<PathSegment> segments = LinkedList<PathSegment>();
     
     doc "True if this URI is absolute (begins with a `/`)"
-    shared variable Boolean absolute := initialAbsolute;
+    shared variable Boolean absolute = initialAbsolute;
     
     for(PathSegment s in initialSegments){
         segments.add(s);
@@ -77,7 +77,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
         if(absolute){
             b.appendCharacter(`/`);
         }
-        variable Integer i := 0;
+        variable Integer i = 0;
         for(PathSegment segment in segments){
             if(i++ > 0){
                 b.appendCharacter(`/`);

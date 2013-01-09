@@ -8,7 +8,7 @@ doc "Reader that can read from a [[FileDescriptor]].
 by "Stéphane Épardaud"
 shared class FileDescriptorReader(FileDescriptor fileDescriptor, Integer? length = null) satisfies Reader {
     
-    variable Integer position := 0;
+    variable Integer position = 0;
     
     doc "Reads data into the specified [[buffer]] and return the number
          of bytes read, or `-1` if the end of file is reached."
@@ -21,7 +21,7 @@ shared class FileDescriptorReader(FileDescriptor fileDescriptor, Integer? length
             // maybe decrease the max to read from the buffer if required
             Integer remaining = length - position;
             if(buffer.available > remaining){
-                buffer.limit := buffer.position + remaining;
+                buffer.limit = buffer.position + remaining;
             }
         }
         Integer r = fileDescriptor.read(buffer);

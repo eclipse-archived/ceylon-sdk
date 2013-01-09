@@ -15,7 +15,7 @@ shared class Authority(user = null, password = null, host = null, port = null){
 
     doc "True if the host name is an ipLiteral (IPV6 or later) and has to be represented 
          surrounded by [] (square brackets)"
-    shared variable Boolean ipLiteral := false;
+    shared variable Boolean ipLiteral = false;
     
     doc "The optional port number"
     shared variable Integer? port;

@@ -54,7 +54,7 @@ shared class Query(Parameter... initialParameters) {
             return "";
         }
         StringBuilder b = StringBuilder();
-        variable Integer i := 0;
+        variable Integer i = 0;
         for(Parameter p in parameters){
             if(i++ > 0){
                 b.appendCharacter(`&`);

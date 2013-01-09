@@ -5,7 +5,7 @@ by "Stéphane Épardaud"
 shared class PathSegment(String initialName, Parameter... initialParameters) {
     
     doc "The path segment name"
-    shared variable String name := initialName;
+    shared variable String name = initialName;
     
     doc "The path segment paramters"
     shared LinkedList<Parameter> parameters = LinkedList<Parameter>();

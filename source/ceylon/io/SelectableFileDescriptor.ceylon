@@ -41,7 +41,7 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
     see (Selector)
     shared void writeAsync(Selector selector, void producer(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         setNonBlocking();
-        variable Boolean needNewData := true;
+        variable Boolean needNewData = true;
         Boolean writeData(FileDescriptor socket){
             // get new data if we ran out
             if(needNewData){
@@ -53,12 +53,12 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
                     // EOI
                     return false;
                 }
-                needNewData := false;
+                needNewData = false;
             }
             // try to write it
             if(socket.write(buffer) >= 0){
                 // did we manage to write everything?
-                needNewData := !buffer.hasAvailable;
+                needNewData = !buffer.hasAvailable;
                 return true;
             }else{
                 // EOF

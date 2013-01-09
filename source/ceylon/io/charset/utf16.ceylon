@@ -101,15 +101,15 @@ class UTF16Encoder(charset) satisfies Encoder {
 class UTF16Decoder(charset) extends AbstractDecoder()  {
     shared actual Charset charset;
     
-    variable Boolean needsMoreBytes := false;
-    variable Integer firstByte := 0;
+    variable Boolean needsMoreBytes = false;
+    variable Integer firstByte = 0;
 
-    variable Boolean needsLowSurrogate := false;
-    variable Integer highSurrogate := 0;
+    variable Boolean needsLowSurrogate = false;
+    variable Integer highSurrogate = 0;
     
-    variable Boolean bigEndian := true;
+    variable Boolean bigEndian = true;
 
-    variable Boolean byteOrderMarkSeen := false;
+    variable Boolean byteOrderMarkSeen = false;
     
     shared actual String done() {
         if(needsMoreBytes){
@@ -140,8 +140,8 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
             // are we looking at the first byte of a 16-bit word?
             if(!needsMoreBytes){
                 // keep this byte in any case
-                firstByte := byte;
-                needsMoreBytes := true;
+                firstByte = byte;
+                needsMoreBytes = true;
                 continue;
             }
             // are we looking at the second byte?
@@ -150,7 +150,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                 
                 // assemble the two bytes
                 Integer word = assembleBytes(firstByte, byte);
-                needsMoreBytes := false;
+                needsMoreBytes = false;
                 
                 // are we looking at the first 16-bit word?
                 if(!needsLowSurrogate){
@@ -163,8 +163,8 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                         throw Exception("Invalid UTF-16 high surrogate value: " word "");
                     }else{
                         // we're waiting for the second half;
-                        highSurrogate := word;
-                        needsLowSurrogate := true;
+                        highSurrogate = word;
+                        needsLowSurrogate = true;
                         continue;
                     }
                 }else{
@@ -178,15 +178,15 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                     Integer part2 = word.and(bin('1111111111'));
                     char = part1.or(part2) + (hex('10000'));
                     
-                    needsLowSurrogate := false; 
+                    needsLowSurrogate = false; 
                 }
 
                 // 0xFEFF is the Byte Order Mark in UTF8
                 if(char == hex('FEFF') && builder.size == 0 && !byteOrderMarkSeen){
-                    byteOrderMarkSeen := true;
+                    byteOrderMarkSeen = true;
                 }else if(char == hex('FFFE') && builder.size == 0 && !byteOrderMarkSeen){
-                    byteOrderMarkSeen := true;
-                    bigEndian := false;
+                    byteOrderMarkSeen = true;
+                    bigEndian = false;
                 }else{
                     builder.appendCharacter(char.character);
                 }

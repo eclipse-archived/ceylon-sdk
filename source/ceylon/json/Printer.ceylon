@@ -2,7 +2,7 @@ by "Stéphane Épardaud"
 doc "A JSON Printer"
 shared abstract class Printer(Boolean pretty = false){
     
-    variable Integer level := 0;
+    variable Integer level = 0;
     
     void enter(){
         level++;
@@ -30,10 +30,10 @@ shared abstract class Printer(Boolean pretty = false){
     shared default void printObject(Object o){
         print("{");
         enter();
-        variable Boolean once := true; 
+        variable Boolean once = true; 
         for(entry in o){
             if(once){
-                once := false;
+                once = false;
             }else{
                 print(",");
             }
@@ -56,10 +56,10 @@ shared abstract class Printer(Boolean pretty = false){
     shared default void printArray(Array o){
         print("[");
         enter();
-        variable Boolean once := true; 
+        variable Boolean once = true; 
         for(elem in o){
             if(once){
-                once := false;
+                once = false;
             }else{
                 print(",");
             }

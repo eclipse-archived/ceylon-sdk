@@ -4,8 +4,8 @@ shared class HashSet<Element>()
     satisfies MutableSet<Element>
         given Element satisfies Object {
     
-    variable Array<Cell<Element>?> store := makeCellElementArray<Element>(16);
-    variable Integer _size := 0;
+    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(16);
+    variable Integer _size = 0;
     Float loadFactor = 0.75;
 
     // Write
@@ -14,30 +14,30 @@ shared class HashSet<Element>()
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
             Array<Cell<Element>?> newStore = makeCellElementArray<Element>(_size * 2);
-            variable Integer index := 0;
+            variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
-                variable Cell<Element>? bucket := store[index];
+                variable Cell<Element>? bucket = store[index];
                 while(exists Cell<Element> cell = bucket){
                     addToStore(newStore, cell.car);
-                    bucket := cell.cdr;
+                    bucket = cell.cdr;
                 }
                 index++;
             }
-            store := newStore;
+            store = newStore;
         }
     }
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket := store[index];
+        variable Cell<Element>? bucket = store[index];
         while(exists Cell<Element> cell = bucket){
             if(cell.car == element){
                 // modify an existing entry
-                cell.car := element;
+                cell.car = element;
                 return false;
             }
-            bucket := cell.cdr;
+            bucket = cell.cdr;
         }
         // add a new entry
         store.setItem(index, Cell<Element>(element, store[index]));
@@ -63,32 +63,32 @@ shared class HashSet<Element>()
     doc "Removes an element from this set, if present"
     shared actual void remove(Element element){
         Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket := store[index];
-        variable Cell<Element>? prev := null;
+        variable Cell<Element>? bucket = store[index];
+        variable Cell<Element>? prev = null;
         while(exists Cell<Element> cell = bucket){
             if(cell.car == element){
                 // found it
                 if(exists Cell<Element> last = prev){
-                    last.cdr := cell.cdr;
+                    last.cdr = cell.cdr;
                 }else{
                     store.setItem(index, cell.cdr);
                 }
                 _size--;
                 return;
             }
-            prev := cell;
-            bucket := cell.cdr;
+            prev = cell;
+            bucket = cell.cdr;
         }
     }
     
     doc "Removes every element"
     shared actual void clear(){
-        variable Integer index := 0;
+        variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
             store.setItem(index++, null);
         }
-        _size := 0;
+        _size = 0;
     }
 
     Integer storeIndex(Object elem, Array<Cell<Element>?> store){
@@ -108,15 +108,15 @@ shared class HashSet<Element>()
     shared actual Iterator<Element> iterator {
         // FIXME: make this faster with a size check
         object iter satisfies Iterator<Element> {
-            variable Integer index := 0;
-            variable Cell<Element>? bucket := store[index];
+            variable Integer index = 0;
+            variable Cell<Element>? bucket = store[index];
             
             shared actual Element|Finished next() {
                 // do we need a new bucket?
                 if(!bucket exists){
                     // find the next non-empty bucket
                     while(++index < store.size){
-                        bucket := store[index];
+                        bucket = store[index];
                         if(bucket exists){
                             break;
                         }
@@ -126,7 +126,7 @@ shared class HashSet<Element>()
                 if(exists Cell<Element> bucket = bucket){
                     value car = bucket.car;
                     // advance to the next cell
-                    this.bucket := bucket.cdr;
+                    this.bucket = bucket.cdr;
                     return car;
                 }
                 return exhausted;
@@ -136,16 +136,16 @@ shared class HashSet<Element>()
     }
     
     shared actual Integer count(Boolean selecting(Element element)) {
-        variable Integer c := 0;
-        variable Integer index := 0;
+        variable Integer c = 0;
+        variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket := store[index];
+            variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
                 if(selecting(cell.car)){
                     c++;
                 }
-                bucket := cell.cdr;
+                bucket = cell.cdr;
             }
             index++;
         }
@@ -153,21 +153,21 @@ shared class HashSet<Element>()
     }
     
     shared actual String string {
-        variable Integer index := 0;
+        variable Integer index = 0;
         StringBuilder ret = StringBuilder();
         ret.append("(");
-        variable Boolean first := true;
+        variable Boolean first = true;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket := store[index];
+            variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
                 if(!first){
                     ret.append(", ");
                 }else{
-                    first := false;
+                    first = false;
                 }
                 ret.append(cell.car.string);
-                bucket := cell.cdr;
+                bucket = cell.cdr;
             }
             index++;
         }
@@ -176,14 +176,14 @@ shared class HashSet<Element>()
     }
     
     shared actual Integer hash {
-        variable Integer index := 0;
-        variable Integer hash := 17;
+        variable Integer index = 0;
+        variable Integer hash = 17;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket := store[index];
+            variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
-                hash := hash * 31 + cell.car.hash;
-                bucket := cell.cdr;
+                hash = hash * 31 + cell.car.hash;
+                bucket = cell.cdr;
             }
             index++;
         }
@@ -201,15 +201,15 @@ shared class HashSet<Element>()
         if(size != that.size){
             return false;
         }
-        variable Integer index := 0;
+        variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket := store[index];
+            variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
                 if(!that.contains(cell.car)){
                     return false;
                 }
-                bucket := cell.cdr;
+                bucket = cell.cdr;
             }
             index++;
         }
@@ -218,9 +218,9 @@ shared class HashSet<Element>()
     
     shared actual HashSet<Element> clone {
         HashSet<Element> clone = HashSet<Element>();
-        clone._size := _size;
-        clone.store := makeCellElementArray<Element>(store.size);
-        variable Integer index := 0;
+        clone._size = _size;
+        clone.store = makeCellElementArray<Element>(store.size);
+        variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
             if(exists Cell<Element> bucket = store[index]){
@@ -232,15 +232,15 @@ shared class HashSet<Element>()
     }
     
     shared actual Boolean contains(Object element) {
-        variable Integer index := 0;
+        variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket := store[index];
+            variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
                 if(cell.car == element){
                     return true;
                 }
-                bucket := cell.cdr;
+                bucket = cell.cdr;
             }
             index++;
         }

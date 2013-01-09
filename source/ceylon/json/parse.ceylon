@@ -1,6 +1,6 @@
 class Parser(String str){
     Character[] chars = str.characters;
-    variable Integer index := 0;
+    variable Integer index = 0;
 
     shared Object parseObject(){
         Object obj = Object();
@@ -124,7 +124,7 @@ class Parser(String str){
         if(!isDigit(c)){
             throw Exception("Expected digit, got: " c.string "");
         }
-        variable Integer digits := parseDigit(c);
+        variable Integer digits = parseDigit(c);
         while(isDigit(char())){
             digits *= 10;
             digits += parseDigit(eatChar());

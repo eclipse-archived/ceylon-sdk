@@ -36,8 +36,8 @@ shared class SelectorImpl() satisfies Selector {
                 value key = map[javaKey];
                 if(exists key){
                     // update our key
-                    key.onRead := callback;
-                    key.socket := socket;
+                    key.onRead = callback;
+                    key.socket = socket;
                     javaKey.interestOps(javaKey.interestOps().or(javaReadOp));
                 }else{
                     throw;
@@ -60,8 +60,8 @@ shared class SelectorImpl() satisfies Selector {
                 value key = map[javaKey];
                 if(exists key){
                     // update our key
-                    key.onWrite := callback;
-                    key.socket := socket;
+                    key.onWrite = callback;
+                    key.socket = socket;
                     javaKey.interestOps(javaKey.interestOps().or(javaWriteOp));
                 }else{
                     throw;
@@ -84,8 +84,8 @@ shared class SelectorImpl() satisfies Selector {
                 value key = map[javaKey];
                 if(exists key){
                     // update our key
-                    key.onConnect := callback;
-                    key.connector := connector;
+                    key.onConnect = callback;
+                    key.connector = connector;
                     javaKey.interestOps(javaKey.interestOps().or(javaConnectOp));
                 }else{
                     throw;
@@ -108,8 +108,8 @@ shared class SelectorImpl() satisfies Selector {
                 value key = map[javaKey];
                 if(exists key){
                     // update our key
-                    key.onAccept := callback;
-                    key.acceptor := acceptor;
+                    key.onAccept = callback;
+                    key.acceptor = acceptor;
                     javaKey.interestOps(javaKey.interestOps().or(javaAcceptOp));
                 }else{
                     throw;
@@ -137,7 +137,7 @@ shared class SelectorImpl() satisfies Selector {
                             // drop the reading bits
                         print("Dropping read interest");
                             selectedKey.interestOps(selectedKey.interestOps().xor(javaReadOp));
-                            key.onRead := null;
+                            key.onRead = null;
                         }else{
                             print("Cancelling key");
                             selectedKey.cancel();
@@ -165,7 +165,7 @@ shared class SelectorImpl() satisfies Selector {
                             // drop the reading bits
                             print("Dropping write interest");
                             selectedKey.interestOps(selectedKey.interestOps().xor(javaWriteOp));
-                            key.onWrite := null;
+                            key.onWrite = null;
                         }else{
                             print("Cancelling key");
                             selectedKey.cancel();
@@ -195,8 +195,8 @@ shared class SelectorImpl() satisfies Selector {
                         // drop the connect bits
                         print("Dropping connect interest");
                         selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));
-                        key.onConnect := null;
-                        key.connector := null;
+                        key.onConnect = null;
+                        key.connector = null;
                     }else{
                         print("Cancelling key");
                         selectedKey.cancel();
@@ -226,8 +226,8 @@ shared class SelectorImpl() satisfies Selector {
                             // drop the connect bits
                             print("Dropping connect interest");
                             selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));
-                            key.onConnect := null;
-                            key.connector := null;
+                            key.onConnect = null;
+                            key.connector = null;
                         }else{
                             print("Cancelling key");
                             selectedKey.cancel();

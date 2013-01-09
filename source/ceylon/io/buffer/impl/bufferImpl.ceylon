@@ -4,7 +4,7 @@ import ceylon.io.buffer { ByteBuffer }
 Boolean needsWorkarounds = true;
 
 shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
-    variable JavaByteBuffer buf := allocateJavaByteBuffer(initialCapacity);
+    variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
     shared JavaByteBuffer underlyingBuffer {
         return buf;
     }
@@ -80,7 +80,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         // copy
         dest.put(buf);
         // change buffer
-        buf := dest;
+        buf = dest;
         // now restore positions
         buf.limit(limit);
         buf.position(position);

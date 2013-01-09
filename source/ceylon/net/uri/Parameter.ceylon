@@ -3,8 +3,8 @@ import ceylon.net.iop { eq }
 doc "Represents a URI path segment or query parameter"
 by "Stéphane Épardaud"
 shared class Parameter(String initialName, String? initialValue = null) {
-    shared variable String name := initialName;
-    shared variable String? val := initialValue;
+    shared variable String name = initialName;
+    shared variable String? val = initialValue;
     
     doc "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human){
