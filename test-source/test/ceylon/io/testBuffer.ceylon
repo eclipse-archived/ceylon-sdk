@@ -10,7 +10,7 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
     assertEquals(0, buffer.position);
     assertEquals(true, buffer.hasAvailable);
     
-    variable Integer position := 0;
+    variable Integer position = 0;
     if(buffer.writable){
         // put four bytes
         for(T val in values){
@@ -33,7 +33,7 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
     }
     
     // now check the results
-    position := 0;
+    position = 0;
     for(T val in values){
         assertEquals(val, buffer.get());
         position++;

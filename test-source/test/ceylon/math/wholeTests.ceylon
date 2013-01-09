@@ -122,7 +122,7 @@ shared void wholeTests() {
     print("Whole *cessor");
     assertEquals(wholeNumber(2), wholeNumber(1).successor, "1.successor");
     assertEquals(wholeNumber(0), wholeNumber(1).predecessor, "1.predecessor");
-    variable Whole w := wholeNumber(0);
+    variable Whole w = wholeNumber(0);
     assertEquals(wholeNumber(1), ++w, "++0");
     assertEquals(wholeNumber(0), --w, "--1");
 

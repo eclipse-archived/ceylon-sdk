@@ -4,9 +4,9 @@ import org.h2.jdbcx { JdbcDataSource }
 
 JdbcDataSource createDataSource() {
     value ds = JdbcDataSource();
-    ds.url:="jdbc:h2:~/test";
-    ds.user:="sa";
-    ds.password:="sa";
+    ds.url="jdbc:h2:~/test";
+    ds.user="sa";
+    ds.password="sa";
     return ds;
 }
 

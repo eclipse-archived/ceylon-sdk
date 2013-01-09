@@ -55,7 +55,7 @@ void testFileCreateWriteReadWithoutReopen(){
 	assertEquals(12, file.size);
 	
 	// reset it and read it
-	file.position := 0;
+	file.position = 0;
 	assertEquals(0, file.position);
 	assertEquals(12, file.size);
     Decoder decoder = utf8.newDecoder();
@@ -88,13 +88,13 @@ void testFileCreateWriteResetWriteRead(){
 	assertEquals(12, file.size);
 	
 	// reset it and change the start
-	file.position := 0;
+	file.position = 0;
 	file.writeFrom(stringToByteProducer(utf8, "olleH"));
 	assertEquals(5, file.position);
 	assertEquals(12, file.size);
 	
 	// reset it and read it
-	file.position := 0;
+	file.position = 0;
 	assertEquals(0, file.position);
 	assertEquals(12, file.size);
     Decoder decoder = utf8.newDecoder();
@@ -127,7 +127,7 @@ void testFileTruncate(){
 	assertEquals(12, file.size);
 	
 	// truncate it and read it
-	file.position := 0;
+	file.position = 0;
 	file.truncate(5);
 	assertEquals(0, file.position);
 	assertEquals(5, file.size);
