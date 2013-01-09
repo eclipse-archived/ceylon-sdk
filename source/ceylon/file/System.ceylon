@@ -46,8 +46,8 @@ shared System createZipFileSystem(
         doc "The character encoding for entry names." 
         String encoding="UTF-8") {
     return createSystem("jar:" + file.path.uriString, 
-            {"create"->(file is Nil).string, 
-            "encoding"->encoding}...);
+            "create"->(file is Nil).string, 
+            "encoding"->encoding);
 } 
 
 doc "A `System` representing the default file system."

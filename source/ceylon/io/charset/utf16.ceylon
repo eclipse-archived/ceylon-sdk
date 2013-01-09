@@ -16,7 +16,7 @@ shared object utf16 satisfies Charset {
     doc "Returns a list of common aliases such as `utf16` and `utf_16` even
          though these are not defined officially as aliases by
          [the internet registry](http://www.iana.org/assignments/character-sets)."
-    shared actual String[] aliases = {"utf16", "utf_16"};
+    shared actual String[] aliases = ["utf16", "utf_16"];
     
     doc "Returns 2."
     shared actual Integer minimumBytesPerCharacter = 2;

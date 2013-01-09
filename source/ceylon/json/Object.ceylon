@@ -34,7 +34,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         return Object(contents.sequence...);
     }
     
-    shared actual Nothing|String|Boolean|Integer|Float|Object|Array|NullInstance item(LangObject key) {
+    shared actual Null|String|Boolean|Integer|Float|Object|Array|NullInstance item(LangObject key) {
         return contents[key];
     }
     
@@ -137,7 +137,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     throws "If the key points to a type that is neither [[Integer]] nor [[NullInstance]]."
     shared Integer? getIntegerOrNull(String key){
         value val = item(key);
-        if(is Integer|Nothing val){
+        if(is Integer|Null val){
             return val;
         }
         if(is NullInstance val){
@@ -150,7 +150,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     throws "If the key points to a type that is neither [[Float]] nor [[NullInstance]]."
     shared Float? getFloatOrNull(String key){
         value val = item(key);
-        if(is Float|Nothing val){
+        if(is Float|Null val){
             return val;
         }
         if(is NullInstance val){
@@ -163,7 +163,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     throws "If the key points to a type that is neither [[Boolean]] nor [[NullInstance]]."
     shared Boolean? getBooleanOrNull(String key){
         value val = item(key);
-        if(is Boolean|Nothing val){
+        if(is Boolean|Null val){
             return val;
         }
         if(is NullInstance val){
@@ -176,7 +176,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     throws "If the key points to a type that is neither [[String]] nor [[NullInstance]]."
     shared String? getStringOrNull(String key){
         value val = item(key);
-        if(is String|Nothing val){
+        if(is String|Null val){
             return val;
         }
         if(is NullInstance val){
@@ -189,7 +189,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     throws "If the key points to a type that is neither [[Object]] nor [[NullInstance]]."
     shared Object? getObjectOrNull(String key){
         value val = item(key);
-        if(is Object|Nothing val){
+        if(is Object|Null val){
             return val;
         }
         if(is NullInstance val){
@@ -202,7 +202,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
     throws "If the key points to a type that is neither [[Array]] nor [[NullInstance]]."
     shared Array? getArrayOrNull(String key){
         value val = item(key);
-        if(is Array|Nothing val){
+        if(is Array|Null val){
             return val;
         }
         if(is NullInstance val){

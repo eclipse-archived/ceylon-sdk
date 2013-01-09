@@ -15,7 +15,7 @@ shared object ascii satisfies Charset {
          because we use the _preferred MIME name_ (`US-ASCII`) as [[name]], we include the
          official character set name `ANSI_X3.4-1968` in the aliases, thereby deviating
          from the spec."
-    shared actual String[] aliases = {
+    shared actual String[] aliases = [
         "ANSI_X3.4-1968",
         "iso-ir-6",
         "ANSI_X3.4-1986",
@@ -25,7 +25,7 @@ shared object ascii satisfies Charset {
         "us",
         "IBM367",
         "cp367"
-    };
+    ];
 
     doc "Returns 1."
     shared actual Integer minimumBytesPerCharacter = 1;

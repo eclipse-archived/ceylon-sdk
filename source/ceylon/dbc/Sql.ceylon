@@ -254,7 +254,7 @@ shared class Sql(DataSource ds) {
                 try {
                     value meta = rs.metaData;
                     value range = 1..meta.columnCount;
-                    value cont = offset > 0 then (1..offset).every((Integer x) rs.next()) else true;
+                    value cont = offset > 0 then (1..offset).every((Integer x) => rs.next()) else true;
                     value sb = SequenceBuilder<Map<String, Object>>();
                     if (limit > 0) {
                         variable value count = 0;
@@ -515,7 +515,7 @@ shared class Sql(DataSource ds) {
                 try {
                     value meta = rs.metaData;
                     value range = 1..meta.columnCount;
-                    value cont = offset > 0 then (1..offset).every((Integer x) rs.next()) else true;
+                    value cont = offset > 0 then (1..offset).every((Integer x) => rs.next()) else true;
                     if (limit > 0) {
                         variable value count = 0;
                         while (count < limit && rs.next()) {

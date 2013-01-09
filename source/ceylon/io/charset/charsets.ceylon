@@ -8,7 +8,7 @@ doc "The list of all supported character sets.
      - UTF-16
      "
 by "Stéphane Épardaud"
-shared Charset[] charsets = { ascii, iso_8859_1, utf8, utf16 };
+shared Charset[] charsets = [ ascii, iso_8859_1, utf8, utf16 ];
 
 doc "Gets a character set by name or alias."
 by "Stéphane Épardaud"

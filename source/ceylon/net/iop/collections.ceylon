@@ -8,7 +8,7 @@ shared class JavaIterator<T>(JIterator<T> iter) satisfies Iterator<T>{
         if(iter.hasNext()){
             return iter.next();
         } else {
-            return exhausted;
+            return finished;
         }
     }
 

@@ -60,11 +60,11 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         }
         JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
         // save our position and limit
-        value position = min({this.position, newSize});
+        value position = min([this.position, newSize]);
         Integer limit;
         if(newSize < capacity){
             // shrink the limit
-            limit = min({this.limit, newSize});
+            limit = min([this.limit, newSize]);
         }else if(growLimit && this.limit == capacity){
             // grow the limit if it was the max and we want that
             limit = newSize;
@@ -73,7 +73,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
             limit = this.limit;
         }
         // copy everything unless we shrink
-        value copyUntil = min({this.capacity, newSize});
+        value copyUntil = min([this.capacity, newSize]);
         // prepare our limits for copying
         buf.position(0);
         buf.limit(copyUntil);

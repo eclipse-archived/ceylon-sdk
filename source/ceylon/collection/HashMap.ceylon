@@ -123,7 +123,7 @@ shared class HashMap<Key, Item>()
     // FIXME
     doc "Not implemented"
     shared actual Item?[] items(Object... keys) {
-        return bottom;
+        return nothing;
     }
     
     shared actual Collection<Item> values {
@@ -202,7 +202,7 @@ shared class HashMap<Key, Item>()
                     this.bucket = bucket.cdr;
                     return car;
                 }
-                return exhausted;
+                return finished;
             }
         }
         return iter;
@@ -269,7 +269,7 @@ shared class HashMap<Key, Item>()
     see (equalsTemp)
     shared actual Boolean equals(Object that) {
         // FIXME: can't implement this :(
-        return bottom;
+        return nothing;
     }
     
     shared Boolean equalsTemp(Map<Key,Item> that){

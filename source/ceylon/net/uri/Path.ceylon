@@ -34,7 +34,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
         }
         PathSegment path = PathSegment(decodePercentEncoded(name));
         if(exists sep){
-            for(String param in part[sep+1...].split((Character ch) ch == `;`, true, false)){
+            for(String param in part[sep+1...].split((Character ch) => ch == `;`, true, false)){
                 path.parameters.add(parseParameter(param));
             }
         }

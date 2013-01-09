@@ -148,28 +148,28 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     doc "Not implemented yet"
     // FIXME
     shared actual Element?[] items(Integer... keys) {
-        return bottom;
+        return nothing;
     }
     
     doc "Not implemented yet"
     // FIXME
     shared actual Sequence<Element> span(Integer from, Integer to) {
-        return bottom;
+        return nothing;
     }
     doc "Not implemented yet"
     // FIXME
     shared actual Sequence<Element> spanFrom(Integer from) {
-        return bottom;
+        return nothing;
     }
     doc "Not implemented yet"
     // FIXME
     shared actual Sequence<Element> spanTo(Integer to) {
-        return bottom;
+        return nothing;
     }
     doc "Not implemented yet"
     // FIXME
     shared actual Sequence<Element> segment(Integer from, Integer length) {
-        return bottom;
+        return nothing;
     }
     
     shared actual Boolean defines(Integer index) {
@@ -334,6 +334,6 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
 
     doc "Not implemented yet"
     shared actual LinkedList<Element> reversed {
-        return bottom;
+        return nothing;
     }
 }

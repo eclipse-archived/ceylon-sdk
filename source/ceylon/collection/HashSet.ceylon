@@ -129,7 +129,7 @@ shared class HashSet<Element>()
                     this.bucket = bucket.cdr;
                     return car;
                 }
-                return exhausted;
+                return finished;
             }
         }
         return iter;
@@ -194,7 +194,7 @@ shared class HashSet<Element>()
     see (equalsTemp)
     shared actual Boolean equals(Object that) {
         // FIXME: can't implement this :(
-        return bottom;
+        return nothing;
     }
     
     shared Boolean equalsTemp(Set<Element> that){

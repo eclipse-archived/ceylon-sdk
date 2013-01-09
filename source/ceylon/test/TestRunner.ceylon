@@ -12,7 +12,7 @@ shared class TestRunner() {
     }
     
     doc "Adds a test to be run"
-    shared void addTest(String name, Void() callable) {
+    shared void addTest(String name, Anything() callable) {
         testList.add(TestUnit(name, callable));
     }
     
@@ -26,11 +26,11 @@ shared class TestRunner() {
         TestRunner runner = this;
         TestResult result = TestResult(this);
         
-        fire((TestListener l) l.testRunStarted(runner));
+        fire((TestListener l) => l.testRunStarted(runner));
         for(test in testList) {
             runTest(test);
         }
-        fire((TestListener l) l.testRunFinished(runner, result));
+        fire((TestListener l) => l.testRunFinished(runner, result));
         
         return result;
     }
@@ -38,7 +38,7 @@ shared class TestRunner() {
     void runTest(TestUnit test) {
         value startTime = process.milliseconds;
         test.state = running;
-        fire((TestListener l) l.testStarted(test));
+        fire((TestListener l) => l.testStarted(test));
         try {
             test.callable();
             test.state = success;
@@ -52,7 +52,7 @@ shared class TestRunner() {
           value finishTime = process.milliseconds;
           test.elapsedTimeInMilis = finishTime - startTime;
         }
-        fire((TestListener l) l.testFinished(test));
+        fire((TestListener l) => l.testFinished(test));
     }
     
     void fire(void fireCallable(TestListener testListener)) {

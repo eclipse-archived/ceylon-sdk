@@ -18,7 +18,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance... val
     }
     
     doc "Gets the value at the given index, or `null` if it does not exist"
-    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance|Nothing item(Integer index){
+    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance|Null item(Integer index){
         return list[index];
     }
     

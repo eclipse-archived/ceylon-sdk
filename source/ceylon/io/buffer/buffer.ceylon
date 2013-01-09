@@ -105,7 +105,7 @@ shared abstract class Buffer<T>() satisfies Iterable<T> {
                 if(hasAvailable){
                     return get();
                 }
-                return exhausted;
+                return finished;
             }
         }
         return it;

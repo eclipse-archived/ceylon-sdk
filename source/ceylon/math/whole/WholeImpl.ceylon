@@ -175,7 +175,7 @@ class WholeImpl(BigInteger num)
         throw;
     }
     
-    shared actual Integer distanceFrom(Whole other) {
+    shared actual Integer integerValue {
         // See https://github.com/ceylon/ceylon.language/issues/92#issuecomment-7964218
         throw;
     }

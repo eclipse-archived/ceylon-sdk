@@ -1,6 +1,6 @@
 import java.lang { Math { jsin=sin, jcos=cos, jtan=tan, jsinh=sinh, jcosh=cosh, jtanh=tanh, jasin=asin, jacos=acos, jatan=atan, jatan2=atan2, jhypot=hypot, jexp=exp, jlog=log, jlog10=log10, jsqrt=sqrt, jcbrt=cbrt, jrandom=random, jfloor=floor, jceiling=ceil, jrint=rint, jmin=min, jmax=max, jscalb=scalb } }
 
-doc "\{0001D452} raised to the power of the argument.
+doc "\{#0001D452} raised to the power of the argument.
 
      * `exp(-infinity)` is `+0`,
      * `exp(+infinity)` is `+infinity`,
@@ -10,7 +10,7 @@ shared Float exp(Float num) {
     return jexp(num);
 }
 
-doc "The natural logarithm (base \{0001D452}) of the 
+doc "The natural logarithm (base \{#0001D452}) of the 
      argument.
 
      * `log(x)` for any x < 0 is `undefined`,
@@ -202,71 +202,71 @@ td>+0</td>
 <tr>
 <td>+0</td>                       
 <td>&lt; 0</td>     
-<td>The `Float` best approximating \{03C0}</td>
+<td>The `Float` best approximating \{#03C0}</td>
 </tr>
 
 <tr>
 <td>&gt; 0 and not +infinity</td> 
 <td>-infinity</td>  
-<td>The `Float` best approximating \{03C0}</td>
+<td>The `Float` best approximating \{#03C0}</td>
 </tr>
 
 <tr>
 <td>-0</td>                       
 <td>&lt; 0</td>     
-<td>The `Float` best approximating -\{03C0}</td>
+<td>The `Float` best approximating -\{#03C0}</td>
 </tr>
 
 <tr>
 <td>&lt; 0 and not -infinity</td> 
 <td>-infinity</td>  
-<td>The `Float` best approximating -\{03C0}</td>
+<td>The `Float` best approximating -\{#03C0}</td>
 </tr>
 
 <tr>
 <td>&gt; 0</td>    
 <td>+0 or -0</td>                   
-<td>The `Float` best approximating \{03C0}/2</td>
+<td>The `Float` best approximating \{#03C0}/2</td>
 </tr>
 
 <tr>
 <td>+infinity</td> 
 <td>not +infinity or -infinity</td> 
-<td>The `Float` best approximating \{03C0}/2</td>
+<td>The `Float` best approximating \{#03C0}/2</td>
 </tr>
 
 <tr>
 <td>&lt; 0</td>    
 <td>+0 or -0</td>                   
-<td>The `Float` best approximating -\{03C0}/2</td>
+<td>The `Float` best approximating -\{#03C0}/2</td>
 </tr>
 
 <tr>
 <td>-infinity</td> 
 <td>not +infinity or -infinity</td> 
-<td>The `Float` best approximating -\{03C0}/2</td>
+<td>The `Float` best approximating -\{#03C0}/2</td>
 </tr>
 
 <tr>
 <td>+infinity</td> <td>+infinity</td> 
-<td>The `Float` best approximating \{03C0}/4</td>
+<td>The `Float` best approximating \{#03C0}/4</td>
 </tr>
 
 <tr>
 <td>+infinity</td> <td>-infinity</td> 
-<td>The `Float` best approximating 3\{03C0}/4</td>
+<td>The `Float` best approximating 3\{#03C0}/4</td>
 </tr>
 
 <tr>
 <td>-infinity</td> 
 <td>+infinity</td> 
-<td>The `Float` best approximating -\{03C0}/4</td>
+<td>The `Float` best approximating -\{#03C0}/4</td>
 </tr>
 
 <tr>
 <td>-infinity</td> 
 <td>-infinity</td> 
-<td>The `Float` best approximating -3\{03C0}/4</td>
+<td>The `Float` best approximating -3\{#03C0}/4</td>
 </tr>
 
 </tbody>
@@ -419,7 +419,7 @@ shared Float product(Float... values) {
     return sum;
 }
 
-doc "The value of `x \{00D7} 2\{207F}`, calculated exactly 
+doc "The value of `x \{#00D7} 2\{#207F}`, calculated exactly 
      for reasonable values of `n`."
 shared Float scalb(Float x, Integer n) {
     return jscalb(x, n);

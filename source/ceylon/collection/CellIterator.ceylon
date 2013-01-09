@@ -6,6 +6,6 @@ class CellIterator<T>(iter) satisfies Iterator<T> {
             this.iter = iter.cdr;
             return iter.car;
         }
-        return exhausted;
+        return finished;
     }
 }

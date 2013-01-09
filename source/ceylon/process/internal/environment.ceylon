@@ -12,7 +12,7 @@ shared object environment
                     return entry.key.string->entry.\ivalue.string;
                 }
                 else {
-                    return exhausted;
+                    return finished;
                 }
             }
         }

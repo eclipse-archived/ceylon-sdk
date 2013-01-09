@@ -17,7 +17,7 @@ class Key(socket = null, onRead = null, onWrite = null,
     shared variable Callable<Boolean, [FileDescriptor]>? onWrite;
     shared variable shared FileDescriptor? socket;
     
-    shared variable Callable<Void, [Socket]>? onConnect;
+    shared variable Callable<Anything, [Socket]>? onConnect;
     shared variable SocketConnectorImpl? connector;
     
     shared variable Callable<Boolean, [Socket]>? onAccept;

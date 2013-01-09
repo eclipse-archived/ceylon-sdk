@@ -15,7 +15,7 @@ shared object iso_8859_1 satisfies Charset {
          because we use the _preferred MIME name_ (`ISO-8859-1`) as [[name]], we include the
          official character set name `ISO_8859-1:1987` in the aliases, thereby deviating
          from the spec."
-    shared actual String[] aliases = {
+    shared actual String[] aliases = [
         "ISO_8859-1:1987", // official name
         "iso-ir-100",
         "ISO_8859-1",
@@ -31,7 +31,7 @@ shared object iso_8859_1 satisfies Charset {
         "iso8859_1", 
         "latin-1", 
         "latin_1"
-    };
+    ];
 
     doc "Returns 1."
     shared actual Integer minimumBytesPerCharacter = 1;

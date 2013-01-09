@@ -128,7 +128,7 @@ shared URI parseURI(String uri){
         }
         if(!pathPart.empty){
             variable Boolean first = true;
-            for(String part in pathPart.split((Character ch) ch == `/`, true, false)){
+            for(String part in pathPart.split((Character ch) => ch == `/`, true, false)){
                 if(first && part.empty){
                     path.absolute = true;
                     first = false;
@@ -143,7 +143,7 @@ shared URI parseURI(String uri){
     }
 
     void parseQueryPart(String queryPart) {
-        for(String part in queryPart.split((Character ch) ch == `&`, true, false)){
+        for(String part in queryPart.split((Character ch) => ch == `&`, true, false)){
             query.addRaw(part);
         }
     }

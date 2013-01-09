@@ -4,7 +4,7 @@ shared class TestUnit(name, callable) {
     doc "The name of this test."
     shared String name;
     doc "The test code."
-    shared Void() callable;
+    shared Anything() callable;
     doc "The [[state|TestState]] of this unit."
     shared variable TestState state = undefined;
     doc "The exception thrown by this unit, if any."
