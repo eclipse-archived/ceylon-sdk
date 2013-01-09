@@ -38,28 +38,28 @@ void testEncoder(Charset charset, String string, Integer... bytes){
 }
 
 void testFullASCIIEncoder(){
-    testEncoder(ascii, "asd", hex('61'), hex('73'), hex('64'));
+    testEncoder(ascii, "asd", #61, #73, #64);
 }
 
 void testLatin1Encoder(){
     testEncoder(iso_8859_1, "Stéphane Épardaud", 
-                            hex('53'), hex('74'), hex('E9'), hex('70'), hex('68'), hex('61'), hex('6E'), hex('65'), hex('20'),
-                            hex('C9'), hex('70'), hex('61'), hex('72'), hex('64'), hex('61'), hex('75'), hex('64'));
+                            #53, #74, #E9, #70, #68, #61, #6E, #65, #20,
+                            #C9, #70, #61, #72, #64, #61, #75, #64);
 }
 
 void testUTF8Encoder(){
     // samples from http://tools.ietf.org/html/rfc3629
-    testEncoder(utf8, "A≢Α.", hex('41'), hex('E2'), hex('89'), hex('A2'), hex('CE'), hex('91'), hex('2E'));
-    testEncoder(utf8, "한국어", hex('ED'), hex('95'), hex('9C'), hex('EA'), hex('B5'), hex('AD'), hex('EC'), hex('96'), hex('B4'));
-    testEncoder(utf8, "日本語", hex('E6'), hex('97'), hex('A5'), hex('E6'), hex('9C'), hex('AC'), hex('E8'), hex('AA'), hex('9E'));
-    testEncoder(utf8, "𣎴", hex('F0'), hex('A3'), hex('8E'), hex('B4'));
+    testEncoder(utf8, "A≢Α.", #41, #E2, #89, #A2, #CE, #91, #2E);
+    testEncoder(utf8, "한국어", #ED, #95, #9C, #EA, #B5, #AD, #EC, #96, #B4);
+    testEncoder(utf8, "日本語", #E6, #97, #A5, #E6, #9C, #AC, #E8, #AA, #9E);
+    testEncoder(utf8, "𣎴", #F0, #A3, #8E, #B4);
 }
 
 void testUTF16Encoder(){
     // samples from http://en.wikipedia.org/wiki/UTF-16
-    testEncoder(utf16, "z水𐀀𝄞􏿽", hex('00'), hex('7A'),
-                                    hex('6C'), hex('34'),
-                                    hex('D8'), 0, hex('DC'), 0,
-                                    hex('D8'), hex('34'), hex('DD'), hex('1E'),
-                                    hex('DB'), hex('FF'), hex('DF'), hex('FD'));
+    testEncoder(utf16, "z水𐀀𝄞􏿽", #00, #7A,
+                                    #6C, #34,
+                                    #D8, 0, #DC, 0,
+                                    #D8, #34, #DD, #1E,
+                                    #DB, #FF, #DF, #FD);
 }
