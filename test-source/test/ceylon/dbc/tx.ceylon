@@ -13,7 +13,7 @@ void transactionTests() {
         if (exists count1 = sql.queryForInteger("SELECT count(*) FROM test1")) {
             assertEquals(count0, count1, "rollback");
         }
-        sql.transaction(() sql.update("DELETE FROM test1")==count0);
+        sql.transaction(() => sql.update("DELETE FROM test1")==count0);
         if (exists count1 = sql.queryForInteger("SELECT count(*) FROM test1")) {
             assertEquals(0, count1, "commit");
         }

@@ -26,7 +26,7 @@ void testFileCreateWriteRead(){
 	assertEquals(0, file2.position);
 	assertEquals(12, file2.size);
     Decoder decoder = utf8.newDecoder();
-	file2.readFully((ByteBuffer buffer) decoder.decode(buffer));
+	file2.readFully((ByteBuffer buffer) => decoder.decode(buffer));
 	file2.close();
 
 	if(is File f = path.resource){
@@ -59,7 +59,7 @@ void testFileCreateWriteReadWithoutReopen(){
 	assertEquals(0, file.position);
 	assertEquals(12, file.size);
     Decoder decoder = utf8.newDecoder();
-	file.readFully((ByteBuffer buffer) decoder.decode(buffer));
+	file.readFully((ByteBuffer buffer) => decoder.decode(buffer));
 	file.close();
 
 	if(is File f = path.resource){
@@ -98,7 +98,7 @@ void testFileCreateWriteResetWriteRead(){
 	assertEquals(0, file.position);
 	assertEquals(12, file.size);
     Decoder decoder = utf8.newDecoder();
-	file.readFully((ByteBuffer buffer) decoder.decode(buffer));
+	file.readFully((ByteBuffer buffer) => decoder.decode(buffer));
 	file.close();
 
 	if(is File f = path.resource){
@@ -132,7 +132,7 @@ void testFileTruncate(){
 	assertEquals(0, file.position);
 	assertEquals(5, file.size);
     Decoder decoder = utf8.newDecoder();
-	file.readFully((ByteBuffer buffer) decoder.decode(buffer));
+	file.readFully((ByteBuffer buffer) => decoder.decode(buffer));
 	file.close();
 
 	if(is File f = path.resource){

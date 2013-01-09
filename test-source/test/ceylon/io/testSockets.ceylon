@@ -7,7 +7,7 @@ void readResponse(Socket socket) {
     // blocking read
     Decoder decoder = utf8.newDecoder();
     // read,decode it all, blocking
-    socket.readFully((ByteBuffer buffer) decoder.decode(buffer));
+    socket.readFully((ByteBuffer buffer) => decoder.decode(buffer));
     // print it all
     print(decoder.done());
 }
@@ -15,7 +15,7 @@ void readResponse(Socket socket) {
 void readAsyncResponse2(Socket socket){
     Selector select = newSelector();
     // read, decode, print as we get data
-    socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) process.write(string)));
+    socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) => process.write(string)));
     // run the event loop
     select.process();
     print("");
@@ -25,7 +25,7 @@ void readAsyncResponse(Socket socket){
     Selector select = newSelector();
     Decoder decoder = utf8.newDecoder();
     // read, decode it all as we get data
-    socket.readAsync(select, (ByteBuffer buffer) decoder.decode(buffer));
+    socket.readAsync(select, (ByteBuffer buffer) => decoder.decode(buffer));
     // run the event loop
     select.process();
     // print it all
@@ -80,7 +80,7 @@ void readAndWriteAsync(String request, Socket socket){
     // encode and write as we can
     socket.writeAsync(select, stringToByteProducer(ascii, request));
     // read, decode and print as we can
-    socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) process.write(string)));
+    socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) => process.write(string)));
     // run the event loop
     select.process();
     print("");

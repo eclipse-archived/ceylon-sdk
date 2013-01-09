@@ -47,7 +47,7 @@ void testParse() {
     
     value o9 = parse("{\"s\": \"escapes \\\\ \\\" \\/ \\b \\f \\t \\n \\r \\u0053 \\u3042\"}");
     assertEquals(1, o9.size);
-    assertEquals("escapes \\ \" / \b \f \t \n \r \{0053} \{3042}", o9["s"]);
+    assertEquals("escapes \\ \" / \b \f \t \n \r \{#0053} \{#3042}", o9["s"]);
     
     value o10 = parse("{\"obj\": {\"gee\": \"bar\"}}");
     assertEquals(1, o10.size);

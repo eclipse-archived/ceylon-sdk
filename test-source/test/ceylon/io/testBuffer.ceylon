@@ -71,13 +71,13 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
 
 void testByteBuffer(){
     ByteBuffer buffer = newByteBuffer(4);
-    Integer[] values = {1, 200, 200, 200};
+    Integer[] values = [1, 200, 200, 200];
     testBuffer(buffer, values);
 }
 
 void testByteBufferResize(){
     ByteBuffer buffer = newByteBuffer(4);
-    Integer[] values = {1, 2, 3, 4};
+    Integer[] values = [1, 2, 3, 4];
     for(Integer val in values){
         buffer.put(val);
     }
@@ -127,6 +127,6 @@ void testByteBufferResize(){
 
 void testCharacterBuffer(){
     CharacterBuffer buffer = newCharacterBufferWithData("abcd");
-    Character[] values = {`a`, `b`, `c`, `d`};
+    Character[] values = [`a`, `b`, `c`, `d`];
     testBuffer(buffer, values);
 }
