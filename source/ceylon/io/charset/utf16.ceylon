@@ -59,28 +59,28 @@ class UTF16Encoder(charset) satisfies Encoder {
                 // now read from input
                 value codePoint = input.get().integer;
                 // how many bytes?
-                if(codePoint < hex('10000')){
+                if(codePoint < #10000){
                     // single 16-bit value
                     // two bytes
-                    value b1 = codePoint.and(hex('FF00')).rightLogicalShift(8);
-                    value b2 = codePoint.and(hex('FF'));
+                    value b1 = codePoint.and(#FF00).rightLogicalShift(8);
+                    value b2 = codePoint.and(#FF);
                     output.put(b1);
                     // save it for later
                     bytes.clear();
                     bytes.put(b2);
                     bytes.flip();
-                }else if(codePoint < hex('10FFFF')){
+                }else if(codePoint < #10FFFF){
                     // two 16-bit values
-                    value u = codePoint - hex('10000');
+                    value u = codePoint - #10000;
                     // keep the high 10 bits
-                    value high = u.and(bin('11111111110000000000')).rightLogicalShift(10).or(hex('D800'));
+                    value high = u.and($11111111110000000000).rightLogicalShift(10).or(#D800);
                     // and the low 10 bits
-                    value low = u.and(bin('1111111111')).or(hex('DC00'));
+                    value low = u.and($1111111111).or(#DC00);
                     // now turn them into four bytes
-                    value b1 = high.and(hex('FF00')).rightLogicalShift(8);
-                    value b2 = high.and(hex('FF'));
-                    value b3 = low.and(hex('FF00')).rightLogicalShift(8);
-                    value b4 = low.and(hex('FF'));
+                    value b1 = high.and(#FF00).rightLogicalShift(8);
+                    value b2 = high.and(#FF);
+                    value b3 = low.and(#FF00).rightLogicalShift(8);
+                    value b4 = low.and(#FF);
                     output.put(b1);
                     // save it for later
                     bytes.clear();
@@ -155,10 +155,10 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                 // are we looking at the first 16-bit word?
                 if(!needsLowSurrogate){
                     // Single 16bit value
-                    if(word < hex('D800') || word > hex('DFFF')){
+                    if(word < #D800 || word > #DFFF){
                         // we got the char
                         char = word;
-                    }else if(word > hex('DBFF')){
+                    }else if(word > #DBFF){
                         // FIXME: type
                         throw Exception("Invalid UTF-16 high surrogate value: " word "");
                     }else{
@@ -169,22 +169,22 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                     }
                 }else{
                     // we have the second 16-bit word, check it
-                    if(word < hex('DC00') || word > hex('DFFF')){
+                    if(word < #DC00 || word > #DFFF){
                         // FIXME: type
                         throw Exception("Invalid UTF-16 low surrogate value: " word "");
                     }
                     // now assemble them
-                    Integer part1 = highSurrogate.and(bin('1111111111')).leftLogicalShift(10);
-                    Integer part2 = word.and(bin('1111111111'));
-                    char = part1.or(part2) + (hex('10000'));
+                    Integer part1 = highSurrogate.and($1111111111).leftLogicalShift(10);
+                    Integer part2 = word.and($1111111111);
+                    char = part1.or(part2) + (#10000);
                     
                     needsLowSurrogate = false; 
                 }
 
                 // 0xFEFF is the Byte Order Mark in UTF8
-                if(char == hex('FEFF') && builder.size == 0 && !byteOrderMarkSeen){
+                if(char == #FEFF && builder.size == 0 && !byteOrderMarkSeen){
                     byteOrderMarkSeen = true;
-                }else if(char == hex('FFFE') && builder.size == 0 && !byteOrderMarkSeen){
+                }else if(char == #FFFE && builder.size == 0 && !byteOrderMarkSeen){
                     byteOrderMarkSeen = true;
                     bigEndian = false;
                 }else{
