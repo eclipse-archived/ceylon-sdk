@@ -147,7 +147,7 @@ shared class Sql(DataSource ds) {
 
     doc "Execute a SQL statement, with the given parameters. The SQL string
          must use the '?' parameter placeholders."
-    shared default Boolean execute(String sql, Object... params) {
+    shared default Boolean execute(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -165,7 +165,7 @@ shared class Sql(DataSource ds) {
          the number of rows that were affected. This is useful for
          DELETE or UPDATE statements. The SQL string must use the '?'
          parameter placeholders."
-    shared default Integer update(String sql, Object... params) {
+    shared default Integer update(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -182,7 +182,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL INSERT statement with the given parameters, and return
          the generated keys (if the JDBC driver supports it). The SQL string
          must use the '?' parameter placeholders."
-    shared default Object[][] insert(String sql, Object... params) {
+    shared default Object[][] insert(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = conn.connection().prepareStatement(sql, returnGeneratedKeys);
@@ -214,7 +214,7 @@ shared class Sql(DataSource ds) {
          that were affected. This is useful to call database functions or
          stored procedures that update or delete rows. The SQL string must
          use the '?' parameter placeholers."
-    shared default Integer callUpdate(String sql, Object... params) {
+    shared default Integer callUpdate(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareCall(conn, sql, params);
@@ -228,7 +228,7 @@ shared class Sql(DataSource ds) {
         }
     }
 
-    shared default Map<Integer, Object>? call(String sql, Object... params) {
+    shared default Map<Integer, Object>? call(String sql, Object* params) {
         return null;
     }
 
@@ -282,7 +282,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          row from the result only. The SQL string must use the '?' parameter
          placeholders."
-    shared default Map<String, Object>? firstRow(String sql, Object... params) {
+    shared default Map<String, Object>? firstRow(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -310,7 +310,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as an Integer value. The SQL string must
          use the '?' parameter placeholders."
-    shared default Integer? queryForInteger(String sql, Object... params) {
+    shared default Integer? queryForInteger(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -334,7 +334,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as a Float. The SQL string must
          use the '?' parameter placeholders."
-    shared default Float? queryForFloat(String sql, Object... params) {
+    shared default Float? queryForFloat(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -358,7 +358,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as a Boolean. The SQL string must
          use the '?' parameter placeholders."
-    shared default Boolean? queryForBoolean(String sql, Object... params) {
+    shared default Boolean? queryForBoolean(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -382,7 +382,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as a Decimal. The SQL string must
          use the '?' parameter placeholders."
-    shared default Decimal? queryForDecimal(String sql, Object... params) {
+    shared default Decimal? queryForDecimal(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -410,14 +410,14 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as a Whole. The SQL string must
          use the '?' parameter placeholders."
-    shared default Whole? queryForWhole(String sql, Object... params) {
+    shared default Whole? queryForWhole(String sql, Object* params) {
         return null;
     }
 
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as a String. The SQL string must
          use the '?' parameter placeholders."
-    shared default String? queryForString(String sql, Object... params) {
+    shared default String? queryForString(String sql, Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
@@ -444,7 +444,7 @@ shared class Sql(DataSource ds) {
     doc "Execute a SQL query with the given parameters, and return the first
          column of the first result, as a Float. The SQL string must
          use the '?' parameter placeholders."
-    shared default Value? queryForValue<Value>(String sql, Object... params)
+    shared default Value? queryForValue<Value>(String sql, Object* params)
             given Value satisfies Object {
         value conn = conns.get();
         try {
@@ -503,7 +503,7 @@ shared class Sql(DataSource ds) {
             doc "The number of rows to skip from the result before starting processing. Default 0."
             Integer offset=0,
             doc "The parameters to pass to the SQL query."
-            Object... params) {
+            Object* params) {
         value conn = conns.get();
         try {
             value stmt = prepareStatement(conn, sql, params);
