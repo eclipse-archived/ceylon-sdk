@@ -8,7 +8,7 @@ shared interface MutableSet<Element>
     shared formal void add(Element element);
 
     doc "Adds the elements to this set, unless already present"
-    shared formal void addAll(Element... elements);
+    shared formal void addAll(Element* elements);
     
     doc "Removes an element from this set, if present"
     shared formal void remove(Element element);

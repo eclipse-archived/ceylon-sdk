@@ -2,7 +2,7 @@ import ceylon.collection { LinkedList }
 
 doc "Represents a URI Path segment part"
 by "Stéphane Épardaud"
-shared class PathSegment(String initialName, Parameter... initialParameters) {
+shared class PathSegment(String initialName, Parameter* initialParameters) {
     
     doc "The path segment name"
     shared variable String name = initialName;

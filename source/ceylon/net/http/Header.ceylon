@@ -2,7 +2,7 @@ import ceylon.collection { LinkedList, MutableList }
 
 doc "Represents an HTTP Header"
 by "Stéphane Épardaud"
-shared class Header(name, String... initialValues){
+shared class Header(name, String* initialValues){
     
     doc "Header name"
     shared String name;

@@ -9,7 +9,7 @@ shared interface MutableMap<Key, Item>
     shared formal void put(Key key, Item item);
     
     doc "Adds the key/value mappings to this map, may be used to change existing mappings"
-    shared formal void putAll(Key->Item... entries);
+    shared formal void putAll(<Key->Item>* entries);
     
     doc "Removes a key/value mapping if it exists"
     shared formal void remove(Key key);

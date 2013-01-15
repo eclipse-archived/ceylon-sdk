@@ -23,7 +23,7 @@ doc "Allocates a new [[ByteBuffer]] filled with the [[bytes]] given
      `capacity`."
 by "Stéphane Épardaud"
 see (ByteBuffer, newByteBuffer, Buffer)
-shared ByteBuffer newByteBufferWithData(Integer... bytes){
+shared ByteBuffer newByteBufferWithData(Integer* bytes){
     value seq = bytes.sequence;
     value buf = newByteBuffer(seq.size);
     for(Integer byte in seq){

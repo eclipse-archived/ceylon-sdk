@@ -2,7 +2,7 @@ import ceylon.collection { LinkedList }
 
 doc "Represents a URI Path part"
 by "Stéphane Épardaud"
-shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegments) {
+shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments) {
     
     doc "The list of path segments"
     shared LinkedList<PathSegment> segments = LinkedList<PathSegment>();
@@ -15,7 +15,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment... initialSegment
     }
 
     doc "Adds a path segment"
-    shared void add(String segment, Parameter... parameters) {
+    shared void add(String segment, Parameter* parameters) {
         PathSegment part = PathSegment(segment);
         for(Parameter p in parameters){
             part.parameters.add(p);

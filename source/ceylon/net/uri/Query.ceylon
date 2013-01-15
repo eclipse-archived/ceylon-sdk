@@ -2,7 +2,7 @@ import ceylon.collection { LinkedList }
 
 doc "Represents a URI Query part"
 by "Stéphane Épardaud"
-shared class Query(Parameter... initialParameters) {
+shared class Query(Parameter* initialParameters) {
     
     doc "The list of query parameters"
     shared LinkedList<Parameter> parameters = LinkedList<Parameter>();

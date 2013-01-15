@@ -14,7 +14,7 @@ shared Integer largest(Integer x, Integer y) {
 
 doc "The sum of the given values, or `0` if there are no 
      arguments."
-shared Integer sum(Integer... values) {
+shared Integer sum(Integer* values) {
     variable Integer sum=0;
     for (x in values) {
         sum+=x;
@@ -24,7 +24,7 @@ shared Integer sum(Integer... values) {
 
 doc "The product of the given values, or `1` if there are 
      no arguments."
-shared Integer product(Integer... values) {
+shared Integer product(Integer* values) {
     variable Integer sum=1;
     for (x in values) {
         sum*=x;

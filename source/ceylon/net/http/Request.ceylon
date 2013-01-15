@@ -62,13 +62,13 @@ shared class Request(uri, method = "GET"){
     }
     
     doc "Sets a request header."
-    shared void setHeader(String name, String... values){
+    shared void setHeader(String name, String* values){
         Header? header = getHeader(name);
         if(exists header){
             header.values.clear();
-            header.values.addAll(values...);
+            header.values.addAll(*values);
         }else{
-            headers.add(Header(name, values...));
+            headers.add(Header(name, *values));
         }
     }
     

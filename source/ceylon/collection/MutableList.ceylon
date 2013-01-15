@@ -9,7 +9,7 @@ shared interface MutableList<Element> satisfies List<Element> {
     shared formal void add(Element val);
 
     doc "Adds the items at the end of this list"
-    shared formal void addAll(Element... values);
+    shared formal void addAll(Element* values);
 
     doc "Inserts an item at specified index, list is expanded if index > size"    
     shared formal void insert(Integer index, Element val);

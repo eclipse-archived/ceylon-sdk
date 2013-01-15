@@ -53,7 +53,7 @@ shared class HashSet<Element>()
     }
     
     doc "Adds every element from the given collection to this set, unless already present"
-    shared actual void addAll(Element... elements){
+    shared actual void addAll(Element* elements){
         for(Element elem in elements){
             add(elem);
         }
@@ -246,7 +246,7 @@ shared class HashSet<Element>()
         }
         return false;
     }
-    shared actual Boolean containsEvery(Object... elements) {
+    shared actual Boolean containsEvery(Object* elements) {
         for(Object element in elements){
             if(contains(element)){
                 return true;
@@ -254,7 +254,7 @@ shared class HashSet<Element>()
         }
         return false;
     }
-    shared actual Boolean containsAny(Object... elements) {
+    shared actual Boolean containsAny(Object* elements) {
         for(Object element in elements){
             if(!contains(element)){
                 return false;
@@ -307,8 +307,8 @@ shared class HashSet<Element>()
     shared actual Set<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
-        ret.addAll(this.sequence...);
-        ret.addAll(set.sequence...);
+        ret.addAll(*this.sequence);
+        ret.addAll(*set.sequence);
         return ret;
     }
 

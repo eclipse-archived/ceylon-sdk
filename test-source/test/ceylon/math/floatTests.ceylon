@@ -1,5 +1,5 @@
 import ceylon.test { assertEquals, assertTrue, assertFalse }
-import ceylon.math.float {...}
+import ceylon.math.float { ... }
 
 Float undefined = 0.0/0.0;
 

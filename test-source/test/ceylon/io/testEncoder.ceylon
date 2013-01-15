@@ -26,7 +26,7 @@ void testASCIIEncoder(){
     assertEquals(`d`.integer, output.get());
 }
 
-void testEncoder(Charset charset, String string, Integer... bytes){
+void testEncoder(Charset charset, String string, Integer* bytes){
     value encoded = charset.encode(string);
     value sequence = bytes.sequence;
     assertEquals(0, encoded.position);

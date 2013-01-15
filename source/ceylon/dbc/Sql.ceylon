@@ -65,9 +65,9 @@ doc "A component that can perform queries and execute SQL statements on a
 
          sql.transaction {
              Boolean do() {
-                 sql.insert(\"INSERT...\");
-                 sql.update(\"UPDATE...\");
-                 sql.update(\"DELETE...\");
+                 sql.insert(\"INSERT*\");
+                 sql.update(\"UPDATE*\");
+                 sql.update(\"DELETE*\");
                  //This will cause a commit - return false or throw to cause rollback
                  return true;
              }

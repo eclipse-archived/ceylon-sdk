@@ -21,7 +21,7 @@ shared class ConcreteProcess(
     actual shared Error|Reader error;
     actual shared Iterable<String->String> environment;
     
-    value builder = ProcessBuilder(command.split().sequence...);
+    value builder = ProcessBuilder(*command.split().sequence);
     builder.directory(JFile(path.string));
     for (e in environment) {
         builder.environment()

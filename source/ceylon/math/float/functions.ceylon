@@ -401,7 +401,7 @@ shared Float largest(Float x, Float y) {
 
 doc "The sum of the given values, or `0.0` if there are no 
      arguments."
-shared Float sum(Float... values) {
+shared Float sum(Float* values) {
     variable Float sum=0.0;
     for (x in values) {
         sum+=x;
@@ -411,7 +411,7 @@ shared Float sum(Float... values) {
 
 doc "The product of the given values, or `1.0` if there are 
      no arguments."
-shared Float product(Float... values) {
+shared Float product(Float* values) {
     variable Float sum=1.0;
     for (x in values) {
         sum*=x;

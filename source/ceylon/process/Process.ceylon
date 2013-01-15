@@ -77,7 +77,7 @@ shared Process createProcess(
              process. By default the process inherits 
              the environment variables of the current
              virtual machine process."
-        String->String... environment) => ConcreteProcess(command, path, input, output, error, environment);
+        <String->String>* environment) => ConcreteProcess(command, path, input, output, error, environment);
 
 doc "A source for the standard input stream of
      a process."

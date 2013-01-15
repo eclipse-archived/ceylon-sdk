@@ -1,5 +1,5 @@
 import ceylon.test { ... }
-import ceylon.math.integer{...}
+import ceylon.math.integer { ... }
 
 void testIntSumProduct() {
     print("Integer.sum");
