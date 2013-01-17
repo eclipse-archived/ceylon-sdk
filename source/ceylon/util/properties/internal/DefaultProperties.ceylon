@@ -3,7 +3,7 @@ import ceylon.util.properties { Properties, Property, ConfigurationException }
 
 shared class DefaultProperties(Reader reader) satisfies Properties {
 	
-	variable Collection<Property>? properties := null;
+	variable Collection<Property>? properties = null;
 
 	shared actual Property? item(String key) {
 		Property[] properties = items(key);
@@ -22,7 +22,7 @@ shared class DefaultProperties(Reader reader) satisfies Properties {
 		
 		if (!properties exists ) {
 			//TODO synchronized properties parser
-			properties := parseProperties();
+			properties = parseProperties();
 		}
 		
 		if (exists props = properties) {
