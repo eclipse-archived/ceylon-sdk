@@ -110,48 +110,48 @@
         <!-- TODO support verbose attr on ceylon-run command -->
         <!-- TODO run the js tests -->
         <!-- TODO fix the dbc test -->
-        <ceylon-run module="test.ceylon.math/0.4" run="test.ceylon.math.run"
+        <ceylon-run module="test.ceylon.math/${sdk.version}" run="test.ceylon.math.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.collection/0.4" run="test.ceylon.collection.run"
+        <ceylon-run module="test.ceylon.collection/${sdk.version}" run="test.ceylon.collection.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.file/0.4" run="test.ceylon.file.run"
+        <ceylon-run module="test.ceylon.file/${sdk.version}" run="test.ceylon.file.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.io/0.4" run="test.ceylon.io.run"
+        <ceylon-run module="test.ceylon.io/${sdk.version}" run="test.ceylon.io.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.json/0.4" run="test.ceylon.json.run"
+        <ceylon-run module="test.ceylon.json/${sdk.version}" run="test.ceylon.json.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.net/0.4" run="test.ceylon.net.run"
+        <ceylon-run module="test.ceylon.net/${sdk.version}" run="test.ceylon.net.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.process/0.4" run="test.ceylon.process.run"
+        <ceylon-run module="test.ceylon.process/${sdk.version}" run="test.ceylon.process.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.dbc/0.4" run="test.ceylon.dbc.run"
+        <ceylon-run module="test.ceylon.dbc/${sdk.version}" run="test.ceylon.dbc.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
           <rep url="${test.repo}"/>
         </ceylon-run>
             
-        <ceylon-run module="test.ceylon.interop/0.4" run="test.ceylon.interop.run"
+        <ceylon-run module="test.ceylon.interop/${sdk.version}" run="test.ceylon.interop.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
