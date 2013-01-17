@@ -14,6 +14,6 @@ doc "A module for collections.
      "
 by "Stéphane Épardaud"
 license "Apache Software License"
-module ceylon.collection '0.4' {
+module ceylon.collection '0.5' {
     import ceylon.language '0.5';
 }

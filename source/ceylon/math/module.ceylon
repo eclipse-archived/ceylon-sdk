@@ -33,7 +33,7 @@ doc "This module provides four APIs:
      result of each constituent operation rounded down to 40
      decimal digits."
 by "Tom Bentley"
-module ceylon.math '0.4' {
+module ceylon.math '0.5' {
     import ceylon.language '0.5';
     import java.base '7';
 }

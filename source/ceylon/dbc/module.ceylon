@@ -4,9 +4,9 @@ doc "This module offers some components for JDBC-based
      that has been already been configured. "
 by "Enrique Zamudio"
 license "Apache Software License 2.0"
-module ceylon.dbc '0.4' {
+module ceylon.dbc '0.5' {
     import ceylon.language '0.5';
-    export import ceylon.math '0.4';
+    export import ceylon.math '0.5';
     import java.base '7';
     export import java.jdbc '7';
 }

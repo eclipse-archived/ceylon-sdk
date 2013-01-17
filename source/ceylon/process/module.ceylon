@@ -50,8 +50,8 @@ doc "API for running native commands in a child process.
        To wait for the child process to terminate, call
        the `waitForExit()` method of `Process`."
 by "Gavin King"
-module ceylon.process '0.4' {
+module ceylon.process '0.5' {
     import ceylon.language '0.5';
-    export import ceylon.file '0.4';
+    export import ceylon.file '0.5';
     import java.base '7';
 }
