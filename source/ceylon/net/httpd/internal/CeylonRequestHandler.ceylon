@@ -1,4 +1,4 @@
-import io.undertow.server { HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
+import io.undertow.server { JHttpServerExchange = HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
 import ceylon.net.httpd { HttpRequest, WebEndpoint, WebEndpointAsync, HttpCompletionHandler, WebEndpointConfig }
 import ceylon.collection { MutableList, LinkedList }
@@ -9,10 +9,11 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 
 	MutableList<WebEndpointConfigInternal> webEndpointConfigs = LinkedList<WebEndpointConfigInternal>();
 
-	shared actual void handleRequest(HttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
-		if (exists httpServerExchange, exists utCompletionHandler) {
-			HttpRequestImpl request = HttpRequestImpl(httpServerExchange);
-			HttpResponseImpl response = HttpResponseImpl(httpServerExchange);
+	shared actual void handleRequest(JHttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
+		
+		if (exists hse = httpServerExchange, exists utCompletionHandler) {
+			HttpRequestImpl request = HttpRequestImpl(hse);
+			HttpResponseImpl response = HttpResponseImpl(hse);
 
 			try {
 				String requestPath = request.path();
@@ -20,7 +21,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 				
 				if (exists webEndpointConfig) {
 					request.webEndpointConfig(webEndpointConfig);
-					invokeWebEndpoint(webEndpointConfig, request, response, httpServerExchange, utCompletionHandler);
+					invokeWebEndpoint(webEndpointConfig, request, response, hse, utCompletionHandler);
 				} else {
 					response.responseStatus(404);
 					response.responseDone();
@@ -34,10 +35,12 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 			    response.responseDone();
 				utCompletionHandler.handleComplete();
 			}
+		} else {
+			//TODO log error
 		}
 	}
 	
-	void invokeWebEndpoint(WebEndpointConfigInternal webEndpointConfig, HttpRequest request, HttpResponseImpl response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
+	void invokeWebEndpoint(WebEndpointConfigInternal webEndpointConfig, HttpRequest request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
 
 		WebModuleLoader webModuleLoader = WebModuleLoader();
 
@@ -59,7 +62,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
 		} 
 	}
 		
-	class AsyncInvoker(WebEndpointAsync webApp, HttpRequest request, HttpResponseImpl response, HttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
+	class AsyncInvoker(WebEndpointAsync webApp, HttpRequest request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
 		shared actual void run() {
 			object completionHandler satisfies HttpCompletionHandler {
 				shared actual void handleComplete() {

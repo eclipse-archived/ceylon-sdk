@@ -21,10 +21,10 @@ import org.xnio { IoFuture }
 by "Matej Lazar"
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest {
 	
-	variable WebEndpointConfig? endpointConfig := null;
+	variable WebEndpointConfig? endpointConfig = null;
 	
 	HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
-	variable FormData? formData := null;
+	variable FormData? formData = null;
 								
 	shared actual String? header(String name) {
 		return exchange.requestHeaders.getFirst(HttpString(name));
@@ -115,7 +115,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	}
 	
 	shared void webEndpointConfig(WebEndpointConfig webEndpointConfig) {
-		endpointConfig := webEndpointConfig;
+		endpointConfig = webEndpointConfig;
 	}
 	
 	shared actual SocketAddress sourceAddress() {
@@ -128,18 +128,18 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	}
 
 	shared actual HttpSession session() {
-		variable UtSession? utSession := null;
+		variable UtSession? utSession = null;
 		SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
 
 		//TODO configurable session cookie
 		SessionCookieConfig sessionCookieConfig = SessionCookieConfig();
 
 		IoFuture<UtSession> sessionFuture = sessionManager.getSession(exchange, sessionCookieConfig);
-   		utSession := sessionFuture.get();
+   		utSession = sessionFuture.get();
 
 		if (!utSession exists) {
 			IoFuture<UtSession> sessionFutureNew = sessionManager.createSession(exchange, sessionCookieConfig);
-	   		utSession := sessionFutureNew.get();
+	   		utSession = sessionFutureNew.get();
 		}
 		
    		if (exists u = utSession) {
@@ -177,12 +177,12 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	       		if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.startsWith(multiparFormData)) {
 	        		FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
 	        		//is EagerFormParsingHandler is in chain, parsing is already done
-	        		formData := formDataParser.parseBlocking();
+	        		formData = formDataParser.parseBlocking();
 	       		}
 	    	} 
 	    	//If it is not parsable, construct empty
 	    	if (!formData exists) {
-	    		formData := FormData();
+	    		formData = FormData();
 	    	}
 		}
     	return formData;

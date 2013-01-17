@@ -43,15 +43,15 @@ shared class DefaultHttpdServer() satisfies Httpd {
 	}
 
 	shared actual void loadWebEndpointConfig(String? _moduleId, String pathToModuleConfig) {
-		variable String? moduleId := null;
+		variable String? moduleId = null;
 
 		if (exists _moduleId) {
 			if (!_moduleId.empty) {
-				moduleId := _moduleId;
+				moduleId = _moduleId;
 			}
 		}
 		if (! moduleId exists) {
-			moduleId := getLocalModuleId();
+			moduleId = getLocalModuleId();
 		}
 
 		if (exists mid = moduleId) {
@@ -81,23 +81,23 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		session.setNext(ceylonHandler);
 
         CookieHandler cookieHandler = CookieHandler();
-        cookieHandler.next := session;
+        cookieHandler.next = session;
 		
 		EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
-		eagerFormParsingHandler.next := cookieHandler;
+		eagerFormParsingHandler.next = cookieHandler;
 		
 		FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
-		formEncodedDataHandler.next := eagerFormParsingHandler;
+		formEncodedDataHandler.next = eagerFormParsingHandler;
 		
 		MultiPartHandler multiPartHandler = MultiPartHandler();
-		multiPartHandler.next := formEncodedDataHandler;
+		multiPartHandler.next = formEncodedDataHandler;
 
 		HttpHandler errPageHandler = SimpleErrorPageHandler(multiPartHandler);
 		HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
 		HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);
 		
 		HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
-		openListener.rootHandler := httpTransferEncoding;
+		openListener.rootHandler = httpTransferEncoding;
 		
 		object channelListener satisfies ChannelListener<AcceptingChannel<ConnectedStreamChannel>> {
 			shared actual void handleEvent(AcceptingChannel<ConnectedStreamChannel>? channel) {
@@ -134,7 +134,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 		}
 		
 		JThread shutdownThread = JThread(shutdownHook, "Shutdown thread");
-	    shutdownThread.daemon := false;
+	    shutdownThread.daemon = false;
 	    jRuntime.addShutdownHook(shutdownThread);
 
 		worker.awaitTermination();

@@ -8,23 +8,23 @@ by "Matej Lazar"
 shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	
 	//root dir of external (not from car) location
-	variable String? externalPath := null;
+	variable String? externalPath = null;
 
-	variable String carPath := "static";
+	variable String carPath = "static";
 
-	variable String? basePath := null;
+	variable String? basePath = null;
 		
 	shared actual void init(WebEndpointConfig webEndpointConfig) {
-		externalPath := webEndpointConfig.attribute("files-dir");
+		externalPath = webEndpointConfig.attribute("files-dir");
 		
 		if (exists c = webEndpointConfig.attribute("car-static-dir")) {
-			carPath := c;	
+			carPath = c;	
 		}
 		
 		if (exists ext = externalPath) {
-			basePath := ext; 
+			basePath = ext; 
 		} else {
-			basePath := carPath;
+			basePath = carPath;
 		}
 	}
 	
@@ -41,7 +41,7 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
 	            value openFile = newOpenFile(file);
 	            
 	            try {
-	                variable Integer available := file.size;
+	                variable Integer available = file.size;
 	                response.addHeader("content-length", "" available "");
 	                if (is String cntType = file.contentType) {
 						response.addHeader("content-type", cntType);                    

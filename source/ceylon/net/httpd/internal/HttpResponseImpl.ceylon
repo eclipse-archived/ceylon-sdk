@@ -14,7 +14,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
 		throw HttpdInternalException("Cannot get response ChannelFactory."); 
     } 
 
-	variable StreamSinkChannel? response := null;
+	variable StreamSinkChannel? response = null;
 	
 	StreamSinkChannel createResponse() {
 		if (exists factory) {
@@ -28,7 +28,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         if (exists r = response) {
     		return r;
         }
-        response := createResponse();
+        response = createResponse();
         if (exists r = response) {
             return r;
         }
@@ -43,10 +43,10 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         value bb = wrapByteBuffer(bytes);
 		value response = getResponse();
 			
-		variable Integer remaining := bytes.size;       	
+		variable Integer remaining = bytes.size;       	
         while (remaining > 0) {
-			variable Integer written := 0;	
-			while((written := response.write(bb)) > 0) {
+			variable Integer written = 0;	
+			while((written = response.write(bb)) > 0) {
 				remaining -= written;
 				try {
 					response.awaitWritable();
@@ -63,7 +63,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
 	}
 
 	shared actual void responseStatus(Integer responseStatusCode) {
-		exchange.responseCode := responseStatusCode;
+		exchange.responseCode = responseStatusCode;
 	}
 
     shared void responseDone() {

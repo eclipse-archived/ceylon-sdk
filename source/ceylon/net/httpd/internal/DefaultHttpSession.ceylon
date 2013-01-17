@@ -20,7 +20,7 @@ class DefaultHttpSession(UtSession utSession) satisfies HttpSession {
 	
     shared actual Integer maxInactiveInterval(Integer? interval) {
 		if (exists interval) {
-			utSession.maxInactiveInterval := interval;
+			utSession.maxInactiveInterval = interval;
 		}
 		return utSession.maxInactiveInterval;
 	}

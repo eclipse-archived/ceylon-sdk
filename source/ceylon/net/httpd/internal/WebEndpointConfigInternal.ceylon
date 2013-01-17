@@ -3,7 +3,7 @@ import ceylon.net.httpd { WebEndpoint, WebEndpointAsync, WebEndpointConfig}
 by "Matej Lazar"
 class WebEndpointConfigInternal(WebEndpointConfig webEndpointConfig) satisfies WebEndpointConfig {
 
-	shared variable WebEndpoint|WebEndpointAsync|Nothing webEndpoint := null;
+	shared variable WebEndpoint|WebEndpointAsync|Null webEndpoint = null;
 
 	shared actual String path {
 		return webEndpointConfig.path;
@@ -26,6 +26,6 @@ class WebEndpointConfigInternal(WebEndpointConfig webEndpointConfig) satisfies W
 	}
 		
 	shared void setWebEndpoint(WebEndpoint|WebEndpointAsync webEndpoint) {
-		this.webEndpoint := webEndpoint;
+		this.webEndpoint = webEndpoint;
 	}
 }

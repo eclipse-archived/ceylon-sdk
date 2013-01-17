@@ -25,10 +25,13 @@ module ceylon.net '0.5' {
     import java.base '7';
     
     // -- java modules --
-    import io.undertow '1.0.0.Alpha1-SNAPSHOT';
+    import io.undertow.core '1.0.0.Alpha1-9fdfd5f766';
     import org.jboss.modules 'main';
 
     import 'org.jboss.xnio.api' '3.1.0.Beta7';
     import 'org.jboss.xnio.nio' '3.1.0.Beta7';
+    
+    //TODO remove transitive dependency
+    import org.jboss.logging '3.1.2.GA';
 
 }
