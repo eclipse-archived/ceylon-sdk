@@ -147,7 +147,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     
     doc "Not implemented yet"
     // FIXME
-    shared actual Element?[] items(Integer* keys) {
+    shared actual Element?[] items({Integer*} keys) {
         return nothing;
     }
     
@@ -175,7 +175,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     shared actual Boolean defines(Integer index) {
         return index >= 0 && index < _size;
     }
-    shared actual Boolean definesAny(Integer* keys) {
+    shared actual Boolean definesAny({Integer*} keys) {
         for(Integer key in keys){
             if(defines(key)){
                 return true;
@@ -183,7 +183,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         }
         return false;
     }
-    shared actual Boolean definesEvery(Integer* keys) {
+    shared actual Boolean definesEvery({Integer*} keys) {
         for(Integer key in keys){
             if(!defines(key)){
                 return false;
@@ -205,7 +205,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         return false;
     }
     
-    shared actual Boolean containsAny(Object* elements) {
+    shared actual Boolean containsAny({Object*} elements) {
         for(Object elem in elements){
             if(contains(elem)){
                 return true;
@@ -213,7 +213,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         }
         return false;
     }
-    shared actual Boolean containsEvery(Object* elements) {
+    shared actual Boolean containsEvery({Object*} elements) {
         for(Object elem in elements){
             if(!contains(elem)){
                 return false;

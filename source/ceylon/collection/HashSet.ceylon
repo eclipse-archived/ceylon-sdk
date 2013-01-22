@@ -246,7 +246,7 @@ shared class HashSet<Element>()
         }
         return false;
     }
-    shared actual Boolean containsEvery(Object* elements) {
+    shared actual Boolean containsEvery({Object*} elements) {
         for(Object element in elements){
             if(contains(element)){
                 return true;
@@ -254,7 +254,7 @@ shared class HashSet<Element>()
         }
         return false;
     }
-    shared actual Boolean containsAny(Object* elements) {
+    shared actual Boolean containsAny({Object*} elements) {
         for(Object element in elements){
             if(!contains(element)){
                 return false;
