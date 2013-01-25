@@ -133,7 +133,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     
     // Read
     
-    shared actual Element? item(Integer index) {
+    shared actual Element? get(Integer index) {
         variable Cell<Element>? iter = head;
         variable Integer i = 0;
         while(exists Cell<Element> cell = iter){

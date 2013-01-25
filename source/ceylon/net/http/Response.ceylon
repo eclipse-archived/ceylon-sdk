@@ -107,7 +107,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
     
     doc "Fetches a header by name, returns null if the header does not exist."
-    shared actual Header? item(String key) {
+    shared actual Header? get(String key) {
         return headersByName[key.lowercased];
     }
 

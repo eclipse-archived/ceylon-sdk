@@ -100,7 +100,7 @@ shared class HashMap<Key, Item>()
         return _size == 0;
     }
     
-    shared actual Item? item(Object key) {
+    shared actual Item? get(Object key) {
         if(empty){
             return null;
         }
@@ -281,7 +281,7 @@ shared class HashMap<Key, Item>()
         while(index < store.size){
             variable Cell<Key->Item>? bucket = store[index];
             while(exists Cell<Key->Item> cell = bucket){
-                Item? item = that.item(cell.car.key);
+                Item? item = that.get(cell.car.key);
                 if(exists item){
                     if(item != cell.car.item){
                         return false;
@@ -312,7 +312,7 @@ shared class HashMap<Key, Item>()
     }
     
     shared actual Boolean defines(Object key) {
-        return item(key) exists;
+        return get(key) exists;
     }
     shared actual Boolean definesAny({Object*} keys) {
         for(Object key in keys){
