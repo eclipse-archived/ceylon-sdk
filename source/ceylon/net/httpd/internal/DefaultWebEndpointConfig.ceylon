@@ -23,7 +23,7 @@ shared class DefaultWebEndpointConfig(path, className, moduleId) satisfies WebEn
 	}
 
 	shared actual String? attribute(String name) {
-		return attributes.item(name); 
+		return attributes.get(name); 
 	}
 	
 }

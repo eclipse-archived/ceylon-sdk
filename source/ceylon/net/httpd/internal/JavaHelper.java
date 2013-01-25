@@ -31,6 +31,8 @@ public class JavaHelper {
     public static Object createInstance(Object obj, String className, String moduleId) throws ModuleLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         ClassLoader cl = obj.getClass().getClassLoader();
         if (cl instanceof ModuleClassLoader) {
+			//TODO log debug
+			System.out.println("Using modular class loader.");
             ModuleClassLoader mcl = (ModuleClassLoader)cl;
             ModuleLoader ml =  mcl.getModule().getModuleLoader();
             ModuleIdentifier identifier = ModuleIdentifier.fromString(moduleId);

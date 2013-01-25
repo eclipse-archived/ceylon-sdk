@@ -45,7 +45,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
 	shared actual String[]|Empty parameters(String name) {
 		
 		if (parametersMap.contains(name)) {
-			if (exists params = parametersMap.item(name)) {
+			if (exists params = parametersMap.get(name)) {
 				return params;
 			}
 		}

@@ -72,7 +72,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
 	shared actual void start(Integer port, String host, HttpdOptions httpdOptions) {
 		
 		//TODO log
-		print("starting on " host ":" port "");
+		print("Starting on " host ":" port "");
 
 
 		value sessionconfig = SessionCookieConfig();
