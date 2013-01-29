@@ -151,7 +151,7 @@
           <rep url="${test.repo}"/>
         </ceylon-run>
             
-        <ceylon-run module="test.ceylon.interop/${sdk.version}" run="test.ceylon.interop.run"
+        <ceylon-run module="test.ceylon.interop.java/${sdk.version}" run="test.ceylon.interop.java.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
