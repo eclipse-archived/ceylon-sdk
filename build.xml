@@ -3,7 +3,12 @@
     <property file="build.properties" />
     <property name="ceylon.verbosity" value="false"/>
     <property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
+    <property name="out.repo" location="modules"/>
     <property name="test.repo" location="test-modules"/>
+
+    <!-- Local repository -->
+    <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
+    
     <path id="ant-tasks">
         <pathelement location="${ceylon.ant.lib}"/>
     </path>
@@ -165,5 +170,11 @@
         </ceylon-doc>
         
     </target>
-    
+
+    <target name="publish" 
+            description="Copies the SDK modules to the user's repository">
+        <copy todir="${ceylon.repo.dir}" overwrite="true">
+            <fileset dir="${out.repo}"/>
+        </copy>
+    </target>
 </project>
