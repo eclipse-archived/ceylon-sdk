@@ -85,11 +85,11 @@ class Parser(String str){
             Integer start = index;
             Integer fractionPart = parseDigits();
             Integer digits = index - start;
-            Float float = wholePart.float + (fractionPart.float / (10 ** digits).float);
+            Float float = wholePart.float + (fractionPart.float / (10 ^ digits).float);
             Float signedFloat = negative then float.negativeValue else float;
             Integer? exp = parseExponent();
             if(exists exp){
-                return signedFloat * (10.float ** exp.float);
+                return signedFloat * (10.float ^ exp.float);
             }
             return signedFloat;
         }
@@ -97,7 +97,7 @@ class Parser(String str){
         Integer signedInteger = negative then wholePart.negativeValue else wholePart;
         Integer? exp = parseExponent();
         if(exists exp){
-            return signedInteger.float * (10.float ** exp.float);
+            return signedInteger.float * (10.float ^ exp.float);
         }
         return signedInteger;
     }
@@ -205,8 +205,8 @@ class Parser(String str){
     
     Character parseStringUnicode(){
         Integer codePoint = 
-            parseHex() * 16 ** 3
-            + parseHex() * 16 ** 2
+            parseHex() * 16 ^ 3
+            + parseHex() * 16 ^ 2
             + parseHex() * 16
             + parseHex();
         return codePoint.character;
