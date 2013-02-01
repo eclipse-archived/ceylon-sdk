@@ -127,6 +127,6 @@ void testByteBufferResize(){
 
 void testCharacterBuffer(){
     CharacterBuffer buffer = newCharacterBufferWithData("abcd");
-    Character[] values = [`a`, `b`, `c`, `d`];
+    Character[] values = ['a', 'b', 'c', 'd'];
     testBuffer(buffer, values);
 }

@@ -9,7 +9,7 @@ shared void run() {
     testArray(createShortArray(10), "Short", 1);
     testArray(createIntArray(10), "Int", 1);
     testArray(createFloatArray(10), "Float", 1.0);
-    testArray(createCharArray(10), "Char", `c`);
+    testArray(createCharArray(10), "Char", 'c');
     testArray(createBooleanArray(10), "Boolean", true);
 }
 

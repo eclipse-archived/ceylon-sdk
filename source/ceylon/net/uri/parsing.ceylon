@@ -1,6 +1,6 @@
 doc "Parses a raw percent-encoded path parameter"
 shared Parameter parseParameter(String part){
-    Integer? sep = part.firstCharacterOccurrence(`=`);
+    Integer? sep = part.firstCharacterOccurrence('=');
     if(exists sep){
         return Parameter(decodePercentEncoded(part.initial(sep)), 
             decodePercentEncoded(part.terminal(part.size - sep - 1)));
@@ -31,7 +31,7 @@ shared URI parseURI(String uri){
     }
 
     void parseUserInfo(String userInfo) {
-        Integer? sep = userInfo.firstCharacterOccurrence(`:`);
+        Integer? sep = userInfo.firstCharacterOccurrence(':');
         if(exists sep){
             authority.user = decodePercentEncoded(userInfo.segment(0, sep));
             authority.password = decodePercentEncoded(userInfo[sep+1...]);
@@ -45,7 +45,7 @@ shared URI parseURI(String uri){
         String? portString;
         if(hostAndPort.startsWith("[")){
             authority.ipLiteral = true;
-            Integer? end = hostAndPort.firstCharacterOccurrence(`]`);
+            Integer? end = hostAndPort.firstCharacterOccurrence(']');
             if(exists end){
                 // eat the delimiters
                 authority.host = hostAndPort.segment(1, end-1);
@@ -60,7 +60,7 @@ shared URI parseURI(String uri){
             }
         }else{
             authority.ipLiteral = false;
-            Integer? sep = hostAndPort.lastCharacterOccurrence(`:`);
+            Integer? sep = hostAndPort.lastCharacterOccurrence(':');
             if(exists sep){
                 authority.host = decodePercentEncoded(hostAndPort.segment(0, sep));
                 portString = hostAndPort[sep+1...];
@@ -89,9 +89,9 @@ shared URI parseURI(String uri){
         }
         // eat the two slashes
         String part = uri[2...];
-        Integer? sep = part.firstCharacterOccurrence(`/`) 
-            else part.firstCharacterOccurrence(`?`)
-            else part.firstCharacterOccurrence(`#`);
+        Integer? sep = part.firstCharacterOccurrence('/') 
+            else part.firstCharacterOccurrence('?')
+            else part.firstCharacterOccurrence('#');
         String authority;
         String remains;
         if(exists sep){
@@ -102,7 +102,7 @@ shared URI parseURI(String uri){
             authority = part;
             remains = "";
         }
-        Integer? userInfoSep = authority.firstCharacterOccurrence(`@`);
+        Integer? userInfoSep = authority.firstCharacterOccurrence('@');
         String hostAndPort;
         if(exists userInfoSep){
             parseUserInfo(authority.segment(0, userInfoSep));
@@ -115,7 +115,7 @@ shared URI parseURI(String uri){
     }
 
     String parsePath(String uri){
-        Integer? sep = uri.firstCharacterOccurrence(`?`) else uri.firstCharacterOccurrence(`#`);
+        Integer? sep = uri.firstCharacterOccurrence('?') else uri.firstCharacterOccurrence('#');
         String pathPart;
         String remains;
         if(exists sep){
@@ -128,7 +128,7 @@ shared URI parseURI(String uri){
         }
         if(!pathPart.empty){
             variable Boolean first = true;
-            for(String part in pathPart.split((Character ch) => ch == `/`, true, false)){
+            for(String part in pathPart.split((Character ch) => ch == '/', true, false)){
                 if(first && part.empty){
                     path.absolute = true;
                     first = false;
@@ -143,7 +143,7 @@ shared URI parseURI(String uri){
     }
 
     void parseQueryPart(String queryPart) {
-        for(String part in queryPart.split((Character ch) => ch == `&`, true, false)){
+        for(String part in queryPart.split((Character ch) => ch == '&', true, false)){
             query.addRaw(part);
         }
     }
@@ -151,9 +151,9 @@ shared URI parseURI(String uri){
     String parseQuery(String uri){
         Character? c = uri[0];
         if(exists c){
-            if(c == `?`){
+            if(c == '?'){
                 // we have a query part
-                Integer end = uri.firstCharacterOccurrence(`#`) else uri.size;
+                Integer end = uri.firstCharacterOccurrence('#') else uri.size;
                 parseQueryPart(uri.segment(1, end-1));
                 return uri[end...];
             }
@@ -165,7 +165,7 @@ shared URI parseURI(String uri){
     String parseFragment(String uri){
         Character? c = uri[0];
         if(exists c){
-            if(c == `#`){
+            if(c == '#'){
                 // we have a fragment part
                 fragment = decodePercentEncoded(uri[1...]);
                 return "";

@@ -135,7 +135,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
         for(Integer byte in buffer){
             if(byte < 0 || byte > 255){
                 // FIXME: type
-                throw Exception("Invalid UTF-16 byte value: " byte "");
+                throw Exception("Invalid UTF-16 byte value: `` byte ``");
             }
             // are we looking at the first byte of a 16-bit word?
             if(!needsMoreBytes){
@@ -160,7 +160,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                         char = word;
                     }else if(word > #DBFF){
                         // FIXME: type
-                        throw Exception("Invalid UTF-16 high surrogate value: " word "");
+                        throw Exception("Invalid UTF-16 high surrogate value: `` word ``");
                     }else{
                         // we're waiting for the second half;
                         highSurrogate = word;
@@ -171,7 +171,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                     // we have the second 16-bit word, check it
                     if(word < #DC00 || word > #DFFF){
                         // FIXME: type
-                        throw Exception("Invalid UTF-16 low surrogate value: " word "");
+                        throw Exception("Invalid UTF-16 low surrogate value: `` word ``");
                     }
                     // now assemble them
                     Integer part1 = highSurrogate.and($1111111111).leftLogicalShift(10);

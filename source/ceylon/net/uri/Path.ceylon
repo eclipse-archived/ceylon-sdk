@@ -25,7 +25,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
     
     doc "Adds a raw (percent-encoded) segment, with optional parameters to be parsed"
     shared void addRawSegment(String part){
-        Integer? sep = part.firstCharacterOccurrence(`;`);
+        Integer? sep = part.firstCharacterOccurrence(';');
         String name;
         if(exists sep){
             name = part[0..sep-1];
@@ -34,7 +34,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         }
         PathSegment path = PathSegment(decodePercentEncoded(name));
         if(exists sep){
-            for(String param in part[sep+1...].split((Character ch) => ch == `;`, true, false)){
+            for(String param in part[sep+1...].split((Character ch) => ch == ';', true, false)){
                 path.parameters.add(parseParameter(param));
             }
         }
@@ -75,12 +75,12 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         }
         StringBuilder b = StringBuilder();
         if(absolute){
-            b.appendCharacter(`/`);
+            b.appendCharacter('/');
         }
         variable Integer i = 0;
         for(PathSegment segment in segments){
             if(i++ > 0){
-                b.appendCharacter(`/`);
+                b.appendCharacter('/');
             }
             b.append(segment.toRepresentation(human));
         }

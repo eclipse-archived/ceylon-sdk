@@ -97,7 +97,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     doc "Builds a debugging representation of this HTTP response."
     shared actual String string {
         StringBuilder b = StringBuilder();
-        b.append("HTTP/" major "." minor " " status " " reason "\n");
+        b.append("HTTP/`` major ``.`` minor `` `` status `` `` reason ``\n");
         for(header in headers){
             for(val in header.values){
                 b.append(header.name).append(": ").append(val).append("\n");

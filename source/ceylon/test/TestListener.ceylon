@@ -31,10 +31,10 @@ shared class PrintingTestListener() satisfies TestListener {
             print("There were no tests!");
         } else {
             print(banner("TESTS RESULT"));
-            print("run:     " result.runCount "");
-            print("success: " result.successCount "");
-            print("failure: " result.failureCount "");
-            print("error:   " result.errorCount "");
+            print("run:     `` result.runCount ``");
+            print("success: `` result.successCount ``");
+            print("failure: `` result.failureCount ``");
+            print("error:   `` result.errorCount ``");
             
             if (result.isSuccess) {
                 print(banner("TESTS SUCCESS"));
@@ -50,12 +50,12 @@ shared class PrintingTestListener() satisfies TestListener {
     
     doc "Generates a banner with the given text, like this:
          
-         ```
+         \`\``
          ============ banner ============
-         ```
+         \`\``
          "
     String banner(String text) {
-        Character ch = `=`;
+        Character ch = '=';
         StringBuilder sb = StringBuilder();
         Integer totalWith = 60;
         Integer bannerWidth = totalWith - text.size - 2;

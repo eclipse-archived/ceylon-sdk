@@ -108,7 +108,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         if(is Object val){
             return val;
         }
-        throw InvalidTypeException("Expecting Object but got " val "");
+        throw InvalidTypeException("Expecting Object but got `` val ``");
     }
 
     doc "Returns this array as a sequence of [[Object]] elements."
@@ -121,7 +121,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         if(is String val){
             return val;
         }
-        throw InvalidTypeException("Expecting String but got " val "");
+        throw InvalidTypeException("Expecting String but got `` val ``");
     }
 
     doc "Returns this array as a sequence of [[String]] elements."
@@ -134,7 +134,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         if(is Integer val){
             return val;
         }
-        throw InvalidTypeException("Expecting Integer but got " val "");
+        throw InvalidTypeException("Expecting Integer but got `` val ``");
     }
 
     doc "Returns this array as a sequence of [[Integer]] elements."
@@ -147,7 +147,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         if(is Float val){
             return val;
         }
-        throw InvalidTypeException("Expecting Float but got " val "");
+        throw InvalidTypeException("Expecting Float but got `` val ``");
     }
 
     doc "Returns this array as a sequence of [[Float]] elements."
@@ -160,7 +160,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         if(is Boolean val){
             return val;
         }
-        throw InvalidTypeException("Expecting Boolean but got " val "");
+        throw InvalidTypeException("Expecting Boolean but got `` val ``");
     }
 
     doc "Returns this array as a sequence of [[Boolean]] elements."
@@ -173,7 +173,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         if(is Array val){
             return val;
         }
-        throw InvalidTypeException("Expecting Array but got " val "");
+        throw InvalidTypeException("Expecting Array but got `` val ``");
     }
 
     doc "Returns this array as a sequence of [[Array]] elements."

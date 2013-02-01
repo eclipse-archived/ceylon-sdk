@@ -109,7 +109,7 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
     shared actual String done() {
         if(needsMoreBytes > 0){
             // type
-            throw Exception("Invalid UTF-8 sequence: missing " needsMoreBytes " bytes");
+            throw Exception("Invalid UTF-8 sequence: missing `` needsMoreBytes `` bytes");
         }
         return super.done();
     }
@@ -118,7 +118,7 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
         for(Integer byte in buffer){
             if(byte < 0 || byte > 255){
                 // FIXME: type
-                throw Exception("Invalid UTF-8 byte value: " byte "");
+                throw Exception("Invalid UTF-8 byte value: `` byte ``");
             }
             // are we looking at the first byte?
             if(needsMoreBytes == 0){
@@ -131,11 +131,11 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
                 // invalid range
                 if(byte < $11000000){
                     // FIXME: type
-                    throw Exception("Invalid UTF-8 byte value: " byte "");
+                    throw Exception("Invalid UTF-8 byte value: `` byte ``");
                 }
                 // invalid range
                 if(byte >= $11111000){
-                    throw Exception("Invalid UTF-8 first byte value: " byte "");
+                    throw Exception("Invalid UTF-8 first byte value: `` byte ``");
                 }
                 // keep this byte in any case
                 bytes.put(byte);
@@ -156,7 +156,7 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
             // if we got this far, we must have a second byte at least
             if(byte < $10000000 || byte >= $11000000){
                 // FIXME: type
-                throw Exception("Invalid UTF-8 second byte value: " byte "");
+                throw Exception("Invalid UTF-8 second byte value: `` byte ``");
             }
             if(--needsMoreBytes > 0){
                 // not enough bytes

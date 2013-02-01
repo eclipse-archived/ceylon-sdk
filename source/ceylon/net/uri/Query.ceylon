@@ -57,7 +57,7 @@ shared class Query(Parameter* initialParameters) {
         variable Integer i = 0;
         for(Parameter p in parameters){
             if(i++ > 0){
-                b.appendCharacter(`&`);
+                b.appendCharacter('&');
             }
             b.append(serialiseParameter(p, human));
         }

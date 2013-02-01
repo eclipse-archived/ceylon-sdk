@@ -46,7 +46,7 @@ shared class PathSegment(String initialName, Parameter* initialParameters) {
             StringBuilder b = StringBuilder();
             b.append(human then name else percentEncoder.encodePathSegmentName(name));
             for(Parameter param in parameters){
-                b.appendCharacter(`;`);
+                b.appendCharacter(';');
                 b.append(serialiseParameter(param, human));
             }
             return b.string;

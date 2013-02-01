@@ -130,7 +130,7 @@ shared class SelectorImpl() satisfies Selector {
             if(exists socket = key.socket){
                 if(exists callback = key.onRead){
                     value goOn = callback(socket);
-                    print("Do we keep it for reading? " goOn "");
+                    print("Do we keep it for reading? `` goOn ``");
                     if(!goOn){
                         // are we still writing?
                         if(key.onWrite exists){
@@ -158,7 +158,7 @@ shared class SelectorImpl() satisfies Selector {
             if(exists socket = key.socket){
                 if(exists callback = key.onWrite){
                     value goOn = callback(socket);
-                    print("Do we keep it for writing? " goOn "");
+                    print("Do we keep it for writing? `` goOn ``");
                     if(!goOn){
                         // are we still reading?
                         if(key.onRead exists){
@@ -245,10 +245,10 @@ shared class SelectorImpl() satisfies Selector {
     
     shared actual void process() {
         while(!map.empty){
-            print("Select! with " javaSelector.keys().size() " keys ");
+            print("Select! with `` javaSelector.keys().size() `` keys ");
             javaSelector.select();
             // process results
-            print("Got " javaSelector.selectedKeys().size() " selected keys");
+            print("Got `` javaSelector.selectedKeys().size() `` selected keys");
             value it = javaSelector.selectedKeys().iterator();
             while(it.hasNext()){
                 value selectedKey = it.next();

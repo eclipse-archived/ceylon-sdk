@@ -5,21 +5,21 @@ class Parser(String str){
     shared Object parseObject(){
         Object obj = Object();
         
-        eatSpacesUntil(`{`);
+        eatSpacesUntil('{');
         eatSpaces();
-        if(!check(`}`)){
+        if(!check('}')){
             while(true){
                 String key = parseString();
-                eatSpacesUntil(`:`);
+                eatSpacesUntil(':');
                 String|Boolean|Integer|Float|Object|Array|NullInstance val = parseValue();
                 obj.put(key, val);
                 
                 eatSpaces();
-                if(check(`}`)){
+                if(check('}')){
                     break;
                 }
-                if(!check(`,`)){
-                    throw Exception("Expected '}' or ',' but got " char().string "");
+                if(!check(',')){
+                    throw Exception("Expected '}' or ',' but got `` char().string ``");
                 }
             }
         }
@@ -29,19 +29,19 @@ class Parser(String str){
     Array parseArray(){
         Array arr = Array();
         
-        eatSpacesUntil(`[`);
+        eatSpacesUntil('[');
         eatSpaces();
-        if(!check(`]`)){
+        if(!check(']')){
             while(true){
                 String|Boolean|Integer|Float|Object|Array|NullInstance val = parseValue();
                 arr.add(val);
 
                 eatSpaces();
-                if(check(`]`)){
+                if(check(']')){
                     break;
                 }
-                if(!check(`,`)){
-                    throw Exception("Expected ']' or ',' but got " char().string "");
+                if(!check(',')){
+                    throw Exception("Expected ']' or ',' but got `` char().string ``");
                 }
             }
         }
@@ -51,37 +51,37 @@ class Parser(String str){
     String|Boolean|Integer|Float|Object|Array|NullInstance parseValue(){
         eatSpaces();
         Character c = char();
-        if(c == `{`){
+        if(c == '{'){
             return parseObject();
         }
-        if(c == `[`){
+        if(c == '['){
             return parseArray();
         }
-        if(c == `"`){
+        if(c == '"'){
             return parseString();
         }
-        if(c == `t`){
+        if(c == 't'){
             return parseTrue();
         }
-        if(c == `f`){
+        if(c == 'f'){
             return parseFalse();
         }
-        if(c == `n`){
+        if(c == 'n'){
             return parseNull();
         }
         if(isDigit(c)
-            || c == `-`){
+            || c == '-'){
             return parseNumber();
         }
-        throw Exception("Invalid value: expecting object, array, string, number, true, false, null but got " c.string "");
+        throw Exception("Invalid value: expecting object, array, string, number, true, false, null but got `` c.string ``");
     }
     
     Integer|Float parseNumber(){
         eatSpaces();
-        Boolean negative = check(`-`);
+        Boolean negative = check('-');
         Integer wholePart = parseDigits();
         
-        if(check(`.`)){
+        if(check('.')){
             Integer start = index;
             Integer fractionPart = parseDigits();
             Integer digits = index - start;
@@ -103,12 +103,12 @@ class Parser(String str){
     }
 
     Integer? parseExponent(){
-        if(check(`e`)
-            || check(`E`)){
+        if(check('e')
+            || check('E')){
             Boolean negativeExponent;
-            if(check(`-`)){
+            if(check('-')){
                 negativeExponent = true;
-            }else if(check(`+`)){
+            }else if(check('+')){
                 negativeExponent = false;
             }else{
                 negativeExponent = false;
@@ -122,7 +122,7 @@ class Parser(String str){
     Integer parseDigits(){
         Character c = eatChar();
         if(!isDigit(c)){
-            throw Exception("Expected digit, got: " c.string "");
+            throw Exception("Expected digit, got: `` c.string ``");
         }
         variable Integer digits = parseDigit(c);
         while(isDigit(char())){
@@ -133,40 +133,40 @@ class Parser(String str){
     }
     
     Integer parseDigit(Character c){
-        return c.integer - `0`.integer;
+        return c.integer - '0'.integer;
     }
     
     Boolean parseTrue(){
-        eatSpacesUntil(`t`);
-        eat(`r`);
-        eat(`u`);
-        eat(`e`);
+        eatSpacesUntil('t');
+        eat('r');
+        eat('u');
+        eat('e');
         return true;
     }
 
     Boolean parseFalse(){
-        eatSpacesUntil(`f`);
-        eat(`a`);
-        eat(`l`);
-        eat(`s`);
-        eat(`e`);
+        eatSpacesUntil('f');
+        eat('a');
+        eat('l');
+        eat('s');
+        eat('e');
         return false;
     }
 
     NullInstance parseNull(){
-        eatSpacesUntil(`n`);
-        eat(`u`);
-        eat(`l`);
-        eat(`l`);
+        eatSpacesUntil('n');
+        eat('u');
+        eat('l');
+        eat('l');
         return nil;
     }
     
     String parseString(){
-        eatSpacesUntil(`"`);
+        eatSpacesUntil('"');
         StringBuilder buf = StringBuilder();
-        while(!check(`"`)){
+        while(!check('"')){
             Character c = eatChar();
-            if(c == `\\`){
+            if(c == '\\'){
                 buf.append(parseStringEscape().string);
             }else{
                 buf.append(c.string);
@@ -177,30 +177,30 @@ class Parser(String str){
     
     Character parseStringEscape(){
         Character c = eatChar();
-        if(c == `"`
-            || c == `\\`
-            || c == `/`){
+        if(c == '"'
+            || c == '\\'
+            || c == '/'){
             return c;
         }
-        if(c == `b`){
-            return `\b`;
+        if(c == 'b'){
+            return '\b';
         }
-        if(c == `f`){
-            return `\f`;
+        if(c == 'f'){
+            return '\f';
         }
-        if(c == `r`){
-            return `\r`;
+        if(c == 'r'){
+            return '\r';
         }
-        if(c == `n`){
-            return `\n`;
+        if(c == 'n'){
+            return '\n';
         }
-        if(c == `t`){
-            return `\t`;
+        if(c == 't'){
+            return '\t';
         }
-        if(c == `u`){
+        if(c == 'u'){
             return parseStringUnicode();
         }
-        throw Exception("Expected String escape sequence, got " c " TERM ");
+        throw Exception("Expected String escape sequence, got `` c `` TERM ");
     }
     
     Character parseStringUnicode(){
@@ -215,16 +215,16 @@ class Parser(String str){
     Integer parseHex(){
         Character c = eatChar();
         Integer codePoint = c.integer;
-        if(codePoint >= `0`.integer && codePoint <= `9`.integer){
-            return codePoint - `0`.integer;
+        if(codePoint >= '0'.integer && codePoint <= '9'.integer){
+            return codePoint - '0'.integer;
         }
-        if(codePoint >= `a`.integer && codePoint <= `f`.integer){
-            return 10 + codePoint - `a`.integer;
+        if(codePoint >= 'a'.integer && codePoint <= 'f'.integer){
+            return 10 + codePoint - 'a'.integer;
         }
-        if(codePoint >= `A`.integer && codePoint <= `F`.integer){
-            return 10 + codePoint - `A`.integer;
+        if(codePoint >= 'A'.integer && codePoint <= 'F'.integer){
+            return 10 + codePoint - 'A'.integer;
         }
-        throw Exception("Expecting hex number, got " c.string "");
+        throw Exception("Expecting hex number, got `` c.string ``");
     }
     
     void eatSpaces(){
@@ -249,7 +249,7 @@ class Parser(String str){
     
     void eat(Character c){
         if(char() != c){
-            throw Exception("Expected " c.string " but got " char().string "");
+            throw Exception("Expected `` c.string `` but got `` char().string ``");
         }
         index++;
     }
@@ -268,15 +268,15 @@ class Parser(String str){
     }
     
     Boolean isSpace(Character c){
-        return c == ` ` 
-            || c == `\n`
-            || c == `\r`
-            || c == `\t`;
+        return c == ' ' 
+            || c == '\n'
+            || c == '\r'
+            || c == '\t';
     }
 
     Boolean isDigit(Character c){
         Integer codePoint = c.integer;
-        return codePoint >= `0`.integer && codePoint <= `9`.integer; 
+        return codePoint >= '0'.integer && codePoint <= '9'.integer; 
     }
 }
 

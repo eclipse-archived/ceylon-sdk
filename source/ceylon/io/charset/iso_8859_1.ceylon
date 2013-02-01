@@ -62,7 +62,7 @@ class ISO_8859_1Encoder(charset) satisfies Encoder {
             value char = input.get().integer;
             if(char > 255){
                 // FIXME: type
-                throw Exception("Invalid ISO_8859-1 byte value: " char "");
+                throw Exception("Invalid ISO_8859-1 byte value: `` char ``");
             }
             output.put(char);
         }
@@ -76,7 +76,7 @@ class ISO_8859_1Decoder(charset) extends AbstractDecoder()  {
         for(Integer byte in buffer){
             if(byte < 0 || byte > 255){
                 // FIXME: type
-                throw Exception("Invalid ISO_8859-1 byte value: " byte "");
+                throw Exception("Invalid ISO_8859-1 byte value: `` byte ``");
             }
             builder.appendCharacter(byte.character);
         }

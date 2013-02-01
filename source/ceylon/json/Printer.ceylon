@@ -77,11 +77,11 @@ shared abstract class Printer(Boolean pretty = false){
     shared default void printString(String s){
         print("\"");
         for(c in s){
-            if(c == `"`){
+            if(c == '"'){
                 print("\\" + "\"");
-            }else if(c == `\\`){
+            }else if(c == '\\'){
                 print("\\\\");
-            }else if(c == `/`){
+            }else if(c == '/'){
                 print("\\" + "/");
             }else if(c == 8.character){
                 print("\\" + "b");

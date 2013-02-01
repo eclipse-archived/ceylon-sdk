@@ -42,10 +42,10 @@ shared class Authority(user = null, password = null, host = null, port = null){
             if(exists String user = user){
                 b.append(human then user else percentEncoder.encodeUser(user));
                 if(exists String password = password){
-                    b.appendCharacter(`:`);
+                    b.appendCharacter(':');
                     b.append(human then password else percentEncoder.encodePassword(password));
                 }
-                b.appendCharacter(`@`);
+                b.appendCharacter('@');
             }
             if(ipLiteral){
                 b.append("[");
@@ -55,7 +55,7 @@ shared class Authority(user = null, password = null, host = null, port = null){
                 b.append(human then host else percentEncoder.encodeRegName(host));
             }
             if(exists Integer port = port){
-                b.appendCharacter(`:`);
+                b.appendCharacter(':');
                 b.append(port.string);
             }
             return b.string;

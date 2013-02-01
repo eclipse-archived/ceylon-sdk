@@ -44,14 +44,14 @@ shared class Parser(FileDescriptor socket){
     
     Boolean isDigit(){
         // DIGIT: 0-9
-        return byte >= `0`.integer && byte <= `9`.integer;
+        return byte >= '0'.integer && byte <= '9'.integer;
     }
     
     Boolean isHexDigit(){
         // HEX DIGIT: 0-9 or a-f or A-F
-        return byte >= `0`.integer && byte <= `9`.integer
-         || byte >= `a`.integer && byte <= `f`.integer
-         || byte >= `A`.integer && byte <= `F`.integer;
+        return byte >= '0'.integer && byte <= '9'.integer
+         || byte >= 'a'.integer && byte <= 'f'.integer
+         || byte >= 'A'.integer && byte <= 'F'.integer;
     }
     
     Boolean isToken(){
@@ -64,16 +64,16 @@ shared class Parser(FileDescriptor socket){
         //            | "," | ";" | ":" | "\" | <">
         //            | "/" | "[" | "]" | "?" | "="
         //            | "{" | "}" | SP | HT
-        return byte == `(`.integer || byte == `)`.integer
-            || byte == `<`.integer || byte == `>`.integer
-            || byte == `@`.integer || byte == `,`.integer
-            || byte == `;`.integer || byte == `:`.integer
-            || byte == `\\`.integer || byte == `"`.integer
-            || byte == `/`.integer || byte == `[`.integer
-            || byte == `]`.integer || byte == `?`.integer
-            || byte == `=`.integer || byte == `{`.integer
-            || byte == `}`.integer || byte == ` `.integer
-            || byte == `\t`.integer
+        return byte == '('.integer || byte == ')'.integer
+            || byte == '<'.integer || byte == '>'.integer
+            || byte == '@'.integer || byte == ','.integer
+            || byte == ';'.integer || byte == ':'.integer
+            || byte == '\\'.integer || byte == '"'.integer
+            || byte == '/'.integer || byte == '['.integer
+            || byte == ']'.integer || byte == '?'.integer
+            || byte == '='.integer || byte == '{'.integer
+            || byte == '}'.integer || byte == ' '.integer
+            || byte == '\t'.integer
         ;
     }
 
@@ -119,7 +119,7 @@ shared class Parser(FileDescriptor socket){
         socket.read(buffer);
         buffer.flip();
         String line = ascii.decode(buffer);
-        throw Exception("Got byte " byte " while expecting " expected " (while looking at '" line "')");
+        throw Exception("Got byte `` byte `` while expecting `` expected `` (while looking at '`` line ``')");
     }
 
     doc "Reads a byte and checks that it's a given ASCII char"
@@ -148,7 +148,7 @@ shared class Parser(FileDescriptor socket){
     doc "Reads a space."
     throws "If the byte read is not a space"
     void readSpace(){
-        readChar(` `);
+        readChar(' ');
     }
     
     doc "Reads a byte and checks that it's an ASCII digit. Returns the digit read."
@@ -158,7 +158,7 @@ shared class Parser(FileDescriptor socket){
         if(!isDigit()){
             throw unexpected("digit");
         }
-        return byte - `0`.integer;
+        return byte - '0'.integer;
     }
 
     doc "Reads a byte and checks that it's an ASCII hex digit. Returns the digit read."
@@ -175,11 +175,11 @@ shared class Parser(FileDescriptor socket){
             throw unexpected("hex digit");
         }
         if(isDigit()){
-            return byte - `0`.integer;
-        }else if(byte >= `a`.integer && byte <= `f`.integer){
-            return 10 + byte - `a`.integer;
-        }else if(byte >= `A`.integer && byte <= `F`.integer){
-            return 10 + byte - `A`.integer;
+            return byte - '0'.integer;
+        }else if(byte >= 'a'.integer && byte <= 'f'.integer){
+            return 10 + byte - 'a'.integer;
+        }else if(byte >= 'A'.integer && byte <= 'F'.integer){
+            return 10 + byte - 'A'.integer;
         }else{
             // can't happen
             throw;
@@ -190,7 +190,7 @@ shared class Parser(FileDescriptor socket){
     void parseHttpVersion(){
         readString("HTTP/");
         major = parseDigit();
-        readChar(`.`);
+        readChar('.');
         minor = parseDigit();
     }
     
@@ -212,10 +212,10 @@ shared class Parser(FileDescriptor socket){
     doc "Reads a CR LF pair. Expects the current byte to be on the CR."
     throws "If the current byte is not a CR and if the next is not a LF."
     void atCrLf(){
-        if(byte != `\r`.integer){
+        if(byte != '\r'.integer){
             throw unexpected("\\r");
         }
-        readChar(`\n`);
+        readChar('\n');
     }
     
     doc "Reads a LWS (CR LF (SP|HT)+). Expects the current byte to be on the CR."
@@ -223,7 +223,7 @@ shared class Parser(FileDescriptor socket){
     void atLws(){
         atCrLf();
         readByte();
-        if(byte != ` `.integer && byte != `\t`.integer){
+        if(byte != ' '.integer && byte != '\t'.integer){
             throw unexpected("SP or HT");
         }
         // FIXME: should we eat the rest?
@@ -232,18 +232,18 @@ shared class Parser(FileDescriptor socket){
     doc "Reads a quoted string. Expects the current byte to be on the \" symbol"
     throws "If the current byte does not start a valid quoted string." 
     void atQuotedText(){
-        atChar(`"`);
+        atChar('"');
         readByte();
         buffer.clear();
-        while(byte != `"`.integer){
-            if(byte == `\\`.integer){
+        while(byte != '"'.integer){
+            if(byte == '\\'.integer){
                 saveByte();
                 if(!isChar()){
                     throw unexpected("CHAR");
                 }
-            }else if(byte == `\r`.integer){
+            }else if(byte == '\r'.integer){
                 atLws();
-                byte = ` `.integer;
+                byte = ' '.integer;
                 saveByte();
             }else if(isText()){
                 pushByte();
@@ -252,9 +252,9 @@ shared class Parser(FileDescriptor socket){
             }
             readByte();
         }
-        atChar(`"`);
+        atChar('"');
         String txt = getString() else "";
-        print("Quoted text: " txt "");
+        print("Quoted text: `` txt ``");
     }
     
     doc "Parses a status line: HttpVersion StatusCode Reason? CRLF."
@@ -266,7 +266,7 @@ shared class Parser(FileDescriptor socket){
         readSpace();
         buffer.clear();
         saveByte();
-        while(isText() && byte != `\r`.integer && byte != `\n`.integer){
+        while(isText() && byte != '\r'.integer && byte != '\n'.integer){
             saveByte();
         }
         buffer.position = buffer.position - 1;
@@ -280,7 +280,7 @@ shared class Parser(FileDescriptor socket){
     throws "If the header line is invalid."
     void atHeaderPlusOne(){
         String name = atTokenPlusOne();
-        atChar(`:`);
+        atChar(':');
         buffer.clear();
         // eat until EOL
         while(true){
@@ -292,7 +292,7 @@ shared class Parser(FileDescriptor socket){
             atCrLf();
             // go again if we have a SP or HT
             readByte();
-            if(byte != ` `.integer && byte != `\t`.integer){
+            if(byte != ' '.integer && byte != '\t'.integer){
                 break;
             }
         }
@@ -328,10 +328,10 @@ shared class Parser(FileDescriptor socket){
             readByte();
         }
         // optional extensions
-        while(byte == `;`.integer){
+        while(byte == ';'.integer){
             // eat extension
             atTokenPlusOne();
-            if(byte == `=`.integer){
+            if(byte == '='.integer){
                 // we have a value
                 readByte();
                 if(isToken()){
@@ -339,7 +339,7 @@ shared class Parser(FileDescriptor socket){
                 }else{
                     // must be a quoted string
                     atQuotedText();
-                    // that one stops at the last `"`
+                    // that one stops at the last '"'
                     readByte();
                 }
             }
@@ -363,7 +363,7 @@ shared class Parser(FileDescriptor socket){
         while(true){
             if(isToken()){
                 atHeaderPlusOne();
-            }else if(byte == `\r`.integer){
+            }else if(byte == '\r'.integer){
                 // final line?
                 atCrLf();
                 break;

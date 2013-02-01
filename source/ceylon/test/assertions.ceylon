@@ -20,21 +20,21 @@ shared void fail(String message = "Failed") {
 doc "Fails the test if the assertion is false"
 shared void assertTrue(Boolean condition, String message = " expected " + condition.string)  {
     if (!condition) {
-        throw AssertException("assertion failed: " message "");
+        throw AssertException("assertion failed: `` message ``");
     }
 }
 
 doc "Fails the test if the assertion is true"
 shared void assertFalse(Boolean condition, String message = " expected " + condition.string) {
     if (condition) {
-        throw AssertException("assertion failed: " message "");
+        throw AssertException("assertion failed: `` message ``");
     }
 }
 
 doc "Fails the test if the given result is not null"
 shared void assertNull(Object? got, String message = "") {
     if (exists got) {
-        throw AssertException("accertion failed: expected null but got " got "");
+        throw AssertException("accertion failed: expected null but got `` got ``");
     }
 }
 
@@ -52,10 +52,10 @@ shared void assertEquals(Object? expected, Object? actual, String? message = nul
         value expectedText = nullSafeString(expected);
         value actualText = nullSafeString(actual);
         if (exists message) {
-            throw AssertComparisonException("assertion failed: " expectedText " != " actualText ": \"" message "\"", expectedText, actualText);
+            throw AssertComparisonException("assertion failed: `` expectedText `` != `` actualText ``: \"`` message ``\"", expectedText, actualText);
         }
         else {
-            throw AssertComparisonException("assertion failed: " expectedText " != " actualText "", expectedText, actualText);
+            throw AssertComparisonException("assertion failed: `` expectedText `` != `` actualText ``", expectedText, actualText);
         }
     }
 }

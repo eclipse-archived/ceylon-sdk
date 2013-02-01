@@ -1,14 +1,14 @@
 import java.lang { JString = String }
 
 Integer fromHex(Integer hex){
-    if(hex >= `0`.integer && hex <= `9`.integer){
-        return hex - `0`.integer;
+    if(hex >= '0'.integer && hex <= '9'.integer){
+        return hex - '0'.integer;
     }
-    if(hex >= `A`.integer && hex <= `F`.integer){
-        return 10 + hex - `A`.integer;
+    if(hex >= 'A'.integer && hex <= 'F'.integer){
+        return 10 + hex - 'A'.integer;
     }
-    if(hex >= `a`.integer && hex <= `f`.integer){
-        return 10 + hex - `a`.integer;
+    if(hex >= 'a'.integer && hex <= 'f'.integer){
+        return 10 + hex - 'a'.integer;
     }
     throw Exception("Invalid hexadecimal number: "+hex.string);
 }
@@ -21,7 +21,7 @@ shared String decodePercentEncoded(String str){
     variable Integer w = 0;
     while(r < array.size){
         if(exists Integer char = array[r]){
-            if(char == `%`.integer){
+            if(char == '%'.integer){
                 // must read the next two items
                 if(exists Integer first = array[++r]){
                     if(exists Integer second = array[++r]){

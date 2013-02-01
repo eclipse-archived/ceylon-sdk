@@ -149,13 +149,13 @@ class WholeImpl(BigInteger num)
                 return oneImpl;
             }
             if (other < zeroImpl) {
-                throw Exception("Unsupported power " this 
-                        "**" other "");
+                throw Exception("Unsupported power `` this 
+                        ``**`` other ``");
             } else if (other == 0) {
                 return oneImpl;
             } else if (other > maxIntImpl) {
-                throw Exception("Unsupported power " this 
-                        "**" other "");
+                throw Exception("Unsupported power `` this 
+                        ``**`` other ``");
             }
             return WholeImpl(implementation
                     .pow(other.implementation.intValue()));

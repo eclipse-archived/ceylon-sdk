@@ -13,8 +13,8 @@ void testASCIIEncoder(){
     assertEquals(2, output.position);
     
     output.flip();
-    assertEquals(`a`.integer, output.get());
-    assertEquals(`s`.integer, output.get());
+    assertEquals('a'.integer, output.get());
+    assertEquals('s'.integer, output.get());
     output.clear();
     
     // decode remaining char
@@ -23,7 +23,7 @@ void testASCIIEncoder(){
     assertEquals(1, output.position);
     
     output.flip();
-    assertEquals(`d`.integer, output.get());
+    assertEquals('d'.integer, output.get());
 }
 
 void testEncoder(Charset charset, String string, Integer* bytes){

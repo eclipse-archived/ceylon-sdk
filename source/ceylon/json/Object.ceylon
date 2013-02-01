@@ -78,7 +78,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is Integer val){
             return val;
         }
-        throw InvalidTypeException("Expecting an Integer but got: " val else "null" "");
+        throw InvalidTypeException("Expecting an Integer but got: `` val else "null" ``");
     }
 
     doc "Returns an [[Float]] value."
@@ -88,7 +88,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is Float val){
             return val;
         }
-        throw InvalidTypeException("Expecting a Float but got: " val else "null" "");
+        throw InvalidTypeException("Expecting a Float but got: `` val else "null" ``");
     }
 
     doc "Returns an [[Boolean]] value."
@@ -98,7 +98,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is Boolean val){
             return val;
         }
-        throw InvalidTypeException("Expecting a Boolean but got: " val else "null" "");
+        throw InvalidTypeException("Expecting a Boolean but got: `` val else "null" ``");
     }
 
     doc "Returns an [[String]] value."
@@ -108,7 +108,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is String val){
             return val;
         }
-        throw InvalidTypeException("Expecting a String but got: " val else "null" "");
+        throw InvalidTypeException("Expecting a String but got: `` val else "null" ``");
     }
 
     doc "Returns an [[Object]] value."
@@ -118,7 +118,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is Object val){
             return val;
         }
-        throw InvalidTypeException("Expecting an Object but got: " val else "null" "");
+        throw InvalidTypeException("Expecting an Object but got: `` val else "null" ``");
     }
     
     doc "Returns an [[Array]] value."
@@ -128,7 +128,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is Array val){
             return val;
         }
-        throw InvalidTypeException("Expecting an Array but got: " val else "null" "");
+        throw InvalidTypeException("Expecting an Array but got: `` val else "null" ``");
     }
     
     // optional auto-casting
@@ -143,7 +143,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is NullInstance val){
             return null;
         }
-        throw InvalidTypeException("Expecting an Integer but got: " val else "null" "");
+        throw InvalidTypeException("Expecting an Integer but got: `` val else "null" ``");
     }
 
     doc "Returns an [[Float]] value, unless the key does not exist, or the value is null."
@@ -156,7 +156,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is NullInstance val){
             return null;
         }
-        throw InvalidTypeException("Expecting a Float but got: " val else "null" "");
+        throw InvalidTypeException("Expecting a Float but got: `` val else "null" ``");
     }
 
     doc "Returns an [[Boolean]] value, unless the key does not exist, or the value is null."
@@ -169,7 +169,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is NullInstance val){
             return null;
         }
-        throw InvalidTypeException("Expecting a Boolean but got: " val else "null" "");
+        throw InvalidTypeException("Expecting a Boolean but got: `` val else "null" ``");
     }
 
     doc "Returns an [[String]] value, unless the key does not exist, or the value is null."
@@ -182,7 +182,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is NullInstance val){
             return null;
         }
-        throw InvalidTypeException("Expecting a String but got: " val else "null" "");
+        throw InvalidTypeException("Expecting a String but got: `` val else "null" ``");
     }
 
     doc "Returns an [[Object]] value, unless the key does not exist, or the value is null."
@@ -195,7 +195,7 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is NullInstance val){
             return null;
         }
-        throw InvalidTypeException("Expecting an Object but got: " val else "null" "");
+        throw InvalidTypeException("Expecting an Object but got: `` val else "null" ``");
     }
     
     doc "Returns an [[Array]] value, unless the key does not exist, or the value is null."
@@ -208,6 +208,6 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         if(is NullInstance val){
             return null;
         }
-        throw InvalidTypeException("Expecting an Array but got: " val else "null" "");
+        throw InvalidTypeException("Expecting an Array but got: `` val else "null" ``");
     }
 }
