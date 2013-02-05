@@ -171,7 +171,7 @@
         
     </target>
 
-    <target name="publish" 
+    <target name="publish" depends="compile"
             description="Copies the SDK modules to the user's repository">
         <copy todir="${ceylon.repo.dir}" overwrite="true">
             <fileset dir="${out.repo}"/>
