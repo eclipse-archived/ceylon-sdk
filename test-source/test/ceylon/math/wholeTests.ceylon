@@ -8,7 +8,7 @@ shared void wholeTests() {
        if (exists result) {
            return result;
        }
-       throw AssertException("" str " didn't parse");
+       throw AssertException("``str`` didn't parse");
     }
 
     print("Whole instantiation, equality");
@@ -62,38 +62,38 @@ shared void wholeTests() {
 
     print("Whole.power");
     assertEquals(wholeNumber(4), wholeNumber(2).power(wholeNumber(2)), "2.power(2)");
-    assertEquals(wholeNumber(4), wholeNumber(2) ** wholeNumber(2), "2**2");
+    assertEquals(wholeNumber(4), wholeNumber(2) ^ wholeNumber(2), "2^2");
 
-    assertEquals(wholeNumber(1), wholeNumber(1) ** wholeNumber(1), "1**1");
-    assertEquals(wholeNumber(1), wholeNumber(1) ** wholeNumber(0), "1**0");
-    assertEquals(wholeNumber(1), wholeNumber(1) ** wholeNumber(-1), "1**-1");
-    assertEquals(wholeNumber(1), wholeNumber(1) ** wholeNumber(-2), "1**-2");
+    assertEquals(wholeNumber(1), wholeNumber(1) ^ wholeNumber(1), "1^1");
+    assertEquals(wholeNumber(1), wholeNumber(1) ^ wholeNumber(0), "1^0");
+    assertEquals(wholeNumber(1), wholeNumber(1) ^ wholeNumber(-1), "1^-1");
+    assertEquals(wholeNumber(1), wholeNumber(1) ^ wholeNumber(-2), "1^-2");
 
-    assertEquals(wholeNumber(0), wholeNumber(0) ** wholeNumber(1), "0**1");
-    assertEquals(wholeNumber(1), wholeNumber(0) ** wholeNumber(0), "0**0");
+    assertEquals(wholeNumber(0), wholeNumber(0) ^ wholeNumber(1), "0^1");
+    assertEquals(wholeNumber(1), wholeNumber(0) ^ wholeNumber(0), "0^0");
     try {
-        Whole w = wholeNumber(0) ** wholeNumber(-1);
-        fail("0**-1");
+        Whole w = wholeNumber(0) ^ wholeNumber(-1);
+        fail("0^-1");
     } catch (Exception e){}
     try {
-        Whole w = wholeNumber(0) ** wholeNumber(-2);
-        fail("0**-2");
+        Whole w = wholeNumber(0) ^ wholeNumber(-2);
+        fail("0^-2");
     } catch (Exception e){}
 
-    assertEquals(wholeNumber(-1), wholeNumber(-1) ** wholeNumber(1), "-1**1");
-    assertEquals(wholeNumber(1), wholeNumber(-1) ** wholeNumber(0), "-1**0");
-    assertEquals(wholeNumber(-1), wholeNumber(-1) ** wholeNumber(-1), "-1**-1");
-    assertEquals(wholeNumber(1), wholeNumber(-1) ** wholeNumber(-2), "-1**-2");
+    assertEquals(wholeNumber(-1), wholeNumber(-1) ^ wholeNumber(1), "-1^1");
+    assertEquals(wholeNumber(1), wholeNumber(-1) ^ wholeNumber(0), "-1^0");
+    assertEquals(wholeNumber(-1), wholeNumber(-1) ^ wholeNumber(-1), "-1^-1");
+    assertEquals(wholeNumber(1), wholeNumber(-1) ^ wholeNumber(-2), "-1^-2");
 
-    assertEquals(wholeNumber(-2), wholeNumber(-2) ** wholeNumber(1), "-2**-1");
-    assertEquals(wholeNumber(1), wholeNumber(-2) ** wholeNumber(0), "-2**0");
+    assertEquals(wholeNumber(-2), wholeNumber(-2) ^ wholeNumber(1), "-2^-1");
+    assertEquals(wholeNumber(1), wholeNumber(-2) ^ wholeNumber(0), "-2^0");
     try {
-        Whole w = wholeNumber(-2) ** wholeNumber(-1);
-        fail("-2**-1");
+        Whole w = wholeNumber(-2) ^ wholeNumber(-1);
+        fail("-2^-1");
     } catch (Exception e){}
     try {
-        Whole w = wholeNumber(-2) ** wholeNumber(-2);
-        fail("-2**-2");
+        Whole w = wholeNumber(-2) ^ wholeNumber(-2);
+        fail("-2^-2");
     } catch (Exception e){}
 
     print("Whole comparison");

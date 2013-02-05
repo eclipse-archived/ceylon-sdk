@@ -23,7 +23,7 @@ Decimal parseOrFail(String str) {
     if (exists result) {
         return result;
     }
-    throw AssertException("" str " didn't parse");
+    throw AssertException("``str`` didn't parse");
 }
 
 void instantiationAndEquality() {
@@ -143,11 +143,11 @@ void divided() {
 
 void power() {
     print("Decimal.power");
-    assertEquals(decimalNumber(4), decimalNumber(2)**2, "2**2");
-    assertEquals(decimalNumber(8), decimalNumber(2)**3, "2**3");
-    assertEquals(parseOrFail("0.25"), parseOrFail("0.5")**2, "0.5**2");
+    assertEquals(decimalNumber(4), decimalNumber(2)^2, "2^2");
+    assertEquals(decimalNumber(8), decimalNumber(2)^3, "2^3");
+    assertEquals(parseOrFail("0.25"), parseOrFail("0.5")^2, "0.5^2");
     try {
-        Decimal d = decimalNumber(2)**(-2);
+        Decimal d = decimalNumber(2)^(-2);
         fail();
     } catch (Exception e) {
     }
@@ -160,9 +160,9 @@ void power() {
     variable value a = parseOrFail("2");
     variable value b = -2;
     function calculation() {
-        return a ** b;
+        return a ^ b;
     }
-    assertEquals(parseDecimal("0.25"), implicitlyRounded(calculation, r), "2 ** -2", strictly);
+    assertEquals(parseDecimal("0.25"), implicitlyRounded(calculation, r), "2 ^ -2", strictly);
 }
 
 void dividedAndTruncated() {

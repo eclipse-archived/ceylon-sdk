@@ -3,7 +3,7 @@ import ceylon.io.charset { byteConsumerToStringConsumer, stringToByteProducer, a
 
 void testServerSocket(){
     value serverSocket = newServerSocket();
-    print("Socket is listening at " serverSocket.localAddress.address ":" serverSocket.localAddress.port "");
+    print("Socket is listening at ``serverSocket.localAddress.address``:``serverSocket.localAddress.port``");
     value socket = serverSocket.accept();
     // read it all until EOF
     void echo(String string){

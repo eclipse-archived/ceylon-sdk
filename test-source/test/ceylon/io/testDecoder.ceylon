@@ -26,7 +26,7 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
         buf.clear();
     }
     assertEquals(expected, decoder.done());
-    print("Decoded " expected " OK");
+    print("Decoded ``expected`` OK");
 }
 
 void testLatin1Decoder(){

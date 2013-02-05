@@ -34,7 +34,7 @@ void testEncoder(Charset charset, String string, Integer* bytes){
     for(Integer byte in sequence){
         assertEquals(byte, encoded.get());
     }
-    print("Encoded " string " OK");
+    print("Encoded ``string`` OK");
 }
 
 void testFullASCIIEncoder(){
