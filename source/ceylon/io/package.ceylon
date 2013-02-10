@@ -16,7 +16,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // create a new decoder from ASCII bytes
              Decoder decoder = ascii.newDecoder();
              // read,decode it all, blocking
-             socket.readFully((ByteBuffer buffer) decoder.decode(buffer));
+             socket.readFully((ByteBuffer buffer) => decoder.decode(buffer));
              // print it all
              process.write(decoder.done());
          }
@@ -28,7 +28,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // create a new selector for reading from this socket
              Selector select = newSelector();
              // read, decode, print as we get data
-             socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) process.write(string)));
+             socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) => process.write(string)));
              // run the event loop
              select.process();
          }
@@ -59,7 +59,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // encode and write as we can
              socket.writeAsync(select, stringToByteProducer(ascii, request));
              // read, decode and print as we can
-             socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) process.write(string)));
+             socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) => process.write(string)));
              // run the event loop
              select.process();
          }
