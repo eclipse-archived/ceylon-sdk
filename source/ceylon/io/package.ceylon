@@ -1,8 +1,8 @@
 doc "This package lets you create [[FileDescriptor]] objects, which represent
      open streams, such as files, sockets, or pipes. You can read and write bytes
-     to those streams in synchronous or asynchronous ways, using [[Buffer|ceylon.io.buffer.Buffer]]
+     to those streams in synchronous or asynchronous ways, using [[Buffer|ceylon.io.buffer::Buffer]]
      objects, and you can convert bytes to [[String]] objects using 
-     [[Charset|ceylon.io.charset.Charset]] objects.
+     [[Charset|ceylon.io.charset::Charset]] objects.
      
      Here's how you can get a [[Socket]] to a remote host in a blocking way:
      

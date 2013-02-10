@@ -9,8 +9,9 @@ doc "This module provides four APIs:
      - `ceylon.math.integer`&mdash;various common functions for
        integers.
      
-     The types `Whole` and `Decimal` are first-class numeric types 
-     and support all the usual mathematical operations:
+     The types [[Whole|ceylon.math.whole::Whole]] and 
+     [[Decimal|ceylon.math.decimal::Decimal]] are first-class numeric 
+     types and support all the usual mathematical operations:
      
          Whole i = wholeNumber(12P);
          Whole j = wholeNumber(3);
