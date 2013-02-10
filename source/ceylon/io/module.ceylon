@@ -8,7 +8,7 @@ by "Stéphane Épardaud"
 license "Apache Software License"
 module ceylon.io '0.5' {
     import ceylon.language '0.5';
-    export import ceylon.file '0.5';
+    shared import ceylon.file '0.5';
     import ceylon.collection '0.5';
     import java.base '7';
 }

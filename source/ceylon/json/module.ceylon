@@ -30,5 +30,5 @@ by "Stéphane Épardaud"
 license "Apache Software License"
 module ceylon.json '0.5' {
     import ceylon.language '0.5';
-    export import ceylon.collection '0.5';
+    shared import ceylon.collection '0.5';
 }
