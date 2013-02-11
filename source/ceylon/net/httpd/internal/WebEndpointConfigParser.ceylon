@@ -30,7 +30,7 @@ shared class WebEndpointConfigParser(String moduleId, String configFileName) {
 				}
 			}
 		} else {
-			throw HttpdException("Properties file [" configFileName "] not found.");
+			throw HttpdException("Properties file [``configFileName``] not found.");
 		}
 		return sb.sequence;
 	} 

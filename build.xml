@@ -1,19 +1,14 @@
 <project name="Ceylon SDK" basedir="." default="test">
 
-    <property file="build.properties" />
-    <property name="ceylon.verbosity" value="false"/>
-    <property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
-    <property name="out.repo" location="modules"/>
-    <property name="test.repo" location="test-modules"/>
-
-    <!-- Local repository -->
-    <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
-    
-    <path id="ant-tasks">
-        <pathelement location="${ceylon.ant.lib}"/>
-    </path>
-    
-    <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
+	<property file="build.properties" />
+	<property name="ceylon.verbosity" value="false"/>
+	<property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
+	<property name="test.repo" location="test-modules"/>
+	<path id="ant-tasks">
+	    <pathelement location="${ceylon.ant.lib}"/>
+	</path>
+	
+	<typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
 
     <reposet id="reposet.compile.test">
         <repo url="./modules"/>
@@ -25,13 +20,13 @@
         <repo url="${test.repo}"/>
     </reposet>
     
-    <moduleset id="modules.sdk.jvm">
-        <sourcemodules dir="source"/>
-    </moduleset>
-    
-    <moduleset id="modules.sdk.js">
+	<moduleset id="modules.sdk.jvm">
+		<sourcemodules dir="source"/>
+	</moduleset>
+	
+	<moduleset id="modules.sdk.js">
         <!--<module name="ceylon.math"/>-->
-        <module name="ceylon.test"/>
+		<module name="ceylon.test"/>
         <module name="ceylon.collection"/>
         <!--<module name="ceylon.file"/>-->
         <!--<module name="ceylon.io"/>-->
@@ -41,10 +36,10 @@
         <!--<module name="ceylon.dbc"/>-->
         <!--<module name="ceylon.interop.java"/>-->
     </moduleset>
-    
-    <moduleset id="modules.test.jvm">
-        <module name="test.ceylon.test"/>
-        <module name="test.ceylon.math"/>
+	
+	<moduleset id="modules.test.jvm">
+		<module name="test.ceylon.test"/>
+		<module name="test.ceylon.math"/>
         <module name="test.ceylon.collection"/>
         <module name="test.ceylon.file"/>
         <module name="test.ceylon.io"/>
@@ -54,11 +49,11 @@
         <module name="test.ceylon.dbc"/>
         <module name="test.ceylon.interop.java"/>
     </moduleset>
-    
+	
     <moduleset id="modules.test.js">
         <!--<module name="com.redhat.ceylon.sdk.test"/>-->
         <!--<module name="test.ceylon.math"/>-->
-        <module name="test.ceylon.test"/>
+    	<module name="test.ceylon.test"/>
         <module name="test.ceylon.collection"/>
         <!--<module name="test.ceylon.file"/>-->
         <!--<module name="test.ceylon.io"/>-->
@@ -68,23 +63,20 @@
         <!--<module name="test.ceylon.dbc"/>-->
         <!--<module name="test.ceylon.interop"/>-->
     </moduleset>
-    
-    <target name="clean"
-        description="Deletes the test-modules and modules directories">
-        <delete dir="modules"/>
-        <delete dir="test-modules"/>
-    </target>
-    
-    <target name="compile-jvm">
+	
+	<target name="clean"
+		description="Deletes the test-modules and modules directories">
+	    <delete dir="modules"/>
+		<delete dir="test-modules"/>
+	</target>
+	
+    <target name="compile" 
+            description="Compiles the SDK modules to the 'modules' repository">
         
         <ceylon-compile executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
-        
-    </target>
-
-    <target name="compile-js">
         
         <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}">
@@ -92,24 +84,17 @@
         </ceylon-compile-js>
         
     </target>
-    
-    <target name="compile" depends="compile-jvm,compile-js"
-            description="Compiles the SDK modules to the 'modules' repository" />
-
-    <target name="compile-test-jvm" depends="compile-jvm">
-        
-        <ceylon-compile executable="${ceylon.executable}"
+	
+	<target name="compile-test" depends="compile"
+		description="Compiles the test modules to the 'test-modules' repository">
+		
+		<ceylon-compile executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
             verbose="${ceylon.verbosity}">
             <reposet refid="reposet.compile.test"/> 
             <moduleset refid="modules.test.jvm"/>
         </ceylon-compile>
-        
-    </target>
-
-    <target name="compile-test-js" depends="compile-js">
-        
         <ceylon-compile-js executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -117,83 +102,68 @@
             <reposet refid="reposet.compile.test"/>
             <moduleset refid="modules.test.js"/>
         </ceylon-compile-js>
-        
+		
     </target>
-            
-    <target name="compile-test" depends="compile,compile-test-jvm,compile-test-js"
-        description="Compiles the test modules to the 'test-modules' repository" />
-
-    <target name="test-jvm" depends="compile-test-jvm"
-        description="Runs the compiled test modules from the 'test-modules' repository">
+        	
+    <target name="test" depends="compile-test"
+    	description="Runs the compiled test modules from the 'test-modules' repository">
         <!-- TODO support verbose attr on ceylon-run command -->
-        <ceylon-run module="test.ceylon.math/${sdk.version}" run="test.ceylon.math.run"
+        <!-- TODO run the js tests -->
+        <!-- TODO fix the dbc test -->
+        <ceylon-run module="test.ceylon.math/0.4" run="test.ceylon.math.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.collection/${sdk.version}" run="test.ceylon.collection.run"
+        <ceylon-run module="test.ceylon.collection/0.4" run="test.ceylon.collection.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.file/${sdk.version}" run="test.ceylon.file.run"
+        <ceylon-run module="test.ceylon.file/0.4" run="test.ceylon.file.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.io/${sdk.version}" run="test.ceylon.io.run"
+        <ceylon-run module="test.ceylon.io/0.4" run="test.ceylon.io.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.json/${sdk.version}" run="test.ceylon.json.run"
+        <ceylon-run module="test.ceylon.json/0.4" run="test.ceylon.json.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.net/${sdk.version}" run="test.ceylon.net.run"
+        <ceylon-run module="test.ceylon.net/0.4" run="test.ceylon.net.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.process/${sdk.version}" run="test.ceylon.process.run"
+        <ceylon-run module="test.ceylon.process/0.4" run="test.ceylon.process.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
-        <ceylon-run module="test.ceylon.dbc/${sdk.version}" run="test.ceylon.dbc.run"
+        <ceylon-run module="test.ceylon.dbc/0.4" run="test.ceylon.dbc.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
           <rep url="${test.repo}"/>
         </ceylon-run>
             
-        <ceylon-run module="test.ceylon.interop.java/${sdk.version}" run="test.ceylon.interop.java.run"
+        <ceylon-run module="test.ceylon.interop/0.4" run="test.ceylon.interop.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
     </target>
 
-    <target name="test-js" depends="compile-test-js">
-        <!-- TODO support verbose attr on ceylon-run command -->
-        <!-- TODO run the js tests -->
-    </target>
-
-    <target name="test" depends="compile-test,test-jvm,test-js"
-        description="Runs the compiled test modules from the 'test-modules' repository" />
-
     <target name="doc" 
             description="Documents the SDK modules to the 'modules' repository">
         
-        <ceylon-doc executable="${ceylon.executable}">
+    	<ceylon-doc executable="${ceylon.executable}">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-doc>
-        
+    	
     </target>
-
-    <target name="publish" depends="compile"
-            description="Copies the SDK modules to the user's repository">
-        <copy todir="${ceylon.repo.dir}" overwrite="true">
-            <fileset dir="${out.repo}"/>
-        </copy>
-    </target>
+	
 </project>

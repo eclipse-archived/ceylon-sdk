@@ -7,7 +7,7 @@ doc "This module allows you to represent URIs, and to connect to HTTP servers.
              Request request = uri.get();
              Response response = request.execute();
              print(response.contents);
-         }
+         }"
 
 by "Stéphane Épardaud, Matej Lazar"
 license "Apache Software License"

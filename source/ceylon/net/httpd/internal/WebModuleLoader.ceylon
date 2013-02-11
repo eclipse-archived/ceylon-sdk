@@ -18,7 +18,7 @@ shared class WebModuleLoader() {
 
 		try {
 			//TODO log
-			print("Creating new web endpoint instance " className "...");
+			print("Creating new web endpoint instance ``className`` ...");
 			Object instanceObj = jh.createInstance(this, className, moduleId);
 			if (is WebEndpoint|WebEndpointAsync instanceObj) {
 				instanceObj.init(webEndpointConfig);
@@ -27,7 +27,7 @@ shared class WebModuleLoader() {
 				throw HttpdException("Web endpoint does not satisfy WebEndpoint|WebEndpointAsync.");
 			}
 		} catch(ClassNotFoundException e) {
-			throw HttpdException("Web endpoint class " className " not found.");
+			throw HttpdException("Web endpoint class ``className`` not found.");
 		}
 	}
 	

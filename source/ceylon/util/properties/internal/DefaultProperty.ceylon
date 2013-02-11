@@ -15,7 +15,7 @@ class DefaultProperty(Properties properties, String propKey, String propValue) s
 		if (exists val) {
 			return val;
 		} else {
-			throw Exception("Cannot read value " propValue " as Integer.");
+			throw Exception("Cannot read value ``propValue`` as Integer.");
 		}
 	}
 	
