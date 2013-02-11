@@ -3,8 +3,8 @@ doc "This package contains everything required to convert bytes to [[String]]s a
      
      Sample code for converting a [[String]] to an ASCII [[ceylon.io.buffer::ByteBuffer]]
      
-          ByteBuffer buffer = ascii.encode(\"Hello World\");
-
+         ByteBuffer buffer = ascii.encode(\"Hello World\");
+     
      Now if you want to decode it back:
      
           String hello = ascii.decode(buffer);

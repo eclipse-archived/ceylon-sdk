@@ -13,11 +13,11 @@ shared interface Whole of WholeImpl
          platform."
     see(fromImplementation)
     shared formal Object? implementation;
-
+    
     doc "The result of raising this number to the given power.
-
+         
          Special cases:
-
+         
          * Returns one if `this` is one (or all powers)
          * Returns one if `this` is minus one and the power 
            is even
@@ -26,7 +26,7 @@ shared interface Whole of WholeImpl
          * Returns one if the power is zero.
          * Otherwise negative powers result in an `Exception` 
            being thrown
-    "
+         "
     throws(Exception, "If passed a negative or large positive 
                        exponent")
     shared formal actual Whole power(Whole exponent);

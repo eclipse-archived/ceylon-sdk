@@ -8,7 +8,7 @@ doc "This module allows you to represent URIs, and to connect to HTTP servers.
              Response response = request.execute();
              print(response.contents);
          }
-    "
+     "
 by "Stéphane Épardaud"
 license "Apache Software License"
 module ceylon.net '0.5' {

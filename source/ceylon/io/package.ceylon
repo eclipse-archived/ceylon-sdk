@@ -20,7 +20,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // print it all
              process.write(decoder.done());
          }
-
+     
      Here's the same code, but in an asynchronous way, using a [[Selector]] object to treat
      `read` events:
      
@@ -32,7 +32,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // run the event loop
              select.process();
          }
-
+     
      Here's how you could write a request to a [[Socket]] in a blocking way:
      
          void writeRequest(String data, Socket socket) {
@@ -41,7 +41,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // write it all, blocking
              socket.writeFully(requestBuffer);
          }
-
+     
      Here's how you would write a request to a [[Socket]] in an asynchronous way:
      
          void writeRequestAsync(String request, Socket socket){
@@ -51,7 +51,7 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // run the event loop
              select.process();
          }
-
+     
      Finally, here's how you can read and write asynchronously to the same socket:
      
          void readAndWriteAsync(String request, Socket socket){
@@ -63,6 +63,6 @@ doc "This package lets you create [[FileDescriptor]] objects, which represent
              // run the event loop
              select.process();
          }
-    "
+     "
 by "Stéphane Épardaud"
 shared package ceylon.io;

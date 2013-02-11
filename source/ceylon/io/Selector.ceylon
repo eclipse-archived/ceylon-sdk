@@ -15,7 +15,7 @@ doc "Represents a listener that can listen for read/write/connect/accept events
      Every listener can signal the selector object that it is no longer interested in
      notifications by returning `false` when invoked, except for `connect` listeners which
      are only notified once (since you can only connect a [[Socket]] once). 
-
+     
      Listeners should be registered with:
      
      - [[addConsumer]] for `read` events,
@@ -44,7 +44,7 @@ shared interface Selector {
     shared formal void process();
     
     doc "Registers a `read` listener on the given [[SelectableFileDescriptor]].
-    
+         
          The given [[callback]] will be invoked by [[process]] whenever there is data
          ready to be read from the specified [[socket]] without blocking.
          
@@ -54,7 +54,7 @@ shared interface Selector {
     shared formal void addConsumer(FileDescriptor socket, Boolean callback(FileDescriptor s));
 
     doc "Registers a `write` listener on the given [[SelectableFileDescriptor]].
-    
+         
          The given [[callback]] will be invoked by [[process]] whenever there is data
          ready to be written to the specified [[socket]] without blocking.
          
@@ -64,7 +64,7 @@ shared interface Selector {
     shared formal void addProducer(FileDescriptor socket, Boolean callback(FileDescriptor s));
 
     doc "Registers a `connect` listener on the given [[SocketConnector]].
-    
+         
          The given [[callback]] will be invoked by [[process]] as soon as the
          specified [[socketConnector]] can be connected without blocking.
          
@@ -73,7 +73,7 @@ shared interface Selector {
     shared formal void addConnectListener(SocketConnector socketConnector, void connect(Socket s));
 
     doc "Registers an `accept` listener on the given [[ServerSocket]].
-    
+         
          The given [[callback]] will be invoked by [[process]] whenever there is a
          [[Socket]] ready to be accepted from the specified [[socketAcceptor]] without blocking.
          

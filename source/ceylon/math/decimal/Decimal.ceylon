@@ -11,7 +11,7 @@ shared class DividedWithRemainder(divided, remainder) {
 doc "Performs an arbitrary calcuation with the given rounding used 
      implicity when arithmetic operators are applied to `Decimal` 
      operands.
-
+     
      During a call to this method the `Decimal` operators
      `+`, `-`, `*`, `/` and `**` (or equivalently, the methods 
      `plus()`, `minus()`, `times()`, `divided()`, and `power()`)
