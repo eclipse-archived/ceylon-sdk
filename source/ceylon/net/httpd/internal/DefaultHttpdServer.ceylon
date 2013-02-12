@@ -141,7 +141,7 @@ shared class DefaultHttpdServer() satisfies Httpd {
         jRuntime.addShutdownHook(shutdownThread);
         
         //TODO log
-        print("Https started.");
+        print("Httpd started.");
         notifyListeners(httpdStarted);
         
         if (exists w = worker) {

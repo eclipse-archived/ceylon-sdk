@@ -1,14 +1,17 @@
 import ceylon.io { SocketAddress }
 
+doc "Defines an object to provide client request information to a web enpoint."
 by "Matej Lazar"
 shared interface HttpRequest {
     
     shared formal String? parameter(String name);
     
-    shared formal String[]|Empty parameters(String name);
+    shared formal String[] parameters(String name);
     
+    doc "Returns a single header with given name."
     shared formal String? header(String name);
     
+    doc "Returns all haaders with given name."
     shared formal String[] headers(String name);
     
     doc "Get the HTTP request method. {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
@@ -34,9 +37,10 @@ shared interface HttpRequest {
     doc "Get the destination address of the HTTP request."
     shared formal SocketAddress destinationAddress();
     
+    doc "Returns request mime type, read from content-type header."
     shared formal String? mimeType();
     
+    doc "Returns users http session. If session doesn't exists, a new is created."
     shared formal HttpSession session();
-    
     
 }

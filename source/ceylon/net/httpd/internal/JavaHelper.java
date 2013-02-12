@@ -18,6 +18,8 @@ import org.xnio.channels.AcceptingChannel;
 import org.xnio.channels.ConnectedChannel;
 import org.xnio.channels.ConnectedStreamChannel;
 
+import com.redhat.ceylon.compiler.java.metadata.Ceylon;
+
 /**
  * @author Matej Lazar
  */
@@ -31,8 +33,8 @@ public class JavaHelper {
     public static Object createInstance(Object obj, String className, String moduleId) throws ModuleLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         ClassLoader cl = obj.getClass().getClassLoader();
         if (cl instanceof ModuleClassLoader) {
-			//TODO log debug
-			System.out.println("Using modular class loader.");
+            //TODO log debug
+            System.out.println("Using modular class loader.");
             ModuleClassLoader mcl = (ModuleClassLoader)cl;
             ModuleLoader ml =  mcl.getModule().getModuleLoader();
             ModuleIdentifier identifier = ModuleIdentifier.fromString(moduleId);
@@ -42,7 +44,7 @@ public class JavaHelper {
         Class<?> clazz = cl.loadClass(className);
         return clazz.newInstance();
     }
-    
+
     /**
      * Remove wildcard type from retun type.
      * Workaround for: type argument to invariant type parameter in assignability condition not yet supported (until we implement reified generics)
@@ -59,17 +61,15 @@ public class JavaHelper {
         return acceptingChannel;
     }
 
-    
     public static ClassLoader getClassLoader(Object object) {
-    	return object.getClass().getClassLoader();
+        return object.getClass().getClassLoader();
     }
-    
+
     /**
      * workaround for: ambiguous reference to overloaded method or class: InputStreamReader 
      */
     public static InputStreamReader newInputStreamReader(InputStream in) {
-    	return new InputStreamReader(in);
+        return new InputStreamReader(in);
     }
-    
-    
+
 }
