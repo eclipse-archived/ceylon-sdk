@@ -54,7 +54,7 @@ class ASCIIDecoder(charset) extends AbstractDecoder() {
         for(Integer byte in buffer){
             if(byte < 0 || byte > 127){
                 // FIXME: type
-                throw Exception("Invalid ASCII byte value: `` byte ``");
+                throw Exception("Invalid ASCII byte value: ``byte``");
             }
             builder.appendCharacter(byte.character);
         }
@@ -70,7 +70,7 @@ class ASCIIEncoder(charset) satisfies Encoder {
             value char = input.get().integer;
             if(char > 127){
                 // FIXME: type
-                throw Exception("Invalid ASCII byte value: `` char ``");
+                throw Exception("Invalid ASCII byte value: ``char``");
             }
             output.put(char);
         }

@@ -7,6 +7,7 @@ doc "Represents a buffer of bytes (from 0 to 255 inclusive, unsigned).
 by "Stéphane Épardaud"
 see (Buffer, newByteBuffer, newByteBufferWithData)
 shared abstract class ByteBuffer() extends Buffer<Integer>(){
+	shared formal Array<Integer> bytes();
 }
 
 doc "Allocates a new empty [[ByteBuffer]] of the given [[capacity]]."
