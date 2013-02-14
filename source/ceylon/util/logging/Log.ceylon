@@ -30,14 +30,12 @@ shared interface Log {
     
     shared formal void log(Level level, String message);
     
-    shared formal Level getLogLevel();
-
-    shared formal void setLogLevel(Level level);
+    shared formal variable Level? logLevel;
 
 }
 
 doc "Get log instance."
-shared Log logInstance(String name) => logManager.getLogger(name); 
+shared Log logInstance(String name) => logManager.loggerInstance(name); 
 
 shared abstract class Level(Integer level) of levelFatal | levelError | levelWarn | levelInfo | levelDebug | levelTrace {
     shared Integer getLevel() {

@@ -4,14 +4,14 @@ import ceylon.util.logging { Log, levelInfo, LogWriter, LogManager, ConsoleWrite
 by "Matej Lazar"
 shared class DefaultLogManager() satisfies LogManager {
     
-    variable LogWriter logWriter = ConsoleWriter(); 
+    shared actual variable LogWriter logWriter = ConsoleWriter();
     
     Log rootLogger = DefaultLog("", logWriter);
-    rootLogger.setLogLevel(levelInfo);
+    rootLogger.logLevel = levelInfo;
     
     MutableMap<String, Log> loggers = HashMap<String, Log>();
     
-    shared actual Log getLogger(String name) {
+    shared actual Log loggerInstance(String name) {
         if ( exists logger = loggers.get(name)) {
             return logger;
         } else {
@@ -27,11 +27,4 @@ shared class DefaultLogManager() satisfies LogManager {
         return rootLogger;
     }
     
-    shared LogWriter getLogWriter() {
-        return logWriter;
-    }
-
-    shared actual void setLogWriter(LogWriter writer) {
-        logWriter = writer;
-    }
 }

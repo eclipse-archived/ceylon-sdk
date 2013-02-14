@@ -4,9 +4,8 @@ import ceylon.test { assertTrue, assertFalse }
 
 void testLog() {
     value list = LinkedList<String>(); 
-    value writer = ListWriter(list);
 
-    logManager.setLogWriter(writer);
+    logManager.logWriter = ListWriter(list);
     
     LoggingTest().test(list);
     SupportedLoggingTest().test(list);
@@ -25,7 +24,7 @@ class LoggingTest() {
         log1.debug("debug 1");
 
         value log3 = logInstance("log3");
-        log3.setLogLevel(levelTrace);
+        log3.logLevel = levelTrace;
         log3.info("info 3");
         log3.error("error 3");
         log3.debug("debug 3");
@@ -66,7 +65,7 @@ class LoggingTest() {
 
 class SupportedLoggingTest() satisfies LogSupport {
     shared void test(MutableList<String> list) {
-        log.setLogLevel(levelDebug);
+        log.logLevel = levelDebug;
         log.info("supported info");
         log.error("supported error");
         log.debug("supported debug");

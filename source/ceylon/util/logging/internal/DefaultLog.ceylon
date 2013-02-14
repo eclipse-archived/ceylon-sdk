@@ -4,30 +4,32 @@ import ceylon.util.logging.internal { DefaultLogManager }
 by "Matej Lazar"
 shared class DefaultLog(String name, LogWriter writer) satisfies Log {
 
-    shared variable Level? logLevel = null;
+    shared actual variable Level? logLevel = null;
 
     shared actual void log(Level level, String message) {
-        if (level.getLevel() >= getLogLevel().getLevel()) {
+        if (level.getLevel() >= resolvedLogLevel().getLevel()) {
             //LogWriter writer = logManager.getLogWriter();
             writer.write("``level.string.uppercased`` ``process.milliseconds`` ``name``: ``message``");
         }
     }
     
-    shared actual Level getLogLevel() {
+    shared Level resolvedLogLevel() {
         if (exists l = logLevel) {
             return l;
         } else {
             if (is DefaultLogManager l = logManager) {
                 value parent = l.getParent(this);
-                return parent.getLogLevel();
+                if (is DefaultLog p = parent) {
+                    return p.resolvedLogLevel();
+                } else {
+                    throw Exception("Parent should be instance of the same class (DefaultLog).");
+                }
             } else {
                 throw Exception("Default log should use DefaultLogManager.");
             }
         }
     }
+
     
-    shared actual void setLogLevel(Level level) {
-        logLevel = level;
-    }
 }
 
