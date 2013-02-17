@@ -1,19 +1,19 @@
 
-shared abstract class HttpdStatus() of httpdStarting | httpdStarted | httpdStoping | httpdStopped {}
+shared abstract class Status() of starting | started | stoping | stopped {}
 
-shared object httpdStarting extends HttpdStatus() {
-    shared actual String string => "httpdStarting";
+shared object starting extends Status() {
+    shared actual String string => "starting";
 }
 
-shared object httpdStarted extends HttpdStatus() {
-    shared actual String string => "httpdStarted";
+shared object started extends Status() {
+    shared actual String string => "started";
 }
 
-shared object httpdStoping extends HttpdStatus() {
-    shared actual String string => "httpdStoping";
+shared object stoping extends Status() {
+    shared actual String string => "stoping";
 }
 
-shared object httpdStopped extends HttpdStatus() {
-    shared actual String string => "httpdStopped";
+shared object stopped extends Status() {
+    shared actual String string => "stopped";
 }
 

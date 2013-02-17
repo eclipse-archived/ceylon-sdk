@@ -1,9 +1,14 @@
-doc "Interface for a synchronous web endpoint."
+doc "Synchronous web endpoint."
 by "Matej Lazar"
-shared interface WebEndpoint satisfies WebEndpointBase {
+shared class WebEndpoint(String path, void service(HttpRequest request, HttpResponse response)) {
+
+    //TODO do we realy need shared method
+    shared void callService(HttpRequest request, HttpResponse response) {
+        service(request, response);
+    }
     
-    doc "Method is called by server, when a new request is received."
-    see (HttpRequest, HttpResponse)
-    shared formal void service(HttpRequest request, HttpResponse response);
-    
+    //TODO do we realy need shared method
+    shared String getPath() {
+        return path;
+    }
 }

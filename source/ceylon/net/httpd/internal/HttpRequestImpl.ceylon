@@ -1,4 +1,4 @@
-import ceylon.net.httpd { HttpRequest, HttpSession, WebEndpointConfig, HttpdInternalException }
+import ceylon.net.httpd { HttpRequest, HttpSession, WebEndpoint, InternalException, WebEndpointAsync }
 import io.undertow.server { HttpServerExchange }
 import java.util { Deque, JMap = Map }
 import java.lang { JString = String }
@@ -20,7 +20,7 @@ import org.xnio { IoFuture }
 by "Matej Lazar"
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest {
     
-    variable WebEndpointConfig? endpointConfig = null;
+    variable WebEndpoint|WebEndpointAsync|Null endpoint = null;
     
     HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
     variable FormData? formData = null;
@@ -88,9 +88,17 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
     
     shared actual String relativePath() {
         String requestPath = path();
-        if (exists e = endpointConfig) {
-            //TODO path could be regex
-            String mappingPath = e.path;
+        if (exists e = endpoint) {
+            String mappingPath;
+            
+            switch(e)
+            case(is WebEndpoint) {
+                mappingPath = e.getPath();
+            }
+            case (is WebEndpointAsync) {
+                mappingPath = e.getPath();
+            }
+            
             return requestPath[mappingPath.size .. (requestPath.size - 1 )];
         }
         return requestPath;
@@ -111,23 +119,23 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
     
     shared actual String scheme() {
         return exchange.requestScheme;
-        }
-        
-        shared void webEndpointConfig(WebEndpointConfig webEndpointConfig) {
-            endpointConfig = webEndpointConfig;
-        }
-        
-        shared actual SocketAddress sourceAddress() {
-            value address = exchange.sourceAddress;
-            return SocketAddress(address.hostString, address.port);
-        }
-        
-        shared actual String? mimeType() {
-            return header(headerConntentType.string);
-        }
-        
-        shared actual HttpSession session() {
-		variable UtSession? utSession = null;
+    }
+
+    shared void webEndpoint(WebEndpoint|WebEndpointAsync webEndpoint) {
+        endpoint = webEndpoint;
+    }
+    
+    shared actual SocketAddress sourceAddress() {
+        value address = exchange.sourceAddress;
+        return SocketAddress(address.hostString, address.port);
+    }
+    
+    shared actual String? mimeType() {
+        return header(headerConntentType.string);
+    }
+    
+    shared actual HttpSession session() {
+    	variable UtSession? utSession = null;
         SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
         
         //TODO configurable session cookie
@@ -143,9 +151,9 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
         
         if (exists u = utSession) {
             return DefaultHttpSession(u);
+        } else {
+            throw InternalException("Cannot get or create session.");
         }
-        
-        throw HttpdInternalException("Cannot get or create session.");
     }
     
     void addPostValues(SequenceBuilder<String> sequenceBuilder, String paramName) {
@@ -186,5 +194,5 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
         }
         return formData;
     }
-    
 }
+
