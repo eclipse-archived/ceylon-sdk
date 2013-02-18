@@ -15,7 +15,6 @@ String fileContent = "The quick brown fox jumps over the lazy dog.\n";
 Integer fileLines = 10;
 String fileName = "lazydog.txt";
 
-//TODO closing file problem
 Boolean loadTestEnabled = false;
 
 void testServer() {
@@ -75,6 +74,7 @@ void execuTestEcho() {
     assertEquals("text/html", contentTypeHeader);
     
     value echoMsg = response.contents;
+    response.close();
     //TODO log
     print("Received message: ``echoMsg``");
     assertEquals("Hello ``name``!", echoMsg);
@@ -86,6 +86,9 @@ void executeTestStaticFile(Integer executeRequests) {
         value fileRequest = ClientRequest(parseURI("http://localhost:8080/file/``fileName``"));
         value fileResponse = fileRequest.execute();
         value fileCnt = fileResponse.contents;
+        fileResponse.close();
+        //TODO log trace
+        print("Request N°``request``");
         print("File content:``fileCnt``");
         assertEquals(produceFileContent(), fileCnt);
         request++;
