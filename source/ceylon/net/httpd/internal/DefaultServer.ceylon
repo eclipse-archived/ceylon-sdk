@@ -4,7 +4,7 @@ import java.lang {
     JThread = Thread, 
     JRunnable = Runnable 
 }
-import java.net { InetSocketAddress }
+import java.net { InetSocketAddress, SocketAddress }
 import org.xnio { 
     Xnio { xnioInstance = instance }, 
     XnioWorker, 
@@ -20,7 +20,7 @@ import org.xnio {
     }, 
     ByteBufferSlicePool, 
     BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR}, 
-    ChannelListener
+    ChannelListener, Option
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
@@ -155,4 +155,14 @@ shared class DefaultServer() satisfies Server {
             listener.onStatusChange(status);
         }
     }
+
+    //TODO use instead of [[JavaHelper]]
+    //AcceptingChannel<ConnectedChannel> createStreamServer(
+    //        XnioWorker worker, 
+    //        InetSocketAddress bindAddress,
+    //        ChannelListener<AcceptingChannel<ConnectedStreamChannel>> acceptListener,
+    //        OptionMap optionMap) { 
+    //    return worker.createStreamServer(bindAddress, acceptListener, optionMap);
+    //}
 }
+
