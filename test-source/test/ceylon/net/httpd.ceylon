@@ -8,14 +8,25 @@ import ceylon.net.httpd { createServer, StatusListener, Status,
 import ceylon.net.httpd.endpoints { serveStaticFile }
 import ceylon.net.uri { parseURI }
 import ceylon.test { assertEquals }
+import java.lang { Runnable, Thread }
+import ceylon.collection { LinkedList }
+
 
 by "Matej Lazar"
 
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
+
+doc "How many lines of default text to write to file."
 Integer fileLines = 10;
+
 String fileName = "lazydog.txt";
 
-Boolean loadTestEnabled = false;
+doc "How many requests to file we want to execute."
+Integer numberOfSequentialRequests = 0;
+
+doc "Number of concurent requests"
+Integer numberOfUsers=10;
+Integer requestsPerUser = 10;
 
 void testServer() {
     
@@ -45,10 +56,10 @@ void testServer() {
                 try {
                     execuTestEcho();
                     
-                    executeTestStaticFile(1);
-                    if (loadTestEnabled) {
-                        executeTestStaticFile(11000);
-                    }
+                    executeTestStaticFile(numberOfSequentialRequests);
+                    
+                    concurentFileRequests(numberOfUsers);
+                    
                 } finally {
                     cleanUpFile();
                     server.stop();
@@ -94,6 +105,32 @@ void executeTestStaticFile(Integer executeRequests) {
         request++;
     }
 }
+
+void concurentFileRequests(Integer concurentRequests) {
+    variable Integer requestNumber = 0;
+    
+    object user satisfies Runnable {
+        shared actual void run() {
+            executeTestStaticFile(requestsPerUser);
+        }
+    }
+    
+    value users = LinkedList<Thread>();
+    
+    while(requestNumber < concurentRequests) {
+        print("User: ``requestNumber``");
+        value userThread = Thread(user);
+        users.add(userThread);
+        userThread.start();
+        requestNumber++;
+    }
+    
+    //wait for users to complete requests
+    for (userThread in users) {
+        userThread.join();
+    }
+}
+
 
 void creteTestFile() {
     Path path = parsePath(fileName);
