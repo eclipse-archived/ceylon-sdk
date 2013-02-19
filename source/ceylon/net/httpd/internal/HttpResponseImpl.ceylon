@@ -1,4 +1,4 @@
-import ceylon.net.httpd { HttpResponse, HttpdInternalException }
+import ceylon.net.httpd { HttpResponse, InternalException }
 import io.undertow.server { HttpServerExchange }
 import org.xnio.channels { StreamSinkChannel, ChannelFactory, Channels {chFlushBlocking = flushBlocking}}
 import java.nio { JByteBuffer = ByteBuffer {wrapByteBuffer = wrap} }
@@ -11,7 +11,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
     
     ChannelFactory<StreamSinkChannel>? factory = exchange.responseChannelFactory;
     if (!factory exists ) {
-        throw HttpdInternalException("Cannot get response ChannelFactory."); 
+        throw InternalException("Cannot get response ChannelFactory."); 
     } 
     
     variable StreamSinkChannel? response = null;
@@ -20,7 +20,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         if (exists factory) {
             return factory.create();
         } else {
-            throw HttpdInternalException("Missing response channel factory.");
+            throw InternalException("Missing response channel factory.");
         }
     }
 
@@ -32,7 +32,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         if (exists r = response) {
             return r;
         }
-        throw HttpdInternalException("response is not avaialble");
+        throw InternalException("response is not avaialble");
     }
     
     shared actual void writeString(String string) {
@@ -43,7 +43,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         value bb = wrapByteBuffer(bytes);
         value response = getResponse();
         
-        variable Integer remaining = bytes.size;       	
+        variable Integer remaining = bytes.size;
         while (remaining > 0) {
             variable Integer written = 0;	
             while((written = response.write(bb)) > 0) {

@@ -1,13 +1,17 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
-import ceylon.net.httpd { HttpRequest, WebEndpoint, WebEndpointAsync, HttpCompletionHandler, WebEndpointConfig }
-import ceylon.collection { MutableList, LinkedList }
+import ceylon.net.httpd { HttpRequest, WebEndpointAsync, CompletionHandler, WebEndpoint }
+import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 
 by "Matej Lazar"
 shared class CeylonRequestHandler() satisfies HttpHandler {
     
-    MutableList<WebEndpointConfigInternal> webEndpointConfigs = LinkedList<WebEndpointConfigInternal>();
+    value webEndpoints = LinkedList<WebEndpoint|WebEndpointAsync>();
+    
+    shared void addWebEndpoint(WebEndpoint|WebEndpointAsync webEndpoint) {
+        webEndpoints.add(webEndpoint);
+    }
     
     shared actual void handleRequest(JHttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
         
@@ -17,11 +21,11 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
             
             try {
                 String requestPath = request.path();
-                WebEndpointConfigInternal? webEndpointConfig = getWebEndpointConfig(requestPath);
+                WebEndpoint|WebEndpointAsync|Null webEndpoint = getWebEndpoint(requestPath);
                 
-                if (exists webEndpointConfig) {
-                    request.webEndpointConfig(webEndpointConfig);
-                    invokeWebEndpoint(webEndpointConfig, request, response, hse, utCompletionHandler);
+                if (exists w = webEndpoint) {
+                    request.webEndpoint(w);
+                    invokeWebEndpoint(w, request, response, hse, utCompletionHandler);
                 } else {
                     response.responseStatus(404);
                     response.responseDone();
@@ -40,54 +44,60 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         }
     }
     
-    void invokeWebEndpoint(WebEndpointConfigInternal webEndpointConfig, HttpRequest request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
+    void invokeWebEndpoint(WebEndpoint|WebEndpointAsync webEndpoint, HttpRequest request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
         
-        WebModuleLoader webModuleLoader = WebModuleLoader();
-        
-        if (exists webEndpoint = webEndpointConfig.webEndpoint) {
-        } else {
-            //TODO use synchronized to make shure that WebEndpoint is singleton
-            value webEndpoint = webModuleLoader.instance(webEndpointConfig);
-            webEndpointConfig.setWebEndpoint(webEndpoint);
+        switch (webEndpoint)
+        case (is WebEndpointAsync) {
+            wdDispatch(exchange, AsyncInvoker(webEndpoint, request, response, exchange, utCompletionHandler));
         }
-        
-        value webEndpoint = webEndpointConfig.webEndpoint;
-        
-        if (is WebEndpointAsync w = webEndpoint) {
-            wdDispatch(exchange, AsyncInvoker(w, request, response, exchange, utCompletionHandler));
-        } else if (is WebEndpoint w = webEndpoint) {
-            w.service(request, response);
+        case (is WebEndpoint) {
+            webEndpoint.callService(request, response);
             response.responseDone();
             utCompletionHandler.handleComplete();
-        } 
+        }
     }
     
-    class AsyncInvoker(WebEndpointAsync webApp, HttpRequest request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
+    class AsyncInvoker(WebEndpointAsync webEndpoint, HttpRequest request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
         shared actual void run() {
-            object completionHandler satisfies HttpCompletionHandler {
+            object completionHandler satisfies CompletionHandler {
                 shared actual void handleComplete() {
                     response.responseDone();
                     utCompletionHandler.handleComplete();
-                    }
-                }
-                webApp.service(request, response, completionHandler);
-            }
-        }
-        
-        shared void addWebEndpointMapping(WebEndpointConfig webEndpointConfig) {
-            WebEndpointConfigInternal internalConfig = WebEndpointConfigInternal(webEndpointConfig);
-            webEndpointConfigs.add(internalConfig);
-        }
-        
-        WebEndpointConfigInternal? getWebEndpointConfig(String path) {
-            //TODO wildcard/regex matching path
-            
-                    for (config in webEndpointConfigs) {
-                if (path.contains(config.path)) {
-                    return config;
                 }
             }
-            //return webEndpointConfigs.item(path);
-            return null;
+            webEndpoint.callService(request, response, completionHandler);
         }
     }
+    
+    WebEndpoint|WebEndpointAsync|Null getWebEndpoint(String requestPath) {
+        //TODO ends with
+        /*
+So you need endsWith() as well. No problem, add it.
+And you could even write yourself an and() method so that this works:
+    
+    and(startsWith("/home"), endsWith(".jsf"))
+
+Hell, you could even go as far as writing an implementation of Set,
+which would let you write:
+
+    startsWith("/home") & (endsWith(".jsf") | endsWith(".csf"))
+            */
+
+        for (webEndpoint in webEndpoints) {
+            String endpointPath;
+            switch (webEndpoint)
+            case (is WebEndpointAsync) {
+                endpointPath = webEndpoint.getPath();
+            }
+            case (is WebEndpoint) {
+                endpointPath = webEndpoint.getPath();
+            }
+            
+
+            if (requestPath.contains(endpointPath)) {
+                return webEndpoint;
+            }
+        }
+        return null;
+    }   
+}
