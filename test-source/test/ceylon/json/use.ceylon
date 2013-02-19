@@ -16,33 +16,33 @@ void testUsage(){
     }
     
     value results = parse("""
-{"results" : [
- {
-  "module": "ceylon.collection",
-  "versions": [
-   "0.3.0", 
-   "0.3.3" 
-  ],
-  "authors": [
-   "Stéphane Épardaud" 
-  ],
-  "doc": "A module for collections",
-  "license": "Apache Software License"
- },
- {
-  "module": "ceylon.io",
-  "versions": [
-   "0.3.0", 
-   "0.3.3" 
-  ],
-  "authors": [
-   "Stéphane Épardaud" 
-  ],
-  "doc": "A module for io",
-  "license": "Apache Software License"
- }
-]}
-""");
+                             {"results" : [
+                              {
+                               "module": "ceylon.collection",
+                               "versions": [
+                                "0.3.0", 
+                                "0.3.3" 
+                               ],
+                               "authors": [
+                                "Stéphane Épardaud" 
+                               ],
+                               "doc": "A module for collections",
+                               "license": "Apache Software License"
+                              },
+                              {
+                               "module": "ceylon.io",
+                               "versions": [
+                                "0.3.0", 
+                                "0.3.3" 
+                               ],
+                               "authors": [
+                                "Stéphane Épardaud" 
+                               ],
+                               "doc": "A module for io",
+                               "license": "Apache Software License"
+                              }
+                             ]}
+                             """);
     for(mod in results.getArray("results").objects){
         print("Module: ``mod.getString("module")``");
         for(version in mod.getArray("versions").strings){
