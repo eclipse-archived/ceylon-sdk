@@ -1,5 +1,6 @@
-/build/
 .settings/
 modules
 test-modules
 JDTClasses
+classes
+build
