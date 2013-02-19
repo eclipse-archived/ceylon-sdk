@@ -193,7 +193,18 @@
     <target name="publish" depends="compile"
             description="Copies the SDK modules to the user's repository">
         <copy todir="${ceylon.repo.dir}" overwrite="true">
-            <fileset dir="${out.repo}"/>
+            <fileset dir="${out.repo}">
+                <include name="ceylon/test/**"/>
+                <include name="ceylon/math/**"/>
+                <include name="ceylon/collection/**"/>
+                <include name="ceylon/file/**"/>
+                <include name="ceylon/io/**"/>
+                <include name="ceylon/json/**"/>
+                <include name="ceylon/net/**"/>
+                <include name="ceylon/process/**"/>
+                <include name="ceylon/dbc/**"/>
+                <include name="ceylon/interop/java/**"/>
+            </fileset>
         </copy>
     </target>
 </project>
