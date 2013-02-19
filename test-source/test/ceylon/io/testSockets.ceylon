@@ -109,10 +109,10 @@ void testGrrr(){
 //    value socket = connector.connect();
     print("Getting ``uri.humanRepresentation``");
     value request = "GET ``uri.path.string`` HTTP/1.1
-Host: ``host``
-User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11
-
-";
+                     Host: ``host``
+                     User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11
+                     
+                     ";
     print(request);
     
     print("Writing request");
