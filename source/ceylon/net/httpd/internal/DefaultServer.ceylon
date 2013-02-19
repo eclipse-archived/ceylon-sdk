@@ -1,15 +1,15 @@
 import java.lang { 
     JInt = Integer,
     Runtime { jRuntime = runtime }, 
-    JThread = Thread { tsleep = sleep}, 
-    JRunnable = Runnable, ClassLoader 
+    JThread = Thread, 
+    JRunnable = Runnable 
 }
 import java.net { InetSocketAddress }
 import org.xnio { 
     Xnio { xnioInstance = instance }, 
     XnioWorker, 
     OptionMap { omBuilder = builder }, 
-    Options { 
+    XnioOptions = Options { 
         xnioWorkerWriteThreads = \iWORKER_WRITE_THREADS, 
         xnioWorkerReadThreads = \iWORKER_READ_THREADS, 
         xnioConnectionLowWatter = \iCONNECTION_LOW_WATER, 
@@ -26,14 +26,13 @@ import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedCh
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Httpd, HttpdOptions, WebEndpointConfig, HttpdInternalException, HttpdStatusListerner, HttpdStatus, httpdStarting, httpdStarted, httpdStoping, httpdStopped }
+import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, started, stoping, stopped, WebEndpoint, WebEndpointAsync }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
-import org.jboss.modules { ModuleClassLoader }
 import ceylon.collection { LinkedList, MutableList }
 
 by "Matej Lazar"
-shared class DefaultHttpdServer() satisfies Httpd {
+shared class DefaultServer() satisfies Server {
     
     variable XnioWorker? worker = null;
     
@@ -41,41 +40,14 @@ shared class DefaultHttpdServer() satisfies Httpd {
     
     JavaHelper jh = JavaHelper();
     
-    MutableList<HttpdStatusListerner> statusListeners = LinkedList<HttpdStatusListerner>();
+    MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
-    shared actual void addWebEndpointConfig(WebEndpointConfig webEndpointConfig) {
-        ceylonHandler.addWebEndpointMapping(webEndpointConfig);
+    shared actual void addWebEndpoint(WebEndpoint|WebEndpointAsync webEndpoint) {
+        ceylonHandler.addWebEndpoint(webEndpoint);
     }
     
-    shared actual void loadWebEndpointConfig(String? _moduleId, String pathToModuleConfig) {
-        variable String? moduleId = null;
-        
-        if (exists _moduleId) {
-            if (!_moduleId.empty) {
-                moduleId = _moduleId;
-            }
-        }
-        if (! moduleId exists) {
-            moduleId = getLocalModuleId();
-        }
-	
-		if (exists mid = moduleId) {
-            List<WebEndpointConfig> webEndpointConfigs = parseWebEndpointConfig(mid, pathToModuleConfig);
-            
-            for (WebEndpointConfig webEndpointConfig in webEndpointConfigs) {
-                ceylonHandler.addWebEndpointMapping(webEndpointConfig);
-            }
-        } else {
-            throw HttpdInternalException("ModuleId not defined.");
-        }
-    }
-    
-    shared actual void scan() {
-        //TODO scan for configs
-    }
-    
-    shared actual void start(Integer port, String host, HttpdOptions httpdOptions) {
-        notifyListeners(httpdStarting);
+    shared actual void start(Integer port, String host, Options httpdOptions) {
+        notifyListeners(starting);
         //TODO log
         print("Starting on ``host``:``port``");
         
@@ -142,24 +114,14 @@ shared class DefaultHttpdServer() satisfies Httpd {
         
         //TODO log
         print("Httpd started.");
-        notifyListeners(httpdStarted);
+        notifyListeners(started);
         
         if (exists w = worker) {
             w.awaitTermination();   
         }
     }
     
-    String getLocalModuleId() { 
-        ClassLoader cl = jh.getClassLoader(this);
-        if (is ModuleClassLoader cl) {
-            return cl.\imodule.identifier.string;
-        } else {
-            //running in IDE
-            return "--flat-class-loader--";
-        }
-    }
-
-    shared actual void startInBackground(Integer port, String host, HttpdOptions httpdOptions) {
+    shared actual void startInBackground(Integer port, String host, Options httpdOptions) {
         object httpd satisfies JRunnable {
             shared actual void run() {
                 start(port, host, httpdOptions);
@@ -170,24 +132,25 @@ shared class DefaultHttpdServer() satisfies Httpd {
     
     shared actual void stop() {
         if (exists w = worker) {
-            notifyListeners(httpdStoping);
+            notifyListeners(stoping);
             w.shutdown();
             //TODO log
             print("Httpd stopped.");
-            notifyListeners(httpdStopped);
+            notifyListeners(stopped);
             worker = null;
         }
     }
     
-    shared actual void addListener(HttpdStatusListerner listener) {
+    shared actual void addListener(StatusListener listener) {
         statusListeners.add(listener);
     }
     
-    shared actual void removeListener(HttpdStatusListerner listener) {
+    shared actual void removeListener(StatusListener listener) {
         //TODO statusListeners.remove(listener);
+        throw Exception("NOT IMPLEMENTED YET!");
     }
     
-    void notifyListeners(HttpdStatus status) {
+    void notifyListeners(Status status) {
         for (listener in statusListeners) {
             listener.onStatusChange(status);
         }

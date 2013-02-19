@@ -1,5 +1,5 @@
 by "Matej Lazar"
-shared class HttpdOptions() {
+shared class Options() {
     shared variable Integer workerWriteThreads = 2;
     shared variable Integer workerReadThreads = 2;
     shared variable Integer workerTaskCoreThreads = 2;

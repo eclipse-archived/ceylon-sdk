@@ -1,11 +1,5 @@
 package ceylon.net.httpd.internal;
 
-import org.jboss.modules.Module;
-import org.jboss.modules.ModuleClassLoader;
-import org.jboss.modules.ModuleIdentifier;
-import org.jboss.modules.ModuleLoadException;
-import org.jboss.modules.ModuleLoader;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,32 +12,11 @@ import org.xnio.channels.AcceptingChannel;
 import org.xnio.channels.ConnectedChannel;
 import org.xnio.channels.ConnectedStreamChannel;
 
-import com.redhat.ceylon.compiler.java.metadata.Ceylon;
-
 /**
  * @author Matej Lazar
  */
-//@Ceylon
+//TODO remove me
 public class JavaHelper {
-
-    /**
-     * Helper method to create instances of given class in a module.
-     * Method trys to use modular class loader, if it is not available (running from IDE) a flat one is used.
-     */
-    public static Object createInstance(Object obj, String className, String moduleId) throws ModuleLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        ClassLoader cl = obj.getClass().getClassLoader();
-        if (cl instanceof ModuleClassLoader) {
-            //TODO log debug
-            System.out.println("Using modular class loader.");
-            ModuleClassLoader mcl = (ModuleClassLoader)cl;
-            ModuleLoader ml =  mcl.getModule().getModuleLoader();
-            ModuleIdentifier identifier = ModuleIdentifier.fromString(moduleId);
-            Module module = ml.loadModule(identifier);
-            cl = module.getClassLoader();
-        }
-        Class<?> clazz = cl.loadClass(className);
-        return clazz.newInstance();
-    }
 
     /**
      * Remove wildcard type from retun type.
@@ -59,10 +32,6 @@ public class JavaHelper {
         @SuppressWarnings("rawtypes")
         AcceptingChannel acceptingChannel = worker.createStreamServer(bindAddress, acceptListener, optionMap);
         return acceptingChannel;
-    }
-
-    public static ClassLoader getClassLoader(Object object) {
-        return object.getClass().getClassLoader();
     }
 
     /**

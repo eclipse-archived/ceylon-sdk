@@ -1,39 +1,24 @@
-import ceylon.net.httpd { WebEndpointAsync, HttpResponse, HttpCompletionHandler, HttpRequest, WebEndpointConfig, HttpdInternalException }
+import ceylon.net.httpd { HttpResponse, CompletionHandler, HttpRequest, InternalException }
 import ceylon.file { Path, File, parsePath }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io { newOpenFile }
 
 
 by "Matej Lazar"
-shared class StaticFileEndpoint() satisfies WebEndpointAsync {
+shared class StaticFileEndpoint() {
     
     doc "root dir of external (not from .car) location"
-    variable String? externalPath = null;
+    shared variable String? externalPath = null;
     
+    //TODO onec we decide how to pack static files
     variable String carPath = "static";
     
-    variable String? basePath = null;
-    
-    shared actual void init(WebEndpointConfig webEndpointConfig) {
-        externalPath = webEndpointConfig.attribute("files-dir");
-        
-        if (exists c = webEndpointConfig.attribute("car-static-dir")) {
-            carPath = c;
-        }
-        
-        if (exists ext = externalPath) {
-            basePath = ext; 
-        } else {
-            basePath = carPath;
-        }
-    }
-    
-    shared actual void service(HttpRequest request, HttpResponse response, HttpCompletionHandler completionHandler) {
+    shared void service(HttpRequest request, HttpResponse response, CompletionHandler completionHandler) {
         String path = request.relativePath();
         
-        if (exists b = basePath) {
+        if (exists filesLocation = externalPath) {
             //TODO serve files from car
-            Path filePath = parsePath(b + path);
+            Path filePath = parsePath(filesLocation + path);
             if (is File file = filePath.resource) {
                 //TODO log
                 print("Serving file: ``filePath.absolutePath.string``");
@@ -44,12 +29,12 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
                     variable Integer available = file.size;
                     response.addHeader("content-length", available.string);
                     if (is String cntType = file.contentType) {
-                        response.addHeader("content-type", cntType);                    
+                        response.addHeader("content-type", cntType);
                     }
                     
                     //TODO transfer bytes efficiently between two channels. Use org.xnio.channels.Channels.transferBlocking
-                    //TODO fails on large files, XNIO bug test with new version
-                            ByteBuffer buffer = newByteBuffer(available);
+                    //use completionHandler to notify request complete
+                    ByteBuffer buffer = newByteBuffer(available);
                     //while (available > 0) {
                     value read = openFile.read(buffer);
                     //available -= read;
@@ -65,7 +50,7 @@ shared class StaticFileEndpoint() satisfies WebEndpointAsync {
                 print("file does not exist");
             }
         } else {
-            throw HttpdInternalException("Cannot determine files path.");
+            throw InternalException("Root dir of files must be set. Make shure that StaticFileEndpoint.externalPath is set.");
         }
         completionHandler.handleComplete();
     }
