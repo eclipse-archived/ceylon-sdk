@@ -1,4 +1,4 @@
 
 [repositories]
-output=./test-modules
+output=./modules
 lookup=./test-deps

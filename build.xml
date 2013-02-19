@@ -4,7 +4,7 @@
     <property name="ceylon.verbosity" value="false"/>
     <property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
     <property name="out.repo" location="modules"/>
-    <property name="test.repo" location="test-modules"/>
+    <property name="test.repo" location="modules"/>
 
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
@@ -16,8 +16,8 @@
     <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
 
     <reposet id="reposet.compile.test">
-        <repo url="./modules"/>
-        <repo url="./test-deps"/><!-- Needed for h2.jar dep of test.ceylon.dbc -->
+        <repo url="${out.repo}"/>
+        <repo url="test-deps"/><!-- Needed for h2.jar dep of test.ceylon.dbc -->
     </reposet>
     
     <reposet id="reposet.run.test">
@@ -71,8 +71,8 @@
     
     <target name="clean"
         description="Deletes the test-modules and modules directories">
-        <delete dir="modules"/>
-        <delete dir="test-modules"/>
+        <delete dir="${out.repo}"/>
+        <delete dir="${test.repo}"/>
     </target>
     
     <target name="compile-jvm">
