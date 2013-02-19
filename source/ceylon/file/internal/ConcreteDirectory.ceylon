@@ -2,10 +2,12 @@ import ceylon.file { ... }
 
 import java.nio.file { JPath=Path, 
                        Files { movePath=move, 
-                               newDirectoryStream } }
+                               newDirectoryStream,
+                               deletePath=delete,
+                               getOwner, setOwner } }
+import java.nio.file.attribute { UserPrincipalNotFoundException }
 
 class ConcreteDirectory(JPath jpath)
-        extends ConcreteExistingResource(jpath) 
         satisfies Directory {
     shared actual Iterable<Path> childPaths(String filter) {
         //TODO: efficient impl
@@ -35,5 +37,35 @@ class ConcreteDirectory(JPath jpath)
     }
     shared actual Directory move(Nil target) {
         return ConcreteDirectory( movePath(jpath, asJPath(target.path)) );
+    }
+    shared actual Path path { 
+        return ConcretePath(jpath); 
+    }
+    shared actual File|Directory|Nil linkedResource {
+        return this;
+    }
+    shared actual String string {
+        return jpath.string;
+    }
+    shared actual Nil delete() {
+        deletePath(jpath);
+        return ConcreteNil(jpath);
+    }
+    
+    function jprincipal(String name) {
+        value upls = jpath.fileSystem.userPrincipalLookupService;
+        try {
+            return upls.lookupPrincipalByName(name);
+        }
+        catch (UserPrincipalNotFoundException e) {
+            throw NoSuchPrincipalException(name, e);
+        }
+    }
+    
+    shared actual String owner {
+        return getOwner(jpath).name;
+    }
+    assign owner {
+        setOwner(jpath, jprincipal(owner));
     }
 }

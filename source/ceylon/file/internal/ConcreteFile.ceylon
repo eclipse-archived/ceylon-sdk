@@ -6,10 +6,13 @@ import java.nio.file { JPath=Path,
                                getLastModifiedTime, setLastModifiedTime,
                                probeContentType, copyPath=copy, movePath=move,
                                newLink=createLink, 
+                               deletePath=delete,
+                               getOwner, setOwner,
                                newSymbolicLink=createSymbolicLink },
                        StandardCopyOption { REPLACE_EXISTING } }
 import java.nio.charset { Charset { defaultCharset, forName } }
-import java.nio.file.attribute { FileTime { fromMillis } }
+import java.nio.file.attribute { FileTime { fromMillis }, 
+                                 UserPrincipalNotFoundException }
 
 Charset parseCharset(String? encoding) {
     if (exists encoding) {
@@ -21,7 +24,6 @@ Charset parseCharset(String? encoding) {
 }
 
 class ConcreteFile(JPath jpath)
-        extends ConcreteExistingResource(jpath) 
         satisfies File {
     shared actual File copy(Nil target) {
             return ConcreteFile( copyPath(jpath, asJPath(target.path)) );
@@ -84,6 +86,37 @@ class ConcreteFile(JPath jpath)
     }
     shared actual Writer appender(String? encoding) {
         return ConcreteAppendingWriter(jpath, parseCharset(encoding));
+    }
+    shared actual Nil delete() {
+        deletePath(jpath);
+        return ConcreteNil(jpath);
+    }
+    
+    function jprincipal(String name) {
+        value upls = jpath.fileSystem.userPrincipalLookupService;
+        try {
+            return upls.lookupPrincipalByName(name);
+        }
+        catch (UserPrincipalNotFoundException e) {
+            throw NoSuchPrincipalException(name, e);
+        }
+    }
+    
+    shared actual String owner {
+        return getOwner(jpath).name;
+    }
+    assign owner {
+        setOwner(jpath, jprincipal(owner));
+    }
+    
+    shared actual Path path { 
+        return ConcretePath(jpath); 
+    }
+    shared actual File|Directory|Nil linkedResource {
+        return this;
+    }
+    shared actual String string {
+        return jpath.string;
     }
 }
 

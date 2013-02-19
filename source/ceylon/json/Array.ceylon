@@ -55,6 +55,10 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         return Array(*list.reversed.sequence);
     }
     
+    shared actual Array rest {
+        return Array(*list.rest.sequence);
+    }
+    
     shared actual Array segment(Integer from, Integer length) {
         return Array(*list.segment(from, length));
     }

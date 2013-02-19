@@ -5,12 +5,17 @@ import java.nio.file { JPath=Path,
                                newFile=createFile } }
 
 class ConcreteNil(JPath jpath) 
-        extends ConcreteResource(jpath)
         satisfies Nil {
     shared actual Directory createDirectory() {
         return ConcreteDirectory(newDirectory(jpath));
     }
     shared actual File createFile() {
         return ConcreteFile(newFile(jpath));
+    }
+    shared actual Path path { 
+        return ConcretePath(jpath); 
+    }
+    shared actual File|Directory|Nil linkedResource {
+        return this;
     }
 }

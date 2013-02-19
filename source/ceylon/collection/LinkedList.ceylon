@@ -336,4 +336,6 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     shared actual LinkedList<Element> reversed {
         return nothing;
     }
+    
+    shared actual List<Element> rest => nothing; /* TODO auto-generated stub */
 }

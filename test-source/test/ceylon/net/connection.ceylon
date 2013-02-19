@@ -19,7 +19,7 @@ void testGETAndParseJSON(){
     value request = parseURI("https://api.github.com/repos/ceylon/ceylon-compiler").get();
     value response = request.execute();
     print(response);
-    assertTrue(response.contents nonempty, "Has contents");
+    assertFalse(response.contents empty, "Has contents");
 
     Object json = parse(response.contents);
     testJSON(json);    
