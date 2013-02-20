@@ -7,18 +7,16 @@ import java.util { HashMap }
 
 class ConcreteSystem(FileSystem fs) 
         satisfies System {
-    shared actual void close() {
-        fs.close();
-    }
-    shared actual Boolean open {
-        return fs.open;
-    }
-    shared actual Boolean writeable {
-        return !fs.readOnly;
-    }
-    shared actual Path parsePath(String pathString) {
-        return ConcretePath(fs.getPath(pathString));
-    }   
+    
+    close() => fs.close();
+    
+    open => fs.open;
+    
+    writeable => !fs.readOnly;
+    
+    parsePath(String pathString) =>
+            ConcretePath(fs.getPath(pathString));
+     
     shared actual Path[] rootPaths {
         value sb = SequenceBuilder<Path>();
         value iter = fs.rootDirectories.iterator();
@@ -27,6 +25,7 @@ class ConcreteSystem(FileSystem fs)
         }
         return sb.sequence;
     }
+    
     shared actual Store[] stores {
         value sb = SequenceBuilder<Store>();
         value iter = fs.fileStores.iterator();
@@ -35,6 +34,7 @@ class ConcreteSystem(FileSystem fs)
         }
         return sb.sequence;
     }
+    
 }
 
 shared System createSystem(String uriString, <String->String>* properties) {

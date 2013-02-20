@@ -14,19 +14,15 @@ shared Store[] stores {
 
 class ConcreteStore(JFileStore jstore) 
         satisfies Store {
-    shared actual Integer totalSpace {
-        return jstore.totalSpace;
-    }
-    shared actual Integer availableSpace {
-        return jstore.unallocatedSpace;
-    }
-    shared actual Integer usableSpace {
-        return jstore.usableSpace;
-    }
-    shared actual String name {
-        return jstore.name();
-    }
-    shared actual Boolean writable {
-        return !jstore.readOnly;
-    }
+    
+    totalSpace => jstore.totalSpace;
+    
+    availableSpace => jstore.unallocatedSpace;
+    
+    usableSpace => jstore.usableSpace;
+    
+    name => jstore.name();
+    
+    writable => !jstore.readOnly;
+    
 }

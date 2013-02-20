@@ -9,13 +9,11 @@ import java.nio.file { JPath=Path, Paths { newPath=get }, FileVisitor,
                                isSymbolicLink, walkFileTree } }
 import java.nio.file.attribute { BasicFileAttributes }
 
-shared Path parsePath(String pathString) {
-    return ConcretePath(newPath(pathString));
-}
+shared Path parsePath(String pathString) =>
+        ConcretePath(newPath(pathString));
 
-shared Path parseURI(String uriString) {
-    return ConcretePath(newPath(newURI(uriString)));
-}
+shared Path parseURI(String uriString) =>
+        ConcretePath(newPath(newURI(uriString)));
 
 shared Path[] rootPaths {
     value sb = SequenceBuilder<Path>();
@@ -37,40 +35,36 @@ JPath asJPath(String|Path path) {
 
 class ConcretePath(jpath)
         satisfies Path {
+    
     shared JPath jpath;
-    shared actual Path parent {
-        return ConcretePath(jpath.parent);
-    }
-    shared actual Path childPath(String|Path subpath) {
-        return ConcretePath(jpath.resolve(asJPath(subpath)));
-    }
-    shared actual Path siblingPath(String|Path subpath) {
-        return ConcretePath(jpath.resolveSibling(asJPath(subpath)));
-    }
-    shared actual Path absolutePath {
-        return ConcretePath(jpath.toAbsolutePath());
-    }
-    shared actual Path normalizedPath {
-        return ConcretePath(jpath.normalize());
-    }
-    shared actual Boolean parentOf(Path path) {
-        return asJPath(path).startsWith(jpath);
-    }
-    shared actual Boolean childOf(Path path) {
-        return jpath.startsWith(asJPath(path));
-    }
-    shared actual Path relativePath(String|Path path) {
-        return ConcretePath(asJPath(path).relativize(jpath));
-    }
-    shared actual System system {
-        return ConcreteSystem(jpath.fileSystem);
-    }
-    shared actual String string {
-        return jpath.string;
-    }
-    shared actual String uriString {
-        return jpath.toUri().string;
-    }
+    
+    parent => ConcretePath(jpath.parent);
+    
+    childPath(String|Path subpath) =>
+            ConcretePath(jpath.resolve(asJPath(subpath)));
+    
+    siblingPath(String|Path subpath) =>
+            ConcretePath(jpath.resolveSibling(asJPath(subpath)));
+    
+    absolute => jpath.absolute;
+    
+    absolutePath => ConcretePath(jpath.toAbsolutePath());
+    
+    normalizedPath => ConcretePath(jpath.normalize());
+    
+    parentOf(Path path) => asJPath(path).startsWith(jpath);
+    
+    childOf(Path path) => jpath.startsWith(asJPath(path));
+    
+    relativePath(String|Path path) =>
+            ConcretePath(asJPath(path).relativize(jpath));
+    
+    system => ConcreteSystem(jpath.fileSystem);
+    
+    string => jpath.string;
+    
+    uriString => jpath.toUri().string;
+    
     shared actual Path[] elementPaths {
         value sb = SequenceBuilder<Path>();
         value iter = jpath.iterator();
@@ -79,6 +73,7 @@ class ConcretePath(jpath)
         }
         return sb.sequence;
     }
+    
     shared actual String[] elements {
         value sb = SequenceBuilder<String>();
         value iter = jpath.iterator();
@@ -87,12 +82,9 @@ class ConcretePath(jpath)
         }
         return sb.sequence;
     }
-    shared actual Boolean absolute {
-        return jpath.absolute;
-    }
-    shared actual Comparison compare(Path other) {
-        return jpath.compareTo(asJPath(other))<=>0;
-    }
+    
+    compare(Path other) => jpath.compareTo(asJPath(other))<=>0;
+    
     shared actual Boolean equals(Object that) {
         if (is Path that) {
             return asJPath(that)==jpath;
@@ -101,12 +93,11 @@ class ConcretePath(jpath)
             return false;
         }
     }
-    shared actual Integer hash {
-        return jpath.hash;
-    }
-    shared actual String separator {
-        return jpath.fileSystem.separator;
-    }
+    
+    hash => jpath.hash;
+    
+    separator => jpath.fileSystem.separator;
+    
     shared actual Resource resource {
         if (isExisting(jpath)) {
             if (isRegularFile(jpath)) {
@@ -126,6 +117,7 @@ class ConcretePath(jpath)
             return ConcreteNil(jpath);
         }
     }
+    
     shared actual void visit(Visitor visitor) {
         object fileVisitor satisfies FileVisitor<JPath> {
             value result {
@@ -161,4 +153,5 @@ class ConcretePath(jpath)
         }
         walkFileTree(jpath, fileVisitor);
     }
+    
 }

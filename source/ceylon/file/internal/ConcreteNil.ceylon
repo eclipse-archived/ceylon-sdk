@@ -6,16 +6,14 @@ import java.nio.file { JPath=Path,
 
 class ConcreteNil(JPath jpath) 
         satisfies Nil {
-    shared actual Directory createDirectory() {
-        return ConcreteDirectory(newDirectory(jpath));
-    }
-    shared actual File createFile() {
-        return ConcreteFile(newFile(jpath));
-    }
-    shared actual Path path { 
-        return ConcretePath(jpath); 
-    }
-    shared actual File|Directory|Nil linkedResource {
-        return this;
-    }
+    
+    createDirectory() =>
+            ConcreteDirectory(newDirectory(jpath));
+    
+    createFile() => ConcreteFile(newFile(jpath));
+    
+    path => ConcretePath(jpath); 
+    
+    linkedResource => this;
+    
 }

@@ -4,27 +4,27 @@ shared interface Directory
     
     doc "The files and subdirectories that directly belong
          to this directory."
-    shared formal Iterable<ExistingResource> children(
+    shared formal {ExistingResource*} children(
             doc "A filter to apply to the file names,
                  expressed as a glob pattern."
             String filter="*");
     
     doc "The files that directly belong to this directory."
-    shared formal Iterable<File> files(
+    shared formal {File*} files(
             doc "A filter to apply to the file names,
                  expressed as a glob pattern."
             String filter="*");    
     
     doc "The subdirectories that directly belong to this 
          directory."
-    shared formal Iterable<Directory> childDirectories(
+    shared formal {Directory*} childDirectories(
             doc "A filter to apply to the file names,
                  expressed as a glob pattern."
             String filter="*");
     
     doc "The paths of all files and subdirectories that 
          directly belong to this directory."
-    shared formal Iterable<Path> childPaths(
+    shared formal {Path*} childPaths(
             doc "A filter to apply to the file names,
                  expressed as a glob pattern."
             String filter="*");

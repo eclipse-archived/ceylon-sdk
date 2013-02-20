@@ -44,31 +44,27 @@ shared System createZipFileSystem(
              will be automatically created." 
         File|Nil file, 
         doc "The character encoding for entry names." 
-        String encoding="UTF-8") {
-    return createSystem("jar:" + file.path.uriString, 
+        String encoding="UTF-8")
+        => createSystem("jar:" + file.path.uriString, 
             "create"->(file is Nil).string, 
             "encoding"->encoding);
-} 
 
 doc "A `System` representing the default file system."
 shared object defaultSystem 
         satisfies System {
-    shared actual Path parsePath(String pathString) {
-        return defaultParsePath(pathString);
-    }
-    shared actual Path[] rootPaths {
-        return defaultRootPaths;
-    }
-    shared actual Store[] stores {
-        return defaultStores;
-    }
-    shared actual Boolean open {
-        return true;
-    }
-    shared actual Boolean writeable {
-        return true;
-    }
+    
+    parsePath(String pathString) => defaultParsePath(pathString);
+    
+    rootPaths => defaultRootPaths;
+    
+    stores => defaultStores;
+    
+    open => true;
+    
+    writeable => true;
+    
     shared actual void close() {
-        throw;
+        throw Exception("the default system cannot be closed");
     }
+    
 }
