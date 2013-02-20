@@ -7,11 +7,8 @@ class OutgoingPipe(InputStream stream)
     
     value reader = BufferedReader(InputStreamReader(stream));
     
-    shared actual void destroy() {
-        reader.close();
-    }
-    shared actual String? readLine() {
-        return reader.readLine();
-    }
+    destroy() => reader.close();
+    
+    readLine() => reader.readLine();
     
 }

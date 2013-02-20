@@ -21,7 +21,7 @@ shared class ConcreteProcess(
     actual shared Error|Reader error;
     actual shared Iterable<String->String> environment;
     
-    value builder = ProcessBuilder(*command.split().sequence);
+    value builder = ProcessBuilder(*command.split());
     builder.directory(JFile(path.string));
     for (e in environment) {
         builder.environment()
@@ -50,17 +50,11 @@ shared class ConcreteProcess(
         }
     }
     
-    actual shared Boolean terminated {
-        return exitCode exists;
-    }
+    terminated => exitCode exists;
     
-    actual shared Integer waitForExit() {
-        return process.waitFor();
-    }
+    waitForExit() => process.waitFor();
     
-    actual shared void kill() {
-        process.destroy();
-    }
+    kill() => process.destroy();
     
 }
 
