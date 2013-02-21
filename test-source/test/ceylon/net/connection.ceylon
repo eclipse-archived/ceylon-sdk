@@ -1,7 +1,7 @@
-import ceylon.net.uri { URI, parseURI }
-import ceylon.net.http { ... }
-import ceylon.test { ... }
 import ceylon.json { ... }
+import ceylon.net.http { ... }
+import ceylon.net.uri { parseURI }
+import ceylon.test { ... }
 
 void testJSON(Object json){
     assertEquals(32, json.size, "Object size");

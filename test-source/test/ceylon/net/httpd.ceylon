@@ -1,12 +1,13 @@
-import ceylon.test { assertEquals }
-import ceylon.net.httpd {  newInstance, StatusListener, Status, started, AsynchronousWebEndpoint }
-import ceylon.net.httpd { WebEndpoint, Response, Request}
-import ceylon.net.http { ClientRequest=Request }
-import ceylon.net.uri { parseURI }
-import ceylon.net.httpd.endpoints { StaticFileEndpoint }
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
+import ceylon.net.http { ClientRequest=Request }
+import ceylon.net.httpd { newInstance, StatusListener, Status, 
+                          started, AsynchronousWebEndpoint, 
+                          WebEndpoint, Response, Request }
+import ceylon.net.httpd.endpoints { serveStaticFile }
+import ceylon.net.uri { parseURI }
+import ceylon.test { assertEquals }
 
 by "Matej Lazar"
 
@@ -34,10 +35,8 @@ void testServer() {
 
     //add fileEndpoint
     creteTestFile();
-    StaticFileEndpoint staticFileEndpoint = StaticFileEndpoint();
-    staticFileEndpoint.externalPath = ".";
     server.addWebEndpoint(AsynchronousWebEndpoint {
-        service => staticFileEndpoint.service;
+        service => serveStaticFile(".");
         path = "/file";
     });
     

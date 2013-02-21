@@ -1,4 +1,4 @@
-import ceylon.net.uri { Parameter, URI, parseURI, percentEncoder, Path, PathSegment, ... }
+import ceylon.net.uri { ... }
 import ceylon.test { ... }
 
 void testURL(String url, 
