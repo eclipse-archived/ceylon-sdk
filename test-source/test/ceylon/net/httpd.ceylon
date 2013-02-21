@@ -37,7 +37,7 @@ void testServer() {
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
-        path = and(startsWith("/echo")); //TODO test endpoint overriding
+        path = and(startsWith("/echo")); //TODO endpoint overriding, first matching should be used
     });
 
     //add fileEndpoint
