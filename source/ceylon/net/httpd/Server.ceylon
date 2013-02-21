@@ -5,7 +5,7 @@ doc "Ceylon http server."
 shared interface Server {
 
     doc "Define webEndpoint by providing an instance of WebEndpointConfig class."
-    shared formal void addWebEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint);
+    shared formal void addEndpoint(Endpoint|AsynchronousEndpoint endpoint);
     
     shared formal void start(Integer port = 8080, 
             String host = "127.0.0.1", 

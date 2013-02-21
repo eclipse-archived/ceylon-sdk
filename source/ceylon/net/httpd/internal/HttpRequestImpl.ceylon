@@ -1,7 +1,7 @@
 import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
-import ceylon.net.httpd { Request, Session, WebEndpoint, 
-                          InternalException, AsynchronousWebEndpoint }
+import ceylon.net.httpd { Request, Session, Endpoint, 
+                          InternalException, AsynchronousEndpoint }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.server.handlers.form { 
@@ -21,7 +21,7 @@ import org.xnio { IoFuture }
 by "Matej Lazar"
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     
-    variable WebEndpoint|AsynchronousWebEndpoint|Null endpoint = null;
+    variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
     
     HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
     variable FormData? formData = null;
@@ -89,10 +89,10 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
             String mappingPath;
             
             switch(e)
-            case(is WebEndpoint) {
+            case(is Endpoint) {
                 mappingPath = e.path;
             }
-            case (is AsynchronousWebEndpoint) {
+            case (is AsynchronousEndpoint) {
                 mappingPath = e.path;
             }
             
@@ -112,7 +112,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     
     shared actual String scheme => exchange.requestScheme;
     
-    shared void webEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint) {
+    shared void webEndpoint(Endpoint|AsynchronousEndpoint webEndpoint) {
         endpoint = webEndpoint;
     }
     

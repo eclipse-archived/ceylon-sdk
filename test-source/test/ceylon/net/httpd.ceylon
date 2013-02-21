@@ -3,8 +3,8 @@ import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.http { ClientRequest=Request }
 import ceylon.net.httpd { newInstance, StatusListener, Status, 
-                          started, AsynchronousWebEndpoint, 
-                          WebEndpoint, Response, Request }
+                          started, AsynchronousEndpoint, 
+                          Endpoint, Response, Request }
 import ceylon.net.httpd.endpoints { serveStaticFile }
 import ceylon.net.uri { parseURI }
 import ceylon.test { assertEquals }
@@ -28,14 +28,14 @@ void testServer() {
 
     value server = newInstance();
 
-    server.addWebEndpoint(WebEndpoint {
+    server.addEndpoint(Endpoint {
         service => serviceImpl;
         path = "/echo";
     });
 
     //add fileEndpoint
     creteTestFile();
-    server.addWebEndpoint(AsynchronousWebEndpoint {
+    server.addEndpoint(AsynchronousEndpoint {
         service => serveStaticFile(".");
         path = "/file";
     });

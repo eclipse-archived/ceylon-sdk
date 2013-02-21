@@ -1,15 +1,15 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
-import ceylon.net.httpd { Request, AsynchronousWebEndpoint, Completion, WebEndpoint }
+import ceylon.net.httpd { Request, AsynchronousEndpoint, Completion, Endpoint }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 
 by "Matej Lazar"
 shared class CeylonRequestHandler() satisfies HttpHandler {
     
-    value webEndpoints = LinkedList<WebEndpoint|AsynchronousWebEndpoint>();
+    value webEndpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
     
-    shared void addWebEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint) {
+    shared void addWebEndpoint(Endpoint|AsynchronousEndpoint webEndpoint) {
         webEndpoints.add(webEndpoint);
     }
     
@@ -21,7 +21,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
             
             try {
                 String requestPath = request.path;
-                WebEndpoint|AsynchronousWebEndpoint|Null webEndpoint = getWebEndpoint(requestPath);
+                Endpoint|AsynchronousEndpoint|Null webEndpoint = getWebEndpoint(requestPath);
                 
                 if (exists w = webEndpoint) {
                     request.webEndpoint(w);
@@ -44,20 +44,20 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         }
     }
     
-    void invokeWebEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
+    void invokeWebEndpoint(Endpoint|AsynchronousEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
         
         switch (webEndpoint)
-        case (is AsynchronousWebEndpoint) {
+        case (is AsynchronousEndpoint) {
             wdDispatch(exchange, AsyncInvoker(webEndpoint, request, response, exchange, utCompletionHandler));
         }
-        case (is WebEndpoint) {
+        case (is Endpoint) {
             webEndpoint.service(request, response);
             response.responseDone();
             utCompletionHandler.handleComplete();
         }
     }
     
-    class AsyncInvoker(AsynchronousWebEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
+    class AsyncInvoker(AsynchronousEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
         shared actual void run() {
             object completionHandler satisfies Completion {
                 shared actual void complete() {
@@ -69,7 +69,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         }
     }
     
-    WebEndpoint|AsynchronousWebEndpoint|Null getWebEndpoint(String requestPath) {
+    Endpoint|AsynchronousEndpoint|Null getWebEndpoint(String requestPath) {
         //TODO ends with
         /*
 So you need endsWith() as well. No problem, add it.
@@ -86,10 +86,10 @@ which would let you write:
         for (webEndpoint in webEndpoints) {
             String endpointPath;
             switch (webEndpoint)
-            case (is AsynchronousWebEndpoint) {
+            case (is AsynchronousEndpoint) {
                 endpointPath = webEndpoint.path;
             }
-            case (is WebEndpoint) {
+            case (is Endpoint) {
                 endpointPath = webEndpoint.path;
             }
             

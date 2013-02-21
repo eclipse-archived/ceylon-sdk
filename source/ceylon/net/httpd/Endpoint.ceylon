@@ -1,6 +1,6 @@
 doc "Synchronous web endpoint."
 by "Matej Lazar"
-shared class WebEndpoint(path, service) {
+shared class Endpoint(path, service) {
     
     shared String path;
     
