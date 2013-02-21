@@ -1,12 +1,12 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { newOpenFile }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
-import ceylon.net.httpd { Response, Completion, Request }
+import ceylon.net.httpd { Response, Request }
 
 
 by "Matej Lazar"
 shared void serveStaticFile(externalPath)
-        (Request request, Response response, Completion completionHandler) {
+        (Request request, Response response, void completionHandler()) {
     
     doc "Root directory containing files."
     String externalPath;
@@ -42,6 +42,6 @@ shared void serveStaticFile(externalPath)
         //print("file does not exist");
     }
     
-    completionHandler.complete();
+    completionHandler();
     
 }

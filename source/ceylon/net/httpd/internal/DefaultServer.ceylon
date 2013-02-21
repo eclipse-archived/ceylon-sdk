@@ -1,26 +1,26 @@
-import java.lang { 
+import java.lang {
     JInt = Integer,
-    Runtime { jRuntime = runtime }, 
+    Runtime { jRuntime = runtime },
     JThread = Thread, 
     JRunnable = Runnable 
 }
-import java.net { InetSocketAddress, SocketAddress }
+import java.net { InetSocketAddress}
 import org.xnio { 
-    Xnio { xnioInstance = instance }, 
+    Xnio { xnioInstance = instance },
     XnioWorker, 
-    OptionMap { omBuilder = builder }, 
+    OptionMap { omBuilder = builder },
     XnioOptions = Options { 
-        xnioWorkerWriteThreads = \iWORKER_WRITE_THREADS, 
-        xnioWorkerReadThreads = \iWORKER_READ_THREADS, 
-        xnioConnectionLowWatter = \iCONNECTION_LOW_WATER, 
+        xnioWorkerWriteThreads = \iWORKER_WRITE_THREADS,
+        xnioWorkerReadThreads = \iWORKER_READ_THREADS,
+        xnioConnectionLowWatter = \iCONNECTION_LOW_WATER,
         xnioConnectionHighWatter = \iCONNECTION_HIGH_WATER,
         xnioWorkerTaskCoreThreads = \iWORKER_TASK_CORE_THREADS,
         xnioWorkerTaskMaxThreads = \iWORKER_TASK_MAX_THREADS,
         xnioTcpNoDelay = \iTCP_NODELAY
     }, 
     ByteBufferSlicePool, 
-    BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR}, 
-    ChannelListener, Option
+    BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR},
+    ChannelListener
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }

@@ -2,11 +2,11 @@ doc "Asynchronous web endpoint. Enpoint is executed
      asynchronously. End of request proccessing must be 
      signaled by calling completionHandler."
 by "Matej Lazar"
-shared class AsynchronousEndpoint(path, service) {
+shared class AsynchronousEndpoint(path, service) extends EndpointBase(path) {
     
-    shared String path;
+    shared Matcher path;
     
     shared void service(Request request, Response response,
-            Completion completionHandler);
+            void completionHandler());
     
 }

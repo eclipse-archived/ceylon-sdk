@@ -39,6 +39,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies Response {
         throw InternalException("response is not avaialble");
     }
     
+    //TODO ecodings
     shared actual void writeString(String string) {
         writeBytes(JString(string).bytes);
     }

@@ -4,7 +4,7 @@ import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.http { ClientRequest=Request }
 import ceylon.net.httpd { createServer, StatusListener, Status, 
                           started, AsynchronousEndpoint, 
-                          Endpoint, Response, Request }
+                          Endpoint, Response, Request, and, startsWith, endsWith, or }
 import ceylon.net.httpd.endpoints { serveStaticFile }
 import ceylon.net.uri { parseURI }
 import ceylon.test { assertEquals }
@@ -20,9 +20,6 @@ doc "How many lines of default text to write to file."
 Integer fileLines = 10;
 
 String fileName = "lazydog.txt";
-
-doc "How many requests to file we want to execute."
-Integer numberOfSequentialRequests = 0;
 
 doc "Number of concurent requests"
 Integer numberOfUsers=10;
@@ -40,14 +37,14 @@ void testServer() {
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
-        path = "/echo";
+        path = and(startsWith("/echo")); //TODO test endpoint overriding
     });
 
     //add fileEndpoint
     creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
         service => serveStaticFile(".");
-        path = "/file";
+        path = or(startsWith("/file"), startsWith("/blob"), endsWith(".txt"));
     });
     
     object httpdListerner satisfies StatusListener {
@@ -55,8 +52,6 @@ void testServer() {
             if (status.equals(started)) {
                 try {
                     execuTestEcho();
-                    
-                    executeTestStaticFile(numberOfSequentialRequests);
                     
                     concurentFileRequests(numberOfUsers);
                     
