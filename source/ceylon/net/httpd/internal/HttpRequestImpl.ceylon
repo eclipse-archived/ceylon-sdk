@@ -96,7 +96,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
                 mappingPath = e.path;
             }
             
-            return requestPath[mappingPath.size..requestPath.size-1];
+            return requestPath[mappingPath.size...];
         }
         return requestPath;
     }

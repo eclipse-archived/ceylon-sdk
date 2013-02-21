@@ -27,4 +27,4 @@ shared interface Server {
     
 }
 
-shared Server newInstance() => DefaultServer();
+shared Server createServer() => DefaultServer();

@@ -2,7 +2,7 @@ import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.http { ClientRequest=Request }
-import ceylon.net.httpd { newInstance, StatusListener, Status, 
+import ceylon.net.httpd { createServer, StatusListener, Status, 
                           started, AsynchronousEndpoint, 
                           Endpoint, Response, Request }
 import ceylon.net.httpd.endpoints { serveStaticFile }
@@ -26,7 +26,7 @@ void testServer() {
         response.writeString("Hello ``name(request)``!");
     }
 
-    value server = newInstance();
+    value server = createServer();
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
