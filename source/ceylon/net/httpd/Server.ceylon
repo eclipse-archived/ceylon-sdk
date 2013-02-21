@@ -27,4 +27,10 @@ shared interface Server {
     
 }
 
-shared Server createServer() => DefaultServer();
+shared Server createServer({Endpoint|AsynchronousEndpoint*} endpoints) {
+    Server server = DefaultServer();
+    for (endpoint in endpoints) {
+        server.addEndpoint(endpoint);
+    }
+    return server;
+} 

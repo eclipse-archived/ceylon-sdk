@@ -26,7 +26,7 @@ void testServer() {
         response.writeString("Hello ``name(request)``!");
     }
 
-    value server = createServer();
+    value server = createServer {};
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
