@@ -1,6 +1,6 @@
 doc "An object to assist sending response to the client."
 by "Matej Lazar"
-shared interface HttpResponse {
+shared interface Response {
     
     doc "Writes string to the response."
     shared formal void writeString(String string);
@@ -11,7 +11,7 @@ shared interface HttpResponse {
     doc "Add a header to response. Multiple headers can have the same name."
     shared formal void addHeader(String headerName, String headerValue);
     
-    doc "Sets http status code to response."
-    shared formal void responseStatus(Integer responseStatusCode);
+    doc "The HTTP status code of the response."
+    shared formal variable Integer responseStatus;
     
 }

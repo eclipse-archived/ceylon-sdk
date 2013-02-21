@@ -1,36 +1,33 @@
-import ceylon.net.httpd { HttpSession }
-import io.undertow.server.session { UtSession = Session }
-import org.xnio { IoFuture }
+import ceylon.net.httpd { Session }
+
+import io.undertow.server.session { UtSession=Session }
 
 by "Matej Lazar"
-class DefaultHttpSession(UtSession utSession) satisfies HttpSession {
+class DefaultHttpSession(UtSession utSession) satisfies Session {
     
-    shared actual String id() {
-        return utSession.id;
+    shared actual String id => utSession.id;
+    
+    shared actual Object? get(String key) => 
+            utSession.getAttribute(key.string).get();
+    
+    shared actual void put(String key, Object item) =>
+            utSession.setAttribute(key, item);
+    
+    shared actual Integer creationTime => utSession.creationTime;
+    
+    shared actual Integer lastAccessedTime => utSession.lastAccessedTime;
+    
+    shared actual Integer? timeout {
+        value maxInactiveInterval = utSession.maxInactiveInterval;
+        return maxInactiveInterval>=0 then maxInactiveInterval;
     }
-    
-    shared actual Object? item(String key) {
-        IoFuture<Object> attributeFuture = utSession.getAttribute(key.string);
-        return attributeFuture.get();
-    }
-    
-    shared actual void put(String key, Object item) {
-        utSession.setAttribute(key, item);
-    }
-    
-    shared actual Integer maxInactiveInterval(Integer? interval) {
-        if (exists interval) {
-            utSession.maxInactiveInterval = interval;
+    assign timeout {
+        if (exists timeout) {
+            utSession.maxInactiveInterval = timeout;
         }
-        return utSession.maxInactiveInterval;
-    }
-    
-    shared actual Integer creationTime() {
-        return utSession.creationTime;
-    }
-    
-    shared actual Integer lastAccessedTime() {
-        return utSession.lastAccessedTime;
+        else {
+            utSession.maxInactiveInterval = -1;
+        }
     }
     
 }

@@ -1,5 +1,6 @@
 
-shared abstract class Status() of starting | started | stoping | stopped {}
+shared abstract class Status() 
+        of starting | started | stoping | stopped {}
 
 shared object starting extends Status() {
     shared actual String string => "starting";

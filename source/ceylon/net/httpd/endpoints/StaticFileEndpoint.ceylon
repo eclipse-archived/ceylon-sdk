@@ -1,4 +1,4 @@
-import ceylon.net.httpd { HttpResponse, CompletionHandler, HttpRequest, InternalException }
+import ceylon.net.httpd { Response, Completion, Request, InternalException }
 import ceylon.file { Path, File, parsePath }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io { newOpenFile }
@@ -13,8 +13,8 @@ shared class StaticFileEndpoint() {
     //TODO onec we decide how to pack static files
     variable String carPath = "static";
     
-    shared void service(HttpRequest request, HttpResponse response, CompletionHandler completionHandler) {
-        String path = request.relativePath();
+    shared void service(Request request, Response response, Completion completionHandler) {
+        String path = request.relativePath;
         
         if (exists filesLocation = externalPath) {
             //TODO serve files from car
@@ -45,13 +45,13 @@ shared class StaticFileEndpoint() {
                     openFile.close();
                 }
             } else {
-                response.responseStatus(404);
+                response.responseStatus=404;
                 //TODO log
                 print("file does not exist");
             }
         } else {
             throw InternalException("Root dir of files must be set. Make shure that StaticFileEndpoint.externalPath is set.");
         }
-        completionHandler.handleComplete();
+        completionHandler.complete();
     }
 }

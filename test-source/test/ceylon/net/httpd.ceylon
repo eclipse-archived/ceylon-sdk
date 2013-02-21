@@ -1,7 +1,7 @@
 import ceylon.test { assertEquals }
-import ceylon.net.httpd {  newInstance, StatusListener, Status, started, WebEndpointAsync }
-import ceylon.net.httpd { WebEndpoint, HttpResponse, HttpRequest}
-import ceylon.net.http { Request }
+import ceylon.net.httpd {  newInstance, StatusListener, Status, started, AsynchronousWebEndpoint }
+import ceylon.net.httpd { WebEndpoint, Response, Request}
+import ceylon.net.http { ClientRequest=Request }
 import ceylon.net.uri { parseURI }
 import ceylon.net.httpd.endpoints { StaticFileEndpoint }
 import ceylon.file { Path, File, parsePath }
@@ -19,8 +19,8 @@ Boolean loadTestEnabled = false;
 
 void testServer() {
     
-    function name(HttpRequest request) => request.parameter("name") else "world";
-    void serviceImpl(HttpRequest request, HttpResponse response) {
+    function name(Request request) => request.parameter("name") else "world";
+    void serviceImpl(Request request, Response response) {
         response.addHeader("content-type", "text/html");
         response.writeString("Hello ``name(request)``!");
     }
@@ -36,7 +36,7 @@ void testServer() {
     creteTestFile();
     StaticFileEndpoint staticFileEndpoint = StaticFileEndpoint();
     staticFileEndpoint.externalPath = ".";
-    server.addWebEndpoint(WebEndpointAsync {
+    server.addWebEndpoint(AsynchronousWebEndpoint {
         service => staticFileEndpoint.service;
         path = "/file";
     });
@@ -69,7 +69,7 @@ void execuTestEcho() {
     
     String name = "Ceylon";
     
-    value request = Request(parseURI("http://localhost:8080/echo?name=" + name));
+    value request = ClientRequest(parseURI("http://localhost:8080/echo?name=" + name));
     value response = request.execute();
     
     value contentTypeHeader = response.getSingleHeader("content-type");
@@ -84,7 +84,7 @@ void execuTestEcho() {
 void executeTestStaticFile(Integer executeRequests) {
     variable Integer request = 0;
     while(request < executeRequests) {
-        value fileRequest = Request(parseURI("http://localhost:8080/file/``fileName``"));
+        value fileRequest = ClientRequest(parseURI("http://localhost:8080/file/``fileName``"));
         value fileResponse = fileRequest.execute();
         value fileCnt = fileResponse.contents;
         print("File content:``fileCnt``");

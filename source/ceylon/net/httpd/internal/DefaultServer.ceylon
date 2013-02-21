@@ -26,7 +26,7 @@ import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedCh
 import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, started, stoping, stopped, WebEndpoint, WebEndpointAsync }
+import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, started, stoping, stopped, WebEndpoint, AsynchronousWebEndpoint }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
@@ -42,7 +42,7 @@ shared class DefaultServer() satisfies Server {
     
     MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
-    shared actual void addWebEndpoint(WebEndpoint|WebEndpointAsync webEndpoint) {
+    shared actual void addWebEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint) {
         ceylonHandler.addWebEndpoint(webEndpoint);
     }
     

@@ -1,26 +1,27 @@
-import ceylon.net.httpd { HttpRequest, HttpSession, WebEndpoint, InternalException, WebEndpointAsync }
-import io.undertow.server { HttpServerExchange }
-import java.util { Deque, JMap = Map }
-import java.lang { JString = String }
-import ceylon.io { SocketAddress }
-import io.undertow.util { Headers { headerConntentType = \iCONTENT_TYPE}, HttpString}
-import io.undertow.server.handlers.form {
-    FormEncodedDataHandler {applicationXWwwFormUrlEncoded = \iAPPLICATION_X_WWW_FORM_URLENCODED}, 
-    MultiPartHandler {multiparFormData = \iMULTIPART_FORM_DATA},
-    FormDataParser {fdpAttachmentKey = \iATTACHMENT_KEY}, 
-    FormData 
-}
-import io.undertow.server.session { 
-    SessionManager {smAttachmentKey = \iATTACHMENT_KEY}, 
-    UtSession = Session, SessionCookieConfig
-}
 import ceylon.collection { HashMap }
+import ceylon.io { SocketAddress }
+import ceylon.net.httpd { Request, Session, WebEndpoint, 
+                          InternalException, AsynchronousWebEndpoint }
+
+import io.undertow.server { HttpServerExchange }
+import io.undertow.server.handlers.form { 
+        FormEncodedDataHandler { applicationXWwwFormUrlEncoded=APPLICATION_X_WWW_FORM_URLENCODED }, 
+        MultiPartHandler { multiparFormData=MULTIPART_FORM_DATA }, 
+        FormDataParser { fdpAttachmentKey=ATTACHMENT_KEY }, FormData }
+import io.undertow.server.session { 
+        SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
+        UtSession=Session, SessionCookieConfig }
+import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE }, HttpString }
+
+import java.lang { JString=String }
+import java.util { Deque, JMap=Map }
+
 import org.xnio { IoFuture }
 
 by "Matej Lazar"
-shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest {
+shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     
-    variable WebEndpoint|WebEndpointAsync|Null endpoint = null;
+    variable WebEndpoint|AsynchronousWebEndpoint|Null endpoint = null;
     
     HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
     variable FormData? formData = null;
@@ -78,63 +79,51 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
     }
     
     
-    shared actual String uri() {
-        return exchange.requestURI;
-    }
+    shared actual String uri => exchange.requestURI;
     
-    shared actual String path() {
-        return exchange.requestPath;
-    }
+    shared actual String path => exchange.requestPath;
     
-    shared actual String relativePath() {
-        String requestPath = path();
+    shared actual String relativePath {
+        String requestPath = path;
         if (exists e = endpoint) {
             String mappingPath;
             
             switch(e)
             case(is WebEndpoint) {
-                mappingPath = e.getPath();
+                mappingPath = e.path;
             }
-            case (is WebEndpointAsync) {
-                mappingPath = e.getPath();
+            case (is AsynchronousWebEndpoint) {
+                mappingPath = e.path;
             }
             
-            return requestPath[mappingPath.size .. (requestPath.size - 1 )];
+            return requestPath[mappingPath.size..requestPath.size-1];
         }
         return requestPath;
     }
     
-    shared actual SocketAddress destinationAddress() {
+    shared actual SocketAddress destinationAddress {
         value address = exchange.destinationAddress;
         return SocketAddress(address.hostString, address.port);
     }
     
-    shared actual String method() {
-        return exchange.requestMethod.string;
-    }
+    shared actual String method => exchange.requestMethod.string;
     
-    shared actual String queryString() {
-        return exchange.queryString;
-    }
+    shared actual String queryString => exchange.queryString;
     
-    shared actual String scheme() {
-        return exchange.requestScheme;
-    }
-
-    shared void webEndpoint(WebEndpoint|WebEndpointAsync webEndpoint) {
+    shared actual String scheme => exchange.requestScheme;
+    
+    shared void webEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint) {
         endpoint = webEndpoint;
     }
     
-    shared actual SocketAddress sourceAddress() {
+    shared actual SocketAddress sourceAddress {
         value address = exchange.sourceAddress;
         return SocketAddress(address.hostString, address.port);
     }
     
-    shared actual String? mimeType() {
-        return header(headerConntentType.string);
-    }
+    shared actual String? mimeType => header(headerConntentType.string);
     
-    shared actual HttpSession session() {
+    shared actual Session session {
     	variable UtSession? utSession = null;
         SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
         
@@ -178,7 +167,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies HttpRequest 
         if (exists f = formData) {
             return f;
         } else { 
-            String? mimeType = this.mimeType();
+            String? mimeType = this.mimeType;
             if (exists mimeType) {
                 //TODO use equals instead of startsWith (workaround for parsing bug)
                 if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.startsWith(multiparFormData)) {

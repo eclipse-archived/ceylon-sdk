@@ -1,9 +1,14 @@
 by "Matej Lazar"
-shared class Options() {
-    shared variable Integer workerWriteThreads = 2;
-    shared variable Integer workerReadThreads = 2;
-    shared variable Integer workerTaskCoreThreads = 2;
-    shared variable Integer workerTaskMaxThreads = 12;
-    shared variable Integer connectionLowWatter = 1000000;
-    shared variable Integer connectionHighWatter = 1000000;
+shared class Options(workerWriteThreads = 2, 
+        workerReadThreads = 2, 
+        workerTaskCoreThreads = 2, 
+        workerTaskMaxThreads = 12,
+        connectionLowWatter = 1000000,
+        connectionHighWatter = 1000000) {
+    shared variable Integer workerWriteThreads;
+    shared variable Integer workerReadThreads;
+    shared variable Integer workerTaskCoreThreads;
+    shared variable Integer workerTaskMaxThreads;
+    shared variable Integer connectionLowWatter;
+    shared variable Integer connectionHighWatter;
 }

@@ -1,13 +1,17 @@
-import ceylon.net.httpd { HttpResponse, InternalException }
+import ceylon.net.httpd { Response, InternalException }
+
 import io.undertow.server { HttpServerExchange }
-import org.xnio.channels { StreamSinkChannel, ChannelFactory, Channels {chFlushBlocking = flushBlocking}}
-import java.nio { JByteBuffer = ByteBuffer {wrapByteBuffer = wrap} }
-import java.lang { JString = String }
-import java.io { JIOException = IOException }
 import io.undertow.util { HttpString }
 
+import java.io { JIOException=IOException }
+import java.lang { JString=String }
+import java.nio { JByteBuffer=ByteBuffer { wrapByteBuffer=wrap } }
+
+import org.xnio.channels { StreamSinkChannel, ChannelFactory, 
+                           Channels { chFlushBlocking=flushBlocking } }
+
 by "Matej Lazar"
-shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpResponse {
+shared class HttpResponseImpl(HttpServerExchange exchange) satisfies Response {
     
     ChannelFactory<StreamSinkChannel>? factory = exchange.responseChannelFactory;
     if (!factory exists ) {
@@ -62,8 +66,11 @@ shared class HttpResponseImpl(HttpServerExchange exchange) satisfies HttpRespons
         exchange.responseHeaders.add(HttpString(headerName), headerValue);
     }
     
-    shared actual void responseStatus(Integer responseStatusCode) {
-        exchange.responseCode = responseStatusCode;
+    shared actual Integer responseStatus {
+        return exchange.responseCode;
+    }
+    assign responseStatus {
+        exchange.responseCode = responseStatus;
     }
     
     shared void responseDone() {

@@ -5,12 +5,16 @@ doc "Ceylon http server."
 shared interface Server {
 
     doc "Define webEndpoint by providing an instance of WebEndpointConfig class."
-    shared formal void addWebEndpoint(WebEndpoint|WebEndpointAsync webEndpoint);
+    shared formal void addWebEndpoint(WebEndpoint|AsynchronousWebEndpoint webEndpoint);
     
-    shared formal void start(Integer port = 8080, String host = "127.0.0.1", Options httpdOptions = Options());
-
+    shared formal void start(Integer port = 8080, 
+            String host = "127.0.0.1", 
+            Options httpdOptions = Options());
+    
     doc "Starts httpd in a new thread."
-    shared formal void startInBackground(Integer port = 8080, String host = "127.0.0.1", Options httpdOptions = Options());
+    shared formal void startInBackground(Integer port = 8080, 
+        String host = "127.0.0.1", 
+        Options httpdOptions = Options());
     
     shared formal void stop();
     
@@ -20,7 +24,7 @@ shared interface Server {
     
     doc "Removes status change listener."
     shared formal void removeListener(StatusListener listener);
-
+    
 }
 
 shared Server newInstance() => DefaultServer();
