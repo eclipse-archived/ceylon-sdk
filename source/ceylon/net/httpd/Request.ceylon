@@ -29,7 +29,9 @@ shared interface Request {
          request path."
     shared formal String path;
     
-    doc "Return path relative to endpoint mapping path."
+
+    doc "Return path relative to endpoint mapping path.
+         Relative path is a substring of path without [[startsWith]] mappings."
     shared formal String relativePath;
     
     shared formal String queryString;

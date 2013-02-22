@@ -33,12 +33,4 @@ public class JavaHelper {
         AcceptingChannel acceptingChannel = worker.createStreamServer(bindAddress, acceptListener, optionMap);
         return acceptingChannel;
     }
-
-    /**
-     * workaround for: ambiguous reference to overloaded method or class: InputStreamReader 
-     */
-    public static InputStreamReader newInputStreamReader(InputStream in) {
-        return new InputStreamReader(in);
-    }
-
 }
