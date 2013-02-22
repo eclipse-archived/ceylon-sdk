@@ -11,10 +11,6 @@
     
     <path id="ant-tasks">
         <pathelement location="${ceylon.ant.lib}"/>
-        <pathelement location="${ceylon.cmr.lib}"/>
-        <pathelement location="${ceylon.typechecker.lib}"/>
-        <pathelement location="${ceylon.common.lib}"/>
-        <fileset dir="${dist.lib.dir}" includes="*.jar"/>
     </path>
     
     <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
