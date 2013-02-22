@@ -7,7 +7,7 @@ import ceylon.net.http { contentType, contentLength }
 
 by "Matej Lazar"
 shared void serveStaticFile(externalPath)
-        (Request request, Response response, void completionHandler()) {
+        (Request request, Response response, Callable<Anything, []> completionHandler) {
     
     doc "Root directory containing files."
     String externalPath;

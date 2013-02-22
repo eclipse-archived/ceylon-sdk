@@ -96,7 +96,7 @@ void executeTestStaticFile(Integer executeRequests) {
         fileResponse.close();
         //TODO log trace
         print("Request N°``request``");
-        print("File content:``fileCnt``");
+        //print("File content:``fileCnt``");
         assertEquals(produceFileContent(), fileCnt);
         request++;
     }
