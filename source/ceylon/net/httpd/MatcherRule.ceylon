@@ -3,7 +3,6 @@ by "Matej Lazar"
 shared abstract class MatcherRule(String substring) {
     shared formal Boolean matches(String string);
 
-    //TODO is it ok to be in base class?
     shared actual String string {return substring;}
 }
 

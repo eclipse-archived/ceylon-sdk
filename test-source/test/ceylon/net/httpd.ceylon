@@ -1,7 +1,7 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
-import ceylon.net.http { ClientRequest=Request }
+import ceylon.net.http { ClientRequest=Request, contentType }
 import ceylon.net.httpd { createServer, StatusListener, Status, 
                           started, AsynchronousEndpoint, 
                           Endpoint, Response, Request, and, startsWith, endsWith, or }
@@ -29,7 +29,7 @@ void testServer() {
     
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
-        response.addHeader("content-type", "text/html");
+        response.addHeader(contentType("text/html", utf8));
         response.writeString("Hello ``name(request)``!");
     }
 
@@ -77,13 +77,14 @@ void execuTestEcho() {
     value response = request.execute();
     
     value contentTypeHeader = response.getSingleHeader("content-type");
-    assertEquals("text/html", contentTypeHeader);
-    
+    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
+
     value echoMsg = response.contents;
     response.close();
     //TODO log
     print("Received message: ``echoMsg``");
-    assertEquals("Hello ``name``!", echoMsg);
+    value expecting = "Hello ``name``!";
+    assertEquals(expecting, echoMsg);
 }
 
 void executeTestStaticFile(Integer executeRequests) {

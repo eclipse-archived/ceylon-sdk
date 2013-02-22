@@ -2,6 +2,7 @@ import ceylon.file { Path, File, parsePath }
 import ceylon.io { newOpenFile }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.net.httpd { Response, Request }
+import ceylon.net.http { contentType, contentLength }
 
 
 by "Matej Lazar"
@@ -19,9 +20,9 @@ shared void serveStaticFile(externalPath)
         value openFile = newOpenFile(file);
         try {
             Integer available = file.size;
-            response.addHeader("content-length", available.string);
+            response.addHeader(contentLength(available.string));
             if (is String cntType = file.contentType) {
-                response.addHeader("content-type", cntType);
+                response.addHeader(contentType(cntType));
             }
             
             //TODO transfer bytes efficiently between two channels. 

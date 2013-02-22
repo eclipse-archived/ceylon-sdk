@@ -30,13 +30,16 @@ import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, sta
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
+import ceylon.io.charset { Charset, utf8 }
 
 by "Matej Lazar"
 shared class DefaultServer() satisfies Server {
     
+    shared actual variable Charset defaultCharset = utf8;
+
     variable XnioWorker? worker = null;
     
-    CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
+    CeylonRequestHandler ceylonHandler = CeylonRequestHandler(defaultCharset);
     
     JavaHelper jh = JavaHelper();
     

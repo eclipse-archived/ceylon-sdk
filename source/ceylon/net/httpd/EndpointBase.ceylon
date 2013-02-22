@@ -1,3 +1,5 @@
+import ceylon.io.charset { Charset, utf8 }
+
 abstract shared class EndpointBase(Matcher path) {
     
     shared Boolean pathMatches(String url) {

@@ -3,9 +3,10 @@ import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
 import ceylon.net.httpd { Request, AsynchronousEndpoint, Endpoint }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
+import ceylon.io.charset { Charset }
 
 by "Matej Lazar"
-shared class CeylonRequestHandler() satisfies HttpHandler {
+shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler {
     
     value webEndpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
     
@@ -17,7 +18,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         
         if (exists hse = httpServerExchange, exists utCompletionHandler) {
             HttpRequestImpl request = HttpRequestImpl(hse);
-            HttpResponseImpl response = HttpResponseImpl(hse);
+            HttpResponseImpl response = HttpResponseImpl(hse, defaultCharset);
             
             try {
                 String requestPath = request.path;
