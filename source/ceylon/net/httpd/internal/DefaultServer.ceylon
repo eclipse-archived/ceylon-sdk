@@ -1,25 +1,25 @@
-import java.lang { 
+import java.lang {
     JInt = Integer,
-    Runtime { jRuntime = runtime }, 
+    Runtime { jRuntime = runtime },
     JThread = Thread, 
     JRunnable = Runnable 
 }
-import java.net { InetSocketAddress }
+import java.net { InetSocketAddress}
 import org.xnio { 
-    Xnio { xnioInstance = instance }, 
+    Xnio { xnioInstance = instance },
     XnioWorker, 
-    OptionMap { omBuilder = builder }, 
+    OptionMap { omBuilder = builder },
     XnioOptions = Options { 
-        xnioWorkerWriteThreads = \iWORKER_WRITE_THREADS, 
-        xnioWorkerReadThreads = \iWORKER_READ_THREADS, 
-        xnioConnectionLowWatter = \iCONNECTION_LOW_WATER, 
+        xnioWorkerWriteThreads = \iWORKER_WRITE_THREADS,
+        xnioWorkerReadThreads = \iWORKER_READ_THREADS,
+        xnioConnectionLowWatter = \iCONNECTION_LOW_WATER,
         xnioConnectionHighWatter = \iCONNECTION_HIGH_WATER,
         xnioWorkerTaskCoreThreads = \iWORKER_TASK_CORE_THREADS,
         xnioWorkerTaskMaxThreads = \iWORKER_TASK_MAX_THREADS,
         xnioTcpNoDelay = \iTCP_NODELAY
     }, 
     ByteBufferSlicePool, 
-    BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR}, 
+    BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR},
     ChannelListener
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
@@ -30,13 +30,16 @@ import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, sta
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
+import ceylon.io.charset { Charset, utf8 }
 
 by "Matej Lazar"
 shared class DefaultServer() satisfies Server {
     
+    shared actual variable Charset defaultCharset = utf8;
+
     variable XnioWorker? worker = null;
     
-    CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
+    CeylonRequestHandler ceylonHandler = CeylonRequestHandler(defaultCharset);
     
     JavaHelper jh = JavaHelper();
     
@@ -155,4 +158,14 @@ shared class DefaultServer() satisfies Server {
             listener.onStatusChange(status);
         }
     }
+
+    //TODO use instead of [[JavaHelper]]
+    //AcceptingChannel<ConnectedChannel> createStreamServer(
+    //        XnioWorker worker, 
+    //        InetSocketAddress bindAddress,
+    //        ChannelListener<AcceptingChannel<ConnectedStreamChannel>> acceptListener,
+    //        OptionMap optionMap) { 
+    //    return worker.createStreamServer(bindAddress, acceptListener, optionMap);
+    //}
 }
+

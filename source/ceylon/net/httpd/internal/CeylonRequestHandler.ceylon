@@ -1,11 +1,12 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
-import ceylon.net.httpd { Request, AsynchronousEndpoint, Completion, Endpoint }
+import ceylon.net.httpd { Request, AsynchronousEndpoint, Endpoint }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
+import ceylon.io.charset { Charset }
 
 by "Matej Lazar"
-shared class CeylonRequestHandler() satisfies HttpHandler {
+shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler {
     
     value webEndpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
     
@@ -17,14 +18,14 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         
         if (exists hse = httpServerExchange, exists utCompletionHandler) {
             HttpRequestImpl request = HttpRequestImpl(hse);
-            HttpResponseImpl response = HttpResponseImpl(hse);
+            HttpResponseImpl response = HttpResponseImpl(hse, defaultCharset);
             
             try {
                 String requestPath = request.path;
                 Endpoint|AsynchronousEndpoint|Null webEndpoint = getWebEndpoint(requestPath);
                 
                 if (exists w = webEndpoint) {
-                    request.webEndpoint(w);
+                    request.endpoint = w;
                     invokeWebEndpoint(w, request, response, hse, utCompletionHandler);
                 } else {
                     response.responseStatus=404;
@@ -40,12 +41,12 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
                 utCompletionHandler.handleComplete();
             }
         } else {
-            //TODO log error
+            //TODO log fatal
+            print("Underlying HttpServerExchange or CompletionHandler must be provided.");
         }
     }
-    
+
     void invokeWebEndpoint(Endpoint|AsynchronousEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
-        
         switch (webEndpoint)
         case (is AsynchronousEndpoint) {
             wdDispatch(exchange, AsyncInvoker(webEndpoint, request, response, exchange, utCompletionHandler));
@@ -59,45 +60,25 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     
     class AsyncInvoker(AsynchronousEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
         shared actual void run() {
-            object completionHandler satisfies Completion {
-                shared actual void complete() {
-                    response.responseDone();
-                    utCompletionHandler.handleComplete();
-                }
+            void completionHandler() {
+                response.responseDone();
+                utCompletionHandler.handleComplete();
             }
             webEndpoint.service(request, response, completionHandler);
         }
     }
     
+
     Endpoint|AsynchronousEndpoint|Null getWebEndpoint(String requestPath) {
-        //TODO ends with
-        /*
-So you need endsWith() as well. No problem, add it.
-And you could even write yourself an and() method so that this works:
-    
-    and(startsWith("/home"), endsWith(".jsf"))
-
-Hell, you could even go as far as writing an implementation of Set,
-which would let you write:
-
-    startsWith("/home") & (endsWith(".jsf") | endsWith(".csf"))
-            */
-
+        /*TODO
+        create an implementation of Set, which would let you write:
+        startsWith("/home") & (endsWith(".jsf") | endsWith(".csf"))
+        */
         for (webEndpoint in webEndpoints) {
-            String endpointPath;
-            switch (webEndpoint)
-            case (is AsynchronousEndpoint) {
-                endpointPath = webEndpoint.path;
-            }
-            case (is Endpoint) {
-                endpointPath = webEndpoint.path;
-            }
-            
-
-            if (requestPath.contains(endpointPath)) {
+            if (webEndpoint.pathMatches(requestPath)) {
                 return webEndpoint;
             }
         }
         return null;
-    }   
+    }
 }

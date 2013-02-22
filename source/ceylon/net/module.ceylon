@@ -17,8 +17,6 @@ module ceylon.net '0.5' {
     shared import ceylon.io '0.5';
     import ceylon.file '0.5';
 
-    import ceylon.util '0.5';
-
     import java.base '7';
     
     // -- java modules --

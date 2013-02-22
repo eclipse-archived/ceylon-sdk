@@ -8,6 +8,7 @@ import io.undertow.server.handlers.form {
         FormEncodedDataHandler { applicationXWwwFormUrlEncoded=APPLICATION_X_WWW_FORM_URLENCODED }, 
         MultiPartHandler { multiparFormData=MULTIPART_FORM_DATA }, 
         FormDataParser { fdpAttachmentKey=ATTACHMENT_KEY }, FormData }
+
 import io.undertow.server.session { 
         SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
         UtSession=Session, SessionCookieConfig }
@@ -21,7 +22,7 @@ import org.xnio { IoFuture }
 by "Matej Lazar"
 shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     
-    variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
+    shared variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
     
     HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
     variable FormData? formData = null;
@@ -35,7 +36,8 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
         
         value it = headers.iterator();
-        while (exists header = it.next()) {
+        while (it.hasNext()) {
+            value header = it.next();
             sequenceBuilder.append(header.string);
         }
         
@@ -78,27 +80,18 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         }
     }
     
-    
     shared actual String uri => exchange.requestURI;
     
     shared actual String path => exchange.requestPath;
     
+    doc "Resurns substring of string without [[startsWith]] parts."
     shared actual String relativePath {
         String requestPath = path;
         if (exists e = endpoint) {
-            String mappingPath;
-            
-            switch(e)
-            case(is Endpoint) {
-                mappingPath = e.path;
-            }
-            case (is AsynchronousEndpoint) {
-                mappingPath = e.path;
-            }
-            
-            return requestPath[mappingPath.size...];
+            return e.relativePath(requestPath);
+        } else {
+            throw InternalException("HttpRequest.relativePath shoud be called on request with web endpoint already defined.");
         }
-        return requestPath;
     }
     
     shared actual SocketAddress destinationAddress {
@@ -111,10 +104,6 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     shared actual String queryString => exchange.queryString;
     
     shared actual String scheme => exchange.requestScheme;
-    
-    shared void webEndpoint(Endpoint|AsynchronousEndpoint webEndpoint) {
-        endpoint = webEndpoint;
-    }
     
     shared actual SocketAddress sourceAddress {
         value address = exchange.sourceAddress;
@@ -172,7 +161,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
                 //TODO use equals instead of startsWith (workaround for parsing bug)
                 if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.startsWith(multiparFormData)) {
                     FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
-                    //is EagerFormParsingHandler is in chain, parsing is already done
+                    //if EagerFormParsingHandler is in handlers chain, parsing is already done and operation returns imediatly
                     formData = formDataParser.parseBlocking();
                 }
             } 
@@ -184,4 +173,3 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         return formData;
     }
 }
-
