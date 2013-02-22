@@ -66,3 +66,12 @@ void testUTF16Decoder(){
     testDecoder(utf16, "𝄞", #FE, #FF, #D8, #34, #DD, #1E);
     testDecoder(utf16, "𝄞", #FF, #FE, #34, #D8, #1E, #DD);
 }
+
+void testUTF8EncoderDecoder() {
+    String original = "abc čšžćđČŠŽĆĐ"; //test latin-2 letters
+    value encoded = utf8.encode(original);
+    value decoder = utf8.newDecoder();
+    decoder.decode(encoded);
+    String decoded = decoder.done();
+    assertEquals(original, decoded);
+}
