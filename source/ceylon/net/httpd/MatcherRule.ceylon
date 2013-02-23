@@ -2,20 +2,17 @@ by "Matej Lazar"
 
 shared abstract class MatcherRule(String substring) {
     shared formal Boolean matches(String string);
-
-    shared actual String string {return substring;}
+    string => substring;
 }
 
-class StartsWith(String substring) extends MatcherRule(substring) {
-    shared actual Boolean matches(String string) {
-        return string.startsWith(substring);
-    }
+class StartsWith(String substring) 
+        extends MatcherRule(substring) {
+    matches(String string) => string.startsWith(substring);
 }
 
-class EndsWith(String substring) extends MatcherRule(substring) {
-    shared actual Boolean matches(String path) {
-        return string.endsWith(substring);
-    }
+class EndsWith(String substring) 
+        extends MatcherRule(substring) {
+    matches(String path) => string.endsWith(substring);
 }
 
 doc "Rule using [[String.startsWith]]."

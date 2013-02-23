@@ -1,4 +1,4 @@
-import ceylon.collection { LinkedList, MutableList }
+import ceylon.collection { LinkedList }
 
 by "Matej Lazar"
 
@@ -7,8 +7,7 @@ shared abstract class Matcher(MatcherRule* matcherRules) {
     shared formal Boolean matches(String string);
     
     shared List<MatcherRule> findRulesMatching(String string) {
-        MutableList<MatcherRule> rulesMatching = LinkedList<MatcherRule>();
-
+        value rulesMatching = LinkedList<MatcherRule>();
         for (matcherRule in matcherRules) {
             if (matcherRule.matches(string)) {
                 rulesMatching.add(matcherRule);
@@ -24,7 +23,7 @@ shared abstract class Matcher(MatcherRule* matcherRules) {
             }
             return false;
         }
-        return findRulesMatching(string).filter((MatcherRule elem) => filterStartsOnly(elem));
+        return findRulesMatching(string).filter(filterStartsOnly);
     }
     
     shared {MatcherRule*} findEndsRulesMatching(String string) {
@@ -34,24 +33,26 @@ shared abstract class Matcher(MatcherRule* matcherRules) {
             }
             return false;
         }
-        return findRulesMatching(string).filter((MatcherRule elem) => filterEndsOnly(elem));
+        return findRulesMatching(string).filter(filterEndsOnly);
     }
 }
 
-class AndMatcher(MatcherRule* rules) extends Matcher(*rules) {
-    shared actual Boolean matches(String string) {
-        return findRulesMatching(string).size == rules.size;
-    }
+class AndMatcher(MatcherRule* rules) 
+        extends Matcher(*rules) {
+    matches(String string) =>
+            findRulesMatching(string).size == rules.size;
 }
 
-class OrMatcher(MatcherRule* rules) extends Matcher(*rules) {
-    shared actual Boolean matches(String string) {
-        return findRulesMatching(string).size > 0;
-    }
+class OrMatcher(MatcherRule* rules) 
+        extends Matcher(*rules) {
+    matches(String string) =>
+            findRulesMatching(string).size > 0;
 }
 
 doc "Method to define maping, rules apply using logical 'and'."
-shared Matcher and(MatcherRule* matcherRules) => AndMatcher(*matcherRules);
+shared Matcher and(MatcherRule* matcherRules) => 
+        AndMatcher(*matcherRules);
 
 doc "Method to define maping, rules apply using logical 'or'."
-shared Matcher or(MatcherRule* matcherRules) => OrMatcher(*matcherRules);
+shared Matcher or(MatcherRule* matcherRules) => 
+        OrMatcher(*matcherRules);
