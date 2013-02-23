@@ -1,22 +1,38 @@
 by "Matej Lazar"
 
-shared abstract class MatcherRule(String substring) {
+shared abstract class Matcher() {
     shared formal Boolean matches(String string);
-    string => substring;
+    shared formal String relativePath(String requestPath);
+    shared Matcher and(Matcher other) => And(this, other);
+    shared Matcher or(Matcher other) => Or(this, other);
 }
 
 class StartsWith(String substring) 
-        extends MatcherRule(substring) {
+        extends Matcher() {
     matches(String string) => string.startsWith(substring);
+    relativePath(String requestPath) => requestPath[substring.size...];
 }
 
 class EndsWith(String substring) 
-        extends MatcherRule(substring) {
+        extends Matcher() {
     matches(String path) => string.endsWith(substring);
+    relativePath(String requestPath) => requestPath;
+}
+
+class And(Matcher left, Matcher right) 
+        extends Matcher() {
+    matches(String path) => left.matches(path) && right.matches(path);
+    relativePath(String requestPath) => nothing; //TODO
+}
+
+class Or(Matcher left, Matcher right) 
+        extends Matcher() {
+    matches(String path) => left.matches(path) || right.matches(path);
+    relativePath(String requestPath) => nothing; //TODO
 }
 
 doc "Rule using [[String.startsWith]]."
-shared MatcherRule startsWith(String s) => StartsWith(s);
+shared Matcher startsWith(String s) => StartsWith(s);
 
 doc "Rule using [[String.endsWith]]."
-shared MatcherRule endsWith(String s) => EndsWith(s);
+shared Matcher endsWith(String s) => EndsWith(s);

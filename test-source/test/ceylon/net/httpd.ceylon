@@ -4,7 +4,8 @@ import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.http { ClientRequest=Request, contentType }
 import ceylon.net.httpd { createServer, StatusListener, Status, 
                           started, AsynchronousEndpoint, 
-                          Endpoint, Response, Request, and, startsWith, endsWith, or }
+                          Endpoint, Response, Request, 
+                          startsWith, endsWith }
 import ceylon.net.httpd.endpoints { serveStaticFile }
 import ceylon.net.uri { parseURI }
 import ceylon.test { assertEquals }
@@ -37,14 +38,15 @@ void testServer() {
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
-        path = and(startsWith("/echo")); //TODO endpoint overriding, first matching should be used
+        path = startsWith("/echo"); //TODO endpoint overriding, first matching should be used
     });
 
     //add fileEndpoint
     creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
         service => serveStaticFile(".");
-        path = or(startsWith("/file"), startsWith("/blob"), endsWith(".txt"));
+        path = (startsWith("/file") or startsWith("/blob")) 
+                or endsWith(".txt");
     });
     
     object httpdListerner satisfies StatusListener {
