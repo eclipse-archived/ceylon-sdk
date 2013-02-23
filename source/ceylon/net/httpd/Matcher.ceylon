@@ -16,25 +16,14 @@ shared abstract class Matcher(MatcherRule* matcherRules) {
         return rulesMatching;
     }
     
-    shared {MatcherRule*} findStartRulesMatching(String string) {
-        Boolean filterStartsOnly(MatcherRule elem) {
-            if (is StartsWith elem ) {
-                return true;
-            }
-            return false;
-        }
-        return findRulesMatching(string).filter(filterStartsOnly);
-    }
+    shared {MatcherRule*} findStartRulesMatching(String string) =>
+            findRulesMatching(string)
+                 .filter((MatcherRule elem) => elem is StartsWith);
     
-    shared {MatcherRule*} findEndsRulesMatching(String string) {
-        Boolean filterEndsOnly(MatcherRule elem) {
-            if (is EndsWith elem ) {
-                return true;
-            }
-            return false;
-        }
-        return findRulesMatching(string).filter(filterEndsOnly);
-    }
+    shared {MatcherRule*} findEndsRulesMatching(String string) =>
+            findRulesMatching(string)
+                 .filter((MatcherRule elem) => elem is EndsWith);
+    
 }
 
 class AndMatcher(MatcherRule* rules) 

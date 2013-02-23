@@ -1,8 +1,6 @@
 abstract shared class EndpointBase(Matcher path) {
     
-    shared Boolean pathMatches(String url) {
-        return path.matches(url);
-    }
+    shared Boolean pathMatches(String url) => path.matches(url);
     
     shared String relativePath(String requestPath) {
         variable value relativePath = requestPath;
@@ -10,7 +8,7 @@ abstract shared class EndpointBase(Matcher path) {
         for(rule in rules) {
             value mappingPath = rule.string; 
             if (relativePath.startsWith(mappingPath)) {
-                relativePath = relativePath[mappingPath.size .. (relativePath.size - 1 )];
+                relativePath = relativePath[mappingPath.size...];
             }
         }
         return relativePath;
