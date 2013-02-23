@@ -30,7 +30,8 @@ shared void serveStaticFile(externalPath)
             //use completionHandler to notify request complete
             ByteBuffer buffer = newByteBuffer(available);
             //while (available > 0) {
-            value read = openFile.read(buffer);
+            //value read = 
+            openFile.read(buffer);
             //available -= read;
             response.writeBytes(buffer.bytes());
             //buffer.flip();

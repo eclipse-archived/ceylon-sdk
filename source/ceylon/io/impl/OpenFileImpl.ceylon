@@ -1,4 +1,4 @@
-import ceylon.file { File, Resource }
+import ceylon.file { Resource }
 import ceylon.io.buffer { ByteBuffer }
 import ceylon.io { OpenFile }
 

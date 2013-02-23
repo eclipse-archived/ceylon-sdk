@@ -161,12 +161,12 @@ shared class Parser(FileDescriptor socket){
         return byte - '0'.integer;
     }
 
-    doc "Reads a byte and checks that it's an ASCII hex digit. Returns the digit read."
+    /*doc "Reads a byte and checks that it's an ASCII hex digit. Returns the digit read."
     throws "If the byte read is not a hex digit."
     Integer parseHexDigit(){
         readByte();
         return atHexDigit();
-    }
+    }*/
     
     doc "Checks that the current byte is an ASCII hex digit. Returns the digit."
     throws "If the current byte is not a hex digit."

@@ -2,7 +2,7 @@ import ceylon.net.httpd { Response, InternalException }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }
-import ceylon.io.charset { getCharset, Charset }
+import ceylon.io.charset { Charset }
 import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
@@ -110,7 +110,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
         }
     }
     
-    Charset findCharset() {
+    /*Charset findCharset() {
         for (header in headers) {
             if (header.name.lowercased.equals("content-type")) {
                 return parseCharset(header);
@@ -139,5 +139,5 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
             }
         }
         return defaultCharset;
-    }
+    }*/
 }

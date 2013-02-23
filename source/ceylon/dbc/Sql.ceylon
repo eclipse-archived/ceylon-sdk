@@ -11,7 +11,7 @@ import java.sql {
 import java.util { Date }
 import java.math { BigDecimal, BigInteger }
 import ceylon.math.decimal { Decimal, parseDecimal }
-import ceylon.math.whole { Whole, fromImplementation, parseWhole }
+import ceylon.math.whole { Whole, parseWhole }
 
 doc "A component that can perform queries and execute SQL statements on a
      database, via connections obtained from a JDBC DataSource.
@@ -120,8 +120,8 @@ shared class Sql(DataSource ds) {
 
     CallableStatement prepareCall(ConnectionStatus conn, String sql, Iterable<Object> params) {
         value cs = conn.connection().prepareCall(sql);
-        variable value i=1;
-        /*for (p in params) {
+        /*variable value i=1;
+        for (p in params) {
             switch (p)
             case (is Integer) { cs.setLong(i,p); }
             case (is Boolean) { cs.setBoolean(i,p); }

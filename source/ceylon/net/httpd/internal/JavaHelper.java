@@ -1,8 +1,6 @@
 package ceylon.net.httpd.internal;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 
 import org.xnio.ChannelListener;

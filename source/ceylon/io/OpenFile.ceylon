@@ -1,5 +1,5 @@
 import ceylon.io { FileDescriptor }
-import ceylon.file { File, Resource }
+import ceylon.file { Resource }
 import ceylon.io.impl { OpenFileImpl }
 
 doc "Represents a file object we can read/write to."

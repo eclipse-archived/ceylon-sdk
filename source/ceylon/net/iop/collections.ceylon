@@ -1,4 +1,4 @@
-import java.util { List, LinkedList, JIterator = Iterator }
+import java.util { JIterator = Iterator }
 import java.lang { JIterable = Iterable }
 
 by "Stéphane Épardaud"
