@@ -88,7 +88,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     shared actual String relativePath {
         String requestPath = path;
         if (exists e = endpoint) {
-            return e.relativePath(requestPath);
+            return e.path.relativePath(requestPath);
         } else {
             throw InternalException("HttpRequest.relativePath shoud be called on request with web endpoint already defined.");
         }

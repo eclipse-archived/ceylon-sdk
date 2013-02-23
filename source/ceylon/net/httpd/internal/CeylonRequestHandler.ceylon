@@ -75,7 +75,7 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         startsWith("/home") & (endsWith(".jsf") | endsWith(".csf"))
         */
         for (webEndpoint in webEndpoints) {
-            if (webEndpoint.pathMatches(requestPath)) {
+            if (webEndpoint.path.matches(requestPath)) {
                 return webEndpoint;
             }
         }
