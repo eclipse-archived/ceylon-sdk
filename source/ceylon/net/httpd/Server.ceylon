@@ -1,11 +1,11 @@
 import ceylon.net.httpd.internal { DefaultServer }
-import ceylon.io.charset { Charset }
+import ceylon.io.charset { Charset, utf8 } //utf8 is required by doc on defaultCharset
 
 by "Matej Lazar"
 doc "Ceylon http server."
 shared interface Server {
 
-    doc "Define webEndpoint by providing an instance of WebEndpointConfig class."
+    doc "Define endpoint by providing an instance of [[Endpoint]]|[[AsynchronousEndpoint]] class."
     shared formal void addEndpoint(Endpoint|AsynchronousEndpoint endpoint);
     
     shared formal void start(Integer port = 8080, 

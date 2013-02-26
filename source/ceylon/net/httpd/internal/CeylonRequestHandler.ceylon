@@ -8,10 +8,10 @@ import ceylon.io.charset { Charset }
 by "Matej Lazar"
 shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler {
     
-    value webEndpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
+    value endpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
     
-    shared void addWebEndpoint(Endpoint|AsynchronousEndpoint webEndpoint) {
-        webEndpoints.add(webEndpoint);
+    shared void addWebEndpoint(Endpoint|AsynchronousEndpoint endpoint) {
+        endpoints.add(endpoint);
     }
     
     shared actual void handleRequest(JHttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
@@ -22,11 +22,11 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
             
             try {
                 String requestPath = request.path;
-                Endpoint|AsynchronousEndpoint|Null webEndpoint = getWebEndpoint(requestPath);
+                Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpoint(requestPath);
                 
-                if (exists w = webEndpoint) {
-                    request.endpoint = w;
-                    invokeWebEndpoint(w, request, response, hse, utCompletionHandler);
+                if (exists e = endpoint) {
+                    request.endpoint = e;
+                    invokeEndpoint(e, request, response, hse, utCompletionHandler);
                 } else {
                     response.responseStatus=404;
                     response.responseDone();
@@ -46,25 +46,25 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         }
     }
 
-    void invokeWebEndpoint(Endpoint|AsynchronousEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
-        switch (webEndpoint)
+    void invokeEndpoint(Endpoint|AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
+        switch (endpoint)
         case (is AsynchronousEndpoint) {
-            wdDispatch(exchange, AsyncInvoker(webEndpoint, request, response, exchange, utCompletionHandler));
+            wdDispatch(exchange, AsyncInvoker(endpoint, request, response, exchange, utCompletionHandler));
         }
         case (is Endpoint) {
-            webEndpoint.service(request, response);
+            endpoint.service(request, response);
             response.responseDone();
             utCompletionHandler.handleComplete();
         }
     }
     
-    class AsyncInvoker(AsynchronousEndpoint webEndpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
+    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
         shared actual void run() {
             void completionHandler() {
                 response.responseDone();
                 utCompletionHandler.handleComplete();
             }
-            webEndpoint.service(request, response, completionHandler);
+            endpoint.service(request, response, completionHandler);
         }
     }
     
@@ -74,9 +74,9 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         create an implementation of Set, which would let you write:
         startsWith("/home") & (endsWith(".jsf") | endsWith(".csf"))
         */
-        for (webEndpoint in webEndpoints) {
-            if (webEndpoint.path.matches(requestPath)) {
-                return webEndpoint;
+        for (endpoint in endpoints) {
+            if (endpoint.path.matches(requestPath)) {
+                return endpoint;
             }
         }
         return null;

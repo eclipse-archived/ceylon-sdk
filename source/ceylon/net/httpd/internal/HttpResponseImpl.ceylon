@@ -14,7 +14,8 @@ import org.xnio.channels { StreamSinkChannel, ChannelFactory,
                            Channels { chFlushBlocking=flushBlocking } }
 
 by "Matej Lazar"
-shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharset) satisfies Response {
+shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
+        satisfies Response {
 
     ChannelFactory<StreamSinkChannel>? factory = exchange.responseChannelFactory;
     if (!factory exists ) {

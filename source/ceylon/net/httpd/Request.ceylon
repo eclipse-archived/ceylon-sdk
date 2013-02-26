@@ -31,7 +31,10 @@ shared interface Request {
     
 
     doc "Return path relative to endpoint mapping path.
-         Relative path is a substring of path without [[startsWith]] mappings."
+         Relative path is a substring of path without [[startsWith]] mappings.
+         
+         Note that endpoints mapped with [[And]] and [[endsWith]] will return complete path instead of relative.
+         See [[Matcher.relativePath]] for details."
     shared formal String relativePath;
     
     shared formal String queryString;

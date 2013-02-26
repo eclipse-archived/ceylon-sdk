@@ -1,6 +1,6 @@
 by "Matej Lazar"
 doc "Listeners are called on httpd status changes. Statuses 
-     are: staring, started, stoping, stopped."
+     are: [[starting]], [[started]], [[stoping]], [[stopped]]."
 see (Status)
 shared interface StatusListener {
     
