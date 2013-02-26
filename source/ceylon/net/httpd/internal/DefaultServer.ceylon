@@ -45,11 +45,11 @@ shared class DefaultServer() satisfies Server {
     
     MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
-    shared actual void addEndpoint(Endpoint|AsynchronousEndpoint webEndpoint) {
-        ceylonHandler.addWebEndpoint(webEndpoint);
+    shared actual void addEndpoint(Endpoint|AsynchronousEndpoint endpoint) {
+        ceylonHandler.addWebEndpoint(endpoint);
     }
     
-    shared actual void start(Integer port, String host, Options httpdOptions) {
+    shared actual void start(Integer port, String host, Options options) {
         notifyListeners(starting);
         //TODO log
         print("Starting on ``host``:``port``");
@@ -90,12 +90,12 @@ shared class DefaultServer() satisfies Server {
         }
         
         OptionMap optionMap = omBuilder()
-                .set(xnioWorkerWriteThreads, JInt(httpdOptions.workerWriteThreads))
-                .set(xnioWorkerReadThreads, JInt(httpdOptions.workerReadThreads))
-                .set(xnioConnectionLowWatter, JInt(httpdOptions.connectionLowWatter))
-                .set(xnioConnectionHighWatter, JInt(httpdOptions.connectionHighWatter))
-                .set(xnioWorkerTaskCoreThreads, JInt(httpdOptions.workerTaskCoreThreads))
-                .set(xnioWorkerTaskMaxThreads, JInt(httpdOptions.workerTaskMaxThreads))
+                .set(xnioWorkerWriteThreads, JInt(options.workerWriteThreads))
+                .set(xnioWorkerReadThreads, JInt(options.workerReadThreads))
+                .set(xnioConnectionLowWatter, JInt(options.connectionLowWatter))
+                .set(xnioConnectionHighWatter, JInt(options.connectionHighWatter))
+                .set(xnioWorkerTaskCoreThreads, JInt(options.workerTaskCoreThreads))
+                .set(xnioWorkerTaskMaxThreads, JInt(options.workerTaskMaxThreads))
                 .set(xnioTcpNoDelay, true)
                 .map;
         
@@ -124,10 +124,10 @@ shared class DefaultServer() satisfies Server {
         }
     }
     
-    shared actual void startInBackground(Integer port, String host, Options httpdOptions) {
+    shared actual void startInBackground(Integer port, String host, Options options) {
         object httpd satisfies JRunnable {
             shared actual void run() {
-                start(port, host, httpdOptions);
+                start(port, host, options);
             }
         }
         JThread(httpd).start();

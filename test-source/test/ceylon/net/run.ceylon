@@ -11,5 +11,6 @@ void run() {
         "HTTP testGetUtf8" -> testGetUtf8,
         "HTTP testGetUtf8 2" -> testGetUtf8_2,
         "HTTP testGetChunked" -> testGetChunked,
-        "HTTPD testServer" -> testServer);
+        "HTTPD testServer" -> testServer,
+        "HTTPD testPathMatcher" -> testPathMatcher);
 }
