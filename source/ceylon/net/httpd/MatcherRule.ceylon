@@ -8,8 +8,6 @@ shared abstract class Matcher() {
          [[endsWith]] and [[and]] are ignored while constructing relative path. [[endsWith]] and [[and]] returns unmodified requestPath.
          "
     shared formal String relativePath(String requestPath);
-    
-    doc "Note that [[Matcher.relativePath]] returns complete requestPath."
     shared Matcher and(Matcher other) => And(this, other);
     shared Matcher or(Matcher other) => Or(this, other);
 }
@@ -43,7 +41,5 @@ class Or(Matcher left, Matcher right)
 doc "Rule using [[String.startsWith]]."
 shared Matcher startsWith(String s) => StartsWith(s);
 
-doc "Rule using [[String.endsWith]].
-     
-     Note that [[EndsWith.relativePath]] returns complete requestPath."
+doc "Rule using [[String.endsWith]]."
 shared Matcher endsWith(String s) => EndsWith(s);
