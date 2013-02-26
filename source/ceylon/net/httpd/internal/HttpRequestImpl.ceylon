@@ -90,7 +90,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         if (exists e = endpoint) {
             return e.path.relativePath(requestPath);
         } else {
-            throw InternalException("HttpRequest.relativePath shoud be called on request with web endpoint already defined.");
+            throw InternalException("HttpRequest.relativePath shoud be called on request with already defined endpoint.");
         }
     }
     
