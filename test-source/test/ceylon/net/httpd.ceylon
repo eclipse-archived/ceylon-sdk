@@ -153,3 +153,29 @@ void cleanUpFile() {
         f.delete();
     }
 }
+
+void testPathMatcher() {
+    String requestPath = "/file/myfile.txt";
+
+    value matcher = startsWith("/file");
+    assertEquals("/myfile.txt", matcher.relativePath(requestPath));
+    
+    value matcher2 = endsWith(".txt");
+    assertEquals("/file/myfile.txt", matcher2.relativePath(requestPath));
+    
+    value matcher3 = startsWith("/file") and endsWith(".txt");
+    assertEquals("/file/myfile.txt", matcher3.relativePath(requestPath));
+
+    value matcher4 = endsWith(".txt") and startsWith("/file");
+    assertEquals("/file/myfile.txt", matcher4.relativePath(requestPath));
+
+    value matcher5 = (startsWith("/file") or startsWith("/blob")) 
+                or endsWith(".txt");
+    assertEquals("/myfile.txt", matcher5.relativePath(requestPath));
+
+    value matcher6 = (startsWith("/blob") or startsWith("/file")) 
+                and endsWith(".txt");
+    assertEquals("/file/myfile.txt", matcher6.relativePath(requestPath));
+    
+    
+}
