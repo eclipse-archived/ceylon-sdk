@@ -1,4 +1,4 @@
-import io.undertow.server { JHttpServerExchange = HttpServerExchange, JHttpCompletionHandler = HttpCompletionHandler, HttpHandler}
+import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
 import ceylon.net.httpd { Request, AsynchronousEndpoint, Endpoint }
 import ceylon.collection { LinkedList }
@@ -14,11 +14,11 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         endpoints.add(endpoint);
     }
     
-    shared actual void handleRequest(JHttpServerExchange? httpServerExchange, JHttpCompletionHandler? utCompletionHandler) {
+    shared actual void handleRequest(JHttpServerExchange? exchange) {
         
-        if (exists hse = httpServerExchange, exists utCompletionHandler) {
-            HttpRequestImpl request = HttpRequestImpl(hse);
-            HttpResponseImpl response = HttpResponseImpl(hse, defaultCharset);
+        if (exists exc = exchange) {
+            HttpRequestImpl request = HttpRequestImpl(exc);
+            HttpResponseImpl response = HttpResponseImpl(exc, defaultCharset);
             
             try {
                 String requestPath = request.path;
@@ -26,19 +26,18 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
                 
                 if (exists e = endpoint) {
                     request.endpoint = e;
-                    invokeEndpoint(e, request, response, hse, utCompletionHandler);
+                    invokeEndpoint(e, request, response, exc);
                 } else {
                     response.responseStatus=404;
                     response.responseDone();
-                    utCompletionHandler.handleComplete();
+                    exc.endExchange();
                 }
             } catch(Exception e) {
                 //TODO write to log
-                process.writeErrorLine("" + e.string + "");
                 e.printStackTrace();
                 response.responseStatus=500;
                 response.responseDone();
-                utCompletionHandler.handleComplete();
+                exc.endExchange();
             }
         } else {
             //TODO log fatal
@@ -46,23 +45,24 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         }
     }
 
-    void invokeEndpoint(Endpoint|AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler ) {
+    void invokeEndpoint(Endpoint|AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange ) {
         switch (endpoint)
         case (is AsynchronousEndpoint) {
-            wdDispatch(exchange, AsyncInvoker(endpoint, request, response, exchange, utCompletionHandler));
+            wdDispatch(exchange, AsyncInvoker(endpoint, request, response, exchange));
         }
         case (is Endpoint) {
             endpoint.service(request, response);
             response.responseDone();
-            utCompletionHandler.handleComplete();
+            exchange.endExchange();
         }
     }
     
-    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange, JHttpCompletionHandler utCompletionHandler) satisfies Runnable {
+    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange) 
+            satisfies Runnable {
         shared actual void run() {
             void completionHandler() {
                 response.responseDone();
-                utCompletionHandler.handleComplete();
+                exchange.endExchange();
             }
             endpoint.service(request, response, completionHandler);
         }
@@ -70,10 +70,6 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
     
 
     Endpoint|AsynchronousEndpoint|Null getWebEndpoint(String requestPath) {
-        /*TODO
-        create an implementation of Set, which would let you write:
-        startsWith("/home") & (endsWith(".jsf") | endsWith(".csf"))
-        */
         for (endpoint in endpoints) {
             if (endpoint.path.matches(requestPath)) {
                 return endpoint;

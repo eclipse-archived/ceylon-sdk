@@ -23,8 +23,8 @@ import org.xnio {
     ChannelListener
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
-import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
-import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
+import io.undertow.server { HttpOpenListener, HttpTransferEncoding, HttpHandler }
+import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler, URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
@@ -62,21 +62,22 @@ shared class DefaultServer() satisfies Server {
         CookieHandler cookieHandler = CookieHandler();
         cookieHandler.next = session;
         
-        EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
-        eagerFormParsingHandler.next = cookieHandler;
+        MultiPartHandler multiPartHandler = MultiPartHandler();
+        multiPartHandler.next = cookieHandler;
+        multiPartHandler.defaultEncoding = defaultCharset.name;
         
         FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
-        formEncodedDataHandler.next = eagerFormParsingHandler;
+        formEncodedDataHandler.next = multiPartHandler;
+        formEncodedDataHandler.defaultEncoding = defaultCharset.name;
         
-        MultiPartHandler multiPartHandler = MultiPartHandler();
-        multiPartHandler.next = formEncodedDataHandler;
-        
-        HttpHandler errPageHandler = SimpleErrorPageHandler(multiPartHandler);
-        HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
-        HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);
+        HttpHandler errPageHandler = SimpleErrorPageHandler(formEncodedDataHandler);
+
+        URLDecodingHandler urlDecodingHandler = URLDecodingHandler();
+        urlDecodingHandler.next = errPageHandler;
+        urlDecodingHandler.setCharset(defaultCharset.name);
         
         HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
-        openListener.rootHandler = httpTransferEncoding;
+        openListener.rootHandler = urlDecodingHandler;
         
         object channelListener satisfies ChannelListener<AcceptingChannel<ConnectedStreamChannel>> {
             shared actual void handleEvent(AcceptingChannel<ConnectedStreamChannel>? channel) {
@@ -84,7 +85,7 @@ shared class DefaultServer() satisfies Server {
                     ConnectedStreamChannel? accept = channel.accept();
                     if (exists accept) {
                         openListener.handleEvent(accept);
-                    }		
+                    }
                 }
             }
         }

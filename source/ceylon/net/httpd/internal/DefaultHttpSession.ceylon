@@ -8,7 +8,7 @@ class DefaultHttpSession(UtSession utSession) satisfies Session {
     shared actual String id => utSession.id;
     
     shared actual Object? get(String key) => 
-            utSession.getAttribute(key.string).get();
+            utSession.getAttribute(key.string);
     
     shared actual void put(String key, Object item) =>
             utSession.setAttribute(key, item);

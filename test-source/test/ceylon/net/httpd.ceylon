@@ -30,7 +30,6 @@ void testServer() {
     
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
-        response.addHeader(contentType("text/html", utf8));
         response.writeString("Hello ``name(request)``!");
     }
 
@@ -39,6 +38,14 @@ void testServer() {
     server.addEndpoint(Endpoint {
         service => serviceImpl;
         path = startsWith("/echo"); //TODO endpoint overriding, first matching should be used
+    });
+
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", utf8));
+                        response.writeString(request.header("Content-Type") else "");
+                    };
+        path = startsWith("/headerTest");
     });
 
     //add fileEndpoint
@@ -53,7 +60,9 @@ void testServer() {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {
                 try {
-                    execuTestEcho();
+                    executeEchoTest();
+                    
+                    headerTest();
                     
                     concurentFileRequests(numberOfUsers);
                     
@@ -69,7 +78,7 @@ void testServer() {
     server.startInBackground();
 }
 
-void execuTestEcho() {
+void executeEchoTest() {
     //TODO log debug
     print("Making request to Ceylon server...");
     
@@ -77,9 +86,6 @@ void execuTestEcho() {
     
     value request = ClientRequest(parse("http://localhost:8080/echo?name=" + name));
     value response = request.execute();
-    
-    value contentTypeHeader = response.getSingleHeader("content-type");
-    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
 
     value echoMsg = response.contents;
     response.close();
@@ -87,6 +93,24 @@ void execuTestEcho() {
     print("Received message: ``echoMsg``");
     value expecting = "Hello ``name``!";
     assertEquals(expecting, echoMsg);
+}
+
+void headerTest() {
+    String header = "multipart/form-data";
+    
+    value request = ClientRequest(parseURI("http://localhost:8080/headerTest"));
+    request.setHeader("Content-Type", header);
+    
+    value response = request.execute();
+    
+    value contentTypeHeader = response.getSingleHeader("content-type");
+    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
+    
+    value echoMsg = response.contents;
+    response.close();
+    //TODO log debug
+    print("Received contents: ``echoMsg``");
+    assertEquals(header, echoMsg);
 }
 
 void executeTestStaticFile(Integer executeRequests) {
@@ -114,9 +138,9 @@ void concurentFileRequests(Integer concurentRequests) {
     }
     
     value users = LinkedList<Thread>();
-    
+
+    print ("Running ``concurentRequests `` concurent requests.");    
     while(requestNumber < concurentRequests) {
-        print("User: ``requestNumber``");
         value userThread = Thread(user);
         users.add(userThread);
         userThread.start();
