@@ -51,6 +51,7 @@
         <module name="test.ceylon.json"/>
         <module name="test.ceylon.net"/>
         <module name="test.ceylon.process"/>
+        <module name="test.ceylon.time"/>
         <module name="test.ceylon.dbc"/>
         <module name="test.ceylon.interop.java"/>
     </moduleset>
@@ -161,6 +162,12 @@
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
+        <ceylon-run module="test.ceylon.time/${sdk.version}" run="test.ceylon.time.run"
+            executable="${ceylon.executable}">
+            <reposet refid="reposet.run.test"/>
+          <rep url="${test.repo}"/>
+        </ceylon-run>
+            
         <ceylon-run module="test.ceylon.dbc/${sdk.version}" run="test.ceylon.dbc.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
@@ -202,6 +209,7 @@
                 <include name="ceylon/json/**"/>
                 <include name="ceylon/net/**"/>
                 <include name="ceylon/process/**"/>
+                <include name="ceylon/time/**"/>
                 <include name="ceylon/dbc/**"/>
                 <include name="ceylon/interop/java/**"/>
             </fileset>
