@@ -19,7 +19,7 @@ import java.lang { JString=String }
 import java.util { Deque, JMap=Map }
 
 by "Matej Lazar"
-shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
+shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
     
     shared variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
     
@@ -128,7 +128,7 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         }
         
         if (exists s = utSession) {
-            return DefaultHttpSession(s);
+            return DefaultSession(s);
         } else {
             throw InternalException("Cannot get or create session.");
         }

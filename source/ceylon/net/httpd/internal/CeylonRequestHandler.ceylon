@@ -17,8 +17,8 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
     shared actual void handleRequest(JHttpServerExchange? exchange) {
         
         if (exists exc = exchange) {
-            HttpRequestImpl request = HttpRequestImpl(exc);
-            HttpResponseImpl response = HttpResponseImpl(exc, defaultCharset);
+            RequestImpl request = RequestImpl(exc);
+            ResponseImpl response = ResponseImpl(exc, defaultCharset);
             
             try {
                 String requestPath = request.path;
@@ -45,7 +45,7 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         }
     }
 
-    void invokeEndpoint(Endpoint|AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange ) {
+    void invokeEndpoint(Endpoint|AsynchronousEndpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange ) {
         switch (endpoint)
         case (is AsynchronousEndpoint) {
             wdDispatch(exchange, AsyncInvoker(endpoint, request, response, exchange));
@@ -57,7 +57,7 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
         }
     }
     
-    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange) 
+    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange) 
             satisfies Runnable {
         shared actual void run() {
             void complete() {

@@ -14,7 +14,7 @@ import org.xnio.channels { StreamSinkChannel,
                            Channels { chFlushBlocking=flushBlocking } }
 
 by "Matej Lazar"
-shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
+shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
         satisfies Response {
 
     variable StreamSinkChannel? lazyResponse = null;

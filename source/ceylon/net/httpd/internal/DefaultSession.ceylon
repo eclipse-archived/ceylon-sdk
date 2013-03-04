@@ -3,7 +3,7 @@ import ceylon.net.httpd { Session }
 import io.undertow.server.session { UtSession=Session }
 
 by "Matej Lazar"
-class DefaultHttpSession(UtSession utSession) satisfies Session {
+class DefaultSession(UtSession utSession) satisfies Session {
     
     shared actual String id => utSession.id;
     
