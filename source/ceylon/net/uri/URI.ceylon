@@ -6,19 +6,19 @@ by "Stéphane Épardaud"
 shared class URI(scheme = null, authority = Authority(), path = Path(), query = Query(), fragment = null){
     
     doc "The optional URI scheme: `http`, `https`, `mailto`…"
-    shared variable String? scheme;
+    shared String? scheme;
     
     doc "The optional Authority part (contains user, password, host and port)"
-    shared variable Authority authority;
+    shared Authority authority;
     
     doc "The optional Path part"
-    shared variable Path path;
+    shared Path path;
     
     doc "The optional query part"
-    shared variable Query query;
+    shared Query query;
     
     doc "The optional fragment (hash) part"
-    shared variable String? fragment;
+    shared String? fragment;
 
     doc "Returns true if this is a relative URI"
     shared Boolean relative {

@@ -1,60 +1,39 @@
-import ceylon.collection { LinkedList }
 
 doc "Represents a URI Path part"
 by "Stéphane Épardaud"
-shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments) {
+shared class Path(absolute = false, segments) {
     
     doc "The list of path segments"
-    shared LinkedList<PathSegment> segments = LinkedList<PathSegment>();
+    PathSegment* segments;
     
-    doc "True if this URI is absolute (begins with a `/`)"
-    shared variable Boolean absolute = initialAbsolute;
+    doc "True if this Path is absolute (begins with a `/`)"
+    shared Boolean absolute;
     
-    for(PathSegment s in initialSegments){
-        segments.add(s);
-    }
+    //doc "Adds a path segment"
+    //shared void add(String segment, Parameter* parameters) {
+    //    PathSegment part = PathSegment(segment);
+    //    for(Parameter p in parameters){
+    //        part.parameters.add(p);
+    //    }
+    //    segments.add(part);
+    //}
+    
 
-    doc "Adds a path segment"
-    shared void add(String segment, Parameter* parameters) {
-        PathSegment part = PathSegment(segment);
-        for(Parameter p in parameters){
-            part.parameters.add(p);
-        }
-        segments.add(part);
-    }
-    
-    doc "Adds a raw (percent-encoded) segment, with optional parameters to be parsed"
-    shared void addRawSegment(String part){
-        Integer? sep = part.firstCharacterOccurrence(';');
-        String name;
-        if(exists sep){
-            name = part[0..sep-1];
-        }else{
-            name = part;
-        }
-        PathSegment path = PathSegment(decodePercentEncoded(name));
-        if(exists sep){
-            for(String param in part[sep+1...].split((Character ch) => ch == ';', true, false)){
-                path.parameters.add(parseParameter(param));
-            }
-        }
-        segments.add(path);
-    }
 
     doc "Returns a path segment"    
     shared PathSegment? get(Integer i){
         return segments[i];
     }
 
-    doc "Remove a path segment"
-    shared void remove(Integer i){
-        segments.remove(i);
-    }
-
-    doc "Removes every path segment"
-    shared void clear(){
-        segments.clear();
-    }
+//    doc "Remove a path segment"
+//    shared void remove(Integer i){
+//        segments.remove(i);
+//    }
+//
+//    doc "Removes every path segment"
+//    shared void clear(){
+//        segments.clear();
+//    }
 
     doc "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
@@ -63,7 +42,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
                 return true;
             }
             return absolute == that.absolute
-                && segments.equalsTemp(that.segments); 
+                && segments.equals(that.segments); 
         }
         return false;
     }
