@@ -10,7 +10,7 @@ doc "Endpoint for serving static files.
      
      Do not use path mappings with `and` as used [[Request.relativePath]] is not working with it."
 shared void serveStaticFile(externalPath)
-        (Request request, Response response, Callable<Anything, []> completionHandler) {
+        (Request request, Response response, Callable<Anything, []> complete) {
     
     doc "Root directory containing files."
     String externalPath;
@@ -47,6 +47,6 @@ shared void serveStaticFile(externalPath)
         //print("file does not exist");
     }
     
-    completionHandler();
+    complete();
     
 }

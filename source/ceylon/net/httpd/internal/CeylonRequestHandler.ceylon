@@ -60,11 +60,11 @@ shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler 
     class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, HttpResponseImpl response, JHttpServerExchange exchange) 
             satisfies Runnable {
         shared actual void run() {
-            void completionHandler() {
+            void complete() {
                 response.responseDone();
                 exchange.endExchange();
             }
-            endpoint.service(request, response, completionHandler);
+            endpoint.service(request, response, complete);
         }
     }
     
