@@ -1,4 +1,4 @@
-import java.lang { JString = String { format }, JByte = Byte }
+import java.lang { JString = String { format }, JByte = Byte, ByteArray }
 import java.util { BitSet }
 
 doc "Contains methods for percent-encoding. 
@@ -278,9 +278,10 @@ shared object percentEncoder {
                 encoded.append(c.string);
             }
             else {
-                Array<Integer> bytes = JString(c.string).getBytes(encoding);
-                for (Integer b in bytes) {
-                    encoded.append(format("%%%1$02X", JByte(b)));
+                ByteArray bytes = JString(c.string).getBytes(encoding);
+                variable Integer idx = 0;
+                while (idx < bytes.size) {
+                    encoded.append(format("%%%1$02X", bytes.get(idx++)));
                 }
             }
         }

@@ -7,7 +7,7 @@ import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
 import java.io { JIOException=IOException }
-import java.lang { JString=String }
+import java.lang { JString=String, ByteArray, arrays }
 import java.nio { JByteBuffer=ByteBuffer { wrapByteBuffer=wrap } }
 
 import org.xnio.channels { StreamSinkChannel, ChannelFactory, 
@@ -47,7 +47,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
     
     //TODO comment encodings and defaults
     shared actual void writeString(String string) {
-        writeBytes(JString(string).bytes);
+        writeBytes(JString(string).bytes.array);
         //TODO use encoder
         //value buffer = findCharset().encode(string);
         //writeBytes(buffer.bytes());
@@ -56,7 +56,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
     shared actual void writeBytes(Array<Integer> bytes) {
         applyHeadersToExchange();
         
-        value bb = wrapByteBuffer(bytes);
+        value bb = wrapByteBuffer(arrays.asByteArray(bytes));
         value response = getResponse();
         
         variable Integer remaining = bytes.size;
