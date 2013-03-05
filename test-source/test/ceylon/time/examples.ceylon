@@ -1,6 +1,7 @@
 
 import ceylon.math.whole { Whole, one, zero, wholeNumber }
-import ceylon.time { now, Instant, date }
+import ceylon.time { now, Instant, date, Date, Period, today, Time, dateTime, DateTime }
+import ceylon.time.base { january, february }
 
 doc "An example program using ceylon.time"
 void example(){
@@ -19,13 +20,28 @@ void example(){
     print("");
     
     value duration = start.durationTo(now());
-    print("Calculated 40000 digits of pi in ``duration.period.normalized()``");
+    print("Calculated 40000 digits of pi in ``duration``");
     
     value startDate = start.date();
     value startTime = start.time();
     
     print("Pi calculation started on ``startDate`` at ``startTime`` (UTC)");
     
+    Date vacationStart = date(2013, january, 8);
+    Date vacationEnd = vacationStart.plus(Period { days = 12; });
+    
+    Date thisDay = today();
+    print("today is ``thisDay.dayOfWeek``");
+    assert(today() == now().date());
+    
+    Time time = now().time();
+    print("Current time is ``time``");
+    print("In five minutes it will be ``time.plusMinutes(5)``");
+
+    DateTime eventStart = dateTime(2013, february, 13, 12, 30);
+    Period length = Period { hours = 1; minutes = 30; };
+    print("Lunch interview on ``eventStart`` to ``eventStart.plus(length).time``");
+
     print("Minimum date is ``date(-24660873952897, 12, 25)``");
     print("Maximum date is ``date(24660873952898, 1, 7)``");
     print("Minimum Instant is ``Instant(-9007199254740991).dateTime()``");
