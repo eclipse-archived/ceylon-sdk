@@ -86,7 +86,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         buf.position(position);
     }
     shared actual Array<Integer> bytes() {
-        return buf.array();
+        return buf.array().array;
     }
 }
 

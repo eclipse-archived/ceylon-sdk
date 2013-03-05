@@ -49,10 +49,10 @@ class DecimalImpl(BigDecimal num)
             if (is RoundingImpl rounding) {
                 array = implementation
                         .divideAndRemainder(other.implementation, 
-                                rounding.implementation);
+                                rounding.implementation).array;
             } else if (!rounding exists) {
                 array = implementation
-                        .divideAndRemainder(other.implementation);
+                        .divideAndRemainder(other.implementation).array;
             } else {
                 throw;
             }

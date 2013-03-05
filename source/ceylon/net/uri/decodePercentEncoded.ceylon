@@ -1,4 +1,4 @@
-import java.lang { JString = String }
+import java.lang { JString = String, ByteArray }
 
 Integer fromHex(Integer hex){
     if(hex >= '0'.integer && hex <= '9'.integer){
@@ -16,25 +16,26 @@ Integer fromHex(Integer hex){
 doc "Decodes a percent-encoded ASCII string."
 by "Stéphane Épardaud"
 shared String decodePercentEncoded(String str){
-    Array<Integer> array = JString(str).getBytes("ASCII");
+    ByteArray array = JString(str).getBytes("ASCII");
     variable Integer r = 0;
     variable Integer w = 0;
     while(r < array.size){
-        if(exists Integer char = array[r]){
-            if(char == '%'.integer){
-                // must read the next two items
-                if(exists Integer first = array[++r]){
-                    if(exists Integer second = array[++r]){
-                        array.setItem(w, 16 * fromHex(first) + fromHex(second));
-                    }else{
-                        throw Exception("Missing second hex number");
-                    }
+        Integer char = array.get(r);
+        if(char == '%'.integer){
+            // must read the next two items
+            if(++r < array.size){
+                Integer first = array.get(r);
+                if(++r < array.size){
+                    Integer second = array.get(r);
+                    array.set(w, 16 * fromHex(first) + fromHex(second));
                 }else{
-                    throw Exception("Missing first hex number");
+                    throw Exception("Missing second hex number");
                 }
             }else{
-                array.setItem(w, char);
+                throw Exception("Missing first hex number");
             }
+        }else{
+            array.set(w, char);
         }
         r++;
         w++;
