@@ -143,7 +143,7 @@ void testDecomposition(){
 void testComposition(){
     URI u = URI("http", 
                 Authority("stef", null, "192.168.1.1", 9000),
-                Path(true, PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
+                absolutePath(PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
                 Query(Parameter("q"), Parameter("r","s")),
                 null);
     testURL{
@@ -187,8 +187,7 @@ void testDecoding(){
         port = 123;
 //        path = "/segm/?;ent1;par/?;=am1;par/?;=am2=val/?;=#ue/segment2";
         path = "/segm%2F%3F%3Bent1;par%2F%3F%3B%3Dam1;par%2F%3F%3B%3Dam2=val%2F%3F%3B=%23ue/segment2";
-        decomposedPath = Path {
-            absolute = true;
+        decomposedPath = absolutePath {
             segments = [
                 PathSegment {
                     name = "segm/?;ent1";
@@ -221,7 +220,4 @@ void testDecoding(){
         };
         fragment = "frag&=#ment";
     };
-        
 }
-
-

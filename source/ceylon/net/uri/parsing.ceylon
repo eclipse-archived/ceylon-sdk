@@ -21,7 +21,6 @@ shared URI parseURI(String uri){
     variable String? host = null;
     variable Integer? port = null;
     
-    variable Boolean absolutePath = false;
     LinkedList<PathSegment> pathSegments = LinkedList<PathSegment>();
 
     LinkedList<Parameter> queryParameters = LinkedList<Parameter>();
@@ -137,14 +136,7 @@ shared URI parseURI(String uri){
             remains = "";
         }
         if(!pathPart.empty){
-            variable Boolean first = true;
             for(String part in pathPart.split((Character ch) => ch == '/', true, false)){
-                if(first && part.empty){
-                    absolutePath = true;
-                    first = false;
-                    continue;
-                }
-                first = false;
                 pathSegments.add(parseRaw(part));
             }
         }
@@ -196,7 +188,7 @@ shared URI parseURI(String uri){
     parseURI(uri);
 
     Authority authority = Authority(user, password, host, port, ipLiteral);
-    Path path = Path(absolutePath, *pathSegments);
+    Path path = Path(*pathSegments);
     Query query = Query(*queryParameters);
     return URI(scheme, authority, path, query, fragment);
 }

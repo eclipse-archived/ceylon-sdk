@@ -2,7 +2,7 @@ import ceylon.net.iop { eq }
 import ceylon.net.http { Request }
 
 doc "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
-by "Stéphane Épardaud"
+by ("Stéphane Épardaud", "Matej Lazar")
 shared class URI(scheme = null, authority = Authority(), path = Path(), query = Query(), fragment = null){
     
     doc "The optional URI scheme: `http`, `https`, `mailto`…"
@@ -33,6 +33,52 @@ shared class URI(scheme = null, authority = Authority(), path = Path(), query = 
     doc "Returns the query as an externalisable (percent-encoded) string representation. Can be null." 
     shared String? queryPart {
         return query.specified then query.string;
+    }
+    
+    doc "Returns absolute URI by applying relativeURI to this URI.
+         If relativeURI is absolute, relativeURI is returned."
+    shared URI resolve(URI relativeURI) {
+        if (!relativeURI.relative) {
+            return relativeURI;
+        }
+        
+        if (relativeURI.authority.specified) {
+            return URI(scheme, relativeURI.authority, relativeURI.path.noDotSegments, relativeURI.query, relativeURI.fragment);
+        }
+
+        if (relativeURI.path.specified) {
+            if (relativeURI.path.absolute) {
+                return URI(scheme, authority, relativeURI.path.noDotSegments, relativeURI.query, relativeURI.fragment);
+            } else {
+                return URI(scheme, authority, path.resolve(relativeURI.path), relativeURI.query, relativeURI.fragment);
+            }
+        }
+
+        if (relativeURI.query.specified) {
+            return URI(scheme, authority, path.noDotSegments, relativeURI.query, relativeURI.fragment);
+        } else {
+            return URI(scheme, authority, path.noDotSegments, query, relativeURI.fragment);
+        }
+    }
+    
+    doc "Truncate given base from absolute URI.
+         If this URI is relative, this is returned."
+    shared URI relativePart(URI base) {
+        if (relative) {
+            return this;
+        }
+        
+        if (base.relative) {
+            throw InvalidURIException("Base URI must be absolute.");
+        }
+        
+        if (base.path.specified) {
+            return URI(null, Authority(), path.relativePart(base.path), query, fragment);
+        }
+        if (base.authority.specified) {
+            return URI(null, base.authority, path.noDotSegments, query, fragment);
+        }
+        return URI(null, authority, path.noDotSegments, query, fragment);
     }
     
     String toRepresentation(Boolean human) {

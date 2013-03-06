@@ -9,6 +9,10 @@ shared class PathSegment(name, parameters) {
     doc "The path segment paramters"
     shared Parameter* parameters;
     
+    shared Boolean empty {
+        return name.empty && parameters.empty;
+    }
+    
     doc "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is PathSegment that){
@@ -78,3 +82,6 @@ shared PathSegment parseRaw(String part){
     }
     return PathSegment(decodePercentEncoded(name), *parameters);
 }
+
+shared PathSegment absolute => PathSegment("");
+shared PathSegment folder = absolute;
