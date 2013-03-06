@@ -178,7 +178,7 @@ shared class HashMap<Key, Item>()
         return ret;
     }
     
-    shared actual Iterator<Entry<Key,Item>> iterator {
+    shared actual Iterator<Entry<Key,Item>> iterator() {
         // FIXME: make this faster with a size check
         object iter satisfies Iterator<Entry<Key,Item>> {
             variable Integer index = 0;

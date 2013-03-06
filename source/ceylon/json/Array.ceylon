@@ -12,7 +12,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
         list.add(val);
     }
     
-    shared actual Iterator<String|Boolean|Integer|Float|Object|Array|NullInstance> iterator => list.iterator;
+    shared actual Iterator<String|Boolean|Integer|Float|Object|Array|NullInstance> iterator() => list.iterator();
     
     doc "Adds a new value at the end of this array"
     shared actual void add(String|Boolean|Integer|Float|Object|Array|NullInstance val){

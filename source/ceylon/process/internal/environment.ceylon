@@ -3,7 +3,7 @@ import java.lang { System { getenv } }
 shared object environment 
         satisfies Iterable<String->String> {    
     
-    shared actual Iterator<String->String> iterator {
+    shared actual Iterator<String->String> iterator() {
         object iterator satisfies Iterator<String->String> {   
             value env = getenv().entrySet().iterator();
             shared actual <String->String>|Finished next() {

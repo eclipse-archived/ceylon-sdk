@@ -246,7 +246,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
         return !empty then _size - 1;
     }
     
-    shared actual Iterator<Element> iterator {
+    shared actual Iterator<Element> iterator() {
         return CellIterator(head);
     }
     

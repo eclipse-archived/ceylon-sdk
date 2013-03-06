@@ -105,7 +105,7 @@ shared class HashSet<Element>()
         return _size == 0;
     }
     
-    shared actual Iterator<Element> iterator {
+    shared actual Iterator<Element> iterator() {
         // FIXME: make this faster with a size check
         object iter satisfies Iterator<Element> {
             variable Integer index = 0;
