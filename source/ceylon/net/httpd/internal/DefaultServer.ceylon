@@ -60,20 +60,21 @@ shared class DefaultServer() satisfies Server {
         session.setNext(ceylonHandler);
         
         CookieHandler cookieHandler = CookieHandler();
-        cookieHandler.next = session;
+        //cookieHandler.next = session;
+        cookieHandler.setNext(session);
         
         MultiPartHandler multiPartHandler = MultiPartHandler();
-        multiPartHandler.next = cookieHandler;
-        multiPartHandler.defaultEncoding = defaultCharset.name;
+        multiPartHandler.setNext(cookieHandler);
+        multiPartHandler.setDefaultEncoding(defaultCharset.name);
         
         FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
-        formEncodedDataHandler.next = multiPartHandler;
-        formEncodedDataHandler.defaultEncoding = defaultCharset.name;
+        formEncodedDataHandler.setNext(multiPartHandler);
+        formEncodedDataHandler.setDefaultEncoding(defaultCharset.name);
         
         HttpHandler errPageHandler = SimpleErrorPageHandler(formEncodedDataHandler);
 
         URLDecodingHandler urlDecodingHandler = URLDecodingHandler();
-        urlDecodingHandler.next = errPageHandler;
+        urlDecodingHandler.setNext(errPageHandler);
         urlDecodingHandler.setCharset(defaultCharset.name);
         
         HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
