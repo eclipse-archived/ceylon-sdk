@@ -1,4 +1,4 @@
-import ceylon.time { DateTime, dateTime }
+import ceylon.time { DateTime, dateTime, Period }
 import ceylon.time.base { december, january, november, september, Month, DayOfWeek, sunday, july, wednesday, monday, october, tuesday, friday, saturday, february }
 import ceylon.test { assertEquals, fail, assertTrue }
 
@@ -165,11 +165,11 @@ shared void testPredecessor_DateTime() {
         expected = dateTime { 
             year = 1982;  
             month = december; 
-            date = 12; 
+            date = 13; 
             hour = 9; 
             minutes = 8;
             seconds = 7;
-            millis = 50;
+            millis = 49;
         };
     };
 }
@@ -180,13 +180,111 @@ shared void testSuccessor_DateTime() {
         expected = dateTime {
             year = 1982;
             month = december;
-            date = 14; 
+            date = 13; 
             hour = 9; 
             minutes = 8;
             seconds = 7;
-            millis = 50;
+            millis = 51;
          };
      };
+}
+
+shared void testPeriodFrom_DateTime() {
+    Period period = Period{ days = 2; hours = 14;};
+    DateTime from = dateTime(2013, december, 28, 10, 0);
+    DateTime to = dateTime(2013,december,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromSameYearNoTime_DateTime() {
+    Period period = Period{ months = 8; days = 3;};
+    DateTime from = dateTime(2013, february,28);
+    DateTime to = dateTime(2013,october,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromSameYear_DateTime() {
+    Period period = Period{ months = 8; days = 2; hours = 23; minutes = 59; seconds = 59; milliseconds = 900;};
+    DateTime from = dateTime(2013, february,28, 0, 0, 0, 100);
+    DateTime to = dateTime(2013,october,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromMonthBeforeNoTime_DateTime() {
+    Period period = Period{ years = 1; months = 10; days = 3;}; 
+    DateTime from = dateTime(2011, december, 28);
+    DateTime to = dateTime(2013,october,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromMonthBefore_DateTime() {
+    Period period = Period{ years = 1; months = 10; days = 3; hours = 10; minutes = 30;}; 
+    DateTime from = dateTime(2011, december, 28);
+    DateTime to = dateTime(2013,october,31, 10, 30);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromDayAfterNoTime_DateTime() {
+    Period period = Period{ years = 2; days = 3;}; 
+    DateTime from = dateTime(2011, december, 28);
+    DateTime to = dateTime(2013,december,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromDayAfter_DateTime() {
+    Period period = Period{ years = 2; days = 3; milliseconds = 999;}; 
+    DateTime from = dateTime(2011, december, 28);
+    DateTime to = dateTime(2013,december,31, 0, 0, 0, 999);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromDayBeforeNoTime_DateTime() {
+    Period period = Period{ years = 1; months = 11; days = 20;};
+    DateTime from = dateTime(2011, october, 30);
+    DateTime to = dateTime(2013,october,20);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromDayBefore_DateTime() {
+    Period period = Period{ years = 1; months = 11; days = 20;};
+    DateTime from = dateTime(2011, october, 30, 20, 20, 20, 20);
+    DateTime to = dateTime(2013,october,20, 20, 20, 20, 20);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromEqualDate_DateTime() {
+    Period period = Period();
+    DateTime from = dateTime(2011, october, 30, 10, 10, 10, 10);
+    DateTime to = dateTime(2011, october, 30, 10, 10, 10, 10);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromNewYearNoTime_DateTime() {
+    Period period = Period{ days = 4; };
+    DateTime from = dateTime(2013, december, 28);
+    DateTime to = dateTime(2014,january,1);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromNewYear_DateTime() {
+    Period period = Period{ days = 3; hours = 23; minutes = 59; seconds = 59; milliseconds = 100; };
+    DateTime from = dateTime(2013, december, 28, 0, 0, 0, 900);
+    DateTime to = dateTime(2014,january,1);
+    assertFromToDateTime(period, from, to);
+}
+
+void assertFromToDateTime( Period period, DateTime from, DateTime to ) {
+    assertEquals{
+      expected = period;
+      actual = to.periodFrom( from );
+    };
+    assertEquals{
+      expected = period;
+      actual = from.periodTo( to );
+    };
+
+    assertEquals(to, from.plus(period));
+    assertEquals(from, to.minus(period));
 }
 
 void assertGregorianDateTime( Integer year, Month month, Integer day, DayOfWeek dayOfWeek, Boolean leapYear = false, 

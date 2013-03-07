@@ -12,9 +12,19 @@ shared interface DateTime
             & Ordinal<DateTime>
             & Comparable<DateTime> {
 
+    "Adds a specified period to this date and time."
     shared formal DateTime plus(ReadablePeriod period);
 
+    "Subtracts a specified period to this date and time."
     shared formal DateTime minus(ReadablePeriod period);
+
+    "Returns the period between this and the given DateTime.
+     If this date is before the given date then return zero period"
+    shared formal Period periodFrom( DateTime start );
+
+    "Returns the period between this and the given DateTime.
+     If this DateTime is after the given DateTime then return zero period"
+    shared formal Period periodTo( DateTime end );
 
 }
  
