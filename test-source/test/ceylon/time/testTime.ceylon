@@ -1,5 +1,5 @@
 import ceylon.test { assertEquals, fail, assertTrue }
-import ceylon.time { time, Time }
+import ceylon.time { time, Time, Period }
 import ceylon.time.base { seconds, minutes }
 
 Time midnight = time(0, 0);
@@ -206,16 +206,72 @@ shared void testWithMilliseconds() {
 }
 
 shared void testPredecessor_Time() {
-    assertEquals( midnight.predecessor, time(23,59,59) ); 
+    assertEquals( midnight.predecessor, time(23,59,59,999) ); 
 }
 
 shared void testSuccessor_Time() {
-    assertEquals( midnight.successor, time(0,0,1) ); 
+    assertEquals( midnight.successor, time(0,0,0,001) ); 
 }
 
 shared void testString_Time() {
     assertEquals( midnight.string, "00:00:00.000");
     assertEquals( time_14h_20m_07s_59ms.string, "14:20:07.059");
+}
+
+shared void testPeriodFrom_Time() {
+    Period period = Period{ hours = 9; minutes = 59; seconds = 50; milliseconds = 100;};
+    Time from = time(10, 30, 20, 500);
+    Time to = time(20,30, 10, 600);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromHour_Time() {
+    Period period = Period{ hours = 2;};
+    Time from = time(18, 0);
+    Time to = time(20,0);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromMinSec_Time() {
+    Period period = Period{ hours = 9; minutes = 59; seconds = 59; milliseconds = 900;};
+    Time from = time(10, 0, 0, 600);
+    Time to = time(20, 0, 0, 500);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromMinuteBefore() {
+    Period period = Period{ hours = 9; minutes = 50; };
+    Time from = time(10, 20);
+    Time to = time(20, 10);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromSecondBefore() {
+    Period period = Period{ minutes = 9; seconds = 50; };
+    Time from = time(20, 10, 50);
+    Time to = time(20, 20, 40);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromMillisecondBefore() {
+    Period period = Period{ seconds = 9; milliseconds = 900; };
+    Time from = time(20, 20, 40, 500);
+    Time to = time(20, 20, 50, 400);
+    assertFromToTime(period, from, to);
+}
+
+void assertFromToTime( Period period, Time from, Time to ) {
+    assertEquals{
+      expected = period;
+      actual = to.periodFrom( from );
+    };
+    assertEquals{
+      expected = period;
+      actual = from.periodTo( to );
+    };
+
+    assertEquals(to, from.plus(period));
+    assertEquals(from, to.minus(period));
 }
 
 shared void assertTime( Integer hour = 0, Integer minute = 0, Integer second = 0, Integer milli = 0, Integer secondsOfDay = 0, Integer minutesOfDay = 0) {

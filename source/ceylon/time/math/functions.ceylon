@@ -38,4 +38,3 @@ shared Integer adjustedMod(Integer x, Integer y){
     }
     return amod;
 }
-

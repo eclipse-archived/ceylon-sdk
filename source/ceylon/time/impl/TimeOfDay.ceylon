@@ -1,4 +1,4 @@
-import ceylon.time { Time, time }
+import ceylon.time { Time, time, Period, zero }
 import ceylon.time.base { ms=milliseconds, sec=seconds, ReadableTimePeriod }
 import ceylon.time.math { floorMod }
 
@@ -34,14 +34,10 @@ shared class TimeOfDay(millisOfDay)
     }
 
     "Previous second"
-    shared actual Time predecessor
-        //TODO: Is this really right?
-        => minusSeconds(1);
+    shared actual Time predecessor => minusMilliseconds(1);
 
     "Next second"
-    shared actual Time successor
-        //TODO: Is this really right?
-        => plusSeconds(1);
+    shared actual Time successor => plusMilliseconds(1);
 
     "Returns ISO 8601 formatted String representation of this _time of day_."
     shared actual String string {
@@ -150,6 +146,36 @@ shared class TimeOfDay(millisOfDay)
             return millisOfDay == other.millisOfDay;
         }
         return false;
+    }
+
+    "Returns the period between this and the given time.
+     If this time is before the given time then return zero period"
+    shared actual Period periodFrom(Time start) {
+        if ( this <= start ) {
+            return zero;
+        }
+
+        variable value total = this.millisOfDay - start.millisOfDay;
+        value hh = total / ms.perHour;
+        total =  total % ms.perHour;
+
+        value mm = total / ms.perMinute;
+        total =  total % ms.perMinute;
+
+        value ss = total / ms.perSecond;
+
+        return Period {
+            hours = hh;
+            minutes = mm;
+            seconds = ss;
+            milliseconds = total % ms.perSecond;
+        }; 
+    }
+
+    "Returns the period between this and the given time.
+     If this time is after the given time then return zero period"
+    shared actual Period periodTo(Time end) {
+        return end.periodFrom(this); 
     }
 
 }

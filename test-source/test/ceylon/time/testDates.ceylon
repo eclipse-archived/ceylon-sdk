@@ -120,12 +120,7 @@ shared void testDateMinusDays() {
 }
 
 shared void testDatePlusMonthsLessDaysException() {
-    try {
-        date(1982,december,31).plusMonths(2);
-        fail("Should throw exception...");
-    } catch ( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }    
+    assertEquals( date(1983, february, 28), date(1982,december,31).plusMonths(2));
 }
 
 shared void testDatePlusMonths() {
@@ -144,13 +139,8 @@ shared void testDateMinusMonths() {
     assertEquals( data_1982_12_13.minusMonths(12), date( 1981, december, 13) );
 }
 
-shared void testDatePlusMinusLessDaysException() {
-    try {
-        date(1982,december,31).plusMonths(2);
-        fail("Should throw exception...");
-    } catch ( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }    
+shared void testDateMinusLessDaysException() {
+    assertEquals( date(1982,november,30), date(1982,december,31).minusMonths(1));
 }
 
 shared void testDatePlusYears() {
@@ -347,6 +337,83 @@ shared void testAtInvalidMillis() {
     } catch ( AssertionException e ) {
         assertTrue(e.message.contains("Milliseconds value should be between 0 and 999"));
     }
+}
+
+shared void testPeriodFrom() {
+    Period period = Period{ years = 2; months = 2; days = 3;};
+    Date from = date(2011, october, 28);
+    Date to = date(2013,december,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromNewYear() {
+    Period period = Period{ days = 4; };
+    Date from = date(2013, december, 28);
+    Date to = date(2014,january,1);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromSameYear() {
+    Period period = Period{ months = 8; days = 3;};
+    Date from = date(2013, february,28);
+    Date to = date(2013,october,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromMonthBefore() {
+    Period period = Period{ years = 1; months = 10; days = 3;}; 
+    Date from = date(2011, december, 28);
+    Date to = date(2013,october,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromDayAfter() {
+    Period period = Period{ years = 2; days = 3;}; 
+    Date from = date(2011, december, 28);
+    Date to = date(2013,december,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromDayBefore() {
+    Period period = Period{ years = 1; months = 11; days = 20;};
+    Date from = date(2011, october, 30);
+    Date to = date(2013,october,20);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromEqualDate() {
+    Period period = Period();
+    Date from = date(2011, october, 30);
+    Date to = date(2011, october, 30);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromAfterDate() {
+    Period period = Period();
+    Date from = date(2011, december, 30);
+    Date to = date(2011, october, 30);
+    assertEquals{
+      expected = period;
+      actual = to.periodFrom( from );
+    };
+    assertEquals{
+      expected = period;
+      actual = from.periodTo( to );
+    };
+}
+
+void assertFromTo( Period period, Date from, Date to ) {
+    assertEquals{
+      expected = period;
+      actual = to.periodFrom( from );
+    };
+    assertEquals{
+      expected = period;
+      actual = from.periodTo( to );
+    };
+
+    assertEquals(to, from.plus(period));
+    assertEquals(from, to.minus(period));
 }
 
 void assertAt(Integer year, Month month, Integer day, Integer h, Integer min, Integer sec, Integer ms ) {

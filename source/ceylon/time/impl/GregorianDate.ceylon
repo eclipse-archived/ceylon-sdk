@@ -1,6 +1,6 @@
 import ceylon.language { Integer }
-import ceylon.time { Date, DateTime, Time }
-import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod }
+import ceylon.time { Date, DateTime, Time, Period, zero }
+import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod}
 import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.math { adjustedMod }
 
@@ -66,8 +66,8 @@ shared class GregorianDate( Integer dayOfEra )
         value o = month.add(months);
         value newYear = year + o.years;
 
-        impl.checkDate([newYear, o.month.integer, day]);
-        return GregorianDate( impl.fixedFrom([newYear, o.month.integer, day]) );
+        value monthDay = monthOf(o.month.integer).numberOfDays(impl.leapYear(newYear));
+        return GregorianDate( impl.fixedFrom([newYear, o.month.integer, min([monthDay, day])]) );
     }
 
     "Subtracts number of months from this date and returns the resulting date.
@@ -148,15 +148,15 @@ shared class GregorianDate( Integer dayOfEra )
     "Adds specified date period to this date and returns the new date."
     shared actual GregorianDate plus( ReadableDatePeriod amount ) {
         return plusYears( amount.years )
-              .plusMonths( amount.months )
+              .plusMonths( amount.months ) 
               .plusDays( amount.days );
     }
 
     "Subtracts specified date period from this date and returns the new date."
     shared actual GregorianDate minus( ReadableDatePeriod amount ) {
-        return minusYears( amount.years )
+        return minusDays( amount.days )
               .minusMonths( amount.months )
-              .minusDays( amount.days );
+              .minusYears( amount.years );
     }
 
     "Returns week of year according to ISO 8601 week number calculation rules."
@@ -210,6 +210,47 @@ shared class GregorianDate( Integer dayOfEra )
     "Returns ISO 8601 formatted String representation of this date."
     shared actual String string {
         return "``year``-``leftPad(month.integer)``-``leftPad(day)``";	
+    }
+
+    "Returns the period between this and the given date.
+     If this date is before the given date then return zero period"
+    shared actual Period periodFrom(Date start) {
+        if ( this <= start ) {
+            return zero;
+        }
+
+        variable value nextDate = start.plusYears(1);
+        variable value yy = 0;
+        while ( nextDate <= this ) {
+            nextDate = nextDate.plusYears(1);
+            yy+=1;
+        }
+
+        variable value mm = 0;
+        nextDate = start.plusYears(yy).plusMonths(mm+1);
+        while ( nextDate <= this ) {
+            mm+=1;
+            nextDate = start.plusYears(yy).plusMonths(mm+1);
+        }
+
+        nextDate = start.plusYears(yy).plusMonths(mm).plusDays(1);
+        variable value dd = 0;
+        while ( nextDate <= this ) {
+            nextDate = nextDate.plusDays(1);
+            dd+=1;
+        }
+
+        return Period {
+            years = yy;
+            months = mm;
+            days = dd;
+        }; 
+    }
+
+    "Returns the period between this and the given date.
+     If this date is after the given date then return zero period"
+    shared actual Period periodTo(Date end) {
+        return end.periodFrom(this); 
     }
 }
 
