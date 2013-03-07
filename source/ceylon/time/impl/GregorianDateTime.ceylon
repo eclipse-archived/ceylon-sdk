@@ -1,5 +1,5 @@
 import ceylon.language { Integer }
-import ceylon.time { Date, Time, DateTime, Instant }
+import ceylon.time { Date, Time, DateTime, Instant, Period, zero }
 import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.math { floorDiv, floorMod }
@@ -17,7 +17,7 @@ shared class GregorianDateTime( date, time )
                                   else time <=> other.time;
     }
 
-	shared actual Integer day {
+    shared actual Integer day {
         return date.day;
     }
 
@@ -40,7 +40,7 @@ shared class GregorianDateTime( date, time )
     shared actual Boolean leapYear {
         return date.leapYear;
     }
-	
+
     shared actual Integer weekOfYear {
         return date.weekOfYear;
     }
@@ -56,7 +56,7 @@ shared class GregorianDateTime( date, time )
     shared actual Integer millis {
         return time.millis;
     }
-	
+
     shared actual Integer millisOfDay {
         return time.millisOfDay;
     }
@@ -76,7 +76,7 @@ shared class GregorianDateTime( date, time )
     shared actual Integer secondsOfDay {
         return time.secondsOfDay;
     }
-	
+
     shared actual DateTime plusYears(Integer years) {
         return GregorianDateTime { date = date.plusYears(years); time = time; };
     }
@@ -104,7 +104,7 @@ shared class GregorianDateTime( date, time )
     shared actual DateTime plusDays(Integer days) {
         return GregorianDateTime { date = date.plusDays(days); time = time; };
     }
-	
+
     shared actual DateTime minusDays(Integer days) {
         return plusDays(-days);
     }
@@ -129,7 +129,7 @@ shared class GregorianDateTime( date, time )
         value signal = minutes >= 0 then 1 else -1; 
         return fromTime{ minutes = minutes * signal; signal = signal; };
     }
-	
+
     shared actual DateTime minusMinutes(Integer minutes) {
         return plusMinutes(-minutes);
     }
@@ -187,11 +187,11 @@ shared class GregorianDateTime( date, time )
     }
 
     shared actual DateTime predecessor {
-        return minusDays(1);
+        return minusMilliseconds(1);
     }
 
     shared actual DateTime successor {
-        return plusDays(1);    }
+        return plusMilliseconds(1);    }
 
     shared actual DateTime plus( ReadablePeriod amount ) {
         return plusYears( amount.years )
@@ -204,13 +204,14 @@ shared class GregorianDateTime( date, time )
     }
 
     shared actual DateTime minus( ReadablePeriod amount ) {
-        return minusYears( amount.years )
-              .minusMonths( amount.months )
-              .minusDays( amount.days )
-              .minusHours( amount.hours )
-              .minusMinutes( amount.minutes )
+        return minusMilliseconds(amount.milliseconds) 
               .minusSeconds( amount.seconds )
-              .minusMilliseconds(amount.milliseconds);
+              .minusMinutes( amount.minutes )
+              .minusHours( amount.hours )
+              .minusDays( amount.days )
+              .minusMonths( amount.months )
+              .minusYears( amount.years );
+              
     }
 
     shared actual Instant instant( TimeZone? timeZone ) {
@@ -237,8 +238,39 @@ shared class GregorianDateTime( date, time )
         return "``date.string`` ``time.string``";
     }
 
+    shared actual Period periodFrom(DateTime start) {
+        if ( this <= start ) {
+            return zero;
+        }
+
+        value dayConsumed = this.time < start.time then 1 else 0; 
+        
+        variable value total = this.millisOfDay >= start.millisOfDay
+                               then this.millisOfDay - start.millisOfDay
+                               else ms.perDay + this.millisOfDay - start.millisOfDay;
+
+        value hh = total / ms.perHour;
+        total =  total % ms.perHour;
+
+        value mm = total / ms.perMinute;
+        total =  total % ms.perMinute;
+
+        value ss = total / ms.perSecond;
+
+        return Period {
+            hours = hh;
+            minutes = mm;
+            seconds = ss;
+            milliseconds = total % ms.perSecond;
+        }.plus( this.date.minusDays(dayConsumed).periodFrom(start.date) );
+    }
+
+    shared actual Period periodTo(DateTime end) {
+        return end.periodFrom(this); 
+    }
+
     GregorianDateTime fromTime( Integer hours = 0, Integer minutes = 0, Integer seconds = 0, Integer millis = 0, Integer signal = 1 ) {
-	
+
         value inputMillis = hours * ms.perHour 
                           + minutes * ms.perMinute 
                           + seconds * ms.perSecond

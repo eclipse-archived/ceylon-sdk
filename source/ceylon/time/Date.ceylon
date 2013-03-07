@@ -17,6 +17,14 @@ shared interface Date
     "Subtracts a specified period to this date."
     shared formal Date minus( ReadableDatePeriod period );
 
+    "Returns the period between this and the given date.
+     If this date is before the given date then return zero period"
+    shared formal Period periodFrom( Date start );
+
+    "Returns the period between this and the given date.
+     If this date is after the given date then return zero period"
+    shared formal Period periodTo( Date end );
+
     "Returns new DateTime value based on this date and a specified time"
     shared formal DateTime at( Time time );
 

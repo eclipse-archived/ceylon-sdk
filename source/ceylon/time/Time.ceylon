@@ -15,19 +15,27 @@ shared interface Time
                 & Comparable<Time>
                 & Ordinal<Time> {
 
-    doc "Adds a period of time to this time of day value.
-         
-         Result of this operation is another time of day,
-         wrapping around 12 a.m. (midnight) if necessary.
-         "
+    "Adds a period of time to this time of day value.
+     
+     Result of this operation is another time of day,
+     wrapping around 12 a.m. (midnight) if necessary.
+     "
     shared formal Time plus(ReadableTimePeriod period);
 
-    doc "Subtracts a period of time to this time of day value.
-         
-         Result of this operation is another time of day,
-         wrapping around 12 a.m. (midnight) if necessary.
-         "
+    "Subtracts a period of time to this time of day value.
+     
+     Result of this operation is another time of day,
+     wrapping around 12 a.m. (midnight) if necessary.
+     "
     shared formal Time minus(ReadableTimePeriod period);
+
+    "Returns the period between this and the given time.
+     If this time is before the given time then return zero period"
+    shared formal Period periodFrom( Time start );
+
+    "Returns the period between this and the given time.
+     If this time is after the given time then return zero period"
+    shared formal Period periodTo( Time end );
 }
 
 "Creates new instance of [[Time]]."
