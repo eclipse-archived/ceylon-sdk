@@ -70,8 +70,6 @@ void testUTF16Decoder(){
 void testUTF8EncoderDecoder() {
     String original = "abc čšžćđČŠŽĆĐ"; //test latin-2 letters
     value encoded = utf8.encode(original);
-    value decoder = utf8.newDecoder();
-    decoder.decode(encoded);
-    String decoded = decoder.done();
+    String decoded = utf8.decode(encoded);
     assertEquals(original, decoded);
 }
