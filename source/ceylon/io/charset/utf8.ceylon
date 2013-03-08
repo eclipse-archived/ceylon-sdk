@@ -60,7 +60,7 @@ class UTF8Encoder(charset) satisfies Encoder {
                 }else if(codePoint < #800){
                     // two bytes
                     value b1 = codePoint.and($11111000000).rightLogicalShift(6).or($11000000);
-                    value b2 = codePoint.and($11111).or($10000000);
+                    value b2 = codePoint.and($111111).or($10000000);
                     output.put(b1);
                     // save it for later
                     bytes.clear();
