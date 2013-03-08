@@ -1,5 +1,5 @@
 import ceylon.collection { MutableList, LinkedList }
-import ceylon.net.uri { URI }
+import ceylon.net.uri { Uri }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
 
@@ -10,7 +10,7 @@ shared class Request(uri, method = "GET"){
     String crLf = "\r\n";
 
     doc "This request URI, must be absolute."
-    shared URI uri;
+    shared Uri uri;
     
     doc "The list of request headers."
     shared MutableList<Header> headers = LinkedList<Header>();

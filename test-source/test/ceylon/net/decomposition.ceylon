@@ -13,7 +13,7 @@ void testURL(String url,
             String? query = null,
             Query? decomposedQuery = null,
             String? fragment = null){
-    URI u = parseURI(url);
+    Uri u = parse(url);
     assertEquals(scheme, u.scheme, "Scheme "+url);
     assertEquals(user, u.authority.user, "User "+url);
     assertEquals(pass, u.authority.password, "Password "+url);
@@ -141,7 +141,7 @@ void testDecomposition(){
 }
 
 void testComposition(){
-    URI u = URI("http", 
+    Uri u = Uri("http", 
                 Authority("stef", null, "192.168.1.1", 9000),
                 Path(true, PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
                 Query(Parameter("q"), Parameter("r","s")),
@@ -159,7 +159,7 @@ void testComposition(){
 
 void testInvalidPort(){
     try {
-        parseURI("http://foo:bar");
+        parse("http://foo:bar");
      } catch (Exception e) {
         assertEquals("Invalid port number: bar", e.message);
      }
@@ -167,7 +167,7 @@ void testInvalidPort(){
 
 void testInvalidPort2(){
     try {
-        parseURI("http://foo:-23");
+        parse("http://foo:-23");
      } catch (Exception e) {
         assertEquals("Invalid port number: -23", e.message);
      }

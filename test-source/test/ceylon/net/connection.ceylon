@@ -1,6 +1,6 @@
-import ceylon.json { ... }
+import ceylon.json { parseJson = parse, ... }
 import ceylon.net.http { ... }
-import ceylon.net.uri { parseURI }
+import ceylon.net.uri { parse }
 import ceylon.test { ... }
 
 void testJSON(Object json){
@@ -16,17 +16,17 @@ void testJSON(Object json){
 
 doc "Disabled until we support HTTPS"
 void testGETAndParseJSON(){
-    value request = parseURI("https://api.github.com/repos/ceylon/ceylon-compiler").get();
+    value request = parse("https://api.github.com/repos/ceylon/ceylon-compiler").get();
     value response = request.execute();
     print(response);
     assertFalse(response.contents empty, "Has contents");
 
-    Object json = parse(response.contents);
+    Object json = parseJson(response.contents);
     testJSON(json);    
 }
 
 String get(String uri){
-    return parseURI(uri).get().execute().contents;
+    return parse(uri).get().execute().contents;
 }
 
 void testGet(){

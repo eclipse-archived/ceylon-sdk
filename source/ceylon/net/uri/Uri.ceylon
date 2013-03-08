@@ -3,7 +3,7 @@ import ceylon.net.http { Request }
 
 doc "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
 by "Stéphane Épardaud"
-shared class URI(scheme = null, authority = Authority(), path = Path(), query = Query(), fragment = null){
+shared class Uri(scheme = null, authority = Authority(), path = Path(), query = Query(), fragment = null){
     
     doc "The optional URI scheme: `http`, `https`, `mailto`…"
     shared variable String? scheme;
@@ -69,7 +69,7 @@ shared class URI(scheme = null, authority = Authority(), path = Path(), query = 
     
     doc "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
-        if(is URI that){
+        if(is Uri that){
             if(this === that){
                 return true;
             }

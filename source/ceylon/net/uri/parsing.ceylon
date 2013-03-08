@@ -10,8 +10,8 @@ shared Parameter parseParameter(String part){
 }
 
 doc "Parses a URI"
-throws(InvalidURIException, "If the URI is invalid")
-shared URI parseURI(String uri){
+throws(InvalidUriException, "If the URI is invalid")
+shared Uri parse(String uri){
     variable String? scheme = null;
     Authority authority = Authority(null, null, null, null);
     Path path = Path();
@@ -56,7 +56,7 @@ shared URI parseURI(String uri){
                     portString = null;
                 }
             }else{
-                throw InvalidURIException("Invalid IP literal: " + hostAndPort);
+                throw InvalidUriException("Invalid IP literal: " + hostAndPort);
             }
         }else{
             authority.ipLiteral = false;
@@ -73,10 +73,10 @@ shared URI parseURI(String uri){
             authority.port = parseInteger(portString);
             if(exists Integer port = authority.port){
                 if(port < 0){
-                    throw InvalidURIException("Invalid port number: "+portString);
+                    throw InvalidUriException("Invalid port number: "+portString);
                 }
             }else{
-                throw InvalidURIException("Invalid port number: "+portString);
+                throw InvalidUriException("Invalid port number: "+portString);
             }
         }else{
             authority.port = null;
@@ -184,5 +184,5 @@ shared URI parseURI(String uri){
     }
 
     parseURI(uri);
-    return URI(scheme, authority, path, query, fragment);
+    return Uri(scheme, authority, path, query, fragment);
 }

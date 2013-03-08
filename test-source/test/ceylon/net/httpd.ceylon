@@ -7,7 +7,7 @@ import ceylon.net.httpd { createServer, StatusListener, Status,
                           Endpoint, Response, Request, 
                           startsWith, endsWith }
 import ceylon.net.httpd.endpoints { serveStaticFile }
-import ceylon.net.uri { parseURI }
+import ceylon.net.uri { parse }
 import ceylon.test { assertEquals }
 import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
@@ -75,7 +75,7 @@ void execuTestEcho() {
     
     String name = "Ceylon";
     
-    value request = ClientRequest(parseURI("http://localhost:8080/echo?name=" + name));
+    value request = ClientRequest(parse("http://localhost:8080/echo?name=" + name));
     value response = request.execute();
     
     value contentTypeHeader = response.getSingleHeader("content-type");
@@ -92,7 +92,7 @@ void execuTestEcho() {
 void executeTestStaticFile(Integer executeRequests) {
     variable Integer request = 0;
     while(request < executeRequests) {
-        value fileRequest = ClientRequest(parseURI("http://localhost:8080/file/``fileName``"));
+        value fileRequest = ClientRequest(parse("http://localhost:8080/file/``fileName``"));
         value fileResponse = fileRequest.execute();
         value fileCnt = fileResponse.contents;
         fileResponse.close();
