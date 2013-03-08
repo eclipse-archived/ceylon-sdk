@@ -44,24 +44,25 @@ shared class HashSet<Element>()
         return true;
     }
             
-    doc "Adds an element to this set, if not already present"
-    shared actual void add(Element element){
+    shared actual Boolean add(Element element){
         if(addToStore(store, element)){
             _size++;
             checkRehash();
+            return true;
         }
+        return false;
     }
     
-    doc "Adds every element from the given collection to this set, unless already present"
-    shared actual void addAll(Element* elements){
+    shared actual Boolean addAll(Element* elements){
+        variable Boolean ret = false;
         for(Element elem in elements){
-            add(elem);
+            ret ||= add(elem);
         }
         checkRehash();
+        return ret;
     }
 
-    doc "Removes an element from this set, if present"
-    shared actual void remove(Element element){
+    shared actual Boolean remove(Element element){
         Integer index = storeIndex(element, store);
         variable Cell<Element>? bucket = store[index];
         variable Cell<Element>? prev = null;
@@ -74,11 +75,12 @@ shared class HashSet<Element>()
                     store.setItem(index, cell.cdr);
                 }
                 _size--;
-                return;
+                return true;
             }
             prev = cell;
             bucket = cell.cdr;
         }
+        return false;
     }
     
     doc "Removes every element"

@@ -20,7 +20,7 @@ shared class HashMap<Key, Item>()
             while(index < store.size){
                 variable Cell<Key->Item>? bucket = store[index];
                 while(exists Cell<Key->Item> cell = bucket){
-                    addToStore(newStore, cell.car.key, cell.car.item);
+                    addToStore(newStore, cell.car.key, cell.car.item, false);
                     bucket = cell.cdr;
                 }
                 index++;
@@ -29,28 +29,29 @@ shared class HashMap<Key, Item>()
         }
     }
     
-    Boolean addToStore(Array<Cell<Key->Item>?> store, Key key, Item item){
+    Item? addToStore(Array<Cell<Key->Item>?> store, Key key, Item item, Boolean handleGrowingAndRehash){
         Integer index = storeIndex(key, store);
         variable Cell<Key->Item>? bucket = store[index];
         while(exists Cell<Key->Item> cell = bucket){
             if(cell.car.key == key){
+                Item oldValue = cell.car.item;
                 // modify an existing entry
                 cell.car = key->item;
-                return false;
+                return oldValue;
             }
             bucket = cell.cdr;
         }
         // add a new entry
         store.setItem(index, Cell<Key->Item>(key->item, store[index]));
-        return true;
-    }
-    
-    doc "Adds a key/value mapping to this map, may be used to modify an existing mapping"
-    shared actual void put(Key key, Item item){
-        if(addToStore(store, key, item)){
+        if(handleGrowingAndRehash){
             _size++;
             checkRehash();
         }
+        return null;
+    }
+    
+    shared actual Item? put(Key key, Item item){
+        return addToStore(store, key, item, true);
     }
     
     doc "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
@@ -61,7 +62,7 @@ shared class HashMap<Key, Item>()
     }
     
     doc "Removes a key/value mapping if it exists"
-    shared actual void remove(Key key){
+    shared actual Item? remove(Key key){
         Integer index = storeIndex(key, store);
         variable Cell<Key->Item>? bucket = store[index];
         variable Cell<Key->Item>? prev = null;
@@ -74,11 +75,12 @@ shared class HashMap<Key, Item>()
                     store.setItem(index, cell.cdr);
                 }
                 _size--;
-                return;
+                return cell.car.item;
             }
             prev = cell;
             bucket = cell.cdr;
         }
+        return null;
     }
     
     doc "Removes every key/value mapping"

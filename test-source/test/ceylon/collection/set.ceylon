@@ -6,12 +6,12 @@ void testSet(){
     assertEquals("()", set.string);
     assertEquals(0, set.size);
 
-    set.add("fu");
+    assertEquals(true, set.add("fu"));
     assertEquals("(fu)", set.string);
     assertTrue(set.contains("fu"));
     assertEquals(1, set.size);
 
-    set.add("fu");
+    assertEquals(false, set.add("fu"));
     assertEquals("(fu)", set.string);
     assertTrue(set.contains("fu"));
     assertEquals(1, set.size);
@@ -35,15 +35,17 @@ void testSetRemove(){
     set.add("b");
     assertEquals(2, set.size);
     
-    set.remove("a");
+    assertEquals(true, set.remove("a"));
     assertEquals(1, set.size);
     assertFalse(set.contains("a"));
     assertTrue(set.contains("b"));
 
-    set.remove("b");
+    assertEquals(true, set.remove("b"));
     assertEquals(0, set.size);
     assertFalse(set.contains("a"));
     assertFalse(set.contains("b"));
+
+    assertEquals(false, set.remove("b"));
 }
 
 void testSet2(){

@@ -42,16 +42,16 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         return contents.iterator();
     }
     
-    shared actual void put(String key, String|Boolean|Integer|Float|Object|Array|NullInstance item) {
-        contents.put(key, item);
+    shared actual Null|String|Boolean|Integer|Float|Object|Array|NullInstance put(String key, String|Boolean|Integer|Float|Object|Array|NullInstance item) {
+        return contents.put(key, item);
     }
     
     shared actual void putAll(Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>* entries) {
         contents.putAll(*entries);
     }
     
-    shared actual void remove(String key) {
-        contents.remove(key);
+    shared actual Null|String|Boolean|Integer|Float|Object|Array|NullInstance remove(String key) {
+        return contents.remove(key);
     }
     
     shared actual Integer size {

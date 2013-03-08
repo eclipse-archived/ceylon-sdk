@@ -7,12 +7,12 @@ void testMap(){
     assertEquals(0, map.size);
     assertTrue(!map.defines("fu"), "a");
 
-    map.put("fu", "bar");
+    assertEquals(null, map.put("fu", "bar"));
     assertEquals("{fu->bar}", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "b");
 
-    map.put("fu", "gee");
+    assertEquals("bar", map.put("fu", "gee"));
     assertEquals("{fu->gee}", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "c");
@@ -39,15 +39,17 @@ void testMapRemove(){
     map.put("c", "d");
     assertEquals(2, map.size);
     
-    map.remove("a");
+    assertEquals("b", map.remove("a"));
     assertEquals(1, map.size);
     assertEquals("d", map["c"]);
     assertEquals(null, map["a"]);
 
-    map.remove("c");
+    assertEquals("d", map.remove("c"));
     assertEquals(0, map.size);
     assertEquals(null, map["c"]);
     assertEquals(null, map["a"]);
+
+    assertEquals(null, map.remove("c"));
 }
 
 void testMap2(){
