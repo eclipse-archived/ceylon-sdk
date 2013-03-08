@@ -17,6 +17,9 @@ shared interface MutableList<Element> satisfies List<Element> {
     doc "Removes the item at the specified index"
     shared formal void remove(Integer index);
 
+    doc "Removes all occurences of the given element"
+    shared formal void removeElement(Element val);
+
     doc "Remove every item"
     shared formal void clear();
 }

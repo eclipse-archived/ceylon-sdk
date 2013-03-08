@@ -126,6 +126,10 @@ void testList(){
     assertEquals("[foo, bar, empty, empty, empty, empty, last, last, end]", l.string);
     assertEquals(9, l.size);
 
+    l.removeElement("empty");
+    assertEquals("[foo, bar, last, last, end]", l.string);
+    assertEquals(5, l.size);
+
     l.clear();
     assertEquals("[]", l.string);
     assertEquals(0, l.size);

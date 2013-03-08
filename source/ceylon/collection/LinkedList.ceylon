@@ -138,6 +138,31 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
 
+    shared actual void removeElement(Element val) {
+        variable Cell<Element>? iter = head;
+        variable Cell<Element>? prev = null;
+        while(exists Cell<Element> cell = iter){
+            if(eq(cell.car, val)){
+                if(exists Cell<Element> prev2 = prev){
+                    prev2.cdr = cell.cdr;
+                }else{
+                    // changing the head
+                    head = cell.cdr;
+                }
+                // see if we need to update the tail
+                if(!cell.cdr exists){
+                    tail = prev;
+                }
+                _size--;
+                // keep the same prev but move on
+                iter = cell.cdr;
+            }else{
+                prev = iter;
+                iter = cell.cdr;
+            }
+        }
+    }
+
     doc "Remove every item"
     shared actual void clear(){
         _size = 0;

@@ -86,6 +86,10 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     shared actual void remove(Integer index) {
         list.remove(index);
     }
+
+    shared actual void removeElement(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
+        list.removeElement(val);
+    }
     
     shared actual void setItem(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
         list.setItem(index, val);
