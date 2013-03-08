@@ -3,7 +3,7 @@ class Parser(String str){
     variable Integer index = 0;
 
     shared Object parseObject(){
-        Object obj = Object();
+        Object obj = Object{};
         
         eatSpacesUntil('{');
         eatSpaces();
@@ -27,7 +27,7 @@ class Parser(String str){
     }
 
     Array parseArray(){
-        Array arr = Array();
+        Array arr = Array{};
         
         eatSpacesUntil('[');
         eatSpaces();

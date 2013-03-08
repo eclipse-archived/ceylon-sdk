@@ -3,7 +3,7 @@ import ceylon.collection { ... }
 
 by "Stéphane Épardaud"
 doc "Represents a JSON Array"
-shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* values) 
+shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} values) 
     satisfies MutableList<String|Boolean|Integer|Float|Object|Array|NullInstance> {
     
     value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
@@ -44,7 +44,7 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
     }
 
     shared actual Array clone {
-        return Array(*list.sequence);
+        return Array(list);
     }
 
     shared actual Integer? lastIndex {
@@ -52,27 +52,27 @@ shared class Array(String|Boolean|Integer|Float|Object|Array|NullInstance* value
     }
     
     shared actual Array reversed {
-        return Array(*list.reversed.sequence);
+        return Array(list.reversed);
     }
     
     shared actual Array rest {
-        return Array(*list.rest.sequence);
+        return Array(list.rest);
     }
     
     shared actual Array segment(Integer from, Integer length) {
-        return Array(*list.segment(from, length));
+        return Array(list.segment(from, length));
     }
     
     shared actual Array span(Integer from, Integer to) {
-        return Array(*list.span(from, to));
+        return Array(list.span(from, to));
     }
     
     shared actual Array spanFrom(Integer from) {
-        return Array(*list.spanFrom(from));
+        return Array(list.spanFrom(from));
     }
     
     shared actual Array spanTo(Integer to) {
-        return Array(*list.spanTo(to));
+        return Array(list.spanTo(to));
     }
     
     shared actual void addAll(<String|Boolean|Integer|Float|Object|Array|NullInstance>* values) {
