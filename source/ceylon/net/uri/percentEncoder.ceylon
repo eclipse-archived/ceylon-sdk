@@ -281,7 +281,7 @@ shared object percentEncoder {
                 ByteArray bytes = JString(c.string).getBytes(encoding);
                 variable Integer idx = 0;
                 while (idx < bytes.size) {
-                    encoded.append(format("%%%1$02X", bytes.get(idx++)));
+                    encoded.append(format("%%%1$02X", JByte(bytes.get(idx++))));
                 }
             }
         }
