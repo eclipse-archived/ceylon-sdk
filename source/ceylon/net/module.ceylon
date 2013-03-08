@@ -20,10 +20,10 @@ module ceylon.net '0.5' {
     import java.base '7';
     
     // -- java modules --
-    import io.undertow.core '1.0.0.Alpha1-9fdfd5f766';
+    import io.undertow.core '1.0.0.Alpha1';
 
-    import 'org.jboss.xnio.api' '3.1.0.Beta8';
-    import 'org.jboss.xnio.nio' '3.1.0.Beta8';
+    import 'org.jboss.xnio.api' '3.1.0.Beta9';
+    import 'org.jboss.xnio.nio' '3.1.0.Beta9';
     
     //TODO remove transitive dependency
     import org.jboss.logging '3.1.2.GA';

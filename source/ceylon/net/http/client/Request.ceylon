@@ -2,6 +2,7 @@ import ceylon.collection { MutableList, LinkedList }
 import ceylon.net.uri { Uri }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
+import ceylon.net.http { Header }
 
 doc "Represents an HTTP Request"
 by "Stéphane Épardaud"

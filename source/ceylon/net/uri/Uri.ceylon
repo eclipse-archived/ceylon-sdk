@@ -1,5 +1,5 @@
 import ceylon.net.iop { eq }
-import ceylon.net.http { Request }
+import ceylon.net.http.client { Request }
 
 doc "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
 by "Stéphane Épardaud"

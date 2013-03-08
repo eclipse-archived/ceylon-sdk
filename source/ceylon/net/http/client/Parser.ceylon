@@ -3,6 +3,7 @@ import ceylon.io.buffer { newByteBuffer, ByteBuffer }
 import ceylon.io.readers { ByteReader, FileDescriptorReader }
 import ceylon.io.charset { ascii }
 import ceylon.collection { LinkedList, HashMap, MutableMap }
+import ceylon.net.http { Header }
 
 doc "Parses an HTTP message from the given [[FileDescriptor]]."
 by "Stéphane Épardaud"
