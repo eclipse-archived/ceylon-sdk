@@ -23,23 +23,20 @@ import org.xnio {
     ChannelListener
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
-import io.undertow.server { HttpOpenListener, HttpTransferEncoding, HttpHandler }
-import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler, URLDecodingHandler }
+import io.undertow.server { HttpOpenListener, HttpHandler }
+import io.undertow.server.handlers { CookieHandler, URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
-import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
+import io.undertow.server.handlers.form { FormEncodedDataHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
-import ceylon.io.charset { Charset, utf8 }
 
 by "Matej Lazar"
 shared class DefaultServer() satisfies Server {
     
-    shared actual variable Charset defaultCharset = utf8;
-
     variable XnioWorker? worker = null;
     
-    CeylonRequestHandler ceylonHandler = CeylonRequestHandler(defaultCharset);
+    variable CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
     
     JavaHelper jh = JavaHelper();
     
@@ -54,6 +51,8 @@ shared class DefaultServer() satisfies Server {
         //TODO log
         print("Starting on ``host``:``port``");
         
+        ceylonHandler.options = options;
+        
         value sessionconfig = SessionCookieConfig();
         
         SessionAttachmentHandler session = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
@@ -65,17 +64,17 @@ shared class DefaultServer() satisfies Server {
         
         MultiPartHandler multiPartHandler = MultiPartHandler();
         multiPartHandler.setNext(cookieHandler);
-        multiPartHandler.setDefaultEncoding(defaultCharset.name);
+        multiPartHandler.setDefaultEncoding(options.defaultCharset.name);
         
         FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
         formEncodedDataHandler.setNext(multiPartHandler);
-        formEncodedDataHandler.setDefaultEncoding(defaultCharset.name);
+        formEncodedDataHandler.setDefaultEncoding(options.defaultCharset.name);
         
         HttpHandler errPageHandler = SimpleErrorPageHandler(formEncodedDataHandler);
 
         URLDecodingHandler urlDecodingHandler = URLDecodingHandler();
         urlDecodingHandler.setNext(errPageHandler);
-        urlDecodingHandler.setCharset(defaultCharset.name);
+        urlDecodingHandler.setCharset(options.defaultCharset.name);
         
         HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
         openListener.rootHandler = urlDecodingHandler;
