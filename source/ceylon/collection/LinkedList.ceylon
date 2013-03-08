@@ -1,9 +1,30 @@
 by "Stéphane Épardaud"
 doc "A mutable Linked List"
-shared class LinkedList<Element>() satisfies MutableList<Element> {
+shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<Element> {
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
     variable Integer _size = 0; 
+
+    // initialiser section
+
+    void _add(Element val){
+        Cell<Element> newTail = Cell<Element>(val, null);
+        if(exists Cell<Element> tail = tail){
+            tail.cdr = newTail;
+            this.tail = newTail;
+        }else{
+            // no tail means empty list
+            tail = head = newTail;
+        }
+        _size++;
+    }
+    
+    // add initial values
+    for(val in values){
+        _add(val);
+    }
+    
+    // End of initialiser section
 
     // Write
     
@@ -78,15 +99,7 @@ shared class LinkedList<Element>() satisfies MutableList<Element> {
     
     doc "Adds an item at the end of this list"
     shared actual void add(Element val){
-        Cell<Element> newTail = Cell<Element>(val, null);
-        if(exists Cell<Element> tail = tail){
-            tail.cdr = newTail;
-            this.tail = newTail;
-        }else{
-            // no tail means empty list
-            tail = head = newTail;
-        }
-        _size++;
+        _add(val);
     }
     
     shared actual void addAll(Element* values) {

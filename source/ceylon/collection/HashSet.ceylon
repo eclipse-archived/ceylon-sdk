@@ -1,6 +1,6 @@
 doc "Set that uses a Hashing implementation."
 by "Stéphane Épardaud"
-shared class HashSet<Element>()
+shared class HashSet<Element>({Element*} values = {})
     satisfies MutableSet<Element>
         given Element satisfies Object {
     
@@ -9,6 +9,27 @@ shared class HashSet<Element>()
     Float loadFactor = 0.75;
 
     // Write
+
+    Integer storeIndex(Object elem, Array<Cell<Element>?> store){
+        Integer i = elem.hash % store.size;
+        return i.negative then i.negativeValue else i;
+    }
+
+    Boolean addToStore(Array<Cell<Element>?> store, Element element){
+        Integer index = storeIndex(element, store);
+        variable Cell<Element>? bucket = store[index];
+        while(exists Cell<Element> cell = bucket){
+            if(cell.car == element){
+                // modify an existing entry
+                cell.car = element;
+                return false;
+            }
+            bucket = cell.cdr;
+        }
+        // add a new entry
+        store.setItem(index, Cell<Element>(element, store[index]));
+        return true;
+    }
 
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
@@ -28,22 +49,16 @@ shared class HashSet<Element>()
         }
     }
     
-    Boolean addToStore(Array<Cell<Element>?> store, Element element){
-        Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket = store[index];
-        while(exists Cell<Element> cell = bucket){
-            if(cell.car == element){
-                // modify an existing entry
-                cell.car = element;
-                return false;
-            }
-            bucket = cell.cdr;
-        }
-        // add a new entry
-        store.setItem(index, Cell<Element>(element, store[index]));
-        return true;
+    // Add initial values
+    for(val in values){
+        if(addToStore(store, val)){
+            _size++;
+        }        
     }
-            
+    checkRehash();
+    
+    // End of initialiser section
+    
     shared actual Boolean add(Element element){
         if(addToStore(store, element)){
             _size++;
@@ -91,11 +106,6 @@ shared class HashSet<Element>()
             store.setItem(index++, null);
         }
         _size = 0;
-    }
-
-    Integer storeIndex(Object elem, Array<Cell<Element>?> store){
-        Integer i = elem.hash % store.size;
-        return i.negative then i.negativeValue else i;
     }
 
     // Read

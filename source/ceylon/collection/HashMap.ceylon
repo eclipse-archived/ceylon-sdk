@@ -1,6 +1,6 @@
 doc "Map implementation that uses hashing"
 by "Stéphane Épardaud"
-shared class HashMap<Key, Item>()
+shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     satisfies MutableMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
@@ -11,6 +11,27 @@ shared class HashMap<Key, Item>()
 
     // Write
 
+    Integer storeIndex(Object key, Array<Cell<Key->Item>?> store){
+        Integer i = key.hash % store.size;
+        return i.negative then i.negativeValue else i;
+    }
+    
+    Boolean addToStore(Array<Cell<Key->Item>?> store, Key key, Item item){
+        Integer index = storeIndex(key, store);
+        variable Cell<Key->Item>? bucket = store[index];
+        while(exists Cell<Key->Item> cell = bucket){
+            if(cell.car.key == key){
+                // modify an existing entry
+                cell.car = key->item;
+                return false;
+            }
+            bucket = cell.cdr;
+        }
+        // add a new entry
+        store.setItem(index, Cell<Key->Item>(key->item, store[index]));
+        return true;
+    }
+
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
@@ -20,7 +41,7 @@ shared class HashMap<Key, Item>()
             while(index < store.size){
                 variable Cell<Key->Item>? bucket = store[index];
                 while(exists Cell<Key->Item> cell = bucket){
-                    addToStore(newStore, cell.car.key, cell.car.item, false);
+                    addToStore(newStore, cell.car.key, cell.car.item);
                     bucket = cell.cdr;
                 }
                 index++;
@@ -28,8 +49,18 @@ shared class HashMap<Key, Item>()
             store = newStore;
         }
     }
+
+    // Add initial values
+    for(key->item in initialValues){   
+        if(addToStore(store, key, item)){
+            _size++;
+        }
+    }
+    checkRehash();
     
-    Item? addToStore(Array<Cell<Key->Item>?> store, Key key, Item item, Boolean handleGrowingAndRehash){
+    // End of initialiser section
+
+    shared actual Item? put(Key key, Item item){
         Integer index = storeIndex(key, store);
         variable Cell<Key->Item>? bucket = store[index];
         while(exists Cell<Key->Item> cell = bucket){
@@ -43,23 +74,21 @@ shared class HashMap<Key, Item>()
         }
         // add a new entry
         store.setItem(index, Cell<Key->Item>(key->item, store[index]));
-        if(handleGrowingAndRehash){
-            _size++;
-            checkRehash();
-        }
+        _size++;
+        checkRehash();
         return null;
-    }
-    
-    shared actual Item? put(Key key, Item item){
-        return addToStore(store, key, item, true);
     }
     
     doc "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
     shared actual void putAll(<Key->Item>* entries){
         for(entry in entries){
-            put(entry.key, entry.item);
+            if(addToStore(store, entry.key, entry.item)){
+                _size++;
+            }
         }
+        checkRehash();
     }
+    
     
     doc "Removes a key/value mapping if it exists"
     shared actual Item? remove(Key key){
@@ -115,11 +144,6 @@ shared class HashMap<Key, Item>()
             bucket = cell.cdr;
         }
         return null;
-    }
-    
-    Integer storeIndex(Object key, Array<Cell<Key->Item>?> store){
-        Integer i = key.hash % store.size;
-        return i.negative then i.negativeValue else i;
     }
     
     // FIXME

@@ -52,6 +52,13 @@ void testMapRemove(){
     assertEquals(null, map.remove("c"));
 }
 
+void testMapConstructor(){
+    Map<String,String> map = HashMap{"a"->"b", "c"->"d"};
+    assertEquals(2, map.size);
+    assertEquals("b", map["a"]);
+    assertEquals("d", map["c"]);
+}
+
 void testMap2(){
     MutableMap<String,String|Integer> map = HashMap<String,String|Integer>();
     map.put("gravatar_id", "a38479e9dc888f68fb6911d4ce05d7cc");

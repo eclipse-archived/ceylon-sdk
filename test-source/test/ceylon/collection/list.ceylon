@@ -131,3 +131,10 @@ void testList(){
     assertEquals(0, l.size);
     assertTrue(!l.contains("foo"));
 }
+
+void testListConstructor(){
+    List<String> list = LinkedList{"a", "b"};
+    assertEquals(2, list.size);
+    assertEquals("a", list[0]);
+    assertEquals("b", list[1]);
+}

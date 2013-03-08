@@ -48,6 +48,13 @@ void testSetRemove(){
     assertEquals(false, set.remove("b"));
 }
 
+void testSetConstructor(){
+    Set<String> set = HashSet{"a", "b"};
+    assertEquals(2, set.size);
+    assertTrue(set.contains("a"));
+    assertTrue(set.contains("b"));
+}
+
 void testSet2(){
     MutableSet<String> set = HashSet<String>();
     set.add("gravatar_id");
