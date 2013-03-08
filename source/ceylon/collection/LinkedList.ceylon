@@ -102,7 +102,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         _add(val);
     }
     
-    shared actual void addAll(Element* values) {
+    shared actual void addAll({Element*} values) {
         for (val in values) {
             add(val);
         }

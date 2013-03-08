@@ -80,7 +80,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     }
     
     doc "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
-    shared actual void putAll(<Key->Item>* entries){
+    shared actual void putAll({<Key->Item>*} entries){
         for(entry in entries){
             if(addToStore(store, entry.key, entry.item)){
                 _size++;

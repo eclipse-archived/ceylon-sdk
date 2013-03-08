@@ -68,7 +68,7 @@ shared class HashSet<Element>({Element*} values = {})
         return false;
     }
     
-    shared actual Boolean addAll(Element* elements){
+    shared actual Boolean addAll({Element*} elements){
         variable Boolean ret = false;
         for(Element elem in elements){
             ret ||= add(elem);
@@ -319,8 +319,8 @@ shared class HashSet<Element>({Element*} values = {})
     shared actual Set<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
-        ret.addAll(*this.sequence);
-        ret.addAll(*set.sequence);
+        ret.addAll(this);
+        ret.addAll(set);
         return ret;
     }
 

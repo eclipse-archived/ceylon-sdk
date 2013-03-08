@@ -67,7 +67,7 @@ shared class Request(uri, method = "GET"){
         Header? header = getHeader(name);
         if(exists header){
             header.values.clear();
-            header.values.addAll(*values);
+            header.values.addAll(values);
         }else{
             headers.add(Header(name, *values));
         }

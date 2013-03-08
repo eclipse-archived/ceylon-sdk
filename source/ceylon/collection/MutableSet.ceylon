@@ -12,7 +12,7 @@ shared interface MutableSet<Element>
     doc "Adds the elements to this set, unless already present. 
          
          Returns true if any element was added, false if they were all already part of the Set."
-    shared formal Boolean addAll(Element* elements);
+    shared formal Boolean addAll({Element*} elements);
     
     doc "Removes an element from this set, if present.
          

@@ -75,8 +75,8 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         return Array(list.spanTo(to));
     }
     
-    shared actual void addAll(<String|Boolean|Integer|Float|Object|Array|NullInstance>* values) {
-        list.addAll(*values);
+    shared actual void addAll({<String|Boolean|Integer|Float|Object|Array|NullInstance>*} values) {
+        list.addAll(values);
     }
     
     shared actual void clear() {

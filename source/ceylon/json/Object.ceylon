@@ -46,8 +46,8 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         return contents.put(key, item);
     }
     
-    shared actual void putAll(Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>* entries) {
-        contents.putAll(*entries);
+    shared actual void putAll({Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>*} entries) {
+        contents.putAll(entries);
     }
     
     shared actual Null|String|Boolean|Integer|Float|Object|Array|NullInstance remove(String key) {
