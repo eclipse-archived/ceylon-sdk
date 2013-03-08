@@ -1,6 +1,6 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
-import ceylon.io.charset { stringToByteProducer, utf8 }
+import ceylon.io.charset { stringToByteProducer, utf8, ascii }
 import ceylon.net.http { ClientRequest=Request, contentType }
 import ceylon.net.httpd { createServer, StatusListener, Status, 
                           started, AsynchronousEndpoint, 
@@ -30,10 +30,12 @@ void testServer() {
     
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
+        response.addHeader(contentType { contentType = "text/html"; charset = ascii; });
         response.writeString("Hello ``name(request)``!");
     }
 
     value server = createServer {};
+    server.defaultCharset = ascii; //TODO use utf8 instead of ascii once encoder/decoder issue fixed
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
@@ -42,7 +44,7 @@ void testServer() {
 
     server.addEndpoint(Endpoint {
         service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
+                        response.addHeader(contentType("text/html", ascii));
                         response.writeString(request.header("Content-Type") else "");
                     };
         path = startsWith("/headerTest");
@@ -60,9 +62,9 @@ void testServer() {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {
                 try {
-                    executeEchoTest();
-                    
                     headerTest();
+                    
+                    executeEchoTest();
                     
                     concurentFileRequests(numberOfUsers);
                     
@@ -104,7 +106,8 @@ void headerTest() {
     value response = request.execute();
     
     value contentTypeHeader = response.getSingleHeader("content-type");
-    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
+    //assertEquals("text/html; charset=UTF-8", contentTypeHeader);
+    assertEquals("text/html; charset=``ascii.name``", contentTypeHeader);
     
     value echoMsg = response.contents;
     response.close();
