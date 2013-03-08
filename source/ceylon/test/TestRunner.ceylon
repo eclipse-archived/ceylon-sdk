@@ -1,24 +1,22 @@
-import ceylon.collection { LinkedList, MutableList }
-
 doc "Capable of running tests, notifying [[TestListener]]s about each test"
 shared class TestRunner() {
     
-    MutableList<TestUnit> testList = LinkedList<TestUnit>();
-    MutableList<TestListener> testListenerList = LinkedList<TestListener>();
+    value testList = SequenceBuilder<TestUnit>();
+    value testListenerList = SequenceBuilder<TestListener>();
     
     doc "The tests held by this instance"
     shared List<TestUnit> tests { 
-        return testList; 
+        return testList.sequence; 
     }
     
     doc "Adds a test to be run"
     shared void addTest(String name, Anything() callable) {
-        testList.add(TestUnit(name, callable));
+        testList.append(TestUnit(name, callable));
     }
     
     doc "Adds a test listener to be notified about the execution of tests"
     shared void addTestListener(TestListener testListener) {
-        testListenerList.add(testListener);
+        testListenerList.append(testListener);
     }
     
     doc "Runs the [[tests]]"
@@ -27,7 +25,7 @@ shared class TestRunner() {
         TestResult result = TestResult(this);
         
         fire((TestListener l) => l.testRunStarted(runner));
-        for(test in testList) {
+        for(test in testList.sequence) {
             runTest(test);
         }
         fire((TestListener l) => l.testRunFinished(runner, result));
@@ -56,7 +54,7 @@ shared class TestRunner() {
     }
     
     void fire(void fireCallable(TestListener testListener)) {
-        for(testListener in testListenerList) { 
+        for(testListener in testListenerList.sequence) { 
             fireCallable(testListener);
         }
     }
