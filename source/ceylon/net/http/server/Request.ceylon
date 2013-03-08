@@ -45,9 +45,8 @@ shared interface Request {
     doc "Get the destination address of the HTTP request."
     shared formal SocketAddress destinationAddress;
     
-    doc "Returns request mime type, read from content-type 
-         header."
-    shared formal String? mimeType;
+    doc "Returns request content type, read from header."
+    shared formal String? contentType;
     
     doc "Returns users http session. If session doesn't exists, 
          a new is created."

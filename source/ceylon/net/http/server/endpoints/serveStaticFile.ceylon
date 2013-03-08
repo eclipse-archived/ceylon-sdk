@@ -1,7 +1,7 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { newOpenFile }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
-import ceylon.net.httpd { Response, Request }
+import ceylon.net.http.server { Response, Request }
 import ceylon.net.http { contentType, contentLength }
 
 
@@ -10,7 +10,7 @@ doc "Endpoint for serving static files.
      
      Do not use path mappings with `and` as used [[Request.relativePath]] is not working with it."
 shared void serveStaticFile(externalPath)
-        (Request request, Response response, Callable<Anything, []> completionHandler) {
+        (Request request, Response response, Callable<Anything, []> complete) {
     
     doc "Root directory containing files."
     String externalPath;
@@ -47,6 +47,6 @@ shared void serveStaticFile(externalPath)
         //print("file does not exist");
     }
     
-    completionHandler();
+    complete();
     
 }

@@ -1,6 +1,6 @@
 import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
-import ceylon.net.httpd { Request, Session, Endpoint, 
+import ceylon.net.http.server { Request, Session, Endpoint, 
                           InternalException, AsynchronousEndpoint }
 
 import io.undertow.server { HttpServerExchange }
@@ -12,15 +12,14 @@ import io.undertow.server.handlers.form {
 import io.undertow.server.session { 
         SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
         UtSession=Session, SessionCookieConfig }
-import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE }, HttpString }
+import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE }, 
+                         HttpString }
 
 import java.lang { JString=String }
 import java.util { Deque, JMap=Map }
 
-import org.xnio { IoFuture }
-
 by "Matej Lazar"
-shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
+shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
     
     shared variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
     
@@ -28,11 +27,15 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
     variable FormData? formData = null;
     
     shared actual String? header(String name) {
+        return getHeader(name);
+    }
+    
+    String? getHeader(String name) {
         return exchange.requestHeaders.getFirst(HttpString(name));
     }
     
     shared actual String[] headers(String name) {
-        Deque<JString> headers = exchange.requestHeaders.get(HttpString(name));
+        value headers = exchange.requestHeaders.get(HttpString(name));
         SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
         
         value it = headers.iterator();
@@ -110,25 +113,22 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         return SocketAddress(address.hostString, address.port);
     }
     
-    shared actual String? mimeType => header(headerConntentType.string);
+    shared actual String? contentType => getHeader(headerConntentType.string);
     
     shared actual Session session {
-    	variable UtSession? utSession = null;
         SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
         
         //TODO configurable session cookie
         SessionCookieConfig sessionCookieConfig = SessionCookieConfig();
         
-        IoFuture<UtSession> sessionFuture = sessionManager.getSession(exchange, sessionCookieConfig);
-        utSession = sessionFuture.get();
+        variable UtSession|Null utSession = sessionManager.getSession(exchange, sessionCookieConfig);
         
         if (!utSession exists) {
-            IoFuture<UtSession> sessionFutureNew = sessionManager.createSession(exchange, sessionCookieConfig);
-            utSession = sessionFutureNew.get();
+            utSession = sessionManager.createSession(exchange, sessionCookieConfig);
         }
         
-        if (exists u = utSession) {
-            return DefaultHttpSession(u);
+        if (exists s = utSession) {
+            return DefaultSession(s);
         } else {
             throw InternalException("Cannot get or create session.");
         }
@@ -156,10 +156,8 @@ shared class HttpRequestImpl(HttpServerExchange exchange) satisfies Request {
         if (exists f = formData) {
             return f;
         } else { 
-            String? mimeType = this.mimeType;
-            if (exists mimeType) {
-                //TODO use equals instead of startsWith (workaround for parsing bug)
-                if (mimeType.equals(applicationXWwwFormUrlEncoded) || mimeType.startsWith(multiparFormData)) {
+            if (exists contentType = getHeader(headerConntentType.string)) {
+                if (contentType.equals(applicationXWwwFormUrlEncoded) || contentType.startsWith(multiparFormData)) {
                     FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
                     //if EagerFormParsingHandler is in handlers chain, parsing is already done and operation returns imediatly
                     formData = formDataParser.parseBlocking();

@@ -1,68 +1,56 @@
-import ceylon.net.httpd { Response, InternalException }
+import ceylon.net.http.server { Response }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }
-import ceylon.io.charset { Charset }
+import ceylon.io.charset { Charset, getCharset }
 import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
 import java.io { JIOException=IOException }
-import java.lang { JString=String, ByteArray, arrays }
-import java.nio { JByteBuffer=ByteBuffer { wrapByteBuffer=wrap } }
-
-import org.xnio.channels { StreamSinkChannel, ChannelFactory, 
+import java.lang { JString=String, arrays }
+import java.nio { 
+    JByteBuffer=ByteBuffer { wrapByteBuffer=wrap },
+    CharBuffer {wrapCharBuffer = wrap} }
+import java.nio.charset {JCharset = Charset {charsetForName=forName}}
+import org.xnio.channels { StreamSinkChannel,
                            Channels { chFlushBlocking=flushBlocking } }
 
 by "Matej Lazar"
-shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
+shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
         satisfies Response {
 
-    ChannelFactory<StreamSinkChannel>? factory = exchange.responseChannelFactory;
-    if (!factory exists ) {
-        throw InternalException("Cannot get response ChannelFactory."); 
-    } 
-    
-    variable StreamSinkChannel? response = null;
-    
-    MutableList<Header> headers = LinkedList<Header>();
-    
-    StreamSinkChannel createResponse() {
-        if (exists factory) {
-            return factory.create();
-        } else {
-            throw InternalException("Missing response channel factory.");
-        }
-    }
+    variable StreamSinkChannel? lazyResponse = null;
+    StreamSinkChannel response => lazyResponse else (lazyResponse=exchange.responseChannel);
 
-    StreamSinkChannel getResponse() {
-        if (exists r = response) {
-            return r;
-        }
-        response = createResponse();
-        if (exists r = response) {
-            return r;
-        }
-        throw InternalException("response is not avaialble");
-    }
+    MutableList<Header> headers = LinkedList<Header>();
     
     //TODO comment encodings and defaults
     shared actual void writeString(String string) {
-        writeBytes(JString(string).bytes.array);
         //TODO use encoder
-        //value buffer = findCharset().encode(string);
+        value charset = findCharset();
+        writeBytes(toByteArray(string, charsetForName(charset.name)));
+        //TODO use ceylon encoder
+        //value buffer = charset.encode(string);
         //writeBytes(buffer.bytes());
+    }
+    //TODO remove
+    Array<Integer> toByteArray(String string, JCharset charset) {
+        CharBuffer cbuf = wrapCharBuffer(JString(string).toCharArray());
+        JByteBuffer bbuf = charset.encode(cbuf);
+        return bbuf.array().array;
     }
     
     shared actual void writeBytes(Array<Integer> bytes) {
         applyHeadersToExchange();
         
         value bb = wrapByteBuffer(arrays.asByteArray(bytes));
-        value response = getResponse();
         
         variable Integer remaining = bytes.size;
         while (remaining > 0) {
             variable Integer written = 0;
-            while((written = response.write(bb)) > 0) {
+            
+            while(bb.hasRemaining()) {
+                written = response.write(bb);
                 remaining -= written;
                 try {
                     response.awaitWritable();
@@ -98,9 +86,9 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
     }
     
     shared void responseDone() {
-        getResponse().shutdownWrites();
-        chFlushBlocking(getResponse());
-        getResponse().close();
+        response.shutdownWrites();
+        chFlushBlocking(response);
+        response.close();
     }
 
     void applyHeadersToExchange() {
@@ -111,7 +99,7 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
         }
     }
     
-    /*Charset findCharset() {
+    Charset findCharset() {
         for (header in headers) {
             if (header.name.lowercased.equals("content-type")) {
                 return parseCharset(header);
@@ -140,5 +128,5 @@ shared class HttpResponseImpl(HttpServerExchange exchange, Charset defaultCharse
             }
         }
         return defaultCharset;
-    }*/
+    }
 }

@@ -1,16 +1,17 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
-import ceylon.io.charset { stringToByteProducer, utf8 }
-import ceylon.net.http { ClientRequest=Request, contentType }
-import ceylon.net.httpd { createServer, StatusListener, Status, 
-                          started, AsynchronousEndpoint, 
-                          Endpoint, Response, Request, 
-                          startsWith, endsWith }
-import ceylon.net.httpd.endpoints { serveStaticFile }
+import ceylon.io.charset { stringToByteProducer, utf8, ascii }
 import ceylon.net.uri { parse }
+import ceylon.net.http.client { ClientRequest=Request }
+import ceylon.net.http.server { createServer, StatusListener, Status, 
+                                  started, AsynchronousEndpoint, 
+                                  Endpoint, Response, Request, 
+                                  startsWith, endsWith }
+import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals }
 import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
+import ceylon.net.http { contentType }
 
 
 by "Matej Lazar"
@@ -30,15 +31,24 @@ void testServer() {
     
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
-        response.addHeader(contentType("text/html", utf8));
+        response.addHeader(contentType { contentType = "text/html"; charset = ascii; });
         response.writeString("Hello ``name(request)``!");
     }
 
     value server = createServer {};
+    server.defaultCharset = ascii; //TODO use utf8 instead of ascii once encoder/decoder issue fixed
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
         path = startsWith("/echo"); //TODO endpoint overriding, first matching should be used
+    });
+
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", ascii));
+                        response.writeString(request.header("Content-Type") else "");
+                    };
+        path = startsWith("/headerTest");
     });
 
     //add fileEndpoint
@@ -49,11 +59,13 @@ void testServer() {
                 or endsWith(".txt");
     });
     
-    object httpdListerner satisfies StatusListener {
+    object serverListerner satisfies StatusListener {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {
                 try {
-                    execuTestEcho();
+                    headerTest();
+                    
+                    executeEchoTest();
                     
                     concurentFileRequests(numberOfUsers);
                     
@@ -65,11 +77,11 @@ void testServer() {
         }
     }
     
-    server.addListener(httpdListerner);
+    server.addListener(serverListerner);
     server.startInBackground();
 }
 
-void execuTestEcho() {
+void executeEchoTest() {
     //TODO log debug
     print("Making request to Ceylon server...");
     
@@ -77,9 +89,6 @@ void execuTestEcho() {
     
     value request = ClientRequest(parse("http://localhost:8080/echo?name=" + name));
     value response = request.execute();
-    
-    value contentTypeHeader = response.getSingleHeader("content-type");
-    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
 
     value echoMsg = response.contents;
     response.close();
@@ -87,6 +96,25 @@ void execuTestEcho() {
     print("Received message: ``echoMsg``");
     value expecting = "Hello ``name``!";
     assertEquals(expecting, echoMsg);
+}
+
+void headerTest() {
+    String header = "multipart/form-data";
+    
+    value request = ClientRequest(parse("http://localhost:8080/headerTest"));
+    request.setHeader("Content-Type", header);
+    
+    value response = request.execute();
+    
+    value contentTypeHeader = response.getSingleHeader("content-type");
+    //assertEquals("text/html; charset=UTF-8", contentTypeHeader);
+    assertEquals("text/html; charset=``ascii.name``", contentTypeHeader);
+    
+    value echoMsg = response.contents;
+    response.close();
+    //TODO log debug
+    print("Received contents: ``echoMsg``");
+    assertEquals(header, echoMsg);
 }
 
 void executeTestStaticFile(Integer executeRequests) {
@@ -114,9 +142,9 @@ void concurentFileRequests(Integer concurentRequests) {
     }
     
     value users = LinkedList<Thread>();
-    
+
+    print ("Running ``concurentRequests `` concurent requests.");    
     while(requestNumber < concurentRequests) {
-        print("User: ``requestNumber``");
         value userThread = Thread(user);
         users.add(userThread);
         userThread.start();

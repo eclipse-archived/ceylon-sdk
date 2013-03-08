@@ -1,4 +1,4 @@
-import ceylon.net.httpd.internal { DefaultServer }
+import ceylon.net.http.server.internal { DefaultServer }
 import ceylon.io.charset { Charset, utf8 } //utf8 is required by doc on defaultCharset
 
 by "Matej Lazar"

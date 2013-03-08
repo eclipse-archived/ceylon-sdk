@@ -23,10 +23,10 @@ import org.xnio {
     ChannelListener
 }
 import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
-import io.undertow.server { HttpOpenListener, HttpTransferEncodingHandler, HttpHandler }
-import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler }
+import io.undertow.server { HttpOpenListener, HttpTransferEncoding, HttpHandler }
+import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler, URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
+import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
@@ -60,23 +60,25 @@ shared class DefaultServer() satisfies Server {
         session.setNext(ceylonHandler);
         
         CookieHandler cookieHandler = CookieHandler();
-        cookieHandler.next = session;
-        
-        EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
-        eagerFormParsingHandler.next = cookieHandler;
-        
-        FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
-        formEncodedDataHandler.next = eagerFormParsingHandler;
+        //cookieHandler.next = session;
+        cookieHandler.setNext(session);
         
         MultiPartHandler multiPartHandler = MultiPartHandler();
-        multiPartHandler.next = formEncodedDataHandler;
+        multiPartHandler.setNext(cookieHandler);
+        multiPartHandler.setDefaultEncoding(defaultCharset.name);
         
-        HttpHandler errPageHandler = SimpleErrorPageHandler(multiPartHandler);
-        HttpHandler cannonicalPathHandler = CanonicalPathHandler(errPageHandler);
-        HttpHandler httpTransferEncoding = HttpTransferEncodingHandler(cannonicalPathHandler);
+        FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
+        formEncodedDataHandler.setNext(multiPartHandler);
+        formEncodedDataHandler.setDefaultEncoding(defaultCharset.name);
+        
+        HttpHandler errPageHandler = SimpleErrorPageHandler(formEncodedDataHandler);
+
+        URLDecodingHandler urlDecodingHandler = URLDecodingHandler();
+        urlDecodingHandler.setNext(errPageHandler);
+        urlDecodingHandler.setCharset(defaultCharset.name);
         
         HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
-        openListener.rootHandler = httpTransferEncoding;
+        openListener.rootHandler = urlDecodingHandler;
         
         object channelListener satisfies ChannelListener<AcceptingChannel<ConnectedStreamChannel>> {
             shared actual void handleEvent(AcceptingChannel<ConnectedStreamChannel>? channel) {
@@ -84,7 +86,7 @@ shared class DefaultServer() satisfies Server {
                     ConnectedStreamChannel? accept = channel.accept();
                     if (exists accept) {
                         openListener.handleEvent(accept);
-                    }		
+                    }
                 }
             }
         }
