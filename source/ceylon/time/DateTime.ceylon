@@ -1,6 +1,6 @@
 import ceylon.time { createDate=date, createTime=time }
 import ceylon.time.base { Month, DateTimeBehavior, ReadableDateTime, ReadablePeriod }
-import ceylon.time.impl { GregorianDateTime }
+import ceylon.time.internal { GregorianDateTime }
 
 doc "An abstract moment in time (like _4pm, October 21. 2012_).
      

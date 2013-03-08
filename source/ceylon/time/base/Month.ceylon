@@ -1,5 +1,5 @@
 import ceylon.time.chronology { gregorian }
-import ceylon.time.math { mod=floorMod, fdiv=floorDiv }
+import ceylon.time.internal.math { mod=floorMod, fdiv=floorDiv }
 
 "A month in a Gregorian or Julian calendar system."
 shared abstract class Month(integer)

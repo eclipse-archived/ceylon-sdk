@@ -1,5 +1,5 @@
 import ceylon.test { assertEquals }
-import ceylon.time.math { floor, round, mod=floorMod, amod=adjustedMod }
+import ceylon.time.internal.math { floor, round, mod=floorMod, amod=adjustedMod }
 
 // Test floor function
 

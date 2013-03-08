@@ -1,6 +1,6 @@
 import ceylon.time { Time, time, Period, zero }
 import ceylon.time.base { ms=milliseconds, sec=seconds, ReadableTimePeriod }
-import ceylon.time.math { floorMod }
+import ceylon.time.internal.math { floorMod }
 
 "Basic implementation of [[Time]] interface, representing an abstract 
  _time of day_ such as _10am_ or _3.20pm_."
@@ -20,7 +20,7 @@ shared class TimeOfDay(millisOfDay)
     shared actual Integer seconds => floorMod(millisOfDay, ms.perMinute) / ms.perSecond;
 
     "Number of milliseconds since last full second"
-    shared actual Integer millis => floorMod(millisOfDay, ms.perSecond);
+    shared actual Integer milliseconds => floorMod(millisOfDay, ms.perSecond);
 
     "Number of seconds since last midnight"
     shared actual Integer secondsOfDay => millisOfDay / ms.perSecond;
@@ -41,7 +41,7 @@ shared class TimeOfDay(millisOfDay)
 
     "Returns ISO 8601 formatted String representation of this _time of day_."
     shared actual String string {
-        return "``leftPad(hours)``:``leftPad(minutes)``:``leftPad(seconds)``.``leftPad(millis, "000")``";
+        return "``leftPad(hours)``:``leftPad(minutes)``:``leftPad(seconds)``.``leftPad(milliseconds, "000")``";
     }
 
     "Adds specified number of hours to this time of day 
@@ -116,7 +116,7 @@ shared class TimeOfDay(millisOfDay)
         if (this.hours == hours) {
             return this;
         }
-        return time(hours, minutes, seconds, millis);
+        return time(hours, minutes, seconds, milliseconds);
     }
 
     shared actual Time withMinutes(Integer minutes) {
@@ -124,17 +124,17 @@ shared class TimeOfDay(millisOfDay)
             return this;
         }
 
-        return time(hours, minutes, seconds, millis);
+        return time(hours, minutes, seconds, milliseconds);
     }
     shared actual Time withSeconds(Integer seconds) {
         if (this.seconds == seconds) {
             return this;
         }
 
-        return time(hours, minutes, seconds, millis );
+        return time(hours, minutes, seconds, milliseconds );
     }
     shared actual Time withMilliseconds(Integer milliseconds) {
-        if (this.millis == milliseconds) {
+        if (this.milliseconds == milliseconds) {
             return this;
         }
 

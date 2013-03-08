@@ -1,5 +1,5 @@
 import ceylon.time.base { days, ms=milliseconds, years }
-import ceylon.time.math { floor, fdiv=floorDiv, mod=floorMod }
+import ceylon.time.internal.math { floor, fdiv=floorDiv, mod=floorMod }
 
 doc "Converts _Rata Die_ day number to a fixed date value.
      
