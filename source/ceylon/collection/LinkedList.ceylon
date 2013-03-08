@@ -375,5 +375,5 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return nothing;
     }
     
-    shared actual List<Element> rest => nothing; /* TODO auto-generated stub */
+    shared actual List<Element> rest => nothing;
 }
