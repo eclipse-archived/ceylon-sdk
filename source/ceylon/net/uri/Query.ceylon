@@ -1,26 +1,11 @@
-import ceylon.collection { LinkedList }
 
 doc "Represents a URI Query part"
 by "Stéphane Épardaud"
-shared class Query(Parameter* initialParameters) {
+shared class Query(parameters) {
     
     doc "The list of query parameters"
-    shared LinkedList<Parameter> parameters = LinkedList<Parameter>();
+    shared Parameter* parameters;
     
-    for(Parameter p in initialParameters){
-        parameters.add(p);
-    }
-
-    doc "Adds a query parameter"
-    shared void add(Parameter param){
-        parameters.add(param);
-    }
-
-    doc "Adds a single raw (percent-encoded) query parameter, where name and value have to be parsed"
-    shared void addRaw(String part){
-        add(parseParameter(part));
-    }
-
     doc "Returns true if we have any query parameter"
     shared Boolean specified {
         return !parameters.empty;
@@ -32,7 +17,7 @@ shared class Query(Parameter* initialParameters) {
             if(this === that){
                 return true;
             }
-            return parameters.equalsTemp(that.parameters); 
+            return parameters.equals(that.parameters); 
         }
         return false;
     }

@@ -1,3 +1,4 @@
+import ceylon.collection { LinkedList }
 doc "Parses a raw percent-encoded path parameter"
 shared Parameter parseParameter(String part){
     Integer? sep = part.firstCharacterOccurrence('=');
@@ -13,9 +14,17 @@ doc "Parses a URI"
 throws(InvalidURIException, "If the URI is invalid")
 shared URI parseURI(String uri){
     variable String? scheme = null;
-    Authority authority = Authority(null, null, null, null);
-    Path path = Path();
-    Query query = Query();
+    
+    variable String? user = null;
+    variable String? password = null;
+    variable Boolean ipLiteral = false;
+    variable String? host = null;
+    variable Integer? port = null;
+    
+    LinkedList<PathSegment> pathSegments = LinkedList<PathSegment>();
+
+    LinkedList<Parameter> queryParameters = LinkedList<Parameter>();
+
     variable String? fragment = null;
     
     String parseScheme(String uri){
@@ -33,22 +42,22 @@ shared URI parseURI(String uri){
     void parseUserInfo(String userInfo) {
         Integer? sep = userInfo.firstCharacterOccurrence(':');
         if(exists sep){
-            authority.user = decodePercentEncoded(userInfo.segment(0, sep));
-            authority.password = decodePercentEncoded(userInfo[sep+1...]);
+            user = decodePercentEncoded(userInfo.segment(0, sep));
+            password = decodePercentEncoded(userInfo[sep+1...]);
         }else{
-            authority.user = decodePercentEncoded(userInfo);
-            authority.password = null;
+            user = decodePercentEncoded(userInfo);
+            password = null;
         }
     }
 
     void parseHostAndPort(String hostAndPort) {
         String? portString;
         if(hostAndPort.startsWith("[")){
-            authority.ipLiteral = true;
+            ipLiteral = true;
             Integer? end = hostAndPort.firstCharacterOccurrence(']');
             if(exists end){
                 // eat the delimiters
-                authority.host = hostAndPort.segment(1, end-1);
+                host = hostAndPort.segment(1, end-1);
                 String rest = hostAndPort[end+1...];
                 if(rest.startsWith(":")){
                     portString = rest[1...];
@@ -59,19 +68,19 @@ shared URI parseURI(String uri){
                 throw InvalidURIException("Invalid IP literal: " + hostAndPort);
             }
         }else{
-            authority.ipLiteral = false;
+            ipLiteral = false;
             Integer? sep = hostAndPort.lastCharacterOccurrence(':');
             if(exists sep){
-                authority.host = decodePercentEncoded(hostAndPort.segment(0, sep));
+                host = decodePercentEncoded(hostAndPort.segment(0, sep));
                 portString = hostAndPort[sep+1...];
             }else{
-                authority.host = decodePercentEncoded(hostAndPort);
+                host = decodePercentEncoded(hostAndPort);
                 portString = null;
             }
         }
         if(exists portString){
-            authority.port = parseInteger(portString);
-            if(exists Integer port = authority.port){
+            port = parseInteger(portString);
+            if(exists Integer port = port){
                 if(port < 0){
                     throw InvalidURIException("Invalid port number: "+portString);
                 }
@@ -79,7 +88,7 @@ shared URI parseURI(String uri){
                 throw InvalidURIException("Invalid port number: "+portString);
             }
         }else{
-            authority.port = null;
+            port = null;
         }
     }
     
@@ -127,15 +136,8 @@ shared URI parseURI(String uri){
             remains = "";
         }
         if(!pathPart.empty){
-            variable Boolean first = true;
             for(String part in pathPart.split((Character ch) => ch == '/', true, false)){
-                if(first && part.empty){
-                    path.absolute = true;
-                    first = false;
-                    continue;
-                }
-                first = false;
-                path.addRawSegment(part);
+                pathSegments.add(parseRaw(part));
             }
         }
         
@@ -144,7 +146,7 @@ shared URI parseURI(String uri){
 
     void parseQueryPart(String queryPart) {
         for(String part in queryPart.split((Character ch) => ch == '&', true, false)){
-            query.addRaw(part);
+            queryParameters.add(parseParameter(part));
         }
     }
 
@@ -184,5 +186,9 @@ shared URI parseURI(String uri){
     }
 
     parseURI(uri);
+
+    Authority authority = Authority(user, password, host, port, ipLiteral);
+    Path path = Path(*pathSegments);
+    Query query = Query(*queryParameters);
     return URI(scheme, authority, path, query, fragment);
 }

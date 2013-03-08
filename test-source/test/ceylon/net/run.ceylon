@@ -7,6 +7,8 @@ void run() {
         "URI Invalid port" -> testInvalidPort,
         "URI Invalid port2" -> testInvalidPort2,
         "URI Decoding test"-> testDecoding,
+        "URI ResolveRelative"-> testResolveRelativeURI,
+        "URI relativePart"-> testRelativePart,
         "HTTP testGet" -> testGet,
         "HTTP testGetUtf8" -> testGetUtf8,
         "HTTP testGetUtf8 2" -> testGetUtf8_2,
