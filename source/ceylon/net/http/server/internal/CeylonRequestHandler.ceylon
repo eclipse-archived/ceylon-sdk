@@ -1,47 +1,51 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
-import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint }
+import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
-import ceylon.io.charset { Charset }
 
 by "Matej Lazar"
-shared class CeylonRequestHandler(Charset defaultCharset) satisfies HttpHandler {
+shared class CeylonRequestHandler() satisfies HttpHandler {
     
     value endpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
+    
+    shared variable Options? options = null;
     
     shared void addWebEndpoint(Endpoint|AsynchronousEndpoint endpoint) {
         endpoints.add(endpoint);
     }
     
     shared actual void handleRequest(JHttpServerExchange? exchange) {
-        
-        if (exists exc = exchange) {
-            RequestImpl request = RequestImpl(exc);
-            ResponseImpl response = ResponseImpl(exc, defaultCharset);
-            
-            try {
-                String requestPath = request.path;
-                Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpoint(requestPath);
+        if (exists o = options) {
+            if (exists exc = exchange) {
+                RequestImpl request = RequestImpl(exc);
+                ResponseImpl response = ResponseImpl(exc, o.defaultCharset);
                 
-                if (exists e = endpoint) {
-                    request.endpoint = e;
-                    invokeEndpoint(e, request, response, exc);
-                } else {
-                    response.responseStatus=404;
+                try {
+                    String requestPath = request.path;
+                    Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpoint(requestPath);
+                    
+                    if (exists e = endpoint) {
+                        request.endpoint = e;
+                        invokeEndpoint(e, request, response, exc);
+                    } else {
+                        response.responseStatus=404;
+                        response.responseDone();
+                        exc.endExchange();
+                    }
+                } catch(Exception e) {
+                    //TODO write to log
+                    e.printStackTrace();
+                    response.responseStatus=500;
                     response.responseDone();
                     exc.endExchange();
                 }
-            } catch(Exception e) {
-                //TODO write to log
-                e.printStackTrace();
-                response.responseStatus=500;
-                response.responseDone();
-                exc.endExchange();
+            } else {
+                //TODO log fatal
+                print("Underlying HttpServerExchange or CompletionHandler must be provided.");
             }
         } else {
-            //TODO log fatal
-            print("Underlying HttpServerExchange or CompletionHandler must be provided.");
+            throw InternalException("Options must be set before handling request.");
         }
     }
 
