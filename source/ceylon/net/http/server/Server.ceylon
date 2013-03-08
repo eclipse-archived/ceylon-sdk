@@ -22,7 +22,7 @@ shared interface Server {
     see (StatusListener)
     shared formal void addListener(StatusListener listener);
     
-    doc "NOT IMPLMENTED YET! Removes status change listener."
+    doc "Removes status change listener."
     shared formal void removeListener(StatusListener listener);
 }
 

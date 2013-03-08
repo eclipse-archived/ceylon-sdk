@@ -150,8 +150,7 @@ shared class DefaultServer() satisfies Server {
     }
     
     shared actual void removeListener(StatusListener listener) {
-        //TODO statusListeners.remove(listener);
-        throw Exception("NOT IMPLEMENTED YET!");
+        statusListeners.removeElement(listener);
     }
     
     void notifyListeners(Status status) {
