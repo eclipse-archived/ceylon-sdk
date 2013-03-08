@@ -2,7 +2,7 @@ import ceylon.language { Integer }
 import ceylon.time { Date, DateTime, Time, Period, zero }
 import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod}
 import ceylon.time.chronology { impl=gregorian }
-import ceylon.time.math { adjustedMod }
+import ceylon.time.internal.math { adjustedMod }
 
 
 "Default implementation of a gregorian calendar"

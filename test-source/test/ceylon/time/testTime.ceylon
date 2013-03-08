@@ -279,7 +279,7 @@ shared void assertTime( Integer hour = 0, Integer minute = 0, Integer second = 0
     assertEquals { expected = hour; actual = actual.hours; };
     assertEquals { expected = minute; actual = actual.minutes; };
     assertEquals { expected = second; actual = actual.seconds; };
-    assertEquals { expected = milli; actual = actual.millis; };
+    assertEquals { expected = milli; actual = actual.milliseconds; };
     assertEquals { expected = secondsOfDay; actual = actual.secondsOfDay; };
     assertEquals { expected = minutesOfDay; actual = actual.minutesOfDay; };
 }

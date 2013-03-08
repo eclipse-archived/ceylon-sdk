@@ -1,5 +1,5 @@
 import ceylon.time.base { ReadableTime, TimeBehavior, h=hours, min=minutes, sec=seconds, ms=milliseconds, ReadableTimePeriod }
-import ceylon.time.impl { TimeOfDay }
+import ceylon.time.internal { TimeOfDay }
 
 doc """Time of day like _6pm_ or _8.30am_.
        

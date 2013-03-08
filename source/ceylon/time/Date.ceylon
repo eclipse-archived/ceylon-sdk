@@ -1,5 +1,5 @@
 import ceylon.time.base { ReadableDate, Month, DateBehavior, ReadableDatePeriod }
-import ceylon.time.impl { gregorianDate }
+import ceylon.time.internal { gregorianDate }
 import ceylon.time.timezone { TimeZone }
 
 "An interface for date objects in the ISO-8601 calendar system.
