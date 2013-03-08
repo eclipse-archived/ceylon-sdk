@@ -1,4 +1,4 @@
-import ceylon.time.math { floorDiv }
+import ceylon.time.internal.math { floorDiv }
 
 "Common properties and constraints of _year_ unit"
 shared object years {

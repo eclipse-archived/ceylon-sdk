@@ -13,7 +13,7 @@ shared interface TimeBehavior<Element> of Element
     "Returns a copy of this period with the specified amount of seconds."
     shared formal Element withSeconds(Integer seconds);
 
-    "Returns a copy of this period with the specified amount of nanos."
+    "Returns a copy of this period with the specified amount of milliseconds."
     shared formal Element withMilliseconds(Integer milliseconds);
 
     "Returns a copy of this period with the specified number of hours added."
@@ -37,7 +37,7 @@ shared interface TimeBehavior<Element> of Element
     "Returns a copy of this period with the specified number of seconds subtracted."
     shared formal Element minusSeconds(Integer seconds);
 
-    "Returns a copy of this period with the specified number of nonoseconds subtracted."
+    "Returns a copy of this period with the specified number of milliseconds subtracted."
     shared formal Element minusMilliseconds(Integer milliseconds);
 
 }

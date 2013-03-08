@@ -104,18 +104,18 @@ shared void testMinusSeconds_DateTime() {
 }
 
 shared void testPlusMillis_DateTime() {
-    assertEquals( 150, data_1982_12_13_09_08_07_0050.plusMilliseconds(100).millis);
+    assertEquals( 150, data_1982_12_13_09_08_07_0050.plusMilliseconds(100).milliseconds);
 
     value data_1982_12_13_9_8_15_300 = data_1982_12_13_09_08_07_0050.plusMilliseconds(950+7300);
-    assertEquals( 300, data_1982_12_13_9_8_15_300.millis);
+    assertEquals( 300, data_1982_12_13_9_8_15_300.milliseconds);
     assertEquals( 15, data_1982_12_13_9_8_15_300.seconds);
 }
 
 shared void testMinusMilliseconds_DateTime() {
-    assertEquals( 950, data_1982_12_13_09_08_07_0050.minusMilliseconds(100).millis);
+    assertEquals( 950, data_1982_12_13_09_08_07_0050.minusMilliseconds(100).milliseconds);
 
     value data_1982_12_13_9_8_4_100 = data_1982_12_13_09_08_07_0050.minusMilliseconds(50+2900);
-    assertEquals( 100, data_1982_12_13_9_8_4_100.millis);
+    assertEquals( 100, data_1982_12_13_9_8_4_100.milliseconds);
     assertEquals( 4, data_1982_12_13_9_8_4_100.seconds);
 }
 
@@ -298,5 +298,5 @@ void assertGregorianDateTime( Integer year, Month month, Integer day, DayOfWeek 
     assertEquals(hour, actual.hours);
     assertEquals(minute, actual.minutes);
     assertEquals(second, actual.seconds);
-    assertEquals(milli, actual.millis);
+    assertEquals(milli, actual.milliseconds);
 }

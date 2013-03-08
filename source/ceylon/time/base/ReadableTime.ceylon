@@ -16,7 +16,7 @@ shared interface ReadableTime {
     shared formal Integer seconds;
 
     "Number of milliseconds since last second"
-    shared formal Integer millis;
+    shared formal Integer milliseconds;
 
     "Number of minutes since the beginning of the day"
     shared formal Integer minutesOfDay;

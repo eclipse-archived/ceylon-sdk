@@ -2,7 +2,7 @@ import ceylon.language { Integer }
 import ceylon.time { Date, Time, DateTime, Instant, Period, zero }
 import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek }
 import ceylon.time.chronology { unixTime }
-import ceylon.time.math { floorDiv, floorMod }
+import ceylon.time.internal.math { floorDiv, floorMod }
 import ceylon.time.timezone { TimeZone }
 
 doc "Default implementation of a gregorian calendar"
@@ -53,8 +53,8 @@ shared class GregorianDateTime( date, time )
         return time.hours;
     }
 
-    shared actual Integer millis {
-        return time.millis;
+    shared actual Integer milliseconds {
+        return time.milliseconds;
     }
 
     shared actual Integer millisOfDay {
