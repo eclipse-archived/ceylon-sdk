@@ -3,14 +3,10 @@ import ceylon.language { LangObject = Object }
 
 by "Stéphane Épardaud"
 doc "Represents a JSON Object"
-shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|NullInstance>*} values) 
+shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|NullInstance>*} values = {}) 
     satisfies MutableMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance> {
     
-    value contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>();
-    
-    for(val in values){
-        contents.put(val.key, val.item);
-    }
+    value contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>(values);
     
     doc "Returns a serialised JSON representation"
     shared actual String string {

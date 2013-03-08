@@ -3,14 +3,10 @@ import ceylon.collection { ... }
 
 by "Stéphane Épardaud"
 doc "Represents a JSON Array"
-shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} values) 
+shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} values = {}) 
     satisfies MutableList<String|Boolean|Integer|Float|Object|Array|NullInstance> {
     
-    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>();
-    
-    for(val in values){
-        list.add(val);
-    }
+    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>(values);
     
     shared actual Iterator<String|Boolean|Integer|Float|Object|Array|NullInstance> iterator() => list.iterator();
     
