@@ -224,4 +224,9 @@ void testDecoding(){
         
 }
 
-
+void testUriBuilding(){
+    Uri uri = parse("http://ceylon-lang.org");
+    uri.path.absolute = true;
+    uri.path.add("blog");
+    assertEquals("http://ceylon-lang.org/blog", uri.string);
+}
