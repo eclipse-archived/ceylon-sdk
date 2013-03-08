@@ -1,7 +1,7 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { newOpenFile }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
-import ceylon.net.httpd { Response, Request }
+import ceylon.net.http.server { Response, Request }
 import ceylon.net.http { contentType, contentLength }
 
 

@@ -26,7 +26,7 @@ import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedCh
 import io.undertow.server { HttpOpenListener, HttpTransferEncoding, HttpHandler }
 import io.undertow.server.handlers { CanonicalPathHandler, CookieHandler, URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.httpd { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
+import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, EagerFormParsingHandler, MultiPartHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }

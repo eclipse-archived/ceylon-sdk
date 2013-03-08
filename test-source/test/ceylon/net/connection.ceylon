@@ -1,6 +1,6 @@
 import ceylon.json { parseJson = parse, ... }
-import ceylon.net.http { ... }
 import ceylon.net.uri { parse }
+import ceylon.net.http.client { ... }
 import ceylon.test { ... }
 
 void testJSON(Object json){

@@ -1,16 +1,17 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8, ascii }
-import ceylon.net.http { ClientRequest=Request, contentType }
-import ceylon.net.httpd { createServer, StatusListener, Status, 
-                          started, AsynchronousEndpoint, 
-                          Endpoint, Response, Request, 
-                          startsWith, endsWith }
-import ceylon.net.httpd.endpoints { serveStaticFile }
 import ceylon.net.uri { parse }
+import ceylon.net.http.client { ClientRequest=Request }
+import ceylon.net.http.server { createServer, StatusListener, Status, 
+                                  started, AsynchronousEndpoint, 
+                                  Endpoint, Response, Request, 
+                                  startsWith, endsWith }
+import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals }
 import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
+import ceylon.net.http { contentType }
 
 
 by "Matej Lazar"
@@ -58,7 +59,7 @@ void testServer() {
                 or endsWith(".txt");
     });
     
-    object httpdListerner satisfies StatusListener {
+    object serverListerner satisfies StatusListener {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {
                 try {
@@ -76,7 +77,7 @@ void testServer() {
         }
     }
     
-    server.addListener(httpdListerner);
+    server.addListener(serverListerner);
     server.startInBackground();
 }
 
@@ -100,7 +101,7 @@ void executeEchoTest() {
 void headerTest() {
     String header = "multipart/form-data";
     
-    value request = ClientRequest(parseURI("http://localhost:8080/headerTest"));
+    value request = ClientRequest(parse("http://localhost:8080/headerTest"));
     request.setHeader("Content-Type", header);
     
     value response = request.execute();

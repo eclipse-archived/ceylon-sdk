@@ -1,4 +1,4 @@
-import ceylon.net.httpd { Response }
+import ceylon.net.http.server { Response }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }

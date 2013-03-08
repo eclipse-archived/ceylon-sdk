@@ -2,6 +2,7 @@ import ceylon.io { FileDescriptor }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io.readers { Reader, FileDescriptorReader }
 import ceylon.io.charset { ascii, getCharset }
+import ceylon.net.http { Header }
 
 doc "Represents an HTTP Response"
 by "Stéphane Épardaud"

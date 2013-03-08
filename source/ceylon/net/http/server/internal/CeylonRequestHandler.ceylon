@@ -1,6 +1,6 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
 import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
-import ceylon.net.httpd { Request, AsynchronousEndpoint, Endpoint }
+import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 import ceylon.io.charset { Charset }

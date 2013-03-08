@@ -1,6 +1,6 @@
 import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
-import ceylon.net.httpd { Request, Session, Endpoint, 
+import ceylon.net.http.server { Request, Session, Endpoint, 
                           InternalException, AsynchronousEndpoint }
 
 import io.undertow.server { HttpServerExchange }

@@ -1,4 +1,4 @@
-import ceylon.net.httpd { Session }
+import ceylon.net.http.server { Session }
 
 import io.undertow.server.session { UtSession=Session }
 

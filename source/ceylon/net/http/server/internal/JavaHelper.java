@@ -1,4 +1,4 @@
-package ceylon.net.httpd.internal;
+package ceylon.net.http.server.internal;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
