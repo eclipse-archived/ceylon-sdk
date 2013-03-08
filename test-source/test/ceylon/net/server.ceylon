@@ -6,7 +6,7 @@ import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { createServer, StatusListener, Status, 
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
-                                  startsWith, endsWith }
+                                  startsWith, endsWith, Options }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals }
 import java.lang { Runnable, Thread }
@@ -36,7 +36,6 @@ void testServer() {
     }
 
     value server = createServer {};
-    server.defaultCharset = ascii; //TODO use utf8 instead of ascii once encoder/decoder issue fixed
 
     server.addEndpoint(Endpoint {
         service => serviceImpl;
@@ -78,7 +77,10 @@ void testServer() {
     }
     
     server.addListener(serverListerner);
-    server.startInBackground();
+
+    server.startInBackground {
+        serverOptions = Options {defaultCharset = ascii;}; //TODO use utf8 instead of ascii once encoder/decoder issue fixed
+    };
 }
 
 void executeEchoTest() {

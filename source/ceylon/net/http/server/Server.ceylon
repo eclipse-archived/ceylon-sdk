@@ -1,5 +1,4 @@
 import ceylon.net.http.server.internal { DefaultServer }
-import ceylon.io.charset { Charset, utf8 } //utf8 is required by doc on defaultCharset
 
 by "Matej Lazar"
 doc "Ceylon http server."
@@ -10,12 +9,12 @@ shared interface Server {
     
     shared formal void start(Integer port = 8080, 
             String host = "127.0.0.1", 
-            Options httpdOptions = Options());
+            Options serverOptions = Options());
     
     doc "Starts httpd in a new thread."
     shared formal void startInBackground(Integer port = 8080, 
         String host = "127.0.0.1", 
-        Options httpdOptions = Options());
+        Options serverOptions = Options());
     
     shared formal void stop();
     
@@ -25,10 +24,6 @@ shared interface Server {
     
     doc "NOT IMPLMENTED YET! Removes status change listener."
     shared formal void removeListener(StatusListener listener);
-    
-    doc "Default charset is used to encode string, when there is no charset header in response.
-         Default value is [[utf8]]."
-    shared formal variable Charset defaultCharset;
 }
 
 shared Server createServer({Endpoint|AsynchronousEndpoint*} endpoints) {
