@@ -24,8 +24,6 @@ shared Map<Group, {Element+}> group<Group, Element>({Element*} elements,
         }
     }
     
-    print(map);
-    
     Sequence<Element> fn(Group key, SequenceBuilder<Element> item) {
         value sequence = item.sequence;
         assert(is Sequence<Element> sequence);
