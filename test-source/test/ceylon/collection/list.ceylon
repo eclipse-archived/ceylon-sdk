@@ -22,7 +22,7 @@ void testList(){
     assertEquals("fu", l[0]);
     assertEquals("bar", l[1]);
 
-    l.setItem(0, "foo");
+    l.set(0, "foo");
     assertEquals("[foo, bar]", l.string);
     assertEquals(2, l.size);
     assertTrue(l.contains("foo"));
@@ -31,7 +31,7 @@ void testList(){
     assertEquals("foo", l[0]);
     assertEquals("bar", l[1]);
 
-    l.setItem(5, "empty");
+    l.set(5, "empty");
     assertEquals("[foo, bar, empty, empty, empty, empty]", l.string);
     assertEquals(6, l.size);
     assertTrue(l.contains("foo"));

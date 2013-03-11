@@ -29,7 +29,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     // Write
     
     doc "Sets an item at the given index. List is expanded if index > size"
-    shared actual void setItem(Integer index, Element val){
+    shared actual void set(Integer index, Element val){
         if(index < _size){
             variable Cell<Element>? iter = head;
             variable Integer i = 0;
@@ -65,7 +65,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     doc "Inserts an item at specified index, list is expanded if index > size"    
     shared actual void insert(Integer index, Element val){
         if(index >= _size){
-            setItem(index, val);
+            set(index, val);
         }else{
             Cell<Element> newCell = Cell<Element>(val, null);
             if(index == 0){
@@ -83,7 +83,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
                             prev2.cdr = newCell;
                             newCell.cdr = cell;
                             // no need to update the tail since we never modify the last element, we would
-                            // have called setItem above instead
+                            // have called set() above instead
                         }else{
                             // cannot happen
                         }

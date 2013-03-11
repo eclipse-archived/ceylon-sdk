@@ -28,7 +28,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
             bucket = cell.cdr;
         }
         // add a new entry
-        store.setItem(index, Cell<Key->Item>(key->item, store[index]));
+        store.set(index, Cell<Key->Item>(key->item, store[index]));
         return true;
     }
 
@@ -73,7 +73,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
             bucket = cell.cdr;
         }
         // add a new entry
-        store.setItem(index, Cell<Key->Item>(key->item, store[index]));
+        store.set(index, Cell<Key->Item>(key->item, store[index]));
         _size++;
         checkRehash();
         return null;
@@ -101,7 +101,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
                 if(exists Cell<Key->Item> last = prev){
                     last.cdr = cell.cdr;
                 }else{
-                    store.setItem(index, cell.cdr);
+                    store.set(index, cell.cdr);
                 }
                 _size--;
                 return cell.car.item;
@@ -117,7 +117,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            store.setItem(index++, null);
+            store.set(index++, null);
         }
         _size = 0;
     }
@@ -330,7 +330,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         // walk every bucket
         while(index < store.size){
             if(exists Cell<Key->Item> bucket = store[index]){
-                clone.store.setItem(index, bucket.clone); 
+                clone.store.set(index, bucket.clone); 
             }
             index++;
         }

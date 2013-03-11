@@ -27,7 +27,7 @@ shared class HashSet<Element>({Element*} values = {})
             bucket = cell.cdr;
         }
         // add a new entry
-        store.setItem(index, Cell<Element>(element, store[index]));
+        store.set(index, Cell<Element>(element, store[index]));
         return true;
     }
 
@@ -87,7 +87,7 @@ shared class HashSet<Element>({Element*} values = {})
                 if(exists Cell<Element> last = prev){
                     last.cdr = cell.cdr;
                 }else{
-                    store.setItem(index, cell.cdr);
+                    store.set(index, cell.cdr);
                 }
                 _size--;
                 return true;
@@ -103,7 +103,7 @@ shared class HashSet<Element>({Element*} values = {})
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            store.setItem(index++, null);
+            store.set(index++, null);
         }
         _size = 0;
     }
@@ -236,7 +236,7 @@ shared class HashSet<Element>({Element*} values = {})
         // walk every bucket
         while(index < store.size){
             if(exists Cell<Element> bucket = store[index]){
-                clone.store.setItem(index, bucket.clone); 
+                clone.store.set(index, bucket.clone); 
             }
             index++;
         }

@@ -3,7 +3,7 @@ by "Stéphane Épardaud"
 shared interface MutableList<Element> satisfies List<Element> {
 
     doc "Sets an item at the given index. List is expanded if index > size"
-    shared formal void setItem(Integer index, Element val);
+    shared formal void set(Integer index, Element val);
     
     doc "Adds an item at the end of this list"
     shared formal void add(Element val);

@@ -91,8 +91,8 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.removeElement(val);
     }
     
-    shared actual void setItem(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.setItem(index, val);
+    shared actual void set(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
+        list.set(index, val);
     }
     
     shared actual Integer hash {
