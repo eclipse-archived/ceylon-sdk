@@ -149,13 +149,8 @@ shared void testDatePlusYears() {
     assertEquals( data_1982_12_13.plusYears(30), date( 2012, december, 13) );
 }
 
-shared void testPlusYearsLessDaysException() {
-    try {
-        date(2012, february, 29).plusYears(1);
-        fail("Should throw exception...");
-    } catch( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }
+shared void testPlusYearsLessDays() {
+    assertEquals( date(2013, february, 28), date(2012, february, 29).plusYears(1));
 }
 
 shared void testDateMinusYears() {
@@ -164,13 +159,8 @@ shared void testDateMinusYears() {
     assertEquals( data_1982_12_13.minusYears(10), date( 1972, december, 13) );
 }
 
-shared void testMinusYearsLessDaysException() {
-    try {
-        date(2012, february, 29).minusYears(1);
-        fail("Should throw exception...");
-    } catch( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }
+shared void testMinusYearsLessDays() {
+    assertEquals( date(2011, february, 28), date(2012, february, 29).minusYears(1));
 }
 
 shared void testDatePlusWeeks() {
@@ -251,6 +241,15 @@ shared void testWithYear() {
     assertEquals( data_1982_12_13.withYear(1982), data_1982_12_13 );
     assertEquals( data_1982_12_13.withYear(2000), date( 2000, december, 13) );
     assertEquals( data_1982_12_13.withYear(1800), date( 1800, december, 13) );
+}
+
+shared void testWithYearLeap() {
+    try {
+        date( 2012, february, 29).withYear(2011);
+        fail("Should throw exception...");
+    } catch( AssertionException e ) {
+        assertTrue(e.message.contains("Invalid date value"));
+    }
 }
 
 shared void testOrdinal() {
@@ -346,6 +345,13 @@ shared void testPeriodFrom() {
     assertFromTo(period, from, to);
 }
 
+shared void testPeriodFromOnlyDayChange() {
+    Period period = Period{ days = 3;};
+    Date from = date(2013, december, 28);
+    Date to = date(2013,december,31);
+    assertFromTo(period, from, to);
+}
+
 shared void testPeriodFromNewYear() {
     Period period = Period{ days = 4; };
     Date from = date(2013, december, 28);
@@ -365,6 +371,44 @@ shared void testPeriodFromMonthBefore() {
     Date from = date(2011, december, 28);
     Date to = date(2013,october,31);
     assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromOnlyMonthChange() {
+    Period period = Period{ months = 2;};
+    Date from = date(2013, january, 31);
+    Date to = date(2013,march,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromOnlyYearChange() {
+    Period period = Period{ years = 3;};
+    Date from = date(2010, january, 31);
+    Date to = date(2013,january,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromYearMonthChange() {
+    Period period = Period{ years = 1; months = 1;};
+    Date from = date(2011, december, 31);
+    Date to = date(2013,january,31);
+    assertFromTo(period, from, to);
+}
+
+shared void testPeriodFromLeapYear() {
+    Period period = Period{ years = 1;};
+    Date from = date(2012, february, 29);
+    Date to = date(2013,february,28);
+    assertEquals{
+      expected = period;
+      actual = to.periodFrom( from );
+    };
+    assertEquals{
+      expected = period;
+      actual = from.periodTo( to );
+    };
+
+    assertEquals(to, from.plus(period));
+    assertEquals(from.minusDays(1), to.minus(period));
 }
 
 shared void testPeriodFromDayAfter() {
