@@ -18,7 +18,8 @@ shared interface Writer satisfies Closeable {
     shared formal void destroy();
     
     shared actual void open() {}
-    
+
+    doc "Closes this `Writer` after `flush` is called automatically."    
     shared actual void close(Exception? exception) =>
             destroy();
     
