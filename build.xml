@@ -191,7 +191,7 @@
     <target name="doc" 
             description="Documents the SDK modules to the 'modules' repository">
         
-        <ceylon-doc executable="${ceylon.executable}">
+        <ceylon-doc executable="${ceylon.executable}" includesourcecode="true" nomtimecheck="true">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-doc>
         
