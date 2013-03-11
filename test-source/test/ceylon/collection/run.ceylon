@@ -11,6 +11,7 @@ shared void run(){
         "Map2" -> testMap2,
         "MapRemove" -> testMapRemove,
         "List" -> testList,
-        "List constructor" -> testListConstructor
+        "List constructor" -> testListConstructor,
+        "group" -> testGroup
     );
 }
