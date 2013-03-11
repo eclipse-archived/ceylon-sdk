@@ -31,7 +31,7 @@ Boolean exact(Object? expect, Object? got) {
                         && got != got) { // consider undefined as equal
                         return true;
                     } else if (expect == 0.0
-                        && actual== 0.0
+                        && got == 0.0
                         && expect.strictlyPositive != got.strictlyPositive) { // consider 0.0 and -0.0 as different
                         return false;
                     }
