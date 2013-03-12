@@ -183,53 +183,76 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return null;
     }
     
-    doc "Not implemented yet"
-    // FIXME
-    shared actual Element?[] items({Integer*} keys) {
-        return nothing;
+    shared actual List<Element> span(Integer from, Integer to) {
+        value ret = LinkedList<Element>();
+        variable Cell<Element>? iter = head;
+        variable Integer i = 0;
+        while(exists Cell<Element> cell = iter){
+            if(i > to){
+                break;
+            }
+            if(i >= from){
+                ret.add(cell.car);
+            }
+            i++;
+            iter = cell.cdr;
+        }
+        return ret;
     }
     
-    doc "Not implemented yet"
-    // FIXME
-    shared actual Sequence<Element> span(Integer from, Integer to) {
-        return nothing;
+    shared actual List<Element> spanFrom(Integer from) {
+        value ret = LinkedList<Element>();
+        variable Cell<Element>? iter = head;
+        variable Integer i = 0;
+        while(exists Cell<Element> cell = iter){
+            if(i >= from){
+                ret.add(cell.car);
+            }
+            i++;
+            iter = cell.cdr;
+        }
+        return ret;
     }
-    doc "Not implemented yet"
-    // FIXME
-    shared actual Sequence<Element> spanFrom(Integer from) {
-        return nothing;
+    
+    shared actual List<Element> spanTo(Integer to) {
+        value ret = LinkedList<Element>();
+        variable Cell<Element>? iter = head;
+        variable Integer i = 0;
+        while(exists Cell<Element> cell = iter){
+            if(i > to){
+                break;
+            }
+            ret.add(cell.car);
+            i++;
+            iter = cell.cdr;
+        }
+        return ret;
     }
-    doc "Not implemented yet"
-    // FIXME
-    shared actual Sequence<Element> spanTo(Integer to) {
-        return nothing;
-    }
-    doc "Not implemented yet"
-    // FIXME
-    shared actual Sequence<Element> segment(Integer from, Integer length) {
-        return nothing;
+
+    shared actual List<Element> segment(Integer from, Integer length) {
+        value ret = LinkedList<Element>();
+        if(length == 0){
+            return ret;
+        }
+        variable Cell<Element>? iter = head;
+        variable Integer i = 0;
+        while(exists Cell<Element> cell = iter){
+            if(i >= from){
+                if(ret._size >= length){
+                    break;
+                }
+                ret.add(cell.car);
+            }
+            i++;
+            iter = cell.cdr;
+        }
+        return ret;
     }
     
     shared actual Boolean defines(Integer index) {
         return index >= 0 && index < _size;
     }
-    shared actual Boolean definesAny({Integer*} keys) {
-        for(Integer key in keys){
-            if(defines(key)){
-                return true;
-            }
-        }
-        return false;
-    }
-    shared actual Boolean definesEvery({Integer*} keys) {
-        for(Integer key in keys){
-            if(!defines(key)){
-                return false;
-            }
-        }
-        return true;
-    }
-    
+
     shared actual Boolean contains(Object element) {
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
@@ -332,10 +355,30 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return false;
     }
 
-    doc "Not implemented yet"
-    shared actual LinkedList<Element> reversed {
-        return nothing;
+    shared actual List<Element> reversed {
+        value ret = LinkedList<Element>();
+
+        variable Cell<Element>? iter = head;
+        while(exists Cell<Element> cell = iter){
+            // append before the head
+            ret.head = Cell(cell.car, ret.head);
+            if(!ret.tail exists){
+                ret.tail = ret.head;
+            }
+            iter = cell.cdr;
+        }
+        ret._size = _size;
+        return ret;
     }
     
-    shared actual List<Element> rest => nothing;
+    shared actual List<Element> rest {
+        // this would be a lot cheaper if we were not mutable, but there we are
+        value ret = LinkedList<Element>();
+        variable Cell<Element>? iter = head?.cdr; // skip the first one
+        while(exists Cell<Element> cell = iter){
+            ret.add(cell.car);
+            iter = cell.cdr;
+        }
+        return ret;
+    }
 }
