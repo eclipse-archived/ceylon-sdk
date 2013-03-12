@@ -199,30 +199,24 @@ shared class HashSet<Element>({Element*} values = {})
         return hash;
     }
     
-    doc "Not implemented yet"
-    see (equalsTemp)
     shared actual Boolean equals(Object that) {
-        // FIXME: can't implement this :(
-        return nothing;
-    }
-    
-    shared Boolean equalsTemp(Set<Element> that){
-        if(size != that.size){
-            return false;
-        }
-        variable Integer index = 0;
-        // walk every bucket
-        while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
-                if(!that.contains(cell.car)){
-                    return false;
+        if(is Set<Object> that,
+            size == that.size){
+            variable Integer index = 0;
+            // walk every bucket
+            while(index < store.size){
+                variable Cell<Element>? bucket = store[index];
+                while(exists Cell<Element> cell = bucket){
+                    if(!that.contains(cell.car)){
+                        return false;
+                    }
+                    bucket = cell.cdr;
                 }
-                bucket = cell.cdr;
+                index++;
             }
-            index++;
+            return true;
         }
-        return true;
+        return false;
     }
     
     shared actual HashSet<Element> clone {

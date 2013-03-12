@@ -60,7 +60,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     
     shared actual Boolean equals(LangObject that) {
         if(is Object that){
-            return this === that || contents.equalsTemp(that.contents);
+            return this === that || contents == that.contents;
         }
         return false;
     }

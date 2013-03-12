@@ -312,42 +312,24 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return h;
     }
     
-    doc "Not implemented yet"
-    see (equalsTemp)
     shared actual Boolean equals(Object that) {
-        // grrr, we can't implement this :(
-        return false;
-    }
-    
-    shared Boolean equalsTemp(LinkedList<Element> that){
-        if(_size != that._size){
-            return false;
-        }
-        variable Cell<Element>? iter = head;
-        variable Cell<Element>? iter2 = that.head;
-        while(exists Cell<Element> cell = iter){
-            if(exists Cell<Element> cell2 = iter2){
-                if(is Object car = cell.car){
-                    if(is Object car2 = cell2.car){
-                       if(car != car2){
-                           return false;
-                       }
-                    }else{
+        if(is List<Object> that,
+            _size == that.size){
+            variable Cell<Element>? iter = head;
+            variable Iterator<Object> iter2 = that.iterator();
+            while(exists Cell<Element> cell = iter){
+                if(!is Finished thatElement = iter2.next()){
+                    if(!eq(cell.car, thatElement)){
                         return false;
                     }
+                    iter = cell.cdr;
                 }else{
-                    // both must be non-objects?
-                    if(cell2.car is Object){
-                        return false;
-                    }
+                    return false;
                 }
-                iter2 = cell2.cdr;
-            }else{
-                return false;
             }
-            iter = cell.cdr;
+            return true;
         }
-        return true;
+        return false;
     }
 
     doc "Not implemented yet"

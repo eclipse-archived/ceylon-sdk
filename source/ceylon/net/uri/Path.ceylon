@@ -63,7 +63,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
                 return true;
             }
             return absolute == that.absolute
-                && segments.equalsTemp(that.segments); 
+                && segments == that.segments; 
         }
         return false;
     }

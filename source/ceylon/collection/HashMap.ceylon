@@ -282,35 +282,29 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         return hash;
     }
     
-    doc "Not implemented yet"
-    see (equalsTemp)
     shared actual Boolean equals(Object that) {
-        // FIXME: can't implement this :(
-        return nothing;
-    }
-    
-    shared Boolean equalsTemp(Map<Key,Item> that){
-        if(size != that.size){
-            return false;
-        }
-        variable Integer index = 0;
-        // walk every bucket
-        while(index < store.size){
-            variable Cell<Key->Item>? bucket = store[index];
-            while(exists Cell<Key->Item> cell = bucket){
-                Item? item = that.get(cell.car.key);
-                if(exists item){
-                    if(item != cell.car.item){
+        if(is Map<Object,Object> that,
+            size == that.size){
+            variable Integer index = 0;
+            // walk every bucket
+            while(index < store.size){
+                variable Cell<Key->Item>? bucket = store[index];
+                while(exists Cell<Key->Item> cell = bucket){
+                    Object? item = that.get(cell.car.key);
+                    if(exists item){
+                        if(item != cell.car.item){
+                            return false;
+                        }
+                    }else{
                         return false;
                     }
-                }else{
-                    return false;
+                    bucket = cell.cdr;
                 }
-                bucket = cell.cdr;
+                index++;
             }
-            index++;
+            return true;
         }
-        return true;
+        return false;
     }
     
     shared actual Map<Key,Item> clone {

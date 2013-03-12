@@ -32,7 +32,7 @@ shared class Query(Parameter* initialParameters) {
             if(this === that){
                 return true;
             }
-            return parameters.equalsTemp(that.parameters); 
+            return parameters == that.parameters; 
         }
         return false;
     }

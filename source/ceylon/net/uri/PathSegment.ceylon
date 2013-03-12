@@ -21,7 +21,7 @@ shared class PathSegment(String initialName, Parameter* initialParameters) {
                 return true;
             }
             return name == that.name
-                && parameters.equalsTemp(that.parameters);
+                && parameters == that.parameters;
         }
         return false;
     }

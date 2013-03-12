@@ -101,7 +101,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     
     shared actual Boolean equals(LangObject that) {
         if(is Array that){
-            return that === this || list.equalsTemp(that.list);
+            return that === this || list == that.list;
         }
         return false;
     }
