@@ -250,7 +250,7 @@ shared class HashSet<Element>({Element*} values = {})
         return false;
     }
     
-    shared actual Set<Element> complement<Other>(Set<Other> set) 
+    shared actual HashSet<Element> complement<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element> ret = HashSet<Element>();
         for(Element elem in this){
@@ -261,7 +261,7 @@ shared class HashSet<Element>({Element*} values = {})
         return ret;
     }
 
-    shared actual Set<Element|Other> exclusiveUnion<Other>(Set<Other> set) 
+    shared actual HashSet<Element|Other> exclusiveUnion<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
         for(Element elem in this){
