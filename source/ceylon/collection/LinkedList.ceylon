@@ -243,29 +243,8 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return false;
     }
     
-    shared actual Boolean containsAny({Object*} elements) {
-        for(Object elem in elements){
-            if(contains(elem)){
-                return true;
-            }
-        }
-        return false;
-    }
-    shared actual Boolean containsEvery({Object*} elements) {
-        for(Object elem in elements){
-            if(!contains(elem)){
-                return false;
-            }
-        }
-        return true;
-    }
-    
     shared actual Integer size {
         return _size;
-    }
-    
-    shared actual Boolean empty {
-        return size == 0;
     }
     
     shared actual Integer count(Boolean selecting(Element element)) {
@@ -295,6 +274,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         ret._size = size;
         return ret;
     }
+
     shared actual Integer[] keys {
         return empty then {} else 0.._size;
     }

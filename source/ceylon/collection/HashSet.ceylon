@@ -113,9 +113,6 @@ shared class HashSet<Element>({Element*} values = {})
     shared actual Integer size {
         return _size;
     }
-    shared actual Boolean empty {
-        return _size == 0;
-    }
     
     shared actual Iterator<Element> iterator() {
         // FIXME: make this faster with a size check
@@ -258,22 +255,6 @@ shared class HashSet<Element>({Element*} values = {})
         }
         return false;
     }
-    shared actual Boolean containsEvery({Object*} elements) {
-        for(Object element in elements){
-            if(contains(element)){
-                return true;
-            }
-        }
-        return false;
-    }
-    shared actual Boolean containsAny({Object*} elements) {
-        for(Object element in elements){
-            if(!contains(element)){
-                return false;
-            }
-        }
-        return true;
-    }
     
     shared actual Set<Element> complement<Other>(Set<Other> set) 
     given Other satisfies Object {
@@ -302,49 +283,22 @@ shared class HashSet<Element>({Element*} values = {})
         return ret;
     }
     
-    shared actual Set<Element&Other> intersection<Other>(Set<Other> set) 
+    shared actual HashSet<Element&Other> intersection<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element&Other> ret = HashSet<Element&Other>();
         for(Element elem in this){
-            if(set.contains(elem)){
-                // FIXME: can't implement yet
-                //if(is Other elem){
-                //    ret.add(elem);
-                //}
+            if(set.contains(elem), is Other elem){
+                ret.add(elem);
             }
         }
         return ret;
     }
 
-    shared actual Set<Element|Other> union<Other>(Set<Other> set) 
+    shared actual HashSet<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
         ret.addAll(this);
         ret.addAll(set);
         return ret;
-    }
-
-    doc "Determines if this Set is a superset of the specified Set,
-         that is, if this Set contains all of the elements in the
-         specified Set."
-    shared actual Boolean superset(Set<Object> set) {
-        for (element in set) {
-            if (!contains(element)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    doc "Determines if this Set is a subset of the specified Set,
-         that is, if the specified Set contains all of the
-         elements in this Set."
-    shared actual Boolean subset(Set<Object> set) {
-        for (element in this) {
-            if (!set.contains(element)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
