@@ -27,6 +27,17 @@ void testSet(){
     assertEquals("()", set.string);
     assertEquals(0, set.size);
     assertTrue(!set.contains("fu"));
+    
+    // equality
+    assertEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a", "b"});
+    assertNotEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a"});
+    assertNotEquals(HashSet{"a", "b", "c"}, HashSet{});
+    assertEquals(HashSet{}, HashSet{});
+    
+    // unions and shit
+    assertEquals(HashSet{"a", 2}, HashSet{"a", "a"}.union(HashSet{2, "a"}));
+    assertEquals(HashSet{"b", 2}, HashSet{"a", "b"}.exclusiveUnion(HashSet{2, "a"}));
+    assertEquals(HashSet{"a"}, HashSet{"a", "b"}.intersection(HashSet{2, "a"}));
 }
 
 void testSetRemove(){

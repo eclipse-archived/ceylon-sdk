@@ -31,6 +31,13 @@ void testMap(){
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
     assertTrue(!map.defines("fu"), "f");
+    
+    // equality
+    assertEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
+    assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->2});
+    assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2});
+    assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{});
+    assertEquals(HashMap{}, HashMap{});
 }
 
 void testMapRemove(){

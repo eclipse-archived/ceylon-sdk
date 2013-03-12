@@ -134,6 +134,34 @@ void testList(){
     assertEquals("[]", l.string);
     assertEquals(0, l.size);
     assertTrue(!l.contains("foo"));
+    
+    // equality tests
+    assertEquals(LinkedList{"a", "b"}, LinkedList{"a", "b"});
+    assertNotEquals(LinkedList{"a", "b"}, LinkedList{"b", "a"});
+    assertNotEquals(LinkedList{"a", "b"}, LinkedList{"a", "b", "c"});
+    assertNotEquals(LinkedList{"a", "b", "c"}, LinkedList{"a", "b"});
+    assertEquals(LinkedList{}, LinkedList{});
+
+    // rest
+    assertEquals(LinkedList{"b", "c"}, LinkedList{"a", "b", "c"}.rest);
+
+    // reversed
+    assertEquals(LinkedList{"c", "b", "a"}, LinkedList{"a", "b", "c"}.reversed);
+
+    // span
+    assertEquals(LinkedList{}, LinkedList{"a", "b", "c"}.spanFrom(3));
+    assertEquals(LinkedList{"c"}, LinkedList{"a", "b", "c"}.spanFrom(2));
+    assertEquals(LinkedList{"b", "c"}, LinkedList{"a", "b", "c"}.spanFrom(1));
+    assertEquals(LinkedList{"a"}, LinkedList{"a", "b", "c"}.spanTo(0));
+    assertEquals(LinkedList{"a", "b"}, LinkedList{"a", "b", "c"}.spanTo(1));
+    assertEquals(LinkedList{"a", "b", "c"}, LinkedList{"a", "b", "c"}.spanTo(20));
+    assertEquals(LinkedList{"b", "c"}, LinkedList{"a", "b", "c", "d"}.span(1, 2));
+    assertEquals(LinkedList{"b", "c", "d"}, LinkedList{"a", "b", "c", "d"}.span(1, 20));
+
+    // segment
+    assertEquals(LinkedList{}, LinkedList{"a", "b", "c"}.segment(0, 0));
+    assertEquals(LinkedList{"a", "b"}, LinkedList{"a", "b", "c"}.segment(0, 2));
+    assertEquals(LinkedList{"b", "c"}, LinkedList{"a", "b", "c"}.segment(1, 20));
 }
 
 void testListConstructor(){
