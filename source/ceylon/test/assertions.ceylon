@@ -60,6 +60,21 @@ shared void assertEquals(Object? expected, Object? actual, String? message = nul
     }
 }
 
+doc "Fails the test if the given objects are equal according to the given `compare` function."
+shared void assertNotEquals(Object? expected, Object? actual, String? message = null,
+        Boolean compare(Object? expected, Object? actual) => nullSafeEquals(expected, actual)) {
+    if (compare(expected,actual)) {
+        value expectedText = nullSafeString(expected);
+        value actualText = nullSafeString(actual);
+        if (exists message) {
+            throw AssertComparisonException("assertion failed: `` expectedText `` == `` actualText ``: \"`` message ``\"", expectedText, actualText);
+        }
+        else {
+            throw AssertComparisonException("assertion failed: `` expectedText `` == `` actualText ``", expectedText, actualText);
+        }
+    }
+}
+
 doc "A compare function for `assertEquals()`"
 see(assertEquals)
 Boolean nullSafeEquals(Object? expected, Object? actual) {
