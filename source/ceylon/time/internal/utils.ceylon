@@ -1,5 +1,3 @@
-import ceylon.language { Integer }
-
 doc "return padded value"
 shared String leftPad(Integer number, String padding = "00"){
     if (number == 0){

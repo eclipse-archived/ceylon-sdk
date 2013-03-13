@@ -1,4 +1,3 @@
-import ceylon.language { Integer }
 import ceylon.time { Date, Time, DateTime, Instant, Period, zero }
 import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek }
 import ceylon.time.chronology { unixTime }

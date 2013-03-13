@@ -1,4 +1,3 @@
-import ceylon.language { Integer }
 import ceylon.time { Date }
 
 shared abstract class AbstractDate( dayOfEra )
