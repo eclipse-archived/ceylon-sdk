@@ -79,7 +79,8 @@
     <target name="compile-jvm">
         
         <ceylon-compile executable="${ceylon.executable}"
-            verbose="${ceylon.verbosity}">
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
         
@@ -88,7 +89,8 @@
     <target name="compile-js">
         
         <ceylon-compile-js executable="${ceylon.executable}"
-            verbose="${ceylon.verbosity}">
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8">
             <moduleset refid="modules.sdk.js"/>
         </ceylon-compile-js>
         
@@ -102,7 +104,8 @@
         <ceylon-compile executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
-            verbose="${ceylon.verbosity}">
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8">
             <reposet refid="reposet.compile.test"/> 
             <moduleset refid="modules.test.jvm"/>
         </ceylon-compile>
@@ -114,7 +117,8 @@
         <ceylon-compile-js executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
-            verbose="${ceylon.verbosity}">
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8">
             <reposet refid="reposet.compile.test"/>
             <moduleset refid="modules.test.js"/>
         </ceylon-compile-js>
@@ -191,7 +195,10 @@
     <target name="doc" 
             description="Documents the SDK modules to the 'modules' repository">
         
-        <ceylon-doc executable="${ceylon.executable}" includesourcecode="true" nomtimecheck="true">
+        <ceylon-doc executable="${ceylon.executable}"
+            includesourcecode="true"
+            nomtimecheck="true"
+            encoding="UTF-8">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-doc>
         
