@@ -41,6 +41,7 @@
         <!--<module name="ceylon.process"/>-->
         <!--<module name="ceylon.dbc"/>-->
         <!--<module name="ceylon.interop.java"/>-->
+        <module name="ceylon.time"/>
     </moduleset>
     
     <moduleset id="modules.test.jvm">
@@ -67,6 +68,7 @@
         <module name="test.ceylon.json"/>
         <!--<module name="test.ceylon.net"/>-->
         <!--<module name="test.ceylon.process"/>-->
+        <module name="test.ceylon.time"/>
         <!--<module name="test.ceylon.dbc"/>-->
         <!--<module name="test.ceylon.interop"/>-->
     </moduleset>
@@ -186,8 +188,21 @@
     </target>
 
     <target name="test-js" depends="compile-test-js">
-        <!-- TODO support verbose attr on ceylon-run command -->
-        <!-- TODO run the js tests -->
+        <ceylon-run module="test.ceylon.collection/${sdk.version}" run="test.ceylon.collection.run"
+            executable="${ceylon.executable}">
+            <reposet refid="reposet.run.test"/>
+        </ceylon-run>
+        
+        <ceylon-run module="test.ceylon.json/${sdk.version}" run="test.ceylon.json.run"
+            executable="${ceylon.executable}">
+            <reposet refid="reposet.run.test"/>
+        </ceylon-run>
+        
+        <ceylon-run module="test.ceylon.time/${sdk.version}" run="test.ceylon.time.run"
+            executable="${ceylon.executable}">
+            <reposet refid="reposet.run.test"/>
+          <rep url="${test.repo}"/>
+        </ceylon-run>
     </target>
 
     <target name="test" depends="compile-test,test-jvm,test-js"
