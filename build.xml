@@ -4,6 +4,7 @@
     <property name="ceylon.verbosity" value="false"/>
     <property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
     <property name="out.repo" location="modules"/>
+    <property name="deps.repo" location="test-deps"/>
     <property name="test.repo" location="modules"/>
 
     <!-- Local repository -->
@@ -17,7 +18,7 @@
 
     <reposet id="reposet.compile.test">
         <repo url="${out.repo}"/>
-        <repo url="test-deps"/><!-- Needed for h2.jar dep of test.ceylon.dbc -->
+        <repo url="${deps.repo}"/><!-- Needed for h2.jar dep of test.ceylon.dbc -->
     </reposet>
     
     <reposet id="reposet.run.test">
