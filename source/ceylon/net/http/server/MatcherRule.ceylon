@@ -24,6 +24,12 @@ class EndsWith(String substring)
     relativePath(String requestPath) => requestPath;
 }
 
+class IsRoot()
+        extends Matcher() {
+    matches(String path) => path.equals("/");
+    relativePath(String requestPath) => requestPath;
+}
+
 class And(Matcher left, Matcher right) 
         extends Matcher() {
     matches(String path) => left.matches(path) && right.matches(path);
@@ -43,3 +49,6 @@ shared Matcher startsWith(String s) => StartsWith(s);
 
 doc "Rule using [[String.endsWith]]."
 shared Matcher endsWith(String s) => EndsWith(s);
+
+doc "Rule matching / (root)."
+shared Matcher isRoot() => IsRoot();
