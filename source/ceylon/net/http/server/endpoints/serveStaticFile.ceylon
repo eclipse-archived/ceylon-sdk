@@ -15,7 +15,7 @@ shared void serveStaticFile(externalPath)
     doc "Root directory containing files."
     String externalPath;
     
-    Path filePath = parsePath(externalPath + request.relativePath);
+    Path filePath = parsePath(externalPath + request.path);
     if (is File file = filePath.resource) {
         //TODO log
         //print("Serving file: ``filePath.absolutePath.string``");
