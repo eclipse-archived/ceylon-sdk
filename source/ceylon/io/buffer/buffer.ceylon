@@ -99,7 +99,7 @@ shared abstract class Buffer<T>() satisfies Iterable<T> {
     doc "Returns an [[Iterator]] object to read from the current [[position]] until the
          [[limit]]. This iterator modifies the buffer directly, so you will need to
          [[clear]] or [[flip]] it afterwards if you wish to iterate it again."
-    shared actual Iterator<T> iterator {
+    shared actual Iterator<T> iterator() {
         object it satisfies Iterator<T> {
             shared actual T|Finished next() {
                 if(hasAvailable){

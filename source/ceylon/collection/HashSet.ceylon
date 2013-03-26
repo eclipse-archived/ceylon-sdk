@@ -40,7 +40,7 @@ shared class HashSet<Element>()
             bucket = cell.cdr;
         }
         // add a new entry
-        store.setItem(index, Cell<Element>(element, store[index]));
+        store.set(index, Cell<Element>(element, store[index]));
         return true;
     }
             
@@ -71,7 +71,7 @@ shared class HashSet<Element>()
                 if(exists Cell<Element> last = prev){
                     last.cdr = cell.cdr;
                 }else{
-                    store.setItem(index, cell.cdr);
+                    store.set(index, cell.cdr);
                 }
                 _size--;
                 return;
@@ -86,7 +86,7 @@ shared class HashSet<Element>()
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            store.setItem(index++, null);
+            store.set(index++, null);
         }
         _size = 0;
     }
@@ -105,7 +105,7 @@ shared class HashSet<Element>()
         return _size == 0;
     }
     
-    shared actual Iterator<Element> iterator {
+    shared actual Iterator<Element> iterator() {
         // FIXME: make this faster with a size check
         object iter satisfies Iterator<Element> {
             variable Integer index = 0;
@@ -224,7 +224,7 @@ shared class HashSet<Element>()
         // walk every bucket
         while(index < store.size){
             if(exists Cell<Element> bucket = store[index]){
-                clone.store.setItem(index, bucket.clone); 
+                clone.store.set(index, bucket.clone); 
             }
             index++;
         }

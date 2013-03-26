@@ -41,7 +41,7 @@ shared class ConcreteProcess(
     error = errorOrNone
             else OutgoingPipe(process.errorStream);
     
-    actual shared Integer? exitCode {
+    shared actual Integer? exitCode {
         try {
             return process.exitValue();
         }
@@ -54,7 +54,7 @@ shared class ConcreteProcess(
     
     waitForExit() => process.waitFor();
     
-    kill() => process.destroy();
+    shared actual void kill() => process.destroy();
     
 }
 

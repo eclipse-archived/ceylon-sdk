@@ -38,8 +38,8 @@ shared class Object(Entry<String, String|Boolean|Integer|Float|Object|Array|Null
         return contents[key];
     }
     
-    shared actual Iterator<Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>> iterator {
-        return contents.iterator;
+    shared actual Iterator<Entry<String,String|Boolean|Integer|Float|Object|Array|NullInstance>> iterator() {
+        return contents.iterator();
     }
     
     shared actual void put(String key, String|Boolean|Integer|Float|Object|Array|NullInstance item) {
