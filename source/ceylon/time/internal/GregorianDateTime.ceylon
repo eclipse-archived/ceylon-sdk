@@ -16,65 +16,35 @@ shared class GregorianDateTime( date, time )
                                   else time <=> other.time;
     }
 
-    shared actual Integer day {
-        return date.day;
-    }
+    shared actual Integer day => date.day;
 
-    shared actual DayOfWeek dayOfWeek {
-        return date.dayOfWeek;
-    }
+    shared actual DayOfWeek dayOfWeek => date.dayOfWeek;
 
-    shared actual Integer dayOfYear {
-        return date.dayOfYear;
-    }
+    shared actual Integer dayOfYear => date.dayOfYear;
 
-    shared actual Integer dayOfEra {
-        return date.dayOfEra;
-    }
+    shared actual Integer dayOfEra => date.dayOfEra;
 
-    shared actual Integer year {
-        return date.year;
-    }
+    shared actual Integer year => date.year;
 
-    shared actual Boolean leapYear {
-        return date.leapYear;
-    }
+    shared actual Boolean leapYear => date.leapYear;
 
-    shared actual Integer weekOfYear {
-        return date.weekOfYear;
-    }
+    shared actual Integer weekOfYear => date.weekOfYear;
 
-    shared actual Month month {
-        return date.month;
-    }
+    shared actual Month month => date.month;
 
-    shared actual Integer hours {
-        return time.hours;
-    }
+    shared actual Integer hours => time.hours;
 
-    shared actual Integer milliseconds {
-        return time.milliseconds;
-    }
+    shared actual Integer milliseconds => time.milliseconds;
 
-    shared actual Integer millisOfDay {
-        return time.millisOfDay;
-    }
+    shared actual Integer millisecondsOfDay => time.millisecondsOfDay;
 
-    shared actual Integer minutes {
-        return time.minutes;
-    }
+    shared actual Integer minutes => time.minutes;
 
-    shared actual Integer minutesOfDay {
-        return time.minutesOfDay;
-    }
+    shared actual Integer minutesOfDay => time.minutesOfDay;
 
-    shared actual Integer seconds {
-        return time.seconds;
-    }
+    shared actual Integer seconds => time.seconds;
 
-    shared actual Integer secondsOfDay {
-        return time.secondsOfDay;
-    }
+    shared actual Integer secondsOfDay => time.secondsOfDay;
 
     shared actual DateTime plusYears(Integer years) {
         return GregorianDateTime { date = date.plusYears(years); time = time; };
@@ -217,7 +187,7 @@ shared class GregorianDateTime( date, time )
         if (exists timeZone) {
             return nothing;
         }
-        return Instant(unixTime.timeFromFixed(dayOfEra) + millisOfDay);
+        return Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
     }
 
     shared actual Boolean equals( Object other ) {
@@ -244,9 +214,9 @@ shared class GregorianDateTime( date, time )
 
         value dayConsumed = this.time < start.time then 1 else 0; 
         
-        variable value total = this.millisOfDay >= start.millisOfDay
-                               then this.millisOfDay - start.millisOfDay
-                               else ms.perDay + this.millisOfDay - start.millisOfDay;
+        variable value total = this.millisecondsOfDay >= start.millisecondsOfDay
+                               then this.millisecondsOfDay - start.millisecondsOfDay
+                               else ms.perDay + this.millisecondsOfDay - start.millisecondsOfDay;
 
         value hh = total / ms.perHour;
         total =  total % ms.perHour;
@@ -277,12 +247,12 @@ shared class GregorianDateTime( date, time )
 
         value days = daysOf.fromMillis(inputMillis) * signal;
         value restOfMillis = floorMod(inputMillis, ms.perDay) * signal
-                           + time.millisOfDay;
+                           + time.millisecondsOfDay;
 
         value totalDays = days + floorDiv(restOfMillis, ms.perDay);
         value newMillis = floorMod(restOfMillis, ms.perDay);
 
-        Time newTime = (newMillis == time.millisOfDay) 
+        Time newTime = (newMillis == time.millisecondsOfDay) 
                        then time else TimeOfDay(newMillis);
 
         return GregorianDateTime( date.plusDays(totalDays), newTime);

@@ -8,7 +8,7 @@ Time time_14h_20m_07s_59ms = time {
     hours = 14;
     minutes = 20;
     seconds = 07;
-    millis = 59;
+    milliseconds = 59;
 };
 //              msOfDay, hours,   minutes, seconds, millis,  minOfDay, secOfDay
 alias Table => [Integer, Integer, Integer, Integer, Integer, Integer,  Integer];

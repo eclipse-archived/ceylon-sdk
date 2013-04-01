@@ -3,7 +3,8 @@ import ceylon.time.internal.math { mod=floorMod, fdiv=floorDiv }
 
 "A month in a Gregorian or Julian calendar system."
 shared abstract class Month(integer)
-       of january | february | march | april | may | june | july | august | september | october | november | december
+       of january | february | march | april | may | june | july 
+        | august | september | october | november | december
        satisfies Ordinal<Month> & Comparable<Month>{
 
         "Ordinal number of the month of year.
@@ -47,18 +48,18 @@ shared abstract class Month(integer)
     shared class Overflow(month, years){
         "New month value"
         shared Month month;
-        
+
         "Number of years overflowed by calculation"
         shared Integer years;
     }
-    
+
     "Adds number of months to this month and returns the result of 
-     as new month value and."
+     as new month value and number of times the operation overflowed."
     shared Overflow add(Integer numberOfMonths){
         value next = (integer - 1 + numberOfMonths);
         value nextMonth = mod(next, months.perYear);
         assert (exists month = months.all[nextMonth]);
-        
+
         Integer years = fdiv(next, 12);
         return Overflow(month, years); 
     }
@@ -88,83 +89,83 @@ shared Month monthOf(Integer|Month month){
 "January. The first month of a gregorian calendar system."
 shared object january extends Month(gregorian.january) {
     shared actual String string = "january";
-    shared actual Month predecessor { return december; }  
-    shared actual Month successor { return february; }
+    shared actual Month predecessor => december;
+    shared actual Month successor => february;
 }
 
 "February. The second month of a gregorian calendar system."
 shared object february extends Month(gregorian.february) {
     shared actual String string = "february";
-    shared actual Month predecessor { return january; }  
-    shared actual Month successor { return march; }
+    shared actual Month predecessor => january;
+    shared actual Month successor => march;
 }
 
 "March. The third month of a gregorian calendar system."
 shared object march extends Month(gregorian.march) {
     shared actual String string = "march";
-    shared actual Month predecessor { return february; }  
-    shared actual Month successor { return april; }
+    shared actual Month predecessor => february;
+    shared actual Month successor => april;
 }
 
 "April. The fourth month of a gregorian calendar system."
 shared object april extends Month(gregorian.april) {
     shared actual String string = "april";
-    shared actual Month predecessor { return march; }  
-    shared actual Month successor { return may; }
+    shared actual Month predecessor => march;
+    shared actual Month successor => may;
 }
 
 "May. The fifth month of a gregorian calendar system."
 shared object may extends Month(5) {
     shared actual String string = "may";
-    shared actual Month predecessor { return april; }  
-    shared actual Month successor { return june; }
+    shared actual Month predecessor => april;
+    shared actual Month successor => june;
 }
 
 "June. The sixth month of a gregorian calendar system."
 shared object june extends Month(gregorian.june) {
     shared actual String string = "june";
-    shared actual Month predecessor { return may; }
-    shared actual Month successor { return july; }
+    shared actual Month predecessor => may;
+    shared actual Month successor => july;
 }
 
 "July. The seventh month of a gregorian calendar system."
 shared object july extends Month(gregorian.july) {
     shared actual shared actual String string = "july";
-    shared actual Month predecessor { return june; }  
-    shared actual Month successor { return august; }
+    shared actual Month predecessor => june;
+    shared actual Month successor => august;
 }
 
 "August. The eigth month of a gregorian calendar system."
 shared object august extends Month(gregorian.august) {
     shared actual shared actual String string = "august";
-    shared actual Month predecessor { return july; }  
-    shared actual Month successor { return september; }
+    shared actual Month predecessor => july;
+    shared actual Month successor => september;
 }
 
 "September. The nineth month of a gregorian calendar system."
 shared object september extends Month(gregorian.september) {
     shared actual shared actual String string = "september";
-    shared actual Month predecessor { return august; }  
-    shared actual Month successor { return october; }
+    shared actual Month predecessor => august;
+    shared actual Month successor => october;
 }
 
 "October. The tenth month of a gregorian calendar system."
 shared object october extends Month(gregorian.october) {
     shared actual shared actual String string = "october";
-    shared actual Month predecessor { return september; }  
-    shared actual Month successor { return november; }
+    shared actual Month predecessor => september;
+    shared actual Month successor => november;
 }
 
 "November. The eleventh month of a gregorian calendar system."
 shared object november extends Month(gregorian.november) {
     shared actual shared actual String string = "november";
-    shared actual Month predecessor { return october; }  
-    shared actual Month successor { return december; }
+    shared actual Month predecessor => october;
+    shared actual Month successor => december;
 }
 
 "December. The twelveth (last) month of a gregorian calendar system."
 shared object december extends Month(gregorian.december) {
     shared actual shared actual String string = "december";
-    shared actual Month predecessor { return november; }  
-    shared actual Month successor { return january; }
+    shared actual Month predecessor => november;
+    shared actual Month successor => january;
 }

@@ -1,20 +1,14 @@
 import ceylon.time.base { ReadableDuration }
 
-doc "Duration specifies a discreet amount of milliseconds between two instances of time."
-shared class Duration(millis) satisfies ReadableDuration {
+"Duration specifies a discreet amount of milliseconds between two instances of time."
+shared class Duration(milliseconds) satisfies ReadableDuration {
 
-    doc "Number of milliseconds of this duration"
-    shared actual Integer millis;
+    "Number of milliseconds of this duration"
+    shared actual Integer milliseconds;
 
-    doc "Returns this duration as a period of milliseconds"
-    shared Period period {
-        return Period { 
-            milliseconds = millis; 
-        }; 
-    }
+    "Returns this duration as a period of milliseconds"
+    shared Period period => Period { milliseconds = milliseconds; }; 
 
-    doc "Returns the string representation of this duration."
-    shared actual String string {
-        return "``millis``ms";
-    }
+    "Returns the string representation of this duration."
+    shared actual String string => "``milliseconds``ms";
 }

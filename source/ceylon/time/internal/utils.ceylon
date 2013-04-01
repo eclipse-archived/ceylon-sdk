@@ -1,4 +1,4 @@
-doc "return padded value"
+"return padded value of the number as a string"
 shared String leftPad(Integer number, String padding = "00"){
     if (number == 0){
         return padding;

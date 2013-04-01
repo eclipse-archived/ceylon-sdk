@@ -9,6 +9,6 @@ by ("Diego Coronel", "Roland Tepp")
 shared interface ReadableDuration {
 
     "Number of milliseconds."
-    shared formal Integer millis;
+    shared formal Integer milliseconds;
 
 }

@@ -39,7 +39,7 @@ shared interface Time
 }
 
 "Creates new instance of [[Time]]."
-shared Time time(hours, minutes, seconds=0, millis=0) {
+shared Time time(hours, minutes, seconds=0, milliseconds=0) {
 
     "Hours of the day (0..23)"
     Integer hours;
@@ -51,23 +51,23 @@ shared Time time(hours, minutes, seconds=0, millis=0) {
     Integer seconds;
 
     "Milliseconds of the second (0..999)"
-    Integer millis;
+    Integer milliseconds;
 
     "Hours value should be between 0 and 23"
-    assert( 0 <= hours && hours < h.perDay );
+    assert( 0 <= hours < h.perDay );
 
     "Minutes value should be between 0 and 59"
-    assert( 0 <= minutes && minutes < min.perHour );
+    assert( 0 <= minutes < min.perHour );
 
     "Seconds value should be between 0 and 59"
-    assert( 0 <= seconds && seconds < sec.perMinute );
+    assert( 0 <= seconds < sec.perMinute );
 
     "Milliseconds value should be between 0 and 999"
-    assert( 0 <= millis && millis < ms.perSecond );
+    assert( 0 <= milliseconds < ms.perSecond );
 
     value hh = hours * ms.perHour;
     value mm = minutes * ms.perMinute;
     value ss = seconds * ms.perSecond;
 
-    return TimeOfDay( hh + mm + ss + millis );
+    return TimeOfDay( hh + mm + ss + milliseconds );
 }

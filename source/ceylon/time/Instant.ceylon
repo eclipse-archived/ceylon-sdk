@@ -15,18 +15,18 @@ doc "A specific instant of time on a continuous time-scale.
      
      An instant represents a single point in time irrespective of 
      any time-zone offsets or geographical locations"
-shared class Instant(millis) 
+shared class Instant(millisecondsOfEra) 
     satisfies ReadableInstant & Comparable<Instant> {
 
     doc "Internal value of an instant as a number of milliseconds since 
          1970-01-01T00:00:00.000Z."
-    shared actual Integer millis;
+    shared actual Integer millisecondsOfEra;
 
     doc "Adds a period to this instant"
     shared Instant plus(Duration|Period other){
         switch(other)
         case(is Duration){
-            return Instant(this.millis + other.millis);
+            return Instant(this.millisecondsOfEra + other.milliseconds);
         }
         case(is Period){
             return dateTime().plus(other).instant();
@@ -37,7 +37,7 @@ shared class Instant(millis)
     shared Instant minus(Duration|Period other){
         switch(other)
         case(is Duration){
-            return Instant(this.millis - other.millis);
+            return Instant(this.millisecondsOfEra - other.milliseconds);
         }
         case(is Period){
             return dateTime().minus(other).instant();
@@ -46,7 +46,7 @@ shared class Instant(millis)
 
     doc "Compares this instant to the _other_ instant"
     shared actual Comparison compare(Instant other) {
-        return millis <=> other.millis;
+        return this.millisecondsOfEra <=> other.millisecondsOfEra;
     }
 
     doc "Returns this instant as a [[DateTime]] value."
@@ -82,7 +82,7 @@ shared class Instant(millis)
             return nothing;
         }
 
-        return GregorianDate(unixTime.fixedFromTime(millis));
+        return GregorianDate(unixTime.fixedFromTime(millisecondsOfEra));
     }
 
     doc "Returns _time of day_ for this instant"
@@ -99,7 +99,7 @@ shared class Instant(millis)
             //TODO: get [[Time]] of this [[Instant]] in the specified time zone.
             return nothing;
         }
-        return TimeOfDay( unixTime.timeOfDay(millis) );
+        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEra) );
     }
 
     doc "Returns ZoneDateTime value for this instant."
@@ -110,12 +110,12 @@ shared class Instant(millis)
 
     doc "Returns duration in milliseconds from this instant to the other instant."
     shared Duration durationTo(Instant other) {
-        return Duration(other.millis - this.millis);
+        return Duration(other.millisecondsOfEra - this.millisecondsOfEra);
     }
     
     doc "Returns duration in milliseconds from other instant to this instant."
     shared Duration durationFrom(Instant other) {
-        return Duration(this.millis - other.millis);
+        return Duration(this.millisecondsOfEra - other.millisecondsOfEra);
     }
 
 }

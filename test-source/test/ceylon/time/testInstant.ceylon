@@ -26,16 +26,16 @@ shared void testMinusPeriod_UTC() {
 
 shared void testDurationTo() {
     value twoDaysduration = ( 2 * milliseconds.perDay );
-    value twoDaysAfter = Instant(feb_13_2013_18_00_42_0057.millis + twoDaysduration );
+    value twoDaysAfter = Instant(feb_13_2013_18_00_42_0057.millisecondsOfEra + twoDaysduration );
     value duration = feb_13_2013_18_00_42_0057.durationTo( twoDaysAfter );
     
-   assertEquals( twoDaysduration, duration.millis );
+   assertEquals( twoDaysduration, duration.milliseconds );
 }
 
 shared void testDurationFrom() {
     value twoDaysduration = ( 2 * milliseconds.perDay );
-    value twoDaysBefore = Instant(feb_13_2013_18_00_42_0057.millis - twoDaysduration );
+    value twoDaysBefore = Instant(feb_13_2013_18_00_42_0057.millisecondsOfEra - twoDaysduration );
     value duration =  feb_13_2013_18_00_42_0057.durationFrom(twoDaysBefore);
     
-   assertEquals( twoDaysduration, duration.millis );
+   assertEquals( twoDaysduration, duration.milliseconds );
 }

@@ -248,9 +248,7 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Returns the period between this and the given date.
      If this date is after the given date then return zero period"
-    shared actual Period periodTo(Date end) {
-        return end.periodFrom(this); 
-    }
+    shared actual Period periodTo(Date end) => end.periodFrom(this); 
 }
 
 "Returns a gregorian calendar date according to the specified year, month and date values"

@@ -4,33 +4,33 @@ import ceylon.time.internal.math { floorMod }
 
 "Basic implementation of [[Time]] interface, representing an abstract 
  _time of day_ such as _10am_ or _3.20pm_."
-shared class TimeOfDay(millisOfDay) 
+shared class TimeOfDay(millisecondsOfDay) 
        satisfies Time {
 
     "Number of milliseconds since last midnight"
-    shared actual Integer millisOfDay;
+    shared actual Integer millisecondsOfDay;
 
     "Number of full hours elapsed since last midnight."
-    shared actual Integer hours => millisOfDay / ms.perHour;
+    shared actual Integer hours => millisecondsOfDay / ms.perHour;
 
     "Number of minutes since last full hour."
-    shared actual Integer minutes => floorMod(millisOfDay, ms.perHour) / ms.perMinute;
+    shared actual Integer minutes => floorMod(millisecondsOfDay, ms.perHour) / ms.perMinute;
 
     "Number of seconds since last minute."
-    shared actual Integer seconds => floorMod(millisOfDay, ms.perMinute) / ms.perSecond;
+    shared actual Integer seconds => floorMod(millisecondsOfDay, ms.perMinute) / ms.perSecond;
 
     "Number of milliseconds since last full second"
-    shared actual Integer milliseconds => floorMod(millisOfDay, ms.perSecond);
+    shared actual Integer milliseconds => floorMod(millisecondsOfDay, ms.perSecond);
 
     "Number of seconds since last midnight"
-    shared actual Integer secondsOfDay => millisOfDay / ms.perSecond;
+    shared actual Integer secondsOfDay => millisecondsOfDay / ms.perSecond;
 
     "Number of minutes since last midnight"
     shared actual Integer minutesOfDay => secondsOfDay / sec.perMinute;
 
     "Compare two instances of _time of day_"
     shared actual Comparison compare(Time other) {
-        return millisOfDay <=> other.millisOfDay;
+        return millisecondsOfDay <=> other.millisecondsOfDay;
     }
 
     "Previous second"
@@ -75,8 +75,8 @@ shared class TimeOfDay(millisOfDay)
             return this;
         }
 
-        value newMillisOfDay = floorMod(millisOfDay + milliseconds, ms.perDay);
-        return newMillisOfDay == this.millisOfDay
+        value newMillisOfDay = floorMod(millisecondsOfDay + milliseconds, ms.perDay);
+        return newMillisOfDay == this.millisecondsOfDay
                then this else TimeOfDay(newMillisOfDay);
     }
 
@@ -87,28 +87,28 @@ shared class TimeOfDay(millisOfDay)
     "Adds specified time period to this time of day 
      and returns the result as new time of day."
     shared actual Time plus(ReadableTimePeriod period){
-        value totalMillis = millisOfDay
+        value totalMillis = millisecondsOfDay
                           + period.milliseconds
                           + period.seconds * ms.perSecond
                           + period.minutes * ms.perMinute
                           + period.hours * ms.perHour;
 
         value time = floorMod(totalMillis, ms.perDay);
-        return (time == this.millisOfDay) 
+        return (time == this.millisecondsOfDay) 
                then this else TimeOfDay(time);
     }
 
     "Subtracts specified time period from this time of day 
      and returns the result as new time of day."
     shared actual Time minus(ReadableTimePeriod period) {
-        value totalMillis = millisOfDay
+        value totalMillis = millisecondsOfDay
                           - period.milliseconds
                           - period.seconds * ms.perSecond
                           - period.minutes * ms.perMinute
                           - period.hours * ms.perHour;
 
         value time = floorMod(totalMillis, ms.perDay);
-        return (time == this.millisOfDay) 
+        return (time == this.millisecondsOfDay) 
                then this else TimeOfDay(time);
     }
 
@@ -143,7 +143,7 @@ shared class TimeOfDay(millisOfDay)
 
     shared actual Boolean equals( Object other ) {
         if ( is TimeOfDay other ) {
-            return millisOfDay == other.millisOfDay;
+            return millisecondsOfDay == other.millisecondsOfDay;
         }
         return false;
     }
@@ -155,7 +155,7 @@ shared class TimeOfDay(millisOfDay)
             return zero;
         }
 
-        variable value total = this.millisOfDay - start.millisOfDay;
+        variable value total = this.millisecondsOfDay - start.millisecondsOfDay;
         value hh = total / ms.perHour;
         total =  total % ms.perHour;
 
@@ -174,8 +174,6 @@ shared class TimeOfDay(millisOfDay)
 
     "Returns the period between this and the given time.
      If this time is after the given time then return zero period"
-    shared actual Period periodTo(Time end) {
-        return end.periodFrom(this); 
-    }
+    shared actual Period periodTo(Time end) => end.periodFrom(this); 
 
 }
