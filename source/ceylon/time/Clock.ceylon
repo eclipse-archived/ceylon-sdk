@@ -76,3 +76,15 @@ class FixedMilliseconds(Integer fixedMilliseconds) satisfies Clock {
     shared actual Instant instant() => Instant(fixedMilliseconds);
 
 }
+
+"Returns an implementation of a clock that always returns a 
+ constant offset from the value of the provided clock."
+shared Clock offsetTime(Clock baseClock, Integer offset) 
+       => OffsetClock(baseClock, offset);
+
+"An implementation of a [[Clock]] that returns tilem with a constant 
+ offset from the provided clock."
+class OffsetClock(Clock baseClock, Integer offset) satisfies Clock {
+    shared actual Instant instant() => Instant( millis() );
+    shared actual Integer millis() => baseClock.millis() + offset;
+}
