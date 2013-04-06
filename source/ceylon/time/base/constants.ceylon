@@ -1,7 +1,20 @@
 import ceylon.time.internal.math { floorDiv }
 
+"Represents units of Date"
+shared interface UnitOfDate of UnitOfYear|UnitOfMonth|UnitOfDay{}
+shared interface UnitOfYear  satisfies UnitOfDate{}
+shared interface UnitOfMonth satisfies UnitOfDate{}
+shared interface UnitOfDay   satisfies UnitOfDate{}
+
+"Represents units of Time"
+shared interface UnitOfTime of UnitOfHour|UnitOfMinute|UnitOfSecond|UnitOfMillisecond{}
+shared interface UnitOfHour satisfies UnitOfTime{}
+shared interface UnitOfMinute satisfies UnitOfTime{}
+shared interface UnitOfSecond satisfies UnitOfTime{}
+shared interface UnitOfMillisecond satisfies UnitOfTime{}
+
 "Common properties and constraints of _year_ unit"
-shared object years {
+shared object years satisfies UnitOfYear {
 
     "The minimum supported year for instances of `Date`, -283_457."
     // the least that can be represented by an Instant
@@ -13,7 +26,7 @@ shared object years {
 }
 
 "Common properties and constraints of months"
-shared object months {
+shared object months satisfies UnitOfMonth {
 
     "Ordered list of all months of Gregorian and Julian calendar system from January to December"
     shared Month[] all = [january, february, march, april, may, june, july, august, september, october, november, december];
@@ -24,7 +37,7 @@ shared object months {
 }
 
 "Common properties and constraints of _day_ unit"
-shared object days {
+shared object days satisfies UnitOfDay {
 
     "Returns the number of days per year"
     shared Integer perYear(Boolean leapYear=false) => leapYear then 366 else 365;
@@ -63,7 +76,7 @@ shared object days {
 }
 
 "Common properties of _hour_ time unit"
-shared object hours {
+shared object hours satisfies UnitOfHour {
 
     "Number of hours per day"
     shared Integer perDay = 24;
@@ -71,7 +84,7 @@ shared object hours {
 }
 
 "Common properties of _minute_ time unit"
-shared object minutes {
+shared object minutes satisfies UnitOfMinute {
 
     "Number of minutes per hour"
     shared Integer perHour = 60;
@@ -81,7 +94,7 @@ shared object minutes {
 }
 
 "Common properties of _second_ time unit"
-shared object seconds {
+shared object seconds satisfies UnitOfSecond {
 
     "Number of seconds per minute"
     shared Integer perMinute = 60;
@@ -94,7 +107,7 @@ shared object seconds {
 }
 
 "Common properties of _millisecond_ time unit"
-shared object milliseconds {
+shared object milliseconds satisfies UnitOfMillisecond {
 
     "Number of milliseconds per second (1000)"
     shared Integer perSecond = 1000;
