@@ -36,6 +36,9 @@ shared interface Time
     "Returns the period between this and the given time.
      If this time is after the given time then return zero period"
     shared formal Period periodTo( Time end );
+
+    "Returns the [[TimeRange]] between this and given Time"
+    shared formal TimeRange to( Time other );
 }
 
 "Creates new instance of [[Time]]."

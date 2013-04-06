@@ -28,6 +28,9 @@ shared interface Date
     "Returns new DateTime value based on this date and a specified time"
     shared formal DateTime at( Time time );
 
+    "Returns the [[DateRange]] between this and given Date"
+    shared formal DateRange to( Date other );
+
 }
 
 "Returns current date according to the provided system clock and time zone."
