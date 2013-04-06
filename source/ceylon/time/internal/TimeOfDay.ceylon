@@ -1,4 +1,4 @@
-import ceylon.time { Time, time, Period }
+import ceylon.time { Time, time, Period, zero, TimeRange }
 import ceylon.time.base { ms=milliseconds, sec=seconds, ReadableTimePeriod }
 import ceylon.time.internal.math { floorMod }
 
@@ -175,5 +175,10 @@ shared class TimeOfDay(millisecondsOfDay)
     "Returns the period between this and the given time.
      If this time is after the given time then return zero period"
     shared actual Period periodTo(Time end) => end.periodFrom(this); 
+
+    "Returns the [[TimeRange]] between this and given Time"
+    shared actual TimeRange to( Time other ) {
+        return TimeRange(this, other); 
+    }
 
 }

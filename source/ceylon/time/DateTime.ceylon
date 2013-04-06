@@ -26,6 +26,9 @@ shared interface DateTime
      If this DateTime is after the given DateTime then return zero period"
     shared formal Period periodTo( DateTime end );
 
+    "Returns the [[DateTimeRange]] between this and given DateTime"
+    shared formal DateTimeRange to( DateTime other );
+
 }
  
 "Returns a date based on the specified year, month and day-of-month values"
