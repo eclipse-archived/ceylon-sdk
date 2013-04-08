@@ -138,7 +138,7 @@ shared object gregorian extends GregorianCalendar() {
         value d2 = mod(d1, days.perCentury);
         value n4 = fdiv(d2, days.inFourYears);
         value d3 = mod(d2, days.inFourYears);
-        value n1 = fdiv(d3, days.perYear());
+        value n1 = fdiv(d3, days.perYear);
         value year = 400 * n400 + 100 * n100 + 4 * n4 + n1;
         return (n100 == 4 || n1 == 4) then year else year + 1;
     }

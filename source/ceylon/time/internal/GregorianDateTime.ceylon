@@ -282,7 +282,7 @@ shared class GregorianDateTime( date, time )
                           + seconds * ms.perSecond
                           + millis;
 
-        value days = daysOf.fromMillis(inputMillis) * signal;
+        value days = daysOf.fromMilliseconds(inputMillis) * signal;
         value restOfMillis = floorMod(inputMillis, ms.perDay) * signal
                            + time.millisecondsOfDay;
 

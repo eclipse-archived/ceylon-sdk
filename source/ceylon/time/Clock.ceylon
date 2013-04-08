@@ -23,7 +23,7 @@ shared interface Clock {
     //TODO: shared formal Clock withZone(TimeZone zone);
 
     "Gets the current millisecond instant of the clock."
-    shared formal Integer millis();
+    shared formal Integer milliseconds();
 
     "Gets the current instant of the clock."
     shared formal Instant instant();
@@ -34,10 +34,10 @@ shared interface Clock {
 shared object systemTime satisfies Clock {
 
     "Return number of milliseconds from system time"
-    shared actual Integer millis() => process.milliseconds;
+    shared actual Integer milliseconds() => process.milliseconds;
 
     "Return current instant from system time"
-    shared actual Instant instant() => Instant( millis() );
+    shared actual Instant instant() => Instant( milliseconds() );
 
 }
 
@@ -58,7 +58,7 @@ shared Clock fixedTime(Instant|Integer instant) {
 class FixedInstant(Instant fixedInstant) satisfies Clock {
 
     "Returns milliseconds from the fixed instant"
-    shared actual Integer millis() => fixedInstant.millisecondsOfEpoch;
+    shared actual Integer milliseconds() => fixedInstant.millisecondsOfEra;
 
     "Returns the fixed instant"
     shared actual Instant instant() => fixedInstant;
@@ -70,7 +70,7 @@ class FixedInstant(Instant fixedInstant) satisfies Clock {
 class FixedMilliseconds(Integer fixedMilliseconds) satisfies Clock {
 
     "Returns the fixed milliseconds"
-    shared actual Integer millis() => fixedMilliseconds;
+    shared actual Integer milliseconds() => fixedMilliseconds;
 
     "Returns the instant from the fixed milliseconds"
     shared actual Instant instant() => Instant(fixedMilliseconds);
@@ -85,6 +85,6 @@ shared Clock offsetTime(Clock baseClock, Integer offset)
 "An implementation of a [[Clock]] that returns tilem with a constant 
  offset from the provided clock."
 class OffsetClock(Clock baseClock, Integer offset) satisfies Clock {
-    shared actual Instant instant() => Instant( millis() );
-    shared actual Integer millis() => baseClock.millis() + offset;
+    shared actual Instant instant() => Instant( milliseconds() );
+    shared actual Integer milliseconds() => baseClock.milliseconds() + offset;
 }
