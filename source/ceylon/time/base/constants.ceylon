@@ -118,5 +118,4 @@ shared object milliseconds satisfies UnitOfMillisecond {
 
     "Number of milliseconds per day"
     shared Integer perDay =>  hours.perDay * milliseconds.perHour;
-
 }
