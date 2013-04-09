@@ -54,7 +54,7 @@ void testServer() {
     creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
         service => serveStaticFile(".");
-        path = (startsWith("/file") or startsWith("/blob")) 
+        path = (startsWith("/lazy") or startsWith("/blob")) 
                 or endsWith(".txt");
     });
     
@@ -122,7 +122,7 @@ void headerTest() {
 void executeTestStaticFile(Integer executeRequests) {
     variable Integer request = 0;
     while(request < executeRequests) {
-        value fileRequest = ClientRequest(parse("http://localhost:8080/file/``fileName``"));
+        value fileRequest = ClientRequest(parse("http://localhost:8080/``fileName``"));
         value fileResponse = fileRequest.execute();
         value fileCnt = fileResponse.contents;
         fileResponse.close();
