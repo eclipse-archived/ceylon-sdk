@@ -15,8 +15,8 @@ shared interface Session
          given key."
     shared formal void put(String key, Object item);
     
-    doc "Removes an object from users session indenfied by
-         given bey."
+    doc "Removes an object from users session identified by
+         given key."
     shared formal formal Object? remove(String key);
     
     doc "The time, in seconds, between client requests before 
