@@ -6,9 +6,7 @@ import ceylon.net.http { contentType, contentLength }
 
 
 by "Matej Lazar"
-doc "Endpoint for serving static files.
-     
-     Do not use path mappings with `and` as used [[Request.relativePath]] is not working with it."
+doc "Endpoint for serving static files."
 shared void serveStaticFile(externalPath)
         (Request request, Response response, Callable<Anything, []> complete) {
     
@@ -48,5 +46,4 @@ shared void serveStaticFile(externalPath)
     }
     
     complete();
-    
 }
