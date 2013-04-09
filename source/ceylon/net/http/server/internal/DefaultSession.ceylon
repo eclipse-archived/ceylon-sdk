@@ -13,6 +13,9 @@ class DefaultSession(UtSession utSession) satisfies Session {
     shared actual void put(String key, Object item) =>
             utSession.setAttribute(key, item);
     
+    shared actual Object? remove(String key) =>
+            utSession.removeAttribute(key);
+    
     shared actual Integer creationTime => utSession.creationTime;
     
     shared actual Integer lastAccessedTime => utSession.lastAccessedTime;
