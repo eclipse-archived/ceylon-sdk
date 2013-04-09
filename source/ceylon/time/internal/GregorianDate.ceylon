@@ -252,16 +252,16 @@ shared class GregorianDate( Integer dayOfEra )
 }
 
 "Returns a gregorian calendar date according to the specified year, month and date values"
-shared Date gregorianDate(year, month, day){
+shared Date gregorianDate(year, month, day) {
         "Year number of the date"
         Integer year;
-        
+
         "Month of the year"
         Integer|Month month; 
-        
+
         "Day of month"
         Integer day;
- 
-    impl.checkDate([year, monthOf(month).integer, day]);       
+
+    impl.checkDate([year, monthOf(month).integer, day]);
     return GregorianDate( impl.fixedFrom([year, monthOf(month).integer, day]) );
 }

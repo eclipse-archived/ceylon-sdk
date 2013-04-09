@@ -30,5 +30,8 @@ shared interface DateTime
  
 "Returns a date based on the specified year, month and day-of-month values"
 shared DateTime dateTime(Integer year, Integer|Month month, Integer date, Integer hour = 0, Integer minutes=0, Integer seconds=0, Integer millis=0){
-    return GregorianDateTime( createDate( year, month, date), createTime( hour, minutes, seconds, millis ));
+    return GregorianDateTime( 
+        createDate( year, month, date), 
+        createTime( hour, minutes, seconds, millis )
+    );
 }

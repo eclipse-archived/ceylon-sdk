@@ -54,7 +54,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         return false;
     }
 
-    "compare this period to the _other_ period."
+    "Return the result of comparing this period to the _other_ period."
     shared actual Comparison compare(Period other) {
         Period norm1 = this.normalized();
         Period norm2 = other.normalized();

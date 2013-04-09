@@ -4,7 +4,7 @@ import ceylon.time.chronology { unixTime }
 import ceylon.time.internal.math { floorDiv, floorMod }
 import ceylon.time.timezone { TimeZone }
 
-doc "Default implementation of a gregorian calendar"
+"Default implementation of a gregorian calendar"
 shared class GregorianDateTime( date, time ) 
     satisfies  DateTime {
 
@@ -180,7 +180,6 @@ shared class GregorianDateTime( date, time )
               .minusDays( amount.days )
               .minusMonths( amount.months )
               .minusYears( amount.years );
-              
     }
 
     shared actual Instant instant( TimeZone? timeZone ) {
@@ -199,7 +198,6 @@ shared class GregorianDateTime( date, time )
             return day == other.day 
                 && time == other.time;
         }
-        
         return false;
     }
 
@@ -213,7 +211,7 @@ shared class GregorianDateTime( date, time )
         }
 
         value dayConsumed = this.time < start.time then 1 else 0; 
-        
+
         variable value total = this.millisecondsOfDay >= start.millisecondsOfDay
                                then this.millisecondsOfDay - start.millisecondsOfDay
                                else ms.perDay + this.millisecondsOfDay - start.millisecondsOfDay;
