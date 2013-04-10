@@ -1,7 +1,7 @@
 import ceylon.time { Duration, Period }
 
 "An interface to represent a Range between two Date/DateTime/Time"
-shared interface Range<Element, in Self> satisfies Category & Iterable<Element, Null>
+shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
                                 given Element satisfies Comparable<Element> & Ordinal<Element>
                                 given Self satisfies Range<Element,Self> {
 
