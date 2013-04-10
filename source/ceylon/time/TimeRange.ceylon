@@ -11,7 +11,6 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
 
     Time smaller = from <= to then from else to;
     Time greater = from > to then from else to;
-    Boolean reversed = from > to; 	
 
     shared actual Period period  {
         return smaller.periodTo(greater);	
@@ -41,7 +40,7 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
         object listIterator satisfies Iterator<Time> {
             variable Integer count = 0;
             shared actual Time|Finished next() {
-                value date = reversed then previousByStep(from, step, count++) else nextByStep(from, step, count++);
+                value date = from > to then previousByStep(from, step, count++) else nextByStep(from, step, count++);
                 assert( is Time date );
                 value continueLoop = from <= to then date <= to else date >= to && date <= from;
                 return continueLoop then date else finished;

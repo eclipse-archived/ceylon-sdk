@@ -11,7 +11,6 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
 
     Date smaller = from <= to then from else to;
     Date greater = from > to then from else to;
-    Boolean reversed = from > to; 	
 
     shared actual Period period  {
         return smaller.periodTo(greater);	
@@ -26,19 +25,13 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
     }
 
     shared actual DateRange? overlap(DateRange other) {
-        value response = overlapUtil(this, other, step);
-        assert( is DateRange? response );
+        assert( is DateRange? response = overlapUtil(this, other, step));
         return response;
-        //assert( is DateRange? response = overlapUtil(this, other, step));
-        //return response;
     }
 
     shared actual DateRange? gap( DateRange other ) {
-        value response = gapUtil(this, other, step);
-        assert( is DateRange? response );
+        assert( is DateRange? response = gapUtil(this, other, step) );
         return response;
-        //assert( is DateRange? response = gapUtil(this, other, step) );
-        //return response;
     }
 
     "An iterator for the elements belonging to this 
@@ -47,7 +40,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
         object listIterator satisfies Iterator<Date> {
             variable Integer count = 0;
             shared actual Date|Finished next() {
-                value date = reversed then previousByStep(from, step, count++) else nextByStep(from, step, count++);
+                value date = from > to then previousByStep(from, step, count++) else nextByStep(from, step, count++);
                 assert( is Date date );
                 value continueLoop = from <= to then date <= to else date >= to;
                 return continueLoop then date else finished;
