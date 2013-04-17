@@ -9,7 +9,8 @@ shared interface Response {
     doc "Writes bytes to the response."
     shared formal void writeBytes(Array<Integer> bytes);
     
-    doc "Add a header to response. Multiple headers can have the same name."
+    doc "Add a header to response. Multiple headers can have the same name.
+         Throws Exception if headers have been already sent to client."
     shared formal void addHeader(Header header);
     
     doc "The HTTP status code of the response."
