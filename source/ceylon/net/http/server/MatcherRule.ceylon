@@ -14,13 +14,13 @@ shared abstract class Matcher() {
 
 class StartsWith(String substring) 
         extends Matcher() {
-    matches(String string) => string.startsWith(substring);
+    matches(String path) => path.startsWith(substring);
     relativePath(String requestPath) => requestPath[substring.size...];
 }
 
 class EndsWith(String substring) 
         extends Matcher() {
-    matches(String path) => string.endsWith(substring);
+    matches(String path) => path.endsWith(substring);
     relativePath(String requestPath) => requestPath;
 }
 
