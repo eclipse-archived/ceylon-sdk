@@ -206,10 +206,6 @@ shared class GregorianDateTime( date, time )
     }
 
     shared actual Period periodFrom(DateTime start) {
-        if ( this <= start ) {
-            return zero;
-        }
-
         value dayConsumed = this.time < start.time then 1 else 0; 
 
         variable value total = this.millisecondsOfDay >= start.millisecondsOfDay

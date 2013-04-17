@@ -1,5 +1,5 @@
-import ceylon.time { Date, DateTime, Time, Period, zero }
-import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, february}
+import ceylon.time { Date, DateTime, Time, Period }
+import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, february, months}
 import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.internal.math { adjustedMod }
 
@@ -146,8 +146,7 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Adds specified date period to this date and returns the new date."
     shared actual GregorianDate plus( ReadableDatePeriod amount ) {
-        return plusYears( amount.years )
-              .plusMonths( amount.months ) 
+        return plusMonths( amount.years * months.perYear + amount.months ) 
               .plusDays( amount.days );
     }
 
@@ -212,42 +211,42 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "Returns the period between this and the given date.
-     If this date is before the given date then return zero period"
+     If this date is before the given date then return negative period"
     shared actual Period periodFrom(Date start) {
-        if ( this <= start ) {
-            return zero;
-        }
+        value from = this < start then this else start;
+        value to = this < start then start else this;
 
-        variable value nextDate = start.plusYears(1);
+        variable value nextDate = from.plusYears(1);
         variable value yy = 0;
-        while ( nextDate <= this ) {
+        while ( nextDate <= to ) {
             nextDate = nextDate.plusYears(1);
             yy+=1;
         }
 
         variable value mm = 0;
-        nextDate = start.plusYears(yy).plusMonths(mm+1);
-        while ( nextDate <= this ) {
+        nextDate = from.plusYears(yy).plusMonths(mm+1);
+        while ( nextDate <= to ) {
             mm+=1;
-            nextDate = start.plusYears(yy).plusMonths(mm+1);
+            nextDate = from.plusYears(yy).plusMonths(mm+1);
         }
 
-        nextDate = start.plusYears(yy).plusMonths(mm).plusDays(1);
+        nextDate = from.plusYears(yy).plusMonths(mm).plusDays(1);
         variable value dd = 0;
-        while ( nextDate <= this ) {
+        while ( nextDate <= to ) {
             nextDate = nextDate.plusDays(1);
             dd+=1;
         }
 
+        Boolean positive = start < this; 
         return Period {
-            years = yy;
-            months = mm;
-            days = dd;
+            years = positive then yy else -yy;
+            months = positive then mm else -mm;
+            days = positive then dd else -dd;
         }; 
     }
 
     "Returns the period between this and the given date.
-     If this date is after the given date then return zero period"
+     If this date is after the given date then return negative period"
     shared actual Period periodTo(Date end) => end.periodFrom(this); 
 }
 

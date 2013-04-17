@@ -1,4 +1,4 @@
-import ceylon.time { Time, time, Period, zero }
+import ceylon.time { Time, time, Period }
 import ceylon.time.base { ms=milliseconds, sec=seconds, ReadableTimePeriod }
 import ceylon.time.internal.math { floorMod }
 
@@ -151,10 +151,6 @@ shared class TimeOfDay(millisecondsOfDay)
     "Returns the period between this and the given time.
      If this time is before the given time then return zero period"
     shared actual Period periodFrom(Time start) {
-        if ( this <= start ) {
-            return zero;
-        }
-
         variable value total = this.millisecondsOfDay - start.millisecondsOfDay;
         value hh = total / ms.perHour;
         total =  total % ms.perHour;
