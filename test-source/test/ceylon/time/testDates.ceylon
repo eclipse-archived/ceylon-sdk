@@ -16,7 +16,26 @@ shared void runDateTests(String suiteName="Date tests") {
         "Testing October 29 1974" -> test_tue_oct_29_1974,
         "Testing December 13 1982" -> test_mon_dec_13_1982,
         "Testing December 31 1999" -> test_mon_dec_31_1999,
-        "Testing January 1 2000" -> test_mon_jan_01_2000
+        "Testing January 1 2000" -> test_mon_jan_01_2000,
+        "Testing January 31 2000" -> test_mon_jan_31_2000,
+        "Testing February 29 2000" -> test_tue_feb_29_2000,
+        "Testing December 31 2000" -> test_sun_dec_31_2000,
+        "Testing February 29 2012" -> test_wed_feb_29_2012,
+        
+        "Testing invalid dates: January 0 2013" -> test_invalid_date_jan_0,
+        "Testing invalid dates: February 29 2013" -> test_invalid_date_feb_29,
+        "Testing invalid dates: maximum year" -> test_invalid_date_maximum_year,
+        "Testing invalid dates: minimum year" -> test_invalid_date_minimum_year,
+        
+        "Testing leap year rules: 2400" -> test_2400_is_leapYear,
+        "Testing leap year rules: 2200" -> test_2200_is_not_leapYear,
+        "Testing leap year rules: 2100" -> test_2100_is_not_leapYear,
+        "Testing leap year rules: 2012" -> test_2012_is_leapYear,
+        "Testing leap year rules: 2011" -> test_2011_is_not_leapYear,
+        "Testing leap year rules: 2008" -> test_2008_is_leapYear,
+        "Testing leap year rules: 2000" -> test_2000_is_leapYear,
+        "Testing leap year rules: 1900" -> test_1900_is_not_leapYear,
+        "Testing leap year rules: 1600" -> test_1600_is_leapYear
     );
 }
 
@@ -35,41 +54,13 @@ shared void test_tue_feb_29_2000() => assertGregorianDate(2000, february, 29, tu
 shared void test_sun_dec_31_2000() => assertGregorianDate(2000, december, 31, sunday, leapYear, 366);
 shared void test_wed_feb_29_2012() => assertGregorianDate(2012, february, 29, wednesday, leapYear, 60);
 
-shared void test_invalid_date_jan_0() {
-    try {
-        date(2013,january,0);
-        fail("It should throw exception...");
-    } catch ( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }
-}
-
-shared void test_invalid_date_feb_29() {
-    try {
-        date(2013,february,29);
-        fail("It should throw exception...");
-    } catch ( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }
-}
-
-shared void test_invalid_date_maximum_year() {
-    try {
-        date(years.maximum+1,february,29);
-        fail("It should throw exception...");
-    } catch ( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid year"));
-    }
-}
-
-shared void test_invalid_date_minimum_year() {
-    try {
-        date(years.minimum-1,february,29);
-        fail("It should throw exception...");
-    } catch ( AssertionException e ) {
-        assertTrue(e.message.contains("Invalid year"));
-    }
-}
+shared void test_invalid_date_jan_0() => expectException("Invalid date", 2013, january, 0);
+shared void test_invalid_date_feb_29() => expectException("Invalid date", 2013, february, 29);
+shared void test_invalid_date_feb_30() => expectException("Invalid date", 2012, february, 30);
+shared void test_invalid_date_apr_31() => expectException("Invalid date", 2012, april, 31);
+shared void test_invalid_date_jan_32() => expectException("Invalid date", 2013, january, 32);
+shared void test_invalid_date_maximum_year() => expectException("Invalid year", years.maximum+1, february, 29);
+shared void test_invalid_date_minimum_year() => expectException("Invalid year", years.minimum-1, february, 29);
 
 shared void test_2400_is_leapYear() => assertTrue( date(2400, january, 1 ).leapYear, "2400 is leap year" );
 shared void test_2200_is_not_leapYear() => assertFalse( date(2200, january, 1 ).leapYear, "2200 is not leap year" );
@@ -80,6 +71,21 @@ shared void test_2008_is_leapYear() => assertTrue( date(2008, january, 1 ).leapY
 shared void test_2000_is_leapYear() => assertTrue( date(2000, january, 1 ).leapYear, "2000 is leap year" );
 shared void test_1900_is_not_leapYear() => assertFalse( date(1900, january, 1 ).leapYear, "1900 is not leap year" );
 shared void test_1600_is_leapYear() => assertTrue( date(1600, january, 1 ).leapYear, "1600 is leap year" );
+shared void test_0000_is_leapYear() => assertTrue( date(0000, january, 1 ).leapYear, "0 is leap year" );
+shared void test_0001_is_not_leapYear() => assertFalse( date(0001, january, 1 ).leapYear, "1 is not leap year" );
+shared void test_0004_is_leapYear() => assertTrue( date(0004, january, 1 ).leapYear, "4 is leap year" );
+shared void test_0033_is_not_leapYear() => assertFalse( date(033, january, 1 ).leapYear, "33 is not leap year" );
+shared void test_0100_is_not_leapYear() => assertFalse( date(100, january, 1 ).leapYear, "100 is not leap year" );
+
+void expectException(String message, Integer year, Month month, Integer day) {
+    try {
+        date(year, month, day);
+        fail("Expecting exception for invalid date: ``day``. ``month`` ``year``.");
+    }
+    catch ( AssertionException e ) {
+        assertTrue(message.contains(message));
+    }
+}
 
 shared void testWeekOfYear() {
     //Random dates
