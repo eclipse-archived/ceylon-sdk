@@ -7,13 +7,12 @@ import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
 import java.io { JIOException=IOException }
-import java.lang { JString=String, arrays }
+import java.lang { arrays, ByteArray }
 import java.nio { 
-    JByteBuffer=ByteBuffer { wrapByteBuffer=wrap },
-    CharBuffer {wrapCharBuffer = wrap} }
-import java.nio.charset {JCharset = Charset {charsetForName=forName}}
+    JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import org.xnio.channels { StreamSinkChannel,
                            Channels { chFlushBlocking=flushBlocking } }
+import ceylon.io.buffer { Buffer }
 
 by "Matej Lazar"
 shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
@@ -26,18 +25,28 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     
     //TODO comment encodings and defaults
     shared actual void writeString(String string) {
-        //TODO use encoder
         value charset = findCharset();
-        writeBytes(toByteArray(string, charsetForName(charset.name)));
-        //TODO use ceylon encoder
-        //value buffer = charset.encode(string);
-        //writeBytes(buffer.bytes());
-    }
-    //TODO remove
-    Array<Integer> toByteArray(String string, JCharset charset) {
-        CharBuffer cbuf = wrapCharBuffer(JString(string).toCharArray());
-        JByteBuffer bbuf = charset.encode(cbuf);
-        return bbuf.array().array;
+        Buffer<Integer> buffer = charset.encode(string);
+        applyHeadersToExchange();
+        
+        variable Integer remaining = buffer.limit;
+
+        variable Integer written = 0;
+        
+        ByteArray bytes = ByteArray(buffer.available);
+        variable Integer i = 0;
+        while(buffer.hasAvailable) {
+            bytes.set(i++, buffer.get());
+        }
+        value bb = wrapByteBuffer(bytes);
+        written = response.write(bb);
+        remaining -= written;
+        try {
+            response.awaitWritable();
+        } catch(JIOException e) {
+            //TODO log
+            print(e);
+        }
     }
     
     shared actual void writeBytes(Array<Integer> bytes) {
