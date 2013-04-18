@@ -146,15 +146,41 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Adds specified date period to this date and returns the new date."
     shared actual GregorianDate plus( ReadableDatePeriod amount ) {
-        return plusMonths( amount.years * months.perYear + amount.months ) 
-              .plusDays( amount.days );
+        return addPeriod {
+                months = amount.years * months.perYear + amount.months;
+                days = amount.days; 
+        };
     }
 
     "Subtracts specified date period from this date and returns the new date."
     shared actual GregorianDate minus( ReadableDatePeriod amount ) {
-        return minusDays( amount.days )
-              .minusMonths( amount.months )
-              .minusYears( amount.years );
+        return addPeriod {
+                months = amount.years.negativeValue * months.perYear + amount.months.negativeValue;
+                days = amount.days.negativeValue; 
+        };
+    }
+
+    "This method add the specified fields doing first the subtraction and last the additions.
+     The mix between positive and negative fields does not guarantee any expected behavior"
+    GregorianDate addPeriod( Integer months, Integer days ) {
+        variable value _this = this;
+        //do all subtractions first
+        if ( days < 0 ) {
+            _this = _this.minusDays(days.negativeValue);
+        } 
+        if ( months < 0 ) {
+            _this = _this.minusMonths(months.negativeValue);
+        }
+        
+        //now we should do all additions
+        if ( months > 0 ) {
+            _this = _this.plusMonths(months);
+        }
+        if ( days > 0 ) {
+            _this = _this.plusDays(days);
+        } 
+        
+        return _this;
     }
 
     "Returns week of year according to ISO 8601 week number calculation rules."
