@@ -342,56 +342,111 @@ shared void testPeriodFrom() {
     Period period = Period{ years = 2; months = 2; days = 3;};
     Date from = date(2011, october, 28);
     Date to = date(2013,december,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromNegative() {
+    Period period = Period{ years = -2; months = -2; days = -3;};
+    Date to = date(2011, october, 28);
+    Date from = date(2013,december,31);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromOnlyDayChange() {
     Period period = Period{ days = 3;};
     Date from = date(2013, december, 28);
     Date to = date(2013,december,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromOnlyDayChangeNegative() {
+    Date to = date(2013, december, 28);
+    Date from = date(2013,december,31);
+    assertFromAndTo(Period{ days = -3;}, from, to);
 }
 
 shared void testPeriodFromNewYear() {
     Period period = Period{ days = 4; };
     Date from = date(2013, december, 28);
     Date to = date(2014,january,1);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromNewYearNegative() {
+    Period period = Period{ days = -4; };
+    Date from = date(2014,january,1);
+    Date to = date(2013, december, 28);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromSameYear() {
     Period period = Period{ months = 8; days = 3;};
     Date from = date(2013, february,28);
     Date to = date(2013,october,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromSameYearNegative() {
+    Period period = Period{ months = -8; days = -3;};
+    Date from = date(2013,october,31);
+    Date to = date(2013, february,28);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromMonthBefore() {
     Period period = Period{ years = 1; months = 10; days = 3;}; 
     Date from = date(2011, december, 28);
     Date to = date(2013,october,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromMonthBeforeNegative() {
+    Period period = Period{ years = -1; months = -10; days = -3;}; 
+    Date from = date(2013,october,31);
+    Date to = date(2011, december, 28);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromOnlyMonthChange() {
     Period period = Period{ months = 2;};
     Date from = date(2013, january, 31);
     Date to = date(2013,march,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromOnlyMonthChangeNegative() {
+    Period period = Period{ months = -2;};
+    Date from = date(2013,march,31);
+    Date to = date(2013, january, 31);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromOnlyYearChange() {
     Period period = Period{ years = 3;};
     Date from = date(2010, january, 31);
     Date to = date(2013,january,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromOnlyYearChangeNegative() {
+    Period period = Period{ years = -3;};
+    Date from = date(2013,january,31);
+    Date to = date(2010, january, 31);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromYearMonthChange() {
     Period period = Period{ years = 1; months = 1;};
     Date from = date(2011, december, 31);
     Date to = date(2013,january,31);
-    assertFromTo(period, from, to);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromYearMonthChangeNegative() {
+    Period period = Period{ years = -1; months = -1;};
+    Date from = date(2013,january,31);
+    Date to = date(2011, december, 31);
+    assertFromAndTo(period, from, to);
 }
 
 shared void testPeriodFromLeapYear() {
@@ -411,31 +466,10 @@ shared void testPeriodFromLeapYear() {
     assertEquals(from.minusDays(1), to.minus(period));
 }
 
-shared void testPeriodFromDayAfter() {
-    Period period = Period{ years = 2; days = 3;}; 
-    Date from = date(2011, december, 28);
-    Date to = date(2013,december,31);
-    assertFromTo(period, from, to);
-}
-
-shared void testPeriodFromDayBefore() {
-    Period period = Period{ years = 1; months = 11; days = 20;};
-    Date from = date(2011, october, 30);
-    Date to = date(2013,october,20);
-    assertFromTo(period, from, to);
-}
-
-shared void testPeriodFromEqualDate() {
-    Period period = Period();
-    Date from = date(2011, october, 30);
-    Date to = date(2011, october, 30);
-    assertFromTo(period, from, to);
-}
-
-shared void testPeriodFromAfterDate() {
-    Period period = Period();
-    Date from = date(2011, december, 30);
-    Date to = date(2011, october, 30);
+shared void testPeriodFromLeapYearNegative() {
+    Period period = Period{ years = -1;};
+    Date from = date(2013,february,28);
+    Date to = date(2012, february, 28);
     assertEquals{
       expected = period;
       actual = to.periodFrom( from );
@@ -444,9 +478,67 @@ shared void testPeriodFromAfterDate() {
       expected = period;
       actual = from.periodTo( to );
     };
+
+    assertEquals(to, from.plus(period));
+    assertEquals(from, to.minus(period));
 }
 
-void assertFromTo( Period period, Date from, Date to ) {
+shared void testPeriodFromDayAfter() {
+    Period period = Period{ years = 2; days = 3;}; 
+    Date from = date(2011, december, 28);
+    Date to = date(2013,december,31);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromDayAfterNegative() {
+    Period period = Period{ years = -2; days = -3;}; 
+    Date from = date(2013,december,31);
+    Date to = date(2011, december, 28);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromDayBefore() {
+    Period period = Period{ years = 1; months = 11; days = 20;};
+    Date from = date(2011, october, 30);
+    Date to = date(2013,october,20);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromDayBeforeNegative() {
+    Period period = Period{ years = -1; months = -11; days = -20;};
+    Date from = date(2013,october,20);
+    Date to = date(2011, october, 30);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromNegativeDay() {
+    Period period = Period{ days = -1;};
+    Date from = date(2011, october, 28);
+    Date to = date(2011,october,27);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromEqualDate() {
+    Period period = Period();
+    Date from = date(2011, october, 30);
+    Date to = date(2011, october, 30);
+    assertFromAndTo(period, from, to);
+}
+
+shared void testPeriodFromAfterDate() {
+    Date from = date(2011, december, 30);
+    Date to = date(2011, october, 30);
+    assertEquals{
+      expected = Period { months = -2; };
+      actual = to.periodFrom( from );
+    };
+    assertEquals{
+      expected = Period { months = -2; };
+      actual = from.periodTo( to );
+    };
+}
+
+void assertFromAndTo( Period period, Date from, Date to ) {
     assertEquals{
       expected = period;
       actual = to.periodFrom( from );

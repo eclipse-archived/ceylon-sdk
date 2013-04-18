@@ -1,5 +1,5 @@
-import ceylon.time { Date, Time, DateTime, Instant, Period, zero }
-import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek }
+import ceylon.time { Date, Time, DateTime, Instant, Period }
+import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek, months }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.internal.math { floorDiv, floorMod }
 import ceylon.time.timezone { TimeZone }
@@ -155,32 +155,65 @@ shared class GregorianDateTime( date, time )
         return GregorianDateTime { date = date; time = time.withMilliseconds(milliseconds); };
     }
 
-    shared actual DateTime predecessor {
-        return minusMilliseconds(1);
-    }
+    shared actual DateTime predecessor => minusMilliseconds(1);
 
-    shared actual DateTime successor {
-        return plusMilliseconds(1);    }
-
+    shared actual DateTime successor => plusMilliseconds(1);
     shared actual DateTime plus( ReadablePeriod amount ) {
-        return plusYears( amount.years )
-              .plusMonths( amount.months )
-              .plusDays( amount.days )
-              .plusHours( amount.hours )
-              .plusMinutes( amount.minutes )
-              .plusSeconds( amount.seconds )
-              .plusMilliseconds(amount.milliseconds);
+        return addPeriod { 
+            months = amount.years * months.perYear + amount.months; 
+            days = amount.days; 
+            hours = amount.hours; 
+            minutes = amount.minutes; 
+            seconds = amount.seconds; 
+            milliseconds = amount.milliseconds; 
+        };
     }
 
     shared actual DateTime minus( ReadablePeriod amount ) {
-        return minusMilliseconds(amount.milliseconds) 
-              .minusSeconds( amount.seconds )
-              .minusMinutes( amount.minutes )
-              .minusHours( amount.hours )
-              .minusDays( amount.days )
-              .minusMonths( amount.months )
-              .minusYears( amount.years );
+        return addPeriod { 
+            months = amount.years.negativeValue * months.perYear + amount.months.negativeValue; 
+            days = amount.days.negativeValue; 
+            hours = amount.hours.negativeValue; 
+            minutes = amount.minutes.negativeValue; 
+            seconds = amount.seconds.negativeValue; 
+            milliseconds = amount.milliseconds.negativeValue; 
+        };
     }
+
+    "This method add the specified fields doing first the subtraction and last the additions.
+     The mix between positive and negative fields does not guarantee any expected behavior"
+    DateTime addPeriod( Integer months, Integer days, Integer hours, Integer minutes, Integer seconds, Integer milliseconds ) {
+        variable DateTime _this = this;
+
+        value totalTime = hours * ms.perHour
+                        + minutes * ms.perMinute
+                        + seconds * ms.perSecond
+                        + milliseconds;
+        //do all subtractions first
+        if ( totalTime < 0 ) {
+            _this = _this.minusMilliseconds(totalTime.negativeValue);
+        }
+        if ( days < 0 ) {
+            _this = _this.minusDays(days.negativeValue);
+        } 
+        if ( months < 0 ) {
+            _this = _this.minusMonths(months.negativeValue);
+        }
+        
+        //now we should do all additions
+        if ( months > 0 ) {
+            _this = _this.plusMonths(months);
+        }
+        if ( days > 0 ) {
+            _this = _this.plusDays(days);
+        } 
+        if ( totalTime > 0 ) {
+            _this = _this.plusMilliseconds(totalTime);
+        }
+        
+        return _this;
+    }
+
 
     shared actual Instant instant( TimeZone? timeZone ) {
         if (exists timeZone) {
@@ -206,15 +239,14 @@ shared class GregorianDateTime( date, time )
     }
 
     shared actual Period periodFrom(DateTime start) {
-        if ( this <= start ) {
-            return zero;
-        }
+        value from = this < start then this else start;
+        value to = this < start then start else this;
 
-        value dayConsumed = this.time < start.time then 1 else 0; 
+        value dayConsumed = to.time < from.time then 1 else 0; 
 
-        variable value total = this.millisecondsOfDay >= start.millisecondsOfDay
-                               then this.millisecondsOfDay - start.millisecondsOfDay
-                               else ms.perDay + this.millisecondsOfDay - start.millisecondsOfDay;
+        variable value total = to.millisecondsOfDay >= from.millisecondsOfDay
+                               then to.millisecondsOfDay - from.millisecondsOfDay
+                               else ms.perDay + to.millisecondsOfDay - from.millisecondsOfDay;
 
         value hh = total / ms.perHour;
         total =  total % ms.perHour;
@@ -224,19 +256,21 @@ shared class GregorianDateTime( date, time )
 
         value ss = total / ms.perSecond;
 
+        Boolean positive = start < this; 
         return Period {
-            hours = hh;
-            minutes = mm;
-            seconds = ss;
-            milliseconds = total % ms.perSecond;
-        }.plus( this.date.minusDays(dayConsumed).periodFrom(start.date) );
+            hours = positive then hh else -hh;
+            minutes = positive then mm else -mm;
+            seconds = positive then ss else -ss;
+            milliseconds = positive then total % ms.perSecond else -(total % ms.perSecond);
+        }.plus( positive then  to.date.minusDays(dayConsumed).periodFrom(from.date) 
+                         else  to.date.minusDays(dayConsumed).periodTo(from.date));
     }
 
     shared actual Period periodTo(DateTime end) {
         return end.periodFrom(this); 
     }
 
-    GregorianDateTime fromTime( Integer hours = 0, Integer minutes = 0, Integer seconds = 0, Integer millis = 0, Integer signal = 1 ) {
+    DateTime fromTime( Integer hours = 0, Integer minutes = 0, Integer seconds = 0, Integer millis = 0, Integer signal = 1 ) {
 
         value inputMillis = hours * ms.perHour 
                           + minutes * ms.perMinute 

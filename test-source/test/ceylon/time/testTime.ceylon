@@ -225,10 +225,24 @@ shared void testPeriodFrom_Time() {
     assertFromToTime(period, from, to);
 }
 
+shared void testPeriodFrom_TimeNegative() {
+    Period period = Period{ hours = -9; minutes = -59; seconds = -50; milliseconds = -100;};
+    Time from = time(20,30, 10, 600);
+    Time to = time(10, 30, 20, 500);
+    assertFromToTime(period, from, to);
+}
+
 shared void testPeriodFromHour_Time() {
     Period period = Period{ hours = 2;};
     Time from = time(18, 0);
     Time to = time(20,0);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromHour_TimeNegative() {
+    Period period = Period{ hours = -2;};
+    Time from = time(20,0);
+    Time to = time(18, 0);
     assertFromToTime(period, from, to);
 }
 
@@ -239,10 +253,24 @@ shared void testPeriodFromMinSec_Time() {
     assertFromToTime(period, from, to);
 }
 
+shared void testPeriodFromMinSec_TimeNegative() {
+    Period period = Period{ hours = -9; minutes = -59; seconds = -59; milliseconds = -900;};
+    Time from = time(20, 0, 0, 500);
+    Time to = time(10, 0, 0, 600);
+    assertFromToTime(period, from, to);
+}
+
 shared void testPeriodFromMinuteBefore() {
     Period period = Period{ hours = 9; minutes = 50; };
     Time from = time(10, 20);
     Time to = time(20, 10);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromMinuteBeforeNegative() {
+    Period period = Period{ hours = -9; minutes = -50; };
+    Time from = time(20, 10);
+    Time to = time(10, 20);
     assertFromToTime(period, from, to);
 }
 
@@ -253,10 +281,24 @@ shared void testPeriodFromSecondBefore() {
     assertFromToTime(period, from, to);
 }
 
+shared void testPeriodFromSecondBeforeNegative() {
+    Period period = Period{ minutes = -9; seconds = -50; };
+    Time from = time(20, 20, 40);
+    Time to = time(20, 10, 50);
+    assertFromToTime(period, from, to);
+}
+
 shared void testPeriodFromMillisecondBefore() {
     Period period = Period{ seconds = 9; milliseconds = 900; };
     Time from = time(20, 20, 40, 500);
     Time to = time(20, 20, 50, 400);
+    assertFromToTime(period, from, to);
+}
+
+shared void testPeriodFromMillisecondBeforeNegative() {
+    Period period = Period{ seconds = -9; milliseconds = -900; };
+    Time from = time(20, 20, 50, 400);
+    Time to = time(20, 20, 40, 500);
     assertFromToTime(period, from, to);
 }
 
