@@ -196,10 +196,24 @@ shared void testPeriodFrom_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodFrom_DateTimeNegative() {
+    Period period = Period{ days = -2; hours = -14;};
+    DateTime from = dateTime(2013,december,31);
+    DateTime to = dateTime(2013, december, 28, 10, 0);
+    assertFromToDateTime(period, from, to);
+}
+
 shared void testPeriodFromSameYearNoTime_DateTime() {
     Period period = Period{ months = 8; days = 3;};
     DateTime from = dateTime(2013, february,28);
     DateTime to = dateTime(2013,october,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromSameYearNoTime_DateTimeNegative() {
+    Period period = Period{ months = -8; days = -3;};
+    DateTime from = dateTime(2013,october,31);
+    DateTime to = dateTime(2013, february,28);
     assertFromToDateTime(period, from, to);
 }
 
@@ -210,10 +224,24 @@ shared void testPeriodFromSameYear_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodFromSameYear_DateTimeNegative() {
+    Period period = Period{ months = -8; days = -2; hours = -23; minutes = -59; seconds = -59; milliseconds = -900;};
+    DateTime from = dateTime(2013,october,31);
+    DateTime to = dateTime(2013, february,28, 0, 0, 0, 100);
+    assertFromToDateTime(period, from, to);
+}
+
 shared void testPeriodFromMonthBeforeNoTime_DateTime() {
     Period period = Period{ years = 1; months = 10; days = 3;}; 
     DateTime from = dateTime(2011, december, 28);
     DateTime to = dateTime(2013,october,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromMonthBeforeNoTime_DateTimeNegative() {
+    Period period = Period{ years = -1; months = -10; days = -3;}; 
+    DateTime from = dateTime(2013,october,31);
+    DateTime to = dateTime(2011, december, 28);
     assertFromToDateTime(period, from, to);
 }
 
@@ -224,10 +252,24 @@ shared void testPeriodFromMonthBefore_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodFromMonthBefore_DateTimeNegative() {
+    Period period = Period{ years = -1; months = -10; days = -3; hours = -10; minutes = -30;}; 
+    DateTime from = dateTime(2013,october,31, 10, 30);
+    DateTime to = dateTime(2011, december, 28);
+    assertFromToDateTime(period, from, to);
+}
+
 shared void testPeriodFromDayAfterNoTime_DateTime() {
     Period period = Period{ years = 2; days = 3;}; 
     DateTime from = dateTime(2011, december, 28);
     DateTime to = dateTime(2013,december,31);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromDayAfterNoTime_DateTimeNegative() {
+    Period period = Period{ years = -2; days = -3;}; 
+    DateTime from = dateTime(2013,december,31);
+    DateTime to = dateTime(2011, december, 28);
     assertFromToDateTime(period, from, to);
 }
 
@@ -238,6 +280,13 @@ shared void testPeriodFromDayAfter_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodFromDayAfter_DateTimeNegative() {
+    Period period = Period{ years = -2; days = -3; milliseconds = -999;}; 
+    DateTime from = dateTime(2013,december,31, 0, 0, 0, 999);
+    DateTime to = dateTime(2011, december, 28);
+    assertFromToDateTime(period, from, to);
+}
+
 shared void testPeriodFromDayBeforeNoTime_DateTime() {
     Period period = Period{ years = 1; months = 11; days = 20;};
     DateTime from = dateTime(2011, october, 30);
@@ -245,10 +294,24 @@ shared void testPeriodFromDayBeforeNoTime_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodFromDayBeforeNoTime_DateTimeNegative() {
+    Period period = Period{ years = -1; months = -11; days = -20;};
+    DateTime from = dateTime(2013,october,20);
+    DateTime to = dateTime(2011, october, 30);
+    assertFromToDateTime(period, from, to);
+}
+
 shared void testPeriodFromDayBefore_DateTime() {
     Period period = Period{ years = 1; months = 11; days = 20;};
     DateTime from = dateTime(2011, october, 30, 20, 20, 20, 20);
     DateTime to = dateTime(2013,october,20, 20, 20, 20, 20);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromDayBefore_DateTimeNegative() {
+    Period period = Period{ years = -1; months = -11; days = -20;};
+    DateTime from = dateTime(2013,october,20, 20, 20, 20, 20);
+    DateTime to = dateTime(2011, october, 30, 20, 20, 20, 20);
     assertFromToDateTime(period, from, to);
 }
 
@@ -266,10 +329,30 @@ shared void testPeriodFromNewYearNoTime_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodFromNewYearNoTime_DateTimeNegative() {
+    Period period = Period{ days = -4; };
+    DateTime from = dateTime(2014,january,1);
+    DateTime to = dateTime(2013, december, 28);
+    assertFromToDateTime(period, from, to);
+}
+
 shared void testPeriodFromNewYear_DateTime() {
     Period period = Period{ days = 3; hours = 23; minutes = 59; seconds = 59; milliseconds = 100; };
     DateTime from = dateTime(2013, december, 28, 0, 0, 0, 900);
     DateTime to = dateTime(2014,january,1);
+    assertFromToDateTime(period, from, to);
+}
+
+shared void testPeriodFromNewYear_DateTimeNegative() {
+    Period period = Period{ 
+        days = -3; 
+        hours = -23; 
+        minutes = -59; 
+        seconds = -59; 
+        milliseconds = -100; 
+    };
+    DateTime from = dateTime(2014,january,1);
+    DateTime to = dateTime(2013, december, 28, 0, 0, 0, 900);
     assertFromToDateTime(period, from, to);
 }
 
