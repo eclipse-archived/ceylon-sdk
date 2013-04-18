@@ -111,7 +111,7 @@ void headerTest() {
     value response = request.execute();
     
     value contentTypeHeader = response.getSingleHeader("content-type");
-    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
+    assertEquals("text/html; charset=``utf8.name``", contentTypeHeader);
     
     value echoMsg = response.contents;
     response.close();
