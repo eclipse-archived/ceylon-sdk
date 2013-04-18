@@ -6,18 +6,14 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
 
     shared actual Date from;
     shared actual Date to;
-
     shared actual UnitOfDate step;
 
-    Date smaller = from <= to then from else to;
-    Date greater = from > to then from else to;
-
     shared actual Period period  {
-        return smaller.periodTo(greater);	
+        return from.periodTo(to);	
     }
 
     shared actual Duration duration  {
-        return Duration((greater.dayOfEra - smaller.dayOfEra) * milliseconds.perDay);	
+        return Duration((to.dayOfEra - from.dayOfEra) * milliseconds.perDay);	
     }
 
     shared actual Boolean equals( Object other ) {

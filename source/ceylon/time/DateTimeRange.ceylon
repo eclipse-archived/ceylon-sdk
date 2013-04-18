@@ -9,15 +9,12 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
 
     shared actual UnitOfDate|UnitOfTime step;
 
-    DateTime smaller = from <= to then from else to;
-    DateTime greater = from > to then from else to;
-
     shared actual Period period  {
-        return smaller.periodTo(greater);	
+        return from.periodTo(to);	
     }
 
     shared actual Duration duration  {
-        return Duration(greater.instant().millisecondsOfEra - smaller.instant().millisecondsOfEra);	
+        return Duration(to.instant().millisecondsOfEra - from.instant().millisecondsOfEra);	
     }
 
     shared actual Boolean equals( Object other ) {
