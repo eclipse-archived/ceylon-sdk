@@ -8,7 +8,7 @@ import ceylon.net.http.server { createServer, StatusListener, Status,
                                   Endpoint, Response, Request, 
                                   startsWith, endsWith, Options }
 import ceylon.net.http.server.endpoints { serveStaticFile }
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, assertTrue }
 import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType }
@@ -67,6 +67,8 @@ void testServer() {
                     executeEchoTest();
                     
                     concurentFileRequests(numberOfUsers);
+                    
+                    
                     
                 } finally {
                     cleanUpFile();
@@ -186,6 +188,12 @@ void cleanUpFile() {
 
 void testPathMatcher() {
     String requestPath = "/file/myfile.txt";
+    
+    value matcherStarts = startsWith("/file");
+    assertTrue(matcherStarts.matches(requestPath));
+
+    value matcherEnds = endsWith(".txt");
+    assertTrue(matcherEnds.matches(requestPath));
 
     value matcher = startsWith("/file");
     assertEquals("/myfile.txt", matcher.relativePath(requestPath));
