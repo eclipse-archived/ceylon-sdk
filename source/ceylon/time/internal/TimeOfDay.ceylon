@@ -151,7 +151,10 @@ shared class TimeOfDay(millisecondsOfDay)
     "Returns the period between this and the given time.
      If this time is before the given time then return zero period"
     shared actual Period periodFrom(Time start) {
-        variable value total = this.millisecondsOfDay - start.millisecondsOfDay;
+        value from = this < start then this else start;
+        value to = this < start then start else this;
+
+        variable value total = to.millisecondsOfDay - from.millisecondsOfDay;
         value hh = total / ms.perHour;
         total =  total % ms.perHour;
 
@@ -160,11 +163,12 @@ shared class TimeOfDay(millisecondsOfDay)
 
         value ss = total / ms.perSecond;
 
+        Boolean positive = start < this; 
         return Period {
-            hours = hh;
-            minutes = mm;
-            seconds = ss;
-            milliseconds = total % ms.perSecond;
+            hours = positive then hh else -hh;
+            minutes = positive then mm else -mm;
+            seconds = positive then ss else -ss;
+            milliseconds = positive then total % ms.perSecond else -(total % ms.perSecond);
         }; 
     }
 
