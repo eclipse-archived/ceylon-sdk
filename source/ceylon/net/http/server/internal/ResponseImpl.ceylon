@@ -29,8 +29,6 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         Buffer<Integer> buffer = charset.encode(string);
         applyHeadersToExchange();
         
-        variable Integer remaining = buffer.limit;
-
         variable Integer written = 0;
         
         ByteArray bytes = ByteArray(buffer.available);
@@ -40,7 +38,6 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         }
         value bb = wrapByteBuffer(bytes);
         written = response.write(bb);
-        remaining -= written;
         try {
             response.awaitWritable();
         } catch(JIOException e) {
