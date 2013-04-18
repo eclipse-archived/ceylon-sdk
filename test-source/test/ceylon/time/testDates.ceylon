@@ -338,11 +338,6 @@ shared void testAtInvalidMillis() {
     }
 }
 
-/**
- * Check all combinations of date.periodFrom(anotherDate) (positive and negative)
- * Check all combinations of date.periodTo(anotherDate) (positive and negative)
- */
-
 shared void testPeriodFrom() {
     Period period = Period{ years = 2; months = 2; days = 3;};
     Date from = date(2011, october, 28);

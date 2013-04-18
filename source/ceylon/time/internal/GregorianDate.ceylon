@@ -24,16 +24,16 @@ shared class GregorianDate( Integer dayOfEra )
     shared actual Integer dayOfYear => month.fisrtDayOfYear( leapYear ) + day - 1;
 
     "Returns gregorian date immediately preceeding this date."
-    shared actual GregorianDate predecessor => minusDays( 1 );
+    shared actual Date predecessor => minusDays( 1 );
 
     "Returns gregorian date immediately succeeding this date."
-    shared actual GregorianDate successor => plusDays( 1 );
+    shared actual Date successor => plusDays( 1 );
 
     "Returns current day of the week."
     shared actual DayOfWeek dayOfWeek => weekdayOf(impl.dayOfWeekFrom( dayOfEra ));
 
     "Adds number of days to this date and returns the resulting date."
-    shared actual GregorianDate plusDays(Integer days) {
+    shared actual Date plusDays(Integer days) {
         if ( days == 0 ) {
             return this;
         }
@@ -41,13 +41,13 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "Subtracts number of days from this date and returns the resulting date."
-    shared actual GregorianDate minusDays(Integer days) => plusDays(-days);
+    shared actual Date minusDays(Integer days) => plusDays(-days);
 
     "Adds number of weeks to this date and returns the resulting date."
-    shared actual GregorianDate plusWeeks(Integer weeks) => plusDays( weeks * days.perWeek );
+    shared actual Date plusWeeks(Integer weeks) => plusDays( weeks * days.perWeek );
 
     "Subtracts number of weeks from this date and returns the resulting date."
-    shared actual GregorianDate minusWeeks(Integer weeks) => plusWeeks( -weeks );
+    shared actual Date minusWeeks(Integer weeks) => plusWeeks( -weeks );
 
     "Adds number of months to this date and returns the resulting date.
      
@@ -57,7 +57,7 @@ shared class GregorianDate( Integer dayOfEra )
      This means for example, that `date(2013, 1, 31).plusMonths(1)` will return
      `2013-02-28`, since _February 2013_ has only 28 days.
      "
-    shared actual GregorianDate plusMonths(Integer months) {
+    shared actual Date plusMonths(Integer months) {
         if ( months == 0 ) {
             return this;
         }
@@ -77,7 +77,7 @@ shared class GregorianDate( Integer dayOfEra )
      This means for example, that `date(2013, 3, 30).minusMonths(1)` will return
      `2013-02-28`, since _February 2013_ has only 28 days.
      "
-    shared actual GregorianDate minusMonths(Integer months) => plusMonths(-months);
+    shared actual Date minusMonths(Integer months) => plusMonths(-months);
 
     "Adds number of years to this date returning the resulting gregorian date.
      
@@ -87,7 +87,7 @@ shared class GregorianDate( Integer dayOfEra )
      This means for example, that `date(2012, 2, 29).plusYears(1)` will return
      `2013-02-28`, since _February 2013_ has only 28 days.
      "
-    shared actual GregorianDate plusYears(Integer years) {
+    shared actual Date plusYears(Integer years) {
         if ( years == 0 ) {
             return this;
         }
@@ -103,13 +103,13 @@ shared class GregorianDate( Integer dayOfEra )
      This means for example, that `date(2012, 2, 29).minusYears(1)` will return
      `2011-02-28`, since _February 2011_ has only 28 days.
      "
-    shared actual GregorianDate minusYears(Integer years) => plusYears(-years);
+    shared actual Date minusYears(Integer years) => plusYears(-years);
 
     "Returns new date with the _day of month_ vaue set to the specified value.
      
      Resulting date will have to be valid Gregorian date.
      "
-    shared actual GregorianDate withDay(Integer day) {
+    shared actual Date withDay(Integer day) {
         if ( day == this.day ) {
             return this;
         }
@@ -121,7 +121,7 @@ shared class GregorianDate( Integer dayOfEra )
      
      Resulting date will have to be valid Gregorian date.
      "
-    shared actual GregorianDate withMonth(Month month) {
+    shared actual Date withMonth(Month month) {
         Month newMonth = monthOf(month);
         if ( newMonth == this.month ) {
             return this;
@@ -135,7 +135,7 @@ shared class GregorianDate( Integer dayOfEra )
      
      Resulting date will have to be valid Gregorian date.
      "
-    shared actual GregorianDate withYear(Integer year) {
+    shared actual Date withYear(Integer year) {
         if ( year == this.year ) {
             return this;
         }
@@ -145,7 +145,7 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "Adds specified date period to this date and returns the new date."
-    shared actual GregorianDate plus( ReadableDatePeriod amount ) {
+    shared actual Date plus( ReadableDatePeriod amount ) {
         return addPeriod {
                 months = amount.years * months.perYear + amount.months;
                 days = amount.days; 
@@ -153,7 +153,7 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "Subtracts specified date period from this date and returns the new date."
-    shared actual GregorianDate minus( ReadableDatePeriod amount ) {
+    shared actual Date minus( ReadableDatePeriod amount ) {
         return addPeriod {
                 months = amount.years.negativeValue * months.perYear + amount.months.negativeValue;
                 days = amount.days.negativeValue; 
@@ -162,8 +162,8 @@ shared class GregorianDate( Integer dayOfEra )
 
     "This method add the specified fields doing first the subtraction and last the additions.
      The mix between positive and negative fields does not guarantee any expected behavior"
-    GregorianDate addPeriod( Integer months, Integer days ) {
-        variable value _this = this;
+    Date addPeriod( Integer months, Integer days ) {
+        variable Date _this = this;
         //do all subtractions first
         if ( days < 0 ) {
             _this = _this.minusDays(days.negativeValue);
