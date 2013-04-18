@@ -1,6 +1,6 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
-import ceylon.io.charset { stringToByteProducer, utf8, ascii }
+import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse }
 import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { createServer, StatusListener, Status, 
@@ -31,7 +31,7 @@ void testServer() {
     
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
-        response.addHeader(contentType { contentType = "text/html"; charset = ascii; });
+        response.addHeader(contentType { contentType = "text/html"; charset = utf8; });
         response.writeString("Hello ``name(request)``!");
     }
 
@@ -44,7 +44,7 @@ void testServer() {
 
     server.addEndpoint(Endpoint {
         service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", ascii));
+                        response.addHeader(contentType("text/html", utf8));
                         response.writeString(request.header("Content-Type") else "");
                     };
         path = startsWith("/headerTest");
@@ -81,7 +81,7 @@ void testServer() {
     server.addListener(serverListerner);
 
     server.startInBackground {
-        serverOptions = Options {defaultCharset = ascii;}; //TODO use utf8 instead of ascii once encoder/decoder issue fixed
+        serverOptions = Options {defaultCharset = utf8;};
     };
 }
 
@@ -90,7 +90,8 @@ void executeEchoTest() {
     print("Making request to Ceylon server...");
     
     String name = "Ceylon";
-    
+    value expecting = "Hello ``name``!";
+
     value request = ClientRequest(parse("http://localhost:8080/echo?name=" + name));
     value response = request.execute();
 
@@ -98,7 +99,6 @@ void executeEchoTest() {
     response.close();
     //TODO log
     print("Received message: ``echoMsg``");
-    value expecting = "Hello ``name``!";
     assertEquals(expecting, echoMsg);
 }
 
@@ -111,8 +111,7 @@ void headerTest() {
     value response = request.execute();
     
     value contentTypeHeader = response.getSingleHeader("content-type");
-    //assertEquals("text/html; charset=UTF-8", contentTypeHeader);
-    assertEquals("text/html; charset=``ascii.name``", contentTypeHeader);
+    assertEquals("text/html; charset=UTF-8", contentTypeHeader);
     
     value echoMsg = response.contents;
     response.close();
@@ -214,6 +213,5 @@ void testPathMatcher() {
     value matcher6 = (startsWith("/blob") or startsWith("/file")) 
                 and endsWith(".txt");
     assertEquals("/file/myfile.txt", matcher6.relativePath(requestPath));
-    
-    
 }
+

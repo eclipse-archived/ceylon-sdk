@@ -7,12 +7,12 @@ import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
 import java.io { JIOException=IOException }
-import java.lang { JString=String, arrays, Byte, ByteArray }
+import java.lang { arrays, ByteArray }
 import java.nio { 
     JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import org.xnio.channels { StreamSinkChannel,
                            Channels { chFlushBlocking=flushBlocking } }
-import ceylon.io.buffer { ByteBuffer, Buffer }
+import ceylon.io.buffer { Buffer }
 
 by "Matej Lazar"
 shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
