@@ -17,7 +17,7 @@ shared interface Session
     
     doc "Removes an object from users session identified by
          given key."
-    shared formal formal Object? remove(String key);
+    shared formal Object? remove(String key);
     
     doc "The time, in seconds, between client requests before 
          the server will invalidate this session. A null time 
