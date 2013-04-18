@@ -46,8 +46,8 @@ shared void testIntervalDateTimeReverse() {
     assertIntervalDateTime{
          start = date(2013, february,28);
          end = date(2013, february,1);
-         period = Period{ days = 27; };
-         duration = Duration( 27 * milliseconds.perDay );
+         period = Period{ days = -27; };
+         duration = Duration( -27 * milliseconds.perDay );
     };
 }
 
@@ -100,13 +100,9 @@ void assertIntervalDateTime( Date start, Date end, Period period, Duration? dura
     value interval = start.to(end);
     assertEquals(period, interval.period);
 
-    if ( start <= end ) {
-        assertEquals( end, start.plus(period) );
-        assertEquals( start, end.minus(period) );
-    } else {
-        assertEquals( start, end.plus(period) );
-        assertEquals( end, start.minus(period) );
-    }
+    assertEquals( end, start.plus(period) );
+    assertEquals( start, end.minus(period) );
+
     if( exists duration ) {
         assertEquals(duration, interval.duration);
     }

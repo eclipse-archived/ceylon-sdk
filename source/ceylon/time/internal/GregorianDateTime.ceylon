@@ -1,4 +1,4 @@
-import ceylon.time { Date, Time, DateTime, Instant, Period, zero, DateTimeRange }
+import ceylon.time { Date, Time, DateTime, Instant, Period, DateTimeRange }
 import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek, months }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.internal.math { floorDiv, floorMod }

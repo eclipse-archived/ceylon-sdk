@@ -6,18 +6,14 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
 
     shared actual Time from;
     shared actual Time to;
-
     shared actual UnitOfTime step;
 
-    Time smaller = from <= to then from else to;
-    Time greater = from > to then from else to;
-
     shared actual Period period  {
-        return smaller.periodTo(greater);	
+        return from.periodTo(to);	
     }
 
     shared actual Duration duration  {
-        return Duration(greater.millisecondsOfDay - smaller.millisecondsOfDay);	
+        return Duration(to.millisecondsOfDay - from.millisecondsOfDay);	
     }
 
     shared actual Boolean equals( Object other ) {

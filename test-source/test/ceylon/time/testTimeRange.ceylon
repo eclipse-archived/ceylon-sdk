@@ -48,8 +48,8 @@ shared void testIntervalTimeReverse() {
     assertIntervalTime{
          start = time(10,0);
          end = time(8,0);
-         period = Period{ hours = 2; };
-         duration = Duration( 2 * milliseconds.perHour );
+         period = Period{ hours = -2; };
+         duration = Duration( -2 * milliseconds.perHour );
     };
 }
 
@@ -101,13 +101,9 @@ void assertIntervalTime( Time start, Time end, Period period, Duration? duration
     value interval = start.to(end);
     assertEquals(period, interval.period);
 
-    if ( start <= end ) {
-        assertEquals( end, start.plus(period) );
-        assertEquals( start, end.minus(period) );
-    } else {
-        assertEquals( start, end.plus(period) );
-        assertEquals( end, start.minus(period) );
-    }
+    assertEquals( end, start.plus(period) );
+    assertEquals( start, end.minus(period) );
+
     if( exists duration ) {
         assertEquals(duration, interval.duration);
     }
