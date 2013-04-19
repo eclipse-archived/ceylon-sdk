@@ -2,6 +2,7 @@ import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandle
 import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
+import ceylon.net.http { Method }
 
 by("Matej Lazar")
 shared class CeylonRequestHandler() satisfies HttpHandler {
@@ -22,7 +23,8 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
                 
                 try {
                     String requestPath = request.path;
-                    Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpoint(requestPath);
+                    Method method = request.method;
+                    Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpoint(requestPath, method);
                     
                     if (exists e = endpoint) {
                         request.endpoint = e;
@@ -71,9 +73,9 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     }
     
 
-    Endpoint|AsynchronousEndpoint|Null getWebEndpoint(String requestPath) {
+    Endpoint|AsynchronousEndpoint|Null getWebEndpoint(String requestPath, Method method) {
         for (endpoint in endpoints) {
-            if (endpoint.path.matches(requestPath)) {
+            if (endpoint.path.matches(requestPath) && endpoint.acceptMethod(method) ) {
                 return endpoint;
             }
         }

@@ -1,4 +1,5 @@
 import ceylon.io { SocketAddress }
+import ceylon.net.http { Method }
 
 "Defines an object to provide client request information 
  to a web endpoint."
@@ -16,7 +17,7 @@ shared interface Request {
     shared formal String[] headers(String name);
     
     "Get the HTTP request method. {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
-    shared formal String method;
+    shared formal Method method;
     
     "Get the request URI scheme. {http, https}"
     shared formal String scheme;
