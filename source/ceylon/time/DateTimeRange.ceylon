@@ -1,5 +1,5 @@
 import ceylon.time.base { Range, UnitOfDate, milliseconds, UnitOfTime, UnitOfYear, UnitOfMonth, UnitOfDay, UnitOfHour, UnitOfMinute, UnitOfSecond, UnitOfMillisecond }
-import ceylon.time.internal { gapUtil = gap, overlapUtil = overlap }
+import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
 see( Range )
 shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<DateTime, DateTimeRange> {
@@ -22,12 +22,12 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
     }
 
     shared actual DateTimeRange? overlap(DateTimeRange other) {
-        assert( is DateTimeRange? response = overlapUtil(this, other, step));
+        assert( is DateTimeRange? response = _overlap(this, other, step));
         return response;
     }
 
 	shared actual DateTimeRange? gap( DateTimeRange other ) {
-        assert( is DateTimeRange? response = gapUtil(this, other, step));
+        assert( is DateTimeRange? response = _gap(this, other, step));
         return response;
     }
 
