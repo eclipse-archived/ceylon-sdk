@@ -1,7 +1,10 @@
 import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
-import ceylon.net.http.server { Request, Session, Endpoint, 
-                          InternalException, AsynchronousEndpoint }
+import ceylon.net.http.server { 
+    Request, Session, 
+    Method, options, get, head, post, put, delete, trace, connect,
+    Endpoint, AsynchronousEndpoint,
+    InternalException}
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.server.handlers.form { 
@@ -102,7 +105,7 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
         return SocketAddress(address.hostString, address.port);
     }
     
-    shared actual String method => exchange.requestMethod.string;
+    shared actual Method method => decodeMethod(exchange.requestMethod.string);
     
     shared actual String queryString => exchange.queryString;
     
@@ -169,5 +172,28 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
             }
         }
         return formData;
+    }
+}
+
+doc "Decode a method string to Method instance"
+Method decodeMethod(String name) {
+    if ( name == "OPTIONS" ) {
+        return options;
+    } else if ( name == "GET" ) {
+        return get;
+    } else if ( name == "HEAD" ) {
+        return head;
+    } else if ( name == "POST" ) {
+        return post;
+    } else if ( name == "PUT" ) {
+        return put;
+    } else if ( name == "DELETE" ) {
+        return delete;
+    } else if ( name == "TRACE" ) {
+        return trace;
+    } else if ( name == "CONNECT" ) {
+        return connect;
+    } else {
+        throw Exception("Unknown method '"+ name +"'.");
     }
 }

@@ -16,7 +16,7 @@ shared interface Request {
     shared formal String[] headers(String name);
     
     doc "Get the HTTP request method. {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
-    shared formal String method;
+    shared formal Method method;
     
     doc "Get the request URI scheme. {http, https}"
     shared formal String scheme;
