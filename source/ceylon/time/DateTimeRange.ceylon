@@ -1,5 +1,5 @@
-import ceylon.time.base { Range, UnitOfDate, milliseconds, UnitOfTime }
-import ceylon.time.internal { nextByStep, previousByStep, gapUtil = gap, overlapUtil = overlap }
+import ceylon.time.base { Range, UnitOfDate, milliseconds, UnitOfTime, UnitOfYear, UnitOfMonth, UnitOfDay, UnitOfHour, UnitOfMinute, UnitOfSecond, UnitOfMillisecond }
+import ceylon.time.internal { gapUtil = gap, overlapUtil = overlap }
 
 see( Range )
 shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<DateTime, DateTimeRange> {
@@ -37,8 +37,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         object listIterator satisfies Iterator<DateTime> {
             variable Integer count = 0;
             shared actual DateTime|Finished next() {
-                value date = from > to then previousByStep(from, step, count++) else nextByStep(from, step, count++);
-                assert( is DateTime date);
+                value date = from > to then previousByStep(count++) else nextByStep(count++);
                 value continueLoop = from <= to then date <= to else date >= to;
                 return continueLoop then date else finished;
             }
@@ -49,6 +48,40 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
     "Define how this Range will get next or previous element while iterating."
     shared DateTimeRange stepBy( UnitOfDate|UnitOfTime step ) {
         return step == this.step then this else DateTimeRange(from, to, step);
+    }
+
+    DateTime nextByStep( Integer jump = 1 ) {
+        if ( is UnitOfDate step ) {
+            switch( step )
+            case( is UnitOfYear )  { return from.plusYears(jump); }
+            case( is UnitOfMonth ) { return from.plusMonths(jump); }
+            case( is UnitOfDay )   { return from.plusDays(jump); }
+        }
+        if ( is UnitOfTime step ) {
+            switch( step )
+            case( is UnitOfHour )  { return from.plusHours(jump); }
+            case( is UnitOfMinute ) { return from.plusMinutes(jump); }
+            case( is UnitOfSecond )   { return from.plusSeconds(jump); }
+            case( is UnitOfMillisecond )   { return from.plusMilliseconds(jump); }
+        }
+        throw;
+    }
+
+    DateTime previousByStep( Integer jump = 1 ) {
+        if ( is UnitOfDate step ) {
+            switch( step )
+            case( is UnitOfYear )  { return from.minusYears(jump); }
+            case( is UnitOfMonth ) { return from.minusMonths(jump); }
+            case( is UnitOfDay )   { return from.minusDays(jump); }
+        }
+        if ( is UnitOfTime step ) {
+            switch( step )
+            case( is UnitOfHour )  { return from.minusHours(jump); }
+            case( is UnitOfMinute ) { return from.minusMinutes(jump); }
+            case( is UnitOfSecond )   { return from.minusSeconds(jump); }
+            case( is UnitOfMillisecond )   { return from.minusMilliseconds(jump); }
+        }
+        throw;
     }
     
 }

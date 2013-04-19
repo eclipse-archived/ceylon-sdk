@@ -1,5 +1,5 @@
 import ceylon.time { DateTime, Time, Date, DateTimeRange, DateRange, TimeRange}
-import ceylon.time.base { UnitOfDate, UnitOfTime, UnitOfYear, UnitOfMonth, UnitOfDay, UnitOfHour, UnitOfMinute, UnitOfSecond, UnitOfMillisecond }
+import ceylon.time.base { UnitOfDate, UnitOfTime }
 
 "Represents all Date/Time types"
 shared alias Kind => Date|Time|DateTime;
@@ -33,69 +33,7 @@ shared Boolean intersect( Integer start, Integer end, Integer otherStart, Intege
     return start <= otherEnd && end >= otherStart;
 }
 
-"Return next Kind based on step and jump"
-shared Kind nextByStep( Kind kind, UnitOfDate|UnitOfTime step, Integer jump = 1 ) {
-    if ( is UnitOfDate step, is Date kind ) {
-        switch( step )
-        case( is UnitOfYear )  { return kind.plusYears(jump); }
-        case( is UnitOfMonth ) { return kind.plusMonths(jump); }
-        case( is UnitOfDay )   { return kind.plusDays(jump); }
-    } else if ( is UnitOfTime step, is Time kind ) {
-        switch( step )
-        case( is UnitOfHour )  { return kind.plusHours(jump); }
-        case( is UnitOfMinute ) { return kind.plusMinutes(jump); }
-        case( is UnitOfSecond )   { return kind.plusSeconds(jump); }
-        case( is UnitOfMillisecond )   { return kind.plusMilliseconds(jump); }
-    } else if ( is DateTime kind ) {
-        if ( is UnitOfDate step ) {
-            switch( step )
-            case( is UnitOfYear )  { return kind.plusYears(jump); }
-            case( is UnitOfMonth ) { return kind.plusMonths(jump); }
-            case( is UnitOfDay )   { return kind.plusDays(jump); }
-        }
-        if ( is UnitOfTime step ) {
-            switch( step )
-            case( is UnitOfHour )  { return kind.plusHours(jump); }
-            case( is UnitOfMinute ) { return kind.plusMinutes(jump); }
-            case( is UnitOfSecond )   { return kind.plusSeconds(jump); }
-            case( is UnitOfMillisecond )   { return kind.plusMilliseconds(jump); }
-        }
-    }
-    throw;
-}
-
-"Return previous Kind based on step and jump"
-shared Kind previousByStep( Kind kind, UnitOfDate|UnitOfTime step, Integer jump = 1 ) {
-    if ( is UnitOfDate step, is Date kind ) {
-        switch( step )
-        case( is UnitOfYear )  { return kind.minusYears(jump); }
-        case( is UnitOfMonth ) { return kind.minusMonths(jump); }
-        case( is UnitOfDay )   { return kind.minusDays(jump); }
-    } else if ( is UnitOfTime step, is Time kind ) {
-        switch( step )
-        case( is UnitOfHour )  { return kind.minusHours(jump); }
-        case( is UnitOfMinute ) { return kind.minusMinutes(jump); }
-        case( is UnitOfSecond )   { return kind.minusSeconds(jump); }
-        case( is UnitOfMillisecond )   { return kind.minusMilliseconds(jump); }
-    } else if ( is DateTime kind ) {
-        if ( is UnitOfDate step ) {
-            switch( step )
-            case( is UnitOfYear )  { return kind.minusYears(jump); }
-            case( is UnitOfMonth ) { return kind.minusMonths(jump); }
-            case( is UnitOfDay )   { return kind.minusDays(jump); }
-        }
-        if ( is UnitOfTime step ) {
-            switch( step )
-            case( is UnitOfHour )  { return kind.minusHours(jump); }
-            case( is UnitOfMinute ) { return kind.minusMinutes(jump); }
-            case( is UnitOfSecond )   { return kind.minusSeconds(jump); }
-            case( is UnitOfMillisecond )   { return kind.minusMilliseconds(jump); }
-        }
-    }
-    throw;
-}
-
-"Returns the intersection between two intervals as a new Interval"
+//"Returns the intersection between two intervals as a new Interval"
 shared KindRange|Null overlap(KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step) {
 
     "We need to order it because we can have _time(6,0).to(time(2,0))_"
@@ -133,7 +71,7 @@ shared KindRange|Null overlap(KindRange range, KindRange otherRange, UnitOfDate|
     return null;
 }
 
-"Returns the gap between two intervals as a new Range"
+//"Returns the gap between two intervals as a new Range"
 shared KindRange|Null gap( KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step ) {
 
     "We need to order it because we can have _time(6,0).to(time(2,0))_"
