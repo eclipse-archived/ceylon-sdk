@@ -37,7 +37,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         object listIterator satisfies Iterator<DateTime> {
             variable Integer count = 0;
             shared actual DateTime|Finished next() {
-                value date = from > to then nextByStep(from, step, count++) else previousByStep(from, step, count++);
+                value date = from > to then previousByStep(from, step, count++) else nextByStep(from, step, count++);
                 assert( is DateTime date);
                 value continueLoop = from <= to then date <= to else date >= to;
                 return continueLoop then date else finished;
