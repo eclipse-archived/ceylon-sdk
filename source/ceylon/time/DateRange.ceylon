@@ -1,5 +1,5 @@
-import ceylon.time.base { Range, milliseconds, UnitOfDate, days }
-import ceylon.time.internal { previousByStep, nextByStep, gapUtil = gap, overlapUtil = overlap }
+import ceylon.time.base { Range, milliseconds, UnitOfDate, days, UnitOfYear, UnitOfMonth, UnitOfDay }
+import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
 see( Range )
 shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange> {
@@ -9,7 +9,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
     shared actual UnitOfDate step;
 
     shared actual Period period  {
-        return from.periodTo(to);	
+        return from.periodTo(to);
     }
 
     shared actual Duration duration  {
@@ -21,12 +21,12 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
     }
 
     shared actual DateRange? overlap(DateRange other) {
-        assert( is DateRange? response = overlapUtil(this, other, step));
+        assert( is DateRange? response = _overlap(this, other, step));
         return response;
     }
 
     shared actual DateRange? gap( DateRange other ) {
-        assert( is DateRange? response = gapUtil(this, other, step) );
+        assert( is DateRange? response = _gap(this, other, step) );
         return response;
     }
 
@@ -36,8 +36,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
         object listIterator satisfies Iterator<Date> {
             variable Integer count = 0;
             shared actual Date|Finished next() {
-                value date = from > to then previousByStep(from, step, count++) else nextByStep(from, step, count++);
-                assert( is Date date );
+                value date = from > to then previousByStep(count++) else nextByStep(count++);
                 value continueLoop = from <= to then date <= to else date >= to;
                 return continueLoop then date else finished;
             }
@@ -49,5 +48,19 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange>
     shared DateRange stepBy( UnitOfDate step ) {
         return step == this.step then this else DateRange(from, to, step);
     }
+
+    Date nextByStep( Integer jump = 1 ) {
+        switch( step )
+        case( is UnitOfYear )  { return from.plusYears(jump); }
+        case( is UnitOfMonth ) { return from.plusMonths(jump); }
+        case( is UnitOfDay )   { return from.plusDays(jump); }
+    }
+
+    Date previousByStep( Integer jump = 1 ) {
+        switch( step )
+        case( is UnitOfYear )  { return from.minusYears(jump); }
+        case( is UnitOfMonth ) { return from.minusMonths(jump); }
+        case( is UnitOfDay )   { return from.minusDays(jump); }
+    } 
 
 }

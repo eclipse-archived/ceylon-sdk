@@ -1,5 +1,5 @@
-import ceylon.time.base { Range, UnitOfTime, milliseconds }
-import ceylon.time.internal { nextByStep, previousByStep, gapUtil = gap, overlapUtil = overlap }
+import ceylon.time.base { Range, UnitOfTime, milliseconds, UnitOfHour, UnitOfMinute, UnitOfSecond, UnitOfMillisecond }
+import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
 see( Range )
 shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, TimeRange> {
@@ -21,12 +21,12 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
     }
 
     shared actual TimeRange? overlap(TimeRange other) {
-        assert( is TimeRange? response = overlapUtil(this, other, step));
+        assert( is TimeRange? response = _overlap(this, other, step));
         return response;
     }
 
     shared actual TimeRange? gap( TimeRange other ) {
-        assert( is TimeRange? response  = gapUtil(this, other, step));
+        assert( is TimeRange? response  = _gap(this, other, step));
         return response;
     }
 
@@ -36,8 +36,7 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
         object listIterator satisfies Iterator<Time> {
             variable Integer count = 0;
             shared actual Time|Finished next() {
-                value date = from > to then previousByStep(from, step, count++) else nextByStep(from, step, count++);
-                assert( is Time date );
+                value date = from > to then previousByStep(count++) else nextByStep(count++);
                 value continueLoop = from <= to then date <= to else date >= to && date <= from;
                 return continueLoop then date else finished;
             }
@@ -48,6 +47,23 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
     "Define how this Range will get next or previous element while iterating."
     shared TimeRange stepBy( UnitOfTime step ) {
         return step == this.step then this else TimeRange(from, to, step);
+    }
+
+    Time nextByStep( Integer jump = 1 ) {
+        switch( step )
+        case( is UnitOfHour )  { return from.plusHours(jump); }
+        case( is UnitOfMinute ) { return from.plusMinutes(jump); }
+        case( is UnitOfSecond )   { return from.plusSeconds(jump); }
+        case( is UnitOfMillisecond )   { return from.plusMilliseconds(jump); }
+    }
+
+
+    Time previousByStep( Integer jump = 1 ) {
+        switch( step )
+        case( is UnitOfHour )  { return from.minusHours(jump); }
+        case( is UnitOfMinute ) { return from.minusMinutes(jump); }
+        case( is UnitOfSecond )   { return from.minusSeconds(jump); }
+        case( is UnitOfMillisecond )   { return from.minusMilliseconds(jump); }
     }
 
 }

@@ -26,24 +26,22 @@ shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
      and _to_ fields, but it does not guarantee that _to_ will be included in iterator"
     shared formal UnitOfDate|UnitOfTime step;
 
-    "Returns the Duration between _from_ and _to_ fields in ascending order.
-     This means that its never going to produces a negative duration.
+    "Returns the Duration between _from_ and _to_ fields.
 
      Example: 
      
      Given: today().to(tomorrow).duration then duration is 86400000 milliseconds
      
-     Given: tomorrow().to(today).duration then duration is 86400000 milliseconds"
+     Given: tomorrow().to(today).duration then duration is -86400000 milliseconds"
     shared formal Duration duration;
 
-    "Returns the Period between _from_ and _to_ fields in ascending order.
-     This means that its never going to produces a negative duration.
+    "Returns the Period between _from_ and _to_ fields.
 
      Example: 
      
      Given: today().to(tomorrow).duration then duration is 1 day
      
-     Given: tomorrow().to(today).duration then duration is 1 day"
+     Given: tomorrow().to(today).duration then duration is -1 day"
     shared formal Period period;
     
     "Returns a new range based on overlap with given parameter. \n
@@ -137,4 +135,5 @@ shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
         }
         return false;
     }
+
 }
