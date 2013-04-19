@@ -157,7 +157,7 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
             return f;
         } else { 
             if (exists contentType = getHeader(headerConntentType.string)) {
-                if (contentType.equals(applicationXWwwFormUrlEncoded) || contentType.startsWith(multiparFormData)) {
+                if (contentType.startsWith(applicationXWwwFormUrlEncoded) || contentType.startsWith(multiparFormData)) {
                     FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
                     //if EagerFormParsingHandler is in handlers chain, parsing is already done and operation returns imediatly
                     formData = formDataParser.parseBlocking();
