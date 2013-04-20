@@ -27,3 +27,5 @@ shared Header contentType(String contentType, Charset? charset = null) {
 }
 
 shared Header contentLength(String contentLength) => Header("Content-Length", contentLength);
+
+shared String contentTypeFormUrlEncoded = "application/x-www-form-urlencoded";
