@@ -2,7 +2,7 @@ import ceylon.time.base { Range, UnitOfDate, milliseconds, UnitOfTime, UnitOfYea
 import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
 see( Range )
-shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<DateTime, DateTimeRange> {
+shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<DateTime, DateTimeRange, UnitOfDate|UnitOfTime> {
 
     shared actual DateTime from;
     shared actual DateTime to;
@@ -46,7 +46,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
     }
     
     "Define how this Range will get next or previous element while iterating."
-    shared DateTimeRange stepBy( UnitOfDate|UnitOfTime step ) {
+    shared actual DateTimeRange stepBy( UnitOfDate|UnitOfTime step ) {
         return step == this.step then this else DateTimeRange(from, to, step);
     }
 

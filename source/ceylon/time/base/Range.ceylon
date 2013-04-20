@@ -1,9 +1,9 @@
 import ceylon.time { Duration, Period }
 
 "An interface to represent a Range between two Date/DateTime/Time"
-shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
+shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Null>
                                 given Element satisfies Comparable<Element> & Ordinal<Element>
-                                given Self satisfies Range<Element,Self> {
+                                given Self satisfies Range<Element,Self, StepBy> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as
@@ -79,7 +79,7 @@ shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
 
      Then: \n
      overlapedRange will be Null"
-    shared formal Range<Element, Self>? overlap( Self other );
+    shared formal Range<Element, Self, StepBy>? overlap( Self other );
     
     "Returns a new range based on gap with given parameter. \n
      Gaps are considered exclusives on both _from_ and _to_ fields and 
@@ -116,7 +116,7 @@ shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
 
      Then: \n
      gapRange will be Null"
-    shared formal Range<Element, Self>? gap( Self other );
+    shared formal Range<Element, Self, StepBy>? gap( Self other );
 
     //TODO: How to link it with Container::contains doc?
     shared actual Boolean contains(Object element) {
@@ -130,10 +130,13 @@ shared interface Range<Element, in Self> satisfies Iterable<Element, Null>
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_"
     shared default actual Boolean equals( Object other ) {
-        if ( is Range<Element, Self> other ) {
+        if ( is Range<Element, Self, StepBy> other ) {
             return from == other.from && to == other.to;
         }
         return false;
     }
+
+    "Define how this Range will get next or previous element while iterating."
+    shared formal Range<Element, Self, StepBy> stepBy( StepBy step );
 
 }
