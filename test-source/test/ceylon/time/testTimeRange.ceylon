@@ -62,14 +62,14 @@ shared void testGapTimeReverse() {
     TimeRange mar = time(4,0).to(time(2,0));
     TimeRange gap = time(4,0,0,1).to(time(5,59,59,999));
     
-    assertEquals(gap, time(6,0).to(time(8,0)).gap(mar));    
+    assertEquals(gap, time(6,0).to(time(8,0)).gap(mar));
 }
 
 shared void testOverlapTime() {
     TimeRange halfFirstQuarter = time(0,0).to(time(3,0));
     TimeRange overlap = time(0,0).to(time(3,0));
 
-    assertEquals(overlap, firstQuarterDay.overlap(halfFirstQuarter));    
+    assertEquals(overlap, firstQuarterDay.overlap(halfFirstQuarter));
 }
 
 shared void testStepMillisReverseTime() {
@@ -94,7 +94,7 @@ shared void testStepMinutesReverseTime() {
 }
 
 shared void testContainsTime() {
-    assertEquals(true, time(4,30) in firstQuarterDay);    
+    assertEquals(true, time(4,30) in firstQuarterDay);
 }
 
 void assertIntervalTime( Time start, Time end, Period period, Duration? duration = null )  {
