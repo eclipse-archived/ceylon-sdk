@@ -1,11 +1,11 @@
-import ceylon.collection { MutableList, LinkedList }
+import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
 import ceylon.net.uri { Uri }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
-import ceylon.net.http { Header }
+import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength }
 
 doc "Represents an HTTP Request"
-by "Stéphane Épardaud"
+by("Stéphane Épardaud", "Matej Lazar")
 shared class Request(uri, method = "GET"){
     // constant
     String crLf = "\r\n";
@@ -13,7 +13,10 @@ shared class Request(uri, method = "GET"){
     doc "This request URI, must be absolute."
     shared Uri uri;
     
-    doc "The list of request headers."
+    doc "The map of request headers."
+    MutableMap<String, String> parameters = HashMap<String, String>();
+    
+    doc "The list of post parameters."
     shared MutableList<Header> headers = LinkedList<Header>();
     
     doc "The request method, such as `GET`, `POST`…"
@@ -79,18 +82,53 @@ shared class Request(uri, method = "GET"){
     setHeader("User-Agent", "curl/7.21.6 (x86_64-pc-linux-gnu) libcurl/7.21.6 OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3");
     setHeader("Accept-Charset", "UTF-8");
     
+    shared void putParameter(String name, String parameterValue) {
+        parameters.put(name, parameterValue);
+    }
+
+    Header defaultContentTypeHeader() {
+        //TODO log debug
+        print("Using default Content-Type");
+        Header contentTypeHeader = contentType(contentTypeFormUrlEncoded);
+        headers.add(contentTypeHeader);
+        return contentTypeHeader; 
+    }
+    
+    Header contentTypeHeader() {
+        variable Header? contentTypeHeader = headers.find((Header header) => header.name.lowercased.startsWith("content-type"));
+        return contentTypeHeader else defaultContentTypeHeader();
+    }
+    
+    String preparePostData() {
+        if (parameters.size == 0) {
+            return "";
+        }
+        String? contentType = contentTypeHeader().values.first;
+        if (exists contentType) {
+            ContentEncoder encoder = createEncoder(contentType);
+            return encoder.encode(parameters);
+        } else {
+            throw Exception("Shouldn't be here.");
+        }
+    }
+    
     String prepareRequest() {
         variable String path = uri.pathPart;
         if(path.empty){
             path = "/";
         }
-        if(exists query = uri.queryPart){
+        if(exists query = uri.queryPart) {
             path += "?"+query;
         }
 
         value builder = StringBuilder();
         builder.append(method).append(" ").append(path).append(" ").append("HTTP/1.1").append(crLf);
 
+        String postData = preparePostData();
+        if (!postData.empty) {
+            headers.add(contentLength(postData.size.string));
+        }
+        
         // headers
         for(header in headers){
             for(val in header.values){
@@ -98,6 +136,11 @@ shared class Request(uri, method = "GET"){
             }
         }
         builder.append(crLf);
+        
+        if (!postData.empty) {
+            builder.append(postData);
+        }
+
         return builder.string;
     }
     
@@ -118,4 +161,6 @@ shared class Request(uri, method = "GET"){
         // now parse the response
         return Parser(socket).parseResponse();
     }
+
+
 }
