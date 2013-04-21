@@ -50,6 +50,14 @@ void testServer() {
         path = startsWith("/headerTest");
     });
 
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", utf8));
+                        response.writeString(request.method);
+                    };
+        path = startsWith("/methodTest");
+    });
+
     //add fileEndpoint
     creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
@@ -68,7 +76,7 @@ void testServer() {
                     
                     concurentFileRequests(numberOfUsers);
                     
-                    
+                    methodTest();
                     
                 } finally {
                     cleanUpFile();
@@ -103,7 +111,7 @@ void executeEchoTest() {
 }
 
 void headerTest() {
-    String header = "multipart/form-data";
+    String header = "application/x-www-form-urlencoded";
     
     value request = ClientRequest(parse("http://localhost:8080/headerTest"));
     request.setHeader("Content-Type", header);
@@ -215,3 +223,37 @@ void testPathMatcher() {
     assertEquals("/file/myfile.txt", matcher6.relativePath(requestPath));
 }
 
+void methodTest() {
+    methodTestRequest("POST");
+    methodTestRequest("POST");
+    methodTestRequest("POST");
+    methodTestRequest("POST");
+    methodTestRequest("PUT");
+    methodTestRequest("PUT");
+    methodTestRequest("PUT");
+    methodTestRequest("PUT");
+    methodTestRequest("GET");
+    methodTestRequest("GET");
+    methodTestRequest("GET");
+    methodTestRequest("GET");
+    methodTestRequest("DELETE");
+    methodTestRequest("DELETE");
+    methodTestRequest("DELETE");
+    methodTestRequest("DELETE");
+}
+
+void methodTestRequest(String method) {
+    value request = ClientRequest(parse("http://localhost:8080/methodTest"));
+
+    request.method = method;
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.putParameter("foo", "valueFoo");
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertEquals(method, responseContent);
+
+}
