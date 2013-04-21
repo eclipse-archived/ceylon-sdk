@@ -27,7 +27,7 @@ import io.undertow.server { HttpOpenListener, HttpHandler }
 import io.undertow.server.handlers { CookieHandler, URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
-import io.undertow.server.handlers.form { FormEncodedDataHandler, MultiPartHandler }
+import io.undertow.server.handlers.form { FormEncodedDataHandler, MultiPartHandler, EagerFormParsingHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 
@@ -59,11 +59,13 @@ shared class DefaultServer() satisfies Server {
         session.setNext(ceylonHandler);
         
         CookieHandler cookieHandler = CookieHandler();
-        //cookieHandler.next = session;
         cookieHandler.setNext(session);
         
+        EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
+        eagerFormParsingHandler.setNext(cookieHandler);
+        
         MultiPartHandler multiPartHandler = MultiPartHandler();
-        multiPartHandler.setNext(cookieHandler);
+        multiPartHandler.setNext(eagerFormParsingHandler);
         multiPartHandler.setDefaultEncoding(options.defaultCharset.name);
         
         FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
