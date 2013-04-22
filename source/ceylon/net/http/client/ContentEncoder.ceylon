@@ -1,8 +1,9 @@
 import ceylon.net.http { contentTypeFormUrlEncoded }
+import ceylon.net.uri { Parameter }
 
 by("Matej Lazar")
 shared interface ContentEncoder {
-    shared formal String encode(Map<String, String> parameters); 
+    shared formal String encode(Map<String, List<Parameter>> parameters); 
 }
 
 ContentEncoder createEncoder(String contentType) {
@@ -15,18 +16,18 @@ ContentEncoder createEncoder(String contentType) {
 }
 
 class UrlEncoder() satisfies ContentEncoder {
-    shared actual String encode(Map<String,String> parameters) {
+    shared actual String encode(Map<String, List<Parameter>> parameters) {
         value builder = StringBuilder();
         variable value first = true;
-        for (parameter in parameters) {
-            if (first) {
-                first = false;
-            } else {
-                builder.append("&");
+        for (params in parameters) {
+            for (param in params.item) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append("&");
+                }
+                builder.append(param.string);
             }
-            builder.append(parameter.key);
-            builder.append("=");
-            builder.append(parameter.item);
         }
         return builder.string;
     }

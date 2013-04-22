@@ -1,7 +1,7 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
-import ceylon.net.uri { parse }
+import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { createServer, StatusListener, Status, 
                                   started, AsynchronousEndpoint, 
@@ -58,6 +58,14 @@ void testServer() {
         path = startsWith("/methodTest");
     });
 
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", utf8));
+                        response.writeString(request.parameter("čšž") else "");
+                    };
+        path = startsWith("/paramTest");
+    });
+
     //add fileEndpoint
     creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
@@ -77,6 +85,8 @@ void testServer() {
                     concurentFileRequests(numberOfUsers);
                     
                     methodTest();
+
+                    parametersTest("čšž", "ČŠŽ ĐŽ");
                     
                 } finally {
                     cleanUpFile();
@@ -247,7 +257,7 @@ void methodTestRequest(String method) {
 
     request.method = method;
     request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-    request.putParameter("foo", "valueFoo");
+    request.setParameter(Parameter("foo", "valueFoo"));
 
     value response = request.execute();
     value responseContent = response.contents;
@@ -255,5 +265,19 @@ void methodTestRequest(String method) {
     //TODO log
     print("Response content: " + responseContent);
     assertEquals(method, responseContent);
+}
 
+void parametersTest(String paramKey, String paramValue) {
+    value request = ClientRequest(parse("http://localhost:8080/paramTest"), "POST");
+
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.setParameter(Parameter("foo", "valueFoo"));
+    request.setParameter(Parameter(paramKey, paramValue));
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertEquals(paramValue, responseContent);
 }

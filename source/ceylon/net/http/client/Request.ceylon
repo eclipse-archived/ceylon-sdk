@@ -1,5 +1,5 @@
 import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
-import ceylon.net.uri { Uri }
+import ceylon.net.uri { Uri, Parameter }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
 import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength }
@@ -13,10 +13,10 @@ shared class Request(uri, method = "GET"){
     doc "This request URI, must be absolute."
     shared Uri uri;
     
-    doc "The map of request headers."
-    MutableMap<String, String> parameters = HashMap<String, String>();
+    doc "The list of request parameters."
+    MutableMap<String, MutableList<Parameter>> parameters = HashMap<String, MutableList<Parameter>>();
     
-    doc "The list of post parameters."
+    doc "The list of request headers."
     shared MutableList<Header> headers = LinkedList<Header>();
     
     doc "The request method, such as `GET`, `POST`…"
@@ -82,8 +82,29 @@ shared class Request(uri, method = "GET"){
     setHeader("User-Agent", "curl/7.21.6 (x86_64-pc-linux-gnu) libcurl/7.21.6 OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3");
     setHeader("Accept-Charset", "UTF-8");
     
-    shared void putParameter(String name, String parameterValue) {
-        parameters.put(name, parameterValue);
+    doc "Returns a list of parameters, if it exists. Returns null otherwise."
+    shared MutableList<Parameter>? getParameters(String name) {
+        return parameters.get(name);
+    }
+    
+    doc "Returns first parameter, if it exists. Returns null otherwise.
+         Note to use `getParameters` if there are multiple items with the same name."
+    shared Parameter? getParameter(String name) {
+        List<Parameter>? params = getParameters(name);
+        if (exists params) {
+            return params.first; 
+        }
+        return null;
+    }
+    
+    shared void setParameter(Parameter parameter) {
+        if (exists MutableList<Parameter> params = parameters.get(parameter.name)) {
+            params.add(parameter);
+        } else {
+            MutableList<Parameter> params = LinkedList<Parameter>();
+            params.add(parameter);
+            parameters.put(parameter.name, params);
+        }
     }
 
     Header defaultContentTypeHeader() {
@@ -103,8 +124,7 @@ shared class Request(uri, method = "GET"){
         if (parameters.size == 0) {
             return "";
         }
-        String? contentType = contentTypeHeader().values.first;
-        if (exists contentType) {
+        if (exists contentType = contentTypeHeader().values.first) {
             ContentEncoder encoder = createEncoder(contentType);
             return encoder.encode(parameters);
         } else {
