@@ -104,7 +104,8 @@ shared interface Decoder {
 
     doc "Returns a [[String]] consisting of all the decoded characters so far.
          Returns `null` if there are no decoded characters yet."
-    throws "If there were not enough bytes decoded to finish decoding the last
-            character."
+    throws(Exception,
+        "If there were not enough bytes decoded to finish decoding the last
+         character.")
     shared formal String done();
 }
