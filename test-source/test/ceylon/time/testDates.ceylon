@@ -35,7 +35,38 @@ shared void runDateTests(String suiteName="Date tests") {
         "Testing leap year rules: 2008" -> test_2008_is_leapYear,
         "Testing leap year rules: 2000" -> test_2000_is_leapYear,
         "Testing leap year rules: 1900" -> test_1900_is_not_leapYear,
-        "Testing leap year rules: 1600" -> test_1600_is_leapYear
+        "Testing leap year rules: 1600" -> test_1600_is_leapYear,
+        "Testing leap year rules: year 0" -> test_0000_is_leapYear,
+        "Testing leap year rules: year 1" -> test_0001_is_not_leapYear,
+        "Testing leap year rules: year 4" -> test_0004_is_leapYear,
+        "Testing leap year rules: year 33" -> test_0033_is_not_leapYear,
+        "Testing leap year rules: year 100" -> test_0100_is_not_leapYear,
+        "Testing leap year rules: year 400" -> test_0400_is_leapYear,
+        
+        //http://en.wikipedia.org/wiki/ISO_week_date
+        "Testing week of year: April 28 2009" -> test_weekOfYear_2009_apr_28,
+        "Testing week of year: December 16 2012" -> test_weekOfYear_2012_dec_16,
+        "Testing week of year: January 1 2005" -> test_weekOfYear_2005_jan_01,
+        "Testing week of year: January 1 2005" -> test_weekOfYear_2005_jan_01,
+        "Testing week of year: January 2 2005" -> test_weekOfYear_2005_jan_02,
+        "Testing week of year: January 31 2005" -> test_weekOfYear_2005_dec_31,
+        "Testing week of year: January 1 2007" -> test_weekOfYear_2007_jan_01,
+        "Testing week of year: December 30 2007" -> test_weekOfYear_2007_dec_30,
+        "Testing week of year: December 31 2007" -> test_weekOfYear_2007_dec_31,
+        "Testing week of year: January 1 2008" -> test_weekOfYear_2008_jan_01,
+        "Testing week of year: December 28 2008" -> test_weekOfYear_2008_dec_28,
+        "Testing week of year: December 29 2009" -> test_weekOfYear_2008_dec_29,
+        "Testing week of year: December 30 2008" -> test_weekOfYear_2008_dec_30,
+        "Testing week of year: December 31 2008" -> test_weekOfYear_2008_dec_31,
+        "Testing week of year: January 1 2009" -> test_weekOfYear_2009_jan_01,
+        "Testing week of year: December 31 2009" -> test_weekOfYear_2009_dec_31,
+        "Testing week of year: January 1 2010" -> test_weekOfYear_2010_jan_01,
+        "Testing week of year: January 2 2010" -> test_weekOfYear_2010_jan_02,
+        "Testing week of year: January 3 2010" -> test_weekOfYear_2010_jan_03,
+        
+        "Testing date plusDays" -> testPlusDays,
+        "Testing date minusDays" -> testMinusDays,
+        "Testing date minusDays" -> testMinusDays
     );
 }
 
@@ -54,13 +85,13 @@ shared void test_tue_feb_29_2000() => assertGregorianDate(2000, february, 29, tu
 shared void test_sun_dec_31_2000() => assertGregorianDate(2000, december, 31, sunday, leapYear, 366);
 shared void test_wed_feb_29_2012() => assertGregorianDate(2012, february, 29, wednesday, leapYear, 60);
 
-shared void test_invalid_date_jan_0() => expectException("Invalid date", 2013, january, 0);
-shared void test_invalid_date_feb_29() => expectException("Invalid date", 2013, february, 29);
-shared void test_invalid_date_feb_30() => expectException("Invalid date", 2012, february, 30);
-shared void test_invalid_date_apr_31() => expectException("Invalid date", 2012, april, 31);
-shared void test_invalid_date_jan_32() => expectException("Invalid date", 2013, january, 32);
-shared void test_invalid_date_maximum_year() => expectException("Invalid year", years.maximum+1, february, 29);
-shared void test_invalid_date_minimum_year() => expectException("Invalid year", years.minimum-1, february, 29);
+shared void test_invalid_date_jan_0() => assertException("Invalid date", 2013, january, 0);
+shared void test_invalid_date_feb_29() => assertException("Invalid date", 2013, february, 29);
+shared void test_invalid_date_feb_30() => assertException("Invalid date", 2012, february, 30);
+shared void test_invalid_date_apr_31() => assertException("Invalid date", 2012, april, 31);
+shared void test_invalid_date_jan_32() => assertException("Invalid date", 2013, january, 32);
+shared void test_invalid_date_maximum_year() => assertException("Invalid year", years.maximum+1, february, 29);
+shared void test_invalid_date_minimum_year() => assertException("Invalid year", years.minimum-1, february, 29);
 
 shared void test_2400_is_leapYear() => assertTrue( date(2400, january, 1 ).leapYear, "2400 is leap year" );
 shared void test_2200_is_not_leapYear() => assertFalse( date(2200, january, 1 ).leapYear, "2200 is not leap year" );
@@ -71,46 +102,34 @@ shared void test_2008_is_leapYear() => assertTrue( date(2008, january, 1 ).leapY
 shared void test_2000_is_leapYear() => assertTrue( date(2000, january, 1 ).leapYear, "2000 is leap year" );
 shared void test_1900_is_not_leapYear() => assertFalse( date(1900, january, 1 ).leapYear, "1900 is not leap year" );
 shared void test_1600_is_leapYear() => assertTrue( date(1600, january, 1 ).leapYear, "1600 is leap year" );
-shared void test_0000_is_leapYear() => assertTrue( date(0000, january, 1 ).leapYear, "0 is leap year" );
-shared void test_0001_is_not_leapYear() => assertFalse( date(0001, january, 1 ).leapYear, "1 is not leap year" );
-shared void test_0004_is_leapYear() => assertTrue( date(0004, january, 1 ).leapYear, "4 is leap year" );
-shared void test_0033_is_not_leapYear() => assertFalse( date(033, january, 1 ).leapYear, "33 is not leap year" );
-shared void test_0100_is_not_leapYear() => assertFalse( date(100, january, 1 ).leapYear, "100 is not leap year" );
+shared void test_0000_is_leapYear() => assertTrue( date(0000, january, 1 ).leapYear, "Year 0 is leap year" );
+shared void test_0001_is_not_leapYear() => assertFalse( date(0001, january, 1 ).leapYear, "Year 1 is not leap year" );
+shared void test_0004_is_leapYear() => assertTrue( date(0004, january, 1 ).leapYear, "Year 4 is leap year" );
+shared void test_0033_is_not_leapYear() => assertFalse( date(033, january, 1 ).leapYear, "Year 33 is not leap year" );
+shared void test_0100_is_not_leapYear() => assertFalse( date(100, january, 1 ).leapYear, "Year 100 is not leap year" );
+shared void test_0400_is_leapYear() => assertFalse( date(400, january, 1 ).leapYear, "Year 400 is leap year" );
 
-void expectException(String message, Integer year, Month month, Integer day) {
-    try {
-        date(year, month, day);
-        fail("Expecting exception for invalid date: ``day``. ``month`` ``year``.");
-    }
-    catch ( AssertionException e ) {
-        assertTrue(message.contains(message));
-    }
-}
+shared void test_weekOfYear_2009_apr_28() => assertEquals( date(2009, april, 28).weekOfYear, 18);
+shared void test_weekOfYear_2012_dec_16() => assertEquals( date(2012, december, 16).weekOfYear, 50);
 
-shared void testWeekOfYear() {
-    //Random dates
-    assertEquals( date(2009, april, 28).weekOfYear, 18);
-    assertEquals( date(2012, december, 16).weekOfYear, 50);
-
-    //http://en.wikipedia.org/wiki/ISO_week_date
-    //http://www.personal.ecu.edu/mccartyr/isowdcal.html
-    assertEquals( date(2005, january, 1).weekOfYear, 53);
-    assertEquals( date(2005, january, 2).weekOfYear, 53);
-    assertEquals( date(2005, december, 31).weekOfYear, 52);
-    assertEquals( date(2007, january, 1).weekOfYear, 1);
-    assertEquals( date(2007, december, 30).weekOfYear, 52);
-    assertEquals( date(2007, december, 31).weekOfYear, 1);
-    assertEquals( date(2008, january, 1).weekOfYear, 1);
-    assertEquals( date(2008, december, 28).weekOfYear, 52);
-    assertEquals( date(2008, december, 29).weekOfYear, 1);
-    assertEquals( date(2008, december, 30).weekOfYear, 1);
-    assertEquals( date(2008, december, 31).weekOfYear, 1);
-    assertEquals( date(2009, january, 1).weekOfYear, 1);
-    assertEquals( date(2009, december, 31).weekOfYear, 53);
-    assertEquals( date(2010, january, 1).weekOfYear, 53);
-    assertEquals( date(2010, january, 2).weekOfYear, 53);
-    assertEquals( date(2010, january, 3).weekOfYear, 53);
-}
+//http://en.wikipedia.org/wiki/ISO_week_date
+//http://www.personal.ecu.edu/mccartyr/isowdcal.html
+shared void test_weekOfYear_2005_jan_01() => assertEquals( date(2005, january, 1).weekOfYear, 53);
+shared void test_weekOfYear_2005_jan_02() => assertEquals( date(2005, january, 2).weekOfYear, 53);
+shared void test_weekOfYear_2005_dec_31() => assertEquals( date(2005, december, 31).weekOfYear, 52);
+shared void test_weekOfYear_2007_jan_01() => assertEquals( date(2007, january, 1).weekOfYear, 1);
+shared void test_weekOfYear_2007_dec_30() => assertEquals( date(2007, december, 30).weekOfYear, 52);
+shared void test_weekOfYear_2007_dec_31() => assertEquals( date(2007, december, 31).weekOfYear, 1);
+shared void test_weekOfYear_2008_jan_01() => assertEquals( date(2008, january, 1).weekOfYear, 1);
+shared void test_weekOfYear_2008_dec_28() => assertEquals( date(2008, december, 28).weekOfYear, 52);
+shared void test_weekOfYear_2008_dec_29() => assertEquals( date(2008, december, 29).weekOfYear, 1);
+shared void test_weekOfYear_2008_dec_30() => assertEquals( date(2008, december, 30).weekOfYear, 1);
+shared void test_weekOfYear_2008_dec_31() => assertEquals( date(2008, december, 31).weekOfYear, 1);
+shared void test_weekOfYear_2009_jan_01() => assertEquals( date(2009, january, 1).weekOfYear, 1);
+shared void test_weekOfYear_2009_dec_31() => assertEquals( date(2009, december, 31).weekOfYear, 53);
+shared void test_weekOfYear_2010_jan_01() => assertEquals( date(2010, january, 1).weekOfYear, 53);
+shared void test_weekOfYear_2010_jan_02() => assertEquals( date(2010, january, 2).weekOfYear, 53);
+shared void test_weekOfYear_2010_jan_03() => assertEquals( date(2010, january, 3).weekOfYear, 53);
 
 shared void testDatePlusDays() {
     assertEquals( data_1982_12_13.plusDays( 0 ), data_1982_12_13 );
@@ -573,5 +592,15 @@ void assertGregorianDate(Integer year, Month month, Integer day, DayOfWeek dayOf
 
     if ( exists dayOfYear ) {
         assertEquals(dayOfYear, actual.dayOfYear);
+    }
+}
+
+void assertException(String message, Integer year, Month month, Integer day) {
+    try {
+        date(year, month, day);
+        fail("Expecting exception for invalid date: ``day``. ``month`` ``year``.");
+    }
+    catch ( AssertionException e ) {
+        assertTrue(message.contains(message));
     }
 }
