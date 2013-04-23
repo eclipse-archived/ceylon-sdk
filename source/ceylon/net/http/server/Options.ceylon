@@ -1,14 +1,13 @@
 import ceylon.io.charset { utf8, Charset }
 by "Matej Lazar"
-shared class Options(workerWriteThreads = 2, 
-        workerReadThreads = 2, 
+shared class Options(
+        workerIoThreads = 4, 
         workerTaskCoreThreads = 2, 
         workerTaskMaxThreads = 12,
         connectionLowWatter = 1000000,
         connectionHighWatter = 1000000,
         defaultCharset = utf8) {
-    shared variable Integer workerWriteThreads;
-    shared variable Integer workerReadThreads;
+    shared variable Integer workerIoThreads;
     shared variable Integer workerTaskCoreThreads;
     shared variable Integer workerTaskMaxThreads;
     shared variable Integer connectionLowWatter;

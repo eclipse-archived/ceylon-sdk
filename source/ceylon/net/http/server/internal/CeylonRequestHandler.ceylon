@@ -1,5 +1,4 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
-import io.undertow.util { WorkerDispatcher {wdDispatch = dispatch}}
 import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
@@ -41,8 +40,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
                     exc.endExchange();
                 }
             } else {
-                //TODO log fatal
-                print("Underlying HttpServerExchange or CompletionHandler must be provided.");
+                throw InternalException("Underlying HttpServerExchange must be provided.");
             }
         } else {
             throw InternalException("Options must be set before handling request.");
@@ -52,7 +50,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     void invokeEndpoint(Endpoint|AsynchronousEndpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange ) {
         switch (endpoint)
         case (is AsynchronousEndpoint) {
-            wdDispatch(exchange, AsyncInvoker(endpoint, request, response, exchange));
+            exchange.dispatch(AsyncInvoker(endpoint, request, response, exchange));
         }
         case (is Endpoint) {
             endpoint.service(request, response);

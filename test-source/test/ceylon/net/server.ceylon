@@ -87,6 +87,8 @@ void testServer() {
                     methodTest();
 
                     parametersTest("čšž", "ČŠŽ ĐŽ");
+
+                    //TODO multipart post
                     
                 } finally {
                     cleanUpFile();
@@ -121,21 +123,22 @@ void executeEchoTest() {
 }
 
 void headerTest() {
-    String header = "application/x-www-form-urlencoded";
+    String contentType = "application/x-www-form-urlencoded";
     
     value request = ClientRequest(parse("http://localhost:8080/headerTest"));
-    request.setHeader("Content-Type", header);
+    request.setHeader("Content-Type", contentType);
     
     value response = request.execute();
-    
-    value contentTypeHeader = response.getSingleHeader("content-type");
-    assertEquals("text/html; charset=``utf8.name``", contentTypeHeader);
-    
+
     value echoMsg = response.contents;
-    response.close();
     //TODO log debug
     print("Received contents: ``echoMsg``");
-    assertEquals(header, echoMsg);
+    
+    value contentTypeHeader = response.getSingleHeader("Content-Type");
+    response.close();
+
+    assertEquals("text/html; charset=``utf8.name``", contentTypeHeader);
+    assertEquals(contentType, echoMsg);
 }
 
 void executeTestStaticFile(Integer executeRequests) {
