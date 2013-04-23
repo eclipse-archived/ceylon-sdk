@@ -10,26 +10,29 @@ import org.xnio {
     XnioWorker, 
     OptionMap { omBuilder = builder },
     XnioOptions = Options { 
-        xnioWorkerWriteThreads = \iWORKER_WRITE_THREADS,
-        xnioWorkerReadThreads = \iWORKER_READ_THREADS,
+        xnioWorkerIoThreads = \iWORKER_IO_THREADS,
         xnioConnectionLowWatter = \iCONNECTION_LOW_WATER,
         xnioConnectionHighWatter = \iCONNECTION_HIGH_WATER,
         xnioWorkerTaskCoreThreads = \iWORKER_TASK_CORE_THREADS,
         xnioWorkerTaskMaxThreads = \iWORKER_TASK_MAX_THREADS,
-        xnioTcpNoDelay = \iTCP_NODELAY
+        xnioTcpNoDelay = \iTCP_NODELAY,
+        xnioReuseAddress = \iREUSE_ADDRESSES,
+        xnioCork = \iCORK
     }, 
     ByteBufferSlicePool, 
     BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR},
-    ChannelListener
+    ChannelListeners { clOpenListenerAdapter = openListenerAdapter},
+    StreamConnection, ChannelListener
 }
-import org.xnio.channels { AcceptingChannel, ConnectedStreamChannel, ConnectedChannel }
+import org.xnio.channels { AcceptingChannel }
 import io.undertow.server { HttpOpenListener, HttpHandler }
 import io.undertow.server.handlers { CookieHandler, URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint }
+import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint, InternalException }
 import io.undertow.server.handlers.form { FormEncodedDataHandler, MultiPartHandler, EagerFormParsingHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
+import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
 
 by "Matej Lazar"
 shared class DefaultServer() satisfies Server {
@@ -37,8 +40,6 @@ shared class DefaultServer() satisfies Server {
     variable XnioWorker? worker = null;
     
     variable CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
-    
-    JavaHelper jh = JavaHelper();
     
     MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
@@ -73,40 +74,46 @@ shared class DefaultServer() satisfies Server {
         formEncodedDataHandler.setDefaultEncoding(options.defaultCharset.name);
         
         HttpHandler errPageHandler = SimpleErrorPageHandler(formEncodedDataHandler);
-
+        
         URLDecodingHandler urlDecodingHandler = URLDecodingHandler();
         urlDecodingHandler.setNext(errPageHandler);
         urlDecodingHandler.setCharset(options.defaultCharset.name);
         
-        HttpOpenListener openListener = HttpOpenListener(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 8192);
+        HttpOpenListener openListener = HttpOpenListener(
+            ByteBufferSlicePool(
+                directByteBufferAllocator, 8192, 8192 * 8192), 
+                omBuilder().set(utBufferPipelinedData, false).map ,
+                8192 );
+        
         openListener.rootHandler = urlDecodingHandler;
         
-        object channelListener satisfies ChannelListener<AcceptingChannel<ConnectedStreamChannel>> {
-            shared actual void handleEvent(AcceptingChannel<ConnectedStreamChannel>? channel) {
-                if (exists channel) {
-                    ConnectedStreamChannel? accept = channel.accept();
-                    if (exists accept) {
-                        openListener.handleEvent(accept);
-                    }
-                }
-            }
-        }
-        
-        OptionMap optionMap = omBuilder()
-                .set(xnioWorkerWriteThreads, JInt(options.workerWriteThreads))
-                .set(xnioWorkerReadThreads, JInt(options.workerReadThreads))
+        OptionMap workerOptions = omBuilder()
+                .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))
                 .set(xnioConnectionLowWatter, JInt(options.connectionLowWatter))
                 .set(xnioConnectionHighWatter, JInt(options.connectionHighWatter))
                 .set(xnioWorkerTaskCoreThreads, JInt(options.workerTaskCoreThreads))
                 .set(xnioWorkerTaskMaxThreads, JInt(options.workerTaskMaxThreads))
                 .set(xnioTcpNoDelay, true)
+                .set(xnioCork, true)
                 .map;
         
-        worker = xnioInstance.createWorker(optionMap);
+        OptionMap serverOptions = omBuilder()
+                .set(xnioTcpNoDelay, true)
+                .set(xnioReuseAddress, true)
+                .map;
+        
+        worker = xnioInstance.createWorker(workerOptions);
         
         InetSocketAddress socketAddress = InetSocketAddress(host, port);
-        AcceptingChannel<ConnectedChannel> acceptingChannel = jh.createStreamServer(worker, socketAddress, channelListener, optionMap);
-        acceptingChannel.resumeAccepts();
+        
+        ChannelListener<AcceptingChannel<StreamConnection>> acceptListener = clOpenListenerAdapter(openListener);
+        
+        if (exists w = worker) {
+            AcceptingChannel<StreamConnection> server = w.createStreamConnectionServer(socketAddress, acceptListener, serverOptions);
+            server.resumeAccepts();
+        } else {
+            throw InternalException("Missing xnio worker!");
+        }
         
         object shutdownHook satisfies JRunnable {
             shared actual void run() {

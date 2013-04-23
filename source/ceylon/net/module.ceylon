@@ -11,7 +11,7 @@ doc "This module allows you to represent URIs, and to connect to HTTP servers.
 
 by "Stéphane Épardaud, Matej Lazar"
 license "Apache Software License"
-module ceylon.net '0.5.2' {
+module ceylon.net '0.5.3' {
     import ceylon.language '0.5';
     shared import ceylon.collection '0.5';
     shared import ceylon.io '0.5';
@@ -20,12 +20,11 @@ module ceylon.net '0.5.2' {
     import java.base '7';
     
     // -- java modules --
-    import io.undertow.core '1.0.0.Alpha1';
+    import io.undertow.core '1.0.0.Alpha10';
 
-    import 'org.jboss.xnio.api' '3.1.0.Beta9';
-    import 'org.jboss.xnio.nio' '3.1.0.Beta9';
+    import 'org.jboss.xnio.api' '3.1.0.CR2';
+    import 'org.jboss.xnio.nio' '3.1.0.CR2';
     
     //TODO remove transitive dependency
     import org.jboss.logging '3.1.2.GA';
-
 }
