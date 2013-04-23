@@ -1,4 +1,5 @@
 <<<<<<< Upstream, based on ceylon/master
+<<<<<<< Upstream, based on ceylon/master
 import ceylon.time.base { ms = milliseconds }
 
 "Represents the problem that occured while parsing. It can be recovered from _message_ field"
@@ -199,31 +200,46 @@ Integer characterToInteger( Character digit ) {
     return digit.integer - '0'.integer; 
 }
 =======
+=======
+import ceylon.time { offsetTime }
+>>>>>>> 48b7b35 initial beginnings of TimeZone implementation
 
-shared TimeZone parseTimeZone(String zoneId) {
-    variable State state = initial;
-    while ()
-    return nothing;
+abstract class Input<out Data>() of Chunk<Data> | EOF | Empty 
+                                 given Data satisfies Anything {}
+
+class Chunk<out Data>(data) extends Input<Data>() {
+    shared Data data;
 }
 
-abstract class State() of initial | zulu | sign | hours | colon | minutes | final | error {
-    shared formal [Integer, State] next(Character character);
+abstract class EOF() of eof extends Input<Nothing>() {}
+object eof extends EOF() {}
+
+abstract class Empty() of empty extends Input<Nothing>() {}
+object empty extends Empty() {} 
+
+
+
+abstract class State() of Initial | Zulu | Sign() | Final | Error {
+    shared formal State next(Input<Character> input);
 }
 
-object initial extends State() {
-    shared actual [Integer, State] next(Character character) {
+abstract class Initial() of zone extends State() {}
+object zone extends Initial() {
+    shared actual State next(Input<Character> character) {
         if (character == 'Z') {
-            return [0, zulu];
+            return zulu;
         }
         if (character == '+') {
-            return [+1, sign];
+            return Sign( +1 );
         }
         if (character == '-') {
-            return [-1, sign];
+            return Sign( -1 );
         }
+        return Error("Unexpected character at initial position!");
     }
 }
 
+<<<<<<< Upstream, based on ceylon/master
 object zulu extends State() {}
 object sign extends State() {}
 object hours extends State() {}
@@ -232,3 +248,33 @@ object minutes extends State() {}
 object final extends State() {}
 object error extends State() {}
 >>>>>>> 026d7bd initial beginnings of TimeZone implementation
+=======
+abstract class Zulu() of zulu extends State(){}
+object zulu extends Zulu(){
+    shared actual State next(Input<Character> input) {
+        switch(input)
+        case (is EOF) { return Final(0); }
+        case (is Empty) { return this; }
+        else { return Error("""Unexpected characters after "Z"!"""); }
+    }
+}
+
+class Final(result) extends State() {
+    shared Integer result;
+    shared actual State next(Input<Character> character) => this;
+}
+
+class Error(message) extends State() {
+    shared String message;
+    shared actual State next(Input<Character> character) => this;
+}
+
+
+shared TimeZone parseTimeZone(String zoneId) {
+    variable State state = initial;
+    for(character in zoneId) {
+        state = state.next(character);
+    }
+    return nothing;
+}
+>>>>>>> 48b7b35 initial beginnings of TimeZone implementation
