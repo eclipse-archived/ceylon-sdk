@@ -63,6 +63,9 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
     assertEquals(4, buffer.capacity);
     assertEquals(2, buffer.limit);
     assertEquals(2, buffer.available);
+    // make sure size uses available and does not consume bytes
+    assertEquals(2, buffer.size);
+    assertEquals(2, buffer.available);
     assertEquals(0, buffer.position);
     assertEquals(true, buffer.hasAvailable);
 

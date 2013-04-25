@@ -109,5 +109,7 @@ shared abstract class Buffer<T>() satisfies Iterable<T> {
             }
         }
         return it;
-    } 
+    }
+
+    size => available;
 }
