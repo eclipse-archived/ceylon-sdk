@@ -16,6 +16,9 @@ void run() {
         "File create/write/read" -> testFileCreateWriteRead,
         "File create/write/read no reopen" -> testFileCreateWriteReadWithoutReopen,
         "File create/write/reset/write/read" -> testFileCreateWriteResetWriteRead,
-        "File create/truncate" -> testFileTruncate
+        "File create/truncate" -> testFileTruncate,
+        "Base64 Basic with ISO_8859_1" -> testBase64WithIso88591,
+        "Base64 Basic with UTF-8" -> testBase64WithUtf8,
+        "Base64 Basic with ASCII" -> testBase64WithAscii
     );
 }
