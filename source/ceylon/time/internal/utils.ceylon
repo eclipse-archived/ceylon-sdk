@@ -34,7 +34,7 @@ shared Boolean intersect( Integer start, Integer end, Integer otherStart, Intege
 }
 
 //"Returns the intersection between two intervals as a new Interval"
-shared KindRange|Null overlap(KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step) {
+shared KindRange|Empty overlap(KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step) {
 
     "We need to order it because we can have _time(6,0).to(time(2,0))_"
     variable KindsOrdered firstRange = createPairOrdered(range);
@@ -68,11 +68,11 @@ shared KindRange|Null overlap(KindRange range, KindRange otherRange, UnitOfDate|
             throw;
         }
     }
-    return null;
+    return empty;
 }
 
 //"Returns the gap between two intervals as a new Range"
-shared KindRange|Null gap( KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step ) {
+shared KindRange|Empty gap( KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step ) {
 
     "We need to order it because we can have _time(6,0).to(time(2,0))_"
     variable value firstRange = createPairOrdered(range);
@@ -99,26 +99,26 @@ shared KindRange|Null gap( KindRange range, KindRange otherRange, UnitOfDate|Uni
         if ( is Time sucessor, is Time predecessor, is UnitOfTime step, is Time sec = secondRange[2] ) {
             //Not enough gap to be considered.
             if( sucessor >= sec ) {
-                return null;
+                return empty;
             }
             return TimeRange( sucessor, predecessor, step );
         } else if ( is Date sucessor, is Date predecessor, is UnitOfDate step, is Date sec = secondRange[2] ) {
             //Not enough gap to be considered.
             if( sucessor >= sec ) {
-                return null;
+                return empty;
             }
             return DateRange( sucessor, predecessor, step );
         }  else if ( is DateTime sucessor, is DateTime predecessor, is DateTime sec = secondRange[2] ) {
             //Not enough gap to be considered.
             if( sucessor >= sec ) {
-                return null;
+                return empty;
             }
             return DateTimeRange( sucessor, predecessor, step );
         } else {
             throw;
         }
     }
-    return null;
+    return empty;
 }
 
 "Utility to order: [X, Y, today, yesterday] in this: [Y,X, yesterday, today]"

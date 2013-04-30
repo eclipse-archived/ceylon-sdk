@@ -20,13 +20,13 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
         return Range::equals(other); 
     }
 
-    shared actual TimeRange? overlap(TimeRange other) {
-        assert( is TimeRange? response = _overlap(this, other, step));
+    shared actual TimeRange|Empty overlap(TimeRange other) {
+        assert( is TimeRange|Empty response = _overlap(this, other, step));
         return response;
     }
 
-    shared actual TimeRange? gap( TimeRange other ) {
-        assert( is TimeRange? response  = _gap(this, other, step));
+    shared actual TimeRange|Empty gap( TimeRange other ) {
+        assert( is TimeRange|Empty response  = _gap(this, other, step));
         return response;
     }
 
