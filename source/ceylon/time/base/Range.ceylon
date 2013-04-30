@@ -79,7 +79,7 @@ shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Nul
 
      Then: \n
      overlapedRange will be Null"
-    shared formal Range<Element, Self, StepBy>? overlap( Self other );
+    shared formal Range<Element, Self, StepBy>|Empty overlap( Self other );
     
     "Returns a new range based on gap with given parameter. \n
      Gaps are considered exclusives on both _from_ and _to_ fields and 
@@ -116,7 +116,7 @@ shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Nul
 
      Then: \n
      gapRange will be Null"
-    shared formal Range<Element, Self, StepBy>? gap( Self other );
+    shared formal Range<Element, Self, StepBy>|Empty gap( Self other );
 
     //TODO: How to link it with Container::contains doc?
     shared actual Boolean contains(Object element) {

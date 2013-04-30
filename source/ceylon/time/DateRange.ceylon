@@ -20,13 +20,13 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange,
         return Range::equals(other); 
     }
 
-    shared actual DateRange? overlap(DateRange other) {
-        assert( is DateRange? response = _overlap(this, other, step));
+    shared actual DateRange|Empty overlap(DateRange other) {
+        assert( is DateRange|Empty response = _overlap(this, other, step));
         return response;
     }
 
-    shared actual DateRange? gap( DateRange other ) {
-        assert( is DateRange? response = _gap(this, other, step) );
+    shared actual DateRange|Empty gap( DateRange other ) {
+        assert( is DateRange|Empty response = _gap(this, other, step) );
         return response;
     }
 

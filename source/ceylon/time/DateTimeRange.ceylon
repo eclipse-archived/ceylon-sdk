@@ -21,13 +21,13 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         return Range::equals(other); 
     }
 
-    shared actual DateTimeRange? overlap(DateTimeRange other) {
-        assert( is DateTimeRange? response = _overlap(this, other, step));
+    shared actual DateTimeRange|Empty overlap(DateTimeRange other) {
+        assert( is DateTimeRange|Empty response = _overlap(this, other, step));
         return response;
     }
 
-	shared actual DateTimeRange? gap( DateTimeRange other ) {
-        assert( is DateTimeRange? response = _gap(this, other, step));
+	shared actual DateTimeRange|Empty gap( DateTimeRange other ) {
+        assert( is DateTimeRange|Empty response = _gap(this, other, step));
         return response;
     }
 
