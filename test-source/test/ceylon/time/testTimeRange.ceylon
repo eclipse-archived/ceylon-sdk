@@ -90,6 +90,18 @@ shared void testContainsTime() {
     assertEquals(true, time(4,30) in firstQuarterDay);
 }
 
+shared void testGapTimeEmpty() {
+    TimeRange noGap = time(2, 0).to(time(12, 0));
+    
+    assertEquals(empty, firstQuarterDay.gap(noGap));    
+}
+
+shared void testOverlapTimeEmpty() {
+    TimeRange noOverlap = time(9, 0).to(time(12, 0));
+
+    assertEquals(empty, firstQuarterDay.overlap(noOverlap));
+}
+
 shared void testGapRulesABSmallerCD_Time() {
     //Combinations to Test: AB < CD
     //C1: 12 gap 56 = (2,5)
