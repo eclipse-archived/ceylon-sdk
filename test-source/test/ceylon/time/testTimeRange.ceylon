@@ -58,13 +58,6 @@ shared void testGapTime() {
     assertEquals(gap, firstQuarterDay.gap(lastQuarterDay));    
 }
 
-shared void testGapTimeReverse() {
-    TimeRange mar = time(4,0).to(time(2,0));
-    TimeRange gap = time(4,0,0,1).to(time(5,59,59,999));
-    
-    assertEquals(gap, time(6,0).to(time(8,0)).gap(mar));
-}
-
 shared void testOverlapTime() {
     TimeRange halfFirstQuarter = time(0,0).to(time(3,0));
     TimeRange overlap = time(0,0).to(time(3,0));
@@ -95,6 +88,162 @@ shared void testStepMinutesReverseTime() {
 
 shared void testContainsTime() {
     assertEquals(true, time(4,30) in firstQuarterDay);
+}
+
+shared void testGapRulesABSmallerCD_Time() {
+    //Combinations to Test: AB < CD
+    //C1: 12 gap 56 = (2,5)
+    //C2: 12 gap 65 = (2,5)
+    //C3: 21 gap 56 = (2,5)
+    //C4: 21 gap 65 = (2,5)
+
+    value a = time(1, 0);
+    value b = time(2, 0);
+    value c = time(5, 0);
+    value d = time(6, 0);
+
+    value result = time(2, 0, 0, 1).to( time(4, 59, 59, 999) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( d.to( c ) );
+    };
+}
+
+shared void testGapRulesABHigherCD_Time() {
+    //Combinations to Test: AB > CD
+    //56 gap 12 = (5,2)
+    //56 gap 21 = (5,2)
+    //65 gap 12 = (5,2)
+    //65 gap 21 = (5,2)
+
+    value a = time(5, 0);
+    value b = time(6, 0);
+    value c = time(1, 0);
+    value d = time(2, 0);
+
+    value result = time(4, 59, 59, 999).to( time(2, 0, 0, 1) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( d.to( c ) );
+    };
+}
+
+shared void testOverlapRulesABSmallerCD_Time() {
+    //Combinations to Test: AB < CD
+    //C1: 16 overlap 39 = [3,6]
+    //C2: 16 overlap 93 = [3,6]
+    //C3: 61 overlap 39 = [3,6]
+    //C4: 61 overlap 93 = [3,6]
+
+    value a = time(1, 0);
+    value b = time(6, 0);
+    value c = time(3, 0);
+    value d = time(9, 0);
+
+    value result = time(3, 0).to( time(6, 0) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( d.to( c ) );
+    };
+}
+
+shared void testOverlapRulesABHigherCD_Time() {
+    //Combinations to Test: AB > CD
+    //39 gap 16 = [6,3]
+    //39 gap 61 = [6,3]
+    //93 gap 16 = [6,3]
+    //93 gap 61 = [6,3]
+
+    value a = time(3, 0);
+    value b = time(9, 0);
+    value c = time(1, 0);
+    value d = time(6, 0);
+
+    value result = time(6, 0).to( time(3, 0) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( d.to( c ) );
+    };
 }
 
 void assertIntervalTime( Time start, Time end, Period period, Duration? duration = null )  {

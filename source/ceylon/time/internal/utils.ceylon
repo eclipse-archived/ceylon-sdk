@@ -1,5 +1,4 @@
 import ceylon.time { DateTime, Time, Date, DateTimeRange, DateRange, TimeRange}
-import ceylon.time.base { UnitOfDate, UnitOfTime }
 
 "Represents all Date/Time types"
 shared alias Kind => Date|Time|DateTime;
@@ -34,7 +33,7 @@ shared Boolean intersect( Integer start, Integer end, Integer otherStart, Intege
 }
 
 //"Returns the intersection between two intervals as a new Interval"
-shared KindRange|Empty overlap(KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step) {
+shared KindRange|Empty overlap(KindRange range, KindRange otherRange) {
 
     "We need to order it because we can have _time(6,0).to(time(2,0))_"
     variable KindsOrdered firstRange = createPairOrdered(range);
@@ -43,7 +42,9 @@ shared KindRange|Empty overlap(KindRange range, KindRange otherRange, UnitOfDate
     variable KindsOrdered secondRange = createPairOrdered(otherRange);
     
     //Order ranges ascending because we can have Range(6,0 to 4,0) overlap Range(2,0 to 0,0)
+    variable value ascending = true;
     if ( firstRange[0] > secondRange[0] ) {
+        ascending = false;
         value aux = firstRange;
         firstRange = secondRange;
         secondRange = aux;
@@ -54,15 +55,24 @@ shared KindRange|Empty overlap(KindRange range, KindRange otherRange, UnitOfDate
         "Now that we have an intersection we know that secondRange[2] will always be the first element"
         value newFirst = secondRange[2];
         
-        if ( is Time newFirst, is Time fr = firstRange[3], is Time sr = secondRange[3], is UnitOfTime step ) {
+        if ( is Time newFirst, is Time fr = firstRange[3], is Time sr = secondRange[3] ) {
             //Then we need to know whats the last element: min({fr,sr})
-            return TimeRange(newFirst, min({fr,sr}), step);
-        } else if ( is Date newFirst, is Date fr = firstRange[3], is Date sr = secondRange[3], is UnitOfDate step ) {
+            return TimeRange{
+                       from = ascending then newFirst     else min({fr,sr});
+                       to   = ascending then min({fr,sr}) else newFirst; 
+                   };
+        } else if ( is Date newFirst, is Date fr = firstRange[3], is Date sr = secondRange[3] ) {
             //Then we need to know whats the last element: min({fr,sr})
-            return DateRange(newFirst, min({fr,sr}), step);
+            return DateRange{
+                       from = ascending then newFirst     else min({fr,sr});
+                       to   = ascending then min({fr,sr}) else newFirst; 
+                   };
         } else if ( is DateTime newFirst, is DateTime fr = firstRange[3], is DateTime sr = secondRange[3] ) {
             //Then we need to know whats the last element: min({fr,sr})
-            return DateTimeRange(newFirst, min({fr,sr}), step);
+            return DateTimeRange{
+                       from = ascending then newFirst     else min({fr,sr});
+                       to   = ascending then min({fr,sr}) else newFirst; 
+                   };
         } else {
             //Thats an internal method and we know we are doing it right else it throw an exception
             throw;
@@ -72,7 +82,7 @@ shared KindRange|Empty overlap(KindRange range, KindRange otherRange, UnitOfDate
 }
 
 //"Returns the gap between two intervals as a new Range"
-shared KindRange|Empty gap( KindRange range, KindRange otherRange, UnitOfDate|UnitOfTime step ) {
+shared KindRange|Empty gap( KindRange range, KindRange otherRange ) {
 
     "We need to order it because we can have _time(6,0).to(time(2,0))_"
     variable value firstRange = createPairOrdered(range);
@@ -81,7 +91,9 @@ shared KindRange|Empty gap( KindRange range, KindRange otherRange, UnitOfDate|Un
     variable value secondRange = createPairOrdered(otherRange);
     
     //Order ranges ascending because we can have Range(6,0 to 4,0) overlap Range(2,0 to 0,0)
+    variable value ascending = true;
     if ( firstRange[0] > secondRange[0] ) {
+        ascending = false;
         value aux = firstRange;
         firstRange = secondRange;
         secondRange = aux;
@@ -96,24 +108,33 @@ shared KindRange|Empty gap( KindRange range, KindRange otherRange, UnitOfDate|Un
         "Now we know next step will always be secondRange[from].predecessor"
         value predecessor = secondRange[2].predecessor;
 
-        if ( is Time sucessor, is Time predecessor, is UnitOfTime step, is Time sec = secondRange[2] ) {
+        if ( is Time sucessor, is Time predecessor, is Time sec = secondRange[2] ) {
             //Not enough gap to be considered.
             if( sucessor >= sec ) {
                 return empty;
             }
-            return TimeRange( sucessor, predecessor, step );
-        } else if ( is Date sucessor, is Date predecessor, is UnitOfDate step, is Date sec = secondRange[2] ) {
+            return TimeRange{
+                       from = ascending then sucessor     else predecessor;
+                       to   = ascending then predecessor  else sucessor; 
+                   };
+        } else if ( is Date sucessor, is Date predecessor, is Date sec = secondRange[2] ) {
             //Not enough gap to be considered.
             if( sucessor >= sec ) {
                 return empty;
             }
-            return DateRange( sucessor, predecessor, step );
+            return DateRange{
+                       from = ascending then sucessor     else predecessor;
+                       to   = ascending then predecessor  else sucessor; 
+                   };
         }  else if ( is DateTime sucessor, is DateTime predecessor, is DateTime sec = secondRange[2] ) {
             //Not enough gap to be considered.
             if( sucessor >= sec ) {
                 return empty;
             }
-            return DateTimeRange( sucessor, predecessor, step );
+            return DateTimeRange{
+                       from = ascending then sucessor     else predecessor;
+                       to   = ascending then predecessor  else sucessor; 
+                   };
         } else {
             throw;
         }
