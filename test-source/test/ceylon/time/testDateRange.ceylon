@@ -63,35 +63,41 @@ shared void testGapDate() {
     DateRange mar = date(2013, march, 1).to(date(2013, march, 31));
     DateRange gap = date(2013, february, 1).to(date(2013, february, 28));
     
-    assertEquals(gap, jan_date_range.gap(mar));    
+    assertEquals(gap, jan_date_range.gap(mar));
 }
 
 shared void testGapDateReverse() {
     DateRange mar = date(2013, march, 1).to(date(2013, march,31));
     DateRange gap = date(2013, february, 1).to(date(2013, february, 28));
     
-    assertEquals(gap, jan_date_range_reverse.gap(mar));    
+    assertEquals(gap, jan_date_range_reverse.gap(mar));
 }
 
 shared void testGapDateOneYear() {
     DateRange _2013 = date(2013, january, 1).to(date(2013, december, 31));
     DateRange _2015 = date(2015, january, 1).to(date(2015, december, 31));
 
-    DateRange _2014 = date(2014, january, 1).to(date(2014, december, 31));
-    assertEquals(_2014, _2015.gap(_2013));    
+    DateRange _2014 = date(2014, december, 31).to(date(2014, january, 1));
+    assertEquals(_2014, _2015.gap(_2013));
 }
 
-shared void testGapDateNotEnough() {
+shared void testGapDateEmpty() {
     DateRange feb = date(2013, february, 1).to(date(2013, february,28));
     
-    assertEquals(null, jan_date_range_reverse.gap(feb));    
+    assertEquals(empty, jan_date_range_reverse.gap(feb));
+}
+
+shared void testOverlapDateEmpty() {
+    DateRange decemberRange = date(2013, december, 1).to(date(2013, december, 31));
+
+    assertEquals(empty, jan_date_range.overlap(decemberRange));
 }
 
 shared void testOverlapDate() {
     DateRange halfJan = date(2013, january, 5).to(date(2013, january, 15));
     DateRange overlap = date(2013, january, 5).to(date(2013, january, 15));
 
-    assertEquals(overlap, jan_date_range.overlap(halfJan));    
+    assertEquals(overlap, jan_date_range.overlap(halfJan));
 }
 
 shared void testStepDayReverse() {
@@ -116,6 +122,162 @@ shared void testStepYearReverse() {
 
 shared void testContainsDate() {
     assertEquals(true, date(2013, january, 15) in jan_date_range);    
+}
+
+shared void testGapRulesABSmallerCD() {
+    //Combinations to Test: AB < CD
+    //C1: 12 gap 56 = (2,5)
+    //C2: 12 gap 65 = (2,5)
+    //C3: 21 gap 56 = (2,5)
+    //C4: 21 gap 65 = (2,5)
+
+    value a = date(2013, january, 1);
+    value b = date(2013, january, 2);
+    value c = date(2013, january, 5);
+    value d = date(2013, january, 6);
+
+    value result = date(2013, january, 3).to( date(2013, january, 4) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( d.to( c ) );
+    };
+}
+
+shared void testGapRulesABHigherCD() {
+    //Combinations to Test: AB > CD
+    //56 gap 12 = (5,2)
+    //56 gap 21 = (5,2)
+    //65 gap 12 = (5,2)
+    //65 gap 21 = (5,2)
+
+    value a = date(2013, january, 5);
+    value b = date(2013, january, 6);
+    value c = date(2013, january, 1);
+    value d = date(2013, january, 2);
+
+    value result = date(2013, january, 4).to( date(2013, january, 3) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).gap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).gap( d.to( c ) );
+    };
+}
+
+shared void testOverlapRulesABSmallerCD() {
+    //Combinations to Test: AB < CD
+    //C1: 16 overlap 39 = [3,6]
+    //C2: 16 overlap 93 = [3,6]
+    //C3: 61 overlap 39 = [3,6]
+    //C4: 61 overlap 93 = [3,6]
+
+    value a = date(2013, january, 1);
+    value b = date(2013, january, 6);
+    value c = date(2013, january, 3);
+    value d = date(2013, january, 9);
+
+    value result = date(2013, january, 3).to( date(2013, january, 6) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( d.to( c ) );
+    };
+}
+
+shared void testOverlapRulesABHigherCD() {
+    //Combinations to Test: AB > CD
+    //39 gap 16 = [6,3]
+    //39 gap 61 = [6,3]
+    //93 gap 16 = [6,3]
+    //93 gap 61 = [6,3]
+
+    value a = date(2013, january, 3);
+    value b = date(2013, january, 9);
+    value c = date(2013, january, 1);
+    value d = date(2013, january, 6);
+
+    value result = date(2013, january, 6).to( date(2013, january, 3) );
+
+    //C1
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( c.to( d ) );
+    };
+
+    //C2
+    assertEquals{ 
+        expected = result;
+        actual = a.to( b ).overlap( d.to( c ) );
+    };
+
+    //C3
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( c.to( d ) );
+    };
+
+    //C4
+    assertEquals{ 
+        expected = result;
+        actual = b.to( a ).overlap( d.to( c ) );
+    };
 }
 
 void assertIntervalDate( Date start, Date end, Period period, Duration? duration = null )  {

@@ -21,12 +21,12 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
     }
 
     shared actual TimeRange|Empty overlap(TimeRange other) {
-        assert( is TimeRange|Empty response = _overlap(this, other, step));
+        assert( is TimeRange|Empty response = _overlap(this, other));
         return response;
     }
 
     shared actual TimeRange|Empty gap( TimeRange other ) {
-        assert( is TimeRange|Empty response  = _gap(this, other, step));
+        assert( is TimeRange|Empty response  = _gap(this, other));
         return response;
     }
 
@@ -43,7 +43,7 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
         }
         return listIterator;
     }
-    
+
     "Define how this Range will get next or previous element while iterating."
     shared actual TimeRange stepBy( UnitOfTime step ) {
         return step == this.step then this else TimeRange(from, to, step);
@@ -56,7 +56,6 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
         case( is UnitOfSecond )   { return from.plusSeconds(jump); }
         case( is UnitOfMillisecond )   { return from.plusMilliseconds(jump); }
     }
-
 
     Time previousByStep( Integer jump = 1 ) {
         switch( step )

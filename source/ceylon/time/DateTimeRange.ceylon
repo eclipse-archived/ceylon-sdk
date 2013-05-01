@@ -22,12 +22,12 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
     }
 
     shared actual DateTimeRange|Empty overlap(DateTimeRange other) {
-        assert( is DateTimeRange|Empty response = _overlap(this, other, step));
+        assert( is DateTimeRange|Empty response = _overlap(this, other));
         return response;
     }
 
 	shared actual DateTimeRange|Empty gap( DateTimeRange other ) {
-        assert( is DateTimeRange|Empty response = _gap(this, other, step));
+        assert( is DateTimeRange|Empty response = _gap(this, other));
         return response;
     }
 
@@ -83,5 +83,5 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         }
         throw;
     }
-    
+
 }
