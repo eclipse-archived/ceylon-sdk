@@ -44,78 +44,8 @@ shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Nul
      Given: tomorrow().to(today).duration then duration is -1 day"
     shared formal Period period;
     
-    "Returns a new range based on overlap with given parameter. \n
-     Overlaps are considered inclusives on both _from_ and _to_ fields and 
-     will always return the new Range with _from_ and _to_ ordered ascending.
-
-     Examples:
-     
-     Scenario: Two ranges that overlaps 
-
-     Given:\n
-     DateRange januaryRange = date(2013, january, 1).to(date(2013, january, 31));\n
-     DateRnage januaryFirstHalf = date(2013, january, 1).to(date(2013, january, 15));\n
-     DateRanged overlapedRange = januaryRange.overlap(januaryFirstHalf);
-
-     Then: \n
-     overlapedRange will have _from_: date(2013, january, 1) and _to_: date(2013, january, 15)
-
-     Scenario: Two inverted ranges that overlaps 
-
-     Given:\n
-     DateRange januaryRange = date(2013, january, 31).to(date(2013, january, 1));\n
-     DateRnage januaryFirstHalf = date(2013, january, 15).to(date(2013, january, 1));\n
-     DateRanged overlapedRange = januaryRange.overlap(januaryFirstHalf);
-
-     Then: \n
-     overlapedRange will have _from_: date(2013, january, 1) and _to_: date(2013, january, 15)
-
-     Scenario: Two ranges that dont overlaps 
-
-     Given:\n
-     DateRange januaryRange = date(2013, january, 31).to(date(2013, january, 1));\n
-     DateRnage februaryRange = date(2013, february, 1).to(date(2013, february, 28));\n
-     DateRanged overlapedRange = januaryRange.overlap(februaryRange);
-
-     Then: \n
-     overlapedRange will be Null"
     shared formal Range<Element, Self, StepBy>|Empty overlap( Self other );
     
-    "Returns a new range based on gap with given parameter. \n
-     Gaps are considered exclusives on both _from_ and _to_ fields and 
-     will always return the new Range with _from_ and _to_ ordered ascending.
-
-     Examples:
-     
-     Scenario: Two ranges that dont overlaps 
-
-     Given:\n
-     DateRange januaryRange = date(2013, january, 1).to(date(2013, january, 31));\n
-     DateRnage marchRange = date(2013, march, 1).to(date(2013, march, 31));\n
-     DateRanged gapRange = januaryRange.overlap(marchRange);
-
-     Then: \n
-     gapRange will have _from_: date(2013, february, 1) and _to_: date(2013, february, 28)
-
-     Scenario: Two inverted ranges that dont overlaps 
-
-     Given:\n
-     DateRange januaryRange = date(2013, january, 1).to(date(2013, january, 31));\n
-     DateRnage marchRange = date(2013, march, 31).to(date(2013, march, 1));\n
-     DateRanged gapRange = januaryRange.overlap(marchRange);
-
-     Then: \n
-     gapRange will have _from_: date(2013, february, 1) and _to_: date(2013, february, 28)
-
-     Scenario: Two ranges that overlaps 
-
-     Given:\n
-     DateRange januaryRange = date(2013, january, 1).to(date(2013, january, 31));\n
-     DateRnage januaryFirstHalf = date(2013, january, 1).to(date(2013, january, 15));\n
-     DateRanged gapRange = januaryRange.overlap(januaryFirstHalf);
-
-     Then: \n
-     gapRange will be Null"
     shared formal Range<Element, Self, StepBy>|Empty gap( Self other );
 
     //TODO: How to link it with Container::contains doc?
