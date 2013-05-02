@@ -4,9 +4,9 @@ import ceylon.time.base { december, monday, january, november, february, april, 
 
 // Constants
 Boolean leapYear = true;
-Date data_1982_12_13 = date( 1982, december, 13);
 
 shared void runDateTests(String suiteName="Date tests") {
+    
     suite(suiteName,
         "Testing July 24 -586" -> test_sun_jul_24_minus586,
         "Testing December 05 -168" -> test_wed_dec_05_minus168,
@@ -64,8 +64,15 @@ shared void runDateTests(String suiteName="Date tests") {
         "Testing week of year: January 2 2010" -> test_weekOfYear_2010_jan_02,
         "Testing week of year: January 3 2010" -> test_weekOfYear_2010_jan_03,
         
-        "Testing date plusDays" -> testPlusDays,
-        "Testing date minusDays" -> testMinusDays,
+        "Testing December 13 1982 + 0 days" -> test_1982_dec_13_plusDays_0,
+        "Testing December 13 1982 + 5 days" -> test_1982_dec_13_plusDays_5,
+        "Testing December 13 1982 + 45 days" -> test_1982_dec_13_plusDays_45,
+        "Testing December 13 1982 + 10954 days" -> test_1982_dec_13_plusDays_10954,
+        
+        "Testing December 13 1982 - 5 days" -> test_1982_dec_13_minusDays_5,
+        "Testing December 13 1982 - 0 days" -> test_1982_dec_13_minusDays_0,
+        "Testing December 9 2012 - 10954 days" -> test_2012_dec_9_minusDays_10954,
+        
         "Testing date minusDays" -> testMinusDays
     );
 }
@@ -93,75 +100,67 @@ shared void test_invalid_date_jan_32() => assertException("Invalid date", 2013, 
 shared void test_invalid_date_maximum_year() => assertException("Invalid year", years.maximum+1, february, 29);
 shared void test_invalid_date_minimum_year() => assertException("Invalid year", years.minimum-1, february, 29);
 
-shared void test_2400_is_leapYear() => assertTrue( date(2400, january, 1 ).leapYear, "2400 is leap year" );
-shared void test_2200_is_not_leapYear() => assertFalse( date(2200, january, 1 ).leapYear, "2200 is not leap year" );
-shared void test_2100_is_not_leapYear() => assertFalse( date(2100, january, 1 ).leapYear, "2010 is not leap year" );
-shared void test_2012_is_leapYear() => assertTrue( date(2012, january, 1 ).leapYear, "2012 is leap year" );
-shared void test_2011_is_not_leapYear() => assertFalse( date(2011, january, 1 ).leapYear, "2011 is not leap year" );
-shared void test_2008_is_leapYear() => assertTrue( date(2008, january, 1 ).leapYear, "2008 is leap year" );
-shared void test_2000_is_leapYear() => assertTrue( date(2000, january, 1 ).leapYear, "2000 is leap year" );
-shared void test_1900_is_not_leapYear() => assertFalse( date(1900, january, 1 ).leapYear, "1900 is not leap year" );
-shared void test_1600_is_leapYear() => assertTrue( date(1600, january, 1 ).leapYear, "1600 is leap year" );
-shared void test_0000_is_leapYear() => assertTrue( date(0000, january, 1 ).leapYear, "Year 0 is leap year" );
-shared void test_0001_is_not_leapYear() => assertFalse( date(0001, january, 1 ).leapYear, "Year 1 is not leap year" );
-shared void test_0004_is_leapYear() => assertTrue( date(0004, january, 1 ).leapYear, "Year 4 is leap year" );
-shared void test_0033_is_not_leapYear() => assertFalse( date(033, january, 1 ).leapYear, "Year 33 is not leap year" );
-shared void test_0100_is_not_leapYear() => assertFalse( date(100, january, 1 ).leapYear, "Year 100 is not leap year" );
-shared void test_0400_is_leapYear() => assertFalse( date(400, january, 1 ).leapYear, "Year 400 is leap year" );
+shared void test_0000_is_leapYear() => assertLeapYear( 0,  leapYear );
+shared void test_0001_is_not_leapYear() => assertLeapYear( 1, !leapYear );
+shared void test_0004_is_leapYear() => assertLeapYear( 4, leapYear );
+shared void test_0033_is_not_leapYear() => assertLeapYear( 33, !leapYear );
+shared void test_0100_is_not_leapYear() => assertLeapYear( 100, !leapYear);
+shared void test_0400_is_leapYear() => assertLeapYear( 400, leapYear );
+shared void test_1600_is_leapYear() => assertLeapYear( 1600,  leapYear );
+shared void test_1900_is_not_leapYear() => assertLeapYear( 1900, !leapYear );
+shared void test_2000_is_leapYear() => assertLeapYear( 2000, leapYear );
+shared void test_2008_is_leapYear() => assertLeapYear( 2008, leapYear );
+shared void test_2011_is_not_leapYear() => assertLeapYear( 2011, !leapYear );
+shared void test_2012_is_leapYear() => assertLeapYear( 2012, leapYear );
+shared void test_2100_is_not_leapYear() => assertLeapYear( 2100, !leapYear );
+shared void test_2200_is_not_leapYear() => assertLeapYear( 2200, !leapYear );
+shared void test_2400_is_leapYear() => assertLeapYear( 2400, leapYear );
 
-shared void test_weekOfYear_2009_apr_28() => assertEquals( date(2009, april, 28).weekOfYear, 18);
-shared void test_weekOfYear_2012_dec_16() => assertEquals( date(2012, december, 16).weekOfYear, 50);
+shared void test_weekOfYear_2009_apr_28() => assertEquals(18, date(2009, april, 28).weekOfYear);
+shared void test_weekOfYear_2012_dec_16() => assertEquals(50, date(2012, december, 16).weekOfYear);
 
 //http://en.wikipedia.org/wiki/ISO_week_date
 //http://www.personal.ecu.edu/mccartyr/isowdcal.html
-shared void test_weekOfYear_2005_jan_01() => assertEquals( date(2005, january, 1).weekOfYear, 53);
-shared void test_weekOfYear_2005_jan_02() => assertEquals( date(2005, january, 2).weekOfYear, 53);
-shared void test_weekOfYear_2005_dec_31() => assertEquals( date(2005, december, 31).weekOfYear, 52);
-shared void test_weekOfYear_2007_jan_01() => assertEquals( date(2007, january, 1).weekOfYear, 1);
-shared void test_weekOfYear_2007_dec_30() => assertEquals( date(2007, december, 30).weekOfYear, 52);
-shared void test_weekOfYear_2007_dec_31() => assertEquals( date(2007, december, 31).weekOfYear, 1);
-shared void test_weekOfYear_2008_jan_01() => assertEquals( date(2008, january, 1).weekOfYear, 1);
-shared void test_weekOfYear_2008_dec_28() => assertEquals( date(2008, december, 28).weekOfYear, 52);
-shared void test_weekOfYear_2008_dec_29() => assertEquals( date(2008, december, 29).weekOfYear, 1);
-shared void test_weekOfYear_2008_dec_30() => assertEquals( date(2008, december, 30).weekOfYear, 1);
-shared void test_weekOfYear_2008_dec_31() => assertEquals( date(2008, december, 31).weekOfYear, 1);
-shared void test_weekOfYear_2009_jan_01() => assertEquals( date(2009, january, 1).weekOfYear, 1);
-shared void test_weekOfYear_2009_dec_31() => assertEquals( date(2009, december, 31).weekOfYear, 53);
-shared void test_weekOfYear_2010_jan_01() => assertEquals( date(2010, january, 1).weekOfYear, 53);
-shared void test_weekOfYear_2010_jan_02() => assertEquals( date(2010, january, 2).weekOfYear, 53);
-shared void test_weekOfYear_2010_jan_03() => assertEquals( date(2010, january, 3).weekOfYear, 53);
+shared void test_weekOfYear_2005_jan_01() => assertEquals(53, date(2005, january, 1).weekOfYear);
+shared void test_weekOfYear_2005_jan_02() => assertEquals(53, date(2005, january, 2).weekOfYear);
+shared void test_weekOfYear_2005_dec_31() => assertEquals(52, date(2005, december, 31).weekOfYear);
+shared void test_weekOfYear_2007_jan_01() => assertEquals( 1, date(2007, january, 1).weekOfYear);
+shared void test_weekOfYear_2007_dec_30() => assertEquals(52, date(2007, december, 30).weekOfYear);
+shared void test_weekOfYear_2007_dec_31() => assertEquals( 1, date(2007, december, 31).weekOfYear);
+shared void test_weekOfYear_2008_jan_01() => assertEquals( 1, date(2008, january, 1).weekOfYear);
+shared void test_weekOfYear_2008_dec_28() => assertEquals(52, date(2008, december, 28).weekOfYear);
+shared void test_weekOfYear_2008_dec_29() => assertEquals( 1, date(2008, december, 29).weekOfYear);
+shared void test_weekOfYear_2008_dec_30() => assertEquals( 1, date(2008, december, 30).weekOfYear);
+shared void test_weekOfYear_2008_dec_31() => assertEquals( 1, date(2008, december, 31).weekOfYear);
+shared void test_weekOfYear_2009_jan_01() => assertEquals( 1, date(2009, january, 1).weekOfYear);
+shared void test_weekOfYear_2009_dec_31() => assertEquals(53, date(2009, december, 31).weekOfYear);
+shared void test_weekOfYear_2010_jan_01() => assertEquals(53, date(2010, january, 1).weekOfYear);
+shared void test_weekOfYear_2010_jan_02() => assertEquals(53, date(2010, january, 2).weekOfYear);
+shared void test_weekOfYear_2010_jan_03() => assertEquals(53, date(2010, january, 3).weekOfYear);
 
-shared void testDatePlusDays() {
-    assertEquals( data_1982_12_13.plusDays( 0 ), data_1982_12_13 );
-    assertEquals( data_1982_12_13.plusDays( 5 ), date( 1982, december, 18 ) );
-    assertEquals( data_1982_12_13.plusDays( 45 ), date( 1983, january, 27 ) );
-    assertEquals( data_1982_12_13.plusDays( 10954 ), date( 2012, december, 9 ) );
-}
+shared void test_1982_dec_13_plusDays_0()     => assertEquals( date(1982, december, 13), date( 1982, december, 13).plusDays( 0 ) );
+shared void test_1982_dec_13_plusDays_5()     => assertEquals( date(1982, december, 18), date( 1982, december, 13).plusDays( 5 ) );
+shared void test_1982_dec_13_plusDays_45()    => assertEquals( date(1983, january,  27), date( 1982, december, 13).plusDays( 45 ) );
+shared void test_1982_dec_13_plusDays_10954() => assertEquals( date(2012, december,  9), date( 1982, december, 13).plusDays( 10954 ) );
 
-shared void testDateMinusDays() {
-    assertEquals( data_1982_12_13.minusDays( 5 ), date( 1982, december, 8 ) );
-    assertEquals( data_1982_12_13.minusDays( 0 ), data_1982_12_13 );
-    assertEquals( date( 2012, december, 9 ).minusDays( 10954 ), data_1982_12_13 );
-}
+shared void test_1982_dec_13_minusDays_5()    => assertEquals( date(1982, december,  8), date( 1982, december, 13).minusDays( 5 ) );
+shared void test_1982_dec_13_minusDays_0()    => assertEquals( date(1982, december, 13), date( 1982, december, 13).minusDays( 0 ) );
+shared void test_2012_dec_9_minusDays_10954() => assertEquals( date(1982, december, 13), date( 2012, december, 9 ).minusDays( 10954 ) );
 
-shared void testDatePlusMonthsLessDaysException() {
-    assertEquals( date(1983, february, 28), date(1982,december,31).plusMonths(2));
-}
+shared void test_1982_dec_13_plusMonths_0()  => assertEquals( date(1982, december, 13), date( 1982, december, 13).plusMonths(0));
+shared void test_1982_dec_13_plusMonths_1()  => assertEquals( date(1983, january, 13),  date( 1982, december, 13).plusMonths(1));
+shared void test_1982_dec_13_plusMonths_12() => assertEquals( date(1983, december, 13), date( 1982, december, 13).plusMonths(12));
+shared void test_1982_dec_13_plusMonths_36() => assertEquals( date(1985, december, 13), date( 1982, december, 13).plusMonths(36));
+shared void test_2000_jan_31_plusMonths_14() => assertEquals( date(2001, march, 31),    date( 2000, january, 31 ).plusMonths(14));
 
-shared void testDatePlusMonths() {
-    assertEquals( data_1982_12_13.plusMonths(0), data_1982_12_13 );
-    assertEquals( data_1982_12_13.plusMonths(1), date( 1983, january, 13) );
-    assertEquals( data_1982_12_13.plusMonths(12), date( 1983, december, 13) );
-    assertEquals( data_1982_12_13.plusMonths(36), date( 1985, december, 13) );
-
-    value data_2000_01_31 = date( 2000, january, 31 );
-    assertEquals( data_2000_01_31.plusMonths(14), date( 2001, march, 31) );
-}
+shared void test_1983_jan_31_plusMonths_1() => assertEquals( date(1983, february, 28), date(1982, december, 31).plusMonths(2));
+shared void test_1983_mar_31_plusMonths_1() => assertEquals( date(1983, april, 30), date(1983, march, 31).plusMonths(1));
+shared void test_2000_feb_29_plusMonths_12() => assertEquals( date(2001, february, 28), date(2000, february, 29).plusMonths(12));
 
 shared void testDateMinusMonths() {
-    assertEquals( data_1982_12_13.minusMonths(0), data_1982_12_13 );
-    assertEquals( data_1982_12_13.minusMonths(1), date( 1982, november, 13) );
-    assertEquals( data_1982_12_13.minusMonths(12), date( 1981, december, 13) );
+    assertEquals( date( 1982, december, 13).minusMonths(0), date( 1982, december, 13) );
+    assertEquals( date( 1982, december, 13).minusMonths(1), date( 1982, november, 13) );
+    assertEquals( date( 1982, december, 13).minusMonths(12), date( 1981, december, 13) );
 }
 
 shared void testDateMinusLessDaysException() {
@@ -169,9 +168,9 @@ shared void testDateMinusLessDaysException() {
 }
 
 shared void testDatePlusYears() {
-    assertEquals( data_1982_12_13.plusYears(0), data_1982_12_13 );
-    assertEquals( data_1982_12_13.plusYears(18), date( 2000, december, 13) );
-    assertEquals( data_1982_12_13.plusYears(30), date( 2012, december, 13) );
+    assertEquals( date( 1982, december, 13).plusYears(0), date( 1982, december, 13) );
+    assertEquals( date( 1982, december, 13).plusYears(18), date( 2000, december, 13) );
+    assertEquals( date( 1982, december, 13).plusYears(30), date( 2012, december, 13) );
 }
 
 shared void testPlusYearsLessDays() {
@@ -181,7 +180,7 @@ shared void testPlusYearsLessDays() {
 shared void testDateMinusYears() {
     value data_2000_01_31 = date( 2000, january, 31);
     assertEquals( data_2000_01_31.minusYears(1), date( 1999, january, 31) );
-    assertEquals( data_1982_12_13.minusYears(10), date( 1972, december, 13) );
+    assertEquals( date( 1982, december, 13).minusYears(10), date( 1972, december, 13) );
 }
 
 shared void testMinusYearsLessDays() {
@@ -189,26 +188,26 @@ shared void testMinusYearsLessDays() {
 }
 
 shared void testDatePlusWeeks() {
-    assertEquals( data_1982_12_13.plusWeeks(1).dayOfWeek, data_1982_12_13.dayOfWeek );
-    assertEquals( data_1982_12_13.plusWeeks(1), date( 1982, december, 20) );
-    assertEquals( data_1982_12_13.plusWeeks(3), date( 1983, january, 3) );
+    assertEquals( date( 1982, december, 13).plusWeeks(1).dayOfWeek, date( 1982, december, 13).dayOfWeek );
+    assertEquals( date( 1982, december, 13).plusWeeks(1), date( 1982, december, 20) );
+    assertEquals( date( 1982, december, 13).plusWeeks(3), date( 1983, january, 3) );
 }
 
 shared void testDateMinusWeeks(){
-    assertEquals( data_1982_12_13.minusWeeks(1), date( 1982, december, 6) );
-    assertEquals( data_1982_12_13.minusWeeks(3), date( 1982, november, 22) );
-    assertEquals( data_1982_12_13.minusWeeks(3).dayOfWeek, date( 1982, november, 22).dayOfWeek );
+    assertEquals( date( 1982, december, 13).minusWeeks(1), date( 1982, december, 6) );
+    assertEquals( date( 1982, december, 13).minusWeeks(3), date( 1982, november, 22) );
+    assertEquals( date( 1982, december, 13).minusWeeks(3).dayOfWeek, date( 1982, november, 22).dayOfWeek );
 }
 
 shared void testWithDay() {
-    assertEquals( data_1982_12_13.withDay(13), data_1982_12_13 );
-    assertEquals( data_1982_12_13.withDay(17), date( 1982, december, 17) );
-    assertTrue( data_1982_12_13.withDay(17) <=> date( 1982, december, 17) == equal);
+    assertEquals( date( 1982, december, 13).withDay(13), date( 1982, december, 13) );
+    assertEquals( date( 1982, december, 13).withDay(17), date( 1982, december, 17) );
+    assertTrue( date( 1982, december, 13).withDay(17) <=> date( 1982, december, 17) == equal);
 }
 
 shared void testWithDay40() {
     try {
-        data_1982_12_13.withDay(40);
+        date( 1982, december, 13).withDay(40);
         fail("Should throw exception...");
     } catch( AssertionException e ) {
         assertTrue(e.message.contains("Invalid date"));
@@ -217,7 +216,7 @@ shared void testWithDay40() {
 
 shared void testWithDay0() {
     try {
-        data_1982_12_13.withDay(0);
+        date( 1982, december, 13).withDay(0);
         fail("Should throw exception...");
     } catch( AssertionException e ) {
         assertTrue(e.message.contains("Invalid date"));
@@ -226,7 +225,7 @@ shared void testWithDay0() {
 
 shared void testWithDayNegative() {
     try {
-        data_1982_12_13.withDay(-10);
+        date( 1982, december, 13).withDay(-10);
         fail("Should throw exception...");
     } catch( AssertionException e ) {
         assertTrue(e.message.contains("Invalid date"));
@@ -244,7 +243,7 @@ shared void testWithDay29FebNotLeap() {
 
 shared void testWithDay29FebLeap() {
     assertEquals( date(2012, february,1).withDay(29), date(2012, february, 29) );
-}    
+}
 
 
 shared void testWithMonthLessDaysException() {
@@ -257,15 +256,15 @@ shared void testWithMonthLessDaysException() {
 }
 
 shared void testWithMonth() {
-    assertEquals( data_1982_12_13, data_1982_12_13.withMonth(december) );
-    assertEquals( date( 1982, january, 13), data_1982_12_13.withMonth(january) );
-    assertTrue( data_1982_12_13.withMonth(january) <=> date( 1982, january, 13) == equal);
+    assertEquals( date( 1982, december, 13), date( 1982, december, 13).withMonth(december) );
+    assertEquals( date( 1982, january, 13), date( 1982, december, 13).withMonth(january) );
+    assertTrue( date( 1982, december, 13).withMonth(january) <=> date( 1982, january, 13) == equal);
 }
 
 shared void testWithYear() {
-    assertEquals( data_1982_12_13.withYear(1982), data_1982_12_13 );
-    assertEquals( data_1982_12_13.withYear(2000), date( 2000, december, 13) );
-    assertEquals( data_1982_12_13.withYear(1800), date( 1800, december, 13) );
+    assertEquals( date( 1982, december, 13).withYear(1982), date( 1982, december, 13) );
+    assertEquals( date( 1982, december, 13).withYear(2000), date( 2000, december, 13) );
+    assertEquals( date( 1982, december, 13).withYear(1800), date( 1800, december, 13) );
 }
 
 shared void testWithYearLeap() {
@@ -278,11 +277,10 @@ shared void testWithYearLeap() {
 }
 
 shared void testOrdinal() {
-    Date data_1983_01_01 = date( 1983, january, 1 );
-    variable value cont = 0;
-    for ( Date date in data_1982_12_13..data_1983_01_01 ) {
-        assertEquals( date, data_1982_12_13.plusDays(cont++) );
-    }
+    //variable value cont = 0;
+    //for ( Date date in date( 1982, december, 13)..date( 1983, january, 1 ) ) {
+    //    assertEquals( date, date( 1982, december, 13).plusDays(cont++) );
+    //}
 }
 
 shared void testPlusPeriod_Date() {
@@ -291,7 +289,7 @@ shared void testPlusPeriod_Date() {
         months = 2;
         days = 3;
     };
-    value newDataAmount = data_1982_12_13.plus( period_0001_02_03 );
+    value newDataAmount = date( 1982, december, 13).plus( period_0001_02_03 );
     assertEquals( newDataAmount.year, 1984 );
     assertEquals( newDataAmount.month, february );
     assertEquals( newDataAmount.day, 16 );
@@ -303,22 +301,22 @@ shared void testMinusPeriod_Date() {
         months = 2;
         days = 3;
     };
-    value newDataAmount = data_1982_12_13.minus( period_0001_02_03 );
+    value newDataAmount = date( 1982, december, 13).minus( period_0001_02_03 );
     assertEquals( newDataAmount.year, 1981 );
     assertEquals( newDataAmount.month, october );
     assertEquals( newDataAmount.day, 10 );
 }
 
 shared void testPredecessor() {
-    assertEquals(data_1982_12_13.predecessor, date(1982, december, 12));
+    assertEquals(date( 1982, december, 13).predecessor, date(1982, december, 12));
 }
 
 shared void testSuccessor() {
-    assertEquals(data_1982_12_13.successor, date(1982, december, 14));
+    assertEquals(date( 1982, december, 13).successor, date(1982, december, 14));
 }
 
 shared void testString() {
-    assertEquals( data_1982_12_13.string, "1982-12-13" );
+    assertEquals( date( 1982, december, 13).string, "1982-12-13" );
     assertEquals( date(2012, january, 1 ).string, "2012-01-01" );
 }
 
@@ -329,7 +327,7 @@ shared void testAt() {
 
 shared void testAtInvalidHour() {
     try {
-        data_1982_12_13.at( time(-10, 0) );
+        date( 1982, december, 13).at( time(-10, 0) );
         fail("Should throw exception...");
     } catch ( AssertionException e ) {
         assertTrue(e.message.contains("Hours value should be between 0 and 23"));
@@ -338,7 +336,7 @@ shared void testAtInvalidHour() {
 
 shared void testAtInvalidMinute() {
     try {
-        data_1982_12_13.at( time(10, 60) );
+        date( 1982, december, 13).at( time(10, 60) );
         fail("Should throw exception...");
     } catch ( AssertionException e ) {
         assertTrue(e.message.contains("Minutes value should be between 0 and 59"));
@@ -347,7 +345,7 @@ shared void testAtInvalidMinute() {
 
 shared void testAtInvalidSecond() {
     try {
-        data_1982_12_13.at( time(10, 59, -1) );
+        date( 1982, december, 13).at( time(10, 59, -1) );
         fail("Should throw exception...");
     } catch ( AssertionException e ) {
         assertTrue(e.message.contains("Seconds value should be between 0 and 59"));
@@ -356,7 +354,7 @@ shared void testAtInvalidSecond() {
 
 shared void testAtInvalidMillis() {
     try {
-        data_1982_12_13.at( time(10, 59, 59, 1000) );
+        date( 1982, december, 13).at( time(10, 59, 59, 1000) );
         fail("Should throw exception...");
     } catch ( AssertionException e ) {
         assertTrue(e.message.contains("Milliseconds value should be between 0 and 999"));
@@ -603,4 +601,10 @@ void assertException(String message, Integer year, Month month, Integer day) {
     catch ( AssertionException e ) {
         assertTrue(message.contains(message));
     }
+}
+
+void assertLeapYear(Integer year, Boolean leapYear){
+    switch(leapYear)
+    case (true) {assertTrue(date(year, january, 1).leapYear, "Year ``year`` is leap year"); }
+    case (false) {assertFalse(date(year, january, 1).leapYear, "Year ``year`` is not leap year"); }
 }
