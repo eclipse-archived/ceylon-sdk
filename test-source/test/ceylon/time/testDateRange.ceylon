@@ -124,6 +124,10 @@ shared void testContainsDate() {
     assertEquals(true, date(2013, january, 15) in jan_date_range);    
 }
 
+shared void testNotContainsDate() {
+    assertEquals(false, date(2013, january, 15) in jan_date_range.stepBy(years));   
+}
+
 shared void testGapRulesABSmallerCD() {
     //Combinations to Test: AB < CD
     //C1: 12 gap 56 = (2,5)
@@ -243,10 +247,10 @@ shared void testOverlapRulesABSmallerCD() {
 
 shared void testOverlapRulesABHigherCD() {
     //Combinations to Test: AB > CD
-    //39 gap 16 = [6,3]
-    //39 gap 61 = [6,3]
-    //93 gap 16 = [6,3]
-    //93 gap 61 = [6,3]
+    //39 overlap 16 = [6,3]
+    //39 overlap 61 = [6,3]
+    //93 overlap 16 = [6,3]
+    //93 overlap 61 = [6,3]
 
     value a = date(2013, january, 3);
     value b = date(2013, january, 9);

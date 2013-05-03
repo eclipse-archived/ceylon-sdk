@@ -21,12 +21,20 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange,
     }
 
     shared actual DateRange|Empty overlap(DateRange other) {
-        assert( is DateRange|Empty response = _overlap(this, other));
+        value response = _overlap([from,to], [other.from, other.to]);
+        if ( is [Date,Date] response) {
+            return DateRange(response[0], response[1]);
+        }
+        assert( is Empty response);
         return response;
     }
 
     shared actual DateRange|Empty gap( DateRange other ) {
-        assert( is DateRange|Empty response = _gap(this, other) );
+        value response = _gap([from,to], [other.from, other.to]);
+        if ( is [Date,Date] response) {
+            return DateRange(response[0], response[1]);
+        }
+        assert( is Empty response);
         return response;
     }
 
