@@ -1,4 +1,4 @@
-import ceylon.io.buffer { ByteBuffer, newByteBuffer, newByteBufferWithData }
+import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 
 "Represents a Base64 implementation of RFC 4648
  (the specification)[http://tools.ietf.org/html/rfc4648]."
@@ -61,29 +61,25 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
         //Base64 has an output grow about 33%
         value result = newByteBuffer((2 + input.available - ((input.available + 2) % 3)) * 4 / 3);
         while( input.hasAvailable ){
-            Integer remaining = min({3, input.available});
-           
-             //Get remaining chars
-            value raw3 = newByteBufferWithData( for( Integer i in 1..remaining) input.get().integer );
-            
-            encodeBytesToChars( raw3, result );
+            encodeBytesToChars( input, result );
         }
         result.flip();
         return result;
     }
 
     "Transforms a sequence of 3 bytes into 4 characters based on base64 table"
-    void encodeBytesToChars( ByteBuffer threeBytes, ByteBuffer encoded ) {
-        value codePoint1 = threeBytes.get().integer;
+    void encodeBytesToChars( ByteBuffer input, ByteBuffer encoded ) {
+        value available = input.available;
+        value codePoint1 = input.get().integer;
         assert(exists char1 = table[codePoint1.rightLogicalShift(2)]);
 
         variable value codePoint2 = 0;
         variable value codePoint3 = 0;
-        if( threeBytes.capacity == 3 ) {
-            codePoint2 = threeBytes.get().integer;
-            codePoint3 = threeBytes.get().integer;
-        } else if( threeBytes.capacity == 2 ) {
-            codePoint2 = threeBytes.get().integer;
+        if( available >= 3 ) {
+            codePoint2 = input.get().integer;
+            codePoint3 = input.get().integer;
+        } else if( available == 2 ) {
+            codePoint2 = input.get().integer;
         }
 
         assert(exists char2 = table[((codePoint1.and(3)).leftLogicalShift(4)).or((codePoint2.rightLogicalShift(4)))]);
@@ -92,8 +88,8 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
 
         encoded.put(char1.integer);
         encoded.put(char2.integer);
-        encoded.put(threeBytes.capacity >= 2 then char3.integer else pad.integer);
-        encoded.put(threeBytes.capacity == 3 then char4.integer else pad.integer);
+        encoded.put(available >= 2 then char3.integer else pad.integer);
+        encoded.put(available >= 3 then char4.integer else pad.integer);
     }
 
     "Returns index of an encoded char
