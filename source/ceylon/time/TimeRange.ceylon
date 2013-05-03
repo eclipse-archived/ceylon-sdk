@@ -21,12 +21,20 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
     }
 
     shared actual TimeRange|Empty overlap(TimeRange other) {
-        assert( is TimeRange|Empty response = _overlap(this, other));
+        value response = _overlap([from,to], [other.from, other.to]);
+        if ( is [Time,Time] response) {
+            return TimeRange(response[0], response[1]);
+        }
+        assert( is Empty response);
         return response;
     }
 
     shared actual TimeRange|Empty gap( TimeRange other ) {
-        assert( is TimeRange|Empty response  = _gap(this, other));
+        value response = _gap([from,to], [other.from, other.to]);
+        if ( is [Time,Time] response) {
+            return TimeRange(response[0], response[1]);
+        }
+        assert( is Empty response);
         return response;
     }
 

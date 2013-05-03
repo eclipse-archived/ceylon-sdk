@@ -44,19 +44,43 @@ shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Nul
      Given: tomorrow().to(today).duration then duration is -1 day"
     shared formal Period period;
     
-    shared formal Range<Element, Self, StepBy>|Empty overlap( Self other );
-    
-    shared formal Range<Element, Self, StepBy>|Empty gap( Self other );
+    "Returns empty or a new Range:
+     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
+     - The precision is based on the lowest unit 
+     - When the new Range exists it will follow these rules:\n
+     Given: [A..B] overlap [C..D]\n 
+     When: AB < CD\n
+         [1..6] overlap [3..9] = [3,6]\n
+         [1..6] overlap [9..3] = [3,6]\n
+         [6..1] overlap [3..9] = [3,6]\n
+         [6..1] overlap [9..3] = [3,6]\n\n
 
-    //TODO: How to link it with Container::contains doc?
-    shared actual Boolean contains(Object element) {
-        if ( is Element element ) {
-            return from <= to
-                   then from <= element <= to
-                   else to <= element <= from;
-        }
-        return false;
-    }
+     Given: [A..B] overlap [C..D]\n 
+     When: AB > CD\n
+         [3..9] overlap [1..6] = [6,3]\n
+         [3..9] overlap [6..1] = [6,3]\n
+         [9..3] overlap [1..6] = [6,3]\n
+         [9..3] overlap [6..1] = [6,3]"
+    shared formal Range<Element, Self, StepBy>|Empty overlap( Self other );
+
+    "Returns empty or a new Range:
+     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
+     - The precision is based on the lowest unit 
+     - When the new Range exists it will follow these rules:\n
+     Given: [A..B] gap [C..D]\n 
+     When: AB < CD\n
+         [1..2] gap [5..6] = (2,5)\n
+         [1..2] gap [6..5] = (2,5)\n
+         [2..1] gap [5..6] = (2,5)\n
+         [2..1] gap [6..5] = (2,5)\n\n
+
+     Given: [A..B] gap [C..D]\n 
+     When: AB > CD\n
+         [5..6] gap [1..2] = (5,2)\n
+         [5..6] gap [2..1] = (5,2)\n
+         [6..5] gap [1..2] = (5,2)\n
+         [6..5] gap [2..1] = (5,2)"    
+    shared formal Range<Element, Self, StepBy>|Empty gap( Self other );
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_"
     shared default actual Boolean equals( Object other ) {
