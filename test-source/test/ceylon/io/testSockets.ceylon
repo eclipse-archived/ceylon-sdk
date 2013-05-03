@@ -1,7 +1,7 @@
-import ceylon.io { ... }
 import ceylon.io.buffer { ... }
 import ceylon.io.charset { ... }
 import ceylon.net.uri { parse }
+import ceylon.io { Socket, Selector, newSelector, SocketConnector, SocketAddress, newSocketConnector }
 
 void readResponse(Socket socket) {
     // blocking read
