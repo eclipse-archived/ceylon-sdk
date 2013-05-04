@@ -130,42 +130,42 @@ shared object june extends Month(gregorian.june) {
 
 "July. The seventh month of a gregorian calendar system."
 shared object july extends Month(gregorian.july) {
-    shared actual shared actual String string = "july";
+    shared actual String string = "july";
     shared actual Month predecessor => june;
     shared actual Month successor => august;
 }
 
-"August. The eigth month of a gregorian calendar system."
+"August. The eighth month of a gregorian calendar system."
 shared object august extends Month(gregorian.august) {
-    shared actual shared actual String string = "august";
+    shared actual String string = "august";
     shared actual Month predecessor => july;
     shared actual Month successor => september;
 }
 
 "September. The nineth month of a gregorian calendar system."
 shared object september extends Month(gregorian.september) {
-    shared actual shared actual String string = "september";
+    shared actual String string = "september";
     shared actual Month predecessor => august;
     shared actual Month successor => october;
 }
 
 "October. The tenth month of a gregorian calendar system."
 shared object october extends Month(gregorian.october) {
-    shared actual shared actual String string = "october";
+    shared actual String string = "october";
     shared actual Month predecessor => september;
     shared actual Month successor => november;
 }
 
 "November. The eleventh month of a gregorian calendar system."
 shared object november extends Month(gregorian.november) {
-    shared actual shared actual String string = "november";
+    shared actual String string = "november";
     shared actual Month predecessor => october;
     shared actual Month successor => december;
 }
 
 "December. The twelveth (last) month of a gregorian calendar system."
 shared object december extends Month(gregorian.december) {
-    shared actual shared actual String string = "december";
+    shared actual String string = "december";
     shared actual Month predecessor => november;
     shared actual Month successor => january;
 }
