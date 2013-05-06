@@ -1,5 +1,5 @@
 import ceylon.time { DateTime, dateTime, Period }
-import ceylon.time.base { december, january, november, september, Month, DayOfWeek, sunday, july, wednesday, monday, october, tuesday, friday, saturday, february }
+import ceylon.time.base { december, january, november, september, Month, DayOfWeek, sunday, july, wednesday, monday, october, tuesday, friday, saturday, february, april }
 import ceylon.test { assertEquals, fail, assertTrue }
 
 DateTime data_1982_12_13_09_08_07_0050 = dateTime { year = 1982;  
@@ -343,6 +343,20 @@ shared void testPeriodFromNewYear_DateTime() {
     assertFromToDateTime(period, from, to);
 }
 
+shared void testPeriodNextStepByMs_DateTime() {
+    value from = dateTime(2013, april, 19, 17, 59,59);
+    value to = dateTime(2013, april, 19, 18, 0);
+
+    assertEquals( 1001, from.to(to).size );
+}
+
+shared void testPeriodPreviousStepByMs_DateTime() {
+    value from = dateTime(2013, april, 19, 18, 0);
+    value to = dateTime(2013, april, 19, 17, 59,59);
+
+    assertEquals( 1001, from.to(to).size );
+}
+
 shared void testPeriodFromNewYear_DateTimeNegative() {
     Period period = Period{ 
         days = -3; 
@@ -355,6 +369,14 @@ shared void testPeriodFromNewYear_DateTimeNegative() {
     DateTime to = dateTime(2013, december, 28, 0, 0, 0, 900);
     assertFromToDateTime(period, from, to);
 }
+
+shared void testPeriodTimeStep() {
+    value agora = dateTime(2013, april, 19, 6, 10);
+    value  fimDoEvento = dateTime(2013, april, 19, 18, 0);
+    
+    assertFromToDateTime(Period{ hours = 11; minutes = 50; }, agora, fimDoEvento);
+}
+
 
 void assertFromToDateTime( Period period, DateTime from, DateTime to ) {
     assertEquals{

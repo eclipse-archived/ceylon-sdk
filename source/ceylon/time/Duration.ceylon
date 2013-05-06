@@ -11,4 +11,12 @@ shared class Duration(milliseconds) satisfies ReadableDuration {
 
     "Returns the string representation of this duration."
     shared actual String string => "``milliseconds``ms";
+
+    "Duration is considered equal when type and milliseconds are the same"
+    shared actual Boolean equals( Object other ) {
+        if ( is Duration other ) {
+            return milliseconds == other.milliseconds;
+        }
+        return false;
+    }
 }

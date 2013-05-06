@@ -1,4 +1,4 @@
-import ceylon.time { Date, Time, DateTime, Instant, Period }
+import ceylon.time { Date, Time, DateTime, Instant, Period, DateTimeRange }
 import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek, months }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.internal.math { floorDiv, floorMod }
@@ -268,6 +268,11 @@ shared class GregorianDateTime( date, time )
 
     shared actual Period periodTo(DateTime end) {
         return end.periodFrom(this); 
+    }
+
+    "Returns the [[DateTimeRange]] between this and given DateTime"
+    shared actual DateTimeRange to( DateTime other ) {
+        return DateTimeRange(this, other); 
     }
 
     DateTime fromTime( Integer hours = 0, Integer minutes = 0, Integer seconds = 0, Integer millis = 0, Integer signal = 1 ) {
