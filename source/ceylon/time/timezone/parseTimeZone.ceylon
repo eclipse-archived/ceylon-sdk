@@ -1,65 +1,193 @@
-import ceylon.time { offsetTime }
+import ceylon.time.base { ms = milliseconds }
 
-abstract class Input<out Data>() of Chunk<Data> | EOF | Empty 
-                                 given Data satisfies Anything {}
+"Represents the problem that occured while parsing. It can be recovered from _message_ field"
+shared class ParserError( message ) {
+    shared String message;
 
-class Chunk<out Data>(data) extends Input<Data>() {
-    shared Data data;
+    shared actual Boolean equals( Object other ) {
+        if ( is ParserError other ) {
+            return message == other.message; 
+        }
+        return false;
+    }
+
 }
 
-abstract class EOF() of eof extends Input<Nothing>() {}
+"Timezone offset parser based on ISO-8601, currently it accepts the pattern: ±[hh]:[mm], ±[hh][mm], or ±[hh]"
+shared TimeZone|ParserError parseTimeZone( String offset ) {
+    variable State state = Initial();
+    for( character in offset ) {
+        state = state.next( Chunk( character ) );
+    }
+    state = state.next( eof );
+    if ( is Final final = state ) {
+        value result = final.evaluate();
+        if ( result == 0 && offset.contains('-') ) {
+            return ParserError("Pattern not allowed by ISO-8601: '``offset``'!");
+        }
+        return OffsetTimeZone( result );
+    }
+
+    assert ( is Error error = state );
+    return ParserError(error.message);
+}
+
+
+"Represents each elelment or the end of the parser"
+abstract class Input() of Chunk | EOF {}
+
+"Represents each character"
+class Chunk( character ) extends Input() {
+    shared Character character;
+    shared actual Boolean equals( Object other ) {
+        if ( is Character other ) {
+            return this.character == other;
+        }
+        return false;
+    } 
+}
+
+"Represents the end of the parser"
+abstract class EOF() of eof extends Input() {}
+
+"Singleton implementation to represent the end of the parser"
 object eof extends EOF() {}
 
-abstract class Empty() of empty extends Input<Nothing>() {}
-object empty extends Empty() {} 
+"All states avaiable for the parser"
+abstract class State() of Initial | Zulu | Sign | Hours | Minutes | Final | Error | Colon {
 
+    "Each state is responsible to check if the next state is valid and call it"
+    shared formal State next( Input input );
 
-
-abstract class State() of Initial | Zulu | Sign() | Final | Error {
-    shared formal State next(Input<Character> input);
 }
 
-abstract class Initial() of zone extends State() {}
-object zone extends Initial() {
-    shared actual State next(Input<Character> character) {
-        if (character == 'Z') {
-            return zulu;
+"Represents the init of the parser"
+class Initial() extends State() {
+    shared actual State next( Input input ) {
+        switch( input )
+        case ( is Chunk ) {
+            if ( input == 'Z' ) {
+                return Zulu();
+            }
+            if ( input == '+' ) {
+                return Sign( +1 );
+            }
+            if ( input == '-' ) {
+                return Sign( -1 );
+            }
+            return Error( "Unexpected character! Got '``input.character``' but expected: 'Z', '+' or '-'" );
         }
-        if (character == '+') {
-            return Sign( +1 );
+        case( is EOF ) {
+            return Error( "Unexpected end of input! Empty time zone." );
         }
-        if (character == '-') {
-            return Sign( -1 );
-        }
-        return Error("Unexpected character at initial position!");
     }
 }
 
-abstract class Zulu() of zulu extends State(){}
-object zulu extends Zulu(){
-    shared actual State next(Input<Character> input) {
-        switch(input)
-        case (is EOF) { return Final(0); }
-        case (is Empty) { return this; }
-        else { return Error("""Unexpected characters after "Z"!"""); }
+"Represents the UTC"
+class Zulu() extends State() {
+    shared actual State next( Input input ) {
+        switch( input )
+        case ( is Chunk ) { return Error( "Unexpected character! Got '``input.character``' but expected end of input after 'Z'" ); }
+        case ( is EOF ) { return Final(); }
     }
 }
 
-class Final(result) extends State() {
-    shared Integer result;
-    shared actual State next(Input<Character> character) => this;
+"Represents +1 case the time is ahead of UTC, otherwise its -1"
+class Sign( Integer sign ) extends State() {
+    shared actual State next( Input input ) {
+        switch( input )
+        case ( is Chunk ) {
+            return input.character.digit 
+                   then Hours( sign, characterToInteger( input.character ) )
+                   else Error( "Unexpected character! Got '``input.character``' but expected a digit [0..9] after '``sign > 0 then "+" else "-"``'" ); 
+        }
+        case ( is EOF ) {
+            return Error( "Unexpected end of input! Expecting a digit [0..9] after '``sign > 0 then "+" else "-"``'" );
+        }
+    }
 }
 
-class Error(message) extends State() {
+"Represents the hours, the accepted pattern is two digit hours"
+class Hours( Integer sign, hours, digits = 1 ) extends State() {
+    Integer digits;
+    Integer hours;
+    shared actual State next( Input input ) {
+        switch( input )
+        case ( is Chunk ) {
+            if( input.character.digit ) {
+                return digits == 2 
+                       then Minutes( sign, hours, characterToInteger(input.character) )	 
+                       else Hours( sign, hours * 10 + characterToInteger(input.character), 2 );
+            } else if ( input == ':' ) {
+                return Colon( sign, hours );
+            } else {
+                return Error( "Unexpected character! Got '``input.character``' but expected a digit [0..9]" ); 
+            }
+        }
+        case( is EOF ) {
+            return digits == 2 
+                   then Final( sign, hours ) 
+                   else Error( "Unexpected end of input! Expected at two digits for hours but got one." );
+        }
+    }
+    
+}
+
+"Represents the minutes, the accepted pattern is two digit minutes"
+class Minutes( Integer sign, Integer hours, minutes, digits = 1 ) extends State() {
+    Integer digits;
+    Integer minutes;
+    shared actual State next( Input input ) {
+        switch( input )
+        case ( is Chunk ) {
+            if( input.character.digit ) {
+                return digits == 2 
+                        then Error( "Unexpected character! Got '``input.character``' but expected end of input" )	
+                        else Minutes( sign, hours, minutes * 10 + characterToInteger(input.character), 2 );
+            } else {
+                return digits == 2 
+                        then Error( "Unexpected character! Got '``input.character``' but expected end of input" )
+                        else Error( "Unexpected character! Got '``input.character``' but expected a digit [0..9]" ); 
+            }
+        }
+        case ( is EOF ) {
+            return digits == 2 
+                       then Final( sign, hours, minutes ) 
+                       else Error( "Unexpected end of input! Expected two digits for minutes but got one." );
+        }
+    }
+
+}
+
+"Represents the colon as some patterns accepts for example 'hh:mm'"
+class Colon( Integer sign, Integer hours ) extends State() {
+    shared actual State next( Input input ) {
+        switch( input )
+        case ( is Chunk ) {
+            return input.character.digit 
+                   then Minutes( sign, hours, characterToInteger( input.character ) )
+                   else Error( "Unexpected character! Got '``input.character``' but expected a digit [0..9] after ':'" ); 
+        }
+        case ( is EOF ) {
+            return Error( "Unexpected end of input! Expecting a digit [0..9] after ':'" );
+        }
+    }
+}
+
+"Rrepresents the parser successfully finished"
+class Final( Integer sign = 1, Integer hours = 0, Integer minutes = 0 ) extends State() {
+    shared actual State next(Input character) => this;
+    shared Integer evaluate() {
+        return sign * ( hours * ms.perHour + minutes * ms.perMinute );
+    }
+}
+
+"Represents the parser unsuccessfully finished and hold the error message"
+class Error( message ) extends State() {
     shared String message;
-    shared actual State next(Input<Character> character) => this;
+    shared actual State next( Input character ) => this;
 }
 
-
-shared TimeZone parseTimeZone(String zoneId) {
-    variable State state = initial;
-    for(character in zoneId) {
-        state = state.next(character);
-    }
-    return nothing;
+Integer characterToInteger( Character digit ) {
+    return digit.integer - '0'.integer; 
 }
