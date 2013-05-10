@@ -1,4 +1,4 @@
-import ceylon.time { DateTime, Instant }
+import ceylon.time { Instant }
 import ceylon.time.base { milliseconds }
 
 "The interface representing a timezone"
@@ -16,7 +16,8 @@ shared TimeZone timeZone(Integer|String? zone = null) {
             return OffsetTimeZone(offset * milliseconds.perMinute);
         }
         if (is String zone) {
-            return parseTimeZone(zone);
+            //TODO: Probably split it in another method.
+            //return parseTimeZone(zone);
         }
     }
     
@@ -24,10 +25,20 @@ shared TimeZone timeZone(Integer|String? zone = null) {
 }
 
 "A simple time zone with a constant offset from UTC."
-shared class OffsetTimeZone(shared Integer offsetMilliseconds) satisfies TimeZone {
+shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
+
+    "The value that represents this constant offset"
+    shared Integer offsetMilliseconds;
 
     "Always returns a constant offset"
     shared actual Integer offset(Instant instant) => offsetMilliseconds;
+
+    shared actual Boolean equals( Object other ) {
+        if ( is OffsetTimeZone other ) {
+            return this.offsetMilliseconds == other.offsetMilliseconds;
+        }
+        return false;
+    }
 
 }
 
