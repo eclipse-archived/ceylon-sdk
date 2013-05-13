@@ -9,22 +9,18 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
 
     shared actual UnitOfDate|UnitOfTime step;
 
-    shared actual Period period  {
-        return from.periodTo(to);	
-    }
+    shared actual Period period => from.periodTo(to);	
 
     shared actual Duration duration  {
         return Duration(to.instant().millisecondsOfEra - from.instant().millisecondsOfEra);	
     }
 
-    shared actual Boolean equals( Object other ) {
-        return Range::equals(other); 
-    }
+    shared actual Boolean equals( Object other ) => Range::equals(other); 
 
     shared actual DateTimeRange|Empty overlap(DateTimeRange other) {
         value response = _overlap([from,to], [other.from, other.to]);
         if ( is [DateTime,DateTime] response) {
-            return DateTimeRange(response[0], response[1]);
+            return DateTimeRange(*response);
         }
         assert( is Empty response);
         return response;
@@ -52,10 +48,11 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         }
         return listIterator;
     }
-    
+
     "Define how this Range will get next or previous element while iterating."
     shared actual DateTimeRange stepBy( UnitOfDate|UnitOfTime step ) {
-        return step == this.step then this else DateTimeRange(from, to, step);
+        return step == this.step then this 
+               else DateTimeRange(from, to, step);
     }
 
     DateTime nextByStep( Integer jump = 1 ) {

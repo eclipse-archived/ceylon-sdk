@@ -1,3 +1,4 @@
+
 "return padded value of the number as a string"
 shared String leftPad(Integer number, String padding = "00"){
     if (number == 0){
@@ -21,51 +22,49 @@ shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value
     return start <= otherEnd && end >= otherStart;
 }
 
-"Returns the gap between two Ranges represented as [Value,Value]"
-shared [Value,Value]|Empty gap<Value>([Value,Value] first, [Value,Value] second) given Value satisfies Comparable<Value>&Ordinal<Value> {
-
-    variable [Value,Value] from = [min{*first}, max{*first}];
-    variable [Value,Value] to = [min{*second}, max{*second}]; 
-
-    variable Boolean ascending = true; 
-    if( from[0] > to[0] ) {
-        ascending = false;
-        value aux = from;
-        from = to;
-        to = aux;
-    }
-
-    if (!intersect(from[0], from[1], to[0], to[1])) {
-        value sucessor = from[1].successor;
-        value predecessor = to[0].predecessor;
-
-        if( sucessor >= to[0] ) {
-            return empty;
-        }
-
-        return [ascending then sucessor else predecessor, 
-                ascending then predecessor else sucessor];
+"Returns the inclusive overlap between two ordinal ranges.
+ 
+ The range of the overlap will be returned in the natural order of the values regardless of their original order in input tuples.
+ 
+ Examples:
+ 
+     assert(overlap([1, 3], [2, 4]) == [2, 3]);
+     assert(overlap([4, 2], [1, 3]) == [2, 3]);
+     assert(is Empty o = overlap([1, 2], [3, 4]));
+ "
+shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second) 
+       given Value satisfies Comparable<Value> & Ordinal<Value> {
+    value ordered = sort(join(first, second)).segment(1, 2); // take the middle two
+    if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
+        assert(exists start = ordered.first);
+        assert(exists end = ordered.last);
+        return [start, end];
     }
 
     return empty;
 }
 
-"Returns the overlap between two Ranges represented as [Value,Value]"
-shared [Value,Value]|Empty overlap<Value>([Value,Value] first, [Value,Value] second) given Value satisfies Comparable<Value>&Ordinal<Value> {
-    variable [Value,Value] from = [min{*first}, max{*first}];
-    variable [Value,Value] to = [min{*second}, max{*second}]; 
+"Returns a tuple representing an exclusive gap between two disjoint ranges of ordinal values.
+ 
+ Values in the tuple are returned always in their natural order regardless of their original ordering in the input tuples. 
+ If input ranges are overlapping, this function will return an empty value.
+ 
+ Examples:
 
-    variable Boolean ascending = true; 
-    if( from[0] > to[0] ) {
-        ascending = false;
-        value aux = from;
-        from = to;
-        to = aux;
+     assert(gap([1, 2], [5, 6]) == [3, 4]);
+     assert(gap([6, 5], [1, 2]) == [3, 4]);
+     assert(is Empty g = gap([1, 3], [2, 4]));
+ "
+shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] second) 
+       given Value satisfies Comparable<Value> & Ordinal<Value> {
+
+    value ordered = sort(join(first, second)).segment(1, 2); // take the middle two
+    if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
+        return empty;
     }
+    
+    assert(exists start = ordered.first);
+    assert(exists end = ordered.last);
 
-    if (intersect(from[0], from[1], to[0], to[1])) {
-        return [ascending then to[0] else min{from[1], to[1] },
-                ascending then min{from[1], to[1] } else to[0] ];
-    } 
-    return empty;
+    return [start, end];
 }

@@ -1,1 +1,1 @@
-package ceylon.time.internal;
+shared package ceylon.time.internal;
