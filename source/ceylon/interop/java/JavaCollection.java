@@ -1,0 +1,186 @@
+package ceylon.interop.java;
+
+import java.util.Collection;
+
+@com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 5)
+@ceylon.language.Shared$annotation
+@com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared")})
+@com.redhat.ceylon.compiler.java.metadata.SatisfiedTypes({"java.util::Collection<T>"})
+@com.redhat.ceylon.compiler.java.metadata.TypeParameters({@com.redhat.ceylon.compiler.java.metadata.TypeParameter(value = "T", variance = com.redhat.ceylon.compiler.java.metadata.Variance.NONE, satisfies = {}, caseTypes = {})})
+public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtime.model.ReifiedType, java.util.Collection<T> {
+    
+    public JavaCollection(@com.redhat.ceylon.compiler.java.metadata.Ignore
+    com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor $reifiedT, @com.redhat.ceylon.compiler.java.metadata.Name("items")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Iterable<T,ceylon.language::Null>")
+    final ceylon.language.Iterable<? extends T, ? extends java.lang.Object> items) {
+        this.$reifiedT = $reifiedT;
+        this.items = items;
+    }
+    @com.redhat.ceylon.compiler.java.metadata.Ignore
+    private final com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor $reifiedT;
+    private final ceylon.language.Iterable<? extends T, ? extends java.lang.Object> items;
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean add(@com.redhat.ceylon.compiler.java.metadata.Name("e")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|T")
+    final T e) {
+        throw new java.lang.UnsupportedOperationException("add()");
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean addAll(@com.redhat.ceylon.compiler.java.metadata.Name("collection")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|java.util::Collection<T>")
+    final java.util.Collection<? extends T> collection) {
+        throw new java.lang.UnsupportedOperationException("addAll()");
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Anything")
+    public final void clear() {
+        throw new java.lang.UnsupportedOperationException("clear()");
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean contains(@com.redhat.ceylon.compiler.java.metadata.Name("obj")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|ceylon.language::Object")
+    final java.lang.Object obj) {
+        java.lang.Object $obj$1;
+        if (($obj$1 = obj) != null) {
+            final java.lang.Object $obj$2 = $obj$1;
+            return items.contains($obj$2);
+        } else {
+            return false;
+        }
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean containsAll(@com.redhat.ceylon.compiler.java.metadata.Name("collection")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|java.util::Collection<ceylon.language::Object>")
+    final java.util.Collection<?> collection) {
+        java.util.Collection<?> $collection$4;
+        if (($collection$4 = collection) != null) {
+            final java.util.Collection<java.lang.Object> $collection$5 = (Collection<Object>) $collection$4;
+            return items.containsEvery(new ceylon.interop.java.CeylonIterable<java.lang.Object>(ceylon.language.Object.$TypeDescriptor, $collection$5));
+        } else {
+            return false;
+        }
+    }
+    
+  
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean isEmpty() {
+        return items.getEmpty();
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("java.util::Iterator<T>")
+    public final java.util.Iterator<T> iterator() {
+        return new ceylon.interop.java.JavaIterator<T>($reifiedT, items.iterator());
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean remove(@com.redhat.ceylon.compiler.java.metadata.Name("obj")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|ceylon.language::Object")
+    final java.lang.Object obj) {
+        throw new java.lang.UnsupportedOperationException("remove()");
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean removeAll(@com.redhat.ceylon.compiler.java.metadata.Name("collection")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|java.util::Collection<ceylon.language::Object>")
+    final java.util.Collection<?> collection) {
+        throw new java.lang.UnsupportedOperationException("removeAll()");
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean retainAll(@com.redhat.ceylon.compiler.java.metadata.Name("collection")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|java.util::Collection<ceylon.language::Object>")
+    final java.util.Collection<?> collection) {
+        throw new java.lang.UnsupportedOperationException("retainAll()");
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Integer")
+    public final int size() {
+        return (int)items.getSize();
+    }
+
+    @java.lang.Override
+    public final java.lang.Object[] toArray() {
+        return com.redhat.ceylon.compiler.java.language.arrays_.getArrays$().<T>toObjectArray($reifiedT, items);
+    }
+
+    @java.lang.Override
+    public <S> S[] toArray(S[] arr) {
+        T[] tmp = com.redhat.ceylon.compiler.java.language.arrays_.getArrays$().<T>toObjectArray($reifiedT, items);
+        System.arraycopy(tmp, 0, arr, 0, arr.length);
+        return arr;
+    }
+    
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
+    public final boolean equals(@com.redhat.ceylon.compiler.java.metadata.Name("that")
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Object")
+    final java.lang.Object that) {
+        return items.equals(that);
+    }
+    
+    @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
+    @ceylon.language.Shared$annotation
+    @ceylon.language.Actual$annotation
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Integer")
+    public final int hashCode() {
+        return items.hashCode();
+    }
+    
+    @java.lang.Override
+    @com.redhat.ceylon.compiler.java.metadata.Ignore
+    public com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor $getType() {
+        return com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor.klass(ceylon.interop.java.JavaCollection.class, $reifiedT);
+    }
+}
