@@ -3,8 +3,9 @@ package ceylon.interop.java;
 import java.util.Collection;
 
 @com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 5)
+@ceylon.language.Doc$annotation(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
 @ceylon.language.Shared$annotation
-@com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared")})
+@com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation(value = "doc", arguments = {"Takes a Ceylon list of items and turns them into a Java `Collection`"}), @com.redhat.ceylon.compiler.java.metadata.Annotation("shared")})
 @com.redhat.ceylon.compiler.java.metadata.SatisfiedTypes({"java.util::Collection<T>"})
 @com.redhat.ceylon.compiler.java.metadata.TypeParameters({@com.redhat.ceylon.compiler.java.metadata.TypeParameter(value = "T", variance = com.redhat.ceylon.compiler.java.metadata.Variance.NONE, satisfies = {}, caseTypes = {})})
 public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtime.model.ReifiedType, java.util.Collection<T> {

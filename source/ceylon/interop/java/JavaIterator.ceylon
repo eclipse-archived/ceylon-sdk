@@ -2,6 +2,7 @@
 import java.lang { UnsupOpEx=UnsupportedOperationException }
 import java.util { JIterator=Iterator }
 
+"Takes a Ceylon `Iterator` and turns it into a Java `Iterator`"
 shared class JavaIterator<T>(Iterator<T> iter) satisfies JIterator<T> {
     variable Boolean first = true;
     variable T|Finished item = finished;
