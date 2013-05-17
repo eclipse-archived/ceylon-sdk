@@ -33,7 +33,7 @@ shared object systemTime satisfies Clock {
     shared actual Integer milliseconds() => process.milliseconds;
 
     "Return current instant from system time"
-    shared actual Instant instant() => Instant( milliseconds() );
+    shared actual Instant instant() => Instant( process.milliseconds );
 
 }
 

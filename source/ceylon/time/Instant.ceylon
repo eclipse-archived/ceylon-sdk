@@ -1,7 +1,7 @@
 import ceylon.time.base { ReadableInstant }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.internal { TimeOfDay, GregorianDateTime, GregorianDate }
-import ceylon.time.timezone { TimeZone, ZoneDateTime, systemTimeZone }
+import ceylon.time.timezone { TimeZone, ZoneDateTime, systemZone }
 
 "Obtains the current instant from the system clock."
 shared Instant now(Clock? clock = null) {
@@ -50,18 +50,18 @@ shared class Instant(millisecondsOfEpoch)
     }
 
     "Returns this instant as a [[DateTime]] value."
-    shared DateTime dateTime( TimeZone zone = systemTimeZone ) {
+    shared DateTime dateTime( TimeZone zone = systemZone ) {
         return  GregorianDateTime( date(zone), time(zone) );
     }
 
     "Returns this instant as a [[Date]] value"
-    shared Date date( TimeZone zone = systemTimeZone ) {
-        return GregorianDate( unixTime.fixedFromTime(millisecondsOfEra + zone.offset(this)) );
+    shared Date date( TimeZone zone = systemZone ) {
+        return GregorianDate( unixTime.fixedFromTime(millisecondsOfEpoch + zone.offset(this)) );
     }
 
     "Returns _time of day_ for this instant"
-    shared Time time( TimeZone zone = systemTimeZone ) {
-        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEra + zone.offset(this)) );
+    shared Time time( TimeZone zone = systemZone ) {
+        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch + zone.offset(this)) );
     }
 
     "Returns ZoneDateTime value for this instant."
@@ -82,15 +82,7 @@ shared class Instant(millisecondsOfEpoch)
 
     shared actual Boolean equals( Object other ) {
         if ( is Instant other ) {
-            return millisecondsOfEra == other.millisecondsOfEra;
-        }
-        return false;
-    }
-
-    "Instants are equal if both milliseconds of era are equal"
-    shared actual Boolean equals( Object other ) {
-        if ( is Instant other ) {
-            return millisecondsOfEra == other.millisecondsOfEra;
+            return millisecondsOfEpoch == other.millisecondsOfEpoch;
         }
         return false;
     }
