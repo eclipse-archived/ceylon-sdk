@@ -1,6 +1,6 @@
 import ceylon.time.base { ReadableDate, Month, DateBehavior, ReadableDatePeriod }
 import ceylon.time.internal { gregorianDate }
-import ceylon.time.timezone { TimeZone, systemTimeZone }
+import ceylon.time.timezone { TimeZone, tz = timeZone }
 
 "An interface for date objects in the ISO-8601 calendar system.
  
@@ -34,8 +34,8 @@ shared interface Date
 }
 
 "Returns current date according to the provided system clock and time zone."
-shared Date today(Clock clock = systemTime, TimeZone zone = systemTimeZone){
-    return clock.instant().date(zone);
+shared Date today(Clock clock = systemTime, TimeZone timeZone = tz.system){
+    return clock.instant().date(timeZone);
 }
 
 "Returns a date based on the specified year, month and day-ofMonth values"

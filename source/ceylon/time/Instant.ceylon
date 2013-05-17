@@ -1,7 +1,7 @@
 import ceylon.time.base { ReadableInstant }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.internal { TimeOfDay, GregorianDateTime, GregorianDate }
-import ceylon.time.timezone { TimeZone, ZoneDateTime, systemTimeZone }
+import ceylon.time.timezone { TimeZone, ZoneDateTime, tz = timeZone }
 
 "Obtains the current instant from the system clock."
 shared Instant now(Clock? clock = null) {
@@ -50,18 +50,18 @@ shared class Instant(millisecondsOfEpoch)
     }
 
     "Returns this instant as a [[DateTime]] value."
-    shared DateTime dateTime( TimeZone zone = systemTimeZone ) {
-        return  GregorianDateTime( date(zone), time(zone) );
+    shared DateTime dateTime( TimeZone timeZone = tz.system ) {
+        return  GregorianDateTime( date(timeZone), time(timeZone) );
     }
 
     "Returns this instant as a [[Date]] value"
-    shared Date date( TimeZone zone = systemZone ) {
-        return GregorianDate( unixTime.fixedFromTime(millisecondsOfEpoch + zone.offset(this)) );
+    shared Date date( TimeZone timeZone = tz.system ) {
+        return GregorianDate( unixTime.fixedFromTime(millisecondsOfEpoch + timeZone.offset(this)) );
     }
 
     "Returns _time of day_ for this instant"
-    shared Time time( TimeZone zone = systemZone ) {
-        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch + zone.offset(this)) );
+    shared Time time( TimeZone timeZone = tz.system ) {
+        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch + timeZone.offset(this)) );
     }
 
     "Returns ZoneDateTime value for this instant."
