@@ -1,4 +1,3 @@
-
 "A clock providing access to the current instant, date and time using a time-zone.
  
  Instances of this class are used to find the current instant, which can be
@@ -19,9 +18,6 @@
  system clock, such as `process.milliseconds`."
 shared interface Clock {
 
-    //TODO: shared formal TimeZone zone
-    //TODO: shared formal Clock withZone(TimeZone zone);
-
     "Gets the current millisecond instant of the clock."
     shared formal Integer milliseconds();
 
@@ -37,7 +33,7 @@ shared object systemTime satisfies Clock {
     shared actual Integer milliseconds() => process.milliseconds;
 
     "Return current instant from system time"
-    shared actual Instant instant() => Instant( milliseconds() );
+    shared actual Instant instant() => Instant( process.milliseconds );
 
 }
 

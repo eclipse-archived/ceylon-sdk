@@ -214,12 +214,10 @@ shared class GregorianDateTime( date, time )
         return _this;
     }
 
-
-    shared actual Instant instant( TimeZone? timeZone ) {
-        if (exists timeZone) {
-            return nothing;
-        }
-        return Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
+    //TODO: Thats not the right way...
+    shared actual Instant instant( TimeZone timeZone ) {
+	    value instant = Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
+        return Instant( instant.millisecondsOfEra - timeZone.offset(instant) );
     }
 
     shared actual Boolean equals( Object other ) {
