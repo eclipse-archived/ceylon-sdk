@@ -33,13 +33,11 @@ interface RuleBasedTimezone satisfies TimeZone {
 
 shared object timeZone {
 
-    //TODO: Waiting for some decision about how to handle it
-    shared object system extends OffsetTimeZone(-4 * milliseconds.perHour) {}
+    shared object system extends OffsetTimeZone(process.timezoneOffset) {}
 
-    //TODO: Waiting for some decision about how to handle it
     shared object utc extends OffsetTimeZone(0) {}
 
-    shared TimeZone|ParserError fromMinutes(Integer offset) {
+    shared TimeZone fromMinutes(Integer offset) {
         return OffsetTimeZone(offset * milliseconds.perMinute);
     }
 
