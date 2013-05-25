@@ -1,24 +1,20 @@
 import ceylon.collection { MutableMap, HashMap }
-import ceylon.logging.internal { DefaultLogger }
+import ceylon.logging.internal { DefaultLogger, JavaLogger }
 
 doc "Configure logger."
 by "Matej Lazar"
 //TODO inject writter
-shared class Configuration(
+shared class Configuration (
         Writer defaultWriter, 
         Level rootLevel,
-        {[String,Level,Writer]+} loggerConfigs) {
-
-    Logger rootLogger = createLogger("_ROOT_", rootLevel, defaultWriter);
+        {LoggerConfiguration+} loggers) {
+    //TODO configure java root logger
+    Logger rootLogger = createDefaultLogger("_ROOT_", rootLevel, defaultWriter);
 
     MutableMap<String, Logger> indexedLoggers = HashMap<String, Logger>();
-    for (loggerConfig in loggerConfigs) {
+    for (logger in loggers) {
         //TODO make writter optional, add default here ?
-        
-        value name = loggerConfig[0];
-        value level = loggerConfig[1];
-        value writer = loggerConfig[2];
-        indexedLoggers.put(name, createLogger(name, level, writer));
+        indexedLoggers.put(logger.name, createLogger(logger));
     }
     
     shared Logger logger(String name) {
@@ -36,5 +32,21 @@ shared class Configuration(
     }
 }
 
-Logger createLogger(String name, Level level, Writer writer) => DefaultLogger(name, level, writer);
+shared class LoggerConfiguration (
+    shared String name,
+    shared Level level,
+    shared Writer writer,
+    shared Boolean javaLib = false) {}
+
+
+
+Logger createLogger(LoggerConfiguration config) {
+    if (config.javaLib) {
+        return createJavaLogger(config.name, config.level, config.writer);
+    } else {
+        return createDefaultLogger(config.name, config.level, config.writer);
+    }
+}
+Logger createDefaultLogger(String name, Level level, Writer writer) => DefaultLogger(name, level, writer);
+Logger createJavaLogger(String name, Level level, Writer writer) => JavaLogger(name, level, writer);
 
