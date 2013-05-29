@@ -149,12 +149,12 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
 
     @java.lang.Override
     public final java.lang.Object[] toArray() {
-        return com.redhat.ceylon.compiler.java.language.arrays_.getArrays$().<T>toObjectArray($reifiedT, items);
+        return com.redhat.ceylon.compiler.java.language.arrays_.$get().<T>toObjectArray($reifiedT, items);
     }
 
     @java.lang.Override
     public <S> S[] toArray(S[] arr) {
-        T[] tmp = com.redhat.ceylon.compiler.java.language.arrays_.getArrays$().<T>toObjectArray($reifiedT, items);
+        T[] tmp = com.redhat.ceylon.compiler.java.language.arrays_.$get().<T>toObjectArray($reifiedT, items);
         System.arraycopy(tmp, 0, arr, 0, arr.length);
         return arr;
     }
