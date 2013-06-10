@@ -13,10 +13,9 @@ shared Integer rd( Integer t ) {
 shared object unixTime {
 
     "Fixed date value of the _Unix time_ epoch (1970-01-01)"
-    shared Integer epoch = gregorian.fixedFrom([1970, 1, 1]);
-
-    "Time value of the unix time epoch (1970-01-01 00:00:00Z)"
-    shared Integer epochTime = epoch * ms.perDay;
+    /* - There are five 400 year cycles from year zero to 2000.
+       - There are 7 leap years from 1970 to 2000. */
+    shared Integer epoch => (days.perCycle * 5) - (30 * days.perYear + 7);
 
     "Returns a _fixed date_ from the _unix time_ value."
     shared Integer fixedFromTime(Integer time) {
@@ -28,7 +27,7 @@ shared object unixTime {
         return (date - epoch) * ms.perDay;
     }
 
-    "Return time of day from the provided unix time value"
+    "Returns _time of day_ in milliseconds for the specified _unix time_ value."
     shared Integer timeOfDay( Integer time ) {
         return mod(time, ms.perDay);
     }
