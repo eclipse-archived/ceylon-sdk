@@ -9,10 +9,6 @@ shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
 
 }
 
-shared TimeZone timeZone(Integer minutes) {
-    return OffsetTimeZone(minutes * milliseconds.perMinute);
-}
-
 "A simple time zone with a constant offset from UTC."
 shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
 
@@ -40,5 +36,18 @@ shared object systemTimeZone extends OffsetTimeZone(-4 * milliseconds.perHour) {
 }
 
 //TODO: Waiting for some decision about how to handle it
-shared object utcZone extends OffsetTimeZone(0) {
+shared object utcZone extends OffsetTimeZone(0) {}
+
+shared TimeZone|ParserError timeZone(Integer|String? zone = null) {
+    if (exists zone) {
+        if (is Integer offset = zone) {
+            //TODO: Should we?
+            return OffsetTimeZone(offset * milliseconds.perMinute);
+        }
+        if (is String zone) {
+            return parseTimeZone(zone);
+        }
+    }
+    
+    return nothing;
 }
