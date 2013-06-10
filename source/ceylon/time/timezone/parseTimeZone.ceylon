@@ -13,7 +13,10 @@ shared class ParserError( message ) {
 
 }
 
-"Timezone offset parser based on ISO-8601, currently it accepts the pattern: ±[hh]:[mm], ±[hh][mm], or ±[hh]"
+"Timezone offset parser based on ISO-8601, currently it accepts the following time zone offset patterns:
+   &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`
+ 
+ In addition, the special code `Z` is recognized as a shorthand for `+00:00`"
 shared TimeZone|ParserError parseTimeZone( String offset ) {
     variable State state = Initial();
     for( character in offset ) {
@@ -118,9 +121,11 @@ class Hours( Integer sign, hours, digits = 1 ) extends State() {
                 return digits == 2 
                        then Minutes( sign, hours, characterToInteger(input.character) )	 
                        else Hours( sign, hours * 10 + characterToInteger(input.character), 2 );
-            } else if ( input == ':' ) {
+            }
+            else if ( input == ':' ) {
                 return Colon( sign, hours );
-            } else {
+            }
+            else {
                 return Error( "Unexpected character! Got '``input.character``' but expected a digit [0..9]" ); 
             }
         }
@@ -144,7 +149,8 @@ class Minutes( Integer sign, Integer hours, minutes, digits = 1 ) extends State(
                 return digits == 2 
                         then Error( "Unexpected character! Got '``input.character``' but expected end of input" )	
                         else Minutes( sign, hours, minutes * 10 + characterToInteger(input.character), 2 );
-            } else {
+            }
+            else {
                 return digits == 2 
                         then Error( "Unexpected character! Got '``input.character``' but expected end of input" )
                         else Error( "Unexpected character! Got '``input.character``' but expected a digit [0..9]" ); 
