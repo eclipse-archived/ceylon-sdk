@@ -1,25 +1,25 @@
-doc "Capable of running tests, notifying [[TestListener]]s about each test"
+"Capable of running tests, notifying [[TestListener]]s about each test"
 shared class TestRunner() {
     
     value testList = SequenceBuilder<TestUnit>();
     value testListenerList = SequenceBuilder<TestListener>();
     
-    doc "The tests held by this instance"
+    "The tests held by this instance"
     shared List<TestUnit> tests { 
         return testList.sequence; 
     }
     
-    doc "Adds a test to be run"
+    "Adds a test to be run"
     shared void addTest(String name, Anything() callable) {
         testList.append(TestUnit(name, callable));
     }
     
-    doc "Adds a test listener to be notified about the execution of tests"
+    "Adds a test listener to be notified about the execution of tests"
     shared void addTestListener(TestListener testListener) {
         testListenerList.append(testListener);
     }
     
-    doc "Runs the [[tests]]"
+    "Runs the [[tests]]"
     shared TestResult run() {
         TestRunner runner = this;
         TestResult result = TestResult(this);

@@ -8,7 +8,7 @@ class ConnectionStatus(DataSource ds) {
     variable Connection? conn=null;
     variable value use=0;
 
-    doc "Creates a new connection if needed and returns it."
+    "Creates a new connection if needed and returns it."
     shared Connection connection() {
         if (exists c=conn) {
             if (!c.closed) {
@@ -24,7 +24,7 @@ class ConnectionStatus(DataSource ds) {
         throw;
     }
 
-    doc "Closes the connection if it's not being used anymore."
+    "Closes the connection if it's not being used anymore."
     shared void close() {
         if (exists c=conn) {
 			use--;
@@ -34,13 +34,13 @@ class ConnectionStatus(DataSource ds) {
         }
     }
 
-    doc "Begins a transaction in the current connection."
+    "Begins a transaction in the current connection."
     shared void beginTransaction() {
         connection().autoCommit=false;
         tx = true;
     }
 
-    doc "Commits the current transaction, clearing the transaction flag.
+    "Commits the current transaction, clearing the transaction flag.
          If an exception is thrown, the transaction will be rolled back
          and the exception rethrown."
     shared void commit() {
@@ -54,7 +54,7 @@ class ConnectionStatus(DataSource ds) {
         }
     }
 
-    doc "Rolls back the current transaction, clearing the transaction flag."
+    "Rolls back the current transaction, clearing the transaction flag."
     shared void rollback() {
         connection().rollback();
         tx = false;

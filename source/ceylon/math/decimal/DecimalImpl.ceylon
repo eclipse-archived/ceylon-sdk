@@ -62,19 +62,19 @@ class DecimalImpl(BigDecimal num)
         throw;
     }
 
-    doc "The precision of this decimal."
+    "The precision of this decimal."
     shared actual Integer precision {
         return implementation.precision();
     }
-    doc "The scale of this decimal."
+    "The scale of this decimal."
     shared actual Integer scale {
         return implementation.scale();
     }
-    doc "The unscaled value."
+    "The unscaled value."
     shared actual Whole unscaled {
         return wrapBigInteger(implementation.unscaledValue());
     }
-    doc "This value rounded according to the given context."
+    "This value rounded according to the given context."
     shared actual Decimal round(Rounding rounding) {
         if (is RoundingImpl rounding) {
             return DecimalImpl(implementation

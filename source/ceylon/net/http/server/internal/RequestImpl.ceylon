@@ -18,7 +18,7 @@ import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE },
 import java.lang { JString=String }
 import java.util { Deque, JMap=Map }
 
-by "Matej Lazar"
+by("Matej Lazar")
 shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
     
     shared variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
@@ -87,7 +87,7 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
     
     shared actual String path => exchange.requestPath;
     
-    doc "Resurns substring of string without [[startsWith]] parts."
+    "Resurns substring of string without [[startsWith]] parts."
     shared actual String relativePath {
         String requestPath = path;
         if (exists e = endpoint) {

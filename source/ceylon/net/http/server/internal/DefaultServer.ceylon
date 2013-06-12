@@ -34,7 +34,7 @@ import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHan
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
 
-by "Matej Lazar"
+by("Matej Lazar")
 shared class DefaultServer() satisfies Server {
     
     variable XnioWorker? worker = null;

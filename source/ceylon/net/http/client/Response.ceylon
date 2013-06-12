@@ -4,36 +4,36 @@ import ceylon.io.readers { Reader, FileDescriptorReader }
 import ceylon.io.charset { ascii, getCharset }
 import ceylon.net.http { Header }
 
-doc "Represents an HTTP Response"
-by "Stéphane Épardaud"
+"Represents an HTTP Response"
+by("Stéphane Épardaud")
 shared class Response(status, reason, major, minor, FileDescriptor socket, Parser parser) satisfies Correspondence<String, Header>{
     
-    doc "The HTTP status code"
+    "The HTTP status code"
     shared Integer status;
     
-    doc "The HTTP reason line"
+    "The HTTP reason line"
     shared String reason;
     
-    doc "The HTTP major number"
+    "The HTTP major number"
     shared Integer major;
 
-    doc "The HTTP major number"
+    "The HTTP major number"
     shared Integer minor;
 
     variable Exception? readException = null;
     variable String? readContents = null;
     
-    doc "The HTTP headers as a [[List]]"
+    "The HTTP headers as a [[List]]"
     shared List<Header> headers {
         return parser.headers;
     }
 
-    doc "The HTTP headers as a [[Map]]"
+    "The HTTP headers as a [[Map]]"
     shared Map<String,Header> headersByName {
         return parser.headersByName;
     }
 
-    doc "True if the content-type starts with `text/`"
+    "True if the content-type starts with `text/`"
     shared Boolean isText {
         String? contentType = this.contentTypeLine;
         if(exists contentType){
@@ -42,7 +42,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         return false;
     }
 
-    doc "The content-type, if set. Null otherwise."
+    "The content-type, if set. Null otherwise."
     shared String? contentType {
         String? contentTypeLine = this.contentTypeLine;
         if(exists contentTypeLine){
@@ -57,7 +57,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         return null;
     }
 
-    doc "The charset, if set. Null otherwise."
+    "The charset, if set. Null otherwise."
     shared String? charset {
         String? contentTypeLine = this.contentTypeLine;
         if(exists contentTypeLine){
@@ -76,8 +76,8 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         return null;
     }
 
-    doc "Returns a single header value, if there is a single value present.
-         Returns null if the header cannot be found or has more than one value."
+    "Returns a single header value, if there is a single value present.
+     Returns null if the header cannot be found or has more than one value."
     shared String? getSingleHeader(String name){
         Header? contentType = this[name];
         if(exists contentType){
@@ -90,12 +90,12 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         }
     }
 
-    doc "Returns the content type header, unparsed."
+    "Returns the content type header, unparsed."
     shared String? contentTypeLine {
         return getSingleHeader("Content-Type");
     }
     
-    doc "Builds a debugging representation of this HTTP response."
+    "Builds a debugging representation of this HTTP response."
     shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("HTTP/`` major ``.`` minor `` `` status `` `` reason ``\n");
@@ -107,13 +107,13 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         return b.string;
     }
     
-    doc "Fetches a header by name, returns null if the header does not exist."
+    "Fetches a header by name, returns null if the header does not exist."
     shared actual Header? get(String key) {
         return headersByName[key.lowercased];
     }
 
-    doc "Returns a [[Reader]] for the entity body."
-    throws "If the status is not 200 OK."    
+    "Returns a [[Reader]] for the entity body."
+    throws("If the status is not 200 OK.")
     shared Reader getReader(){
         if(status != 200){
             throw Exception("Status is not OK");
@@ -169,8 +169,8 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         }
     }
     
-    doc "Returns the entity body as a [[String]]."
-    throws "If the status code is not 200"
+    "Returns the entity body as a [[String]]."
+    throws("If the status code is not 200")
     shared String contents {
         if(exists x = readException){
             throw x;
@@ -205,7 +205,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         throw Exception("Failed to read contents");
     }
     
-    doc "Returns the entity `Content-Length`, if known. Returns `null` otherwise."
+    "Returns the entity `Content-Length`, if known. Returns `null` otherwise."
     shared Integer? contentLength {
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13
         value header = getSingleHeader("Content-Length");
@@ -219,7 +219,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         return null;
     }
 
-    doc "Closes the underlying [[FileDescriptor]]."    
+    "Closes the underlying [[FileDescriptor]]."    
     shared void close(){
         socket.close();
     }

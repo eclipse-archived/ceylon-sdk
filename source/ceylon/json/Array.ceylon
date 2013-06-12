@@ -1,8 +1,8 @@
 import ceylon.language { LangObject = Object }
 import ceylon.collection { ... }
 
-by "Stéphane Épardaud"
-doc "Represents a JSON Array"
+"Represents a JSON Array"
+by("Stéphane Épardaud")
 shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} values = {}) 
     satisfies MutableList<String|Boolean|Integer|Float|Object|Array|NullInstance> {
     
@@ -10,29 +10,29 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     
     shared actual Iterator<String|Boolean|Integer|Float|Object|Array|NullInstance> iterator() => list.iterator();
     
-    doc "Adds a new value at the end of this array"
+    "Adds a new value at the end of this array"
     shared actual void add(String|Boolean|Integer|Float|Object|Array|NullInstance val){
         list.add(val);
     }
     
-    doc "Gets the value at the given index, or `null` if it does not exist"
+    "Gets the value at the given index, or `null` if it does not exist"
     shared actual String|Boolean|Integer|Float|Object|Array|NullInstance|Null get(Integer index){
         return list[index];
     }
     
-    doc "Returns the number of elements in this array"
+    "Returns the number of elements in this array"
     shared actual Integer size {
         return list.size;
     }
 
-    doc "Returns a serialised JSON representation"
+    "Returns a serialised JSON representation"
     shared actual String string {
         StringPrinter p = StringPrinter();
         p.printArray(this);
         return p.string;
     }
 
-    doc "Returns a pretty-printed serialised JSON representation"
+    "Returns a pretty-printed serialised JSON representation"
     shared String pretty {
         StringPrinter p = StringPrinter(true);
         p.printArray(this);
@@ -116,7 +116,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         throw InvalidTypeException("Expecting Object but got `` val ``");
     }
 
-    doc "Returns this array as a sequence of [[Object]] elements."
+    "Returns this array as a sequence of [[Object]] elements."
     throws(InvalidTypeException,
         "If one element in this array is not an [[Object]].")
     shared Iterable<Object> objects {
@@ -131,7 +131,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         throw InvalidTypeException("Expecting String but got `` val ``");
     }
 
-    doc "Returns this array as a sequence of [[String]] elements."
+    "Returns this array as a sequence of [[String]] elements."
     throws(InvalidTypeException,
         "If one element in this array is not a [[String]].")
     shared Iterable<String> strings {
@@ -146,7 +146,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         throw InvalidTypeException("Expecting Integer but got `` val ``");
     }
 
-    doc "Returns this array as a sequence of [[Integer]] elements."
+    "Returns this array as a sequence of [[Integer]] elements."
     throws(InvalidTypeException,
         "If one element in this array is not a [[Integer]].")
     shared Iterable<Integer> integers {
@@ -161,7 +161,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         throw InvalidTypeException("Expecting Float but got `` val ``");
     }
 
-    doc "Returns this array as a sequence of [[Float]] elements."
+    "Returns this array as a sequence of [[Float]] elements."
     throws(InvalidTypeException,
         "If one element in this array is not a [[Float]].")
     shared Iterable<Float> floats {
@@ -176,7 +176,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         throw InvalidTypeException("Expecting Boolean but got `` val ``");
     }
 
-    doc "Returns this array as a sequence of [[Boolean]] elements."
+    "Returns this array as a sequence of [[Boolean]] elements."
     throws(InvalidTypeException,
         "If one element in this array is not a [[Boolean]].")
     shared Iterable<Boolean> booleans {
@@ -191,7 +191,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         throw InvalidTypeException("Expecting Array but got `` val ``");
     }
 
-    doc "Returns this array as a sequence of [[Array]] elements."
+    "Returns this array as a sequence of [[Array]] elements."
     throws(InvalidTypeException,
         "If one element in this array is not an [[Array]].")
     shared Iterable<Array> arrays {

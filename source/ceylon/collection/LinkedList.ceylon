@@ -1,5 +1,5 @@
-by "Stéphane Épardaud"
-doc "A mutable Linked List"
+"A mutable Linked List"
+by("Stéphane Épardaud")
 shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<Element> {
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
@@ -28,7 +28,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
 
     // Write
     
-    doc "Sets an item at the given index. List is expanded if index > size"
+    "Sets an item at the given index. List is expanded if index > size"
     shared actual void set(Integer index, Element val){
         if(index < _size){
             variable Cell<Element>? iter = head;
@@ -62,7 +62,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
 
-    doc "Inserts an item at specified index, list is expanded if index > size"    
+    "Inserts an item at specified index, list is expanded if index > size"    
     shared actual void insert(Integer index, Element val){
         if(index >= _size){
             set(index, val);
@@ -97,7 +97,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    doc "Adds an item at the end of this list"
+    "Adds an item at the end of this list"
     shared actual void add(Element val){
         _add(val);
     }
@@ -108,7 +108,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    doc "Removes the item at the specified index"
+    "Removes the item at the specified index"
     shared actual void remove(Integer index){
         if(index < _size){
             variable Cell<Element>? iter = head;
@@ -163,7 +163,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
 
-    doc "Remove every item"
+    "Remove every item"
     shared actual void clear(){
         _size = 0;
         head = tail = null;

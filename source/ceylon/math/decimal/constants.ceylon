@@ -6,11 +6,11 @@ import java.lang { JInteger=Integer { maxInt = \iMAX_VALUE,
 Decimal intMax = decimalNumber(maxInt);
 Decimal intMin = decimalNumber(minInt);
 
-doc "A `Decimal` instance representing zero."
+"A `Decimal` instance representing zero."
 shared Decimal zero = DecimalImpl(bdzero);
 
-doc "A `Decimal` instance representing one."
+"A `Decimal` instance representing one."
 shared Decimal one = DecimalImpl(bdone);
 
-doc "A `Decimal` instance representing ten."
+"A `Decimal` instance representing ten."
 shared Decimal ten = DecimalImpl(bdten);

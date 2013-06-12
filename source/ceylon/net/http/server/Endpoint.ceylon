@@ -1,5 +1,5 @@
-doc "Synchronous web endpoint."
-by "Matej Lazar"
+"Synchronous web endpoint."
+by("Matej Lazar")
 shared class Endpoint(Matcher path, service) 
         extends EndpointBase(path) {
     

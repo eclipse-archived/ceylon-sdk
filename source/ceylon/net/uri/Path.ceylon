@@ -1,20 +1,20 @@
 import ceylon.collection { LinkedList }
 
-doc "Represents a URI Path part"
-by "Stéphane Épardaud"
+"Represents a URI Path part"
+by("Stéphane Épardaud")
 shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments) {
     
-    doc "The list of path segments"
+    "The list of path segments"
     shared LinkedList<PathSegment> segments = LinkedList<PathSegment>();
     
-    doc "True if this URI is absolute (begins with a `/`)"
+    "True if this URI is absolute (begins with a `/`)"
     shared variable Boolean absolute = initialAbsolute;
     
     for(PathSegment s in initialSegments){
         segments.add(s);
     }
 
-    doc "Adds a path segment"
+    "Adds a path segment"
     shared void add(String segment, Parameter* parameters) {
         PathSegment part = PathSegment(segment);
         for(Parameter p in parameters){
@@ -23,7 +23,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         segments.add(part);
     }
     
-    doc "Adds a raw (percent-encoded) segment, with optional parameters to be parsed"
+    "Adds a raw (percent-encoded) segment, with optional parameters to be parsed"
     shared void addRawSegment(String part){
         Integer? sep = part.firstCharacterOccurrence(';');
         String name;
@@ -41,22 +41,22 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         segments.add(path);
     }
 
-    doc "Returns a path segment"    
+    "Returns a path segment"    
     shared PathSegment? get(Integer i){
         return segments[i];
     }
 
-    doc "Remove a path segment"
+    "Remove a path segment"
     shared void remove(Integer i){
         segments.remove(i);
     }
 
-    doc "Removes every path segment"
+    "Removes every path segment"
     shared void clear(){
         segments.clear();
     }
 
-    doc "Returns true if the given object is the same as this object"
+    "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is Path that){
             if(this === that){
@@ -68,7 +68,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         return false;
     }
     
-    doc "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human) { 
         if(segments.empty){
             return "";
@@ -87,12 +87,12 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         return b.string;
     }
 
-    doc "Returns an externalisable (percent-encoded) representation of this part"    
+    "Returns an externalisable (percent-encoded) representation of this part"    
     shared actual String string {
         return toRepresentation(false);
     }
 
-    doc "Returns a human (non parseable) representation of this part"    
+    "Returns a human (non parseable) representation of this part"    
     shared String humanRepresentation {
         return toRepresentation(true);
     }

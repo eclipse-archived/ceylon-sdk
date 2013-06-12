@@ -14,7 +14,7 @@ void testJSON(Object json){
     }
 }
 
-doc "Disabled until we support HTTPS"
+"Disabled until we support HTTPS"
 void testGETAndParseJSON(){
     value request = parse("https://api.github.com/repos/ceylon/ceylon-compiler").get();
     value response = request.execute();

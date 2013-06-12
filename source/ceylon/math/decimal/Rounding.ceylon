@@ -7,45 +7,45 @@ import java.math { JRoundingMode=RoundingMode { jDown=\iDOWN, jUp=\iUP,
                                                 jUnnecessary=\iUNNECESSARY },
                    MathContext }
 
-doc "A strategy for rounding the result of an operation
-     on two `Decimal`s."
+"A strategy for rounding the result of an operation
+ on two `Decimal`s."
 shared abstract class Mode() 
         of floor | ceiling | 
            halfUp | halfDown | halfEven | 
            down | up | unnecessary {
 }
 
-doc "Round towards negative infinity."
+"Round towards negative infinity."
 shared object floor extends Mode() {}
 
-doc "Round towards positive infinity."
+"Round towards positive infinity."
 shared object ceiling extends Mode() {}
 
-doc "Round towards the nearest neighbour, or round up if 
-     there are two nearest neighbours."
+"Round towards the nearest neighbour, or round up if 
+ there are two nearest neighbours."
 shared object halfUp extends Mode() {}
 
-doc "Round towards the nearest neighbour, or round down if 
-     there are two nearest neighbours."
+"Round towards the nearest neighbour, or round down if 
+ there are two nearest neighbours."
 shared object halfDown extends Mode() {}
 
-doc "Round towards the nearest neighbour, or round towards 
-     the even neighbour if there are two nearest neighbours."
+"Round towards the nearest neighbour, or round towards 
+ the even neighbour if there are two nearest neighbours."
 shared object halfEven extends Mode() {}
 
-doc "Round towards zero."
+"Round towards zero."
 shared object down extends Mode() {}
 
-doc "Round away from zero."
+"Round away from zero."
 shared object up extends Mode() {}
 
-doc "Asserts that rounding will not be required causing an 
-     exception to be thrown if it is."
+"Asserts that rounding will not be required causing an 
+ exception to be thrown if it is."
 shared object unnecessary extends Mode() {}
 
-doc "Holds precision and rounding information for use in 
-     decimal arithmetic. A precision of `0` means unlimited 
-     precision."
+"Holds precision and rounding information for use in 
+ decimal arithmetic. A precision of `0` means unlimited 
+ precision."
 throws(Exception, "The precision is negative.")
 see(Decimal)
 see(round)
@@ -55,10 +55,10 @@ shared abstract class Rounding(precision, mode) of RoundingImpl {
         throw Exception("Precision cannot be negative");
     }
 
-    doc "The precision to apply when rounding."
+    "The precision to apply when rounding."
     shared Integer precision;
 
-    doc "The kind of rounding to apply."
+    "The kind of rounding to apply."
     shared Mode mode;
 
     shared actual String string {
@@ -88,11 +88,11 @@ class RoundingImpl(Integer precision, Mode mode)
             MathContext(precision, jmode);
 }
 
-doc "Creates a rounding with the given precision and mode."
+"Creates a rounding with the given precision and mode."
 shared Rounding round(Integer precision, Mode mode) {
     return RoundingImpl(precision, mode);
 }
 
-doc "Unlimited precision"
+"Unlimited precision"
 shared Rounding unlimitedPrecision = RoundingImpl(0, halfUp);
 

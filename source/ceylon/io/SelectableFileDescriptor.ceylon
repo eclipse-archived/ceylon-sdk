@@ -1,18 +1,18 @@
 import ceylon.io.buffer { ByteBuffer }
 
-doc "Represents a [[FileDescriptor]] that you can `select`. This means that you can
-     register listeners for this file descriptor on a given [[Selector]] object that
-     will be called whenever there is data available to be read or written without
-     blocking the reading/writing thread."
-by "Stéphane Épardaud"
+"Represents a [[FileDescriptor]] that you can `select`. This means that you can
+ register listeners for this file descriptor on a given [[Selector]] object that
+ will be called whenever there is data available to be read or written without
+ blocking the reading/writing thread."
+by("Stéphane Épardaud")
 shared interface SelectableFileDescriptor satisfies FileDescriptor {
 
-    doc "Register a reading listener to the given [[selector]]. The reading listener will
-         be invoked by the [[Selector]] whenever data can be read from this file
-         descriptor without blocking.
-         
-         If you are no longer interested in `read` events from the selector, you should return
-         `false` from your listener when invoked."
+    "Register a reading listener to the given [[selector]]. The reading listener will
+     be invoked by the [[Selector]] whenever data can be read from this file
+     descriptor without blocking.
+     
+     If you are no longer interested in `read` events from the selector, you should return
+     `false` from your listener when invoked."
     see (Selector)
     shared void readAsync(Selector selector, void consume(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         setNonBlocking();
@@ -32,12 +32,12 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
         selector.addConsumer(this, readData);
     }
 
-    doc "Register a writing listener to the given [[selector]]. The writing listener will
-         be invoked by the [[Selector]] whenever data can be written to this file
-         descriptor without blocking.
-         
-         If you are no longer interested in `write` events from the selector, you should return
-         `false` from your listener when invoked."
+    "Register a writing listener to the given [[selector]]. The writing listener will
+     be invoked by the [[Selector]] whenever data can be written to this file
+     descriptor without blocking.
+     
+     If you are no longer interested in `write` events from the selector, you should return
+     `false` from your listener when invoked."
     see (Selector)
     shared void writeAsync(Selector selector, void producer(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         setNonBlocking();
@@ -69,6 +69,6 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
     }
 
     // FIXME: revisit, pull up
-    doc "Sets this file descriptor in `non-blocking` mode."
+    "Sets this file descriptor in `non-blocking` mode."
     shared formal void setNonBlocking();
 }

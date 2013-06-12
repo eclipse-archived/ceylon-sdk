@@ -3,7 +3,7 @@ import ceylon.math.whole { Whole, one, zero, wholeNumber }
 import ceylon.time { now, Instant, date, Date, Period, today, Time, dateTime, DateTime }
 import ceylon.time.base { january, february }
 
-doc "An example program using ceylon.time"
+"An example program using ceylon.time"
 void example(){
     
     print("Getting current timestamp");
@@ -54,7 +54,7 @@ Whole four = wholeNumber(4);
 Whole seven = wholeNumber(7);
 Whole ten = wholeNumber(10);
 
-doc "Pi digits calculator"
+"Pi digits calculator"
 class Pi() satisfies Iterator<Whole>{
   variable Whole q = one;
   variable Whole r = zero;

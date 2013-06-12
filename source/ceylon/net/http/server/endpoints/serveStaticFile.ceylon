@@ -5,12 +5,12 @@ import ceylon.net.http.server { Response, Request }
 import ceylon.net.http { contentType, contentLength }
 
 
-by "Matej Lazar"
-doc "Endpoint for serving static files."
+"Endpoint for serving static files."
+by("Matej Lazar")
 shared void serveStaticFile(externalPath)
         (Request request, Response response, Callable<Anything, []> complete) {
     
-    doc "Root directory containing files."
+    "Root directory containing files."
     String externalPath;
     
     Path filePath = parsePath(externalPath + request.path);

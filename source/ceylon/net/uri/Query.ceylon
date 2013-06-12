@@ -1,32 +1,32 @@
 import ceylon.collection { LinkedList }
 
-doc "Represents a URI Query part"
-by "Stéphane Épardaud"
+"Represents a URI Query part"
+by("Stéphane Épardaud")
 shared class Query(Parameter* initialParameters) {
     
-    doc "The list of query parameters"
+    "The list of query parameters"
     shared LinkedList<Parameter> parameters = LinkedList<Parameter>();
     
     for(Parameter p in initialParameters){
         parameters.add(p);
     }
 
-    doc "Adds a query parameter"
+    "Adds a query parameter"
     shared void add(Parameter param){
         parameters.add(param);
     }
 
-    doc "Adds a single raw (percent-encoded) query parameter, where name and value have to be parsed"
+    "Adds a single raw (percent-encoded) query parameter, where name and value have to be parsed"
     shared void addRaw(String part){
         add(parseParameter(part));
     }
 
-    doc "Returns true if we have any query parameter"
+    "Returns true if we have any query parameter"
     shared Boolean specified {
         return !parameters.empty;
     }
 
-    doc "Returns true if the given object is the same as this object"
+    "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is Query that){
             if(this === that){
@@ -48,7 +48,7 @@ shared class Query(Parameter* initialParameters) {
         }
     }
 
-    doc "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human) { 
         if(parameters.empty){
             return "";
@@ -64,12 +64,12 @@ shared class Query(Parameter* initialParameters) {
         return b.string;
     }
 
-    doc "Returns an externalisable (percent-encoded) representation of this part"    
+    "Returns an externalisable (percent-encoded) representation of this part"    
     shared actual String string {
         return toRepresentation(false);
     }
     
-    doc "Returns a human (non parseable) representation of this part"    
+    "Returns a human (non parseable) representation of this part"    
     shared String humanRepresentation {
         return toRepresentation(true);
     }

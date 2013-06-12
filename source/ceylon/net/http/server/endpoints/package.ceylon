@@ -1,3 +1,3 @@
-by "Matej Lazar"
-doc "Package contains predefined web endpoint implementations."
+"Package contains predefined web endpoint implementations."
+by("Matej Lazar")
 shared package ceylon.net.http.server.endpoints;

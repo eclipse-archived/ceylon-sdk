@@ -1,5 +1,5 @@
-doc "Contract for things needing to be informed about the execution of tests 
-     by a [[TestRunner]]."
+"Contract for things needing to be informed about the execution of tests 
+ by a [[TestRunner]]."
 shared interface TestListener {
     
     shared default void testRunStarted(TestRunner runner) {
@@ -16,8 +16,8 @@ shared interface TestListener {
     
 }
 
-doc "A [[TestListener]] which prints information about test execution to the 
-     standard output."
+"A [[TestListener]] which prints information about test execution to the 
+ standard output."
 shared class PrintingTestListener() satisfies TestListener {
     
     variable SequenceBuilder<TestUnit> errAndFail = SequenceBuilder<TestUnit>();
@@ -70,12 +70,12 @@ shared class PrintingTestListener() satisfies TestListener {
         }
     }
     
-    doc "Generates a banner with the given text, like this:
-         
-         \`\``
-         ============ banner ============
-         \`\``
-         "
+    "Generates a banner with the given text, like this:
+     
+     \`\``
+     ============ banner ============
+     \`\``
+     "
     String banner(String text) {
         Character ch = '=';
         StringBuilder sb = StringBuilder();

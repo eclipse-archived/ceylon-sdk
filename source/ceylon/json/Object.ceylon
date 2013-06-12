@@ -1,21 +1,21 @@
 import ceylon.collection { ... }
 import ceylon.language { LangObject = Object }
 
-by "Stéphane Épardaud"
-doc "Represents a JSON Object"
+"Represents a JSON Object"
+by("Stéphane Épardaud")
 shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|NullInstance>*} values = {}) 
     satisfies MutableMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance> {
     
     value contents = HashMap<String, String|Boolean|Integer|Float|Object|Array|NullInstance>(values);
     
-    doc "Returns a serialised JSON representation"
+    "Returns a serialised JSON representation"
     shared actual String string {
         StringPrinter p = StringPrinter();
         p.printObject(this);
         return p.string;
     }
 
-    doc "Returns a pretty-printed serialised JSON representation"
+    "Returns a pretty-printed serialised JSON representation"
     shared String pretty {
         StringPrinter p = StringPrinter(true);
         p.printObject(this);
@@ -67,7 +67,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     
     // auto-casting
     
-    doc "Returns an [[Integer]] value."
+    "Returns an [[Integer]] value."
     throws(InvalidTypeException,
         "If the key dot not exist or points to a type that is not [[Integer]].")
     shared Integer getInteger(String key){
@@ -78,7 +78,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting an Integer but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[Float]] value."
+    "Returns an [[Float]] value."
     throws(InvalidTypeException,
         "If the key dot not exist or points to a type that is not [[Float]].")
     shared Float getFloat(String key){
@@ -89,7 +89,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting a Float but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[Boolean]] value."
+    "Returns an [[Boolean]] value."
     throws(InvalidTypeException,
         "If the key dot not exist or points to a type that is not [[Boolean]].")
     shared Boolean getBoolean(String key){
@@ -100,7 +100,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting a Boolean but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[String]] value."
+    "Returns an [[String]] value."
     throws(InvalidTypeException,
         "If the key dot not exist or points to a type that is not [[String]].")
     shared String getString(String key){
@@ -111,7 +111,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting a String but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[Object]] value."
+    "Returns an [[Object]] value."
     throws(InvalidTypeException,
         "If the key dot not exist or points to a type that is not [[Object]].")
     shared Object getObject(String key){
@@ -122,7 +122,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting an Object but got: `` val else "null" ``");
     }
     
-    doc "Returns an [[Array]] value."
+    "Returns an [[Array]] value."
     throws(InvalidTypeException,
         "If the key dot not exist or points to a type that is not [[Array]].")
     shared Array getArray(String key){
@@ -135,7 +135,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     
     // optional auto-casting
     
-    doc "Returns an [[Integer]] value, unless the key does not exist, or the value is null."
+    "Returns an [[Integer]] value, unless the key does not exist, or the value is null."
     throws(InvalidTypeException,
         "If the key points to a type that is neither [[Integer]] nor [[NullInstance]].")
     shared Integer? getIntegerOrNull(String key){
@@ -149,7 +149,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting an Integer but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[Float]] value, unless the key does not exist, or the value is null."
+    "Returns an [[Float]] value, unless the key does not exist, or the value is null."
     throws(InvalidTypeException,
         "If the key points to a type that is neither [[Float]] nor [[NullInstance]].")
     shared Float? getFloatOrNull(String key){
@@ -163,7 +163,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting a Float but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[Boolean]] value, unless the key does not exist, or the value is null."
+    "Returns an [[Boolean]] value, unless the key does not exist, or the value is null."
     throws(InvalidTypeException,
         "If the key points to a type that is neither [[Boolean]] nor [[NullInstance]].")
     shared Boolean? getBooleanOrNull(String key){
@@ -177,7 +177,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting a Boolean but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[String]] value, unless the key does not exist, or the value is null."
+    "Returns an [[String]] value, unless the key does not exist, or the value is null."
     throws(InvalidTypeException,
         "If the key points to a type that is neither [[String]] nor [[NullInstance]].")
     shared String? getStringOrNull(String key){
@@ -191,7 +191,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting a String but got: `` val else "null" ``");
     }
 
-    doc "Returns an [[Object]] value, unless the key does not exist, or the value is null."
+    "Returns an [[Object]] value, unless the key does not exist, or the value is null."
     throws(InvalidTypeException,
         "If the key points to a type that is neither [[Object]] nor [[NullInstance]].")
     shared Object? getObjectOrNull(String key){
@@ -205,7 +205,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
         throw InvalidTypeException("Expecting an Object but got: `` val else "null" ``");
     }
     
-    doc "Returns an [[Array]] value, unless the key does not exist, or the value is null."
+    "Returns an [[Array]] value, unless the key does not exist, or the value is null."
     throws(InvalidTypeException,
         "If the key points to a type that is neither [[Array]] nor [[NullInstance]].")
     shared Array? getArrayOrNull(String key){

@@ -1,5 +1,5 @@
-by "Stéphane Épardaud"
-doc "A JSON Printer"
+"A JSON Printer"
+by("Stéphane Épardaud")
 shared abstract class Printer(Boolean pretty = false){
     
     variable Integer level = 0;
@@ -23,10 +23,10 @@ shared abstract class Printer(Boolean pretty = false){
         }
     }
     
-    doc "Override to implement the printing part"
+    "Override to implement the printing part"
     shared formal void print(String string);
 
-    doc "Prints an `Object`"
+    "Prints an `Object`"
     shared default void printObject(Object o){
         print("{");
         enter();
@@ -52,7 +52,7 @@ shared abstract class Printer(Boolean pretty = false){
         print("}");
     }
 
-    doc "Prints an `Array`"
+    "Prints an `Array`"
     shared default void printArray(Array o){
         print("[");
         enter();
@@ -73,7 +73,7 @@ shared abstract class Printer(Boolean pretty = false){
         print("]");
     }
 
-    doc "Prints a `String`"
+    "Prints a `String`"
     shared default void printString(String s){
         print("\"");
         for(c in s){
@@ -100,22 +100,22 @@ shared abstract class Printer(Boolean pretty = false){
         print("\"");
     }
 
-    doc "Prints an `Integer|Float`"
+    "Prints an `Integer|Float`"
     shared default void printNumber(Number n){
         print(n.string);
     }
 
-    doc "Prints a `Boolean`"
+    "Prints a `Boolean`"
     shared default void printBoolean(Boolean v){
         print(v.string);
     }
 
-    doc "Prints `null`"
+    "Prints `null`"
     shared default void printNull(){
         print("null");
     }
     
-    doc "Prints a JSON value"
+    "Prints a JSON value"
     shared default void printValue(String|Boolean|Integer|Float|Object|Array|NullInstance val){
         switch(val)
         case (is String){

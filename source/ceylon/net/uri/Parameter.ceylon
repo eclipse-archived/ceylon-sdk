@@ -1,12 +1,12 @@
 import ceylon.net.iop { eq }
 
-doc "Represents a URI path segment or query parameter"
-by "Stéphane Épardaud"
+"Represents a URI path segment or query parameter"
+by("Stéphane Épardaud")
 shared class Parameter(String initialName, String? initialValue = null) {
     shared variable String name = initialName;
     shared variable String? val = initialValue;
     
-    doc "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human){
         if(exists String val = val){
             return human then name + "=" + val
@@ -16,17 +16,17 @@ shared class Parameter(String initialName, String? initialValue = null) {
         }
     }
 
-    doc "Returns an externalisable (percent-encoded) representation of this part"    
+    "Returns an externalisable (percent-encoded) representation of this part"    
     shared actual String string {
         return toRepresentation(false);
     }
 
-    doc "Returns a human (non parseable) representation of this part"    
+    "Returns a human (non parseable) representation of this part"    
     shared String humanRepresentation {
         return toRepresentation(true);
     }
 
-    doc "Returns true if the given object is the same as this object"
+    "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is Parameter that){
             if(this === that){

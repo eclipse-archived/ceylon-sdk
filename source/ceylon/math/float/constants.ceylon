@@ -1,13 +1,13 @@
 import java.lang { Math { je=\iE, jpi=\iPI } }
 
-doc "The `Float` which best approximates the 
-     mathematical constant \{#0001D452}, the 
-     base of the natural logarithm."
+"The `Float` which best approximates the 
+ mathematical constant \{#0001D452}, the 
+ base of the natural logarithm."
 see(exp, log)
 shared Float e=je;
 
-doc "The Float which best approximates the 
-     mathematical constant \{#03C0}, the ratio 
-     of the circumference of a circle to its 
-     diameter."
+"The Float which best approximates the 
+ mathematical constant \{#03C0}, the ratio 
+ of the circumference of a circle to its 
+ diameter."
 shared Float pi=jpi;

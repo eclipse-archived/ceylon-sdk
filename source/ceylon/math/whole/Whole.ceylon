@@ -1,44 +1,44 @@
 import java.lang { NumberFormatException }
 import java.math { BigInteger { fromLong=valueOf } }
 
-doc "An arbitrary precision integer."
+"An arbitrary precision integer."
 shared interface Whole of WholeImpl
         //extends IdentifiableObject()
         satisfies //Castable<Whole|Decimal> &
                   Integral<Whole> & Scalar<Whole> &
                   Exponentiable<Whole, Whole> {
 
-    doc "The platform-specific implementation object, if any. 
-         This is provided for interoperation with the runtime 
-         platform."
+    "The platform-specific implementation object, if any. 
+     This is provided for interoperation with the runtime 
+     platform."
     see(fromImplementation)
     shared formal Object? implementation;
     
-    doc "The result of raising this number to the given power.
-         
-         Special cases:
-         
-         * Returns one if `this` is one (or all powers)
-         * Returns one if `this` is minus one and the power 
-           is even
-         * Returns minus one if `this` is minus one and the 
-           power is odd
-         * Returns one if the power is zero.
-         * Otherwise negative powers result in an `Exception` 
-           being thrown
-         "
+    "The result of raising this number to the given power.
+     
+     Special cases:
+     
+     * Returns one if `this` is one (or all powers)
+     * Returns one if `this` is minus one and the power 
+       is even
+     * Returns minus one if `this` is minus one and the 
+       power is odd
+     * Returns one if the power is zero.
+     * Otherwise negative powers result in an `Exception` 
+       being thrown
+     "
     throws(Exception, "If passed a negative or large positive 
                        exponent")
     shared formal actual Whole power(Whole exponent);
 
-    doc "The result of `(this**exponent) % modulus`."
+    "The result of `(this**exponent) % modulus`."
     throws(Exception, "If passed a negative modulus")
     shared formal Whole powerRemainder(Whole exponent, 
                                        Whole modulus);
 }
 
-doc "The `Whole` repesented by the given string, or `null` 
-     if the given string does not represent a `Whole`."
+"The `Whole` repesented by the given string, or `null` 
+ if the given string does not represent a `Whole`."
 shared Whole? parseWhole(String num) {
     BigInteger bi;
     try {
@@ -51,7 +51,7 @@ shared Whole? parseWhole(String num) {
     return WholeImpl(bi);
 }
 
-doc "The `number.integer` converted to a `Whole`."
+"The `number.integer` converted to a `Whole`."
 shared Whole wholeNumber(Number number) {
     Integer int = number.integer;
     if (int == 0) {
@@ -63,9 +63,9 @@ shared Whole wholeNumber(Number number) {
     }
 }
 
-doc "Converts a platform-specific implementation object to a 
-     `Whole` instance. This is provided for interoperation 
-     with the runtime platform."
+"Converts a platform-specific implementation object to a 
+ `Whole` instance. This is provided for interoperation 
+ with the runtime platform."
 //see(Whole.implementation)
 shared Whole fromImplementation(Object implementation) {
     if(is BigInteger implementation) {
@@ -75,18 +75,18 @@ shared Whole fromImplementation(Object implementation) {
 }
 
 /*
-doc "The greatest common divisor of the arguments."
+"The greatest common divisor of the arguments."
 shared Whole gcd(Whole a, Whole b) {
     // TODO return Whole(a.val.gcd(b.val));
     throw;
 }
 
-doc "The least common multiple of the arguments."
+"The least common multiple of the arguments."
 shared Whole lcm(Whole a, Whole b) {
     return (a*b) / gcd(a, b);
 }
 
-doc "The factorial of the argument."
+"The factorial of the argument."
 shared Whole factorial(Whole a) {
     if (a <= Whole(0)) {
         throw;

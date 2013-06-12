@@ -1,36 +1,36 @@
 import ceylon.net.iop { eq }
 import ceylon.net.http.client { Request }
 
-doc "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
-by "Stéphane Épardaud"
+"The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
+by("Stéphane Épardaud")
 shared class Uri(scheme = null, authority = Authority(), path = Path(), query = Query(), fragment = null){
     
-    doc "The optional URI scheme: `http`, `https`, `mailto`…"
+    "The optional URI scheme: `http`, `https`, `mailto`…"
     shared variable String? scheme;
     
-    doc "The optional Authority part (contains user, password, host and port)"
+    "The optional Authority part (contains user, password, host and port)"
     shared variable Authority authority;
     
-    doc "The optional Path part"
+    "The optional Path part"
     shared variable Path path;
     
-    doc "The optional query part"
+    "The optional query part"
     shared variable Query query;
     
-    doc "The optional fragment (hash) part"
+    "The optional fragment (hash) part"
     shared variable String? fragment;
 
-    doc "Returns true if this is a relative URI"
+    "Returns true if this is a relative URI"
     shared Boolean relative {
         return !scheme exists;
     }
 
-    doc "Returns the path as an externalisable (percent-encoded) string representation. Can be an empty string." 
+    "Returns the path as an externalisable (percent-encoded) string representation. Can be an empty string." 
     shared String pathPart {
         return path.string;
     }
     
-    doc "Returns the query as an externalisable (percent-encoded) string representation. Can be null." 
+    "Returns the query as an externalisable (percent-encoded) string representation. Can be null." 
     shared String? queryPart {
         return query.specified then query.string;
     }
@@ -57,17 +57,17 @@ shared class Uri(scheme = null, authority = Authority(), path = Path(), query = 
         return b.string;
     }
 
-    doc "Returns an externalisable (percent-encoded) representation of this URI."
+    "Returns an externalisable (percent-encoded) representation of this URI."
     shared actual String string {
         return toRepresentation(false);
     }
     
-    doc "Returns a human (not parseable) representation of this URI."
+    "Returns a human (not parseable) representation of this URI."
     shared String humanRepresentation {
         return toRepresentation(true);
     }
     
-    doc "Returns true if the given object is the same as this object"
+    "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is Uri that){
             if(this === that){
@@ -82,7 +82,7 @@ shared class Uri(scheme = null, authority = Authority(), path = Path(), query = 
         return false;
     }
     
-    doc "Returns a GET HTTP request"
+    "Returns a GET HTTP request"
     shared Request get(){
         return Request(this);
     }

@@ -14,16 +14,15 @@ import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType }
 
 
-by "Matej Lazar"
-
+by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
 
-doc "How many lines of default text to write to file."
+"How many lines of default text to write to file."
 Integer fileLines = 10;
 
 String fileName = "lazydog.txt";
 
-doc "Number of concurent requests"
+"Number of concurent requests"
 Integer numberOfUsers=10;
 Integer requestsPerUser = 10;
 

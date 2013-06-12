@@ -14,7 +14,7 @@ import org.xnio.channels { StreamSinkChannel,
                            Channels { chFlushBlocking=flushBlocking } }
 import ceylon.io.buffer { Buffer }
 
-by "Matej Lazar"
+by("Matej Lazar")
 shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
         satisfies Response {
 

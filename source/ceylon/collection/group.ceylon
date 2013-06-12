@@ -1,4 +1,4 @@
-doc "Creates a `Map` that contains the `Iterable`'s
+"Creates a `Map` that contains the `Iterable`'s
      elements, grouped in `Sequence`s under the
      keys provided by the grouping function."
 shared Map<Group, {Element+}> group<Group, Element>({Element*} elements,

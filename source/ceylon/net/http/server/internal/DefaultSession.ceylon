@@ -2,7 +2,7 @@ import ceylon.net.http.server { Session }
 
 import io.undertow.server.session { UtSession=Session }
 
-by "Matej Lazar"
+by("Matej Lazar")
 class DefaultSession(UtSession utSession) satisfies Session {
     
     shared actual String id => utSession.id;

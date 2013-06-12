@@ -1,4 +1,4 @@
-doc "Parses a raw percent-encoded path parameter"
+"Parses a raw percent-encoded path parameter"
 shared Parameter parseParameter(String part){
     Integer? sep = part.firstCharacterOccurrence('=');
     if(exists sep){
@@ -9,7 +9,7 @@ shared Parameter parseParameter(String part){
     }
 }
 
-doc "Parses a URI"
+"Parses a URI"
 throws(InvalidUriException, "If the URI is invalid")
 shared Uri parse(String uri){
     variable String? scheme = null;

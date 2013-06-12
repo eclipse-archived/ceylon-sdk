@@ -3,7 +3,7 @@ import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 
-by "Matej Lazar"
+by("Matej Lazar")
 shared class CeylonRequestHandler() satisfies HttpHandler {
     
     value endpoints = LinkedList<Endpoint|AsynchronousEndpoint>();

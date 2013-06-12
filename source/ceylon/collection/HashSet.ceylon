@@ -1,5 +1,5 @@
-doc "Set that uses a Hashing implementation."
-by "Stéphane Épardaud"
+"Set that uses a Hashing implementation."
+by("Stéphane Épardaud")
 shared class HashSet<Element>({Element*} values = {})
     satisfies MutableSet<Element>
         given Element satisfies Object {
@@ -98,7 +98,7 @@ shared class HashSet<Element>({Element*} values = {})
         return false;
     }
     
-    doc "Removes every element"
+    "Removes every element"
     shared actual void clear(){
         variable Integer index = 0;
         // walk every bucket

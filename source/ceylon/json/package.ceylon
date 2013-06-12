@@ -1,3 +1,3 @@
-doc "A JSON parser / serialiser"
-by "Stéphane Épardaud"
+"A JSON parser / serialiser"
+by("Stéphane Épardaud")
 shared package ceylon.json;

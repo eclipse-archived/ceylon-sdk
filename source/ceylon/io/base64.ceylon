@@ -2,7 +2,7 @@ import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 
 "Represents a Base64 implementation of RFC 4648
  (the specification)[http://tools.ietf.org/html/rfc4648]."
-by "Diego Coronel"
+by("Diego Coronel")
 shared object base64 {
     
     "Returns a [[Encoder]] that encodes using the Basic type base64 encoding scheme."
@@ -28,7 +28,7 @@ shared object base64 {
 }
 
 "Allows you to encode a sequence of bytes into a sequence of 6 bits characters."
-by "Diego Coronel"
+by("Diego Coronel")
 shared interface Encoder {
 
     "Encodes all remaining bytes from the specified byte buffer 
@@ -37,7 +37,7 @@ shared interface Encoder {
 }
 
 "Allows you to decode a group of four 6 bits characters into bytes."
-by "Diego Coronel"
+by("Diego Coronel")
 shared interface Decoder {
 
     "Decodes all bytes from the input byte buffer using the Base64 encoding scheme, 

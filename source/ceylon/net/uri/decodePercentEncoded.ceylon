@@ -13,8 +13,8 @@ Integer fromHex(Integer hex){
     throw Exception("Invalid hexadecimal number: "+hex.string);
 }
 
-doc "Decodes a percent-encoded ASCII string."
-by "Stéphane Épardaud"
+"Decodes a percent-encoded ASCII string."
+by("Stéphane Épardaud")
 shared String decodePercentEncoded(String str){
     ByteArray array = JString(str).getBytes("ASCII");
     variable Integer r = 0;

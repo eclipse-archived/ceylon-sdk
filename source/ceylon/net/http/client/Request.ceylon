@@ -4,26 +4,26 @@ import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
 import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength }
 
-doc "Represents an HTTP Request"
+"Represents an HTTP Request"
 by("Stéphane Épardaud", "Matej Lazar")
 shared class Request(uri, method = "GET"){
     // constant
     String crLf = "\r\n";
 
-    doc "This request URI, must be absolute."
+    "This request URI, must be absolute."
     shared Uri uri;
     
-    doc "The list of request parameters."
+    "The list of request parameters."
     MutableMap<String, MutableList<Parameter>> parameters = HashMap<String, MutableList<Parameter>>();
     
-    doc "The list of request headers."
+    "The list of request headers."
     shared MutableList<Header> headers = LinkedList<Header>();
     
-    doc "The request method, such as `GET`, `POST`…"
+    "The request method, such as `GET`, `POST`…"
     shared variable String method;
     
-    doc "The port to connect to. Defaults to 80 for `http` Uris and to 443 for `https` uris, unless
-         overridden in the [[uri]]."
+    "The port to connect to. Defaults to 80 for `http` Uris and to 443 for `https` uris, unless
+     overridden in the [[uri]]."
     shared variable Integer port = 80;
 
     if(uri.relative){
@@ -46,7 +46,7 @@ shared class Request(uri, method = "GET"){
         throw Exception("Missing URI scheme");
     }
     
-    doc "The host to connect to. Extracted from the specified [[uri]]."
+    "The host to connect to. Extracted from the specified [[uri]]."
     shared String host;
     if(exists tmpHost = uri.authority.host){
         host = tmpHost;
@@ -54,7 +54,7 @@ shared class Request(uri, method = "GET"){
         throw Exception("URI host is not set");
     }
     
-    doc "Returns a request header, if it exists. Returns null otherwise."
+    "Returns a request header, if it exists. Returns null otherwise."
     shared Header? getHeader(String name){
         String lc = name.lowercased;
         for(header in headers){
@@ -65,7 +65,7 @@ shared class Request(uri, method = "GET"){
         return null;
     }
     
-    doc "Sets a request header."
+    "Sets a request header."
     shared void setHeader(String name, String* values){
         Header? header = getHeader(name);
         if(exists header){
@@ -82,13 +82,13 @@ shared class Request(uri, method = "GET"){
     setHeader("User-Agent", "curl/7.21.6 (x86_64-pc-linux-gnu) libcurl/7.21.6 OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3");
     setHeader("Accept-Charset", "UTF-8");
     
-    doc "Returns a list of parameters, if it exists. Returns null otherwise."
+    "Returns a list of parameters, if it exists. Returns null otherwise."
     shared MutableList<Parameter>? getParameters(String name) {
         return parameters.get(name);
     }
     
-    doc "Returns first parameter, if it exists. Returns null otherwise.
-         Note to use `getParameters` if there are multiple items with the same name."
+    "Returns first parameter, if it exists. Returns null otherwise.
+     Note to use `getParameters` if there are multiple items with the same name."
     shared Parameter? getParameter(String name) {
         List<Parameter>? params = getParameters(name);
         if (exists params) {
@@ -164,7 +164,7 @@ shared class Request(uri, method = "GET"){
         return builder.string;
     }
     
-    doc "Executes this request by connecting to the server and returns a [[Response]]."
+    "Executes this request by connecting to the server and returns a [[Response]]."
     shared Response execute(){
         // prepare the request
         value requestContents = prepareRequest();

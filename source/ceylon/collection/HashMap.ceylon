@@ -1,5 +1,5 @@
-doc "Map implementation that uses hashing"
-by "Stéphane Épardaud"
+"Map implementation that uses hashing"
+by("Stéphane Épardaud")
 shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     satisfies MutableMap<Key, Item>
         given Key satisfies Object 
@@ -79,7 +79,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         return null;
     }
     
-    doc "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
+    "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
     shared actual void putAll({<Key->Item>*} entries){
         for(entry in entries){
             if(addToStore(store, entry.key, entry.item)){
@@ -90,7 +90,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     }
     
     
-    doc "Removes a key/value mapping if it exists"
+    "Removes a key/value mapping if it exists"
     shared actual Item? remove(Key key){
         Integer index = storeIndex(key, store);
         variable Cell<Key->Item>? bucket = store[index];
@@ -112,7 +112,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         return null;
     }
     
-    doc "Removes every key/value mapping"
+    "Removes every key/value mapping"
     shared actual void clear(){
         variable Integer index = 0;
         // walk every bucket

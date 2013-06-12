@@ -2,8 +2,8 @@ import java.io { InputStream }
 import java.nio { ByteBuffer { allocate } }
 import java.lang { JString = String }
 
-by "Stéphane Épardaud"
-doc "Reads an InputStream of the given length into a String using the specified charset"
+"Reads an InputStream of the given length into a String using the specified charset"
+by("Stéphane Épardaud")
 shared String readString(InputStream stream, Integer length, String charset){
     ByteBuffer total = allocate(length);
     ByteBuffer chunk = allocate(1024);

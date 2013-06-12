@@ -302,5 +302,5 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
 
 }
 
-doc "A period of zero length"
+"A period of zero length"
 shared Period zero = Period();

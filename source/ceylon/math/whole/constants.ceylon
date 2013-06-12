@@ -4,10 +4,10 @@ import java.math { BigInteger { jzero=\iZERO, jone=\iONE} }
 Whole maxIntImpl = wholeNumber(maxInt);
 Whole twoImpl = wholeNumber(2);
 
-doc "A `Whole` instance representing zero."
+"A `Whole` instance representing zero."
 shared Whole zero = zeroImpl;
 WholeImpl zeroImpl = WholeImpl(jzero);
 
-doc "A `Whole` instance representing one."
+"A `Whole` instance representing one."
 shared Whole one = oneImpl;
 WholeImpl oneImpl = WholeImpl(jone);
