@@ -1,13 +1,14 @@
-import ceylon.logging { Logger, Writer, ListWriter, levelTrace, levelInfo, levelWarn, Configuration, levelDebug, LoggerConfiguration }
-import ceylon.collection { LinkedList }
-import ceylon.test { assertTrue, assertFalse }
-import ceylon.net.http.server { Server, createServer, StatusListener, Status, started }
+import ceylon.logging { Logger, levelTrace, levelInfo, levelWarn, Configuration, LoggerConfiguration }
+import ceylon.collection { LinkedList, MutableList }
+import ceylon.test { assertTrue, assertFalse, AssertException }
+import ceylon.net.http.server { Server, createServer, StatusListener, Status, started, stopped }
+import ceylon.logging.writer { Writer, ListWriter }
 
 void testSmoke() {
-    //TODO -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+    //java system prop must be set: -Djava.util.logging.manager=org.jboss.logmanager.LogManager
     
-    LinkedList<String> logList = LinkedList<String>();
-    Writer writer = ListWriter(logList);
+    MutableList<String> list = LinkedList<String>();
+    Writer writer = ListWriter(list);
     
     Configuration logConfig = Configuration {
         defaultWriter = writer; 
@@ -23,21 +24,22 @@ void testSmoke() {
     smokeLogger.info("Info message from ceylon.smoke.");
     smokeLogger.debug("Debug message from ceylon.smoke.");
     
-    print(logList);
+    print(list);
     
-    assertContains("Info message from ceylon.smoke.", logList);
-    assertNotContains("Debug message from ceylon.smoke.", logList);
+    assertContains("Info message from ceylon.smoke.", list);
+    assertNotContains("Debug message from ceylon.smoke.", list);
 }
 
 void testJavaLoggerConfig() {
-    LinkedList<String> logList = LinkedList<String>();
-    Writer writer = ListWriter(logList);
+    MutableList<String> list = LinkedList<String>();
+    Writer writer = ListWriter(list);
+    //Writer writer = ConsoleWriter();
     
     Configuration logConfig = Configuration {
         defaultWriter = writer; 
         rootLevel = levelInfo;
         loggers = {
-            LoggerConfiguration("org.xnio.nio", levelDebug, writer, true)
+            LoggerConfiguration("org.xnio.nio", levelInfo, writer, true)
         };
     };
 
@@ -47,46 +49,15 @@ void testJavaLoggerConfig() {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {
                 server.stop();
-                print(logList);
-
-                //assertContains("Info message from ceylon.smoke.", logList);
-                //assertNotContains("Debug message from ceylon.smoke.", logList);
+            } else if (status.equals(stopped)) {
+                print(list.string);
+                assertListElementMatches("XNIO NIO Implementation Version", list);
+                assertListElementNotMatches("Started channel thread", list);
             }
         }
     }
     server.addListener(serverListerner);
-    server.startInBackground();
-    
-    
-
-//import org.jboss.logging { Logger {logger = getLogger}}
-//import org.jboss.logmanager { LogManager = Logger {manager = getLogger}, Level { trace = TRACE, debug = DEBUG }}
-//import org.jboss.logmanager.handlers { ConsoleHandler }
-
-//    LogManager logManager = manager("org.xnio.nio");
-//    print(logManager.level);
-//
-//    logManager.setLevelName("DEBUG");
-//    logManager.level = debug;
-//    
-//    ConsoleHandler ch = ConsoleHandler();
-//    ch.formatter = SimpleFormatter();
-//    
-//    logManager.addHandler(ch);
-//    
-//    print(logManager.level);
-//    
-//    LogManager utManager = manager("io.undertow");
-//    utManager.setLevelName("DEBUG");
-//    utManager.level = debug;
-//    utManager.addHandler(ch);
-//    
-//    print(logManager.level);
-//    
-//
-//    Logger log = logger("org.xnio.nio");
-//    log.debug("Debug mesage");
-//    log.info("Info mesage");
+    server.start();
 
 }
 
@@ -99,3 +70,25 @@ void assertContains(String element, Collection<String> collection ) {
 void assertNotContains(String element, Collection<String> collection ) {
     assertFalse(collection.contains(element));
 }
+
+void assertListElementMatches(String element, Collection<String> collection, String message = "") {
+    for (c in collection) {
+        if (c.contains(element)) {
+            return;
+        }
+    }
+    throw AssertException("assertion failed: `` message ``");
+}
+
+void assertListElementNotMatches(String element, Collection<String> collection, String message = "") {
+    variable Boolean contains = false;
+    for (c in collection) {
+        if (c.contains(element)) {
+            contains = true;
+        }
+    }
+    if (contains) {
+        throw AssertException("assertion failed: `` message ``");
+    }
+}
+

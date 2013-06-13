@@ -1,22 +1,12 @@
-import ceylon.logging { Level, Writer, Logger, levelTrace, levelDebug, levelInfo, levelWarn, levelError, levelFatal }
+import ceylon.logging { Level, Logger, levelTrace, levelDebug, levelInfo, levelWarn, levelError, levelFatal }
 import org.jboss.logmanager { LogManager = Logger {manager = getLogger}}
 import org.jboss.logmanager.handlers { WriterHandler }
 import java.lang { CharArray, JInteger = Integer }
 import java.io {JWriter = Writer}
-import java.util.logging {
-    JLevel = Level, SimpleFormatter/* {
-        jOFF = \iOFF,
-        jSEVERE = \iSEVERE,
-        jWARNING = \iWARNING,
-        jINFO = \iINFO,
-        jCONFIG = \iCONFIG,
-        jFINE = \iFINE,
-        jFINER = \iFINER,
-        jFINEST = \iFINEST,
-        jALL = \iALL
-    }*/
-}
+import java.util.logging { JLevel = Level }
 import ceylon.logging.internal { JLevelAdapter }
+import org.jboss.logmanager.formatters { PatternFormatter }
+import ceylon.logging.writer { Writer }
 
 by "Matej Lazar"
 shared class JavaLogger(String name, Level level, Writer writer) extends Logger(name, level, writer) {
@@ -28,13 +18,13 @@ shared class JavaLogger(String name, Level level, Writer writer) extends Logger(
     
     WriterHandler handler = WriterHandler();
     handler.setWriter(wrapWritter(writer));
-    //TODO ceylon formater
-    handler.setFormatter(SimpleFormatter());
+    //TODO use ceylon formater
+    handler.setFormatter(PatternFormatter("%d{HH:mm:ss,SSS} %-5p [%c{1}] %m%n"));
     logManager.addHandler(handler);
 
     shared actual void log(Level level, String message) {
         if (this.level <= level ) {
-            writer.write(message);
+            writer.write(message);//TODO log warning "Do not use Java logger in Ceylon code."
         }
     }
 }
@@ -65,20 +55,26 @@ JLevel translateLevel(Level level) {
 JWriter wrapWritter(Writer writer) {
     object jWriter extends JWriterAdapter() {
         
-        StringBuilder messageBuilder = StringBuilder();
+        StringBuilder lineBuffer = StringBuilder();
         
         shared actual void writeCBuff(CharArray cbuf, JInteger off, JInteger len) {
             for (i in Range<Integer>(off.intValue(), off.intValue() + len.intValue())) {
-                messageBuilder.append(cbuf.get(i).string);
+                value char = cbuf.get(i).string;
+                lineBuffer.append(char);
+                if (char.equals("\n")) {
+                    writer.write(lineBuffer.string);
+                    lineBuffer.reset();
+                }
             }
         }
 
         shared actual void close() {
-            flush();
+            //flush();
         }
         
         shared actual void flush() {
-            writer.write(messageBuilder.string);
+            //writer.write(messageBuilder.string);
+            //messageBuilder.reset();
         }
     }
 

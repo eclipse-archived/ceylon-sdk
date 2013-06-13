@@ -1,4 +1,5 @@
-import ceylon.logging { Level, Writer, Logger }
+import ceylon.logging { Level, Logger }
+import ceylon.logging.writer { Writer }
 
 by "Matej Lazar"
 shared class DefaultLogger(String name, Level level, Writer writer) extends Logger(name, level, writer) {

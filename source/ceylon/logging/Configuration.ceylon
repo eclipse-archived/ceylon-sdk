@@ -1,9 +1,10 @@
 import ceylon.collection { MutableMap, HashMap }
 import ceylon.logging.internal { DefaultLogger, JavaLogger }
+import ceylon.logging.writer { Writer }
 
 doc "Configure logger."
 by "Matej Lazar"
-//TODO inject writter
+
 shared class Configuration (
         Writer defaultWriter, 
         Level rootLevel,
@@ -18,6 +19,7 @@ shared class Configuration (
     }
     
     shared Logger logger(String name) {
+        //TODO Create non java logers here, if config does not exists use parent
         Logger? loggger = indexedLoggers.get(name);
         if (exists l = loggger) {
             return l;

@@ -1,3 +1,4 @@
+import ceylon.logging.writer { Writer }
 doc "Interface to log messages."
 by "Matej Lazar"
 shared abstract class Logger (shared String name, Level level, Writer writer) {
@@ -49,11 +50,11 @@ shared object levelError extends Level(500) {
     shared actual String string = "error";
 }
 shared object levelWarn extends Level(400) {
-    shared actual String string = "warn "; 
+    shared actual String string = "warn"; 
 }
 
 shared object levelInfo extends Level(300) {
-    shared actual String string = "info "; 
+    shared actual String string = "info"; 
 }
 
 shared object levelDebug extends Level(200) {
