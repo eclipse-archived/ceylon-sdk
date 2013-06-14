@@ -42,5 +42,5 @@ module ceylon.net '0.6' {
     import 'org.jboss.xnio.nio' '3.1.0.CR5';
     
     //TODO remove transitive dependency
-    import org.jboss.logging '3.1.2.GA';
+ //   import org.jboss.logging '3.1.2.GA';
 }

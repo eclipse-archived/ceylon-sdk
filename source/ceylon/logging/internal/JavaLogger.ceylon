@@ -57,6 +57,7 @@ JWriter wrapWritter(Writer writer) {
         
         StringBuilder lineBuffer = StringBuilder();
         
+        //TODO thread safe
         shared actual void writeCBuff(CharArray cbuf, JInteger off, JInteger len) {
             for (i in Range<Integer>(off.intValue(), off.intValue() + len.intValue())) {
                 value char = cbuf.get(i).string;
