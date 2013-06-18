@@ -8,7 +8,7 @@ import ceylon.logging.internal { JLevelAdapter }
 import org.jboss.logmanager.formatters { PatternFormatter }
 import ceylon.logging.writer { Writer }
 
-by "Matej Lazar"
+by ("Matej Lazar")
 shared class JavaLogger(String name, Level level, Writer writer) extends Logger(name, level, writer) {
 
     LogManager logManager = manager(name);

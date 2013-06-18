@@ -1,7 +1,7 @@
 import ceylon.collection { MutableList }
 
-doc "Add log mesages to the list."
-by "Matej Lazar"
+"Add log mesages to the list."
+by ("Matej Lazar")
 shared class ListWriter(MutableList<String> list) satisfies Writer {
 
     //StringBuilder lineBuffer = StringBuilder();

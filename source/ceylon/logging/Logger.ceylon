@@ -1,6 +1,7 @@
 import ceylon.logging.writer { Writer }
-doc "Interface to log messages."
-by "Matej Lazar"
+
+"Interface to log messages."
+by ("Matej Lazar")
 shared abstract class Logger (shared String name, Level level, Writer writer) {
     
     shared void fatal(String message) {

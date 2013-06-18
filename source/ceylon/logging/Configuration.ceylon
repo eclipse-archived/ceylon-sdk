@@ -2,9 +2,8 @@ import ceylon.collection { MutableMap, HashMap }
 import ceylon.logging.internal { DefaultLogger, JavaLogger }
 import ceylon.logging.writer { Writer }
 
-doc "Configure logger."
-by "Matej Lazar"
-
+"Configure logger."
+by ("Matej Lazar")
 shared class Configuration (
         Writer defaultWriter, 
         Level rootLevel,
