@@ -3,7 +3,7 @@ import ceylon.time.timezone { ZoneDateTime }
 
 "Common interface capable of representing _time of day_."
 by ("Diego Coronel", "Roland Tepp")
-see (Time, DateTime, ZoneDateTime)
+//TODO see (Time, DateTime, ZoneDateTime)
 shared interface ReadableTime {
 
     "Hour of day"

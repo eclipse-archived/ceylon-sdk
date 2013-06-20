@@ -1,13 +1,13 @@
 import java.lang { Math { jmin=min, jmax=max } }
 
 "The smaller of the two arguments."
-see(largest)
+//TODO see(largest)
 shared Integer smallest(Integer x, Integer y) {
     return jmin(x, y);
 }
 
 "The larger of the two arguments."
-see(smallest)
+//TODO see(smallest)
 shared Integer largest(Integer x, Integer y) {
     return jmax(x, y);
 }

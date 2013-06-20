@@ -18,7 +18,7 @@ shared Float exp(Float num) {
  * `log(+infinity)` is `+infinity`,
  * `log(undefined)` is `undefined`.
  "
-see(log10)
+//TODO see(log10)
 shared Float log(Float num) {
     return jlog(num);
 }
@@ -30,19 +30,19 @@ shared Float log(Float num) {
  * `log10(+infinity)` is `+infinity`,
  * `log10(undefined)` is `undefined`.
  "
-see(log)
+//TODO see(log)
 shared Float log10(Float num) {
     return jlog10(num);
 }
 
 "The given angle (in radians) converted to degrees."
-see(toRadians)
+//TODO see(toRadians)
 shared Float toDegrees(Float num) {
     return num/pi*180;
 }
 
 "The given angle (in degrees) converted to radians."
-see(toDegrees)
+//TODO see(toDegrees)
 shared Float toRadians(Float num) {
     return num/180*pi;
 }
@@ -335,8 +335,8 @@ shared Float random() {
  * `floor(+infinity)` is `+infinity`,
  * `floor(undefined)` is `undefined`.
  "
-see(ceiling)
-see(halfEven)
+//TODO see(ceiling)
+//TODO see(halfEven)
 shared Float floor(Float num) {
     return jfloor(num);
 }
@@ -351,8 +351,8 @@ shared Float floor(Float num) {
  * `ceiling(+infinity)` is `+infinity`,
  * `ceiling(undefined)` is `undefined`.
  "
-see(floor)
-see(halfEven)
+//TODO see(floor)
+//TODO see(halfEven)
 shared Float ceiling(Float num) {
     return jceiling(num);
 }
@@ -367,8 +367,8 @@ shared Float ceiling(Float num) {
  * `halfEven(+infinity)` is `+infinity`
  * `halfEven(undefined)` is `undefined`
  "
-see(floor)
-see(ceiling)
+//TODO see(floor)
+//TODO see(ceiling)
 shared Float halfEven(Float num) {
     return jrint(num);
 }
@@ -381,7 +381,7 @@ shared Float halfEven(Float num) {
  * `smallest(+infinity,x) is `x`
  * `smallest(-infinity,x) is `-infinity`
  "
-see(largest)
+//TODO see(largest)
 shared Float smallest(Float x, Float y) {
     return jmin(x, y);
 }
@@ -394,7 +394,7 @@ shared Float smallest(Float x, Float y) {
  * `largest(+infinity,x) is `+infinity`
  * `largest(-infinity,x) is `x`
  "
-see(smallest)
+//TODO see(smallest)
 shared Float largest(Float x, Float y) {
     return jmax(x, y);
 }
