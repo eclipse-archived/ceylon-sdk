@@ -37,12 +37,12 @@ shared class LoggerConfiguration (
     shared String name,
     shared Level level,
     shared Writer writer,
-    shared Boolean javaLib = false) {}
+    shared Boolean delagateToJavaModule = false) {}
 
 
 
 Logger createLogger(LoggerConfiguration config) {
-    if (config.javaLib) {
+    if (config.delagateToJavaModule) {
         return createJavaLogger(config.name, config.level, config.writer);
     } else {
         return createDefaultLogger(config.name, config.level, config.writer);

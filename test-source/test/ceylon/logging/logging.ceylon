@@ -1,12 +1,11 @@
 import ceylon.logging { Logger, levelTrace, levelInfo, levelWarn, Configuration, LoggerConfiguration }
 import ceylon.collection { LinkedList, MutableList }
-import ceylon.test { assertTrue, assertFalse, AssertException }
+import ceylon.test { assertTrue, assertFalse, AssertException, assertEquals }
 import ceylon.net.http.server { Server, createServer, StatusListener, Status, started, stopped }
 import ceylon.logging.writer { Writer, ListWriter }
+import java.lang { System {systemProperty = setProperty}}
 
 void testSmoke() {
-    //java system prop must be set: -Djava.util.logging.manager=org.jboss.logmanager.LogManager
-    
     MutableList<String> list = LinkedList<String>();
     Writer writer = ListWriter(list);
     
@@ -31,6 +30,11 @@ void testSmoke() {
 }
 
 void testJavaLoggerConfig() {
+    //java system prop must be set: -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+    systemProperty("java.util.logging.manager","org.jboss.logmanager.LogManager");
+    
+    assertEquals("org.jboss.logmanager.LogManager", process.propertyValue("java.util.logging.manager"), "Invalid system property org.jboss.logmanager.LogManager.");
+    
     MutableList<String> list = LinkedList<String>();
     Writer writer = ListWriter(list);
     //Writer writer = ConsoleWriter();
@@ -39,7 +43,12 @@ void testJavaLoggerConfig() {
         defaultWriter = writer; 
         rootLevel = levelInfo;
         loggers = {
-            LoggerConfiguration("org.xnio.nio", levelInfo, writer, true)
+            LoggerConfiguration { 
+                name = "org.xnio.nio";
+                level = levelInfo;
+                writer = writer;
+                delagateToJavaModule = true;
+            }
         };
     };
 

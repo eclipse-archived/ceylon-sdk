@@ -67,6 +67,7 @@
         <!--<module name="test.ceylon.file"/>-->
         <!--<module name="test.ceylon.io"/>-->
         <module name="test.ceylon.json"/>
+        <!--<module name="test.ceylon.logging"/-->
         <!--<module name="test.ceylon.net"/>-->
         <!--<module name="test.ceylon.process"/>-->
         <module name="test.ceylon.time"/>
