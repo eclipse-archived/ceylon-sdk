@@ -24,8 +24,8 @@
  array reallocation and copy.
  "
 by("Stéphane Épardaud")
-see (ByteBuffer, newByteBuffer, newByteBufferWithData,
-     CharacterBuffer, newCharacterBufferWithData)
+//TODO see (ByteBuffer, newByteBuffer, newByteBufferWithData,
+//     CharacterBuffer, newCharacterBufferWithData)
 shared abstract class Buffer<T>() satisfies Iterable<T> {
     
     "The current position index within this buffer. Starts at `0`

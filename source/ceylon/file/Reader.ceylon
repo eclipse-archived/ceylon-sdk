@@ -1,5 +1,5 @@
 "Reads lines of text from a `File`."
-see (File)
+//TODO see (File)
 shared interface Reader satisfies Closeable {
     
     "The next line of text in the file,
@@ -9,7 +9,7 @@ shared interface Reader satisfies Closeable {
     
     "Destroy this `Reader`. Called
      automatically by `close()`."
-    see (close)
+    //TODO see (close)
     shared formal void destroy();
     
     shared actual void open() {}

@@ -4,7 +4,7 @@
  with the [[position]] set to `0` and the [[limit]] set to size of the
  given [[string]]."
 by("Stéphane Épardaud")
-see (Buffer, newCharacterBufferWithData)
+//TODO see (Buffer, newCharacterBufferWithData)
 shared class CharacterBuffer(String string) extends Buffer<Character>(){
     
     "The size of the given [[string]]."
@@ -64,7 +64,7 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
 
 "Allocates a new [[CharacterBuffer]] with the underlying [[data]]."
 by("Stéphane Épardaud")
-see (CharacterBuffer)
+//TODO see (CharacterBuffer)
 shared CharacterBuffer newCharacterBufferWithData(String data){
     return CharacterBuffer(data);
 }
