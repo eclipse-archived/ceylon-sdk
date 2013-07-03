@@ -2,11 +2,11 @@ import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
 import ceylon.net.uri { Uri, Parameter }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress }
-import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength }
+import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength, get, Method }
 
 "Represents an HTTP Request"
 by("Stéphane Épardaud", "Matej Lazar")
-shared class Request(uri, method = "GET"){
+shared class Request(uri, method = get){
     // constant
     String crLf = "\r\n";
 
@@ -20,7 +20,7 @@ shared class Request(uri, method = "GET"){
     shared MutableList<Header> headers = LinkedList<Header>();
     
     "The request method, such as `GET`, `POST`…"
-    shared variable String method;
+    shared variable Method method;
     
     "The port to connect to. Defaults to 80 for `http` Uris and to 443 for `https` uris, unless
      overridden in the [[uri]]."
@@ -142,7 +142,7 @@ shared class Request(uri, method = "GET"){
         }
 
         value builder = StringBuilder();
-        builder.append(method).append(" ").append(path).append(" ").append("HTTP/1.1").append(crLf);
+        builder.append(method.string).append(" ").append(path).append(" ").append("HTTP/1.1").append(crLf);
 
         String postData = preparePostData();
         if (!postData.empty) {

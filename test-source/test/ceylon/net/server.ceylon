@@ -11,7 +11,7 @@ import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue }
 import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
-import ceylon.net.http { contentType }
+import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete }
 
 
 by("Matej Lazar")
@@ -52,7 +52,7 @@ void testServer() {
     server.addEndpoint(Endpoint {
         service => void (Request request, Response response) {
                         response.addHeader(contentType("text/html", utf8));
-                        response.writeString(request.method);
+                        response.writeString(request.method.string);
                     };
         path = startsWith("/methodTest");
     });
@@ -236,25 +236,30 @@ void testPathMatcher() {
 }
 
 void methodTest() {
-    methodTestRequest("POST");
-    methodTestRequest("POST");
-    methodTestRequest("POST");
-    methodTestRequest("POST");
-    methodTestRequest("PUT");
-    methodTestRequest("PUT");
-    methodTestRequest("PUT");
-    methodTestRequest("PUT");
-    methodTestRequest("GET");
-    methodTestRequest("GET");
-    methodTestRequest("GET");
-    methodTestRequest("GET");
-    methodTestRequest("DELETE");
-    methodTestRequest("DELETE");
-    methodTestRequest("DELETE");
-    methodTestRequest("DELETE");
+    methodTestRequest(post);
+    methodTestRequest(post);
+    methodTestRequest(post);
+    methodTestRequest(post);
+    methodTestRequest(put);
+    methodTestRequest(put);
+    methodTestRequest(put);
+    methodTestRequest(put);
+    methodTestRequest(get);
+    methodTestRequest(get);
+    methodTestRequest(get);
+    methodTestRequest(get);
+    methodTestRequest(delete);
+    methodTestRequest(delete);
+    methodTestRequest(delete);
+    methodTestRequest(delete);
+
+    methodTestRequest(trace);
+    methodTestRequest(connect);
+    methodTestRequest(parseMethod("CUSTOMMETHOD"));
+    methodTestRequest(parseMethod("lowercasemethod"));
 }
 
-void methodTestRequest(String method) {
+void methodTestRequest(Method method) {
     value request = ClientRequest(parse("http://localhost:8080/methodTest"));
 
     request.method = method;
@@ -266,11 +271,11 @@ void methodTestRequest(String method) {
     response.close();
     //TODO log
     print("Response content: " + responseContent);
-    assertEquals(method, responseContent);
+    assertEquals(method.string, responseContent);
 }
 
 void parametersTest(String paramKey, String paramValue) {
-    value request = ClientRequest(parse("http://localhost:8080/paramTest"), "POST");
+    value request = ClientRequest(parse("http://localhost:8080/paramTest"), post);
 
     request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     request.setParameter(Parameter("foo", "valueFoo"));

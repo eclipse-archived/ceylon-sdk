@@ -1,7 +1,8 @@
+import ceylon.net.http { Method }
 abstract shared class EndpointBase(path) {
     shared Matcher path;
 
-    doc "returns true if method is handled be endpoint."
+    "returns true if method is handled by endpoint."
     shared Boolean acceptMethod(Method method) {
     	return true;
     }

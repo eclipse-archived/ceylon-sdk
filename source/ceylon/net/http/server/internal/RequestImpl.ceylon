@@ -2,9 +2,8 @@ import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
 import ceylon.net.http.server { 
     Request, Session, 
-    Method, options, get, head, post, put, delete, trace, connect,
     Endpoint, AsynchronousEndpoint,
-    InternalException}
+    InternalException }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.server.handlers.form { 
@@ -20,6 +19,7 @@ import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE },
 
 import java.lang { JString=String }
 import java.util { Deque, JMap=Map }
+import ceylon.net.http { Method, parseMethod }
 
 by("Matej Lazar")
 shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
@@ -105,7 +105,7 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
         return SocketAddress(address.hostString, address.port);
     }
     
-    shared actual Method method => decodeMethod(exchange.requestMethod.string);
+    shared actual Method method => parseMethod(exchange.requestMethod.string.uppercased);
     
     shared actual String queryString => exchange.queryString;
     
@@ -172,28 +172,5 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
             }
         }
         return formData;
-    }
-}
-
-doc "Decode a method string to Method instance"
-Method decodeMethod(String name) {
-    if ( name == "OPTIONS" ) {
-        return options;
-    } else if ( name == "GET" ) {
-        return get;
-    } else if ( name == "HEAD" ) {
-        return head;
-    } else if ( name == "POST" ) {
-        return post;
-    } else if ( name == "PUT" ) {
-        return put;
-    } else if ( name == "DELETE" ) {
-        return delete;
-    } else if ( name == "TRACE" ) {
-        return trace;
-    } else if ( name == "CONNECT" ) {
-        return connect;
-    } else {
-        throw Exception("Unknown method '"+ name +"'.");
     }
 }
