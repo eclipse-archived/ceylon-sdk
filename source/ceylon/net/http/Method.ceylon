@@ -2,15 +2,15 @@
 by ("Jean-Charles Roger", "Matej Lazar")
 shared interface Method {
     shared default actual Boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        } else {
-            if (is Method that) {
-                return that.string.equals(string);
-            } else {
-                return false;
-            }
-        }
+        return methodEquals(this, that);
+    }
+}
+
+Boolean methodEquals(Object thisObject, Object that) {
+    if (is Method that) {
+        return that.string.equals(thisObject.string);
+    } else {
+        return false;
     }
 }
 
@@ -18,7 +18,7 @@ shared abstract class AbstractMethod()
     of options | get | head | post | put | delete | trace | connect 
     satisfies Method {
 
-    shared actual Boolean equals(Object that) => super.equals(that); 
+    shared actual Boolean equals(Object that) => methodEquals(this, that); 
 }
 
 shared object options extends AbstractMethod() {
@@ -75,7 +75,7 @@ shared Method parseMethod(String method) {
     } else {
         object m satisfies Method {
             shared actual String string = method.uppercased;
-            shared actual Boolean equals(Object that) => super.equals(that);
+            shared actual Boolean equals(Object that) =>  methodEquals(this, that); 
         }
         return m;
     }

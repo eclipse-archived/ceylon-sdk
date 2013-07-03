@@ -1,5 +1,5 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
-import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException }
+import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException, Response }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 import ceylon.net.http { Method }
@@ -15,6 +15,12 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         endpoints.add(endpoint);
     }
     
+    void endResponse(JHttpServerExchange exchange, ResponseImpl response, Integer responseStatus) {
+        response.responseStatus = responseStatus;
+        response.responseDone();
+        exchange.endExchange();
+    }
+    
     shared actual void handleRequest(JHttpServerExchange? exchange) {
         if (exists o = options) {
             if (exists exc = exchange) {
@@ -23,16 +29,18 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
                 
                 try {
                     String requestPath = request.path;
-                    Method method = request.method;
-                    Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpoint(requestPath, method);
+                    Endpoint|AsynchronousEndpoint|Null endpoint = getWebEndpointMatchingPath(requestPath);
                     
                     if (exists e = endpoint) {
-                        request.endpoint = e;
-                        invokeEndpoint(e, request, response, exc);
+                        if (isMethodSupported(e, request.method)) {
+                            request.endpoint = e;
+                            invokeEndpoint(e, request, response, exc);
+                        } else {
+                            //TODO The response MUST include an Allow header containing a list of valid methods for the requested resource. 
+                            endResponse(exc, response, 405);
+                        }
                     } else {
-                        response.responseStatus=404;
-                        response.responseDone();
-                        exc.endExchange();
+                        endResponse(exc, response, 404);
                     }
                 } catch(Exception e) {
                     //TODO write to log
@@ -72,13 +80,20 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         }
     }
     
-
-    Endpoint|AsynchronousEndpoint|Null getWebEndpoint(String requestPath, Method method) {
+    Endpoint|AsynchronousEndpoint|Null getWebEndpointMatchingPath(String requestPath) {
         for (endpoint in endpoints) {
-            if (endpoint.path.matches(requestPath) && endpoint.acceptMethod(method) ) {
+            if (endpoint.path.matches(requestPath)) {
                 return endpoint;
             }
         }
         return null;
+    }
+    
+    Boolean isMethodSupported(Endpoint|AsynchronousEndpoint endpoint, Method method) { 
+        if (endpoint.acceptMethod.size > 0) {
+            return endpoint.acceptMethod.contains(method);
+        } else {
+            return true;
+        }
     }
 }

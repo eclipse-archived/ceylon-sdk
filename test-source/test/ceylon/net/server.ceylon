@@ -60,6 +60,15 @@ void testServer() {
     server.addEndpoint(Endpoint {
         service => void (Request request, Response response) {
                         response.addHeader(contentType("text/html", utf8));
+                        response.writeString(request.method.string);
+                    };
+        path = startsWith("/acceptMethodTest");
+        acceptMethod = {post, get};
+    });
+
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", utf8));
                         response.writeString(request.parameter("čšž") else "");
                     };
         path = startsWith("/paramTest");
@@ -82,6 +91,8 @@ void testServer() {
                     executeEchoTest();
                     
                     concurentFileRequests(numberOfUsers);
+                    
+                    acceptMethodTest();
                     
                     methodTest();
 
@@ -272,6 +283,53 @@ void methodTestRequest(Method method) {
     //TODO log
     print("Response content: " + responseContent);
     assertEquals(method.string, responseContent);
+}
+
+void acceptMethodTest() {
+    //accept POST
+    value request = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
+    request.method = post;
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.setParameter(Parameter("foo", "valueFoo"));
+    value response = request.execute();
+    value responseStatus = response.status;
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    assertEquals(200, responseStatus);
+    assertEquals(post.string, responseContent);
+
+    //accept GET
+    value request1 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
+    request1.method = post;
+    request1.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request1.setParameter(Parameter("foo", "valueFoo"));
+    value response1 = request1.execute();
+    value response1Status = response1.status;
+    response.close();
+    //TODO log
+    assertEquals(200, response1Status);
+
+    //do NOT accept PUT 
+    value request2 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
+    request2.method = put;
+    request2.setParameter(Parameter("foo", "valueFoo"));
+    value response2 = request2.execute();
+    value response2Status = response2.status;
+    response2.close();
+    //TODO log
+    assertEquals(405, response2Status);
+
+    //accept all methods
+    value request3 = ClientRequest(parse("http://localhost:8080/methodTest"));
+    request3.method = post;
+    request3.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request3.setParameter(Parameter("foo", "valueFoo"));
+    value response3 = request3.execute();
+    value response3Status = response3.status;
+    response3.close();
+    //TODO log
+    assertEquals(200, response3Status);
 }
 
 void parametersTest(String paramKey, String paramValue) {
