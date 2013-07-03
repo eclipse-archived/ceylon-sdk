@@ -15,7 +15,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         return Duration(to.instant().millisecondsOfEra - from.instant().millisecondsOfEra);	
     }
 
-    shared actual Boolean equals( Object other ) => Range::equals(other); 
+    shared actual Boolean equals( Object other ) => (super of Range<DateTime, DateTimeRange, UnitOfDate|UnitOfTime>).equals(other); 
 
     shared actual DateTimeRange|Empty overlap(DateTimeRange other) {
         value response = _overlap([from,to], [other.from, other.to]);

@@ -17,7 +17,7 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
     }
 
     shared actual Boolean equals( Object other ) {
-        return Range::equals(other); 
+        return (super of Range<Time, TimeRange, UnitOfTime>).equals(other); 
     }
 
     shared actual TimeRange|Empty overlap(TimeRange other) {

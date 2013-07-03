@@ -17,7 +17,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange,
     }
 
     shared actual Boolean equals( Object other ) {
-        return Range::equals(other); 
+        return (super of Range<Date, DateRange, UnitOfDate>).equals(other); 
     }
 
     shared actual DateRange|Empty overlap(DateRange other) {
