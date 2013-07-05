@@ -2,7 +2,7 @@ import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandle
 import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException, Response }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
-import ceylon.net.http { Method }
+import ceylon.net.http { Method, allow }
 
 by("Matej Lazar")
 shared class CeylonRequestHandler() satisfies HttpHandler {
@@ -36,7 +36,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
                             request.endpoint = e;
                             invokeEndpoint(e, request, response, exc);
                         } else {
-                            //TODO The response MUST include an Allow header containing a list of valid methods for the requested resource. 
+                            response.addHeader(allow(e.acceptMethod));
                             endResponse(exc, response, 405);
                         }
                     } else {

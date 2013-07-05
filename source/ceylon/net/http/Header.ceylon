@@ -28,4 +28,16 @@ shared Header contentType(String contentType, Charset? charset = null) {
 
 shared Header contentLength(String contentLength) => Header("Content-Length", contentLength);
 
+Header allowHeaders({Method*} methods) {
+    StringBuilder sb = StringBuilder();
+    for (i -> method in entries(methods)) {
+        if (i > 0) {
+            sb.append(", ");
+        }
+        sb.append(method.string);
+    }
+    return Header("Allow", sb.string);
+}
+shared Header allow({Method*} methods = empty) => allowHeaders(methods);
+
 shared String contentTypeFormUrlEncoded = "application/x-www-form-urlencoded";

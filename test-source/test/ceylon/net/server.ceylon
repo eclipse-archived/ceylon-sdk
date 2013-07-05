@@ -11,7 +11,7 @@ import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue }
 import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
-import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete }
+import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
 
 
 by("Matej Lazar")
@@ -319,6 +319,11 @@ void acceptMethodTest() {
     response2.close();
     //TODO log
     assertEquals(405, response2Status);
+    if (exists Header allow = response2.headersByName["allow"]) {
+        assertEquals(allow.values.get(0), "POST, GET");
+    } else {
+        throw AssertionException("Missing allow header.");
+    }
 
     //accept all methods
     value request3 = ClientRequest(parse("http://localhost:8080/methodTest"));

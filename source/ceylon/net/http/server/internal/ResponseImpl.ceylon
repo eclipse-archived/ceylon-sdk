@@ -95,6 +95,9 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     }
     
     shared void responseDone() {
+        //Retry to apply headers, if there were no writes, headers were not applied.
+        applyHeadersToExchange();
+        
         response.shutdownWrites();
         chFlushBlocking(response);
         response.close();
