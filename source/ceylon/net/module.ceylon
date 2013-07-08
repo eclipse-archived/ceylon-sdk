@@ -1,4 +1,4 @@
-"This module allows you to represent URIs, and to connect to HTTP servers.
+"This module allows you to represent URIs, to connect to HTTP servers and to run a HTTP server.
  
  Sample usage for getting the contents of an HTTP URI:
  
@@ -7,6 +7,23 @@
          Request request = uri.get();
          Response response = request.execute();
          print(response.contents);
+     }
+
+ Sample usage for running a HTTP server:
+     void runServer() {
+         //create a HTTP server
+         value server = createServer {
+             //an endpoint, on the path /hello
+             Endpoint {
+                path = startsWith(\"/hello\");
+                 //handle requests to this path
+                 service(Request request, Response response) =>
+                         response.writeString(\"hello world\");
+             }
+         };
+ 
+         //start the server on port 8080
+         server.start(8080);
      }"
 by("Stéphane Épardaud, Matej Lazar")
 license("Apache Software License")
