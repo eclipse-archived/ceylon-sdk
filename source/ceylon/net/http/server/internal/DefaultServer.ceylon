@@ -26,10 +26,9 @@ import org.xnio {
 }
 import org.xnio.channels { AcceptingChannel }
 import io.undertow.server { HttpOpenListener, HttpHandler }
-import io.undertow.server.handlers { CookieHandler, URLDecodingHandler }
+import io.undertow.server.handlers { URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint, InternalException }
-import io.undertow.server.handlers.form { FormEncodedDataHandler, MultiPartHandler, EagerFormParsingHandler }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
@@ -47,45 +46,32 @@ shared class DefaultServer() satisfies Server {
         ceylonHandler.addWebEndpoint(endpoint);
     }
     
+    HttpHandler getHeandlers(Options options) {
+        value sessionconfig = SessionCookieConfig();
+        SessionAttachmentHandler sessionHandler = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
+        sessionHandler.setNext(ceylonHandler);
+        
+        HttpHandler errPageHandler = SimpleErrorPageHandler(sessionHandler);
+        
+        //URLDecodingHandler urlDecodingHandler = URLDecodingHandler(errPageHandler, options.defaultCharset.name);
+        //return urlDecodingHandler;
+        return errPageHandler;
+    }
+    
     shared actual void start(Integer port, String host, Options options) {
         notifyListeners(starting);
         //TODO log
         print("Starting on ``host``:``port``");
         
         ceylonHandler.options = options;
-        
-        value sessionconfig = SessionCookieConfig();
-        
-        SessionAttachmentHandler session = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
-        session.setNext(ceylonHandler);
-        
-        CookieHandler cookieHandler = CookieHandler();
-        cookieHandler.setNext(session);
-        
-        EagerFormParsingHandler eagerFormParsingHandler = EagerFormParsingHandler();
-        eagerFormParsingHandler.setNext(cookieHandler);
-        
-        MultiPartHandler multiPartHandler = MultiPartHandler();
-        multiPartHandler.setNext(eagerFormParsingHandler);
-        multiPartHandler.setDefaultEncoding(options.defaultCharset.name);
-        
-        FormEncodedDataHandler formEncodedDataHandler = FormEncodedDataHandler();
-        formEncodedDataHandler.setNext(multiPartHandler);
-        formEncodedDataHandler.setDefaultEncoding(options.defaultCharset.name);
-        
-        HttpHandler errPageHandler = SimpleErrorPageHandler(formEncodedDataHandler);
-        
-        URLDecodingHandler urlDecodingHandler = URLDecodingHandler();
-        urlDecodingHandler.setNext(errPageHandler);
-        urlDecodingHandler.setCharset(options.defaultCharset.name);
-        
+
         HttpOpenListener openListener = HttpOpenListener(
-            ByteBufferSlicePool(
-                directByteBufferAllocator, 8192, 8192 * 8192), 
-                omBuilder().set(utBufferPipelinedData, false).map ,
-                8192 );
+        ByteBufferSlicePool(
+            directByteBufferAllocator, 8192, 8192 * 8192), 
+            omBuilder().set(utBufferPipelinedData, false).map ,
+            8192 );
         
-        openListener.rootHandler = urlDecodingHandler;
+        openListener.rootHandler = getHeandlers(options);
         
         OptionMap workerOptions = omBuilder()
                 .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))

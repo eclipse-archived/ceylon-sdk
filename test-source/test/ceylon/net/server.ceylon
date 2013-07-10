@@ -74,6 +74,26 @@ void testServer() {
         path = startsWith("/paramTest");
     });
 
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", utf8));
+                        variable Object? count = request.session.get("count");
+                        if (exists Object c = count) {
+                            if (is Integer ci = c) {
+                                value ci2 = ci.plus(1);
+                                request.session.put("count", ci2);
+                                response.writeString(ci2.string);
+                            } else {
+                                AssertionException("Invalid object type retreived from session");
+                            }
+                        } else {
+                            request.session.put("count", Integer(1));
+                            response.writeString(1.string);
+                        }
+                    };
+        path = startsWith("/session");
+    });
+
     //add fileEndpoint
     creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
@@ -88,16 +108,19 @@ void testServer() {
                 try {
                     headerTest();
                     
-                    executeEchoTest();
+                    executeEchoTest("Ceylon");
                     
                     concurentFileRequests(numberOfUsers);
                     
                     acceptMethodTest();
                     
                     methodTest();
-
+                    
                     parametersTest("čšž", "ČŠŽ ĐŽ");
-
+                    
+                    //TODO enable session test when client suports it
+                    //sessionTest();
+                    
                     //TODO multipart post
                     
                 } finally {
@@ -115,11 +138,10 @@ void testServer() {
     };
 }
 
-void executeEchoTest() {
+void executeEchoTest(String name) {
     //TODO log debug
     print("Making request to Ceylon server...");
     
-    String name = "Ceylon";
     value expecting = "Hello ``name``!";
 
     value request = ClientRequest(parse("http://localhost:8080/echo?name=" + name));
@@ -350,4 +372,22 @@ void parametersTest(String paramKey, String paramValue) {
     //TODO log
     print("Response content: " + responseContent);
     assertEquals(paramValue, responseContent);
+}
+
+void sessionTest() {
+    value request = ClientRequest(parse("http://localhost:8080/session"), get);
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    //TODO log
+    print("Response content: " + responseContent);
+    assertEquals("1", responseContent);
+    response.close();
+
+    value response2 = request.execute();
+    value responseContent2 = response.contents;
+    //TODO log
+    print("Response content: " + responseContent2);
+    assertEquals("2", responseContent2);
+    response2.close();
 }

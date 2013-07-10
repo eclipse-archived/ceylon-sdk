@@ -7,9 +7,9 @@ import ceylon.net.http.server {
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.server.handlers.form { 
-        FormEncodedDataHandler { applicationXWwwFormUrlEncoded=APPLICATION_X_WWW_FORM_URLENCODED }, 
-        MultiPartHandler { multiparFormData=MULTIPART_FORM_DATA }, 
-        FormDataParser { fdpAttachmentKey=ATTACHMENT_KEY }, FormData }
+        FormEncodedDataDefinition { applicationXWwwFormUrlEncoded=APPLICATION_X_WWW_FORM_URLENCODED },
+        MultiPartParserDefinition { multiparFormData=MULTIPART_FORM_DATA },
+        FormDataParser, FormData, FormParserFactory }
 
 import io.undertow.server.session { 
         SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
@@ -22,7 +22,7 @@ import java.util { Deque, JMap=Map }
 import ceylon.net.http { Method, parseMethod }
 
 by("Matej Lazar")
-shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
+shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formParserFactory) satisfies Request {
     
     shared variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
     
@@ -161,14 +161,13 @@ shared class RequestImpl(HttpServerExchange exchange) satisfies Request {
         } else { 
             if (exists contentType = getHeader(headerConntentType.string)) {
                 if (contentType.startsWith(applicationXWwwFormUrlEncoded) || contentType.startsWith(multiparFormData)) {
-                    FormDataParser formDataParser = exchange.getAttachment(fdpAttachmentKey);
-                    //if EagerFormParsingHandler is in handlers chain, parsing is already done and operation returns imediatly
+                    FormDataParser formDataParser = formParserFactory.createParser(exchange);
                     formData = formDataParser.parseBlocking();
                 }
             } 
             //If it is not parsable, construct empty
             if (!formData exists) {
-                formData = FormData();
+                formData = FormData(9999); //TODO expose max form data values as option
             }
         }
         return formData;

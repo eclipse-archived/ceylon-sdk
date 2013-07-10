@@ -3,6 +3,7 @@ import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 import ceylon.net.http { Method, allow }
+import io.undertow.server.handlers.form { FormParserFactory { formParserFactoryBuilder = builder }, FormDataParser, FormData}
 
 by("Matej Lazar")
 shared class CeylonRequestHandler() satisfies HttpHandler {
@@ -10,6 +11,8 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     value endpoints = LinkedList<Endpoint|AsynchronousEndpoint>();
     
     shared variable Options? options = null;
+    
+    FormParserFactory formParserFactory = formParserFactoryBuilder().build();
     
     shared void addWebEndpoint(Endpoint|AsynchronousEndpoint endpoint) {
         endpoints.add(endpoint);
@@ -24,7 +27,8 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     shared actual void handleRequest(JHttpServerExchange? exchange) {
         if (exists o = options) {
             if (exists exc = exchange) {
-                RequestImpl request = RequestImpl(exc);
+                
+                RequestImpl request = RequestImpl(exc, formParserFactory);
                 ResponseImpl response = ResponseImpl(exc, o.defaultCharset);
                 
                 try {
