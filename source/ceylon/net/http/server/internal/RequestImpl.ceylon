@@ -6,10 +6,7 @@ import ceylon.net.http.server {
     InternalException }
 
 import io.undertow.server { HttpServerExchange }
-import io.undertow.server.handlers.form { 
-        FormEncodedDataDefinition { applicationXWwwFormUrlEncoded=APPLICATION_X_WWW_FORM_URLENCODED },
-        MultiPartParserDefinition { multiparFormData=MULTIPART_FORM_DATA },
-        FormDataParser, FormData, FormParserFactory }
+import io.undertow.server.handlers.form { FormDataParser, FormData, FormParserFactory }
 
 import io.undertow.server.session { 
         SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
@@ -159,15 +156,12 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         if (exists f = formData) {
             return f;
         } else { 
-            if (exists contentType = getHeader(headerConntentType.string)) {
-                if (contentType.startsWith(applicationXWwwFormUrlEncoded) || contentType.startsWith(multiparFormData)) {
-                    FormDataParser formDataParser = formParserFactory.createParser(exchange);
-                    formData = formDataParser.parseBlocking();
-                }
-            } 
-            //If it is not parsable, construct empty
-            if (!formData exists) {
-                formData = FormData(9999); //TODO expose max form data values as option
+            FormDataParser? formDataParser = formParserFactory.createParser(exchange);
+            if (exists fdp = formDataParser) {
+                formData = fdp.parseBlocking();
+            } else {
+                //If no parser exists for requeste content-type, construct empty form data
+                formData = FormData(1000); //TODO expose max form data values as option
             }
         }
         return formData;
