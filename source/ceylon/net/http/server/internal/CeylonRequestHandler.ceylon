@@ -1,9 +1,9 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
-import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException, Response }
+import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException }
 import ceylon.collection { LinkedList }
 import java.lang { Runnable }
 import ceylon.net.http { Method, allow }
-import io.undertow.server.handlers.form { FormParserFactory { formParserFactoryBuilder = builder }, FormDataParser, FormData}
+import io.undertow.server.handlers.form { FormParserFactory { formParserFactoryBuilder = builder } }
 
 by("Matej Lazar")
 shared class CeylonRequestHandler() satisfies HttpHandler {
