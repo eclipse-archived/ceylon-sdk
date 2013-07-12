@@ -1,4 +1,4 @@
-import ceylon.logging { Logger, levelTrace, levelInfo, levelWarn, Configuration, LoggerConfiguration }
+import ceylon.logging { Logger, levelTrace, levelInfo, levelWarn, Configuration, LoggerConfiguration, logger }
 import ceylon.collection { LinkedList, MutableList }
 import ceylon.test { assertTrue, assertFalse, AssertException, assertEquals }
 import ceylon.net.http.server { Server, createServer, StatusListener, Status, started, stopped }
@@ -9,7 +9,7 @@ void testSmoke() {
     MutableList<String> list = LinkedList<String>();
     Writer writer = ListWriter(list);
     
-    Configuration logConfig = Configuration {
+    Configuration {
         defaultWriter = writer; 
         rootLevel = levelInfo;
         loggers = {
@@ -19,7 +19,7 @@ void testSmoke() {
         };
     };
     
-    Logger smokeLogger => logConfig.logger("ceylon.smoke");
+    Logger smokeLogger = logger("ceylon.smoke");
     smokeLogger.info("Info message from ceylon.smoke.");
     smokeLogger.debug("Debug message from ceylon.smoke.");
     
@@ -39,7 +39,7 @@ void testJavaLoggerConfig() {
     Writer writer = ListWriter(list);
     //Writer writer = ConsoleWriter();
     
-    Configuration logConfig = Configuration {
+    Configuration {
         defaultWriter = writer; 
         rootLevel = levelInfo;
         loggers = {
