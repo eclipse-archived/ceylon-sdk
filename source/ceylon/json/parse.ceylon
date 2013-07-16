@@ -1,5 +1,5 @@
 class Parser(String str){
-    Character[] chars = str.characters;
+    Character[] chars = str.characters.sequence;
     variable Integer index = 0;
 
     shared Object parseObject(){
