@@ -2,7 +2,7 @@ import ceylon.time.base { days, ms=milliseconds, years }
 import ceylon.time.internal.math { floor, fdiv=floorDiv, mod=floorMod }
 
 "Converts _Rata Die_ day number to a fixed date value.
- 
+
  _Rata Die_ is fixed at Monday, January 1st, 1. (Gregorian)."
 shared Integer rd( Integer t ) {
     value epoch = 0; // origin of all calculations
@@ -13,9 +13,7 @@ shared Integer rd( Integer t ) {
 shared object unixTime {
 
     "Fixed date value of the _Unix time_ epoch (1970-01-01)"
-    /* - There are five 400 year cycles from year zero to 2000.
-       - There are 7 leap years from 1970 to 2000. */
-    shared Integer epoch => (days.perCycle * 5) - (30 * days.perYear + 7);
+    shared Integer epoch => gregorian.fixedFrom([1970, 1, 1]);
 
     "Returns a _fixed date_ from the _unix time_ value."
     shared Integer fixedFromTime(Integer time) {
@@ -110,6 +108,7 @@ shared object gregorian extends GregorianCalendar() {
         return unflatten(fixed)(date);
     }
 
+    "Assert that specified date has it conjunction of year, month and day as valid gregorian values"
     shared actual void checkDate([Integer, Integer, Integer] date) {
         "Invalid year value"
         assert(years.minimum <= date[0] && date[0] <= years.maximum);

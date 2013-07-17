@@ -28,11 +28,15 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
 
     shared actual DateTimeRange|Empty gap( Range<DateTime, UnitOfDate|UnitOfTime> other ) {
         value response = _gap([from,to], [other.from, other.to]);
-        if ( is [DateTime,DateTime] response) {
-            return DateTimeRange(response[0], response[1]);
+        switch( response )
+        case( is [DateTime,DateTime] ) {
+            return response[0].successor < response[1] 
+                       then DateTimeRange(response[0].successor, response[1].predecessor)
+                       else [];
         }
-        assert( is Empty response);
-        return response;
+        case( is Empty ) {
+            return response;
+        }
     }
 
     "An iterator for the elements belonging to this 

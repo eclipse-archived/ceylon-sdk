@@ -38,6 +38,7 @@ shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] 
     if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
         assert(exists start = ordered.first);
         assert(exists end = ordered.last);
+
         return [start, end];
     }
 

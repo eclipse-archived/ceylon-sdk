@@ -149,17 +149,17 @@ shared void testGapRulesABSmallerCD_DateTime() {
 
 shared void testGapRulesABHigherCD_DateTime() {
     //Combinations to Test: AB > CD
-    //56 gap 12 = (5,2)
-    //56 gap 21 = (5,2)
-    //65 gap 12 = (5,2)
-    //65 gap 21 = (5,2)
+    //56 gap 12 = (2,5)
+    //56 gap 21 = (2,5)
+    //65 gap 12 = (2,5)
+    //65 gap 21 = (2,5)
 
     value a = dateTime(2013, january, 5, 9);
     value b = dateTime(2013, january, 6, 15);
     value c = dateTime(2013, january, 1, 9);
     value d = dateTime(2013, january, 2, 15);
 
-    value result = dateTime(2013, january, 5, 8, 59, 59, 999).rangeTo( dateTime(2013, january, 2, 15, 0, 0, 1) );
+    value result = dateTime(2013, january, 2, 15, 0, 0, 1).to(dateTime(2013, january, 5, 8, 59, 59, 999));
 
     //C1
     assertEquals{ 
@@ -227,17 +227,17 @@ shared void testOverlapRulesABSmallerCD_DateTime() {
 
 shared void testOverlapRulesABHigherCD_DateTime() {
     //Combinations to Test: AB > CD
-    //39 gap 16 = [6,3]
-    //39 gap 61 = [6,3]
-    //93 gap 16 = [6,3]
-    //93 gap 61 = [6,3]
+    //39 gap 16 = [3,6]
+    //39 gap 61 = [3,6]
+    //93 gap 16 = [3,6]
+    //93 gap 61 = [3,6]
 
     value a = dateTime(2013, january, 3, 9);
     value b = dateTime(2013, january, 9, 15);
     value c = dateTime(2013, january, 1, 9);
     value d = dateTime(2013, january, 6, 15);
 
-    value result = dateTime(2013, january, 6, 15).rangeTo( dateTime(2013, january, 3, 9) );
+    value result = dateTime(2013, january, 3, 9).to( dateTime(2013, january, 6, 15) );
 
     //C1
     assertEquals{ 

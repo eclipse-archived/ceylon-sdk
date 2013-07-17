@@ -4,8 +4,8 @@ import ceylon.time { Duration }
  
  A duration is a fixed delta of time between two instants 
  measured in number of milliseconds."
-see(`Duration`)
 by ("Diego Coronel", "Roland Tepp")
+see (`Duration`)
 shared interface ReadableDuration {
 
     "Number of milliseconds."
