@@ -70,14 +70,18 @@ void timeRangeSamples() {
     }
 
     value schedule = DaySchedule();
+    print("Adding 9:00 using default of 30 minutes");
     schedule.add(time(9,0));
+    
+    print( "Check if is 9:20 available ? The answer is ``schedule.isAvailable(time(9,20)) then "yes" else "no"`` ");
 
-    print( "is 9:20 available ? The answer is ``schedule.isAvailable(time(9,20)) then "yes" else "no"`` ");
-
+    print("Adding 13:00 until 15:00");
     schedule.add(time(13,0), time(15,0));
 
+    print("Adding 10:00 until 11:00");
     schedule.add(time(10,0), time(11,0));
 
+    print("\n############### Final Result ###############\n");
     print( schedule );
     for( range in schedule.availables()) {
         print("Available from: ``range.from`` until ``range.to`` ");
