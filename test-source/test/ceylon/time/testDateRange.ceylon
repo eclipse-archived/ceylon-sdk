@@ -285,13 +285,16 @@ shared void testOverlapRulesABHigherCD() {
 }
 
 void assertIntervalDate( Date start, Date end, Period period, Duration? duration = null )  {
-    value interval = start.rangeTo(end);
-    assertEquals(period, interval.period);
+    value range = start.to(end);
+    assertEquals(period, range.period);
 
     assertEquals( end, start.plus(period) );
     assertEquals( start, end.minus(period) );
 
+    assertEquals( start, range.first );
+    assertEquals( end, range.last );
+
     if( exists duration ) {
-        assertEquals(duration, interval.duration);
+        assertEquals(duration, range.duration);
     }
 }

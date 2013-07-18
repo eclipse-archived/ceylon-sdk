@@ -35,12 +35,14 @@ shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value
 shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second) 
        given Value satisfies Comparable<Value> & Ordinal<Value> {
     value ordered = sort(join(first, second)).segment(1, 2); // take the middle two
+
     if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
         assert(exists start = ordered.first);
         assert(exists end = ordered.last);
 
         return [start, end];
     }
+	
 
     return empty;
 }
