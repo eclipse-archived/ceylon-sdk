@@ -87,7 +87,7 @@ shared void testStepMinutesReverseTime() {
 }
 
 shared void testContainsTime() {
-    assertEquals(true, time(4,30) in firstQuarterDay);
+    assertEquals(true, time(1,30) in firstQuarterDay);
 }
 
 shared void testGapTimeEmpty() {

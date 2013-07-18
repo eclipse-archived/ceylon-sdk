@@ -32,7 +32,7 @@ interface RuleBasedTimezone satisfies TimeZone {
 }
 
 //TODO: Waiting for some decision about how to handle it
-shared object systemTimeZone extends OffsetTimeZone(0) {
+shared object systemTimeZone extends OffsetTimeZone(-4 * milliseconds.perHour) {
 }
 
 //TODO: Waiting for some decision about how to handle it

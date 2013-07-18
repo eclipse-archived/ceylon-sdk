@@ -1,6 +1,7 @@
 
-import ceylon.time { now, date, Date, Period, today, Time, dateTime, DateTime, DateRange, TimeRange, time }
-import ceylon.time.base { february, saturday, sunday, december, november, minutes }
+import ceylon.math.whole { Whole, one, zero, wholeNumber }
+import ceylon.time { now, Instant, date, Date, Period, today, Time, dateTime, DateTime, DateRange, TimeRange, time }
+import ceylon.time.base { february, december, saturday, sunday, november}
 
 void dateRangeSamples() {
     Boolean weekday( Date day ) {
@@ -13,38 +14,34 @@ void dateRangeSamples() {
     print("More ``christmasRange.filter(weekday).size`` weekday(s) until christmas");
 
     value vacationDays = 20;
-    value startVacation = date(2013, november, 1);
+	value startVacation = date(2013, november, 1);
 
-    print("But I´ll be on vacation from ``startVacation`` to ``startVacation.plusDays(vacationDays)`` ");
+    print("But ill be on vacation from ``startVacation`` to ``startVacation.plusDays(vacationDays)`` ");
 
     value realWeekdays = christmasRange.filter(weekday).size 
-           - startVacation.rangeTo(startVacation.plusDays(vacationDays)).filter(weekday).size;
-    print("Then its just only ``realWeekdays`` weekday(s) until christmas");
+           - startVacation.to(startVacation.plusDays(vacationDays)).filter(weekday).size;
+	print("Then its just only ``realWeekdays`` weekday(s) until christmas");
 }
 
 void timeRangeSamples() {
     class DaySchedule() {
         variable [TimeRange*] schedules = [];
 
-        shared [TimeRange*]|Empty availables() {
-           variable [TimeRange*]|Empty result = [];
-           if( schedules.size == 1 ) {
-               assert( exists unique = schedules[0]);
-               result = [ time(0,0).rangeTo(unique.from), unique.to.rangeTo(time(23, 59, 59)) ];
-           } else {
-               result = [for( i in 0..schedules.size ) if( exists start = schedules[i], exists end = schedules[i+1]) start.to.rangeTo(end.from) ]; 
+       // shared [TimeRange*]|Empty availables() {
+       //    variable [TimeRange*]|Empty result = [];
+       //    if( schedules.size == 1 ) {
+       //        assert( exists unique = schedules[0]);
+       //        result = [ time(0,0).to(unique.from), unique, unique.to(time(24,0)) ];
+       //    }
+       //    for( i in 1..schedules.size -1 ) {
+       //        value a = schedules[0];
+       //    }
+       //    return result;
+       //}
 
-               assert(exists first = schedules.first);
-               assert(exists last =  schedules.last);
-               result = [ time(0,0).rangeTo(first.from), last.to.rangeTo(time(23,59,59)), *result ];
-           }
-           result = result.sort((TimeRange x, TimeRange y) => x.from <=> y.from);
-           return result;
-       }
-
-        shared Boolean isAvailable( Time begin, Time end = begin.plusMinutes(30) ) {
+        shared Boolean isFree( Time begin, Time end = begin.plusMinutes(30) ) {
             variable Boolean free = true;
-            value newSchedule = begin.rangeTo(end).stepBy(minutes);
+            value newSchedule = begin.to(end);
             for( current in schedules ) {
                 if( newSchedule.overlap(current) != empty ) {
                     free = false;
@@ -55,8 +52,43 @@ void timeRangeSamples() {
         }
 
         shared void add( Time begin, Time end = begin.plusMinutes(30) ) {
-            this.schedules = [begin.rangeTo(end).stepBy(minutes), *schedules];
+            this.schedules = [begin.to(end), *schedules];
             this.schedules = schedules.sort((TimeRange x, TimeRange y) => x.from <=> y.from);
+        }
+
+        shared actual String string {
+            value builder = StringBuilder();
+            for( current in schedules ) {
+                builder.append("Reserved from ``current.from`` until ``current.to``\n");
+            }
+            return builder.string;
+        }
+    }
+
+    value schedule = DaySchedule();
+    schedule.add(time(9,0));
+
+    print( "Can i add to 9:20 ? [``schedule.isFree(time(9,20))``] ");
+
+    schedule.add(time(13,0), time(15,0));
+
+    schedule.add(time(10,0), time(11,0));
+
+    print( schedule );
+}
+
+"An example program using ceylon.time"
+void example(){
+
+    print("Getting current timestamp");
+    Instant start = now();
+    
+    print("Spending some time calculating pi...")
+    value pi = Pi();
+    for (n in 0..4000) {
+        process.write( pi.next().string );
+        if (n == 0){
+            process.write(".");
         }
 
         shared actual String string {
@@ -105,13 +137,7 @@ shared void example(){
     //}
     //print(result);
     
-    //value duration = start.durationTo(now());
-    //print("Calculated ``precision`` digits of pi in ``duration``");
-    
-    //value startDate = start.date();
-    //value startTime = start.time();
-    
-    //print("Pi calculation started on ``startDate`` at ``startTime`` (UTC)");
+    print("Pi calculation started on ``startDate`` at ``startTime`` ");
     
     Date thisDay = today();
     print("today is ``thisDay.dayOfWeek``");

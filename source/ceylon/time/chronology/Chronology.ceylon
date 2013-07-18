@@ -13,7 +13,7 @@ shared Integer rd( Integer t ) {
 shared object unixTime {
 
     "Fixed date value of the _Unix time_ epoch (1970-01-01)"
-    shared Integer epoch => gregorian.fixedFrom([1970, 1, 1]);
+    shared Integer epoch => (days.perCycle * 5) - (31 * days.perYear + 7);
 
     "Returns a _fixed date_ from the _unix time_ value."
     shared Integer fixedFromTime(Integer time) {

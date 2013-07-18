@@ -1,8 +1,8 @@
 import ceylon.time.base { Range, milliseconds, UnitOfDate, days, UnitOfYear, UnitOfMonth, UnitOfDay }
 import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
-see(`Range`)
-shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate> {
+see( `Range<Date, DateRange, UnitOfDate>` )
+shared class DateRange( from, to, step = days ) satisfies Range<Date, DateRange, UnitOfDate> {
 
     shared actual Date from;
     shared actual Date to;
@@ -12,7 +12,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate
         return from.periodTo(to);
     }
 
-    shared actual Duration duration  {
+    shared actual Duration duration {
         return Duration((to.dayOfEra - from.dayOfEra) * milliseconds.perDay);	
     }
 
@@ -43,7 +43,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate
     }
 
     "An iterator for the elements belonging to this 
-     container. where each jump is based on actual step of this Range"
+     container. where each jump is based on actual stepBy of this Range"
     shared actual Iterator<Date> iterator()  {
         object listIterator satisfies Iterator<Date> {
             variable Integer count = 0;

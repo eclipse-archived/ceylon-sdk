@@ -56,11 +56,11 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
 
      Given: [A..B] overlap [C..D]\n 
      When: AB > CD\n
-         [3..9] overlap [1..6] = [6,3]\n
-         [3..9] overlap [6..1] = [6,3]\n
-         [9..3] overlap [1..6] = [6,3]\n
-         [9..3] overlap [6..1] = [6,3]"
-    shared formal Range<Element, StepBy>|Empty overlap( Range<Element, StepBy> other );
+         [3..9] overlap [1..6] = [3,6]\n
+         [3..9] overlap [6..1] = [3,6]\n
+         [9..3] overlap [1..6] = [3,6]\n
+         [9..3] overlap [6..1] = [3,6]"
+    shared formal Range<Element, Self, StepBy>|Empty overlap( Self other );
 
     "Returns empty or a new Range:
      - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
@@ -75,11 +75,11 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
 
      Given: [A..B] gap [C..D]\n 
      When: AB > CD\n
-         [5..6] gap [1..2] = (5,2)\n
-         [5..6] gap [2..1] = (5,2)\n
-         [6..5] gap [1..2] = (5,2)\n
-         [6..5] gap [2..1] = (5,2)"    
-    shared formal Range<Element, StepBy>|Empty gap( Range<Element, StepBy> other );
+         [5..6] gap [1..2] = (2,5)\n
+         [5..6] gap [2..1] = (2,5)\n
+         [6..5] gap [1..2] = (2,5)\n
+         [6..5] gap [2..1] = (2,5)"    
+    shared formal Range<Element, Self, StepBy>|Empty gap( Self other );
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_"
     shared default actual Boolean equals( Object other ) {

@@ -87,6 +87,7 @@ shared class Instant(millisecondsOfEpoch)
         return false;
     }
 
+    "Instants are equal if both milliseconds of era are equal"
     shared actual Boolean equals( Object other ) {
         if ( is Instant other ) {
             return millisecondsOfEra == other.millisecondsOfEra;
