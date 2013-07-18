@@ -10,18 +10,18 @@ shared void stringTests() {
 }
 
 shared void collectionTests() {
-    //value lst = ArrayList<Integer>(JavaCollection({ 1, 2, 3 }));
+    value lst = ArrayList<Integer>(JavaCollection({ 1, 2, 3 }));
 
-    //value iter = CeylonIterator(lst.iterator());
-    //variable value val = 1;
-    //while (!is Finished i=iter.next()) {
-        //assertEquals(val++, i);
-    //}
+    value iter = CeylonIterator(lst.iterator());
+    variable value val = 1;
+    while (!is Finished i=iter.next()) {
+        assertEquals(val++, i);
+    }
 
-    //val = 1;
-    //for (Integer i in CeylonIterable(lst)) {
-        //assertEquals(val++, i);
-    //}
+    val = 1;
+    for (Integer i in CeylonIterable(lst)) {
+        assertEquals(val++, i);
+    }
 }
 
 shared void classTests() {
