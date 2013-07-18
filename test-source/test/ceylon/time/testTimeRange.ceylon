@@ -153,7 +153,7 @@ shared void testGapRulesABHigherCD_Time() {
     value c = time(1, 0);
     value d = time(2, 0);
 
-    value result = time(2, 0, 0, 1).to(time(4, 59, 59, 999));
+    value result = time(2, 0, 0, 1).rangeTo(time(4, 59, 59, 999));
 
     //C1
     assertEquals{ 
@@ -231,7 +231,7 @@ shared void testOverlapRulesABHigherCD_Time() {
     value c = time(1, 0);
     value d = time(6, 0);
 
-    value result = time(3, 0).to( time(6, 0) );
+    value result = time(3, 0).rangeTo( time(6, 0) );
 
     //C1
     assertEquals{ 
@@ -259,7 +259,7 @@ shared void testOverlapRulesABHigherCD_Time() {
 }
 
 void assertIntervalTime( Time start, Time end, Period period, Duration? duration = null )  {
-    value range = start.to(end);
+    value range = start.rangeTo(end);
     assertEquals(period, range.period);
 
     assertEquals( end, start.plus(period) );

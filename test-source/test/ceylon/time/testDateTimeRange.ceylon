@@ -159,7 +159,7 @@ shared void testGapRulesABHigherCD_DateTime() {
     value c = dateTime(2013, january, 1, 9);
     value d = dateTime(2013, january, 2, 15);
 
-    value result = dateTime(2013, january, 2, 15, 0, 0, 1).to(dateTime(2013, january, 5, 8, 59, 59, 999));
+    value result = dateTime(2013, january, 2, 15, 0, 0, 1).rangeTo(dateTime(2013, january, 5, 8, 59, 59, 999));
 
     //C1
     assertEquals{ 
@@ -237,7 +237,7 @@ shared void testOverlapRulesABHigherCD_DateTime() {
     value c = dateTime(2013, january, 1, 9);
     value d = dateTime(2013, january, 6, 15);
 
-    value result = dateTime(2013, january, 3, 9).to( dateTime(2013, january, 6, 15) );
+    value result = dateTime(2013, january, 3, 9).rangeTo( dateTime(2013, january, 6, 15) );
 
     //C1
     assertEquals{ 
@@ -265,7 +265,7 @@ shared void testOverlapRulesABHigherCD_DateTime() {
 }
 
 void assertIntervalDateTime( Date start, Date end, Period period, Duration? duration = null )  {
-    value range = start.to(end);
+    value range = start.rangeTo(end);
     assertEquals(period, range.period);
 
     assertEquals( end, start.plus(period) );

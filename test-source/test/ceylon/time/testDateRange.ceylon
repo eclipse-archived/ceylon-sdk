@@ -77,7 +77,7 @@ shared void testGapDateOneYear() {
     DateRange _2013 = date(2013, january, 1).rangeTo(date(2013, december, 31));
     DateRange _2015 = date(2015, january, 1).rangeTo(date(2015, december, 31));
 
-    DateRange _2014 = date(2014, january, 1).to(date(2014, december, 31));
+    DateRange _2014 = date(2014, january, 1).rangeTo(date(2014, december, 31));
     assertEquals(_2014, _2015.gap(_2013));
 }
 
@@ -179,7 +179,7 @@ shared void testGapRulesABHigherCD() {
     value c = date(2013, january, 1);
     value d = date(2013, january, 2);
 
-    value result = date(2013, january, 3).to( date(2013, january, 4) );
+    value result = date(2013, january, 3).rangeTo( date(2013, january, 4) );
 
     //C1
     assertEquals{ 
@@ -257,7 +257,7 @@ shared void testOverlapRulesABHigherCD() {
     value c = date(2013, january, 1);
     value d = date(2013, january, 6);
 
-    value result = date(2013, january, 3).to( date(2013, january, 6) );
+    value result = date(2013, january, 3).rangeTo( date(2013, january, 6) );
 
     //C1
     assertEquals{ 
@@ -285,7 +285,7 @@ shared void testOverlapRulesABHigherCD() {
 }
 
 void assertIntervalDate( Date start, Date end, Period period, Duration? duration = null )  {
-    value range = start.to(end);
+    value range = start.rangeTo(end);
     assertEquals(period, range.period);
 
     assertEquals( end, start.plus(period) );
