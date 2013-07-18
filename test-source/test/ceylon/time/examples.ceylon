@@ -1,4 +1,3 @@
-
 import ceylon.math.whole { Whole, one, zero, wholeNumber }
 import ceylon.time { now, Instant, date, Date, Period, today, Time, dateTime, DateTime, DateRange, TimeRange, time }
 import ceylon.time.base { february, december, saturday, sunday, november, minutes}
@@ -203,4 +202,4 @@ shared void example(){
   //    return nout;
   //}
   
-//}
+}
