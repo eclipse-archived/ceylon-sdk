@@ -1,6 +1,7 @@
 import ceylon.time { createDate=date, createTime=time }
 import ceylon.time.base { Month, DateTimeBehavior, ReadableDateTime, ReadablePeriod }
 import ceylon.time.internal { GregorianDateTime }
+import ceylon.time.timezone { tz = timeZone, TimeZone }
 
 "An abstract moment in time (like _4pm, October 21. 2012_).
  
@@ -28,6 +29,9 @@ shared interface DateTime
 
     "Returns the [[DateTimeRange]] between this and given DateTime"
     shared formal DateTimeRange rangeTo( DateTime other );
+
+    "Returns an instant from this [[DateTime]]"
+    shared formal Instant instant(TimeZone timeZone = tz.system);
 
 }
  

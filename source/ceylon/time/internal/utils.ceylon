@@ -1,3 +1,6 @@
+import ceylon.time { DateTime, Instant }
+import ceylon.time.chronology { unixTime }
+import ceylon.time.timezone { TimeZone }
 
 "return padded value of the number as a string"
 shared String leftPad(Integer number, String padding = "00"){
@@ -70,4 +73,9 @@ shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] seco
     assert(exists end = ordered.last);
 
     return [start, end];
+}
+
+shared Integer millisecondsOfEraFrom( DateTime dateTime, TimeZone timeZone ) {
+    value milliseconds = unixTime.timeFromFixed(dateTime.dayOfEra) + dateTime.millisecondsOfDay;
+    return milliseconds - timeZone.offset(Instant(milliseconds));
 }

@@ -6,7 +6,6 @@ import ceylon.time.timezone { ZoneDateTime }
  This interface is common to all data types that
  either partially or fully represent information 
  that can be interpreted as _date_."
-by ("Diego Coronel", "Roland Tepp")
 see (`Date`, `Time`, `DateTime`, `ZoneDateTime`)
 shared interface ReadableDate {
 

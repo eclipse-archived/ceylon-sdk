@@ -37,12 +37,12 @@ shared object timeZone {
 
     shared object utc extends OffsetTimeZone(0) {}
 
+    shared TimeZone|ParserError parse(String zone) {
+        return parseTimeZone(zone);
+	}
+	
     shared TimeZone fromMinutes(Integer offset) {
         return OffsetTimeZone(offset * milliseconds.perMinute);
     }
 
-    shared TimeZone|ParserError parse(String zone) {
-        return parseTimeZone(zone);
-    }
-    
 }

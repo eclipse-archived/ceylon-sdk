@@ -1,6 +1,6 @@
 import ceylon.time.base { ReadableInstant }
 import ceylon.time.chronology { unixTime }
-import ceylon.time.internal { TimeOfDay, GregorianDateTime, GregorianDate }
+import ceylon.time.internal { TimeOfDay, GregorianDateTime, GregorianDate, GregorianZonedDateTime }
 import ceylon.time.timezone { TimeZone, ZoneDateTime, tz = timeZone }
 
 "Obtains the current instant from the system clock."
