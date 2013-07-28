@@ -15,18 +15,18 @@ shared Instant now(Clock? clock = null) {
  
  An instant represents a single point in time irrespective of 
  any time-zone offsets or geographical locations"
-shared class Instant(millisecondsOfEra) 
+shared class Instant(millisecondsOfEpoch) 
     satisfies ReadableInstant & Comparable<Instant> {
 
     "Internal value of an instant as a number of milliseconds since 
      1970-01-01T00:00:00.000Z."
-    shared actual Integer millisecondsOfEra;
+    shared actual Integer millisecondsOfEpoch;
 
     "Adds a period to this instant"
     shared Instant plus(Duration|Period other){
         switch(other)
         case(is Duration){
-            return Instant(this.millisecondsOfEra + other.milliseconds);
+            return Instant(this.millisecondsOfEpoch + other.milliseconds);
         }
         case(is Period){
             return dateTime().plus(other).instant();
@@ -37,7 +37,7 @@ shared class Instant(millisecondsOfEra)
     shared Instant minus(Duration|Period other){
         switch(other)
         case(is Duration){
-            return Instant(this.millisecondsOfEra - other.milliseconds);
+            return Instant(this.millisecondsOfEpoch - other.milliseconds);
         }
         case(is Period){
             return dateTime().minus(other).instant();
@@ -46,7 +46,7 @@ shared class Instant(millisecondsOfEra)
 
     "Compares this instant to the _other_ instant"
     shared actual Comparison compare(Instant other) {
-        return this.millisecondsOfEra <=> other.millisecondsOfEra;
+        return this.millisecondsOfEpoch <=> other.millisecondsOfEpoch;
     }
 
     "Returns this instant as a [[DateTime]] value."
@@ -82,7 +82,7 @@ shared class Instant(millisecondsOfEra)
             return nothing;
         }
 
-        return GregorianDate(unixTime.fixedFromTime(millisecondsOfEra));
+        return GregorianDate(unixTime.fixedFromTime(millisecondsOfEpoch));
     }
 
     "Returns _time of day_ for this instant"
@@ -99,7 +99,7 @@ shared class Instant(millisecondsOfEra)
             //TODO: get [[Time]] of this [[Instant]] in the specified time zone.
             return nothing;
         }
-        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEra) );
+        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch) );
     }
 
     "Returns ZoneDateTime value for this instant."
@@ -110,12 +110,12 @@ shared class Instant(millisecondsOfEra)
 
     "Returns duration in milliseconds from this instant to the other instant."
     shared Duration durationTo(Instant other) {
-        return Duration(other.millisecondsOfEra - this.millisecondsOfEra);
+        return Duration(other.millisecondsOfEpoch - this.millisecondsOfEpoch);
     }
     
     "Returns duration in milliseconds from other instant to this instant."
     shared Duration durationFrom(Instant other) {
-        return Duration(this.millisecondsOfEra - other.millisecondsOfEra);
+        return Duration(this.millisecondsOfEpoch - other.millisecondsOfEpoch);
     }
 
 }

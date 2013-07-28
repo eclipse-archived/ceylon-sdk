@@ -29,7 +29,7 @@ shared interface Date
     shared formal DateTime at( Time time );
 
     "Returns the [[DateRange]] between this and given Date"
-    shared formal DateRange to( Date other );
+    shared formal DateRange rangeTo( Date other );
 
 }
 

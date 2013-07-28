@@ -276,7 +276,7 @@ shared class GregorianDate( Integer dayOfEra )
     shared actual Period periodTo(Date end) => end.periodFrom(this);
 
     "Returns the [[DateRange]] between this and given Date"
-    shared actual DateRange to( Date other ) {
+    shared actual DateRange rangeTo( Date other ) {
         return DateRange(this, other); 
     } 
 }

@@ -347,14 +347,14 @@ shared void testPeriodNextStepByMs_DateTime() {
     value from = dateTime(2013, april, 19, 17, 59,59);
     value to = dateTime(2013, april, 19, 18, 0);
 
-    assertEquals( 1001, from.to(to).size );
+    assertEquals( 1001, from.rangeTo(to).size );
 }
 
 shared void testPeriodPreviousStepByMs_DateTime() {
     value from = dateTime(2013, april, 19, 18, 0);
     value to = dateTime(2013, april, 19, 17, 59,59);
 
-    assertEquals( 1001, from.to(to).size );
+    assertEquals( 1001, from.rangeTo(to).size );
 }
 
 shared void testPeriodFromNewYear_DateTimeNegative() {

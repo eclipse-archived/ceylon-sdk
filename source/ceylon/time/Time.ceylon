@@ -38,7 +38,7 @@ shared interface Time
     shared formal Period periodTo( Time end );
 
     "Returns the [[TimeRange]] between this and given Time"
-    shared formal TimeRange to( Time other );
+    shared formal TimeRange rangeTo( Time other );
 }
 
 "Creates new instance of [[Time]]."
