@@ -2,7 +2,7 @@ import ceylon.time.base { Range, UnitOfDate, milliseconds, UnitOfTime, UnitOfYea
 import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
 //TODO see( Range )
-shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<DateTime, DateTimeRange, UnitOfDate|UnitOfTime> {
+shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<DateTime, UnitOfDate|UnitOfTime> {
 
     shared actual DateTime from;
     shared actual DateTime to;
@@ -15,9 +15,9 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         return Duration(to.instant().millisecondsOfEpoch - from.instant().millisecondsOfEpoch);	
     }
 
-    shared actual Boolean equals( Object other ) => (super of Range<DateTime, DateTimeRange, UnitOfDate|UnitOfTime>).equals(other); 
+    shared actual Boolean equals( Object other ) => (super of Range<DateTime, UnitOfDate|UnitOfTime>).equals(other); 
 
-    shared actual DateTimeRange|Empty overlap(DateTimeRange other) {
+    shared actual DateTimeRange|Empty overlap(Range<DateTime, UnitOfDate|UnitOfTime> other) {
         value response = _overlap([from,to], [other.from, other.to]);
         if ( is [DateTime,DateTime] response) {
             return DateTimeRange(*response);
@@ -26,7 +26,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
         return response;
     }
 
-    shared actual DateTimeRange|Empty gap( DateTimeRange other ) {
+    shared actual DateTimeRange|Empty gap( Range<DateTime, UnitOfDate|UnitOfTime> other ) {
         value response = _gap([from,to], [other.from, other.to]);
         if ( is [DateTime,DateTime] response) {
             return DateTimeRange(response[0], response[1]);

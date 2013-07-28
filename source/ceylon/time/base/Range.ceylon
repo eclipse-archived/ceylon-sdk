@@ -1,9 +1,8 @@
 import ceylon.time { Duration, Period }
 
 "An interface to represent a Range between two Date/DateTime/Time"
-shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Null>
-                                given Element satisfies Comparable<Element> & Ordinal<Element>
-                                given Self satisfies Range<Element,Self, StepBy> {
+shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
+                                given Element satisfies Comparable<Element> & Ordinal<Element> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as
@@ -61,7 +60,7 @@ shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Nul
          [3..9] overlap [6..1] = [6,3]\n
          [9..3] overlap [1..6] = [6,3]\n
          [9..3] overlap [6..1] = [6,3]"
-    shared formal Range<Element, Self, StepBy>|Empty overlap( Self other );
+    shared formal Range<Element, StepBy>|Empty overlap( Range<Element, StepBy> other );
 
     "Returns empty or a new Range:
      - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
@@ -80,17 +79,17 @@ shared interface Range<Element, in Self, StepBy> satisfies Iterable<Element, Nul
          [5..6] gap [2..1] = (5,2)\n
          [6..5] gap [1..2] = (5,2)\n
          [6..5] gap [2..1] = (5,2)"    
-    shared formal Range<Element, Self, StepBy>|Empty gap( Self other );
+    shared formal Range<Element, StepBy>|Empty gap( Range<Element, StepBy> other );
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_"
     shared default actual Boolean equals( Object other ) {
-        if ( is Range<Element, Self, StepBy> other ) {
+        if ( is Range<Element, StepBy> other ) {
             return from == other.from && to == other.to;
         }
         return false;
     }
 
     "Define how this Range will get next or previous element while iterating."
-    shared formal Range<Element, Self, StepBy> stepBy( StepBy step );
+    shared formal Range<Element, StepBy> stepBy( StepBy step );
 
 }
