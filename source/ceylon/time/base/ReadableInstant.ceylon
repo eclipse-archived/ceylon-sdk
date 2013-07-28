@@ -7,7 +7,7 @@ by ("Diego Coronel", "Roland Tepp")
 shared interface ReadableInstant {
 
     "Internal value of an instant as a number of milliseconds 
-     since beginning of an _era_ (january 1st 1974 UTC)"
-    shared formal Integer millisecondsOfEra;
+     since beginning of an _era_ (january 1st 1970 UTC)"
+    shared formal Integer millisecondsOfEpoch;
 
 }

@@ -12,7 +12,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
     shared actual Period period => from.periodTo(to);	
 
     shared actual Duration duration  {
-        return Duration(to.instant().millisecondsOfEra - from.instant().millisecondsOfEra);	
+        return Duration(to.instant().millisecondsOfEpoch - from.instant().millisecondsOfEpoch);	
     }
 
     shared actual Boolean equals( Object other ) => (super of Range<DateTime, DateTimeRange, UnitOfDate|UnitOfTime>).equals(other); 
