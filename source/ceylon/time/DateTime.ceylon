@@ -27,7 +27,7 @@ shared interface DateTime
     shared formal Period periodTo( DateTime end );
 
     "Returns the [[DateTimeRange]] between this and given DateTime"
-    shared formal DateTimeRange to( DateTime other );
+    shared formal DateTimeRange rangeTo( DateTime other );
 
 }
  
