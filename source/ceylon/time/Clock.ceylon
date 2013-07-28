@@ -58,7 +58,7 @@ shared Clock fixedTime(Instant|Integer instant) {
 class FixedInstant(Instant fixedInstant) satisfies Clock {
 
     "Returns milliseconds from the fixed instant"
-    shared actual Integer millis() => fixedInstant.millisecondsOfEra;
+    shared actual Integer millis() => fixedInstant.millisecondsOfEpoch;
 
     "Returns the fixed instant"
     shared actual Instant instant() => fixedInstant;

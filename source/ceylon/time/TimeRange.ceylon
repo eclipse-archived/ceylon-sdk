@@ -2,7 +2,7 @@ import ceylon.time.base { Range, UnitOfTime, milliseconds, UnitOfHour, UnitOfMin
 import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
 //TODO see( Range )
-shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, TimeRange, UnitOfTime> {
+shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, UnitOfTime> {
 
     shared actual Time from;
     shared actual Time to;
@@ -17,10 +17,10 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
     }
 
     shared actual Boolean equals( Object other ) {
-        return (super of Range<Time, TimeRange, UnitOfTime>).equals(other); 
+        return (super of Range<Time, UnitOfTime>).equals(other); 
     }
 
-    shared actual TimeRange|Empty overlap(TimeRange other) {
+    shared actual TimeRange|Empty overlap(Range<Time, UnitOfTime> other) {
         value response = _overlap([from,to], [other.from, other.to]);
         if ( is [Time,Time] response) {
             return TimeRange(response[0], response[1]);
@@ -29,7 +29,7 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Ti
         return response;
     }
 
-    shared actual TimeRange|Empty gap( TimeRange other ) {
+    shared actual TimeRange|Empty gap( Range<Time, UnitOfTime> other ) {
         value response = _gap([from,to], [other.from, other.to]);
         if ( is [Time,Time] response) {
             return TimeRange(response[0], response[1]);
