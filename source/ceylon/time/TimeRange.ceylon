@@ -1,7 +1,7 @@
 import ceylon.time.base { Range, UnitOfTime, milliseconds, UnitOfHour, UnitOfMinute, UnitOfSecond, UnitOfMillisecond }
 import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
-//TODO see( Range )
+see( Range )
 shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, UnitOfTime> {
 
     shared actual Time from;

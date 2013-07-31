@@ -1,5 +1,5 @@
 "Writes text to a `File`."
-//TODO see (File)
+see (File)
 shared interface Writer satisfies Closeable {
     
     "Write text to the file."
@@ -14,7 +14,7 @@ shared interface Writer satisfies Closeable {
     
     "Destroy this `Writer`. Called 
      automatically by `close()`."
-    //TODO see (close)
+    see (close)
     shared formal void destroy();
     
     shared actual void open() {}

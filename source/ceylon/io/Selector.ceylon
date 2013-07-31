@@ -84,7 +84,7 @@ shared interface Selector {
 }
 
 "Returns a new selector object."
-//TODO see (Selector)
+see (Selector)
 shared Selector newSelector(){
     return SelectorImpl();
 }

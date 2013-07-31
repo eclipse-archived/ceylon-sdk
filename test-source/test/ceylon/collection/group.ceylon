@@ -1,7 +1,7 @@
 import ceylon.collection { group }
 import ceylon.test { assertEquals }
 "Test the `group()` function"
-//TODO see (group)
+see (group)
 void testGroup(){
     value l = {"foo", "bar", "last", "list", "end"};
     value byFirstChar = group(l, (String element) => element.first?.string else "");

@@ -13,7 +13,7 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
      
      If you are no longer interested in `read` events from the selector, you should return
      `false` from your listener when invoked."
-    //TODO see (Selector)
+    see (Selector)
     shared void readAsync(Selector selector, void consume(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         setNonBlocking();
         Boolean readData(FileDescriptor socket){
@@ -38,7 +38,7 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
      
      If you are no longer interested in `write` events from the selector, you should return
      `false` from your listener when invoked."
-    //TODO see (Selector)
+    see (Selector)
     shared void writeAsync(Selector selector, void producer(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
         setNonBlocking();
         variable Boolean needNewData = true;
