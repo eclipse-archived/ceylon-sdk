@@ -9,13 +9,13 @@ shared interface Store {
     
     "The total number of bytes that are 
      available in this store."
-    see (usableSpace)
+    see(`usableSpace`)
     shared formal Integer availableSpace;
     
     "The total number of bytes that may be
      written to this store by this process,
      taking into account permissions, etc."
-    see (availableSpace)
+    see(`availableSpace`)
     shared formal Integer usableSpace;
     
     "Determine if this store can be written to."
@@ -27,5 +27,5 @@ shared interface Store {
 
 "The `Store`s representing the stores of the
  default file system."
-see (defaultSystem)
+see(`defaultSystem`)
 shared Store[] stores = storesInternal;

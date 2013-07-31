@@ -23,7 +23,7 @@ shared class DividedWithRemainder(divided, remainder) {
  thread. The `calculate()` function may itself call 
  `implicitlyRounded()` to apply a different implicit rounding 
  for a sub-calculation."
-see(implicitRounding)
+see(`implicitRounding`)
 shared Decimal implicitlyRounded(Decimal calculate(), Rounding rounding) {
     Rounding? prev = defaultRounding.get();
     try {
@@ -38,7 +38,7 @@ shared Decimal implicitlyRounded(Decimal calculate(), Rounding rounding) {
  operators `+`, `-`, `*`, `/` and `**` (or equivalently, the 
  methods `plus()`, `minus()`, `times()`, `divided()`, and 
  `power()`)."
-see(implicitlyRounded)
+see(`implicitlyRounded`)
 shared Rounding? implicitRounding {
     return defaultRounding.get();
 }
@@ -50,9 +50,9 @@ shared Rounding? implicitRounding {
  (unless documented otherwise) except for `plus()`, `minus()`, 
  `times()`, `divided()` and `power()` whose implicit rounding is 
  subject to the rules of `implicitlyRounded()`."
-see(implicitlyRounded)
-see(Rounding)
-see(unlimitedPrecision)
+see(`implicitlyRounded`)
+see(`Rounding`)
+see(`unlimitedPrecision`)
 shared interface Decimal
         of DecimalImpl
         satisfies //Castable<Decimal> &
@@ -66,13 +66,13 @@ shared interface Decimal
     "Determine whether two instances have equal value.`equals()` 
      considers `1` and `1.0` to be the same, `strictlyEquals()` 
      considers them to be different."
-    see(strictlyEquals)
+    see(`strictlyEquals`)
     shared formal actual Boolean equals(Object that);
 
     "Determine whether two instances have equal value _and 
      scale_. `strictlyEquals()` considers `1` and `1.0` to
      be different, `equals()` considers them to be the same."
-    see(equals)
+    see(`equals`)
     shared formal Boolean strictlyEquals(Decimal that);
 
     "The hash value of this `Decimal`. Due to the definition 
@@ -86,54 +86,54 @@ shared interface Decimal
      this `Decimal`'s scale and the given `Decimal`'s scale; it 
      may be larger if necessary; an exception is thrown if the 
      result would have a nonterminating decimal representation."
-    see(dividedRounded)
-    see(dividedTruncated)
-    see(implicitlyRounded)
+    see(`dividedRounded`)
+    see(`dividedTruncated`)
+    see(`implicitlyRounded`)
     shared formal actual Decimal divided(Decimal other);
 
     "The quotient obtained by dividing this `Decimal` by the given 
      `Decimal` with the given rounding."
-    see(divided)
-    see(dividedTruncated)
+    see(`divided`)
+    see(`dividedTruncated`)
     shared formal Decimal dividedRounded(Decimal other, 
                                          Rounding? rounding = null);
 
     "The product of this `Decimal` and the given `Decimal`. Unless 
      invoked within `implicitlyRounded()` the scale of the result 
      is the sum of the scales of the operands."
-    see(timesRounded)
-    see(implicitlyRounded)
+    see(`timesRounded`)
+    see(`implicitlyRounded`)
     shared formal actual Decimal times(Decimal other);
 
     "The product of this `Decimal` and the given `Decimal` with 
      the given rounding."
-    see(times)
+    see(`times`)
     shared formal Decimal timesRounded(Decimal other, 
                                        Rounding? rounding = null);
 
     "The sum of this `Decimal` and the given `Decimal`. Unless 
      invoked within `implicitlyRounded()` the scale of the result 
      is the greater of the scales of the operands."
-    see(plusRounded)
-    see(implicitlyRounded)
+    see(`plusRounded`)
+    see(`implicitlyRounded`)
     shared formal actual Decimal plus(Decimal other);
 
     "The sum of this `Decimal` and the given `Decimal` with the 
      given rounding."
-    see(plus)
+    see(`plus`)
     shared formal Decimal plusRounded(Decimal other, 
                                       Rounding? rounding = null);
 
     "The difference between this `Decimal` and the given `Decimal`.
      Unless invoked within `implicitlyRounded()` the scale of the 
      result is the greater of the scales of the operands."
-    see(minusRounded)
-    see(implicitlyRounded)
+    see(`minusRounded`)
+    see(`implicitlyRounded`)
     shared formal actual Decimal minus(Decimal other);
 
     "The difference between this `Decimal` and the given `Decimal` 
      with the given rounding."
-    see(minus)
+    see(`minus`)
     shared formal Decimal minusRounded(Decimal other, 
                                        Rounding? rounding = null);
 
@@ -141,7 +141,7 @@ shared interface Decimal
      Unless invoked within 
      `implicitlyRounded()` the result is computed to unlimited 
      precision and negative powers are not supported."
-    see(powerRounded)
+    see(`powerRounded`)
     throws(Exception, "The exponent has a non-zero fractional part")
     throws(Exception, "The exponent is too large or too small")
     throws(Exception, "The exponent was negative when attempting to 
@@ -150,7 +150,7 @@ shared interface Decimal
 
     "The result of raising this number to the given power with 
      the given rounding. Fractional powers are not supported."
-    see(power)
+    see(`power`)
     shared formal Decimal powerRounded(Integer other, 
                                        Rounding? rounding = null);
 
@@ -161,8 +161,8 @@ shared interface Decimal
     throws(Exception, "The integer part of the quotient requires 
                        more than the given precision.")
     throws(Exception, "The given divisor is zero")
-    see(dividedTruncated)
-    see(divided)
+    see(`dividedTruncated`)
+    see(`divided`)
     shared formal Decimal dividedTruncated(Decimal other, 
                                            Rounding? rounding = null);
 
@@ -183,25 +183,25 @@ shared interface Decimal
      `dividedTruncated()` and `remainderRounded()` with the given 
      arguments, except the division is only performed once."
     throws(Exception, "The given divisor is zero")
-    see(dividedTruncated, remainderRounded)
+    see(`dividedTruncated`,`remainderRounded`)
     shared formal DividedWithRemainder dividedAndRemainder(Decimal other, 
                                                            Rounding? rounding = null);
     
     "The precision of this decimal. This is the number of digits 
      in the unscaled value."
-    see(scale)
+    see(`scale`)
     shared formal Integer precision;
 
     "The scale of this decimal. This is the number of digits to 
      the right of the decimal point (for a positive scale) or 
      the power of ten by which the unscaled value is multiplied 
      (for a negative scale)."
-    see(unscaled)
-    see(precision)
+    see(`unscaled`)
+    see(`precision`)
     shared formal Integer scale;
     
     "The unscaled value of this `Decimal`."
-    see(scale)
+    see(`scale`)
     shared formal Whole unscaled;
 
     "This value rounded according to the given context."
@@ -209,8 +209,8 @@ shared interface Decimal
 
     "The number, represented as a `Whole`, after truncation of 
      any fractional part."
-    see(Whole)
-    see(integer)
+    see(`Whole`)
+    see(`integer`)
     shared formal Whole whole;
 
 }

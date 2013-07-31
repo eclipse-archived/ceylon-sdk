@@ -39,7 +39,7 @@ shared interface Directory
 
 "The `Directory`s representing the root directories of
  the default file system."
-see (defaultSystem)
+see(`defaultSystem`)
 shared Directory[] rootDirectories {
     value sb = SequenceBuilder<Directory>();
     for (p in rootPaths) {

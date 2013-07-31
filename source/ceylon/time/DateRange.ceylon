@@ -1,7 +1,7 @@
 import ceylon.time.base { Range, milliseconds, UnitOfDate, days, UnitOfYear, UnitOfMonth, UnitOfDay }
 import ceylon.time.internal { _gap = gap, _overlap = overlap }
 
-see( Range )
+see(`Range`)
 shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate> {
 
     shared actual Date from;

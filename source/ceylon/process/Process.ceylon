@@ -2,7 +2,7 @@ import ceylon.file { Path, current, Reader, Writer }
 import ceylon.process.internal { ConcreteProcess, environment }
 
 "Represents a separate native process."
-see (createProcess)
+see(`createProcess`)
 shared interface Process {
     
     "A _command_, usually a program with a list

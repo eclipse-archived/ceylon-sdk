@@ -12,7 +12,7 @@ import ceylon.io.impl { ServerSocketImpl }
  
  New server sockets are created with [[newServerSocket]]."
 by("Stéphane Épardaud")
-see (newServerSocket)
+see(`newServerSocket`)
 shared abstract class ServerSocket(SocketAddress? bindAddress = null){
     
     "Returns the local address this server socket is listening on."
@@ -27,7 +27,7 @@ shared abstract class ServerSocket(SocketAddress? bindAddress = null){
      
      If you wish to stop accepting connections, your listener should return
      `false` when invoked."
-    see (Selector)
+    see(`Selector`)
     shared formal void acceptAsync(Selector selector, Boolean accept(Socket socket));
     
     "Closes this server socket."
@@ -35,7 +35,7 @@ shared abstract class ServerSocket(SocketAddress? bindAddress = null){
 }
 
 "Instantiates and binds a new server socket."
-see (ServerSocket)
+see(`ServerSocket`)
 shared ServerSocket newServerSocket(SocketAddress? addr = null, Integer backlog = 0){
     return ServerSocketImpl(addr, backlog);
 }
