@@ -142,10 +142,10 @@ shared interface Decimal
      `implicitlyRounded()` the result is computed to unlimited 
      precision and negative powers are not supported."
     see(`powerRounded`)
-    throws(Exception, "The exponent has a non-zero fractional part")
-    throws(Exception, "The exponent is too large or too small")
-    throws(Exception, "The exponent was negative when attempting to 
-                       compute a result to unlimited precision")
+    throws(`Exception`, "The exponent has a non-zero fractional part")
+    throws(`Exception`, "The exponent is too large or too small")
+    throws(`Exception`, "The exponent was negative when attempting to 
+                         compute a result to unlimited precision")
     shared formal actual Decimal power(Integer other);
 
     "The result of raising this number to the given power with 
@@ -158,9 +158,9 @@ shared interface Decimal
      `Decimal` by the given `Decimal` and truncating the result. 
      The scale of the result is the difference of the scales of 
      the operands."
-    throws(Exception, "The integer part of the quotient requires 
-                       more than the given precision.")
-    throws(Exception, "The given divisor is zero")
+    throws(`Exception`, "The integer part of the quotient requires 
+                         more than the given precision.")
+    throws(`Exception`, "The given divisor is zero")
     see(`dividedTruncated`)
     see(`divided`)
     shared formal Decimal dividedTruncated(Decimal other, 
@@ -173,16 +173,16 @@ shared interface Decimal
      
       This is not equivalent to the `%` operator (`Decimal` does 
       not satisfy `Integral`), and the result may be negative."
-    throws(Exception, "The integer part of the quotient requires more 
-                       than the given precision.")
-    throws(Exception, "The given divisor is zero")
+    throws(`Exception`, "The integer part of the quotient requires more 
+                         than the given precision.")
+    throws(`Exception`, "The given divisor is zero")
     shared formal Decimal remainderRounded(Decimal other, 
                                            Rounding? rounding = null);
 
     "A pair containing the same results as calling 
      `dividedTruncated()` and `remainderRounded()` with the given 
      arguments, except the division is only performed once."
-    throws(Exception, "The given divisor is zero")
+    throws(`Exception`, "The given divisor is zero")
     see(`dividedTruncated`,`remainderRounded`)
     shared formal DividedWithRemainder dividedAndRemainder(Decimal other, 
                                                            Rounding? rounding = null);

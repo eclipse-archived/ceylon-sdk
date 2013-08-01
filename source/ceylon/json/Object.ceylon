@@ -68,7 +68,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     // auto-casting
     
     "Returns an [[Integer]] value."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key dot not exist or points to a type that is not [[Integer]].")
     shared Integer getInteger(String key){
         value val = get(key);
@@ -79,7 +79,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[Float]] value."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key dot not exist or points to a type that is not [[Float]].")
     shared Float getFloat(String key){
         value val = get(key);
@@ -90,7 +90,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[Boolean]] value."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key dot not exist or points to a type that is not [[Boolean]].")
     shared Boolean getBoolean(String key){
         value val = get(key);
@@ -101,7 +101,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[String]] value."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key dot not exist or points to a type that is not [[String]].")
     shared String getString(String key){
         value val = get(key);
@@ -112,7 +112,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[Object]] value."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key dot not exist or points to a type that is not [[Object]].")
     shared Object getObject(String key){
         value val = get(key);
@@ -123,7 +123,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
     
     "Returns an [[Array]] value."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key dot not exist or points to a type that is not [[Array]].")
     shared Array getArray(String key){
         value val = get(key);
@@ -136,7 +136,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     // optional auto-casting
     
     "Returns an [[Integer]] value, unless the key does not exist, or the value is null."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key points to a type that is neither [[Integer]] nor [[NullInstance]].")
     shared Integer? getIntegerOrNull(String key){
         value val = get(key);
@@ -150,7 +150,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[Float]] value, unless the key does not exist, or the value is null."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key points to a type that is neither [[Float]] nor [[NullInstance]].")
     shared Float? getFloatOrNull(String key){
         value val = get(key);
@@ -164,7 +164,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[Boolean]] value, unless the key does not exist, or the value is null."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key points to a type that is neither [[Boolean]] nor [[NullInstance]].")
     shared Boolean? getBooleanOrNull(String key){
         value val = get(key);
@@ -178,7 +178,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[String]] value, unless the key does not exist, or the value is null."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key points to a type that is neither [[String]] nor [[NullInstance]].")
     shared String? getStringOrNull(String key){
         value val = get(key);
@@ -192,7 +192,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
 
     "Returns an [[Object]] value, unless the key does not exist, or the value is null."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key points to a type that is neither [[Object]] nor [[NullInstance]].")
     shared Object? getObjectOrNull(String key){
         value val = get(key);
@@ -206,7 +206,7 @@ shared class Object({Entry<String, String|Boolean|Integer|Float|Object|Array|Nul
     }
     
     "Returns an [[Array]] value, unless the key does not exist, or the value is null."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If the key points to a type that is neither [[Array]] nor [[NullInstance]].")
     shared Array? getArrayOrNull(String key){
         value val = get(key);

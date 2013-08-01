@@ -46,7 +46,7 @@ shared object unnecessary extends Mode() {}
 "Holds precision and rounding information for use in 
  decimal arithmetic. A precision of `0` means unlimited 
  precision."
-throws(Exception, "The precision is negative.")
+throws(`Exception`, "The precision is negative.")
 see(`Decimal`)
 see(`round`)
 see(`unlimitedPrecision`)

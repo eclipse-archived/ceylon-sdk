@@ -282,7 +282,7 @@ class Parser(String str){
 
 "Parses a JSON string into a JSON Object"
 by("Stéphane Épardaud")
-throws(Exception, "If the JSON string is invalid")
+throws(`Exception`, "If the JSON string is invalid")
 shared Object parse(String str){
     return Parser(str).parseObject();
 }

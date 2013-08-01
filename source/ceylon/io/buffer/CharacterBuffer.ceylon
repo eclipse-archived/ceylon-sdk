@@ -48,14 +48,14 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
     }
 
     "Not supported"
-    throws(Exception,"Always")
+    throws(`Exception`,"Always")
     shared actual void put(Character element) {
         // FIXME: type
         throw Exception("Buffer is read-only");
     }
     
     "Not supported"
-    throws(Exception,"Always")
+    throws(`Exception`,"Always")
     shared actual void resize(Integer newSize, Boolean growLimit) {
         // FIXME: type
         throw Exception("Buffer is read-only");

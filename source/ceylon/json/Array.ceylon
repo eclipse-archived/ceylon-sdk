@@ -108,7 +108,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     
     // auto-casting
     
-    throws(InvalidTypeException)
+    throws(`InvalidTypeException`)
     Object checkObject(LangObject val){
         if(is Object val){
             return val;
@@ -117,13 +117,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
 
     "Returns this array as a sequence of [[Object]] elements."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If one element in this array is not an [[Object]].")
     shared Iterable<Object> objects {
         return { for (elem in list) checkObject(elem) };
     }
 
-    throws(InvalidTypeException)
+    throws(`InvalidTypeException`)
     String checkString(LangObject val){
         if(is String val){
             return val;
@@ -132,13 +132,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
 
     "Returns this array as a sequence of [[String]] elements."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If one element in this array is not a [[String]].")
     shared Iterable<String> strings {
         return { for (elem in list) checkString(elem) };
     }
 
-    throws(InvalidTypeException)
+    throws(`InvalidTypeException`)
     Integer checkInteger(LangObject val){
         if(is Integer val){
             return val;
@@ -147,13 +147,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
 
     "Returns this array as a sequence of [[Integer]] elements."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If one element in this array is not a [[Integer]].")
     shared Iterable<Integer> integers {
         return { for (elem in list) checkInteger(elem) };
     }
 
-    throws(InvalidTypeException)
+    throws(`InvalidTypeException`)
     Float checkFloat(LangObject val){
         if(is Float val){
             return val;
@@ -162,13 +162,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
 
     "Returns this array as a sequence of [[Float]] elements."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If one element in this array is not a [[Float]].")
     shared Iterable<Float> floats {
         return { for (elem in list) checkFloat(elem) };
     }
 
-    throws(InvalidTypeException)
+    throws(`InvalidTypeException`)
     Boolean checkBoolean(LangObject val){
         if(is Boolean val){
             return val;
@@ -177,13 +177,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
 
     "Returns this array as a sequence of [[Boolean]] elements."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If one element in this array is not a [[Boolean]].")
     shared Iterable<Boolean> booleans {
         return { for (elem in list) checkBoolean(elem) };
     }
 
-    throws(InvalidTypeException)
+    throws(`InvalidTypeException`)
     Array checkArray(LangObject val){
         if(is Array val){
             return val;
@@ -192,7 +192,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
 
     "Returns this array as a sequence of [[Array]] elements."
-    throws(InvalidTypeException,
+    throws(`InvalidTypeException`,
         "If one element in this array is not an [[Array]].")
     shared Iterable<Array> arrays {
         return { for (elem in list) checkArray(elem) };

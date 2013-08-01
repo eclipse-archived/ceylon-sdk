@@ -27,12 +27,12 @@ shared interface Whole of WholeImpl
      * Otherwise negative powers result in an `Exception` 
        being thrown
      "
-    throws(Exception, "If passed a negative or large positive 
-                       exponent")
+    throws(`Exception`, "If passed a negative or large positive 
+                         exponent")
     shared formal actual Whole power(Whole exponent);
 
     "The result of `(this**exponent) % modulus`."
-    throws(Exception, "If passed a negative modulus")
+    throws(`Exception`, "If passed a negative modulus")
     shared formal Whole powerRemainder(Whole exponent, 
                                        Whole modulus);
 }
