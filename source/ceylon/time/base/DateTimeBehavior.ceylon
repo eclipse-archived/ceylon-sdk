@@ -1,6 +1,3 @@
-import ceylon.time.timezone { TimeZone, tz = timeZone }
-import ceylon.time { Instant }
-
 "Common behavior of the [[DateTime]] types"
 shared interface DateTimeBehavior<Element, out DateType, out TimeType> of Element
        satisfies DateBehavior<Element>
@@ -14,8 +11,5 @@ shared interface DateTimeBehavior<Element, out DateType, out TimeType> of Elemen
 
     "Returns Date portion of this [[DateTime]] value."
     shared formal DateType date;
-
-    "Returns an instant from this [[DateTime]]"
-    shared formal Instant instant(TimeZone timeZone = tz.system );
 
 }

@@ -54,11 +54,7 @@ shared Clock fixedTime(Instant|Integer instant) {
 class FixedInstant(Instant fixedInstant) satisfies Clock {
 
     "Returns milliseconds from the fixed instant"
-<<<<<<< Upstream, based on ceylon/master
     shared actual Integer milliseconds() => fixedInstant.millisecondsOfEpoch;
-=======
-    shared actual Integer milliseconds() => fixedInstant.millisecondsOfEra;
->>>>>>> 026d7bd initial beginnings of TimeZone implementation
 
     "Returns the fixed instant"
     shared actual Instant instant() => fixedInstant;
@@ -87,8 +83,4 @@ shared Clock offsetTime(Clock baseClock, Integer offset)
 class OffsetClock(Clock baseClock, Integer offset) satisfies Clock {
     shared actual Instant instant() => Instant( milliseconds() );
     shared actual Integer milliseconds() => baseClock.milliseconds() + offset;
-<<<<<<< Upstream, based on ceylon/master
 }
-=======
-}
->>>>>>> 026d7bd initial beginnings of TimeZone implementation

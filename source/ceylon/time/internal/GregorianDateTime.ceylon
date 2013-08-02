@@ -217,7 +217,7 @@ shared class GregorianDateTime( date, time )
     //TODO: Thats not the right way...
     shared actual Instant instant( TimeZone timeZone ) {
 	    value instant = Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
-        return Instant( instant.millisecondsOfEra - timeZone.offset(instant) );
+        return Instant( instant.millisecondsOfEpoch - timeZone.offset(instant) );
     }
 
     shared actual Boolean equals( Object other ) {
