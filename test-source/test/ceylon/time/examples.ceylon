@@ -94,7 +94,7 @@ void example(){
     print("Getting current timestamp");
     Instant start = now();
     
-    print("Spending some time calculating pi...")
+    print("Spending some time calculating pi...");
     value pi = Pi();
     for (n in 0..4000) {
         process.write( pi.next().string );
