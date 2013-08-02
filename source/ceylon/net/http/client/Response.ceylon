@@ -113,7 +113,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
 
     "Returns a [[Reader]] for the entity body."
-    throws("If the status is not 200 OK.")
+    throws(`Exception`, "If the status is not 200 OK.")
     shared Reader getReader(){
         if(status != 200){
             throw Exception("Status is not OK");
@@ -170,7 +170,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
     
     "Returns the entity body as a [[String]]."
-    throws("If the status code is not 200")
+    throws(`Exception`, "If the status code is not 200")
     shared String contents {
         if(exists x = readException){
             throw x;
