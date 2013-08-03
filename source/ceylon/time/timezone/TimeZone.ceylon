@@ -27,7 +27,7 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
 
 }
 
-interface RuleBasedTimezone satisfies TimeZone {
+shared interface RuleBasedTimezone satisfies TimeZone {
     //TODO: Implement complex rule based time zones
 }
 
@@ -39,8 +39,8 @@ shared object timeZone {
 
     shared TimeZone|ParserError parse(String zone) {
         return parseTimeZone(zone);
-	}
-	
+    }
+
     shared TimeZone fromMinutes(Integer offset) {
         return OffsetTimeZone(offset * milliseconds.perMinute);
     }

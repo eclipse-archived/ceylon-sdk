@@ -65,9 +65,8 @@ shared class Instant(millisecondsOfEpoch)
     }
 
     "Returns ZoneDateTime value for this instant."
-    shared ZoneDateTime zoneDateTime(TimeZone zone){
-        //TODO: get [[Time]] of this [[Instant]] in the specified time zone.
-        return nothing;
+    shared ZoneDateTime zoneDateTime(TimeZone timeZone = tz.system){
+        return GregorianZonedDateTime(this, timeZone);
     }
 
     "Returns duration in milliseconds from this instant to the other instant."

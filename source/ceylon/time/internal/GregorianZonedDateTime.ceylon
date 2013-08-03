@@ -1,6 +1,7 @@
 import ceylon.time { Date, Time, Instant, DateTime }
 import ceylon.time.timezone { ZoneDateTime, TimeZone, tz = timeZone }
-import ceylon.time.base { Month, DayOfWeek }
+import ceylon.time.base { Month, DayOfWeek, ms = milliseconds }
+import ceylon.time.chronology { unixTime }
 
 shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies ZoneDateTime {
 
@@ -8,7 +9,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
     shared actual Instant instant;
 
     shared actual Comparison compare(ZoneDateTime other) {
-        return instant.millisecondsOfEpoch <=> other.instant.millisecondsOfEpoch;
+        return instant <=> other.instant;
     }
 
     shared actual Integer day => instant.dateTime(timeZone).day;
@@ -95,9 +96,20 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
 
     shared actual ZoneDateTime successor => adjust( instant.dateTime(timeZone).successor );
 
+    //TODO: Need to check correct pattern
+    shared actual String string {
+        value offset = timeZone.offset(instant);
+        value builder = StringBuilder();
+        builder.append(instant.dateTime(timeZone).string);
+        builder.append( offset >= 0 then " +" else " -" );
+        builder.append( "``leftPad((offset / ms.perHour).magnitude)``:``leftPad(offset % ms.perHour)``" ); 
+        return builder.string;
+    }
+
     GregorianZonedDateTime adjust( DateTime resolved ) {
-        value newMillisecondsOfEra = millisecondsOfEraFrom( resolved, timeZone );
-        return GregorianZonedDateTime( Instant( newMillisecondsOfEra ), timeZone );
+        value zoneMillisecondsOfEpoch = unixTime.timeFromFixed(resolved.dayOfEra) + resolved.millisecondsOfDay;
+        value utcMillisecondsOfEpoch = zoneMillisecondsOfEpoch - timeZone.offset(instant);
+        return GregorianZonedDateTime( Instant( utcMillisecondsOfEpoch ), timeZone );
     }
 
 }
