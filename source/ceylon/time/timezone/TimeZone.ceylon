@@ -1,5 +1,5 @@
 import ceylon.time { Instant }
-import ceylon.time.base { milliseconds }
+import ceylon.time.base { ms = milliseconds }
 
 "The interface representing a timezone"
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -41,8 +41,8 @@ shared object timeZone {
         return parseTimeZone(zone);
     }
 
-    shared TimeZone fromMinutes(Integer offset) {
-        return OffsetTimeZone(offset * milliseconds.perMinute);
+    shared TimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
+        return OffsetTimeZone(hours * ms.perHour + minutes * ms.perMinute + milliseconds);
     }
 
 }
