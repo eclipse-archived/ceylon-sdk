@@ -1,18 +1,24 @@
-import ceylon.time.timezone { timeZone, zoneDateTime, ZoneDateTime, RuleBasedTimezone }
+import ceylon.time.timezone { timeZone, zoneDateTime, ZoneDateTime, RuleBasedTimezone, OffsetTimeZone }
 import ceylon.time.base { january, december, february, june, july, milliseconds, august, may }
 import ceylon.test { assertEquals }
-import ceylon.time { date, Date, Time, time, dateTime, Instant }
+import ceylon.time { date, Date, Time, time, Instant }
 
 Date _2013_01_01 = date(2013, january, 1);
 Time _00_00 = time(0,0);
-ZoneDateTime systemZoned = zoneDateTime(timeZone.system, 2013, january, 1);
+ZoneDateTime systemZoned = zoneDateTime(simpleTimeZone, 2013, january, 1);
 ZoneDateTime utcZoned = zoneDateTime(timeZone.utc, 2013, january, 1);
 ZoneDateTime _dst_2013_01_01 = zoneDateTime(simpleDstTimeZone, 2013, january, 1);
 
+object simpleTimeZone extends OffsetTimeZone(-4 * milliseconds.perHour) {
+}
+
 object simpleDstTimeZone satisfies RuleBasedTimezone {
 
-    Instant start = dateTime(2013, june, 1).instant(timeZone.system);
-    Instant end   = dateTime(2013, july, 1, 10, 0).instant(timeZone.system);
+    // 2013-06-01T00:00:00Z
+    Instant start = Instant(1370044800000);
+   
+    // 2013-07-01T10:00:00
+    Instant end   = Instant(1372672800000);
 
     Integer dstOffset = 1 * milliseconds.perHour;
 
@@ -25,21 +31,20 @@ object simpleDstTimeZone satisfies RuleBasedTimezone {
 }
 
 void testRuleBasedTimeZone() {
-    //Inside DST Rule
+
+    assertDateAndTime(date(2013, june, 1), time(0,0), zoneDateTime(simpleDstTimeZone, 2013, june, 1));
+
     assertDateAndTime( date(2013, june, 1), time(1,0), _dst_2013_01_01.plusMonths(5) );
     assertDateAndTime( date(2013, july, 1), time(1,0), _dst_2013_01_01.plusMonths(6) );
 
-    //Outside DST Rule
     assertDateAndTime( _2013_01_01, _00_00, _dst_2013_01_01 );
     assertDateAndTime( date(2013, february, 1), time(0,0), _dst_2013_01_01.plusMonths(1) );
     assertDateAndTime( date(2013, august, 1), time(0,0), _dst_2013_01_01.plusMonths(7) );
 
-    //From inside
     value _dst_2013_06_02 = zoneDateTime(simpleDstTimeZone, 2013, june, 2);
     assertDateAndTime( date(2013, may, 30), time(23,0), _dst_2013_06_02.minusDays(2) );
     assertDateAndTime( date(2013, july, 1), time(0,0), _dst_2013_06_02.plusDays(29) );
     assertDateAndTime( date(2013, july, 1), time(11,0), _dst_2013_06_02.plusDays(29).plusHours(12) );
-
 }
 
 void testDateZoned() {
@@ -48,7 +53,7 @@ void testDateZoned() {
 }
 
 void testInstantZoned() {
-    assertEquals(feb_13_2013_18_00_42_0057.millisecondsOfEpoch, zoneDateTime(timeZone.system, 2013, february, 13, 18, 0, 42, 57).instant.millisecondsOfEpoch + (process.timezoneOffset));
+    assertEquals(feb_13_2013_18_00_42_0057.millisecondsOfEpoch, zoneDateTime(simpleTimeZone, 2013, february, 13, 18, 0, 42, 57).instant.millisecondsOfEpoch + (process.timezoneOffset));
     assertEquals(feb_13_2013_18_00_42_0057.millisecondsOfEpoch, zoneDateTime(timeZone.utc, 2013, february, 13, 18, 0, 42, 57).instant.millisecondsOfEpoch);
 }
 
