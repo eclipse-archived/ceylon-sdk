@@ -7,6 +7,7 @@ Date _2013_01_01 = date(2013, january, 1);
 Time _00_00 = time(0,0);
 ZoneDateTime systemZoned = zoneDateTime(timeZone.system, 2013, january, 1);
 ZoneDateTime utcZoned = zoneDateTime(timeZone.utc, 2013, january, 1);
+ZoneDateTime _dst_2013_01_01 = zoneDateTime(simpleDstTimeZone, 2013, january, 1);
 
 object simpleDstTimeZone satisfies RuleBasedTimezone {
 
@@ -16,7 +17,6 @@ object simpleDstTimeZone satisfies RuleBasedTimezone {
     Integer dstOffset = 1 * milliseconds.perHour;
 
     shared actual Integer offset(Instant instant)  {
-print(start <= instant <= end);
         return ( start <= instant <= end ) 
                     then dstOffset + process.timezoneOffset 
                     else process.timezoneOffset;   
@@ -25,8 +25,6 @@ print(start <= instant <= end);
 }
 
 void testRuleBasedTimeZone() {
-    value _dst_2013_01_01 = zoneDateTime(simpleDstTimeZone, 2013, january, 1);
-
     //Inside DST Rule
     assertDateAndTime( date(2013, june, 1), time(1,0), _dst_2013_01_01.plusMonths(5) );
     assertDateAndTime( date(2013, july, 1), time(1,0), _dst_2013_01_01.plusMonths(6) );
@@ -150,6 +148,12 @@ void testMinusHoursZoned() {
     assertDateAndTime( date(2012, december, 30), time(22, 0), systemZoned.minusHours(26) );
     assertDateAndTime( date(2012, december, 30), time(22, 0), utcZoned.minusHours(26) );
 }
+
+void testStringZoneDateTime() {
+    assertEquals("2013-01-01T00:00:00-04:00", _dst_2013_01_01.string);
+    assertEquals("2013-06-01T00:00:00-03:00", zoneDateTime(simpleDstTimeZone, 2013, june, 1).string);
+    assertEquals("2013-01-01T00:00:00+00:00", utcZoned.string);
+} 
 
 void assertDateAndTime( Date date, Time time, ZoneDateTime zoneDateTime) {
     assertEquals(date, zoneDateTime.date);

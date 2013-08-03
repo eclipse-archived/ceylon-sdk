@@ -39,9 +39,10 @@ shared class TimeOfDay(millisecondsOfDay)
     "Next second"
     shared actual Time successor => plusMilliseconds(1);
 
-    "Returns ISO 8601 formatted String representation of this _time of day_."
+    "Returns ISO 8601 formatted String representation of this _time of day_.\n
+     Reference: https://en.wikipedia.org/wiki/ISO_8601#Times"
     shared actual String string {
-        return "``leftPad(hours)``:``leftPad(minutes)``:``leftPad(seconds)``.``leftPad(milliseconds, "000")``";
+        return "``leftPad(hours)``:``leftPad(minutes)``:``leftPad(seconds)``";
     }
 
     "Adds specified number of hours to this time of day 

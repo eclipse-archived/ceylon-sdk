@@ -232,8 +232,10 @@ shared class GregorianDateTime( date, time )
         return false;
     }
 
+    "Returns ISO 8601 formatted String representation of this _Date and Time of day_.\n
+     https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations"
     shared actual String string {
-        return "``date.string`` ``time.string``";
+        return "``date.string``T``time.string``";
     }
 
     shared actual Period periodFrom(DateTime start) {

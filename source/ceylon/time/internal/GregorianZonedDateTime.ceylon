@@ -96,12 +96,11 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
 
     shared actual ZoneDateTime successor => adjust( instant.dateTime(timeZone).successor );
 
-    //TODO: Need to check correct pattern
     shared actual String string {
         value offset = timeZone.offset(instant);
         value builder = StringBuilder();
         builder.append(instant.dateTime(timeZone).string);
-        builder.append( offset >= 0 then " +" else " -" );
+        builder.append( offset >= 0 then "+" else "-" );
         builder.append( "``leftPad((offset / ms.perHour).magnitude)``:``leftPad(offset % ms.perHour)``" ); 
         return builder.string;
     }
