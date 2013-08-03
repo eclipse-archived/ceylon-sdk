@@ -9,10 +9,10 @@ shared Integer rd( Integer t ) {
     return t - epoch;
 }
 
-"Common properties of _Unix time_"
+"Common properties of _Unix time_."
 shared object unixTime {
 
-    "Fixed date value of the _Unix time_ epoch (1970-01-01)"
+    "Fixed date value of the _Unix time_ epoch (1970-01-01)."
     shared Integer epoch => gregorian.fixedFrom([1970, 1, 1]);
 
     "Returns a _fixed date_ from the _unix time_ value."
@@ -20,7 +20,7 @@ shared object unixTime {
         return fdiv(time, ms.perDay) + epoch;
     }
 
-    "Return milliseconds elapsed from 1970-01-01 00:00:00"
+    "Return milliseconds elapsed from 1970-01-01 00:00:00."
     shared Integer timeFromFixed( Integer date ) {
         return (date - epoch) * ms.perDay;
     }
@@ -42,25 +42,25 @@ shared interface Chronology<Fields>
     shared formal Integer epoch;
 
     "Converts date tuple of this calendar system to an equivalent _fixed date_
-     representation of the "
+     representation of the day of era."
     shared formal Integer fixedFrom( Fields date );
 
-    "Converts a _fixed day_ number to a calendar date tuple"
+    "Converts a _fixed day_ number to a calendar date tuple."
     shared formal Fields dateFrom( Integer fixed );
 
-    "Validate the given date"
+    "Validate the given date."
     shared formal void checkDate( Fields date );
 
 }
 
 "An interface for calendar system that defines leap year rules.
  
- *Note:* This interface is meant to convey a Calendar that has some sort of leap year syntax"
+ *Note:* This interface is meant to convey a Calendar that has some sort of leap year syntax."
 shared interface LeapYear<Self, Fields> of Self
        given Self satisfies Chronology<Fields>
        given Fields satisfies Anything[] {
 
-    "Returns true if the specified year is a leap year according to the leap year rules of the"
+    "Returns true if the specified year is a leap year according to the leap year rules of the given chronology."
     shared formal Boolean leapYear( Integer leapYear );
 }
 
@@ -70,10 +70,10 @@ abstract shared class GregorianCalendar() of gregorian
                  & LeapYear<GregorianCalendar, [Integer, Integer, Integer]> {}
 
 "Represents the implementation of all calculations for
- the rules based on Gregorian Calendar"
+ the rules based on Gregorian Calendar."
 shared object gregorian extends GregorianCalendar() {
 
-    "Epoch of the gregorian calendar"
+    "Epoch of the gregorian calendar."
     shared actual Integer epoch = rd(1);
 
     shared Integer january = 1;
@@ -96,6 +96,7 @@ shared object gregorian extends GregorianCalendar() {
                                  else year % 4 == 0;
     }
 
+    "Return the _day of era_ from a given date."
     Integer fixed(Integer year, Integer month, Integer day) {
         return epoch - 1 + 365 * (year - 1) + floor((year - 1) / 4.0)
                - floor((year - 1) / 100.0) + floor((year - 1) / 400.0)
@@ -104,11 +105,12 @@ shared object gregorian extends GregorianCalendar() {
                + day;
     }
 
+    "Return the _day of era_ from a given date."
     shared actual Integer fixedFrom([Integer, Integer, Integer] date) {
         return unflatten(fixed)(date);
     }
 
-    "Assert that specified date has it conjunction of year, month and day as valid gregorian values"
+    "Assert that specified date has it conjunction of year, month and day as valid gregorian values."
     shared actual void checkDate([Integer, Integer, Integer] date) {
         "Invalid year value"
         assert(years.minimum <= date[0] && date[0] <= years.maximum);
@@ -141,7 +143,7 @@ shared object gregorian extends GregorianCalendar() {
         return (n100 == 4 || n1 == 4) then year else year + 1;
     }
 
-    "Converts the fixed date value to an equivalent gregorian date"
+    "Converts the fixed date value to an equivalent gregorian date."
     shared actual [Integer, Integer, Integer] dateFrom(Integer date) {
         value year = yearFrom(date);
         value priorDays = date - newYear(year);

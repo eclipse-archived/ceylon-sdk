@@ -3,11 +3,11 @@ import ceylon.time.base { ms=milliseconds, sec=seconds, ReadableTimePeriod }
 import ceylon.time.internal.math { floorMod }
 
 "Basic implementation of [[Time]] interface, representing an abstract 
- _time of day_ such as _10am_ or _3.20pm_."
+ _time of day_ such as _10am_ or _3.20pm_ with a precision of milliseconds."
 shared class TimeOfDay(millisecondsOfDay) 
        satisfies Time {
 
-    "Number of milliseconds since last midnight"
+    "Number of milliseconds since last midnight."
     shared actual Integer millisecondsOfDay;
 
     "Number of full hours elapsed since last midnight."
@@ -19,33 +19,35 @@ shared class TimeOfDay(millisecondsOfDay)
     "Number of seconds since last minute."
     shared actual Integer seconds => floorMod(millisecondsOfDay, ms.perMinute) / ms.perSecond;
 
-    "Number of milliseconds since last full second"
+    "Number of milliseconds since last full second."
     shared actual Integer milliseconds => floorMod(millisecondsOfDay, ms.perSecond);
 
-    "Number of seconds since last midnight"
+    "Number of seconds since last midnight."
     shared actual Integer secondsOfDay => millisecondsOfDay / ms.perSecond;
 
-    "Number of minutes since last midnight"
+    "Number of minutes since last midnight."
     shared actual Integer minutesOfDay => secondsOfDay / sec.perMinute;
 
-    "Compare two instances of _time of day_"
+    "Compare two instances of _time of day_."
     shared actual Comparison compare(Time other) {
         return millisecondsOfDay <=> other.millisecondsOfDay;
     }
 
-    "Previous second"
+    "For predecessor its used the lowest unit of time, this way we can benefit
+     from maximum precision. In this case the predecessor is the current value minus 1 millisecond."
     shared actual Time predecessor => minusMilliseconds(1);
 
-    "Next second"
+    "For successor its used the lowest unit of time, this way we can benefit
+     from maximum precision. In this case the sucessor is the current value plus 1 millisecond."    
     shared actual Time successor => plusMilliseconds(1);
 
-    "Returns ISO 8601 formatted String representation of this _time of day_.\n
+    "Returns ISO-8601 formatted String representation of this _time of day_.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Times"
     shared actual String string {
         return "``leftPad(hours)``:``leftPad(minutes)``:``leftPad(seconds)``";
     }
 
-    "Adds specified number of hours to this time of day 
+    "Adds specified number of hours to this time of day
      and returns the result as new time of day."
     shared actual Time plusHours(Integer hours) => plusMilliseconds( hours * ms.perHour );
 
@@ -113,6 +115,8 @@ shared class TimeOfDay(millisecondsOfDay)
                then this else TimeOfDay(time);
     }
 
+    "Returns a copy of this Time replacing the _hours_ value.\n
+     **Note:** It should be a valid _hour_."
     shared actual Time withHours(Integer hours) {
         if (this.hours == hours) {
             return this;
@@ -120,6 +124,8 @@ shared class TimeOfDay(millisecondsOfDay)
         return time(hours, minutes, seconds, milliseconds);
     }
 
+    "Returns a copy of this Time replacing the _minutes_ value.\n
+     **Note:** It should be a valid _minute_."
     shared actual Time withMinutes(Integer minutes) {
         if (this.minutes == minutes) {
             return this;
@@ -127,6 +133,9 @@ shared class TimeOfDay(millisecondsOfDay)
 
         return time(hours, minutes, seconds, milliseconds);
     }
+
+    "Returns a copy of this Time replacing the _seconds_ value.\n
+     **Note:** It should be a valid _second_."
     shared actual Time withSeconds(Integer seconds) {
         if (this.seconds == seconds) {
             return this;
@@ -134,6 +143,9 @@ shared class TimeOfDay(millisecondsOfDay)
 
         return time(hours, minutes, seconds, milliseconds );
     }
+
+    "Returns a copy of this Time replacing the _milliseconds_ value.\n
+     **Note:** It should be a valid _millisecond_."
     shared actual Time withMilliseconds(Integer milliseconds) {
         if (this.milliseconds == milliseconds) {
             return this;
@@ -142,6 +154,7 @@ shared class TimeOfDay(millisecondsOfDay)
         return time(hours, minutes, seconds, milliseconds);
     }
 
+    "Return _true_ if it have same type and milliseconds of day."
     shared actual Boolean equals( Object other ) {
         if ( is TimeOfDay other ) {
             return millisecondsOfDay == other.millisecondsOfDay;
@@ -149,8 +162,8 @@ shared class TimeOfDay(millisecondsOfDay)
         return false;
     }
 
-    "Returns the period between this and the given time.
-     If this time is before the given time then return zero period"
+    "Returns the period between this and the given time.\n
+     If this time is before the given time then return zero period."
     shared actual Period periodFrom(Time start) {
         value from = this < start then this else start;
         value to = this < start then start else this;
@@ -173,11 +186,11 @@ shared class TimeOfDay(millisecondsOfDay)
         }; 
     }
 
-    "Returns the period between this and the given time.
-     If this time is after the given time then return zero period"
+    "Returns the period between this and the given time.\n
+     If this time is after the given time then return zero period."
     shared actual Period periodTo(Time end) => end.periodFrom(this); 
 
-    "Returns the [[TimeRange]] between this and given Time"
+    "Returns the [[TimeRange]] between this and given Time."
     shared actual TimeRange rangeTo( Time other ) {
         return TimeRange(this, other); 
     }

@@ -1,4 +1,4 @@
-"return padded value of the number as a string"
+"Return padded value of the number as a string."
 shared String leftPad(Integer number, String padding = "00"){
     if (number == 0){
         return padding;
@@ -16,7 +16,7 @@ shared String leftPad(Integer number, String padding = "00"){
     return string;
 }
 
-"Returns if two ranges has intersection"
+"Returns if two ranges has intersection."
 shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value otherEnd ) given Value satisfies Comparable<Value> {
     return start <= otherEnd && end >= otherStart;
 }

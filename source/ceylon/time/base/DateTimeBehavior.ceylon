@@ -1,4 +1,4 @@
-"Common behavior of the [[DateTime]] types"
+"Common behavior of the [[DateTime]] types."
 shared interface DateTimeBehavior<Element, out DateType, out TimeType> of Element
        satisfies DateBehavior<Element>
                & TimeBehavior<Element>

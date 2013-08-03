@@ -29,10 +29,10 @@ shared interface Clock {
 "Gets a clock that obtains the current instant using the best available system clock."
 shared object systemTime satisfies Clock {
 
-    "Return number of milliseconds from system time"
+    "Return number of milliseconds from system time."
     shared actual Integer milliseconds() => process.milliseconds;
 
-    "Return current instant from system time"
+    "Return current instant from system time."
     shared actual Instant instant() => Instant( milliseconds() );
 
 }
@@ -50,25 +50,27 @@ shared Clock fixedTime(Instant|Integer instant) {
 }
 
 "Implementation of a clock that always returns the same instant.
+ 
  This is typically used for testing."
 class FixedInstant(Instant fixedInstant) satisfies Clock {
 
-    "Returns milliseconds from the fixed instant"
+    "Returns milliseconds from the fixed instant."
     shared actual Integer milliseconds() => fixedInstant.millisecondsOfEpoch;
 
-    "Returns the fixed instant"
+    "Returns the fixed instant."
     shared actual Instant instant() => fixedInstant;
 
 }
 
 "Implementation of a clock that always returns the same instant.
+ 
  This is typically used for testing."
 class FixedMilliseconds(Integer fixedMilliseconds) satisfies Clock {
 
-    "Returns the fixed milliseconds"
+    "Returns the fixed milliseconds."
     shared actual Integer milliseconds() => fixedMilliseconds;
 
-    "Returns the instant from the fixed milliseconds"
+    "Returns the instant from the fixed milliseconds."
     shared actual Instant instant() => Instant(fixedMilliseconds);
 
 }

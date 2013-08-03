@@ -8,76 +8,132 @@ import ceylon.time.timezone { TimeZone }
 shared class GregorianDateTime( date, time ) 
     satisfies  DateTime {
 
+    "Returns [[Date]] representation of current _date and time_."
     shared actual Date date;
+
+    "Returns [[Time]] representation of current _date and time_."
     shared actual Time time;
 
+    "Comparing [[DateTime]] is based on [[Date]] and [[Time]] comparision."
     shared actual Comparison compare(DateTime other) {
         return date != other.date then date <=> other.date
                                   else time <=> other.time;
     }
 
+    "Returns _day of month_ value of this gregorian date."
     shared actual Integer day => date.day;
 
+    "Returns current day of the week."
     shared actual DayOfWeek dayOfWeek => date.dayOfWeek;
 
+    "Returns _day of year_ value of this gregorian date."
     shared actual Integer dayOfYear => date.dayOfYear;
 
+    "Returns _day of year_ value of this gregorian date."
     shared actual Integer dayOfEra => date.dayOfEra;
 
+    "Returns year of this gregorian date."
     shared actual Integer year => date.year;
 
+    "Returns `true` if this is a leap year according to gregorian calendar leap year rules."
     shared actual Boolean leapYear => date.leapYear;
 
+    "Returns week of year according to ISO-8601 week number calculation rules."
     shared actual Integer weekOfYear => date.weekOfYear;
 
+    "Returns month of this gregorian date."
     shared actual Month month => date.month;
 
+    "Number of full hours elapsed since last midnight."
     shared actual Integer hours => time.hours;
 
+    "Number of milliseconds since last full second."
     shared actual Integer milliseconds => time.milliseconds;
 
+    "Number of milliseconds since last midnight."
     shared actual Integer millisecondsOfDay => time.millisecondsOfDay;
 
+    "Number of minutes since last full hour."
     shared actual Integer minutes => time.minutes;
 
+    "Number of minutes since last midnight."
     shared actual Integer minutesOfDay => time.minutesOfDay;
 
+    "Number of seconds since last minute."
     shared actual Integer seconds => time.seconds;
 
+    "Number of seconds since last midnight."
     shared actual Integer secondsOfDay => time.secondsOfDay;
 
+    "Adds number of years to this date returning the resulting gregorian date.
+     
+     **Note:** Day of month value of the resulting date will be truncated to the 
+     valid range of the target date if necessary.
+     
+     This means for example, that `date(2012, 2, 29).plusYears(1)` will return
+     `2013-02-28`, since _February 2013_ has only 28 days.
+     "
     shared actual DateTime plusYears(Integer years) {
         return GregorianDateTime { date = date.plusYears(years); time = time; };
     }
 
+    "Subtracts number of years from this date returning the resulting the new gregorian date.
+     
+     **Note:** Day of month value of the resulting date will be truncated to the 
+     valid range of the target date if necessary.
+     
+     This means for example, that `date(2012, 2, 29).minusYears(1)` will return
+     `2011-02-28`, since _February 2011_ has only 28 days.
+     "
     shared actual DateTime minusYears(Integer years) {
         return GregorianDateTime { date = date.minusYears(years); time = time; };
     }
 
+    "Adds number of months to this date and returns the resulting date.
+     
+     **Note:** Day of month value of the resulting date will be truncated to the 
+     valid range of the target date if necessary.
+     
+     This means for example, that `date(2013, 1, 31).plusMonths(1)` will return
+     `2013-02-28`, since _February 2013_ has only 28 days.
+     "
     shared actual DateTime plusMonths(Integer months) {
         return GregorianDateTime { date = date.plusMonths(months); time = time; };
     }
 
+    "Subtracts number of months from this date and returns the resulting date.
+     
+     **Note:** Day of month value of the resulting date will be truncated to the 
+     valid range of the target date if necessary.
+     
+     This means for example, that `date(2013, 3, 30).minusMonths(1)` will return
+     `2013-02-28`, since _February 2013_ has only 28 days.
+     "
     shared actual DateTime minusMonths(Integer months) {
         return plusMonths(-months);
     }
 
+    "Adds number of weeks to this date and returns the resulting [[DateTime]]."
     shared actual DateTime plusWeeks(Integer weeks) {
         return GregorianDateTime { date = date.plusWeeks(weeks); time = time; };
     }
 
+    "Subtracts number of weeks from this date and returns the resulting [[DateTime]]."
     shared actual DateTime minusWeeks(Integer weeks) {
         return plusWeeks(-weeks);
     }
 
+    "Adds number of days to this date and returns the resulting [[DateTime]]."
     shared actual DateTime plusDays(Integer days) {
         return GregorianDateTime { date = date.plusDays(days); time = time; };
     }
 
+    "Subtracts number of days from this date and returns the resulting [[DateTime]]."
     shared actual DateTime minusDays(Integer days) {
         return plusDays(-days);
     }
 
+    "Adds number of hours from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime plusHours(Integer hours) {
         if ( hours == 0 ) {
             return this;
@@ -86,10 +142,12 @@ shared class GregorianDateTime( date, time )
         return fromTime{ hours = hours * signal; signal = signal; };
     }
 
+    "Subtracts number of hours from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime minusHours(Integer hours) {
         return plusHours(-hours);
     }
 
+    "Adds number of minutes from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime plusMinutes(Integer minutes) {
         if ( minutes == 0 ) {
             return this;
@@ -99,10 +157,12 @@ shared class GregorianDateTime( date, time )
         return fromTime{ minutes = minutes * signal; signal = signal; };
     }
 
+    "Subtracts number of minutes from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime minusMinutes(Integer minutes) {
         return plusMinutes(-minutes);
     }
 
+    "Adds number of seconds from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime plusSeconds(Integer seconds) {
         if ( seconds == 0 ) {
             return this;
@@ -111,10 +171,12 @@ shared class GregorianDateTime( date, time )
         return fromTime{ seconds = seconds * signal; signal = signal; };
     }
 
+    "Subtracts number of seconds from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime minusSeconds(Integer seconds) {
         return plusSeconds(-seconds);
     }
 
+    "Adds number of milliseconds from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime plusMilliseconds(Integer milliseconds) {
         if ( milliseconds == 0 ) {
             return this;
@@ -123,41 +185,78 @@ shared class GregorianDateTime( date, time )
         return fromTime{ millis = milliseconds * signal; signal = signal; };
     }
 
+    "Subtracts number of milliseconds from this _date and time_ and returns the resulting [[DateTime]]."
     shared actual DateTime minusMilliseconds(Integer milliseconds) {
         return plusMilliseconds(-milliseconds);
     }
 
+    "Returns new [[DateTime]] with the _day of month_ value set to the specified value.
+
+     **Note:** It should result in a valid gregorian date.
+     "
     shared actual DateTime withDay(Integer dayOfMonth) {
         return GregorianDateTime { date = date.withDay(dayOfMonth); time = time; };
     }
 
+    "Returns new [[DateTime]] with the _hours_ value set to the specified value.
+
+     **Note:** It should be a valid _hour_.
+     "
     shared actual DateTime withHours(Integer hours) {
         return GregorianDateTime { date = date; time = time.withHours(hours); };
     }
 
+    "Returns new [[DateTime]] with the _year_ value set to the specified value.
+
+     **Note:** It should result in a valid gregorian date.
+     "
     shared actual DateTime withYear(Integer year) {
         return GregorianDateTime { date = date.withYear(year); time = time; };
     }
 
+    "Returns new [[DateTime]] with the _month_ value set to the specified value.
+
+     **Note:** It should result in a valid gregorian date.
+     "
     shared actual DateTime withMonth(Month month) {
         return GregorianDateTime( date.withMonth(month), time );
     }
 
+    "Returns new [[DateTime]] with the _minutes_ value set to the specified value.
+
+     **Note:** It should be a valid _minute_.
+     "
     shared actual DateTime withMinutes(Integer minutes) {
         return GregorianDateTime { date = date; time = time.withMinutes(minutes); };
     }
 
+    "Returns new [[DateTime]] with the _seconds_ value set to the specified value.
+
+     **Note:** It should be a valid _second_.
+     "
     shared actual DateTime withSeconds(Integer seconds) {
         return GregorianDateTime { date = date; time = time.withSeconds(seconds); };
     }
 
+    "Returns new [[DateTime]] with the _milliseconds_ value set to the specified value.
+
+     **Note:** It should be a valid _millisecond_.
+     "
     shared actual DateTime withMilliseconds(Integer milliseconds) {
         return GregorianDateTime { date = date; time = time.withMilliseconds(milliseconds); };
     }
 
+    "For predecessor its used the lowest unit of time, this way we can benefit
+     from maximum precision. In this case the predecessor is the current value minus 1 millisecond.
+     "
     shared actual DateTime predecessor => minusMilliseconds(1);
 
+    "For successor its used the lowest unit of time, this way we can benefit
+     from maximum precision. In this case the successor is the current value minus 1 millisecond.
+     "
     shared actual DateTime successor => plusMilliseconds(1);
+
+    "Adds specified date period to this date and returns the new [[DateTime]]."
     shared actual DateTime plus( ReadablePeriod amount ) {
         return addPeriod { 
             months = amount.years * months.perYear + amount.months; 
@@ -169,6 +268,7 @@ shared class GregorianDateTime( date, time )
         };
     }
 
+    "Subtracts specified date period from this date and returns the new [[DateTime]]."
     shared actual DateTime minus( ReadablePeriod amount ) {
         return addPeriod { 
             months = amount.years.negativeValue * months.perYear + amount.months.negativeValue; 
@@ -181,7 +281,8 @@ shared class GregorianDateTime( date, time )
     }
 
     "This method add the specified fields doing first the subtraction and last the additions.
-     The mix between positive and negative fields does not guarantee any expected behavior"
+
+     The mix between positive and negative fields does not guarantee any expected behavior."
     DateTime addPeriod( Integer months, Integer days, Integer hours, Integer minutes, Integer seconds, Integer milliseconds ) {
         variable DateTime _this = this;
 
@@ -214,12 +315,14 @@ shared class GregorianDateTime( date, time )
         return _this;
     }
 
-    //TODO: Thats not the right way...
+    "[[DateTime]] does not know anything about [[TimeZone]] and it should be supplied to
+     create a [[Instant]]." 
     shared actual Instant instant( TimeZone timeZone ) {
 	    value instant = Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
         return Instant( instant.millisecondsOfEpoch - timeZone.offset(instant) );
     }
 
+    "Returns _true_ if given value is same type, date and time."
     shared actual Boolean equals( Object other ) {
         if (is GregorianDateTime other) {
             if (this === other){
@@ -232,12 +335,15 @@ shared class GregorianDateTime( date, time )
         return false;
     }
 
-    "Returns ISO 8601 formatted String representation of this _Date and Time of day_.\n
+    "Returns ISO-8601 formatted String representation of this _Date and Time of day_.\n
      https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations"
     shared actual String string {
         return "``date.string``T``time.string``";
     }
 
+    "Returns the period between this and the given [[DateTime]].
+
+     If this [[DateTime]] is before the given [[DateTime]] then return negative period."
     shared actual Period periodFrom(DateTime start) {
         value from = this < start then this else start;
         value to = this < start then start else this;
@@ -266,15 +372,20 @@ shared class GregorianDateTime( date, time )
                          else  to.date.minusDays(dayConsumed).periodTo(from.date));
     }
 
+    "Returns the period between this and the given [[DateTime]].
+
+     If this [[DateTime]] is after the given [[DateTime]] then return negative period."
+
     shared actual Period periodTo(DateTime end) {
         return end.periodFrom(this); 
     }
 
-    "Returns the [[DateTimeRange]] between this and given DateTime"
+    "Returns the [[DateTimeRange]] between this and given DateTime."
     shared actual DateTimeRange rangeTo( DateTime other ) {
         return DateTimeRange(this, other); 
     }
 
+    "Calculates the based in given time, consuming it for each day if necessary."
     DateTime fromTime( Integer hours = 0, Integer minutes = 0, Integer seconds = 0, Integer millis = 0, Integer signal = 1 ) {
 
         value inputMillis = hours * ms.perHour 

@@ -9,22 +9,22 @@ import ceylon.time.timezone { ZoneDateTime }
 see (`Date`, `Time`, `DateTime`, `ZoneDateTime`)
 shared interface ReadableDate {
 
-    "The year of the date"
+    "The year of the date."
     shared formal Integer year;
 
-    "Month of the year value of the date"
+    "Month of the year value of the date."
     shared formal Month month;
 
-    "Day of month value of the date" 
+    "Day of month value of the date."
     shared formal Integer day;
 
     "Day of the week."
     shared formal DayOfWeek dayOfWeek;
 
-    "Number of the week of the date"
+    "Number of the week of the date."
     shared formal Integer weekOfYear;
 
-    "Number of the day in year"
+    "Number of the day in year."
     shared formal Integer dayOfYear;
 
     "Number of calendar days since ERA."

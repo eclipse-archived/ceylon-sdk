@@ -14,7 +14,7 @@ shared Instant now(Clock? clock = null) {
 "A specific instant of time on a continuous time-scale.
  
  An instant represents a single point in time irrespective of 
- any time-zone offsets or geographical locations"
+ any time-zone offsets or geographical locations."
 shared class Instant(millisecondsOfEpoch) 
     satisfies ReadableInstant & Comparable<Instant> {
 
@@ -22,7 +22,7 @@ shared class Instant(millisecondsOfEpoch)
      1970-01-01T00:00:00.000Z."
     shared actual Integer millisecondsOfEpoch;
 
-    "Adds a period to this instant"
+    "Adds a period to this instant."
     shared Instant plus(Duration|Period other){
         switch(other)
         case(is Duration){
@@ -33,7 +33,7 @@ shared class Instant(millisecondsOfEpoch)
         }
     }
 
-    "Subtracts a period to this instant"
+    "Subtracts a period to this instant."
     shared Instant minus(Duration|Period other){
         switch(other)
         case(is Duration){
@@ -44,7 +44,7 @@ shared class Instant(millisecondsOfEpoch)
         }
     }
 
-    "Compares this instant to the _other_ instant"
+    "Compares this instant to the _other_ instant."
     shared actual Comparison compare(Instant other) {
         return this.millisecondsOfEpoch <=> other.millisecondsOfEpoch;
     }
@@ -54,12 +54,12 @@ shared class Instant(millisecondsOfEpoch)
         return  GregorianDateTime( date(timeZone), time(timeZone) );
     }
 
-    "Returns this instant as a [[Date]] value"
+    "Returns this instant as a [[Date]] value."
     shared Date date( TimeZone timeZone = tz.system ) {
         return GregorianDate( unixTime.fixedFromTime(millisecondsOfEpoch + timeZone.offset(this)) );
     }
 
-    "Returns _time of day_ for this instant"
+    "Returns _time of day_ for this instant."
     shared Time time( TimeZone timeZone = tz.system ) {
         return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch + timeZone.offset(this)) );
     }
@@ -79,6 +79,7 @@ shared class Instant(millisecondsOfEpoch)
         return Duration(this.millisecondsOfEpoch - other.millisecondsOfEpoch);
     }
 
+    "Returns _true_ if given value is same type and milliseconds of epoch."
     shared actual Boolean equals( Object other ) {
         if ( is Instant other ) {
             return millisecondsOfEpoch == other.millisecondsOfEpoch;

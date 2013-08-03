@@ -17,22 +17,22 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
     "The number of years."
     shared actual Integer years;
 
-    "The number of months"
+    "The number of months."
     shared actual Integer months;
 
-    "The number of days"
+    "The number of days."
     shared actual Integer days;
 
-    "The number of hours"
+    "The number of hours."
     shared actual Integer hours;
 
-    "The number of minutes"
+    "The number of minutes."
     shared actual Integer minutes;
 
-    "The number of seconds"
+    "The number of seconds."
     shared actual Integer seconds;
 
-    "The number of milliseconds"
+    "The number of milliseconds."
     shared actual Integer milliseconds;
 
     "Checks if this period is equal to another period."
@@ -121,7 +121,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         return Period(years, months, days, hours, minutes, seconds, milliseconds);
     }
 
-    "Returns a copy of this period with the specified amount of nanos."
+    "Returns a copy of this period with the specified amount of milliseconds."
     shared actual Period withMilliseconds(Integer milliseconds){
         if (milliseconds == this.milliseconds){
             return this;
@@ -159,7 +159,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         return withSeconds( this.seconds + seconds );
     }
 
-    "Returns a copy of this period with the specified number of nonoseconds added."
+    "Returns a copy of this period with the specified number of milliseconds added."
     shared actual Period plusMilliseconds(Integer milliseconds){
         return withMilliseconds( this.milliseconds + milliseconds );
     }
@@ -194,7 +194,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         return plusSeconds( - seconds );
     }
 
-    "Returns a copy of this period with the specified number of nonoseconds subtracted."
+    "Returns a copy of this period with the specified number of milliseconds subtracted."
     shared actual Period minusMilliseconds(Integer milliseconds){
         return plusMilliseconds( - milliseconds );
     }
@@ -263,7 +263,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         };
     }
 
-    "Returns the ISO 8601 formatted string for this period"
+    "Returns the ISO-8601 formatted string for this period."
     shared actual String string {
         if (this == zero) {
             return "PT0S";
@@ -302,5 +302,5 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
 
 }
 
-"A period of zero length"
+"A period of zero length."
 shared Period zero = Period();

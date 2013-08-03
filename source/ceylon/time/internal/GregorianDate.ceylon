@@ -3,7 +3,6 @@ import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, 
 import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.internal.math { adjustedMod }
 
-
 "Default implementation of a gregorian calendar"
 shared class GregorianDate( Integer dayOfEra ) 
       extends AbstractDate( dayOfEra ) {
@@ -11,10 +10,10 @@ shared class GregorianDate( Integer dayOfEra )
     "Returns year of this gregorian date."
     shared actual Integer year => impl.yearFrom( dayOfEra );
 
-    "Returns month of this gregorian date"
+    "Returns month of this gregorian date."
     shared actual Month month => monthOf(impl.monthFrom( dayOfEra ));
 
-    "Returns _day of month_ value of this gregorian date"
+    "Returns _day of month_ value of this gregorian date."
     shared actual Integer day => impl.dayFrom( dayOfEra );
 
     "Returns `true`, if this is a leap year according to gregorian calendar leap year rules."
@@ -23,16 +22,20 @@ shared class GregorianDate( Integer dayOfEra )
     "Returns _day of year_ value of this gregorian date."
     shared actual Integer dayOfYear => month.fisrtDayOfYear( leapYear ) + day - 1;
 
-    "Returns gregorian date immediately preceeding this date."
+    "Returns gregorian date immediately preceeding this date.\n
+     For successor its used the lowest unit of date, this way we can benefit
+     from maximum precision. In this case the sucessor is the current value minus 1 day."
     shared actual Date predecessor => minusDays( 1 );
 
-    "Returns gregorian date immediately succeeding this date."
+    "Returns gregorian date immediately succeeding this date.\n
+     For successor its used the lowest unit of date, this way we can benefit
+     from maximum precision. In this case the sucessor is the current value plus 1 day."
     shared actual Date successor => plusDays( 1 );
 
     "Returns current day of the week."
     shared actual DayOfWeek dayOfWeek => weekdayOf(impl.dayOfWeekFrom( dayOfEra ));
 
-    "Adds number of days to this date and returns the resulting date."
+    "Adds number of days to this date and returns the resulting [[Date]]."
     shared actual Date plusDays(Integer days) {
         if ( days == 0 ) {
             return this;
@@ -40,13 +43,13 @@ shared class GregorianDate( Integer dayOfEra )
         return GregorianDate( dayOfEra + days );
     }
 
-    "Subtracts number of days from this date and returns the resulting date."
+    "Subtracts number of days from this date and returns the resulting [[Date]]."
     shared actual Date minusDays(Integer days) => plusDays(-days);
 
-    "Adds number of weeks to this date and returns the resulting date."
+    "Adds number of weeks to this date and returns the resulting [[Date]]."
     shared actual Date plusWeeks(Integer weeks) => plusDays( weeks * days.perWeek );
 
-    "Subtracts number of weeks from this date and returns the resulting date."
+    "Subtracts number of weeks from this date and returns the resulting [[Date]]."
     shared actual Date minusWeeks(Integer weeks) => plusWeeks( -weeks );
 
     "Adds number of months to this date and returns the resulting date.
@@ -105,9 +108,9 @@ shared class GregorianDate( Integer dayOfEra )
      "
     shared actual Date minusYears(Integer years) => plusYears(-years);
 
-    "Returns new date with the _day of month_ vaue set to the specified value.
-     
-     Resulting date will have to be valid Gregorian date.
+    "Returns new date with the _day of month_ value set to the specified value.
+
+     **Note:** It should result in a valid gregorian date.
      "
     shared actual Date withDay(Integer day) {
         if ( day == this.day ) {
@@ -119,7 +122,7 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Returns new date with the month set to the specified value.
      
-     Resulting date will have to be valid Gregorian date.
+     **Note:** It should result in a valid gregorian date.
      "
     shared actual Date withMonth(Month month) {
         Month newMonth = monthOf(month);
@@ -133,7 +136,7 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Returns new date with the specified year value.
      
-     Resulting date will have to be valid Gregorian date.
+     **Note:** It should result in a valid gregorian date.
      "
     shared actual Date withYear(Integer year) {
         if ( year == this.year ) {
@@ -144,7 +147,7 @@ shared class GregorianDate( Integer dayOfEra )
         return GregorianDate( impl.fixedFrom([year, month.integer, day]) );
     }
 
-    "Adds specified date period to this date and returns the new date."
+    "Adds specified date period to this date and returns the new [[Date]]."
     shared actual Date plus( ReadableDatePeriod amount ) {
         return addPeriod {
                 months = amount.years * months.perYear + amount.months;
@@ -152,7 +155,7 @@ shared class GregorianDate( Integer dayOfEra )
         };
     }
 
-    "Subtracts specified date period from this date and returns the new date."
+    "Subtracts specified date period from this date and returns the new [[Date]]."
     shared actual Date minus( ReadableDatePeriod amount ) {
         return addPeriod {
                 months = amount.years.negativeValue * months.perYear + amount.months.negativeValue;
@@ -161,7 +164,8 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "This method add the specified fields doing first the subtraction and last the additions.
-     The mix between positive and negative fields does not guarantee any expected behavior"
+
+     The mix between positive and negative fields does not guarantee any expected behavior."
     Date addPeriod( Integer months, Integer days ) {
         variable Date _this = this;
         //do all subtractions first
@@ -183,7 +187,7 @@ shared class GregorianDate( Integer dayOfEra )
         return _this;
     }
 
-    "Returns week of year according to ISO 8601 week number calculation rules."
+    "Returns week of year according to ISO-8601 week number calculation rules."
     shared actual Integer weekOfYear {
         value weekFromYearBefore = 0;
         value possibleNextYearWeek = 53;
@@ -231,13 +235,15 @@ shared class GregorianDate( Integer dayOfEra )
         return GregorianDateTime(this, time);
     }
 
-    "Returns ISO 8601 formatted String representation of this date."
+    "Returns ISO-8601 formatted String representation of this date.\n
+     Reference: https://en.wikipedia.org/wiki/ISO_8601#Dates"
     shared actual String string {
         return "``year``-``leftPad(month.integer)``-``leftPad(day)``";	
     }
 
     "Returns the period between this and the given date.
-     If this date is before the given date then return negative period"
+
+     If this date is before the given date then return negative period."
     shared actual Period periodFrom(Date start) {
         value from = this < start then this else start;
         value to = this < start then start else this;
@@ -272,16 +278,17 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "Returns the period between this and the given date.
-     If this date is after the given date then return negative period"
+
+     If this date is after the given date then return negative period."
     shared actual Period periodTo(Date end) => end.periodFrom(this);
 
-    "Returns the [[DateRange]] between this and given Date"
+    "Returns the [[DateRange]] between this and given Date."
     shared actual DateRange rangeTo( Date other ) {
         return DateRange(this, other); 
     } 
 }
 
-"Returns a gregorian calendar date according to the specified year, month and date values"
+"Returns a gregorian calendar date according to the specified year, month and date values."
 shared Date gregorianDate(year, month, day) {
         "Year number of the date"
         Integer year;

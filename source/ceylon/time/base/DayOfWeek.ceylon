@@ -3,28 +3,28 @@ shared abstract class DayOfWeek(integer)
        of monday | tuesday | wednesday | thursday | friday | saturday | sunday
        satisfies Ordinal<DayOfWeek> & Comparable<DayOfWeek> {
 
-    "Numeric value of the DayOfWeek"
+    "Numeric value of the DayOfWeek."
     shared Integer integer;
 
-    "Returns a day of week that comes specified number of days after this DayOfWeek"
+    "Returns a day of week that comes specified number of days after this DayOfWeek."
     shared DayOfWeek plusDays(Integer number){
         value wd = (integer + number) % 7;
         assert (exists dow = weekdays[wd]);
         return dow;
     }
 
-    "Returns a day of week that comes number of days before this DayOfWeek"
+    "Returns a day of week that comes number of days before this DayOfWeek."
     shared DayOfWeek minusDays(Integer number) => plusDays(-number);
 
-    "Compare days of week"
+    "Compare days of week."
     shared actual Comparison compare(DayOfWeek other) => this.integer <=> other.integer;
 
 }
 
-"List of all available weekdays"
+"List of all available weekdays."
 shared DayOfWeek[] weekdays = [ sunday, monday, tuesday, wednesday, thursday, friday, saturday ];
 
-"Returns [[DayOfWeek]] from the input"
+"Returns [[DayOfWeek]] from the input."
 shared DayOfWeek dayOfWeek(Integer|DayOfWeek dayOfWeek){
     switch(dayOfWeek)
     case (is DayOfWeek) { return dayOfWeek; }
@@ -35,11 +35,11 @@ shared DayOfWeek dayOfWeek(Integer|DayOfWeek dayOfWeek){
     }
 }
 
-"An exception that is thrown when parsing a DayOfWeek fails"
+"An exception that is thrown when parsing a DayOfWeek fails."
 shared class WeekdayParseError(String message)
        extends Exception(message) {}
 
-"Parses a string into a DayOfWeek"
+"Parses a string into a DayOfWeek."
 shared DayOfWeek parseWeekday(String dayOfWeek){
     value wd = dayOfWeek.lowercased;
     for (dow in weekdays) {

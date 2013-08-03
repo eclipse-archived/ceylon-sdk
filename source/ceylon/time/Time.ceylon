@@ -30,42 +30,42 @@ shared interface Time
     shared formal Time minus(ReadableTimePeriod period);
 
     "Returns the period between this and the given time.
-     If this time is before the given time then return zero period"
+     If this time is before the given time then return zero period."
     shared formal Period periodFrom( Time start );
 
     "Returns the period between this and the given time.
-     If this time is after the given time then return zero period"
+     If this time is after the given time then return zero period."
     shared formal Period periodTo( Time end );
 
-    "Returns the [[TimeRange]] between this and given Time"
+    "Returns the [[TimeRange]] between this and given Time."
     shared formal TimeRange rangeTo( Time other );
 }
 
 "Creates new instance of [[Time]]."
 shared Time time(hours, minutes, seconds=0, milliseconds=0) {
 
-    "Hours of the day (0..23)"
+    "Hours of the day (0..23)."
     Integer hours;
 
-    "Minutes of the hour (0..59)"
+    "Minutes of the hour (0..59)."
     Integer minutes;
 
-    "Seconds of the minute (0..59)"
+    "Seconds of the minute (0..59)."
     Integer seconds;
 
-    "Milliseconds of the second (0..999)"
+    "Milliseconds of the second (0..999)."
     Integer milliseconds;
 
-    "Hours value should be between 0 and 23"
+    "Hours value should be between 0 and 23."
     assert( 0 <= hours < h.perDay );
 
-    "Minutes value should be between 0 and 59"
+    "Minutes value should be between 0 and 59."
     assert( 0 <= minutes < min.perHour );
 
-    "Seconds value should be between 0 and 59"
+    "Seconds value should be between 0 and 59."
     assert( 0 <= seconds < sec.perMinute );
 
-    "Milliseconds value should be between 0 and 999"
+    "Milliseconds value should be between 0 and 999."
     assert( 0 <= milliseconds < ms.perSecond );
 
     value hh = hours * ms.perHour;
