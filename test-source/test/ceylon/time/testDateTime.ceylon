@@ -378,7 +378,7 @@ shared void testPeriodTimeStep() {
 }
 
 shared void testStringDateTime() {
-    assertEquals("1982-12-13T09:08:07", data_1982_12_13_09_08_07_0050.string);
+    assertEquals("1982-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.string);
 }
 
 void assertFromToDateTime( Period period, DateTime from, DateTime to ) {
