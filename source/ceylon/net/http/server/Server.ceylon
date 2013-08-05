@@ -1,4 +1,5 @@
 import ceylon.net.http.server.internal { DefaultServer }
+import ceylon.net.http.server.websocket { WebSocketEndpoint }
 
 "Ceylon http server."
 by("Matej Lazar")
@@ -6,6 +7,8 @@ shared interface Server {
 
     "Define endpoint by providing an instance of [[Endpoint]]|[[AsynchronousEndpoint]] class."
     shared formal void addEndpoint(Endpoint|AsynchronousEndpoint endpoint);
+
+    shared formal void addWebSocketEndpoint(WebSocketEndpoint endpoint);
     
     shared formal void start(Integer port = 8080, 
             String host = "127.0.0.1", 

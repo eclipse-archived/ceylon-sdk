@@ -2,6 +2,8 @@ package ceylon.net.http.server.internal;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.xnio.ChannelListener;
 import org.xnio.OptionMap;
@@ -30,5 +32,15 @@ public class JavaHelper {
         @SuppressWarnings("rawtypes")
         AcceptingChannel acceptingChannel = worker.createStreamServer(bindAddress, acceptListener, optionMap);
         return acceptingChannel;
+    }
+    
+    public static ByteBuffer wrapByteBuffer(byte[] byteArray) {
+        return ByteBuffer.wrap(byteArray);
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(byteArray.length * 4);
+//        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+//        for (int i = 0; i < byteArray.length; i++) {
+//            intBuffer.put(byteArray[i]);
+//        }
+//        return byteBuffer;
     }
 }
