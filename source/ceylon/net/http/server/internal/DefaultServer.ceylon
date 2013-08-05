@@ -32,6 +32,10 @@ import ceylon.net.http.server { Server, Options, StatusListener, Status, startin
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
+import io.undertow.websockets.core.handler { WebSocketProtocolHandshakeHandler }
+import io.undertow.websockets.spi { WebSocketHttpExchange }
+import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler }
+import ceylon.net.http.server.websocket { WebSocketEndpoint }
 
 by("Matej Lazar")
 shared class DefaultServer() satisfies Server {
@@ -39,6 +43,7 @@ shared class DefaultServer() satisfies Server {
     variable XnioWorker? worker = null;
     
     variable CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
+    CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
     
     MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
@@ -46,15 +51,21 @@ shared class DefaultServer() satisfies Server {
         ceylonHandler.addWebEndpoint(endpoint);
     }
     
+    shared actual void addWebSocketEndpoint(WebSocketEndpoint endpoint) {
+        webSocketHandler.addEndpoint(endpoint);
+    }
+    
     HttpHandler getHeandlers(Options options) {
+        value webSocketProtocolHandshakeHandler = WebSocketProtocolHandshakeHandler(
+                                                        webSocketHandler,
+                                                        ceylonHandler);
+        
         value sessionconfig = SessionCookieConfig();
         SessionAttachmentHandler sessionHandler = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
-        sessionHandler.setNext(ceylonHandler);
+        sessionHandler.setNext(webSocketProtocolHandshakeHandler);
         
         HttpHandler errPageHandler = SimpleErrorPageHandler(sessionHandler);
         
-        //URLDecodingHandler urlDecodingHandler = URLDecodingHandler(errPageHandler, options.defaultCharset.name);
-        //return urlDecodingHandler;
         return errPageHandler;
     }
     

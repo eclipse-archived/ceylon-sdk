@@ -9,9 +9,10 @@ import ceylon.net.http.server { createServer, StatusListener, Status,
                                   startsWith, endsWith, Options }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue }
-import java.lang { Runnable, Thread }
+import java.lang { Runnable, Thread, Byte }
 import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
+import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason }
 
 
 by("Matej Lazar")
@@ -102,6 +103,7 @@ void testServer() {
                 or endsWith(".txt");
     });
     
+
     object serverListerner satisfies StatusListener {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {

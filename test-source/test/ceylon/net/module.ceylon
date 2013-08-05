@@ -7,4 +7,5 @@ module test.ceylon.net '0.6' {
     import ceylon.io '0.6';
     import ceylon.collection '0.6';
     import java.base '7';
+    import io.netty '4.0.2.Final';
 }
