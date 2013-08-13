@@ -1,6 +1,6 @@
 "Parses a raw percent-encoded path parameter"
 shared Parameter parseParameter(String part){
-    Integer? sep = part.firstCharacterOccurrence('=');
+    Integer? sep = part.firstOccurrence('=');
     if(exists sep){
         return Parameter(decodePercentEncoded(part.initial(sep)), 
             decodePercentEncoded(part.terminal(part.size - sep - 1)));
@@ -19,7 +19,7 @@ shared Uri parse(String uri){
     variable String? fragment = null;
     
     String parseScheme(String uri){
-        Integer? sep = uri.firstOccurrence(":");
+        Integer? sep = uri.firstInclusion(":");
         if(exists sep){
             if(sep > 0){
                 scheme = uri.segment(0, sep);
@@ -31,7 +31,7 @@ shared Uri parse(String uri){
     }
 
     void parseUserInfo(String userInfo) {
-        Integer? sep = userInfo.firstCharacterOccurrence(':');
+        Integer? sep = userInfo.firstOccurrence(':');
         if(exists sep){
             authority.user = decodePercentEncoded(userInfo.segment(0, sep));
             authority.password = decodePercentEncoded(userInfo[sep+1...]);
@@ -45,7 +45,7 @@ shared Uri parse(String uri){
         String? portString;
         if(hostAndPort.startsWith("[")){
             authority.ipLiteral = true;
-            Integer? end = hostAndPort.firstCharacterOccurrence(']');
+            Integer? end = hostAndPort.firstOccurrence(']');
             if(exists end){
                 // eat the delimiters
                 authority.host = hostAndPort.segment(1, end-1);
@@ -60,7 +60,7 @@ shared Uri parse(String uri){
             }
         }else{
             authority.ipLiteral = false;
-            Integer? sep = hostAndPort.lastCharacterOccurrence(':');
+            Integer? sep = hostAndPort.lastOccurrence(':');
             if(exists sep){
                 authority.host = decodePercentEncoded(hostAndPort.segment(0, sep));
                 portString = hostAndPort[sep+1...];
@@ -89,9 +89,9 @@ shared Uri parse(String uri){
         }
         // eat the two slashes
         String part = uri[2...];
-        Integer? sep = part.firstCharacterOccurrence('/') 
-            else part.firstCharacterOccurrence('?')
-            else part.firstCharacterOccurrence('#');
+        Integer? sep = part.firstOccurrence('/') 
+            else part.firstOccurrence('?')
+            else part.firstOccurrence('#');
         String authority;
         String remains;
         if(exists sep){
@@ -102,7 +102,7 @@ shared Uri parse(String uri){
             authority = part;
             remains = "";
         }
-        Integer? userInfoSep = authority.firstCharacterOccurrence('@');
+        Integer? userInfoSep = authority.firstOccurrence('@');
         String hostAndPort;
         if(exists userInfoSep){
             parseUserInfo(authority.segment(0, userInfoSep));
@@ -115,7 +115,7 @@ shared Uri parse(String uri){
     }
 
     String parsePath(String uri){
-        Integer? sep = uri.firstCharacterOccurrence('?') else uri.firstCharacterOccurrence('#');
+        Integer? sep = uri.firstOccurrence('?') else uri.firstOccurrence('#');
         String pathPart;
         String remains;
         if(exists sep){
@@ -153,7 +153,7 @@ shared Uri parse(String uri){
         if(exists c){
             if(c == '?'){
                 // we have a query part
-                Integer end = uri.firstCharacterOccurrence('#') else uri.size;
+                Integer end = uri.firstOccurrence('#') else uri.size;
                 parseQueryPart(uri.segment(1, end-1));
                 return uri[end...];
             }

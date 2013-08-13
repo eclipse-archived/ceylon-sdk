@@ -131,7 +131,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         value headerValue = header.values.first;
         if (exists headerValue) {
             value charsetLabel = "charset=";
-            value charsetIndex = headerValue.firstOccurrence(charsetLabel);
+            value charsetIndex = headerValue.firstInclusion(charsetLabel);
             if (exists charsetIndex) {
                 String charsetString = headerValue[charsetIndex + charsetLabel.size..headerValue.size].trimmed;
                 Charset? charset = getCharset(charsetString);

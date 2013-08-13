@@ -47,7 +47,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         String? contentTypeLine = this.contentTypeLine;
         if(exists contentTypeLine){
             // split it if required
-            value sep = contentTypeLine.firstOccurrence(";");
+            value sep = contentTypeLine.firstInclusion(";");
             if(exists sep){
                 return contentTypeLine.segment(0, sep);
             }else{

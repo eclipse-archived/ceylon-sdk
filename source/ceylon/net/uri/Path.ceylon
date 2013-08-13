@@ -25,7 +25,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
     
     "Adds a raw (percent-encoded) segment, with optional parameters to be parsed"
     shared void addRawSegment(String part){
-        Integer? sep = part.firstCharacterOccurrence(';');
+        Integer? sep = part.firstOccurrence(';');
         String name;
         if(exists sep){
             name = part[0..sep-1];
