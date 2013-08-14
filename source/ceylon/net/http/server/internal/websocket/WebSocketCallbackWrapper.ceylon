@@ -13,10 +13,9 @@ shared class WebSocketCallbackWrapper(SendCallback sendCallback, WebSocketChanne
 
     shared actual void onError(UtWebSocketChannel? webSocketChannel, Void? t, Exception? throwable) {
         if (exists throwable) {
-            //TODO better exception handling
-            sendCallback.onError(channel, HttpException("", throwable));
+            sendCallback.onError(channel, HttpException("WebSocket error.", throwable));
         } else {
-            sendCallback.onError(channel, HttpException("No description."));
+            sendCallback.onError(channel, HttpException("WebSocket error, no details available."));
         }
     }
 }
@@ -30,10 +29,9 @@ shared class WebSocketCallbackFragmentedWrapper(SendCallback sendCallback, WebSo
 
     shared actual void onError(UtWebSocketChannel? webSocketChannel, FragmentedMessageChannel ch, Exception? throwable) {
         if (exists throwable) {
-            //TODO better exception handling
-            sendCallback.onError(channel, HttpException("", throwable));
+            sendCallback.onError(channel, HttpException("WebSocket error.", throwable));
         } else {
-            sendCallback.onError(channel, HttpException("No description."));
+            sendCallback.onError(channel, HttpException("WebSocket error, no details available."));
         }
     }
 }

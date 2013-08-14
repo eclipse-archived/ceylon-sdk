@@ -3,8 +3,6 @@ package test.ceylon.net.websocketclient;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -54,7 +52,12 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         Channel ch = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
-            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            try {
+                handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            } catch (io.netty.handler.codec.http.websocketx.WebSocketHandshakeException e) {
+                handshakeFuture.setFailure(e);
+                return;
+            }
             System.out.println("WebSocket Client connected!");
             handshakeFuture.setSuccess();
             return;

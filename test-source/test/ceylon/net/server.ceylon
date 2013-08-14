@@ -9,10 +9,9 @@ import ceylon.net.http.server { createServer, StatusListener, Status,
                                   startsWith, endsWith, Options }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue }
-import java.lang { Runnable, Thread, Byte }
+import java.lang { Runnable, Thread }
 import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
-import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason }
 
 
 by("Matej Lazar")

@@ -2,9 +2,9 @@ package test.ceylon.net.websocketclient;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -34,7 +34,7 @@ public class WebSocketClient {
 
     Channel ch;
     
-    public void connect(EventLoopGroup group) throws Exception {
+    public void connect(EventLoopGroup group) throws Throwable {
         Bootstrap b = new Bootstrap();
         String protocol = uri.getScheme();
         if (!"ws".equals(protocol)) {
@@ -66,7 +66,11 @@ public class WebSocketClient {
 
         System.out.println("WebSocket Client connecting");
         ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-        handler.handshakeFuture().sync();
+        ChannelFuture future = handler.handshakeFuture();
+        future.sync();
+        if (!future.isSuccess()) {
+            throw future.cause();
+        }
     }
 
     public void waitForClose() throws InterruptedException {
