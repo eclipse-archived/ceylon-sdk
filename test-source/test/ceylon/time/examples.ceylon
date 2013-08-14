@@ -1,4 +1,3 @@
-import ceylon.math.whole { Whole, one, zero, wholeNumber }
 import ceylon.time { now, Instant, date, Date, Period, today, Time, dateTime, DateTime, DateRange, TimeRange, time }
 import ceylon.time.base { february, december, saturday, sunday, november, minutes}
 
@@ -88,48 +87,6 @@ void timeRangeSamples() {
 }
 
 "An example program using ceylon.time"
-void example(){
-
-    print("Getting current timestamp");
-    Instant start = now();
-    
-    print("Spending some time calculating pi...")
-    value pi = Pi();
-    for (n in 0..4000) {
-        process.write( pi.next().string );
-        if (n == 0){
-            process.write(".");
-        }
-
-        shared actual String string {
-            value builder = StringBuilder();
-            for( current in schedules ) {
-                builder.append("Reserved from ``current.from`` until ``current.to``\n");
-            }
-            return builder.string;
-        }
-    }
-
-    value schedule = DaySchedule();
-    print("Adding 9:00 using default of 30 minutes");
-    schedule.add(time(9,0));
-    
-    print( "Check if is 9:20 available ? The answer is ``schedule.isAvailable(time(9,20)) then "yes" else "no"`` ");
-
-    print("Adding 13:00 until 15:00");
-    schedule.add(time(13,0), time(15,0));
-
-    print("Adding 10:00 until 11:00");
-    schedule.add(time(10,0), time(11,0));
-
-    print("\n############### Final Result ###############\n");
-    print( schedule );
-    for( range in schedule.availables()) {
-        print("Available from: ``range.from`` until ``range.to`` ");
-    }
-}
-
-"An example program using ceylon.time"
 shared void example(){
     
     //print("Getting current timestamp");
@@ -140,14 +97,14 @@ shared void example(){
     //value result = StringBuilder(); 
     //value pi = Pi();
     //for (n in 0..precision) {
-        //result.append( pi.next().string );
-        //if (n == 0){
-            //result.append(".");
-        //}
+    //    result.append( pi.next().string );
+    //    if (n == 0){
+    //        result.append(".");
+    //    }
     //}
     //print(result);
-    
-    print("Pi calculation started on ``startDate`` at ``startTime`` ");
+    //
+    //print("Pi calculation started on ``startDate`` at ``startTime`` ");
     
     Date thisDay = today();
     print("today is ``thisDay.dayOfWeek``");
@@ -202,4 +159,4 @@ shared void example(){
   //    return nout;
   //}
   
-}
+//}

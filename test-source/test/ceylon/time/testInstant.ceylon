@@ -1,5 +1,5 @@
 import ceylon.test { assertEquals }
-import ceylon.time { Instant, fixedTime, Clock, date, Period, time }
+import ceylon.time { Instant, fixedTime, Clock, date, Period, time, now }
 import ceylon.time.base { february, march, january, milliseconds }
 import ceylon.time.timezone { timeZone }
 
