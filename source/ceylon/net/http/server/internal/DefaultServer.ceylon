@@ -26,15 +26,12 @@ import org.xnio {
 }
 import org.xnio.channels { AcceptingChannel }
 import io.undertow.server { HttpOpenListener, HttpHandler }
-import io.undertow.server.handlers { URLDecodingHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint, InternalException }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
-import io.undertow.websockets.core.handler { WebSocketProtocolHandshakeHandler }
-import io.undertow.websockets.spi { WebSocketHttpExchange }
-import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler }
+import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler, WebSocketProtocolHandshakeHandler }
 import ceylon.net.http.server.websocket { WebSocketEndpoint }
 
 by("Matej Lazar")
@@ -42,13 +39,13 @@ shared class DefaultServer() satisfies Server {
     
     variable XnioWorker? worker = null;
     
-    variable CeylonRequestHandler ceylonHandler = CeylonRequestHandler();
+    variable CeylonRequestHandler httpHandler = CeylonRequestHandler();
     CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
     
     MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
     shared actual void addEndpoint(Endpoint|AsynchronousEndpoint endpoint) {
-        ceylonHandler.addWebEndpoint(endpoint);
+        httpHandler.addWebEndpoint(endpoint);
     }
     
     shared actual void addWebSocketEndpoint(WebSocketEndpoint endpoint) {
@@ -58,7 +55,7 @@ shared class DefaultServer() satisfies Server {
     HttpHandler getHeandlers(Options options) {
         value webSocketProtocolHandshakeHandler = WebSocketProtocolHandshakeHandler(
                                                         webSocketHandler,
-                                                        ceylonHandler);
+                                                        httpHandler);
         
         value sessionconfig = SessionCookieConfig();
         SessionAttachmentHandler sessionHandler = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
@@ -74,7 +71,7 @@ shared class DefaultServer() satisfies Server {
         //TODO log
         print("Starting on ``host``:``port``");
         
-        ceylonHandler.options = options;
+        httpHandler.options = options;
 
         HttpOpenListener openListener = HttpOpenListener(
         ByteBufferSlicePool(

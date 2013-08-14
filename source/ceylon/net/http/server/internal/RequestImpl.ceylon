@@ -2,8 +2,7 @@ import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
 import ceylon.net.http.server { 
     Request, Session, 
-    Endpoint, AsynchronousEndpoint,
-    InternalException }
+    InternalException, HttpEndpoint }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.server.handlers.form { FormDataParser, FormData, FormParserFactory }
@@ -21,7 +20,7 @@ import ceylon.net.http { Method, parseMethod }
 by("Matej Lazar")
 shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formParserFactory) satisfies Request {
     
-    shared variable Endpoint|AsynchronousEndpoint|Null endpoint = null;
+    shared variable HttpEndpoint? endpoint = null;
     
     HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
     variable FormData? formData = null;

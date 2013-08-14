@@ -7,6 +7,7 @@ import ceylon.io.buffer { ByteBuffer }
 import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
 import ceylon.io.charset { utf8 }
+import io.netty.handler.codec.http.websocketx { WebSocketHandshakeException }
 
 by("Matej Lazar")
 void testWebSocketServer() {
@@ -68,10 +69,19 @@ void testWebSocketServer() {
 
                         client.waitForClose();
 
+                        value client2 = WebSocketClient(URI("ws://localhost:8080/notfoundwebsocket"));
+                        variable String exception = "";
+                        try {
+                            client2.connect(group);
+                        } catch (WebSocketHandshakeException e) {
+                            exception = e.message;
+                        }
+                        if (!exception.contains("404 Not Found")) {
+                            throw AssertionException("Expected WebSocketHandshakeException with 404 Not Found.");
+                        }
                     } finally {
                         group.shutdownGracefully();
                     }
-                    
                 } finally {
                     print("Stopping http server ...");
                     server.stop();
