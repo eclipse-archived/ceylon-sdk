@@ -2,12 +2,13 @@ import java.net { URI }
 import test.ceylon.net.websocketclient { WebSocketClient }
 import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason, WebSocketEndpoint }
 import ceylon.test { assertTrue, assertEquals }
-import ceylon.net.http.server { createServer, startsWith, started, StatusListener, Status }
+import ceylon.net.http.server { createServer, startsWith, started, StatusListener, Status, stopped }
 import ceylon.io.buffer { ByteBuffer }
 import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
 import ceylon.io.charset { utf8 }
 import io.netty.handler.codec.http.websocketx { WebSocketHandshakeException }
+import java.util.concurrent { Semaphore }
 
 by("Matej Lazar")
 void testWebSocketServer() {
@@ -86,9 +87,13 @@ void testWebSocketServer() {
                     print("Stopping http server ...");
                     server.stop();
                 }
+                if (status.equals(stopped)) {
+                    testCompleted();
+                }
             }
         }
     }
     server.addListener(serverListerner);
     server.startInBackground();
+    waitTestToComplete();
 }

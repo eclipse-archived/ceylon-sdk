@@ -6,12 +6,13 @@ import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { createServer, StatusListener, Status, 
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
-                                  startsWith, endsWith, Options }
+                                  startsWith, endsWith, Options, stopped }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue }
-import java.lang { Runnable, Thread }
+import java.lang { Runnable, Thread {sleep}}
 import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
+import java.util.concurrent { Semaphore }
 
 
 by("Matej Lazar")
@@ -129,6 +130,9 @@ void testServer() {
                     server.stop();
                 }
             }
+            if (status.equals(stopped)) {
+                testCompleted();
+            }
         }
     }
     
@@ -137,6 +141,7 @@ void testServer() {
     server.startInBackground {
         serverOptions = Options {defaultCharset = utf8;};
     };
+    waitTestToComplete();
 }
 
 void executeEchoTest(String name) {
@@ -391,4 +396,12 @@ void sessionTest() {
     print("Response content: " + responseContent2);
     assertEquals("2", responseContent2);
     response2.close();
+}
+
+Semaphore mutex = Semaphore(0);
+void waitTestToComplete() {
+    mutex.acquire();
+}
+void testCompleted() {
+    mutex.release();
 }
