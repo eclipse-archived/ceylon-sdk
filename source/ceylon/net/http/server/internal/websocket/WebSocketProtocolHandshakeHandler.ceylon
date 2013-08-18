@@ -6,6 +6,11 @@ shared class WebSocketProtocolHandshakeHandler(CeylonWebSocketHandler webSocketH
         extends UtWebSocketProtocolHandshakeHandler(webSocketHandler, next) {
 
     shared actual void handleRequest(HttpServerExchange exchange) {
+        if (!exchange.requestScheme in {"ws", "wss"}) {
+            next.handleRequest(exchange);
+            return;
+        }
+    
         if (webSocketHandler.endpointExists(exchange.requestPath)) {
             super.handleRequest(exchange);
         } else {
