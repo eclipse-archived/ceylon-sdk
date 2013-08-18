@@ -10,7 +10,7 @@ shared interface Server {
 
     shared formal void addWebSocketEndpoint(WebSocketEndpoint endpoint);
     
-    shared formal void start(Integer port = 8080, 
+    shared formal void start(Integer port = 8080, //TODO use SocketAddress 
             String host = "127.0.0.1", 
             Options serverOptions = Options());
     
