@@ -9,11 +9,10 @@ import ceylon.net.http.server { createServer, StatusListener, Status,
                                   startsWith, endsWith, Options, stopped }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue }
-import java.lang { Runnable, Thread {sleep}}
 import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
 import java.util.concurrent { Semaphore }
-
+import java.lang { Runnable, Thread }
 
 by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";

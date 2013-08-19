@@ -8,7 +8,6 @@ import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
 import ceylon.io.charset { utf8 }
 import io.netty.handler.codec.http.websocketx { WebSocketHandshakeException }
-import java.util.concurrent { Semaphore }
 
 by("Matej Lazar")
 void testWebSocketServer() {
