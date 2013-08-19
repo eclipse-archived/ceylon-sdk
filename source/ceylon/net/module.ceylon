@@ -36,7 +36,7 @@ module ceylon.net '0.6' {
     import java.base '7';
     
     // -- java modules --
-    import io.undertow.core '1.0.0.Beta7';
+    import io.undertow.core '1.0.0.Beta8';
 
     import 'org.jboss.xnio.api' '3.1.0.CR6';
     import 'org.jboss.xnio.nio' '3.1.0.CR6';
