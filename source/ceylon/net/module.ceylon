@@ -15,10 +15,28 @@
          value server = createServer {
              //an endpoint, on the path /hello
              Endpoint {
-                path = startsWith(\"/hello\");
+                 path = startsWith(\"/hello\");
                  //handle requests to this path
                  service(Request request, Response response) =>
                          response.writeString(\"hello world\");
+             },
+             WebSocketEndpoint {
+                 path = startsWith(\"/websocket\");
+                 onOpen = void (WebSocketChannel channel) { print(\"server: Channel opened.\"); };
+                 onClose = void (WebSocketChannel channel, CloseReason closeReason) { print(\"server: Channel closed.\"); };
+                 onError = void (WebSocketChannel webSocketChannel, Exception? throwable) {};
+                 onText = void (WebSocketChannel channel, String text) {
+                     print(\"Server received:\");
+                     print(text);
+                     channel.sendText(text.uppercased);
+                 };
+                 onBinary = void (WebSocketChannel channel, ByteBuffer binary) {
+                     String data = utf8.decode(binary);
+                     print(\"Server received binary message:\");
+                     print(data);
+                     value encoded = utf8.encode(data.uppercased);
+                     channel.sendBinary(encoded);
+                 };
              }
          };
  
