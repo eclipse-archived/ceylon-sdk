@@ -1,5 +1,5 @@
 import ceylon.net.http.server.internal { DefaultServer }
-import ceylon.net.http.server.websocket { WebSocketEndpoint }
+import ceylon.net.http.server.websocket { WebSocketEndpoint, WebSocketFragmentedEndpoint }
 
 "Ceylon http server."
 by("Matej Lazar")
@@ -29,10 +29,19 @@ shared interface Server {
     shared formal void removeListener(StatusListener listener);
 }
 
-shared Server createServer({Endpoint|AsynchronousEndpoint*} endpoints) {
+shared Server createServer({Endpoint|AsynchronousEndpoint|WebSocketEndpoint|WebSocketFragmentedEndpoint*} endpoints) {
     Server server = DefaultServer();
     for (endpoint in endpoints) {
-        server.addEndpoint(endpoint);
+        switch(endpoint)
+        case (is WebSocketEndpoint) {
+            server.addWebSocketEndpoint(endpoint);
+        }
+        case (is HttpEndpoint) {
+            server.addEndpoint(endpoint);
+        }
+        else {
+            //TODO remove all cases are handled
+        }
     }
     return server;
 } 
