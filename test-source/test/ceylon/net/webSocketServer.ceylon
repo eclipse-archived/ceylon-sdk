@@ -87,9 +87,9 @@ void testWebSocketServer() {
                     print("Stopping http server ...");
                     server.stop();
                 }
-                if (status.equals(stopped)) {
-                    testCompleted();
-                }
+            }
+            if (status.equals(stopped)) {
+                testCompleted();
             }
         }
     }
