@@ -3,6 +3,7 @@ import ceylon.net.http.server.websocket { WebSocketEndpoint, WebSocketFragmented
 
 "Ceylon http server."
 by("Matej Lazar")
+see(`function createServer`)
 shared interface Server {
 
     "Define endpoint by providing an instance of [[Endpoint]]|[[AsynchronousEndpoint]] class."
@@ -22,7 +23,7 @@ shared interface Server {
     shared formal void stop();
     
     "Registers a status change listener."
-    see(`StatusListener`)
+    see(`interface StatusListener`)
     shared formal void addListener(StatusListener listener);
     
     "Removes status change listener."

@@ -4,7 +4,8 @@ import ceylon.io.buffer { ByteBuffer }
  
  This supports synchronous and asynchronous reading.
  "
-see(`Socket`,`SelectableFileDescriptor`)
+see(`interface Socket`,
+    `interface SelectableFileDescriptor`)
 by("Stéphane Épardaud")
 shared interface FileDescriptor {
 

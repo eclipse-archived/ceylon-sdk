@@ -79,14 +79,14 @@ shared interface Path
 
 "Obtain a `Path` in the default file system given 
  the string representation of a path."
-see(`defaultSystem`)
+see(`value defaultSystem`)
 shared Path parsePath(String pathString) => parsePathInternal(pathString);
 
 "Obtain a `Path` given the string representation
  of a URI. The scheme determines the file system
  the path belongs to. The scheme `file:` refers
  to the default file system."
-see(`System`)
+see(`interface System`)
 shared Path parseURI(String uriString) => parseURIInternal(uriString);
 
 "The `Path` representing the user home directory."
@@ -98,7 +98,7 @@ shared Path current = parsePath(getProperty("user.dir"));
 
 "The `Path`s representing the root directories of
  the default file system."
-see(`defaultSystem`)
+see(`value defaultSystem`)
 shared Path[] rootPaths = rootPathsInternal;
 
 "A file visitor."

@@ -28,7 +28,7 @@ shared interface OpenFile satisfies FileDescriptor {
 
 
 "Creates a new [[OpenFile]] to read/write to the given [[resource]]."
-see(`OpenFile`)
+see(`interface OpenFile`)
 shared OpenFile newOpenFile(Resource resource){
     return OpenFileImpl(resource);
 }

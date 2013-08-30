@@ -5,14 +5,18 @@ import ceylon.io.buffer.impl { ByteBufferImpl }
  You can create new instances with [[newByteBuffer]] (empty) and
  [[newByteBufferWithData]] (filled with your data)."
 by("Stéphane Épardaud")
-see(`Buffer`,`newByteBuffer`,`newByteBufferWithData`)
+see(`class Buffer`,
+    `function newByteBuffer`,
+    `function newByteBufferWithData`)
 shared abstract class ByteBuffer() extends Buffer<Integer>(){
 	shared formal Array<Integer> bytes();
 }
 
 "Allocates a new empty [[ByteBuffer]] of the given [[capacity]]."
 by("Stéphane Épardaud")
-see(`ByteBuffer`,`newByteBufferWithData`,`Buffer`)
+see(`class ByteBuffer`,
+    `function newByteBufferWithData`,
+    `class Buffer`)
 shared ByteBuffer newByteBuffer(Integer capacity){
     return ByteBufferImpl(capacity);
 }
@@ -23,7 +27,9 @@ shared ByteBuffer newByteBuffer(Integer capacity){
  with its `position` set to `0` and its limit set to the buffer
  `capacity`."
 by("Stéphane Épardaud")
-see(`ByteBuffer`,`newByteBuffer`,`Buffer`)
+see(`class ByteBuffer`,
+    `function newByteBuffer`,
+    `class Buffer`)
 shared ByteBuffer newByteBufferWithData(Integer* bytes){
     value seq = bytes.sequence;
     value buf = newByteBuffer(seq.size);

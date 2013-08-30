@@ -11,7 +11,7 @@ import ceylon.io.impl { SocketConnectorImpl }
  You create new socket connectors with [[newSocketConnector]].
  "
 by("Stéphane Épardaud")
-see(`newSocketConnector`)
+see(`function newSocketConnector`)
 shared abstract class SocketConnector(SocketAddress addr){
     
     "Blocks the current thread until we can make a connection to the
@@ -20,7 +20,7 @@ shared abstract class SocketConnector(SocketAddress addr){
 
     "Registers a `connect` listener on the specified [[selector]] that
      will be invoked when the socket is connected to the specified [[addr]]."
-    see(`Selector`)
+    see(`interface Selector`)
     shared formal void connectAsync(Selector selector, void connect(Socket socket));
 
     "Closes this socket connector."
@@ -28,7 +28,7 @@ shared abstract class SocketConnector(SocketAddress addr){
 }
 
 "Creates a new [[SocketConnector]] to connect to the specified [[add]]."
-see(`SocketConnector`)
+see(`class SocketConnector`)
 shared SocketConnector newSocketConnector(SocketAddress addr){
     return SocketConnectorImpl(addr);
 }

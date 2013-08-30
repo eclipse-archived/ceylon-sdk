@@ -4,7 +4,7 @@ shared class AssertException(String message) extends Exception(message, null) {
 
 "Subclass of `AssertException` for assertion failures dues to two things 
      not being equal"
-see(`assertEquals`)
+see(`function assertEquals`)
 shared class AssertComparisonException(String message, expectedValue, actualValue) extends AssertException(message) {
     
     shared String expectedValue;
@@ -76,7 +76,7 @@ shared void assertNotEquals(Object? expected, Object? actual, String? message = 
 }
 
 "A compare function for `assertEquals()`"
-see(`assertEquals`)
+see(`function assertEquals`)
 Boolean nullSafeEquals(Object? expected, Object? actual) {
     if (exists expected) {
         if (exists actual) {

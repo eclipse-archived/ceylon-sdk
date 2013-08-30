@@ -7,7 +7,10 @@ import ceylon.time.timezone { ZoneDateTime }
  either partially or fully represent information 
  that can be interpreted as _date_."
 by ("Diego Coronel", "Roland Tepp")
-see(`Date`,`Time`,`DateTime`,`ZoneDateTime`)
+see(`interface Date`,
+    `interface Time`,
+    `interface DateTime`,
+    `interface ZoneDateTime`)
 shared interface ReadableDate {
 
     "The year of the date"

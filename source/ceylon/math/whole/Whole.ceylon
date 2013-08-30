@@ -11,7 +11,7 @@ shared interface Whole of WholeImpl
     "The platform-specific implementation object, if any. 
      This is provided for interoperation with the runtime 
      platform."
-    see(`fromImplementation`)
+    see(`function fromImplementation`)
     shared formal Object? implementation;
     
     "The result of raising this number to the given power.
@@ -27,12 +27,12 @@ shared interface Whole of WholeImpl
      * Otherwise negative powers result in an `Exception` 
        being thrown
      "
-    throws(`Exception`, "If passed a negative or large positive 
-                         exponent")
+    throws(`class Exception`, "If passed a negative or large 
+                               positive exponent")
     shared formal actual Whole power(Whole exponent);
 
     "The result of `(this**exponent) % modulus`."
-    throws(`Exception`, "If passed a negative modulus")
+    throws(`class Exception`, "If passed a negative modulus")
     shared formal Whole powerRemainder(Whole exponent, 
                                        Whole modulus);
 }

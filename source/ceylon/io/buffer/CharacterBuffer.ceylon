@@ -4,7 +4,7 @@
  with the [[position]] set to `0` and the [[limit]] set to size of the
  given [[string]]."
 by("Stéphane Épardaud")
-see(`Buffer`,`newCharacterBufferWithData`)
+see(`class Buffer`,`function newCharacterBufferWithData`)
 shared class CharacterBuffer(String string) extends Buffer<Character>(){
     
     "The size of the given [[string]]."
@@ -48,14 +48,14 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
     }
 
     "Not supported"
-    throws(`Exception`,"Always")
+    throws(`class Exception`,"Always")
     shared actual void put(Character element) {
         // FIXME: type
         throw Exception("Buffer is read-only");
     }
     
     "Not supported"
-    throws(`Exception`,"Always")
+    throws(`class Exception`,"Always")
     shared actual void resize(Integer newSize, Boolean growLimit) {
         // FIXME: type
         throw Exception("Buffer is read-only");
@@ -64,7 +64,7 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
 
 "Allocates a new [[CharacterBuffer]] with the underlying [[data]]."
 by("Stéphane Épardaud")
-see(`CharacterBuffer`)
+see(`class CharacterBuffer`)
 shared CharacterBuffer newCharacterBufferWithData(String data){
     return CharacterBuffer(data);
 }

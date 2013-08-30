@@ -79,7 +79,7 @@ shared class Parser(FileDescriptor socket){
     }
 
     "Reads a byte"
-    throws(`Exception`, "On end of file")
+    throws(`class Exception`, "On end of file")
     void readByte(){
         byte = reader.readByte();
         if(byte < 0){
@@ -88,7 +88,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads a byte and pushes it on the buffer"
-    throws(`Exception`, "On end of file")
+    throws(`class Exception`, "On end of file")
     void saveByte(){
         readByte();
         pushByte();
@@ -112,7 +112,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Throws an exception about an unexpected input read"
-    throws(`Exception`, "All the time")
+    throws(`class Exception`, "All the time")
     Exception unexpected(String expected){
         // try to read some context for an error
         ByteBuffer buffer = newByteBuffer(40);
@@ -124,14 +124,14 @@ shared class Parser(FileDescriptor socket){
     }
 
     "Reads a byte and checks that it's a given ASCII char"
-    throws(`Exception`, "If if the byte read is not equal to the given ASCII char")
+    throws(`class Exception`, "If if the byte read is not equal to the given ASCII char")
     void readChar(Character c){
         readByte();
         atChar(c);
     }
 
     "Throws if the current byte is not equal to the given ASCII char"
-    throws(`Exception`, "If if the current byte is not equal to the given ASCII char")
+    throws(`class Exception`, "If if the current byte is not equal to the given ASCII char")
     void atChar(Character c){
         if(byte != c.integer){
             throw unexpected(c.string);
@@ -139,7 +139,7 @@ shared class Parser(FileDescriptor socket){
     }
 
     "Reads as many bytes as in the given ASCII string."
-    throws(`Exception`, "If the bytes read do not match the given ASCII string.")
+    throws(`class Exception`, "If the bytes read do not match the given ASCII string.")
     void readString(String string){
         for(c in string){
             readChar(c);
@@ -147,13 +147,13 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads a space."
-    throws(`Exception`, "If the byte read is not a space")
+    throws(`class Exception`, "If the byte read is not a space")
     void readSpace(){
         readChar(' ');
     }
     
     "Reads a byte and checks that it's an ASCII digit. Returns the digit read."
-    throws(`Exception`, "If the byte read is not a digit")
+    throws(`class Exception`, "If the byte read is not a digit")
     Integer parseDigit(){
         readByte();
         if(!isDigit()){
@@ -163,14 +163,14 @@ shared class Parser(FileDescriptor socket){
     }
 
     /*"Reads a byte and checks that it's an ASCII hex digit. Returns the digit read."
-    throws(`Exception`, "If the byte read is not a hex digit.")
+    throws(`class Exception`, "If the byte read is not a hex digit.")
     Integer parseHexDigit(){
         readByte();
         return atHexDigit();
     }*/
     
     "Checks that the current byte is an ASCII hex digit. Returns the digit."
-    throws(`Exception`, "If the current byte is not a hex digit.")
+    throws(`class Exception`, "If the current byte is not a hex digit.")
     Integer atHexDigit(){
         if(!isHexDigit()){
             throw unexpected("hex digit");
@@ -196,7 +196,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads a token plus one byte. Expects the current byte to be the start of token."
-    throws(`Exception`, "If the current byte is not a token byte")
+    throws(`class Exception`, "If the current byte is not a token byte")
     String atTokenPlusOne(){
         buffer.clear();
         while(isToken()){
@@ -211,7 +211,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads a CR LF pair. Expects the current byte to be on the CR."
-    throws(`Exception`, "If the current byte is not a CR and if the next is not a LF.")
+    throws(`class Exception`, "If the current byte is not a CR and if the next is not a LF.")
     void atCrLf(){
         if(byte != '\r'.integer){
             throw unexpected("\\r");
@@ -220,7 +220,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads a LWS (CR LF (SP|HT)+). Expects the current byte to be on the CR."
-    throws(`Exception`, "If the current byte is not at the start of a LWS.")
+    throws(`class Exception`, "If the current byte is not at the start of a LWS.")
     void atLws(){
         atCrLf();
         readByte();
@@ -231,7 +231,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads a quoted string. Expects the current byte to be on the \" symbol"
-    throws(`Exception`, "If the current byte does not start a valid quoted string.")
+    throws(`class Exception`, "If the current byte does not start a valid quoted string.")
     void atQuotedText(){
         atChar('"');
         readByte();
@@ -259,7 +259,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Parses a status line: HttpVersion StatusCode Reason? CRLF."
-    throws(`Exception`, "If the status line is invalid.")
+    throws(`class Exception`, "If the status line is invalid.")
     void parseStatusLine(){
         parseHttpVersion();
         readSpace();
@@ -278,7 +278,7 @@ shared class Parser(FileDescriptor socket){
     "Parses a header line plus one extra byte. 
      Expects the current byte to be on the first character of the
      header name token."
-    throws(`Exception`, "If the header line is invalid.")
+    throws(`class Exception`, "If the header line is invalid.")
     void atHeaderPlusOne(){
         String name = atTokenPlusOne();
         atChar(':');
@@ -312,7 +312,7 @@ shared class Parser(FileDescriptor socket){
     
     "Parses a chunk header, starting with a CRLF if `firstChunk` is false.
      Returns the next chunk's size."
-    throws(`Exception`, "If the chunk header could not be parsed.")
+    throws(`class Exception`, "If the chunk header could not be parsed.")
     shared Integer parseChunkHeader(Boolean firstChunk) {
         // if it's not the first chunk we must have an end of chunk marker
         if(!firstChunk){
@@ -351,14 +351,14 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Parses a chunk trailer: optional headers."
-    throws(`Exception`, "If an invalid header is present.")
+    throws(`class Exception`, "If an invalid header is present.")
     shared void parseChunkTrailer() {
         // we may be at CRLF or defining new headers
         parseHeaders();
     }
     
     "Parses a list of headers until a CRLF CRLF sequence"
-    throws(`Exception`, "On invalid headers or EOF")
+    throws(`class Exception`, "On invalid headers or EOF")
     shared void parseHeaders() {
         readByte();
         while(true){
@@ -375,7 +375,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Parses an HTTP Response until the end of headers."
-    throws(`Exception`, "On an invalid HTTP Response or EOF")
+    throws(`class Exception`, "On an invalid HTTP Response or EOF")
     shared Response parseResponse() {
         // all the headers are defined in ASCII
         parseStatusLine();
