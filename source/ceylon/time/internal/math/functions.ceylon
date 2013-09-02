@@ -1,5 +1,4 @@
-
-"Returns the largest integer less than or equal to _x_"
+"Returns the largest integer less than or equal to _x_."
 shared Integer floor( Float x ) {
     if (x.fractionalPart != 0.0 && x.negative){
         return x.integer - 1;
@@ -8,7 +7,7 @@ shared Integer floor( Float x ) {
     return i;
 }
 
-"Returns floored division of the two integers"
+"Returns floored division of the two integers."
 shared Integer floorDiv(Integer x, Integer y)
     => floor(x.float / y.float);
 

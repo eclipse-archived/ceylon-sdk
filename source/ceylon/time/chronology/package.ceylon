@@ -12,5 +12,5 @@
  This API is considered experimental and can change significantly between releases, so dependency 
  on this package is not advisable for general use.
  "
-by ("Roland Tepp")
+by ("Diego Coronel", "Roland Tepp")
 shared package ceylon.time.chronology;

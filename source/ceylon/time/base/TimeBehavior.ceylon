@@ -1,9 +1,8 @@
-
 "Common behavior for the types that represent time."
 shared interface TimeBehavior<Element> of Element
        given Element satisfies ReadableTime {
 
-    "Returns a copy of this period with the specified amount of hours.
+    "Returns a copy of this period with the specified amount of hours.\n
      Result must be a valid time of day."
     shared formal Element withHours(Integer hours);
 
@@ -25,7 +24,7 @@ shared interface TimeBehavior<Element> of Element
     "Returns a copy of this period with the specified number of seconds added."
     shared formal Element plusSeconds(Integer seconds);
 
-    "Returns a copy of this period with the specified number of nonoseconds added."
+    "Returns a copy of this period with the specified number of milliseconds added."
     shared formal Element plusMilliseconds(Integer milliseconds);
 
     "Returns a copy of this period with the specified number of hours subtracted."

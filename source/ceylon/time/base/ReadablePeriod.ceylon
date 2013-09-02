@@ -28,7 +28,7 @@ shared interface ReadableDatePeriod {
 
 }
 
-"A period of time (_hours_, _minutes_, _seconds_ and _milliseconds_)."
+"A period of _hours_, _minutes_, _seconds_ and _milliseconds_."
 shared interface ReadableTimePeriod {
 
     "The number of hours"

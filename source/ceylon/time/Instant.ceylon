@@ -1,7 +1,7 @@
 import ceylon.time.base { ReadableInstant }
 import ceylon.time.chronology { unixTime }
-import ceylon.time.internal { TimeOfDay, GregorianDateTime, GregorianDate }
-import ceylon.time.timezone { TimeZone, ZoneDateTime }
+import ceylon.time.internal { TimeOfDay, GregorianDateTime, GregorianDate, GregorianZonedDateTime }
+import ceylon.time.timezone { TimeZone, ZoneDateTime, tz = timeZone }
 
 "Obtains the current instant from the system clock."
 shared Instant now(Clock? clock = null) {
@@ -14,7 +14,7 @@ shared Instant now(Clock? clock = null) {
 "A specific instant of time on a continuous time-scale.
  
  An instant represents a single point in time irrespective of 
- any time-zone offsets or geographical locations"
+ any time-zone offsets or geographical locations."
 shared class Instant(millisecondsOfEpoch) 
     satisfies ReadableInstant & Comparable<Instant> {
 
@@ -22,7 +22,7 @@ shared class Instant(millisecondsOfEpoch)
      1970-01-01T00:00:00.000Z."
     shared actual Integer millisecondsOfEpoch;
 
-    "Adds a period to this instant"
+    "Adds a period to this instant."
     shared Instant plus(Duration|Period other){
         switch(other)
         case(is Duration){
@@ -33,7 +33,7 @@ shared class Instant(millisecondsOfEpoch)
         }
     }
 
-    "Subtracts a period to this instant"
+    "Subtracts a period to this instant."
     shared Instant minus(Duration|Period other){
         switch(other)
         case(is Duration){
@@ -44,78 +44,47 @@ shared class Instant(millisecondsOfEpoch)
         }
     }
 
-    "Compares this instant to the _other_ instant"
+    "Compares this instant to the _other_ instant."
     shared actual Comparison compare(Instant other) {
         return this.millisecondsOfEpoch <=> other.millisecondsOfEpoch;
     }
 
     "Returns this instant as a [[DateTime]] value."
-    shared DateTime dateTime(
-            "Time zone of the conversion.
-             
-             If omitted, the current/default time zone of the system will be used.
-             
-             **Note:** Since time zone support is not implemented yet, this method 
-             will return dateTime according to the of the UTC instead of using local 
-             time zone."
-            TimeZone? zone = null) {
-        if (exists zone) {
-            //TODO: get [[DateTime]] for this [[Instant]] in the specified time zone. 
-            return nothing;
-        }
-        
-        return  GregorianDateTime( date(), time() );
+    shared DateTime dateTime( TimeZone timeZone = tz.system ) {
+        return  GregorianDateTime( date(timeZone), time(timeZone) );
     }
 
-    "Returns this instant as a [[Date]] value"
-    shared Date date(
-            "Time zone of the conversion.
-             
-             If omitted the current/default time zone of the system will be used.
-             
-             **Note:** Since time zone support is not implemented yet, this method 
-             will return date according to the of the UTC instead of using local 
-             time zone."
-            TimeZone? zone = null) {
-        if (exists zone) {
-            //TODO: get [[Date]] of this [[Instant]] in the specified time zone.
-            return nothing;
-        }
-
-        return GregorianDate(unixTime.fixedFromTime(millisecondsOfEpoch));
+    "Returns this instant as a [[Date]] value."
+    shared Date date( TimeZone timeZone = tz.system ) {
+        return GregorianDate( unixTime.fixedFromTime(millisecondsOfEpoch + timeZone.offset(this)) );
     }
 
-    "Returns _time of day_ for this instant"
-    shared Time time(
-            "Time zone of the conversion.
-             
-             If omitted the current/default time zone of the system will be used.
-             
-             **Note:** Since time zone support is not implemented yet, this method 
-             will return time of day according to the of the UTC-0 instead of using local 
-             time zone."
-            TimeZone? zone = null) {
-        if (exists zone) {
-            //TODO: get [[Time]] of this [[Instant]] in the specified time zone.
-            return nothing;
-        }
-        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch) );
+    "Returns _time of day_ for this instant."
+    shared Time time( TimeZone timeZone = tz.system ) {
+        return TimeOfDay( unixTime.timeOfDay(millisecondsOfEpoch + timeZone.offset(this)) );
     }
 
     "Returns ZoneDateTime value for this instant."
-    shared ZoneDateTime zoneDateTime(TimeZone zone){
-        //TODO: get [[Time]] of this [[Instant]] in the specified time zone.
-        return nothing;
+    shared ZoneDateTime zoneDateTime(TimeZone timeZone = tz.system){
+        return GregorianZonedDateTime(this, timeZone);
     }
 
     "Returns duration in milliseconds from this instant to the other instant."
     shared Duration durationTo(Instant other) {
         return Duration(other.millisecondsOfEpoch - this.millisecondsOfEpoch);
     }
-    
+
     "Returns duration in milliseconds from other instant to this instant."
     shared Duration durationFrom(Instant other) {
         return Duration(this.millisecondsOfEpoch - other.millisecondsOfEpoch);
+    }
+
+    "Returns _true_ if given value is same type and milliseconds of epoch."
+    shared actual Boolean equals( Object other ) {
+        if ( is Instant other ) {
+            return millisecondsOfEpoch == other.millisecondsOfEpoch;
+        }
+        return false;
     }
 
 }

@@ -1,5 +1,4 @@
-
-"return padded value of the number as a string"
+"Return padded value of the number as a string."
 shared String leftPad(Integer number, String padding = "00"){
     if (number == 0){
         return padding;
@@ -17,7 +16,7 @@ shared String leftPad(Integer number, String padding = "00"){
     return string;
 }
 
-"Returns if two ranges has intersection"
+"Returns if two ranges has intersection."
 shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value otherEnd ) given Value satisfies Comparable<Value> {
     return start <= otherEnd && end >= otherStart;
 }
@@ -35,9 +34,11 @@ shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value
 shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second) 
        given Value satisfies Comparable<Value> & Ordinal<Value> {
     value ordered = sort(join(first, second)).segment(1, 2); // take the middle two
+
     if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
         assert(exists start = ordered.first);
         assert(exists end = ordered.last);
+
         return [start, end];
     }
 

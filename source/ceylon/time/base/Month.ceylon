@@ -15,7 +15,7 @@ shared abstract class Month(integer)
             december = 12"
         shared Integer integer;
 
-    "Returns number of days in this month"
+    "Returns number of days in this month."
     shared default Integer numberOfDays(Boolean leapYear = false) {
         switch(this)
         case (february) { return leapYear then 29 else 28; }
@@ -23,7 +23,7 @@ shared abstract class Month(integer)
         case (january,march,may,july,august,october,december) { return 31; }
     }
 
-    "Returns the _day of year_ value for first of this month"
+    "Returns the _day of year_ value for first of this month."
     shared default Integer fisrtDayOfYear(Boolean leapYear = false){
         assert(exists day = firstDayOfMonth[this.integer-1]);
         if (leapYear && this > february){
@@ -32,7 +32,7 @@ shared abstract class Month(integer)
         return day;
     }
 
-    "Compares ordinal numbers of two instances of `Month`"
+    "Compares ordinal numbers of two instances of `Month`."
     shared actual Comparison compare(Month other)
         => integer.compare(other.integer);
 
@@ -44,12 +44,12 @@ shared abstract class Month(integer)
     shared Month minusMonths(Integer number) 
         => (number == 0) then this else add(-number).month;
 
-    "A result of adding or subtracting a month to another mont"
+    "A result of adding or subtracting a month to another amount."
     shared class Overflow(month, years){
-        "New month value"
+        "New month value."
         shared Month month;
 
-        "Number of years overflowed by calculation"
+        "Number of years overflowed by calculation."
         shared Integer years;
     }
 
@@ -65,7 +65,7 @@ shared abstract class Month(integer)
     }
 }
 
-"Table of _day of year_ values for the first day of each month"
+"Table of _day of year_ values for the first day of each month."
 Integer[] firstDayOfMonth = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 
 "Returns month of year specified by the input argument.
@@ -79,7 +79,7 @@ shared Month monthOf(Integer|Month month){
     switch (month)
     case (is Month) { return month; }
     case (is Integer) {
-        "Invalid month, it should be xx,zz,yy"//TODO: How to use string template?
+        "Invalid month."
         assert ( january.integer <= month && month <= december.integer );
         assert ( exists m = months.all[month-1] );
         return m;

@@ -1,5 +1,4 @@
-
-"Common behavior for date types"
+"Common behavior for date types."
 shared interface DateBehavior<Element> of Element 
        given Element satisfies ReadableDate {
 

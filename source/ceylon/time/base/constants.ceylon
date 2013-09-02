@@ -13,7 +13,7 @@ shared interface UnitOfMinute satisfies UnitOfTime{}
 shared interface UnitOfSecond satisfies UnitOfTime{}
 shared interface UnitOfMillisecond satisfies UnitOfTime{}
 
-"Common properties and constraints of _year_ unit"
+"Common properties and constraints of _year_ unit."
 shared object years satisfies UnitOfYear {
 
     "The minimum supported year for instances of `Date`, -283_457."
@@ -25,32 +25,35 @@ shared object years satisfies UnitOfYear {
     shared Integer maximum = 287_396;
 }
 
-"Common properties and constraints of months"
+"Common properties and constraints of months."
 shared object months satisfies UnitOfMonth {
 
-    "Ordered list of all months of Gregorian and Julian calendar system from January to December"
+    "Ordered list of all months of Gregorian and Julian calendar system from January to December."
     shared Month[] all = [january, february, march, april, may, june, july, august, september, october, november, december];
 
-    "Number of months per year"
+    "Number of months per year."
     shared Integer perYear = all.size;
 
 }
 
-"Common properties and constraints of _day_ unit"
+"Common properties and constraints of _day_ unit."
 shared object days satisfies UnitOfDay {
 
-    "Returns the number of days per year"
-    shared Integer perYear(Boolean leapYear=false) => leapYear then 366 else 365;
+    "Number of days per normal year."
+    shared Integer perYear => 365;
 
-    "Returns the number of days per month"
+    "Number of days per leap year."
+    shared Integer perLeapYear => 366;
+
+    "Returns the number of days per month."
     shared Integer perMonth(Month month, Boolean leapYear=false) => month.numberOfDays(leapYear);
 
-    "Returns the number of days from the start of the year to the first of the month"
+    "Returns the number of days from the start of the year to the first of the month."
     shared Integer toMonth(Month month, Boolean leapYear=false) => month.fisrtDayOfYear(leapYear) - 1;
 
     shared DayOfWeek[] ofWeek = [sunday, monday, tuesday, wednesday, thursday, friday, saturday];
 
-    "Number of days per week (7)"
+    "Number of days per week (7)."
     shared Integer perWeek = ofWeek.size;
 
     "The number of days in a 400 year cycle."
@@ -59,65 +62,61 @@ shared object days satisfies UnitOfDay {
     "The number of days in a 400 year cycle."
     shared Integer perFourCenturies => perCycle;
 
-    "The number of days from year zero to year 1970.
-     There are five 400 year cycles from year zero to 2000.
-     There are 7 leap years from 1970 to 2000."
-    shared Integer toEpoch => (perCycle * 5) - (30 * 365 + 7);
-
-    "Number of days in four years"
+    "Number of days in four years."
     shared Integer inFourYears = 1461;
 
-    "Number of of per century (100 years)"
+    "Number of of per century (100 years)."
     shared Integer perCentury = 36524;
 
     "Returns number of days from the number of milliseconds."
-    shared Integer fromMillis(Integer millis = 0) => floorDiv(millis, milliseconds.perDay);
+    shared Integer fromMilliseconds(Integer millisecondsIn = 0) => floorDiv(millisecondsIn, milliseconds.perDay);
 
 }
 
-"Common properties of _hour_ time unit"
+"Common properties of _hour_ time unit."
 shared object hours satisfies UnitOfHour {
 
-    "Number of hours per day"
+    "Number of hours per day."
     shared Integer perDay = 24;
 
 }
 
-"Common properties of _minute_ time unit"
+"Common properties of _minute_ time unit."
 shared object minutes satisfies UnitOfMinute {
 
-    "Number of minutes per hour"
+    "Number of minutes per hour."
     shared Integer perHour = 60;
 
-    "Number of minutes per day"
+    "Number of minutes per day."
     shared Integer perDay => hours.perDay * minutes.perHour;
 }
 
-"Common properties of _second_ time unit"
+"Common properties of _second_ time unit."
 shared object seconds satisfies UnitOfSecond {
 
-    "Number of seconds per minute"
+    "Number of seconds per minute."
     shared Integer perMinute = 60;
 
-    "Number of seconds per hour"
+    "Number of seconds per hour."
     shared Integer perHour => minutes.perHour * seconds.perMinute;
 
-    "Number of seconds per day"
+    "Number of seconds per day."
     shared Integer perDay => hours.perDay * seconds.perHour;
 }
 
-"Common properties of _millisecond_ time unit"
+"Common properties of _millisecond_ time unit."
 shared object milliseconds satisfies UnitOfMillisecond {
 
-    "Number of milliseconds per second (1000)"
+    "Number of milliseconds per second."
     shared Integer perSecond = 1000;
 
-    "Milliseconds per minute (60000)"
+    "Milliseconds per minute."
     shared Integer perMinute => seconds.perMinute * milliseconds.perSecond;
 
-    "Number of milliseconds per hour"
+    "Number of milliseconds per hour."
     shared Integer perHour => minutes.perHour * milliseconds.perMinute;
 
-    "Number of milliseconds per day"
+    "Number of milliseconds per day."
     shared Integer perDay =>  hours.perDay * milliseconds.perHour;
+
 }

@@ -87,13 +87,13 @@ shared void testStepMinutesReverseTime() {
 }
 
 shared void testContainsTime() {
-    assertEquals(true, time(4,30) in firstQuarterDay);
+    assertEquals(true, time(1,30) in firstQuarterDay);
 }
 
 shared void testGapTimeEmpty() {
     TimeRange noGap = time(2, 0).rangeTo(time(12, 0));
     
-    assertEquals(empty, firstQuarterDay.gap(noGap));    
+    assertEquals(empty, firstQuarterDay.gap(noGap));
 }
 
 shared void testOverlapTimeEmpty() {
@@ -143,17 +143,17 @@ shared void testGapRulesABSmallerCD_Time() {
 
 shared void testGapRulesABHigherCD_Time() {
     //Combinations to Test: AB > CD
-    //56 gap 12 = (5,2)
-    //56 gap 21 = (5,2)
-    //65 gap 12 = (5,2)
-    //65 gap 21 = (5,2)
+    //56 gap 12 = (2,5)
+    //56 gap 21 = (2,5)
+    //65 gap 12 = (2,5)
+    //65 gap 21 = (2,5)
 
     value a = time(5, 0);
     value b = time(6, 0);
     value c = time(1, 0);
     value d = time(2, 0);
 
-    value result = time(4, 59, 59, 999).rangeTo( time(2, 0, 0, 1) );
+    value result = time(2, 0, 0, 1).rangeTo(time(4, 59, 59, 999));
 
     //C1
     assertEquals{ 
@@ -221,17 +221,17 @@ shared void testOverlapRulesABSmallerCD_Time() {
 
 shared void testOverlapRulesABHigherCD_Time() {
     //Combinations to Test: AB > CD
-    //39 gap 16 = [6,3]
-    //39 gap 61 = [6,3]
-    //93 gap 16 = [6,3]
-    //93 gap 61 = [6,3]
+    //39 gap 16 = [3,6]
+    //39 gap 61 = [3,6]
+    //93 gap 16 = [3,6]
+    //93 gap 61 = [3,6]
 
     value a = time(3, 0);
     value b = time(9, 0);
     value c = time(1, 0);
     value d = time(6, 0);
 
-    value result = time(6, 0).rangeTo( time(3, 0) );
+    value result = time(3, 0).rangeTo( time(6, 0) );
 
     //C1
     assertEquals{ 
@@ -259,13 +259,16 @@ shared void testOverlapRulesABHigherCD_Time() {
 }
 
 void assertIntervalTime( Time start, Time end, Period period, Duration? duration = null )  {
-    value interval = start.rangeTo(end);
-    assertEquals(period, interval.period);
+    value range = start.rangeTo(end);
+    assertEquals(period, range.period);
 
     assertEquals( end, start.plus(period) );
     assertEquals( start, end.minus(period) );
 
+    assertEquals( start, range.first );
+    assertEquals( end, range.last );
+
     if( exists duration ) {
-        assertEquals(duration, interval.duration);
+        assertEquals(duration, range.duration);
     }
 }

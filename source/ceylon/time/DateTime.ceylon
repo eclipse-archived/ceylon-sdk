@@ -1,6 +1,7 @@
 import ceylon.time { createDate=date, createTime=time }
 import ceylon.time.base { Month, DateTimeBehavior, ReadableDateTime, ReadablePeriod }
 import ceylon.time.internal { GregorianDateTime }
+import ceylon.time.timezone { tz = timeZone, TimeZone }
 
 "An abstract moment in time (like _4pm, October 21. 2012_).
  
@@ -19,19 +20,24 @@ shared interface DateTime
     shared formal DateTime minus(ReadablePeriod period);
 
     "Returns the period between this and the given DateTime.
-     If this date is before the given date then return zero period"
+     
+     If this date is before the given date then return zero period."
     shared formal Period periodFrom( DateTime start );
 
     "Returns the period between this and the given DateTime.
-     If this DateTime is after the given DateTime then return zero period"
+     
+     If this DateTime is after the given DateTime then return zero period."
     shared formal Period periodTo( DateTime end );
 
-    "Returns the [[DateTimeRange]] between this and given DateTime"
+    "Returns the [[DateTimeRange]] between this and given [[DateTime]]."
     shared formal DateTimeRange rangeTo( DateTime other );
+
+    "Returns an instant from this [[DateTime]]."
+    shared formal Instant instant(TimeZone timeZone = tz.system);
 
 }
  
-"Returns a date based on the specified year, month and day-of-month values"
+"Returns a date based on the specified year, month and day of month values."
 shared DateTime dateTime(Integer year, Integer|Month month, Integer date, Integer hour = 0, Integer minutes=0, Integer seconds=0, Integer millis=0){
     return GregorianDateTime( 
         createDate( year, month, date), 

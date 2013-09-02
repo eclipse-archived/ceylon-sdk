@@ -1,4 +1,3 @@
-
 "Common behavior of objects representing a period."
 shared interface PeriodBehavior<Self> of Self 
        given Self satisfies PeriodBehavior<Self>
@@ -40,7 +39,7 @@ shared interface PeriodBehavior<Self> of Self
     "Returns a copy of this period with the specified amount of seconds."
     shared formal Self withSeconds(Integer seconds);
 
-    "Returns a copy of this period with the specified amount of nanos."
+    "Returns a copy of this period with the specified amount of milliseconds."
     shared formal Self withMilliseconds(Integer milliseconds);
 
     "Returns a copy of this period with the specified number of hours added."
@@ -52,7 +51,7 @@ shared interface PeriodBehavior<Self> of Self
     "Returns a copy of this period with the specified number of seconds added."
     shared formal Self plusSeconds(Integer seconds);
 
-    "Returns a copy of this period with the specified number of nonoseconds added."
+    "Returns a copy of this period with the specified number of milliseconds added."
     shared formal Self plusMilliseconds(Integer milliseconds);
 
     "Returns a copy of this period with the specified number of hours subtracted."
@@ -64,7 +63,7 @@ shared interface PeriodBehavior<Self> of Self
     "Returns a copy of this period with the specified number of seconds subtracted."
     shared formal Self minusSeconds(Integer seconds);
 
-    "Returns a copy of this period with the specified number of nonoseconds subtracted."
+    "Returns a copy of this period with the specified number of milliseconds subtracted."
     shared formal Self minusMilliseconds(Integer milliseconds);
 
     "Returns a copy of this period with all amounts normalized to the 
