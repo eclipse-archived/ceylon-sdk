@@ -2,14 +2,10 @@ import ceylon.time { DateTime, dateTime, Period }
 import ceylon.time.base { december, january, november, september, Month, DayOfWeek, sunday, july, wednesday, monday, october, tuesday, friday, saturday, february, april }
 import ceylon.test { assertEquals, fail, assertTrue }
 
-DateTime data_1982_12_13_09_08_07_0050 = dateTime { year = 1982;  
-                                                    month = december; 
-                                                    date = 13; 
-                                                    hour = 9; 
-                                                    minutes = 8;
-                                                    seconds = 7;
-                                                    millis = 50;
-                                                  };
+DateTime data_1982_12_13_09_08_07_0050 = dateTime { 
+	year = 1982; month = december; day = 13;
+	hours = 9; minutes = 8; seconds = 7; milliseconds = 50;
+};
 
 // Table of test data from the book Calendrical Calculations + time
 shared void test_sun_jul_24_minus586_09_00_00_0000() => assertGregorianDateTime(-586, july, 24, sunday, !leapYear, 9 );
@@ -163,13 +159,8 @@ shared void testPredecessor_DateTime() {
     assertEquals{ 
         actual = data_1982_12_13_09_08_07_0050.predecessor; 
         expected = dateTime { 
-            year = 1982;  
-            month = december; 
-            date = 13; 
-            hour = 9; 
-            minutes = 8;
-            seconds = 7;
-            millis = 49;
+            year = 1982; month = december; day = 13; 
+            hours = 9; minutes = 8; seconds = 7; milliseconds = 49;
         };
     };
 }
@@ -178,13 +169,8 @@ shared void testSuccessor_DateTime() {
     assertEquals{ 
         actual = data_1982_12_13_09_08_07_0050.successor; 
         expected = dateTime {
-            year = 1982;
-            month = december;
-            date = 13; 
-            hour = 9; 
-            minutes = 8;
-            seconds = 7;
-            millis = 51;
+            year = 1982; month = december; day = 13; 
+            hours = 9; minutes = 8; seconds = 7; milliseconds = 51;
          };
      };
 }
