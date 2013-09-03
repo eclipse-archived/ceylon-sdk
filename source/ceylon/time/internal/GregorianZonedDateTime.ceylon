@@ -265,4 +265,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
         return GregorianZonedDateTime( Instant( utcMillisecondsOfEpoch ), timeZone );
     }
 
+    "Returns _milliseconds of epoch_ as it enumerable value."
+    shared actual Integer integerValue => instant.millisecondsOfEpoch;
+
 }

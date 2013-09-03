@@ -11,7 +11,7 @@ shared void runDateTests(String suiteName="Date tests") {
         "Testing July 24 -586" -> test_sun_jul_24_minus586,
         "Testing December 05 -168" -> test_wed_dec_05_minus168,
         "Testing September 24 70" -> test_wed_sep_24_70,
-        
+
         "Testing January 01 1900" -> test_mon_jan_01_1900,
         "Testing October 29 1974" -> test_tue_oct_29_1974,
         "Testing December 13 1982" -> test_mon_dec_13_1982,
@@ -401,7 +401,7 @@ shared void testPeriodFromMonthBefore() {
 }
 
 shared void testPeriodFromMonthBeforeNegative() {
-    Period period = Period{ years = -1; months = -10; days = -3;}; 
+    Period period = Period{ years = -1; months = -10; days = -3;};
     Date from = date(2013,october,31);
     Date to = date(2011, december, 28);
     assertFromAndTo(period, from, to);
@@ -536,6 +536,12 @@ shared void testPeriodFromAfterDate() {
       expected = Period { months = -2; };
       actual = from.periodTo( to );
     };
+}
+
+shared void testEnumerableDate() {
+    assertEquals(data_1982_12_13.dayOfEra, data_1982_12_13.integerValue);
+    assertEquals(data_1982_12_13.successor.dayOfEra, data_1982_12_13.integerValue + 1);
+    assertEquals(data_1982_12_13.predecessor.dayOfEra, data_1982_12_13.integerValue - 1);
 }
 
 void assertFromAndTo( Period period, Date from, Date to ) {

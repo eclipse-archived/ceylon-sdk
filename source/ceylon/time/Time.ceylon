@@ -2,10 +2,10 @@ import ceylon.time.base { ReadableTime, TimeBehavior, h=hours, min=minutes, sec=
 import ceylon.time.internal { TimeOfDay }
 
 """Time of day like _6pm_ or _8.30am_.
-   
+
    This type contains only information about an abstract _time of day_ without 
    referencing any date or timezone.
-   
+
    You use Time to specify something that has to occur on a specific time of day
    like _"lunch hour starts at 1pm"_ or _"shop opens at 10am"_.
    """
@@ -13,7 +13,7 @@ shared interface Time
         satisfies ReadableTime 
                 & TimeBehavior<Time>
                 & Comparable<Time>
-                & Ordinal<Time> {
+                & Ordinal<Time> & Enumerable<Time> {
 
     "Adds a period of time to this time of day value.
      

@@ -9,7 +9,7 @@ shared interface ZoneDateTime
        satisfies ReadableDateTime
                & DateTimeBehavior<ZoneDateTime, Date, Time> 
                & Comparable<ZoneDateTime>
-               & Ordinal<ZoneDateTime>{
+               & Ordinal<ZoneDateTime> & Enumerable<ZoneDateTime> {
 
     "Time zone information of this date and time value."
     shared formal TimeZone timeZone;
