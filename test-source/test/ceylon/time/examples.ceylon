@@ -1,5 +1,5 @@
 import ceylon.time { now, date, Date, Period, today, Time, dateTime, DateTime, DateRange, TimeRange, time }
-import ceylon.time.base { february, december, saturday, sunday, november }
+import ceylon.time.base { february, december, saturday, sunday, november, minutes }
 
 void dateRangeSamples() {
     Boolean weekday( Date day ) {
@@ -12,34 +12,38 @@ void dateRangeSamples() {
     print("More ``christmasRange.filter(weekday).size`` weekday(s) until christmas");
 
     value vacationDays = 20;
-	value startVacation = date(2013, november, 1);
+    value startVacation = date(2013, november, 1);
 
     print("But ill be on vacation from ``startVacation`` to ``startVacation.plusDays(vacationDays)`` ");
 
     value realWeekdays = christmasRange.filter(weekday).size 
            - startVacation.rangeTo(startVacation.plusDays(vacationDays)).filter(weekday).size;
-	print("Then its just only ``realWeekdays`` weekday(s) until christmas");
+    print("Then its just only ``realWeekdays`` weekday(s) until christmas");
 }
 
 void timeRangeSamples() {
     class DaySchedule() {
         variable [TimeRange*] schedules = [];
 
-       // shared [TimeRange*]|Empty availables() {
-       //    variable [TimeRange*]|Empty result = [];
-       //    if( schedules.size == 1 ) {
-       //        assert( exists unique = schedules[0]);
-       //        result = [ time(0,0).to(unique.from), unique, unique.to(time(24,0)) ];
-       //    }
-       //    for( i in 1..schedules.size -1 ) {
-       //        value a = schedules[0];
-       //    }
-       //    return result;
-       //}
+        shared [TimeRange*]|Empty availables() {
+           variable [TimeRange*]|Empty result = [];
+           if( schedules.size == 1 ) {
+               assert( exists unique = schedules[0]);
+               result = [ time(0,0).rangeTo(unique.from), unique.to.rangeTo(time(23, 59, 59)) ];
+           } else {
+               result = [for( i in 0..schedules.size ) if( exists start = schedules[i], exists end = schedules[i+1]) start.to.rangeTo(end.from) ]; 
 
-        shared Boolean isFree( Time begin, Time end = begin.plusMinutes(30) ) {
+               assert(exists first = schedules.first);
+               assert(exists last =  schedules.last);
+               result = [ time(0,0).rangeTo(first.from), last.to.rangeTo(time(23,59,59)), *result ];
+           }
+           result = result.sort((TimeRange x, TimeRange y) => x.from <=> y.from);
+           return result;
+       }
+
+        shared Boolean isAvailable( Time begin, Time end = begin.plusMinutes(30) ) {
             variable Boolean free = true;
-            value newSchedule = begin.rangeTo(end);
+            value newSchedule = begin.rangeTo(end).stepBy(minutes);
             for( current in schedules ) {
                 if( newSchedule.overlap(current) != empty ) {
                     free = false;
@@ -50,7 +54,7 @@ void timeRangeSamples() {
         }
 
         shared void add( Time begin, Time end = begin.plusMinutes(30) ) {
-            this.schedules = [begin.rangeTo(end), *schedules];
+            this.schedules = [begin.rangeTo(end).stepBy(minutes), *schedules];
             this.schedules = schedules.sort((TimeRange x, TimeRange y) => x.from <=> y.from);
         }
 
@@ -64,15 +68,22 @@ void timeRangeSamples() {
     }
 
     value schedule = DaySchedule();
+    print("Adding 9:00 using default of 30 minutes");
     schedule.add(time(9,0));
+    
+    print( "Check if is 9:20 available ? The answer is ``schedule.isAvailable(time(9,20)) then "yes" else "no"`` ");
 
-    print( "Can i add to 9:20 ? [``schedule.isFree(time(9,20))``] ");
-
+    print("Adding 13:00 until 15:00");
     schedule.add(time(13,0), time(15,0));
 
+    print("Adding 10:00 until 11:00");
     schedule.add(time(10,0), time(11,0));
 
+    print("\n############### Final Result ###############\n");
     print( schedule );
+    for( range in schedule.availables()) {
+        print("Available from: ``range.from`` until ``range.to`` ");
+    }
 }
 
 "An example program using ceylon.time"
