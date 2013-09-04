@@ -1,7 +1,7 @@
 import ceylon.time.base { ReadableDuration }
 
 "Duration specifies a discreet amount of milliseconds between two instances of time."
-shared class Duration(milliseconds) satisfies ReadableDuration {
+shared class Duration(milliseconds) satisfies ReadableDuration & Scalable<Integer, Duration> {
 
     "Number of milliseconds of this duration."
     shared actual Integer milliseconds;
@@ -19,4 +19,8 @@ shared class Duration(milliseconds) satisfies ReadableDuration {
         }
         return false;
     }
+
+    "Returns a new [[Duration]] with it´s milliseconds scaled."
+    shared actual Duration scale(Integer scale) => Duration( scale * milliseconds );
+    
 }
