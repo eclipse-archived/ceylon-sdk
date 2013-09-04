@@ -11,8 +11,9 @@ import ceylon.time.internal { leftPad }
 shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, milliseconds=0)
        satisfies ReadablePeriod & ReadableTimePeriod & ReadableDatePeriod
                & PeriodBehavior<Period>
-               & Comparable<Period> 
-               & Summable<Period> {
+               & Comparable<Period>
+               & Summable<Period>
+               & Scalable<Integer, Period> {
 
     "The number of years."
     shared actual Integer years;
@@ -299,6 +300,17 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
             return buf.string;
         }
 	}
+
+    "Each field will be scalable independently, and the result will _not_ be normalized"
+	shared actual Period scale(Integer scale) => Period {
+            years = scale * years;
+            months = scale * months;
+            days = scale * days;
+            hours = scale * hours;
+            minutes = scale * minutes;
+            seconds = scale * seconds;
+            milliseconds = scale * milliseconds;
+    };
 
 }
 

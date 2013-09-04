@@ -107,6 +107,18 @@ shared void testStringTimePaddedString() => assertEquals("PT1H1M1.001S", Period 
                                                milliseconds = 1; 
                                             }.string);
 
+shared void testScalablePeriod() {
+    //Rules suggested by scalable interface
+    assertEquals(Period { years = 200; },   1 ** Period{ years = 200;});
+    assertEquals(Period { years = -200; }, -1 ** Period{ years = 200;});
+    assertEquals(Period { years = 0; },     0 ** Period{ years = 200;});
+    assertEquals(Period { years = 400; },   2 ** Period{ years = 200;});
+
+    Period period = Period (4, 4, 4, 4, 4, 4);
+    Period result = Period (16, 16, 16, 16, 16, 16);  
+    assertEquals( result, 4 ** period);
+}
+
 void assertPeriodNormalized( Period period, Integer year = 0, Integer month = 0, Integer day = 0, Integer hour = 0, Integer minute = 0, Integer second = 0, Integer milli = 0 ) {
     value normalized = Period { years = year; months = month; days = day; hours = hour; minutes = minute; seconds = second; milliseconds = milli;}.normalized();
     assertEquals(period, normalized);
