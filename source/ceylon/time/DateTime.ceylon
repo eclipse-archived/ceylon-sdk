@@ -10,7 +10,7 @@ import ceylon.time.timezone { tz = timeZone, TimeZone }
 shared interface DateTime 
     satisfies ReadableDateTime
             & DateTimeBehavior<DateTime, Date, Time> 
-            & Ordinal<DateTime>
+            & Ordinal<DateTime> & Enumerable<DateTime>
             & Comparable<DateTime> {
 
     "Adds a specified period to this date and time."
@@ -39,13 +39,13 @@ shared interface DateTime
  
 "Returns a date based on the specified year, month and day of month values."
 shared DateTime dateTime(
-		Integer year, 
-		Integer|Month month, 
-		Integer day, 
-		Integer hours = 0, 
-		Integer minutes=0, 
-		Integer seconds=0, 
-		Integer milliseconds=0){
+        Integer year, 
+        Integer|Month month, 
+        Integer day, 
+        Integer hours = 0, 
+        Integer minutes=0, 
+        Integer seconds=0, 
+        Integer milliseconds=0){
     return GregorianDateTime( 
         createDate( year, month, day), 
         createTime( hours, minutes, seconds, milliseconds )

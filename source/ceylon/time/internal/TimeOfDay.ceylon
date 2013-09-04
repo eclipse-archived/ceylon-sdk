@@ -4,8 +4,7 @@ import ceylon.time.internal.math { floorMod }
 
 "Basic implementation of [[Time]] interface, representing an abstract 
  _time of day_ such as _10am_ or _3.20pm_ with a precision of milliseconds."
-shared class TimeOfDay(millisecondsOfDay) 
-       satisfies Time {
+shared class TimeOfDay(millisecondsOfDay) satisfies Time {
 
     "Number of milliseconds since last midnight."
     shared actual Integer millisecondsOfDay;
@@ -194,5 +193,8 @@ shared class TimeOfDay(millisecondsOfDay)
     shared actual TimeRange rangeTo( Time other ) {
         return TimeRange(this, other); 
     }
+
+    "Returns _milliseconds of day_ as it enumerable value"
+    shared actual Integer integerValue => millisecondsOfDay;
 
 }

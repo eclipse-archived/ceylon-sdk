@@ -9,7 +9,7 @@ import ceylon.time.timezone { TimeZone, tz = timeZone }
  day-of-year, day-of-week and week-of-year."
 shared interface Date
        satisfies ReadableDate & DateBehavior<Date>
-               & Ordinal<Date> & Comparable<Date> {
+               & Ordinal<Date> & Comparable<Date> & Enumerable<Date> {
 
     "Adds a specified period to this date."
     shared formal Date plus( ReadableDatePeriod period );

@@ -2,7 +2,7 @@ import ceylon.time { Date, Time, DateTime, Instant, Period, DateTimeRange }
 import ceylon.time.base { ReadablePeriod, Month, ms=milliseconds, daysOf=days, DayOfWeek, months }
 import ceylon.time.chronology { unixTime }
 import ceylon.time.internal.math { floorDiv, floorMod }
-import ceylon.time.timezone { TimeZone }
+import ceylon.time.timezone { TimeZone, timeZone }
 
 "Default implementation of a gregorian calendar"
 shared class GregorianDateTime( date, time ) 
@@ -318,7 +318,7 @@ shared class GregorianDateTime( date, time )
     "[[DateTime]] does not know anything about [[TimeZone]] and it should be supplied to
      create a [[Instant]]." 
     shared actual Instant instant( TimeZone timeZone ) {
-	    value instant = Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
+        value instant = Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
         return Instant( instant.millisecondsOfEpoch - timeZone.offset(instant) );
     }
 
@@ -405,5 +405,11 @@ shared class GregorianDateTime( date, time )
 
         return GregorianDateTime( date.plusDays(totalDays), newTime);
     }
+
+    "Returns _millisecondsOfEpoch_ as it enumerable value. 
+
+     Note that to have the _milliseconds of epoch_ it apply UTC zone."
+    shared actual Integer integerValue => instant(timeZone.utc).millisecondsOfEpoch;
+    
 
 }

@@ -285,7 +285,11 @@ shared class GregorianDate( Integer dayOfEra )
     "Returns the [[DateRange]] between this and given Date."
     shared actual DateRange rangeTo( Date other ) {
         return DateRange(this, other); 
-    } 
+    }
+
+    "Returns _day of era_ as it enumerable value"
+    shared actual Integer integerValue => dayOfEra;
+     
 }
 
 "Returns a gregorian calendar date according to the specified year, month and date values."

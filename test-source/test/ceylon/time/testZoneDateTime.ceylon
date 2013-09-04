@@ -160,6 +160,16 @@ void testStringZoneDateTime() {
     assertEquals("2013-01-01T00:00:00.000+00:00", utcZoned.string);
 } 
 
+shared void testEnumerableZoneDateTime() {
+    assertEquals(systemZoned.instant.millisecondsOfEpoch, systemZoned.integerValue);
+    assertEquals(systemZoned.successor.instant.millisecondsOfEpoch, systemZoned.integerValue + 1);
+    assertEquals(systemZoned.predecessor.instant.millisecondsOfEpoch, systemZoned.integerValue - 1);
+
+    assertEquals(utcZoned.instant.millisecondsOfEpoch, utcZoned.integerValue);
+    assertEquals(utcZoned.successor.instant.millisecondsOfEpoch, utcZoned.integerValue + 1);
+    assertEquals(utcZoned.predecessor.instant.millisecondsOfEpoch, utcZoned.integerValue - 1);
+}
+
 void assertDateAndTime( Date date, Time time, ZoneDateTime zoneDateTime) {
     assertEquals(date, zoneDateTime.date);
     assertEquals(time, zoneDateTime.time);
