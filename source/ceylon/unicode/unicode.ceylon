@@ -73,7 +73,8 @@ shared String? unicodeVersion {
     return null;
 }
 
-"Enumerates character directionalities."
+"Enumerates the *Directionalities* defined in the 
+ defined in the Unicode standard."
 shared abstract class Directionality(code)
         of
         arabicNumber 
@@ -151,139 +152,189 @@ shared Directionality directionality(Character character) {
     return undefined;
 }
 
-shared abstract class GeneralCategory(code, description) 
-        of combiningSpacingMark
-         | connectorPunctuation
-         | control
-         | currencySymbol
-         | dashPunctuation
-         | decimalDigitNumber
-         | enclosingMark
-         | endPunctuation
-         | finalQuotePunctuation
-         | format
-         | initialQuotePunctuation
-         | letterNumber
-         | lineSeparator
-         | lowercaseLetter
-         | mathSymbol
-         | modifierLetter
-         | modifierSymbol
-         // TODO Collides with the Directionality of the same name
-         | nonspacingMark_
-         | otherLetter
-         | otherNumber
-         | otherPunctuation
-         | otherSymbol
-         // TODO Collides with the Directionality of the same name
-         | paragraphSeparator_
-         | privateUse
-         | spaceSeparator
-         | startPunctuation
-         | surrogate
-         | titlecaseLetter
-         | unassigned
-         | uppercaseLetter {
-    "The two character code used to refer to this general category in the 
+"Enumerates the major classes of *General Category* 
+ defined in the Unicode standard"
+shared abstract class GeneralCategory(code, description)
+        of Letter | Mark | Number | Other 
+            | Punctuation | Separator | Symbol {
+    "The two character code used to refer to this General Category in the 
      Unicode standard, e.g. `Zs` for the 'space separator' general category."
     shared String code;
     
     "A description of this general category."
     shared String description;
     
-    Character first {
-        value c = code[0];
-        assert(exists c);
-        return c;
-    }
-    "Whether this is a number category."
-    shared Boolean number => first == 'N';
-    "Whether this is a letter category."
-    shared Boolean letter => first == 'L';
-    "Whether this is a mark category."
-    shared Boolean mark => first == 'M';
-    "Whether this is a punctuation category."
-    shared Boolean punctuation => first == 'P';
-    "Whether this is a symbol category."
-    shared Boolean symbol => first == 'S';
-    "Whether this is a seperator category."
-    shared Boolean separator => first == 'Z';
-    "Whether this is an other category."
-    shared Boolean other => first == 'C';
-    
     shared actual String string = code;
 }
 
-shared object combiningSpacingMark extends GeneralCategory("Mc", "Mark, spacing combining"){}
-shared object connectorPunctuation extends GeneralCategory("Pc", "Punctuaton, connector"){}
-shared object control extends GeneralCategory("Cc", "Other, control"){}
-shared object currencySymbol extends GeneralCategory("Sc", "Symbol, currency"){}
-shared object dashPunctuation extends GeneralCategory("Pd", "Punctuation, dash"){}
-shared object decimalDigitNumber extends GeneralCategory("Nd", "Number, decimal digit"){}
-shared object enclosingMark extends GeneralCategory("Me", "Mark, enclosing"){}
-shared object endPunctuation extends GeneralCategory("Pe", "Punctuation, end"){}
-shared object finalQuotePunctuation extends GeneralCategory("Pf", "Punctuation, final quote"){}
-shared object format extends GeneralCategory("Cf", "Control, format"){}
-shared object initialQuotePunctuation extends GeneralCategory("Pi", "Punctuation, initial quote"){}
-shared object letterNumber extends GeneralCategory("Nl", "Number, letter"){}
-shared object lineSeparator extends GeneralCategory("Zl", "Separator, line"){}
-shared object lowercaseLetter extends GeneralCategory("Ll", "Letter, lowercase"){}
-shared object mathSymbol extends GeneralCategory("Sm", "Symbol, math"){}
-shared object modifierLetter extends GeneralCategory("Lm", "Letter, modifier"){}
-shared object modifierSymbol extends GeneralCategory("Sk", "Symbol, modifier"){}
-shared object nonspacingMark_ extends GeneralCategory("Mn", "Mark, nonspacing"){}
-shared object otherLetter extends GeneralCategory("Lo", "Letter, other"){}
-shared object otherNumber extends GeneralCategory("No", "Number, other"){}
-shared object otherPunctuation extends GeneralCategory("Po", "Punctuation, other"){}
-shared object otherSymbol extends GeneralCategory("So", "Symbol, other"){}
-shared object paragraphSeparator_ extends GeneralCategory("Zp", "Space, paragraph"){}
-shared object privateUse extends GeneralCategory("Co", "Control, private use"){}
-shared object spaceSeparator extends GeneralCategory("Zs", "Separator, space"){}
-shared object startPunctuation extends GeneralCategory("Ps", "Punctuation, open"){}
-shared object surrogate extends GeneralCategory("Cs", "Control, surrogate"){}
-shared object titlecaseLetter extends GeneralCategory("Lt", "Letter, titlecase"){}
-shared object unassigned extends GeneralCategory("Cn", "Other, not assigned"){}
-shared object uppercaseLetter extends GeneralCategory("Lu", "Letter, unassigned"){}
+"Enumerates the general categories in the *Letter* major class"
+shared abstract class Letter(String code, String description)  
+        of letterLowercase
+        | letterModifier
+        | letterOther
+        | letterTitlecase
+        | letterUppercase 
+        extends GeneralCategory(code, description){
+}
+"The General category for `Ll`"
+shared object letterLowercase extends Letter("Ll", "Letter, lowercase"){}
+"The General category for `Lm`"
+shared object letterModifier extends Letter("Lm", "Letter, modifier"){}
+"The General category for `Lo`"
+shared object letterOther extends Letter("Lo", "Letter, other"){}
+"The General category for `Lt`"
+shared object letterTitlecase extends Letter("Lt", "Letter, titlecase"){}
+"The General category for `Lu`"
+shared object letterUppercase extends Letter("Lu", "Letter, unassigned"){}
 
+"Enumerates the general categories in the *Mark* major class"
+shared abstract class Mark(String code, String description)
+        of markCombiningSpacing
+        | markEnclosing
+        | markNonspacing
+        extends GeneralCategory(code, description){
+}
+"The General category for `Mc`"
+shared object markCombiningSpacing extends Mark("Mc", "Mark, spacing combining"){}
+"The General category for `Me`"
+shared object markEnclosing extends Mark("Me", "Mark, enclosing"){}
+"The General category for `Mn`"
+shared object markNonspacing extends Mark("Mn", "Mark, nonspacing"){}
+
+"Enumerates the general categories in the *Number* major class"
+shared abstract class Number(String code, String description)
+        of numberDecimalDigit
+        | numberLetter
+        | numberOther
+        extends GeneralCategory(code, description){
+}
+"The General category for `Nd`"
+shared object numberDecimalDigit extends Number("Nd", "Number, decimal digit"){}
+"The General category for `Nl`"
+shared object numberLetter extends Number("Nl", "Number, letter"){}
+"The General category for `No`"
+shared object numberOther extends Number("No", "Number, other"){}
+
+"Enumerates the general categories in the *Other* major class"
+shared abstract class Other(String code, String description)  
+        of otherControl
+        | otherFormat
+        | otherPrivateUse
+        | otherSurrogate
+        | otherUnassigned
+        extends GeneralCategory(code, description) {
+}
+"The General category for `Cc`"
+shared object otherControl extends Other("Cc", "Other, control"){}
+"The General category for `Cf`"
+shared object otherFormat extends Other("Cf", "Other, format"){}
+"The General category for `Co`"
+shared object otherPrivateUse extends Other("Co", "Control, private use"){}
+"The General category for `Cs`"
+shared object otherSurrogate extends Other("Cs", "Other, surrogate"){}
+"The General category for `Cn`"
+shared object otherUnassigned extends Other("Cn", "Other, not assigned"){}
+
+"Enumerates the general categories in the *Punctuation* major class"
+shared abstract class Punctuation(String code, String description)
+        of punctuationConnector
+        | punctuationDash
+        | punctuationClose
+        | punctuationFinalQuote
+        | punctuationInitialQuote
+        | punctuationOther
+        | punctuationOpen
+        extends GeneralCategory(code, description){
+}
+"The General category for `Pe`"
+shared object punctuationClose extends Punctuation("Pe", "Punctuation, close"){}
+"The General category for `Pc`"
+shared object punctuationConnector extends Punctuation("Pc", "Punctuaton, connector"){}
+"The General category for `Pd`"
+shared object punctuationDash extends Punctuation("Pd", "Punctuation, dash"){}
+"The General category for `Pf`"
+shared object punctuationFinalQuote extends Punctuation("Pf", "Punctuation, final quote"){}
+"The General category for `Pi`"
+shared object punctuationInitialQuote extends Punctuation("Pi", "Punctuation, initial quote"){}
+"The General category for `Ps`"
+shared object punctuationOpen extends Punctuation("Ps", "Punctuation, open"){}
+"The General category for `Po`"
+shared object punctuationOther extends Punctuation("Po", "Punctuation, other"){}
+
+"Enumerates the general categories in the *Separator* major class"
+shared abstract class Separator(String code, String description) 
+        of separatorLine
+        | separatorParagraph
+        | separatorSpace 
+        extends GeneralCategory(code, description){
+}
+"The General category for `Zl`"
+shared object separatorLine extends Separator("Zl", "Separator, line"){}
+"The General category for `Zp`"
+shared object separatorParagraph extends Separator("Zp", "Space, paragraph"){}
+"The General category for `Zs`"
+shared object separatorSpace extends Separator("Zs", "Separator, space"){}
+
+"Enumerates the general categories in the *Symbol* major class"
+shared abstract class Symbol(String code, String description)
+        of symbolCurrency
+        | symbolMath
+        | symbolModifier
+        | symbolOther
+        extends GeneralCategory(code, description){
+}
+"The General category for `Sc`"
+shared object symbolCurrency extends Symbol("Sc", "Symbol, currency"){}
+"The General category for `Sm`"
+shared object symbolMath extends Symbol("Sm", "Symbol, math"){}
+"The General category for `Sk`"
+shared object symbolModifier extends Symbol("Sk", "Symbol, modifier"){}
+"The General category for `So`"
+shared object symbolOther extends Symbol("So", "Symbol, other"){}
 
 "The general category of the given character"
 shared GeneralCategory generalCategory(Character character) {
     Integer gc = getType(character.integer);
-    if (gc == gcCOMBINING_SPACING_MARK) { return combiningSpacingMark; }
-    else if (gc == gcCONNECTOR_PUNCTUATION) { return connectorPunctuation; }
-    else if (gc == gcCONTROL) { return control; }
-    else if (gc == gcCURRENCY_SYMBOL) { return currencySymbol; }
-    else if (gc == gcDASH_PUNCTUATION) { return dashPunctuation; }
-    else if (gc == gcDECIMAL_DIGIT_NUMBER) { return decimalDigitNumber; }
-    else if (gc == gcENCLOSING_MARK) { return enclosingMark; }
-    else if (gc == gcEND_PUNCTUATION) { return endPunctuation; }
-    else if (gc == gcFINAL_QUOTE_PUNCTUATION) { return finalQuotePunctuation; }
-    else if (gc == gcFORMAT) { return format; }
-    else if (gc == gcINITIAL_QUOTE_PUNCTUATION) { return initialQuotePunctuation; }
-    else if (gc == gcLETTER_NUMBER) { return letterNumber; }
-    else if (gc == gcLINE_SEPARATOR) { return lineSeparator; }
-    else if (gc == gcLOWERCASE_LETTER) { return lowercaseLetter; }
-    else if (gc == gcMATH_SYMBOL) { return mathSymbol; }
-    else if (gc == gcMODIFIER_LETTER) { return modifierLetter; }
-    else if (gc == gcMODIFIER_SYMBOL) { return modifierSymbol; }
-    else if (gc == gcNON_SPACING_MARK) { return nonspacingMark_; }
-    else if (gc == gcOTHER_LETTER) { return otherLetter; }
-    else if (gc == gcOTHER_NUMBER) { return otherNumber; }
-    else if (gc == gcOTHER_PUNCTUATION) { return otherPunctuation; }
-    else if (gc == gcOTHER_SYMBOL) { return otherSymbol; }
-    else if (gc == gcPARAGRAPH_SEPARATOR) { return paragraphSeparator_; }
-    else if (gc == gcPRIVATE_USE) { return privateUse; }
-    else if (gc == gcSPACE_SEPARATOR) { return spaceSeparator; }
-    else if (gc == gcSTART_PUNCTUATION) { return startPunctuation; }
-    else if (gc == gcSURROGATE) { return surrogate; }
-    else if (gc == gcTITLECASE_LETTER) { return titlecaseLetter; }
-    else if (gc == gcUNASSIGNED) { return unassigned; }
-    else if (gc == gcUPPERCASE_LETTER) { return uppercaseLetter; }
-    return unassigned;
+    if (gc == gcCOMBINING_SPACING_MARK) { return markCombiningSpacing; }
+    else if (gc == gcCONNECTOR_PUNCTUATION) { return punctuationConnector; }
+    else if (gc == gcCONTROL) { return otherControl; }
+    else if (gc == gcCURRENCY_SYMBOL) { return symbolCurrency; }
+    else if (gc == gcDASH_PUNCTUATION) { return punctuationDash; }
+    else if (gc == gcDECIMAL_DIGIT_NUMBER) { return numberDecimalDigit; }
+    else if (gc == gcENCLOSING_MARK) { return markEnclosing; }
+    else if (gc == gcEND_PUNCTUATION) { return punctuationClose; }
+    else if (gc == gcFINAL_QUOTE_PUNCTUATION) { return punctuationFinalQuote; }
+    else if (gc == gcFORMAT) { return otherFormat; }
+    else if (gc == gcINITIAL_QUOTE_PUNCTUATION) { return punctuationInitialQuote; }
+    else if (gc == gcLETTER_NUMBER) { return numberLetter; }
+    else if (gc == gcLINE_SEPARATOR) { return separatorLine; }
+    else if (gc == gcLOWERCASE_LETTER) { return letterLowercase; }
+    else if (gc == gcMATH_SYMBOL) { return symbolMath; }
+    else if (gc == gcMODIFIER_LETTER) { return letterModifier; }
+    else if (gc == gcMODIFIER_SYMBOL) { return symbolModifier; }
+    else if (gc == gcNON_SPACING_MARK) { return markNonspacing; }
+    else if (gc == gcOTHER_LETTER) { return letterOther; }
+    else if (gc == gcOTHER_NUMBER) { return numberOther; }
+    else if (gc == gcOTHER_PUNCTUATION) { return punctuationOther; }
+    else if (gc == gcOTHER_SYMBOL) { return symbolOther; }
+    else if (gc == gcPARAGRAPH_SEPARATOR) { return separatorParagraph; }
+    else if (gc == gcPRIVATE_USE) { return otherPrivateUse; }
+    else if (gc == gcSPACE_SEPARATOR) { return separatorSpace; }
+    else if (gc == gcSTART_PUNCTUATION) { return punctuationOpen; }
+    else if (gc == gcSURROGATE) { return otherSurrogate; }
+    else if (gc == gcTITLECASE_LETTER) { return letterTitlecase; }
+    else if (gc == gcUNASSIGNED) { return otherUnassigned; }
+    else if (gc == gcUPPERCASE_LETTER) { return letterUppercase; }
+    return otherUnassigned;
 }
 
 "The Unicode name of the character."
-shared String name(Character character)
+shared String characterName(Character character) {
     /* TODO java.lang.Character.getName substitutes a ficticious name if the
        unicode DB doesn't specify one, what should we do about this?' */
-    => getName(character.integer);
+    String? result = getName(character.integer);
+    if (exists result) {
+        return result;
+    }
+    throw Exception("Invalid codepoint " + character.integer.string);
+}
