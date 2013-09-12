@@ -56,6 +56,7 @@
         <module name="test.ceylon.time"/>
         <module name="test.ceylon.dbc"/>
         <module name="test.ceylon.interop.java"/>
+    	<module name="test.ceylon.unicode"/>
     </moduleset>
     
     <moduleset id="modules.test.js">
@@ -182,6 +183,11 @@
         </ceylon-run>
             
         <ceylon-run module="test.ceylon.interop.java/${sdk.version}" run="test.ceylon.interop.java.run"
+            executable="${ceylon.executable}">
+            <reposet refid="reposet.run.test"/>
+        </ceylon-run>
+        
+        <ceylon-run module="test.ceylon.unicode/${sdk.version}" run="test.ceylon.unicode.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
