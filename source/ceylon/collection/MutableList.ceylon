@@ -1,25 +1,29 @@
-"A mutable Linked List"
+"A [[List]] supporting addition, insertion, removal, and 
+ mutation of its elements."
 by("Stéphane Épardaud")
 shared interface MutableList<Element> satisfies List<Element> {
 
-    "Sets an item at the given index. List is expanded if index > size"
+    "Set the item at the given index in this list. The list 
+     is expanded if `index > size`."
     shared formal void set(Integer index, Element val);
     
-    "Adds an item at the end of this list"
+    "Add the given item to the end of this list."
     shared formal void add(Element val);
 
-    "Adds the items at the end of this list"
+    "Add the given items to the end of this list."
     shared formal void addAll({Element*} values);
 
-    "Inserts an item at specified index, list is expanded if index > size"    
+    "Insert the given item at the specified index. The list 
+     is expanded if `index > size`."
     shared formal void insert(Integer index, Element val);
 
-    "Removes the item at the specified index"
+    "Remove the item at the specified index."
     shared formal void remove(Integer index);
 
-    "Removes all occurences of the given element"
+    "Remove all occurrences of the given value from this
+     list."
     shared formal void removeElement(Element val);
 
-    "Remove every item"
+    "Remove every item from this list, leaving an empty list."
     shared formal void clear();
 }

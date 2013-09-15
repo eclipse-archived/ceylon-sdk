@@ -5,19 +5,20 @@ shared interface MutableMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
     
-    "Adds a key/value mapping to this map, may be used to modify an existing mapping.
-         
-         Returns the previous value pointed to by `key`, or null."
+    "Add an entry to this map, overwriting any existing entry for 
+     the given `key`, and returning the previous value associated 
+     with the given `key`, if any, or null."
     shared formal Item? put(Key key, Item item);
     
-    "Adds the key/value mappings to this map, may be used to change existing mappings."
+    "Add the given entries to this map, overwriting any existing
+     entries with the same keys."
     shared formal void putAll({<Key->Item>*} entries);
     
-    "Removes a key/value mapping if it exists.
-         
-         Returns the previous value pointed to by `key`, or null."
+    "Remove the entry associated with the given `key`, if any, from 
+     this map, returning the value no longer associated with the 
+     given `key`, if any, or null."
     shared formal Item? remove(Key key);
     
-    "Removes every key/value mapping."
+    "Remove every entry from this map, leaving an empty map."
     shared formal void clear();
 }

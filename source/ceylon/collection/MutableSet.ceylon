@@ -1,24 +1,23 @@
-"Mutable set"
+"A [[Set]] supporting addition of new elements and removal of 
+ existing elements."
 by("Stéphane Épardaud")
 shared interface MutableSet<Element>
     satisfies Set<Element>
         given Element satisfies Object {
     
-    "Adds an element to this set, if not already present. 
-         
-         Returns true if the element was added, false if it was already part of the Set."
+    "Add an element to this set, returning true if the element
+     was already a member of the set, or false otherwise."
     shared formal Boolean add(Element element);
 
-    "Adds the elements to this set, unless already present. 
-         
-         Returns true if any element was added, false if they were all already part of the Set."
+    "Add the given elements to this set, returning true if any 
+     of the given elements was not already element a member of
+     the set."
     shared formal Boolean addAll({Element*} elements);
     
-    "Removes an element from this set, if present.
-         
-         Returns true if the element was removed, false if it was not part of the Set."
+    "Remove an element from this set, returning true if the
+     element was previously a member of the set."
     shared formal Boolean remove(Element element);
     
-    "Removes every element."
+    "Remove every element from this set, leaving an empty set."
     shared formal void clear();
 }
