@@ -3,8 +3,8 @@ package ceylon.interop.java;
 import java.util.Collection;
 
 @com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 5)
-@ceylon.language.Doc$annotation(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
-@ceylon.language.Shared$annotation
+@ceylon.language.DocAnnotation$annotation(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
+@ceylon.language.SharedAnnotation$annotation
 @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation(value = "doc", arguments = {"Takes a Ceylon list of items and turns them into a Java `Collection`"}), @com.redhat.ceylon.compiler.java.metadata.Annotation("shared")})
 @com.redhat.ceylon.compiler.java.metadata.SatisfiedTypes({"java.util::Collection<T>"})
 @com.redhat.ceylon.compiler.java.metadata.TypeParameters({@com.redhat.ceylon.compiler.java.metadata.TypeParameter(value = "T", variance = com.redhat.ceylon.compiler.java.metadata.Variance.NONE, satisfies = {}, caseTypes = {})})
@@ -21,8 +21,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
     private final com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor $reifiedT;
     private final ceylon.language.Iterable<? extends T, ? extends java.lang.Object> items;
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -32,8 +32,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         throw new java.lang.UnsupportedOperationException("add()");
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -43,8 +43,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         throw new java.lang.UnsupportedOperationException("addAll()");
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Anything")
@@ -52,8 +52,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         throw new java.lang.UnsupportedOperationException("clear()");
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -69,8 +69,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         }
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -88,16 +88,16 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
     
   
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
     public final boolean isEmpty() {
         return items.getEmpty();
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("java.util::Iterator<T>")
@@ -106,8 +106,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
 //        return new ceylon.interop.java.JavaIterator<T>($reifiedT, items.iterator());
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -117,8 +117,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         throw new java.lang.UnsupportedOperationException("remove()");
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -128,8 +128,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         throw new java.lang.UnsupportedOperationException("removeAll()");
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -139,8 +139,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         throw new java.lang.UnsupportedOperationException("retainAll()");
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Integer")
@@ -160,8 +160,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
         return arr;
     }
     
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Boolean")
@@ -172,8 +172,8 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
     }
     
     @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation("shared"), @com.redhat.ceylon.compiler.java.metadata.Annotation("actual")})
-    @ceylon.language.Shared$annotation
-    @ceylon.language.Actual$annotation
+    @ceylon.language.SharedAnnotation$annotation
+    @ceylon.language.ActualAnnotation$annotation
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Integer")
     public final int hashCode() {
