@@ -107,7 +107,7 @@ shared object gregorian extends GregorianCalendar() {
 
     "Return the _day of era_ from a given date."
     shared actual Integer fixedFrom([Integer, Integer, Integer] date) {
-        return unflatten(fixed)(date);
+        return fixed(date[0], date[1], date[2]);
     }
 
     "Assert that specified date has it conjunction of year, month and day as valid gregorian values."
