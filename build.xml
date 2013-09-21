@@ -94,7 +94,7 @@
         
         <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
-            encoding="UTF-8">
+            encoding="UTF-8" optimize="true">
             <moduleset refid="modules.sdk.js"/>
         </ceylon-compile-js>
         
