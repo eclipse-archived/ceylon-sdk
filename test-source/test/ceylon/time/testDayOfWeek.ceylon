@@ -1,7 +1,20 @@
 import ceylon.time { date, Date }
 import ceylon.time.base { monday, tuesday, wednesday, thursday, friday, saturday, sunday, january, december }
 
-import ceylon.test { assertTrue, assertEquals }
+import ceylon.test { assertTrue, assertEquals, suite }
+
+shared void runDayOfWeekTests(String suiteName="DayOfWeek tests") {
+    suite(suiteName,
+    "Testing day of week sucessor" -> testSucessors_Weekday,
+    "Testing day of week predecessor" -> testPredecessors_Weekday,
+    "Testing day of week comparable monday" -> testComparable_monday_Weekday,
+    "Testing day of week comparable tuesday" -> testComparable_tuesday_Weekday,
+    "Testing day of week comparable wednesday" -> testComparable_wednesday_Weekday,
+    "Testing day of week comparable thursday" -> testComparable_thursday_Weekday,
+    "Testing day of week comparable friday" -> testComparable_friday_Weekday,
+    "Testing day of week ordinal" -> testOrdinal_Weekday
+);
+}
 
 shared void testSucessors_Weekday() {
     assertEquals{ expected = tuesday; actual = monday.successor; compare = same; };

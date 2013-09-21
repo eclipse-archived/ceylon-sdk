@@ -1,12 +1,79 @@
 import ceylon.time { DateTime, dateTime, Period }
 import ceylon.time.base { december, january, november, september, Month, DayOfWeek, sunday, july, wednesday, monday, october, tuesday, friday, saturday, february, april }
-import ceylon.test { assertEquals, fail, assertTrue }
+import ceylon.test { assertEquals, fail, assertTrue, suite }
 import ceylon.time.timezone { timeZone }
 
 DateTime data_1982_12_13_09_08_07_0050 = dateTime {
     year = 1982; month = december; day = 13;
     hours = 9; minutes = 8; seconds = 7; milliseconds = 50;
 };
+
+shared void runDateTimeTests(String suiteName="DateTime tests") {
+    suite(suiteName,
+    "Testing date time sun_jul_24_minus586_09_00_00_0000" -> test_sun_jul_24_minus586_09_00_00_0000,
+    "Testing date time wed_dec_05_minus168_11_08_07_800" -> test_wed_dec_05_minus168_11_08_07_800,
+    "Testing date time wed_sep_24_70_23_59_59_999" -> test_wed_sep_24_70_23_59_59_999,
+    "Testing date time mon_jan_01_1900_14_00_00_0000" -> test_mon_jan_01_1900_14_00_00_0000,
+    "Testing date time tue_oct_29_1974_02_01_03_0987" -> test_tue_oct_29_1974_02_01_03_0987,
+    "Testing date time mon_dec_13_1982_00_00_00_0001" -> test_mon_dec_13_1982_00_00_00_0001,
+    "Testing date time mon_dec_31_1999_00_00_01_0000" -> test_mon_dec_31_1999_00_00_01_0000,
+    "Testing date time mon_jan_01_2000_00_01_00_0000" -> test_mon_jan_01_2000_00_01_00_0000,
+    "Testing date time mon_jan_31_2000_01_00_00_0000" -> test_mon_jan_31_2000_01_00_00_0000,
+    "Testing date time tue_feb_29_2000_10_10_10_0010" -> test_tue_feb_29_2000_10_10_10_0010,
+    "Testing date time sun_dec_31_2000_23_59_59_9999" -> test_sun_dec_31_2000_23_59_59_9999,
+    "Testing date time wed_feb_29_2012_20_20_20_0020" -> test_wed_feb_29_2012_20_20_20_0020,
+    "Testing date time equals" -> testEquals,
+    "Testing date time plus years" -> testPlusYears,
+    "Testing date time minus years" -> testMinusYears,
+    "Testing date time plus months" -> testPlusMonths,
+    "Testing date time minus months" -> testMinusMonths,
+    "Testing date time plus days" -> testPlusDays,
+    "Testing date time minus days" -> testMinusDays,
+    "Testing date time plus hours" -> testPlusHours_DateTime,
+    "Testing date time minus hours" -> testMinusHours_DateTime,
+    "Testing date time plus minutes" -> testPlusMinutes_DateTime,
+    "Testing date time minus minutes" -> testMinusMinutes_DateTime,
+    "Testing date time plus seconds" -> testPlusSeconds_DateTime,
+    "Testing date time minus seconds" -> testMinusSeconds_DateTime,
+    "Testing date time plus milliseconds" -> testPlusMillis_DateTime,
+    "Testing date time minus milliseconds" -> testMinusMilliseconds_DateTime,
+    "Testing date time with day 40" -> testWithDay40_DateTime,
+    "Testing date time with day 0" -> testWithDay0_DateTime,
+    "Testing date time with day negative" -> testWithDayNegative_DateTime,
+    "Testing date time with day 29 not leap year" -> testWithDay29FebNotLeap_DateTime,
+    "Testing date time with day 29 leap year" -> testWithDay29FebLeap_DateTime,
+    "Testing date time predecessor" -> testPredecessor_DateTime,
+    "Testing date time successor" -> testSuccessor_DateTime,
+    "Testing date time period from date time" -> testPeriodFrom_DateTime,
+    "Testing date time period from date time negative" -> testPeriodFrom_DateTimeNegative,
+    "Testing date time period from same year no time" -> testPeriodFromSameYearNoTime_DateTime,
+    "Testing date time period from same year no time negative" -> testPeriodFromSameYearNoTime_DateTimeNegative,
+    "Testing date time period from from same year" -> testPeriodFromSameYear_DateTime,
+    "Testing date time period from from same year negative" -> testPeriodFromSameYear_DateTimeNegative,
+    "Testing date time period from month before no time" -> testPeriodFromMonthBeforeNoTime_DateTime,
+    "Testing date time period from month before no time negative" -> testPeriodFromMonthBeforeNoTime_DateTimeNegative,
+    "Testing date time period from month before" -> testPeriodFromMonthBefore_DateTime,
+    "Testing date time period from month before negative" -> testPeriodFromMonthBefore_DateTimeNegative,
+    "Testing date time period from day after no time" -> testPeriodFromDayAfterNoTime_DateTime,
+    "Testing date time period from day after no time negative" -> testPeriodFromDayAfterNoTime_DateTimeNegative,
+    "Testing date time period from day after" -> testPeriodFromDayAfter_DateTime,
+    "Testing date time period from day after negative" -> testPeriodFromDayAfter_DateTimeNegative,
+    "Testing date time period from day before no time" -> testPeriodFromDayBeforeNoTime_DateTime,
+    "Testing date time period from day before no time negative" -> testPeriodFromDayBeforeNoTime_DateTimeNegative,
+    "Testing date time period from day before" -> testPeriodFromDayBefore_DateTime,
+    "Testing date time period from day before negative" -> testPeriodFromDayBefore_DateTimeNegative,
+    "Testing date time period from equals" -> testPeriodFromEqualDate_DateTime,
+    "Testing date time period from new year no time" -> testPeriodFromNewYearNoTime_DateTime,
+    "Testing date time period from new year no time negative" -> testPeriodFromNewYearNoTime_DateTimeNegative,
+    "Testing date time period from new year" -> testPeriodFromNewYear_DateTime,
+    "Testing date time period from next step by milliseconds" -> testPeriodNextStepByMs_DateTime,
+    "Testing date time period from previous step by milliseconds" -> testPeriodPreviousStepByMs_DateTime,
+    "Testing date time Enumerable<Integer, DateTime>" -> testEnumerableDateTime,
+    "Testing date time period from new year negative" -> testPeriodFromNewYear_DateTimeNegative,
+    "Testing date time period from time step" -> testPeriodTimeStep,
+    "Testing date time string" -> testStringDateTime
+);
+}
 
 // Table of test data from the book Calendrical Calculations + time
 shared void test_sun_jul_24_minus586_09_00_00_0000() => assertGregorianDateTime(-586, july, 24, sunday, !leapYear, 9 );

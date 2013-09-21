@@ -1,9 +1,39 @@
 import ceylon.time { Date, Period, Duration, date, DateRange }
-import ceylon.test { assertEquals, assertTrue, assertFalse }
+import ceylon.test { assertEquals, assertTrue, assertFalse, suite }
 import ceylon.time.base { january, march, february, milliseconds, months, years, saturday, days, december }
 
 DateRange jan_date_range = date(2013, january, 1).rangeTo(date(2013, january, 31));
 DateRange jan_date_range_reverse = date(2013, january, 31).rangeTo(date(2013, january, 1));
+
+shared void runDateRangeTests(String suiteName="DateRange tests") {
+    suite(suiteName,
+    "Testing date range equals" -> testEqualsDateRange,
+    "Testing date range not equals inverted" -> testNotEqualsDateRangeInverted,
+    "Testing date range step days" -> testStepDays,
+    "Testing date range step months" -> testStepMonths,
+    "Testing date range step years" -> testStepYears,
+    "Testing date range any exist" -> testAnyExist,
+    "Testing date range any not exist" -> testAnyNotExist,
+    "Testing date range range" -> testRangeDate,
+    "Testing date range range for years" -> testRangeDateFourYears,
+    "Testing date range interval reverse" -> testIntervalDateReverse,
+    "Testing date range gap date" -> testGapDate,
+    "Testing date range gap date reverse" -> testGapDateReverse,
+    "Testing date range gap date year" -> testGapDateOneYear,
+    "Testing date range gap date empty" -> testGapDateEmpty,
+    "Testing date range overlap date empty" -> testOverlapDateEmpty,
+    "Testing date range overlap date" -> testOverlapDate,
+    "Testing date range step day reverse" -> testStepDayReverse,
+    "Testing date range step month reverse" -> testStepMonthReverse,
+    "Testing date range step year reverse" -> testStepYearReverse,
+    "Testing date range contains date" -> testContainsDate,
+    "Testing date range not contains date" -> testNotContainsDate,
+    "Testing date range gap rules AB < CD" -> testGapRulesABSmallerCD,
+    "Testing date range gap rules AB > CD" -> testGapRulesABHigherCD,
+    "Testing date range overlap rules AB < CD" -> testOverlapRulesABSmallerCD,
+    "Testing date range overlap rules AB > CD" -> testOverlapRulesABHigherCD
+);
+}
 
 shared void testEqualsDateRange() {
     assertTrue(jan_date_range.equals(date(2013, january, 1).rangeTo(date(2013, january, 31))));
