@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals, fail, assertTrue }
+import ceylon.test { assertEquals, fail, assertTrue, suite }
 import ceylon.time { time, Time, Period }
 import ceylon.time.base { seconds, minutes }
 
@@ -19,6 +19,54 @@ alias Table => [Integer, Integer, Integer, Integer, Integer, Integer,  Integer];
         [60000,   00, 01, 01, 000, 001, 0000],
         [60000,   00, 01, 01, 000, 001, 0000]
 };
+
+shared void runTimeTests(String suiteName="Time tests") {
+    suite(suiteName,
+    "Testing time hours" -> testHours,
+    "Testing time minutes" -> testMinutes,
+    "Testing time seconds" -> testSeconds,
+    "Testing time milliseconds" -> testMilliseconds,
+    "Testing time 09_08_59_0100" -> test_09_08_59_0100,
+    "Testing time 00_00_0_0000" -> test_00_00_0_0000,
+    "Testing time 23_59_59_999" -> test_23_59_59_999,
+    "Testing time plus hours" -> testPlusHours,
+    "Testing time minus hours" -> testMinusHours,
+    "Testing time plus minutes" -> testPlusMinutes,
+    "Testing time minus minutes" -> testMinusMinutes,
+    "Testing time plus seconds" -> testPlusSeconds,
+    "Testing time minus seconds" -> testMinusSeconds,
+    "Testing time plus milliseconds" -> testPlusMilliseconds,
+    "Testing time minus milliseconds" -> testMinusMilliseconds,
+    "Testing time with hours 30" -> testWithHours30,
+    "Testing time with hours negative" -> testWithHoursNegative,
+    "Testing time with hours" -> testWithHours,
+    "Testing time with minutes negative" -> testWithMinutesNegative,
+    "Testing time with minutes 60" -> testWithMinutes60,
+    "Testing time with minutes" -> testWithMinutes,
+    "Testing time with seconds negative" -> testWithSecondsNegative,
+    "Testing time with seconds 60" -> testWithSeconds60,
+    "Testing time with seconds" -> testWithSeconds,
+    "Testing time with milliseconds negative" -> testWithMillisecondsNegative,
+    "Testing time with milliseconds 1000" -> testWithMilliseconds1000,
+    "Testing time with milliseconds" -> testWithMilliseconds,
+    "Testing time predecessor" -> testPredecessor_Time,
+    "Testing time successor" -> testSuccessor_Time,
+    "Testing time string" -> testString_Time,
+    "Testing time period from" -> testPeriodFrom_Time,
+    "Testing time period from negative" -> testPeriodFrom_TimeNegative,
+    "Testing time period from hour" -> testPeriodFromHour_Time,
+    "Testing time period from hour negative" -> testPeriodFromHour_TimeNegative,
+    "Testing time period from minute second" -> testPeriodFromMinSec_Time,
+    "Testing time period from minute second negative" -> testPeriodFromMinSec_TimeNegative,
+    "Testing time period from minute before" -> testPeriodFromMinuteBefore,
+    "Testing time period from minute before negative" -> testPeriodFromMinuteBeforeNegative,
+    "Testing time period from second before" -> testPeriodFromSecondBefore,
+    "Testing time period from second before negative" -> testPeriodFromSecondBeforeNegative,
+    "Testing time period from millisecond before" -> testPeriodFromMillisecondBefore,
+    "Testing time period from millisecond before negative" -> testPeriodFromMillisecondBeforeNegative,
+    "Testing time Enumerable" -> testEnumerableTime
+);
+}
 
 shared void testHours() {
     for ( Integer h in 1..23 ) {

@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals, assertTrue }
+import ceylon.test { assertEquals, assertTrue, suite }
 import ceylon.time { Period }
 import ceylon.time.base { milliseconds, seconds, minutes, hours }
 
@@ -10,6 +10,79 @@ Period tenDays = Period { days = 10; };
 Period oneYear = Period { years = 1; };
 Period oneHalfYear = Period { years = 1; months = 6; };
 Period twelveMonths = Period { months = 12; };
+
+shared void runPeriodTests(String suiteName="Period tests") {
+    suite(suiteName,
+    "Testing period year" -> testPeriodYear,
+    "Testing period month" -> testPeriodMonth,
+    "Testing period day" -> testPeriodDay,
+    "Testing period hour" -> testPeriodHour,
+    "Testing period minute" -> testPeriodMinute,
+    "Testing period second" -> testPeriodSecond,
+    "Testing period millisecond" -> testPeriodMilli,
+    "Testing period normalized year" -> testPeriodNormalizedYear,
+    "Testing period normalized month to year" -> testPeriodNormalizedMonthToYear,
+    "Testing period normalized day" -> testPeriodNormalizedDay,
+    "Testing period normalized hour" -> testPeriodNormalizedHour,
+    "Testing period normalized minute to hour" -> testPeriodNormalizedMinuteToHour,
+    "Testing period normalized second to minute" -> testPeriodNormalizedSecondToMinute,
+    "Testing period normalized millisecond to second" -> testPeriodNormalizedMilliToSecond,
+    "Testing period plus " -> testPlus_Periods,
+    "Testing period plus years" -> testPlusYears_Periods,
+    "Testing period plus years same instance" -> testPlusYearsSameInstance_Periods,
+    "Testing period plus months same instance" -> testPlusMonthsSameInstance_Periods,
+    "Testing period plus months normalized" -> testPlusMonthsNormalized_Periods,
+    "Testing period plus days" -> testPlusDaysPeriods,
+    "Testing period plus days same instance" -> testPlusDaysSameInstancePeriods,
+    "Testing period plus hours" -> testPlusHoursPeriods,
+    "Testing period plus hours same instance" -> testPlusHoursSameInstancePeriods,
+    "Testing period plus minutes" -> testPlusMinutesPeriods,
+    "Testing period plus minutes same instance" -> testPlusMinutesSameInstancePeriods,
+    "Testing period plus seconds" -> testPlusSecondsPeriods,
+    "Testing period plus seconds same instance" -> testPlusSecondsSameInstancePeriods,
+    "Testing period plus milliseconds" -> testPlusMillisecondsPeriods,
+    "Testing period plus milliseconds same instance" -> testPlusMillisecondsSameInstancePeriods,
+    "Testing period minus years" -> testMinusYears_Periods,
+    "Testing period minus negative years" -> testMinusYearsNegative_Periods,
+    "Testing period minus years same instance" -> testMinusYearsSameInstance_Periods,
+    "Testing period minus months" -> testMinusMonths_Periods,
+    "Testing period minus months negative" -> testMinusMonthsNegative_Periods,
+    "Testing period minus months same instance" -> testMinusMonthsSameInstance_Periods,
+    "Testing period minus days" -> testMinusDays_Periods,
+    "Testing period minus negative days" -> testMinusDaysNegative_Periods,
+    "Testing period minus days same instance" -> testMinusDaysSameInstance_Periods,
+    "Testing period minus hours" -> testMinusHours_Periods,
+    "Testing period minus hours negative" -> testMinusHoursNegative_Periods,
+    "Testing period minus hours same instance" -> testMinusHoursSameInstance_Periods,
+    "Testing period minus minutes" -> testMinusMinutes_Periods,
+    "Testing period minus negative minutes" -> testMinusMinutesNegative_Periods,
+    "Testing period minus minutes same instance" -> testMinusMinutesSameInstance_Periods,
+    "Testing period minus seconds" -> testMinusSeconds_Periods,
+    "Testing period minus negative seconds" -> testMinusSecondsNegative_Periods,
+    "Testing period minus seconds same instance" -> testMinusSecondsSameInstance_Periods,
+    "Testing period minus milliseconds" -> testMinusMillis_Periods,
+    "Testing period minus negative milliseconds" -> testMinusMillisNegative_Periods,
+    "Testing period minus milliseconds same instance" -> testMinusMillisSameInstance_Periods,
+    "Testing period comparable year month" -> testComparableYearMonth_Periods,
+    "Testing period comparable year half" -> testComparableYearYearHalf_Periods,
+    "Testing period comparable year half months" -> testComparableYearHalfMonths_Periods,
+    "Testing period with years" -> testWithYears_Periods,
+    "Testing period with months" -> testWithMonths_Periods,
+    "Testing period with days" -> testWithDays_Periods,
+    "Testing period with hours" -> testWithHours_Periods,
+    "Testing period with minutes" -> testWithMinutes_Periods,
+    "Testing period with seconds" -> testWithSeconds_Periods,
+    "Testing period with milliseconds" -> testWithMillis_Periods,
+    "Testing period string normalized milliseconds" -> testStringNormalizedMillis,
+    "Testing period string normalized seconds" -> testStringNormalizedSeconds,
+    "Testing period string normalized minutes" -> testStringNormalizedMinutes,
+    "Testing period string normalized hours" -> testStringNormalizedHours,
+    "Testing period string full time" -> testStringFullTime,
+    "Testing period string time padded" -> testStringTimePaddedString,
+    "Testing period scalable" -> testScalablePeriod
+
+);
+}
 
 shared void testPeriodYear() => assertPeriod { year = 200; };
 shared void testPeriodMonth() => assertPeriod { month = 200; };

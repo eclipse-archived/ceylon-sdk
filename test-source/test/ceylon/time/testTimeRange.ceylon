@@ -1,10 +1,35 @@
 import ceylon.time { Period, Duration, time, TimeRange, Time }
-import ceylon.test { assertEquals, assertTrue, assertFalse }
+import ceylon.test { assertEquals, assertTrue, assertFalse, suite }
 import ceylon.time.base { milliseconds, seconds, minutes }
 
 TimeRange firstQuarterDay = time(0, 0).rangeTo(time(6, 0));
 TimeRange firstQuarterDayReverse = time(6,0).rangeTo(time(0,0));
 TimeRange lastQuarterDay = time(18, 0).rangeTo(time(23, 59));
+
+shared void runTimeRangeTests(String suiteName="TimeRange tests") {
+    suite(suiteName,
+    "Testingn time range equals" -> testEqualsTimeRange,
+    "Testingn time range not equals inverted" -> testNotEqualsTimeRangeInverted,
+    "Testingn time range step" -> testStepTime,
+    "Testingn time range any exist time" -> testAnyExistTime,
+    "Testingn time range any not exist time" -> testAnyNotExistTime,
+    "Testingn time range" -> testRangeTime,
+    "Testingn time range four minutes" -> testRangeTimeFourMinutes,
+    "Testingn time range interval reverse" -> testIntervalTimeReverse,
+    "Testingn time range gap" -> testGapTime,
+    "Testingn time range overlap" -> testOverlapTime,
+    "Testingn time range step milliseconds reverse" -> testStepMillisReverseTime,
+    "Testingn time range step seconds reverse" -> testStepSecondsReverseTime,
+    "Testingn time range step minutes reverse" -> testStepMinutesReverseTime,
+    "Testingn time range contains" -> testContainsTime,
+    "Testingn time range gap empty" -> testGapTimeEmpty,
+    "Testingn time range overlap empty" -> testOverlapTimeEmpty,
+    "Testingn time range gap rules AB < CD" -> testGapRulesABSmallerCD_Time,
+    "Testingn time range gap rules AB > CD" -> testGapRulesABHigherCD_Time,
+    "Testingn time range overlap rules AB < CD" -> testOverlapRulesABSmallerCD_Time,
+    "Testingn time range overlap rules AB > CD" -> testOverlapRulesABHigherCD_Time
+);
+}
 
 shared void testEqualsTimeRange() {
     assertTrue(firstQuarterDay.equals(time(0,0).rangeTo(time(6,0))));

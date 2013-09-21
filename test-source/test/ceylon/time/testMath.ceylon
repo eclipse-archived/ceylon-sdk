@@ -1,5 +1,33 @@
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, suite }
 import ceylon.time.internal.math { floor, round, mod=floorMod, amod=adjustedMod }
+
+shared void runMathTests(String suiteName="Math tests") {
+    suite(suiteName,
+    "Testing math floor positive whole" -> testFloorPositiveWhole,
+    "Testing math floor positive float" -> testFloorPositiveFloat,
+    "Testing math floor negative float" -> testFloorNegativeFloat,
+    "Testing math floor negative whole" -> testFloorNegativeWhole,
+    "Testing math round positive whole" -> testRoundPositiveWhole,
+    "Testing math round positive point 01" -> testRoundPositivePoint01,
+    "Testing math round positive point 04" -> testRoundPositivePoint04,
+    "Testing math round positive point 05" -> testRoundPositivePoint05,
+    "Testing math round positive point 06" -> testRoundPositivePoint06,
+    "Testing math round positive point 09" -> testRoundPositivePoint09,
+    "Testing math round negative whole" -> testRoundNegativeWhole,
+    "Testing math round negative point 01" -> testRoundNegativePoint01,
+    "Testing math round negative point 04" -> testRoundNegativePoint04,
+    "Testing math round negative point 05" -> testRoundNegativePoint05,
+    "Testing math round negative point 06" -> testRoundNegativePoint06,
+    "Testing math round negative point 09" -> testRoundNegativePoint09,
+    "Testing math positive mod positive" -> testPositiveModPositive,
+    "Testing math negative mod positive" -> testNegativeModPositive,
+    "Testing math positive mod negative" -> testPositiveModNegative,
+    "Testing math negative mod negative" -> testNegativeModNegative,
+    "Testing math modulus inverted" -> testModulusInverted,
+    "Testing math modulus transitive" -> testModulusTransitive,
+    "Testing math amod" -> testAmod
+);
+}
 
 // Test floor function
 

@@ -1,7 +1,15 @@
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, suite }
 import ceylon.time.chronology { unixTime, gregorian }
 import ceylon.time { date, time }
 import ceylon.time.base { january, tuesday }
+
+shared void runChronologyTests(String suiteName="Chronology tests") {
+    suite(suiteName,
+    "Testing Unix Time" -> testUnixTime,
+    "Testing Gregorian months" -> testGregorianMonths,
+    "Testing Gregorian" -> testGregorian
+);
+}
 
 shared void testUnixTime() {
     assertEquals(719163, unixTime.epoch);

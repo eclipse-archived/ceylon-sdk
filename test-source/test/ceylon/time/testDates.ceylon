@@ -8,15 +8,91 @@ Date data_1982_12_13 = date( 1982, december, 13);
 
 shared void runDateTests(String suiteName="Date tests") {
     suite(suiteName,
-        "Testing July 24 -586" -> test_sun_jul_24_minus586,
-        "Testing December 05 -168" -> test_wed_dec_05_minus168,
-        "Testing September 24 70" -> test_wed_sep_24_70,
-
-        "Testing January 01 1900" -> test_mon_jan_01_1900,
-        "Testing October 29 1974" -> test_tue_oct_29_1974,
-        "Testing December 13 1982" -> test_mon_dec_13_1982,
-        "Testing December 31 1999" -> test_mon_dec_31_1999,
-        "Testing January 1 2000" -> test_mon_jan_01_2000
+    "Testing date july 24 -586" -> test_sun_jul_24_minus586, 
+    "Testing date december 05 -168" -> test_wed_dec_05_minus168, 
+    "Testing date september 24 70" -> test_wed_sep_24_70, 
+    "Testing date january 01 1900" -> test_mon_jan_01_1900,
+    "Testing date october 29 1974" -> test_tue_oct_29_1974,
+    "Testing date december 13 1982" -> test_mon_dec_13_1982,
+    "Testing date december 31 1999" -> test_mon_dec_31_1999,
+    "Testing date january 01 2000" -> test_mon_jan_01_2000,
+    "Testing date january 31 2000" -> test_mon_jan_31_2000,
+    "Testing date february 29 2000" -> test_tue_feb_29_2000,
+    "Testing date december 31 2000" -> test_sun_dec_31_2000,
+    "Testing date february 29 2012" -> test_wed_feb_29_2012,
+    "Testing date invalid date january 0" -> test_invalid_date_jan_0,
+    "Testing date invalid date february 29" -> test_invalid_date_feb_29,
+    "Testing date invalid date maximum year" -> test_invalid_date_maximum_year,
+    "Testing date invalid date minimum year" -> test_invalid_date_minimum_year,
+    "Testing date 2400 is leap year" -> test_2400_is_leapYear,
+    "Testing date 2200 not leap year" -> test_2200_is_not_leapYear,
+    "Testing date 2100 not leap year" -> test_2100_is_not_leapYear,
+    "Testing date 2012 is leap year" -> test_2012_is_leapYear,
+    "Testing date 2011 not leap year" -> test_2011_is_not_leapYear,
+    "Testing date 2008 is leap year" -> test_2008_is_leapYear,
+    "Testing date 2000 is leap year" -> test_2000_is_leapYear,
+    "Testing date 1900 not leap year" -> test_1900_is_not_leapYear,
+    "Testing date 1600 leap year" -> test_1600_is_leapYear,
+    "Testing date week of year" -> testWeekOfYear,
+    "Testing date plus days" -> testDatePlusDays,
+    "Testing date minus days" -> testDateMinusDays,
+    "Testing date month less days" -> testDatePlusMonthsLessDays,
+    "Testing date plus months" -> testDatePlusMonths,
+    "Testing date minus months" -> testDateMinusMonths,
+    "Testing date minus less days" -> testDateMinusLessDays,
+    "Testing date plus years" -> testDatePlusYears,
+    "Testing date plus years less days" -> testPlusYearsLessDays,
+    "Testing date minus years" -> testDateMinusYears,
+    "Testing date minus years less days" -> testMinusYearsLessDays, 
+    "Testing date plus weeks" -> testDatePlusWeeks,
+    "Testing date minus weeks" -> testDateMinusWeeks,
+    "Testing date with day" -> testWithDay,
+    "Testing date with day 40" -> testWithDay40,
+    "Testing date with aday 0" -> testWithDay0,
+    "Testing date with day negative" -> testWithDayNegative,
+    "Testing date with day 29 february not leap year" -> testWithDay29FebNotLeap,
+    "Testing date with day 29 leap year" -> testWithDay29FebLeap,
+    "Testing date with month less days exception" -> testWithMonthLessDaysException,
+    "Testing date with month" -> testWithMonth,
+    "Testing date with year" -> testWithYear,
+    "Testing date with year leap" -> testWithYearLeap,
+    "Testing date ordinal" -> testOrdinal,
+    "Testing date plus period" -> testPlusPeriod_Date, 
+    "Testing date minus period" -> testMinusPeriod_Date,
+    "Testing date predecessor" -> testPredecessor,
+    "Testing date sucessor" -> testSuccessor,
+    "Testing date string" -> testString,
+    "Testing date at" -> testAt,
+    "Testing date invalid hour" -> testAtInvalidHour,
+    "Testing date invalid minute" -> testAtInvalidMinute,
+    "Testing date invalid second" -> testAtInvalidSecond,
+    "Testing date invalid millis" -> testAtInvalidMillis,
+    "Testing date period from" -> testPeriodFrom,
+    "Testing date period from negative" -> testPeriodFromNegative,
+    "Testing date period from only day change" -> testPeriodFromOnlyDayChange,
+    "Testing date period from only day change negative" -> testPeriodFromOnlyDayChangeNegative, 
+    "Testing date period from new year" -> testPeriodFromNewYear,
+    "Testing date period from new negative year" -> testPeriodFromNewYearNegative,
+    "Testing date period from same year" -> testPeriodFromSameYear,
+    "Testing date period from same year negative" -> testPeriodFromSameYearNegative,
+    "Testing date period from month before" -> testPeriodFromMonthBefore,
+    "Testing date period from month before negative" -> testPeriodFromMonthBeforeNegative,
+    "Testing date period from only month change" -> testPeriodFromOnlyMonthChange,
+    "Testing date period from only month change negative" -> testPeriodFromOnlyMonthChangeNegative,
+    "Testing date period from only year change" -> testPeriodFromOnlyYearChange,
+    "Testing date period from only year change negative" -> testPeriodFromOnlyYearChangeNegative,
+    "Testing date period from year month change" -> testPeriodFromYearMonthChange,
+    "Testing date period from year month change negative" -> testPeriodFromYearMonthChangeNegative,
+    "Testing date period from leap year" -> testPeriodFromLeapYear,
+    "Testing date period from leap year negative" -> testPeriodFromLeapYearNegative,
+    "Testing date period from day after" -> testPeriodFromDayAfter,
+    "Testing date period from day after negative" -> testPeriodFromDayAfterNegative,
+    "Testing date period from day before" -> testPeriodFromDayBefore,
+    "Testing date period from day before negative" -> testPeriodFromDayBeforeNegative,
+    "Testing date period from negative day" -> testPeriodFromNegativeDay,
+    "Testing date period from equal date" -> testPeriodFromEqualDate,
+    "Testing date period from after date" -> testPeriodFromAfterDate,
+    "Testing date Enumerable<Integer, Date> date" -> testEnumerableDate
     );
 }
 
@@ -119,7 +195,7 @@ shared void testDateMinusDays() {
     assertEquals( date( 2012, december, 9 ).minusDays( 10954 ), data_1982_12_13 );
 }
 
-shared void testDatePlusMonthsLessDaysException() {
+shared void testDatePlusMonthsLessDays() {
     assertEquals( date(1983, february, 28), date(1982,december,31).plusMonths(2));
 }
 
@@ -139,7 +215,7 @@ shared void testDateMinusMonths() {
     assertEquals( data_1982_12_13.minusMonths(12), date( 1981, december, 13) );
 }
 
-shared void testDateMinusLessDaysException() {
+shared void testDateMinusLessDays() {
     assertEquals( date(1982,november,30), date(1982,december,31).minusMonths(1));
 }
 
