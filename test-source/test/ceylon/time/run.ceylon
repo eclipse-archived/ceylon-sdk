@@ -1,8 +1,20 @@
-import ceylon.time.chronology { unixTime }
-
 "Run all ceylon.time module tests"
 shared void run(){
-print(unixTime.epoch);
     runDateTests();
+    runDateTimeTests();
+    runTimeTests();
     runUtilTests();
+    runChronologyTests();
+    runDateRangeTests();
+    runDateTimeRangeTests();
+    runDayOfWeekTests();
+    runDurationTests();
+    runInstantTests();
+    runMathTests();
+    runMonthTests();
+    runParseTimeZoneTests();
+    runPeriodTests();
+    runTimeRangeTests();
+    runTimeZoneTests();
+    runZoneDateTimeTests();
 }

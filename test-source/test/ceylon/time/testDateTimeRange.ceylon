@@ -1,9 +1,35 @@
 import ceylon.time { Date, Period, Duration, date, DateRange, DateTimeRange, dateTime }
-import ceylon.test { assertEquals, assertTrue, assertFalse }
+import ceylon.test { assertEquals, assertTrue, assertFalse, suite }
 import ceylon.time.base { january, march, february, milliseconds, months, years, saturday, days, december }
 
 DateTimeRange jan_date_time_range = dateTime(2013, january, 1).rangeTo(dateTime(2013, january, 31));
 DateTimeRange jan_date_time_range_reverse = dateTime(2013, january, 31).rangeTo(dateTime(2013, january, 1));
+
+shared void runDateTimeRangeTests(String suiteName="DateTimeRange tests") {
+    suite(suiteName,
+    "Testing date time range equals" -> testEqualsDateTimeRange,
+    "Testing date time range not equals range inverted" -> testNotEqualsDateTimeRangeInverted,
+    "Testing date time range step" -> testStepDateTime,
+    "Testing date time range exist" -> testAnyExistDateTime,
+    "Testing date time range not exist" -> testAnyNotExistDateTime,
+    "Testing date time range" -> testRangeDateTime,
+    "Testing date time range for years" -> testRangeDateTimeFourYears,
+    "Testing date time range interval" -> testIntervalDateTimeReverse,
+    "Testing date time range gap empty" -> testGapDateTimeEmpty,
+    "Testing date time range overlap empty" -> testOverlapDateTimeEmpty,
+    "Testing date time range gap" -> testGapDateTime,
+    "Testing date time range gap reverse" -> testGapDateTimeReverse,
+    "Testing date time range overlap" -> testOverlapDateTime,
+    "Testing date time range step day reverse" -> testStepDayReverseDateTime,
+    "Testing date time range month reverse" -> testStepMonthReverseDateTime,
+    "Testing date time range step years reverse" -> testStepYearReverseDateTime,
+    "Testing date time range contains" -> testContainsDateTime,
+    "Testing date time range gap rules AB < CD" -> testGapRulesABSmallerCD_DateTime,
+    "Testing date time range gap rules AB > CD" -> testGapRulesABHigherCD_DateTime,
+    "Testing date time range overlap rules AB < CD" -> testOverlapRulesABSmallerCD_DateTime,
+    "Testing date time range overlap rules AB > CD" -> testOverlapRulesABHigherCD_DateTime
+);
+}
 
 shared void testEqualsDateTimeRange() {
     assertTrue(jan_date_range.equals(date(2013, january, 1).rangeTo(date(2013, january, 31))));
