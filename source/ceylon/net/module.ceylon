@@ -45,11 +45,11 @@
      }"
 by("Stéphane Épardaud, Matej Lazar")
 license("Apache Software License")
-module ceylon.net '0.6' {
-    import ceylon.language '0.6';
-    shared import ceylon.collection '0.6';
-    shared import ceylon.io '0.6';
-    import ceylon.file '0.6';
+module ceylon.net '0.6.1' {
+    import ceylon.language '0.6.1';
+    shared import ceylon.collection '0.6.1';
+    shared import ceylon.io '0.6.1';
+    import ceylon.file '0.6.1';
 
     import java.base '7';
     

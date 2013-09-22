@@ -4,10 +4,10 @@
  that has been already been configured. "
 by("Enrique Zamudio")
 license("Apache Software License 2.0")
-module ceylon.dbc '0.6' {
-    import ceylon.language '0.6';
-    import ceylon.collection '0.6';
-    shared import ceylon.math '0.6';
+module ceylon.dbc '0.6.1' {
+    import ceylon.language '0.6.1';
+    import ceylon.collection '0.6.1';
+    shared import ceylon.math '0.6.1';
     import java.base '7';
     shared import java.jdbc '7';
 }
