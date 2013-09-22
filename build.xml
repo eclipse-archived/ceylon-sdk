@@ -194,21 +194,21 @@
     </target>
 
     <target name="test-js" depends="compile-test-js">
-        <ceylon-run module="test.ceylon.collection/${sdk.version}" run="test.ceylon.collection.run"
+        <ceylon-run-js module="test.ceylon.collection/${sdk.version}"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
-        </ceylon-run>
+        </ceylon-run-js>
         
-        <ceylon-run module="test.ceylon.json/${sdk.version}" run="test.ceylon.json.run"
+        <ceylon-run-js module="test.ceylon.json/${sdk.version}"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
-        </ceylon-run>
+        </ceylon-run-js>
         
-        <ceylon-run module="test.ceylon.time/${sdk.version}" run="test.ceylon.time.run"
+        <ceylon-run-js module="test.ceylon.time/${sdk.version}"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
           <rep url="${test.repo}"/>
-        </ceylon-run>
+        </ceylon-run-js>
     </target>
 
     <target name="test" depends="compile-test,test-jvm,test-js"
