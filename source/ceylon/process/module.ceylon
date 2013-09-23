@@ -51,7 +51,6 @@
  the `waitForExit()` method of `Process`."
 by("Gavin King")
 module ceylon.process '0.6.1' {
-    import ceylon.language '0.6.1';
     shared import ceylon.file '0.6.1';
     import java.base '7';
 }
