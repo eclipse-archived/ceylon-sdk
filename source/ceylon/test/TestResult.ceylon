@@ -1,7 +1,9 @@
-"Represent a detailed result of the test."
+"Represents a detailed result of the execution of a 
+ particular test."
+see(`interface TestRunResult`)
 shared interface TestResult {
 
-    "The description of this test."
+    "The test this is the result for."
     shared formal TestDescription description;
 
     "The result state of this test."

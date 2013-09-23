@@ -3,17 +3,23 @@ import ceylon.language.meta.declaration {
     FunctionDeclaration
 }
 
-"Annotation to mark function like a test."
+"Marks an element as being a test. Only `shared` nullary functions 
+ and classes should be annotated with `test`."
 shared annotation Test test() => Test();
 
-"Annotation to mark function which will be run before each tests in its scope."
+"Marks an element which should be run before each test in its scope.
+ Only `shared` nullary functions and classes should be 
+ annotated with `beforeTest`."
 shared annotation BeforeTest beforeTest() => BeforeTest();
 
-"Annotation to mark function which will be run after each tests in its scope."
+"Marks a function which will be run after each test in its scope.
+ Only `shared` nullary functions and classes should be 
+ annotated with `afterTest`."
 shared annotation AfterTest afterTest() => AfterTest();
 
-"Annotation to mark test or group of tests like ignored."
-shared annotation Ignore ignore("Reason why the test is ignored." String reason = "") => Ignore(reason);
+"Marks a test or group of tests which should not be executed."
+shared annotation Ignore ignore("Reason why the test is ignored." String reason = "") 
+        => Ignore(reason);
 
 "Annotation class for [[test]]."
 shared final annotation class Test() satisfies OptionalAnnotation<Test, FunctionDeclaration> {}

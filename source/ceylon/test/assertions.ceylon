@@ -6,9 +6,15 @@ import ceylon.language.meta.model {
     ClassModel
 }
 
-"Thrown when a comparison of two values failed."
+"Thrown to indicate that two values which should have been \"the 
+ same\" (according to some comparison function) were in fact 
+ different."
 see(`function assertEquals`, `function assertNotEquals`)
-shared class AssertionComparisonException("The message describing the problem." String message, actualValue, expectedValue) extends AssertionException(message) {
+shared class AssertionComparisonException(
+    "The message describing the problem." 
+    String message, 
+    actualValue, expectedValue) 
+        extends AssertionException(message) {
 
     "The actual string value."
     shared String actualValue;
@@ -18,30 +24,37 @@ shared class AssertionComparisonException("The message describing the problem." 
 
 }
 
-"Fail a test."
+"Throws an [[AssertionException]] to fail a test."
+throws(`class AssertionException`, "always")
 shared void fail("The message describing the problem." String? message = null) {
     throw AssertionException(message else "assertion failed");
 }
 
 "Fails the test if the _condition_ is false."
+throws(`class AssertionException`, "When [[condition]] is false.")
 shared void assertTrue(
         "The condition to be checked." Boolean condition, 
-        "The message describing the problem." String? message = null)  {
+        "The message describing the problem." 
+        String? message = null)  {
     if (!condition) {
         throw AssertionException(message else "assertion failed: expected true");
     }
 }
 
 "Fails the test if the _condition_ is true."
+throws(`class AssertionException`, "When [[condition]] is true.")
 shared void assertFalse(
-        "The condition to be checked." Boolean condition, 
-        "The message describing the problem." String? message = null) {
+        "The condition to be checked."
+        Boolean condition, 
+        "The message describing the problem."
+        String? message = null) {
     if (condition) {
         throw AssertionException(message else "assertion failed: expected false");
     }
 }
 
 "Fails the test if the given _value_ is not null."
+throws(`class AssertionException`, "When [[val]] is not null.")
 shared void assertNull(
         "The value to be checked." Object? val, 
         "The message describing the problem." String? message = null) {
@@ -51,6 +64,7 @@ shared void assertNull(
 }
 
 "Fails the test if the given _value_ is null."
+throws(`class AssertionException`, "When [[val]] is null.")
 shared void assertNotNull(
         "The value to be checked." Object? val, 
         "The message describing the problem." String? message = null) {
@@ -60,11 +74,12 @@ shared void assertNotNull(
 }
 
 "Fails the test if the given values are not equal according to the given compare function."
+throws(`class AssertionComparisonException`, "When [[actual]] != [[expected]].")
 shared void assertEquals(
         "The actual value to be checked." Object? actual, 
         "The expected value." Object? expected, 
         "The message describing the problem." String? message = null, 
-        "The compare function." Boolean compare(Object? val1, Object? val2) => defaultCompare(actual, expected)) {
+        "The compare function." Boolean compare(Object? val1, Object? val2) => equalsCompare(actual, expected)) {
     if (!compare(actual, expected)) {
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
@@ -74,11 +89,12 @@ shared void assertEquals(
 }
 
 "Fails the test if the given values are equal according to the given compare function."
+throws(`class AssertionComparisonException`, "When [[actual]] == [[expected]].")
 shared void assertNotEquals(
         "The actual value to be checked." Object? actual, 
         "The expected value." Object? expected, 
         "The message describing the problem." String? message = null, 
-        "The compare function." Boolean compare(Object? val1, Object? val2) => defaultCompare(actual, expected)) {
+        "The compare function." Boolean compare(Object? val1, Object? val2) => equalsCompare(actual, expected)) {
     if (compare(actual, expected)) {
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
@@ -88,8 +104,10 @@ shared void assertNotEquals(
 }
 
 "Fails the test if expected exception isn't thrown."
+throws(`class AssertionException`, "When [[exceptionSource]]() doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
-        "The checked exception or callback which should throw exception." Exception|Anything() exceptionSource) {
+        "The checked exception or callback which should throw exception." 
+        Exception|Anything() exceptionSource) {
     if(is Exception exception = exceptionSource) {
         return ExceptionAssert(exception);
     }
@@ -151,7 +169,9 @@ shared class ExceptionAssert(
 
 }
 
-Boolean defaultCompare(Object? obj1, Object? obj2) {
+"Compares two things. Returns true if both are null or both are non-null and 
+ are the same according to [[Object.equals]]."
+shared Boolean equalsCompare(Object? obj1, Object? obj2) {
     if (exists obj1) {
         if (exists obj2) {
             return obj1 == obj2;
@@ -159,6 +179,8 @@ Boolean defaultCompare(Object? obj1, Object? obj2) {
     }
     return obj1 exists == obj2 exists;
 }
+
+// XXX Should we provide identicalCompare, comparisonCompare?
 
 String nullSafeString(Object? obj) {
     if (exists obj) {
