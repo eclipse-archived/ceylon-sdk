@@ -1,5 +1,4 @@
 module test.ceylon.dbc '0.6.1' {
-    import ceylon.language '0.6.1';
     import ceylon.dbc '0.6.1';
     import ceylon.math '0.6.1';
     import ceylon.test '0.6.1';

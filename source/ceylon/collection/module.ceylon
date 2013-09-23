@@ -15,5 +15,4 @@
 by("Stéphane Épardaud")
 license("Apache Software License")
 module ceylon.collection '0.6.1' {
-    import ceylon.language '0.6.1';
 }

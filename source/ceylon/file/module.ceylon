@@ -109,6 +109,5 @@
  "
 by("Gavin King")
 module ceylon.file '0.6.1' {
-    import ceylon.language '0.6.1';
     import java.base '7';
 }
