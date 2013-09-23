@@ -1,97 +1,34 @@
-"Contract for things needing to be informed about the execution of tests 
- by a [[TestRunner]]."
+"Represent a listener which allow to be notified about events that occur during test run."
 shared interface TestListener {
-    
-    shared default void testRunStarted(TestRunner runner) {
-    }
-    
-    shared default void testRunFinished(TestRunner runner, TestResult result) {
-    }
-    
-    shared default void testStarted(TestUnit test) {
-    }
-    
-    shared default void testFinished(TestUnit test) {
-    }
-    
-}
 
-"A [[TestListener]] which prints information about test execution to the 
- standard output."
-shared class PrintingTestListener() satisfies TestListener {
-    
-    variable SequenceBuilder<TestUnit> errAndFail = SequenceBuilder<TestUnit>();
-    
-    shared actual void testRunStarted(TestRunner runner) {
-        print(banner("TESTS STARTED"));
-    }
-    
-    shared actual void testRunFinished(TestRunner runner, TestResult result) {
-        if( result.runCount == 0 ) {
-            print(banner("NO TESTS"));
-            print("There were no tests!");
-        } else {
-            print(banner("TESTS RESULT"));
-            print("run:     `` result.runCount ``");
-            print("success: `` result.successCount ``");
-            print("failure: `` result.failureCount ``");
-            print("error:   `` result.errorCount ``");
-            
-            if (errAndFail.size > 0) {
-                print("errors & failures:");
-                for (errorOrFailure in errAndFail.sequence) {
-                    print("``errorOrFailure.state``: ``errorOrFailure.name``");
-                    if (exists ex=errorOrFailure.exception) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-            
-            if (result.isSuccess) {
-                print(banner("TESTS SUCCESS"));
-            } else {
-                print(banner("TESTS FAILED"));
-            }
-        }
-        errAndFail = SequenceBuilder<TestUnit>();
-    }
-    
-    shared actual void testStarted(TestUnit test) {
-        print(test.name);
-    }
-    
-    shared actual void testFinished(TestUnit test) {
-        switch(test.state)
-        case (failure, error) {
-            errAndFail.append(test);
-        }
-        else {
-            // who cares
-        }
-    }
-    
-    "Generates a banner with the given text, like this:
-     
-     \`\``
-     ============ banner ============
-     \`\``
-     "
-    String banner(String text) {
-        Character ch = '=';
-        StringBuilder sb = StringBuilder();
-        Integer totalWith = 60;
-        Integer bannerWidth = totalWith - text.size - 2;
-        for (ii in 0..bannerWidth/2) {
-            sb.appendCharacter(ch);
-        }
-        if (bannerWidth % 2 == 1) {
-            sb.appendCharacter(ch);
-        }
-        sb.append(" ").append(text).append(" ");
-        for (ii in 0..bannerWidth/2) {
-            sb.appendCharacter(ch);
-        }
-        return sb.string;
-    }    
-    
+    "Called before any tests have been run."
+    shared default void testRunStart(
+        "Contains description of all tests to be run."
+        TestDescription description) {}
+
+    "Called after all tests have finished."
+    shared default void testRunFinish(
+        "Contains summary result of the test run."
+        TestRunResult result) {}
+
+    "Called when a test is about to be started."
+    shared default void testStart(
+        "Contains description of test."
+        TestDescription description) {}
+
+    "Called when a test has finished, whether the test succeeds or not."
+    shared default void testFinish(
+        "Contains detailed test result."
+        TestResult result) {}
+
+    "Called when a test will not be run, because it is marked with [[ignore]] annotation."
+    shared default void testIgnored(
+        "Contains detailed test result."
+        TestResult result) {}
+
+    "Called when a test will not be run, because some error occure (eg. invalid test function signature)."
+    shared default void testError(
+        "Contains detailed test result."
+        TestResult result) {}
+
 }
