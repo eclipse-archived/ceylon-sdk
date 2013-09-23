@@ -240,6 +240,7 @@
                 <include name="ceylon/process/**"/>
                 <include name="ceylon/time/**"/>
                 <include name="ceylon/dbc/**"/>
+                <include name="ceylon/unicode/**"/>
                 <include name="ceylon/interop/java/**"/>
             </fileset>
         </copy>
