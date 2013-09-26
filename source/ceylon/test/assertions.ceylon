@@ -104,7 +104,7 @@ shared void assertNotEquals(
 }
 
 "Fails the test if expected exception isn't thrown."
-throws(`class AssertionException`, "When _exceptionSource]]_ doesn't throw an Exception")
+throws(`class AssertionException`, "When _exceptionSource()_ doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
         "The checked exception or callback which should throw exception." 
         Exception|Anything() exceptionSource) {

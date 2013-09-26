@@ -4,7 +4,8 @@ import ceylon.test {
     failure,
     error,
     ignored,
-    TestDescription, TestRunResult
+    TestDescription,
+    TestRunResult
 }
 
 void runTestRunning() {
