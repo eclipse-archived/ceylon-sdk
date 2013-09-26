@@ -31,7 +31,7 @@ shared void fail("The message describing the problem." String? message = null) {
 }
 
 "Fails the test if the _condition_ is false."
-throws(`class AssertionException`, "When [[condition]] is false.")
+throws(`class AssertionException`, "When _condition_ is false.")
 shared void assertTrue(
         "The condition to be checked." Boolean condition, 
         "The message describing the problem." 
@@ -42,7 +42,7 @@ shared void assertTrue(
 }
 
 "Fails the test if the _condition_ is true."
-throws(`class AssertionException`, "When [[condition]] is true.")
+throws(`class AssertionException`, "When _condition_ is true.")
 shared void assertFalse(
         "The condition to be checked."
         Boolean condition, 
@@ -54,7 +54,7 @@ shared void assertFalse(
 }
 
 "Fails the test if the given _value_ is not null."
-throws(`class AssertionException`, "When [[val]] is not null.")
+throws(`class AssertionException`, "When _val_ is not null.")
 shared void assertNull(
         "The value to be checked." Object? val, 
         "The message describing the problem." String? message = null) {
@@ -64,7 +64,7 @@ shared void assertNull(
 }
 
 "Fails the test if the given _value_ is null."
-throws(`class AssertionException`, "When [[val]] is null.")
+throws(`class AssertionException`, "When _val_ is null.")
 shared void assertNotNull(
         "The value to be checked." Object? val, 
         "The message describing the problem." String? message = null) {
@@ -74,7 +74,7 @@ shared void assertNotNull(
 }
 
 "Fails the test if the given values are not equal according to the given compare function."
-throws(`class AssertionComparisonException`, "When [[actual]] != [[expected]].")
+throws(`class AssertionComparisonException`, "When _actual_ != _expected_.")
 shared void assertEquals(
         "The actual value to be checked." Object? actual, 
         "The expected value." Object? expected, 
@@ -89,7 +89,7 @@ shared void assertEquals(
 }
 
 "Fails the test if the given values are equal according to the given compare function."
-throws(`class AssertionComparisonException`, "When [[actual]] == [[expected]].")
+throws(`class AssertionComparisonException`, "When _actual_ == _expected_.")
 shared void assertNotEquals(
         "The actual value to be checked." Object? actual, 
         "The expected value." Object? expected, 
@@ -104,7 +104,7 @@ shared void assertNotEquals(
 }
 
 "Fails the test if expected exception isn't thrown."
-throws(`class AssertionException`, "When [[exceptionSource]]() doesn't throw an Exception")
+throws(`class AssertionException`, "When _exceptionSource]]_ doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
         "The checked exception or callback which should throw exception." 
         Exception|Anything() exceptionSource) {

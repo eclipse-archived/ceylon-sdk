@@ -1,5 +1,4 @@
-"Represents a detailed result of the execution of a 
- particular test."
+"Represents a detailed result of the execution of a particular test."
 see(`interface TestRunResult`)
 shared interface TestResult {
 

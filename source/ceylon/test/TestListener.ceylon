@@ -1,5 +1,4 @@
-"Represents a listener which will be notified about events that occur 
- during a test run."
+"Represents a listener which will be notified about events that occur during a test run."
 shared interface TestListener {
 
     "Called before any tests have been run."
@@ -27,8 +26,8 @@ shared interface TestListener {
         "The detailed test result."
         TestResult result) {}
 
-    "Called when a test will not be run, because some error 
-     has occured. For example a invalid test function signature."
+    "Called when a test will not be run, because some error has occured. 
+     For example a invalid test function signature."
     shared default void testError(
         "The test result."
         TestResult result) {}

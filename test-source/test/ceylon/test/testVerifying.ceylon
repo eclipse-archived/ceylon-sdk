@@ -19,7 +19,9 @@ void runTestVerifying() {
         `shouldVerifyAnonymousClass`,
         `shouldVerifyClassWithParameter`,
         `shouldVerifyClassWithTypeParameter`,
-        `shouldVerifyClassWithoutTestableMethods`
+        `shouldVerifyClassWithoutTestableMethods`,
+        `shouldVerifyInvalidTypeLiteral1`,
+        `shouldVerifyInvalidTypeLiteral2`
     );
 }
 
@@ -190,4 +192,32 @@ void shouldVerifyClassWithoutTestableMethods() {
         source = `ClassWithoutTestableMethods`;
         message = "should have testable methods";
      };
+}
+
+void shouldVerifyInvalidTypeLiteral1() {
+    value runResult = createTestRunner(["function foo.bar::baz"]).run();
+    assertResultCounts {
+        runResult;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        runResult;
+        state = error;
+        message = "invalid type literal: function foo.bar::baz";
+    };
+}
+
+void shouldVerifyInvalidTypeLiteral2() {
+    value runResult = createTestRunner(["class foo.bar::Baz"]).run();
+    assertResultCounts {
+        runResult;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        runResult;
+        state = error;
+        message = "invalid type literal: class foo.bar::Baz";
+    };
 }

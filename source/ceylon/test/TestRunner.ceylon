@@ -13,7 +13,7 @@ import ceylon.test.internal {
 }
 
 "Alias for program elements from which tests can be run."
-shared alias TestSource => Module|Package|ClassDeclaration|FunctionDeclaration|Class|FunctionModel;
+shared alias TestSource => Module|Package|ClassDeclaration|FunctionDeclaration|Class|FunctionModel|String;
 
 "Alias for functions which filter tests. 
  Should return true if the given test should be run."
@@ -47,13 +47,12 @@ shared TestRunner createTestRunner(
     TestFilter filter = defaultTestFilter,
     "A comparator used to sort the tests, used tests in certain order.
      The default comparator runs the tests in the order they are given in 
-     the [[sources]] parameter."
-    TestComparator comparator = defaultComparator)
+     the _sources_ parameter."
+    TestComparator comparator = defaultTestComparator)
         => TestRunnerImpl(sources, listeners, filter, comparator);
 
-// TODO This is where we should do the filtering of `ignored` tests
-// so it's easy to override and actually run stuff which is ignored
-// (e.g. it ca be useful to know which tests which are ignored actually pass)
+"Default test filter, always return true."
 shared Boolean defaultTestFilter(TestDescription description) => true;
 
-Comparison defaultComparator(TestDescription description1, TestDescription description2) => equal;
+"Default test comparator, doesn't change tests order."
+shared Comparison defaultTestComparator(TestDescription description1, TestDescription description2) => equal;

@@ -1,13 +1,16 @@
+import ceylon.language.meta.declaration {
+    FunctionDeclaration,
+    ClassDeclaration
+}
 import ceylon.test {
-    TestDescription,
-    TestSource
+    TestDescription
 }
 
-class TestDescriptionImpl(name, source = null, children = []) satisfies TestDescription {
+class TestDescriptionImpl(name, declaration = null, children = []) satisfies TestDescription {
 
     shared actual String name;
 
-    shared actual TestSource? source;
+    shared actual <ClassDeclaration|FunctionDeclaration>? declaration;
 
     shared actual TestDescription[] children;
 

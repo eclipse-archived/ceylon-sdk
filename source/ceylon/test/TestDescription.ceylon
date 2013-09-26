@@ -1,12 +1,16 @@
-"Describes a test, or a group of tests. 
- Groups of tests can be arranged in a tree."
+import ceylon.language.meta.declaration {
+    FunctionDeclaration,
+    ClassDeclaration
+}
+
+"Describes a test, or a group of tests, can be arranged in a tree."
 shared interface TestDescription {
 
     "The user friendly name of this test."
     shared formal String name;
 
-    "The source program element of this test, if one exists."
-    shared formal TestSource? source;
+    "The program element declaration of this test, if one exists."
+    shared formal <ClassDeclaration|FunctionDeclaration>? declaration;
 
     "The children of this test, if any."
     shared formal TestDescription[] children;

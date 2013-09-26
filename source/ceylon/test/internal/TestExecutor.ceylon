@@ -37,6 +37,14 @@ interface TestExecutor {
 
 }
 
+class ErrorTestExecutor(String name, Exception exception) satisfies TestExecutor {
+
+    shared actual TestDescription description => TestDescriptionImpl(name);
+
+    shared actual void execute(TestListener notifier) => notifier.testError(TestResultImpl(description, error, exception));
+
+}
+
 class ClassTestExecutor(
         ClassDeclaration classDecl, 
         FunctionDeclaration? funcDecl, 

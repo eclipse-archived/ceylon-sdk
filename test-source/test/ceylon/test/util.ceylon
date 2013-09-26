@@ -53,9 +53,9 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
         
         if( exists source ) {
             if( is Model source ) {
-                assert(exists s = r.description.source, s == source.declaration);
+                assert(exists s = r.description.declaration, s == source.declaration);
             } else {
-                assert(exists s = r.description.source, s == source);
+                assert(exists s = r.description.declaration, s == source);
             }
         }
         if( exists message ) {

@@ -19,7 +19,7 @@
    ```
    
    Assertions can be evaluated by using the language's `assert` statement 
-   or with the various `assert...`_ functions, for example:
+   or with the various `assert...` functions, for example:
    ```
    assert(is Hobit frodo);
    assert(exists ring);
@@ -79,10 +79,8 @@
    Or by enumerating the things to be tested:
    ```
    value result = createTestRunner([
-       `funtion shouldAlwaysSucceed`,
-       `class YodaTest`,
-       `class StarshipTest`,
-       `function shouldBeFasterThanLight`]).run();
+           `shouldBeFasterThanLight`,
+           `StarshipTest`]).run();
    print(result.isSuccess);
    ```
    

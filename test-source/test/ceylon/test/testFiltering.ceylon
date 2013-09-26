@@ -15,5 +15,5 @@ void shouldFilterTestsByName() {
     value description = runner.description;
     assert(description.name == "root",
            description.children.size == 1,
-           description.children[0]?.source?.equals(`function methodFoo`) else false); 
+           description.children[0]?.declaration?.equals(`function methodFoo`) else false); 
 }
