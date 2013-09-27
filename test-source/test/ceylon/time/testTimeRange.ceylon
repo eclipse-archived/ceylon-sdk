@@ -48,15 +48,15 @@ shared void testAnyExistTime() {
 }
 
 shared void testAnyNotExistTime() {
-    assertFalse(time(0, 0).rangeTo(time(1, 0)).any(( Time time ) => time.seconds == 91));
+	assertFalse(time(0, 0).rangeTo(time(0, 0, 15)).any(( Time time ) => time.seconds == 91));
 }
 
 shared void testRangeTime() {
     assertIntervalTime{
-         start = time(8,0);
-         end = time(10,0);
-         period = Period{ hours = 2; };
-         duration = Duration( 2 * milliseconds.perHour );
+        start = time(9,55);
+        end = time(10,0);
+        period = Period{ minutes = 5; };
+        duration = Duration( 5 * milliseconds.perMinute );
     };
 }
 
@@ -71,10 +71,10 @@ shared void testRangeTimeFourMinutes() {
 
 shared void testIntervalTimeReverse() {
     assertIntervalTime{
-         start = time(10,0);
-         end = time(8,0);
-         period = Period{ hours = -2; };
-         duration = Duration( -2 * milliseconds.perHour );
+        start = time(10,0);
+        end = time(9,58);
+        period = Period{ minutes = -2; };
+        duration = Duration( -2 * milliseconds.perMinute );
     };
 }
 
@@ -112,7 +112,7 @@ shared void testStepMinutesReverseTime() {
 }
 
 shared void testContainsTime() {
-    assertEquals(true, time(1,30) in firstQuarterDay);
+    assertEquals(true, time(0,1) in firstQuarterDay);
 }
 
 shared void testGapTimeEmpty() {
