@@ -161,6 +161,13 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
         return false;
     }
 
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        value prime = 31;
+        value result = 3;
+        return prime * result + (millisecondsOfDay.xor((millisecondsOfDay.rightLogicalShift(32))));
+    }
+
     "Returns the period between this and the given time.\n
      If this time is before the given time then return zero period."
     shared actual Period periodFrom(Time start) {

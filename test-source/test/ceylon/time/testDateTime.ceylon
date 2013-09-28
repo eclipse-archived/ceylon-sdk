@@ -1,6 +1,6 @@
 import ceylon.time { DateTime, dateTime, Period }
 import ceylon.time.base { december, january, november, september, Month, DayOfWeek, sunday, july, wednesday, monday, october, tuesday, friday, saturday, february, april }
-import ceylon.test { assertEquals, fail, assertTrue, suite }
+import ceylon.test { assertEquals, fail, assertTrue, suite, assertFalse }
 import ceylon.time.timezone { timeZone }
 
 DateTime data_1982_12_13_09_08_07_0050 = dateTime {
@@ -22,7 +22,7 @@ shared void runDateTimeTests(String suiteName="DateTime tests") {
     "Testing date time tue_feb_29_2000_10_10_10_0010" -> test_tue_feb_29_2000_10_10_10_0010,
     "Testing date time sun_dec_31_2000_23_59_59_9999" -> test_sun_dec_31_2000_23_59_59_9999,
     "Testing date time wed_feb_29_2012_20_20_20_0020" -> test_wed_feb_29_2012_20_20_20_0020,
-    "Testing date time equals" -> testEquals,
+    "Testing date time equals and hash" -> testEqualsAndHashDateTime,
     "Testing date time plus years" -> testPlusYears,
     "Testing date time minus years" -> testMinusYears,
     "Testing date time plus months" -> testPlusMonths,
@@ -90,9 +90,22 @@ shared void test_tue_feb_29_2000_10_10_10_0010() => assertGregorianDateTime(2000
 shared void test_sun_dec_31_2000_23_59_59_9999() => assertGregorianDateTime(2000, december, 31, sunday, leapYear, 23,59,59,999);
 shared void test_wed_feb_29_2012_20_20_20_0020() => assertGregorianDateTime(2012, february, 29, wednesday, leapYear, 20,20,20,20);
 
-shared void testEquals() {
-    assertEquals(data_1982_12_13_09_08_07_0050, dateTime(1982, december, 13, 9, 8, 7, 50));
-    assertEquals(data_1982_12_13_09_08_07_0050.plusYears(1), dateTime(1983, december, 13, 9, 8, 7, 50));
+shared void testEqualsAndHashDateTime() {
+    DateTime instanceA_1 = dateTime(1900, january, 1, 9, 8, 7, 6);
+    DateTime instanceA_2 = dateTime(1900, january, 1, 9, 8, 7, 6);
+    DateTime instanceB_1 = dateTime(2000, january, 1, 9, 8, 7, 6);
+    DateTime instanceB_2 = dateTime(2000, january, 1, 9, 8, 7, 6);
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
 shared void testPlusYears() {

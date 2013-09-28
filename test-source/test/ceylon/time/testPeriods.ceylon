@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals, assertTrue, suite }
+import ceylon.test { assertEquals, assertTrue, suite, assertFalse }
 import ceylon.time { Period }
 import ceylon.time.base { milliseconds, seconds, minutes, hours }
 
@@ -79,8 +79,8 @@ shared void runPeriodTests(String suiteName="Period tests") {
     "Testing period string normalized hours" -> testStringNormalizedHours,
     "Testing period string full time" -> testStringFullTime,
     "Testing period string time padded" -> testStringTimePaddedString,
-    "Testing period scalable" -> testScalablePeriod
-
+    "Testing period scalable" -> testScalablePeriod,
+    "Testing period equals and hash" -> testEqualsAndHashPeriod
 );
 }
 
@@ -190,6 +190,24 @@ shared void testScalablePeriod() {
     Period period = Period (4, 4, 4, 4, 4, 4);
     Period result = Period (16, 16, 16, 16, 16, 16);  
     assertEquals( result, 4 ** period);
+}
+
+shared void testEqualsAndHashPeriod() {
+    Period instanceA_1 = Period{ years = 1;};
+    Period instanceA_2 = Period{ years = 1;};
+    Period instanceB_1 = Period{ days = 1;};
+    Period instanceB_2 = Period{ days = 1;};
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
 void assertPeriodNormalized( Period period, Integer year = 0, Integer month = 0, Integer day = 0, Integer hour = 0, Integer minute = 0, Integer second = 0, Integer milli = 0 ) {

@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals, suite }
+import ceylon.test { assertEquals, suite, assertTrue, assertFalse }
 import ceylon.time { Instant, fixedTime, Clock, date, Period, time, now }
 import ceylon.time.base { february, march, january, milliseconds }
 import ceylon.time.timezone { timeZone }
@@ -14,7 +14,8 @@ shared void runInstantTests(String suiteName="Instant tests") {
     "Testing instant plus period utc" -> testPlusPeriod_UTC,
     "Testing instant minus period utc" -> testMinusPeriod_UTC,
     "Testing instant durationTo" -> testDurationTo,
-    "Testing instant durationFrom" -> testDurationFrom
+    "Testing instant durationFrom" -> testDurationFrom,
+    "Testing instant equals and hash" -> testEqualsAndHash
 );
 }
 
@@ -40,7 +41,7 @@ shared void testDurationTo() {
     value twoDaysAfter = Instant(feb_13_2013_18_00_42_0057.millisecondsOfEpoch + twoDaysduration );
     value duration = feb_13_2013_18_00_42_0057.durationTo( twoDaysAfter );
     
-   assertEquals( twoDaysduration, duration.milliseconds );
+    assertEquals( twoDaysduration, duration.milliseconds );
 }
 
 shared void testDurationFrom() {
@@ -48,5 +49,23 @@ shared void testDurationFrom() {
     value twoDaysBefore = Instant(feb_13_2013_18_00_42_0057.millisecondsOfEpoch - twoDaysduration );
     value duration =  feb_13_2013_18_00_42_0057.durationFrom(twoDaysBefore);
     
-   assertEquals( twoDaysduration, duration.milliseconds );
+    assertEquals( twoDaysduration, duration.milliseconds );
+}
+
+shared void testEqualsAndHash() {
+    Instant instanceA_1 = Instant(1380396587);
+    Instant instanceA_2 = Instant(1380396587);
+    Instant instanceB_1 = Instant(1380386587);
+    Instant instanceB_2 = Instant(1380386587);
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }

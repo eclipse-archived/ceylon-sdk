@@ -1,6 +1,6 @@
 import ceylon.time.timezone { timeZone, zoneDateTime, ZoneDateTime, RuleBasedTimezone, OffsetTimeZone }
 import ceylon.time.base { january, december, february, june, milliseconds }
-import ceylon.test { assertEquals, suite }
+import ceylon.test { assertEquals, suite, assertTrue, assertFalse }
 import ceylon.time { date, Date, Time, time, Instant }
 
 Date _2013_01_01 = date(2013, january, 1);
@@ -51,7 +51,8 @@ shared void runZoneDateTimeTests(String suiteName="ZoneDateTime tests") {
     "Testing zone date time plus hours zoned" -> testPlusHoursZoned,
     "Testing zone date time minus hours zoned" -> testMinusHoursZoned,
     "Testing zone date time string" -> testStringZoneDateTime,
-    "Testing zone date time enumerable" -> testEnumerableZoneDateTime
+    "Testing zone date time enumerable" -> testEnumerableZoneDateTime,
+    "Testing zone date time equals and hash" -> testEqualsAndHashZoneDateTime
 );
 }
 
@@ -196,6 +197,25 @@ shared void testEnumerableZoneDateTime() {
     assertEquals(utcZoned.successor.instant.millisecondsOfEpoch, utcZoned.integerValue + 1);
     assertEquals(utcZoned.predecessor.instant.millisecondsOfEpoch, utcZoned.integerValue - 1);
 }
+
+shared void testEqualsAndHashZoneDateTime() {
+    ZoneDateTime instanceA_1 = zoneDateTime(simpleTimeZone, 2013, january, 1);
+    ZoneDateTime instanceA_2 = zoneDateTime(simpleTimeZone, 2013, january, 1);
+    ZoneDateTime instanceB_1 = zoneDateTime(simpleTimeZone, 2013, february, 1);
+    ZoneDateTime instanceB_2 = zoneDateTime(simpleTimeZone, 2013, february, 1);
+    
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+    
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+    
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
+}
+
 
 void assertDateAndTime( Date date, Time time, ZoneDateTime zoneDateTime) {
     assertEquals(date, zoneDateTime.date);

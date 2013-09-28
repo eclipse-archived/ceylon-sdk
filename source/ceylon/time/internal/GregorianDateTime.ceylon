@@ -329,10 +329,19 @@ shared class GregorianDateTime( date, time )
                 return true;
             }
 
-            return day == other.day 
+            return date == other.date 
                 && time == other.time;
         }
         return false;
+    }
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 7;
+        result = prime * result + date.hash;
+        result = prime * result + time.hash;
+        return result;
     }
 
     "Returns ISO-8601 formatted String representation of this _Date and Time of day_.\n
