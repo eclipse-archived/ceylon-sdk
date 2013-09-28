@@ -40,7 +40,7 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
      Given: today().to(tomorrow).duration then duration is 1 day.
      
      Given: tomorrow().to(today).duration then duration is -1 day."
-    shared actual Period period => from.periodTo(to);	
+    shared actual Period period => from.periodTo(to);    
 
     "Returns the Duration between _from_ and _to_ fields.
 
@@ -50,10 +50,13 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
      
      Given: tomorrow().to(today).duration then duration is -86400000 milliseconds."
     shared actual Duration duration  =>
-        Duration(to.instant().millisecondsOfEpoch - from.instant().millisecondsOfEpoch);	
+        Duration(to.instant().millisecondsOfEpoch - from.instant().millisecondsOfEpoch);    
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_."
     shared actual Boolean equals( Object other ) => (super of Range<DateTime, UnitOfDate|UnitOfTime>).equals(other); 
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash => (super of Range<DateTime, UnitOfDate|UnitOfTime>).hash;
 
     "Returns empty or a new Range:
      - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 

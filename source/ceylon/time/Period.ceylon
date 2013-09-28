@@ -55,6 +55,20 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         return false;
     }
 
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        value prime = 31;
+        variable value result = 11;
+        result = prime * result + (years.xor((years.rightLogicalShift(32))));
+        result = prime * result + (months.xor((months.rightLogicalShift(32))));
+        result = prime * result + (days.xor((days.rightLogicalShift(32))));
+        result = prime * result + (hours.xor((hours.rightLogicalShift(32))));
+        result = prime * result + (minutes.xor((minutes.rightLogicalShift(32))));
+        result = prime * result + (seconds.xor((seconds.rightLogicalShift(32))));
+        result = prime * result + (milliseconds.xor((milliseconds.rightLogicalShift(32))));
+        return result;
+    }
+
     "Return the result of comparing this period to the _other_ period."
     shared actual Comparison compare(Period other) {
         Period norm1 = this.normalized();
@@ -299,10 +313,10 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
             }
             return buf.string;
         }
-	}
+    }
 
     "Each field will be scalable independently, and the result will _not_ be normalized"
-	shared actual Period scale(Integer scale) => Period {
+    shared actual Period scale(Integer scale) => Period {
             years = scale * years;
             months = scale * months;
             days = scale * days;

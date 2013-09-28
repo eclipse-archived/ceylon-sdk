@@ -1,14 +1,15 @@
-import ceylon.test { assertEquals, suite }
+import ceylon.test { assertEquals, suite, assertTrue, assertFalse }
 import ceylon.time { date, time, dateTime, Instant, Period }
 import ceylon.time.base { september }
-import ceylon.time.timezone { timeZone }
+import ceylon.time.timezone { timeZone, OffsetTimeZone }
 
 shared void runTimeZoneTests(String suiteName="TimeZone tests") {
     suite(suiteName,
     "Testing timezone date time to instant uses offset" -> testDateTimeToInstantUsesOffset,
     "Testing timezone instant to time uses offset" -> testInstantToTimeUsesOffset,
     "Testing timezone instant to date uses offset" -> testInstantToDateUsesOffset,
-    "Testing timezone instant to date time uses offset" -> testInstantToDateTimeUsesOffset
+    "Testing timezone instant to date time uses offset" -> testInstantToDateTimeUsesOffset,
+    "Testing timezone OffsetTimeZone equals and hash" -> testEqualsAndHashOffsetTimeZone
 );
 }
 
@@ -47,4 +48,22 @@ shared void testInstantToDateTimeUsesOffset() {
     assertEquals( dateTime(2013, september, 02, 12, 00), instant.dateTime( timeZone.utc ) );
     assertEquals( dateTime(2013, september, 03,  2, 00), instant.plus( Period{ hours = 2; }).dateTime( timeZone.offset( 12) ) );
     assertEquals( dateTime(2013, september, 01, 22, 00), instant.minus(Period{ hours = 2; }).dateTime( timeZone.offset(-12) ) );
+}
+
+shared void testEqualsAndHashOffsetTimeZone() {
+    OffsetTimeZone instanceA_1 = OffsetTimeZone(2000);
+    OffsetTimeZone instanceA_2 = OffsetTimeZone(2000);
+    OffsetTimeZone instanceB_1 = OffsetTimeZone(1);
+    OffsetTimeZone instanceB_2 = OffsetTimeZone(1);
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }

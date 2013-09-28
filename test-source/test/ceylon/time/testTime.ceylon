@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals, fail, assertTrue, suite }
+import ceylon.test { assertEquals, fail, assertTrue, suite, assertFalse }
 import ceylon.time { time, Time, Period }
 import ceylon.time.base { seconds, minutes }
 
@@ -64,7 +64,8 @@ shared void runTimeTests(String suiteName="Time tests") {
     "Testing time period from second before negative" -> testPeriodFromSecondBeforeNegative,
     "Testing time period from millisecond before" -> testPeriodFromMillisecondBefore,
     "Testing time period from millisecond before negative" -> testPeriodFromMillisecondBeforeNegative,
-    "Testing time Enumerable" -> testEnumerableTime
+    "Testing time Enumerable" -> testEnumerableTime,
+    "Testing time equals and hash" -> testEqualsAndHashTime
 );
 }
 
@@ -354,6 +355,24 @@ shared void testEnumerableTime() {
     assertEquals(time_14h_20m_07s_59ms.millisecondsOfDay, time_14h_20m_07s_59ms.integerValue);
     assertEquals(time_14h_20m_07s_59ms.successor.millisecondsOfDay, time_14h_20m_07s_59ms.integerValue + 1);
     assertEquals(time_14h_20m_07s_59ms.predecessor.millisecondsOfDay, time_14h_20m_07s_59ms.integerValue - 1);
+}
+
+shared void testEqualsAndHashTime() {
+    Time instanceA_1 = time(10,9,8,7);
+    Time instanceA_2 = time(10,9,8,7);
+    Time instanceB_1 = time(20,0);
+    Time instanceB_2 = time(20,0);
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
 void assertFromToTime( Period period, Time from, Time to ) {

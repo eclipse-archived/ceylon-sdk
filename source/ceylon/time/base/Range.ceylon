@@ -2,7 +2,7 @@ import ceylon.time { Duration, Period }
 
 "An interface to represent a Range between same kinds of _Date_ or _DateTime_ or _Time_."
 shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
-                                given Element satisfies Comparable<Element> & Ordinal<Element> {
+                                given Element satisfies Comparable<Element> & Ordinal<Element> & Enumerable<Element> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as
@@ -87,6 +87,15 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
             return from == other.from && to == other.to;
         }
         return false;
+    }
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 1;
+        result = prime * result + from.hash;
+        result = prime * result + to.hash;
+        return result;
     }
 
     "Define how this Range will get next or previous element while iterating."

@@ -26,6 +26,13 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
         return false;
     }
 
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        value prime = 31;
+        value result = 11;
+        return prime * result + (offsetMilliseconds.xor((offsetMilliseconds.rightLogicalShift(32))));
+    }
+
 }
 
 "This represents offsets based on daylight saving time."

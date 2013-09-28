@@ -258,6 +258,28 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
         return builder.string;
     }
 
+    "Returns _true_ if given value is same type, date and time."
+    shared actual Boolean equals( Object other ) {
+        if (is GregorianZonedDateTime other) {
+            if (this === other){
+                return true;
+            }
+        
+            return instant == other.instant 
+                && timeZone == other.timeZone;
+        }
+        return false;
+    }
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 17;
+        result = prime * result + instant.hash;
+        result = prime * result + timeZone.hash;
+        return result;
+    }
+
     "Fix [[DateTime]] zone absence."
     GregorianZonedDateTime adjust( DateTime resolved ) {
         value zoneMillisecondsOfEpoch = unixTime.timeFromFixed(resolved.dayOfEra) + resolved.millisecondsOfDay;

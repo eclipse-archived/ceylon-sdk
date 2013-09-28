@@ -87,4 +87,11 @@ shared class Instant(millisecondsOfEpoch)
         return false;
     }
 
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        value prime = 31;
+        value result = 1;
+        return prime * result + (millisecondsOfEpoch.xor((millisecondsOfEpoch.rightLogicalShift(32))));
+    }
+
 }
