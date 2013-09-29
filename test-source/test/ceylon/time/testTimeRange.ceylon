@@ -8,8 +8,7 @@ TimeRange lastQuarterDay = time(18, 0).rangeTo(time(23, 59));
 
 shared void runTimeRangeTests(String suiteName="TimeRange tests") {
     suite(suiteName,
-    "Testing time range equals" -> testEqualsTimeRange,
-    "Testing time range not equals inverted" -> testNotEqualsTimeRangeInverted,
+    "Testing time range equals and hash" -> testEqualsAndHashTimeRange,
     "Testing time range step" -> testStepTime,
     "Testing time range any exist time" -> testAnyExistTime,
     "Testing time range any not exist time" -> testAnyNotExistTime,
@@ -31,12 +30,25 @@ shared void runTimeRangeTests(String suiteName="TimeRange tests") {
 );
 }
 
-shared void testEqualsTimeRange() {
-    assertTrue(firstQuarterDay.equals(time(0,0).rangeTo(time(6,0))));
-}
+shared void testEqualsAndHashTimeRange() {
 
-shared void testNotEqualsTimeRangeInverted() {
-    assertFalse(firstQuarterDay.equals(time(6,0).rangeTo(time(0,0))));
+    TimeRange instanceA_1 = time(6,0).rangeTo(time(18,0));
+    TimeRange instanceA_2 = time(6,0).rangeTo(time(18,0));
+
+    TimeRange instanceB_1 = firstQuarterDay;
+    TimeRange instanceB_2 = time(0, 0).rangeTo(time(6, 0));
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
+
 }
 
 shared void testStepTime() {

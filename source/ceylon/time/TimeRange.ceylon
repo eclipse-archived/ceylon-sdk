@@ -41,7 +41,7 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Un
      Given: today().to(tomorrow).duration then duration is 1 day.
      
      Given: tomorrow().to(today).duration then duration is -1 day."
-    shared actual Period period => from.periodTo(to);	
+    shared actual Period period => from.periodTo(to);
 
     "Returns the Duration between _from_ and _to_ fields.
 
@@ -50,15 +50,16 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Un
      Given: today().to(tomorrow).duration then duration is 86400000 milliseconds.
      
      Given: tomorrow().to(today).duration then duration is -86400000 milliseconds."
-    shared actual Duration duration => Duration(to.millisecondsOfDay - from.millisecondsOfDay);	
+    shared actual Duration duration => Duration(to.millisecondsOfDay - from.millisecondsOfDay);
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_."
-    shared actual Boolean equals( Object other ) {
-        return (super of Range<Time, UnitOfTime>).equals(other); 
-    }
+    shared actual Boolean equals( Object other ) => (super of Range<Time, UnitOfTime>).equals(other);
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash => (super of Range<Time, UnitOfTime>).hash;
 
     "Returns empty or a new Range:
-     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
+     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A]
      - The precision is based on the lowest unit 
      - When the new Range exists it will follow these rules:\n
      Given: [A..B] overlap [C..D]\n 
@@ -84,10 +85,10 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Un
     }
 
     "Returns empty or a new Range:
-     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
-     - The precision is based on the lowest unit 
+     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A]
+     - The precision is based on the lowest unit
      - When the new Range exists it will follow these rules:\n
-     Given: [A..B] gap [C..D]\n 
+     Given: [A..B] gap [C..D]\n
      When: AB < CD\n
          [1..2] gap [5..6] = (2,5)\n
          [1..2] gap [6..5] = (2,5)\n

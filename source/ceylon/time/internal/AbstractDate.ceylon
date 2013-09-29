@@ -4,7 +4,7 @@ import ceylon.time { Date }
 shared abstract class AbstractDate( dayOfEra )
        satisfies Date {
 
-    "Every [[Date]] implementation should indicate it own _day of ere_ based in it´s own chronology."
+    "Every [[Date]] implementation should indicate it´s own _day of era_ based in it´s own chronology."
     shared actual Integer dayOfEra;
 
     //TODO: How to deal with two dates of different chronology, maybe compare should use _Rata Die_?
@@ -20,6 +20,14 @@ shared abstract class AbstractDate( dayOfEra )
             return dayOfEra.equals(other.dayOfEra);
         }
         return false;
+    }
+
+    //TODO: When we have another chronology this should be revisited.
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        value prime = 31;
+        value result = 7;
+        return prime * result + dayOfEra.hash;
     }
 
 }

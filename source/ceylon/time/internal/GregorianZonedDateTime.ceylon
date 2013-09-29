@@ -15,8 +15,8 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
     "All operations of this implementations is based in this Instant."
     shared actual Instant instant;
 
-    "Comparing [[ZoneDateTime]] is based on [[Instant]] and should not be 
-     compared as it´s human representation as they are adjusted based on geographic and regional (DST) 
+    "Comparing [[ZoneDateTime]] is based on [[Instant]] and should not be
+     compared as it´s human representation as they are adjusted based on geographic and regional (DST)
      locations and do not represent a comparison correct."
     shared actual Comparison compare(ZoneDateTime other) {
         return instant <=> other.instant;
@@ -149,7 +149,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
 
     "Adds number of months to this _zoned date and time_ and returns the resulting date.
      
-     **Note:** Day of month value of the resulting date will be truncated to the 
+     **Note:** Day of month value of the resulting date will be truncated to the
      valid range of the target date if necessary.
      
      This means for example, that `date(2013, 1, 31).plusMonths(1)` will return
@@ -254,8 +254,30 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
         value builder = StringBuilder();
         builder.append(instant.dateTime(timeZone).string);
         builder.append( offset >= 0 then "+" else "-" );
-        builder.append( "``leftPad((offset / ms.perHour).magnitude)``:``leftPad(offset % ms.perHour)``" ); 
+        builder.append( "``leftPad((offset / ms.perHour).magnitude)``:``leftPad(offset % ms.perHour)``" );
         return builder.string;
+    }
+
+    "Returns _true_ if given value is same type, date and time."
+    shared actual Boolean equals( Object other ) {
+        if (is GregorianZonedDateTime other) {
+            if (this === other){
+                return true;
+            }
+        
+            return instant == other.instant 
+                && timeZone == other.timeZone;
+        }
+        return false;
+    }
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 21;
+        result = prime * result + instant.hash;
+        result = prime * result + timeZone.hash;
+        return result;
     }
 
     "Fix [[DateTime]] zone absence."

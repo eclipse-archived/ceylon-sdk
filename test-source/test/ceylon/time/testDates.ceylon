@@ -92,7 +92,8 @@ shared void runDateTests(String suiteName="Date tests") {
     "Testing date period from negative day" -> testPeriodFromNegativeDay,
     "Testing date period from equal date" -> testPeriodFromEqualDate,
     "Testing date period from after date" -> testPeriodFromAfterDate,
-    "Testing date Enumerable<Integer, Date> date" -> testEnumerableDate
+    "Testing date Enumerable<Integer, Date> date" -> testEnumerableDate,
+    "Testing date equals and hash" -> testEqualsAndHashDate
     );
 }
 
@@ -618,6 +619,24 @@ shared void testEnumerableDate() {
     assertEquals(data_1982_12_13.dayOfEra, data_1982_12_13.integerValue);
     assertEquals(data_1982_12_13.successor.dayOfEra, data_1982_12_13.integerValue + 1);
     assertEquals(data_1982_12_13.predecessor.dayOfEra, data_1982_12_13.integerValue - 1);
+}
+
+shared void testEqualsAndHashDate() {
+    Date instanceA_1 = date(2013, december, 13);
+    Date instanceA_2 = date(2013, december, 13);
+    Date instanceB_1 = date(1974, january, 1);
+    Date instanceB_2 = date(1974, january, 1);
+
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
 void assertFromAndTo( Period period, Date from, Date to ) {

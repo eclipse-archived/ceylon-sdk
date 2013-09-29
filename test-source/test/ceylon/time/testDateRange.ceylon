@@ -7,8 +7,7 @@ DateRange jan_date_range_reverse = date(2013, january, 31).rangeTo(date(2013, ja
 
 shared void runDateRangeTests(String suiteName="DateRange tests") {
     suite(suiteName,
-    "Testing date range equals" -> testEqualsDateRange,
-    "Testing date range not equals inverted" -> testNotEqualsDateRangeInverted,
+    "Testing date range equals and hash" -> testEqualsAndHashDateRange,
     "Testing date range step days" -> testStepDays,
     "Testing date range step months" -> testStepMonths,
     "Testing date range step years" -> testStepYears,
@@ -35,12 +34,22 @@ shared void runDateRangeTests(String suiteName="DateRange tests") {
 );
 }
 
-shared void testEqualsDateRange() {
-    assertTrue(jan_date_range.equals(date(2013, january, 1).rangeTo(date(2013, january, 31))));
-}
-
-shared void testNotEqualsDateRangeInverted() {
-    assertFalse(jan_date_range.equals(date(2013, january, 31).rangeTo(date(2013, january, 1))));
+shared void testEqualsAndHashDateRange() {
+    DateRange instanceA_1 = date(2013, january, 1).rangeTo(date(2013, january, 31));
+    DateRange instanceA_2 = date(2013, january, 1).rangeTo(date(2013, january, 31));
+    DateRange instanceB_1 = date(2013, december, 1).rangeTo(date(2013, december, 31));
+    DateRange instanceB_2 = date(2013, december, 1).rangeTo(date(2013, december, 31));
+    
+    assertTrue(instanceA_1 == instanceA_2);
+    assertTrue(instanceA_1.hash == instanceA_2.hash);
+    
+    assertTrue(instanceB_1 == instanceB_2);
+    assertTrue(instanceB_1.hash == instanceB_2.hash);
+    
+    assertFalse(instanceA_1 == instanceB_1);
+    assertFalse(instanceA_2 == instanceB_1);
+    assertFalse(instanceA_1.hash == instanceB_1.hash);
+    assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
 shared void testStepDays() {

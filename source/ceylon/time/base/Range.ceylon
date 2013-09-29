@@ -2,7 +2,7 @@ import ceylon.time { Duration, Period }
 
 "An interface to represent a Range between same kinds of _Date_ or _DateTime_ or _Time_."
 shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
-                                given Element satisfies Comparable<Element> & Ordinal<Element> {
+                                given Element satisfies Comparable<Element> & Ordinal<Element> & Enumerable<Element> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as
@@ -44,8 +44,8 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
     shared formal Period period;
     
     "Returns empty or a new Range:
-     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
-     - The precision is based on the lowest unit 
+     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A]
+     - The precision is based on the lowest unit
      - When the new Range exists it will follow these rules:\n
      Given: [A..B] overlap [C..D]\n 
      When: AB < CD\n
@@ -78,7 +78,7 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
          [5..6] gap [1..2] = (2,5)\n
          [5..6] gap [2..1] = (2,5)\n
          [6..5] gap [1..2] = (2,5)\n
-         [6..5] gap [2..1] = (2,5)"    
+         [6..5] gap [2..1] = (2,5)"
     shared formal Range<Element, StepBy>|Empty gap( Range<Element, StepBy> other );
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_."
@@ -87,6 +87,15 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
             return from == other.from && to == other.to;
         }
         return false;
+    }
+
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 1;
+        result = prime * result + from.hash;
+        result = prime * result + to.hash;
+        return result;
     }
 
     "Define how this Range will get next or previous element while iterating."
