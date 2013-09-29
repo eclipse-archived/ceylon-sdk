@@ -24,8 +24,8 @@ object simpleDstTimeZone satisfies RuleBasedTimezone {
 
     shared actual Integer offset(Instant instant)  {
         return ( start <= instant <= end )
-                    then process.timezoneOffset + dstOffset 
-                    else process.timezoneOffset;   
+                    then system.timezoneOffset + dstOffset 
+                    else system.timezoneOffset;   
     }
     
 }
@@ -180,7 +180,7 @@ shared void testMinusHoursZoned() {
 }
 
 shared void testStringZoneDateTime() {
-//TODO: need refactor to get current  process.timezoneOffset and formatt it to confirm string method is correct.
+//TODO: need refactor to get current  system.timezoneOffset and formatt it to confirm string method is correct.
     //assertEquals("2013-01-01T00:00:00.000-04:00", _dst_2013_01_01.string);
     //assertEquals("2013-06-01T00:00:00.000-03:00", zoneDateTime(simpleDstTimeZone, 2013, june, 1).string);
     assertEquals("2013-06-01T00:00:00.000-04:00", zoneDateTime(simpleTimeZone, 2013, june, 1).string);
