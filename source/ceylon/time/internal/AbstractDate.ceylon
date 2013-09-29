@@ -27,7 +27,7 @@ shared abstract class AbstractDate( dayOfEra )
     shared actual Integer hash {
         value prime = 31;
         value result = 5;
-        return prime * result + (integerValue.xor((integerValue.rightLogicalShift(32))));
+        return prime * result + (dayOfEra.xor((dayOfEra.rightLogicalShift(32))));
     }
 
 }
