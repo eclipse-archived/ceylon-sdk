@@ -51,7 +51,7 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate
      
      Given: tomorrow().to(today).duration then duration is -86400000 milliseconds."
     shared actual Duration duration =>
-        Duration((to.dayOfEra - from.dayOfEra) * milliseconds.perDay);    
+        Duration((to.dayOfEra - from.dayOfEra) * milliseconds.perDay);
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_."
     shared actual Boolean equals( Object other ) => (super of Range<Date, UnitOfDate>).equals(other);

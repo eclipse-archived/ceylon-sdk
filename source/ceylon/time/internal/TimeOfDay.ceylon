@@ -37,7 +37,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     shared actual Time predecessor => minusMilliseconds(1);
 
     "For successor its used the lowest unit of time, this way we can benefit
-     from maximum precision. In this case the sucessor is the current value plus 1 millisecond."    
+     from maximum precision. In this case the sucessor is the current value plus 1 millisecond."
     shared actual Time successor => plusMilliseconds(1);
 
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
@@ -86,7 +86,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
      and returns the result as new time of day."
     shared actual Time minusMilliseconds(Integer milliseconds) => plusMilliseconds( -milliseconds );
 
-    "Adds specified time period to this time of day 
+    "Adds specified time period to this time of day
      and returns the result as new time of day."
     shared actual Time plus(ReadableTimePeriod period){
         value totalMillis = millisecondsOfDay
@@ -100,7 +100,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
                then this else TimeOfDay(time);
     }
 
-    "Subtracts specified time period from this time of day 
+    "Subtracts specified time period from this time of day
      and returns the result as new time of day."
     shared actual Time minus(ReadableTimePeriod period) {
         value totalMillis = millisecondsOfDay
@@ -165,7 +165,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     shared actual Integer hash {
         value prime = 31;
         value result = 3;
-        return prime * result + (millisecondsOfDay.xor((millisecondsOfDay.rightLogicalShift(32))));
+        return prime * result + millisecondsOfDay.hash;
     }
 
     "Returns the period between this and the given time.\n

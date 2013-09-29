@@ -29,8 +29,8 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
     shared actual Integer hash {
         value prime = 31;
-        value result = 11;
-        return prime * result + (offsetMilliseconds.xor((offsetMilliseconds.rightLogicalShift(32))));
+        value result = 7;
+        return prime * result + offsetMilliseconds.hash;
     }
 
 }

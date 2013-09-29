@@ -26,8 +26,8 @@ shared abstract class AbstractDate( dayOfEra )
     "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
     shared actual Integer hash {
         value prime = 31;
-        value result = 5;
-        return prime * result + (dayOfEra.xor((dayOfEra.rightLogicalShift(32))));
+        value result = 7;
+        return prime * result + dayOfEra.hash;
     }
 
 }
