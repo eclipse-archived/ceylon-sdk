@@ -21,7 +21,7 @@
    Assertions can be evaluated by using the language's `assert` statement 
    or with the various `assert...` functions, for example:
    ```
-   assert(is Hobit frodo);
+   assert(is Hobbit frodo);
    assert(exists ring);
 	
    assertNotEquals(frodo, sauron);
