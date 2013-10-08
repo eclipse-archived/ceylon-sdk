@@ -44,8 +44,8 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
     shared formal Period period;
     
     "Returns empty or a new Range:
-     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A] 
-     - The precision is based on the lowest unit 
+     - Each Range is considered a _set_ then [A..B] is equivalent to [B..A]
+     - The precision is based on the lowest unit
      - When the new Range exists it will follow these rules:\n
      Given: [A..B] overlap [C..D]\n 
      When: AB < CD\n
@@ -78,7 +78,7 @@ shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
          [5..6] gap [1..2] = (2,5)\n
          [5..6] gap [2..1] = (2,5)\n
          [6..5] gap [1..2] = (2,5)\n
-         [6..5] gap [2..1] = (2,5)"    
+         [6..5] gap [2..1] = (2,5)"
     shared formal Range<Element, StepBy>|Empty gap( Range<Element, StepBy> other );
 
     "Returns true if both: this and other are same type and have equal fields _from_ and _to_."

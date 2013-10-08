@@ -15,10 +15,10 @@ shared Instant now(Clock? clock = null) {
  
  An instant represents a single point in time irrespective of 
  any time-zone offsets or geographical locations."
-shared class Instant(millisecondsOfEpoch) 
+shared class Instant(millisecondsOfEpoch)
     satisfies ReadableInstant & Comparable<Instant> {
 
-    "Internal value of an instant as a number of milliseconds since 
+    "Internal value of an instant as a number of milliseconds since
      1970-01-01T00:00:00.000Z."
     shared actual Integer millisecondsOfEpoch;
 
@@ -91,7 +91,7 @@ shared class Instant(millisecondsOfEpoch)
     shared actual Integer hash {
         value prime = 31;
         value result = 1;
-        return prime * result + (millisecondsOfEpoch.xor((millisecondsOfEpoch.rightLogicalShift(32))));
+        return prime * result + millisecondsOfEpoch.hash;
     }
 
 }

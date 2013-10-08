@@ -58,14 +58,14 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
     "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
     shared actual Integer hash {
         value prime = 31;
-        variable value result = 11;
-        result = prime * result + (years.xor((years.rightLogicalShift(32))));
-        result = prime * result + (months.xor((months.rightLogicalShift(32))));
-        result = prime * result + (days.xor((days.rightLogicalShift(32))));
-        result = prime * result + (hours.xor((hours.rightLogicalShift(32))));
-        result = prime * result + (minutes.xor((minutes.rightLogicalShift(32))));
-        result = prime * result + (seconds.xor((seconds.rightLogicalShift(32))));
-        result = prime * result + (milliseconds.xor((milliseconds.rightLogicalShift(32))));
+        variable value result = 17;
+        result = prime * result + years.hash;
+        result = prime * result + months.hash;
+        result = prime * result + days.hash;
+        result = prime * result + hours.hash;
+        result = prime * result + minutes.hash;
+        result = prime * result + seconds.hash;
+        result = prime * result + milliseconds.hash;
         return result;
     }
 
@@ -74,7 +74,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         Period norm1 = this.normalized();
         Period norm2 = other.normalized();
 
-        return norm1.years != norm2.years          then norm1.years   <=> norm2.years 
+        return norm1.years != norm2.years          then norm1.years   <=> norm2.years
             else ( norm1.months != norm2.months    then norm1.months  <=> norm2.months
             else ( norm1.days != norm2.days        then norm1.days    <=> norm2.days
             else ( norm1.hours != norm2.hours      then norm1.hours   <=> norm2.hours
@@ -237,14 +237,14 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
         return this;
     }
 
-    "Returns a copy of this period with all amounts normalized to the 
+    "Returns a copy of this period with all amounts normalized to the
      standard ranges for date/time fields.
      
      Two normalizations occur, one for years and months, and one for
      hours, minutes, seconds and milliseconds.
      
      Days are not normalized, as a day may vary in length at daylight savings cutover.
-     Neither is days normalized into months, as number of days per month varies from 
+     Neither is days normalized into months, as number of days per month varies from
      month to another and depending on the leap year."
     shared actual Period normalized(){
         if (this == zero) {

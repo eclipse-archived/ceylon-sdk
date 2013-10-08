@@ -153,7 +153,7 @@ shared class GregorianDateTime( date, time )
             return this;
         }
 
-        value signal = minutes >= 0 then 1 else -1; 
+        value signal = minutes >= 0 then 1 else -1;
         return fromTime{ minutes = minutes * signal; signal = signal; };
     }
 
@@ -338,7 +338,7 @@ shared class GregorianDateTime( date, time )
     "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
     shared default actual Integer hash {
         value prime = 31;
-        variable Integer result = 7;
+        variable Integer result = 11;
         result = prime * result + date.hash;
         result = prime * result + time.hash;
         return result;
