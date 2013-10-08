@@ -2,7 +2,7 @@ package ceylon.interop.java;
 
 import java.util.Collection;
 
-@com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 5)
+@com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 6)
 @ceylon.language.DocAnnotation$annotation(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
 @ceylon.language.SharedAnnotation$annotation
 @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation(value = "doc", arguments = {"Takes a Ceylon list of items and turns them into a Java `Collection`"}), @com.redhat.ceylon.compiler.java.metadata.Annotation("shared")})

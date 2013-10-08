@@ -11,7 +11,7 @@ import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor.Class;
 
-@Ceylon(major = 5)
+@Ceylon(major = 6)
 @Method
 @DocAnnotation$annotation(description = "Returns the Java `Class` reference for type `T`")
 @SharedAnnotation$annotation
