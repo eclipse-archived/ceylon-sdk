@@ -1,5 +1,5 @@
-module test.ceylon.math '0.6.1' {
+module test.ceylon.math "1.0.0" {
     import java.base '7';
-    import ceylon.math '0.6.1';
-    import ceylon.test '0.6.1';
+    import ceylon.math "1.0.0";
+    import ceylon.test "1.0.0";
 }

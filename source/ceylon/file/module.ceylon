@@ -108,6 +108,6 @@
      }
  "
 by("Gavin King")
-module ceylon.file '0.6.1' {
+module ceylon.file "1.0.0" {
     import java.base '7';
 }

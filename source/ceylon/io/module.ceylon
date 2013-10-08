@@ -6,8 +6,8 @@
  See the `ceylon.io` package for usage examples."
 by("Stéphane Épardaud")
 license("Apache Software License")
-module ceylon.io '0.6.1' {
-    shared import ceylon.file '0.6.1';
-    import ceylon.collection '0.6.1';
+module ceylon.io "1.0.0" {
+    shared import ceylon.file "1.0.0";
+    import ceylon.collection "1.0.0";
     import java.base '7';
 }

@@ -1,4 +1,4 @@
-module test.ceylon.time '0.6.1' {
-    import ceylon.time '0.6.1';
-    import ceylon.test '0.6.1';
+module test.ceylon.time "1.0.0" {
+    import ceylon.time "1.0.0";
+    import ceylon.test "1.0.0";
 }

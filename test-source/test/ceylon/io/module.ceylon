@@ -1,7 +1,7 @@
-module test.ceylon.io '0.6.1' {
-    import ceylon.test '0.6.1';
-    import ceylon.file '0.6.1';
-    import ceylon.io '0.6.1';
-    import ceylon.net '0.6.1';
-    import ceylon.collection '0.6.1';
+module test.ceylon.io "1.0.0" {
+    import ceylon.test "1.0.0";
+    import ceylon.file "1.0.0";
+    import ceylon.io "1.0.0";
+    import ceylon.net "1.0.0";
+    import ceylon.collection "1.0.0";
 }

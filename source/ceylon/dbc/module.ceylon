@@ -4,9 +4,9 @@
  that has been already been configured. "
 by("Enrique Zamudio")
 license("Apache Software License 2.0")
-module ceylon.dbc '0.6.1' {
-    import ceylon.collection '0.6.1';
-    shared import ceylon.math '0.6.1';
+module ceylon.dbc "1.0.0" {
+    import ceylon.collection "1.0.0";
+    shared import ceylon.math "1.0.0";
     import java.base '7';
     shared import java.jdbc '7';
 }

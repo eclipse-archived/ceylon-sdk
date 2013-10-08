@@ -1,6 +1,6 @@
 "A selection of utility methods for accessing Unicode information
  about `Character`s."
 by("Tom Bentley")
-module ceylon.unicode "0.6.1" {
+module ceylon.unicode "1.0.0" {
     shared import java.base "7";
 }
