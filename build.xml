@@ -245,4 +245,39 @@
             </fileset>
         </copy>
     </target>
+
+    <target name="publish-herd">
+	<fail message="Please specify a target Herd upload repo url with -Dherd.repo=..." unless="herd.repo"/>
+	<fail message="Please specify a target Herd user name with -Dherd.user=..." unless="herd.user"/>
+	<fail message="Please specify a target Herd password with -Dherd.pass=..." unless="herd.pass"/>
+        
+        <ceylon-compile executable="${ceylon.executable}"
+            verbose="${ceylon.verbosity}"
+	    out="${herd.repo}"
+	    user="${herd.user}"
+	    pass="${herd.pass}"
+            encoding="UTF-8">
+            <moduleset refid="modules.sdk.jvm"/>
+        </ceylon-compile>
+        
+        <ceylon-compile-js executable="${ceylon.executable}"
+            verbose="${ceylon.verbosity}"
+	    out="${herd.repo}"
+	    user="${herd.user}"
+	    pass="${herd.pass}"
+            encoding="UTF-8">
+            <moduleset refid="modules.sdk.js"/>
+        </ceylon-compile-js>
+
+        <ceylon-doc executable="${ceylon.executable}"
+            includesourcecode="true"
+            nomtimecheck="true"
+	    out="${herd.repo}"
+	    user="${herd.user}"
+	    pass="${herd.pass}"
+            encoding="UTF-8">
+            <moduleset refid="modules.sdk.jvm"/>
+        </ceylon-doc>
+        
+    </target>
 </project>
