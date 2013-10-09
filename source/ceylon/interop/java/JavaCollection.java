@@ -1,6 +1,5 @@
 package ceylon.interop.java;
 
-import java.util.Collection;
 
 @com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 6)
 @ceylon.language.DocAnnotation$annotation(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
