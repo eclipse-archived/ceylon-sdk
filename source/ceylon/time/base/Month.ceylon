@@ -115,7 +115,7 @@ shared object april extends Month(gregorian.april) {
 }
 
 "May. The fifth month of a gregorian calendar system."
-shared object may extends Month(5) {
+shared object may extends Month(gregorian.may) {
     shared actual String string = "may";
     shared actual Month predecessor => april;
     shared actual Month successor => june;
