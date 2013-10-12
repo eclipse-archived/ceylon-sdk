@@ -17,8 +17,9 @@ shared interface MutableList<Element> satisfies List<Element> {
      is expanded if `index > size`."
     shared formal void insert(Integer index, Element val);
 
-    "Remove the item at the specified index."
-    shared formal void remove(Integer index);
+    "Remove the item at the specified index, returning the
+     removed item, or null if there was no such item."
+    shared formal Element? remove(Integer index);
 
     "Remove all occurrences of the given value from this
      list."
@@ -26,4 +27,13 @@ shared interface MutableList<Element> satisfies List<Element> {
 
     "Remove every item from this list, leaving an empty list."
     shared formal void clear();
+    
+    "Remove the item with index `0` from this list, returning 
+     the removed item, or null if there was no such item."
+    shared default Element? removeFirst() => remove(0);
+    
+    "Remove the item with index `size-1` from this list, 
+     returning the removed item, or null if there was no such 
+     item."
+    shared default Element? removeLast() => remove(size-1);
 }

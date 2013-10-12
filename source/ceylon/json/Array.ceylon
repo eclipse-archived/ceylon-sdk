@@ -83,8 +83,8 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.insert(index, val);
     }
     
-    shared actual void remove(Integer index) {
-        list.remove(index);
+    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? remove(Integer index) {
+        return list.remove(index);
     }
 
     shared actual void removeElement(String|Boolean|Integer|Float|Object|Array|NullInstance val) {

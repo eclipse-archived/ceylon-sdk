@@ -109,7 +109,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     }
     
     "Removes the item at the specified index"
-    shared actual void remove(Integer index){
+    shared actual Element? remove(Integer index){
         if(index < _size){
             variable Cell<Element>? iter = head;
             variable Cell<Element>? prev = null;
@@ -127,14 +127,14 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
                         tail = prev;
                     }
                     _size--;
-                    return;
+                    return cell.car;
                 }
                 prev = iter;
                 iter = cell.cdr;
             }
+            assert (false);
         }else{
-            // FIXME
-            throw;
+            return null;
         }
     }
 
