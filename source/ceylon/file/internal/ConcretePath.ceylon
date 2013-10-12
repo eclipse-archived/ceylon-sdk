@@ -110,7 +110,8 @@ class ConcretePath(jpath)
                 return ConcreteLink(jpath);
             }
             else {
-                throw;
+                throw Exception("unknown file type: " +
+                        jpath.string);
             }
         }
         else {
