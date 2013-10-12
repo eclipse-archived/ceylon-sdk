@@ -27,7 +27,7 @@ import org.xnio {
 import org.xnio.channels { AcceptingChannel }
 import io.undertow.server { HttpOpenListener, HttpHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stoping, stopped, Endpoint, AsynchronousEndpoint, InternalException }
+import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stopping, stopped, Endpoint, AsynchronousEndpoint, InternalException }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
@@ -139,7 +139,7 @@ shared class DefaultServer() satisfies Server {
     
     shared actual void stop() {
         if (exists w = worker) {
-            notifyListeners(stoping);
+            notifyListeners(stopping);
             w.shutdown();
             //TODO log
             print("Httpd stopped.");

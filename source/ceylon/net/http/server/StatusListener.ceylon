@@ -1,5 +1,5 @@
 "Listeners are called on httpd status changes. Statuses 
- are: [[starting]], [[started]], [[stoping]], [[stopped]]."
+ are: [[starting]], [[started]], [[stopping]], [[stopped]]."
 by("Matej Lazar")
 see(`class Status`)
 shared interface StatusListener {
