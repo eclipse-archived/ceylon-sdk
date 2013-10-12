@@ -1,5 +1,6 @@
 "A [[List]] supporting addition, insertion, removal, and 
  mutation of its elements."
+see (`interface MutableMap`, `interface MutableSet`)
 by("Stéphane Épardaud")
 shared interface MutableList<Element> satisfies List<Element> {
 
