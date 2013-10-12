@@ -18,12 +18,8 @@
      value filePath = home.childPath(\"hello.txt\");
      if (is Nil loc = filePath.resource) {
          value file = loc.createFile();
-         value writer = file.writer();
-         try {
+         try (writer = file.Overwriter()) {
              writer.writeLine(\"Hello, World!\");
-         }
-         finally {
-             writer.destroy();
          }
      }
      else {
@@ -34,12 +30,8 @@
  
      value filePath = home.childPath(\"hello.txt\");
      if (is File file = filePath.resource) {
-         value reader = file.reader();
-         try {
+         try (reader = file.Reader()) {
              print(reader.readLine());
-         }
-         finally {
-             reader.destroy();
          }
      }
      else {

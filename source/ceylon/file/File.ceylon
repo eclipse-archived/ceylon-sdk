@@ -1,4 +1,5 @@
 import ceylon.file.internal { sameFileInternal=sameFile }
+import ceylon.file { AbstractReader=Reader, AbstractWriter=Writer }
 
 "Represents a file in a hierarchical file system."
 shared interface File 
@@ -58,29 +59,64 @@ shared interface File
     
     "A `Reader` for reading lines of text from this
      file."
-    shared formal Reader reader(
+    shared formal class Reader(
             "The character encoding to use, where
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding=null);
+            String? encoding)
+                satisfies AbstractReader {}
     
     "A `Writer` for writing text to this file, after
      truncating the file to length 0."
-    shared formal Writer writer(
+    shared formal class Overwriter(
             "The character encoding to use, where
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding=null);
+            String? encoding) 
+                satisfies AbstractWriter {}
     
     "A `Writer` for appending text to this file"
-    shared formal Writer appender(
+    shared formal class Appender(
             "The character encoding to use, where
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding=null);
+            String? encoding) 
+                satisfies AbstractWriter {}
+    
+    "A `Reader` for reading lines of text from this
+     file."
+    deprecated ("Use [[Reader]] instead.")
+    shared AbstractReader reader(
+            "The character encoding to use, where
+             `null` indicates that the platform 
+             default character encoding should be
+             used."
+            String? encoding=null)
+                => Reader(encoding);
+    
+    "A `Writer` for writing text to this file, after
+     truncating the file to length 0."
+    deprecated ("Use [[Overwriter]] instead.")
+    shared AbstractWriter writer(
+            "The character encoding to use, where
+             `null` indicates that the platform 
+             default character encoding should be
+             used."
+            String? encoding=null)
+                => Overwriter(encoding);
+    
+    "A `Writer` for appending text to this file"
+    deprecated ("Use [[Appender]] instead.")
+    shared AbstractWriter appender(
+            "The character encoding to use, where
+             `null` indicates that the platform 
+             default character encoding should be
+             used."
+            String? encoding=null)
+                => Appender(encoding);
 }
 
 shared Boolean sameFile(File x, File y) => sameFileInternal(x, y);

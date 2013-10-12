@@ -8,9 +8,12 @@ import java.nio.file { JPath=Path,
                                newLink=createLink, 
                                deletePath=delete,
                                getOwner, setOwner,
-                               newSymbolicLink=createSymbolicLink },
-                       StandardCopyOption { REPLACE_EXISTING } }
+                               newSymbolicLink=createSymbolicLink,
+                               newBufferedReader, newBufferedWriter },
+                       StandardCopyOption { REPLACE_EXISTING },
+                       StandardOpenOption { WRITE, APPEND, TRUNCATE_EXISTING } }
 import java.nio.file.attribute { FileTime { fromMillis } }
+import java.nio.charset { Charset }
 
 
 class ConcreteFile(JPath jpath)
@@ -66,14 +69,14 @@ class ConcreteFile(JPath jpath)
     
     store => ConcreteStore(getFileStore(jpath));
     
-    reader(String? encoding) =>
-            ConcreteReader(jpath, parseCharset(encoding));
-    
-    writer(String? encoding) =>
-            ConcreteWriter(jpath, parseCharset(encoding));
-    
-    appender(String? encoding) =>
-            ConcreteAppendingWriter(jpath, parseCharset(encoding));
+    //reader(String? encoding) =>
+    //        ConcreteReader(jpath, parseCharset(encoding));
+    //
+    //writer(String? encoding) =>
+    //        ConcreteWriter(jpath, parseCharset(encoding));
+    //
+    //appender(String? encoding) =>
+    //        ConcreteAppendingWriter(jpath, parseCharset(encoding));
     
     path => ConcretePath(jpath);
     
@@ -88,6 +91,56 @@ class ConcreteFile(JPath jpath)
         setOwner(jpath, jprincipal(jpath,owner));
     }
     
+    shared actual class Reader(String? encoding) 
+            extends super.Reader(encoding) {
+        value charset = parseCharset(encoding);
+        
+        value r = newBufferedReader(jpath, charset);
+        
+        readLine() => r.readLine();
+        
+        destroy() => r.close();
+        
+    }
+    
+    shared actual class Overwriter(String? encoding) 
+            extends super.Overwriter(encoding) {
+        value charset = parseCharset(encoding);
+        
+        value w = newBufferedWriter(jpath, charset, 
+                \iWRITE, \iTRUNCATE_EXISTING);
+        
+        destroy() => w.close();
+        
+        write(String string) => w.write(string);
+        
+        shared actual void writeLine(String line) {
+            w.write(line); w.newLine();
+        }
+        
+        flush() => w.flush();
+        
+    }
+    
+    shared actual class Appender(String? encoding) 
+            extends super.Appender(encoding) {
+        value charset = parseCharset(encoding);
+        
+        value w = newBufferedWriter(jpath, charset, 
+                \iWRITE, \iAPPEND);
+        
+        destroy() => w.close();
+        
+        write(String string) => w.write(string);
+        
+        shared actual void writeLine(String line) {
+            w.write(line); w.newLine();
+        }
+        
+        flush() => w.flush();
+        
+    }
+
 }
 
 shared Boolean sameFile(File x, File y) =>
