@@ -1,4 +1,6 @@
-"Map implementation that uses hashing"
+"A [[MutableMap]] implemented as a hash map stored in an [[Array]]
+ of singly linked lists. The hash code of a key is defined by 
+ [[Object.hash]]."
 by("Stéphane Épardaud")
 shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     satisfies MutableMap<Key, Item>

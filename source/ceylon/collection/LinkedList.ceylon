@@ -1,4 +1,4 @@
-"A mutable Linked List"
+"A [[MutableList]] implemented as a singly linked list."
 by("Stéphane Épardaud")
 shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<Element> {
     variable Cell<Element>? head = null;

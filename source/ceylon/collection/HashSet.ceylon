@@ -1,4 +1,6 @@
-"Set that uses a Hashing implementation."
+"A [[MutableSet]] implemented as a hash set stored in an [[Array]]
+ of singly linked lists. The hash code of an element is defined
+ by [[Object.hash]]."
 by("Stéphane Épardaud")
 shared class HashSet<Element>({Element*} values = {})
     satisfies MutableSet<Element>
