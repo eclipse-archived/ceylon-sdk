@@ -52,6 +52,7 @@
         <module name="test.ceylon.file"/>
         <module name="test.ceylon.io"/>
         <module name="test.ceylon.json"/>
+        <module name="test.ceylon.logging"/>
         <module name="test.ceylon.net"/>
         <module name="test.ceylon.process"/>
         <module name="test.ceylon.time"/>
@@ -69,6 +70,7 @@
         <!--<module name="test.ceylon.file"/>-->
         <!--<module name="test.ceylon.io"/>-->
         <module name="test.ceylon.json"/>
+        <!--<module name="test.ceylon.logging"/-->
         <!--<module name="test.ceylon.net"/>-->
         <!--<module name="test.ceylon.process"/>-->
         <module name="test.ceylon.time"/>
@@ -163,6 +165,11 @@
             <reposet refid="reposet.run.test"/>
         </ceylon-run>
         
+        <ceylon-run module="test.ceylon.logging/${sdk.version}" run="test.ceylon.logging.run"
+            executable="${ceylon.executable}">
+            <reposet refid="reposet.run.test"/>
+        </ceylon-run>
+        
         <ceylon-run module="test.ceylon.net/${sdk.version}" run="test.ceylon.net.run"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
@@ -252,6 +259,7 @@
                 <include name="ceylon/file/**"/>
                 <include name="ceylon/io/**"/>
                 <include name="ceylon/json/**"/>
+                <include name="ceylon/logging/**"/>
                 <include name="ceylon/net/**"/>
                 <include name="ceylon/process/**"/>
                 <include name="ceylon/time/**"/>
