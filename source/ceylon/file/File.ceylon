@@ -64,7 +64,7 @@ shared interface File
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding)
+            String? encoding=null)
                 satisfies AbstractReader {}
     
     "A `Writer` for writing text to this file, after
@@ -74,7 +74,7 @@ shared interface File
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding) 
+            String? encoding=null) 
                 satisfies AbstractWriter {}
     
     "A `Writer` for appending text to this file"
@@ -83,7 +83,7 @@ shared interface File
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding) 
+            String? encoding=null) 
                 satisfies AbstractWriter {}
     
     "A `Reader` for reading lines of text from this
