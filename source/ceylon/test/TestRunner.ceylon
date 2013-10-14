@@ -34,7 +34,7 @@ shared class TestRunner() {
     }
     
     void runTest(TestUnit test) {
-        value startTime = process.milliseconds;
+        value startTime = system.milliseconds;
         test.state = running;
         fire((TestListener l) => l.testStarted(test));
         try {
@@ -47,7 +47,7 @@ shared class TestRunner() {
             test.state = error;
             test.exception = e;
         } finally {
-          value finishTime = process.milliseconds;
+          value finishTime = system.milliseconds;
           test.elapsedTimeInMilis = finishTime - startTime;
         }
         fire((TestListener l) => l.testFinished(test));

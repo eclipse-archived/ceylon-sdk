@@ -14,7 +14,7 @@ class IncomingPipe(OutputStream stream)
     write(String string) => writer.write(string);
     
     shared actual void writeLine(String line) {
-        write(line); write(process.newline);
+        write(line); write(operatingSystem.newline);
     }
     
 }

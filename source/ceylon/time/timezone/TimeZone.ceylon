@@ -1,3 +1,4 @@
+import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
 
@@ -50,7 +51,7 @@ shared interface RuleBasedTimezone satisfies TimeZone {
 shared object timeZone {
 
     "Represents machine offset based on current VM."
-    shared object system extends OffsetTimeZone(process.timezoneOffset) {}
+    shared object system extends OffsetTimeZone(sys.timezoneOffset) {}
 
     "Represents Coordinated Universal Time."
     shared object utc extends OffsetTimeZone(0) {}
