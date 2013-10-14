@@ -8,16 +8,18 @@ import ceylon.html {
     ParentNode, Snippet
 }
 
-shared abstract class NodeSerializer(
-        SerializerConfig config = SerializerConfig()) {
+shared class NodeSerializer(
+    "A stream to direct output to"
+    void print(String string),
+    "Serialization options"
+    SerializerConfig config = SerializerConfig()
+) {
 
     //shared Boolean isPartial => is Html root;
 
     variable value indentLevel = 0;
 
     variable value sizeCount = 0;
-
-    shared formal void print(String string);
 
     value prettyPrint = config.prettyPrint;
 
@@ -164,8 +166,4 @@ shared abstract class NodeSerializer(
 }
 
 "A [[NodeSerializer]] implementation that prints content on console."
-shared object consoleSerializer extends NodeSerializer() {
-
-    print(String string) => process.write(string);
-    
-}
+shared NodeSerializer consoleSerializer = NodeSerializer(process.write);

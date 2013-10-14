@@ -96,9 +96,8 @@ void doTestExpectedOutput(
 
 String serializeToString(Node node, Boolean prettyPrint) {
     value builder = StringBuilder();
-    object serializer extends NodeSerializer(SerializerConfig(prettyPrint)) {
-        print(String string) => builder.append(string);
-    }
+    value serializer = NodeSerializer(builder.append, 
+            SerializerConfig(prettyPrint));
     serializer.serialize(node);
     return builder.string;
 }
