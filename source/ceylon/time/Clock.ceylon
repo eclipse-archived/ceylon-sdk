@@ -2,7 +2,7 @@
  
  Instances of this class are used to find the current instant, which can be
  interpreted using the stored time-zone to find the current date and time.
- As such, a clock can be used instead of `process.milliseconds`.
+ As such, a clock can be used instead of `system.milliseconds`.
  
  The primary purpose of this abstraction is to allow alternate clocks to be
  plugged in as and when required. Applications use an object to obtain the
@@ -15,7 +15,7 @@
  This approach allows an alternate clock, such as [[fixedTime]] to be used during testing.
  
  The [[systemTime]] top level factory method offers clocks based on the best available 
- system clock, such as `process.milliseconds`."
+ system clock, such as `system.milliseconds`."
 shared interface Clock {
 
     "Gets the current millisecond instant of the clock."
@@ -30,7 +30,7 @@ shared interface Clock {
 shared object systemTime satisfies Clock {
 
     "Return number of milliseconds from system time."
-    shared actual Integer milliseconds() => process.milliseconds;
+    shared actual Integer milliseconds() => system.milliseconds;
 
     "Return current instant from system time."
     shared actual Instant instant() => Instant( milliseconds() );
