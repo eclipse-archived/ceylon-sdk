@@ -148,7 +148,7 @@ shared class NodeSerializer(
 
     void linefeed(Boolean force = false) {
         if (prettyPrint || force) {
-            doPrint(process.newline);
+            doPrint(operatingSystem.newline);
         }
     }
 
