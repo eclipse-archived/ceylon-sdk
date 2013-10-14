@@ -1,6 +1,6 @@
 
 
-shared alias ExtraAttributes => {<String->Object>*};
+shared alias ExtraAttributes => [<String->Object>*];
 
 shared alias CssClass => String|[String*]; // TODO ceylon-style integration
 
