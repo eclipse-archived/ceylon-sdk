@@ -27,7 +27,7 @@ Integer numberOfUsers=10;
 Integer requestsPerUser = 10;
 
 void testServer() {
-    
+
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
         response.addHeader(contentType { contentType = "text/html"; charset = utf8; });
@@ -77,6 +77,16 @@ void testServer() {
     server.addEndpoint(Endpoint {
         service => void (Request request, Response response) {
                         response.addHeader(contentType("text/html", utf8));
+                        for (i in 0..10) {
+                            response.writeString("foo ``i``\n");
+                        }
+                    };
+        path = startsWith("/writeStrings");
+    });
+
+    server.addEndpoint(Endpoint {
+        service => void (Request request, Response response) {
+                        response.addHeader(contentType("text/html", utf8));
                         variable Object? count = request.session.get("count");
                         if (exists Object c = count) {
                             if (is Integer ci = c) {
@@ -118,6 +128,8 @@ void testServer() {
                     methodTest();
                     
                     parametersTest("čšž", "ČŠŽ ĐŽ");
+
+                    writeStringsTest();
                     
                     //TODO enable session test when client suports it
                     //sessionTest();
@@ -377,6 +389,17 @@ void parametersTest(String paramKey, String paramValue) {
     //TODO log
     print("Response content: " + responseContent);
     assertEquals(paramValue, responseContent);
+}
+
+void writeStringsTest() {
+    value request = ClientRequest(parse("http://localhost:8080/writeStrings"), get);
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertTrue(responseContent.contains("foo 10"), "Response does not containg 'foo 10'.");
 }
 
 void sessionTest() {
