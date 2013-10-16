@@ -1,6 +1,10 @@
-import ceylon.test { ... }
-
-"Run the module `test.ceylon.test`."
 void run() {
-    suite("ceylon.test");
+    runTestAssertions();
+    runTestBeforeAfter();
+    runTestFiltering();
+    runTestListening();
+    runTestRunning();
+    runTestSorting();
+    runTestString();
+    runTestVerifying();
 }
