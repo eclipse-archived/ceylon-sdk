@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
-import ceylon.language.DocAnnotation$annotation;
-import ceylon.language.SharedAnnotation$annotation;
+import ceylon.language.DocAnnotation$annotation$;
+import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.metadata.Annotation;
 import com.redhat.ceylon.compiler.java.metadata.Annotations;
@@ -12,8 +12,8 @@ import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
 @Ceylon(major = 6)
 @Method
-@DocAnnotation$annotation(description = "Takes a Ceylon `String` and turns it into a Java `String`")
-@SharedAnnotation$annotation
+@DocAnnotation$annotation$(description = "Takes a Ceylon `String` and turns it into a Java `String`")
+@SharedAnnotation$annotation$
 @Annotations({@Annotation(value = "doc", arguments = {"Takes a Ceylon `String` and turns it into a Java `String`"}), @Annotation("shared")})
 public final class javaString_ {
 
