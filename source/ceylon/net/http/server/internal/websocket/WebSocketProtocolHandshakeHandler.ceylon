@@ -7,6 +7,7 @@ import io.undertow.websockets.core.protocol.version07 { Hybi07Handshake }
 import io.undertow.websockets.core.protocol.version08 { Hybi08Handshake }
 import io.undertow.websockets.core.protocol.version13 { Hybi13Handshake }
 import ceylon.collection { HashSet }
+import io.undertow.util { Headers { headerUpgrade = UPGRADE } }
 
 by ("Matej Lazar")
 shared class WebSocketProtocolHandshakeHandler(CeylonWebSocketHandler webSocketHandler, HttpHandler next)
@@ -21,6 +22,7 @@ shared class WebSocketProtocolHandshakeHandler(CeylonWebSocketHandler webSocketH
 
     shared actual void handleRequest(HttpServerExchange exchange) {
         //TODO schema aware
+        exchange.requestHeaders.contains(headerUpgrade);
         //if (!{"ws", "wss"}.contains(exchange.requestScheme)) {
         //    next.handleRequest(exchange);
         //    return;

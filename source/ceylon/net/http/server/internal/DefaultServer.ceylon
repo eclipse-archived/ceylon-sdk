@@ -122,7 +122,7 @@ shared class DefaultServer() satisfies Server {
         //TODO log
         print("Httpd started.");
         notifyListeners(started);
-        
+        //TODO remove it just blocks
         if (exists w = worker) {
             w.awaitTermination();   
         }

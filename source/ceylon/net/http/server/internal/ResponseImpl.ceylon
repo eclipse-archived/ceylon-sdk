@@ -44,6 +44,9 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     shared actual void writeBytes(Array<Integer> bytes) {
         applyHeadersToExchange();
         
+        //TODO nonblocking write
+        //exchange.responseSender.send(byteBuffer, ioCallback);
+        
         value bb = wrapByteBuffer(arrays.asByteArray(bytes));
         
         variable Integer remaining = bytes.size;
@@ -95,9 +98,10 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         //Retry to apply headers, if there were no writes, headers were not applied.
         applyHeadersToExchange();
         
+        /* all done by endExchange
         response.shutdownWrites();
         chFlushBlocking(response);
-        response.close();
+        response.close();*/
     }
 
     void applyHeadersToExchange() {

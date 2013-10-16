@@ -66,9 +66,7 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
             exchange.dispatch(AsyncInvoker(endpoint, request, response, exchange));
         }
         case (is Endpoint) {
-            endpoint.service(request, response);
-            response.responseDone();
-            exchange.endExchange();
+            exchange.dispatch(SynchronousInvoker(endpoint, request, response, exchange));
         } else {
             //TODO remove else, all cases are covered
         }
@@ -83,7 +81,19 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
             }
             endpoint.service(request, response, complete);
         }
+       
     }
+    
+    class SynchronousInvoker(Endpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange) 
+            satisfies HttpHandler {
+        
+        shared actual void handleRequest(JHttpServerExchange? httpServerExchange) {
+            endpoint.service(request, response);
+        }
+        
+    }
+    
+
     
     Boolean isMethodSupported(HttpEndpoint endpoint, Method method) { 
         if (endpoint.acceptMethod.size > 0) {

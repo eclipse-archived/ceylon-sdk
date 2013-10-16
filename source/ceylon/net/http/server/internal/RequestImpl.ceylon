@@ -34,7 +34,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
     
     shared actual String[] headers(String name) {
-        value headers = exchange.requestHeaders.get(HttpString(name));
+        value headers = exchange.requestHeaders.get(HttpString(name)); //TODO HttpString not required by newer version
         SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
         
         value it = headers.iterator();
@@ -158,6 +158,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
             FormDataParser? formDataParser = formParserFactory.createParser(exchange);
             if (exists fdp = formDataParser) {
                 formData = fdp.parseBlocking();
+                //TODO ASYNC formData = fdp.parse(nextHandler);
             } else {
                 //If no parser exists for requeste content-type, construct empty form data
                 formData = FormData(1000); //TODO expose max form data values as option
