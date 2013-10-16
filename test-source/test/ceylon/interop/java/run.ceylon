@@ -1,9 +1,8 @@
-
-import ceylon.test { suite }
+import ceylon.test {
+    createTestRunner
+}
 
 shared void run() {
-    suite("ceylon.interop.java",
-        "String tests" -> stringTests,
-        "Collection tests" -> collectionTests,
-        "Class tests" -> classTests);
+    value result = createTestRunner([`module test.ceylon.interop.java`]).run();
+    print(result);
 }

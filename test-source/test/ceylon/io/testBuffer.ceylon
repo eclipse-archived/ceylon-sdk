@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, test }
 
 import ceylon.io.buffer { newByteBuffer, ByteBuffer, Buffer, newCharacterBufferWithData, CharacterBuffer }
 
@@ -72,13 +72,13 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
     // FIXME: check exceptions
 }
 
-void testByteBuffer(){
+test void testByteBuffer(){
     ByteBuffer buffer = newByteBuffer(4);
     Integer[] values = [1, 200, 200, 200];
     testBuffer(buffer, values);
 }
 
-void testByteBufferResize(){
+test void testByteBufferResize(){
     ByteBuffer buffer = newByteBuffer(4);
     Integer[] values = [1, 2, 3, 4];
     for(Integer val in values){
@@ -128,7 +128,7 @@ void testByteBufferResize(){
 }
 
 
-void testCharacterBuffer(){
+test void testCharacterBuffer(){
     CharacterBuffer buffer = newCharacterBufferWithData("abcd");
     Character[] values = ['a', 'b', 'c', 'd'];
     testBuffer(buffer, values);

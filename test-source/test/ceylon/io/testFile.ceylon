@@ -2,9 +2,9 @@ import ceylon.file { File, Path, parsePath }
 import ceylon.io { newOpenFile, OpenFile }
 import ceylon.io.charset { utf8, byteConsumerToStringConsumer, stringToByteProducer, Decoder }
 import ceylon.io.buffer { ByteBuffer }
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, test }
 
-void testFileCreateWriteRead(){
+test void testFileCreateWriteRead(){
 	// create a new file and write to it
 	Path path = parsePath("foo.txt");
 	
@@ -38,7 +38,7 @@ void testFileCreateWriteRead(){
 	assertEquals("Hello World\n", ret);
 }
 
-void testFileCreateWriteReadWithoutReopen(){
+test void testFileCreateWriteReadWithoutReopen(){
 	// create a new file and write to it
 	Path path = parsePath("foo.txt");
 	
@@ -71,7 +71,7 @@ void testFileCreateWriteReadWithoutReopen(){
 	assertEquals("Hello World\n", ret);
 }
 
-void testFileCreateWriteResetWriteRead(){
+test void testFileCreateWriteResetWriteRead(){
 	// create a new file and write to it
 	Path path = parsePath("foo.txt");
 	
@@ -110,7 +110,7 @@ void testFileCreateWriteResetWriteRead(){
 	assertEquals("olleH World\n", ret);
 }
 
-void testFileTruncate(){
+test void testFileTruncate(){
 	// create a new file and write to it
 	Path path = parsePath("foo.txt");
 	

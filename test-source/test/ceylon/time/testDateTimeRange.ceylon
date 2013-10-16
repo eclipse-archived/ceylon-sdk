@@ -1,36 +1,34 @@
-import ceylon.time { Date, Period, Duration, date, DateRange, DateTimeRange, dateTime }
-import ceylon.test { assertEquals, assertTrue, assertFalse, suite }
-import ceylon.time.base { january, march, february, milliseconds, months, years, saturday, days, december }
+import ceylon.test {
+    assertEquals,
+    assertTrue,
+    assertFalse,
+    test
+}
+import ceylon.time {
+    Date,
+    Period,
+    Duration,
+    date,
+    DateRange,
+    DateTimeRange,
+    dateTime
+}
+import ceylon.time.base {
+    january,
+    march,
+    february,
+    milliseconds,
+    months,
+    years,
+    saturday,
+    days,
+    december
+}
 
 DateTimeRange jan_date_time_range = dateTime(2013, january, 1).rangeTo(dateTime(2013, january, 31));
 DateTimeRange jan_date_time_range_reverse = dateTime(2013, january, 31).rangeTo(dateTime(2013, january, 1));
 
-shared void runDateTimeRangeTests(String suiteName="DateTimeRange tests") {
-    suite(suiteName,
-    "Testing date time range equals and hash" -> testEqualsAndHashDateTimeRange,
-    "Testing date time range step" -> testStepDateTime,
-    "Testing date time range exist" -> testAnyExistDateTime,
-    "Testing date time range not exist" -> testAnyNotExistDateTime,
-    "Testing date time range" -> testRangeDateTime,
-    "Testing date time range for years" -> testRangeDateTimeFourYears,
-    "Testing date time range interval" -> testIntervalDateTimeReverse,
-    "Testing date time range gap empty" -> testGapDateTimeEmpty,
-    "Testing date time range overlap empty" -> testOverlapDateTimeEmpty,
-    "Testing date time range gap" -> testGapDateTime,
-    "Testing date time range gap reverse" -> testGapDateTimeReverse,
-    "Testing date time range overlap" -> testOverlapDateTime,
-    "Testing date time range step day reverse" -> testStepDayReverseDateTime,
-    "Testing date time range month reverse" -> testStepMonthReverseDateTime,
-    "Testing date time range step years reverse" -> testStepYearReverseDateTime,
-    "Testing date time range contains" -> testContainsDateTime,
-    "Testing date time range gap rules AB < CD" -> testGapRulesABSmallerCD_DateTime,
-    "Testing date time range gap rules AB > CD" -> testGapRulesABHigherCD_DateTime,
-    "Testing date time range overlap rules AB < CD" -> testOverlapRulesABSmallerCD_DateTime,
-    "Testing date time range overlap rules AB > CD" -> testOverlapRulesABHigherCD_DateTime
-);
-}
-
-shared void testEqualsAndHashDateTimeRange() {
+test void testEqualsAndHashDateTimeRange() {
     DateTimeRange instanceA_1 = dateTime(2013, january, 1).rangeTo(dateTime(2013, january, 31));
     DateTimeRange instanceA_2 = dateTime(2013, january, 1).rangeTo(dateTime(2013, january, 31));
     DateTimeRange instanceB_1 = dateTime(2013, january, 5).rangeTo(dateTime(2013, january, 20, 9 ,9));
@@ -48,19 +46,19 @@ shared void testEqualsAndHashDateTimeRange() {
     assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
-shared void testStepDateTime() {
+test void testStepDateTime() {
     assertEquals(days, jan_date_range.step);
 }
 
-shared void testAnyExistDateTime() {
+test void testAnyExistDateTime() {
     assertTrue(jan_date_range.any(( Date date ) => date.dayOfWeek == saturday));
 }
 
-shared void testAnyNotExistDateTime() {
+test void testAnyNotExistDateTime() {
     assertFalse(jan_date_range.any(( Date date ) => date.year == 2014));
 }
 
-shared void testRangeDateTime() {
+test void testRangeDateTime() {
     assertIntervalDateTime{
          start = date(2013, february,1);
          end = date(2013, february,28);
@@ -69,7 +67,7 @@ shared void testRangeDateTime() {
     };
 }
 
-shared void testRangeDateTimeFourYears() {
+test void testRangeDateTimeFourYears() {
     assertIntervalDateTime{
          start = date(2010, january, 1);
          end = date(2014, december, 31);
@@ -77,7 +75,7 @@ shared void testRangeDateTimeFourYears() {
     };
 }
 
-shared void testIntervalDateTimeReverse() {
+test void testIntervalDateTimeReverse() {
     assertIntervalDateTime{
          start = date(2013, february,28);
          end = date(2013, february,1);
@@ -86,64 +84,64 @@ shared void testIntervalDateTimeReverse() {
     };
 }
 
-shared void testGapDateTimeEmpty() {
+test void testGapDateTimeEmpty() {
     DateTimeRange feb = dateTime(2013, january, 1).rangeTo(dateTime(2013, january,28));
     
     assertEquals(empty, jan_date_time_range.gap(feb));    
 }
 
-shared void testOverlapDateTimeEmpty() {
+test void testOverlapDateTimeEmpty() {
     DateTimeRange decemberRange = dateTime(2013, december, 1).rangeTo(dateTime(2013, december, 31));
 
     assertEquals(empty, jan_date_time_range.overlap(decemberRange));
 }
 
-shared void testGapDateTime() {
+test void testGapDateTime() {
     DateRange mar = date(2013, march, 1).rangeTo(date(2013, march, 31));
     DateRange gap = date(2013, february, 1).rangeTo(date(2013, february, 28));
     
     assertEquals(gap, jan_date_range.gap(mar));
 }
 
-shared void testGapDateTimeReverse() {
+test void testGapDateTimeReverse() {
     DateRange mar = date(2013, march, 1).rangeTo(date(2013, march,31));
     DateRange gap = date(2013, february, 1).rangeTo(date(2013, february, 28));
     
     assertEquals(gap, jan_date_range_reverse.gap(mar));
 }
 
-shared void testOverlapDateTime() {
+test void testOverlapDateTime() {
     DateRange halfJan = date(2013, january, 5).rangeTo(date(2013, january, 15));
     DateRange overlap = date(2013, january, 5).rangeTo(date(2013, january, 15));
 
     assertEquals(overlap, jan_date_range.overlap(halfJan));
 }
 
-shared void testStepDayReverseDateTime() {
+test void testStepDayReverseDateTime() {
     assertEquals( 31, jan_date_range_reverse.size);
     assertEquals( date(2013, january, 31), jan_date_range_reverse.first);
     assertEquals( date(2013, january, 1), jan_date_range_reverse.last);
 }
 
-shared void testStepMonthReverseDateTime() {
+test void testStepMonthReverseDateTime() {
     DateRange interval = jan_date_range_reverse.stepBy(months);
     assertEquals( 1, interval.size);
     assertEquals( date(2013, january, 31), interval.first);
     assertEquals( date(2013, january, 31), interval.last);
 }
 
-shared void testStepYearReverseDateTime() {
+test void testStepYearReverseDateTime() {
     DateRange interval = jan_date_range_reverse.stepBy(years);
     assertEquals( 1, interval.size);
     assertEquals( date(2013, january, 31), interval.first);
     assertEquals( date(2013, january, 31), interval.last);
 }
 
-shared void testContainsDateTime() {
+test void testContainsDateTime() {
     assertEquals(true, date(2013, january, 15) in jan_date_range);
 }
 
-shared void testGapRulesABSmallerCD_DateTime() {
+test void testGapRulesABSmallerCD_DateTime() {
     //Combinations to Test: AB < CD
     //C1: 12 gap 56 = (2,5)
     //C2: 12 gap 65 = (2,5)
@@ -182,7 +180,7 @@ shared void testGapRulesABSmallerCD_DateTime() {
     };
 }
 
-shared void testGapRulesABHigherCD_DateTime() {
+test void testGapRulesABHigherCD_DateTime() {
     //Combinations to Test: AB > CD
     //56 gap 12 = (2,5)
     //56 gap 21 = (2,5)
@@ -221,7 +219,7 @@ shared void testGapRulesABHigherCD_DateTime() {
     };
 }
 
-shared void testOverlapRulesABSmallerCD_DateTime() {
+test void testOverlapRulesABSmallerCD_DateTime() {
     //Combinations to Test: AB < CD
     //C1: 16 overlap 39 = [3,6]
     //C2: 16 overlap 93 = [3,6]
@@ -260,7 +258,7 @@ shared void testOverlapRulesABSmallerCD_DateTime() {
     };
 }
 
-shared void testOverlapRulesABHigherCD_DateTime() {
+test void testOverlapRulesABHigherCD_DateTime() {
     //Combinations to Test: AB > CD
     //39 gap 16 = [3,6]
     //39 gap 61 = [3,6]

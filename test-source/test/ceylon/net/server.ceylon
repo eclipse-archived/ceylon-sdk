@@ -8,7 +8,7 @@ import ceylon.net.http.server { createServer, StatusListener, Status,
                                   Endpoint, Response, Request, 
                                   startsWith, endsWith, Options, stopped }
 import ceylon.net.http.server.endpoints { serveStaticFile }
-import ceylon.test { assertEquals, assertTrue }
+import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
 import java.util.concurrent { Semaphore }
@@ -26,7 +26,7 @@ String fileName = "lazydog.txt";
 Integer numberOfUsers=10;
 Integer requestsPerUser = 10;
 
-void testServer() {
+test void testServer() {
 
     function name(Request request) => request.parameter("name") else "world";
     void serviceImpl(Request request, Response response) {
@@ -255,7 +255,7 @@ void cleanUpFile() {
     }
 }
 
-void testPathMatcher() {
+test void testPathMatcher() {
     String requestPath = "/file/myfile.txt";
     
     value matcherStarts = startsWith("/file");

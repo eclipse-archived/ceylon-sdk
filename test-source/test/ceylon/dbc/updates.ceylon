@@ -1,5 +1,5 @@
 import ceylon.test { ... }
 
-void updateTests() {
+test void updateTests() {
 }
 

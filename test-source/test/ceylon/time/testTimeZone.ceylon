@@ -1,19 +1,25 @@
-import ceylon.test { assertEquals, suite, assertTrue, assertFalse }
-import ceylon.time { date, time, dateTime, Instant, Period }
-import ceylon.time.base { september }
-import ceylon.time.timezone { timeZone, OffsetTimeZone }
-
-shared void runTimeZoneTests(String suiteName="TimeZone tests") {
-    suite(suiteName,
-    "Testing timezone date time to instant uses offset" -> testDateTimeToInstantUsesOffset,
-    "Testing timezone instant to time uses offset" -> testInstantToTimeUsesOffset,
-    "Testing timezone instant to date uses offset" -> testInstantToDateUsesOffset,
-    "Testing timezone instant to date time uses offset" -> testInstantToDateTimeUsesOffset,
-    "Testing timezone OffsetTimeZone equals and hash" -> testEqualsAndHashOffsetTimeZone
-);
+import ceylon.test {
+    assertEquals,
+    assertTrue,
+    assertFalse,
+    test
+}
+import ceylon.time {
+    date,
+    time,
+    dateTime,
+    Instant,
+    Period
+}
+import ceylon.time.base {
+    september
+}
+import ceylon.time.timezone {
+    timeZone,
+    OffsetTimeZone
 }
 
-shared void testDateTimeToInstantUsesOffset() {
+test void testDateTimeToInstantUsesOffset() {
     value localDate = date(2013, september, 02);
     
     assertEquals( localDate.at(time(12, 00)).instant( timeZone.utc ), 
@@ -25,7 +31,7 @@ shared void testDateTimeToInstantUsesOffset() {
                   "Should apply negative timezone offset" );
 }
 
-shared void testInstantToTimeUsesOffset() {
+test void testInstantToTimeUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
     
     assertEquals( time(12, 00), instant.time( timeZone.utc ) );
@@ -34,7 +40,7 @@ shared void testInstantToTimeUsesOffset() {
 }
 
 
-shared void testInstantToDateUsesOffset() {
+test void testInstantToDateUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
     
     assertEquals( date(2013, september, 02), instant.date( timeZone.utc ) );
@@ -42,7 +48,7 @@ shared void testInstantToDateUsesOffset() {
     assertEquals( date(2013, september, 01), instant.minus(Period{ hours = 2; }).date( timeZone.offset(-12) ) );
 }
 
-shared void testInstantToDateTimeUsesOffset() {
+test void testInstantToDateTimeUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
     
     assertEquals( dateTime(2013, september, 02, 12, 00), instant.dateTime( timeZone.utc ) );
@@ -50,7 +56,7 @@ shared void testInstantToDateTimeUsesOffset() {
     assertEquals( dateTime(2013, september, 01, 22, 00), instant.minus(Period{ hours = 2; }).dateTime( timeZone.offset(-12) ) );
 }
 
-shared void testEqualsAndHashOffsetTimeZone() {
+test void testEqualsAndHashOffsetTimeZone() {
     OffsetTimeZone instanceA_1 = OffsetTimeZone(2000);
     OffsetTimeZone instanceA_2 = OffsetTimeZone(2000);
     OffsetTimeZone instanceB_1 = OffsetTimeZone(1);

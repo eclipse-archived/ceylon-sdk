@@ -1,18 +1,8 @@
-import ceylon.test {suite}
+import ceylon.test {
+    createTestRunner
+}
 
 void run() {
-    suite("ceylon.net",
-        "URI Decomposition test" -> testDecomposition,
-        "URI Composition test" -> testComposition,
-        "URI Invalid port" -> testInvalidPort,
-        "URI Invalid port2" -> testInvalidPort2,
-        "URI Decoding test"-> testDecoding,
-        "URI Building test"-> testUriBuilding,
-        "HTTP testGet" -> testGet,
-        "HTTP testGetUtf8" -> testGetUtf8,
-        "HTTP testGetUtf8 2" -> testGetUtf8_2,
-        "HTTP testGetChunked" -> testGetChunked,
-        "HTTPD testServer" -> testServer,
-        "HTTPD testPathMatcher" -> testPathMatcher,
-        "HTTPD testWebSocketServer" -> testWebSocketServer);
+    value result = createTestRunner([`module test.ceylon.net`]).run();
+    print(result);
 }

@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, test }
 import ceylon.io.buffer { newByteBuffer, newByteBufferWithData }
 import ceylon.io.charset { Charset, utf8, utf16, iso_8859_1 }
 
@@ -29,13 +29,13 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
     print("Decoded ``expected`` OK");
 }
 
-void testLatin1Decoder(){
+test void testLatin1Decoder(){
     testDecoder(iso_8859_1, "Stéphane Épardaud", 
                             #53, #74, #E9, #70, #68, #61, #6E, #65, #20,
                             #C9, #70, #61, #72, #64, #61, #75, #64);
 }
 
-void testUTF8Decoder(){
+test void testUTF8Decoder(){
     // samples from http://en.wikipedia.org/wiki/UTF-8
     testDecoder(utf8, "$", #24);
     testDecoder(utf8, "¢", #C2, #A2);
@@ -54,7 +54,7 @@ void testUTF8Decoder(){
     assertEquals("$¢€𤭢", utf8.decode(buffer));
 }
 
-void testUTF16Decoder(){
+test void testUTF16Decoder(){
     // samples from http://en.wikipedia.org/wiki/UTF-16
     testDecoder(utf16, "z", #00, #7A);
     testDecoder(utf16, "水", #6C, #34);
@@ -67,7 +67,7 @@ void testUTF16Decoder(){
     testDecoder(utf16, "𝄞", #FF, #FE, #34, #D8, #1E, #DD);
 }
 
-void testUTF8EncoderDecoder() {
+test void testUTF8EncoderDecoder() {
     String original = "abc čšžćđČŠŽĆĐ"; //test latin-2 letters
     value encoded = utf8.encode(original);
     String decoded = utf8.decode(encoded);

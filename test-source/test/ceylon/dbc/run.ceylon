@@ -1,6 +1,13 @@
-import ceylon.test {suite}
-import ceylon.dbc { Sql }
-import org.h2.jdbcx { JdbcDataSource }
+import ceylon.dbc {
+    Sql
+}
+import ceylon.test {
+    createTestRunner
+}
+
+import org.h2.jdbcx {
+    JdbcDataSource
+}
 
 JdbcDataSource createDataSource() {
     value ds = JdbcDataSource();
@@ -21,13 +28,7 @@ shared void run() {
             throw ex;
         }
     }
-    suite("ceylon.dbc",
-        "Insert" -> insertTests,
-        "Query" -> queryTests,
-        "Update/Delete" -> updateTests,
-        "Calls" -> callTests,
-        "Transactions" -> transactionTests
-    );
+    
+    value result = createTestRunner([`module test.ceylon.dbc`]).run();
+    print(result);
 }
-
-

@@ -1,7 +1,7 @@
 import ceylon.test { ... }
 import ceylon.math.integer { ... }
 
-void testIntSumProduct() {
+test void testIntSumProduct() {
     print("Integer.sum");
     assertEquals { 
         expected = 0;
@@ -20,8 +20,4 @@ void testIntSumProduct() {
         expected = 6; 
         actual=product(1, 2, 3);
     };
-}
-
-shared void intTests() {
-    testIntSumProduct();
 }

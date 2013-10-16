@@ -1,10 +1,6 @@
 import ceylon.test { ... }
 
 shared void run(){
-    suite("ceylon.collection", 
-        "Parse" -> testParse,
-        "Print" -> testPrint
-    );
+    value result = createTestRunner([`module test.ceylon.json`]).run();
+    print(result);
 }
-
-

@@ -33,7 +33,7 @@ void testURL(String url,
     assertEquals(url, u.string, "String "+url);
 }
 
-void testDecomposition(){
+test void testDecomposition(){
     testURL{ 
         url = "http://user:pass@www.foo.com:80/path/to;param1;param2=foo/file.html?foo=bar&foo=gee&bar#anchor";
         scheme = "http";
@@ -140,7 +140,7 @@ void testDecomposition(){
     };
 }
 
-void testComposition(){
+test void testComposition(){
     Uri u = Uri("http", 
                 Authority("stef", null, "192.168.1.1", 9000),
                 Path(true, PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
@@ -157,7 +157,7 @@ void testComposition(){
     };
 }
 
-void testInvalidPort(){
+test void testInvalidPort(){
     try {
         parse("http://foo:bar");
      } catch (Exception e) {
@@ -165,7 +165,7 @@ void testInvalidPort(){
      }
 }
 
-void testInvalidPort2(){
+test void testInvalidPort2(){
     try {
         parse("http://foo:-23");
      } catch (Exception e) {
@@ -173,7 +173,7 @@ void testInvalidPort2(){
      }
 }
 
-void testDecoding(){
+test void testDecoding(){
     /*
 %3D%23ue/segment2?par%26%3D%23am3&par%26%3D%23am4=val%26%3D%23ue2#frag%26%3D%23ment
   =%23ue/segment2?par%26%3D%23am3&par%26%3D%23am4=val%26%3D%23ue2#frag&=%23ment
@@ -224,7 +224,7 @@ void testDecoding(){
         
 }
 
-void testUriBuilding(){
+test void testUriBuilding(){
     Uri uri = parse("http://ceylon-lang.org");
     uri.path.absolute = true;
     uri.path.add("blog");

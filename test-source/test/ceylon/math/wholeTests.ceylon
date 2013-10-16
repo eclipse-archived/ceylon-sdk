@@ -1,7 +1,7 @@
 import ceylon.test { ... }
 import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, zero}
 
-shared void wholeTests() {
+test void wholeTests() {
 
     Whole parseOrFail(String str) {
        Whole? result = parseWhole(str);

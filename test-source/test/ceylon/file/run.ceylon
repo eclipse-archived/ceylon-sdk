@@ -2,5 +2,6 @@ import ceylon.test { ... }
 
 "Run the module `test.ceylon.file`."
 void run() {
-    suite("ceylon.file");
+    value result = createTestRunner([`module test.ceylon.file`]).run();
+    print(result);
 }

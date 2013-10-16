@@ -1,9 +1,8 @@
-import ceylon.test {suite}
+import ceylon.test {
+    createTestRunner
+}
 
 shared void run() {
-    suite("ceylon.math",
-        "Whole" -> wholeTests,
-        "Decimal" -> decimalTests,
-        "Float" -> floatTests,
-        "Integer" -> intTests);
+    value result = createTestRunner([`module test.ceylon.math`]).run();
+    print(result);
 }

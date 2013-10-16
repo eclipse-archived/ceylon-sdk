@@ -1,24 +1,28 @@
-import ceylon.test { assertEquals, suite }
-import ceylon.time.chronology { unixTime, gregorian }
-import ceylon.time { date, time }
-import ceylon.time.base { january, tuesday }
-
-shared void runChronologyTests(String suiteName="Chronology tests") {
-    suite(suiteName,
-    "Testing Unix Time" -> testUnixTime,
-    "Testing Gregorian months" -> testGregorianMonths,
-    "Testing Gregorian" -> testGregorian
-);
+import ceylon.test {
+    assertEquals,
+    test
+}
+import ceylon.time {
+    date,
+    time
+}
+import ceylon.time.base {
+    january,
+    tuesday
+}
+import ceylon.time.chronology {
+    unixTime,
+    gregorian
 }
 
-shared void testUnixTime() {
+test void testUnixTime() {
     assertEquals(719163, unixTime.epoch);
     assertEquals(719163, unixTime.fixedFromTime(1));
     assertEquals(1356998400000, unixTime.timeFromFixed(date(2013, january, 1).dayOfEra));
     assertEquals(unixTime.timeOfDay(1357032630000), time(9, 30, 30).millisecondsOfDay);
 }
 
-shared void testGregorianMonths() {
+test void testGregorianMonths() {
     assertEquals(1,  gregorian.january);
     assertEquals(2,  gregorian.february);
     assertEquals(3,  gregorian.march);
@@ -33,7 +37,7 @@ shared void testGregorianMonths() {
     assertEquals(12, gregorian.december);
 }
 
-shared void testGregorian() {
+test void testGregorian() {
     gregorian.checkDate([2013, 1, 1]);
     gregorian.checkDate([2012, 2, 29]);
     gregorian.checkDate([2010, 12, 31]);

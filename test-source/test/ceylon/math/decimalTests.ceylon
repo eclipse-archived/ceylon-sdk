@@ -26,7 +26,7 @@ Decimal parseOrFail(String str) {
     throw AssertionException("``str`` didn't parse");
 }
 
-void instantiationAndEquality() {
+test void instantiationAndEquality() {
     print("Decimal instantiation, equality");
     assertTrue(zero == zero, "zero==zero");
     assertTrue(zero != one, "zero!=one");
@@ -38,7 +38,7 @@ void instantiationAndEquality() {
     assertTrue(decimalNumber(1) != decimalNumber(2), "1!=2");
 }
 
-void parse() {
+test void parse() {
     print("parseDecimal");
     assertEquals(one, parseDecimal("1"), "parseDecimal(1)");
     assertEquals(decimalNumber(-1), parseDecimal("-1"), "parseDecimal(-1)");
@@ -54,7 +54,7 @@ void parse() {
     assertNull(parseDecimal("a1"), "parseDecimal(a1)");
 }
 
-void strictEqualsAndHash() {
+test void strictEqualsAndHash() {
     print("Decimal.strictEquals");
     assertFalse(decimalNumber(1).strictlyEquals(parseOrFail("1.0")), "1.strictEquals(1.0)");
     assertFalse(decimalNumber(1).strictlyEquals(parseOrFail("1.00")), "1.strictEquals(1.00)");
@@ -63,7 +63,7 @@ void strictEqualsAndHash() {
     assertEquals(parseOrFail("2").hash, parseOrFail("2.00").hash, "2.hash==2.0.hash");
 }
 
-void plus() {
+test void plus() {
     print("Decimal.plus");
     assertEquals(decimalNumber(2), decimalNumber(1.0).plus(decimalNumber(1)), "1.0.plus(1)", strictly);
     assertEquals(decimalNumber(2), decimalNumber(1.0) + decimalNumber(1), "1.0+1", strictly);
@@ -81,7 +81,7 @@ void plus() {
     assertEquals(parseDecimal("0.12"), implicitlyRounded(calculation, r), "0.105+0.01", strictly);
 }
 
-void minus() {
+test void minus() {
     print("Decimal.minus");
     assertEquals(decimalNumber(0), decimalNumber(1.0).minus(decimalNumber(1)), "1.0.minus(1)", strictly);
     assertEquals(decimalNumber(0), decimalNumber(1.0) - decimalNumber(1), "1.0-1", strictly);
@@ -100,7 +100,7 @@ void minus() {
     assertEquals(parseDecimal("0.095"), implicitlyRounded(calculation, r), "0.105-0.01", strictly);
 }
 
-void times() {
+test void times() {
     print("Decimal.times");
     assertEquals(decimalNumber(4), decimalNumber(2.0).times(decimalNumber(2)), "2.0.times(2)", strictly);
     assertEquals(decimalNumber(4), decimalNumber(2.0) * decimalNumber(2), "2.0*2", strictly);
@@ -117,7 +117,7 @@ void times() {
     assertEquals(parseDecimal("0.0105"), implicitlyRounded(calculation, r), "0.105 * 0.01", strictly);
 }
 
-void divided() {
+test void divided() {
     print("Decimal.divided");
     variable value r = round(3, halfUp);
     assertEquals(decimalNumber(2), decimalNumber(4.0).divided(decimalNumber(2)), "4.0.divided(2)", strictly);
@@ -141,7 +141,7 @@ void divided() {
     assertEquals(parseDecimal("0.667"), implicitlyRounded(calculation, r), "", strictly);
 }
 
-void power() {
+test void power() {
     print("Decimal.power");
     assertEquals(decimalNumber(4), decimalNumber(2)^2, "2^2");
     assertEquals(decimalNumber(8), decimalNumber(2)^3, "2^3");
@@ -165,7 +165,7 @@ void power() {
     assertEquals(parseDecimal("0.25"), implicitlyRounded(calculation, r), "2 ^ -2", strictly);
 }
 
-void dividedAndTruncated() {
+test void dividedAndTruncated() {
     print("Decimal.dividedAndTruncated");
     variable value r = round(3, halfUp);
     assertEquals(parseDecimal("0"), decimalNumber(2).dividedTruncated(decimalNumber(3), r), "2.dividedAndTruncated(3)", strictly);
@@ -173,14 +173,14 @@ void dividedAndTruncated() {
     assertEquals(parseDecimal("-1"), decimalNumber(-3).dividedTruncated(decimalNumber(2), r), "-3.dividedAndTruncated(2)", strictly);
 }
 
-void remainder() {
+test void remainder() {
     print("Decimal.remainder");
     variable value r = round(3, halfUp);
     assertEquals(parseDecimal("2"), decimalNumber(2).remainderRounded(decimalNumber(3), r), "2.remainder(3)", strictly);
     assertEquals(parseDecimal("1"), decimalNumber(3).remainderRounded(decimalNumber(2), r), "3.remainder(2)", strictly);
 }
 
-void scalePrecision() {
+test void scalePrecision() {
     print("Decimal.scale and .precision");
     assertEquals(3, parseOrFail("0.001").scale);
     assertEquals(1, parseOrFail("0.001").precision);
@@ -194,20 +194,4 @@ void scalePrecision() {
     assertEquals(2, decimalNumber(10).precision);
     assertEquals(0, decimalNumber(100).scale);
     assertEquals(3, decimalNumber(100).precision);
-    
-}
-
-shared void decimalTests() {
-
-    instantiationAndEquality();
-    parse();
-    strictEqualsAndHash();
-    plus();
-    minus();
-    times();
-    divided();
-    power();
-    dividedAndTruncated();
-    remainder();
-    scalePrecision();
 }

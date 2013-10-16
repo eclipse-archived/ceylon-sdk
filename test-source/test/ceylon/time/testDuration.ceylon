@@ -1,13 +1,12 @@
-import ceylon.test { assertEquals, suite }
-import ceylon.time { Duration }
-
-shared void runDurationTests(String suiteName="Duration tests") {
-    suite(suiteName,
-    "Testing duration scalable" -> testScalableDuration
-);
+import ceylon.test {
+    assertEquals,
+    test
+}
+import ceylon.time {
+    Duration
 }
 
-shared void testScalableDuration() {
+test void testScalableDuration() {
     //Rules suggested by scalable interface
     Duration duration = Duration(1000);    
     assertEquals(Duration(1000),   1 ** duration);

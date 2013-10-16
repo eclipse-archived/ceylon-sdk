@@ -1,8 +1,9 @@
-import ceylon.test { suite }
+import ceylon.test {
+    createTestRunner
+}
 
 "Run the module `test.ceylon.html`."
 shared void run() {
-    suite("ceylon-html",
-        "Serialization" -> testHtmlSerialization
-    );
+    value result = createTestRunner([`module test.ceylon.html`]).run();
+    print(result);
 }

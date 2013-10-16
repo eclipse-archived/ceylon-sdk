@@ -1,36 +1,27 @@
-import ceylon.time { Period, Duration, time, TimeRange, Time }
-import ceylon.test { assertEquals, assertTrue, assertFalse, suite }
-import ceylon.time.base { milliseconds, seconds, minutes }
+import ceylon.test {
+    assertEquals,
+    assertTrue,
+    assertFalse,
+    test
+}
+import ceylon.time {
+    Period,
+    Duration,
+    time,
+    TimeRange,
+    Time
+}
+import ceylon.time.base {
+    milliseconds,
+    seconds,
+    minutes
+}
 
 TimeRange firstQuarterDay = time(0, 0).rangeTo(time(6, 0));
 TimeRange firstQuarterDayReverse = time(6,0).rangeTo(time(0,0));
 TimeRange lastQuarterDay = time(18, 0).rangeTo(time(23, 59));
 
-shared void runTimeRangeTests(String suiteName="TimeRange tests") {
-    suite(suiteName,
-    "Testing time range equals and hash" -> testEqualsAndHashTimeRange,
-    "Testing time range step" -> testStepTime,
-    "Testing time range any exist time" -> testAnyExistTime,
-    "Testing time range any not exist time" -> testAnyNotExistTime,
-    "Testing time range" -> testRangeTime,
-    "Testing time range four minutes" -> testRangeTimeFourMinutes,
-    "Testing time range interval reverse" -> testIntervalTimeReverse,
-    "Testing time range gap" -> testGapTime,
-    "Testing time range overlap" -> testOverlapTime,
-    "Testing time range step milliseconds reverse" -> testStepMillisReverseTime,
-    "Testing time range step seconds reverse" -> testStepSecondsReverseTime,
-    "Testing time range step minutes reverse" -> testStepMinutesReverseTime,
-    "Testing time range contains" -> testContainsTime,
-    "Testing time range gap empty" -> testGapTimeEmpty,
-    "Testing time range overlap empty" -> testOverlapTimeEmpty,
-    "Testing time range gap rules AB < CD" -> testGapRulesABSmallerCD_Time,
-    "Testing time range gap rules AB > CD" -> testGapRulesABHigherCD_Time,
-    "Testing time range overlap rules AB < CD" -> testOverlapRulesABSmallerCD_Time,
-    "Testing time range overlap rules AB > CD" -> testOverlapRulesABHigherCD_Time
-);
-}
-
-shared void testEqualsAndHashTimeRange() {
+test void testEqualsAndHashTimeRange() {
 
     TimeRange instanceA_1 = time(6,0).rangeTo(time(18,0));
     TimeRange instanceA_2 = time(6,0).rangeTo(time(18,0));
@@ -51,19 +42,19 @@ shared void testEqualsAndHashTimeRange() {
 
 }
 
-shared void testStepTime() {
+test void testStepTime() {
     assertEquals(milliseconds, firstQuarterDay.step);
 }
 
-shared void testAnyExistTime() {
+test void testAnyExistTime() {
     assertTrue(firstQuarterDay.any( (Time time) => time.minutes == 1));
 }
 
-shared void testAnyNotExistTime() {
+test void testAnyNotExistTime() {
 	assertFalse(time(0, 0).rangeTo(time(0, 0, 15)).any(( Time time ) => time.seconds == 91));
 }
 
-shared void testRangeTime() {
+test void testRangeTime() {
     assertIntervalTime{
         start = time(9,55);
         end = time(10,0);
@@ -72,7 +63,7 @@ shared void testRangeTime() {
     };
 }
 
-shared void testRangeTimeFourMinutes() {
+test void testRangeTimeFourMinutes() {
     assertIntervalTime{
          start = time(8,0);
          end = time(8,4);
@@ -81,7 +72,7 @@ shared void testRangeTimeFourMinutes() {
     };
 }
 
-shared void testIntervalTimeReverse() {
+test void testIntervalTimeReverse() {
     assertIntervalTime{
         start = time(10,0);
         end = time(9,58);
@@ -90,56 +81,56 @@ shared void testIntervalTimeReverse() {
     };
 }
 
-shared void testGapTime() {
+test void testGapTime() {
     TimeRange gap = time(6,0,0,1).rangeTo(time(17,59,59,999));
     assertEquals(gap, firstQuarterDay.gap(lastQuarterDay));    
 }
 
-shared void testOverlapTime() {
+test void testOverlapTime() {
     TimeRange halfFirstQuarter = time(0,0).rangeTo(time(3,0));
     TimeRange overlap = time(0,0).rangeTo(time(3,0));
 
     assertEquals(overlap, firstQuarterDay.overlap(halfFirstQuarter));
 }
 
-shared void testStepMillisReverseTime() {
+test void testStepMillisReverseTime() {
     TimeRange seconds = time(0,0,59).rangeTo(time(0,0,50));
     assertEquals( 9 * milliseconds.perSecond + 1, seconds.size);
     assertEquals( time(0,0,59), seconds.first);
     assertEquals( time(0,0,50), seconds.last);
 }
 
-shared void testStepSecondsReverseTime() {
+test void testStepSecondsReverseTime() {
     TimeRange interval = time(0,3).rangeTo(time(0,0)).stepBy(seconds);
     assertEquals( 3 * seconds.perMinute +1, interval.size);
     assertEquals( time(0,3), interval.first);
     assertEquals( time(0,0), interval.last);
 }
 
-shared void testStepMinutesReverseTime() {
+test void testStepMinutesReverseTime() {
     TimeRange interval = firstQuarterDayReverse.stepBy(minutes);
     assertEquals( 6 * minutes.perHour +1, interval.size);
     assertEquals( time(6,0), interval.first);
     assertEquals( time(0,0), interval.last);
 }
 
-shared void testContainsTime() {
+test void testContainsTime() {
     assertEquals(true, time(0,1) in firstQuarterDay);
 }
 
-shared void testGapTimeEmpty() {
+test void testGapTimeEmpty() {
     TimeRange noGap = time(2, 0).rangeTo(time(12, 0));
     
     assertEquals(empty, firstQuarterDay.gap(noGap));
 }
 
-shared void testOverlapTimeEmpty() {
+test void testOverlapTimeEmpty() {
     TimeRange noOverlap = time(9, 0).rangeTo(time(12, 0));
 
     assertEquals(empty, firstQuarterDay.overlap(noOverlap));
 }
 
-shared void testGapRulesABSmallerCD_Time() {
+test void testGapRulesABSmallerCD_Time() {
     //Combinations to Test: AB < CD
     //C1: 12 gap 56 = (2,5)
     //C2: 12 gap 65 = (2,5)
@@ -178,7 +169,7 @@ shared void testGapRulesABSmallerCD_Time() {
     };
 }
 
-shared void testGapRulesABHigherCD_Time() {
+test void testGapRulesABHigherCD_Time() {
     //Combinations to Test: AB > CD
     //56 gap 12 = (2,5)
     //56 gap 21 = (2,5)
@@ -217,7 +208,7 @@ shared void testGapRulesABHigherCD_Time() {
     };
 }
 
-shared void testOverlapRulesABSmallerCD_Time() {
+test void testOverlapRulesABSmallerCD_Time() {
     //Combinations to Test: AB < CD
     //C1: 16 overlap 39 = [3,6]
     //C2: 16 overlap 93 = [3,6]
@@ -256,7 +247,7 @@ shared void testOverlapRulesABSmallerCD_Time() {
     };
 }
 
-shared void testOverlapRulesABHigherCD_Time() {
+test void testOverlapRulesABHigherCD_Time() {
     //Combinations to Test: AB > CD
     //39 gap 16 = [3,6]
     //39 gap 61 = [3,6]

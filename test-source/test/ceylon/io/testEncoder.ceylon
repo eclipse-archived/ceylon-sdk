@@ -1,8 +1,8 @@
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, test }
 import ceylon.io.charset { ascii, Encoder, Charset, iso_8859_1, utf8, utf16 }
 import ceylon.io.buffer { newCharacterBufferWithData, newByteBuffer }
 
-void testASCIIEncoder(){
+test void testASCIIEncoder(){
     Encoder encoder = ascii.newEncoder();
     value input = newCharacterBufferWithData("asd");
     value output = newByteBuffer(2);
@@ -37,17 +37,17 @@ void testEncoder(Charset charset, String string, Integer* bytes){
     print("Encoded ``string`` OK");
 }
 
-void testFullASCIIEncoder(){
+test void testFullASCIIEncoder(){
     testEncoder(ascii, "asd", #61, #73, #64);
 }
 
-void testLatin1Encoder(){
+test void testLatin1Encoder(){
     testEncoder(iso_8859_1, "Stéphane Épardaud", 
                             #53, #74, #E9, #70, #68, #61, #6E, #65, #20,
                             #C9, #70, #61, #72, #64, #61, #75, #64);
 }
 
-void testUTF8Encoder(){
+test void testUTF8Encoder(){
     // samples from http://tools.ietf.org/html/rfc3629
     testEncoder(utf8, "A≢Α.", #41, #E2, #89, #A2, #CE, #91, #2E);
     testEncoder(utf8, "한국어", #ED, #95, #9C, #EA, #B5, #AD, #EC, #96, #B4);
@@ -55,7 +55,7 @@ void testUTF8Encoder(){
     testEncoder(utf8, "𣎴", #F0, #A3, #8E, #B4);
 }
 
-void testUTF16Encoder(){
+test void testUTF16Encoder(){
     // samples from http://en.wikipedia.org/wiki/UTF-16
     testEncoder(utf16, "z水𐀀𝄞􏿽", #00, #7A,
                                     #6C, #34,

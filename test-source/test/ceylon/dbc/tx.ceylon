@@ -1,6 +1,6 @@
 import ceylon.test { ... }
 
-void transactionTests() {
+test void transactionTests() {
     if (exists count0 = sql.queryForInteger("SELECT count(*) FROM test1")) {
         //Rollback
         sql.transaction {

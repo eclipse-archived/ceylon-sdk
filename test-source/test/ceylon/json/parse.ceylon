@@ -1,7 +1,7 @@
 import ceylon.json { ... }
 import ceylon.test { ... }
 
-void testParse() {
+test void testParse() {
     value o1 = parse("{}");
     assertEquals(0, o1.size);
     

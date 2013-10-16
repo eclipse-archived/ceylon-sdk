@@ -1,4 +1,4 @@
 import ceylon.test { ... }
 
-void callTests() {
+test void callTests() {
 }

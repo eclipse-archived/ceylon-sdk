@@ -1,8 +1,8 @@
 import ceylon.io.charset { utf8, Charset, ascii, iso_8859_1 }
 import ceylon.io { base64, Encoder, Decoder }
-import ceylon.test { assertEquals }
+import ceylon.test { assertEquals, test }
 
-void testBase64WithIso88591(){
+test void testBase64WithIso88591(){
     //Some texts from wikipedia
     variable value input = "any carnal pleasure.";
     variable value expected = "YW55IGNhcm5hbCBwbGVhc3VyZS4=";
@@ -25,7 +25,7 @@ void testBase64WithIso88591(){
     assertBase64(input, expected, iso_8859_1);
 }
 
-void testBase64WithUtf8(){
+test void testBase64WithUtf8(){
     //Some texts from wikipedia
     variable value input = "any carnal pleasure.";
     variable value expected = "YW55IGNhcm5hbCBwbGVhc3VyZS4=";
@@ -64,7 +64,7 @@ void testBase64WithUtf8(){
     assertBase64(input, expected, utf8);
 }
 
-void testBase64WithAscii(){
+test void testBase64WithAscii(){
     //Some texts from wikipedia
     variable value input = "any carnal pleasure.";
     variable value expected = "YW55IGNhcm5hbCBwbGVhc3VyZS4=";

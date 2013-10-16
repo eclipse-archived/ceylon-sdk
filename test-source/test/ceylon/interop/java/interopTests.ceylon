@@ -1,15 +1,24 @@
+import ceylon.interop.java {
+    ...
+}
+import ceylon.test {
+    assertFalse,
+    assertEquals,
+    test
+}
 
-import ceylon.interop.java { ... }
-import java.lang { System { getSystemProperty=getProperty } }
-import java.util { ArrayList }
-import ceylon.test { assertFalse, assertEquals }
+import java.lang {
+    System {
+        getSystemProperty=getProperty
+    }
+}
 
-shared void stringTests() {
+test void stringTests() {
     value val = javaString(getSystemProperty("user.home"));
     assertFalse(val.empty);
 }
 
-shared void collectionTests() {
+test void collectionTests() {
     //value lst = ArrayList<Integer>(JavaCollection({ 1, 2, 3 }));
 
     //value iter = CeylonIterator(lst.iterator());
@@ -24,7 +33,7 @@ shared void collectionTests() {
     //}
 }
 
-shared void classTests() {
+test void classTests() {
     Integer x = 5;
     value klass1 = javaClassFromInstance(x);
     assertEquals("class ceylon.language.Integer", klass1.string);

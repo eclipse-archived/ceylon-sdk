@@ -1,4 +1,4 @@
-import ceylon.test { assertEquals, assertTrue, assertFalse }
+import ceylon.test { assertEquals, assertTrue, assertFalse, test }
 import ceylon.math.float { ... }
 
 Float undefined = 0.0/0.0;
@@ -44,7 +44,7 @@ Boolean exact(Object? expect, Object? got) {
     return !got exists;
 }
 
-void testExp() {
+test void testExp() {
     print("Float.exp");
     assertEquals{
         expected=1.0;
@@ -71,7 +71,7 @@ void testExp() {
     };
 }
 
-void testLog() {
+test void testLog() {
     print("Float.log");
     assertEquals{
         expected=undefined;
@@ -105,7 +105,7 @@ void testLog() {
     };
 }
 
-void testLog10() {
+test void testLog10() {
     print("Float.log10");
     assertEquals{
         expected=undefined;
@@ -139,7 +139,7 @@ void testLog10() {
     };
 }
 
-void testSin() {
+test void testSin() {
     print("Float.sin");
     assertEquals{
         expected=undefined;
@@ -188,7 +188,7 @@ void testSin() {
     };
 }
 
-void testCos() {
+test void testCos() {
     print("Float.cos");
     assertEquals{
         expected=undefined;
@@ -232,7 +232,7 @@ void testCos() {
     };
 }
 
-void testTan() {
+test void testTan() {
     print("Float.tan");
     assertEquals{
         expected=undefined;
@@ -276,7 +276,7 @@ void testTan() {
     };
 }
 
-void testAsin() {
+test void testAsin() {
     print("Float.asin");
     assertEquals{
         expected=undefined;
@@ -315,7 +315,7 @@ void testAsin() {
     };
 }
 
-void testAcos() {
+test void testAcos() {
     print("Float.acos");
     assertEquals{
         expected=undefined;
@@ -349,7 +349,7 @@ void testAcos() {
     };
 }
 
-void testAtan() {
+test void testAtan() {
     print("Float.atan");
     assertEquals{
         expected=-0.0;
@@ -368,7 +368,7 @@ void testAtan() {
     };
 }
 
-void testAtan2() {
+test void testAtan2() {
     print("Float.atan2");
     assertEquals{
         expected=undefined;
@@ -478,7 +478,7 @@ void testAtan2() {
     };
 }
 
-void testHypot() {
+test void testHypot() {
     print("Float.hypot");
     assertEquals{
         expected=0.0;
@@ -539,7 +539,7 @@ void testHypot() {
     };
 }
 
-void testSqrt() {
+test void testSqrt() {
     print("Float.sqrt");
     assertEquals{
         expected=undefined;
@@ -583,7 +583,7 @@ void testSqrt() {
     };
 }
 
-void testCbrt() {
+test void testCbrt() {
     print("Float.cbrt");
     assertEquals{
         expected=-infinity;
@@ -627,7 +627,7 @@ void testCbrt() {
     };
 }
 
-void testRandom() {
+test void testRandom() {
     print("Float.cbrt");
     for (Integer ii in 0..1000) {
         Float r = random();
@@ -636,7 +636,7 @@ void testRandom() {
     }
 }
 
-void testFloor() {
+test void testFloor() {
     print("Float.floor");
     assertEquals{
         expected=-infinity;
@@ -713,7 +713,7 @@ void testFloor() {
     };
 }
 
-void testCeiling() {
+test void testCeiling() {
     print("Float.ceiling");
     assertEquals{
         expected=-infinity;
@@ -795,7 +795,7 @@ void testCeiling() {
     };
 }
 
-void testHalfEven() {
+test void testHalfEven() {
     print("Float.halfEven");
     assertEquals{
         expected=-infinity;
@@ -877,7 +877,7 @@ void testHalfEven() {
     };
 }
 
-void testSumProduct() {
+test void testSumProduct() {
     print("Float.sum");
     assertEquals { 
         expected = 0.0; 
@@ -902,24 +902,6 @@ void testSumProduct() {
     };
 }
 
-shared void floatTests() {
+test void floatTests() {
     assertFalse(exact(0.0, -0.0), "Oops! Test is broken because we can't distinguish 0.0 and -0.0");
-    testExp();
-    testLog();
-    testLog10();
-    testSin();
-    testCos();
-    testTan();
-    testAsin();
-    testAcos();
-    testAtan();
-    testAtan2();
-    testHypot();
-    testSqrt();
-    testCbrt();
-    testRandom();
-    testFloor();
-    testCeiling();
-    testHalfEven();
-    testSumProduct();
 }

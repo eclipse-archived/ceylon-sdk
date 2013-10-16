@@ -1,7 +1,7 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
-void testSet(){
+test void testSet() {
     MutableSet<String> set = HashSet<String>();
     assertEquals("()", set.string);
     assertEquals(0, set.size);
@@ -40,7 +40,7 @@ void testSet(){
     assertEquals(HashSet{"a"}, HashSet{"a", "b"}.intersection(HashSet{2, "a"}));
 }
 
-void testSetRemove(){
+test void testSetRemove() {
     MutableSet<String> set = HashSet<String>();
     set.add("a");
     set.add("b");
@@ -59,14 +59,14 @@ void testSetRemove(){
     assertEquals(false, set.remove("b"));
 }
 
-void testSetConstructor(){
+test void testSetConstructor() {
     Set<String> set = HashSet{"a", "b"};
     assertEquals(2, set.size);
     assertTrue(set.contains("a"));
     assertTrue(set.contains("b"));
 }
 
-void testSet2(){
+test void testSet2() {
     MutableSet<String> set = HashSet<String>();
     set.add("gravatar_id");
     set.add("url");

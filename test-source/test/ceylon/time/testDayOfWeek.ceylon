@@ -1,22 +1,25 @@
-import ceylon.time { date, Date }
-import ceylon.time.base { monday, tuesday, wednesday, thursday, friday, saturday, sunday, january, december }
-
-import ceylon.test { assertTrue, assertEquals, suite }
-
-shared void runDayOfWeekTests(String suiteName="DayOfWeek tests") {
-    suite(suiteName,
-    "Testing day of week sucessor" -> testSucessors_Weekday,
-    "Testing day of week predecessor" -> testPredecessors_Weekday,
-    "Testing day of week comparable monday" -> testComparable_monday_Weekday,
-    "Testing day of week comparable tuesday" -> testComparable_tuesday_Weekday,
-    "Testing day of week comparable wednesday" -> testComparable_wednesday_Weekday,
-    "Testing day of week comparable thursday" -> testComparable_thursday_Weekday,
-    "Testing day of week comparable friday" -> testComparable_friday_Weekday,
-    "Testing day of week ordinal" -> testOrdinal_Weekday
-);
+import ceylon.test {
+    assertTrue,
+    assertEquals,
+    test
+}
+import ceylon.time {
+    date,
+    Date
+}
+import ceylon.time.base {
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday,
+    january,
+    december
 }
 
-shared void testSucessors_Weekday() {
+test void testSucessors_Weekday() {
     assertEquals{ expected = tuesday; actual = monday.successor; compare = same; };
     assertEquals{ expected = wednesday; actual = tuesday.successor; compare = same; };
     assertEquals{ expected = thursday; actual = wednesday.successor; compare = same; };
@@ -26,7 +29,7 @@ shared void testSucessors_Weekday() {
     assertEquals{ expected = monday; actual = sunday.successor; compare = same; };
 }
 
-shared void testPredecessors_Weekday() {
+test void testPredecessors_Weekday() {
     assertEquals{ expected = saturday; actual = sunday.predecessor; compare = same; };
     assertEquals{ expected = friday; actual = saturday.predecessor; compare = same; };
     assertEquals{ expected = thursday; actual = friday.predecessor; compare = same; };
@@ -36,7 +39,7 @@ shared void testPredecessors_Weekday() {
     assertEquals{ expected = sunday; actual = monday.predecessor; compare = same; };
 }
 
-shared void testComparable_monday_Weekday() {
+test void testComparable_monday_Weekday() {
     assertTrue( monday < tuesday, "monday < tuesday" );
     assertTrue( monday < wednesday, "monday < wednesday" );
     assertTrue( monday < thursday, "monday < thursday" );
@@ -45,7 +48,7 @@ shared void testComparable_monday_Weekday() {
     assertTrue( monday > sunday, "monday > sunday" );
 }
 
-shared void testComparable_tuesday_Weekday() {
+test void testComparable_tuesday_Weekday() {
     assertTrue( tuesday > monday, "tuesday > monday" );
     assertTrue( tuesday < wednesday, "tuesday < wednesday" );
     assertTrue( tuesday < thursday, "tuesday < thursday" );
@@ -54,7 +57,7 @@ shared void testComparable_tuesday_Weekday() {
     assertTrue( tuesday > sunday, "tuesday > sunday" );
 }
 
-shared void testComparable_wednesday_Weekday() {
+test void testComparable_wednesday_Weekday() {
     assertTrue( wednesday > monday, "wednesday > monday" );
     assertTrue( wednesday > tuesday, "wednesday > tuesday" );
     assertTrue( wednesday < thursday, "wednesday < thursday" );
@@ -63,7 +66,7 @@ shared void testComparable_wednesday_Weekday() {
     assertTrue( wednesday > sunday, "wednesday > sunday" );
 }
 
-shared void testComparable_thursday_Weekday() {
+test void testComparable_thursday_Weekday() {
     assertTrue( thursday > monday, "thursday > monday" );
     assertTrue( thursday > tuesday, "thursday > tuesday" );
     assertTrue( thursday > wednesday, "thursday > wednesday" );
@@ -72,7 +75,7 @@ shared void testComparable_thursday_Weekday() {
     assertTrue( thursday > sunday, "thursday > sunday" );
 }
 
-shared void testComparable_friday_Weekday() {
+test void testComparable_friday_Weekday() {
     assertTrue( friday > monday, "friday > monday" );
     assertTrue( friday > tuesday, "friday > tuesday" );
     assertTrue( friday > wednesday, "friday > wednesday" );
@@ -81,7 +84,7 @@ shared void testComparable_friday_Weekday() {
     assertTrue( friday > sunday, "friday > sunday" );
 }
 
-shared void testOrdinal_Weekday() {
+test void testOrdinal_Weekday() {
     value data_1982_12_13 = date( 1982, december, 13);
     value data_1983_01_01 = date( 1983, january, 1 );
     variable value dow = data_1982_12_13.dayOfWeek; 

@@ -1,8 +1,7 @@
-import ceylon.test { ... }
 import ceylon.math.decimal { decimalNumber }
-import java.util { Date }
+import ceylon.test { ... }
 
-void queryTests() {
+test void queryTests() {
     value q1 = sql.rows("SELECT * FROM test1 WHERE name=?");
     value r1 = q1(["First"]);
     assertTrue(r1.size > 0, "Rows with 'First");

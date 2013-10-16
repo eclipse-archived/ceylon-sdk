@@ -11,14 +11,10 @@ import ceylon.html.serializer {
     SerializerConfig
 }
 import ceylon.test {
-    assertEquals
+    assertEquals,
+    test
 }
 
-
-void testHtmlSerialization() {
-    testPrettyPrintSerialization();
-    testMinifiedSerialization();
-}
 
 object testData {
     
@@ -37,7 +33,7 @@ object testData {
 }
 
 
-void testPrettyPrintSerialization() {
+test void testPrettyPrintSerialization() {
     value expectedOutput = {
         testData.emptyPage ->
                 """
@@ -73,7 +69,7 @@ void testPrettyPrintSerialization() {
     doTestExpectedOutput(expectedOutput, true);
 }
 
-void testMinifiedSerialization() {
+test void testMinifiedSerialization() {
     value expectedOutput = {
         testData.emptyPage ->
                 "<!DOCTYPE html>

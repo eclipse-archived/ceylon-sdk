@@ -1,8 +1,14 @@
-import ceylon.collection { group }
-import ceylon.test { assertEquals }
+import ceylon.collection {
+    group
+}
+import ceylon.test {
+    assertEquals,
+    test
+}
+
 "Test the `group()` function"
 see(`function group`)
-void testGroup(){
+test void testGroup(){
     value l = {"foo", "bar", "last", "list", "end"};
     value byFirstChar = group(l, (String element) => element.first?.string else "");
     assertEquals(byFirstChar.size, 4, byFirstChar.string);
@@ -17,5 +23,4 @@ void testGroup(){
     assertEquals(byLastChar["o"], {"foo"}, byLastChar.string);
     assertEquals(byLastChar["r"], {"bar"}, byLastChar.string);
     assertEquals(byLastChar["d"], {"end"}, byLastChar.string);
-    
 }
