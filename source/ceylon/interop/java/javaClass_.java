@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
-import ceylon.language.DocAnnotation$annotation;
-import ceylon.language.SharedAnnotation$annotation;
+import ceylon.language.DocAnnotation$annotation$;
+import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.metadata.Annotation;
 import com.redhat.ceylon.compiler.java.metadata.Annotations;
@@ -13,8 +13,8 @@ import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor.Class;
 
 @Ceylon(major = 6)
 @Method
-@DocAnnotation$annotation(description = "Returns the Java `Class` reference for type `T`")
-@SharedAnnotation$annotation
+@DocAnnotation$annotation$(description = "Returns the Java `Class` reference for type `T`")
+@SharedAnnotation$annotation$
 @Annotations({@Annotation(value = "doc", arguments = {"Returns the Java `Class` reference for type `T`"}), @Annotation("shared")})
 public final class javaClass_ {
 
