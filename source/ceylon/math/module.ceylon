@@ -35,5 +35,5 @@
  decimal digits."
 by("Tom Bentley")
 module ceylon.math "1.0.0" {
-    import java.base '7';
+    import java.base "7";
 }

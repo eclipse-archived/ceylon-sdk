@@ -13,5 +13,5 @@
  "
 by("The Ceylon Team")
 module ceylon.interop.java "1.0.0" {
-    shared import java.base '7';
+    shared import java.base "7";
 }

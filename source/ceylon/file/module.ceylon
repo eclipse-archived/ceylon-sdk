@@ -110,5 +110,5 @@
  "
 by("Gavin King")
 module ceylon.file "1.0.0" {
-    import java.base '7';
+    import java.base "7";
 }

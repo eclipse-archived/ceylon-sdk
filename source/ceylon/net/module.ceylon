@@ -50,14 +50,14 @@ module ceylon.net "1.0.0" {
     shared import ceylon.io "1.0.0";
     import ceylon.file "1.0.0";
 
-    import java.base '7';
+    import java.base "7";
     
     // -- java modules --
-    import io.undertow.core '1.0.0.Beta8';
+    import io.undertow.core "1.0.0.Beta8";
 
-    import 'org.jboss.xnio.api' '3.1.0.CR6';
-    import 'org.jboss.xnio.nio' '3.1.0.CR6';
+    import "org.jboss.xnio.api" "3.1.0.CR6";
+    import "org.jboss.xnio.nio" "3.1.0.CR6";
     
     //TODO remove transitive dependency
-    import org.jboss.logging '3.1.2.GA';
+    import org.jboss.logging "3.1.2.GA";
 }
