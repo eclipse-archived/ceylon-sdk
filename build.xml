@@ -42,7 +42,7 @@
         <!--<module name="ceylon.dbc"/>-->
         <!--<module name="ceylon.interop.java"/>-->
         <module name="ceylon.time"/>
-    	<!--<module name="ceylon.html"/>-->
+    	<module name="ceylon.html"/>
     </moduleset>
     
     <moduleset id="modules.test.jvm">
@@ -74,7 +74,7 @@
         <module name="test.ceylon.time"/>
         <!--<module name="test.ceylon.dbc"/>-->
         <!--<module name="test.ceylon.interop"/>-->
-        <!--<module name="test.ceylon.html"/>-->
+        <module name="test.ceylon.html"/>
     </moduleset>
     
     <target name="clean"
@@ -218,12 +218,10 @@
           <rep url="${test.repo}"/>
         </ceylon-run-js>
         
-    	<!--
         <ceylon-run-js module="test.ceylon.html/${sdk.version}"
             executable="${ceylon.executable}">
             <reposet refid="reposet.run.test"/>
         </ceylon-run-js>
-        -->
 
     </target>
 

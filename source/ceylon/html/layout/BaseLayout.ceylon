@@ -9,9 +9,6 @@ import ceylon.html {
     CharsetMeta,
     BlockElement
 }
-import ceylon.io.charset {
-    utf8
-}
 
 "A simple HTML5 boilerplate layout."
 shared class BaseLayout(title, body = Div()) satisfies Layout {
@@ -40,7 +37,7 @@ shared class BaseLayout(title, body = Div()) satisfies Layout {
         Head {
             title = title;
             metaContent = {
-                CharsetMeta(utf8),
+                CharsetMeta(),
                 Meta("description", description)
             };
             stylesheets = concatenate({
