@@ -5,7 +5,10 @@ import ceylon.html {
     TextNode,
     blockTag,
     CssClass,
-    ParentNode, Snippet
+    ParentNode,
+    Snippet,
+    StyledElement,
+    BaseElement
 }
 
 shared class NodeSerializer(
@@ -14,8 +17,6 @@ shared class NodeSerializer(
     "Serialization options"
     SerializerConfig config = SerializerConfig()
 ) {
-
-    //shared Boolean isPartial => is Html root;
 
     variable value indentLevel = 0;
 
@@ -37,8 +38,9 @@ shared class NodeSerializer(
             visit(child);
         } else if (is {Node*} child) {
             visitNodes(child);
-        } else if (is Snippet<Node> child) {
-            visitAny(child.content);
+        } else if (is Snippet<Node> child,
+                exists content = child.content) {
+            visitAny(content);
         }
     }
     
@@ -99,9 +101,22 @@ shared class NodeSerializer(
 
     void printAttributes(Element node) {
         printAttribute("id", node.id);
-        printCssClassAttribute(node.classNames);
-        printAttribute("title", node.title);
-        printAttribute("accesskey", node.accessKey);
+        if (is StyledElement node) {
+            printCssClassAttribute(node.classNames);
+            printAttribute("style", node.style);
+        }
+        if (is BaseElement node) {
+            printAttribute("title", node.title);
+            printAttribute("accesskey", node.accessKey);
+
+            for (name->val in node.attributes) {
+                printAttribute(name, val.string);
+            }
+
+            for (name->val in node.data) {
+                printAttribute("data-``name``", val.string);
+            }
+        }
     }
 
     void printAttribute(String name, Object? val) {
@@ -129,22 +144,6 @@ shared class NodeSerializer(
             visit(node);
         }
     }
-
-    //void visitTextNode(String node) {
-    //    print(node);
-    //}
-
-    //void visitHtmlNode(HtmlNode node) {
-    //    if (is Node node) {
-    //        visit(node);
-    //    } else if (is {Node*} node) {
-    //        visitNodes(node);
-    //    }
-    //    //else if (is String node) {
-    //    //    visitTextNode(node);
-    //    //}
-    //    // TODO use switch-case to exhaust all cases ?
-    //}
 
     void linefeed(Boolean force = false) {
         if (prettyPrint || force) {

@@ -1,5 +1,6 @@
 
-shared class Script(type = javascript) satisfies Node {
+shared class Script(String? id = null, type = javascript)
+        extends Element(id) {
 
     shared ScriptType type;
 

@@ -61,6 +61,8 @@ shared {Doctype+} xhtmlDoctypes = {
     xhtml1Transitional, xhtml1Frameset
 };
 
+"The document type. It provides information about how the [[Document]]
+ shall be defined and serialized."
 shared abstract class Doctype()
         of html4Transitional | html4Strict | html4Frameset
         | xhtml1Transitional | xhtml1Strict | xhtml1Frameset

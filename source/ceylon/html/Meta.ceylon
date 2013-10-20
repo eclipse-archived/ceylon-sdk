@@ -3,7 +3,8 @@ import ceylon.io.charset {
     Charset
 }
 
-shared class Meta(name, content = "") satisfies Node {
+shared class Meta(name, content = "", String? id = null)
+        extends Element(id) {
 
     shared String name;
 

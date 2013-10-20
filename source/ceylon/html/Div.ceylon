@@ -1,18 +1,45 @@
-import ceylon.html { ParentNode, CssClass, Aria, TextNode, ExtraAttributes, BlockElement, Element }
+"""This element has no special meaning, but it's very useful for
+   semantic element grouping as a *block*. Basically a `div`
+   represents its children, using CSS classes to mark up semantics
+   common to a group of consecutive elements (like a gallery of
+   image thumbs, for example):
 
+   ```
+   Div {
+       classNames = "gallery";
+       Div {
+           classNames = "thumb";
+       },
+       // ... more thumbs
+       Div {
+           classNames = "thumb";
+       }
+   }
 
-shared class Div(text = "", String? accessKey = null,
-        CssClass classNames = [], String? contextMenu = null,
-        String? id = null, Boolean? hidden = null, String? lang = null,
-        Boolean? spellcheck = null, String? style = null, String? title = null,
-        Boolean? translate = null, Aria? aria = null,
-        ExtraAttributes attributes = {}, children = {})
-    extends Element(accessKey, classNames, contextMenu, id, hidden, lang,
-        spellcheck, style, title, translate, aria, attributes)
-    satisfies TextNode & BlockElement & ParentNode<BlockElement> {
+   If you want to group elements in a inline manner, see [[Span]]
+
+   ```
+   Technical details about this element can be found on the
+   [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-div-element)
+   """
+shared class Div(text = "", String? id = null, CssClass classNames = [],
+            String? style = null, String? accessKey = null,
+            String? contextMenu = null, TextDirection? dir = null,
+            Boolean? draggable = null, DropZone? dropZone = null,
+            Boolean? inert = null, Boolean? hidden = null,
+            String? lang = null, Boolean? spellcheck = null,
+            Integer? tabIndex = null, String? title = null,
+            Boolean? translate = null, Aria? aria = null,
+            ExtraAttributes attributes = empty,
+            DataContainer data = empty,
+            children = {})
+        extends BaseElement(id, classNames, style, accessKey, contextMenu,
+            dir, draggable, dropZone, inert, hidden, lang, spellcheck,
+            tabIndex, title, translate, aria, attributes, data)
+        satisfies TextNode & BlockElement & ParentNode<BlockOrInline> {
 
     shared actual String text;
 
-    shared actual {<BlockElement|{BlockElement*}|Snippet<BlockElement>|Null>*} children;
+    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
 }

@@ -1,5 +1,7 @@
-"Defines a relationship vetween the `Html` and an external resource."
-shared class Link(rel, type, href) satisfies Node {
+
+"Defines a relationship between the `Html` and an external resource."
+shared class Link(rel, type, href, String? id)
+        extends Element(id) {
 
     "The relationship type."
     shared String|LinkRel rel;
@@ -39,4 +41,6 @@ shared class LinkType(type) {
 shared object css extends LinkType("text/css") {}
 
 "Utility `Link` extension representing an CSS resource."
-shared class CssLink(String href) extends Link(stylesheet, css, href) {}
+shared class CssLink(String href, String? id = null)
+        extends Link(stylesheet, css, href, id) {
+}

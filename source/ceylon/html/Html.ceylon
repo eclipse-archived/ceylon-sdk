@@ -1,8 +1,8 @@
-import ceylon.html.serializer {
-	NodeSerializer
-}
+import ceylon.html.serializer { NodeSerializer }
+
 ""
-shared class Html(doctype = html5, head = Head(), body = Body())
+shared class Html(doctype = html5, head = Head(), body = Body(), String? id = null)
+        extends Element(id)
         satisfies ParentNode<Head|Body> & Document {
     
     shared actual Doctype doctype;
@@ -12,8 +12,6 @@ shared class Html(doctype = html5, head = Head(), body = Body())
     shared Body body;
     
     shared actual {<Head|Body>*} children = { head, body };
-    
-    shared actual Node root => body;
     
     shared actual String string {
         value builder = StringBuilder();
