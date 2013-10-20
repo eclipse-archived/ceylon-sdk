@@ -1,16 +1,16 @@
 
-"The [[Tag]] type, which can be [[blockTag]] or [[inlineTag]]."
-shared abstract class TagType() of blockTag | inlineTag {}
+"The [[Tag]] type, which can be [[blockTag]] or [[emptyTag]]."
+shared abstract class TagType() of blockTag | emptyTag {}
 
 "Block tags are often represented by an opening and a closing tag,
  with content/children between."
 see(`class Div`)
 shared object blockTag extends TagType() {}
 
-"Inline tags are self-contained. They open and close with
+"Empty tags are self-contained. They open and close with
  no text content nor children."
 see(`class Meta`)
-shared object inlineTag extends TagType() {}
+shared object emptyTag extends TagType() {}
 
 
 "Represents a tag, which is the actual text representation of
@@ -22,7 +22,7 @@ shared class Tag(name, type = blockTag, namespacePrefix = null) {
     shared String name;
 
     "The type of the tag. For example, `<div></div>` is a [[blockTag]]
-     while `<img />` is an [[inlineTag]]."
+     while `<img />` is an [[emptyTag]]."
     shared TagType type;
 
     shared String? namespacePrefix;

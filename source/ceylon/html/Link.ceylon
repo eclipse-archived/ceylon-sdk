@@ -12,6 +12,8 @@ shared class Link(rel, type, href, String? id)
     "The reference to the resource."
     shared String href; // TODO Uri
 
+    tag = Tag("link", emptyTag);
+
 }
 
 "The relationship kind between the current document and the linked document."

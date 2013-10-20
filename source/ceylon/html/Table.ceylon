@@ -33,6 +33,8 @@ shared class Table(header = {}, rows = {}, footer = null,
                 footer exists then TFoot(footer else {})
             };
 
+    tag = Tag("table");
+
 }
 
 "Represents the row that consist of the column labels
@@ -45,6 +47,8 @@ class THead({Th?*} headers = {})
         satisfies ParentNode<Tr> & TableElement {
 
     shared actual {Tr?*} children => { Tr { children = headers; } };
+
+    tag = Tag("thead");
 
 }
 
@@ -59,6 +63,8 @@ class TBody({<Tr|Snippet<Tr>?>*} rows = {})
 
     shared actual {<Tr|Snippet<Tr>?>*} children = rows;
 
+    tag = Tag("tbody");
+
 }
 
 "Represents the block of rows ([[Tr]]) that consist of the column ([[Td]])
@@ -71,6 +77,8 @@ class TFoot({Tr?*} rows = {})
         satisfies ParentNode<Tr> & TableElement {
 
     shared actual {Tr?*} children = rows;
+
+    tag = Tag("tfoot");
 
 }
 
@@ -95,6 +103,8 @@ shared class Tr(String? id = null, CssClass classNames = [],
 
     shared actual {<Th|Td|{<Th|Td>*}|Snippet<Th|Td>|Null>*} children;
 
+    tag = Tag("tr");
+
 }
 
 "Represents a header cell in a [[Table]].
@@ -115,11 +125,13 @@ shared class Th(text = "", String? id = null, CssClass classNames = [],
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, attributes, data)
         satisfies TextNode & ParentNode<BlockElement> & TableElement {
-    
+
     shared actual String text;
-    
+
     shared actual {<BlockElement|{BlockElement*}?>*} children;
-    
+
+    tag = Tag("th");
+
 }
 
 "Represents a data cell in a [[Table]].
@@ -144,5 +156,7 @@ shared class Td(text = "", String? id = null, CssClass classNames = [],
     shared actual String text;
 
     shared actual {<BlockElement|{BlockElement*}?>*} children;
+
+    tag = Tag("td");
 
 }

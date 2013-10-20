@@ -15,7 +15,7 @@ shared class Meta(name, content = "", String? id = null)
     "The content (value) of the metadata."
     shared String content;
 
-    tag => Tag(tagName, inlineTag);
+    tag = Tag("meta", emptyTag);
 
 }
 

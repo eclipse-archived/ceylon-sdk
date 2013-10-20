@@ -21,4 +21,6 @@ shared class Body(String? id = null, CssClass classNames = [],
     shared actual {<BlockElement|Null|Script|Snippet<BlockElement>|
             {BlockElement*}|{Script*}>*} children;
 
+    tag = Tag("body");
+
 }

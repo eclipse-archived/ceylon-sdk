@@ -24,6 +24,8 @@ shared class Head(title = "", metaContent = {},
     shared actual {<HeadElements|Null>*} children
             => concatenate({ Title(title) }, metaContent, scripts);
 
+    tag = Tag("head");
+
 }
 
 "Represents the title node, present only on the head of the document."
@@ -33,5 +35,7 @@ shared class Title(
 ) satisfies TextNode {
 
     shared actual String text = content;
+
+    tag = Tag("title");
 
 }

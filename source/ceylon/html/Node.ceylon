@@ -1,6 +1,4 @@
-import ceylon.language.meta {
-    type
-}
+import ceylon.html.serializer { NodeSerializer }
 
 "Represents a single node in the `Document` tree.
  This is the **base type** for the entire Document
@@ -9,21 +7,14 @@ import ceylon.language.meta {
 see(`interface ParentNode`, `interface TextNode`, `interface Document`)
 shared interface Node {
 
-    "The tag name, which textually represents this node.
-     The default implementation guess the tag name from the
-     [[ceylon.language.meta.model::ClassModel]] declaration
-     name in lowercase. So unless you need a name that doesn't
-     match the class name, you don't need to overwrite it."
-    shared default String tagName {
-        variable value tag = type(this).declaration.name;
-        if (exists lastDot = tag.lastOccurrence(".")) {
-            tag = tag[(lastDot + 1)...];
-        }
-        return tag.lowercased;
-    }
-
     "The tag name and type."
-    shared default Tag tag => Tag(tagName);
+    shared formal Tag tag;
+
+    shared actual String string {
+        value builder = StringBuilder();
+        NodeSerializer(builder.append).serialize(this);
+        return builder.string;
+    }
 
 }
 

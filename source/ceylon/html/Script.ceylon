@@ -4,6 +4,8 @@ shared class Script(String? id = null, type = javascript)
 
     shared ScriptType type;
 
+    tag = Tag("script");
+
 }
 
 shared abstract class ScriptType(type) {

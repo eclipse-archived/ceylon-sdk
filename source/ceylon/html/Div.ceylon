@@ -42,4 +42,6 @@ shared class Div(text = "", String? id = null, CssClass classNames = [],
 
     shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
+    tag = Tag("div");
+
 }
