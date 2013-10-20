@@ -18,7 +18,7 @@ shared interface Node {
 
 }
 
-""
+"Marks a [[Node]] implementation as a possible parent of other nodes."
 shared interface ParentNode<out Child>
         satisfies Node
             given Child satisfies Node {
@@ -27,9 +27,9 @@ shared interface ParentNode<out Child>
 
 }
 
-
+"Marks a [[Node]] implementation as a text container."
 shared interface TextNode satisfies Node {
-    
+
     shared formal String text;
     
 }
@@ -43,4 +43,3 @@ shared interface Document of Html satisfies Node {
     shared formal Doctype doctype;
 
 }
-

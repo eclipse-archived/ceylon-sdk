@@ -12,11 +12,15 @@ shared abstract class Element(id = null)
 
 }
 
+"Implementations of this class represents an element that can be styled
+ using CSS."
 shared abstract class StyledElement(String? id, classNames = [], style = null)
         extends Element(id) {
 
+    "CSS class names."
     shared CssClass classNames;
 
+    "CSS style properties."
     shared String? style;
 
 }
@@ -47,7 +51,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
 
     "Defines the behavior when other element is dropped on this element.
      Note: everytime you define a element as a drop zone, you should also
-     define it's [[ceylon.html::BaseElement.title]] attribute for the purpose
+     define it's [[BaseElement.title]] attribute for the purpose
      of non-visual interactions"
     shared DropZone? dropZone;
 

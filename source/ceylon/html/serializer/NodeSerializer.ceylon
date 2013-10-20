@@ -108,6 +108,16 @@ shared class NodeSerializer(
         if (is BaseElement node) {
             printAttribute("title", node.title);
             printAttribute("accesskey", node.accessKey);
+            printAttribute("contextmenu", node.contextMenu);
+            printAttribute("dir", node.dir);
+            printAttribute("draggable", node.draggable);
+            printAttribute("dropzone", node.dropZone);
+            printAttribute("hidden", node.hidden);
+            printAttribute("inert", node.inert);
+            printAttribute("lang", node.lang);
+            printAttribute("spellcheck", node.spellcheck);
+            printAttribute("tabindex", node.tabIndex);
+            printAttribute("translate", node.translate);
 
             for (name->val in node.attributes) {
                 printAttribute(name, val.string);
