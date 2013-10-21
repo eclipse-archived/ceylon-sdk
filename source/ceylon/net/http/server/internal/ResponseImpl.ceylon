@@ -30,20 +30,13 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
 
         value charset = findCharset();
         ByteBuffer buffer = charset.encode(string);
-        //TODO use underlaying java ByteBuffer
-        ByteArray bytes = ByteArray(buffer.available);
-        variable Integer i = 0;
-        while(buffer.hasAvailable) {
-            bytes.set(i++, buffer.get());
-        }
-        if (bytes.size > 0) {
-            value bb = wrapByteBuffer(bytes);
-            response.write(bb);
+        if (buffer.available > 0) {
+            response.write(nativeByteBuffer(buffer));
             try {
                 response.awaitWritable();
             } catch(JIOException e) {
                 //TODO log
-                print(e);
+                print("Error sending response: ``e``");
             }
         }
     }
@@ -149,5 +142,21 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             }
         }
         return defaultCharset;
+    }
+
+    JByteBuffer nativeByteBuffer(ByteBuffer buffer) {
+        Object? implementation = buffer.implementation;
+        if (is JByteBuffer implementation ) {
+            return implementation;
+        } else {
+            //TODO log warning
+            print("Cannot access native implementation of ByteBuffer. Copying values ...");
+            ByteArray bytes = ByteArray(buffer.available);
+            variable Integer i = 0;
+            while(buffer.hasAvailable) {
+                bytes.set(i++, buffer.get());
+            }
+            return wrapByteBuffer(bytes);
+        }
     }
 }
