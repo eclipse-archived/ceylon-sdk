@@ -414,6 +414,9 @@ test void testPeriodTimeStep() {
 
 test void testStringDateTime() {
     assertEquals("1982-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.string);
+    assertEquals("0000-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.withYear(0).string);
+    assertEquals("0010-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.withYear(10).string);
+    assertEquals("0100-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.withYear(100).string);
 }
 
 void assertFromToDateTime( Period period, DateTime from, DateTime to ) {

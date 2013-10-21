@@ -312,6 +312,9 @@ test void testSuccessor() {
 test void testString() {
     assertEquals( data_1982_12_13.string, "1982-12-13" );
     assertEquals( date(2012, january, 1 ).string, "2012-01-01" );
+    assertEquals( date(0, january, 1 ).string, "0000-01-01" );
+    assertEquals( date(10, january, 1 ).string, "0010-01-01" );
+    assertEquals( date(100, january, 1 ).string, "0100-01-01" );
 }
 
 test void testAt() {

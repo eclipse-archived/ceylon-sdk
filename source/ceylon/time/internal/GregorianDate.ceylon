@@ -238,7 +238,7 @@ shared class GregorianDate( Integer dayOfEra )
     "Returns ISO-8601 formatted String representation of this date.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Dates"
     shared actual String string {
-        return "``year``-``leftPad(month.integer)``-``leftPad(day)``";	
+        return "``leftPad(year, "0000")``-``leftPad(month.integer)``-``leftPad(day)``";	
     }
 
     "Returns the period between this and the given date.
