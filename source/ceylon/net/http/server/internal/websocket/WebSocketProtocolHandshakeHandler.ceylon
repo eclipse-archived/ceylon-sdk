@@ -21,12 +21,11 @@ shared class WebSocketProtocolHandshakeHandler(CeylonWebSocketHandler webSocketH
     });
 
     shared actual void handleRequest(HttpServerExchange exchange) {
-        //TODO schema aware
-        exchange.requestHeaders.contains(headerUpgrade);
-        //if (!{"ws", "wss"}.contains(exchange.requestScheme)) {
-        //    next.handleRequest(exchange);
-        //    return;
-        //}
+        //if no upgrade header it is not a valid WS handshake
+        if (!exchange.requestHeaders.contains(headerUpgrade)) {
+            next.handleRequest(exchange);
+            return;
+        }
     
         AsyncWebSocketHttpServerExchange facade = AsyncWebSocketHttpServerExchange(exchange);
         variable Handshake? handshaker = null;
