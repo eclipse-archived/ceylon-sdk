@@ -63,43 +63,50 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     void invokeEndpoint(HttpEndpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange ) {
         switch (endpoint)
         case (is AsynchronousEndpoint) {
-            exchange.dispatch(AsyncInvoker(endpoint, request, response, exchange));
+            exchange.dispatch(AsyncInvoker(endpoint, request, response));
         }
         case (is Endpoint) {
-            exchange.dispatch(SynchronousInvoker(endpoint, request, response, exchange));
+            exchange.dispatch(SynchronousInvoker(endpoint, request, response));
         } else {
             //TODO remove else, all cases are covered
         }
     }
-    
-    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange) 
-            satisfies Runnable {
-        shared actual void run() {
+
+    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, ResponseImpl response) 
+            satisfies HttpHandler {
+
+        shared actual void handleRequest(JHttpServerExchange? httpServerExchange) {
             void complete() {
                 response.responseDone();
-                exchange.endExchange();
+                endExchange(httpServerExchange);
             }
             endpoint.service(request, response, complete);
         }
-       
     }
-    
-    class SynchronousInvoker(Endpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange) 
+
+    class SynchronousInvoker(Endpoint endpoint, Request request, ResponseImpl response) 
             satisfies HttpHandler {
-        
+
         shared actual void handleRequest(JHttpServerExchange? httpServerExchange) {
             endpoint.service(request, response);
+            response.responseDone();
+            endExchange(httpServerExchange);
         }
-        
     }
-    
 
-    
     Boolean isMethodSupported(HttpEndpoint endpoint, Method method) { 
         if (endpoint.acceptMethod.size > 0) {
             return endpoint.acceptMethod.contains(method);
         } else {
             return true;
+        }
+    }
+
+    void endExchange(JHttpServerExchange? httpServerExchange) {
+        if (exists httpServerExchange) {
+            httpServerExchange.endExchange();
+        } else {
+            throw InternalException("HttpExchange shoud not be null!");
         }
     }
 }
