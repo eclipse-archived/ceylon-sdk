@@ -67,8 +67,6 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
         }
         case (is Endpoint) {
             exchange.dispatch(SynchronousInvoker(endpoint, request, response));
-        } else {
-            //TODO remove else, all cases are covered
         }
     }
 
