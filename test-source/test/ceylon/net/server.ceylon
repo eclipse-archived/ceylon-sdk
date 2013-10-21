@@ -13,6 +13,16 @@ import ceylon.collection { LinkedList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
 import java.util.concurrent { Semaphore }
 import java.lang { Runnable, Thread }
+import ceylon.html {
+    Html,
+    html5,
+    Head,
+    Body,
+    P
+}
+import ceylon.html.serializer {
+    NodeSerializer
+}
 
 by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
@@ -113,6 +123,21 @@ test void testServer() {
     });
     
 
+    server.addEndpoint(Endpoint { 
+        path = startsWith("/serializer"); 
+        void service(Request request, Response response) {
+            NodeSerializer(response.writeString).serialize(
+                Html {
+                    doctype = html5; 
+                    Head { title = "Hello"; }; 
+                    Body {
+                        P("Hello!")
+                    };
+                }
+            );
+        }
+    });
+
     object serverListerner satisfies StatusListener {
         shared actual void onStatusChange(Status status) {
             if (status.equals(started)) {
@@ -133,6 +158,8 @@ test void testServer() {
                     
                     //TODO enable session test when client suports it
                     //sessionTest();
+                    
+                    testSerializer();
                     
                     //TODO multipart post
                     
@@ -418,6 +445,17 @@ void sessionTest() {
     print("Response content: " + responseContent2);
     assertEquals("2", responseContent2);
     response2.close();
+}
+
+void testSerializer() {
+    value request = ClientRequest(parse("http://localhost:8080/serializer"), get);
+    
+    value response = request.execute();
+    value responseContent = response.contents;
+    //TODO log
+    print("Response content: " + responseContent);
+    assertTrue(responseContent.contains("Hello"), "Response does not contain Hello.");
+    response.close();
 }
 
 Semaphore mutex = Semaphore(0);
