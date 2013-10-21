@@ -10,8 +10,7 @@ import java.io { JIOException=IOException }
 import java.lang { arrays, ByteArray }
 import java.nio { 
     JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
-import org.xnio.channels { StreamSinkChannel,
-                           Channels { chFlushBlocking=flushBlocking } }
+import org.xnio.channels { StreamSinkChannel }
 import ceylon.io.buffer { ByteBuffer }
 
 by("Matej Lazar")
@@ -97,11 +96,6 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     shared void responseDone() {
         //Retry to apply headers, if there were no writes, headers were not applied.
         applyHeadersToExchange();
-        
-        /* all done by endExchange
-        response.shutdownWrites();
-        chFlushBlocking(response);
-        response.close();*/
     }
 
     void applyHeadersToExchange() {
