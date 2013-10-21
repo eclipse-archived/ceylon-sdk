@@ -12,7 +12,7 @@ import java.nio {
     JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import org.xnio.channels { StreamSinkChannel,
                            Channels { chFlushBlocking=flushBlocking } }
-import ceylon.io.buffer { Buffer }
+import ceylon.io.buffer { ByteBuffer }
 
 by("Matej Lazar")
 shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
@@ -29,23 +29,25 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         applyHeadersToExchange();
 
         value charset = findCharset();
-        Buffer<Integer> buffer = charset.encode(string);
-        
+        ByteBuffer buffer = charset.encode(string);
+        //TODO use underlaying java ByteBuffer
         ByteArray bytes = ByteArray(buffer.available);
         variable Integer i = 0;
         while(buffer.hasAvailable) {
             bytes.set(i++, buffer.get());
         }
-        value bb = wrapByteBuffer(bytes);
-        response.write(bb);
-        try {
-            response.awaitWritable();
-        } catch(JIOException e) {
-            //TODO log
-            print(e);
+        if (bytes.size > 0) {
+            value bb = wrapByteBuffer(bytes);
+            response.write(bb);
+            try {
+                response.awaitWritable();
+            } catch(JIOException e) {
+                //TODO log
+                print(e);
+            }
         }
     }
-    
+
     shared actual void writeBytes(Array<Integer> bytes) {
         applyHeadersToExchange();
         
