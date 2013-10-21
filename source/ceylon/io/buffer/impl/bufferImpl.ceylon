@@ -88,5 +88,8 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
     shared actual Array<Integer> bytes() {
         return buf.array().array;
     }
+    
+    shared actual Object? implementation => underlyingBuffer;
+
 }
 

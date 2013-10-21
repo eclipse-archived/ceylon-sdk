@@ -9,7 +9,10 @@ see(`class Buffer`,
     `function newByteBuffer`,
     `function newByteBufferWithData`)
 shared abstract class ByteBuffer() extends Buffer<Integer>(){
-	shared formal Array<Integer> bytes();
+    shared formal Array<Integer> bytes();
+    
+    "The platform-specific implementation object, if any."
+    shared formal Object? implementation;
 }
 
 "Allocates a new empty [[ByteBuffer]] of the given [[capacity]]."
