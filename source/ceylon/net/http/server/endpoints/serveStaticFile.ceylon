@@ -20,22 +20,24 @@ shared void serveStaticFile(externalPath)
         
         value openFile = newOpenFile(file);
         try {
-            Integer available = file.size;
+            variable Integer available = file.size;
             response.addHeader(contentLength(available.string));
             if (is String cntType = file.contentType) {
                 response.addHeader(contentType(cntType));
             }
-            
-            //TODO transfer bytes efficiently between two channels. 
-            //     using org.xnio.channels.Channels.transferBlocking
-            //use completionHandler to notify request complete
-            ByteBuffer buffer = newByteBuffer(available);
-            //while (available > 0) {
-            //value read = 
-            openFile.read(buffer);
-            //available -= read;
-            response.writeBytes(buffer.bytes());
-            //buffer.flip();
+
+            ByteBuffer buffer = newByteBuffer(1024);
+            while (available > 0) {
+                value read = openFile.read(buffer);
+                if (read == -1) {
+                    available = 0;
+                } else {
+                    available -= read;
+                }
+                buffer.flip();
+                response.writeByteBuffer(buffer);
+                buffer.clear();
+            }
         } finally {
             openFile.close();
         }

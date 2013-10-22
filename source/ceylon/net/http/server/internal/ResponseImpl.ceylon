@@ -29,38 +29,28 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
 
         value charset = findCharset();
         ByteBuffer buffer = charset.encode(string);
-        if (buffer.available > 0) {
-            response.write(nativeByteBuffer(buffer));
-            try {
-                response.awaitWritable();
-            } catch(JIOException e) {
-                //TODO log
-                print("Error sending response: ``e``");
-            }
-        }
+        writeJByteBuffer(nativeByteBuffer(buffer));
     }
 
     shared actual void writeBytes(Array<Integer> bytes) {
         applyHeadersToExchange();
-        
-        //TODO nonblocking write
-        //exchange.responseSender.send(byteBuffer, ioCallback);
-        
-        value bb = wrapByteBuffer(arrays.asByteArray(bytes));
-        
-        variable Integer remaining = bytes.size;
-        while (remaining > 0) {
-            variable Integer written = 0;
-            
-            while(bb.hasRemaining()) {
-                written = response.write(bb);
-                remaining -= written;
-                try {
-                    response.awaitWritable();
-                } catch(JIOException e) {
-                    //TODO log
-                    print(e);
-                }
+
+        value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
+        writeJByteBuffer(jByteBuffer);
+    }
+    
+    shared actual void writeByteBuffer(ByteBuffer byteBuffer) {
+        applyHeadersToExchange();
+        writeJByteBuffer(nativeByteBuffer(byteBuffer));
+    }
+
+    void writeJByteBuffer(JByteBuffer byteBuffer) {
+        while(byteBuffer.hasRemaining()) {
+            response.write(byteBuffer);
+            try {
+                response.awaitWritable();
+            } catch(JIOException e) {
+                throw Exception("Cannot write response.", e);
             }
         }
     }
