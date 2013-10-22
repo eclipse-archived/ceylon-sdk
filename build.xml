@@ -236,6 +236,9 @@
             nomtimecheck="true"
             encoding="UTF-8">
             <moduleset refid="modules.sdk.jvm"/>
+            <linkset>
+                <link pattern="ceylon" url="http://modules.ceylon-lang.org/test/"/>
+            </linkset>
         </ceylon-doc>
         
     </target>
