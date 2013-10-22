@@ -1,4 +1,4 @@
-import ceylon.net.http.server { Response, Exception }
+import ceylon.net.http.server { Response, Exception, SendCallback }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }
@@ -12,6 +12,7 @@ import java.nio {
     JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import org.xnio.channels { StreamSinkChannel }
 import ceylon.io.buffer { ByteBuffer }
+import io.undertow.io { JIoCallback = IoCallback }
 
 by("Matej Lazar")
 shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
@@ -32,6 +33,14 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         writeJByteBuffer(nativeByteBuffer(buffer));
     }
 
+    shared actual void writeStringAsynchronous(String string, SendCallback sendCallback) {
+        applyHeadersToExchange();
+
+        value charset = findCharset();
+        ByteBuffer byteBuffer = charset.encode(string);
+        writeByteBufferAsynchronous(byteBuffer, sendCallback);
+    }
+
     shared actual void writeBytes(Array<Integer> bytes) {
         applyHeadersToExchange();
 
@@ -39,9 +48,21 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         writeJByteBuffer(jByteBuffer);
     }
     
+    shared actual void writeBytesAsynchronous(Array<Integer> bytes, SendCallback sendCallback) {
+        applyHeadersToExchange();
+
+        value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
+        writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(sendCallback, this));
+    }
+    
     shared actual void writeByteBuffer(ByteBuffer byteBuffer) {
         applyHeadersToExchange();
         writeJByteBuffer(nativeByteBuffer(byteBuffer));
+    }
+
+    shared actual void writeByteBufferAsynchronous(ByteBuffer byteBuffer, SendCallback sendCallback) {
+        applyHeadersToExchange();
+        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(sendCallback, this));
     }
 
     void writeJByteBuffer(JByteBuffer byteBuffer) {
@@ -52,6 +73,12 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             } catch(JIOException e) {
                 throw Exception("Cannot write response.", e);
             }
+        }
+    }
+    
+    void writeJByteBufferAsynchronous(JByteBuffer jByteBuffer, JIoCallback sendCallback) {
+        if (jByteBuffer.hasRemaining()) {
+            exchange.responseSender.send(jByteBuffer, sendCallback);
         }
     }
     
@@ -132,17 +159,17 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         return defaultCharset;
     }
 
-    JByteBuffer nativeByteBuffer(ByteBuffer buffer) {
-        Object? implementation = buffer.implementation;
+    JByteBuffer nativeByteBuffer(ByteBuffer byteBuffer) {
+        Object? implementation = byteBuffer.implementation;
         if (is JByteBuffer implementation ) {
             return implementation;
         } else {
             //TODO log warning
             print("Cannot access native implementation of ByteBuffer. Copying values ...");
-            ByteArray bytes = ByteArray(buffer.available);
+            ByteArray bytes = ByteArray(byteBuffer.available);
             variable Integer i = 0;
-            while(buffer.hasAvailable) {
-                bytes.set(i++, buffer.get());
+            while(byteBuffer.hasAvailable) {
+                bytes.set(i++, byteBuffer.get());
             }
             return wrapByteBuffer(bytes);
         }
