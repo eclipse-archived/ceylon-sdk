@@ -177,7 +177,10 @@ test void testServer() {
     server.addListener(serverListerner);
 
     server.startInBackground {
-        serverOptions = Options {defaultCharset = utf8;};
+        serverOptions = Options {
+            defaultCharset = utf8;
+            workerTaskMaxThreads=2;
+        };
     };
     waitTestToComplete();
 }
