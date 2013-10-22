@@ -32,7 +32,7 @@ import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHan
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
 import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler, WebSocketProtocolHandshakeHandler }
-import ceylon.net.http.server.websocket { WebSocketEndpoint }
+import ceylon.net.http.server.websocket { WebSocketBaseEndpoint }
 
 by("Matej Lazar")
 shared class DefaultServer() satisfies Server {
@@ -49,7 +49,7 @@ shared class DefaultServer() satisfies Server {
         endpoints.add(endpoint);
     }
     
-    shared actual void addWebSocketEndpoint(WebSocketEndpoint endpoint) {
+    shared actual void addWebSocketEndpoint(WebSocketBaseEndpoint endpoint) {
         webSocketHandler.addEndpoint(endpoint);
     }
     

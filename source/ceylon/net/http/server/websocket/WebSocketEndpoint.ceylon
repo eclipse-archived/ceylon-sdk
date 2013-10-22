@@ -3,6 +3,7 @@ import ceylon.io.buffer { ByteBuffer }
 
 by("Matej Lazar")
 shared abstract class WebSocketBaseEndpoint(Matcher path, onOpen, onClose, onError)
+        of WebSocketEndpoint | WebSocketFragmentedEndpoint
         extends EndpointBase(path) {
 
     shared void onOpen(WebSocketChannel channel);
