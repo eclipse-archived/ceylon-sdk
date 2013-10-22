@@ -27,7 +27,7 @@ import org.xnio {
 import org.xnio.channels { AcceptingChannel }
 import io.undertow.server { HttpOpenListener, HttpHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stopping, stopped, Endpoint, AsynchronousEndpoint, InternalException }
+import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stopping, stopped, InternalException, HttpEndpoint }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
@@ -37,25 +37,26 @@ import ceylon.net.http.server.websocket { WebSocketEndpoint }
 by("Matej Lazar")
 shared class DefaultServer() satisfies Server {
     
+    Endpoints endpoints = Endpoints();
+
     variable XnioWorker? worker = null;
     
-    variable CeylonRequestHandler httpHandler = CeylonRequestHandler();
     CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
     
     MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
     
-    shared actual void addEndpoint(Endpoint|AsynchronousEndpoint endpoint) {
-        httpHandler.addWebEndpoint(endpoint);
+    shared actual void addEndpoint(HttpEndpoint endpoint) {
+        endpoints.add(endpoint);
     }
     
     shared actual void addWebSocketEndpoint(WebSocketEndpoint endpoint) {
         webSocketHandler.addEndpoint(endpoint);
     }
     
-    HttpHandler getHeandlers(Options options) {
+    HttpHandler getHeandlers(Options options, HttpHandler next) {
         value webSocketProtocolHandshakeHandler = WebSocketProtocolHandshakeHandler(
                                                         webSocketHandler,
-                                                        httpHandler);
+                                                        next);
         
         value sessionconfig = SessionCookieConfig();
         SessionAttachmentHandler sessionHandler = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
@@ -66,12 +67,11 @@ shared class DefaultServer() satisfies Server {
         return errPageHandler;
     }
     
-    shared actual void start(Integer port, String host, Options options) {  //TODO immutability move options to constructor, use SocketAddres for host:post
+    shared actual void start(Integer port, String host, Options options) {  //TODO use SocketAddres for host:post
         notifyListeners(starting);
         //TODO log
         print("Starting on ``host``:``port``");
-        
-        httpHandler.options = options;
+        CeylonRequestHandler ceylonRequestHandler = CeylonRequestHandler(options, endpoints);
 
         HttpOpenListener openListener = HttpOpenListener(
         ByteBufferSlicePool(
@@ -79,7 +79,7 @@ shared class DefaultServer() satisfies Server {
             omBuilder().set(utBufferPipelinedData, false).map ,
             8192 );
         
-        openListener.rootHandler = getHeandlers(options);
+        openListener.rootHandler = getHeandlers(options, ceylonRequestHandler);
         
         OptionMap workerOptions = omBuilder()
                 .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))
@@ -157,14 +157,5 @@ shared class DefaultServer() satisfies Server {
             listener.onStatusChange(status);
         }
     }
-
-    //TODO use instead of [[JavaHelper]]
-    //AcceptingChannel<ConnectedChannel> createStreamServer(
-    //        XnioWorker worker, 
-    //        InetSocketAddress bindAddress,
-    //        ChannelListener<AcceptingChannel<ConnectedStreamChannel>> acceptListener,
-    //        OptionMap optionMap) { 
-    //    return worker.createStreamServer(bindAddress, acceptListener, optionMap);
-    //}
 }
 

@@ -1,4 +1,4 @@
-import java.nio { JByteBuffer = ByteBuffer }
+import java.nio { JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason, WebSocketFragmentedEndpoint, NoReason }
 import ceylon.io.buffer { newByteBufferWithData }
 import io.undertow.websockets.core { 
@@ -9,7 +9,6 @@ import io.undertow.websockets.core {
     WebSockets {sendCloseBlocking}, 
     UTF8Output,
     StreamSourceFrameChannel}
-import ceylon.net.http.server.internal {JavaHelper {wrapByteBuffer}}
 import org.xnio {IoUtils {safeClose}}
 
 by("Matej Lazar")

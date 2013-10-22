@@ -1,21 +1,12 @@
 import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
 import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException, HttpEndpoint }
-import java.lang { Runnable }
-import ceylon.net.http { Method, allow }
+import ceylon.net.http { Method, allow, parseMethod }
 import io.undertow.server.handlers.form { FormParserFactory { formParserFactoryBuilder = builder } }
 
 by("Matej Lazar")
-shared class CeylonRequestHandler() satisfies HttpHandler {
-    
-    value endpoints = Endpoints();
-    
-    shared variable Options? options = null;
+shared class CeylonRequestHandler(Options options, Endpoints endpoints) satisfies HttpHandler {
     
     FormParserFactory formParserFactory = formParserFactoryBuilder().build();
-    
-    shared void addWebEndpoint(HttpEndpoint endpoint) {
-        endpoints.add(endpoint);
-    }
     
     void endResponse(JHttpServerExchange exchange, ResponseImpl response, Integer responseStatus) {
         response.responseStatus = responseStatus;
@@ -24,39 +15,39 @@ shared class CeylonRequestHandler() satisfies HttpHandler {
     }
     
     shared actual void handleRequest(JHttpServerExchange? exchange) {
-        if (exists o = options) {
-            if (exists exc = exchange) {
+        if (exists exc = exchange) {
+            ResponseImpl response = ResponseImpl(exc, options.defaultCharset);
+            try {
+                String requestPath = exc.requestPath;
+                Method method = parseMethod(exc.requestMethod.string.uppercased);
+                value endpoint = endpoints.getEndpointMatchingPath(requestPath);
                 
-                RequestImpl request = RequestImpl(exc, formParserFactory);
-                ResponseImpl response = ResponseImpl(exc, o.defaultCharset);
-                
-                try {
-                    String requestPath = request.path;
-                    value endpoint = endpoints.getEndpointMatchingPath(requestPath);
-                    
-                    if (is HttpEndpoint e = endpoint) {
-                        if (isMethodSupported(e, request.method)) {
-                            request.endpoint = e;
-                            invokeEndpoint(e, request, response, exc);
-                        } else {
-                            response.addHeader(allow(e.acceptMethod));
-                            endResponse(exc, response, 405);
-                        }
+                if (is HttpEndpoint e = endpoint) {
+                    if (isMethodSupported(e, method)) {
+                        RequestImpl request = RequestImpl { 
+                            exchange = exc; 
+                            formParserFactory = formParserFactory;
+                            endpoint = e;
+                            path = requestPath;
+                            method = method;
+                        };
+                        invokeEndpoint(e, request, response, exc);
                     } else {
-                        endResponse(exc, response, 404);
+                        response.addHeader(allow(e.acceptMethod));
+                        endResponse(exc, response, 405);
                     }
-                } catch(Exception e) {
-                    //TODO write to log
-                    e.printStackTrace();
-                    response.responseStatus=500;
-                    response.responseDone();
-                    exc.endExchange();
+                } else {
+                    endResponse(exc, response, 404);
                 }
-            } else {
-                throw InternalException("Underlying HttpServerExchange must be provided.");
+            } catch(Exception e) {
+                //TODO write to log
+                e.printStackTrace();
+                response.responseStatus=500;
+                response.responseDone();
+                exc.endExchange();
             }
         } else {
-            throw InternalException("Options must be set before handling request.");
+            throw InternalException("Underlying HttpServerExchange must be provided.");
         }
     }
 

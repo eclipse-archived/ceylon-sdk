@@ -7,7 +7,7 @@ see(`function createServer`)
 shared interface Server {
 
     "Define endpoint by providing an instance of [[Endpoint]]|[[AsynchronousEndpoint]] class."
-    shared formal void addEndpoint(Endpoint|AsynchronousEndpoint endpoint);
+    shared formal void addEndpoint(HttpEndpoint endpoint);
 
     shared formal void addWebSocketEndpoint(WebSocketEndpoint endpoint);
     
