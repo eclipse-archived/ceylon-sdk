@@ -115,11 +115,19 @@ test void testServer() {
     });
 
     //add fileEndpoint
-    creteTestFile();
+    value testFile = creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
-        service => serveStaticFile(".");
+        service => serveStaticFile(".", (Request request) { return request.path;});
         path = (startsWith("/lazy") or startsWith("/blob")) 
                 or endsWith(".txt");
+    });
+
+    String fileMapper(Request request) {
+        return testFile.string;
+    }
+    server.addEndpoint(AsynchronousEndpoint {
+        service => serveStaticFile("/", fileMapper);
+        path = startsWith("/filemapper");
     });
     
 
@@ -145,6 +153,8 @@ test void testServer() {
                     headerTest();
                     
                     executeEchoTest("Ceylon");
+                    
+                    fileMapperTest();
                     
                     concurentFileRequests(numberOfUsers);
                     
@@ -235,6 +245,16 @@ void executeTestStaticFile(Integer executeRequests) {
     }
 }
 
+void fileMapperTest() {
+    value fileRequest = ClientRequest(parse("http://localhost:8080/filemapper"));
+    value fileResponse = fileRequest.execute();
+    value fileCnt = fileResponse.contents;
+    fileResponse.close();
+    //TODO log trace
+    print("Filemapper: ``fileCnt``");
+    assertEquals(produceFileContent(), fileCnt);
+}
+
 void concurentFileRequests(Integer concurentRequests) {
     variable Integer requestNumber = 0;
     
@@ -261,11 +281,12 @@ void concurentFileRequests(Integer concurentRequests) {
 }
 
 
-void creteTestFile() {
+Path creteTestFile() {
     Path path = parsePath(fileName);
     OpenFile file = newOpenFile(path.resource);
     file.writeFrom(stringToByteProducer(utf8, produceFileContent()));
     file.close();
+    return path.absolutePath;
 }
 
 String produceFileContent() {
