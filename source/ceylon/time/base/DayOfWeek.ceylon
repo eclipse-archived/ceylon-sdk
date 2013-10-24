@@ -35,12 +35,17 @@ shared DayOfWeek dayOfWeek(Integer|DayOfWeek dayOfWeek){
     }
 }
 
-"An exception that is thrown when parsing a DayOfWeek fails."
-shared class WeekdayParseError(String message)
-       extends Exception(message) {}
+"Parses a string into a DayOfWeek.
 
-"Parses a string into a DayOfWeek."
-shared DayOfWeek parseWeekday(String dayOfWeek){
+ Expected inputs and outputs are:
+ * \"sunday\"    results in [[sunday]]
+ * \"monday\"    results in [[monday]]
+ * \"tuesday\"   results in [[tuesday]]
+ * \"wednesday\" results in [[wednesday]]
+ * \"thursday\"  results in [[thursday]]
+ * \"friday\"    results in [[friday]]
+ * \"saturday\"  results in [[saturday]]"
+shared DayOfWeek? parseDayOfWeek(String dayOfWeek){
     value wd = dayOfWeek.lowercased;
     for (dow in weekdays) {
         if (dow.string.lowercased == wd) {
@@ -48,7 +53,7 @@ shared DayOfWeek parseWeekday(String dayOfWeek){
         }
     }
 
-    throw WeekdayParseError("Unrecognized DayOfWeek: ``dayOfWeek`` ." );
+    return null;
 }
 
 "_Sunday_ is the day of the week that follows Saturday and preceeds Monday."
