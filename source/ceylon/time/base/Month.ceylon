@@ -8,10 +8,10 @@ shared abstract class Month(integer)
        satisfies Ordinal<Month> & Comparable<Month>{
 
         "Ordinal number of the month of year.
-         Where:
-            january  = 1
-            february = 2
-            ...
+         Where:\n
+            january  = 1\n
+            february = 2\n
+            ...\n
             december = 12"
         shared Integer integer;
 
@@ -71,16 +71,16 @@ Integer[] firstDayOfMonth = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 3
 "Returns month of year specified by the input argument.
  
  If input is an Integer, this method returns a month according to the integer 
- value of the [[MonthOfYear]] (i.e. 1=[[january]], 2=[[february]], ... 12=[[december]])
- Any invalid values will throw an exception.
+ value of the [[Month]] (i.e. 1=[[january]], 2=[[february]], ... 12=[[december]])
+ Any invalid values will throw an [[AssertionException]].
  
- If the imput value is a [[MonthOfYear]], the input value is returned as is."
+ If the imput value is a [[Month]], the input value is returned as is."
 shared Month monthOf(Integer|Month month){
     switch (month)
     case (is Month) { return month; }
     case (is Integer) {
         "Invalid month."
-        assert ( january.integer <= month && month <= december.integer );
+        assert ( january.integer <= month <= december.integer );
         assert ( exists m = months.all[month-1] );
         return m;
     }
