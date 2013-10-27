@@ -6,7 +6,7 @@ shared interface Writer satisfies Closeable {
     shared formal void write(String string);
     
     "Write a line of text to the file."
-    shared formal void writeLine(String line);
+    shared formal void writeLine(String line = "");
     
     "Flush all written text to the underlying
      file system."
