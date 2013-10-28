@@ -4,11 +4,8 @@ import ceylon.html {
     Element,
     TextNode,
     blockTag,
-    CssClass,
     ParentNode,
-    Snippet,
-    StyledElement,
-    BaseElement
+    Snippet
 }
 
 shared class NodeSerializer(
@@ -100,52 +97,11 @@ shared class NodeSerializer(
     void closeTag(Node node) => doPrint("</``node.tag.name``>");
 
     void printAttributes(Element node) {
-        printAttribute("id", node.id);
-        if (is StyledElement node) {
-            printCssClassAttribute(node.classNames);
-            printAttribute("style", node.style);
-        }
-        if (is BaseElement node) {
-            printAttribute("title", node.title);
-            printAttribute("accesskey", node.accessKey);
-            printAttribute("contextmenu", node.contextMenu);
-            printAttribute("dir", node.dir);
-            printAttribute("draggable", node.draggable);
-            printAttribute("dropzone", node.dropZone);
-            printAttribute("hidden", node.hidden);
-            printAttribute("inert", node.inert);
-            printAttribute("lang", node.lang);
-            printAttribute("spellcheck", node.spellcheck);
-            printAttribute("tabindex", node.tabIndex);
-            printAttribute("translate", node.translate);
-
-            for (name->val in node.attributes) {
-                printAttribute(name, val.string);
+        for (attrName->attrValue in node.attributes) {
+            value val = attrValue.string.trimmed;
+            if (!val.empty) {
+                doPrint(" ``attrName``=\"``attrValue``\"");
             }
-
-            for (name->val in node.data) {
-                printAttribute("data-``name``", val.string);
-            }
-        }
-    }
-
-    void printAttribute(String name, Object? val) {
-        if (exists val) {
-            doPrint(" ``name``=\"``val``\"");
-        }
-    }
-
-    void printCssClassAttribute(CssClass classNames) {
-        variable String? cls = null;
-        switch(classNames)
-        case(is String) {
-            cls = classNames;
-        }
-        case(is [String*]) {
-            cls = " ".join(classNames);
-        }
-        if (exists cssClass = cls, !cssClass.trimmed.empty) {
-            printAttribute("class", cssClass);
         }
     }
 

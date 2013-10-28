@@ -1,10 +1,10 @@
 
-"Useful alias to indicate that a sequence of
- [[ceylon.language::Correspondence]] can be used to
- add any non standard attribute to the element."
-shared alias ExtraAttributes => [<String->Object>*];
+"Useful alias to indicate that a sequence of [[Entry]] can be
+ used to add any nonstandard attribute to the element."
+shared alias NonstandardAttributes => [<String->Object>*];
 
-""
+"Useful alias to indicate that a sequence of [[Entry]] can be
+ used to add `data-` prefixed attributes tto he element."
 shared alias DataContainer => [<String->Object>*];
 
 "Alias to represent a collection of CSS classes."
@@ -52,3 +52,15 @@ shared object link extends DropZone() {}
 "Indicates that dropping an accepted item on the element
  will result in the dragged data being moved to the new location."
 shared object move extends DropZone() {}
+
+
+class AttributeSequenceBuilder()
+        extends SequenceBuilder<String->Object>() {
+
+    shared void addAttribute(String name, Object? val) {
+        if (exists val) {
+            append(name->val);
+        }
+    }
+
+}

@@ -10,12 +10,12 @@ shared class Code(text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             children = {})
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies TextNode & InlineElement & ParentNode<InlineElement> {
 
     shared actual String text;

@@ -10,6 +10,12 @@ shared abstract class Element(id = null)
      you wish to use and must be unique for the whole document."
     shared String? id;
 
+    shared actual default [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.addAttribute("id", id);
+        return attrs.sequence;
+    }
+
 }
 
 "Implementations of this class represents an element that can be styled
@@ -23,6 +29,18 @@ shared abstract class StyledElement(String? id, classNames = [], style = null)
     "CSS style properties."
     shared String? style;
 
+    shared actual default [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.appendAll(super.attributes);
+        if (is String[] classNames) {
+            attrs.addAttribute("class", " ".join(classNames));
+        } else if (is String classNames) {
+            attrs.addAttribute("class", classNames);
+        }
+        attrs.addAttribute("style", style);
+        return attrs.sequence;
+    }
+
 }
 
 "A default [[Element]] implementation that represents a full featured
@@ -32,7 +50,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
             dir = null, draggable = null, dropZone = null,
             inert = null, hidden = null, lang = null, spellcheck = null,
             tabIndex = null, title = null, translate = null, aria = null,
-            attributes = empty, data = empty)
+            nonstandardAttributes = empty, data = empty)
         extends StyledElement(id, classNames, style) {
 
     "Specifies a shortcut key that can be used to access the element."
@@ -88,10 +106,34 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
 
     shared Aria? aria;
 
-    "Defines any other extra (e.g. non standard) attributes."
-    shared ExtraAttributes attributes;
+    "Defines any other nonstandard (defined by W3C) attributes."
+    shared NonstandardAttributes nonstandardAttributes;
 
     "Can be used to hold data-* attributes."
     shared DataContainer data;
+
+    shared actual [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.appendAll(super.attributes);
+        attrs.addAttribute("accesskey", accessKey);
+        attrs.addAttribute("contextMenu", contextMenu);
+        attrs.addAttribute("draggable", draggable);
+        attrs.addAttribute("dropzone", dropZone);
+        attrs.addAttribute("hidden", hidden);
+        attrs.addAttribute("inert", inert);
+        attrs.addAttribute("lang", lang);
+        attrs.addAttribute("spellcheck", spellcheck);
+        attrs.addAttribute("tabindex", tabIndex);
+        attrs.addAttribute("title", title);
+        attrs.addAttribute("translate", translate);
+
+        attrs.appendAll(nonstandardAttributes);
+
+        attrs.appendAll(data.map(
+            (String->Object elem) => "data-``elem.key``"->elem.item));
+
+        // TODO append events attributes
+        return attrs.sequence;
+    }
 
 }

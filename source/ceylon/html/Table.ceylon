@@ -13,11 +13,11 @@ shared class Table(header = {}, rows = {}, footer = null,
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty)
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies ParentNode<TableElement> & BlockElement {
 
     shared {Th?*} header;
@@ -94,11 +94,11 @@ shared class Tr(String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty, children = {})
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies ParentNode<Th|Td> & TableElement {
 
     shared actual {<Th|Td|{<Th|Td>*}|Snippet<Th|Td>|Null>*} children;
@@ -119,11 +119,11 @@ shared class Th(text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty, children = {})
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies TextNode & ParentNode<BlockElement> & TableElement {
 
     shared actual String text;
@@ -146,11 +146,11 @@ shared class Td(text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty, children = {})
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies TextNode & ParentNode<BlockElement> & TableElement {
 
     shared actual String text;

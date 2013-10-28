@@ -14,12 +14,12 @@ shared abstract class Heading(text = "", String? id = null, CssClass classNames 
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             children = {})
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies TextNode & BlockElement & ParentNode<InlineElement> & Comparable<Heading> {
 
     shared actual String text;
@@ -43,12 +43,12 @@ shared class H1(String text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data, children) {
+            tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
 
     level = 1;
 
@@ -63,12 +63,12 @@ shared class H2(String text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data, children) {
+            tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
 
     level = 2;
 
@@ -83,12 +83,12 @@ shared class H3(String text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data, children) {
+            tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
 
     level = 3;
 
@@ -103,12 +103,12 @@ shared class H4(String text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data, children) {
+            tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
 
     level = 4;
 
@@ -123,12 +123,12 @@ shared class H5(String text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data, children) {
+            tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
 
     level = 5;
 
@@ -143,12 +143,12 @@ shared class H6(String text = "", String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
             {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data, children) {
+            tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
 
     level = 6;
 

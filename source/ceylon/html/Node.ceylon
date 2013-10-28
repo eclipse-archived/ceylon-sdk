@@ -16,6 +16,8 @@ shared interface Node {
         return builder.string;
     }
 
+    shared default [<String->Object>*] attributes => empty;
+
 }
 
 "Marks a [[Node]] implementation as a possible parent of other nodes."

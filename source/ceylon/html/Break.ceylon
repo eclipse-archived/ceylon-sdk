@@ -12,11 +12,11 @@ shared class Br(String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty)
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies InlineElement {
     
     tag = Tag("br", emptyTag);
@@ -38,11 +38,11 @@ shared class Hr(String? id = null, CssClass classNames = [],
             String? lang = null, Boolean? spellcheck = null,
             Integer? tabIndex = null, String? title = null,
             Boolean? translate = null, Aria? aria = null,
-            ExtraAttributes attributes = empty,
+            NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty)
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, attributes, data)
+            tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement {
     
     tag = Tag("hr", emptyTag);

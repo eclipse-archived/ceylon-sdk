@@ -35,6 +35,9 @@ Html page = Html {
     Body {
         Div {
             classNames = ["wrapper", "container"];
+            nonstandardAttributes = [
+                "ng-controller"->"UsersController"
+            ];
             P(
                 users.empty then
                     "No users..."
@@ -42,7 +45,8 @@ Html page = Html {
                     "There are ``users.size`` users!"
             ),
             Table {
-                //id = "users";
+                id = "users";
+                data = ["total"->users.size];
                 header = {
                     Th("#"),
                     Th("Name")
