@@ -5,7 +5,9 @@ import ceylon.html {
     TextNode,
     blockTag,
     ParentNode,
-    Snippet
+    Snippet,
+    emptyTag,
+    xhtmlDoctypes
 }
 
 shared class NodeSerializer(
@@ -86,11 +88,9 @@ shared class NodeSerializer(
     void openTag(Node node) => doPrint("<``node.tag.name``");
 
     void endOpenTag(Node node) {
-        //if (node.tag.type == inlineTag) {
-        //    if (exists doctype, doctype in xhtmlDoctypes) {
-        //        doPrint("/");
-        //    }
-        //}
+        if (node.tag.type == emptyTag) {
+            doPrint(" /");
+        }
         doPrint(">");
     }
 

@@ -21,7 +21,7 @@ shared class BaseLayout(title, body = Div()) satisfies Layout {
 
     shared default {Script*} headScripts = {};
 
-    shared default {String*} stylesheets = {};
+    //shared default {String*} stylesheets = {};
 
     "The page body _block_."
     shared BlockElement|Null|{BlockElement*} body;
@@ -36,13 +36,14 @@ shared class BaseLayout(title, body = Div()) satisfies Layout {
 
         Head {
             title = title;
-            metaContent = {
-                CharsetMeta(),
-                Meta("description", description)
-            };
-            stylesheets = concatenate({
-            }, stylesheets);
-            scripts = headScripts;
+            headChildren = concatenate(
+                {
+                    CharsetMeta(),
+                    Meta("description", description)
+                },
+                //stylesheets,
+                headScripts
+            );
         };
 
         Body {
