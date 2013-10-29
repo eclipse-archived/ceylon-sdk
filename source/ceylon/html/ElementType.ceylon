@@ -1,7 +1,7 @@
 
 """Enumerated type used to group elements with common behavior about
    how they are rendered and how they relate to each other. This
-   interface is useful to enpower proper and semantic HTML writing
+   interface is useful to empower proper and semantic HTML writing
    by API design, enforcing constraints at compile time:
    ```
    P {
