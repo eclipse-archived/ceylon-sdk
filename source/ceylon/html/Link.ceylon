@@ -14,6 +14,12 @@ shared class Link(rel, type, href, String? id)
 
     tag = Tag("link", emptyTag);
 
+    attributes => concatenate(super.attributes, [
+        "href"->href,
+        "rel"->rel,
+        "type"->type
+    ]);
+
 }
 
 "The relationship kind between the current document and the linked document."
@@ -37,7 +43,11 @@ shared object tag extends LinkRel("tag") {}
 
 // TODO generic reusable enumerated mime type?
 shared class LinkType(type) {
+
     shared String type;
+
+    string => type;
+
 }
 
 shared object css extends LinkType("text/css") {}

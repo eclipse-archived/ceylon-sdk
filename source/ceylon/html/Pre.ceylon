@@ -1,5 +1,6 @@
 "Represents a block of preformatted text, in which structure
  is represented by typographic conventions rather than by elements.
+ 
  Technical details about this element can be found on the
  [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-pre-element)"
 shared class Pre(text = "", String? id = null, CssClass classNames = [],
@@ -12,7 +13,7 @@ shared class Pre(text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            children = {})
+            children = empty)
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data)

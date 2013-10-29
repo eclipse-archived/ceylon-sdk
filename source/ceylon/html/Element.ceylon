@@ -112,7 +112,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
     "Can be used to hold data-* attributes."
     shared DataContainer data;
 
-    shared actual [<String->Object>*] attributes {
+    shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
         attrs.appendAll(super.attributes);
         attrs.addAttribute("accesskey", accessKey);

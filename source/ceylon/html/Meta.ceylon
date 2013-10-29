@@ -16,14 +16,23 @@ shared class Meta(name, content = "", String? id = null)
     shared String content;
 
     tag = Tag("meta", emptyTag);
+    
+    shared actual default [<String->Object>*] attributes => concatenate(super.attributes, [
+        "name"->name,
+        "content"->content
+    ]);
 
 }
 
-"Utility class to easily express a charset metadata for the [[ceylon.html::Document]]."
+"Utility class to easily express a charset metadata for the [[Document]]."
 shared class CharsetMeta(charset = "utf-8")
         extends Meta("Content-Type", "text/html; charset=``charset``;") {
 
     "Document content charset. Defaults to `utf-8`."
     shared String charset;
+
+    attributes => [
+        "charset"->charset
+    ];
 
 }

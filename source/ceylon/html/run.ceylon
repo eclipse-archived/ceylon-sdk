@@ -27,10 +27,8 @@ Html page = Html {
     doctype = html5;
     Head {
         title = "Page Title";
-        links = {
-            CssLink("http://fonts.googleapis.com/css?family=Open+Sans")
-        };
-        stylesheets = {};
+        CharsetMeta("utf-8"),
+        CssLink("http://fonts.googleapis.com/css?family=Open+Sans")
     };
     Body {
         Div {
