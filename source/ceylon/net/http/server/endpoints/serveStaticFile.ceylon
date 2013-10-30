@@ -7,7 +7,7 @@ import ceylon.net.http { contentType, contentLength }
 
 "Endpoint for serving static files."
 by("Matej Lazar")
-shared void serveStaticFile(externalPath, String fileMapper(Request request)) //TODO make filemapper optional, remane extrermalPath to rootPath
+shared void serveStaticFile(externalPath, String fileMapper(Request request) => request.path)
         (Request request, Response response, Callable<Anything, []> complete) {
     
     "Root directory containing files."

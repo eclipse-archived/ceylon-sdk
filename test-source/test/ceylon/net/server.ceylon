@@ -117,7 +117,7 @@ test void testServer() {
     //add fileEndpoint
     value testFile = creteTestFile();
     server.addEndpoint(AsynchronousEndpoint {
-        service => serveStaticFile(".", (Request request) { return request.path;});
+        service => serveStaticFile(".");
         path = (startsWith("/lazy") or startsWith("/blob")) 
                 or endsWith(".txt");
     });
