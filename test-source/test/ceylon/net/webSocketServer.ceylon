@@ -2,7 +2,7 @@ import java.net { URI }
 import test.ceylon.net.websocketclient { WebSocketClient }
 import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason, WebSocketEndpoint }
 import ceylon.test { assertTrue, assertEquals, test }
-import ceylon.net.http.server { createServer, startsWith, started, StatusListener, Status, stopped }
+import ceylon.net.http.server { createServer, startsWith, started, Status, stopped }
 import ceylon.io.buffer { ByteBuffer }
 import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
@@ -52,47 +52,45 @@ test void testWebSocketServer() {
         };}
     );
     
-    object serverListerner satisfies StatusListener {
-        shared actual void onStatusChange(Status status) {
-            if (status.equals(started)) {
+    void onStatusChange(Status status) {
+        if (status.equals(started)) {
+            try {
+                URI uri = URI("ws://localhost:8080/websocket");
+                EventLoopGroup group = NioEventLoopGroup(); 
+
                 try {
-                    URI uri = URI("ws://localhost:8080/websocket");
-                    EventLoopGroup group = NioEventLoopGroup(); 
+                    value client = WebSocketClient(uri);
+                    client.connect(group);
+                    client.sendMessages();
+                    client.sendBinaryMessages();
+                    client.sendPing();
+                    client.sendClose();
 
+                    client.waitForClose();
+
+                    value client2 = WebSocketClient(URI("ws://localhost:8080/notfoundwebsocket"));
+                    variable String exception = "";
                     try {
-                        value client = WebSocketClient(uri);
-                        client.connect(group);
-                        client.sendMessages();
-                        client.sendBinaryMessages();
-                        client.sendPing();
-                        client.sendClose();
-
-                        client.waitForClose();
-
-                        value client2 = WebSocketClient(URI("ws://localhost:8080/notfoundwebsocket"));
-                        variable String exception = "";
-                        try {
-                            client2.connect(group);
-                        } catch (WebSocketHandshakeException e) {
-                            exception = e.message;
-                        }
-                        if (!exception.contains("404 Not Found")) {
-                            throw AssertionException("Expected WebSocketHandshakeException with 404 Not Found.");
-                        }
-                    } finally {
-                        group.shutdownGracefully();
+                        client2.connect(group);
+                    } catch (WebSocketHandshakeException e) {
+                        exception = e.message;
+                    }
+                    if (!exception.contains("404 Not Found")) {
+                        throw AssertionException("Expected WebSocketHandshakeException with 404 Not Found.");
                     }
                 } finally {
-                    print("Stopping http server ...");
-                    server.stop();
+                    group.shutdownGracefully();
                 }
-            }
-            if (status.equals(stopped)) {
-                testCompleted();
+            } finally {
+                print("Stopping http server ...");
+                server.stop();
             }
         }
+        if (status.equals(stopped)) {
+            testCompleted();
+        }
     }
-    server.addListener(serverListerner);
+    server.addListener(onStatusChange);
     server.startInBackground();
     waitTestToComplete();
 }

@@ -3,7 +3,7 @@ import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
-import ceylon.net.http.server { createServer, StatusListener, Status, 
+import ceylon.net.http.server { createServer, Status, 
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
                                   startsWith, endsWith, Options, stopped }
@@ -146,45 +146,52 @@ test void testServer() {
         }
     });
 
-    object serverListerner satisfies StatusListener {
-        shared actual void onStatusChange(Status status) {
-            if (status.equals(started)) {
-                try {
-                    headerTest();
-                    
-                    executeEchoTest("Ceylon");
-                    
-                    fileMapperTest();
-                    
-                    concurentFileRequests(numberOfUsers);
-                    
-                    acceptMethodTest();
-                    
-                    methodTest();
-                    
-                    parametersTest("čšž", "ČŠŽ ĐŽ");
+    void onStatusChangeExecuteTest(Status status) {
+        if (status.equals(started)) {
+            try {
+                headerTest();
+                
+                executeEchoTest("Ceylon");
+                
+                fileMapperTest();
+                
+                concurentFileRequests(numberOfUsers);
+                
+                acceptMethodTest();
+                
+                methodTest();
+                
+                parametersTest("čšž", "ČŠŽ ĐŽ");
 
-                    writeStringsTest();
-                    
-                    //TODO enable session test when client suports it
-                    //sessionTest();
-                    
-                    testSerializer();
-                    
-                    //TODO multipart post
-                    
-                } finally {
-                    cleanUpFile();
-                    server.stop();
-                }
+                writeStringsTest();
+                
+                //TODO enable session test when client suports it
+                //sessionTest();
+                
+                testSerializer();
+                
+                //TODO multipart post
+                
+            } finally {
+                cleanUpFile();
+                server.stop();
             }
-            if (status.equals(stopped)) {
-                testCompleted();
-            }
+        }
+        if (status.equals(stopped)) {
+            testCompleted();
         }
     }
     
-    server.addListener(serverListerner);
+    void onStatusChangeTestRemoveListener(Status status) {
+        if (status.equals(started)) {
+            throw AssertionException("Status listener should be removed.");
+        }
+    }
+    
+    server.addListener(onStatusChangeTestRemoveListener);
+    server.removeListener(onStatusChangeTestRemoveListener);
+
+    server.addListener(onStatusChangeExecuteTest);
 
     server.startInBackground {
         serverOptions = Options {
@@ -192,6 +199,7 @@ test void testServer() {
             workerTaskMaxThreads=2;
         };
     };
+
     waitTestToComplete();
 }
 

@@ -27,7 +27,7 @@ import org.xnio {
 import org.xnio.channels { AcceptingChannel }
 import io.undertow.server { HttpOpenListener, HttpHandler }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.http.server { Server, Options, StatusListener, Status, starting, started, stopping, stopped, InternalException, HttpEndpoint }
+import ceylon.net.http.server { Server, Options, Status, starting, started, stopping, stopped, InternalException, HttpEndpoint }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
 import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
@@ -43,7 +43,7 @@ shared class DefaultServer() satisfies Server {
     
     CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
     
-    MutableList<StatusListener> statusListeners = LinkedList<StatusListener>();
+    MutableList<Callable<Anything, [Status]>> statusListeners = LinkedList<Callable<Anything, [Status]>>();
     
     shared actual void addEndpoint(HttpEndpoint endpoint) {
         endpoints.add(endpoint);
@@ -144,17 +144,17 @@ shared class DefaultServer() satisfies Server {
         }
     }
     
-    shared actual void addListener(StatusListener listener) {
+    shared actual void addListener(void listener(Status status)) {
         statusListeners.add(listener);
     }
     
-    shared actual void removeListener(StatusListener listener) {
+    shared actual void removeListener(void listener(Status status)) {
         statusListeners.removeElement(listener);
     }
     
     void notifyListeners(Status status) {
         for (listener in statusListeners) {
-            listener.onStatusChange(status);
+            listener(status);
         }
     }
 }

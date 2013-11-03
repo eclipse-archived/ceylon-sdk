@@ -22,12 +22,13 @@ shared interface Server {
     
     shared formal void stop();
     
-    "Registers a status change listener."
-    see(`interface StatusListener`)
-    shared formal void addListener(StatusListener listener);
+    "Registers a status change listener.
+     Listeners are called on status changes. 
+     Statuses are: [[starting]], [[started]], [[stopping]], [[stopped]]."
+    shared formal void addListener(void listener(Status status));
     
     "Removes status change listener."
-    shared formal void removeListener(StatusListener listener);
+    shared formal void removeListener(void listener(Status status));
 }
 
 shared Server createServer({HttpEndpoint|WebSocketBaseEndpoint*} endpoints) {
