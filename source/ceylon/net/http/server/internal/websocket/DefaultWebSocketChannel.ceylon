@@ -1,6 +1,6 @@
 import ceylon.io.buffer { ByteBuffer }
 
-import ceylon.net.http.server.websocket { WebSocketChannel, FragmentedBinarySender, FragmentedTextSender, SendCallback, CloseReason }
+import ceylon.net.http.server.websocket { WebSocketChannel, FragmentedBinarySender, FragmentedTextSender, CloseReason }
 
 import ceylon.net.http.server.internal { toJavaByteBuffer}
 import io.undertow.websockets.core { 
@@ -42,16 +42,24 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
         wsSendBinaryBlocking(toJavaByteBuffer(binary), channel);
     }
 
-    shared actual void sendBinaryAsynchronous(ByteBuffer binary, SendCallback? sendCallback) {
-        wsSendBinary(toJavaByteBuffer(binary), channel, wrapCallbackSend(sendCallback, this));
+    shared actual void sendBinaryAsynchronous(
+            ByteBuffer binary,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+
+        wsSendBinary(toJavaByteBuffer(binary), channel, wrapCallbackSend(onCompletion, onError, this));
     }
 
     shared actual void sendText(String text) {
         wsSendTextBlocking(text, channel);
     }
 
-    shared actual void sendTextAsynchronous(String text, SendCallback? sendCallback) {
-        wsSendText(text, channel, wrapCallbackSend(sendCallback, this));
+    shared actual void sendTextAsynchronous(
+            String text,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+
+        wsSendText(text, channel, wrapCallbackSend(onCompletion, onError, this));
     }
 
     shared actual void sendClose(CloseReason reason) {
@@ -62,7 +70,14 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
 
     shared actual String requestPath => exchange.requestURI;
 
-    shared actual void sendCloseAsynchronous(CloseReason reason, SendCallback? sendCallback) {
-        wsSendClose(CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(), channel, wrapCallbackSend(sendCallback, this));
+    shared actual void sendCloseAsynchronous(
+            CloseReason reason,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+
+        wsSendClose(
+            CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(),
+            channel,
+            wrapCallbackSend(onCompletion, onError, this));
     }
 }

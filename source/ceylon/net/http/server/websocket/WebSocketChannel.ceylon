@@ -16,7 +16,10 @@ shared interface WebSocketChannel {
 
     shared formal void sendBinary(ByteBuffer binary);
 
-    shared formal void sendBinaryAsynchronous(ByteBuffer binary, SendCallback? sendCallback);
+    shared formal void sendBinaryAsynchronous(
+            ByteBuffer binary,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError = null);
 
     "Send the a text websocket frame and blocks until complete.
      The implementation is responsible to queue them up and send them in the correct order.
@@ -30,13 +33,19 @@ shared interface WebSocketChannel {
      
      The payload which must be valid UTF8.
      The callback is called when sending is done, use without sendCallback if no notification should be done."
-    shared formal void sendTextAsynchronous(String text, SendCallback? sendCallback);
+    shared formal void sendTextAsynchronous(
+            String text,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError = null);
 
     "Send the a CLOSE websocket frame and notify the `SendCallback` once done.
      After the CLOSE is sent the connections will be closed.
      The `callback` that is called when sending is done or `null` if no notification
      should be done."
-    shared formal void sendCloseAsynchronous(CloseReason reason, SendCallback? callback);
+    shared formal void sendCloseAsynchronous(
+            CloseReason reason,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError = null);
 
     "Send the a CLOSE websocket frame and blocks until complete.
      After the CLOSE is sent the connections will be closed."

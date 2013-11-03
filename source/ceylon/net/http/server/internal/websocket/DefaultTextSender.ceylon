@@ -1,4 +1,4 @@
-import ceylon.net.http.server.websocket { FragmentedTextSender, SendCallback }
+import ceylon.net.http.server.websocket { FragmentedTextSender, WebSocketChannel }
 import io.undertow.websockets.core {
     WebSockets {
         wsSendText = sendText,
@@ -14,7 +14,11 @@ shared class DefaultFragmentedTextSender(DefaultWebSocketChannel channel)
         wsSendTextBlocking(text, finalFrame, fragmentedChannel);
     }
 
-    shared actual void sendTextAsynchronous(String text, SendCallback? sendCallback, Boolean finalFrame) {
-        wsSendText(text, finalFrame, fragmentedChannel, wrapFragmentedCallbackSend(sendCallback, channel));
+    shared actual void sendTextAsynchronous(String text,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError,
+            Boolean finalFrame) {
+
+        wsSendText(text, finalFrame, fragmentedChannel, wrapFragmentedCallbackSend(onCompletion, onError, channel));
     }
 }

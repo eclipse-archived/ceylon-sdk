@@ -1,4 +1,4 @@
-import ceylon.net.http.server { Response, Exception, SendCallback }
+import ceylon.net.http.server { Response, Exception }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }
@@ -33,12 +33,15 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         writeJByteBuffer(nativeByteBuffer(buffer));
     }
 
-    shared actual void writeStringAsynchronous(String string, SendCallback sendCallback) {
-        applyHeadersToExchange();
+    shared actual void writeStringAsynchronous(
+            String string,
+            Callable<Anything, []> onCompletion,
+            Callable<Anything, [Exception]>? onError) {
 
+        applyHeadersToExchange();
         value charset = findCharset();
         ByteBuffer byteBuffer = charset.encode(string);
-        writeByteBufferAsynchronous(byteBuffer, sendCallback);
+        writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
     }
 
     shared actual void writeBytes(Array<Integer> bytes) {
@@ -48,11 +51,14 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         writeJByteBuffer(jByteBuffer);
     }
     
-    shared actual void writeBytesAsynchronous(Array<Integer> bytes, SendCallback sendCallback) {
-        applyHeadersToExchange();
+    shared actual void writeBytesAsynchronous(
+            Array<Integer> bytes,
+            Callable<Anything, []> onCompletion,
+            Callable<Anything, [Exception]>? onError) {
 
+        applyHeadersToExchange();
         value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
-        writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(sendCallback, this));
+        writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(onCompletion, onError));
     }
     
     shared actual void writeByteBuffer(ByteBuffer byteBuffer) {
@@ -60,9 +66,13 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         writeJByteBuffer(nativeByteBuffer(byteBuffer));
     }
 
-    shared actual void writeByteBufferAsynchronous(ByteBuffer byteBuffer, SendCallback sendCallback) {
+    shared actual void writeByteBufferAsynchronous(
+            ByteBuffer byteBuffer,
+            Callable<Anything, []> onCompletion,
+            Callable<Anything, [Exception]>? onError) {
+
         applyHeadersToExchange();
-        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(sendCallback, this));
+        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
     }
 
     void writeJByteBuffer(JByteBuffer byteBuffer) {

@@ -1,53 +1,67 @@
-import ceylon.net.http.server.websocket { SendCallback, WebSocketChannel }
+import ceylon.net.http.server.websocket { WebSocketChannel }
 import io.undertow.websockets.core { WebSocketCallback, UtWebSocketChannel = WebSocketChannel, FragmentedMessageChannel }
 import java.lang { Void }
 import ceylon.net.http.server { HttpException = Exception }
 
 by("Matej Lazar")
-shared class WebSocketCallbackWrapper(SendCallback sendCallback, WebSocketChannel channel) 
+shared class WebSocketCallbackWrapper(
+            Callable<Anything, [WebSocketChannel]>? onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onSocketError,
+            WebSocketChannel channel)
         satisfies WebSocketCallback<Void> {
 
     shared actual void complete(UtWebSocketChannel? webSocketChannel, Void? t) {
-        sendCallback.onCompletion(channel);
+        if (exists onCompletion) {
+            onCompletion(channel);
+        }
     }
 
     shared actual void onError(UtWebSocketChannel? webSocketChannel, Void? t, Exception? throwable) {
-        if (exists throwable) {
-            sendCallback.onError(channel, HttpException("WebSocket error.", throwable));
-        } else {
-            sendCallback.onError(channel, HttpException("WebSocket error, no details available."));
+        if (exists onSocketError) {
+            if (exists throwable) {
+                onSocketError(channel, HttpException("WebSocket error.", throwable));
+            } else {
+                onSocketError(channel, HttpException("WebSocket error, no details available."));
+            }
         }
     }
 }
 
-shared class WebSocketCallbackFragmentedWrapper(SendCallback sendCallback, WebSocketChannel channel)
+shared class WebSocketCallbackFragmentedWrapper(
+        Callable<Anything, [WebSocketChannel]>? onCompletion,
+        Callable<Anything, [WebSocketChannel, Exception]>? onSocketError,
+        WebSocketChannel channel)
         satisfies WebSocketCallback<FragmentedMessageChannel> {
 
     shared actual void complete(UtWebSocketChannel? webSocketChannel, FragmentedMessageChannel ch) {
-        sendCallback.onCompletion(channel);
+        if (exists onCompletion) {
+            onCompletion(channel);
+        }
     }
 
     shared actual void onError(UtWebSocketChannel? webSocketChannel, FragmentedMessageChannel ch, Exception? throwable) {
-        if (exists throwable) {
-            sendCallback.onError(channel, HttpException("WebSocket error.", throwable));
-        } else {
-            sendCallback.onError(channel, HttpException("WebSocket error, no details available."));
+        if (exists onSocketError) {
+            if (exists throwable) {
+                onSocketError(channel, HttpException("WebSocket error.", throwable));
+            } else {
+                onSocketError(channel, HttpException("WebSocket error, no details available."));
+            }
         }
     }
 }
 
-shared WebSocketCallbackWrapper? wrapCallbackSend(SendCallback? sendCallback, WebSocketChannel channel) {
-    if (exists sendCallback) {
-        return WebSocketCallbackWrapper(sendCallback, channel);
-    } else {
-        return null;
-    }
+shared WebSocketCallbackWrapper wrapCallbackSend(
+        Callable<Anything, [WebSocketChannel]>? onCompletion,
+        Callable<Anything, [WebSocketChannel, Exception]>? onError,
+        WebSocketChannel channel) {
+
+    return WebSocketCallbackWrapper(onCompletion, onError, channel);
 }
 
-shared WebSocketCallbackFragmentedWrapper? wrapFragmentedCallbackSend(SendCallback? sendCallback, WebSocketChannel channel) {
-    if (exists sendCallback) {
-        return WebSocketCallbackFragmentedWrapper(sendCallback, channel);
-    } else {
-        return null;
-    }
+shared WebSocketCallbackFragmentedWrapper wrapFragmentedCallbackSend(
+        Callable<Anything, [WebSocketChannel]>? onCompletion,
+        Callable<Anything, [WebSocketChannel, Exception]>? onError,
+        WebSocketChannel channel) {
+
+    return WebSocketCallbackFragmentedWrapper(onCompletion, onError, channel);
 }

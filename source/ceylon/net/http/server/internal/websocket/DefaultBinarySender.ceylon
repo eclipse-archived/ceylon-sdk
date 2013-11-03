@@ -1,4 +1,4 @@
-import ceylon.net.http.server.websocket { FragmentedBinarySender, SendCallback }
+import ceylon.net.http.server.websocket { FragmentedBinarySender, WebSocketChannel }
 import ceylon.io.buffer { ByteBuffer }
 import ceylon.net.http.server.internal { toJavaByteBuffer }
 import io.undertow.websockets.core { FragmentedMessageChannel,
@@ -16,7 +16,16 @@ shared class DefaultFragmentedBinarySender( DefaultWebSocketChannel channel )
         wsSendBinaryBlocking(toJavaByteBuffer(binary), finalFrame, fragmentedChannel);
     }
     
-    shared actual void sendBinaryAsynchronous(ByteBuffer binary, SendCallback? sendCallback, Boolean finalFrame) {
-        wsSendBinary(toJavaByteBuffer(binary), finalFrame, fragmentedChannel, wrapFragmentedCallbackSend(sendCallback, channel));
+    shared actual void sendBinaryAsynchronous(
+            ByteBuffer binary,
+            Callable<Anything, [WebSocketChannel]> onCompletion,
+            Callable<Anything, [WebSocketChannel, Exception]>? onError,
+            Boolean finalFrame) {
+
+        wsSendBinary(
+            toJavaByteBuffer(binary),
+            finalFrame,
+            fragmentedChannel,
+            wrapFragmentedCallbackSend(onCompletion, onError, channel));
     }
 }
