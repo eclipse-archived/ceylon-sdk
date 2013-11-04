@@ -40,7 +40,7 @@ shared TestRunner createTestRunner(
     "The program elements from which tests will be executed."
     TestSource[] sources,
     "The listeners which will be notified about events during the test run."
-    TestListener[] listeners = [],
+    TestListener[] listeners = [ DefaultTestListener() ],
     "A filter function for determining which tests should be run.
      Returns true if the test should be run. 
      The default filter always returns true."
@@ -50,6 +50,11 @@ shared TestRunner createTestRunner(
      the _sources_ parameter."
     TestComparator comparator = defaultTestComparator)
         => TestRunnerImpl(sources, listeners, filter, comparator);
+
+"Default test listener, prints description at start of tests."
+shared class DefaultTestListener() satisfies TestListener {
+	shared actual void testStart(TestDescription description) => print(description);
+}
 
 "Default test filter, always return true."
 shared Boolean defaultTestFilter(TestDescription description) => true;

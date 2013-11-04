@@ -37,7 +37,7 @@ class TestRunResultImpl() satisfies TestRunResult {
 
     shared actual String string {
         value b = StringBuilder();
-        b.append("TESTS RESULT").appendNewline();
+        b.append("TEST RESULTS").appendNewline();
         if( results.empty ) {
             b.append("There were no tests!").appendNewline();
         } 
@@ -47,6 +47,7 @@ class TestRunResultImpl() satisfies TestRunResult {
             b.append("failure: ``failureCount``").appendNewline();
             b.append("error:   ``errorCount``").appendNewline();
             b.append("ignored: ``ignoreCount``").appendNewline();
+            b.append("time:    ``elapsedTime/1000``s").appendNewline();
             b.appendNewline();
             if( isSuccess ) {
                 b.append("TESTS SUCCESS").appendNewline();
