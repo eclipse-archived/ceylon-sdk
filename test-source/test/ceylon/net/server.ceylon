@@ -9,10 +9,10 @@ import ceylon.net.http.server { createServer, Status,
                                   startsWith, endsWith, Options, stopped }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue, test }
-import ceylon.collection { LinkedList }
-import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header}
+import ceylon.collection { LinkedList, MutableList }
+import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
 import java.util.concurrent { Semaphore }
-import java.lang { Runnable, Thread }
+import java.lang { Runnable, Thread {threadSleep = sleep} }
 import ceylon.html {
     Html,
     html5,
@@ -23,6 +23,7 @@ import ceylon.html {
 import ceylon.html.serializer {
     NodeSerializer
 }
+import ceylon.io.buffer { newByteBuffer, ByteBuffer, newByteBufferWithData }
 
 by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
@@ -35,6 +36,8 @@ String fileName = "lazydog.txt";
 "Number of concurent requests"
 Integer numberOfUsers=10;
 Integer requestsPerUser = 10;
+
+variable String asyncServiceStatus = "";
 
 test void testServer() {
 
@@ -152,14 +155,30 @@ test void testServer() {
             path = startsWith("/async"); 
 
             void service (Request request, Response response, void complete()) {
+                value startTime = system.milliseconds;
                 String source = request.sourceAddress.address;
-                
+                String responseHello = "Hello ``source`` ";
+                String content = "xxxxxxxxxxoooooooooo";
+                StringBuilder sb = StringBuilder();
+                sb.append(responseHello);
+                for (i in 0..1000) { //generate some more content
+                    sb.append(content);
+                }
+                String responseString = sb.string;
+                response.addHeader(contentLength(responseString.size.string));
+                 
                 response.writeStringAsynchronous { 
-                    string => "Hello ``source``";
+                    string => responseString;
                     void onCompletion () {
+                        asyncServiceStatus = "completing";
+                        //TODO log
+                        print("Completed in ``system.milliseconds - startTime``ms.");
                         complete();
                     } 
                 };
+                //TODO log
+                print("Returned in ``system.milliseconds - startTime``ms.");
+                asyncServiceStatus = "returning";
             }
         }
     );
@@ -188,7 +207,8 @@ test void testServer() {
                 
                 testSerializer();
                 
-                testAsync();
+                //TODO enable async "streaming" test
+                //testAsyncStream();
                 
                 //TODO multipart post
                 
@@ -279,7 +299,7 @@ void fileMapperTest() {
     value fileCnt = fileResponse.contents;
     fileResponse.close();
     //TODO log trace
-    print("Filemapper: ``fileCnt``");
+    print("Filemapper: ``fileCnt.initial(100)``" + (fileCnt.size > 100 then " ..." else ""));
     assertEquals(produceFileContent(), fileCnt);
 }
 
@@ -510,15 +530,53 @@ void testSerializer() {
     response.close();
 }
 
-void testAsync() {
+void testAsyncStream() {
     value request = ClientRequest(parse("http://localhost:8080/async"), get);
-    
+
+    assertEquals(asyncServiceStatus, "");
+
+    value startTime = system.milliseconds;
     value response = request.execute();
-    value responseContent = response.contents;
+
+    threadSleep(50);
+    assertEquals(asyncServiceStatus, "returning");
+
+    value responseReader = response.getReader();
+    value buffSize = 100;
+    value buffer = newByteBuffer(buffSize);
+    MutableList<Integer> content = LinkedList<Integer>();
+    variable Integer remaining = parseInteger(response.getSingleHeader("content-length") else "0") else 0;
+    print("cointent-size: ``remaining``");
+    variable Integer loops = 0;
+    while (true) {
+        loops += 1;
+        value read = responseReader.read(buffer);
+        if (remaining == 0) {
+            break;
+        }
+        remaining -= read;
+        buffer.flip();
+        buffer.map((Integer elem) => content.add(elem));
+        buffer.flip();
+        if (loops < 2) {
+            assertEquals(asyncServiceStatus, "returning");
+        }
+        //TODO log
+        process.write("``read``.");
+    }
+    print("Read in ``system.milliseconds - startTime``ms.");
+    
+    ByteBuffer contentBuff = newByteBuffer(content.size);
+    content.collect((Integer element) => {
+        contentBuff.put(element)
+    });
+    contentBuff.flip();
+    value responseContent = utf8.decode(contentBuff);
     //TODO log
-    print("Response content: " + responseContent);
+    print("Response content: " + responseContent.initial(100));
     assertTrue(responseContent.contains("Hello"), "Response does not contain Hello.");
     response.close();
+    assertEquals(asyncServiceStatus, "completing");
 }
 
 Semaphore mutex = Semaphore(0);
