@@ -1,13 +1,13 @@
 import ceylon.net.http.server { Response, Exception }
 
-import io.undertow.server { HttpServerExchange }
+import io.undertow.server { HttpServerExchange, HttpHandler }
 import io.undertow.util { HttpString }
 import ceylon.io.charset { Charset, getCharset }
 import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
 import java.io { JIOException=IOException }
-import java.lang { arrays, ByteArray }
+import java.lang { arrays, ByteArray, Runnable }
 import java.nio { 
     JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import org.xnio.channels { StreamSinkChannel }
@@ -38,10 +38,20 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             Callable<Anything, []> onCompletion,
             Callable<Anything, [Exception]>? onError) {
 
-        applyHeadersToExchange();
-        value charset = findCharset();
-        ByteBuffer byteBuffer = charset.encode(string);
-        writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
+        void task() {
+            applyHeadersToExchange();
+            value charset = findCharset();
+            ByteBuffer byteBuffer = charset.encode(string);
+            writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
+        }
+
+        exchange.dispatch(
+            Task { 
+                task => task;
+                onCompletion => onCompletion;
+                onError => onError;
+            }
+        );
     }
 
     shared actual void writeBytes(Array<Integer> bytes) {
@@ -56,9 +66,19 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             Callable<Anything, []> onCompletion,
             Callable<Anything, [Exception]>? onError) {
 
-        applyHeadersToExchange();
-        value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
-        writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(onCompletion, onError));
+        void task() {
+            applyHeadersToExchange();
+            value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
+            writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(onCompletion, onError));
+        }
+        
+        exchange.dispatch(
+            Task { 
+                task => task;
+                onCompletion => onCompletion;
+                onError => onError;
+            }
+        );
     }
     
     shared actual void writeByteBuffer(ByteBuffer byteBuffer) {
@@ -71,8 +91,18 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             Callable<Anything, []> onCompletion,
             Callable<Anything, [Exception]>? onError) {
 
-        applyHeadersToExchange();
-        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
+        void task() {
+            applyHeadersToExchange();
+            writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
+        }
+        
+        exchange.dispatch(
+            Task { 
+                task => task;
+                onCompletion => onCompletion;
+                onError => onError;
+            }
+        );
     }
 
     void writeJByteBuffer(JByteBuffer byteBuffer) {
@@ -182,6 +212,17 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
                 bytes.set(i++, byteBuffer.get());
             }
             return wrapByteBuffer(bytes);
+        }
+    }
+
+    class Task (
+        Callable<Anything, []> task,
+        Callable<Anything, []> onCompletion,
+        Callable<Anything, [Exception]>? onError)
+            satisfies Runnable {
+        
+        shared actual void run() {
+            task();
         }
     }
 }
