@@ -45,7 +45,7 @@ class DecimalImpl(BigDecimal num)
     shared actual DividedWithRemainder dividedAndRemainder(Decimal other, 
                                                            Rounding? rounding) {
         if (is DecimalImpl other) {
-            Array<BigDecimal> array;
+            Array<BigDecimal?> array;
             if (is RoundingImpl rounding) {
                 array = implementation
                         .divideAndRemainder(other.implementation, 
