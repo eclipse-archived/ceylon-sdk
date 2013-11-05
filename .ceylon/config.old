@@ -1,4 +1,6 @@
-
 [repositories]
 output=./modules
 lookup=./test-deps
+
+[defaults]
+encoding=UTF-16
