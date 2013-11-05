@@ -16,11 +16,15 @@ shared interface File
     shared formal File moveOverwriting(File|Nil target);
     
     "Copy this file to the given location."
-    shared formal File copy(Nil target);
+    shared formal File copy(Nil target,
+            "Copy attributes of the original file."
+            Boolean copyAttributes=false);
     
     "Copy this file to the given location,
      overwriting the target if it already exists."
-    shared formal File copyOverwriting(File|Nil target);
+    shared formal File copyOverwriting(File|Nil target,
+            "Copy attributes of the original file."
+            Boolean copyAttributes=false);
     
     "Create a hard link to this file."
     shared formal File createLink(Nil target);

@@ -10,10 +10,9 @@ import java.nio.file { JPath=Path,
                                getOwner, setOwner,
                                newSymbolicLink=createSymbolicLink,
                                newBufferedReader, newBufferedWriter },
-                       StandardCopyOption { REPLACE_EXISTING },
+                       StandardCopyOption { REPLACE_EXISTING, COPY_ATTRIBUTES },
                        StandardOpenOption { WRITE, APPEND, TRUNCATE_EXISTING } }
 import java.nio.file.attribute { FileTime { fromMillis } }
-import java.nio.charset { Charset }
 
 
 class ConcreteFile(JPath jpath)
@@ -24,12 +23,14 @@ class ConcreteFile(JPath jpath)
         return ConcreteNil(jpath);
     }
     
-    copy(Nil target) =>
-            ConcreteFile( copyPath(jpath, asJPath(target.path)) );
+    copy(Nil target, Boolean copyAttributes) =>
+            ConcreteFile( copyPath(jpath, asJPath(target.path),
+                    *(copyAttributes then [\iCOPY_ATTRIBUTES] else [])) );
     
-    copyOverwriting(File|Nil target) =>
-            ConcreteFile( copyPath(jpath, asJPath(target.path), 
-                    \iREPLACE_EXISTING) );            
+    copyOverwriting(File|Nil target, Boolean copyAttributes) =>
+            ConcreteFile( copyPath(jpath, asJPath(target.path),
+                    *(copyAttributes then [\iREPLACE_EXISTING, \iCOPY_ATTRIBUTES ]
+                                     else [\iREPLACE_EXISTING])) );
     
     move(Nil target) =>
             ConcreteFile( movePath(jpath, asJPath(target.path)) );
