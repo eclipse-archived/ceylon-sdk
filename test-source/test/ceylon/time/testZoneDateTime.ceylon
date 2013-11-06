@@ -182,10 +182,10 @@ test void testStringZoneDateTime() {
     //assertEquals("2013-01-01T00:00:00.000-04:00", _dst_2013_01_01.string);
     //assertEquals("2013-06-01T00:00:00.000-03:00", zoneDateTime(simpleDstTimeZone, 2013, june, 1).string);
     assertEquals("2013-06-01T00:00:00.000-04:00", zoneDateTime(simpleTimeZone, 2013, june, 1).string);
-    assertEquals("2013-01-01T00:00:00.000+00:00", utcZoned.string);
-    assertEquals("0000-01-01T00:00:00.000+00:00", utcZoned.withYear(0).string);
-    assertEquals("0010-01-01T00:00:00.000+00:00", utcZoned.withYear(10).string);
-    assertEquals("0100-01-01T00:00:00.000+00:00", utcZoned.withYear(100).string);
+    assertEquals("2013-01-01T00:00:00.000Z", utcZoned.string);
+    assertEquals("0000-01-01T00:00:00.000Z", utcZoned.withYear(0).string);
+    assertEquals("0010-01-01T00:00:00.000Z", utcZoned.withYear(10).string);
+    assertEquals("0100-01-01T00:00:00.000Z", utcZoned.withYear(100).string);
 } 
 
 test void testEnumerableZoneDateTime() {

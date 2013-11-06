@@ -12,7 +12,7 @@ import ceylon.time {
     Period
 }
 import ceylon.time.base {
-    september
+    september, milliseconds
 }
 import ceylon.time.timezone {
     timeZone,
@@ -72,4 +72,10 @@ test void testEqualsAndHashOffsetTimeZone() {
     assertFalse(instanceA_2 == instanceB_1);
     assertFalse(instanceA_1.hash == instanceB_1.hash);
     assertFalse(instanceA_2.hash == instanceB_1.hash);
+}
+
+test void testTimeZoneString() {
+    assertEquals("+10:09", OffsetTimeZone(10 * milliseconds.perHour + 9 * milliseconds.perMinute).string);
+    assertEquals("-05:20", OffsetTimeZone(-5 * milliseconds.perHour - 20 * milliseconds.perMinute).string);
+    assertEquals("Z", OffsetTimeZone(0).string);
 }

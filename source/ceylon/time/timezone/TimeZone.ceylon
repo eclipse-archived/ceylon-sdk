@@ -1,6 +1,7 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
+import ceylon.time.internal { leftPad }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -34,6 +35,12 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
         return prime * result + offsetMilliseconds.hash;
     }
 
+    "Returns ISO-8601 formatted String representation of this _time of day_.\n
+     https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
+    shared default actual String string {
+        return stringfyOffset(offsetMilliseconds);
+    }
+
 }
 
 "This represents offsets based on daylight saving time."
@@ -51,10 +58,23 @@ shared interface RuleBasedTimezone satisfies TimeZone {
 shared object timeZone {
 
     "Represents machine offset based on current VM."
-    shared object system extends OffsetTimeZone(sys.timezoneOffset) {}
+    shared object system extends OffsetTimeZone(sys.timezoneOffset) {
+
+        "Returns ISO-8601 formatted String representation of this _time of day_.\n
+         https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
+        shared actual String string {
+            return stringfyOffset(sys.timezoneOffset);
+        }
+    }
 
     "Represents Coordinated Universal Time."
-    shared object utc extends OffsetTimeZone(0) {}
+    shared object utc extends OffsetTimeZone(0) {
+        "Returns ISO-8601 formatted String representation of this _time of day_.\n
+         https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
+        shared actual String string {
+            return "Z";
+        }
+    }
 
     "Timezone offset parser based on ISO-8601, currently it accepts the following time zone offset patterns:
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.
@@ -69,4 +89,15 @@ shared object timeZone {
         return OffsetTimeZone(hours * ms.perHour + minutes * ms.perMinute + milliseconds);
     }
 
+}
+
+String stringfyOffset( Integer milliseconds ) {
+    value builder = StringBuilder();
+    if( milliseconds == 0 ) {
+        builder.append("Z");
+    } else {
+        builder.append( milliseconds >= 0 then "+" else "-" );
+        builder.append( "``leftPad((milliseconds.magnitude / ms.perHour))``:``leftPad((milliseconds.magnitude % ms.perHour) / ms.perMinute)``" );
+    }
+    return builder.string;
 }
