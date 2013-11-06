@@ -2,7 +2,7 @@ import ceylon.dbc {
     Sql
 }
 import ceylon.test {
-    createTestRunner
+    createTestRunner, SimpleLoggingListener
 }
 
 import org.h2.jdbcx {
@@ -29,6 +29,6 @@ shared void run() {
         }
     }
     
-    value result = createTestRunner([`module test.ceylon.dbc`]).run();
+    value result = createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();
     print(result);
 }

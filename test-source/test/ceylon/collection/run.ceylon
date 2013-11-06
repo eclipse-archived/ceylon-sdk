@@ -1,6 +1,6 @@
 import ceylon.test { ... }
 
 shared void run() {
-    value result = createTestRunner([`module test.ceylon.collection`]).run();
+    value result = createTestRunner([`module test.ceylon.collection`], [SimpleLoggingListener()]).run();
     print(result);
 }

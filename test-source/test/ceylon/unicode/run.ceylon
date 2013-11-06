@@ -29,6 +29,6 @@ test void testDirectionality() {
 }
 
 shared void run(){
-    value result = createTestRunner([`module test.ceylon.unicode`]).run();
+    value result = createTestRunner([`module test.ceylon.unicode`], [SimpleLoggingListener()]).run();
     print(result);
 }

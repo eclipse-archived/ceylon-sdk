@@ -1,8 +1,8 @@
 import ceylon.test {
-    createTestRunner
+    createTestRunner, SimpleLoggingListener
 }
 
 shared void run() {
-    value result = createTestRunner([`module test.ceylon.interop.java`]).run();
+    value result = createTestRunner([`module test.ceylon.interop.java`], [SimpleLoggingListener()]).run();
     print(result);
 }

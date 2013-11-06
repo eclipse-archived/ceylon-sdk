@@ -1,8 +1,8 @@
 import ceylon.test {
-    createTestRunner
+    createTestRunner, SimpleLoggingListener
 }
 
 shared void run() {
-    value result = createTestRunner([`module test.ceylon.math`]).run();
+    value result = createTestRunner([`module test.ceylon.math`], [SimpleLoggingListener()]).run();
     print(result);
 }
