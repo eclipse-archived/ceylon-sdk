@@ -308,11 +308,11 @@ class FunctionTestExecutor(FunctionDeclaration funcDecl) satisfies TestExecutor 
             
             variable value extendedType = parent.extendedType;
             while(exists extendedDeclaration = extendedType?.declaration) {
-                callbacks.appendAll(extendedDeclaration.annotatedMemberDeclarations<FunctionDeclaration, CallbackType>());
+                callbacks.appendAll(extendedDeclaration.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>());
                 extendedType = extendedDeclaration.extendedType;
             }
             
-            callbacks.appendAll(parent.annotatedMemberDeclarations<FunctionDeclaration, CallbackType>());
+            callbacks.appendAll(parent.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>());
         }
         else if( is Package parent ) {
             callbacks.appendAll(parent.annotatedMembers<FunctionDeclaration, CallbackType>());                

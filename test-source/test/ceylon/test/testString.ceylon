@@ -41,7 +41,7 @@ void testResultString() {
 void testRunResultString1() {
     value runResult = createTestRunner([]).run();
 
-    value expected = """TESTS RESULT
+    value expected = """TEST RESULTS
                         There were no tests!
                      """;
 
@@ -51,33 +51,30 @@ void testRunResultString1() {
 void testRunResultString2() {
     value runResult = createTestRunner([`methodFoo`, `ClassFoo`]).run();
 
-    value expected = """TESTS RESULT
+    value expected = """TEST RESULTS
                         run:     3
                         success: 3
                         failure: 0
                         error:   0
                         ignored: 0
-                        
-                        TESTS SUCCESS
                     """;
 
-    assert(runResult.string == expected);
+    assert(runResult.string.contains(expected), 
+           runResult.string.contains("TESTS SUCCESS"));
 }
 
 void testRunResultString3() {
     value runResult = createTestRunner([`methodFoo`, `methodThrowingException`, `ignoredMethod`]).run();
     
-    value expected = """TESTS RESULT
+    value expected = """TEST RESULTS
                         run:     2
                         success: 1
                         failure: 0
                         error:   1
                         ignored: 1
-                        
-                        test.ceylon.test::methodThrowingException - error (ceylon.language.Exception "unexpected exception")
-                        
-                        TESTS FAILED !
                      """;
 
-    assert(runResult.string == expected);
+    assert(runResult.string.contains(expected), 
+           runResult.string.contains("test.ceylon.test::methodThrowingException - error (ceylon.language.Exception \"unexpected exception\")"),
+           runResult.string.contains("TESTS FAILED !"));
 }
