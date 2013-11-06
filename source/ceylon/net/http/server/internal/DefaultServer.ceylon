@@ -122,6 +122,10 @@ shared class DefaultServer() satisfies Server {
         //TODO log
         print("Httpd started.");
         notifyListeners(started);
+
+        if (exists w = worker) {
+            w.awaitTermination();
+        }
     }
     
     shared actual void startInBackground(Integer port, String host, Options options) {
