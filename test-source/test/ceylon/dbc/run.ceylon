@@ -29,6 +29,5 @@ shared void run() {
         }
     }
     
-    value result = createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();
-    print(result);
+    createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();
 }

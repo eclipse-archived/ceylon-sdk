@@ -3,6 +3,5 @@ import ceylon.test {
 }
 
 shared void run() {
-    value result = createTestRunner([`module test.ceylon.math`], [SimpleLoggingListener()]).run();
-    print(result);
+    createTestRunner([`module test.ceylon.math`], [SimpleLoggingListener()]).run();
 }
