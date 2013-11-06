@@ -248,6 +248,7 @@
         <copy todir="${ceylon.repo.dir}" overwrite="true">
             <fileset dir="${out.repo}">
                 <include name="ceylon/test/**"/>
+            	<include name="com/redhat/ceylon/test/**"/>
                 <include name="ceylon/math/**"/>
                 <include name="ceylon/collection/**"/>
                 <include name="ceylon/file/**"/>
