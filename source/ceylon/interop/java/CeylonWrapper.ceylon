@@ -3,15 +3,24 @@ import java.lang { AutoCloseable }
 "
  Ceylon wrapper for java.lang.AutoCloseable to allow usage in try-with-resources, e.g.
  <pre>
- try (wrapper = CeylonWrapper(getInputStream()) {
+ try (wrapper = CeylonWrapper( () => getInputStream() ) {
      wrapper.resource.read();
      ...
  }
  </pre>
  "
-shared class CeylonWrapper<Resource>(shared Resource resource) satisfies Closeable 
+shared class CeylonWrapper<Resource>(Resource() resourceProducer) satisfies Closeable 
         given Resource satisfies AutoCloseable {
-    
+
+    variable Resource? actualResource = null;
+
+    shared Resource resource {
+        if (exists a = actualResource) {
+            return a;
+        }
+        throw Exception("resource was not opened");
+    }
+
     shared actual void close(Exception? exception) {
         try {
             resource.close();
@@ -23,6 +32,8 @@ shared class CeylonWrapper<Resource>(shared Resource resource) satisfies Closeab
             throw e;
         }
     }
-    
-    shared actual void open() {}
+
+    shared actual void open() {
+        actualResource = resourceProducer();
+    }
 }
