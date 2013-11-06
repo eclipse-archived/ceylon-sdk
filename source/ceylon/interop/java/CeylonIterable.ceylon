@@ -1,11 +1,17 @@
 
 import java.lang { JIterable=Iterable }
 
-"Takes a Java `Iterable` and turns it into a Ceylon `Iterable`"
-shared class CeylonIterable<T>(JIterable<T> jiter) satisfies Iterable<T> {
+"Adapts an instance of Java's `Iterable` to Ceylon's `Iterable`,
+ allowing its elements to be iterated using `for`.
+ 
+     for (int in CeylonIterable(Arrays.asList(ints))) {
+         ...
+     }"
+shared class CeylonIterable<T>(JIterable<T> iterable) 
+        satisfies Iterable<T> {
 
     shared actual Iterator<T> iterator() {
-        return CeylonIterator(jiter.iterator());
+        return CeylonIterator(iterable.iterator());
     }
     
 }
