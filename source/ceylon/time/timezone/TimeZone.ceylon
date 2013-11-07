@@ -38,7 +38,10 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
     shared default actual String string {
-        return stringfyOffset(offsetMilliseconds);
+        value builder = StringBuilder();
+        builder.append( offsetMilliseconds >= 0 then "+" else "-" )
+               .append( "``leftPad((offsetMilliseconds.magnitude / ms.perHour))``:``leftPad((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute)``" );
+        return builder.string;
     }
 
 }
@@ -58,14 +61,7 @@ shared interface RuleBasedTimezone satisfies TimeZone {
 shared object timeZone {
 
     "Represents machine offset based on current VM."
-    shared object system extends OffsetTimeZone(sys.timezoneOffset) {
-
-        "Returns ISO-8601 formatted String representation of this _time of day_.\n
-         https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
-        shared actual String string {
-            return stringfyOffset(sys.timezoneOffset);
-        }
-    }
+    shared object system extends OffsetTimeZone(sys.timezoneOffset) {}
 
     "Represents Coordinated Universal Time."
     shared object utc extends OffsetTimeZone(0) {
@@ -89,15 +85,4 @@ shared object timeZone {
         return OffsetTimeZone(hours * ms.perHour + minutes * ms.perMinute + milliseconds);
     }
 
-}
-
-String stringfyOffset( Integer milliseconds ) {
-    value builder = StringBuilder();
-    if( milliseconds == 0 ) {
-        builder.append("Z");
-    } else {
-        builder.append( milliseconds >= 0 then "+" else "-" );
-        builder.append( "``leftPad((milliseconds.magnitude / ms.perHour))``:``leftPad((milliseconds.magnitude % ms.perHour) / ms.perMinute)``" );
-    }
-    return builder.string;
 }

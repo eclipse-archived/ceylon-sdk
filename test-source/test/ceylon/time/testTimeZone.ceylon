@@ -77,5 +77,5 @@ test void testEqualsAndHashOffsetTimeZone() {
 test void testTimeZoneString() {
     assertEquals("+10:09", OffsetTimeZone(10 * milliseconds.perHour + 9 * milliseconds.perMinute).string);
     assertEquals("-05:20", OffsetTimeZone(-5 * milliseconds.perHour - 20 * milliseconds.perMinute).string);
-    assertEquals("Z", OffsetTimeZone(0).string);
+    assertEquals("+00:00", OffsetTimeZone(0).string);
 }
