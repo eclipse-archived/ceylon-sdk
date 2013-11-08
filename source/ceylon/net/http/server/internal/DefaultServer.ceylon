@@ -34,6 +34,7 @@ import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINE
 import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler, WebSocketProtocolHandshakeHandler }
 import ceylon.net.http.server.websocket { WebSocketBaseEndpoint }
 import ceylon.collection { MutableList, LinkedList }
+import ceylon.io { SocketAddress }
 
 by("Matej Lazar")
 shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
@@ -70,10 +71,10 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         return errPageHandler;
     }
     
-    shared actual void start(Integer port, String host, Options options) {  //TODO use SocketAddres for host:post
+    shared actual void start(SocketAddress socketAddress, Options options) {  //TODO use SocketAddres for host:post
         notifyListeners(starting);
         //TODO log
-        print("Starting on ``host``:``port``");
+        print("Starting on ``socketAddress.address``:``socketAddress.port``");
         CeylonRequestHandler ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
 
         HttpOpenListener openListener = HttpOpenListener(
@@ -101,12 +102,12 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         
         worker = xnioInstance.createWorker(workerOptions);
         
-        InetSocketAddress socketAddress = InetSocketAddress(host, port);
+        InetSocketAddress jSocketAddress = InetSocketAddress(socketAddress.address, socketAddress.port);
         
         ChannelListener<AcceptingChannel<StreamConnection>> acceptListener = clOpenListenerAdapter(openListener);
         
         if (exists w = worker) {
-            AcceptingChannel<StreamConnection> server = w.createStreamConnectionServer(socketAddress, acceptListener, serverOptions);
+            AcceptingChannel<StreamConnection> server = w.createStreamConnectionServer(jSocketAddress, acceptListener, serverOptions);
             server.resumeAccepts();
         } else {
             throw InternalException("Missing xnio worker!");
@@ -131,10 +132,10 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         }
     }
     
-    shared actual void startInBackground(Integer port, String host, Options options) {
+    shared actual void startInBackground(SocketAddress socketAddress, Options options) {
         object httpd satisfies JRunnable {
             shared actual void run() {
-                start(port, host, options);
+                start(socketAddress, options);
             }
         }
         JThread(httpd).start();

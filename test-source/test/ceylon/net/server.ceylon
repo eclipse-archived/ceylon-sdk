@@ -1,5 +1,5 @@
 import ceylon.file { Path, File, parsePath }
-import ceylon.io { OpenFile, newOpenFile }
+import ceylon.io { OpenFile, newOpenFile, SocketAddress }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
