@@ -65,7 +65,7 @@ shared interface Selector {
 
     "Registers a `connect` listener on the given [[SocketConnector]].
      
-     The given [[callback]] will be invoked by [[process]] as soon as the
+     The given [[connect]] will be invoked by [[process]] as soon as the
      specified [[socketConnector]] can be connected without blocking.
      
      Your listener will only be invoked once.
@@ -74,7 +74,7 @@ shared interface Selector {
 
     "Registers an `accept` listener on the given [[ServerSocket]].
      
-     The given [[callback]] will be invoked by [[process]] whenever there is a
+     The given [[accept]] will be invoked by [[process]] whenever there is a
      [[Socket]] ready to be accepted from the specified [[socketAcceptor]] without blocking.
      
      If your listener is no longer interested in `accept` events from this selector,
