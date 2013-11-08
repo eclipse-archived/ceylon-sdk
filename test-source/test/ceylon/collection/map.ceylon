@@ -1,7 +1,7 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
-test void testMap(){
+shared test void testMap(){
     MutableMap<String,String> map = HashMap<String,String>();
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
@@ -40,7 +40,7 @@ test void testMap(){
     assertEquals(HashMap{}, HashMap{});
 }
 
-test void testMapRemove(){
+shared test void testMapRemove(){
     MutableMap<String,String> map = HashMap<String,String>();
     map.put("a", "b");
     map.put("c", "d");
@@ -59,14 +59,14 @@ test void testMapRemove(){
     assertEquals(null, map.remove("c"));
 }
 
-test void testMapConstructor(){
+shared test void testMapConstructor(){
     Map<String,String> map = HashMap{"a"->"b", "c"->"d"};
     assertEquals(2, map.size);
     assertEquals("b", map["a"]);
     assertEquals("d", map["c"]);
 }
 
-test void testMap2(){
+shared test void testMap2(){
     MutableMap<String,String|Integer> map = HashMap<String,String|Integer>();
     map.put("gravatar_id", "a38479e9dc888f68fb6911d4ce05d7cc");
     map.put("url", "https://api.github.com/users/ceylon");

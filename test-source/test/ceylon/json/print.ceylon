@@ -1,7 +1,7 @@
 import ceylon.json { ... }
 import ceylon.test { assertEquals, test }
 
-test void testPrint(){
+shared test void testPrint(){
     value o1 = Object{};
     assertEquals("{}", o1.string);
     
