@@ -35,8 +35,10 @@ shared object systemTime satisfies Clock {
     "Return current instant from system time."
     shared actual Instant instant() => Instant( milliseconds() );
 
-}
+    "Returns only the kind of this implementation as time can change to every call."
+    shared actual String string = "System time";
 
+}
 
 "Gets a clock that always returns the same instant in the UTC time-zone."
 shared Clock fixedTime(Instant|Integer instant) {
@@ -60,10 +62,13 @@ class FixedInstant(Instant fixedInstant) satisfies Clock {
     "Returns the fixed instant."
     shared actual Instant instant() => fixedInstant;
 
+    "Returns the fixed [[Instant]] that this [[Clock]] represents."
+    shared actual String string = "Fixed to ``instant()``";
+
 }
 
 "Implementation of a clock that always returns the same instant.
- 
+
  This is typically used for testing."
 class FixedMilliseconds(Integer fixedMilliseconds) satisfies Clock {
 
@@ -73,16 +78,23 @@ class FixedMilliseconds(Integer fixedMilliseconds) satisfies Clock {
     "Returns the instant from the fixed milliseconds."
     shared actual Instant instant() => Instant(fixedMilliseconds);
 
+    "Returns the fixed [[Instant]] that this [[Clock]] represents."
+    shared actual String string = "Fixed to ``instant()``";
+
 }
 
 "Returns an implementation of a clock that always returns a 
  constant offset from the value of the provided clock."
-shared Clock offsetTime(Clock baseClock, Integer offset) 
+shared Clock offsetTime(Clock baseClock, Duration offset) 
        => OffsetClock(baseClock, offset);
 
-"An implementation of a [[Clock]] that returns tilem with a constant 
+"An implementation of a [[Clock]] that returns time with a constant 
  offset from the provided clock."
-class OffsetClock(Clock baseClock, Integer offset) satisfies Clock {
+class OffsetClock(Clock baseClock, Duration offset) satisfies Clock {
+    shared actual Integer milliseconds() => baseClock.milliseconds() + offset.milliseconds;
     shared actual Instant instant() => Instant( milliseconds() );
-    shared actual Integer milliseconds() => baseClock.milliseconds() + offset;
+
+    "Returns the [[offsetTime]] period from given [[Clock]]."
+    shared actual String string = "Offset of ``offset.period.normalized()`` from ``baseClock``";
+
 }
