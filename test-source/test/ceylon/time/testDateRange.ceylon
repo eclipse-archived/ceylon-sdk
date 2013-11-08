@@ -20,6 +20,7 @@ import ceylon.time.base {
     years,
     saturday,
     days,
+    october,
     december
 }
 
@@ -313,6 +314,11 @@ test void testOverlapRulesABHigherCD() {
         expected = result;
         actual = b.rangeTo( a ).overlap( d.rangeTo( c ) );
     };
+}
+
+test void testDateRangeString() {
+    assertEquals( "2013-10-01/2013-10-31", DateRange(date(2013, october, 1), date(2013, october, 31)).string );
+    assertEquals( "2014-01-01/2013-01-01", DateRange(date(2014, january, 1), date(2013, january, 1)).string );
 }
 
 void assertIntervalDate( Date start, Date end, Period period, Duration? duration = null )  {

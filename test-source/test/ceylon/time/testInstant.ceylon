@@ -77,3 +77,8 @@ test void testEqualsAndHash() {
     assertFalse(instanceA_1.hash == instanceB_1.hash);
     assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
+
+test void testInstantString() {
+    assertEquals( "2013-02-13T18:00:42.057Z", Instant(1360778442057).string );
+    assertEquals( "2013-10-30T15:16:55.000Z", Instant(1383146215000).string );
+}

@@ -300,3 +300,8 @@ void assertIntervalTime( Time start, Time end, Period period, Duration? duration
         assertEquals(duration, range.duration);
     }
 }
+
+test void testTimeRangeString() {
+    assertEquals( "09:10:11.000/11:00:00.999", TimeRange(time(9, 10, 11), time(11, 0, 0, 999)).string );
+    assertEquals( "23:00:00.000/00:00:00.000", TimeRange(time(23, 0), time(0, 0)).string );
+}
