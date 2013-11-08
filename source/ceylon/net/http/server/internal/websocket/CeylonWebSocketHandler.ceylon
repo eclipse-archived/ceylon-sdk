@@ -49,9 +49,6 @@ shared class CeylonWebSocketHandler() satisfies WebSocketConnectionCallback {
         }
         case (is WebSocketFragmentedEndpoint) {
             return CeylonWebSocketFragmentedFrameHandler(endpoint, webSocketChannel);
-        } else {
-            //TODO remove, all cases are handled
-            throw;
         }
     }
 }

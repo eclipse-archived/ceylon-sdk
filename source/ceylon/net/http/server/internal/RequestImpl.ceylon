@@ -100,7 +100,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
 
     shared actual String[] headers(String name) {
-        value headers = exchange.requestHeaders.get(HttpString(name)); //TODO HttpString not required by newer version
+        value headers = exchange.requestHeaders.get(HttpString(name));
         SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
         
         value it = headers.iterator();
