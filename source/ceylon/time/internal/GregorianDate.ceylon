@@ -20,7 +20,7 @@ shared class GregorianDate( Integer dayOfEra )
     shared actual Boolean leapYear => impl.leapYear( year );
 
     "Returns _day of year_ value of this gregorian date."
-    shared actual Integer dayOfYear => month.fisrtDayOfYear( leapYear ) + day - 1;
+    shared actual Integer dayOfYear => month.firstDayOfYear( leapYear ) + day - 1;
 
     "Returns gregorian date immediately preceeding this date.\n
      For successor its used the lowest unit of date, this way we can benefit
