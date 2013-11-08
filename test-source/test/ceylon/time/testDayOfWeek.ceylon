@@ -19,7 +19,7 @@ import ceylon.time.base {
     december, parseDayOfWeek
 }
 
-test void testSucessors_Weekday() {
+shared test void testSucessors_Weekday() {
     assertEquals{ expected = tuesday; actual = monday.successor; compare = same; };
     assertEquals{ expected = wednesday; actual = tuesday.successor; compare = same; };
     assertEquals{ expected = thursday; actual = wednesday.successor; compare = same; };
@@ -29,7 +29,7 @@ test void testSucessors_Weekday() {
     assertEquals{ expected = monday; actual = sunday.successor; compare = same; };
 }
 
-test void testPredecessors_Weekday() {
+shared test void testPredecessors_Weekday() {
     assertEquals{ expected = saturday; actual = sunday.predecessor; compare = same; };
     assertEquals{ expected = friday; actual = saturday.predecessor; compare = same; };
     assertEquals{ expected = thursday; actual = friday.predecessor; compare = same; };
@@ -39,7 +39,7 @@ test void testPredecessors_Weekday() {
     assertEquals{ expected = sunday; actual = monday.predecessor; compare = same; };
 }
 
-test void testComparable_monday_Weekday() {
+shared test void testComparable_monday_Weekday() {
     assertTrue( monday < tuesday, "monday < tuesday" );
     assertTrue( monday < wednesday, "monday < wednesday" );
     assertTrue( monday < thursday, "monday < thursday" );
@@ -48,7 +48,7 @@ test void testComparable_monday_Weekday() {
     assertTrue( monday > sunday, "monday > sunday" );
 }
 
-test void testComparable_tuesday_Weekday() {
+shared test void testComparable_tuesday_Weekday() {
     assertTrue( tuesday > monday, "tuesday > monday" );
     assertTrue( tuesday < wednesday, "tuesday < wednesday" );
     assertTrue( tuesday < thursday, "tuesday < thursday" );
@@ -57,7 +57,7 @@ test void testComparable_tuesday_Weekday() {
     assertTrue( tuesday > sunday, "tuesday > sunday" );
 }
 
-test void testComparable_wednesday_Weekday() {
+shared test void testComparable_wednesday_Weekday() {
     assertTrue( wednesday > monday, "wednesday > monday" );
     assertTrue( wednesday > tuesday, "wednesday > tuesday" );
     assertTrue( wednesday < thursday, "wednesday < thursday" );
@@ -66,7 +66,7 @@ test void testComparable_wednesday_Weekday() {
     assertTrue( wednesday > sunday, "wednesday > sunday" );
 }
 
-test void testComparable_thursday_Weekday() {
+shared test void testComparable_thursday_Weekday() {
     assertTrue( thursday > monday, "thursday > monday" );
     assertTrue( thursday > tuesday, "thursday > tuesday" );
     assertTrue( thursday > wednesday, "thursday > wednesday" );
@@ -75,7 +75,7 @@ test void testComparable_thursday_Weekday() {
     assertTrue( thursday > sunday, "thursday > sunday" );
 }
 
-test void testComparable_friday_Weekday() {
+shared test void testComparable_friday_Weekday() {
     assertTrue( friday > monday, "friday > monday" );
     assertTrue( friday > tuesday, "friday > tuesday" );
     assertTrue( friday > wednesday, "friday > wednesday" );
@@ -84,7 +84,7 @@ test void testComparable_friday_Weekday() {
     assertTrue( friday > sunday, "friday > sunday" );
 }
 
-test void testOrdinal_Weekday() {
+shared test void testOrdinal_Weekday() {
     value data_1982_12_13 = date( 1982, december, 13);
     value data_1983_01_01 = date( 1983, january, 1 );
     variable value dow = data_1982_12_13.dayOfWeek;
@@ -93,7 +93,7 @@ test void testOrdinal_Weekday() {
     }
 }
 
-test void testParseDayOfWeek() {
+shared test void testParseDayOfWeek() {
     assertEquals(sunday, parseDayOfWeek("sunday"));
     assertEquals(monday, parseDayOfWeek("monday"));
     assertEquals(tuesday, parseDayOfWeek("tuesday"));

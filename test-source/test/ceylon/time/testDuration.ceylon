@@ -6,7 +6,7 @@ import ceylon.time {
     Duration
 }
 
-test void testScalableDuration() {
+shared test void testScalableDuration() {
     //Rules suggested by scalable interface
     Duration duration = Duration(1000);    
     assertEquals(Duration(1000),   1 ** duration);
