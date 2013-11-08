@@ -24,7 +24,7 @@ shared abstract class Month(integer)
     }
 
     "Returns the _day of year_ value for first of this month."
-    shared default Integer fisrtDayOfYear(Boolean leapYear = false){
+    shared default Integer firstDayOfYear(Boolean leapYear = false){
         assert(exists day = firstDayOfMonth[this.integer-1]);
         if (leapYear && this > february){
             return day + 1;

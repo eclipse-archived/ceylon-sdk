@@ -5,7 +5,7 @@ import ceylon.time.internal { _gap = gap, _overlap = overlap }
  
  Provides all power of [[Iterable]] features and complements with:
  * Easy way to recover [[Period]]
- * Easy way to recober [[Duration]]
+ * Easy way to recover [[Duration]]
  * Recover the overlap between [[TimeRange]] types
  * Recover the gap between [[TimeRange]] types
  * Allows cutomized way to iterate as navigate between values by [[UnitOfTime]] cases
