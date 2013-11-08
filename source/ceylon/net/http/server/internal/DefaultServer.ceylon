@@ -30,30 +30,32 @@ import io.undertow.server.protocol.http { HttpOpenListener }
 import io.undertow.server.handlers.error { SimpleErrorPageHandler }
 import ceylon.net.http.server { Server, Options, Status, starting, started, stopping, stopped, InternalException, HttpEndpoint }
 import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
-import ceylon.collection { LinkedList, MutableList }
 import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
 import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler, WebSocketProtocolHandshakeHandler }
 import ceylon.net.http.server.websocket { WebSocketBaseEndpoint }
+import ceylon.collection { MutableList, LinkedList }
 
 by("Matej Lazar")
-shared class DefaultServer() satisfies Server {
-    
-    Endpoints endpoints = Endpoints();
+shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
+        satisfies Server {
+
+    Endpoints httpEndpoints = Endpoints();
+    CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
 
     variable XnioWorker? worker = null;
-    
-    CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
-    
+
     MutableList<Callable<Anything, [Status]>> statusListeners = LinkedList<Callable<Anything, [Status]>>();
-    
-    shared actual void addEndpoint(HttpEndpoint endpoint) {
-        endpoints.add(endpoint);
+
+    for (endpoint in endpoints) {
+        switch (endpoint)
+        case (is HttpEndpoint) {
+            httpEndpoints.add(endpoint);
+        }
+        case (is WebSocketBaseEndpoint) {
+            webSocketHandler.addEndpoint(endpoint);
+        }
     }
-    
-    shared actual void addWebSocketEndpoint(WebSocketBaseEndpoint endpoint) {
-        webSocketHandler.addEndpoint(endpoint);
-    }
-    
+
     HttpHandler getHeandlers(Options options, HttpHandler next) {
         value webSocketProtocolHandshakeHandler = WebSocketProtocolHandshakeHandler(
                                                         webSocketHandler,
@@ -72,7 +74,7 @@ shared class DefaultServer() satisfies Server {
         notifyListeners(starting);
         //TODO log
         print("Starting on ``host``:``port``");
-        CeylonRequestHandler ceylonRequestHandler = CeylonRequestHandler(options, endpoints);
+        CeylonRequestHandler ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
 
         HttpOpenListener openListener = HttpOpenListener(
         ByteBufferSlicePool(
@@ -149,18 +151,22 @@ shared class DefaultServer() satisfies Server {
         }
     }
     
-    shared actual void addListener(void listener(Status status)) {
-        statusListeners.add(listener);
-    }
-    
-    shared actual void removeListener(void listener(Status status)) {
-        statusListeners.removeElement(listener);
-    }
-    
     void notifyListeners(Status status) {
         for (listener in statusListeners) {
             listener(status);
         }
+    }
+
+    shared actual void addEndpoint(HttpEndpoint endpoint) {
+        httpEndpoints.add(endpoint);
+    }
+    
+    shared actual void addWebSocketEndpoint(WebSocketBaseEndpoint endpoint) {
+        webSocketHandler.addEndpoint(endpoint);
+    }
+    
+    shared actual void addListener(void listener(Status status)) {
+        statusListeners.add( listener );
     }
 }
 
