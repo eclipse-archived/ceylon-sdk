@@ -151,8 +151,8 @@ shared Float atan(Float num) {
     return jatan(num);
 }
 
-"The angle from converting rectangular coordinates `x` 
- and `y` to polar coordinates.
+"The angle from converting rectangular coordinates 
+ `x` and `y` to polar coordinates.
  
  Special cases:
  
@@ -165,108 +165,109 @@ shared Float atan(Float num) {
  </tr>
  
  <tr>
- <td>undefined</td>  
- <td>any value</td>  
- <td>undefined</td>
+ <td><code>undefined</code></td>
+ <td>any value</td>
+ <td><code>undefined</code></td>
  </tr>
  
  <tr>
- <td>any value</td>  
- <td>undefined</td>  
- <td>undefined</td>
+ <td>any value</td>
+ <td><code>undefined</code></td>
+ <td><code>undefined</code></td>
  </tr>
  
- <tr><
- td>+0</td>                       
- <td>&gt; 0</td>     
- <td>+0</td>
- </tr>
- 
- <tr>
- <td>&gt; 0 and not +infinity</td> 
- <td>+infinity</td>  
- <td>+0</td></tr>
- 
- <tr>
- <td>-0</td>                       
- <td>&gt; 0</td>     
- <td>-0</td>
+ <tr><td><code>+0</code></td>
+ <td><code>&gt; 0</code></td>
+ <td><code>+0</code></td>
  </tr>
  
  <tr>
- <td>&lt; 0 and not -infinity</td> 
- <td>+infinity</td>  
- <td>-0</td>
+ <td><code>&gt; 0</code> and not <code>+infinity</code></td>
+ <td><code>+infinity</code></td>
+ <td><code>+0</code></td></tr>
+ 
+ <tr>
+ <td><code>-0</code></td>
+ <td><code>&gt; 0</code></td>
+ <td><code>-0</code></td>
  </tr>
  
  <tr>
- <td>+0</td>                       
- <td>&lt; 0</td>     
- <td>The `Float` best approximating \{#03C0}</td>
+ <td><code>&lt; 0</code> and not <code>-infinity</code></td>
+ <td><code>+infinity</code></td>
+ <td><code>-0</code></td>
  </tr>
  
  <tr>
- <td>&gt; 0 and not +infinity</td> 
- <td>-infinity</td>  
- <td>The `Float` best approximating \{#03C0}</td>
+ <td><code>+0</code></td>
+ <td><code>&lt; 0</code></td>
+ <td><code>\{#03C0}</code></td>
  </tr>
  
  <tr>
- <td>-0</td>                       
- <td>&lt; 0</td>     
- <td>The `Float` best approximating -\{#03C0}</td>
+ <td><code>&gt; 0</code> and not <code>+infinity</code></td>
+ <td><code>-infinity</code></td>
+ <td><code>\{#03C0}</code></td>
  </tr>
  
  <tr>
- <td>&lt; 0 and not -infinity</td> 
- <td>-infinity</td>  
- <td>The `Float` best approximating -\{#03C0}</td>
+ <td><code>-0</code></td>
+ <td><code>&lt; 0</code></td>
+ <td><code>-\{#03C0}</code></td>
  </tr>
  
  <tr>
- <td>&gt; 0</td>    
- <td>+0 or -0</td>                   
- <td>The `Float` best approximating \{#03C0}/2</td>
+ <td><code>&lt; 0</code> and not <code>-infinity</code></td>
+ <td><code>-infinity</code></td>
+ <td><code>-\{#03C0}</code></td>
  </tr>
  
  <tr>
- <td>+infinity</td> 
- <td>not +infinity or -infinity</td> 
- <td>The `Float` best approximating \{#03C0}/2</td>
+ <td><code>&gt; 0</code></td>
+ <td><code>+0 or -0</code></td>             
+ <td><code>\{#03C0}/2</code></td>
  </tr>
  
  <tr>
- <td>&lt; 0</td>    
- <td>+0 or -0</td>                   
- <td>The `Float` best approximating -\{#03C0}/2</td>
+ <td><code>+infinity</code></td>
+ <td>not <code>+infinity</code> or <code>-infinity</code></td>
+ <td><code>\{#03C0}/2</code></td>
  </tr>
  
  <tr>
- <td>-infinity</td> 
- <td>not +infinity or -infinity</td> 
- <td>The `Float` best approximating -\{#03C0}/2</td>
+ <td><code>&lt; 0</code></td>
+ <td><code>+0 or -0</code></td>
+ <td><code>-\{#03C0}/2</code></td>
  </tr>
  
  <tr>
- <td>+infinity</td> <td>+infinity</td> 
- <td>The `Float` best approximating \{#03C0}/4</td>
+ <td><code>-infinity</code></td>
+ <td>not <code>+infinity</code> or <code>-infinity</code></td>
+ <td><code>-\{#03C0}/2</code></td>
  </tr>
  
  <tr>
- <td>+infinity</td> <td>-infinity</td> 
- <td>The `Float` best approximating 3\{#03C0}/4</td>
+ <td><code>+infinity</code></td>
+ <td><code>+infinity</code></td>
+ <td><code>\{#03C0}/4</code></td>
  </tr>
  
  <tr>
- <td>-infinity</td> 
- <td>+infinity</td> 
- <td>The `Float` best approximating -\{#03C0}/4</td>
+ <td><code>+infinity</code></td>
+ <td><code>-infinity</code></td>
+ <td><code>3\{#03C0}/4</code></td>
  </tr>
  
  <tr>
- <td>-infinity</td> 
- <td>-infinity</td> 
- <td>The `Float` best approximating -3\{#03C0}/4</td>
+ <td><code>-infinity</code></td>
+ <td><code>+infinity</code></td>
+ <td><code>-\{#03C0}/4</code></td>
+ </tr>
+ 
+ <tr>
+ <td><code>-infinity</code></td>
+ <td><code>-infinity</code></td>
+ <td><code>-3\{#03C0}/4</code></td>
  </tr>
  
  </tbody>
@@ -279,14 +280,12 @@ shared Float atan2(Float y, Float x) {
 "Returns the length of the hypotenuse of a right angle 
  triangle with other sides having lengths `x` and `y`. 
  This method may be more accurate than computing 
- `sqrt(x**2 + x**2)` directly.
+ `sqrt(x^2 + x^2)` directly.
  
- `hypot(x,y)`:
- 
- * where `x` and/or `y` is `+infinity` or `-infinity`, is 
-   `+infinity`,
- * otherwise, where x and/or y is `undefined`, is 
-   `undefined`.
+ * `hypot(x,y)` where `x` and/or `y` is `+infinity` or 
+   `-infinity`, is `+infinity`,
+ * `hypot(x,y)`, where `x` and/or `y` is `undefined`, 
+   is `undefined`.
  "
 shared Float hypot(Float x, Float y) {
     return jhypot(x, y);
@@ -294,7 +293,7 @@ shared Float hypot(Float x, Float y) {
 
 "The positive square root of the given number. This 
  method may be faster and/or more accurate than 
- `num**0.5`.
+ `num^0.5`.
  
  * `sqrt(x)` for any x < 0 is `undefined`,
  * `sqrt(-0)` is `-0`,
@@ -307,7 +306,7 @@ shared Float sqrt(Float num) {
 }
 
 "The cube root of the given number. This method may be 
- faster and/or more accurate than `num**(1.0/3.0)`.
+ faster and/or more accurate than `num^(1.0/3.0)`.
  
  * `cbrt(-infinity)` is `-infinity`,
  * `cbrt(-0)` is `-0`,
