@@ -15,14 +15,14 @@ import ceylon.time.chronology {
     gregorian
 }
 
-test void testUnixTime() {
+shared test void testUnixTime() {
     assertEquals(719163, unixTime.epoch);
     assertEquals(719163, unixTime.fixedFromTime(1));
     assertEquals(1356998400000, unixTime.timeFromFixed(date(2013, january, 1).dayOfEra));
     assertEquals(unixTime.timeOfDay(1357032630000), time(9, 30, 30).millisecondsOfDay);
 }
 
-test void testGregorianMonths() {
+shared test void testGregorianMonths() {
     assertEquals(1,  gregorian.january);
     assertEquals(2,  gregorian.february);
     assertEquals(3,  gregorian.march);
@@ -37,7 +37,7 @@ test void testGregorianMonths() {
     assertEquals(12, gregorian.december);
 }
 
-test void testGregorian() {
+shared test void testGregorian() {
     gregorian.checkDate([2013, 1, 1]);
     gregorian.checkDate([2012, 2, 29]);
     gregorian.checkDate([2010, 12, 31]);

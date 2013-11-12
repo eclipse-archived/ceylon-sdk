@@ -49,7 +49,7 @@ shared object days satisfies UnitOfDay {
     shared Integer perMonth(Month month, Boolean leapYear=false) => month.numberOfDays(leapYear);
 
     "Returns the number of days from the start of the year to the first of the month."
-    shared Integer toMonth(Month month, Boolean leapYear=false) => month.fisrtDayOfYear(leapYear) - 1;
+    shared Integer toMonth(Month month, Boolean leapYear=false) => month.firstDayOfYear(leapYear) - 1;
 
     shared DayOfWeek[] ofWeek = [sunday, monday, tuesday, wednesday, thursday, friday, saturday];
 

@@ -2,11 +2,13 @@ import ceylon.collection { HashMap }
 import ceylon.io { SocketAddress }
 import ceylon.net.http.server { 
     Request, Session, 
-    InternalException, HttpEndpoint }
+    InternalException, HttpEndpoint, UploadedFile }
+
+import ceylon.net.http { Method }
+import ceylon.net.http.server.internal { JavaHelper { paramIsFile, paramFile, paramValue } }
 
 import io.undertow.server { HttpServerExchange }
-import io.undertow.server.handlers.form { FormDataParser, FormData, FormParserFactory }
-
+import io.undertow.server.handlers.form { FormDataParser, UtFormData = FormData, FormParserFactory }
 import io.undertow.server.session { 
         SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
         UtSession=Session, SessionCookieConfig }
@@ -15,10 +17,11 @@ import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE },
 
 import java.lang { JString=String }
 import java.util { Deque, JMap=Map }
-import ceylon.net.http { Method }
+import ceylon.file { parsePath }
 
 by("Matej Lazar")
-shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formParserFactory, endpoint, path, method) satisfies Request {
+shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formParserFactory, endpoint, path, method)
+        satisfies Request {
 
     shared HttpEndpoint endpoint;
 
@@ -26,10 +29,67 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
 
     shared actual Method method;
 
-    HashMap<String, String[]> parametersMap = HashMap<String, String[]>(); 
+    UtFormData getUtFormData() {
+        FormDataParser? formDataParser = formParserFactory.createParser(exchange);
+        if (exists fdp = formDataParser) {
+            return fdp.parseBlocking();
+            //TODO ASYNC parsing for async endpoint formData = fdp.parse(nextHandler);
+        } else {
+            //If no parser exists for requeste content-type, construct empty form data
+            return UtFormData(1);
+        }
+    }
 
-    variable FormData? parsedFormData = null;
-    FormData formData => parsedFormData else (parsedFormData = parseFormData());
+    FormData buildFormData() {
+        value formDataBuilder = FormDataBuilder();
+        
+        value utFormData = getUtFormData();
+        
+        value formDataIt = utFormData.iterator();
+        while (formDataIt.hasNext()) {
+            JString key = formDataIt.next();
+            Deque<UtFormData.FormValue> values = utFormData.get(key.string); 
+            value valuesIt = values.iterator();
+            while (valuesIt.hasNext()) {
+                value parameterValue = valuesIt.next();
+                if (paramIsFile(parameterValue)) {
+                    UploadedFile uploadedFile = UploadedFile { 
+                        file = parsePath(paramFile(parameterValue).absolutePath);
+                        fileName = parameterValue.fileName;
+                    };
+                    formDataBuilder.addFile(key.string, uploadedFile);
+                } else {
+                    formDataBuilder.addParameter(key.string, paramValue(parameterValue));
+                }
+            }
+        }
+        return formDataBuilder.build();
+    }
+    
+    Map<String, String[]> readQueryParameters() {
+        HashMap<String, String[]> queryParameters = HashMap<String, String[]>();
+        JMap<JString,Deque<JString>> utQueryParameters = exchange.queryParameters;
+        
+        value it = utQueryParameters.keySet().iterator();
+        while (it.hasNext()) {
+            JString key = it.next();
+            Deque<JString> values = utQueryParameters.get(key); 
+            value valuesIt = values.iterator();
+            SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
+            while (valuesIt.hasNext()) {
+                value paramValue = valuesIt.next(); 
+                sequenceBuilder.append(paramValue.string);
+            }
+            queryParameters.put(key.string, sequenceBuilder.sequence);
+        }
+        return queryParameters;
+    }
+
+    variable Map<String, String[]>? lazyQueryParameters = null;
+    Map<String, String[]> queryParameters => lazyQueryParameters else (lazyQueryParameters = readQueryParameters());
+
+    variable FormData? lazyFormData = null;
+    FormData formData => lazyFormData else (lazyFormData = buildFormData()) ;
 
     shared actual String? header(String name) {
         return getHeader(name);
@@ -40,7 +100,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
 
     shared actual String[] headers(String name) {
-        value headers = exchange.requestHeaders.get(HttpString(name)); //TODO HttpString not required by newer version
+        value headers = exchange.requestHeaders.get(HttpString(name));
         SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
         
         value it = headers.iterator();
@@ -51,38 +111,46 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         
         return sequenceBuilder.sequence;
     }
-    
-    shared actual String[] parameters(String name) {
 
-        if (parametersMap.contains(name)) {
-            if (exists params = parametersMap.get(name)) {
-                return params;
+    shared actual String[] parameters(String name, Boolean forseFormParse) {
+
+        value mergedParams = SequenceBuilder<String>();
+        if (queryParameters.keys.contains(name)) {
+            if (exists params = queryParameters.get(name)) {
+                if (forseFormParse || initialized(lazyFormData)) {
+                    mergedParams.appendAll(params);
+                } else {
+                    return params;
+                }
             }
         }
 
-        SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
-        value paramName = JString(name);
-        JMap<JString,Deque<JString>> qp = exchange.queryParameters;
-
-        if (qp.containsKey(paramName)) {
-            Deque<JString> params = qp.get(paramName);
-            value it = params.iterator();
-            while (it.hasNext()) {
-                value param = it.next(); 
-                sequenceBuilder.append(param.string);
-            }
+        if (exists posted = formData.parameters.get(name)) {
+            mergedParams.appendAll(posted);
         }
-
-        addPostValues(sequenceBuilder, name);
-        value params = sequenceBuilder.sequence;
-        parametersMap.put(name, params);
-        return params;
+        return mergedParams.sequence;
     }
 
-    shared actual String? parameter(String name) {
+    shared actual String? parameter(String name, Boolean forseFormParsing) {
         value params = parameters(name);
         if (nonempty params) {
             return params.first;
+        } else {
+            return null;
+        }
+    }
+
+    shared actual UploadedFile[] files(String name) {
+        if (exists files = formData.files.get(name)) {
+            return files;
+        }
+        return {};
+    }
+
+    shared actual UploadedFile? file(String name) {
+        UploadedFile[] uploadedFiles = files(name);
+        if (nonempty uploadedFiles) {
+            return uploadedFiles.first;
         } else {
             return null;
         }
@@ -129,30 +197,10 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         }
     }
 
-    void addPostValues(SequenceBuilder<String> sequenceBuilder, String paramName) {
-        if (formData.contains(paramName)) {
-            Deque<FormData.FormValue> params = formData.get(paramName);
-            value it = params.iterator();
-            while (it.hasNext()) {
-                FormData.FormValue param = it.next(); 
-                String? fileName = param.fileName;
-                if (exists fileName) {
-                    //TODO handle uploaded file	
-                } else {
-                    sequenceBuilder.append(param.\ivalue);
-                }
-            }
+    Boolean initialized(Object? obj) { 
+        if (exists obj) {
+            return true;
         }
-    }
-
-    FormData parseFormData() {
-        FormDataParser? formDataParser = formParserFactory.createParser(exchange);
-        if (exists fdp = formDataParser) {
-            return fdp.parseBlocking();
-            //TODO ASYNC parsing for async endpoint formData = fdp.parse(nextHandler);
-        } else {
-            //If no parser exists for requeste content-type, construct empty form data
-            return FormData(1000); //TODO expose max form data values as option
-        }
+        return false;
     }
 }

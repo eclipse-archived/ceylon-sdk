@@ -1,3 +1,5 @@
+import ceylon.language { Obj=Object }
+
 "A JSON Printer"
 by("Stéphane Épardaud")
 shared abstract class Printer(Boolean pretty = false){
@@ -30,8 +32,8 @@ shared abstract class Printer(Boolean pretty = false){
     shared default void printObject(Object o){
         print("{");
         enter();
-        variable Boolean once = true; 
-        for(entry in o){
+        variable Boolean once = true;
+        for(entry in o.sort(compareKeys)){
             if(once){
                 once = false;
             }else{
@@ -140,4 +142,8 @@ shared abstract class Printer(Boolean pretty = false){
             printNull();
         }
     }
+    
 }
+
+Comparison compareKeys(String->Obj x, String->Obj y)
+        => x.key<=>y.key; 

@@ -12,14 +12,14 @@ import ceylon.time {
     Period
 }
 import ceylon.time.base {
-    september
+    september, milliseconds
 }
 import ceylon.time.timezone {
     timeZone,
     OffsetTimeZone
 }
 
-test void testDateTimeToInstantUsesOffset() {
+shared test void testDateTimeToInstantUsesOffset() {
     value localDate = date(2013, september, 02);
     
     assertEquals( localDate.at(time(12, 00)).instant( timeZone.utc ), 
@@ -31,7 +31,7 @@ test void testDateTimeToInstantUsesOffset() {
                   "Should apply negative timezone offset" );
 }
 
-test void testInstantToTimeUsesOffset() {
+shared test void testInstantToTimeUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
     
     assertEquals( time(12, 00), instant.time( timeZone.utc ) );
@@ -40,7 +40,7 @@ test void testInstantToTimeUsesOffset() {
 }
 
 
-test void testInstantToDateUsesOffset() {
+shared test void testInstantToDateUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
     
     assertEquals( date(2013, september, 02), instant.date( timeZone.utc ) );
@@ -48,7 +48,7 @@ test void testInstantToDateUsesOffset() {
     assertEquals( date(2013, september, 01), instant.minus(Period{ hours = 2; }).date( timeZone.offset(-12) ) );
 }
 
-test void testInstantToDateTimeUsesOffset() {
+shared test void testInstantToDateTimeUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
     
     assertEquals( dateTime(2013, september, 02, 12, 00), instant.dateTime( timeZone.utc ) );
@@ -56,7 +56,7 @@ test void testInstantToDateTimeUsesOffset() {
     assertEquals( dateTime(2013, september, 01, 22, 00), instant.minus(Period{ hours = 2; }).dateTime( timeZone.offset(-12) ) );
 }
 
-test void testEqualsAndHashOffsetTimeZone() {
+shared test void testEqualsAndHashOffsetTimeZone() {
     OffsetTimeZone instanceA_1 = OffsetTimeZone(2000);
     OffsetTimeZone instanceA_2 = OffsetTimeZone(2000);
     OffsetTimeZone instanceB_1 = OffsetTimeZone(1);
@@ -72,4 +72,10 @@ test void testEqualsAndHashOffsetTimeZone() {
     assertFalse(instanceA_2 == instanceB_1);
     assertFalse(instanceA_1.hash == instanceB_1.hash);
     assertFalse(instanceA_2.hash == instanceB_1.hash);
+}
+
+test void testTimeZoneString() {
+    assertEquals("+10:09", OffsetTimeZone(10 * milliseconds.perHour + 9 * milliseconds.perMinute).string);
+    assertEquals("-05:20", OffsetTimeZone(-5 * milliseconds.perHour - 20 * milliseconds.perMinute).string);
+    assertEquals("+00:00", OffsetTimeZone(0).string);
 }

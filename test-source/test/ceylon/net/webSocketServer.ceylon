@@ -2,7 +2,7 @@ import java.net { URI }
 import test.ceylon.net.websocketclient { WebSocketClient }
 import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason, WebSocketEndpoint }
 import ceylon.test { assertTrue, assertEquals, test }
-import ceylon.net.http.server { createServer, startsWith, started, Status, stopped }
+import ceylon.net.http.server { startsWith, started, Status, stopped, newServer }
 import ceylon.io.buffer { ByteBuffer }
 import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
@@ -12,7 +12,7 @@ import io.netty.handler.codec.http.websocketx { WebSocketHandshakeException }
 by("Matej Lazar")
 test void testWebSocketServer() {
     
-    value server = createServer {};
+    value server = newServer {};
 
     variable Integer messagesReceived = 0;
     

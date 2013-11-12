@@ -94,4 +94,10 @@ shared class Instant(millisecondsOfEpoch)
         return prime * result + millisecondsOfEpoch.hash;
     }
 
+    "Returns ISO-8601 formatted String representation of this _time of day_.\n
+     Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
+    shared actual String string {
+        return zoneDateTime(tz.utc).string;
+    }
+
 }

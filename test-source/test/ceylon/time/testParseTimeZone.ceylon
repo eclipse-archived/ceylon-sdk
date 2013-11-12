@@ -11,7 +11,7 @@ import ceylon.time.timezone {
     ParserError
 }
 
-test void testISO8601Parser() {
+shared test void testISO8601Parser() {
     assertEquals( OffsetTimeZone( 0 ), parseTimeZone( "Z" ) );
     assertEquals( OffsetTimeZone( 0 ), parseTimeZone( "+00:00" ) );
     assertEquals( OffsetTimeZone( 0 ), parseTimeZone( "+0000" ) );
@@ -33,7 +33,7 @@ test void testISO8601Parser() {
     assertEquals( OffsetTimeZone( -ms.perHour - 11 * ms.perMinute), parseTimeZone( "-0111" ) );
 }
 
-test void testISO8601ParserErrorMessages() {
+shared test void testISO8601ParserErrorMessages() {
     //Negative 0
     assertEquals( ParserError("Pattern not allowed by ISO-8601: '-00:00'!"), parseTimeZone( "-00:00" ) );
     assertEquals( ParserError("Pattern not allowed by ISO-8601: '-0000'!"), parseTimeZone( "-0000" ) );

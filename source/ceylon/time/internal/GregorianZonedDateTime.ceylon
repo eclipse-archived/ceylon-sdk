@@ -250,12 +250,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
     shared actual String string {
-        value offset = timeZone.offset(instant);
-        value builder = StringBuilder();
-        builder.append(instant.dateTime(timeZone).string);
-        builder.append( offset >= 0 then "+" else "-" );
-        builder.append( "``leftPad((offset / ms.perHour).magnitude)``:``leftPad(offset % ms.perHour)``" );
-        return builder.string;
+        return "``instant.dateTime(timeZone).string````timeZone.string``";
     }
 
     "Returns _true_ if given value is same type, date and time."

@@ -33,7 +33,7 @@ object testData {
 }
 
 
-test void testPrettyPrintSerialization() {
+shared test void testPrettyPrintSerialization() {
     value expectedOutput = {
         testData.emptyPage ->
                 """
@@ -69,7 +69,7 @@ test void testPrettyPrintSerialization() {
     doTestExpectedOutput(expectedOutput, true);
 }
 
-test void testMinifiedSerialization() {
+shared test void testMinifiedSerialization() {
     value expectedOutput = {
         testData.emptyPage ->
                 "<!DOCTYPE html>

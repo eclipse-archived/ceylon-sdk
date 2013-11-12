@@ -21,7 +21,7 @@ TimeRange firstQuarterDay = time(0, 0).rangeTo(time(6, 0));
 TimeRange firstQuarterDayReverse = time(6,0).rangeTo(time(0,0));
 TimeRange lastQuarterDay = time(18, 0).rangeTo(time(23, 59));
 
-test void testEqualsAndHashTimeRange() {
+shared test void testEqualsAndHashTimeRange() {
 
     TimeRange instanceA_1 = time(6,0).rangeTo(time(18,0));
     TimeRange instanceA_2 = time(6,0).rangeTo(time(18,0));
@@ -42,19 +42,19 @@ test void testEqualsAndHashTimeRange() {
 
 }
 
-test void testStepTime() {
+shared test void testStepTime() {
     assertEquals(milliseconds, firstQuarterDay.step);
 }
 
-test void testAnyExistTime() {
+shared test void testAnyExistTime() {
     assertTrue(firstQuarterDay.any( (Time time) => time.minutes == 1));
 }
 
-test void testAnyNotExistTime() {
+shared test void testAnyNotExistTime() {
 	assertFalse(time(0, 0).rangeTo(time(0, 0, 15)).any(( Time time ) => time.seconds == 91));
 }
 
-test void testRangeTime() {
+shared test void testRangeTime() {
     assertIntervalTime{
         start = time(9,55);
         end = time(10,0);
@@ -63,7 +63,7 @@ test void testRangeTime() {
     };
 }
 
-test void testRangeTimeFourMinutes() {
+shared test void testRangeTimeFourMinutes() {
     assertIntervalTime{
          start = time(8,0);
          end = time(8,4);
@@ -72,7 +72,7 @@ test void testRangeTimeFourMinutes() {
     };
 }
 
-test void testIntervalTimeReverse() {
+shared test void testIntervalTimeReverse() {
     assertIntervalTime{
         start = time(10,0);
         end = time(9,58);
@@ -81,56 +81,56 @@ test void testIntervalTimeReverse() {
     };
 }
 
-test void testGapTime() {
+shared test void testGapTime() {
     TimeRange gap = time(6,0,0,1).rangeTo(time(17,59,59,999));
     assertEquals(gap, firstQuarterDay.gap(lastQuarterDay));    
 }
 
-test void testOverlapTime() {
+shared test void testOverlapTime() {
     TimeRange halfFirstQuarter = time(0,0).rangeTo(time(3,0));
     TimeRange overlap = time(0,0).rangeTo(time(3,0));
 
     assertEquals(overlap, firstQuarterDay.overlap(halfFirstQuarter));
 }
 
-test void testStepMillisReverseTime() {
+shared test void testStepMillisReverseTime() {
     TimeRange seconds = time(0,0,59).rangeTo(time(0,0,50));
     assertEquals( 9 * milliseconds.perSecond + 1, seconds.size);
     assertEquals( time(0,0,59), seconds.first);
     assertEquals( time(0,0,50), seconds.last);
 }
 
-test void testStepSecondsReverseTime() {
+shared test void testStepSecondsReverseTime() {
     TimeRange interval = time(0,3).rangeTo(time(0,0)).stepBy(seconds);
     assertEquals( 3 * seconds.perMinute +1, interval.size);
     assertEquals( time(0,3), interval.first);
     assertEquals( time(0,0), interval.last);
 }
 
-test void testStepMinutesReverseTime() {
+shared test void testStepMinutesReverseTime() {
     TimeRange interval = firstQuarterDayReverse.stepBy(minutes);
     assertEquals( 6 * minutes.perHour +1, interval.size);
     assertEquals( time(6,0), interval.first);
     assertEquals( time(0,0), interval.last);
 }
 
-test void testContainsTime() {
+shared test void testContainsTime() {
     assertEquals(true, time(0,1) in firstQuarterDay);
 }
 
-test void testGapTimeEmpty() {
+shared test void testGapTimeEmpty() {
     TimeRange noGap = time(2, 0).rangeTo(time(12, 0));
     
     assertEquals(empty, firstQuarterDay.gap(noGap));
 }
 
-test void testOverlapTimeEmpty() {
+shared test void testOverlapTimeEmpty() {
     TimeRange noOverlap = time(9, 0).rangeTo(time(12, 0));
 
     assertEquals(empty, firstQuarterDay.overlap(noOverlap));
 }
 
-test void testGapRulesABSmallerCD_Time() {
+shared test void testGapRulesABSmallerCD_Time() {
     //Combinations to Test: AB < CD
     //C1: 12 gap 56 = (2,5)
     //C2: 12 gap 65 = (2,5)
@@ -169,7 +169,7 @@ test void testGapRulesABSmallerCD_Time() {
     };
 }
 
-test void testGapRulesABHigherCD_Time() {
+shared test void testGapRulesABHigherCD_Time() {
     //Combinations to Test: AB > CD
     //56 gap 12 = (2,5)
     //56 gap 21 = (2,5)
@@ -208,7 +208,7 @@ test void testGapRulesABHigherCD_Time() {
     };
 }
 
-test void testOverlapRulesABSmallerCD_Time() {
+shared test void testOverlapRulesABSmallerCD_Time() {
     //Combinations to Test: AB < CD
     //C1: 16 overlap 39 = [3,6]
     //C2: 16 overlap 93 = [3,6]
@@ -247,7 +247,7 @@ test void testOverlapRulesABSmallerCD_Time() {
     };
 }
 
-test void testOverlapRulesABHigherCD_Time() {
+shared test void testOverlapRulesABHigherCD_Time() {
     //Combinations to Test: AB > CD
     //39 gap 16 = [3,6]
     //39 gap 61 = [3,6]
@@ -299,4 +299,9 @@ void assertIntervalTime( Time start, Time end, Period period, Duration? duration
     if( exists duration ) {
         assertEquals(duration, range.duration);
     }
+}
+
+test void testTimeRangeString() {
+    assertEquals( "09:10:11.000/11:00:00.999", TimeRange(time(9, 10, 11), time(11, 0, 0, 999)).string );
+    assertEquals( "23:00:00.000/00:00:00.000", TimeRange(time(23, 0), time(0, 0)).string );
 }

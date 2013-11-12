@@ -27,7 +27,7 @@ shared abstract class SocketConnector(SocketAddress addr){
     shared formal void close();
 }
 
-"Creates a new [[SocketConnector]] to connect to the specified [[add]]."
+"Creates a new [[SocketConnector]] to connect to the specified [[addr]]."
 see(`class SocketConnector`)
 shared SocketConnector newSocketConnector(SocketAddress addr){
     return SocketConnectorImpl(addr);

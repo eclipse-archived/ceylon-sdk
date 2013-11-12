@@ -46,7 +46,6 @@
     </moduleset>
     
     <moduleset id="modules.test.jvm">
-        <module name="test.ceylon.test"/>
         <module name="test.ceylon.math"/>
         <module name="test.ceylon.collection"/>
         <module name="test.ceylon.file"/>
@@ -64,7 +63,6 @@
     <moduleset id="modules.test.js">
         <!--<module name="com.redhat.ceylon.sdk.test"/>-->
         <!--<module name="test.ceylon.math"/>-->
-        <module name="test.ceylon.test"/>
         <module name="test.ceylon.collection"/>
         <!--<module name="test.ceylon.file"/>-->
         <!--<module name="test.ceylon.io"/>-->
@@ -115,6 +113,7 @@
             encoding="UTF-8">
             <reposet refid="reposet.compile.test"/> 
             <moduleset refid="modules.test.jvm"/>
+        	<module name="test.ceylon.test"/>
         </ceylon-compile>
         
     </target>
@@ -137,7 +136,8 @@
 
     <target name="test-jvm" depends="compile-test-jvm"
         description="Runs the compiled test modules from the 'test-modules' repository">
-        <!-- TODO support verbose attr on ceylon-run command -->
+        <!-- tests for ceylon.test have to be executed via its toplevel function run, they cannot be executed via ceylon test command -->
+        <ceylon-run module="test.ceylon.test/${sdk.version}" />
         <ceylon-test>
             <reposet refid="reposet.run.test"/>
             <moduleset refid="modules.test.jvm"/>

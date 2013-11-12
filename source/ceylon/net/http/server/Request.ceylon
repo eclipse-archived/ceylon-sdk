@@ -6,9 +6,18 @@ import ceylon.net.http { Method }
 by("Matej Lazar")
 shared interface Request {
     
-    shared formal String? parameter(String name);
+    "Returns a single parameters wit given name. If there are more, the first one is returned.
+     If `forseFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed."
+    shared formal String? parameter(String name, Boolean forseFormParsing = false);
     
-    shared formal String[] parameters(String name);
+    "Returns all parameters wit given name.
+     If `forseFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed.
+     It is returned, only if it is already parsed."
+    shared formal String[] parameters(String name, Boolean forseFormParsing = false);
+
+    shared formal UploadedFile? file(String name);
+
+    shared formal UploadedFile[] files(String name);
     
     "Returns a single header with given name."
     shared formal String? header(String name);

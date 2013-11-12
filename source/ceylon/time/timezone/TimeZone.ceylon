@@ -1,6 +1,7 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
+import ceylon.time.internal { leftPad }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -34,6 +35,15 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
         return prime * result + offsetMilliseconds.hash;
     }
 
+    "Returns ISO-8601 formatted String representation of this _time of day_.\n
+     https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
+    shared default actual String string {
+        value builder = StringBuilder();
+        builder.append( offsetMilliseconds >= 0 then "+" else "-" )
+               .append( "``leftPad((offsetMilliseconds.magnitude / ms.perHour))``:``leftPad((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute)``" );
+        return builder.string;
+    }
+
 }
 
 "This represents offsets based on daylight saving time."
@@ -54,7 +64,13 @@ shared object timeZone {
     shared object system extends OffsetTimeZone(sys.timezoneOffset) {}
 
     "Represents Coordinated Universal Time."
-    shared object utc extends OffsetTimeZone(0) {}
+    shared object utc extends OffsetTimeZone(0) {
+        "Returns ISO-8601 formatted String representation of this _time of day_.\n
+         https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
+        shared actual String string {
+            return "Z";
+        }
+    }
 
     "Timezone offset parser based on ISO-8601, currently it accepts the following time zone offset patterns:
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.

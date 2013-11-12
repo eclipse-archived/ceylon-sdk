@@ -1,12 +1,12 @@
 import ceylon.file { Path, File, parsePath }
-import ceylon.io { OpenFile, newOpenFile }
+import ceylon.io { OpenFile, newOpenFile, SocketAddress }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
-import ceylon.net.http.server { createServer, Status, 
+import ceylon.net.http.server { Status, 
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
-                                  startsWith, endsWith, Options, stopped }
+                                  startsWith, endsWith, Options, stopped, newServer }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList, MutableList }
@@ -23,7 +23,7 @@ import ceylon.html {
 import ceylon.html.serializer {
     NodeSerializer
 }
-import ceylon.io.buffer { newByteBuffer, ByteBuffer, newByteBufferWithData }
+import ceylon.io.buffer { newByteBuffer, ByteBuffer }
 
 by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
@@ -42,118 +42,108 @@ variable String asyncServiceStatus = "";
 test void testServer() {
 
     function name(Request request) => request.parameter("name") else "world";
+    
     void serviceImpl(Request request, Response response) {
         response.addHeader(contentType { contentType = "text/html"; charset = utf8; });
         response.writeString("Hello ``name(request)``!");
     }
 
-    value server = createServer {};
-
-    server.addEndpoint(Endpoint {
-        service => serviceImpl;
-        path = startsWith("/echo"); //TODO endpoint overriding, first matching should be used
-    });
-
-    server.addEndpoint(Endpoint {
-        service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
-                        response.writeString(request.header("Content-Type") else "");
-                    };
-        path = startsWith("/headerTest");
-    });
-
-    server.addEndpoint(Endpoint {
-        service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
-                        response.writeString(request.method.string);
-                    };
-        path = startsWith("/methodTest");
-    });
-
-    server.addEndpoint(Endpoint {
-        service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
-                        response.writeString(request.method.string);
-                    };
-        path = startsWith("/acceptMethodTest");
-        acceptMethod = {post, get};
-    });
-
-    server.addEndpoint(Endpoint {
-        service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
-                        response.writeString(request.parameter("čšž") else "");
-                    };
-        path = startsWith("/paramTest");
-    });
-
-    server.addEndpoint(Endpoint {
-        service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
-                        for (i in 0..10) {
-                            response.writeString("foo ``i``\n");
-                        }
-                    };
-        path = startsWith("/writeStrings");
-    });
-
-    server.addEndpoint(Endpoint {
-        service => void (Request request, Response response) {
-                        response.addHeader(contentType("text/html", utf8));
-                        variable Object? count = request.session.get("count");
-                        if (exists Object c = count) {
-                            if (is Integer ci = c) {
-                                value ci2 = ci.plus(1);
-                                request.session.put("count", ci2);
-                                response.writeString(ci2.string);
-                            } else {
-                                AssertionException("Invalid object type retreived from session");
-                            }
-                        } else {
-                            request.session.put("count", Integer(1));
-                            response.writeString(1.string);
-                        }
-                    };
-        path = startsWith("/session");
-    });
-
     //add fileEndpoint
     value testFile = creteTestFile();
-    server.addEndpoint(AsynchronousEndpoint {
-        service => serveStaticFile(".");
-        path = (startsWith("/lazy") or startsWith("/blob")) 
-                or endsWith(".txt");
-    });
-
+    
     String fileMapper(Request request) {
         return testFile.string;
     }
-    server.addEndpoint(AsynchronousEndpoint {
-        service => serveStaticFile("/", fileMapper);
-        path = startsWith("/filemapper");
-    });
-    
 
-    server.addEndpoint(Endpoint { 
-        path = startsWith("/serializer"); 
-        void service(Request request, Response response) {
-            NodeSerializer(response.writeString).serialize(
-                Html {
-                    doctype = html5; 
-                    Head { title = "Hello"; }; 
-                    Body {
-                        P("Hello!")
-                    };
+    {<Endpoint|AsynchronousEndpoint>+} endpoints => {
+        Endpoint {
+            service => serviceImpl;
+            path = startsWith("/echo"); //TODO endpoint overriding, first matching should be used
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.header("Content-Type") else "");
+            };
+            path = startsWith("/headerTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.method.string);
+            };
+            path = startsWith("/methodTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.method.string);
+            };
+            path = startsWith("/acceptMethodTest");
+            acceptMethod = {post, get};
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.parameter("čšž") else "");
+            };
+            path = startsWith("/paramTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                for (i in 0..10) {
+                    response.writeString("foo ``i``\n");
                 }
-            );
-        }
-    });
-
-    server.addEndpoint(
+            };
+            path = startsWith("/writeStrings");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                variable Object? count = request.session.get("count");
+                if (exists Object c = count) {
+                    if (is Integer ci = c) {
+                        value ci2 = ci.plus(1);
+                        request.session.put("count", ci2);
+                        response.writeString(ci2.string);
+                    } else {
+                        AssertionException("Invalid object type retreived from session");
+                    }
+                } else {
+                    request.session.put("count", Integer(1));
+                    response.writeString(1.string);
+                }
+            };
+            path = startsWith("/session");
+        },
+        AsynchronousEndpoint {
+            service => serveStaticFile(".");
+            path = (startsWith("/lazy") or startsWith("/blob")) 
+            or endsWith(".txt");
+        },
+        AsynchronousEndpoint {
+            service => serveStaticFile("/", fileMapper);
+            path = startsWith("/filemapper");
+        },
+        Endpoint { 
+            path = startsWith("/serializer"); 
+            void service(Request request, Response response) {
+                NodeSerializer(response.writeString).serialize(
+                    Html {
+                        doctype = html5; 
+                        Head { title = "Hello"; }; 
+                        Body {
+                            P("Hello!")
+                        };
+                    }
+                );
+            }
+        },
         AsynchronousEndpoint { 
-
+            
             path = startsWith("/async"); 
-
+            
             void service (Request request, Response response, void complete()) {
                 value startTime = system.milliseconds;
                 String source = request.sourceAddress.address;
@@ -166,7 +156,7 @@ test void testServer() {
                 }
                 String responseString = sb.string;
                 response.addHeader(contentLength(responseString.size.string));
-                 
+                
                 response.writeStringAsynchronous { 
                     string => responseString;
                     void onCompletion () {
@@ -181,9 +171,12 @@ test void testServer() {
                 asyncServiceStatus = "returning";
             }
         }
-    );
+    };
 
-    void onStatusChangeExecuteTest(Status status) {
+
+    value server = newServer(endpoints);
+
+    void onStartedExecuteTest(Status status) {
         if (status.equals(started)) {
             try {
                 headerTest();
@@ -199,7 +192,7 @@ test void testServer() {
                 methodTest();
                 
                 parametersTest("čšž", "ČŠŽ ĐŽ");
-
+                
                 writeStringsTest();
                 
                 //TODO enable session test when client suports it
@@ -221,17 +214,8 @@ test void testServer() {
             testCompleted();
         }
     }
-    
-    void onStatusChangeTestRemoveListener(Status status) {
-        if (status.equals(started)) {
-            //TODO enable throw AssertionException("Status listener should be removed.");
-        }
-    }
-    
-    server.addListener(onStatusChangeTestRemoveListener);
-    server.removeListener(onStatusChangeTestRemoveListener);
 
-    server.addListener(onStatusChangeExecuteTest);
+    server.addListener(onStartedExecuteTest);
 
     server.startInBackground {
         serverOptions = Options {

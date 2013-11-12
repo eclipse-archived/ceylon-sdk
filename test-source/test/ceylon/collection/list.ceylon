@@ -1,7 +1,7 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
-test void testList(){
+shared test void testList(){
     MutableList<String> l = LinkedList<String>();
     assertEquals("[]", l.string);
     assertEquals(0, l.size);
@@ -164,7 +164,7 @@ test void testList(){
     assertEquals(LinkedList{"b", "c"}, LinkedList{"a", "b", "c"}.segment(1, 20));
 }
 
-test void testListConstructor(){
+shared test void testListConstructor(){
     List<String> list = LinkedList{"a", "b"};
     assertEquals(2, list.size);
     assertEquals("a", list[0]);

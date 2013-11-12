@@ -13,7 +13,7 @@ shared class DividedWithRemainder(divided, remainder) {
  operands.
  
  During a call to this method the `Decimal` operators
- `+`, `-`, `*`, `/` and `**` (or equivalently, the methods 
+ `+`, `-`, `*`, `/` and `^` (or equivalently, the methods 
  `plus()`, `minus()`, `times()`, `divided()`, and `power()`)
  will implicitly use the given rounding. The behaviour of all 
  other `Decimal` methods are unchanged during a call to this 
@@ -35,7 +35,7 @@ shared Decimal implicitlyRounded(Decimal calculate(), Rounding rounding) {
 }
 
 "The rounding currently being used implicitly by the `Decimal` 
- operators `+`, `-`, `*`, `/` and `**` (or equivalently, the 
+ operators `+`, `-`, `*`, `/` and `^` (or equivalently, the 
  methods `plus()`, `minus()`, `times()`, `divided()`, and 
  `power()`)."
 see(`function implicitlyRounded`)
@@ -45,7 +45,7 @@ shared Rounding? implicitRounding {
 
 "A decimal floating point number. This class provides support 
  for fixed and arbitrary precision numbers. Values are immutable 
- and represented as `unscaled * 10**(-scale)`. Methods without 
+ and represented as `unscaled * 10^(-scale)`. Methods without 
  an explicit `Rounding` parameter use `unlimitedPrecision` 
  (unless documented otherwise) except for `plus()`, `minus()`, 
  `times()`, `divided()` and `power()` whose implicit rounding is 
