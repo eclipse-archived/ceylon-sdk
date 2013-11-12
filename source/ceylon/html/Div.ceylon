@@ -16,9 +16,8 @@
        }
    }
 
-   If you want to group elements in a inline manner, see [[Span]]
-
    ```
+   If you want to group elements in a inline manner, see [[Span]]
    
    Technical details about this element can be found on the
    [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-div-element)

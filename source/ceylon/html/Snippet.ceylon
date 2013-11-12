@@ -39,4 +39,11 @@ shared interface Snippet<out Result>
     "Build the snippet content."
     shared formal Result|{Result*}|Null content;
 
+    shared default actual String string {
+        if (exists c = content) {
+            return c.string;
+        }
+        return "null result from snippet ``this``";
+    }
+
 }

@@ -56,7 +56,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
     "Specifies a shortcut key that can be used to access the element."
     shared String? accessKey; // TODO static typed KeyStroke?
 
-    "A reference to a [[Menu]] element id with the contents of this
+    "A reference to a menu element id with the contents of this
      element context menu.
      **Note** that this property is poorly supported by browsers." // TODO more info here
     shared String? contextMenu;
@@ -116,7 +116,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
         value attrs = AttributeSequenceBuilder();
         attrs.appendAll(super.attributes);
         attrs.addAttribute("accesskey", accessKey);
-        attrs.addAttribute("contextMenu", contextMenu);
+        attrs.addAttribute("contextmenu", contextMenu);
         attrs.addAttribute("draggable", draggable);
         attrs.addAttribute("dropzone", dropZone);
         attrs.addAttribute("hidden", hidden);
@@ -125,7 +125,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
         attrs.addAttribute("spellcheck", spellcheck);
         attrs.addAttribute("tabindex", tabIndex);
         attrs.addAttribute("title", title);
-        attrs.addAttribute("translate", translate);
+        attrs.addYesNoBooleanAttribute("translate", translate);
 
         attrs.appendAll(nonstandardAttributes);
 

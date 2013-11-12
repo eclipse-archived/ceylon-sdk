@@ -6,8 +6,7 @@ import ceylon.html {
     blockTag,
     ParentNode,
     Snippet,
-    emptyTag,
-    xhtmlDoctypes
+    emptyTag
 }
 
 shared class NodeSerializer(
