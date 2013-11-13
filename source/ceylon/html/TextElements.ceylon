@@ -310,7 +310,7 @@ shared class Sup(text = "", String? id = null, CssClass classNames = [],
     
     shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
-    tag = Tag("sub");
+    tag = Tag("sup");
     
 }
 
