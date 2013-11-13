@@ -126,7 +126,7 @@ shared class Input(String? name = null, type = text, accept = null, autoComplete
      (only when [[type]] is [[image]])"
     shared Integer? width;
 
-    tag = Tag("input", emptyTag);
+    shared default actual Tag tag = Tag("input", emptyTag);
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
