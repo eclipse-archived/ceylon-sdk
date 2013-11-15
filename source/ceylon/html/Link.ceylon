@@ -1,28 +1,32 @@
 
 "Defines a relationship between the `Html` and an external resource."
-shared class Link(rel, type, href, String? id)
+shared class Link(rel, href, type = null, String? id = null)
         extends Element(id) {
 
     "The relationship type."
     shared String|LinkRel rel;
 
     "The content mime type."
-    shared String|LinkType type;
+    shared String|LinkType|Null type;
 
     "The reference to the resource."
-    shared String href; // TODO Uri
+    shared String href;
 
     tag = Tag("link", emptyTag);
 
-    attributes => concatenate(super.attributes, [
-        "href"->href,
-        "rel"->rel,
-        "type"->type
-    ]);
+    shared actual default [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.addAttribute("rel", rel);
+        attrs.addAttribute("href", href);
+        attrs.addAttribute("type", type);
+        attrs.appendAll(super.attributes);
+        return attrs.sequence;
+    }
 
 }
 
-"The relationship kind between the current document and the linked document."
+"The relationship kind between the current document
+ and the linked document."
 shared abstract class LinkRel(name)
         of external | search | stylesheet | tag {
 
@@ -54,5 +58,5 @@ shared object css extends LinkType("text/css") {}
 
 "Utility `Link` extension representing an CSS resource."
 shared class CssLink(String href, String? id = null)
-        extends Link(stylesheet, css, href, id) {
+        extends Link(stylesheet, href, css, id) {
 }
