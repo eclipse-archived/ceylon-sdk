@@ -71,7 +71,7 @@ class FileWritter(OpenFile openFile, Response response, void completed()) {
         }
         void onError(Exception exception) {
             //TODO log
-            print("Error writting file." + exception.string);
+            print("Error writting file. " + exception.string);
             completed();
         }
         response.writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
