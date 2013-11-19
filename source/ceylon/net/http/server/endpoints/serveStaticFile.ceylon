@@ -7,7 +7,10 @@ import ceylon.net.http { contentType, contentLength }
 
 "Endpoint for serving static files."
 by("Matej Lazar")
-shared void serveStaticFile(externalPath, String fileMapper(Request request) => request.path)
+shared void serveStaticFile(
+                externalPath, 
+                String fileMapper(Request request) => request.path,
+                EndpointOptions endpointOptions = EndpointOptions())
         (Request request, Response response, Callable<Anything, []> complete) {
     
     "Root directory containing files."
@@ -31,7 +34,7 @@ shared void serveStaticFile(externalPath, String fileMapper(Request request) => 
             complete();
         }
 
-        FileWritter(openFile, response, onComplete).send();
+        FileWritter(openFile, response, onComplete, endpointOptions).send();
 
     } else {
         response.responseStatus=404;
@@ -40,9 +43,9 @@ shared void serveStaticFile(externalPath, String fileMapper(Request request) => 
     }
 }
 
-class FileWritter(OpenFile openFile, Response response, void completed()) {
+class FileWritter(OpenFile openFile, Response response, void completed(), EndpointOptions endpointOptions) {
     variable Integer available = openFile.size;
-    ByteBuffer byteBuffer = newByteBuffer(10);
+    ByteBuffer byteBuffer = newByteBuffer(endpointOptions.outputBufferSize);
 
     shared void send() {
         read();
@@ -71,7 +74,7 @@ class FileWritter(OpenFile openFile, Response response, void completed()) {
         }
         void onError(Exception exception) {
             //TODO log
-            print("Error writting file. " + exception.string);
+            print("Error writting file ``openFile.resource.path``: " + exception.string);
             completed();
         }
         response.writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
