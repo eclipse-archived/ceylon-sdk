@@ -29,7 +29,7 @@ by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
 
 "How many lines of default text to write to file."
-Integer fileLines = 10;
+Integer fileLines = 200;
 
 String fileName = "lazydog.txt";
 
