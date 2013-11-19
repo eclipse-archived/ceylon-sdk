@@ -1,7 +1,7 @@
 import ceylon.io.charset { utf8, Charset }
 by("Matej Lazar")
 shared class Options(
-        workerIoThreads = 4, 
+        workerIoThreads = 4, //TODO cpuCount x 2
         workerTaskCoreThreads = 2, 
         workerTaskMaxThreads = 12,
         connectionLowWatter = 1000000,
