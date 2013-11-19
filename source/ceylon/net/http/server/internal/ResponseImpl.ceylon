@@ -1,6 +1,6 @@
 import ceylon.net.http.server { Response, Exception }
 
-import io.undertow.server { HttpServerExchange, HttpHandler }
+import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }
 import ceylon.io.charset { Charset, getCharset }
 import ceylon.net.http { Header }
@@ -66,19 +66,9 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             Callable<Anything, []> onCompletion,
             Callable<Anything, [Exception]>? onError) {
 
-        void task() {
-            applyHeadersToExchange();
-            value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
-            writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(onCompletion, onError));
-        }
-        
-        exchange.dispatch(
-            Task { 
-                task => task;
-                onCompletion => onCompletion;
-                onError => onError;
-            }
-        );
+        applyHeadersToExchange();
+        value jByteBuffer = wrapByteBuffer(arrays.asByteArray(bytes));
+        writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(onCompletion, onError));
     }
     
     shared actual void writeByteBuffer(ByteBuffer byteBuffer) {
@@ -91,18 +81,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             Callable<Anything, []> onCompletion,
             Callable<Anything, [Exception]>? onError) {
 
-        void task() {
-            applyHeadersToExchange();
-            writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
-        }
-        
-        exchange.dispatch(
-            Task { 
-                task => task;
-                onCompletion => onCompletion;
-                onError => onError;
-            }
-        );
+        applyHeadersToExchange();
+        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
     }
 
     void writeJByteBuffer(JByteBuffer byteBuffer) {
@@ -214,7 +194,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             return wrapByteBuffer(bytes);
         }
     }
-
+    
     class Task (
         Callable<Anything, []> task,
         Callable<Anything, []> onCompletion,
@@ -225,4 +205,5 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             task();
         }
     }
+    
 }
