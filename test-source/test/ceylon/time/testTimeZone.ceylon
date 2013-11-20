@@ -1,22 +1,13 @@
-import ceylon.test {
-    assertEquals,
-    assertTrue,
-    assertFalse,
-    test
-}
-import ceylon.time {
-    date,
-    time,
-    dateTime,
-    Instant,
-    Period
-}
-import ceylon.time.base {
-    september, milliseconds
-}
-import ceylon.time.timezone {
-    timeZone,
-    OffsetTimeZone
+import ceylon.test { assertEquals, assertTrue, assertFalse, test }
+import ceylon.time { date, time, dateTime, Instant, Period, now }
+import ceylon.time.base { september }
+import ceylon.time.timezone { timeZone, OffsetTimeZone }
+
+
+shared test void offsetTimeZoneAlwaysReturnsConstantOffset() {
+	value timeZone = OffsetTimeZone(2222);
+	
+	assertEquals(2222, timeZone.offset(now()));
 }
 
 shared test void testDateTimeToInstantUsesOffset() {
@@ -74,8 +65,12 @@ shared test void testEqualsAndHashOffsetTimeZone() {
     assertFalse(instanceA_2.hash == instanceB_1.hash);
 }
 
-test void testTimeZoneString() {
+shared test void testTimeZoneString() {
     assertEquals("+10:09", OffsetTimeZone(10 * milliseconds.perHour + 9 * milliseconds.perMinute).string);
     assertEquals("-05:20", OffsetTimeZone(-5 * milliseconds.perHour - 20 * milliseconds.perMinute).string);
     assertEquals("+00:00", OffsetTimeZone(0).string);
+}
+
+shared test void offsetTimeZoneToString(){
+	assertEquals("Z", timeZone.utc.string);
 }
