@@ -1,64 +1,80 @@
 import ceylon.test {
-    assertEquals,
-    assertTrue,
-    assertFalse,
-    test
+    assertEquals
 }
 import ceylon.time {
     date,
-    Date,
-    Time,
     time,
-    Instant
+    Instant, Period
 }
 import ceylon.time.base {
-    january,
-    december,
-    february,
-    june,
-    milliseconds
+    milliseconds,
+    september, hours, may, july
 }
 import ceylon.time.timezone {
     timeZone,
-    zoneDateTime,
-    ZoneDateTime,
-    RuleBasedTimezone,
-    OffsetTimeZone
+    RuleBasedTimezone
 }
 
-Date _2013_01_01 = date(2013, january, 1);
-Time _00_00 = time(0,0);
-ZoneDateTime systemZoned = zoneDateTime(simpleTimeZone, 2013, january, 1);
-ZoneDateTime utcZoned = zoneDateTime(timeZone.utc, 2013, january, 1);
-ZoneDateTime _dst_2013_01_01 = zoneDateTime(simpleDstTimeZone, 2013, january, 1);
 
-object simpleTimeZone extends OffsetTimeZone(-4 * milliseconds.perHour) {
-}
+Instant instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
+object dst satisfies RuleBasedTimezone {
 
-object simpleDstTimeZone satisfies RuleBasedTimezone {
+    shared Instant start = Instant(1370044800000); // June 1. 2013 00:00 UTC
+    shared Instant end   = Instant(1372672800000); // July 1. 2013 00:00 UTC
 
-    // 2013-06-01T00:00:00Z
-    Instant start = Instant(1370044800000);
-   
-    // 2013-07-01T10:00:00
-    Instant end   = Instant(1372672800000);
-
-    Integer dstOffset = 1 * milliseconds.perHour;
+	Integer tzOffset = 2 * milliseconds.perHour;
+    Integer dstOffset = tzOffset + milliseconds.perHour;
 
     shared actual Integer offset(Instant instant)  {
         return ( start <= instant <= end )
-                    then system.timezoneOffset + dstOffset 
-                    else system.timezoneOffset;   
+        	   then dstOffset else tzOffset;   
     }
-    
 }
 
-//TODO: There is a problem using for example Manaus (-4) and CET (+2)
-//test void testRuleBasedTimeZone() {
-    //assertDateAndTime(date(2013, june, 1), time(0,0), zoneDateTime(simpleDstTimeZone, 2013, june, 1));
+void testZoneDateTimeToDateAndTime() {
+	// UTC timezone
+	assertEquals(time(12, 00), instant.zoneDateTime( timeZone.utc ).time );
+	assertEquals(date(2013, september, 2), instant.zoneDateTime( timeZone.utc ).date );
 
-    //assertDateAndTime( date(2013, june, 1), time(1,0), _dst_2013_01_01.plusMonths(5) );
-    //assertDateAndTime( date(2013, july, 1), time(1,0), _dst_2013_01_01.plusMonths(6) );
+	// Positive offset
+	assertEquals(time(15, 00), instant.zoneDateTime( timeZone.offset(+3) ).time );
+	assertEquals(date(2013, september, 2), instant.zoneDateTime( timeZone.offset(+3) ).date );
+
+	// Negative offset
+	assertEquals(time( 8, 00), instant.zoneDateTime( timeZone.offset( -4 ) ).time );
+	assertEquals(date(2013, september, 2), instant.zoneDateTime( timeZone.offset( -4 ) ).date );
+}
+
+void testZoneDateTimeBeforeDst() {
+	value instant = dst.start.minus( Period{ hours=12; } );
+	
+	// Assume we've got the correct date
+	assertEquals(time(12, 00), instant.zoneDateTime( timeZone.utc ).time );
+	assertEquals(date(2013, may, 31), instant.zoneDateTime( timeZone.utc ).date );
+	
+	// now check the time before DST
+	assertEquals(time(14, 00), instant.zoneDateTime( dst ).time);
+	assertEquals(date(2013, may, 31), instant.zoneDateTime( dst ).date );
+}
+
+void testZoneDateTimeAfterDst() {
+	value instant = dst.end.plus( Period{ hours=12; } );
+	print( dst.end.zoneDateTime(timeZone.utc));
+	
+	// Assume we've got the correct date
+	assertEquals(time(12, 00), instant.zoneDateTime( timeZone.utc ).time );
+	assertEquals(date(2013, july, 1), instant.zoneDateTime( timeZone.utc ).date );
+	
+	// now check the time before DST
+	assertEquals(time(14, 00), instant.zoneDateTime( dst ).time);
+	assertEquals(date(2013, july, 1), instant.zoneDateTime( dst ).date );
+}
+
+
+/*
+void testRuleBasedTimeZone() {
+
+    assertDateAndTime( date(2013, june, 1), time(0,0), zoneDateTime(testDstTimeZone, 2013, june, 1));
 
     //assertDateAndTime( _2013_01_01, _00_00, _dst_2013_01_01 );
     //assertDateAndTime( date(2013, february, 1), time(0,0), _dst_2013_01_01.plusMonths(1) );
@@ -221,3 +237,4 @@ void assertDateAndTime( Date date, Time time, ZoneDateTime zoneDateTime) {
     assertEquals(date, zoneDateTime.date);
     assertEquals(time, zoneDateTime.time);
 }
+*/

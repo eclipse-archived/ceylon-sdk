@@ -28,7 +28,7 @@ shared TimeZone|ParserError parseTimeZone( String offset ) {
         if ( result == 0 && offset.contains('-') ) {
             return ParserError("Pattern not allowed by ISO-8601: '``offset``'!");
         }
-        return OffsetTimeZone( result );
+        return timeZone.offset{ hours=0, milliseconds=result };
     }
 
     assert ( is Error error = state );
