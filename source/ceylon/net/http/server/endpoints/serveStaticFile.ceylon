@@ -39,13 +39,15 @@ shared void serveStaticFile(
     } else {
         response.responseStatus=404;
         //TODO log
-        //print("file does not exist");
+        print("File ``filePath.absolutePath.string`` does not exist.");
     }
 }
 
 class FileWritter(OpenFile openFile, Response response, void completed(), EndpointOptions endpointOptions) {
     variable Integer available = openFile.size;
-    ByteBuffer byteBuffer = newByteBuffer(endpointOptions.outputBufferSize);
+    variable Integer readFailed = 0;
+    Integer bufferSize = endpointOptions.outputBufferSize < available then endpointOptions.outputBufferSize else available;
+    ByteBuffer byteBuffer = newByteBuffer(bufferSize);
 
     shared void send() {
         read();
@@ -56,8 +58,17 @@ class FileWritter(OpenFile openFile, Response response, void completed(), Endpoi
             value read = openFile.read(byteBuffer);
             if (read == -1) {
                 available = 0;
+            } else if (read == 0) {
+                readFailed ++;
+                if (readFailed > 10) { //try to read 10 times
+                    //TODO log
+                    print("Error reading file ``openFile.resource.path``.");
+                    completed();
+                    return;
+                }
             } else {
                 available -= read;
+                readFailed = 0;
             }
             byteBuffer.flip();
             write();
