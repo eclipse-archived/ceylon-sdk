@@ -166,6 +166,8 @@ void testAssertNotEquals() {
         hasMessage("wops: true == true");
 }
 
+class NegativeNumberException() extends Exception() {}
+
 void testAssertThatException() {
     assertThatException(NegativeNumberException()).
         hasType(`NegativeNumberException`).
