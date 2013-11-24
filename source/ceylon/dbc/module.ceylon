@@ -79,9 +79,10 @@
 
 by("Enrique Zamudio")
 license("Apache Software License 2.0")
-module ceylon.dbc "1.0.0" {
+module ceylon.dbc "1.0.1" {
     import ceylon.collection "1.0.0";
     shared import ceylon.math "1.0.0";
+    shared import ceylon.transaction "1.0.0";
     import java.base "7";
     shared import java.jdbc "7";
 }

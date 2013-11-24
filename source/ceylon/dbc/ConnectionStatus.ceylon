@@ -1,6 +1,7 @@
 import java.sql { Connection }
 import javax.sql { DataSource }
 import java.lang { ThreadLocal }
+import ceylon.transaction.tm { TM, getTM }
 
 class ConnectionStatus(DataSource ds) {
 
@@ -28,7 +29,7 @@ class ConnectionStatus(DataSource ds) {
     shared void close() {
         if (exists c=conn) {
 			use--;
-            if (!tx && use==0) {
+            if (!tx && use==0 && !getTM().isTxnActive()) {
                 c.close();
             }
         }

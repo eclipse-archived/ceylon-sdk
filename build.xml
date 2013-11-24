@@ -55,6 +55,7 @@
         <module name="test.ceylon.process"/>
         <module name="test.ceylon.time"/>
         <module name="test.ceylon.dbc"/>
+        <module name="test.ceylon.transaction"/>
         <module name="test.ceylon.interop.java"/>
     	<module name="test.ceylon.unicode"/>
     	<module name="test.ceylon.html"/>

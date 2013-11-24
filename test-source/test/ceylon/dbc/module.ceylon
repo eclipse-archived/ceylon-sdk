@@ -1,5 +1,5 @@
-module test.ceylon.dbc "1.0.0" {
-    import ceylon.dbc "1.0.0";
+module test.ceylon.dbc "1.0.1" {
+    import ceylon.dbc "1.0.1";
     import ceylon.math "1.0.0";
     import ceylon.test "1.0.0";
     import java.base "7";
