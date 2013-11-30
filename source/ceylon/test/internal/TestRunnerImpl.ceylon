@@ -192,4 +192,10 @@ void initExecutorsForSource(SequenceBuilder<TestExecutor> executors, TestSource 
     else if( is String source ) {
         initExecutorsForTypeLiteral(executors, source, filter, comparator);
     }
+    else if( is Anything() source) {
+        executors.append(CallableTestExecutor(source));
+    }
+    else if( is [Anything(), String] source) {
+        executors.append(CallableTestExecutor(*source));
+    }
 }

@@ -332,6 +332,41 @@ class FunctionTestExecutor(FunctionDeclaration funcDecl) satisfies TestExecutor 
 
 }
 
+class CallableTestExecutor(Anything() callable, String name = "Unnamed") satisfies TestExecutor {
+    
+    shared actual TestDescription description => TestDescriptionImpl(name, null);
+    
+    shared actual void execute(TestListener notifier) {
+        Anything() handler =
+                handleTestExecution(notifier,
+                    invokeTest());
+        handler();
+    }
+    
+    void handleTestExecution(TestListener notifier, Anything() handler)() {
+        value startTime = system.milliseconds;
+        function elapsedTime() => system.milliseconds - startTime;
+        try {
+            notifier.testStart(description);
+            handler();
+            notifier.testFinish(TestResultImpl(description, success, null, elapsedTime()));
+        }
+        catch(Exception e) {
+            if( e is AssertionException ) {
+                notifier.testFinish(TestResultImpl(description, failure, e, elapsedTime()));
+            }
+            else {
+                notifier.testFinish(TestResultImpl(description, error, e, elapsedTime()));
+            }
+        }
+    }
+    
+    void invokeTest()() {
+        callable();
+    }
+    
+}
+
 
 class IgnoreException(shared String reason) extends Exception(reason) {
 }
