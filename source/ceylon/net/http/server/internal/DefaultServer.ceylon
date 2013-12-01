@@ -71,7 +71,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         return errPageHandler;
     }
     
-    shared actual void start(SocketAddress socketAddress, Options options) {  //TODO use SocketAddres for host:post
+    shared actual void start(SocketAddress socketAddress, Options options) {
         notifyListeners(starting);
         //TODO log
         print("Starting on ``socketAddress.address``:``socketAddress.port``");
