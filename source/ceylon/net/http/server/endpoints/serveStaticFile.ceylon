@@ -10,7 +10,7 @@ by("Matej Lazar")
 shared void serveStaticFile(
                 externalPath, 
                 String fileMapper(Request request) => request.path,
-                EndpointOptions endpointOptions = EndpointOptions())
+                Options options = Options())
         (Request request, Response response, Callable<Anything, []> complete) {
     
     "Root directory containing files."
@@ -34,7 +34,7 @@ shared void serveStaticFile(
             complete();
         }
 
-        FileWritter(openFile, response, onComplete, endpointOptions).send();
+        FileWritter(openFile, response, onComplete, options).send();
 
     } else {
         response.responseStatus=404;
@@ -43,10 +43,10 @@ shared void serveStaticFile(
     }
 }
 
-class FileWritter(OpenFile openFile, Response response, void completed(), EndpointOptions endpointOptions) {
+class FileWritter(OpenFile openFile, Response response, void completed(), Options options) {
     variable Integer available = openFile.size;
     variable Integer readFailed = 0;
-    Integer bufferSize = endpointOptions.outputBufferSize < available then endpointOptions.outputBufferSize else available;
+    Integer bufferSize = options.outputBufferSize < available then options.outputBufferSize else available;
     ByteBuffer byteBuffer = newByteBuffer(bufferSize);
 
     shared void send() {
