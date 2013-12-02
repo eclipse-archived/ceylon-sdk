@@ -124,11 +124,11 @@ shared class Th(text = "", String? id = null, CssClass classNames = [],
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies TextNode & ParentNode<BlockElement> & TableElement {
+        satisfies TextNode & ParentNode<BlockOrInline> & TableElement {
 
     shared actual String text;
 
-    shared actual {<BlockElement|{BlockElement*}?>*} children;
+    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("th");
 
@@ -151,11 +151,11 @@ shared class Td(text = "", String? id = null, CssClass classNames = [],
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies TextNode & ParentNode<BlockElement> & TableElement {
+        satisfies TextNode & ParentNode<BlockOrInline> & TableElement {
 
     shared actual String text;
 
-    shared actual {<BlockElement|{BlockElement*}?>*} children;
+    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("td");
 
