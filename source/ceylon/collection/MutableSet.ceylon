@@ -3,7 +3,8 @@
 by("Stéphane Épardaud")
 see (`interface MutableList`, `interface MutableMap`)
 shared interface MutableSet<Element>
-    satisfies Set<Element>
+        satisfies Set<Element> &
+                  Cloneable<MutableSet<Element>>
         given Element satisfies Object {
     
     "Add an element to this set, returning true if the element

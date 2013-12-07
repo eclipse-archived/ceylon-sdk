@@ -293,7 +293,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return CellIterator(head);
     }
     
-    shared actual List<Element> clone {
+    shared actual MutableList<Element> clone {
         LinkedList<Element> ret = LinkedList<Element>();
         ret.head = head;
         ret.tail = tail;

@@ -2,7 +2,9 @@
  mutation of its elements."
 see (`interface MutableMap`, `interface MutableSet`)
 by("Stéphane Épardaud")
-shared interface MutableList<Element> satisfies List<Element> {
+shared interface MutableList<Element> 
+        satisfies List<Element> & 
+                  Cloneable<MutableList<Element>> {
 
     "Set the item at the given index in this list. The list 
      is expanded if `index > size`."

@@ -309,7 +309,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         return false;
     }
     
-    shared actual Map<Key,Item> clone {
+    shared actual MutableMap<Key,Item> clone {
         HashMap<Key,Item> clone = HashMap<Key,Item>();
         clone._size = _size;
         clone.store = makeCellEntryArray<Key,Item>(store.size);

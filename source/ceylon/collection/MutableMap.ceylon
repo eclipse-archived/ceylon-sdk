@@ -3,7 +3,8 @@
 see (`interface MutableList`, `interface MutableSet`)
 by("Stéphane Épardaud")
 shared interface MutableMap<Key, Item>
-    satisfies Map<Key, Item>
+        satisfies Map<Key, Item> &
+                  Cloneable<MutableMap<Key, Item>>
         given Key satisfies Object 
         given Item satisfies Object {
     
