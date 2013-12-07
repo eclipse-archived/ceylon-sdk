@@ -29,6 +29,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     // Write
     
     "Sets an item at the given index. List is expanded if index > size"
+    //TODO: add assertions on given index!!
     shared actual void set(Integer index, Element val){
         if(index < _size){
             variable Cell<Element>? iter = head;
@@ -183,6 +184,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         return null;
     }
     
+    //TODO: surely this impl is broken
     shared actual List<Element> span(Integer from, Integer to) {
         value ret = LinkedList<Element>();
         variable Cell<Element>? iter = head;
@@ -228,7 +230,8 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
         return ret;
     }
-
+    
+    //TODO: surely this impl is broken
     shared actual List<Element> segment(Integer from, Integer length) {
         value ret = LinkedList<Element>();
         if(length == 0){
@@ -252,7 +255,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     shared actual Boolean defines(Integer index) {
         return index >= 0 && index < _size;
     }
-
+    
     shared actual Boolean contains(Object element) {
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
