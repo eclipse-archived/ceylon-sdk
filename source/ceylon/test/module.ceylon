@@ -3,7 +3,7 @@
    
    Tests execute the code of the module under test and 
    can make assertions about what it does. For example,
-    
+   
    * do functions, when called with certain arguments, return the expected results?
    * do classes behave as required?
    * etc.
@@ -23,7 +23,7 @@
    ```
    assert(is Hobbit frodo);
    assert(exists ring);
-	
+   
    assertNotEquals(frodo, sauron);
    assertThatException(() => gandalf.castLightnings()).hasType(`NotEnoughMagicPowerException`);
    ```
@@ -31,32 +31,42 @@
    It's also perfectly acceptable to throw 
    [[AssertionException]] directly.
    
-   A test function which completes without propogating an exception is 
-   classified as a [[success]]. A test function which propogates 
+   A test function which completes without propagating an exception is 
+   classified as a [[success]]. A test function which propagates 
    an [[AssertionException]] is classified as a [[failure]]. A test 
-   function which propogates any other type of `Exception` is classified as 
+   function which propagates any other type of `Exception` is classified as 
    an [[error]].
    
    Test functions can be grouped together inside a class.
    ```
    class YodaTest() {
    
-       test void shouldBeJedi() {
+       test
+       void shouldBeJedi() {
            assert(yoda is Jedi);
        }
    
-       test void shouldHavePower() {
+       test
+       void shouldHavePower() {
            assert(yoda.midichloriansCount > 1k);
        }
+   ```
+   
+   Or several tests can be combined into [[testSuite]] and then run together.
+   ```
+   testSuite({`class YodaTest`,
+              `class DarthVaderTest`,
+              `function starOfDeathTestSuite`})
+   void starwarsTestSuite() {}   
    ```
    
    Common initialization logic can be placed into separate functions, 
    which run [[before|beforeTest]] or [[after|afterTest]] each test.
    ```
    class StarshipTest() {
-    
+   
        beforeTest void init() => starship.chargePhasers();
-        
+   
        afterTest void dispose() => starship.shutdownSystems();
    ```
    
@@ -68,51 +78,13 @@
    void shouldBeFasterThanLight() {
    ```
    
-   Tests can be run programmatically for a whole module, a package or only 
-   individual classes and functions. This is usually achieved using the
-   [[createTestRunner]] factory method, most simply by giving it the 
-   declaration of the module to be run:
-   ```
-   value result = createTestRunner([`module com.acme`]).run();
-   print(result.isSuccess);
-   ```
-   Or by enumerating the things to be tested:
-   ```
-   value result = createTestRunner([
-           `shouldBeFasterThanLight`,
-           `StarshipTest`]).run();
-   print(result.isSuccess);
-   ```
+   The most convenient way how to run tests is to use IDE integration
+   or via command line tool `ceylon test`.
    
-   Although you can implement the [[TestRunner]] interface directly,
-   [[createTestRunner]] has numerous defaulted parameters which usually 
-   mean you don't have to.
-    
-   Using listeners you can react to important events during test execution, 
-   or you can exclude particular tests, or execute them in a specific order.
-   ```
-   object ringingListener satisfies TestListener {
-       shared actual void testError(TestResult result) => alarm.ring();
-   }
-    
-   Boolean integrationTestFilter(TestDescription d) {
-       return d.name.endsWith("IntegrationTest");
-   }
-    
-   Comparison failFastComparator(TestDescription d1, TestDescription d2) {
-       return dateOfLastFailure(d1) <=> dateOfLastFailure(d2);
-   }
-    
-   TestRunner runner = createTestRunner{
-       sources = [`module com.acme`];
-       listeners = [ringingListener];
-       filter = integrationTestFilter;
-       comparator = failFastComparator;
-   };
-   ```
+   Tests can be also run programmatically, via interface [[TestRunner]] and its factory method [[createTestRunner]], 
+   but this API is usually not necessary to use directly. 
    
-"""
+   """
 by("Tom Bentley", "Tomáš Hradec")
 license("Apache Software License")
-module ceylon.test "1.0.0" {
-}
+module ceylon.test "1.0.0" {}

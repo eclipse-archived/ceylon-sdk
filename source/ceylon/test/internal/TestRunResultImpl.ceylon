@@ -1,17 +1,13 @@
 import ceylon.test {
-    TestDescription,
-    TestListener,
-    TestResult,
-    TestRunResult,
-    success,
-    failure,
-    error,
-    ignored
+    ...
+}
+import ceylon.test.event {
+    ...
 }
 
 class TestRunResultImpl() satisfies TestRunResult {
 
-    SequenceBuilder<TestResult> resultsBuilder = SequenceBuilder<TestResult>();
+    value resultsBuilder = SequenceBuilder<TestResult>();
 
     variable Integer runCounter = 0;
     variable Integer successCounter = 0;
@@ -67,15 +63,15 @@ class TestRunResultImpl() satisfies TestRunResult {
 
     shared object listener satisfies TestListener {
 
-        shared actual void testRunStart(TestDescription description) => startTimeMilliseconds = system.milliseconds;
+        shared actual void testRunStart(TestRunStartEvent event) => startTimeMilliseconds = system.milliseconds;
 
-        shared actual void testRunFinish(TestRunResult result) => endTimeMilliseconds = system.milliseconds;
+        shared actual void testRunFinish(TestRunFinishEvent event) => endTimeMilliseconds = system.milliseconds;
 
-        shared actual void testFinish(TestResult result) => handleResult(result, true);
+        shared actual void testFinish(TestFinishEvent event) => handleResult(event.result, true);
 
-        shared actual void testError(TestResult result) => handleResult(result, false);
+        shared actual void testError(TestErrorEvent event) => handleResult(event.result, false);
 
-        shared actual void testIgnored(TestResult result) => handleResult(result, false);
+        shared actual void testIgnore(TestIgnoreEvent event) => handleResult(event.result, false);
 
         void handleResult(TestResult result, Boolean wasRun) {
             resultsBuilder.append(result);
@@ -91,7 +87,7 @@ class TestRunResultImpl() satisfies TestRunResult {
                 errorCounter++;
                 runCounter += wasRun then 1 else 0;
             }
-            else if( result.state == ignored ) {
+            else if( result.state == ignored && result.exception exists ) {
                 ignoreCounter++;
             }
         }

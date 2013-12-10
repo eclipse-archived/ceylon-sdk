@@ -46,6 +46,7 @@
     </moduleset>
     
     <moduleset id="modules.test.jvm">
+    	<module name="test.ceylon.test.suite"/>    	
         <module name="test.ceylon.math"/>
         <module name="test.ceylon.collection"/>
         <module name="test.ceylon.file"/>
@@ -112,8 +113,8 @@
             verbose="${ceylon.verbosity}"
             encoding="UTF-8">
             <reposet refid="reposet.compile.test"/> 
+        	<module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.jvm"/>
-        	<module name="test.ceylon.test"/>
         </ceylon-compile>
         
     </target>
@@ -136,8 +137,6 @@
 
     <target name="test-jvm" depends="compile-test-jvm"
         description="Runs the compiled test modules from the 'test-modules' repository">
-        <!-- tests for ceylon.test have to be executed via its toplevel function run, they cannot be executed via ceylon test command -->
-        <ceylon-run module="test.ceylon.test/${sdk.version}" />
         <ceylon-test>
             <reposet refid="reposet.run.test"/>
             <moduleset refid="modules.test.jvm"/>

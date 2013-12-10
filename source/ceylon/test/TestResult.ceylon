@@ -1,17 +1,19 @@
 "Represents a detailed result of the execution of a particular test."
 see(`interface TestRunResult`)
-shared interface TestResult {
+shared class TestResult(description, state, exception = null, elapsedTime = 0) {
 
     "The test this is the result for."
-    shared formal TestDescription description;
+    shared TestDescription description;
 
     "The result state of this test."
-    shared formal TestState state;
+    shared TestState state;
 
     "The exception thrown during this test, if any."
-    shared formal Exception? exception;
+    shared Exception? exception;
 
     "The total elapsed time in miliseconds."
-    shared formal Integer elapsedTime;
+    shared Integer elapsedTime;
+
+    shared actual String string => "``description`` - ``state````(exception exists) then " (``exception?.string else ""``)" else "" ``";
 
 }

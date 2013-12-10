@@ -1,14 +1,8 @@
 import ceylon.test {
-    TestListener,
-    TestDescription,
-    TestState,
-    TestRunResult,
-    TestResult,
-    AssertionComparisonException,
-    success,
-    failure,
-    error,
-    ignored
+    ...
+}
+import ceylon.test.event {
+    ...
 }
 import com.redhat.ceylon.test.eclipse {
     TestEvent {
@@ -31,46 +25,46 @@ import java.util {
 
 shared class TestEventPublisher(ObjectOutputStream oos) satisfies TestListener {
 
-    shared actual void testRunStart(TestDescription description) {
+    shared actual void testRunStart(TestRunStartEvent e) {
         TestEvent event = TestEvent();
         event.type = Type.\iTEST_RUN_STARTED;
-        event.testElement = convertTestDescription(description, true);
+        event.testElement = convertTestDescription(e.description, true);
         publishEvent(event);
     }
 
-    shared actual void testRunFinish(TestRunResult result) {
+    shared actual void testRunFinish(TestRunFinishEvent e) {
         TestEvent event = TestEvent();
         event.type = Type.\iTEST_RUN_FINISHED;
         publishEvent(event);
     }
 
-    shared actual void testStart(TestDescription description) {
+    shared actual void testStart(TestStartEvent e) {
         TestEvent event = TestEvent();
         event.type = Type.\iTEST_STARTED;
-        TestElement element = convertTestDescription(description, false);
+        TestElement element = convertTestDescription(e.description, false);
         element.state = State.\iRUNNING;
         event.testElement = element;
         publishEvent(event);
     }
 
-    shared actual void testFinish(TestResult result) {
+    shared actual void testFinish(TestFinishEvent e) {
         TestEvent event = TestEvent();
         event.type = Type.\iTEST_FINISHED;
-        event.testElement = convertTestResult(result);
+        event.testElement = convertTestResult(e.result);
         publishEvent(event);
     }
 
-    shared actual void testError(TestResult result) {
+    shared actual void testError(TestErrorEvent e) {
         TestEvent event = TestEvent();
         event.type = Type.\iTEST_FINISHED;
-        event.testElement = convertTestResult(result);
+        event.testElement = convertTestResult(e.result);
         publishEvent(event);
     }
 
-    shared actual void testIgnored(TestResult result) {
+    shared actual void testIgnore(TestIgnoreEvent e) {
         TestEvent event = TestEvent();
         event.type = Type.\iTEST_FINISHED;
-        event.testElement = convertTestResult(result);
+        event.testElement = convertTestResult(e.result);
         publishEvent(event);
     }
 
