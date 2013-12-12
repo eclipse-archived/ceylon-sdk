@@ -45,7 +45,7 @@
        value count = sql.queryForInt("select count(*) from mytable");
        value name = sql.queryForString("select name from table where key=?", key);
    
-   And of course you can execute update and insert statements:
+   And of course you can execute `update` and `insert` statements:
    
        Integer changed = sql.update("update table SET col=? where key=?", newValue, key);
        value newKeys = sql.insert("insert into table (key,col) values (?, ?)", key, col);
@@ -67,8 +67,8 @@
            }
        };
    
-   To pass a null value in an update or insert statement, use a 
-   `SqlNull` with the right SQL type (defined by the JDBC class 
+   To pass a null value in an `update` or `insert` statement, use 
+   a `SqlNull` with the right SQL type (defined by the JDBC class 
    [[java.sql::Types]]):
    
        sql.update("update table set col=? where key=?", SqlNull(Types.\iINTEGER));
