@@ -15,73 +15,7 @@ import ceylon.math.whole { Whole, parseWhole }
 import ceylon.collection { HashMap }
 
 "A component that can perform queries and execute SQL statements on a
- database, via connections obtained from a JDBC DataSource.
- 
- You can easily get a query result as a `Sequence` where each row is
- a `Map`:
- 
-     value rows = sql.rows(\"SELECT * FROM mytable\")({});
- 
- You can pass parameters to the query, using the '?' notation:
- 
-     sql.rows(\"SELECT * FROM mytable WHERE col1=? AND col2=?\")({val1, val2});
- 
- And you can even limit the number of rows obtained, as well as the starting
- offset (the number of rows to skip before the first retrieved result):
- 
-     sql.rows(\"SELECT * FROM mytable WHERE date>?\", 5, 2)({date});
- 
- The `rows` method has two parameter lists because you can actually create
- reusable queries:
- 
-     value query = sql.rows(\"SELECT * FROM mytable WHERE col=?\");
-     value result1 = query({value1});
-     value result2 = query({value2});
-     for (row in query({\"X\"}) {
-         if (is String c=row[\"some_column\"]) {
-             //do something with this
-         }
-         if (is DbNull c=row[\"other_column\"]) {
-             //nulls are represented with DbNull instances
-         }
-     }
- 
- There are methods to retrieve just the first row, and even only one
- value. All these methods handle the SQL connection for you; it will be
- closed even if an exception is thrown:
- 
-     value row = sql.firstRow(\"SELECT * FROM mytable WHERE key=?\", key);
-     value count = sql.queryForInt(\"SELECT count(*) FROM mytable\");
-     value name = sql.queryForString(\"SELECT name FROM table WHERE key=?\", key);
- 
- And of course you can execute update and insert statements:
- 
-     Integer changed = sql.update(\"UPDATE table SET col=? WHERE key=?\", newValue, key);
-     value newKeys = sql.insert(\"INSERT INTO table (key,col) VALUES (?, ?)\", key, col);
- 
- If you need to perform several operations within a transaction, you can pass a function
- to the `transaction` method; it will be executed within a transaction, everything will
- be performed using the same connection, and at the end the commit is performed if your
- method returns `true`, or rolled back if you return `false`:
- 
-     sql.transaction {
-         Boolean do() {
-             sql.insert(\"INSERT*\");
-             sql.update(\"UPDATE*\");
-             sql.update(\"DELETE*\");
-             //This will cause a commit - return false or throw to cause rollback
-             return true;
-         }
-     };
- 
- To pass a NULL value in an update or insert statement, use a `DbNull` with the proper
- SQL type (from the `java.sql.Types` class):
- 
-      sql.update(\"UPDATE table SET col=? WHERE key=?\", DbNull(Types.INTEGER));
- 
- If a column is NULL on a row from the `rows`, `firstRow` or `eachRow` methods, it will
- get mapped to a DbNull instance under the column's key.
- "
+ database, via connections obtained from a JDBC DataSource."
 by("Enrique Zamudio")
 shared class Sql(DataSource ds) {
 
@@ -92,7 +26,7 @@ shared class Sql(DataSource ds) {
         return prepareExistingStatement(stmt, params);
     }
 
-    PreparedStatement prepareExistingStatement(PreparedStatement stmt, Iterable<Object> params) {
+    PreparedStatement prepareExistingStatement(PreparedStatement stmt, {Object*} params) {
         //Set parameters
         variable value i=1;
         for (p in params) {
@@ -111,7 +45,7 @@ shared class Sql(DataSource ds) {
                 }
             }
             case (is Float)   { stmt.setDouble(i, p); }
-            case (is DbNull)  { stmt.setNull(i, p.sqlType); }
+            case (is SqlNull)  { stmt.setNull(i, p.sqlType); }
             //TODO reader, inputStream, byte array
             else { stmt.setObject(i,p); }
             i++;
@@ -552,7 +486,7 @@ shared class Sql(DataSource ds) {
         case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
         case (is BigInteger) { v = parseWhole(x.string); }
         else { v = x; }
-        return columnName -> (v else DbNull(meta.getColumnType(idx)));
+        return columnName -> (v else SqlNull(meta.getColumnType(idx)));
     }
 
 }
