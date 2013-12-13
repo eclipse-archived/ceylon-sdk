@@ -1,6 +1,6 @@
 import ceylon.test { assertEquals, assertTrue, assertFalse, test }
 import ceylon.time { date, time, dateTime, Instant, Period, now }
-import ceylon.time.base { september }
+import ceylon.time.base { september, milliseconds }
 import ceylon.time.timezone { timeZone, OffsetTimeZone }
 
 
