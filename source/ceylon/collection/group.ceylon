@@ -1,7 +1,7 @@
-"Creates a `Map` that contains the `Iterable`'s
-     elements, grouped in `Sequence`s under the
-     keys provided by the grouping function."
-shared Map<Group, {Element+}> group<Group, Element>({Element*} elements,
+"Creates a `Map` that contains the given
+ elements, grouped in sequences under the
+ keys provided by the grouping function."
+shared Map<Group, [Element+]> group<Group, Element>({Element*} elements,
     "A function that returns the key under which 
      to group the specified element."
     Group grouping(Element element))
