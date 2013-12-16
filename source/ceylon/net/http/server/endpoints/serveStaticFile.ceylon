@@ -34,7 +34,7 @@ shared void serveStaticFile(
             complete();
         }
 
-        FileWritter(openFile, response, onComplete, options).send();
+        FileWriter(openFile, response, onComplete, options).send();
 
     } else {
         response.responseStatus=404;
@@ -43,7 +43,7 @@ shared void serveStaticFile(
     }
 }
 
-class FileWritter(OpenFile openFile, Response response, void completed(), Options options) {
+class FileWriter(OpenFile openFile, Response response, void completed(), Options options) {
     variable Integer available = openFile.size;
     variable Integer readFailed = 0;
     Integer bufferSize = options.outputBufferSize < available then options.outputBufferSize else available;
