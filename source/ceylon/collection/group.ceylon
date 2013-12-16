@@ -1,9 +1,9 @@
-"Creates a `Map` that contains the given
- elements, grouped in sequences under the
- keys provided by the grouping function."
+"Groups the given elements into sequences
+ in a `Map`, under the keys provided by the 
+ given grouping function."
 shared Map<Group, [Element+]> group<Group, Element>({Element*} elements,
-    "A function that returns the key under which 
-     to group the specified element."
+    "A function that returns the key under 
+     which to group the specified element."
     Group grouping(Element element))
         given Group satisfies Object {
     

@@ -4,6 +4,9 @@
  containing elements rejected by the given 
  predicate function."
 shared [Element[],Element[]] partition<Element>({Element*} elements,
+        "A predicate function that determines
+         if specified element should be 
+         selected or rejected."
         Boolean selecting(Element element)) {
     value selected = SequenceBuilder<Element>();
     value rejected = SequenceBuilder<Element>();
