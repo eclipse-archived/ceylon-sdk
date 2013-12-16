@@ -2,34 +2,30 @@
      elements, grouped in `Sequence`s under the
      keys provided by the grouping function."
 shared Map<Group, {Element+}> group<Group, Element>({Element*} elements,
-    "A function that returns the key under which to group the 
-     specified element."
-    Group grouping(Element element)) given Group satisfies Object {
+    "A function that returns the key under which 
+     to group the specified element."
+    Group grouping(Element element))
+        given Group satisfies Object {
+    
+    class Appender([Element] element) 
+            => SequenceAppender<Element>(element);
     
     /*
-    We've no idea how long the iterable is, nor how selective the grouping 
-    function is, so it's really had to accurately estimate the size of the
-    HashMap.
+     We've no idea how long the iterable is, nor how 
+     selective the grouping function is, so it's really 
+     hard to accurately estimate the size of the HashMap.
     */
-    value map = HashMap<Group, SequenceBuilder<Element>>() ;
+    value map = HashMap<Group, Appender>() ;
     
     for (Element element in elements) {
         Group group = grouping(element);
-        
-        value sb = map.get(group);
-        if (is SequenceBuilder<Element> sb) {
+        if (is Appender sb = map.get(group)) {
             sb.append(element);
         } else {
-            map.put(group, SequenceBuilder<Element>().append(element));
+            map.put(group, Appender([element]));
         }
     }
     
-    Sequence<Element> fn(Group key, SequenceBuilder<Element> item) {
-        value sequence = item.sequence;
-        assert(nonempty sequence);
-        return sequence;
-    }
-    
-    return map.mapItems(fn);
+    return map.mapItems((Group group, Appender sa) => sa.sequence);
     
 }
