@@ -91,6 +91,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.removeElement(val);
     }
     
+    shared actual void prune() => list.prune();
+    
+    shared actual void replaceElement(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
+            String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
+        list.replaceElement(val, newVal);
+    }
+    
     shared actual void set(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
         list.set(index, val);
     }

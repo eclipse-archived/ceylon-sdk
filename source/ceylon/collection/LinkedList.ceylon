@@ -4,9 +4,9 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
     variable Integer _size = 0; 
-
+    
     // initialiser section
-
+    
     void _add(Element val){
         Cell<Element> newTail = Cell<Element>(val, null);
         if(exists Cell<Element> tail = tail){
@@ -25,48 +25,30 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     }
     
     // End of initialiser section
-
+    
     // Write
     
-    "Sets an item at the given index. List is expanded if index > size"
-    //TODO: add assertions on given index!!
     shared actual void set(Integer index, Element val){
-        if(index < _size){
-            variable Cell<Element>? iter = head;
-            variable Integer i = 0;
-            while(exists Cell<Element> cell = iter){
-                if(i++ == index){
-                    cell.car = val;
-                    return;
-                }
-                iter = cell.cdr;
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<=index<_size);
+        variable Cell<Element>? iter = head;
+        variable Integer i = 0;
+        while(exists Cell<Element> cell = iter){
+            if(i++ == index){
+                cell.car = val;
+                return;
             }
-        }else{
-            // need to grow
-            variable Integer need = index - _size;
-            Cell<Element> newTail = Cell<Element>(val, null);
-            variable Cell<Element> newHead = newTail;
-            while(need-- > 0){
-                newHead = Cell<Element>(/*FIXME*/val, newHead);
-            }
-            // now put it at the end
-            if(exists Cell<Element> tail = tail){
-                tail.cdr = newHead;
-            }else{
-                // if we don't have a tail, we also don't have a head
-                head = newHead;
-            }
-            // change the tail
-            tail = newTail;
-            // cache the size
-            _size = index+1;
+            iter = cell.cdr;
         }
     }
-
-    "Inserts an item at specified index, list is expanded if index > size"    
+    
     shared actual void insert(Integer index, Element val){
-        if(index >= _size){
-            set(index, val);
+        "index may not be negative or greater than the
+         length of the list"
+        assert (0<=index<=_size);
+        if(index == _size){
+            add(val);
         }else{
             Cell<Element> newCell = Cell<Element>(val, null);
             if(index == 0){
@@ -83,8 +65,8 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
                         if(exists Cell<Element> prev2 = prev){
                             prev2.cdr = newCell;
                             newCell.cdr = cell;
-                            // no need to update the tail since we never modify the last element, we would
-                            // have called set() above instead
+                            // no need to update the tail since we never modify the last 
+                            // element, we would have taken the other branch above instead
                         }else{
                             // cannot happen
                         }
@@ -98,7 +80,6 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    "Adds an item at the end of this list"
     shared actual void add(Element val){
         _add(val);
     }
@@ -109,7 +90,6 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    "Removes the item at the specified index"
     shared actual Element? remove(Integer index){
         if(index < _size){
             variable Cell<Element>? iter = head;
@@ -138,12 +118,12 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
             return null;
         }
     }
-
-    shared actual void removeElement(Element val) {
+    
+    shared actual void removeElement(Element&Object val) {
         variable Cell<Element>? iter = head;
         variable Cell<Element>? prev = null;
         while(exists Cell<Element> cell = iter){
-            if(eq(cell.car, val)){
+            if(exists elem = cell.car, elem==val){
                 if(exists Cell<Element> prev2 = prev){
                     prev2.cdr = cell.cdr;
                 }else{
@@ -163,8 +143,42 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
             }
         }
     }
-
-    "Remove every item"
+    
+    shared actual void prune() {
+        variable Cell<Element>? iter = head;
+        variable Cell<Element>? prev = null;
+        while(exists Cell<Element> cell = iter){
+            if(!cell.car exists){
+                if(exists Cell<Element> prev2 = prev){
+                    prev2.cdr = cell.cdr;
+                }else{
+                    // changing the head
+                    head = cell.cdr;
+                }
+                // see if we need to update the tail
+                if(!cell.cdr exists){
+                    tail = prev;
+                }
+                _size--;
+                // keep the same prev but move on
+                iter = cell.cdr;
+            }else{
+                prev = iter;
+                iter = cell.cdr;
+            }
+        }
+    }
+    
+    shared actual void replaceElement(Element&Object val, Element newVal) {
+        variable Cell<Element>? iter = head;
+        while(exists Cell<Element> cell = iter){
+            if(exists elem = cell.car, elem==val){
+                cell.car = newVal;
+            }
+            iter = cell.cdr;
+        }
+    }
+    
     shared actual void clear(){
         _size = 0;
         head = tail = null;
@@ -357,7 +371,7 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
         return false;
     }
-
+    
     shared actual List<Element> reversed {
         value ret = LinkedList<Element>();
 

@@ -52,8 +52,13 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     }
     
     shared actual void insert(Integer index, Element val) {
+        "index may not be negative or greater than the
+         length of the list"
+        assert (0<=index<=length);
         grow(1);
-        array.copyTo(array, index, index+1, length-index);
+        if (index<length) {
+            array.copyTo(array, index, index+1, length-index);
+        }
         length++;
         array.set(index, val);
     }
@@ -66,18 +71,45 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         return result;
     }
     
-    shared actual void removeElement(Element val) {
+    shared actual void removeElement(Element&Object val) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            value element = array[i++];
-            if (!eq(val,element)) {
+            if (exists element = array[i++]) {
+                if (val!=element) {
+                    array.set(j++,element);
+                }
+            }
+            else {
+                array.set(j++, null);
+            }
+        }
+        length=j;
+        while (j<i) {
+            array.set(j++, null);
+        }
+    }
+    
+    shared actual void prune() {
+        variable value i=0;
+        variable value j=0;
+        while (i<length) {
+            if (exists element = array[i++]) {
                 array.set(j++,element);
             }
         }
         length=j;
         while (j<i) {
             array.set(j++, null);
+        }
+    }
+    
+    shared actual void replaceElement(Element&Object val, Element newVal) {
+        variable value i=0;
+        while (i<length) {
+            if (exists element = array[i], val==element) {
+                array.set(i, newVal);
+            }
         }
     }
     
@@ -140,14 +172,10 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     }
     
     shared actual void set(Integer index, Element val) {
-        "index may not be negative or greater than length of list"
-        assert (0<index<=length);
-        if (index==length) {
-            add(val);
-        }
-        else {
-            array.set(index,val);
-        }
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<index<length);
+        array.set(index,val);
     }
     
     shared actual List<Element> span(Integer from, Integer to) {
