@@ -1,14 +1,14 @@
 "A [[MutableList]] implemented as a singly linked list."
 by("Stéphane Épardaud")
-shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<Element> {
+shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList<Element> {
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
     variable Integer _size = 0; 
     
     // initialiser section
     
-    void _add(Element val){
-        Cell<Element> newTail = Cell<Element>(val, null);
+    void _add(Element element){
+        Cell<Element> newTail = Cell<Element>(element, null);
         if(exists Cell<Element> tail = tail){
             tail.cdr = newTail;
             this.tail = newTail;
@@ -20,15 +20,15 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
     }
     
     // add initial values
-    for(val in values){
-        _add(val);
+    for(element in elements){
+        _add(element);
     }
     
     // End of initialiser section
     
     // Write
     
-    shared actual void set(Integer index, Element val){
+    shared actual void set(Integer index, Element element){
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=index<_size);
@@ -36,21 +36,21 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         variable Integer i = 0;
         while(exists Cell<Element> cell = iter){
             if(i++ == index){
-                cell.car = val;
+                cell.car = element;
                 return;
             }
             iter = cell.cdr;
         }
     }
     
-    shared actual void insert(Integer index, Element val){
+    shared actual void insert(Integer index, Element element){
         "index may not be negative or greater than the
          length of the list"
         assert (0<=index<=_size);
         if(index == _size){
-            add(val);
+            add(element);
         }else{
-            Cell<Element> newCell = Cell<Element>(val, null);
+            Cell<Element> newCell = Cell<Element>(element, null);
             if(index == 0){
                 newCell.cdr = head;
                 head = newCell;
@@ -80,17 +80,17 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    shared actual void add(Element val){
-        _add(val);
+    shared actual void add(Element element){
+        _add(element);
     }
     
-    shared actual void addAll({Element*} values) {
-        for (val in values) {
-            add(val);
+    shared actual void addAll({Element*} elements) {
+        for (element in elements) {
+            add(element);
         }
     }
     
-    shared actual Element? remove(Integer index){
+    shared actual Element? delete(Integer index){
         if(index < _size){
             variable Cell<Element>? iter = head;
             variable Cell<Element>? prev = null;
@@ -119,11 +119,11 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    shared actual void removeElement(Element&Object val) {
+    shared actual void remove(Element&Object element) {
         variable Cell<Element>? iter = head;
         variable Cell<Element>? prev = null;
         while(exists Cell<Element> cell = iter){
-            if(exists elem = cell.car, elem==val){
+            if(exists elem = cell.car, elem==element){
                 if(exists Cell<Element> prev2 = prev){
                     prev2.cdr = cell.cdr;
                 }else{
@@ -169,11 +169,12 @@ shared class LinkedList<Element>({Element*} values = {}) satisfies MutableList<E
         }
     }
     
-    shared actual void replaceElement(Element&Object val, Element newVal) {
+    shared actual void replace(Element&Object element, 
+            Element replacement) {
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
-            if(exists elem = cell.car, elem==val){
-                cell.car = newVal;
+            if(exists elem = cell.car, elem==element){
+                cell.car = replacement;
             }
             iter = cell.cdr;
         }

@@ -25,15 +25,15 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         array.set(length++, element);
     }
 
-    shared actual void add(Element val) {
+    shared actual void add(Element element) {
         grow(1);
-        array.set(length++, val);
+        array.set(length++, element);
     }
     
-    shared actual void addAll({Element*} values) {
-        grow(values.size);
-        for (val in values) {
-            array.set(length++, val);
+    shared actual void addAll({Element*} elements) {
+        grow(elements.size);
+        for (element in elements) {
+            array.set(length++, element);
         }
     }
     
@@ -51,7 +51,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
-    shared actual void insert(Integer index, Element val) {
+    shared actual void insert(Integer index, Element element) {
         "index may not be negative or greater than the
          length of the list"
         assert (0<=index<=length);
@@ -60,10 +60,10 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
             array.copyTo(array, index, index+1, length-index);
         }
         length++;
-        array.set(index, val);
+        array.set(index, element);
     }
     
-    shared actual Element? remove(Integer index) {
+    shared actual Element? delete(Integer index) {
         array.copyTo(array, index+1, index, length-index);
         length--;
         Element? result = array[length];
@@ -71,13 +71,13 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         return result;
     }
     
-    shared actual void removeElement(Element&Object val) {
+    shared actual void remove(Element&Object element) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists element = array[i++]) {
-                if (val!=element) {
-                    array.set(j++,element);
+            if (exists elem = array[i++]) {
+                if (elem!=element) {
+                    array.set(j++,elem);
                 }
             }
             else {
@@ -104,11 +104,12 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
-    shared actual void replaceElement(Element&Object val, Element newVal) {
+    shared actual void replace(Element&Object element, 
+            Element replacement) {
         variable value i=0;
         while (i<length) {
-            if (exists element = array[i], val==element) {
-                array.set(i, newVal);
+            if (exists elem = array[i], elem==element) {
+                array.set(i, replacement);
             }
         }
     }
@@ -171,11 +172,11 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
             else ArrayList();
     }
     
-    shared actual void set(Integer index, Element val) {
+    shared actual void set(Integer index, Element element) {
         "index may not be negative or greater than the
          last index in the list"
         assert (0<index<length);
-        array.set(index,val);
+        array.set(index,element);
     }
     
     shared actual List<Element> span(Integer from, Integer to) {

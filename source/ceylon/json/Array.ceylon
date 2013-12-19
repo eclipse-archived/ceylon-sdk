@@ -83,19 +83,19 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.insert(index, val);
     }
     
-    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? remove(Integer index) {
-        return list.remove(index);
+    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? delete(Integer index) {
+        return list.delete(index);
     }
 
-    shared actual void removeElement(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.removeElement(val);
+    shared actual void remove(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
+        list.remove(val);
     }
     
     shared actual void prune() => list.prune();
     
-    shared actual void replaceElement(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
+    shared actual void replace(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
             String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
-        list.replaceElement(val, newVal);
+        list.replace(val, newVal);
     }
     
     shared actual void set(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
