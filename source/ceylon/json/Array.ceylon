@@ -98,6 +98,10 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.replace(val, newVal);
     }
     
+    shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
+        list.infill(replacement);
+    }
+    
     shared actual void set(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
         list.set(index, val);
     }

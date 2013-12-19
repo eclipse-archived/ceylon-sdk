@@ -114,6 +114,15 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
+    shared actual void infill(Element replacement) {
+        variable value i=0;
+        while (i<length) {
+            if (!array[i] exists) {
+                array.set(i, replacement);
+            }
+        }
+    }
+    
     shared actual Element? first {
         if (length>0) {
              return array[length];

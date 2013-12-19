@@ -180,6 +180,16 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         }
     }
     
+    shared actual void infill(Element replacement) {
+        variable Cell<Element>? iter = head;
+        while(exists Cell<Element> cell = iter){
+            if(!cell.car exists){
+                cell.car = replacement;
+            }
+            iter = cell.cdr;
+        }
+    }
+    
     shared actual void clear(){
         _size = 0;
         head = tail = null;

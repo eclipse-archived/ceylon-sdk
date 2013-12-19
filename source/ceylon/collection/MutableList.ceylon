@@ -46,6 +46,12 @@ shared interface MutableList<Element>
             "The replacement value"
             Element replacement);
     
+    "Replace all null values in this list with the given 
+     value."
+    shared formal void infill(
+        "The replacement value"
+        Element replacement);
+    
     "Remove every item from this list, leaving an empty list."
     shared formal void clear();
     
