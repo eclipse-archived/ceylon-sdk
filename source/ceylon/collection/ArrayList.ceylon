@@ -176,7 +176,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     shared actual void set(Integer index, Element element) {
         "index may not be negative or greater than the
          last index in the list"
-        assert (0<index<length);
+        assert (0<=index<length);
         array.set(index,element);
     }
     
