@@ -15,14 +15,14 @@ shared interface MutableList<Element>
     "Replace the existing element at the specified index 
      with the given element."
     throws (`class AssertionException`, 
-    "if the given index is out of bounds, that is, 
-     if `index<0` or if `index>lastIndex`")
+            "if the given index is out of bounds, that is, 
+             if `index<0` or if `index>lastIndex`")
     shared formal void set(Integer index, Element element);
     
     "Insert the given item at the specified index."
     throws (`class AssertionException`, 
-    "if the given index is out of bounds, that is, 
-     if `index<0` or if `index>lastIndex+1`")
+            "if the given index is out of bounds, that is, 
+             if `index<0` or if `index>lastIndex+1`")
     shared formal void insert(Integer index, Element element);
     
     "Remove the item at the specified index, returning the
