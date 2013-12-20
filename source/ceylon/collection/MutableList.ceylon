@@ -63,4 +63,8 @@ shared interface MutableList<Element>
      returning the removed item, or null if there was no such 
      item."
     shared default Element? deleteLast() => delete(size-1);
+    
+    shared formal void deleteSpan(Integer from, Integer to);
+    
+    shared formal void deleteSegment(Integer from, Integer length);
 }

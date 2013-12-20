@@ -173,6 +173,13 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
+    shared actual void set(Integer index, Element element) {
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<index<length);
+        array.set(index,element);
+    }
+    
     shared actual List<Element> segment(Integer from, Integer length) {
         value fst = from<0 then 0 else from;
         value len = from<0 then length+from else length;
@@ -181,24 +188,43 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
             else ArrayList();
     }
     
-    shared actual void set(Integer index, Element element) {
-        "index may not be negative or greater than the
-         last index in the list"
-        assert (0<index<length);
-        array.set(index,element);
-    }
-    
     shared actual List<Element> span(Integer from, Integer to) {
-        if (from>to) {
-            //TODO: would be better to mutate the new array in place
-            return this[to..from].reversed;
-        }
-        else {
-            value fst = from<0 then 0 else from;
-            value len = (to<0 then 0) else (from<0 then to+1) else to-from+1;
-            return fst<this.length && len>=1 
+        value start = from>to then to else from;
+        value end = from>to then from else to;
+        value fst = start<0 then 0 else start;
+        value len = (end<0 then 0) else (start<0 then end+1) else end-start+1;
+        return fst<this.length && len>0 
             then ArrayList(len, skipping(fst).taking(len))
             else ArrayList();
+    }
+    
+    shared actual void deleteSegment(Integer from, Integer length) {
+        value fst = from<0 then 0 else from;
+        value l = from<0 then length+from else length;
+        value len = l+fst>this.length then this.length-fst else l;
+        if (fst<this.length && len>0) {
+            array.copyTo(array, fst+len, fst, this.length-len-fst);
+            variable value i = this.length-len;
+            while (i<this.length) {
+                array.set(i++, null);
+            }
+            this.length-=len;
+        }
+    }
+    
+    shared actual void deleteSpan(Integer from, Integer to) {
+        value start = from>to then to else from;
+        value end = from>to then from else to;
+        value fst = start<0 then 0 else start;
+        value l = (end<0 then 0) else (start<0 then end+1) else end-start+1;
+        value len = l+fst>this.length then this.length-fst else l;
+        if (fst<this.length && len>0) {
+            array.copyTo(array, fst+len, fst, this.length-len-fst);
+            variable value i = this.length-len;
+            while (i<this.length) {
+                array.set(i++, null);
+            }
+            this.length-=len;
         }
     }
     

@@ -86,7 +86,15 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? delete(Integer index) {
         return list.delete(index);
     }
-
+    
+    shared actual void deleteSegment(Integer from, Integer length) {
+        list.deleteSegment(from, length);
+    }
+    
+    shared actual void deleteSpan(Integer from, Integer to) {
+        list.deleteSpan(from, to);
+    }
+    
     shared actual void remove(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
         list.remove(val);
     }

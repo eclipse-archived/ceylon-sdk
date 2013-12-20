@@ -209,16 +209,17 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         return null;
     }
     
-    //TODO: surely this impl is broken
     shared actual List<Element> span(Integer from, Integer to) {
+        value start = from>to then to else from;
+        value end = from>to then from else to;
         value ret = LinkedList<Element>();
         variable Cell<Element>? iter = head;
         variable Integer i = 0;
         while(exists Cell<Element> cell = iter){
-            if(i > to){
+            if(i > end){
                 break;
             }
-            if(i >= from){
+            if(i >= start){
                 ret.add(cell.car);
             }
             i++;
@@ -256,25 +257,40 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         return ret;
     }
     
-    //TODO: surely this impl is broken
     shared actual List<Element> segment(Integer from, Integer length) {
         value ret = LinkedList<Element>();
-        if(length == 0){
-            return ret;
-        }
+        value len = from<0 then length+from else length;
         variable Cell<Element>? iter = head;
         variable Integer i = 0;
         while(exists Cell<Element> cell = iter){
+            if(ret._size >= len){
+                break;
+            }
             if(i >= from){
-                if(ret._size >= length){
-                    break;
-                }
                 ret.add(cell.car);
             }
             i++;
             iter = cell.cdr;
         }
         return ret;
+    }
+    
+    shared actual void deleteSegment(Integer from, Integer length) {
+        value fst = from<0 then 0 else from;
+        value len = from<0 then length+from else length;
+        if (fst<this._size && len>0) {
+            del(fst, len);
+        }
+    }
+    
+    shared actual void deleteSpan(Integer from, Integer to) {
+        value start = from>to then to else from;
+        value end = from>to then from else to;
+        value fst = start<0 then 0 else start;
+        value len = (end<0 then 0) else (start<0 then end+1) else end-start+1;
+        if (fst<this._size && len>0) {
+            del(fst, len);
+        }
     }
     
     shared actual Boolean defines(Integer index) {
@@ -409,4 +425,38 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         }
         return ret;
     }
+    
+    void del(Integer fst, Integer len) {
+        if (fst==0) {
+            head = null;
+            variable Integer i = 0;
+            variable Cell<Element>? iter = head;
+            while(exists Cell<Element> next = iter){
+                if (i++ == len) {
+                    head=next;
+                    return;
+                }
+                _size--;
+            }
+        }
+        else {
+            variable Cell<Element>? iter = head;
+            variable Integer i = 0;
+            while(exists Cell<Element> cell = iter){
+                if(i++ == fst){
+                    while(exists Cell<Element> next = iter){
+                        if (i++ == fst+len) {
+                            cell.cdr=next;
+                            return;
+                        }
+                        _size--;
+                    }
+                    cell.cdr = null;
+                    return;
+                }
+                iter = cell.cdr;
+            }
+        }
+    }
+    
 }
