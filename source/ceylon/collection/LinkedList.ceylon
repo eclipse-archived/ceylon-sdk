@@ -346,7 +346,7 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         return empty then {} else 0.._size;
     }
 
-    shared actual String string {
+    /*shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("[");
         variable Cell<Element>? iter = head;
@@ -363,7 +363,7 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         }
         b.append("]");
         return b.string;
-    }
+    }*/
     
     shared actual Integer hash {
         variable Integer h = 17;
