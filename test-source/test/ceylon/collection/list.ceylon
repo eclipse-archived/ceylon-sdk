@@ -31,7 +31,8 @@ shared test void testList(){
     assertEquals("foo", l[0]);
     assertEquals("bar", l[1]);
 
-    l.set(5, "empty");
+    //l.set(5, "empty");
+    l.addAll { for (i in 0:4) "empty" };
     assertEquals("[foo, bar, empty, empty, empty, empty]", l.string);
     assertEquals(6, l.size);
     assertTrue(l.contains("foo"));
@@ -70,9 +71,9 @@ shared test void testList(){
     assertEquals("bar", l[3]);
     assertEquals("empty", l[7]);
 
-    l.insert(10, "last");
-    assertEquals("[first, foo, stef, bar, empty, empty, empty, empty, last, last, last]", l.string);
-    assertEquals(11, l.size);
+    l.insert(8, "last");
+    assertEquals("[first, foo, stef, bar, empty, empty, empty, empty, last]", l.string);
+    assertEquals(9, l.size);
     assertTrue(l.contains("first"));
     assertTrue(l.contains("foo"));
     assertTrue(l.contains("stef"));
@@ -85,11 +86,11 @@ shared test void testList(){
     assertEquals("stef", l[2]);
     assertEquals("bar", l[3]);
     assertEquals("empty", l[7]);
-    assertEquals("last", l[10]);
+    assertEquals("last", l[8]);
     
     l.delete(0);
-    assertEquals("[foo, stef, bar, empty, empty, empty, empty, last, last, last]", l.string);
-    assertEquals(10, l.size);
+    assertEquals("[foo, stef, bar, empty, empty, empty, empty, last]", l.string);
+    assertEquals(8, l.size);
     assertTrue(!l.contains("first"));
     assertTrue(l.contains("foo"));
     assertTrue(l.contains("stef"));
@@ -101,11 +102,11 @@ shared test void testList(){
     assertEquals("stef", l[1]);
     assertEquals("bar", l[2]);
     assertEquals("empty", l[6]);
-    assertEquals("last", l[9]);
+    assertEquals("last", l[7]);
 
     l.delete(1);
-    assertEquals("[foo, bar, empty, empty, empty, empty, last, last, last]", l.string);
-    assertEquals(9, l.size);
+    assertEquals("[foo, bar, empty, empty, empty, empty, last]", l.string);
+    assertEquals(7, l.size);
     assertTrue(!l.contains("first"));
     assertTrue(l.contains("foo"));
     assertTrue(!l.contains("stef"));
@@ -116,19 +117,19 @@ shared test void testList(){
     assertEquals("foo", l[0]);
     assertEquals("bar", l[1]);
     assertEquals("empty", l[5]);
-    assertEquals("last", l[8]);
+    assertEquals("last", l[6]);
 
-    l.delete(8);
-    assertEquals(8, l.size);
-    assertEquals("[foo, bar, empty, empty, empty, empty, last, last]", l.string);
+    l.delete(5);
+    assertEquals(6, l.size);
+    assertEquals("[foo, bar, empty, empty, empty, last]", l.string);
 
     l.add("end");
-    assertEquals("[foo, bar, empty, empty, empty, empty, last, last, end]", l.string);
-    assertEquals(9, l.size);
+    assertEquals("[foo, bar, empty, empty, empty, last, end]", l.string);
+    assertEquals(7, l.size);
 
     l.remove("empty");
-    assertEquals("[foo, bar, last, last, end]", l.string);
-    assertEquals(5, l.size);
+    assertEquals("[foo, bar, last, end]", l.string);
+    assertEquals(4, l.size);
 
     l.clear();
     assertEquals("[]", l.string);
