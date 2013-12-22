@@ -119,7 +119,7 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         }
     }
     
-    shared actual void remove(Element&Object element) {
+    shared actual void removeAll(Element&Object element) {
         variable Cell<Element>? iter = head;
         variable Cell<Element>? prev = null;
         while(exists Cell<Element> cell = iter){
@@ -169,7 +169,7 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
         }
     }
     
-    shared actual void replace(Element&Object element, 
+    shared actual void replaceAll(Element&Object element, 
             Element replacement) {
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){

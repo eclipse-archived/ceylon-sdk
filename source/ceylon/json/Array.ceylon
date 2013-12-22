@@ -95,15 +95,15 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.deleteSpan(from, to);
     }
     
-    shared actual void remove(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.remove(val);
+    shared actual void removeAll(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
+        list.removeAll(val);
     }
     
     shared actual void prune() => list.prune();
     
-    shared actual void replace(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
+    shared actual void replaceAll(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
             String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
-        list.replace(val, newVal);
+        list.replaceAll(val, newVal);
     }
     
     shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {

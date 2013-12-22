@@ -71,7 +71,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         return result;
     }
     
-    shared actual void remove(Element&Object element) {
+    shared actual void removeAll(Element&Object element) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
@@ -104,7 +104,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
-    shared actual void replace(Element&Object element, 
+    shared actual void replaceAll(Element&Object element, 
             Element replacement) {
         variable value i=0;
         while (i<length) {

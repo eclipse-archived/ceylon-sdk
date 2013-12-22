@@ -31,7 +31,7 @@ shared interface MutableList<Element>
     
     "Remove all occurrences of the given value in this
      list."
-    shared formal void remove(
+    shared formal void removeAll(
             "The non-null value to remove"
             Element&Object element);
     
@@ -40,7 +40,7 @@ shared interface MutableList<Element>
     
     "Replace all occurrences of the given value in this
      list with the given replacement value."
-    shared formal void replace(
+    shared formal void replaceAll(
             "The non-null value to replace"
             Element&Object element,
             "The replacement value"
