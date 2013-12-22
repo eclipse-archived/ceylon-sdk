@@ -15,18 +15,19 @@ shared interface MutableList<Element>
     "Replace the existing element at the specified index 
      with the given element."
     throws (`class AssertionException`, 
-            "if the given index is out of bounds, that is, 
-             if `index<0` or if `index>lastIndex`")
+            "if the given index is out of bounds, that 
+             is, if `index<0` or if `index>lastIndex`")
     shared formal void set(Integer index, Element element);
     
     "Insert the given item at the specified index."
     throws (`class AssertionException`, 
-            "if the given index is out of bounds, that is, 
-             if `index<0` or if `index>lastIndex+1`")
+            "if the given index is out of bounds, that 
+             is, if `index<0` or if `index>lastIndex+1`")
     shared formal void insert(Integer index, Element element);
     
-    "Remove the item at the specified index, returning the
-     removed item, or `null` if there was no such item."
+    "Remove the item at the specified index, returning 
+     the removed item, or `null` if there was no such 
+     item."
     shared formal Element? delete(Integer index);
     
     "Remove all occurrences of the given value in this
@@ -34,6 +35,13 @@ shared interface MutableList<Element>
     shared formal void removeAll(
             "The non-null value to remove"
             Element&Object element);
+    
+    "Remove the first occurrence of the given value in 
+     this list, if any, returning `true` if the value
+     occurs in the list, or `false` otherwise."
+    shared formal Boolean removeFirst(
+        "The non-null value to remove"
+        Element&Object element);
     
     "Remove all null values from this list."
     shared formal void prune();
@@ -45,6 +53,16 @@ shared interface MutableList<Element>
             Element&Object element,
             "The replacement value"
             Element replacement);
+    
+    "Replace the first occurrence of the given value in 
+     this list, if any, with the given replacement value, 
+     returning `true` if the value occurs in the list, 
+     or `false` otherwise."
+    shared formal Boolean replaceFirst(
+        "The non-null value to replace"
+        Element&Object element,
+        "The replacement value"
+        Element replacement);
     
     "Replace all null values in this list with the given 
      value."

@@ -99,11 +99,20 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.removeAll(val);
     }
     
+    shared actual Boolean removeFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
+        return list.removeFirst(element);
+    }
+    
     shared actual void prune() => list.prune();
     
     shared actual void replaceAll(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
             String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
         list.replaceAll(val, newVal);
+    }
+    
+    shared actual Boolean replaceFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
+            String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
+        return list.replaceFirst(element, replacement);
     }
     
     shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {

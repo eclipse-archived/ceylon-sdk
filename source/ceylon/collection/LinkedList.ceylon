@@ -153,6 +153,33 @@ shared class LinkedList<Element>({Element*} elements = {})
         }
     }
     
+    shared actual Boolean removeFirst(Element&Object element) {
+        variable Cell<Element>? iter = head;
+        variable Cell<Element>? prev = null;
+        while(exists Cell<Element> cell = iter){
+            if(exists elem = cell.car, elem==element){
+                if(exists Cell<Element> prev2 = prev){
+                    prev2.cdr = cell.cdr;
+                }else{
+                    // changing the head
+                    head = cell.cdr;
+                }
+                // see if we need to update the tail
+                if(!cell.cdr exists){
+                    tail = prev;
+                }
+                _size--;
+                // keep the same prev but move on
+                iter = cell.cdr;
+                return true;
+            }else{
+                prev = iter;
+                iter = cell.cdr;
+            }
+        }
+        return false;
+    }
+    
     shared actual void prune() {
         variable Cell<Element>? iter = head;
         variable Cell<Element>? prev = null;
@@ -187,6 +214,19 @@ shared class LinkedList<Element>({Element*} elements = {})
             }
             iter = cell.cdr;
         }
+    }
+    
+    shared actual Boolean replaceFirst(Element&Object element, 
+            Element replacement) {
+        variable Cell<Element>? iter = head;
+        while(exists Cell<Element> cell = iter){
+            if(exists elem = cell.car, elem==element){
+                cell.car = replacement;
+                return true;
+            }
+            iter = cell.cdr;
+        }
+        return false;
     }
     
     shared actual void infill(Element replacement) {

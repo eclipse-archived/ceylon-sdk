@@ -104,6 +104,16 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
+    shared actual Boolean removeFirst(Element&Object element) {
+        if (exists index = firstOccurrence(element)) {
+            delete(index);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     shared actual void prune() {
         variable value i=0;
         variable value j=0;
@@ -125,6 +135,17 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
             if (exists elem = array[i], elem==element) {
                 array.set(i, replacement);
             }
+        }
+    }
+    
+    shared actual Boolean replaceFirst(Element&Object element, 
+            Element replacement) {
+        if (exists index = firstOccurrence(element)) {
+            set(index, element);
+            return true;
+        }
+        else {
+            return false;
         }
     }
     
