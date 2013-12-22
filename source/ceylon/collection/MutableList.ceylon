@@ -70,16 +70,18 @@ shared interface MutableList<Element>
             "The replacement value"
             Element replacement);
     
-    "Remove every item from this list, leaving an empty list."
+    "Remove every item from this list, leaving an empty 
+     list."
     shared formal void clear();
     
-    "Remove the item with index `0` from this list, returning 
-     the removed item, or null if there was no such item."
+    "Remove the item with index `0` from this list, 
+     returning the removed item, or null if there was no
+     such item."
     shared default Element? deleteFirst() => delete(0);
     
     "Remove the item with index `size-1` from this list, 
-     returning the removed item, or null if there was no such 
-     item."
+     returning the removed item, or null if there was no 
+     such item."
     shared default Element? deleteLast() => delete(size-1);
     
     shared formal void deleteSpan(Integer from, Integer to);
