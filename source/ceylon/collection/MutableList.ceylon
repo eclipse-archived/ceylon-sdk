@@ -40,8 +40,8 @@ shared interface MutableList<Element>
      this list, if any, returning `true` if the value
      occurs in the list, or `false` otherwise."
     shared formal Boolean removeFirst(
-        "The non-null value to remove"
-        Element&Object element);
+            "The non-null value to remove"
+            Element&Object element);
     
     "Remove all null values from this list."
     shared formal void prune();
@@ -59,10 +59,10 @@ shared interface MutableList<Element>
      returning `true` if the value occurs in the list, 
      or `false` otherwise."
     shared formal Boolean replaceFirst(
-        "The non-null value to replace"
-        Element&Object element,
-        "The replacement value"
-        Element replacement);
+            "The non-null value to replace"
+            Element&Object element,
+            "The replacement value"
+            Element replacement);
     
     "Replace all null values in this list with the given 
      value."
