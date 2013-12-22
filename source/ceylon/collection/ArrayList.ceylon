@@ -1,6 +1,15 @@
-
+"A [[MutableList]] implemented using a backing [[Array]].
+ Also:
+ 
+ - a [[Stack]], where the top of the stack is the _last_
+   element of the list, and
+ - a [[Queue]], where the front of the queue is the first
+   element of the list and the back of the queue is the
+   last element of the list."
+by ("Gavin King")
 shared class ArrayList<Element>(initialCapacity = 0, elements = {}) 
-        satisfies MutableList<Element> {
+        satisfies MutableList<Element> &
+                  Stack<Element> & Queue<Element> {
     Integer initialCapacity;
     {Element*} elements;
     
@@ -64,11 +73,16 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     }
     
     shared actual Element? delete(Integer index) {
-        array.copyTo(array, index+1, index, length-index);
-        length--;
-        Element? result = array[length];
-        array.set(length, null);
-        return result;
+        if (0<=index<length) {
+            array.copyTo(array, index+1, index, length-index);
+            length--;
+            Element? result = array[length];
+            array.set(length, null);
+            return result;
+        }
+        else {
+            return null;
+        }
     }
     
     shared actual void removeAll(Element&Object element) {
@@ -241,5 +255,19 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     hash => (super of List<Element>).hash;
     
     clone => ArrayList(size, this);
+    
+    push(Element element) => add(element);
+    
+    pop() => deleteLast();
+    
+    top => last;
+    
+    offer(Element element) => add(element);
+    
+    accept() => deleteFirst();
+    
+    back => last;
+    
+    front => first;
     
 }

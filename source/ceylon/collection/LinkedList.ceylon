@@ -1,6 +1,15 @@
-"A [[MutableList]] implemented as a singly linked list."
+"A [[MutableList]] implemented as a singly linked list.
+ Also:
+ 
+ - a [[Stack]], where the top of the stack is the _first_ 
+   element of the list, and
+ - a [[Queue]], where the front of the queue is the first
+   element of the list and the back of the queue is the
+   last element of the list."
 by("Stéphane Épardaud")
-shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList<Element> {
+shared class LinkedList<Element>({Element*} elements = {}) 
+        satisfies MutableList<Element> &
+                  Stack<Element> & Queue<Element> {
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
     variable Integer _size = 0; 
@@ -91,7 +100,7 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
     }
     
     shared actual Element? delete(Integer index){
-        if(index < _size){
+        if(0 <= index < _size){
             variable Cell<Element>? iter = head;
             variable Cell<Element>? prev = null;
             variable Integer i = 0;
@@ -458,5 +467,23 @@ shared class LinkedList<Element>({Element*} elements = {}) satisfies MutableList
             }
         }
     }
+    
+    first => head?.car;
+    
+    last => tail?.car;
+    
+    push(Element element) => insert(0, element);
+    
+    pop() => deleteFirst();
+    
+    top => first;
+    
+    offer(Element element) => add(element);
+    
+    accept() => deleteFirst();
+    
+    back => last;
+    
+    front => first;
     
 }

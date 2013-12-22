@@ -1,6 +1,6 @@
 "A [[Map]] supporting addition of new entries and removal of
  existing entries."
-see (`interface MutableList`, `interface MutableSet`)
+see (`class HashMap`)
 by("Stéphane Épardaud")
 shared interface MutableMap<Key, Item>
         satisfies Map<Key, Item> &

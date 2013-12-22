@@ -1,7 +1,7 @@
 "A [[Set]] supporting addition of new elements and removal of 
  existing elements."
 by("Stéphane Épardaud")
-see (`interface MutableList`, `interface MutableMap`)
+see (`class HashSet`)
 shared interface MutableSet<Element>
         satisfies Set<Element> &
                   Cloneable<MutableSet<Element>>

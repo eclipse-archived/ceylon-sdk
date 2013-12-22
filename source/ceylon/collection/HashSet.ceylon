@@ -9,14 +9,14 @@ shared class HashSet<Element>({Element*} values = {})
     variable Array<Cell<Element>?> store = makeCellElementArray<Element>(16);
     variable Integer _size = 0;
     Float loadFactor = 0.75;
-
+    
     // Write
-
+    
     Integer storeIndex(Object elem, Array<Cell<Element>?> store){
         Integer i = elem.hash % store.size;
         return i.negative then i.negativeValue else i;
     }
-
+    
     Boolean addToStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
         variable Cell<Element>? bucket = store[index];
@@ -32,7 +32,7 @@ shared class HashSet<Element>({Element*} values = {})
         store.set(index, Cell<Element>(element, store[index]));
         return true;
     }
-
+    
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
@@ -78,7 +78,7 @@ shared class HashSet<Element>({Element*} values = {})
         checkRehash();
         return ret;
     }
-
+    
     shared actual Boolean remove(Element element){
         Integer index = storeIndex(element, store);
         variable Cell<Element>? bucket = store[index];
@@ -109,7 +109,7 @@ shared class HashSet<Element>({Element*} values = {})
         }
         _size = 0;
     }
-
+    
     // Read
     
     shared actual Integer size {
@@ -262,7 +262,7 @@ shared class HashSet<Element>({Element*} values = {})
         }
         return ret;
     }
-
+    
     shared actual HashSet<Element|Other> exclusiveUnion<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
@@ -289,7 +289,7 @@ shared class HashSet<Element>({Element*} values = {})
         }
         return ret;
     }
-
+    
     shared actual HashSet<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
         HashSet<Element|Other> ret = HashSet<Element|Other>();
@@ -297,4 +297,5 @@ shared class HashSet<Element>({Element*} values = {})
         ret.addAll(set);
         return ret;
     }
+    
 }

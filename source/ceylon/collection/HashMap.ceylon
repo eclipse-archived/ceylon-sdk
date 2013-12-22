@@ -1,8 +1,8 @@
 "A [[MutableMap]] implemented as a hash map stored in an [[Array]]
- of singly linked lists of entries. The hash code of a key is 
+ of singly linked lists of [[Entry]]s. The hash code of a key is 
  defined by [[Object.hash]]."
 by("Stéphane Épardaud")
-shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
+shared class HashMap<Key, Item>({<Key->Item>*} initialValues = {})
     satisfies MutableMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
@@ -10,9 +10,9 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(16);
     variable Integer _size = 0;
     Float loadFactor = 0.75;
-
+    
     // Write
-
+    
     Integer storeIndex(Object key, Array<Cell<Key->Item>?> store){
         Integer i = key.hash % store.size;
         return i.negative then i.negativeValue else i;
@@ -51,7 +51,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
             store = newStore;
         }
     }
-
+    
     // Add initial values
     for(key->item in initialValues){   
         if(addToStore(store, key, item)){
@@ -61,7 +61,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
     checkRehash();
     
     // End of initialiser section
-
+    
     shared actual Item? put(Key key, Item item){
         Integer index = storeIndex(key, store);
         variable Cell<Key->Item>? bucket = store[index];
@@ -123,7 +123,7 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         }
         _size = 0;
     }
-
+    
     // Read
     
     shared actual Integer size {
@@ -197,13 +197,13 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         return ret;
     }
     
-    shared actual Iterator<Entry<Key,Item>> iterator() {
+    shared actual Iterator<Key->Item> iterator() {
         // FIXME: make this faster with a size check
-        object iter satisfies Iterator<Entry<Key,Item>> {
+        object iter satisfies Iterator<Key->Item> {
             variable Integer index = 0;
             variable Cell<Key->Item>? bucket = store[index];
             
-            shared actual Entry<Key,Item>|Finished next() {
+            shared actual <Key->Item>|Finished next() {
                 // do we need a new bucket?
                 if(!bucket exists){
                     // find the next non-empty bucket
@@ -339,4 +339,5 @@ shared class HashMap<Key, Item>({Entry<Key,Item>*} initialValues = {})
         }
         return false;
     }
+    
 }

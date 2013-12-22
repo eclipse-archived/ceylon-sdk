@@ -1,6 +1,6 @@
 "A [[List]] supporting addition, insertion, removal, and 
  mutation of its elements."
-see (`interface MutableMap`, `interface MutableSet`)
+see (`class LinkedList`, `class ArrayList`)
 by("Stéphane Épardaud")
 shared interface MutableList<Element> 
         satisfies List<Element> & 
@@ -26,7 +26,7 @@ shared interface MutableList<Element>
     shared formal void insert(Integer index, Element element);
     
     "Remove the item at the specified index, returning the
-     removed item, or null if there was no such item."
+     removed item, or `null` if there was no such item."
     shared formal Element? delete(Integer index);
     
     "Remove all occurrences of the given value in this
@@ -49,8 +49,8 @@ shared interface MutableList<Element>
     "Replace all null values in this list with the given 
      value."
     shared formal void infill(
-        "The replacement value"
-        Element replacement);
+            "The replacement value"
+            Element replacement);
     
     "Remove every item from this list, leaving an empty list."
     shared formal void clear();
@@ -67,4 +67,5 @@ shared interface MutableList<Element>
     shared formal void deleteSpan(Integer from, Integer to);
     
     shared formal void deleteSegment(Integer from, Integer length);
+    
 }
