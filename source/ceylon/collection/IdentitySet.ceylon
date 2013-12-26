@@ -1,11 +1,12 @@
-import ceylon.collection { Cell, MutableSet, makeCellElementArray }
-"A [[MutableSet]] implemented as a hash set stored in an [[Array]]
+"An identity set implemented as a hash set stored in an [[Array]]
  of singly linked lists. The hash code of an element is defined
- by [[Object.hash]]."
-by("Stéphane Épardaud")
-shared class HashSet<Element>({Element*} values = {})
-    satisfies MutableSet<Element>
-        given Element satisfies Object {
+ by [[identityHash]]. Note that an `IdentitySet` is not a [[Set]],
+ since it does not obey the semantics of a `Set`."
+by ("Gavin King")
+shared class IdentitySet<Element>({Element*} values = {})
+        satisfies Category & {Element*} & 
+                  Cloneable<IdentitySet<Element>>
+        given Element satisfies Identifiable {
     
     variable Array<Cell<Element>?> store = makeCellElementArray<Element>(16);
     variable Integer _size = 0;
@@ -13,8 +14,8 @@ shared class HashSet<Element>({Element*} values = {})
     
     // Write
     
-    Integer storeIndex(Object elem, Array<Cell<Element>?> store){
-        Integer i = elem.hash % store.size;
+    Integer storeIndex(Identifiable elem, Array<Cell<Element>?> store){
+        Integer i = identityHash(elem) % store.size;
         return i.negative then i.negativeValue else i;
     }
     
@@ -22,7 +23,7 @@ shared class HashSet<Element>({Element*} values = {})
         Integer index = storeIndex(element, store);
         variable Cell<Element>? bucket = store[index];
         while(exists Cell<Element> cell = bucket){
-            if(cell.car == element){
+            if(cell.car === element){
                 // modify an existing entry
                 cell.car = element;
                 return false;
@@ -62,7 +63,7 @@ shared class HashSet<Element>({Element*} values = {})
     
     // End of initialiser section
     
-    shared actual Boolean add(Element element){
+    shared Boolean add(Element element){
         if(addToStore(store, element)){
             _size++;
             checkRehash();
@@ -71,7 +72,7 @@ shared class HashSet<Element>({Element*} values = {})
         return false;
     }
     
-    shared actual Boolean addAll({Element*} elements){
+    shared Boolean addAll({Element*} elements){
         variable Boolean ret = false;
         for(Element elem in elements){
             ret ||= add(elem);
@@ -80,12 +81,12 @@ shared class HashSet<Element>({Element*} values = {})
         return ret;
     }
     
-    shared actual Boolean remove(Element element){
+    shared Boolean remove(Element element){
         Integer index = storeIndex(element, store);
         variable Cell<Element>? bucket = store[index];
         variable Cell<Element>? prev = null;
         while(exists Cell<Element> cell = bucket){
-            if(cell.car == element){
+            if(cell.car === element){
                 // found it
                 if(exists Cell<Element> last = prev){
                     last.cdr = cell.cdr;
@@ -102,7 +103,7 @@ shared class HashSet<Element>({Element*} values = {})
     }
     
     "Removes every element"
-    shared actual void clear(){
+    shared void clear(){
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
@@ -194,7 +195,7 @@ shared class HashSet<Element>({Element*} values = {})
         while(index < store.size){
             variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
-                hash = hash * 31 + cell.car.hash;
+                hash = hash * 31 + identityHash(cell);
                 bucket = cell.cdr;
             }
             index++;
@@ -203,7 +204,7 @@ shared class HashSet<Element>({Element*} values = {})
     }
     
     shared actual Boolean equals(Object that) {
-        if(is Set<Object> that,
+        if(is IdentitySet<Object> that,
             size == that.size){
             variable Integer index = 0;
             // walk every bucket
@@ -222,8 +223,8 @@ shared class HashSet<Element>({Element*} values = {})
         return false;
     }
     
-    shared actual HashSet<Element> clone {
-        HashSet<Element> clone = HashSet<Element>();
+    shared actual IdentitySet<Element> clone {
+        IdentitySet<Element> clone = IdentitySet<Element>();
         clone._size = _size;
         clone.store = makeCellElementArray<Element>(store.size);
         variable Integer index = 0;
@@ -238,65 +239,22 @@ shared class HashSet<Element>({Element*} values = {})
     }
     
     shared actual Boolean contains(Object element) {
-        variable Integer index = 0;
-        // walk every bucket
-        while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
-                if(cell.car == element){
-                    return true;
+        if (is Identifiable element) {
+            variable Integer index = 0;
+            // walk every bucket
+            while(index < store.size){
+                variable Cell<Element>? bucket = store[index];
+                while(exists Cell<Element> cell = bucket){
+                    if(cell.car === element){
+                        return true;
+                    }
+                    bucket = cell.cdr;
                 }
-                bucket = cell.cdr;
+                index++;
             }
-            index++;
         }
         return false;
     }
     
-    shared actual HashSet<Element> complement<Other>(Set<Other> set) 
-    given Other satisfies Object {
-        HashSet<Element> ret = HashSet<Element>();
-        for(Element elem in this){
-            if(!set.contains(elem)){
-                ret.add(elem);
-            }
-        }
-        return ret;
-    }
-    
-    shared actual HashSet<Element|Other> exclusiveUnion<Other>(Set<Other> set) 
-    given Other satisfies Object {
-        HashSet<Element|Other> ret = HashSet<Element|Other>();
-        for(Element elem in this){
-            if(!set.contains(elem)){
-                ret.add(elem);
-            }
-        }
-        for(Other elem in set){
-            if(!contains(elem)){
-                ret.add(elem);
-            }
-        }
-        return ret;
-    }
-    
-    shared actual HashSet<Element&Other> intersection<Other>(Set<Other> set) 
-    given Other satisfies Object {
-        HashSet<Element&Other> ret = HashSet<Element&Other>();
-        for(Element elem in this){
-            if(set.contains(elem), is Other elem){
-                ret.add(elem);
-            }
-        }
-        return ret;
-    }
-    
-    shared actual HashSet<Element|Other> union<Other>(Set<Other> set) 
-    given Other satisfies Object {
-        HashSet<Element|Other> ret = HashSet<Element|Other>();
-        ret.addAll(this);
-        ret.addAll(set);
-        return ret;
-    }
     
 }

@@ -20,7 +20,11 @@
    [[Array]] of singly-linked lists of [[Entry]]s.
  
  In addition, dedicated [[Stack]] and [[Queue]]
- interfaces are defined."
+ interfaces are defined.
+ 
+ Finally, [[IdentitySet]] and [[IdentityMap]] are
+ provided, though these are not, strictly speaking,
+ collections."
 
 by("Stéphane Épardaud")
 license("Apache Software License")
