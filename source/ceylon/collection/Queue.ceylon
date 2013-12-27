@@ -6,7 +6,7 @@
  of the queue by [[offer]], and removed from
  the front of the queue by [[accept]].
  
- Note that many `Queue`s are also `List`s, but 
+ Note that many `Queue`s are also [[List]]s, but 
  there is no defined relationship between the 
  order of elements in the list and the direction 
  of the queue. In particular, the front of the 

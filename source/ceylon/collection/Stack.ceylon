@@ -5,7 +5,7 @@
  may be added to the top of the stack by [[push]], 
  and removed from the top of the stack by [[pop]].
  
- Note that many `Stack`s are also `List`s, but 
+ Note that many `Stack`s are also [[List]]s, but 
  there is no defined relationship between the 
  order of elements in the list and the direction 
  of the stack. In particular, the top of the stack
