@@ -256,5 +256,74 @@ shared class IdentitySet<Element>({Element*} values = {})
         return false;
     }
     
+    shared default Boolean superset<Other>(IdentitySet<Other> set) 
+            given Other satisfies Identifiable {
+        for (element in set) {
+            if (!element in this) {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+    
+    shared default Boolean subset<Other>(IdentitySet<Other> set) 
+            given Other satisfies Identifiable {
+        for (element in this) {
+            if (!element in set) {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+    
+    shared IdentitySet<Element> complement<Other>(IdentitySet<Other> set) 
+            given Other satisfies Identifiable {
+        IdentitySet<Element> ret = IdentitySet<Element>();
+        for(Element elem in this){
+            if(!set.contains(elem)){
+                ret.add(elem);
+            }
+        }
+        return ret;
+    }
+    
+    shared IdentitySet<Element|Other> exclusiveUnion<Other>(IdentitySet<Other> set) 
+            given Other satisfies Identifiable {
+        IdentitySet<Element|Other> ret = IdentitySet<Element|Other>();
+        for(Element elem in this){
+            if(!set.contains(elem)){
+                ret.add(elem);
+            }
+        }
+        for(Other elem in set){
+            if(!contains(elem)){
+                ret.add(elem);
+            }
+        }
+        return ret;
+    }
+    
+    shared IdentitySet<Element&Other> intersection<Other>(IdentitySet<Other> set) 
+            given Other satisfies Identifiable {
+        IdentitySet<Element&Other> ret = IdentitySet<Element&Other>();
+        for(Element elem in this){
+            if(set.contains(elem), is Other elem){
+                ret.add(elem);
+            }
+        }
+        return ret;
+    }
+    
+    shared IdentitySet<Element|Other> union<Other>(IdentitySet<Other> set) 
+            given Other satisfies Identifiable {
+        IdentitySet<Element|Other> ret = IdentitySet<Element|Other>();
+        ret.addAll(this);
+        ret.addAll(set);
+        return ret;
+    }
     
 }
