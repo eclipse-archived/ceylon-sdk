@@ -4,7 +4,8 @@
  [[Map]], since it does not obey the semantics of a `Map`."
 by ("Gavin King")
 shared class IdentityMap<Key, Item>({<Key->Item>*} initialValues = {})
-    satisfies Category & {<Key->Item>*} & Correspondence<Key,Item> & 
+    satisfies {<Key->Item>*} & 
+              Correspondence<Key,Item> & 
               Cloneable<IdentityMap<Key,Item>>
         given Key satisfies Identifiable 
         given Item satisfies Object {
