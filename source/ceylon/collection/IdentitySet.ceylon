@@ -4,7 +4,7 @@
  since it does not obey the semantics of a `Set`."
 by ("Gavin King")
 shared class IdentitySet<Element>({Element*} values = {})
-        satisfies {Element*} & 
+        satisfies {Element*} & Collection<Element> &
                   Cloneable<IdentitySet<Element>>
         given Element satisfies Identifiable {
     

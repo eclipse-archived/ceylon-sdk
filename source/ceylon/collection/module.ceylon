@@ -23,8 +23,7 @@
  interfaces are defined.
  
  Finally, [[IdentitySet]] and [[IdentityMap]] are
- provided, though these are not, strictly speaking,
- collections."
+ provided."
 
 by("Stéphane Épardaud")
 license("Apache Software License")
