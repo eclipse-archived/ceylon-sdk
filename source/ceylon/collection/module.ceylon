@@ -25,7 +25,8 @@
  clients. 
  
  In addition, dedicated [[Stack]] and [[Queue]]
- interfaces are defined.
+ interfaces are defined, representing specialized
+ kinds of lists.
  
  Finally, [[IdentitySet]] and [[IdentityMap]] are
  provided."
