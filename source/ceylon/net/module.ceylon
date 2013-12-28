@@ -1,48 +1,60 @@
-"This module allows you to represent URIs, to connect to HTTP servers and to run a HTTP server.
- 
- Sample usage for getting the contents of an HTTP URI:
- 
-     void getit(String uriAsString){
-         URI uri = parseURI(uriAsString);
-         Request request = uri.get();
-         Response response = request.execute();
-         print(response.contents);
-     }
+"""This module defines APIs for:
+   
+   - representing and manipulating URIs, 
+   - connecting to HTTP servers, and 
+   - defining HTTP endpoints and executing HTTP servers.
+   
+   The [[ceylon.net.uri::Uri]] class supports connection 
+   to an HTTP URI. A new `Uri` may be obtained using
+   [[ceylon.net.uri::parse]].
+   
+       void getit(String uriAsString) {
+           URI uri = parse(uriAsString);
+           Request request = uri.get();
+           Response response = request.execute();
+           print(response.contents);
+       }
+   
+   A [[ceylon.net.http.server::Server]] represents a HTTP 
+   server. A new `Server` may be defined using 
+   [[ceylon.net.http.server::newServer]].
+   
+       void runServer() {
+           //create a HTTP server
+           value server = newServer {
+               //an endpoint, on the path /hello
+               Endpoint {
+                   path = startsWith("/hello");
+                   //handle requests to this path
+                   service(Request request, Response response) 
+                           => response.writeString("hello world");
+               },
+               WebSocketEndpoint {
+                   path = startsWith("/websocket");
+                   onOpen(WebSocketChannel channel) 
+                           => print("Channel opened");
+                   onClose(WebSocketChannel channel, CloseReason closeReason) 
+                           => print("Channel closed");
+                   void onError(WebSocketChannel webSocketChannel, Exception? throwable) {}
+                   void onText(WebSocketChannel channel, String text) {
+                       print("Received text:");
+                       print(text);
+                       channel.sendText(text.uppercased);
+                   }
+                   void onBinary(WebSocketChannel channel, ByteBuffer binary) {
+                       String data = utf8.decode(binary);
+                       print("Received binary:");
+                       print(data);
+                       value encoded = utf8.encode(data.uppercased);
+                       channel.sendBinary(encoded);
+                   }
+               }
+           };
+   
+           //start the server on port 8080
+           server.start(SocketAddress("127.0.0.1",8080));
+       }"""
 
- Sample usage for running a HTTP server:
-     void runServer() {
-         //create a HTTP server
-         value server = createServer {
-             //an endpoint, on the path /hello
-             Endpoint {
-                 path = startsWith(\"/hello\");
-                 //handle requests to this path
-                 service(Request request, Response response) =>
-                         response.writeString(\"hello world\");
-             },
-             WebSocketEndpoint {
-                 path = startsWith(\"/websocket\");
-                 onOpen = void (WebSocketChannel channel) { print(\"server: Channel opened.\"); };
-                 onClose = void (WebSocketChannel channel, CloseReason closeReason) { print(\"server: Channel closed.\"); };
-                 onError = void (WebSocketChannel webSocketChannel, Exception? throwable) {};
-                 onText = void (WebSocketChannel channel, String text) {
-                     print(\"Server received:\");
-                     print(text);
-                     channel.sendText(text.uppercased);
-                 };
-                 onBinary = void (WebSocketChannel channel, ByteBuffer binary) {
-                     String data = utf8.decode(binary);
-                     print(\"Server received binary message:\");
-                     print(data);
-                     value encoded = utf8.encode(data.uppercased);
-                     channel.sendBinary(encoded);
-                 };
-             }
-         };
- 
-         //start the server on port 8080
-         server.start(8080);
-     }"
 by("Stéphane Épardaud, Matej Lazar")
 license("Apache Software License")
 module ceylon.net "1.0.1" {
