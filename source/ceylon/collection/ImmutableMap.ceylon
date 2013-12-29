@@ -1,7 +1,7 @@
 "A wrapper class that exposes any [[Map]] as
  an immutable map, hiding the underlying `Map`
  implementation from clients, and preventing 
- attempts to cast to [[ImmutableMap]]."
+ attempts to narrow to [[MutableMap]]."
 by ("Gavin King")
 class ImmutableMap<out Key,out Item>(Map<Key,Item> map)
         satisfies Map<Key,Item>

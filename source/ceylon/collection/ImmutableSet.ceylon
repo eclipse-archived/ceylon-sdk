@@ -1,7 +1,7 @@
 "A wrapper class that exposes any [[Set]] as
  an immutable set, hiding the underlying `Set`
  implementation from clients, and preventing 
- attempts to cast to [[ImmutableSet]]."
+ attempts to narrow to [[MutableSet]]."
 by ("Gavin King")
 shared class ImmutableSet<out Element>(Set<Element> set)
         satisfies Set<Element>

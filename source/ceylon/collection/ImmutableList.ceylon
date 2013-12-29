@@ -1,7 +1,7 @@
 "A wrapper class that exposes any [[List]] as
  an immutable list, hiding the underlying `List`
  implementation from clients, and preventing 
- attempts to cast to [[ImmutableList]]."
+ attempts to narrow to [[MutableList]]."
 by ("Gavin King")
 shared class ImmutableList<out Element>(List<Element> list) 
         satisfies List<Element> {
