@@ -1,4 +1,8 @@
-import ceylon.collection { Cell, MutableSet, makeCellElementArray }
+import ceylon.collection {
+    Cell,
+    MutableSet,
+    makeCellElementArray
+}
 
 "A [[MutableSet]] implemented as a hash set stored in an 
  [[Array]] of singly linked lists. The hash code of an 

@@ -1,4 +1,12 @@
-import ceylon.collection { MutableList, Cell, MutableSet, LinkedList, makeCellEntryArray, HashSet, MutableMap }
+import ceylon.collection {
+    MutableList,
+    Cell,
+    MutableSet,
+    LinkedList,
+    makeCellEntryArray,
+    HashSet,
+    MutableMap
+}
 
 "A [[MutableMap]] implemented as a hash map stored in an 
  [[Array]] of singly linked lists of [[Entry]]s. The hash 

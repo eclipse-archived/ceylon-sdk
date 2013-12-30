@@ -1,4 +1,5 @@
 import ceylon.collection { HashMap }
+
 "A [[Map]] supporting addition of new entries and removal of
  existing entries."
 see (`class HashMap`)
