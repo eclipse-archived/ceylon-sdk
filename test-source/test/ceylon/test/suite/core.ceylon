@@ -34,6 +34,9 @@ shared void shouldRunTest1() {
     
     value result3 = createTestRunner(["function test.ceylon.test.stubs::foo"]).run();
     assertResultTestFoo(result3);
+    
+    value result4 = createTestRunner(["test.ceylon.test.stubs::foo"]).run();
+    assertResultTestFoo(result4);
 }
 
 test
@@ -65,6 +68,9 @@ shared void shouldRunTest2() {
     
     value result3 = createTestRunner(["function test.ceylon.test.stubs::Bar.bar1"]).run();
     assertResultTestBar(result3);
+    
+    value result4 = createTestRunner(["test.ceylon.test.stubs::Bar.bar1"]).run();
+    assertResultTestBar(result4);
 }
 
 test
@@ -132,6 +138,9 @@ shared void shouldRunTestsInClass() {
     
     value result3 = createTestRunner(["class test.ceylon.test.stubs::Bar"]).run();
     assertResultTestsBar(result3);
+    
+    value result4 = createTestRunner(["test.ceylon.test.stubs::Bar"]).run();
+    assertResultTestsBar(result4);
 }
 
 test
@@ -152,6 +161,9 @@ shared void shouldRunTestsInPackage() {
     
     value result2 = createTestRunner(["package test.ceylon.test.stubs"]).run();
     assertResult(result2);
+    
+    value result3 = createTestRunner(["test.ceylon.test.stubs"]).run();
+    assertResult(result3);
 }
 
 test

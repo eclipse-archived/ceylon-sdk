@@ -220,74 +220,144 @@ void findCandidatesInFunction(SequenceBuilder<TestCandidate> candidates, Functio
 }
 
 void findCandidatesInTypeLiteral(SequenceBuilder<TestCandidate> candidates, String typeLiteral) {
-    Package? findPackage(String pkgName) {
-        Module? mod = modules.list.find((Module m) => pkgName.startsWith(m.name));
-        Package? pgk = mod?.findPackage(pkgName);
-        return pgk;
-    }
-
     if( typeLiteral.startsWith("module ") ) {
-        String modName = typeLiteral[7...];
-        Module? mod = modules.list.find((Module m) => m.name == modName);
-        if(exists mod) {
-            findCandidatesInModule(candidates, mod);
+        if( findCandidatesInModuleLiteral(candidates, typeLiteral[7...])) {
             return;
         }
     }
     else if( typeLiteral.startsWith("package ") ) {
-        String pkgName = typeLiteral[8...];
-        if(exists pgk = findPackage(pkgName)) {
-            findCandidatesInPackage(candidates, pgk);
+        if( findCandidatesInPackageLiteral(candidates, typeLiteral[8...]) ) {
             return;
         }
     }
     else if( typeLiteral.startsWith("class ") ) {
-        String fqn = typeLiteral[6...];
-        Integer? pkgDelimiter = fqn.firstInclusion("::");
-        if(exists pkgDelimiter) {
-            String pkgName = fqn[0..pkgDelimiter-1];
-            String className = fqn[pkgDelimiter+2...];
-            if(exists pkg = findPackage(pkgName)) {
-                ClassDeclaration? classDecl = pkg.getMember<ClassDeclaration>(className);
-                if(exists classDecl) {
-                    findCandidatesInClass(candidates, classDecl);
-                    return;
-                }
-            }
+        if( findCandidatesInClassLiteral(candidates, typeLiteral[6...]) ) {
+            return;
         }
     }
     else if( typeLiteral.startsWith("function ") ) {
-        String fqn = typeLiteral[9...];
-        Integer? pkgDelimiter = fqn.firstInclusion("::");
-        if(exists pkgDelimiter) {
-            String pkgName = fqn[0..pkgDelimiter-1];
-            if(exists pkg = findPackage(pkgName) ) {
-                String rest = fqn[pkgDelimiter+2...];
-                Integer? memberDelimiter = rest.firstInclusion(".");
-                if(exists memberDelimiter) {
-                    String className = rest[0..memberDelimiter-1];
-                    String methodName = rest[memberDelimiter+1...];
-                    ClassDeclaration? classDecl = pkg.getMember<ClassDeclaration>(className);
-                    if(exists classDecl) {
-                        FunctionDeclaration? funcDecl = classDecl.getMemberDeclaration<FunctionDeclaration>(methodName);
-                        if(exists funcDecl) {
-                            findCandidatesInFunction(candidates, funcDecl, classDecl);
-                            return;
-                        }
+        if( findCandidatesInFunctionLiteral(candidates, typeLiteral[9...]) ) {
+            return;
+        }
+    }
+    else {
+        if( findCandidatesInFullQualifiedName(candidates, typeLiteral) ) {
+            return;
+        }
+    }
+    candidates.append(ErrorTestExecutor(TestDescription(typeLiteral), Exception("invalid type literal: ``typeLiteral`` (allowed syntax is prefix function, class, package or module followed with qualified name of declaration)")));
+}
+
+Boolean findCandidatesInModuleLiteral(SequenceBuilder<TestCandidate> candidates, String modName) {
+    value mod = modules.list.find((Module m) => m.name == modName);
+    if(exists mod) {
+        findCandidatesInModule(candidates, mod);
+        return true;
+    }
+    return false;
+}
+
+Boolean findCandidatesInPackageLiteral(SequenceBuilder<TestCandidate> candidates, String pkgName) {
+    value pgk = findPackage(pkgName); 
+    if(exists pgk) {
+        findCandidatesInPackage(candidates, pgk);
+        return true;
+    }
+    return false;
+}
+
+Boolean findCandidatesInClassLiteral(SequenceBuilder<TestCandidate> candidates, String fqn) {
+    Integer? pkgDelimiter = fqn.firstInclusion("::");
+    if(exists pkgDelimiter) {
+        String pkgName = fqn[0..pkgDelimiter-1];
+        String className = fqn[pkgDelimiter+2...];
+        if(exists pkg = findPackage(pkgName)) {
+            ClassDeclaration? classDecl = pkg.getMember<ClassDeclaration>(className);
+            if(exists classDecl) {
+                findCandidatesInClass(candidates, classDecl);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+Boolean findCandidatesInFunctionLiteral(SequenceBuilder<TestCandidate> candidates, String fqn) {
+    Integer? pkgDelimiter = fqn.firstInclusion("::");
+    if(exists pkgDelimiter) {
+        String pkgName = fqn[0..pkgDelimiter-1];
+        if(exists pkg = findPackage(pkgName) ) {
+            String rest = fqn[pkgDelimiter+2...];
+            Integer? memberDelimiter = rest.firstInclusion(".");
+            if(exists memberDelimiter) {
+                String className = rest[0..memberDelimiter-1];
+                String methodName = rest[memberDelimiter+1...];
+                ClassDeclaration? classDecl = pkg.getMember<ClassDeclaration>(className);
+                if(exists classDecl) {
+                    FunctionDeclaration? funcDecl = classDecl.getMemberDeclaration<FunctionDeclaration>(methodName);
+                    if(exists funcDecl) {
+                        findCandidatesInFunction(candidates, funcDecl, classDecl);
+                        return true;
                     }
                 }
-                else {
-                    String fceName = rest;
-                    FunctionDeclaration? funcDecl = pkg.getMember<FunctionDeclaration>(fceName);
-                    if(exists funcDecl) {
-                        findCandidatesInFunction(candidates, funcDecl);
-                        return;
-                    }
+            }
+            else {
+                String fceName = rest;
+                FunctionDeclaration? funcDecl = pkg.getMember<FunctionDeclaration>(fceName);
+                if(exists funcDecl) {
+                    findCandidatesInFunction(candidates, funcDecl);
+                    return true;
                 }
             }
         }
     }
-    candidates.append(ErrorTestExecutor(TestDescription(typeLiteral), Exception("invalid type literal: ``typeLiteral`` (allowed syntax is prefix function, class, package or module followed with qualified name of declaration)")));
+    return false;
+}
+
+Boolean findCandidatesInFullQualifiedName(SequenceBuilder<TestCandidate> candidates, String fqn) {
+    Integer? pkgDelimiter = fqn.firstInclusion("::");
+    if(exists pkgDelimiter) {
+        value pkgName = fqn[0..pkgDelimiter-1];
+        value rest = fqn[pkgDelimiter+2...];
+        if(exists pkg = findPackage(pkgName) ) {
+            Integer? memberDelimiter = rest.firstInclusion(".");
+            if(exists memberDelimiter) {
+                String className = rest[0..memberDelimiter-1];
+                String methodName = rest[memberDelimiter+1...];
+                ClassDeclaration? classDecl = pkg.getMember<ClassDeclaration>(className);
+                if(exists classDecl) {
+                    FunctionDeclaration? funcDecl = classDecl.getMemberDeclaration<FunctionDeclaration>(methodName);
+                    if(exists funcDecl) {
+                        findCandidatesInFunction(candidates, funcDecl, classDecl);
+                        return true;
+                    }
+                }
+            }
+            else {
+                value decl = pkg.getMember<FunctionDeclaration|ClassDeclaration>(rest);
+                if(is FunctionDeclaration decl) {
+                    findCandidatesInFunction(candidates, decl);
+                    return true;
+                }
+                else if(is ClassDeclaration decl ) {
+                    findCandidatesInClass(candidates, decl);
+                    return true;
+                }
+            }
+        }
+    }
+    else {
+        if( findCandidatesInPackageLiteral(candidates, fqn) ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Package? findPackage(String pkgName) {
+    Module? mod = modules.list.find((Module m) => pkgName.startsWith(m.name));
+    Package? pgk = mod?.findPackage(pkgName);
+    return pgk;
 }
 
 A? findAnnotation<out A>(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) given A satisfies Annotation {
