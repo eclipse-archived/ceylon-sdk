@@ -72,6 +72,17 @@ shared class ArrayList<Element>
         array = arrayOfSize<Element?>(initialCapacity, null);
     }
     
+    "The size of the backing array, which must be at least 
+     as large as the [[size]] of the list."
+    shared Integer capacity => array.size;
+    assign capacity {
+        "capacity must be at least as large as list size"
+        assert (capacity>=size);
+        value newArray = arrayOfSize<Element?>(capacity, null);
+        array.copyTo(newArray, 0, 0, length);
+        array = newArray;
+    }
+    
     shared actual Element? get(Integer index) {
         if (0<=index<length) {
             return array[index];
