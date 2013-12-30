@@ -1,18 +1,37 @@
-"An identity map implemented as a hash map stored in an [[Array]]
- of singly linked lists of [[Entry]]s. The hash code of a key is 
- defined by [[identityHash]]. Note that an `IdentitySet` is not a 
- [[Map]], since it does not obey the semantics of a `Map`."
+"An identity map implemented as a hash map stored in an 
+ [[Array]] of singly linked lists of [[Entry]]s. The hash 
+ code of a key is defined by [[identityHash]]. Note that an 
+ `IdentitySet` is not a [[Map]], since it does not obey the 
+ semantics of a `Map`. In particular, it may contain 
+ multiple keys which are equal, as determined by the `==` 
+ operator."
 by ("Gavin King")
-shared class IdentityMap<Key, Item>({<Key->Item>*} initialValues = {})
-    satisfies {<Key->Item>*} & Collection<Key->Item> &
-              Correspondence<Key,Item> & 
-              Cloneable<IdentityMap<Key,Item>>
+shared class IdentityMap<Key, Item>
+        (initialCapacity=16, loadFactor = 0.75, entries = {})
+        satisfies {<Key->Item>*} & Collection<Key->Item> &
+                  Correspondence<Key,Item> & 
+                  Cloneable<IdentityMap<Key,Item>>
         given Key satisfies Identifiable 
         given Item satisfies Object {
     
-    variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(16);
+    "The initial entries in the map."
+    {<Key->Item>*} entries;
+    
+    "The initial capacity of the backing array."
+    Integer initialCapacity;
+    
+    "The ratio between the number of elements and the 
+     capacity which triggers a rebuild of the hash map."
+    Float loadFactor;
+    
+    "initial capacity cannot be negative"
+    assert (initialCapacity>=0);
+    
+    "load factor must be positive"
+    assert (loadFactor>0.0);
+    
+    variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(initialCapacity);
     variable Integer _size = 0;
-    Float loadFactor = 0.75;
     
     // Write
     
@@ -21,19 +40,19 @@ shared class IdentityMap<Key, Item>({<Key->Item>*} initialValues = {})
         return i.negative then i.negativeValue else i;
     }
     
-    Boolean addToStore(Array<Cell<Key->Item>?> store, Key key, Item item){
-        Integer index = storeIndex(key, store);
+    Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry){
+        Integer index = storeIndex(entry.key, store);
         variable Cell<Key->Item>? bucket = store[index];
         while(exists Cell<Key->Item> cell = bucket){
-            if(cell.car.key === key){
+            if(cell.car.key === entry.key){
                 // modify an existing entry
-                cell.car = key->item;
+                cell.car = entry;
                 return false;
             }
             bucket = cell.cdr;
         }
         // add a new entry
-        store.set(index, Cell<Key->Item>(key->item, store[index]));
+        store.set(index, Cell<Key->Item>(entry, store[index]));
         return true;
     }
 
@@ -46,7 +65,7 @@ shared class IdentityMap<Key, Item>({<Key->Item>*} initialValues = {})
             while(index < store.size){
                 variable Cell<Key->Item>? bucket = store[index];
                 while(exists Cell<Key->Item> cell = bucket){
-                    addToStore(newStore, cell.car.key, cell.car.item);
+                    addToStore(newStore, cell.car);
                     bucket = cell.cdr;
                 }
                 index++;
@@ -56,8 +75,8 @@ shared class IdentityMap<Key, Item>({<Key->Item>*} initialValues = {})
     }
     
     // Add initial values
-    for(key->item in initialValues){   
-        if(addToStore(store, key, item)){
+    for(entry in entries){   
+        if(addToStore(store, entry)){
             _size++;
         }
     }
@@ -87,7 +106,7 @@ shared class IdentityMap<Key, Item>({<Key->Item>*} initialValues = {})
     "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
     shared void putAll({<Key->Item>*} entries){
         for(entry in entries){
-            if(addToStore(store, entry.key, entry.item)){
+            if(addToStore(store, entry)){
                 _size++;
             }
         }

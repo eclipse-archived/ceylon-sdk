@@ -1,16 +1,35 @@
-"An identity set implemented as a hash set stored in an [[Array]]
- of singly linked lists. The hash code of an element is defined
- by [[identityHash]]. Note that an `IdentitySet` is not a [[Set]],
- since it does not obey the semantics of a `Set`."
+"An identity set implemented as a hash set stored in an 
+ [[Array]] of singly linked lists. The hash code of an 
+ element is defined by [[identityHash]]. Note that an 
+ `IdentitySet` is not a [[Set]], since it does not obey the 
+ semantics of a `Set`. In particular, it may contain 
+ multiple elements which are equal, as determined by the
+ `==` operator."
 by ("Gavin King")
-shared class IdentitySet<Element>({Element*} values = {})
+shared class IdentitySet<Element>
+        (initialCapacity=16, loadFactor = 0.75, elements = {})
         satisfies {Element*} & Collection<Element> &
                   Cloneable<IdentitySet<Element>>
         given Element satisfies Identifiable {
     
-    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(16);
+    "The initial elements of the set."
+    {Element*} elements;
+    
+    "The initial capacity of the backing array."
+    Integer initialCapacity;
+    
+    "The ratio between the number of elements and the 
+     capacity which triggers a rebuild of the hash set."
+    Float loadFactor;
+    
+    "initial capacity cannot be negative"
+    assert (initialCapacity>=0);
+    
+    "load factor must be positive"
+    assert (loadFactor>0.0);
+    
+    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(initialCapacity);
     variable Integer _size = 0;
-    Float loadFactor = 0.75;
     
     // Write
     
@@ -54,8 +73,8 @@ shared class IdentitySet<Element>({Element*} values = {})
     }
     
     // Add initial values
-    for(val in values){
-        if(addToStore(store, val)){
+    for(element in elements){
+        if(addToStore(store, element)){
             _size++;
         }        
     }
