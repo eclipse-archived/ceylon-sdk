@@ -429,17 +429,33 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual Boolean equals(Object that) {
-        if(is List<Object> that,
-            _size == that.size){
+        if (is List<Anything> that,
+            _size == that.size) {
             variable Cell<Element>? iter = head;
-            variable Iterator<Object> iter2 = that.iterator();
-            while(exists Cell<Element> cell = iter){
-                if(!is Finished thatElement = iter2.next()){
-                    if(!eq(cell.car, thatElement)){
-                        return false;
+            variable Iterator<Anything> iter2 = that.iterator();
+            while (exists Cell<Element> cell = iter) {
+                if (!is Finished thatElement = iter2.next()) {
+                    value thisElement=cell.car;
+                    if (exists thatElement) {
+                        if (exists thisElement, 
+                            thisElement==thatElement) {
+                            iter = cell.cdr;
+                        }
+                        else {
+                            return false;
+                        }
                     }
-                    iter = cell.cdr;
-                }else{
+                    else {
+                        if (exists thisElement) {
+                            return false;
+                        }
+                        else {
+                            iter = cell.cdr;
+                        }
+                    }
+                    
+                }
+                else {
                     return false;
                 }
             }
