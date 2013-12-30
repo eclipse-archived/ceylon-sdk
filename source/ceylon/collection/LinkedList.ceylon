@@ -466,7 +466,6 @@ shared class LinkedList<Element>(elements = {})
     
     shared actual List<Element> reversed {
         value ret = LinkedList<Element>();
-
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
             // append before the head
