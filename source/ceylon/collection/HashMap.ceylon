@@ -159,9 +159,7 @@ shared class HashMap<Key, Item>
     
     // Read
     
-    shared actual Integer size {
-        return _size;
-    }
+    size => _size;
     
     shared actual Item? get(Object key) {
         if(empty){

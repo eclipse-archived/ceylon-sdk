@@ -363,9 +363,7 @@ shared class LinkedList<Element>(elements = {})
         return false;
     }
     
-    shared actual Integer size {
-        return _size;
-    }
+    size => _size;
     
     shared actual Integer count(Boolean selecting(Element element)) {
         variable Cell<Element>? iter = head;
@@ -383,9 +381,7 @@ shared class LinkedList<Element>(elements = {})
         return !empty then _size - 1;
     }
     
-    shared actual Iterator<Element> iterator() {
-        return CellIterator(head);
-    }
+    iterator() => CellIterator(head);
     
     shared actual MutableList<Element> clone {
         LinkedList<Element> ret = LinkedList<Element>();

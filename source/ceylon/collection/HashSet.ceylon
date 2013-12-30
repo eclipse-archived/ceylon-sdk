@@ -145,9 +145,7 @@ shared class HashSet<Element>
     
     // Read
     
-    shared actual Integer size {
-        return _size;
-    }
+    size => _size;
     
     shared actual Iterator<Element> iterator() {
         // FIXME: make this faster with a size check
