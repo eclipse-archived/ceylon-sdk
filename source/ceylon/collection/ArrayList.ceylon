@@ -7,22 +7,34 @@
    element of the list and the back of the queue is the
    last element of the list."
 by ("Gavin King")
-shared class ArrayList<Element>(initialCapacity = 0, elements = {}) 
+shared class ArrayList<Element>(initialCapacity = 0, growthFactor=1.5, elements = {}) 
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
+    
+    "The initial size of the backing array."
     Integer initialCapacity;
+    
+    "The factor used to determine the new size of the
+     backing array when a new backing array is allocated."
+    Float growthFactor;
+    
+    "The initial elements of the list."
     {Element*} elements;
     
     "initial capacity cannot be negative"
     assert(initialCapacity>=0);
     
+    "growth factor must be at least 1.0"
+    assert (growthFactor>=1.0);
+    
     variable Array<Element?> array = arrayOfSize<Element?>(initialCapacity, null);
     variable Integer length=0;
     
     void grow(Integer increment) {
-        if (length+increment>array.size) {
+        value newCapacity = length+increment;
+        if (newCapacity>array.size) {
             //TODO: watch out for overflow!!
-            value grown = arrayOfSize<Element?>((length+increment)*2, null);
+            value grown = arrayOfSize<Element?>((newCapacity*growthFactor).integer, null);
             array.copyTo(grown);
             array=grown;
         }
@@ -168,7 +180,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     }
     
     shared actual List<Element> rest
-            => ArrayList(initialCapacity-1, skipping(1));
+            => ArrayList(initialCapacity-1, growthFactor, skipping(1));
     
     shared actual Iterator<Element> iterator() {
         if (length>0) {
@@ -201,7 +213,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
                 }
                 iterable = { for (i in length-1..0) array[i] else error };
             }
-            return ArrayList(initialCapacity, iterable);
+            return ArrayList(initialCapacity, growthFactor, iterable);
         }
         else {
             return ArrayList();
@@ -219,7 +231,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         value fst = from<0 then 0 else from;
         value len = from<0 then length+from else length;
         return fst<this.length && len>0
-            then ArrayList(len, skipping(fst).taking(len))
+            then ArrayList(len, growthFactor, skipping(fst).taking(len))
             else ArrayList();
     }
     
@@ -229,7 +241,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         value fst = start<0 then 0 else start;
         value len = (end<0 then 0) else (start<0 then end+1) else end-start+1;
         return fst<this.length && len>0 
-            then ArrayList(len, skipping(fst).taking(len))
+            then ArrayList(len, growthFactor, skipping(fst).taking(len))
             else ArrayList();
     }
     
@@ -275,7 +287,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     
     hash => (super of List<Element>).hash;
     
-    clone => ArrayList(size, this);
+    clone => ArrayList(size, growthFactor, this);
     
     push(Element element) => add(element);
     
