@@ -194,12 +194,12 @@ shared class Sql(DataSource ds) {
                     if (limit > 0) {
                         variable value count = 0;
                         while (count < limit && rs.next()) {
-                            sb.append(HashMap({for (i in range) mapColumn(rs, meta, i)}));
+                            sb.append(HashMap{for (i in range) mapColumn(rs, meta, i)});
                             count++;
                         }
                     } else if (cont) {
                         while (rs.next()) {
-                            sb.append(HashMap({for (i in range) mapColumn(rs, meta, i)}));
+                            sb.append(HashMap{for (i in range) mapColumn(rs, meta, i)});
                         }
                     }
                     return sb.sequence;
@@ -228,7 +228,7 @@ shared class Sql(DataSource ds) {
                     value meta = rs.metaData;
                     value range = 1..meta.columnCount;
                     if (rs.next()) {
-                        return HashMap({ for (i in range) mapColumn(rs, meta, i) });
+                        return HashMap{ for (i in range) mapColumn(rs, meta, i) };
                     }
                 } finally {
                     rs.close();

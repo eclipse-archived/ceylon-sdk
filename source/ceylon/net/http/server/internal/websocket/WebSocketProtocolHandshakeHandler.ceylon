@@ -13,12 +13,12 @@ by ("Matej Lazar")
 shared class WebSocketProtocolHandshakeHandler(CeylonWebSocketHandler webSocketHandler, HttpHandler next)
         extends UtWebSocketProtocolHandshakeHandler(webSocketHandler, next) {
 
-    Set<Handshake> handshakes = HashSet({
+    Set<Handshake> handshakes = HashSet {
         Hybi13Handshake(),
         Hybi08Handshake(),
         Hybi07Handshake(),
         Hybi00Handshake()
-    });
+    };
 
     shared actual void handleRequest(HttpServerExchange exchange) {
         //if no upgrade header it is not a valid WS handshake
