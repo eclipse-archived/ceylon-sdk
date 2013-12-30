@@ -38,6 +38,9 @@ shared class HashMap<Key, Item>
     "load factor must be positive"
     assert (loadFactor>0.0);
     
+    "growth factor must be at least 1.0"
+    assert (growthFactor>=1.0);
+    
     variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(initialCapacity);
     variable Integer _size = 0;
     

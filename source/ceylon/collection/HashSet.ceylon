@@ -37,6 +37,9 @@ shared class HashSet<Element>
     "load factor must be positive"
     assert (loadFactor>0.0);
     
+    "growth factor must be at least 1.0"
+    assert (growthFactor>=1.0);
+    
     variable Array<Cell<Element>?> store = makeCellElementArray<Element>(initialCapacity);
     variable Integer _size = 0;
     
