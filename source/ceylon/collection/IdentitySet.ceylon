@@ -28,7 +28,7 @@ shared class IdentitySet<Element>
     "load factor must be positive"
     assert (loadFactor>0.0);
     
-    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(initialCapacity);
+    variable Array<Cell<Element>?> store = elementStore<Element>(initialCapacity);
     variable Integer _size = 0;
     
     // Write
@@ -57,7 +57,7 @@ shared class IdentitySet<Element>
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Element>?> newStore = makeCellElementArray<Element>(_size * 2);
+            Array<Cell<Element>?> newStore = elementStore<Element>(_size * 2);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
@@ -245,7 +245,7 @@ shared class IdentitySet<Element>
     shared actual IdentitySet<Element> clone {
         IdentitySet<Element> clone = IdentitySet<Element>();
         clone._size = _size;
-        clone.store = makeCellElementArray<Element>(store.size);
+        clone.store = elementStore<Element>(store.size);
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){

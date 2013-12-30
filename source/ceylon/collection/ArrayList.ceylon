@@ -36,16 +36,19 @@ shared class ArrayList<Element>
     "growth factor must be at least 1.0"
     assert (growthFactor>=1.0);
     
-    variable Array<Element?> array = arrayOfSize<Element?>(initialCapacity, null);
+    function store(Integer capacity)
+            => arrayOfSize<Element?>(capacity, null);
+    
+    variable Array<Element?> array = store(initialCapacity);
     variable Integer length=0;
     
     void grow(Integer increment) {
         value newCapacity = length+increment;
         if (newCapacity>array.size) {
             //TODO: watch out for overflow!!
-            value grown = arrayOfSize<Element?>((newCapacity*growthFactor).integer, null);
+            value grown = store((newCapacity*growthFactor).integer);
             array.copyTo(grown);
-            array=grown;
+            array = grown;
         }
     }
     
@@ -69,7 +72,7 @@ shared class ArrayList<Element>
     
     shared actual void clear() {
         length = 0;
-        array = arrayOfSize<Element?>(initialCapacity, null);
+        array = store(initialCapacity);
     }
     
     "The size of the backing array, which must be at least 
@@ -78,9 +81,9 @@ shared class ArrayList<Element>
     assign capacity {
         "capacity must be at least as large as list size"
         assert (capacity>=size);
-        value newArray = arrayOfSize<Element?>(capacity, null);
-        array.copyTo(newArray, 0, 0, length);
-        array = newArray;
+        value resized = store(capacity);
+        array.copyTo(resized, 0, 0, length);
+        array = resized;
     }
     
     shared actual Element? get(Integer index) {

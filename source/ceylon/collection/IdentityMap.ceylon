@@ -30,7 +30,7 @@ shared class IdentityMap<Key, Item>
     "load factor must be positive"
     assert (loadFactor>0.0);
     
-    variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(initialCapacity);
+    variable Array<Cell<Key->Item>?> store = entryStore<Key,Item>(initialCapacity);
     variable Integer _size = 0;
     
     // Write
@@ -59,7 +59,7 @@ shared class IdentityMap<Key, Item>
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Key->Item>?> newStore = makeCellEntryArray<Key,Item>(_size * 2);
+            Array<Cell<Key->Item>?> newStore = entryStore<Key,Item>(_size * 2);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
@@ -335,7 +335,7 @@ shared class IdentityMap<Key, Item>
     shared actual IdentityMap<Key,Item> clone {
         IdentityMap<Key,Item> clone = IdentityMap<Key,Item>();
         clone._size = _size;
-        clone.store = makeCellEntryArray<Key,Item>(store.size);
+        clone.store = entryStore<Key,Item>(store.size);
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){

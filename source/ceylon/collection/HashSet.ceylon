@@ -1,7 +1,7 @@
 import ceylon.collection {
     Cell,
     MutableSet,
-    makeCellElementArray
+    elementStore
 }
 
 "A [[MutableSet]] implemented as a hash set stored in an 
@@ -46,20 +46,18 @@ shared class HashSet<Element>
     "growth factor must be at least 1.0"
     assert (growthFactor>=1.0);
     
-    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(initialCapacity);
+    variable value store = elementStore<Element>(initialCapacity);
     variable Integer _size = 0;
     
     // Write
     
-    Integer storeIndex(Object elem, Array<Cell<Element>?> store){
-        Integer i = elem.hash % store.size;
-        return i.negative then i.negativeValue else i;
-    }
+    Integer storeIndex(Object elem, Array<Cell<Element>?> store)
+            => (elem.hash % store.size).magnitude;
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket = store[index];
-        while(exists Cell<Element> cell = bucket){
+        variable value bucket = store[index];
+        while(exists cell = bucket){
             if(cell.car == element){
                 // modify an existing entry
                 cell.car = element;
@@ -68,19 +66,19 @@ shared class HashSet<Element>
             bucket = cell.cdr;
         }
         // add a new entry
-        store.set(index, Cell<Element>(element, store[index]));
+        store.set(index, Cell(element, store[index]));
         return true;
     }
     
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Element>?> newStore = makeCellElementArray<Element>((_size * growthFactor).integer);
+            value newStore = elementStore<Element>((_size * growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
-                variable Cell<Element>? bucket = store[index];
-                while(exists Cell<Element> cell = bucket){
+                variable value bucket = store[index];
+                while(exists cell = bucket){
                     addToStore(newStore, cell.car);
                     bucket = cell.cdr;
                 }
@@ -111,7 +109,7 @@ shared class HashSet<Element>
     
     shared actual Boolean addAll({Element*} elements){
         variable Boolean ret = false;
-        for(Element elem in elements){
+        for(elem in elements){
             ret ||= add(elem);
         }
         checkRehash();
@@ -120,12 +118,12 @@ shared class HashSet<Element>
     
     shared actual Boolean remove(Element element){
         Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket = store[index];
-        variable Cell<Element>? prev = null;
-        while(exists Cell<Element> cell = bucket){
+        variable value bucket = store[index];
+        variable value prev = null of Cell<Element>?;
+        while(exists cell = bucket){
             if(cell.car == element){
                 // found it
-                if(exists Cell<Element> last = prev){
+                if(exists last = prev){
                     last.cdr = cell.cdr;
                 }else{
                     store.set(index, cell.cdr);
@@ -157,7 +155,7 @@ shared class HashSet<Element>
         // FIXME: make this faster with a size check
         object iter satisfies Iterator<Element> {
             variable Integer index = 0;
-            variable Cell<Element>? bucket = store[index];
+            variable value bucket = store[index];
             
             shared actual Element|Finished next() {
                 // do we need a new bucket?
@@ -171,7 +169,7 @@ shared class HashSet<Element>
                     }
                 }
                 // do we have a bucket?
-                if(exists Cell<Element> bucket = bucket){
+                if(exists bucket = bucket){
                     value car = bucket.car;
                     // advance to the next cell
                     this.bucket = bucket.cdr;
@@ -188,8 +186,8 @@ shared class HashSet<Element>
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
+            variable value bucket = store[index];
+            while(exists cell = bucket){
                 if(selecting(cell.car)){
                     c++;
                 }
@@ -207,8 +205,8 @@ shared class HashSet<Element>
         variable Boolean first = true;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
+            variable value bucket = store[index];
+            while(exists cell = bucket){
                 if(!first){
                     ret.append(", ");
                 }else{
@@ -228,8 +226,8 @@ shared class HashSet<Element>
         variable Integer hash = 17;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
+            variable value bucket = store[index];
+            while(exists cell = bucket){
                 hash = hash * 31 + cell.car.hash;
                 bucket = cell.cdr;
             }
@@ -244,8 +242,8 @@ shared class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
-                variable Cell<Element>? bucket = store[index];
-                while(exists Cell<Element> cell = bucket){
+                variable value bucket = store[index];
+                while(exists cell = bucket){
                     if(!that.contains(cell.car)){
                         return false;
                     }
@@ -259,13 +257,13 @@ shared class HashSet<Element>
     }
     
     shared actual HashSet<Element> clone {
-        HashSet<Element> clone = HashSet<Element>();
+        value clone = HashSet<Element>();
         clone._size = _size;
-        clone.store = makeCellElementArray<Element>(store.size);
+        clone.store = elementStore<Element>(store.size);
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            if(exists Cell<Element> bucket = store[index]){
+            if(exists bucket = store[index]){
                 clone.store.set(index, bucket.clone); 
             }
             index++;
@@ -277,8 +275,8 @@ shared class HashSet<Element>
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
+            variable value bucket = store[index];
+            while(exists cell = bucket){
                 if(cell.car == element){
                     return true;
                 }
@@ -291,8 +289,8 @@ shared class HashSet<Element>
     
     shared actual HashSet<Element> complement<Other>(Set<Other> set) 
     given Other satisfies Object {
-        HashSet<Element> ret = HashSet<Element>();
-        for(Element elem in this){
+        value ret = HashSet<Element>();
+        for(elem in this){
             if(!set.contains(elem)){
                 ret.add(elem);
             }
@@ -302,13 +300,13 @@ shared class HashSet<Element>
     
     shared actual HashSet<Element|Other> exclusiveUnion<Other>(Set<Other> set) 
     given Other satisfies Object {
-        HashSet<Element|Other> ret = HashSet<Element|Other>();
-        for(Element elem in this){
+        value ret = HashSet<Element|Other>();
+        for(elem in this){
             if(!set.contains(elem)){
                 ret.add(elem);
             }
         }
-        for(Other elem in set){
+        for(elem in set){
             if(!contains(elem)){
                 ret.add(elem);
             }
@@ -318,8 +316,8 @@ shared class HashSet<Element>
     
     shared actual HashSet<Element&Other> intersection<Other>(Set<Other> set) 
     given Other satisfies Object {
-        HashSet<Element&Other> ret = HashSet<Element&Other>();
-        for(Element elem in this){
+        value ret = HashSet<Element&Other>();
+        for(elem in this){
             if(set.contains(elem), is Other elem){
                 ret.add(elem);
             }
@@ -329,7 +327,7 @@ shared class HashSet<Element>
     
     shared actual HashSet<Element|Other> union<Other>(Set<Other> set) 
     given Other satisfies Object {
-        HashSet<Element|Other> ret = HashSet<Element|Other>();
+        value ret = HashSet<Element|Other>();
         ret.addAll(this);
         ret.addAll(set);
         return ret;
