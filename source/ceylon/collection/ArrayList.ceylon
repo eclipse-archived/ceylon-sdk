@@ -94,9 +94,9 @@ shared class ArrayList<Element>
     
     shared actual Element? delete(Integer index) {
         if (0<=index<length) {
-            array.copyTo(array, index+1, index, length-index);
+            Element? result = array[index];
+            array.copyTo(array, index+1, index, length-index-1);
             length--;
-            Element? result = array[length];
             array.set(length, null);
             return result;
         }
