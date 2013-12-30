@@ -5,15 +5,17 @@ import ceylon.collection {
 }
 
 "A [[MutableSet]] implemented as a hash set stored in an 
- [[Array]] of singly linked lists. The hash code of an 
- element is defined by [[Object.hash]].
+ [[Array]] of singly linked lists. Each element is assigned 
+ an index of the array according to its hash code. The hash 
+ code of an element is defined by [[Object.hash]].
  
- The initial size of the backing array is specified by the
- [[initialCapacity]]. The backing array capacity is 
+ The size of the backing `Array` is called the _capacity_
+ of the `HashSet`. The capacity of a new instance is 
+ specified by the given [[initialCapacity]]. The capacity is 
  increased, and the elements _rehashed_, when the ratio of 
- [[size]] to capacity exceeds the [[loadFactor]]. The new 
- capacity is the product of the current capacity and the 
- [[growthFactor]]."
+ [[size]] to capacity exceeds the given [[loadFactor]]. The 
+ new capacity is the product of the current capacity and the 
+ given [[growthFactor]]."
 by("Stéphane Épardaud")
 shared class HashSet<Element>
         (initialCapacity=16, loadFactor=0.75, growthFactor=2.0, 

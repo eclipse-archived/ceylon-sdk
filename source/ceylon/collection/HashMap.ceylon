@@ -9,15 +9,18 @@ import ceylon.collection {
 }
 
 "A [[MutableMap]] implemented as a hash map stored in an 
- [[Array]] of singly linked lists of [[Entry]]s. The hash 
- code of a key is defined by [[Object.hash]].
+ [[Array]] of singly linked lists of [[Entry]]s. Each entry 
+ is assigned an index of the array according to the hash 
+ code of its key. The hash code of a key is defined by 
+ [[Object.hash]].
  
- The initial size of the backing array is specified by the
- [[initialCapacity]]. The backing array capacity is 
- increased, and the elements _rehashed_, when the ratio of 
- [[size]] to capacity exceeds the [[loadFactor]].  The new 
- capacity is the product of the current capacity and the 
- [[growthFactor]]."
+ The size of the backing `Array` is called the _capacity_
+ of the `HashMap`. The capacity of a new instance is 
+ specified by the given [[initialCapacity]]. The capacity is 
+ increased, and the entries _rehashed_, when the ratio of 
+ [[size]] to capacity exceeds the given [[loadFactor]]. The 
+ new capacity is the product of the current capacity and the 
+ given [[growthFactor]]."
 by("Stéphane Épardaud")
 shared class HashMap<Key, Item>
         (initialCapacity=16, loadFactor=0.75, growthFactor=2.0, 
@@ -59,19 +62,19 @@ shared class HashMap<Key, Item>
         return i.negative then i.negativeValue else i;
     }
     
-    Boolean addToStore(Array<Cell<Key->Item>?> store, Key key, Item item){
-        Integer index = storeIndex(key, store);
+    Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry){
+        Integer index = storeIndex(entry.key, store);
         variable Cell<Key->Item>? bucket = store[index];
         while(exists Cell<Key->Item> cell = bucket){
-            if(cell.car.key == key){
+            if(cell.car.key == entry.key){
                 // modify an existing entry
-                cell.car = key->item;
+                cell.car = entry;
                 return false;
             }
             bucket = cell.cdr;
         }
         // add a new entry
-        store.set(index, Cell<Key->Item>(key->item, store[index]));
+        store.set(index, Cell<Key->Item>(entry, store[index]));
         return true;
     }
 
@@ -84,7 +87,7 @@ shared class HashMap<Key, Item>
             while(index < store.size){
                 variable Cell<Key->Item>? bucket = store[index];
                 while(exists Cell<Key->Item> cell = bucket){
-                    addToStore(newStore, cell.car.key, cell.car.item);
+                    addToStore(newStore, cell.car);
                     bucket = cell.cdr;
                 }
                 index++;
@@ -94,8 +97,8 @@ shared class HashMap<Key, Item>
     }
     
     // Add initial values
-    for(key->item in entries){   
-        if(addToStore(store, key, item)){
+    for(entry in entries){   
+        if(addToStore(store, entry)){
             _size++;
         }
     }
@@ -125,7 +128,7 @@ shared class HashMap<Key, Item>
     "Adds a collection of key/value mappings to this map, may be used to change existing mappings"
     shared actual void putAll({<Key->Item>*} entries){
         for(entry in entries){
-            if(addToStore(store, entry.key, entry.item)){
+            if(addToStore(store, entry)){
                 _size++;
             }
         }

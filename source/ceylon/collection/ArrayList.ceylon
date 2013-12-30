@@ -7,11 +7,12 @@
    element of the list and the back of the queue is the
    last element of the list.
  
- The initial size of the backing array is specified by the
- [[initialCapacity]]. The backing array capacity is 
- increased, and the elements _rehashed_, when the ratio of 
- [[size]] exceeds the capacity. The new capacity is the
- product of the current capacity and the [[growthFactor]]."
+ The size of the backing `Array` is called the _capacity_
+ of the `ArrayList`. The capacity of a new instance is 
+ specified by the given [[initialCapacity]]. The capacity is 
+ increased when [[size]] exceeds the capacity. The new 
+ capacity is the product of the current capacity and the 
+ given [[growthFactor]]."
 by ("Gavin King")
 shared class ArrayList<Element>
         (initialCapacity = 0, growthFactor=1.5, 
