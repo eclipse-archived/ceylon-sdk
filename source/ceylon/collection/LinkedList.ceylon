@@ -7,9 +7,13 @@
    element of the list and the back of the queue is the
    last element of the list."
 by("Stéphane Épardaud")
-shared class LinkedList<Element>({Element*} elements = {}) 
+shared class LinkedList<Element>(elements = {}) 
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
+    
+    "The initial elements of the list."
+    {Element*} elements;
+    
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
     variable Integer _size = 0; 

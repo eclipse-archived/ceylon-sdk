@@ -5,9 +5,17 @@
    element of the list, and
  - a [[Queue]], where the front of the queue is the first
    element of the list and the back of the queue is the
-   last element of the list."
+   last element of the list.
+ 
+ The initial size of the backing array is specified by the
+ [[initialCapacity]]. The backing array capacity is 
+ increased, and the elements _rehashed_, when the ratio of 
+ [[size]] exceeds the capacity. The new capacity is the
+ product of the current capacity and the [[growthFactor]]."
 by ("Gavin King")
-shared class ArrayList<Element>(initialCapacity = 0, growthFactor=1.5, elements = {}) 
+shared class ArrayList<Element>
+        (initialCapacity = 0, growthFactor=1.5, 
+                elements = {}) 
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
     

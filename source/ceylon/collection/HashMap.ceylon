@@ -1,16 +1,45 @@
 import ceylon.collection { MutableList, Cell, MutableSet, LinkedList, makeCellEntryArray, HashSet, MutableMap }
-"A [[MutableMap]] implemented as a hash map stored in an [[Array]]
- of singly linked lists of [[Entry]]s. The hash code of a key is 
- defined by [[Object.hash]]."
+
+"A [[MutableMap]] implemented as a hash map stored in an 
+ [[Array]] of singly linked lists of [[Entry]]s. The hash 
+ code of a key is defined by [[Object.hash]].
+ 
+ The initial size of the backing array is specified by the
+ [[initialCapacity]]. The backing array capacity is 
+ increased, and the elements _rehashed_, when the ratio of 
+ [[size]] to capacity exceeds the [[loadFactor]].  The new 
+ capacity is the product of the current capacity and the 
+ [[growthFactor]]."
 by("Stéphane Épardaud")
-shared class HashMap<Key, Item>({<Key->Item>*} initialValues = {})
-    satisfies MutableMap<Key, Item>
+shared class HashMap<Key, Item>
+        (initialCapacity=16, loadFactor=0.75, growthFactor=2.0, 
+                entries = {})
+        satisfies MutableMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
     
-    variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(16);
+    "The initial entries in the map."
+    {<Key->Item>*} entries;
+    
+    "The initial capacity of the backing array."
+    Integer initialCapacity;
+    
+    "The ratio between the number of elements and the 
+     capacity which triggers a rebuild of the hash map."
+    Float loadFactor;
+    
+    "The factor used to determine the new size of the
+     backing array when a new backing array is allocated."
+    Float growthFactor;
+    
+    "initial capacity cannot be negative"
+    assert (initialCapacity>=0);
+    
+    "load factor must be positive"
+    assert (loadFactor>0.0);
+    
+    variable Array<Cell<Key->Item>?> store = makeCellEntryArray<Key,Item>(initialCapacity);
     variable Integer _size = 0;
-    Float loadFactor = 0.75;
     
     // Write
     
@@ -38,7 +67,7 @@ shared class HashMap<Key, Item>({<Key->Item>*} initialValues = {})
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Key->Item>?> newStore = makeCellEntryArray<Key,Item>(_size * 2);
+            Array<Cell<Key->Item>?> newStore = makeCellEntryArray<Key,Item>((_size * growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
@@ -54,7 +83,7 @@ shared class HashMap<Key, Item>({<Key->Item>*} initialValues = {})
     }
     
     // Add initial values
-    for(key->item in initialValues){   
+    for(key->item in entries){   
         if(addToStore(store, key, item)){
             _size++;
         }

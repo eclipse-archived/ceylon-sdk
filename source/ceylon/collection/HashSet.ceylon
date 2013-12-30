@@ -1,15 +1,44 @@
 import ceylon.collection { Cell, MutableSet, makeCellElementArray }
-"A [[MutableSet]] implemented as a hash set stored in an [[Array]]
- of singly linked lists. The hash code of an element is defined
- by [[Object.hash]]."
+
+"A [[MutableSet]] implemented as a hash set stored in an 
+ [[Array]] of singly linked lists. The hash code of an 
+ element is defined by [[Object.hash]].
+ 
+ The initial size of the backing array is specified by the
+ [[initialCapacity]]. The backing array capacity is 
+ increased, and the elements _rehashed_, when the ratio of 
+ [[size]] to capacity exceeds the [[loadFactor]]. The new 
+ capacity is the product of the current capacity and the 
+ [[growthFactor]]."
 by("Stéphane Épardaud")
-shared class HashSet<Element>({Element*} values = {})
-    satisfies MutableSet<Element>
+shared class HashSet<Element>
+        (initialCapacity=16, loadFactor=0.75, growthFactor=2.0, 
+                elements = {})
+        satisfies MutableSet<Element>
         given Element satisfies Object {
     
-    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(16);
+    "The initial elements of the set."
+    {Element*} elements;
+    
+    "The initial capacity of the backing array."
+    Integer initialCapacity;
+    
+    "The ratio between the number of elements and the 
+     capacity which triggers a rebuild of the hash set."
+    Float loadFactor;
+    
+    "The factor used to determine the new size of the
+     backing array when a new backing array is allocated."
+    Float growthFactor;
+    
+    "initial capacity cannot be negative"
+    assert (initialCapacity>=0);
+    
+    "load factor must be positive"
+    assert (loadFactor>0.0);
+    
+    variable Array<Cell<Element>?> store = makeCellElementArray<Element>(initialCapacity);
     variable Integer _size = 0;
-    Float loadFactor = 0.75;
     
     // Write
     
@@ -37,7 +66,7 @@ shared class HashSet<Element>({Element*} values = {})
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
-            Array<Cell<Element>?> newStore = makeCellElementArray<Element>(_size * 2);
+            Array<Cell<Element>?> newStore = makeCellElementArray<Element>((_size * growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
@@ -53,7 +82,7 @@ shared class HashSet<Element>({Element*} values = {})
     }
     
     // Add initial values
-    for(val in values){
+    for(val in elements){
         if(addToStore(store, val)){
             _size++;
         }        
