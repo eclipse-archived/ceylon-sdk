@@ -1,20 +1,8 @@
-"A [[MutableSet]] implemented as a hash set stored in an 
- [[Array]] of singly linked lists. Each element is assigned 
- an index of the array according to its hash code. The hash 
- code of an element is defined by [[Object.hash]]. In 
- addition, the elements of the set form a linked list, where 
- new elements are added to the end of the linked list. 
- Iteration of the `LinkedHashSet` follows this linked list, 
- from least recently added elements to most recently added
- elements.
- 
- The size of the backing `Array` is called the _capacity_
- of the `HashSet`. The capacity of a new instance is 
- specified by the given [[initialCapacity]]. The capacity is 
- increased, and the elements _rehashed_, when the ratio of 
- [[size]] to capacity exceeds the given [[loadFactor]]. The 
- new capacity is the product of the current capacity and the 
- given [[growthFactor]]."
+"A [[HashSet]] with a predictable order of iteration. The 
+ elements of the set form a linked list, where new elements 
+ are added to the end of the linked list. Iteration of the 
+ `LinkedHashSet` follows this linked list, from least 
+ recently added elements to most recently added elements."
 by ("Gavin King")
 shared class LinkedHashSet<Element>
         (initialCapacity=16, loadFactor=0.75, growthFactor=2.0)
@@ -70,6 +58,10 @@ shared class LinkedHashSet<Element>
     }
     
     iterator() => LinkedCellIterator(head);
+    
+    first => head?.car;
+    
+    last => tip?.car;
     
 }
 
