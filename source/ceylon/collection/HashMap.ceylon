@@ -155,7 +155,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, store[index]));
+        store.set(index, createCell(entry, store[index]));
         length++;
         checkRehash();
         return null;
