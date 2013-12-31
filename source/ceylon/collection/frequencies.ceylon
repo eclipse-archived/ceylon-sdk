@@ -1,24 +1,27 @@
-"Produces a [[Map]] containing the frequency in which each
- element occurs among the given elements."
-shared Map<Element,Integer> frequences<Element>({Element*} elements)
+"Produces a [[Map]] mapping elements to frequencies, where 
+ each entry maps a distinct member of the given iterable
+ [[elements]] to the number of times it occurs among the 
+ given `elements`."
+shared Map<Element,Integer> frequences<Element>
+        ({Element*} elements)
         given Element satisfies Object {
-    
     /*
      We've no idea how long the iterable is, nor how 
      selective the grouping function is, so it's really 
      hard to accurately estimate the size of the HashMap.
     */
-    value map = HashMap<Element, Integer>() ;
-    
+    value map = HashMap<Element,Counter>();
     for (element in elements) {
-        if (exists count = map[element]) {
-            map.put(element,count+1);
+        if (exists counter = map[element]) {
+            counter.count++;
         }
         else {
-            map.put(element, 1);
+            map.put(element, Counter(1));
         }
     }
-    
-    return map;
-    
+    return map.mapItems((Element e, Counter c) => c.count);
+}
+
+class Counter(count) {
+    shared variable Integer count;
 }
