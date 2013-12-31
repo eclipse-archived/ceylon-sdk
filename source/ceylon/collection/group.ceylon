@@ -1,6 +1,7 @@
-"Groups the given elements into sequences
- in a `Map`, under the keys provided by the 
- given grouping function."
+import ceylon.collection { HashMap }
+
+"Groups the given elements into sequences in a [[Map]], 
+ under the keys provided by the given grouping function."
 shared Map<Group, [Element+]> group<Group, Element>({Element*} elements,
     "A function that returns the key under 
      which to group the specified element."
@@ -17,9 +18,9 @@ shared Map<Group, [Element+]> group<Group, Element>({Element*} elements,
     */
     value map = HashMap<Group, Appender>() ;
     
-    for (Element element in elements) {
+    for (element in elements) {
         Group group = grouping(element);
-        if (is Appender sb = map.get(group)) {
+        if (exists sb = map.get(group)) {
             sb.append(element);
         } else {
             map.put(group, Appender([element]));
