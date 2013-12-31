@@ -29,8 +29,9 @@ shared class HashMap<Key, Item>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
         
-    variable value store = entryStore<Key,Item>(hashtable.initialCapacity);
-    variable Integer _size = 0;
+    variable value store = entryStore<Key,Item>
+                (hashtable.initialCapacity);
+    variable Integer length = 0;
     
     // Write
     
@@ -41,12 +42,12 @@ shared class HashMap<Key, Item>
         Integer index = storeIndex(entry.key, store);
         variable value bucket = store[index];
         while(exists cell = bucket){
-            if(cell.car.key == entry.key){
+            if(cell.element.key == entry.key){
                 // modify an existing entry
-                cell.car = entry;
+                cell.element = entry;
                 return false;
             }
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         // add a new entry
         store.set(index, Cell(entry, store[index]));
@@ -54,16 +55,17 @@ shared class HashMap<Key, Item>
     }
 
     void checkRehash(){
-        if(_size > (store.size.float * hashtable.loadFactor).integer){
+        if(length > (store.size.float * hashtable.loadFactor).integer){
             // must rehash
-            value newStore = entryStore<Key,Item>((_size * hashtable.growthFactor).integer);
+            value newStore = entryStore<Key,Item>
+                    ((length * hashtable.growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    addToStore(newStore, cell.car);
-                    bucket = cell.cdr;
+                    addToStore(newStore, cell.element);
+                    bucket = cell.rest;
                 }
                 index++;
             }
@@ -74,7 +76,7 @@ shared class HashMap<Key, Item>
     // Add initial values
     for(entry in entries){   
         if(addToStore(store, entry)){
-            _size++;
+            length++;
         }
     }
     checkRehash();
@@ -86,17 +88,17 @@ shared class HashMap<Key, Item>
         value entry = key->item;
         variable value bucket = store[index];
         while(exists cell = bucket){
-            if(cell.car.key == key){
-                Item oldValue = cell.car.item;
+            if(cell.element.key == key){
+                Item oldValue = cell.element.item;
                 // modify an existing entry
-                cell.car = entry;
+                cell.element = entry;
                 return oldValue;
             }
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         // add a new entry
         store.set(index, Cell(entry, store[index]));
-        _size++;
+        length++;
         checkRehash();
         return null;
     }
@@ -106,7 +108,7 @@ shared class HashMap<Key, Item>
     shared actual void putAll({<Key->Item>*} entries){
         for(entry in entries){
             if(addToStore(store, entry)){
-                _size++;
+                length++;
             }
         }
         checkRehash();
@@ -119,18 +121,18 @@ shared class HashMap<Key, Item>
         variable value bucket = store[index];
         variable value prev = null of Cell<Key->Item>?;
         while(exists Cell<Key->Item> cell = bucket){
-            if(cell.car.key == key){
+            if(cell.element.key == key){
                 // found it
                 if(exists last = prev){
-                    last.cdr = cell.cdr;
+                    last.rest = cell.rest;
                 }else{
-                    store.set(index, cell.cdr);
+                    store.set(index, cell.rest);
                 }
-                _size--;
-                return cell.car.item;
+                length--;
+                return cell.element.item;
             }
             prev = cell;
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         return null;
     }
@@ -142,12 +144,12 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             store.set(index++, null);
         }
-        _size = 0;
+        length = 0;
     }
     
     // Read
     
-    size => _size;
+    size => length;
     
     shared actual Item? get(Object key) {
         if(empty){
@@ -156,10 +158,10 @@ shared class HashMap<Key, Item>
         Integer index = storeIndex(key, store);
         variable value bucket = store[index];
         while(exists cell = bucket){
-            if(cell.car.key == key){
-                return cell.car.item;
+            if(cell.element.key == key){
+                return cell.element.item;
             }
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         return null;
     }
@@ -171,8 +173,8 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                ret.add(cell.car.item);
-                bucket = cell.cdr;
+                ret.add(cell.element.item);
+                bucket = cell.rest;
             }
             index++;
         }
@@ -186,8 +188,8 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                ret.add(cell.car.key);
-                bucket = cell.cdr;
+                ret.add(cell.element.key);
+                bucket = cell.rest;
             }
             index++;
         }
@@ -201,14 +203,14 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                if(exists keys = ret[cell.car.item]){
-                    keys.add(cell.car.key);
+                if(exists keys = ret[cell.element.item]){
+                    keys.add(cell.element.key);
                 }else{
                     value k = HashSet<Key>();
-                    ret.put(cell.car.item, k);
-                    k.add(cell.car.key);
+                    ret.put(cell.element.item, k);
+                    k.add(cell.element.key);
                 }
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }
@@ -224,10 +226,10 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                if(selecting(cell.car)){
+                if(selecting(cell.element)){
                     count++;
                 }
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }
@@ -241,8 +243,8 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                hash = hash * 31 + cell.car.hash;
-                bucket = cell.cdr;
+                hash = hash * 31 + cell.element.hash;
+                bucket = cell.rest;
             }
             index++;
         }
@@ -257,14 +259,14 @@ shared class HashMap<Key, Item>
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    if(exists item = that.get(cell.car.key)){
-                        if(item != cell.car.item){
+                    if(exists item = that.get(cell.element.key)){
+                        if(item != cell.element.item){
                             return false;
                         }
                     }else{
                         return false;
                     }
-                    bucket = cell.cdr;
+                    bucket = cell.rest;
                 }
                 index++;
             }
@@ -275,7 +277,7 @@ shared class HashMap<Key, Item>
     
     shared actual MutableMap<Key,Item> clone {
         value clone = HashMap<Key,Item>();
-        clone._size = _size;
+        clone.length = length;
         clone.store = entryStore<Key,Item>(store.size);
         variable Integer index = 0;
         // walk every bucket
@@ -294,10 +296,10 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                if(cell.car.item == element){
+                if(cell.element.item == element){
                     return true;
                 }
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }

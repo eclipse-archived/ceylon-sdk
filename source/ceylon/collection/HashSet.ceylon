@@ -41,8 +41,9 @@ shared class HashSet<Element>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
     
-    variable value store = elementStore<Element>(hashtable.initialCapacity);
-    variable Integer _size = 0;
+    variable value store = elementStore<Element>
+            (hashtable.initialCapacity);
+    variable Integer length = 0;
     
     variable LinkedCell<Element>? head = null;
     variable LinkedCell<Element>? tip = null;
@@ -72,17 +73,17 @@ shared class HashSet<Element>
     void deleteCell(Cell<Element> cell) {
         if (stability==linked) {
             assert (is LinkedCell<Element> cell);
-            if (exists last = cell.last) {
+            if (exists last = cell.previous) {
                 last.next = cell.next;
             }
             else {
                 head = cell.next;
             }
             if (exists next = cell.next) {
-                next.last = cell.last;
+                next.previous = cell.previous;
             }
             else {
-                tip = cell.last;
+                tip = cell.previous;
             }
         }
     }
@@ -91,12 +92,12 @@ shared class HashSet<Element>
         Integer index = storeIndex(element, store);
         variable value bucket = store[index];
         while(exists cell = bucket){
-            if(cell.car == element){
+            if(cell.element == element){
                 // modify an existing entry
-                cell.car = element;
+                cell.element = element;
                 return false;
             }
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         // add a new entry
         store.set(index, createCell(element, store[index]));
@@ -104,21 +105,22 @@ shared class HashSet<Element>
     }
     
     void checkRehash(){
-        if(_size > (store.size.float * hashtable.loadFactor).integer){
+        if(length > (store.size.float * hashtable.loadFactor).integer){
             // must rehash
-            value newStore = elementStore<Element>((_size * hashtable.growthFactor).integer);
+            value newStore = elementStore<Element>
+                    ((length * hashtable.growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    bucket = cell.cdr;
-                    Integer newIndex = storeIndex(cell.car, newStore);
+                    bucket = cell.rest;
+                    Integer newIndex = storeIndex(cell.element, newStore);
                     variable value newBucket = newStore[newIndex];
-                    while(exists newCell = newBucket?.cdr){
+                    while(exists newCell = newBucket?.rest){
                         newBucket = newCell;
                     }
-                    cell.cdr = newBucket;
+                    cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
                 index++;
@@ -130,7 +132,7 @@ shared class HashSet<Element>
     // Add initial values
     for(val in elements){
         if(addToStore(store, val)){
-            _size++;
+            length++;
         }        
     }
     checkRehash();
@@ -139,7 +141,7 @@ shared class HashSet<Element>
     
     shared actual Boolean add(Element element){
         if(addToStore(store, element)){
-            _size++;
+            length++;
             checkRehash();
             return true;
         }
@@ -151,7 +153,9 @@ shared class HashSet<Element>
         for(elem in elements){
             ret ||= add(elem);
         }
-        checkRehash();
+        if (ret) {
+            checkRehash();
+        }
         return ret;
     }
     
@@ -160,19 +164,19 @@ shared class HashSet<Element>
         variable value bucket = store[index];
         variable value prev = null of Cell<Element>?;
         while(exists cell = bucket){
-            if(cell.car == element){
+            if(cell.element == element){
                 // found it
                 if(exists last = prev){
-                    last.cdr = cell.cdr;
+                    last.rest = cell.rest;
                 }else{
-                    store.set(index, cell.cdr);
+                    store.set(index, cell.rest);
                 }
                 deleteCell(cell);
-                _size--;
+                length--;
                 return true;
             }
             prev = cell;
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         return false;
     }
@@ -184,14 +188,14 @@ shared class HashSet<Element>
         while(index < store.size){
             store.set(index++, null);
         }
-        _size = 0;
+        length = 0;
         head = null;
         tip = null;
     }
     
     // Read
     
-    size => _size;
+    size => length;
     
     iterator() => stability==linked 
             then LinkedCellIterator(head)
@@ -204,10 +208,10 @@ shared class HashSet<Element>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                if(selecting(cell.car)){
+                if(selecting(cell.element)){
                     c++;
                 }
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }
@@ -221,8 +225,8 @@ shared class HashSet<Element>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                hash = hash * 31 + cell.car.hash;
-                bucket = cell.cdr;
+                hash = hash * 31 + cell.element.hash;
+                bucket = cell.rest;
             }
             index++;
         }
@@ -237,10 +241,10 @@ shared class HashSet<Element>
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    if(!that.contains(cell.car)){
+                    if(!that.contains(cell.element)){
                         return false;
                     }
-                    bucket = cell.cdr;
+                    bucket = cell.rest;
                 }
                 index++;
             }
@@ -251,7 +255,7 @@ shared class HashSet<Element>
     
     shared actual HashSet<Element> clone {
         value clone = HashSet<Element>();
-        clone._size = _size;
+        clone.length = length;
         clone.store = elementStore<Element>(store.size);
         variable Integer index = 0;
         // walk every bucket
@@ -270,18 +274,19 @@ shared class HashSet<Element>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                if(cell.car == element){
+                if(cell.element == element){
                     return true;
                 }
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }
         return false;
     }
     
-    shared actual HashSet<Element> complement<Other>(Set<Other> set) 
-    given Other satisfies Object {
+    shared actual HashSet<Element> complement<Other>
+            (Set<Other> set) 
+            given Other satisfies Object {
         value ret = HashSet<Element>();
         for(elem in this){
             if(!set.contains(elem)){
@@ -291,8 +296,9 @@ shared class HashSet<Element>
         return ret;
     }
     
-    shared actual HashSet<Element|Other> exclusiveUnion<Other>(Set<Other> set) 
-    given Other satisfies Object {
+    shared actual HashSet<Element|Other> exclusiveUnion<Other>
+            (Set<Other> set) 
+            given Other satisfies Object {
         value ret = HashSet<Element|Other>();
         for(elem in this){
             if(!set.contains(elem)){
@@ -307,8 +313,9 @@ shared class HashSet<Element>
         return ret;
     }
     
-    shared actual HashSet<Element&Other> intersection<Other>(Set<Other> set) 
-    given Other satisfies Object {
+    shared actual HashSet<Element&Other> intersection<Other>
+            (Set<Other> set) 
+            given Other satisfies Object {
         value ret = HashSet<Element&Other>();
         for(elem in this){
             if(set.contains(elem), is Other elem){
@@ -318,8 +325,9 @@ shared class HashSet<Element>
         return ret;
     }
     
-    shared actual HashSet<Element|Other> union<Other>(Set<Other> set) 
-    given Other satisfies Object {
+    shared actual HashSet<Element|Other> union<Other>
+            (Set<Other> set) 
+            given Other satisfies Object {
         value ret = HashSet<Element|Other>();
         ret.addAll(this);
         ret.addAll(set);
@@ -328,23 +336,23 @@ shared class HashSet<Element>
     
     shared actual Element? first {
         if (stability==linked) {
-            return head?.car;
+            return head?.element;
         }
         else {
-            return store[0]?.car;
+            return store[0]?.element;
         }
     }
     
     shared actual Element? last {
         if (stability==linked) {
-            return tip?.car;
+            return tip?.element;
         }
         else {
             variable value bucket = store[store.size-1];
-            while (exists cell = bucket?.cdr) {
+            while (exists cell = bucket?.rest) {
                 bucket = cell;
             }
-            return bucket?.car;
+            return bucket?.element;
         }
     }
     

@@ -21,9 +21,9 @@ class StoreIterator<Element>(Array<Cell<Element>?> store)
         }
         // do we have a bucket?
         if(exists bucket = bucket){
-            value car = bucket.car;
+            value car = bucket.element;
             // advance to the next cell
-            this.bucket = bucket.cdr;
+            this.bucket = bucket.rest;
             return car;
         }
         return finished;

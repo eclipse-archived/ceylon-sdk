@@ -16,25 +16,25 @@ shared class LinkedList<Element>(elements = {})
     
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
-    variable Integer _size = 0; 
+    variable Integer length = 0; 
     
     // initialiser section
     
-    void _add(Element element){
+    void addToTail(Element element){
         value newTail = Cell(element, null);
         if(exists tail = tail){
-            tail.cdr = newTail;
+            tail.rest = newTail;
             this.tail = newTail;
         }else{
             // no tail means empty list
             tail = head = newTail;
         }
-        _size++;
+        length++;
     }
     
     // add initial values
     for(element in elements){
-        _add(element);
+        addToTail(element);
     }
     
     // End of initialiser section
@@ -44,30 +44,31 @@ shared class LinkedList<Element>(elements = {})
     shared actual void set(Integer index, Element element){
         "index may not be negative or greater than the
          last index in the list"
-        assert (0<=index<_size);
+        assert (0<=index<length);
         variable value iter = head;
         variable Integer i = 0;
         while(exists cell = iter){
             if(i++ == index){
-                cell.car = element;
+                cell.element = element;
                 return;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
     }
     
     shared actual void insert(Integer index, Element element){
         "index may not be negative or greater than the
          length of the list"
-        assert (0<=index<=_size);
-        if(index == _size){
+        assert (0<=index<=length);
+        if(index == length){
             add(element);
         }else{
             value newCell = Cell(element, null);
             if(index == 0){
-                newCell.cdr = head;
+                newCell.rest = head;
                 head = newCell;
-                // we only have to update the tail if _size == 0 but that's not possible
+                // we only have to update the tail if 
+                // _size == 0 but that's not possible
                 // since it has already been checked
             }else{
                 variable value iter = head;
@@ -76,25 +77,27 @@ shared class LinkedList<Element>(elements = {})
                 while(exists cell = iter){
                     if(i++ == index){
                         if(exists prev2 = prev){
-                            prev2.cdr = newCell;
-                            newCell.cdr = cell;
-                            // no need to update the tail since we never modify the last 
-                            // element, we would have taken the other branch above instead
+                            prev2.rest = newCell;
+                            newCell.rest = cell;
+                            // no need to update the tail since 
+                            // we never modify the last element, 
+                            // we would have taken the other 
+                            // branch above instead
                         }else{
                             // cannot happen
                         }
                         break;
                     }
                     prev = iter;
-                    iter = cell.cdr;
+                    iter = cell.rest;
                 }
             }
-            _size++;
+            length++;
         }
     }
     
     shared actual void add(Element element){
-        _add(element);
+        addToTail(element);
     }
     
     shared actual void addAll({Element*} elements) {
@@ -104,27 +107,27 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual Element? delete(Integer index){
-        if(0 <= index < _size){
+        if(0 <= index < length){
             variable value iter = head;
             variable value prev = null of Cell<Element>?;
             variable Integer i = 0;
             while(exists cell = iter){
                 if(i++ == index){
                     if(exists prev2 = prev){
-                        prev2.cdr = cell.cdr;
+                        prev2.rest = cell.rest;
                     }else{
                         // changing the head
-                        head = cell.cdr;
+                        head = cell.rest;
                     }
                     // see if we need to update the tail
-                    if(!cell.cdr exists){
+                    if(!cell.rest exists){
                         tail = prev;
                     }
-                    _size--;
-                    return cell.car;
+                    length--;
+                    return cell.element;
                 }
                 prev = iter;
-                iter = cell.cdr;
+                iter = cell.rest;
             }
             assert (false);
         }else{
@@ -136,23 +139,23 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable value prev = null of Cell<Element>?;
         while(exists cell = iter){
-            if(exists elem = cell.car, elem==element){
+            if(exists elem = cell.element, elem==element){
                 if(exists prev2 = prev){
-                    prev2.cdr = cell.cdr;
+                    prev2.rest = cell.rest;
                 }else{
                     // changing the head
-                    head = cell.cdr;
+                    head = cell.rest;
                 }
                 // see if we need to update the tail
-                if(!cell.cdr exists){
+                if(!cell.rest exists){
                     tail = prev;
                 }
-                _size--;
+                length--;
                 // keep the same prev but move on
-                iter = cell.cdr;
+                iter = cell.rest;
             }else{
                 prev = iter;
-                iter = cell.cdr;
+                iter = cell.rest;
             }
         }
     }
@@ -161,24 +164,24 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable value prev = null of Cell<Element>?;
         while(exists cell = iter){
-            if(exists elem = cell.car, elem==element){
+            if(exists elem = cell.element, elem==element){
                 if(exists prev2 = prev){
-                    prev2.cdr = cell.cdr;
+                    prev2.rest = cell.rest;
                 }else{
                     // changing the head
-                    head = cell.cdr;
+                    head = cell.rest;
                 }
                 // see if we need to update the tail
-                if(!cell.cdr exists){
+                if(!cell.rest exists){
                     tail = prev;
                 }
-                _size--;
+                length--;
                 // keep the same prev but move on
-                iter = cell.cdr;
+                iter = cell.rest;
                 return true;
             }else{
                 prev = iter;
-                iter = cell.cdr;
+                iter = cell.rest;
             }
         }
         return false;
@@ -188,23 +191,23 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable value prev = null of Cell<Element>?;
         while(exists cell = iter){
-            if(!cell.car exists){
+            if(!cell.element exists){
                 if(exists prev2 = prev){
-                    prev2.cdr = cell.cdr;
+                    prev2.rest = cell.rest;
                 }else{
                     // changing the head
-                    head = cell.cdr;
+                    head = cell.rest;
                 }
                 // see if we need to update the tail
-                if(!cell.cdr exists){
+                if(!cell.rest exists){
                     tail = prev;
                 }
-                _size--;
+                length--;
                 // keep the same prev but move on
-                iter = cell.cdr;
+                iter = cell.rest;
             }else{
                 prev = iter;
-                iter = cell.cdr;
+                iter = cell.rest;
             }
         }
     }
@@ -213,10 +216,10 @@ shared class LinkedList<Element>(elements = {})
             Element replacement) {
         variable value iter = head;
         while(exists cell = iter){
-            if(exists elem = cell.car, elem==element){
-                cell.car = replacement;
+            if(exists elem = cell.element, elem==element){
+                cell.element = replacement;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
     }
     
@@ -224,11 +227,11 @@ shared class LinkedList<Element>(elements = {})
             Element replacement) {
         variable value iter = head;
         while(exists cell = iter){
-            if(exists elem = cell.car, elem==element){
-                cell.car = replacement;
+            if(exists elem = cell.element, elem==element){
+                cell.element = replacement;
                 return true;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return false;
     }
@@ -236,15 +239,15 @@ shared class LinkedList<Element>(elements = {})
     shared actual void infill(Element replacement) {
         variable value iter = head;
         while(exists cell = iter){
-            if(!cell.car exists){
-                cell.car = replacement;
+            if(!cell.element exists){
+                cell.element = replacement;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
     }
     
     shared actual void clear(){
-        _size = 0;
+        length = 0;
         head = tail = null;
     }
     
@@ -255,9 +258,9 @@ shared class LinkedList<Element>(elements = {})
         variable Integer i = 0;
         while(exists cell = iter){
             if(i++ == index){
-                return cell.car;
+                return cell.element;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return null;
     }
@@ -273,10 +276,10 @@ shared class LinkedList<Element>(elements = {})
                 break;
             }
             if(i >= start){
-                ret.add(cell.car);
+                ret.add(cell.element);
             }
             i++;
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return ret;
     }
@@ -287,10 +290,10 @@ shared class LinkedList<Element>(elements = {})
         variable Integer i = 0;
         while(exists cell = iter){
             if(i >= from){
-                ret.add(cell.car);
+                ret.add(cell.element);
             }
             i++;
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return ret;
     }
@@ -303,9 +306,9 @@ shared class LinkedList<Element>(elements = {})
             if(i > to){
                 break;
             }
-            ret.add(cell.car);
+            ret.add(cell.element);
             i++;
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return ret;
     }
@@ -316,14 +319,14 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable Integer i = 0;
         while(exists cell = iter){
-            if(ret._size >= len){
+            if(ret.length >= len){
                 break;
             }
             if(i >= from){
-                ret.add(cell.car);
+                ret.add(cell.element);
             }
             i++;
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return ret;
     }
@@ -331,7 +334,7 @@ shared class LinkedList<Element>(elements = {})
     shared actual void deleteSegment(Integer from, Integer length) {
         value fst = from<0 then 0 else from;
         value len = from<0 then length+from else length;
-        if (fst<this._size && len>0) {
+        if (fst<this.length && len>0) {
             del(fst, len);
         }
     }
@@ -341,44 +344,44 @@ shared class LinkedList<Element>(elements = {})
         value end = from>to then from else to;
         value fst = start<0 then 0 else start;
         value len = (end<0 then 0) else (start<0 then end+1) else end-start+1;
-        if (fst<this._size && len>0) {
+        if (fst<this.length && len>0) {
             del(fst, len);
         }
     }
     
     shared actual Boolean defines(Integer index) {
-        return index >= 0 && index < _size;
+        return index >= 0 && index < length;
     }
     
     shared actual Boolean contains(Object element) {
         variable value iter = head;
         while(exists cell = iter){
-            if(exists elem = cell.car){
+            if(exists elem = cell.element){
                 if(elem == element){
                     return true;
                 }
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return false;
     }
     
-    size => _size;
+    size => length;
     
     shared actual Integer count(Boolean selecting(Element element)) {
         variable value iter = head;
         variable Integer c = 0;
         while(exists cell = iter){
-            if(selecting(cell.car)){
+            if(selecting(cell.element)){
                 c++;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
         return c;
     }
     
     shared actual Integer? lastIndex {
-        return !empty then _size - 1;
+        return !empty then length - 1;
     }
     
     iterator() => CellIterator(head);
@@ -387,12 +390,12 @@ shared class LinkedList<Element>(elements = {})
         value ret = LinkedList<Element>();
         ret.head = head;
         ret.tail = tail;
-        ret._size = size;
+        ret.length = size;
         return ret;
     }
 
     shared actual Integer[] keys {
-        return empty then {} else 0.._size;
+        return empty then {} else 0..length;
     }
 
     /*shared actual String string {
@@ -415,31 +418,31 @@ shared class LinkedList<Element>(elements = {})
     }*/
     
     shared actual Integer hash {
-        variable Integer h = 17;
+        variable Integer hash = 17;
         variable value iter = head;
         while(exists cell = iter){
-            if(exists car = cell.car){
-                h = h * 31 + car.hash;                
+            if(exists car = cell.element){
+                hash = hash * 31 + car.hash;                
             }else{
-                h = h * 31;
+                hash = hash * 31;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
-        return h;
+        return hash;
     }
     
     shared actual Boolean equals(Object that) {
         if (is List<Anything> that,
-            _size == that.size) {
+            length == that.size) {
             variable value iter = head;
             variable value iter2 = that.iterator();
             while (exists cell = iter) {
                 if (!is Finished thatElement = iter2.next()) {
-                    value thisElement=cell.car;
+                    value thisElement=cell.element;
                     if (exists thatElement) {
                         if (exists thisElement, 
                             thisElement==thatElement) {
-                            iter = cell.cdr;
+                            iter = cell.rest;
                         }
                         else {
                             return false;
@@ -450,7 +453,7 @@ shared class LinkedList<Element>(elements = {})
                             return false;
                         }
                         else {
-                            iter = cell.cdr;
+                            iter = cell.rest;
                         }
                     }
                     
@@ -469,23 +472,23 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         while(exists cell = iter){
             // append before the head
-            ret.head = Cell(cell.car, ret.head);
+            ret.head = Cell(cell.element, ret.head);
             if(!ret.tail exists){
                 ret.tail = ret.head;
             }
-            iter = cell.cdr;
+            iter = cell.rest;
         }
-        ret._size = _size;
+        ret.length = length;
         return ret;
     }
     
     shared actual List<Element> rest {
         // this would be a lot cheaper if we were not mutable, but there we are
         value ret = LinkedList<Element>();
-        variable value iter = head?.cdr; // skip the first one
+        variable value iter = head?.rest; // skip the first one
         while(exists cell = iter){
-            ret.add(cell.car);
-            iter = cell.cdr;
+            ret.add(cell.element);
+            iter = cell.rest;
         }
         return ret;
     }
@@ -500,7 +503,7 @@ shared class LinkedList<Element>(elements = {})
                     head=next;
                     return;
                 }
-                _size--;
+                length--;
             }
         }
         else {
@@ -510,22 +513,22 @@ shared class LinkedList<Element>(elements = {})
                 if(i++ == fst){
                     while(exists next = iter){
                         if (i++ == fst+len) {
-                            cell.cdr=next;
+                            cell.rest=next;
                             return;
                         }
-                        _size--;
+                        length--;
                     }
-                    cell.cdr = null;
+                    cell.rest = null;
                     return;
                 }
-                iter = cell.cdr;
+                iter = cell.rest;
             }
         }
     }
     
-    first => head?.car;
+    first => head?.element;
     
-    last => tail?.car;
+    last => tail?.element;
     
     push(Element element) => insert(0, element);
     

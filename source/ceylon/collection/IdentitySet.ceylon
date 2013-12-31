@@ -18,8 +18,9 @@ shared class IdentitySet<Element>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
     
-    variable value store = elementStore<Element>(hashtable.initialCapacity);
-    variable Integer _size = 0;
+    variable value store = elementStore<Element>
+            (hashtable.initialCapacity);
+    variable Integer length = 0;
     
     // Write
     
@@ -28,31 +29,38 @@ shared class IdentitySet<Element>
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket = store[index];
-        while(exists Cell<Element> cell = bucket){
-            if(cell.car === element){
+        variable value bucket = store[index];
+        while(exists cell = bucket){
+            if(cell.element === element){
                 // modify an existing entry
-                cell.car = element;
+                cell.element = element;
                 return false;
             }
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell<Element>(element, store[index]));
+        store.set(index, Cell(element, store[index]));
         return true;
     }
     
     void checkRehash(){
-        if(_size > (store.size.float * hashtable.loadFactor).integer){
+        if(length > (store.size.float * hashtable.loadFactor).integer){
             // must rehash
-            value newStore = elementStore<Element>((_size * hashtable.growthFactor).integer);
+            value newStore = elementStore<Element>
+                    ((length * hashtable.growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
-                variable Cell<Element>? bucket = store[index];
-                while(exists Cell<Element> cell = bucket){
-                    addToStore(newStore, cell.car);
-                    bucket = cell.cdr;
+                variable value bucket = store[index];
+                while(exists cell = bucket){
+                    bucket = cell.rest;
+                    Integer newIndex = storeIndex(cell.element, newStore);
+                    variable value newBucket = newStore[newIndex];
+                    while(exists newCell = newBucket?.rest){
+                        newBucket = newCell;
+                    }
+                    cell.rest = newBucket;
+                    newStore.set(newIndex, cell);
                 }
                 index++;
             }
@@ -63,7 +71,7 @@ shared class IdentitySet<Element>
     // Add initial values
     for(element in elements){
         if(addToStore(store, element)){
-            _size++;
+            length++;
         }        
     }
     checkRehash();
@@ -72,7 +80,7 @@ shared class IdentitySet<Element>
     
     shared Boolean add(Element element){
         if(addToStore(store, element)){
-            _size++;
+            length++;
             checkRehash();
             return true;
         }
@@ -84,27 +92,29 @@ shared class IdentitySet<Element>
         for(Element elem in elements){
             ret ||= add(elem);
         }
-        checkRehash();
+        if (ret) {
+            checkRehash();
+        }
         return ret;
     }
     
     shared Boolean remove(Element element){
         Integer index = storeIndex(element, store);
-        variable Cell<Element>? bucket = store[index];
-        variable Cell<Element>? prev = null;
-        while(exists Cell<Element> cell = bucket){
-            if(cell.car === element){
+        variable value bucket = store[index];
+        variable value prev = null of Cell<Element>?;
+        while(exists  cell = bucket){
+            if(cell.element === element){
                 // found it
-                if(exists Cell<Element> last = prev){
-                    last.cdr = cell.cdr;
+                if(exists last = prev){
+                    last.rest = cell.rest;
                 }else{
-                    store.set(index, cell.cdr);
+                    store.set(index, cell.rest);
                 }
-                _size--;
+                length--;
                 return true;
             }
             prev = cell;
-            bucket = cell.cdr;
+            bucket = cell.rest;
         }
         return false;
     }
@@ -116,83 +126,30 @@ shared class IdentitySet<Element>
         while(index < store.size){
             store.set(index++, null);
         }
-        _size = 0;
+        length = 0;
     }
     
     // Read
     
-    shared actual Integer size {
-        return _size;
-    }
+    size => length;
     
-    shared actual Iterator<Element> iterator() {
-        // FIXME: make this faster with a size check
-        object iter satisfies Iterator<Element> {
-            variable Integer index = 0;
-            variable Cell<Element>? bucket = store[index];
-            
-            shared actual Element|Finished next() {
-                // do we need a new bucket?
-                if(!bucket exists){
-                    // find the next non-empty bucket
-                    while(++index < store.size){
-                        bucket = store[index];
-                        if(bucket exists){
-                            break;
-                        }
-                    }
-                }
-                // do we have a bucket?
-                if(exists Cell<Element> bucket = bucket){
-                    value car = bucket.car;
-                    // advance to the next cell
-                    this.bucket = bucket.cdr;
-                    return car;
-                }
-                return finished;
-            }
-        }
-        return iter;
-    }
+    iterator() => StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Element element)) {
         variable Integer c = 0;
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
-                if(selecting(cell.car)){
+            variable value bucket = store[index];
+            while(exists cell = bucket){
+                if(selecting(cell.element)){
                     c++;
                 }
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }
         return c;
-    }
-    
-    shared actual String string {
-        variable Integer index = 0;
-        StringBuilder ret = StringBuilder();
-        ret.append("(");
-        variable Boolean first = true;
-        // walk every bucket
-        while(index < store.size){
-            variable Cell<Element>? bucket = store[index];
-            while(exists Cell<Element> cell = bucket){
-                if(!first){
-                    ret.append(", ");
-                }else{
-                    first = false;
-                }
-                ret.append(cell.car.string);
-                bucket = cell.cdr;
-            }
-            index++;
-        }
-        ret.append(")");
-        return ret.string;
     }
     
     shared actual Integer hash {
@@ -203,7 +160,7 @@ shared class IdentitySet<Element>
             variable Cell<Element>? bucket = store[index];
             while(exists Cell<Element> cell = bucket){
                 hash = hash * 31 + identityHash(cell);
-                bucket = cell.cdr;
+                bucket = cell.rest;
             }
             index++;
         }
@@ -216,12 +173,12 @@ shared class IdentitySet<Element>
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
-                variable Cell<Element>? bucket = store[index];
-                while(exists Cell<Element> cell = bucket){
-                    if(!that.contains(cell.car)){
+                variable value bucket = store[index];
+                while(exists cell = bucket){
+                    if(!that.contains(cell.element)){
                         return false;
                     }
-                    bucket = cell.cdr;
+                    bucket = cell.rest;
                 }
                 index++;
             }
@@ -231,13 +188,13 @@ shared class IdentitySet<Element>
     }
     
     shared actual IdentitySet<Element> clone {
-        IdentitySet<Element> clone = IdentitySet<Element>();
-        clone._size = _size;
+        value clone = IdentitySet<Element>();
+        clone.length = length;
         clone.store = elementStore<Element>(store.size);
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            if(exists Cell<Element> bucket = store[index]){
+            if(exists bucket = store[index]){
                 clone.store.set(index, bucket.clone); 
             }
             index++;
@@ -250,12 +207,12 @@ shared class IdentitySet<Element>
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
-                variable Cell<Element>? bucket = store[index];
-                while(exists Cell<Element> cell = bucket){
-                    if(cell.car === element){
+                variable value bucket = store[index];
+                while(exists cell = bucket){
+                    if(cell.element === element){
                         return true;
                     }
-                    bucket = cell.cdr;
+                    bucket = cell.rest;
                 }
                 index++;
             }
@@ -263,7 +220,8 @@ shared class IdentitySet<Element>
         return false;
     }
     
-    shared default Boolean superset<Other>(IdentitySet<Other> set) 
+    shared default Boolean superset<Other>
+            (IdentitySet<Other> set) 
             given Other satisfies Identifiable {
         for (element in set) {
             if (!element in this) {
@@ -275,7 +233,8 @@ shared class IdentitySet<Element>
         }
     }
     
-    shared default Boolean subset<Other>(IdentitySet<Other> set) 
+    shared default Boolean subset<Other>
+            (IdentitySet<Other> set) 
             given Other satisfies Identifiable {
         for (element in this) {
             if (!element in set) {
@@ -287,10 +246,11 @@ shared class IdentitySet<Element>
         }
     }
     
-    shared IdentitySet<Element> complement<Other>(IdentitySet<Other> set) 
+    shared IdentitySet<Element> complement<Other>
+            (IdentitySet<Other> set) 
             given Other satisfies Identifiable {
-        IdentitySet<Element> ret = IdentitySet<Element>();
-        for(Element elem in this){
+        value ret = IdentitySet<Element>();
+        for(elem in this){
             if(!set.contains(elem)){
                 ret.add(elem);
             }
@@ -298,10 +258,11 @@ shared class IdentitySet<Element>
         return ret;
     }
     
-    shared IdentitySet<Element|Other> exclusiveUnion<Other>(IdentitySet<Other> set) 
+    shared IdentitySet<Element|Other> exclusiveUnion<Other>
+            (IdentitySet<Other> set) 
             given Other satisfies Identifiable {
-        IdentitySet<Element|Other> ret = IdentitySet<Element|Other>();
-        for(Element elem in this){
+        value ret = IdentitySet<Element|Other>();
+        for(elem in this){
             if(!set.contains(elem)){
                 ret.add(elem);
             }
@@ -314,10 +275,11 @@ shared class IdentitySet<Element>
         return ret;
     }
     
-    shared IdentitySet<Element&Other> intersection<Other>(IdentitySet<Other> set) 
+    shared IdentitySet<Element&Other> intersection<Other>
+            (IdentitySet<Other> set) 
             given Other satisfies Identifiable {
-        IdentitySet<Element&Other> ret = IdentitySet<Element&Other>();
-        for(Element elem in this){
+        value ret = IdentitySet<Element&Other>();
+        for(elem in this){
             if(set.contains(elem), is Other elem){
                 ret.add(elem);
             }
@@ -325,9 +287,10 @@ shared class IdentitySet<Element>
         return ret;
     }
     
-    shared IdentitySet<Element|Other> union<Other>(IdentitySet<Other> set) 
+    shared IdentitySet<Element|Other> union<Other>
+            (IdentitySet<Other> set) 
             given Other satisfies Identifiable {
-        IdentitySet<Element|Other> ret = IdentitySet<Element|Other>();
+        value ret = IdentitySet<Element|Other>();
         ret.addAll(this);
         ret.addAll(set);
         return ret;

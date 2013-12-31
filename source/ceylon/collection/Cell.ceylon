@@ -1,13 +1,13 @@
-"A link in a linked list."
-class Cell<Element>(car, cdr) 
+"A link in a singly linked list."
+class Cell<Element>(element, rest) 
         satisfies Cloneable<Cell<Element>> {
     "The element belonging to this link."
-    shared variable Element car;
+    shared variable Element element;
     "The next link in the list."
-    shared variable Cell<Element>? cdr;
+    shared variable Cell<Element>? rest;
     // shallow clone
     shared actual Cell<Element> clone
-            => Cell<Element>(car, cdr?.clone);
+            => Cell<Element>(element, rest?.clone);
 }
 
 class CellIterator<Element>(iter) 
@@ -16,8 +16,8 @@ class CellIterator<Element>(iter)
     
     shared actual Element|Finished next() {
         if(exists iter = iter){
-            this.iter = iter.cdr;
-            return iter.car;
+            this.iter = iter.rest;
+            return iter.element;
         }
         return finished;
     }
