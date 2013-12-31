@@ -202,20 +202,20 @@ shared class HashSet<Element>
             else StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Element element)) {
-        variable Integer c = 0;
+        variable Integer count = 0;
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
                 if(selecting(cell.element)){
-                    c++;
+                    count++;
                 }
                 bucket = cell.rest;
             }
             index++;
         }
-        return c;
+        return count;
     }
     
     shared actual Integer hash {

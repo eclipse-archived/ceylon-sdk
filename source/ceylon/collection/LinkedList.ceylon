@@ -370,14 +370,14 @@ shared class LinkedList<Element>(elements = {})
     
     shared actual Integer count(Boolean selecting(Element element)) {
         variable value iter = head;
-        variable Integer c = 0;
+        variable Integer count = 0;
         while(exists cell = iter){
             if(selecting(cell.element)){
-                c++;
+                count++;
             }
             iter = cell.rest;
         }
-        return c;
+        return count;
     }
     
     shared actual Integer? lastIndex {
