@@ -27,11 +27,11 @@ shared class IdentitySet<Element>
     Integer storeIndex(Identifiable elem, Array<Cell<Element>?> store)
             => (identityHash(elem) % store.size).magnitude;
     
-    Boolean addToStore(Array<Cell<Element>?> store, Element element){
+    Boolean addToStore(Array<Cell<Element>?> store, Element element) {
         Integer index = storeIndex(element, store);
         variable value bucket = store[index];
-        while(exists cell = bucket){
-            if(cell.element === element){
+        while (exists cell = bucket) {
+            if (cell.element === element) {
                 // modify an existing entry
                 cell.element = element;
                 return false;
@@ -43,20 +43,20 @@ shared class IdentitySet<Element>
         return true;
     }
     
-    void checkRehash(){
-        if(length > (store.size.float * hashtable.loadFactor).integer){
+    void checkRehash() {
+        if (hashtable.rehash(length, store.size)) {
             // must rehash
             value newStore = elementStore<Element>
-                    ((length * hashtable.growthFactor).integer);
+                    (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
-            while(index < store.size){
+            while (index < store.size) {
                 variable value bucket = store[index];
-                while(exists cell = bucket){
+                while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element, newStore);
                     variable value newBucket = newStore[newIndex];
-                    while(exists newCell = newBucket?.rest){
+                    while (exists newCell = newBucket?.rest) {
                         newBucket = newCell;
                     }
                     cell.rest = newBucket;
@@ -69,8 +69,8 @@ shared class IdentitySet<Element>
     }
     
     // Add initial values
-    for(element in elements){
-        if(addToStore(store, element)){
+    for (element in elements){
+        if (addToStore(store, element)) {
             length++;
         }        
     }

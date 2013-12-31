@@ -37,4 +37,10 @@ shared class Hashtable(
     "growth factor must be at least 1.0"
     assert (growthFactor>=1.0);
     
+    shared Boolean rehash(Integer length, Integer capacity)
+            => length > (capacity * loadFactor).integer;
+    
+    shared Integer capacity(Integer length)
+            => (length * growthFactor).integer;
+    
 }

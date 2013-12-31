@@ -88,11 +88,11 @@ shared class HashSet<Element>
         }
     }
     
-    Boolean addToStore(Array<Cell<Element>?> store, Element element){
+    Boolean addToStore(Array<Cell<Element>?> store, Element element) {
         Integer index = storeIndex(element, store);
         variable value bucket = store[index];
-        while(exists cell = bucket){
-            if(cell.element == element){
+        while (exists cell = bucket) {
+            if (cell.element == element) {
                 // modify an existing entry
                 cell.element = element;
                 return false;
@@ -104,20 +104,20 @@ shared class HashSet<Element>
         return true;
     }
     
-    void checkRehash(){
-        if(length > (store.size.float * hashtable.loadFactor).integer){
+    void checkRehash() {
+        if (hashtable.rehash(length, store.size)) {
             // must rehash
             value newStore = elementStore<Element>
-                    ((length * hashtable.growthFactor).integer);
+                    (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
-            while(index < store.size){
+            while (index < store.size) {
                 variable value bucket = store[index];
-                while(exists cell = bucket){
+                while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element, newStore);
                     variable value newBucket = newStore[newIndex];
-                    while(exists newCell = newBucket?.rest){
+                    while (exists newCell = newBucket?.rest) {
                         newBucket = newCell;
                     }
                     cell.rest = newBucket;
@@ -130,8 +130,8 @@ shared class HashSet<Element>
     }
     
     // Add initial values
-    for(val in elements){
-        if(addToStore(store, val)){
+    for (val in elements) {
+        if (addToStore(store, val)) {
             length++;
         }        
     }

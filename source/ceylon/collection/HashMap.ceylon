@@ -38,11 +38,11 @@ shared class HashMap<Key, Item>
     Integer storeIndex(Object key, Array<Cell<Key->Item>?> store)
             => (key.hash % store.size).magnitude;
     
-    Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry){
+    Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
         variable value bucket = store[index];
-        while(exists cell = bucket){
-            if(cell.element.key == entry.key){
+        while (exists cell = bucket) {
+            if (cell.element.key == entry.key) {
                 // modify an existing entry
                 cell.element = entry;
                 return false;
@@ -53,19 +53,25 @@ shared class HashMap<Key, Item>
         store.set(index, Cell(entry, store[index]));
         return true;
     }
-
-    void checkRehash(){
-        if(length > (store.size.float * hashtable.loadFactor).integer){
+    
+    void checkRehash() {
+        if (hashtable.rehash(length, store.size)) {
             // must rehash
             value newStore = entryStore<Key,Item>
-                    ((length * hashtable.growthFactor).integer);
+                    (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
-            while(index < store.size){
+            while (index < store.size) {
                 variable value bucket = store[index];
-                while(exists cell = bucket){
-                    addToStore(newStore, cell.element);
+                while (exists cell = bucket) {
                     bucket = cell.rest;
+                    Integer newIndex = storeIndex(cell.element.key, newStore);
+                    variable value newBucket = newStore[newIndex];
+                    while (exists newCell = newBucket?.rest) {
+                        newBucket = newCell;
+                    }
+                    cell.rest = newBucket;
+                    newStore.set(newIndex, cell);
                 }
                 index++;
             }
@@ -74,8 +80,8 @@ shared class HashMap<Key, Item>
     }
     
     // Add initial values
-    for(entry in entries){   
-        if(addToStore(store, entry)){
+    for (entry in entries){   
+        if (addToStore(store, entry)) {
             length++;
         }
     }
