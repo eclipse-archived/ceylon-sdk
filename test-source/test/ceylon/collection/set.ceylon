@@ -1,43 +1,59 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
-shared test void testSet() {
-    MutableSet<String> set = HashSet<String>();
-    assertEquals("()", set.string);
+void doSetTests(MutableSet<String> set) {
+    assertEquals("{}", set.string);
     assertEquals(0, set.size);
-
     assertEquals(true, set.add("fu"));
-    assertEquals("(fu)", set.string);
+    assertEquals("{ fu }", set.string);
     assertTrue(set.contains("fu"));
     assertEquals(1, set.size);
-
     assertEquals(false, set.add("fu"));
-    assertEquals("(fu)", set.string);
+    assertEquals("{ fu }", set.string);
     assertTrue(set.contains("fu"));
     assertEquals(1, set.size);
-
     set.add("stef");
     assertTrue(set.contains("fu"));
     assertTrue(set.contains("stef"));
     assertEquals(2, set.size);
-    
     assertTrue(!set.contains("bar"));
-    
     set.clear();
-    assertEquals("()", set.string);
+    assertEquals("{}", set.string);
     assertEquals(0, set.size);
-    assertTrue(!set.contains("fu"));
-    
-    // equality
+    assertTrue(!set.contains("fu")); // equality
     assertEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a", "b"});
     assertNotEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a"});
     assertNotEquals(HashSet{"a", "b", "c"}, HashSet{});
-    assertEquals(HashSet{}, HashSet{});
-    
-    // unions and shit
+    assertEquals(HashSet{}, HashSet{}); // unions and shit
     assertEquals(HashSet{"a", 2}, HashSet{"a", "a"}.union(HashSet{2, "a"}));
     assertEquals(HashSet{"b", 2}, HashSet{"a", "b"}.exclusiveUnion(HashSet{2, "a"}));
     assertEquals(HashSet{"a"}, HashSet{"a", "b"}.intersection(HashSet{2, "a"}));
+}
+
+shared test void testSet() {
+    doSetTests(HashSet<String>());
+    doSetTests(LinkedHashSet<String>());
+    value set1 = LinkedHashSet<String>();
+    set1.add("hello");
+    set1.add("world");
+    set1.add("goodbye");
+    set1.add("world");
+    set1.add("12345");
+    set1.add("!@#$%");
+    set1.add("abcde");
+    value set2 = HashSet<String>();
+    set2.add("hello");
+    set2.add("world");
+    set2.add("goodbye");
+    set2.add("world");
+    set2.add("12345");
+    set2.add("!@#$%");
+    set2.add("abcde");
+    print (set1.string);
+    print (set2.string);
+    assert (set1.string=="{ hello, world, goodbye, 12345, !@#$%, abcde }");
+    //the actual order is irrelevant:
+    assert (set2.string=="{ goodbye, world, hello, abcde, 12345, !@#$% }");
 }
 
 shared test void testSetRemove() {

@@ -1,11 +1,11 @@
 "A link in a linked list."
-class Cell<T>(car, cdr) 
-        satisfies Cloneable<Cell<T>> {
+shared class Cell<Element>(car, cdr) 
+        satisfies Cloneable<Cell<Element>> {
     "The element belonging to this link."
-    shared variable T car;
+    shared variable Element car;
     "The next link in the list."
-    shared variable Cell<T>? cdr;
+    shared variable Cell<Element>? cdr;
     // shallow clone
-    shared actual Cell<T> clone
-            => Cell<T>(car, cdr?.clone);
+    shared actual Cell<Element> clone
+            => Cell<Element>(car, cdr?.clone);
 }

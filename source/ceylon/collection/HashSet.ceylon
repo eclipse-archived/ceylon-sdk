@@ -54,7 +54,7 @@ shared class HashSet<Element>
     Integer storeIndex(Object elem, Array<Cell<Element>?> store)
             => (elem.hash % store.size).magnitude;
     
-    Boolean addToStore(Array<Cell<Element>?> store, Element element){
+    Boolean addToInitialStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
         variable value bucket = store[index];
         while(exists cell = bucket){
@@ -70,6 +70,32 @@ shared class HashSet<Element>
         return true;
     }
     
+    // Add initial values
+    for(val in elements){
+        if(addToInitialStore(store, val)){
+            _size++;
+        }        
+    }
+    //checkRehash();
+    
+    // End of initialiser section
+    
+    Boolean addToStore(Array<Cell<Element>?> store, Element element){
+        Integer index = storeIndex(element, store);
+        variable value bucket = store[index];
+        while(exists cell = bucket){
+            if(cell.car == element){
+                // modify an existing entry
+                cell.car = element;
+                return false;
+            }
+            bucket = cell.cdr;
+        }
+        // add a new entry
+        store.set(index, createCell(element, store[index]));
+        return true;
+    }
+    
     void checkRehash(){
         if(_size > (store.size.float * loadFactor).integer){
             // must rehash
@@ -79,24 +105,20 @@ shared class HashSet<Element>
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    addToStore(newStore, cell.car);
                     bucket = cell.cdr;
+                    Integer newIndex = storeIndex(cell.car, newStore);
+                    variable value newBucket = newStore[newIndex];
+                    while(exists newCell = newBucket?.cdr){
+                        newBucket = newCell;
+                    }
+                    cell.cdr = newBucket;
+                    newStore.set(newIndex, cell);
                 }
                 index++;
             }
             store = newStore;
         }
     }
-    
-    // Add initial values
-    for(val in elements){
-        if(addToStore(store, val)){
-            _size++;
-        }        
-    }
-    checkRehash();
-    
-    // End of initialiser section
     
     shared actual Boolean add(Element element){
         if(addToStore(store, element)){
@@ -128,6 +150,7 @@ shared class HashSet<Element>
                 }else{
                     store.set(index, cell.cdr);
                 }
+                deleteCell(cell);
                 _size--;
                 return true;
             }
@@ -145,13 +168,14 @@ shared class HashSet<Element>
             store.set(index++, null);
         }
         _size = 0;
+        deleteAllCells();
     }
     
     // Read
     
     size => _size;
     
-    shared actual Iterator<Element> iterator() {
+    shared actual default Iterator<Element> iterator() {
         // FIXME: make this faster with a size check
         object iter satisfies Iterator<Element> {
             variable Integer index = 0;
@@ -196,29 +220,6 @@ shared class HashSet<Element>
             index++;
         }
         return c;
-    }
-    
-    shared actual String string {
-        variable Integer index = 0;
-        StringBuilder ret = StringBuilder();
-        ret.append("(");
-        variable Boolean first = true;
-        // walk every bucket
-        while(index < store.size){
-            variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(!first){
-                    ret.append(", ");
-                }else{
-                    first = false;
-                }
-                ret.append(cell.car.string);
-                bucket = cell.cdr;
-            }
-            index++;
-        }
-        ret.append(")");
-        return ret.string;
     }
     
     shared actual Integer hash {
@@ -332,5 +333,15 @@ shared class HashSet<Element>
         ret.addAll(set);
         return ret;
     }
+    
+    //for the benefit of LinkedHashSet
+    //TODO: hide these operations from clients!
+    
+    shared default Cell<Element> createCell(Element car, Cell<Element>? cdr)
+            => Cell(car, cdr);
+    
+    shared default void deleteCell(Cell<Element> cell) {}
+    
+    shared default void deleteAllCells() {}
     
 }

@@ -284,31 +284,6 @@ shared class HashMap<Key, Item>
         return count;
     }
     
-    shared actual String string {
-        variable Integer index = 0;
-        StringBuilder ret = StringBuilder();
-        ret.append("{");
-        variable Boolean first = true;
-        // walk every bucket
-        while(index < store.size){
-            variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(!first){
-                    ret.append(", ");
-                }else{
-                    first = false;
-                }
-                ret.append(cell.car.key.string);
-                ret.append("->");
-                ret.append(cell.car.item.string);
-                bucket = cell.cdr;
-            }
-            index++;
-        }
-        ret.append("}");
-        return ret.string;
-    }
-    
     shared actual Integer hash {
         variable Integer index = 0;
         variable Integer hash = 17;
