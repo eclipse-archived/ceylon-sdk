@@ -7,7 +7,7 @@
  `==` operator."
 by ("Gavin King")
 shared class IdentitySet<Element>
-        (initialCapacity=16, loadFactor = 0.75, elements = {})
+        (hashtable=Hashtable(), elements = {})
         satisfies {Element*} & Collection<Element> &
                   Cloneable<IdentitySet<Element>>
         given Element satisfies Identifiable {
@@ -15,28 +15,16 @@ shared class IdentitySet<Element>
     "The initial elements of the set."
     {Element*} elements;
     
-    "The initial capacity of the backing array."
-    Integer initialCapacity;
+    "Performance-related settings for the backing array."
+    Hashtable hashtable;
     
-    "The ratio between the number of elements and the 
-     capacity which triggers a rebuild of the hash set."
-    Float loadFactor;
-    
-    "initial capacity cannot be negative"
-    assert (initialCapacity>=0);
-    
-    "load factor must be positive"
-    assert (loadFactor>0.0);
-    
-    variable Array<Cell<Element>?> store = elementStore<Element>(initialCapacity);
+    variable value store = elementStore<Element>(hashtable.initialCapacity);
     variable Integer _size = 0;
     
     // Write
     
-    Integer storeIndex(Identifiable elem, Array<Cell<Element>?> store){
-        Integer i = identityHash(elem) % store.size;
-        return i.negative then i.negativeValue else i;
-    }
+    Integer storeIndex(Identifiable elem, Array<Cell<Element>?> store)
+            => (identityHash(elem) % store.size).magnitude;
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
@@ -55,9 +43,9 @@ shared class IdentitySet<Element>
     }
     
     void checkRehash(){
-        if(_size > (store.size.float * loadFactor).integer){
+        if(_size > (store.size.float * hashtable.loadFactor).integer){
             // must rehash
-            Array<Cell<Element>?> newStore = elementStore<Element>(_size * 2);
+            value newStore = elementStore<Element>((_size * hashtable.growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){

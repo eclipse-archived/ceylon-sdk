@@ -13,17 +13,12 @@ import ceylon.collection {
  code of its key. The hash code of a key is defined by 
  [[Object.hash]].
  
- The size of the backing `Array` is called the _capacity_
- of the `HashMap`. The capacity of a new instance is 
- specified by the given [[initialCapacity]]. The capacity is 
- increased, and the entries _rehashed_, when the ratio of 
- [[size]] to capacity exceeds the given [[loadFactor]]. The 
- new capacity is the product of the current capacity and the 
- given [[growthFactor]]."
+ The management of the backing array is controlled by the
+ given [[hashtable]]."
+
 by("Stéphane Épardaud")
 shared class HashMap<Key, Item>
-        (initialCapacity=16, loadFactor=0.75, growthFactor=2.0, 
-                entries = {})
+        (hashtable = Hashtable(), entries = {})
         satisfies MutableMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
@@ -31,27 +26,10 @@ shared class HashMap<Key, Item>
     "The initial entries in the map."
     {<Key->Item>*} entries;
     
-    "The initial capacity of the backing array."
-    Integer initialCapacity;
-    
-    "The ratio between the number of elements and the 
-     capacity which triggers a rebuild of the hash map."
-    Float loadFactor;
-    
-    "The factor used to determine the new size of the
-     backing array when a new backing array is allocated."
-    Float growthFactor;
-    
-    "initial capacity cannot be negative"
-    assert (initialCapacity>=0);
-    
-    "load factor must be positive"
-    assert (loadFactor>0.0);
-    
-    "growth factor must be at least 1.0"
-    assert (growthFactor>=1.0);
-    
-    variable value store = entryStore<Key,Item>(initialCapacity);
+    "Performance-related settings for the backing array."
+    Hashtable hashtable;
+        
+    variable value store = entryStore<Key,Item>(hashtable.initialCapacity);
     variable Integer _size = 0;
     
     // Write
@@ -76,9 +54,9 @@ shared class HashMap<Key, Item>
     }
 
     void checkRehash(){
-        if(_size > (store.size.float * loadFactor).integer){
+        if(_size > (store.size.float * hashtable.loadFactor).integer){
             // must rehash
-            value newStore = entryStore<Key,Item>((_size * growthFactor).integer);
+            value newStore = entryStore<Key,Item>((_size * hashtable.growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
@@ -237,35 +215,7 @@ shared class HashMap<Key, Item>
         return ret;
     }
     
-    shared actual Iterator<Key->Item> iterator() {
-        // FIXME: make this faster with a size check
-        object iter satisfies Iterator<Key->Item> {
-            variable Integer index = 0;
-            variable value bucket = store[index];
-            
-            shared actual <Key->Item>|Finished next() {
-                // do we need a new bucket?
-                if(!bucket exists){
-                    // find the next non-empty bucket
-                    while(++index < store.size){
-                        bucket = store[index];
-                        if(bucket exists){
-                            break;
-                        }
-                    }
-                }
-                // do we have a bucket?
-                if(exists bucket = bucket){
-                    value car = bucket.car;
-                    // advance to the next cell
-                    this.bucket = bucket.cdr;
-                    return car;
-                }
-                return finished;
-            }
-        }
-        return iter;
-    }
+    iterator() => StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Key->Item element)) {
         variable Integer index = 0;

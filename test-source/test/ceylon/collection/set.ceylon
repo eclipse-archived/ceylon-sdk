@@ -31,9 +31,9 @@ void doSetTests(MutableSet<String> set) {
 }
 
 shared test void testSet() {
+    doSetTests(HashSet<String>(unlinked));
     doSetTests(HashSet<String>());
-    doSetTests(LinkedHashSet<String>());
-    value set1 = LinkedHashSet<String>();
+    value set1 = HashSet<String>();
     set1.add("hello");
     set1.add("world");
     set1.add("goodbye");
@@ -41,7 +41,7 @@ shared test void testSet() {
     set1.add("12345");
     set1.add("!@#$%");
     set1.add("abcde");
-    value set2 = HashSet<String>();
+    value set2 = HashSet<String>(unlinked);
     set2.add("hello");
     set2.add("world");
     set2.add("goodbye");

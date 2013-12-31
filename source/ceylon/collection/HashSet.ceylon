@@ -9,76 +9,83 @@ import ceylon.collection {
  an index of the array according to its hash code. The hash 
  code of an element is defined by [[Object.hash]].
  
- The size of the backing `Array` is called the _capacity_
- of the `HashSet`. The capacity of a new instance is 
- specified by the given [[initialCapacity]]. The capacity is 
- increased, and the elements _rehashed_, when the ratio of 
- [[size]] to capacity exceeds the given [[loadFactor]]. The 
- new capacity is the product of the current capacity and the 
- given [[growthFactor]]."
-by("Stéphane Épardaud")
+ The [[stability]] of a `HashSet` controls its iteration
+ order:
+ 
+ - A [[linked]] set has a stable and meaningful order of 
+   iteration. The elements of the set form a linked list, 
+   where new elements are added to the end of the linked 
+   list. Iteration of the set follows this linked list, from 
+   least recently added elements to most recently added 
+   elements.
+ - An [[unlinked]] `HashSet` has an unstable iteration order
+   that may change when the set is modified. The order 
+   itself is not meaningful to a client.
+ 
+ The management of the backing array is controlled by the
+ given [[hashtable]]."
+
+by("Stéphane Épardaud", "Gavin King")
 shared class HashSet<Element>
-        (initialCapacity=16, loadFactor=0.75, growthFactor=2.0, 
-                elements = {})
+        (stability=linked, hashtable = Hashtable(), elements = {})
         satisfies MutableSet<Element>
         given Element satisfies Object {
+    
+    "Determines whether this is a linked hash set with a
+     stable iteration order."
+    Stability stability;
     
     "The initial elements of the set."
     {Element*} elements;
     
-    "The initial capacity of the backing array."
-    Integer initialCapacity;
+    "Performance-related settings for the backing array."
+    Hashtable hashtable;
     
-    "The ratio between the number of elements and the 
-     capacity which triggers a rebuild of the hash set."
-    Float loadFactor;
-    
-    "The factor used to determine the new size of the
-     backing array when a new backing array is allocated."
-    Float growthFactor;
-    
-    "initial capacity cannot be negative"
-    assert (initialCapacity>=0);
-    
-    "load factor must be positive"
-    assert (loadFactor>0.0);
-    
-    "growth factor must be at least 1.0"
-    assert (growthFactor>=1.0);
-    
-    variable value store = elementStore<Element>(initialCapacity);
+    variable value store = elementStore<Element>(hashtable.initialCapacity);
     variable Integer _size = 0;
+    
+    variable LinkedCell<Element>? head = null;
+    variable LinkedCell<Element>? tip = null;
     
     // Write
     
     Integer storeIndex(Object elem, Array<Cell<Element>?> store)
             => (elem.hash % store.size).magnitude;
     
-    Boolean addToInitialStore(Array<Cell<Element>?> store, Element element){
-        Integer index = storeIndex(element, store);
-        variable value bucket = store[index];
-        while(exists cell = bucket){
-            if(cell.car == element){
-                // modify an existing entry
-                cell.car = element;
-                return false;
+    Cell<Element> createCell(Element car, Cell<Element>? cdr) {
+        if (stability==linked) {
+            value cell = LinkedCell(car, cdr, tip);
+            if (exists last = tip) {
+                last.next = cell;
             }
-            bucket = cell.cdr;
+            tip = cell;
+            if (!head exists) {
+                head = cell;
+            }
+            return cell;
         }
-        // add a new entry
-        store.set(index, Cell(element, store[index]));
-        return true;
+        else {
+            return Cell(car, cdr);
+        }
     }
     
-    // Add initial values
-    for(val in elements){
-        if(addToInitialStore(store, val)){
-            _size++;
-        }        
+    void deleteCell(Cell<Element> cell) {
+        if (stability==linked) {
+            assert (is LinkedCell<Element> cell);
+            if (exists last = cell.last) {
+                last.next = cell.next;
+            }
+            else {
+                head = cell.next;
+            }
+            if (exists next = cell.next) {
+                next.last = cell.last;
+            }
+            else {
+                tip = cell.last;
+            }
+        }
     }
-    //checkRehash();
-    
-    // End of initialiser section
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element){
         Integer index = storeIndex(element, store);
@@ -97,9 +104,9 @@ shared class HashSet<Element>
     }
     
     void checkRehash(){
-        if(_size > (store.size.float * loadFactor).integer){
+        if(_size > (store.size.float * hashtable.loadFactor).integer){
             // must rehash
-            value newStore = elementStore<Element>((_size * growthFactor).integer);
+            value newStore = elementStore<Element>((_size * hashtable.growthFactor).integer);
             variable Integer index = 0;
             // walk every bucket
             while(index < store.size){
@@ -119,6 +126,16 @@ shared class HashSet<Element>
             store = newStore;
         }
     }
+    
+    // Add initial values
+    for(val in elements){
+        if(addToStore(store, val)){
+            _size++;
+        }        
+    }
+    checkRehash();
+    
+    // End of initialiser section
     
     shared actual Boolean add(Element element){
         if(addToStore(store, element)){
@@ -168,42 +185,17 @@ shared class HashSet<Element>
             store.set(index++, null);
         }
         _size = 0;
-        deleteAllCells();
+        head = null;
+        tip = null;
     }
     
     // Read
     
     size => _size;
     
-    shared actual default Iterator<Element> iterator() {
-        // FIXME: make this faster with a size check
-        object iter satisfies Iterator<Element> {
-            variable Integer index = 0;
-            variable value bucket = store[index];
-            
-            shared actual Element|Finished next() {
-                // do we need a new bucket?
-                if(!bucket exists){
-                    // find the next non-empty bucket
-                    while(++index < store.size){
-                        bucket = store[index];
-                        if(bucket exists){
-                            break;
-                        }
-                    }
-                }
-                // do we have a bucket?
-                if(exists bucket = bucket){
-                    value car = bucket.car;
-                    // advance to the next cell
-                    this.bucket = bucket.cdr;
-                    return car;
-                }
-                return finished;
-            }
-        }
-        return iter;
-    }
+    iterator() => stability==linked 
+            then LinkedCellIterator(head)
+            else StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Element element)) {
         variable Integer c = 0;
@@ -334,14 +326,26 @@ shared class HashSet<Element>
         return ret;
     }
     
-    //for the benefit of LinkedHashSet
-    //TODO: hide these operations from clients!
+    shared actual Element? first {
+        if (stability==linked) {
+            return head?.car;
+        }
+        else {
+            return store[0]?.car;
+        }
+    }
     
-    shared default Cell<Element> createCell(Element car, Cell<Element>? cdr)
-            => Cell(car, cdr);
-    
-    shared default void deleteCell(Cell<Element> cell) {}
-    
-    shared default void deleteAllCells() {}
+    shared actual Element? last {
+        if (stability==linked) {
+            return tip?.car;
+        }
+        else {
+            variable value bucket = store[store.size-1];
+            while (exists cell = bucket?.cdr) {
+                bucket = cell;
+            }
+            return bucket?.car;
+        }
+    }
     
 }
