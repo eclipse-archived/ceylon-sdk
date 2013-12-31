@@ -162,7 +162,7 @@ shared class IdentityMap<Key, Item>
         return null;
     }
     
-    shared Collection<Item> values {
+    /*shared Collection<Item> values {
         value ret = LinkedList<Item>();
         variable Integer index = 0;
         // walk every bucket
@@ -192,18 +192,17 @@ shared class IdentityMap<Key, Item>
         return ret;
     }
     
-    /*shared actual Map<Item,Set<Key>> inverse {
-        MutableMap<Item,MutableSet<Key>> ret = HashMap<Item,MutableSet<Key>>();
+    shared actual Map<Item,Set<Key>> inverse {
+        value ret = HashMap<Item,MutableSet<Key>>();
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
-            variable Cell<Key->Item>? bucket = store[index];
-            while(exists Cell<Key->Item> cell = bucket){
-                MutableSet<Key>? keys = ret[cell.car.item];
-                if(exists keys){
+            variable value bucket = store[index];
+            while(exists cell = bucket){
+                if(exists keys = ret[cell.car.item]){
                     keys.add(cell.car.key);
                 }else{
-                    MutableSet<Key> k = HashSet<Key>();
+                    value k = HashSet<Key>();
                     ret.put(cell.car.item, k);
                     k.add(cell.car.key);
                 }

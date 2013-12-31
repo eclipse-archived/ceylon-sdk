@@ -18,9 +18,9 @@ import ceylon.collection {
    list. Iteration of the set follows this linked list, from 
    least recently added elements to most recently added 
    elements.
- - An [[unlinked]] `HashSet` has an unstable iteration order
-   that may change when the set is modified. The order 
-   itself is not meaningful to a client.
+ - An [[unlinked]] set has an unstable iteration order that 
+   may change when the set is modified. The order itself is 
+   not meaningful to a client.
  
  The management of the backing array is controlled by the
  given [[hashtable]]."
@@ -53,9 +53,9 @@ shared class HashSet<Element>
     Integer storeIndex(Object elem, Array<Cell<Element>?> store)
             => (elem.hash % store.size).magnitude;
     
-    Cell<Element> createCell(Element car, Cell<Element>? cdr) {
+    Cell<Element> createCell(Element elem, Cell<Element>? rest) {
         if (stability==linked) {
-            value cell = LinkedCell(car, cdr, tip);
+            value cell = LinkedCell(elem, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -66,7 +66,7 @@ shared class HashSet<Element>
             return cell;
         }
         else {
-            return Cell(car, cdr);
+            return Cell(elem, rest);
         }
     }
     

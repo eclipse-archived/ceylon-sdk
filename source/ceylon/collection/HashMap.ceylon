@@ -1,9 +1,6 @@
 import ceylon.collection {
     Cell,
-    MutableSet,
-    LinkedList,
     entryStore,
-    HashSet,
     MutableMap
 }
 
@@ -13,30 +10,85 @@ import ceylon.collection {
  code of its key. The hash code of a key is defined by 
  [[Object.hash]].
  
+ The [[stability]] of a `HashMap` controls its iteration
+ order:
+ 
+ - A [[linked]] map has a stable and meaningful order of 
+   iteration. The entries of the map form a linked list, 
+   where new entries are added to the end of the linked 
+   list. Iteration of the map follows this linked list, from 
+   least recently added elements to most recently added 
+   elements.
+ - An [[unlinked]] set has an unstable iteration order that 
+   may change when the set is modified. The order itself is 
+   not meaningful to a client.
+ 
  The management of the backing array is controlled by the
  given [[hashtable]]."
 
 by("Stéphane Épardaud")
 shared class HashMap<Key, Item>
-        (hashtable = Hashtable(), entries = {})
+        (stability=linked, hashtable = Hashtable(), entries = {})
         satisfies MutableMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
+    
+    "Determines whether this is a linked hash set with a
+     stable iteration order."
+    Stability stability;
     
     "The initial entries in the map."
     {<Key->Item>*} entries;
     
     "Performance-related settings for the backing array."
     Hashtable hashtable;
-        
+    
     variable value store = entryStore<Key,Item>
                 (hashtable.initialCapacity);
     variable Integer length = 0;
+    
+    variable LinkedCell<Key->Item>? head = null;
+    variable LinkedCell<Key->Item>? tip = null;
     
     // Write
     
     Integer storeIndex(Object key, Array<Cell<Key->Item>?> store)
             => (key.hash % store.size).magnitude;
+    
+    Cell<Key->Item> createCell(Key->Item entry, Cell<Key->Item>? rest) {
+        if (stability==linked) {
+            value cell = LinkedCell(entry, rest, tip);
+            if (exists last = tip) {
+                last.next = cell;
+            }
+            tip = cell;
+            if (!head exists) {
+                head = cell;
+            }
+            return cell;
+        }
+        else {
+            return Cell(entry, rest);
+        }
+    }
+    
+    void deleteCell(Cell<Key->Item> cell) {
+        if (stability==linked) {
+            assert (is LinkedCell<Key->Item> cell);
+            if (exists last = cell.previous) {
+                last.next = cell.next;
+            }
+            else {
+                head = cell.next;
+            }
+            if (exists next = cell.next) {
+                next.previous = cell.previous;
+            }
+            else {
+                tip = cell.previous;
+            }
+        }
+    }
     
     Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
@@ -50,7 +102,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, store[index]));
+        store.set(index, createCell(entry, store[index]));
         return true;
     }
     
@@ -134,6 +186,7 @@ shared class HashMap<Key, Item>
                 }else{
                     store.set(index, cell.rest);
                 }
+                deleteCell(cell);
                 length--;
                 return cell.element.item;
             }
@@ -151,6 +204,8 @@ shared class HashMap<Key, Item>
             store.set(index++, null);
         }
         length = 0;
+        head = null;
+        tip = null;
     }
     
     // Read
@@ -172,7 +227,7 @@ shared class HashMap<Key, Item>
         return null;
     }
     
-    shared actual Collection<Item> values {
+    /*shared actual Collection<Item> values {
         value ret = LinkedList<Item>();
         variable Integer index = 0;
         // walk every bucket
@@ -221,9 +276,11 @@ shared class HashMap<Key, Item>
             index++;
         }
         return ret;
-    }
+    }*/
     
-    iterator() => StoreIterator(store);
+    iterator() => stability==linked 
+            then LinkedCellIterator(head)
+            else StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Key->Item element)) {
         variable Integer index = 0;
