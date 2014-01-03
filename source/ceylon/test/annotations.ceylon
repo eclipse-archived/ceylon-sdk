@@ -44,6 +44,10 @@ shared annotation TestExecutorAnnotation testExecutor(
      testListeners({`class DependencyInjectionTestListener`,
                     `class TransactionalTestListener`})
      package com.acme;
+ 
+ Declaratively specified test listeners will be notified only about events related to single test execution, 
+ like [[testStart|TestListener.testStart]] or [[testFinish|TestListener.testFinish]], 
+ not about events concerning the whole test run.
 "
 shared annotation TestListenersAnnotation testListeners(
     "The class declarations of [[TestListener]]s" {ClassDeclaration+} listeners) => TestListenersAnnotation(listeners);
