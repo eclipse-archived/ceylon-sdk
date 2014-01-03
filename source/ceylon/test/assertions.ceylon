@@ -127,6 +127,7 @@ shared class ExceptionAssert(
         "The exception to be checked." Exception exception) {
 
     "Verifies that the actual _exception_ has expected type."
+    throws(`class AssertionException`, "When _exception_ hasn't expected type.")
     shared ExceptionAssert hasType(
             "The expected type or type predicate." Class<Exception,Nothing>|Boolean(ClassModel<Exception,Nothing>) typeCondition) {
         if(is Class<Exception,Nothing> typeCondition) {
@@ -143,6 +144,7 @@ shared class ExceptionAssert(
     }
 
     "Verifies that the actual _exception_ has expected message."
+    throws(`class AssertionException`, "When _exception_ hasn't expected message.")
     shared ExceptionAssert hasMessage(
             "The expected message or message predicate." String|Boolean(String) messageCondition) {
         switch(messageCondition)
@@ -160,6 +162,7 @@ shared class ExceptionAssert(
     }
 
     "Verifies that the actual _exception_ does not have a cause."
+    throws(`class AssertionException`, "When _exception_ has some cause.")
     shared ExceptionAssert hasNoCause() {
         if(exists cause = exception.cause) {
             throw AssertionException("assertion failed: expected exception without cause, but has ``cause``");
