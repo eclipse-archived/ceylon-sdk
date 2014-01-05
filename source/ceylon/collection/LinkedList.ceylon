@@ -63,32 +63,23 @@ shared class LinkedList<Element>(elements = {})
         if(index == length){
             add(element);
         }else{
-            value newCell = Cell(element, null);
             if(index == 0){
-                newCell.rest = head;
-                head = newCell;
+                head = Cell(element, head);
                 // we only have to update the tail if 
                 // _size == 0 but that's not possible
                 // since it has already been checked
             }else{
                 variable value iter = head;
-                variable value prev = null of Cell<Element>?;
                 variable Integer i = 0;
                 while(exists cell = iter){
-                    if(i++ == index){
-                        if(exists prev2 = prev){
-                            prev2.rest = newCell;
-                            newCell.rest = cell;
-                            // no need to update the tail since 
-                            // we never modify the last element, 
-                            // we would have taken the other 
-                            // branch above instead
-                        }else{
-                            // cannot happen
-                        }
+                    if(++i == index){
+                        cell.rest = Cell(element, cell.rest);
+                        // no need to update the tail since 
+                        // we never modify the last element, 
+                        // we would have taken the other 
+                        // branch above instead
                         break;
                     }
-                    prev = iter;
                     iter = cell.rest;
                 }
             }
