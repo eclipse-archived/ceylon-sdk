@@ -49,7 +49,7 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable Integer i = 0;
         while (exists cell = iter) {
-            if (i++ == index){
+            if (i++ == index) {
                 cell.element = element;
                 return;
             }
@@ -76,8 +76,9 @@ shared class LinkedList<Element>(elements = {})
                 variable value iter = head;
                 variable Integer i = 0;
                 while (exists cell = iter) {
+                    value rest = cell.rest;
                     if (++i == index) {
-                        cell.rest = Cell(element, cell.rest);
+                        cell.rest = Cell(element, rest);
                         // no need to update the tail since 
                         // we never modify the last element, 
                         // we would have taken the other 
@@ -85,7 +86,7 @@ shared class LinkedList<Element>(elements = {})
                         length++;
                         return;
                     }
-                    iter = cell.rest;
+                    iter = rest;
                 }
                 assert (false);
             }
@@ -122,8 +123,9 @@ shared class LinkedList<Element>(elements = {})
             variable value iter = head;
             variable Integer i = 0;
             while (exists cell = iter) {
+                value rest = cell.rest;
                 if (++i == index) {
-                    if (exists more = cell.rest?.rest) {
+                    if (exists more = rest?.rest) {
                         cell.rest = more;
                     }
                     else {
@@ -132,7 +134,9 @@ shared class LinkedList<Element>(elements = {})
                     length--;
                     return cell.element;
                 }
-                iter = cell.rest;
+                else {
+                    iter = rest;
+                }
             }
             assert (false);
         }
@@ -155,7 +159,8 @@ shared class LinkedList<Element>(elements = {})
         }
         variable value iter = head;
         while (exists cell = iter) {
-            if (exists rest = cell.rest, 
+            value rest = cell.rest;
+            if (exists rest,
                 exists elem = rest.element, 
                 elem==element) {
                 if (exists more = rest.rest) {
@@ -167,7 +172,7 @@ shared class LinkedList<Element>(elements = {})
                 length--;
             }
             else {
-                iter = cell.rest;
+                iter = rest;
             }
         }
     }
@@ -187,7 +192,8 @@ shared class LinkedList<Element>(elements = {})
         }
         variable value iter = head;
         while (exists cell = iter) {
-            if (exists rest = cell.rest, 
+            value rest = cell.rest;
+            if (exists rest, 
                 exists elem = rest.element, 
                 elem==element) {
                 if (exists more = rest.rest) {
@@ -199,7 +205,7 @@ shared class LinkedList<Element>(elements = {})
                 length--;
                 return true;
             }
-            iter = cell.rest;
+            iter = rest;
         }
         return false;
     }
@@ -217,7 +223,8 @@ shared class LinkedList<Element>(elements = {})
         }
         variable value iter = head;
         while (exists cell = iter) {
-            if (exists rest = cell.rest, 
+            value rest = cell.rest;
+            if (exists rest, 
                 !rest.element exists) {
                 if (exists more = rest.rest) {
                     cell.rest = more;
@@ -228,7 +235,7 @@ shared class LinkedList<Element>(elements = {})
                 length--;
             }
             else {
-                iter = cell.rest;
+                iter = rest;
             }
         }
     }
