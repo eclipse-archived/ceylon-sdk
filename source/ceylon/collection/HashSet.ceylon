@@ -159,26 +159,29 @@ shared class HashSet<Element>
         return ret;
     }
     
-    shared actual Boolean remove(Element element){
+    shared actual Boolean remove(Element element) {
+        variable value result = false;
         Integer index = storeIndex(element, store);
+        while (exists head = store[index], 
+            head.element == element) {
+            store.set(index,head.rest);
+            length--;
+            result = true;
+        }
         variable value bucket = store[index];
-        variable value prev = null of Cell<Element>?;
-        while(exists cell = bucket){
-            if(cell.element == element){
-                // found it
-                if(exists last = prev){
-                    last.rest = cell.rest;
-                }else{
-                    store.set(index, cell.rest);
-                }
+        while (exists cell = bucket) {
+            if (exists rest = cell.rest,
+                rest.element == element) {
+                cell.rest = rest.rest;
                 deleteCell(cell);
                 length--;
-                return true;
+                result = true;
             }
-            prev = cell;
-            bucket = cell.rest;
+            else {
+                bucket = cell.rest;
+            }
         }
-        return false;
+        return result;
     }
     
     "Removes every element"

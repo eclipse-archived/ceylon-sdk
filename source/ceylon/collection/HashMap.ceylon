@@ -161,8 +161,6 @@ shared class HashMap<Key, Item>
         return null;
     }
     
-    "Adds a collection of key/value mappings to this map, 
-     may be used to change existing mappings"
     shared actual void putAll({<Key->Item>*} entries){
         for(entry in entries){
             if(addToStore(store, entry)){
@@ -172,31 +170,30 @@ shared class HashMap<Key, Item>
         checkRehash();
     }
     
-    
-    "Removes a key/value mapping if it exists"
-    shared actual Item? remove(Key key){
+    shared actual Item? remove(Key key) {
         Integer index = storeIndex(key, store);
+        while (exists head = store[index], 
+            head.element.key == key) {
+            store.set(index,head.rest);
+            length--;
+            return head.element.item;
+        }
         variable value bucket = store[index];
-        variable value prev = null of Cell<Key->Item>?;
-        while(exists Cell<Key->Item> cell = bucket){
-            if(cell.element.key == key){
-                // found it
-                if(exists last = prev){
-                    last.rest = cell.rest;
-                }else{
-                    store.set(index, cell.rest);
-                }
+        while (exists cell = bucket) {
+            if (exists rest = cell.rest,
+                rest.element.key == key) {
+                cell.rest = rest.rest;
                 deleteCell(cell);
                 length--;
-                return cell.element.item;
+                return rest.element.item;
             }
-            prev = cell;
-            bucket = cell.rest;
+            else {
+                bucket = cell.rest;
+            }
         }
         return null;
     }
     
-    "Removes every key/value mapping"
     shared actual void clear(){
         variable Integer index = 0;
         // walk every bucket

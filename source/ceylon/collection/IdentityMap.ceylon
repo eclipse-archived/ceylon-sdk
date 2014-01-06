@@ -112,26 +112,29 @@ shared class IdentityMap<Key, Item>
     
     
     "Removes a key/value mapping if it exists"
-    shared Item? remove(Key key){
+    shared Item? remove(Key key) {
         Integer index = storeIndex(key, store);
+        while (exists head = store[index], 
+            head.element.key == key) {
+            store.set(index,head.rest);
+            length--;
+            return head.element.item;
+        }
         variable value bucket = store[index];
-        variable value prev = null of Cell<Key->Item>?;
-        while(exists cell = bucket){
-            if(cell.element.key === key){
-                // found it
-                if(exists last = prev){
-                    last.rest = cell.rest;
-                }else{
-                    store.set(index, cell.rest);
-                }
+        while (exists cell = bucket) {
+            if (exists rest = cell.rest,
+                rest.element.key == key) {
+                cell.rest = rest.rest;
                 length--;
-                return cell.element.item;
+                return rest.element.item;
             }
-            prev = cell;
-            bucket = cell.rest;
+            else {
+                bucket = cell.rest;
+            }
         }
         return null;
     }
+
     
     "Removes every key/value mapping"
     shared void clear(){
