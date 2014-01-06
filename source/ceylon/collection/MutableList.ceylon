@@ -33,15 +33,16 @@ shared interface MutableList<Element>
      no such element."
     shared formal Element? delete(Integer index);
     
-    "Remove all occurrences of the [[given value|element]] 
+    "Remove all occurrences of the given [[value|element]] 
      from this list."
     shared formal void removeAll(
             "The non-null value to remove"
             Element&Object element);
     
-    "Remove the first occurrence of the [[given 
-     value|element]] from this list, if any, returning `true` 
-     if the value occurs in the list, or `false` otherwise."
+    "Remove the first occurrence of the given 
+     [[value|element]] from this list, if any, returning 
+     `true` if the value occurs in the list, or `false` 
+     otherwise."
     shared formal Boolean removeFirst(
             "The non-null value to remove"
             Element&Object element);
@@ -50,8 +51,8 @@ shared interface MutableList<Element>
      with no null elements."
     shared formal void prune();
     
-    "Replace all occurrences of the [[given value|element]] 
-     in this list with the [[given replacement 
+    "Replace all occurrences of the given [[value|element]]
+     in this list with the given [[replacement 
      value|replacement]]."
     shared formal void replaceAll(
             "The non-null value to replace"
@@ -59,23 +60,23 @@ shared interface MutableList<Element>
             "The replacement value"
             Element replacement);
     
-    "Replace the first occurrence of the given value in 
-     this list, if any, with the given replacement value, 
-     returning `true` if the value occurs in the list, or 
-     `false` otherwise."
+    "Replace the first occurrence of the given
+     [[value|element]] in this list, if any, with the given
+     [[replacement value|replacement]], returning `true` if
+     the value occurs in the list, or `false` otherwise."
     shared formal Boolean replaceFirst(
             "The non-null value to replace"
             Element&Object element,
             "The replacement value"
             Element replacement);
     
-    "Replace all null values in this list with the [[given 
-     replacement value|replacement]]."
+    "Replace all null values in this list with the given
+     [[replacement value|replacement]]."
     shared formal void infill(
             "The replacement value"
             Element replacement);
     
-    "Remove every element from this list, leaving an empty 
+    "Remove every element from this list, leaving an empty
      list with no elements."
     shared formal void clear();
     
@@ -89,12 +90,18 @@ shared interface MutableList<Element>
      no such element."
     shared default Element? deleteLast() => delete(size-1);
     
-    "Remove every element with an index in the spanned
-     range `from..to`."
+    "Remove every element with an index in the spanned range 
+     `from..to`."
     shared formal void deleteSpan(Integer from, Integer to);
     
     "Remove every element with an index in the segmented
      range `from:length`."
     shared formal void deleteSegment(Integer from, Integer length);
+    
+    "Truncate this list to the given [[size]], by removing
+     elements from the end of the list, leaving a list
+     shorter than the given size."
+    throws (`class AssertionException`, "if `size<0`")
+    shared formal void truncate(Integer size);
     
 }

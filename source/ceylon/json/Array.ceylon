@@ -103,7 +103,13 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         return list.removeFirst(element);
     }
     
-    shared actual void prune() => list.prune();
+    shared actual void prune() {
+        list.prune();
+    }
+    
+    shared actual void truncate(Integer size) {
+        list.truncate(size);
+    }
     
     shared actual void replaceAll(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
             String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {

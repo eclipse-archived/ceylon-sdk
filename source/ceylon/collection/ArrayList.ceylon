@@ -298,7 +298,20 @@ shared class ArrayList<Element>
         }
     }
     
-    spanFrom(Integer from) => from>=length then ArrayList() else span(from,length-1);
+    shared actual void truncate(Integer size) {
+        assert (size>=0);
+        if (size<length) {
+            variable value i = size;
+            while (i<length) {
+                array.set(i++, null);
+            }
+            length=size;
+        }
+    }
+    
+    spanFrom(Integer from) => from>=length 
+            then ArrayList() 
+            else span(from,length-1);
     
     spanTo(Integer to) => to<0 then ArrayList() else span(0,to);
     

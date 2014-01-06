@@ -116,10 +116,19 @@ void doListTests(MutableList<String> l) {
     l.removeAll("empty");
     assertEquals("{ foo, bar, last, end }", l.string);
     assertEquals(4, l.size);
+    l.truncate(3);
+    assertEquals("{ foo, bar, last }", l.string);
+    assertEquals(3, l.size);
     l.clear();
     assertEquals("{}", l.string);
     assertEquals(0, l.size);
+    assertTrue(l.empty);
     assertTrue(!l.contains("foo")); // equality tests
+}
+
+shared test void testList(){
+    doListTests(ArrayList<String>());
+    doListTests(LinkedList<String>());
     assertEquals(LinkedList{"a", "b"}, LinkedList{"a", "b"});
     assertNotEquals(LinkedList{"a", "b"}, LinkedList{"b", "a"});
     assertNotEquals(LinkedList{"a", "b"}, LinkedList{"a", "b", "c"});
@@ -138,11 +147,6 @@ void doListTests(MutableList<String> l) {
     assertEquals(LinkedList{}, LinkedList{"a", "b", "c"}.segment(0, 0));
     assertEquals(LinkedList{"a", "b"}, LinkedList{"a", "b", "c"}.segment(0, 2));
     assertEquals(LinkedList{"b", "c"}, LinkedList{"a", "b", "c"}.segment(1, 20));
-}
-
-shared test void testList(){
-    doListTests(LinkedList<String>());
-    doListTests(ArrayList<String>());
 }
 
 shared test void testListConstructor(){

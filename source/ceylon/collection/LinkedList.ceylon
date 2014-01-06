@@ -552,6 +552,25 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
+    shared actual void truncate(Integer size) {
+        if (size==0) {
+            head=tail=null;
+            length=0;
+        }
+        else {
+            variable value i=0;
+            variable value iter = head;
+            while (++i<size, exists cell=iter) {
+                iter = cell.rest;
+            }
+            if (exists cell=iter) {
+                cell.rest=null;
+                tail=cell;
+                length=size;
+            }
+        }
+    }
+    
     first => head?.element;
     
     last => tail?.element;
