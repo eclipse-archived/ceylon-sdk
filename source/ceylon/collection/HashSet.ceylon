@@ -170,7 +170,8 @@ shared class HashSet<Element>
         }
         variable value bucket = store[index];
         while (exists cell = bucket) {
-            if (exists rest = cell.rest,
+            value rest = cell.rest;
+            if (exists rest,
                 rest.element == element) {
                 cell.rest = rest.rest;
                 deleteCell(cell);
@@ -178,7 +179,7 @@ shared class HashSet<Element>
                 result = true;
             }
             else {
-                bucket = cell.rest;
+                bucket = rest;
             }
         }
         return result;

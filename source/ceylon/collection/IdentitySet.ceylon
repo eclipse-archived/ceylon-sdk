@@ -102,21 +102,22 @@ shared class IdentitySet<Element>
         variable value result = false;
         Integer index = storeIndex(element, store);
         while (exists head = store[index], 
-        head.element == element) {
+            head.element == element) {
             store.set(index,head.rest);
             length--;
             result = true;
         }
         variable value bucket = store[index];
         while (exists cell = bucket) {
-            if (exists rest = cell.rest,
-            rest.element == element) {
+            value rest = cell.rest;
+            if (exists rest,
+                rest.element == element) {
                 cell.rest = rest.rest;
                 length--;
                 result = true;
             }
             else {
-                bucket = cell.rest;
+                bucket = rest;
             }
         }
         return result;

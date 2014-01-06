@@ -180,7 +180,8 @@ shared class HashMap<Key, Item>
         }
         variable value bucket = store[index];
         while (exists cell = bucket) {
-            if (exists rest = cell.rest,
+            value rest = cell.rest;
+            if (exists rest,
                 rest.element.key == key) {
                 cell.rest = rest.rest;
                 deleteCell(cell);
@@ -188,7 +189,7 @@ shared class HashMap<Key, Item>
                 return rest.element.item;
             }
             else {
-                bucket = cell.rest;
+                bucket = rest;
             }
         }
         return null;
