@@ -20,12 +20,13 @@ shared class LinkedList<Element>(elements = {})
     
     // initialiser section
     
-    void addToTail(Element element){
+    void addToTail(Element element) {
         value newTail = Cell(element, null);
-        if(exists tail = tail){
+        if (exists tail = tail) {
             tail.rest = newTail;
             this.tail = newTail;
-        }else{
+        }
+        else {
             // no tail means empty list
             tail = head = newTail;
         }
@@ -33,7 +34,7 @@ shared class LinkedList<Element>(elements = {})
     }
     
     // add initial values
-    for(element in elements){
+    for (element in elements) {
         addToTail(element);
     }
     
@@ -41,14 +42,14 @@ shared class LinkedList<Element>(elements = {})
     
     // Write
     
-    shared actual void set(Integer index, Element element){
+    shared actual void set(Integer index, Element element) {
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=index<length);
         variable value iter = head;
         variable Integer i = 0;
-        while(exists cell = iter){
-            if(i++ == index){
+        while (exists cell = iter) {
+            if (i++ == index){
                 cell.element = element;
                 return;
             }
@@ -56,38 +57,42 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
-    shared actual void insert(Integer index, Element element){
+    shared actual void insert(Integer index, Element element) {
         "index may not be negative or greater than the
          length of the list"
         assert (0<=index<=length);
-        if(index == length){
+        if (index == length){
             add(element);
-        }else{
-            if(index == 0){
+        }
+        else {
+            if (index == 0){
                 head = Cell(element, head);
                 // we only have to update the tail if 
                 // _size == 0 but that's not possible
                 // since it has already been checked
-            }else{
+                length++;
+            }
+            else {
                 variable value iter = head;
                 variable Integer i = 0;
-                while(exists cell = iter){
-                    if(++i == index){
+                while (exists cell = iter) {
+                    if (++i == index) {
                         cell.rest = Cell(element, cell.rest);
                         // no need to update the tail since 
                         // we never modify the last element, 
                         // we would have taken the other 
                         // branch above instead
-                        break;
+                        length++;
+                        return;
                     }
                     iter = cell.rest;
                 }
+                assert (false);
             }
-            length++;
         }
     }
     
-    shared actual void add(Element element){
+    shared actual void add(Element element) {
         addToTail(element);
     }
     
@@ -98,106 +103,131 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual Element? delete(Integer index){
-        if(0 <= index < length){
+        if (index == 0) {
+            if (exists cell = head) {
+                if (exists rest = cell.rest) {
+                    head = rest;
+                }
+                else {
+                    head = tail = null;
+                }
+                length--;
+                return cell.element;
+            }
+            else {
+                return null;
+            }
+        }
+        else if (0 < index < length) {
             variable value iter = head;
-            variable value prev = null of Cell<Element>?;
             variable Integer i = 0;
-            while(exists cell = iter){
-                if(i++ == index){
-                    if(exists prev2 = prev){
-                        prev2.rest = cell.rest;
-                    }else{
-                        // changing the head
-                        head = cell.rest;
+            while (exists cell = iter) {
+                if (++i == index) {
+                    if (exists more = cell.rest?.rest) {
+                        cell.rest = more;
                     }
-                    // see if we need to update the tail
-                    if(!cell.rest exists){
-                        tail = prev;
+                    else {
+                        cell.rest = tail = null;
                     }
                     length--;
                     return cell.element;
                 }
-                prev = iter;
                 iter = cell.rest;
             }
             assert (false);
-        }else{
+        }
+        else {
             return null;
         }
     }
     
     shared actual void removeAll(Element&Object element) {
+        while (exists cell = head, 
+            exists elem = cell.element, 
+            elem==element) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+        }
         variable value iter = head;
-        variable value prev = null of Cell<Element>?;
-        while(exists cell = iter){
-            if(exists elem = cell.element, elem==element){
-                if(exists prev2 = prev){
-                    prev2.rest = cell.rest;
-                }else{
-                    // changing the head
-                    head = cell.rest;
+        while (exists cell = iter) {
+            if (exists rest = cell.rest, 
+                exists elem = rest.element, 
+                elem==element) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
                 }
-                // see if we need to update the tail
-                if(!cell.rest exists){
-                    tail = prev;
+                else {
+                    cell.rest = tail = null;
                 }
                 length--;
-                // keep the same prev but move on
-                iter = cell.rest;
-            }else{
-                prev = iter;
+            }
+            else {
                 iter = cell.rest;
             }
         }
     }
     
     shared actual Boolean removeFirst(Element&Object element) {
+        if (exists cell = head, 
+            exists elem = cell.element, 
+            elem==element) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+            return true;
+        }
         variable value iter = head;
-        variable value prev = null of Cell<Element>?;
-        while(exists cell = iter){
-            if(exists elem = cell.element, elem==element){
-                if(exists prev2 = prev){
-                    prev2.rest = cell.rest;
-                }else{
-                    // changing the head
-                    head = cell.rest;
+        while (exists cell = iter) {
+            if (exists rest = cell.rest, 
+                exists elem = rest.element, 
+                elem==element) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
                 }
-                // see if we need to update the tail
-                if(!cell.rest exists){
-                    tail = prev;
+                else {
+                    cell.rest = tail = null;
                 }
                 length--;
-                // keep the same prev but move on
-                iter = cell.rest;
                 return true;
-            }else{
-                prev = iter;
-                iter = cell.rest;
             }
+            iter = cell.rest;
         }
         return false;
     }
     
     shared actual void prune() {
+        while (exists cell = head, 
+            !cell.element exists) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+        }
         variable value iter = head;
-        variable value prev = null of Cell<Element>?;
-        while(exists cell = iter){
-            if(!cell.element exists){
-                if(exists prev2 = prev){
-                    prev2.rest = cell.rest;
-                }else{
-                    // changing the head
-                    head = cell.rest;
+        while (exists cell = iter) {
+            if (exists rest = cell.rest, 
+                !rest.element exists) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
                 }
-                // see if we need to update the tail
-                if(!cell.rest exists){
-                    tail = prev;
+                else {
+                    cell.rest = tail = null;
                 }
                 length--;
-                // keep the same prev but move on
-                iter = cell.rest;
-            }else{
-                prev = iter;
+            }
+            else {
                 iter = cell.rest;
             }
         }
@@ -206,8 +236,9 @@ shared class LinkedList<Element>(elements = {})
     shared actual void replaceAll(Element&Object element, 
             Element replacement) {
         variable value iter = head;
-        while(exists cell = iter){
-            if(exists elem = cell.element, elem==element){
+        while (exists cell = iter) {
+            if (exists elem = cell.element, 
+                elem==element) {
                 cell.element = replacement;
             }
             iter = cell.rest;
@@ -217,8 +248,9 @@ shared class LinkedList<Element>(elements = {})
     shared actual Boolean replaceFirst(Element&Object element, 
             Element replacement) {
         variable value iter = head;
-        while(exists cell = iter){
-            if(exists elem = cell.element, elem==element){
+        while (exists cell = iter) {
+            if (exists elem = cell.element,
+                elem==element) {
                 cell.element = replacement;
                 return true;
             }
@@ -229,15 +261,15 @@ shared class LinkedList<Element>(elements = {})
     
     shared actual void infill(Element replacement) {
         variable value iter = head;
-        while(exists cell = iter){
-            if(!cell.element exists){
+        while (exists cell = iter) {
+            if (!cell.element exists) {
                 cell.element = replacement;
             }
             iter = cell.rest;
         }
     }
     
-    shared actual void clear(){
+    shared actual void clear() {
         length = 0;
         head = tail = null;
     }
@@ -247,8 +279,8 @@ shared class LinkedList<Element>(elements = {})
     shared actual Element? get(Integer index) {
         variable value iter = head;
         variable Integer i = 0;
-        while(exists cell = iter){
-            if(i++ == index){
+        while (exists cell = iter) {
+            if (i++ == index) {
                 return cell.element;
             }
             iter = cell.rest;
@@ -262,11 +294,11 @@ shared class LinkedList<Element>(elements = {})
         value ret = LinkedList<Element>();
         variable value iter = head;
         variable Integer i = 0;
-        while(exists cell = iter){
-            if(i > end){
+        while (exists cell = iter) {
+            if(i > end) {
                 break;
             }
-            if(i >= start){
+            if(i >= start) {
                 ret.add(cell.element);
             }
             i++;
@@ -279,8 +311,8 @@ shared class LinkedList<Element>(elements = {})
         value ret = LinkedList<Element>();
         variable value iter = head;
         variable Integer i = 0;
-        while(exists cell = iter){
-            if(i >= from){
+        while (exists cell = iter) {
+            if(i >= from) {
                 ret.add(cell.element);
             }
             i++;
@@ -293,8 +325,8 @@ shared class LinkedList<Element>(elements = {})
         value ret = LinkedList<Element>();
         variable value iter = head;
         variable Integer i = 0;
-        while(exists cell = iter){
-            if(i > to){
+        while (exists cell = iter) {
+            if (i > to) {
                 break;
             }
             ret.add(cell.element);
@@ -309,11 +341,11 @@ shared class LinkedList<Element>(elements = {})
         value len = from<0 then length+from else length;
         variable value iter = head;
         variable Integer i = 0;
-        while(exists cell = iter){
-            if(ret.length >= len){
+        while (exists cell = iter) {
+            if (ret.length >= len) {
                 break;
             }
-            if(i >= from){
+            if (i >= from) {
                 ret.add(cell.element);
             }
             i++;
@@ -340,15 +372,14 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
-    shared actual Boolean defines(Integer index) {
-        return index >= 0 && index < length;
-    }
+    defines(Integer index) 
+            => index >= 0 && index < length;
     
     shared actual Boolean contains(Object element) {
         variable value iter = head;
-        while(exists cell = iter){
-            if(exists elem = cell.element){
-                if(elem == element){
+        while (exists cell = iter) {
+            if (exists elem = cell.element) {
+                if(elem == element) {
                     return true;
                 }
             }
@@ -362,8 +393,8 @@ shared class LinkedList<Element>(elements = {})
     shared actual Integer count(Boolean selecting(Element element)) {
         variable value iter = head;
         variable Integer count = 0;
-        while(exists cell = iter){
-            if(selecting(cell.element)){
+        while (exists cell = iter) {
+            if (selecting(cell.element)) {
                 count++;
             }
             iter = cell.rest;
@@ -371,9 +402,7 @@ shared class LinkedList<Element>(elements = {})
         return count;
     }
     
-    shared actual Integer? lastIndex {
-        return !empty then length - 1;
-    }
+    lastIndex => !empty then length - 1;
     
     iterator() => CellIterator(head);
     
@@ -385,10 +414,8 @@ shared class LinkedList<Element>(elements = {})
         return ret;
     }
 
-    shared actual Integer[] keys {
-        return empty then {} else 0..length;
-    }
-
+    keys => empty then {} else 0..length;
+    
     /*shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("[");
@@ -411,10 +438,11 @@ shared class LinkedList<Element>(elements = {})
     shared actual Integer hash {
         variable Integer hash = 17;
         variable value iter = head;
-        while(exists cell = iter){
-            if(exists car = cell.element){
+        while (exists cell = iter) {
+            if (exists car = cell.element) {
                 hash = hash * 31 + car.hash;                
-            }else{
+            }
+            else {
                 hash = hash * 31;
             }
             iter = cell.rest;
@@ -461,10 +489,10 @@ shared class LinkedList<Element>(elements = {})
     shared actual List<Element> reversed {
         value ret = LinkedList<Element>();
         variable value iter = head;
-        while(exists cell = iter){
+        while (exists cell = iter) {
             // append before the head
             ret.head = Cell(cell.element, ret.head);
-            if(!ret.tail exists){
+            if (!ret.tail exists) {
                 ret.tail = ret.head;
             }
             iter = cell.rest;
@@ -477,7 +505,7 @@ shared class LinkedList<Element>(elements = {})
         // this would be a lot cheaper if we were not mutable, but there we are
         value ret = LinkedList<Element>();
         variable value iter = head?.rest; // skip the first one
-        while(exists cell = iter){
+        while (exists cell = iter) {
             ret.add(cell.element);
             iter = cell.rest;
         }
@@ -489,7 +517,7 @@ shared class LinkedList<Element>(elements = {})
             head = null;
             variable Integer i = 0;
             variable value iter = head;
-            while(exists next = iter){
+            while (exists next = iter) {
                 if (i++ == len) {
                     head=next;
                     return;
@@ -500,9 +528,9 @@ shared class LinkedList<Element>(elements = {})
         else {
             variable value iter = head;
             variable Integer i = 0;
-            while(exists cell = iter){
-                if(i++ == fst){
-                    while(exists next = iter){
+            while (exists cell = iter) {
+                if (i++ == fst) {
+                    while (exists next = iter) {
                         if (i++ == fst+len) {
                             cell.rest=next;
                             return;
