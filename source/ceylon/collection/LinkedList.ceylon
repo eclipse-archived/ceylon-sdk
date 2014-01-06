@@ -553,6 +553,7 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual void truncate(Integer size) {
+        assert (size>=0);
         if (size==0) {
             head=tail=null;
             length=0;
