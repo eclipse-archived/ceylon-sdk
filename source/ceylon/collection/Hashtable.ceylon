@@ -31,6 +31,9 @@ shared class Hashtable(
     "initial capacity cannot be negative"
     assert (initialCapacity>=0);
     
+    "initial capacity too large"
+    assert (initialCapacity<=runtime.maxArraySize);
+    
     "load factor must be positive"
     assert (loadFactor>0.0);
     
@@ -38,9 +41,14 @@ shared class Hashtable(
     assert (growthFactor>=1.0);
     
     shared Boolean rehash(Integer length, Integer capacity)
-            => length > (capacity * loadFactor).integer;
+            => length > (capacity * loadFactor).integer &&
+                    this.capacity(length)>capacity;
     
-    shared Integer capacity(Integer length)
-            => (length * growthFactor).integer;
+    shared Integer capacity(Integer length) {
+        value maxArraySize = runtime.maxArraySize;
+        value grownCapacity = (length * growthFactor).integer;
+        return grownCapacity>maxArraySize 
+                then maxArraySize else grownCapacity;
+    }
     
 }

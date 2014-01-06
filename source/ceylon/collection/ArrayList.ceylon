@@ -31,7 +31,10 @@ shared class ArrayList<Element>
     {Element*} elements;
     
     "initial capacity cannot be negative"
-    assert(initialCapacity>=0);
+    assert (initialCapacity>=0);
+    
+    "initial capacity too large"
+    assert (initialCapacity<=runtime.maxArraySize);
     
     "growth factor must be at least 1.0"
     assert (growthFactor>=1.0);
@@ -43,10 +46,16 @@ shared class ArrayList<Element>
     variable Integer length=0;
     
     void grow(Integer increment) {
-        value newCapacity = length+increment;
-        if (newCapacity>array.size) {
-            //TODO: watch out for overflow!!
-            value grown = store((newCapacity*growthFactor).integer);
+        value neededCapacity = length+increment;
+        value maxArraySize = runtime.maxArraySize;
+        if (neededCapacity>maxArraySize) {
+            throw OverflowException(); //TODO: give it a message!
+        }
+        if (neededCapacity>array.size) {
+            value grownCapacity = (neededCapacity*growthFactor).integer;
+            value newCapacity = grownCapacity<neededCapacity||grownCapacity>maxArraySize 
+                    then maxArraySize else grownCapacity;
+            value grown = store(newCapacity);
             array.copyTo(grown);
             array = grown;
         }
@@ -81,6 +90,8 @@ shared class ArrayList<Element>
     assign capacity {
         "capacity must be at least as large as list size"
         assert (capacity>=size);
+        "capacity too large"
+        assert (capacity<=runtime.maxArraySize);
         value resized = store(capacity);
         array.copyTo(resized, 0, 0, length);
         array = resized;
