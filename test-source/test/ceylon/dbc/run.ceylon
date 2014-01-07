@@ -4,8 +4,8 @@ import ceylon.dbc {
 }
 import ceylon.test {
     beforeTest,
-    createTestRunner,
-    SimpleLoggingListener
+    SimpleLoggingListener,
+    createTestRunner
 }
 
 import org.h2.jdbcx {
