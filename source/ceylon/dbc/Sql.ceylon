@@ -36,6 +36,10 @@ import java.util {
     Date
 }
 
+"A row of results is represented as a [[Map]] with column
+ names as keys, and values as items."
+shared alias Row=>Map<String,Object>;
+
 "An object that exposes operations for executing SQL DML or
  DDL queries against JDBC connections obtained by calling a 
  given [[function|newConnection]]."
@@ -136,7 +140,7 @@ shared class Sql(newConnection) {
         "Execute this statement with the given [[arguments]] 
          to its parameters, returning number of rows 
          inserted, and the generated keys, if any."
-        shared [Integer,Map<String,Object>[]] execute(Object* arguments) {
+        shared [Integer,Row[]] execute(Object* arguments) {
             value connectionStatus = connection.get();
             try {
                 value stmt = connectionStatus.connection()
@@ -148,7 +152,7 @@ shared class Sql(newConnection) {
                     try {
                         value meta = resultSet.metaData;
                         value range = 1..meta.columnCount;
-                        value builder = SequenceBuilder<Map<String,Object>>();
+                        value builder = SequenceBuilder<Row>();
                         while (resultSet.next()) {
                             builder.append(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
                         }
@@ -201,7 +205,7 @@ shared class Sql(newConnection) {
         "Execute this query with the given [[arguments]] 
          to its parameters."
         shared class Results(Object* arguments)
-                satisfies Closeable & {Map<String,Object>*} {
+                satisfies Closeable & {Row*} {
             
             variable ConnectionStatus? _connectionStatus=null;
             variable PreparedStatement? _preparedStatement=null;
@@ -218,9 +222,9 @@ shared class Sql(newConnection) {
             }
             
             
-            shared actual Iterator<Map<String,Object>> iterator() {
+            shared actual Iterator<Row> iterator() {
                 object iterator
-                        satisfies Iterator<Map<String,Object>> {
+                        satisfies Iterator<Row> {
                     //TODO: nasty hack to work around backend bug!
                     value preparedStatement {
                         assert (exists ps = _preparedStatement);
@@ -230,7 +234,7 @@ shared class Sql(newConnection) {
                     _resultSets = _resultSets.following(resultSet);
                     value meta = resultSet.metaData;
                     value range = 1..meta.columnCount;
-                    shared actual Map<String,Object>|Finished next() {
+                    shared actual Row|Finished next() {
                         if (resultSet.next()) {
                             return HashMap { for (i in range) columnEntry(resultSet, meta, i) };
                         }
