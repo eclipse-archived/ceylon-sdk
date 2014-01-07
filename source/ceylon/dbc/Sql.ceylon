@@ -52,13 +52,13 @@ shared class Sql(newConnection) {
     Connection newConnection();
     
     value connection = ThreadLocalConnection(newConnection);
-
+    
     PreparedStatement prepareStatement(ConnectionStatus conn, String sql, {Object*} arguments) {
         value stmt = conn.connection().prepareStatement(sql);
         setParameters(stmt, arguments);
         return stmt;
     }
-
+    
     void setParameters(PreparedStatement stmt, {Object*} arguments) {
         variable value i=1;
         for (argument in arguments) {
@@ -220,7 +220,6 @@ shared class Sql(newConnection) {
                     preparedStatement.maxRows=maxRows;
                 }
             }
-            
             
             shared actual Iterator<Row> iterator() {
                 object iterator
