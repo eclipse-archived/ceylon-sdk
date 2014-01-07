@@ -1,9 +1,7 @@
 import ceylon.dbc {
     Sql
 }
-import ceylon.test {
-    createTestRunner, SimpleLoggingListener
-}
+import ceylon.test { beforeTest }
 
 import org.h2.jdbcx {
     JdbcDataSource
@@ -19,7 +17,7 @@ JdbcDataSource createDataSource() {
 
 shared Sql sql = Sql(createDataSource());
 
-shared void run() {
+shared beforeTest void setup() {
     //Some setup, with the same component
     try {
     sql.update("CREATE TABLE test1 (row_id SERIAL PRIMARY KEY, name VARCHAR(40), when TIMESTAMP, day DATE, count INTEGER, price NUMERIC(10,4), flag BOOLEAN)");
@@ -28,6 +26,4 @@ shared void run() {
             throw ex;
         }
     }
-    
-    createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();
 }

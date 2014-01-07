@@ -2,9 +2,10 @@ import ceylon.math.decimal { decimalNumber }
 import ceylon.test { ... }
 
 test void queryTests() {
+    insertTests();
     value q1 = sql.rows("SELECT * FROM test1 WHERE name=?");
     value r1 = q1(["First"]);
-    assertTrue(r1.size > 0, "Rows with 'First");
+    assertTrue(r1.size > 0, "Rows with 'First'");
     value r2 = q1(["Second"]);
     assertTrue(r2.size > 0, "Rows with 'Second'");
     assertFalse(q1(["whatever"]) nonempty, "'whatever' should return empty");

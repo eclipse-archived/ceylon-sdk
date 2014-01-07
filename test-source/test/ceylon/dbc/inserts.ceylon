@@ -1,7 +1,7 @@
 import ceylon.test { ... }
 import java.util { Date }
 
-test void insertTests() {
+test shared void insertTests() {
     assertEquals(1, sql.update("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)", "First", Date(), 1), "sql.update (inserting)");
     assertEquals(1, sql.update("INSERT INTO test1(name,when,count,price,flag) VALUES (?, ?, ?, ?, ?)", "Third", Date(), 3, 12.34, true), "sql.update (inserting)");
     value keys = sql.insert("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)", "Second", Date(0), 2);
