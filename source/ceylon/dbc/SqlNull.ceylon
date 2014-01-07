@@ -3,6 +3,7 @@
 by("Enrique Zamudio")
 shared class SqlNull(sqlType) {
     shared Integer sqlType;
+    string => "<null>";
 }
 
 deprecated ("Renamed to [[SqlNull]].")

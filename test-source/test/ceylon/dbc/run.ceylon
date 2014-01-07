@@ -1,8 +1,10 @@
 import ceylon.dbc {
-    Sql
+    Sql,
+    newConnectionFromDatasource
 }
 import ceylon.test {
-    createTestRunner, SimpleLoggingListener
+    createTestRunner,
+    SimpleLoggingListener
 }
 
 import org.h2.jdbcx {
@@ -17,12 +19,13 @@ JdbcDataSource createDataSource() {
     return ds;
 }
 
-shared Sql sql = Sql(createDataSource());
+shared Sql sql = Sql(newConnectionFromDatasource(createDataSource()));
 
 shared void run() {
     //Some setup, with the same component
     try {
-    sql.update("CREATE TABLE test1 (row_id SERIAL PRIMARY KEY, name VARCHAR(40), when TIMESTAMP, day DATE, count INTEGER, price NUMERIC(10,4), flag BOOLEAN)");
+        sql.Statement("CREATE TABLE test1 (row_id SERIAL PRIMARY KEY, name VARCHAR(40), when TIMESTAMP, day DATE, count INTEGER, price NUMERIC(10,4), flag BOOLEAN)")
+                .execute();
     } catch (Exception ex) {
         if (!"Table \"TEST1\" already exists" in ex.message) {
             throw ex;

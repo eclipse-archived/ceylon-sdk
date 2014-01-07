@@ -1,4 +1,6 @@
-import ceylon.test { ... }
+import ceylon.test {
+    ...
+}
 
 test void callTests() {
 }

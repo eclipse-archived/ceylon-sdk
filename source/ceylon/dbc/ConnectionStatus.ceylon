@@ -1,8 +1,8 @@
-import java.sql { Connection }
-import javax.sql { DataSource }
-import java.lang { ThreadLocal }
+import java.sql {
+    Connection
+}
 
-class ConnectionStatus(DataSource ds) {
+class ConnectionStatus(Connection() connectionSource) {
 
     variable value tx=false;
     variable Connection? conn=null;
@@ -16,7 +16,7 @@ class ConnectionStatus(DataSource ds) {
                 return c;
             }
         }
-        conn = ds.connection;
+        conn = connectionSource();
         if (exists c=conn) {
 			use++;
             return c;
@@ -40,9 +40,10 @@ class ConnectionStatus(DataSource ds) {
         tx = true;
     }
 
-    "Commits the current transaction, clearing the transaction flag.
-         If an exception is thrown, the transaction will be rolled back
-         and the exception rethrown."
+    "Commits the current transaction, clearing the 
+     transaction flag. If an exception is thrown, the 
+     transaction will be rolled back and the exception 
+     rethrown."
     shared void commit() {
         try {
             connection().commit();
@@ -54,15 +55,10 @@ class ConnectionStatus(DataSource ds) {
         }
     }
 
-    "Rolls back the current transaction, clearing the transaction flag."
+    "Rolls back the current transaction, clearing the 
+     transaction flag."
     shared void rollback() {
         connection().rollback();
         tx = false;
-    }
-}
-
-class ThreadLocalConnection(DataSource ds) extends ThreadLocal<ConnectionStatus>() {
-    shared ConnectionStatus initialValue() {
-        return ConnectionStatus(ds);
     }
 }
