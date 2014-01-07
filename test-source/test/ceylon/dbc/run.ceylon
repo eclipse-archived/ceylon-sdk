@@ -3,6 +3,7 @@ import ceylon.dbc {
     newConnectionFromDatasource
 }
 import ceylon.test {
+    beforeTest,
     createTestRunner,
     SimpleLoggingListener
 }
@@ -21,16 +22,17 @@ JdbcDataSource createDataSource() {
 
 shared Sql sql = Sql(newConnectionFromDatasource(createDataSource()));
 
-shared void run() {
+shared beforeTest void setup() {
     //Some setup, with the same component
     try {
         sql.Statement("CREATE TABLE test1 (row_id SERIAL PRIMARY KEY, name VARCHAR(40), when TIMESTAMP, day DATE, count INTEGER, price NUMERIC(10,4), flag BOOLEAN)")
                 .execute();
-    } catch (Exception ex) {
+    }
+    catch (Exception ex) {
         if (!"Table \"TEST1\" already exists" in ex.message) {
             throw ex;
         }
     }
-    
-    createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();
 }
+
+void run() => createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();

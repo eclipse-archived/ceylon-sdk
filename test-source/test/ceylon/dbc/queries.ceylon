@@ -4,6 +4,7 @@ import ceylon.test {
 import java.util { Date }
 
 test void queryTests() {
+    
     sql.Insert("DELETE FROM test1").execute();
     sql.Insert("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)")
             .execute("First", Date(), 1);
@@ -14,10 +15,10 @@ test void queryTests() {
     
     value q1 = sql.Select("SELECT * FROM test1 WHERE name=?");
     try (r1 = q1.Results("First")) {
-        print(r1);
-        print(r1.size);
-        assertTrue(r1.size==1, "Rows with 'First");
-        print(r1);
+        assertTrue(r1.size==1, "Rows with 'First'");
+        for (row in r1) {
+            assertTrue(row.size==7);
+        }
     }
     try (r2 = q1.Results("Second")) {
         assertTrue(r2.size==1, "Rows with 'Second'");
@@ -38,4 +39,5 @@ test void queryTests() {
     try (r6 = q2.Results()) {
         assertTrue(r6.size==1, "1 row");
     }
+    
 }
