@@ -29,14 +29,14 @@ shared object base64 {
     }
 
     "Encodes the given string in Base64 using the given character encoding ASCII is the default charset"
-     shared String encode(String input, String charset  = "ASCII"){
+    shared String encode(String input, String charset  = "ASCII"){
 	return Base64Helper().encodeToString(input, charset);
-     }
+    }
 
-     "Decodes the given string from Base64 using the given character encoding.  ASCII is the default charset"
-      shared String decode(String input, String charset  = "ASCII"){
+    "Decodes the given string from Base64 using the given character encoding.  ASCII is the default charset"
+    shared String decode(String input, String charset  = "ASCII"){
 	return Base64Helper().decodeToString(input,charset);
-      }
+    }
     
 }
 
