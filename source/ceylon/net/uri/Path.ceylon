@@ -48,7 +48,7 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
 
     "Remove a path segment"
     shared void remove(Integer i){
-        segments.remove(i);
+        segments.delete(i);
     }
 
     "Removes every path segment"

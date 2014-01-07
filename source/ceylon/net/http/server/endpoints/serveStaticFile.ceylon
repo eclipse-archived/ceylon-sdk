@@ -10,7 +10,9 @@ by("Matej Lazar")
 shared void serveStaticFile(
                 externalPath, 
                 String fileMapper(Request request) => request.path,
-                Options options = Options())
+                Options options = Options(),
+                Callable<Anything, [Request]>? onSuccess = null,
+                Callable<Anything, [Exception,Request]>? onError = null)
         (Request request, Response response, Callable<Anything, []> complete) {
     
     "Root directory containing files."
@@ -29,12 +31,23 @@ shared void serveStaticFile(
             response.addHeader(contentType(cntType));
         }
 
-        void onComplete() {
+        void _onSuccess() {
             openFile.close();
+            if (exists onSuccess) {
+                onSuccess(request);
+            }
             complete();
         }
 
-        FileWritter(openFile, response, onComplete, options).send();
+        void _onError(Exception exception) {
+            openFile.close();
+            if (exists onError) {
+                onError(exception,request);
+            }
+            complete();
+        }
+
+        FileWriter(openFile, response, options, _onSuccess, _onError).send();
 
     } else {
         response.responseStatus=404;
@@ -43,7 +56,7 @@ shared void serveStaticFile(
     }
 }
 
-class FileWritter(OpenFile openFile, Response response, void completed(), Options options) {
+class FileWriter(OpenFile openFile, Response response, Options options, void onSuccess(), void onError(Exception exception)) {
     variable Integer available = openFile.size;
     variable Integer readFailed = 0;
     Integer bufferSize = options.outputBufferSize < available then options.outputBufferSize else available;
@@ -55,38 +68,34 @@ class FileWritter(OpenFile openFile, Response response, void completed(), Option
 
     void read() {
         if (available > 0) {
-            value read = openFile.read(byteBuffer);
-            if (read == -1) {
-                available = 0;
-            } else if (read == 0) {
-                readFailed ++;
-                if (readFailed > 10) { //try to read 10 times
-                    //TODO log
-                    print("Error reading file ``openFile.resource.path``.");
-                    completed();
-                    return;
+            try {
+                value read = openFile.read(byteBuffer);
+                if (read == -1) {
+                    available = 0;
+                } else if (read == 0) {
+                    readFailed ++;
+                    if (readFailed > options.readAttempts) {
+                        onError(Exception("Error reading file ``openFile.resource.path``."));
+                        return;
+                    }
+                } else {
+                    available -= read;
+                    readFailed = 0;
                 }
-            } else {
-                available -= read;
-                readFailed = 0;
+                byteBuffer.flip();
+                write(onError);
+            } catch (Exception e) {
+                onError(e);
             }
-            byteBuffer.flip();
-            write();
         } else {
-            completed();
+            onSuccess();
         }
     }
     
-    void write() {
-
+    void write(void onError(Exception exception)) {
         void onCompletion() {
             byteBuffer.clear();
             read();
-        }
-        void onError(Exception exception) {
-            //TODO log
-            print("Error writting file ``openFile.resource.path``: " + exception.string);
-            completed();
         }
         response.writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
     }

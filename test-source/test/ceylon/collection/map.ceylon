@@ -8,12 +8,12 @@ shared test void testMap(){
     assertTrue(!map.defines("fu"), "a");
 
     assertEquals(null, map.put("fu", "bar"));
-    assertEquals("{fu->bar}", map.string);
+    assertEquals("{ fu->bar }", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "b");
 
     assertEquals("bar", map.put("fu", "gee"));
-    assertEquals("{fu->gee}", map.string);
+    assertEquals("{ fu->gee }", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "c");
 

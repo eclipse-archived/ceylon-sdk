@@ -83,12 +83,46 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.insert(index, val);
     }
     
-    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? remove(Integer index) {
-        return list.remove(index);
+    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? delete(Integer index) {
+        return list.delete(index);
     }
-
-    shared actual void removeElement(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.removeElement(val);
+    
+    shared actual void deleteSegment(Integer from, Integer length) {
+        list.deleteSegment(from, length);
+    }
+    
+    shared actual void deleteSpan(Integer from, Integer to) {
+        list.deleteSpan(from, to);
+    }
+    
+    shared actual void removeAll(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
+        list.removeAll(val);
+    }
+    
+    shared actual Boolean removeFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
+        return list.removeFirst(element);
+    }
+    
+    shared actual void prune() {
+        list.prune();
+    }
+    
+    shared actual void truncate(Integer size) {
+        list.truncate(size);
+    }
+    
+    shared actual void replaceAll(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
+            String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
+        list.replaceAll(val, newVal);
+    }
+    
+    shared actual Boolean replaceFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
+            String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
+        return list.replaceFirst(element, replacement);
+    }
+    
+    shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
+        list.infill(replacement);
     }
     
     shared actual void set(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {

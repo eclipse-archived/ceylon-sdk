@@ -1,17 +1,36 @@
-"A module for collections.
+"Library providing general-purpose mutable lists, 
+ sets, and maps.
  
- You can find here the following mutable collection types:
+ The following interfaces define abstract mutable 
+ collection types:
  
- - [[MutableList]]
- - [[MutableSet]]
- - [[MutableMap]]
+ - [[MutableList]] is a mutable [[List]],
+ - [[MutableSet]] is a mutable [[Set]], and
+ - [[MutableMap]] is a mutable [[Map]].
  
- Along with concrete implementations for each:
+ These concrete implementations are provided:
  
- - [[LinkedList]]
- - [[HashSet]]
- - [[HashMap]]
- "
+ - [[ArrayList]] is a `MutableList` implemented 
+   using an [[Array]].
+ - [[LinkedList]] is a `MutableList` implemented 
+   using a singly-linked list.
+ - [[HashSet]] is a hash set implemented using an
+   [[Array]] of singly-linked lists.
+ - [[HashMap]] is a hash map implemented using an
+   [[Array]] of singly-linked lists of [[Entry]]s.
+ 
+ The classes [[ImmutableList]], [[ImmutableSet]],
+ and [[ImmutableMap]] may be used to hide these
+ mutable list, set, and map implementations from 
+ clients. 
+ 
+ In addition, dedicated [[Stack]] and [[Queue]]
+ interfaces are defined, representing specialized
+ kinds of lists.
+ 
+ Finally, [[IdentitySet]] and [[IdentityMap]] are
+ provided."
+
 by("Stéphane Épardaud")
 license("Apache Software License")
 module ceylon.collection "1.0.0" {

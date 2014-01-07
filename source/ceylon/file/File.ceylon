@@ -121,6 +121,40 @@ shared interface File
              used."
             String? encoding=null)
                 => Appender(encoding);
+    
+}
+
+"All lines of text in the given file."
+shared String[] lines(File file) {
+    value sb = SequenceBuilder<String>();
+    try (reader = file.Reader()) {
+        while (exists line = reader.readLine()) {
+            sb.append(line);
+        }
+    }
+    return sb.sequence;
+}
+
+"Call the given function for each line of 
+ text in the given file. 
+ 
+ For example, to print the contents of the
+ file:
+ 
+     forEachLine(file, print);
+ 
+ Or:
+ 
+     forEachLine(file, void (String line) {
+         print(line);
+     });
+ "
+shared void forEachLine(File file, void do(String line)) {
+    try (reader = file.Reader()) {
+        while (exists line = reader.readLine()) {
+            do(line);
+        }
+    }
 }
 
 shared Boolean sameFile(File x, File y) => sameFileInternal(x, y);

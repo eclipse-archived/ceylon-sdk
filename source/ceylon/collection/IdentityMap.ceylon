@@ -1,100 +1,39 @@
-import ceylon.collection {
-    Cell,
-    entryStore,
-    MutableMap
-}
-
-"A [[MutableMap]] implemented as a hash map stored in an 
- [[Array]] of singly linked lists of [[Entry]]s. Each entry 
- is assigned an index of the array according to the hash 
- code of its key. The hash code of a key is defined by 
- [[Object.hash]].
- 
- The [[stability]] of a `HashMap` controls its iteration
- order:
- 
- - A [[linked]] map has a stable and meaningful order of 
-   iteration. The entries of the map form a linked list, 
-   where new entries are added to the end of the linked 
-   list. Iteration of the map follows this linked list, from 
-   least recently added elements to most recently added 
-   elements.
- - An [[unlinked]] set has an unstable iteration order that 
-   may change when the set is modified. The order itself is 
-   not meaningful to a client.
- 
- The management of the backing array is controlled by the
- given [[hashtable]]."
-
-by("Stéphane Épardaud")
-shared class HashMap<Key, Item>
-        (stability=linked, hashtable = Hashtable(), entries = {})
-        satisfies MutableMap<Key, Item>
-        given Key satisfies Object 
+"An identity map implemented as a hash map stored in an 
+ [[Array]] of singly linked lists of [[Entry]]s. The hash 
+ code of a key is defined by [[identityHash]]. Note that an 
+ `IdentitySet` is not a [[Map]], since it does not obey the 
+ semantics of a `Map`. In particular, it may contain 
+ multiple keys which are equal, as determined by the `==` 
+ operator."
+by ("Gavin King")
+shared class IdentityMap<Key, Item>
+        (hashtable=Hashtable(), entries = {})
+        satisfies {<Key->Item>*} & Collection<Key->Item> &
+                  Correspondence<Key,Item> & 
+                  Cloneable<IdentityMap<Key,Item>>
+        given Key satisfies Identifiable 
         given Item satisfies Object {
-    
-    "Determines whether this is a linked hash set with a
-     stable iteration order."
-    Stability stability;
     
     "The initial entries in the map."
     {<Key->Item>*} entries;
     
     "Performance-related settings for the backing array."
     Hashtable hashtable;
-    
+        
     variable value store = entryStore<Key,Item>
                 (hashtable.initialCapacity);
     variable Integer length = 0;
     
-    variable LinkedCell<Key->Item>? head = null;
-    variable LinkedCell<Key->Item>? tip = null;
-    
     // Write
     
-    Integer storeIndex(Object key, Array<Cell<Key->Item>?> store)
-            => (key.hash % store.size).magnitude;
-    
-    Cell<Key->Item> createCell(Key->Item entry, Cell<Key->Item>? rest) {
-        if (stability==linked) {
-            value cell = LinkedCell(entry, rest, tip);
-            if (exists last = tip) {
-                last.next = cell;
-            }
-            tip = cell;
-            if (!head exists) {
-                head = cell;
-            }
-            return cell;
-        }
-        else {
-            return Cell(entry, rest);
-        }
-    }
-    
-    void deleteCell(Cell<Key->Item> cell) {
-        if (stability==linked) {
-            assert (is LinkedCell<Key->Item> cell);
-            if (exists last = cell.previous) {
-                last.next = cell.next;
-            }
-            else {
-                head = cell.next;
-            }
-            if (exists next = cell.next) {
-                next.previous = cell.previous;
-            }
-            else {
-                tip = cell.previous;
-            }
-        }
-    }
+    Integer storeIndex(Identifiable key, Array<Cell<Key->Item>?> store)
+            => (identityHash(key) % store.size).magnitude;
     
     Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
         variable value bucket = store[index];
         while (exists cell = bucket) {
-            if (cell.element.key == entry.key) {
+            if (cell.element.key === entry.key) {
                 // modify an existing entry
                 cell.element = entry;
                 return false;
@@ -102,7 +41,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, store[index]));
+        store.set(index, Cell(entry, store[index]));
         return true;
     }
     
@@ -113,9 +52,9 @@ shared class HashMap<Key, Item>
                     (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
-            while (index < store.size) {
+            while (index < store.size){
                 variable value bucket = store[index];
-                while (exists cell = bucket) {
+                while (exists cell = bucket){
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element.key, newStore);
                     variable value newBucket = newStore[newIndex];
@@ -132,7 +71,7 @@ shared class HashMap<Key, Item>
     }
     
     // Add initial values
-    for (entry in entries){   
+    for (entry in entries) {   
         if (addToStore(store, entry)) {
             length++;
         }
@@ -141,27 +80,28 @@ shared class HashMap<Key, Item>
     
     // End of initialiser section
     
-    shared actual Item? put(Key key, Item item){
+    shared Item? put(Key key, Item item){
         Integer index = storeIndex(key, store);
-        value entry = key->item;
         variable value bucket = store[index];
         while(exists cell = bucket){
-            if(cell.element.key == key){
+            if(cell.element.key === key){
                 Item oldValue = cell.element.item;
                 // modify an existing entry
-                cell.element = entry;
+                cell.element = key->item;
                 return oldValue;
             }
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, store[index]));
+        store.set(index, Cell(key->item, store[index]));
         length++;
         checkRehash();
         return null;
     }
     
-    shared actual void putAll({<Key->Item>*} entries){
+    "Adds a collection of key/value mappings to this map, 
+     may be used to change existing mappings"
+    shared void putAll({<Key->Item>*} entries){
         for(entry in entries){
             if(addToStore(store, entry)){
                 length++;
@@ -170,7 +110,9 @@ shared class HashMap<Key, Item>
         checkRehash();
     }
     
-    shared actual Item? remove(Key key) {
+    
+    "Removes a key/value mapping if it exists"
+    shared Item? remove(Key key) {
         Integer index = storeIndex(key, store);
         while (exists head = store[index], 
             head.element.key == key) {
@@ -184,7 +126,6 @@ shared class HashMap<Key, Item>
             if (exists rest,
                 rest.element.key == key) {
                 cell.rest = rest.rest;
-                deleteCell(cell);
                 length--;
                 return rest.element.item;
             }
@@ -194,30 +135,30 @@ shared class HashMap<Key, Item>
         }
         return null;
     }
+
     
-    shared actual void clear(){
+    "Removes every key/value mapping"
+    shared void clear(){
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
             store.set(index++, null);
         }
         length = 0;
-        head = null;
-        tip = null;
     }
     
     // Read
     
     size => length;
     
-    shared actual Item? get(Object key) {
+    shared actual Item? get(Key key) {
         if(empty){
             return null;
         }
         Integer index = storeIndex(key, store);
         variable value bucket = store[index];
         while(exists cell = bucket){
-            if(cell.element.key == key){
+            if(cell.element.key === key){
                 return cell.element.item;
             }
             bucket = cell.rest;
@@ -225,7 +166,7 @@ shared class HashMap<Key, Item>
         return null;
     }
     
-    /*shared actual Collection<Item> values {
+    /*shared Collection<Item> values {
         value ret = LinkedList<Item>();
         variable Integer index = 0;
         // walk every bucket
@@ -240,8 +181,8 @@ shared class HashMap<Key, Item>
         return ret;
     }
     
-    shared actual Set<Key> keys {
-        value ret = HashSet<Key>();
+    shared actual IdentitySet<Key> keys {
+        value ret = IdentitySet<Key>();
         variable Integer index = 0;
         // walk every bucket
         while(index < store.size){
@@ -262,23 +203,21 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                if(exists keys = ret[cell.element.item]){
-                    keys.add(cell.element.key);
+                if(exists keys = ret[cell.car.item]){
+                    keys.add(cell.car.key);
                 }else{
                     value k = HashSet<Key>();
-                    ret.put(cell.element.item, k);
-                    k.add(cell.element.key);
+                    ret.put(cell.car.item, k);
+                    k.add(cell.car.key);
                 }
-                bucket = cell.rest;
+                bucket = cell.cdr;
             }
             index++;
         }
         return ret;
     }*/
     
-    iterator() => stability==linked 
-            then LinkedCellIterator(head)
-            else StoreIterator(store);
+    iterator() => StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Key->Item element)) {
         variable Integer index = 0;
@@ -304,7 +243,8 @@ shared class HashMap<Key, Item>
         while(index < store.size){
             variable value bucket = store[index];
             while(exists cell = bucket){
-                hash = hash * 31 + cell.element.hash;
+                hash = hash * 31 + identityHash(cell.element.key);
+                hash = hash * 31 + cell.element.item.hash;
                 bucket = cell.rest;
             }
             index++;
@@ -313,7 +253,7 @@ shared class HashMap<Key, Item>
     }
     
     shared actual Boolean equals(Object that) {
-        if(is Map<Object,Object> that,
+        if(is IdentityMap<Object,Object> that,
             size == that.size){
             variable Integer index = 0;
             // walk every bucket
@@ -336,8 +276,8 @@ shared class HashMap<Key, Item>
         return false;
     }
     
-    shared actual MutableMap<Key,Item> clone {
-        value clone = HashMap<Key,Item>();
+    shared actual IdentityMap<Key,Item> clone {
+        value clone = IdentityMap<Key,Item>();
         clone.length = length;
         clone.store = entryStore<Key,Item>(store.size);
         variable Integer index = 0;

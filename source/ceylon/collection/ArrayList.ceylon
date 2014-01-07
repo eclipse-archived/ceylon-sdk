@@ -1,21 +1,63 @@
-
-shared class ArrayList<Element>(initialCapacity = 0, elements = {}) 
-        satisfies MutableList<Element> {
+"A [[MutableList]] implemented using a backing [[Array]].
+ Also:
+ 
+ - a [[Stack]], where the top of the stack is the _last_
+   element of the list, and
+ - a [[Queue]], where the front of the queue is the first
+   element of the list and the back of the queue is the
+   last element of the list.
+ 
+ The size of the backing `Array` is called the _capacity_
+ of the `ArrayList`. The capacity of a new instance is 
+ specified by the given [[initialCapacity]]. The capacity is 
+ increased when [[size]] exceeds the capacity. The new 
+ capacity is the product of the current capacity and the 
+ given [[growthFactor]]."
+by ("Gavin King")
+shared class ArrayList<Element>
+        (initialCapacity = 0, growthFactor=1.5, 
+                elements = {}) 
+        satisfies MutableList<Element> &
+                  Stack<Element> & Queue<Element> {
+    
+    "The initial size of the backing array."
     Integer initialCapacity;
+    
+    "The factor used to determine the new size of the
+     backing array when a new backing array is allocated."
+    Float growthFactor;
+    
+    "The initial elements of the list."
     {Element*} elements;
     
     "initial capacity cannot be negative"
-    assert(initialCapacity>=0);
+    assert (initialCapacity>=0);
     
-    variable Array<Element?> array = arrayOfSize<Element?>(initialCapacity, null);
+    "initial capacity too large"
+    assert (initialCapacity<=runtime.maxArraySize);
+    
+    "growth factor must be at least 1.0"
+    assert (growthFactor>=1.0);
+    
+    function store(Integer capacity)
+            => arrayOfSize<Element?>(capacity, null);
+    
+    variable Array<Element?> array = store(initialCapacity);
     variable Integer length=0;
     
     void grow(Integer increment) {
-        if (length+increment>array.size) {
-            //TODO: watch out for overflow!!
-            value grown = arrayOfSize<Element?>((length+increment)*2, null);
+        value neededCapacity = length+increment;
+        value maxArraySize = runtime.maxArraySize;
+        if (neededCapacity>maxArraySize) {
+            throw OverflowException(); //TODO: give it a message!
+        }
+        if (neededCapacity>array.size) {
+            value grownCapacity = (neededCapacity*growthFactor).integer;
+            value newCapacity = grownCapacity<neededCapacity||grownCapacity>maxArraySize 
+                    then maxArraySize else grownCapacity;
+            value grown = store(newCapacity);
             array.copyTo(grown);
-            array=grown;
+            array = grown;
         }
     }
     
@@ -25,21 +67,34 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         array.set(length++, element);
     }
 
-    shared actual void add(Element val) {
+    shared actual void add(Element element) {
         grow(1);
-        array.set(length++, val);
+        array.set(length++, element);
     }
     
-    shared actual void addAll({Element*} values) {
-        grow(values.size);
-        for (val in values) {
-            array.set(length++, val);
+    shared actual void addAll({Element*} elements) {
+        grow(elements.size);
+        for (element in elements) {
+            array.set(length++, element);
         }
     }
     
     shared actual void clear() {
         length = 0;
-        array = arrayOfSize<Element?>(initialCapacity, null);
+        array = store(initialCapacity);
+    }
+    
+    "The size of the backing array, which must be at least 
+     as large as the [[size]] of the list."
+    shared Integer capacity => array.size;
+    assign capacity {
+        "capacity must be at least as large as list size"
+        assert (capacity>=size);
+        "capacity too large"
+        assert (capacity<=runtime.maxArraySize);
+        value resized = store(capacity);
+        array.copyTo(resized, 0, 0, length);
+        array = resized;
     }
     
     shared actual Element? get(Integer index) {
@@ -51,33 +106,101 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
         }
     }
     
-    shared actual void insert(Integer index, Element val) {
+    shared actual void insert(Integer index, Element element) {
+        "index may not be negative or greater than the
+         length of the list"
+        assert (0<=index<=length);
         grow(1);
-        array.copyTo(array, index, index+1, length-index);
+        if (index<length) {
+            array.copyTo(array, index, index+1, length-index);
+        }
         length++;
-        array.set(index, val);
+        array.set(index, element);
     }
     
-    shared actual Element? remove(Integer index) {
-        array.copyTo(array, index+1, index, length-index);
-        length--;
-        Element? result = array[length];
-        array.set(length, null);
-        return result;
+    shared actual Element? delete(Integer index) {
+        if (0<=index<length) {
+            Element? result = array[index];
+            array.copyTo(array, index+1, index, length-index-1);
+            length--;
+            array.set(length, null);
+            return result;
+        }
+        else {
+            return null;
+        }
     }
     
-    shared actual void removeElement(Element val) {
+    shared actual void removeAll(Element&Object element) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            value element = array[i++];
-            if (!eq(val,element)) {
+            if (exists elem = array[i++]) {
+                if (elem!=element) {
+                    array.set(j++,elem);
+                }
+            }
+            else {
+                array.set(j++, null);
+            }
+        }
+        length=j;
+        while (j<i) {
+            array.set(j++, null);
+        }
+    }
+    
+    shared actual Boolean removeFirst(Element&Object element) {
+        if (exists index = firstOccurrence(element)) {
+            delete(index);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual void prune() {
+        variable value i=0;
+        variable value j=0;
+        while (i<length) {
+            if (exists element = array[i++]) {
                 array.set(j++,element);
             }
         }
         length=j;
         while (j<i) {
             array.set(j++, null);
+        }
+    }
+    
+    shared actual void replaceAll(Element&Object element, 
+            Element replacement) {
+        variable value i=0;
+        while (i<length) {
+            if (exists elem = array[i], elem==element) {
+                array.set(i, replacement);
+            }
+        }
+    }
+    
+    shared actual Boolean replaceFirst(Element&Object element, 
+            Element replacement) {
+        if (exists index = firstOccurrence(element)) {
+            set(index, element);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual void infill(Element replacement) {
+        variable value i=0;
+        while (i<length) {
+            if (!array[i] exists) {
+                array.set(i, replacement);
+            }
         }
     }
     
@@ -91,7 +214,7 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     }
     
     shared actual List<Element> rest
-            => ArrayList(initialCapacity-1, skipping(1));
+            => ArrayList(initialCapacity-1, growthFactor, skipping(1));
     
     shared actual Iterator<Element> iterator() {
         if (length>0) {
@@ -124,47 +247,82 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
                 }
                 iterable = { for (i in length-1..0) array[i] else error };
             }
-            return ArrayList(initialCapacity, iterable);
+            return ArrayList(initialCapacity, growthFactor, iterable);
         }
         else {
             return ArrayList();
         }
     }
     
+    shared actual void set(Integer index, Element element) {
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<=index<length);
+        array.set(index,element);
+    }
+    
     shared actual List<Element> segment(Integer from, Integer length) {
         value fst = from<0 then 0 else from;
         value len = from<0 then length+from else length;
         return fst<this.length && len>0
-            then ArrayList(len, skipping(fst).taking(len))
+            then ArrayList(len, growthFactor, skipping(fst).taking(len))
             else ArrayList();
-    }
-    
-    shared actual void set(Integer index, Element val) {
-        "index may not be negative or greater than length of list"
-        assert (0<index<=length);
-        if (index==length) {
-            add(val);
-        }
-        else {
-            array.set(index,val);
-        }
     }
     
     shared actual List<Element> span(Integer from, Integer to) {
-        if (from>to) {
-            //TODO: would be better to mutate the new array in place
-            return this[to..from].reversed;
-        }
-        else {
-            value fst = from<0 then 0 else from;
-            value len = (to<0 then 0) else (from<0 then to+1) else to-from+1;
-            return fst<this.length && len>=1 
-            then ArrayList(len, skipping(fst).taking(len))
+        value start = from>to then to else from;
+        value end = from>to then from else to;
+        value fst = start<0 then 0 else start;
+        value len = (end<0 then 0) else (start<0 then end+1) else end-start+1;
+        return fst<this.length && len>0 
+            then ArrayList(len, growthFactor, skipping(fst).taking(len))
             else ArrayList();
+    }
+    
+    shared actual void deleteSegment(Integer from, Integer length) {
+        value fst = from<0 then 0 else from;
+        value l = from<0 then length+from else length;
+        value len = l+fst>this.length then this.length-fst else l;
+        if (fst<this.length && len>0) {
+            array.copyTo(array, fst+len, fst, this.length-len-fst);
+            variable value i = this.length-len;
+            while (i<this.length) {
+                array.set(i++, null);
+            }
+            this.length-=len;
         }
     }
     
-    spanFrom(Integer from) => from>=length then ArrayList() else span(from,length-1);
+    shared actual void deleteSpan(Integer from, Integer to) {
+        value start = from>to then to else from;
+        value end = from>to then from else to;
+        value fst = start<0 then 0 else start;
+        value l = (end<0 then 0) else (start<0 then end+1) else end-start+1;
+        value len = l+fst>this.length then this.length-fst else l;
+        if (fst<this.length && len>0) {
+            array.copyTo(array, fst+len, fst, this.length-len-fst);
+            variable value i = this.length-len;
+            while (i<this.length) {
+                array.set(i++, null);
+            }
+            this.length-=len;
+        }
+    }
+    
+    shared actual void truncate(Integer size) {
+        assert (size>=0);
+        if (size<length) {
+            variable value i = size;
+            while (i<length) {
+                array.set(i++, null);
+            }
+            length=size;
+        }
+    }
+    
+    spanFrom(Integer from) => from>=length 
+            then ArrayList() 
+            else span(from,length-1);
     
     spanTo(Integer to) => to<0 then ArrayList() else span(0,to);
     
@@ -176,6 +334,20 @@ shared class ArrayList<Element>(initialCapacity = 0, elements = {})
     
     hash => (super of List<Element>).hash;
     
-    clone => ArrayList(size, this);
+    clone => ArrayList(size, growthFactor, this);
+    
+    push(Element element) => add(element);
+    
+    pop() => deleteLast();
+    
+    top => last;
+    
+    offer(Element element) => add(element);
+    
+    accept() => deleteFirst();
+    
+    back => last;
+    
+    front => first;
     
 }
