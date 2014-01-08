@@ -4,8 +4,30 @@ see (`class LinkedList`, `class ArrayList`)
 by("Stéphane Épardaud")
 shared interface MutableList<Element> 
         satisfies List<Element> & 
+                  ListMutator<Element> &
                   Cloneable<MutableList<Element>> {
+    "Remove the element at the specified [[index]], 
+     returning the removed element, or `null` if there was 
+     no such element."
+    shared actual formal Element? delete(Integer index);
     
+    "Remove the element with index `0` from this list, 
+     returning the removed element, or `null` if there was 
+     no such element."
+    shared actual default Element? deleteFirst() => delete(0);
+    
+    "Remove the element with index `size-1` from this list, 
+     returning the removed element, or `null` if there was 
+     no such element."
+    shared actual default Element? deleteLast() => delete(size-1);
+    
+}
+
+"Protocol for mutation of a [[MutableList]]."
+see (`interface MutableList`)
+shared interface ListMutator<in Element> 
+        satisfies List<Anything> {
+
     "Add the given [[element]] to the end of this list,
      incrementing the [[length|List.size]] of the list."
     shared formal void add(Element element);
@@ -28,10 +50,8 @@ shared interface MutableList<Element>
              is, if `index<0` or if `index>lastIndex+1`")
     shared formal void insert(Integer index, Element element);
     
-    "Remove the element at the specified [[index]], 
-     returning the removed element, or `null` if there was 
-     no such element."
-    shared formal Element? delete(Integer index);
+    "Remove the element at the specified [[index]]."
+    shared formal void delete(Integer index);
     
     "Remove all occurrences of the given [[value|element]] 
      from this list."
@@ -80,15 +100,11 @@ shared interface MutableList<Element>
      list with no elements."
     shared formal void clear();
     
-    "Remove the element with index `0` from this list, 
-     returning the removed element, or `null` if there was 
-     no such element."
-    shared default Element? deleteFirst() => delete(0);
+    "Remove the element with index `0` from this list."
+    shared formal void deleteFirst();
     
-    "Remove the element with index `size-1` from this list, 
-     returning the removed element, or `null` if there was 
-     no such element."
-    shared default Element? deleteLast() => delete(size-1);
+    "Remove the element with index `size-1` from this list."
+    shared formal void deleteLast();
     
     "Remove every element with an index in the spanned range 
      `from..to`."

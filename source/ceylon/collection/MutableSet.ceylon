@@ -4,7 +4,14 @@ by("Stéphane Épardaud")
 see (`class HashSet`)
 shared interface MutableSet<Element>
         satisfies Set<Element> &
+                  SetMutator<Element> &
                   Cloneable<MutableSet<Element>>
+        given Element satisfies Object {}
+
+"Protocol for mutation of a [[MutableSet]]."
+see (`interface MutableSet`)
+shared interface SetMutator<in Element>
+        satisfies Set<Object>
         given Element satisfies Object {
     
     "Add the given [[element]] to this set, returning `true` 
@@ -24,4 +31,5 @@ shared interface MutableSet<Element>
     "Remove every element from this set, leaving an empty 
      set with no elements."
     shared formal void clear();
+    
 }
