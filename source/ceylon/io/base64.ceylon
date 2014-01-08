@@ -28,6 +28,7 @@ shared object base64 {
         return Base64Url();
     }
 
+<<<<<<< HEAD
 	"Encodes the given string in Base64 using the given character encoding ASCII is the default charset"
 	shared String encode(String input, Charset charset  = ascii){
 		return Base64Helper().encodeToString(input, charset);
@@ -37,6 +38,17 @@ shared object base64 {
 	shared String decode(String input,  Charset charset  = ascii){
 		return Base64Helper().decodeToString(input,charset);
 	}
+=======
+    "Encodes the given string in Base64 using the given character encoding ASCII is the default charset"
+    shared String encode(String input, String charset  = "ASCII"){
+	return Base64Helper().encodeToString(input, charset);
+    }
+
+    "Decodes the given string from Base64 using the given character encoding.  ASCII is the default charset"
+    shared String decode(String input, String charset  = "ASCII"){
+	return Base64Helper().decodeToString(input,charset);
+    }
+>>>>>>> c70ae5625556d292a4dd64c66f3685ae8415c5ac
     
 }
 
