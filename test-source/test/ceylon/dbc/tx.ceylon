@@ -11,9 +11,8 @@ test void transactionTests() {
         assert (count==1);
         return true;
     });
-    sql.transaction(() {
+    try (sql.Transaction()) {
         value count = sql.Update("DELETE FROM test1 WHERE name=?").execute("Hello");
         assert (count==1);
-        return true;
-    });
+    }
 }
