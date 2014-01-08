@@ -43,7 +43,7 @@ shared alias Row=>Map<String,Object>;
 "An object that exposes operations for executing SQL DML or
  DDL queries against JDBC connections obtained by calling a 
  given [[function|newConnection]]."
-by("Enrique Zamudio")
+by ("Enrique Zamudio", "Gavin King")
 shared class Sql(newConnection) {
     
     "Obtain a JDBC connection."
