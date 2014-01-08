@@ -1,6 +1,6 @@
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 
-import ceylon.io.charset { getCharset }
+import ceylon.io.charset { getCharset, ascii, Charset }
 
 "Represents a Base64 implementation of RFC 4648
  (the specification)[http://tools.ietf.org/html/rfc4648]."
@@ -29,12 +29,12 @@ shared object base64 {
     }
 
 	"Encodes the given string in Base64 using the given character encoding ASCII is the default charset"
-	shared String encode(String input, String charset  = "ASCII"){
+	shared String encode(String input, Charset charset  = ascii){
 		return Base64Helper().encodeToString(input, charset);
 	}
 
 	"Decodes the given string from Base64 using the given character encoding.  ASCII is the default charset"
-	shared String decode(String input, String charset  = "ASCII"){
+	shared String decode(String input,  Charset charset  = ascii){
 		return Base64Helper().decodeToString(input,charset);
 	}
     
@@ -198,44 +198,27 @@ class Base64Url() extends AbstractBase64() {
 
 
 shared class Base64Helper() {
-	shared String encodeToString(String string ,String charset = "ASCII"){
-		value cs = getCharset(charset);
-		
-		if(exists cs){
+	shared String encodeToString(String string , Charset cs  = ascii){
 			ByteBuffer encodedInput = cs.encode(string);
-			return  encodeByteToString(encodedInput, charset);
-		}	     	
-		throw Exception("Charset not supported ");
-		
+			return  encodeByteToString(encodedInput, cs);		
 	}
 	
 	
-	shared String encodeByteToString(ByteBuffer inputBuffer,String enc ="ASCII"){
-		
+	shared String encodeByteToString(ByteBuffer inputBuffer, Charset cs  = ascii){		
 		ByteBuffer encodedBuffer = base64.getEncoder().encode(inputBuffer); 
-		value cs = getCharset(enc);
-		if(exists cs){
-			return cs.decode(encodedBuffer);  
+		return cs.decode(encodedBuffer); 		
 			
-		}		
-		throw Exception("Charset not supported");		
-	}
-	shared String  decodeToString(String string ,String charset ){
-		value cs = getCharset(charset);
-		if(exists cs){
-			return  decodeByteToString(cs.encode(string), charset);
-		}	     	
-		throw Exception("Charset not supported ");		
 	}
 	
-	shared String decodeByteToString(ByteBuffer inputBuffer ,String  charset = "ASCII" ){
-		value cs = getCharset(charset);
+	shared String  decodeToString(String string ,Charset cs  = ascii){	
+			return  decodeByteToString(cs.encode(string), cs);				
+	}
+	
+	shared String decodeByteToString(ByteBuffer inputBuffer ,Charset cs  = ascii ){
+				
 		ByteBuffer decodedBuffer = base64.getDecoder().decode(inputBuffer); // decode base64 encoded inputBuffer 
-		if(exists cs){
-			return cs.decode(decodedBuffer); // decode 
-		}
-		
-		throw Exception("Charset not supported");	
+		return cs.decode(decodedBuffer); // decode 
+
 	}
 	
 	
