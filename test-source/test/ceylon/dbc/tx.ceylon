@@ -1,23 +1,19 @@
 import ceylon.test {
     ...
 }
+import java.util { Date }
 
 test void transactionTests() {
-    /*if (exists count0 = sql.queryForInteger("SELECT count(*) FROM test1")) {
-        //Rollback
-        sql.transaction {
-            function do() {
-                value erased = sql.update("DELETE FROM test1");
-                assertEquals(count0, erased, "deleted all rows");
-                return false;
-            }
-        };
-        if (exists count1 = sql.queryForInteger("SELECT count(*) FROM test1")) {
-            assertEquals(count0, count1, "rollback");
-        }
-        sql.transaction(() => sql.update("DELETE FROM test1")==count0);
-        if (exists count1 = sql.queryForInteger("SELECT count(*) FROM test1")) {
-            assertEquals(0, count1, "commit");
-        }
-    }*/
+    sql.transaction(() {
+        sql.Insert("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)")
+                    .execute("Hello", Date(0), 3);
+        value count = sql.Update("UPDATE test1 set count=? WHERE name=?").execute(5, "Hello");
+        assert (count==1);
+        return true;
+    });
+    sql.transaction(() {
+        value count = sql.Update("DELETE FROM test1 WHERE name=?").execute("Hello");
+        assert (count==1);
+        return true;
+    });
 }
