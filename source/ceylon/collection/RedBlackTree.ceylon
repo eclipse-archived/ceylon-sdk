@@ -2,9 +2,35 @@ abstract class Color() of red|black {}
 object black extends Color() {}
 object red extends Color() {}
 
-Color nodeColor<Key,Item>(Node<Key,Item>? n)
-        given Key satisfies Comparable<Key>
-        => n?.color else black;
+Boolean isRed<Key,Item>(Node<Key,Item>? node)
+        given Key satisfies Comparable<Key> {
+    if (exists node) {
+        return node.color==red;
+    }
+    else {
+        return false;
+    }
+}
+
+Boolean onLeft<Key,Item>(Node<Key,Item> n)
+        given Key satisfies Comparable<Key> {
+    if (exists npl=n.parent?.left) {
+        return n==npl;
+    }
+    else {
+        return false;
+    }
+}
+
+Boolean onRight<Key,Item>(Node<Key,Item> n)
+        given Key satisfies Comparable<Key> {
+    if (exists npl=n.parent?.right) {
+        return n==npl;
+    }
+    else {
+        return false;
+    }
+}
 
 class Node<Key,Item>(key, item, color) 
         given Key satisfies Comparable<Key>
@@ -124,99 +150,102 @@ shared class RBTree<Key,Item>()
 //        return pathBlackCount;
 //    }
 
-    function lookupNode(Key key) {
-        variable value nn = root;
-        while (exists n=nn) {
-            value compResult = key<=>n.key;
-            switch (compResult) 
+    function lookup(Key key) {
+        variable value node = root;
+        while (exists n=node) {
+            switch (key<=>n.key) 
             case (equal) {
                 return n;
             } 
             case (smaller) {
-                nn = n.left;
+                node = n.left;
             }
             case (larger) {
-                nn = n.right;
+                node = n.right;
             }
         }
-        return nn;
+        return node;
     }
     
-    shared Item? get(Key key) => lookupNode(key)?.item;
+    shared Item? get(Key key) => lookup(key)?.item;
     
-    void replaceNode(Node<Key,Item> oldn, Node<Key,Item>? newn) {
-        if (exists op=oldn.parent) {
-            if (exists opl=op.left, oldn == opl) {
-                op.left = newn;
+    void replaceNode(Node<Key,Item> old, Node<Key,Item>? node) {
+        if (exists parent=old.parent) {
+            if (onLeft(old)) {
+                parent.left = node;
+            }
+            else if (onRight(old)) {
+                parent.right = node;
             }
             else {
-                op.right = newn;
+                assert (false);
             }
         }
         else {
-            root = newn;
+            root = node;
         }
-        if (exists newn) {
-            newn.parent = oldn.parent;
+        if (exists node) {
+            node.parent = old.parent;
         }
     }
     
-    void rotateLeft(Node<Key,Item> n) {
-        assert (exists r = n.right);
-        replaceNode(n, r);
-        n.right = r.left;
-        if (exists rl=r.left) {
-            rl.parent = n;
+    void rotateLeft(Node<Key,Item> node) {
+        assert (exists right = node.right);
+        replaceNode(node, right);
+        node.right = right.left;
+        if (exists rl=right.left) {
+            rl.parent = node;
         }
-        r.left = n;
-        n.parent = r;
+        right.left = node;
+        node.parent = right;
     }
 
-    void rotateRight(Node<Key,Item> n) {
-        assert (exists l = n.left);
-        replaceNode(n, l);
-        n.left = l.right;
-        if (exists lr = l.right) {
-            lr.parent = n;
+    void rotateRight(Node<Key,Item> node) {
+        assert (exists left = node.left);
+        replaceNode(node, left);
+        node.left = left.right;
+        if (exists lr = left.right) {
+            lr.parent = node;
         }
-        l.right = n;
-        n.parent = l;
+        left.right = node;
+        node.parent = left;
     }
     
     shared void put(Key key, Item item) {
-        Node<Key,Item> insertedNode = Node<Key,Item>(key, item, red);
-        if (exists r=root) {
-            variable Node<Key,Item> n = r;
+        value newNode = Node(key, item, red);
+        if (exists root=this.root) {
+            variable Node<Key,Item> node = root;
             while (true) {
-                value compResult = key<=>n.key;
-                switch (compResult)
+                switch (key<=>node.key)
                 case (larger) {
-                    if (exists nr=n.right) {
-                        n = nr;
-                    } else {
-                        n.right = insertedNode;
+                    if (exists nr=node.right) {
+                        node = nr;
+                    }
+                    else {
+                        node.right = newNode;
                         break;
                     }
                 }
                 case (smaller) {
-                    if (exists nl = n.left) {
-                        n = nl;
-                    } else {
-                        n.left = insertedNode;
+                    if (exists nl = node.left) {
+                        node = nl;
+                    }
+                    else {
+                        node.left = newNode;
                         break;
                     }
                 }
                 case (equal) {
-                    n.item = item;
+                    node.item = item;
                     return;
                 }
             }
-            insertedNode.parent = n;
+            newNode.parent = node;
         }
         else {
-            root = insertedNode;
+            root = newNode;
         }
-        insertCase1(insertedNode);
+        insertCase1(newNode);
         //verifyProperties();
     }
     
@@ -230,13 +259,13 @@ shared class RBTree<Key,Item>()
     }
     
     void insertCase2(Node<Key,Item> n) {
-        if (nodeColor(n.parent) != black) {
+        if (isRed(n.parent)) {
             insertCase3(n);
         }
     }
     
     void insertCase3(Node<Key,Item> n) {
-        if (nodeColor(n.uncle) == red) {
+        if (isRed(n.uncle)) {
             assert (exists np=n.parent);
             assert (exists nu=n.uncle);
             np.color = black;
@@ -287,43 +316,43 @@ shared class RBTree<Key,Item>()
         }
     }
     
-    Node<Key,Item> maximumNode(Node<Key,Item> n) {
-        variable value nn = n;
-        while (exists nr = nn.right) {
-            nn = nr;
+    Node<Key,Item> rightmostChild(Node<Key,Item> node) {
+        variable value rightmost = node;
+        while (exists right = rightmost.right) {
+            rightmost = right;
         }
-        return nn;
+        return rightmost;
     }
     
     shared void remove(Key key) {
-        if (exists n = lookupNode(key)) {
-            Node<Key,Item> nn;
-            if (exists nl=n.left, exists nr=n.right) {
+        if (exists node = lookup(key)) {
+            Node<Key,Item> adjusted;
+            if (exists left=node.left, exists right=node.right) {
                 // Copy key/value from predecessor and then delete it instead
-                Node<Key,Item> pred = maximumNode(nl);
-                n.key = pred.key;
-                n.item = pred.item;
-                nn = pred;
+                Node<Key,Item> rightmost = rightmostChild(left);
+                node.key = rightmost.key;
+                node.item = rightmost.item;
+                adjusted = rightmost;
             }
             else {
-                nn = n;
+                adjusted = node;
             }
             
-            Node<Key,Item> child;
-            if (exists nl = nn.left) {
-                child = nl;
+            Node<Key,Item>? child;
+            if (exists left = adjusted.left) {
+                child = left;
             }
-            else if (exists nr = nn.right) {
-                child = nr;
+            else if (exists right = adjusted.right) {
+                child = right;
             }
             else {
-                assert (false);
+                child = null;
             }
-            if (nodeColor(n) == black) {
-                n.color = nodeColor(child);
-                deleteCase1(n);
+            if (exists child, !isRed(node)) {
+                node.color = child.color;
+                deleteCase1(node);
             }
-            replaceNode(n, child);
+            replaceNode(node, child);
         }
         //verifyProperties();
     }
@@ -337,7 +366,7 @@ shared class RBTree<Key,Item>()
     void deleteCase2(Node<Key,Item> n) {
         if (exists np=n.parent, 
             exists ns=n.sibling, 
-            nodeColor(ns) == red) {
+            isRed(ns)) {
             np.color = red;
             ns.color = black;
             if (exists npl=np.left, n == npl) {
@@ -353,10 +382,10 @@ shared class RBTree<Key,Item>()
     void deleteCase3(Node<Key,Item> n) {
         if (exists np=n.parent, 
             exists ns=n.sibling,
-            nodeColor(np) == black &&
-            nodeColor(ns) == black &&
-            nodeColor(ns.left) == black &&
-            nodeColor(ns.right) == black)
+            !isRed(np) &&
+            !isRed(ns) &&
+            !isRed(ns.left) &&
+            !isRed(ns.right))
         {
             ns.color = red;
             deleteCase1(np);
@@ -369,10 +398,10 @@ shared class RBTree<Key,Item>()
     void deleteCase4(Node<Key,Item> n) {
         if (exists np=n.parent, 
             exists ns=n.sibling,
-            nodeColor(np) == red &&
-            nodeColor(ns) == black &&
-            nodeColor(ns.left) == black &&
-            nodeColor(ns.right) == black)
+            isRed(np) &&
+            !isRed(ns) &&
+            !isRed(ns.left) &&
+            !isRed(ns.right))
         {
             ns.color = red;
             np.color = black;
@@ -388,9 +417,9 @@ shared class RBTree<Key,Item>()
             exists npl=np.left,
             exists nsl=ns.left,
             n == npl &&
-            nodeColor(ns) == black &&
-            nodeColor(ns.left) == red &&
-            nodeColor(ns.right) == black)
+            !isRed(ns) &&
+            isRed(ns.left) &&
+            !isRed(ns.right))
         {
             ns.color = red;
             nsl.color = black;
@@ -401,9 +430,9 @@ shared class RBTree<Key,Item>()
             exists npr=np.right,
             exists nsr=ns.left,
             n == npr &&
-            nodeColor(ns) == black &&
-            nodeColor(ns.right) == red &&
-            nodeColor(ns.left) == black)
+            !isRed(ns) &&
+            isRed(ns.right) &&
+            !isRed(ns.left))
         {
             ns.color = red;
             nsr.color = black;
@@ -414,16 +443,16 @@ shared class RBTree<Key,Item>()
     
     void deleteCase6(Node<Key,Item> n) {
         assert (exists ns=n.sibling, exists np=n.parent);
-        ns.color = nodeColor(np);
+        ns.color = np.color;
         np.color = black;
         if (exists npl = np.left, n == npl) {
-            assert (exists nsr=ns.right, nodeColor(nsr) == red);
+            assert (exists nsr=ns.right, isRed(nsr));
             nsr.color = black;
             rotateLeft(np);
         }
         else
         {
-            assert (exists nsl=ns.left, nodeColor(ns.left) == red);
+            assert (exists nsl=ns.left, isRed(ns.left));
             nsl.color = black;
             rotateRight(np);
         }
@@ -441,5 +470,8 @@ shared void testTree() {
     tree.put("gavin", "king");
     tree.put("2", "6");
     tree.put("@#", "%^");
+    print(tree);
+    tree.remove("hello");
+    tree.remove("@#");
     print(tree);
 }
