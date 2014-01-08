@@ -224,19 +224,27 @@ shared class Sql(newConnection) {
         "Execute this query with the given [[arguments]] 
          to its parameters. The resulting instance of 
          `Results` may be iterated, producing [[Row]]s 
-         lazily."
+         lazily.
+         
+         Should be instantiated using `try`:
+         
+             try (results = sql.Select(\"select * from table\").Results()) {
+                 for (row in results) {
+                     //read the row here
+                 }
+             }"
         shared class Results(Object* arguments)
                 satisfies Closeable & {Row*} {
             
-            variable ConnectionStatus? _connectionStatus=null;
-            variable PreparedStatement? _preparedStatement=null;
-            variable {Object*} _resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
+            variable ConnectionStatus? connectionStatus=null;
+            variable PreparedStatement? preparedStatement=null;
+            variable {Object*} resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
             
             shared actual void open() {
                 value connectionStatus = connection.get();
-                this._connectionStatus = connectionStatus;
+                this.connectionStatus = connectionStatus;
                 value preparedStatement = prepareStatement(connectionStatus, sql, arguments);
-                this._preparedStatement = preparedStatement;
+                this.preparedStatement = preparedStatement;
                 if (exists maxRows = limit) {
                     preparedStatement.maxRows=maxRows;
                 }
@@ -247,11 +255,11 @@ shared class Sql(newConnection) {
                         satisfies Iterator<Row> {
                     //TODO: nasty hack to work around backend bug!
                     value preparedStatement {
-                        assert (exists ps = _preparedStatement);
+                        assert (exists ps = outer.preparedStatement);
                         return ps;
                     }
                     value resultSet = preparedStatement.executeQuery();
-                    _resultSets = _resultSets.following(resultSet);
+                    resultSets = resultSets.following(resultSet);
                     value meta = resultSet.metaData;
                     value range = 1..meta.columnCount;
                     shared actual Row|Finished next() {
@@ -267,57 +275,97 @@ shared class Sql(newConnection) {
             }
             
             shared actual void close(Exception? exception) {
-                for (resultSet in this._resultSets) {
+                for (resultSet in this.resultSets) {
                     try {
                         assert (is ResultSet resultSet); //TODO: should not be necessary, nasty hack to work around backend bug!
                         resultSet.close();
                     }
                     catch (e) {}
                 }
-                this._resultSets = [];
-                if (exists preparedStatement = this._preparedStatement) {
+                this.resultSets = [];
+                if (exists preparedStatement = this.preparedStatement) {
                     try {
                         preparedStatement.close();
                     }
                     catch (e) {}
                 }
-                this._preparedStatement = null;
-                if (exists connectionStatus = this._connectionStatus) {
+                this.preparedStatement = null;
+                if (exists connectionStatus = this.connectionStatus) {
                     try {
                         connectionStatus.close();
                     }
                     catch (e) {}
                 }
-                this._connectionStatus = null;
+                this.connectionStatus = null;
             }
             
         }
         
     }
     
-    "Execute the passed Callable within a database transaction. If any
-     exception is thrown from within the Callable, the transaction will
-     be rolled back; otherwise it is committed."
-    shared default void transaction(Boolean do()) {
-        value conn = connection.get();
-        conn.beginTransaction();
-        variable value ok = false;
-        try {
-            ok = do();
-        } finally {
-            try {
-                if (ok) {
-                    conn.commit();
-                } else {
-                    conn.rollback();
+    "Begin a new database transaction. If [[rollbackOnly]]
+     is called, or if an exception propagates out of `try`, 
+     the transaction will be rolled back. Otherwise, the 
+     transaction will be committed.
+     
+     Should be instantiated using `try`:
+     
+         try (tx = sql.Transaction()) {
+             //do work here
+             if (something) {
+                 tx.rollbackOnly();
+             }
+         }"
+    shared class Transaction() satisfies Closeable {
+        
+        variable value rollback = false;
+        
+        "Set the transaction to roll back."
+        shared void rollbackOnly() {
+            rollback=true;
+        }
+        
+        variable ConnectionStatus? connectionStatus=null;
+        
+        shared actual void open() {
+            value connectionStatus = connection.get();
+            this.connectionStatus = connectionStatus;
+            connectionStatus.beginTransaction();
+        }
+        
+        shared actual void close(Exception? exception) {
+            if (exists connectionStatus = this.connectionStatus) {
+                try {
+                    if (rollback||exception exists) {
+                        connectionStatus.rollback();
+                    }
+                    else {
+                        connectionStatus.commit();
+                    }
                 }
-            } finally {
-                conn.close();
+                finally {
+                    connectionStatus.close();
+                }
+            }
+            this.connectionStatus = null;
+        }
+        
+    }
+    
+    "Execute the given [[function|do]] in a new database 
+     transaction. If the function returns `false`, or if an 
+     exception is thrown by the function, the transaction 
+     will be rolled back."
+    shared void transaction(Boolean do()) {
+        try (tx = Transaction()) {
+            if (!do()) {
+                tx.rollbackOnly();
             }
         }
     }
     
-    "Create an `Entry` from the column data at the specified index."
+    "An [[Entry]] with the column data at the specified 
+     index."
     String->Object columnEntry(ResultSet rs, ResultSetMetaData meta, Integer idx) {
         String columnName = meta.getColumnName(idx).lowercased;
         Object? x = rs.getObject(idx);
