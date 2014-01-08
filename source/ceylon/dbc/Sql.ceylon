@@ -203,7 +203,28 @@ shared class Sql(newConnection) {
         shared variable Integer? limit=null;
         
         "Execute this query with the given [[arguments]] 
-         to its parameters."
+         to its parameters, returning a sequence of [[Row]]s."
+        shared Row[] execute(Object* arguments) {
+            try (results = Results(*arguments)) {
+                return results.sequence;
+            }
+        }
+        
+        "Execute this query with the given [[arguments]] 
+         to its parameters, and for each resulting [[Row]],
+         call the given [[function|do]]."
+        shared void forEachRow(Object* arguments)(void do(Row row)) {
+            try (results = Results(*arguments)) {
+                for (row in results) {
+                    do(row);
+                }
+            }
+        }
+        
+        "Execute this query with the given [[arguments]] 
+         to its parameters. The resulting instance of 
+         `Results` may be iterated, producing [[Row]]s 
+         lazily."
         shared class Results(Object* arguments)
                 satisfies Closeable & {Row*} {
             
