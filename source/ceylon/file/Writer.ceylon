@@ -1,6 +1,7 @@
 "Writes text to a `File`."
 see(`interface File`)
-shared interface Writer satisfies Closeable {
+shared interface Writer 
+        satisfies Closeable {
     
     "Write text to the file."
     shared formal void write(String string);

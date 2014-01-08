@@ -1,8 +1,14 @@
-import ceylon.file { ... }
+import ceylon.file {
+    ...
+}
 
-import java.nio.file { JPath=Path, 
-                       Files { newDirectory=createDirectory, 
-                               newFile=createFile } }
+import java.nio.file {
+    JPath=Path,
+    Files {
+        newDirectory=createDirectory,
+        newFile=createFile
+    }
+}
 
 class ConcreteNil(JPath jpath) 
         satisfies Nil {

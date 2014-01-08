@@ -1,6 +1,7 @@
 "Reads lines of text from a `File`."
 see(`interface File`)
-shared interface Reader satisfies Closeable {
+shared interface Reader 
+        satisfies Closeable {
     
     "The next line of text in the file,
      or `null` if there is no more text

@@ -1,10 +1,19 @@
-import ceylon.file { ... }
+import ceylon.file {
+    ...
+}
 
-import java.nio.file { JPath=Path, 
-                       Files { movePath=move, 
-                               newDirectoryStream,
-                               deletePath=delete,
-                               getOwner, setOwner } }
+import java.nio.file {
+    JPath=Path,
+    Files {
+        movePath=move,
+        newDirectoryStream,
+        deletePath=delete,
+        getOwner,
+        setOwner,
+        getAttribute,
+        setAttribute
+    }
+}
 
 class ConcreteDirectory(JPath jpath)
         satisfies Directory {
@@ -45,6 +54,12 @@ class ConcreteDirectory(JPath jpath)
     path =>  ConcretePath(jpath); 
     
     linkedResource => this;
+    
+    readAttribute(Attribute attribute) 
+            => getAttribute(jpath, attributeName(attribute));
+    
+    writeAttribute(Attribute attribute, Object attributeValue)
+            => setAttribute(jpath, attributeName(attribute), attributeValue);
     
     string => jpath.string;
     

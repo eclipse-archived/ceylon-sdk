@@ -1,6 +1,11 @@
-import ceylon.file { defaultParsePath=parsePath, defaultRootPaths=rootPaths, 
-                     defaultStores=stores }
-import ceylon.file.internal { internalCreateSystem=createSystem }
+import ceylon.file {
+    defaultParsePath=parsePath,
+    defaultRootPaths=rootPaths,
+    defaultStores=stores
+}
+import ceylon.file.internal {
+    internalCreateSystem=createSystem
+}
 
 "Represents a special-purpose file system."
 shared interface System {

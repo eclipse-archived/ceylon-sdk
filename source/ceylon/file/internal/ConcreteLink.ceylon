@@ -1,9 +1,18 @@
-import ceylon.file { ... }
+import ceylon.file {
+    ...
+}
 
-import java.nio.file { JPath=Path, 
-                       Files { readSymbolicLink,
-                               deletePath=delete,
-                               getOwner, setOwner } }
+import java.nio.file {
+    JPath=Path,
+    Files {
+        readSymbolicLink,
+        deletePath=delete,
+        getOwner,
+        setOwner,
+        getAttribute,
+        setAttribute
+    }
+}
 
 class ConcreteLink(JPath jpath)
         satisfies Link {
@@ -13,6 +22,12 @@ class ConcreteLink(JPath jpath)
     path => ConcretePath(jpath); 
     
     linkedResource => linkedPath.resource.linkedResource;
+    
+    readAttribute(Attribute attribute) 
+            => getAttribute(jpath, attributeName(attribute));
+    
+    writeAttribute(Attribute attribute, Object attributeValue)
+            => setAttribute(jpath, attributeName(attribute), attributeValue);
     
     string => jpath.string;
     

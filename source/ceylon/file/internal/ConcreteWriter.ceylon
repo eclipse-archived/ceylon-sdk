@@ -1,8 +1,21 @@
-import ceylon.file { Writer }
+import ceylon.file {
+    Writer
+}
 
-import java.nio.file { JPath=Path, Files { newBufferedWriter },
-                       StandardOpenOption { WRITE, APPEND, TRUNCATE_EXISTING } }
-import java.nio.charset { Charset }
+import java.nio.charset {
+    Charset
+}
+import java.nio.file {
+    JPath=Path,
+    Files {
+        newBufferedWriter
+    },
+    StandardOpenOption {
+        WRITE,
+        APPEND,
+        TRUNCATE_EXISTING
+    }
+}
 
 class ConcreteWriter(JPath jpath, Charset charset) 
         satisfies Writer {

@@ -1,13 +1,40 @@
-import ceylon.file { ... }
+import ceylon.file {
+    ...
+}
 
-import java.net { URI { newURI=create } }
-import java.io { IOException }
-import java.nio.file { JPath=Path, Paths { newPath=get }, FileVisitor, 
-                       FileVisitResult { CONTINUE, TERMINATE, SKIP_SUBTREE }, 
-                       FileSystems { defaultFileSystem=default },
-                       Files { isDirectory, isRegularFile, isExisting=\iexists,
-                               isSymbolicLink, walkFileTree } }
-import java.nio.file.attribute { BasicFileAttributes }
+import java.io {
+    IOException
+}
+import java.net {
+    URI {
+        newURI=create
+    }
+}
+import java.nio.file {
+    JPath=Path,
+    Paths {
+        newPath=get
+    },
+    FileVisitor,
+    FileVisitResult {
+        CONTINUE,
+        TERMINATE,
+        SKIP_SUBTREE
+    },
+    FileSystems {
+        defaultFileSystem=default
+    },
+    Files {
+        isDirectory,
+        isRegularFile,
+        isExisting=\iexists,
+        isSymbolicLink,
+        walkFileTree
+    }
+}
+import java.nio.file.attribute {
+    BasicFileAttributes
+}
 
 shared Path parsePath(String pathString) =>
         ConcretePath(newPath(pathString));

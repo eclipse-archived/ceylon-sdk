@@ -1,5 +1,10 @@
-import ceylon.file.internal { sameFileInternal=sameFile }
-import ceylon.file { AbstractReader=Reader, AbstractWriter=Writer }
+import ceylon.file {
+    AbstractReader=Reader,
+    AbstractWriter=Writer
+}
+import ceylon.file.internal {
+    sameFileInternal=sameFile
+}
 
 "Represents a file in a hierarchical file system."
 shared interface File 

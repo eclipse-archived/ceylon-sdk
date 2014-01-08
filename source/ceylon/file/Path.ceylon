@@ -1,8 +1,14 @@
-import java.lang { S=System { getProperty } }
+import ceylon.file.internal {
+    parsePathInternal=parsePath,
+    parseURIInternal=parseURI,
+    rootPathsInternal=rootPaths
+}
 
-import ceylon.file.internal { parsePathInternal=parsePath, 
-                              parseURIInternal=parseURI,
-                              rootPathsInternal=rootPaths }
+import java.lang {
+    S=System {
+        getProperty
+    }
+}
 
 "Represents a path in a hierarchical file system. A 
  path is a sequence of path elements. A path may be 

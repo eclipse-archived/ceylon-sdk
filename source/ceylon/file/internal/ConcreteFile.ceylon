@@ -1,18 +1,47 @@
-import ceylon.file { ... }
+import ceylon.file {
+    ...
+}
 
-import java.nio.file { JPath=Path, 
-                       Files { isReadable, isWritable, isExecutable, isSameFile,
-                               getFileStore, getSize=size, isHidden,
-                               getLastModifiedTime, setLastModifiedTime,
-                               probeContentType, copyPath=copy, movePath=move,
-                               newLink=createLink, 
-                               deletePath=delete,
-                               getOwner, setOwner,
-                               newSymbolicLink=createSymbolicLink,
-                               newBufferedReader, newBufferedWriter },
-                       StandardCopyOption { REPLACE_EXISTING, COPY_ATTRIBUTES },
-                       StandardOpenOption { WRITE, APPEND, TRUNCATE_EXISTING } }
-import java.nio.file.attribute { FileTime { fromMillis } }
+import java.nio.file {
+    JPath=Path,
+    Files {
+        isReadable,
+        isWritable,
+        isExecutable,
+        isSameFile,
+        getFileStore,
+        getSize=size,
+        isHidden,
+        getLastModifiedTime,
+        setLastModifiedTime,
+        getAttribute,
+        setAttribute,
+        probeContentType,
+        copyPath=copy,
+        movePath=move,
+        newLink=createLink,
+        deletePath=delete,
+        getOwner,
+        setOwner,
+        newSymbolicLink=createSymbolicLink,
+        newBufferedReader,
+        newBufferedWriter
+    },
+    StandardCopyOption {
+        REPLACE_EXISTING,
+        COPY_ATTRIBUTES
+    },
+    StandardOpenOption {
+        WRITE,
+        APPEND,
+        TRUNCATE_EXISTING
+    }
+}
+import java.nio.file.attribute {
+    FileTime {
+        fromMillis
+    }
+}
 
 
 class ConcreteFile(JPath jpath)
@@ -50,6 +79,12 @@ class ConcreteFile(JPath jpath)
     writable => isWritable(jpath);
     
     executable => isExecutable(jpath);
+    
+    readAttribute(Attribute attribute) 
+            => getAttribute(jpath, attributeName(attribute));
+    
+    writeAttribute(Attribute attribute, Object attributeValue)
+            => setAttribute(jpath, attributeName(attribute), attributeValue);
     
     shared actual Integer lastModifiedMilliseconds {
         return getLastModifiedTime(jpath).toMillis();

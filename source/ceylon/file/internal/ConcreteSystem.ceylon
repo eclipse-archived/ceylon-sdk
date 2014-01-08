@@ -1,9 +1,24 @@
-import ceylon.file { ... }
+import ceylon.file {
+    ...
+}
 
-import java.lang { JString=String }
-import java.net { URI { newURI=create } }
-import java.nio.file { FileSystem, FileSystems { newFileSystem } }
-import java.util { HashMap }
+import java.lang {
+    JString=String
+}
+import java.net {
+    URI {
+        newURI=create
+    }
+}
+import java.nio.file {
+    FileSystem,
+    FileSystems {
+        newFileSystem
+    }
+}
+import java.util {
+    HashMap
+}
 
 class ConcreteSystem(FileSystem fs) 
         satisfies System {

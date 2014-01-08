@@ -27,7 +27,16 @@ shared interface ExistingResource
              corresponding user.")
     shared formal variable String owner;
     
+    "Get the value of a filesystem attribute."
+    shared formal Object readAttribute(Attribute attribute);
+
+    "Set the value of a filesystem attribute."
+    shared formal void writeAttribute(Attribute attribute, 
+                            Object attributeValue);
+    
 }
+
+
 
 "Thrown if there is no principal with the specified name."
 shared class NoSuchPrincipalException(name, Exception cause) 
