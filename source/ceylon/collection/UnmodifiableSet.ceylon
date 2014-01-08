@@ -1,9 +1,8 @@
-"A wrapper class that exposes any [[Set]] as
- an immutable set, hiding the underlying `Set`
- implementation from clients, and preventing 
- attempts to narrow to [[MutableSet]]."
+"A wrapper class that exposes any [[Set]] as unmodifiable, 
+ hiding the underlying `Set` implementation from clients, 
+ and preventing attempts to narrow to [[MutableSet]]."
 by ("Gavin King")
-shared class ImmutableSet<out Element>(Set<Element> set)
+class UnmodifiableSet<out Element>(Set<Element> set)
         satisfies Set<Element>
         given Element satisfies Object {
     
@@ -36,6 +35,12 @@ shared class ImmutableSet<out Element>(Set<Element> set)
             => set.equals(that);
     hash => set.hash;
     
-    clone => ImmutableSet(set.clone);
+    clone => UnmodifiableSet(set.clone);
     
 }
+
+"Wrap the given [[Set]], preventing attempts to narrow the
+ returned `Set` to [[MutableSet]]."
+shared Set<Element> unmodifiableSet<Element>(Set<Element> set)
+        given Element satisfies Object
+        => UnmodifiableSet(set);

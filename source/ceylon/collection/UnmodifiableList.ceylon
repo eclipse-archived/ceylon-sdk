@@ -1,9 +1,8 @@
-"A wrapper class that exposes any [[List]] as
- an immutable list, hiding the underlying `List`
- implementation from clients, and preventing 
- attempts to narrow to [[MutableList]]."
+"A wrapper class that exposes any [[List]] as unmodifiable, 
+ hiding the underlying `List` implementation from clients, 
+ and preventing attempts to narrow to [[MutableList]]."
 by ("Gavin King")
-shared class ImmutableList<out Element>(List<Element> list) 
+class UnmodifiableList<out Element>(List<Element> list) 
         satisfies List<Element> {
 
     get(Integer index) => list.get(index);
@@ -31,6 +30,11 @@ shared class ImmutableList<out Element>(List<Element> list)
             => list.equals(that);
     hash => list.hash;
     
-    clone => ImmutableList(list.clone);
+    clone => UnmodifiableList(list.clone);
     
 }
+
+"Wrap the given [[List]], preventing attempts to narrow the
+ returned `List` to [[MutableList]]."
+shared List<Element> unmodifiableList<Element>(List<Element> list)
+        => UnmodifiableList(list);
