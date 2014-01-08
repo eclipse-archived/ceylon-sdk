@@ -224,12 +224,12 @@ shared class HashSet<Element>
     
     shared actual Integer hash {
         variable Integer index = 0;
-        variable Integer hash = 17;
+        variable Integer hash = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size){
             variable value bucket = store[index];
-            while(exists cell = bucket){
-                hash = hash * 31 + cell.element.hash;
+            while (exists cell = bucket){
+                hash += cell.element.hash;
                 bucket = cell.rest;
             }
             index++;
