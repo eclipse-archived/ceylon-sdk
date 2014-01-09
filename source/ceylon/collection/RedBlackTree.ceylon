@@ -66,7 +66,8 @@ class Node<Key,Item>(key, item)
         if (exists l=left) {
             stringBuilder.append(l.string).append(", ");
         }
-        stringBuilder.append(key.string)
+        stringBuilder.append(red then "[R]" else "[B]")
+                .append(key.string)
                 .append("->")
                 .append(item?.string else "<null>");
         if (exists r=right) {
@@ -278,8 +279,8 @@ shared class RBTree<Key,Item>()
             else {
                 child = null;
             }
-            if (exists child, !isRed(node)) {
-                node.red = child.red;
+            if (!isRed(node)) {
+                node.red = isRed(child);
                 recolorAfterDeletion(node);
             }
             replaceNode(node, child);
@@ -293,11 +294,14 @@ shared class RBTree<Key,Item>()
             if (isRed(sibling)) {
                 parent.red = true;
                 sibling.red = false;
-                if (exists npl=parent.left, node == npl) {
+                if (onLeft(parent)) {
                     rotateLeft(parent);
                 }
-                else {
+                else if (onRight(parent)) {
                     rotateRight(parent);
+                }
+                else {
+                    assert (false);
                 }
             }
             if (!isRed(sibling) &&
@@ -315,7 +319,7 @@ shared class RBTree<Key,Item>()
                 if (exists siblingLeft=sibling.left,
                     onLeft(node) &&
                     !isRed(sibling) &&
-                    isRed(sibling.left) &&
+                    isRed(siblingLeft) &&
                     !isRed(sibling.right)) {
                     sibling.red = true;
                     siblingLeft.red = false;
@@ -324,7 +328,7 @@ shared class RBTree<Key,Item>()
                 else if (exists siblingRight=sibling.right,
                     onRight(node) &&
                     !isRed(sibling) &&
-                    isRed(sibling.right) &&
+                    isRed(siblingRight) &&
                     !isRed(sibling.left)) {
                     sibling.red = true;
                     siblingRight.red = false;
@@ -351,73 +355,80 @@ shared class RBTree<Key,Item>()
         }
     }
     
+    shared void assertInvariants() {
+        checkBlackRoot();
+        checkColors();
+        countBlackNodesInPaths();
+    }
+    
+    void checkBlackRoot() {
+        assert (!isRed(root));
+    }
+    
+    void checkColors(Node<Key,Item>? node=root) {
+        if (exists node) {
+            if (isRed(node)) {
+                assert (!isRed(node.left));
+                assert (!isRed(node.right));
+                assert (!isRed(node.parent));
+            }
+            checkColors(node.left);
+            checkColors(node.right);
+        }
+    }
+    
+    Integer? countBlackNodesInPaths(node=root, blackCount=0, pathBlackCount=null) {
+        Node<Key,Item>? node;
+        variable Integer blackCount;
+        variable Integer? pathBlackCount;
+        if (!isRed(node)) {
+            blackCount++;
+        }
+        if (exists node) {
+            pathBlackCount = countBlackNodesInPaths(node.left, blackCount, pathBlackCount);
+            pathBlackCount = countBlackNodesInPaths(node.right, blackCount, pathBlackCount);
+            return pathBlackCount;
+        }
+        else {
+            if (exists count=pathBlackCount) {
+                assert (blackCount == count);
+            }
+            else {
+                pathBlackCount = blackCount;
+            }
+            return pathBlackCount;
+        }
+    }
+    
 }
 
-//    verifyProperties();
-//    shared void verifyProperties() {
-//        if (VERIFY_RBTREE) {
-//            verifyProperty1(root);
-//            verifyProperty2(root);
-//            // Property 3 is implicit
-//            verifyProperty4(root);
-//            verifyProperty5(root);
-//        }
-//    }
-//    static void verifyProperty1(Node<?,?> n) {
-//        assert nodeColor(n) == red || nodeColor(n) == black;
-//        if (n == null) return;
-//        verifyProperty1(n.left);
-//        verifyProperty1(n.right);
-//    }
-//    static void verifyProperty2(Node<?,?> root) {
-//        assert nodeColor(root) == black;
-//    }
-//    static Color nodeColor(Node<?,?> n) {
-//        return n == null ? black : n.color;
-//    }
-//    static void verifyProperty4(Node<?,?> n) {
-//        if (nodeColor(n) == red) {
-//            assert nodeColor(n.left)   == black;
-//            assert nodeColor(n.right)  == black;
-//            assert nodeColor(n.parent) == black;
-//        }
-//        if (n == null) return;
-//        verifyProperty4(n.left);
-//        verifyProperty4(n.right);
-//    }
-//    static void verifyProperty5(Node<?,?> root) {
-//        verifyProperty5Helper(root, 0, -1);
-//    }
-//
-//    static int verifyProperty5Helper(Node<?,?> n, int blackCount, int pathBlackCount) {
-//        if (nodeColor(n) == black) {
-//            blackCount++;
-//        }
-//        if (n == null) {
-//            if (pathBlackCount == -1) {
-//                pathBlackCount = blackCount;
-//            } else {
-//                assert blackCount == pathBlackCount;
-//            }
-//            return pathBlackCount;
-//        }
-//        pathBlackCount = verifyProperty5Helper(n.left,  blackCount, pathBlackCount);
-//        pathBlackCount = verifyProperty5Helper(n.right, blackCount, pathBlackCount);
-//        return pathBlackCount;
-//    }
 
 
 shared void testTree() {
     value tree = RBTree<String, String>();
+    tree.assertInvariants();
     tree.put("hello", "hello");
+    tree.assertInvariants();
     tree.put("world", "world");
+    tree.assertInvariants();
     tree.put("goodbye", "goodbye");
+    tree.assertInvariants();
     tree.put("0", "1");
+    tree.assertInvariants();
     tree.put("gavin", "king");
+    tree.assertInvariants();
     tree.put("2", "6");
+    tree.assertInvariants();
     tree.put("@#", "%^");
+    tree.assertInvariants();
     print(tree);
     tree.remove("hello");
+    print(tree);
+    tree.assertInvariants();
     tree.remove("@#");
+    tree.assertInvariants();
+    print(tree);
+    tree.remove("world");
+    tree.assertInvariants();
     print(tree);
 }
