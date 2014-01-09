@@ -8,7 +8,7 @@ shared class TreeSet<Element>(compare, elements={})
         satisfies MutableSet<Element>
         given Element satisfies Object {
      
-     "A comparator function used to order the elements."
+     "A comparator function used to sort the elements."
      Comparison compare(Element x, Element y);
      
      "The initial elements of the set."

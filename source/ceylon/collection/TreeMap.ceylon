@@ -9,7 +9,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         given Key satisfies Object
         given Item satisfies Object {
     
-    "A comparator function used to order the entries."
+    "A comparator function used to sort the entries."
     Comparison compare(Key x, Key y);
     
     "The initial entries in the map."
