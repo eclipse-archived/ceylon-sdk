@@ -13,7 +13,7 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries)
             => redBlackTree.clear();
     
     shared actual MutableMap<Key,Item> clone 
-            => nothing;
+            => TreeMap(entries); //TODO: inefficient!
     
     shared actual <Item&Object>? get(Object key) {
         if (is Key key) {

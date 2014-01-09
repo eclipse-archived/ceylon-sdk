@@ -1,91 +1,126 @@
-Boolean isRed<Key,Item>(Node<Key,Item>? node)
-        given Key satisfies Comparable<Key> {
-    if (exists node) {
-        return node.red;
-    }
-    else {
-        return false;
-    }
-}
-
-class Node<Key,Item>(key, item) 
-        given Key satisfies Comparable<Key> {
-    
-    shared variable Key key;
-    shared variable Item item;
-    shared variable Node<Key,Item>? left=null;
-    shared variable Node<Key,Item>? right=null;
-    shared variable Node<Key,Item>? parent=null;
-    shared variable Boolean red=true;
-    
-    shared Boolean onLeft {
-        if (exists parentLeft=parent?.left) {
-            return this==parentLeft;
-        }
-        else {
-            return false;
-        }
-    }
-    
-    shared Boolean onRight {
-        if (exists parentRight=parent?.right) {
-            return this==parentRight;
-        }
-        else {
-            return false;
-        }
-    }
-    
-    shared Node<Key,Item>? grandparent => parent?.parent;
-    
-    shared Node<Key,Item>? sibling {
-        if (exists p=parent) { 
-            if (onLeft) {
-                return p.right;
-            }
-            else if (onRight){
-                return p.left;
-            }
-            else {
-                assert (false);
-            }
-        }
-        else {
-            // Root node has no sibling
-            return null;
-        }
-    }
-    
-    shared Node<Key,Item>? uncle => parent?.sibling;
-    
-    shared actual String string {
-        value stringBuilder = StringBuilder();
-        stringBuilder.append("(");
-        if (exists l=left) {
-            stringBuilder.append(l.string).append(", ");
-        }
-        stringBuilder.append(red then "[R]" else "[B]")
-                .append(key.string)
-                .append("->")
-                .append(item?.string else "<null>");
-        if (exists r=right) {
-            stringBuilder.append(", ").append(r.string);
-        }
-        stringBuilder.append(")");
-        return stringBuilder.string;
-    }
-}
-
 shared class RedBlackTree<Key,Item>()
         satisfies {<Key->Item>*}
         given Key satisfies Comparable<Key>
         given Item satisfies Object {
     
-    variable Node<Key,Item>? root=null;
+    class Node(key, item) {
+        
+        shared variable Key key;
+        shared variable Item item;
+        shared variable Node? left=null;
+        shared variable Node? right=null;
+        shared variable Node? parent=null;
+        shared variable Boolean red=true;
+        
+        shared Boolean onLeft {
+            if (exists parentLeft=parent?.left) {
+                return this==parentLeft;
+            }
+            else {
+                return false;
+            }
+        }
+        
+        shared Boolean onRight {
+            if (exists parentRight=parent?.right) {
+                return this==parentRight;
+            }
+            else {
+                return false;
+            }
+        }
+        
+        shared Node? grandparent => parent?.parent;
+        
+        shared Node? sibling {
+            if (exists p=parent) { 
+                if (onLeft) {
+                    return p.right;
+                }
+                else if (onRight){
+                    return p.left;
+                }
+                else {
+                    assert (false);
+                }
+            }
+            else {
+                // Root node has no sibling
+                return null;
+            }
+        }
+        
+        shared Node? uncle => parent?.sibling;
+        
+        shared Node rightmostChild {
+            variable value rightmost = this;
+            while (exists right = rightmost.right) {
+                rightmost = right;
+            }
+            return rightmost;
+        }
+        
+        shared Node leftmostChild {
+            variable value leftmost = this;
+            while (exists left = leftmost.left) {
+                leftmost = left;
+            }
+            return leftmost;
+        }
+        
+        shared actual String string {
+            value stringBuilder = StringBuilder();
+            stringBuilder.append("(");
+            if (exists l=left) {
+                stringBuilder.append(l.string).append(", ");
+            }
+            stringBuilder.append(red then "[R]" else "[B]")
+                    .append(key.string)
+                    .append("->")
+                    .append(item.string);
+            if (exists r=right) {
+                stringBuilder.append(", ").append(r.string);
+            }
+            stringBuilder.append(")");
+            return stringBuilder.string;
+        }
+        
+        /*shared actual Node clone {
+            value clone = Node(key, item);
+            if (exists left = this.left) {
+                value leftClone = left.clone;
+                clone.left = leftClone;
+                leftClone.parent = clone;
+            }
+            if (exists right = this.right) {
+                value rightClone = right.clone;
+                clone.right= rightClone;
+                rightClone.parent = clone;
+            }
+            return clone;
+        }*/
+    }
+    
+    Boolean isRed(Node? node) {
+        if (exists node) {
+            return node.red;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    variable Node? root=null;
     
     shared void clear() {
         root=null;
     }
+    
+    /*shared actual RedBlackTree<Key,Item> clone {
+        value clone = RedBlackTree<Key,Item>();
+        clone.root = root?.clone;
+        return clone;
+    }*/
     
     shared actual String string {
         if (exists r=root) {
@@ -115,7 +150,7 @@ shared class RedBlackTree<Key,Item>()
     
     shared Item? get(Key key) => lookup(key)?.item;
     
-    void replaceNode(Node<Key,Item> old, Node<Key,Item>? node) {
+    void replaceNode(Node old, Node? node) {
         if (exists parent=old.parent) {
             if (old.onLeft) {
                 parent.left = node;
@@ -135,7 +170,7 @@ shared class RedBlackTree<Key,Item>()
         }
     }
     
-    void rotateLeft(Node<Key,Item> node) {
+    void rotateLeft(Node node) {
         assert (exists right = node.right);
         replaceNode(node, right);
         node.right = right.left;
@@ -146,7 +181,7 @@ shared class RedBlackTree<Key,Item>()
         node.parent = right;
     }
 
-    void rotateRight(Node<Key,Item> node) {
+    void rotateRight(Node node) {
         assert (exists left = node.left);
         replaceNode(node, left);
         node.left = left.right;
@@ -160,7 +195,7 @@ shared class RedBlackTree<Key,Item>()
     shared Item? put(Key key, Item item) {
         value newNode = Node(key, item);
         if (exists root=this.root) {
-            variable Node<Key,Item> node = root;
+            variable Node node = root;
             while (true) {
                 switch (key<=>node.key)
                 case (larger) {
@@ -197,7 +232,7 @@ shared class RedBlackTree<Key,Item>()
         //verifyProperties();
     }
     
-    void recolorAfterInsert(Node<Key,Item> newNode) {
+    void recolorAfterInsert(Node newNode) {
         if (exists parent = newNode.parent) {
             if (isRed(parent)) {
                 if (exists uncle=newNode.uncle, isRed(uncle)) {
@@ -213,7 +248,7 @@ shared class RedBlackTree<Key,Item>()
                 }
                 else {
                     //first rotation
-                    Node<Key,Item> adjustedNode;
+                    Node adjustedNode;
                     if (newNode.onRight && parent.onLeft) {
                         rotateLeft(parent);
                         assert (exists nl=newNode.left);
@@ -251,29 +286,13 @@ shared class RedBlackTree<Key,Item>()
         }
     }
     
-    Node<Key,Item> rightmostChild(Node<Key,Item> node) {
-        variable value rightmost = node;
-        while (exists right = rightmost.right) {
-            rightmost = right;
-        }
-        return rightmost;
-    }
-    
-    Node<Key,Item> leftmostChild(Node<Key,Item> node) {
-        variable value leftmost = node;
-        while (exists left = leftmost.left) {
-            leftmost = left;
-        }
-        return leftmost;
-    }
-    
     shared Item? remove(Key key) {
         if (exists result = lookup(key)) {
-            Node<Key,Item> node;
+            Node node;
             if (exists left=result.left, 
                 exists right=result.right) {
                 // Copy key/value from predecessor and then delete it instead
-                node = rightmostChild(left);
+                node = left.rightmostChild;
                 result.key = node.key;
                 result.item = node.item;
             }
@@ -281,7 +300,7 @@ shared class RedBlackTree<Key,Item>()
                 node = result;
             }
             
-            Node<Key,Item>? child;
+            Node? child;
             if (exists left = node.left) {
                 assert (!node.right exists);
                 child = left;
@@ -306,7 +325,7 @@ shared class RedBlackTree<Key,Item>()
         //verifyProperties();
     }
     
-    void recolorAfterDeletion(Node<Key,Item> node) {
+    void recolorAfterDeletion(Node node) {
         if (exists parent=node.parent) {
             if (exists sibling=node.sibling,
                 isRed(sibling)) {
@@ -388,7 +407,7 @@ shared class RedBlackTree<Key,Item>()
         assert (!isRed(root));
     }
     
-    void checkColors(Node<Key,Item>? node=root) {
+    void checkColors(Node? node=root) {
         if (exists node) {
             if (isRed(node)) {
                 assert (!isRed(node.left));
@@ -401,7 +420,7 @@ shared class RedBlackTree<Key,Item>()
     }
     
     Integer? countBlackNodesInPaths(node=root, blackCount=0, pathBlackCount=null) {
-        Node<Key,Item>? node;
+        Node? node;
         variable Integer blackCount;
         variable Integer? pathBlackCount;
         if (!isRed(node)) {
@@ -427,7 +446,7 @@ shared class RedBlackTree<Key,Item>()
         if (exists root = this.root) {
             object iterator 
                     satisfies Iterator<Key->Item> {
-                variable Node<Key,Item>? current = leftmostChild(root);
+                variable Node? current = root.leftmostChild;
                 shared actual <Key->Item>|Finished next() {
                     <Key->Item>|Finished entry;
                     if (exists node=current) {
