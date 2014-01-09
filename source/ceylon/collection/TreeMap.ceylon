@@ -161,17 +161,19 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 return n;
             } 
             case (smaller) {
-                //TODO: loop needed here, i think!
-                if (!n.left exists, 
-                    exists p=n.parent, 
-                    compare(p.key,key)==smaller) {
-                    return p;
+                if (!n.left exists) {
+                    variable value child = n;
+                    while (exists parent=child.parent, 
+                        child.onLeft) {
+                        child=parent;
+                    }
+                    return child.parent;
                 }
                 node = n.left;
             }
             case (larger) {
                 if (!n.right exists) {
-                    return node;
+                    return n;
                 }
                 node = n.right;
             }
@@ -188,16 +190,18 @@ shared class TreeMap<Key, Item>(compare, entries={})
             } 
             case (smaller) {
                 if (!n.left exists) {
-                    return node;
+                    return n;
                 }
                 node = n.left;
             }
             case (larger) {
-                //TODO: loop needed here, i think!
-                if (!n.right exists, 
-                    exists p=n.parent, 
-                    compare(p.key,key)==larger) {
-                    return p;
+                if (!n.right exists) {
+                    variable value child = n;
+                    while (exists parent=child.parent, 
+                        child.onRight) {
+                        child=parent;
+                    }
+                    return child.parent;
                 }
                 node = n.right;
             }
@@ -487,12 +491,12 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 }
             }
             else if (exists node=current) {
-                current = node.parent;
                 variable value child = node;
-                while (exists parent=current, child.onRight) {
+                while (exists parent=child.parent, 
+                    child.onRight) {
                     child = parent;
-                    current = parent.parent;
                 }
+                current = child.parent;
             }
             else {
                 current = null;
