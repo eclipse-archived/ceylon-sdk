@@ -86,20 +86,20 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries={})
             return stringBuilder.string;
         }
         
-        /*shared actual Node clone {
-         value clone = Node(key, item);
-         if (exists left = this.left) {
-         value leftClone = left.clone;
-         clone.left = leftClone;
-         leftClone.parent = clone;
-         }
-         if (exists right = this.right) {
-         value rightClone = right.clone;
-         clone.right= rightClone;
-         rightClone.parent = clone;
-         }
-         return clone;
-         }*/
+        shared Node clone(TreeMap<Key,Item> clonedMap) {
+            value clone = clonedMap.Node(key, item);
+            if (exists left = this.left) {
+                value leftClone = left.clone(clonedMap);
+                clone.left = leftClone;
+                leftClone.parent = clone;
+            }
+            if (exists right = this.right) {
+                value rightClone = right.clone(clonedMap);
+                clone.right = rightClone;
+                rightClone.parent = clone;
+            }
+            return clone;
+        }
         
         shared Integer size {
             variable Integer size = 1;
@@ -432,8 +432,11 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries={})
         }
     }
     
-    shared actual MutableMap<Key,Item> clone 
-            => TreeMap(entries); //TODO: inefficient!
+    shared actual MutableMap<Key,Item> clone {
+        value clone = TreeMap<Key,Item>();
+        clone.root = root?.clone(clone);
+        return clone;
+    }
     
     shared actual <Item&Object>? get(Object key) {
         if (is Key key) {
