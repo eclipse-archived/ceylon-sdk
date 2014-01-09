@@ -6,6 +6,7 @@ see (`function naturalOrderTreeMap`)
 by ("Gavin King")
 shared class TreeMap<Key, Item>(compare, entries={}) 
         satisfies MutableMap<Key, Item> 
+                  & Ranged<Key,{<Key->Item>*}>
         given Key satisfies Object
         given Item satisfies Object {
     
@@ -636,6 +637,24 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
         return null;
     }
+    
+    segment(Key from, Integer length) => higherEntries(from).taking(length);
+    
+    shared actual {<Key->Item>*} span(Key from, Key to) {
+        if (compare(from, to)==larger) {
+            return lowerEntries(from)
+                    .takingWhile((Key->Item entry) => compare(entry.key, to)!=smaller);
+        }
+        else {
+            return higherEntries(from)
+                    .takingWhile((Key->Item entry) => compare(entry.key, to)!=larger);
+        }
+    }
+    
+    spanFrom(Key from) => higherEntries(from);
+    
+    spanTo(Key to) 
+            => takingWhile((Key->Item entry) => compare(entry.key, to)!=larger);
     
 }
 

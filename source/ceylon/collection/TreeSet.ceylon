@@ -5,7 +5,8 @@
 see (`function naturalOrderTreeSet`)
 by ("Gavin King")
 shared class TreeSet<Element>(compare, elements={})
-        satisfies MutableSet<Element>
+        satisfies MutableSet<Element> 
+                  & Ranged<Element,{Element*}>
         given Element satisfies Object {
      
      "A comparator function used to sort the elements."
@@ -102,6 +103,24 @@ shared class TreeSet<Element>(compare, elements={})
      
      shared {Element*} lowerElements(Element element) 
              => map.lowerEntries(element).map((Element->Object entry)=>entry.key);
+     
+     segment(Element from, Integer length) => higherElements(from).taking(length);
+     
+     shared actual {Element*} span(Element from, Element to) {
+         if (compare(from, to)==larger) {
+             return lowerElements(from)
+                     .takingWhile((Element elem) => compare(elem, to)!=smaller);
+         }
+         else {
+             return higherElements(from)
+                     .takingWhile((Element elem) => compare(elem, to)!=larger);
+         }
+     }
+     
+     spanFrom(Element from) => higherElements(from);
+     
+     spanTo(Element to) 
+             => takingWhile((Element elem) => compare(elem, to)!=larger);
      
      equals(Object that) => (super of Set<Element>).equals(that);
      hash => (super of Set<Element>).hash;
