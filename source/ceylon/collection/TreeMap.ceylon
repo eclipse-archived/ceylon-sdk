@@ -443,7 +443,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared actual MutableMap<Key,Item> clone {
+    shared actual TreeMap<Key,Item> clone {
         value clone = TreeMap<Key,Item>(compare);
         clone.root = root?.clone(clone);
         return clone;
