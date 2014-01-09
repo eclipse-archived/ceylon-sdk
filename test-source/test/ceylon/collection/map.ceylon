@@ -1,6 +1,8 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
+T id<T>(T t) => t;
+
 void doTestMap(MutableMap<String,String> map) {
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
@@ -27,7 +29,7 @@ void doTestMap(MutableMap<String,String> map) {
 }
 
 shared test void testMap(){
-    doTestMap(TreeMap<String,String>());
+    doTestMap(TreeMap<String,String>(byIncreasing(id<String>)));
     doTestMap(HashMap<String,String>());
 }
 
@@ -38,14 +40,17 @@ shared test void testMapEquality() {
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{});
     
-    assertEquals(TreeMap{"a"->1, "b"->2}, TreeMap{"b"->2, "a"->1});
-    assertNotEquals(TreeMap{"a"->1, "b"->2}, TreeMap{"b"->2, "a"->2});
-    assertNotEquals(TreeMap{"a"->1, "b"->2}, TreeMap{"b"->2});
-    assertNotEquals(TreeMap{"a"->1, "b"->2}, TreeMap{});
-    assertEquals(TreeMap{}, TreeMap{});
+    function treeMap({<String->Integer>*} entries)
+        => TreeMap((String x, String y) => x<=>y, entries);
     
-    assertEquals(TreeMap{}, HashMap{});
-    assertEquals(TreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
+    assertEquals(treeMap{"a"->1, "b"->2}, treeMap{"b"->2, "a"->1});
+    assertNotEquals(treeMap{"a"->1, "b"->2}, treeMap{"b"->2, "a"->2});
+    assertNotEquals(treeMap{"a"->1, "b"->2}, treeMap{"b"->2});
+    assertNotEquals(treeMap{"a"->1, "b"->2}, treeMap{});
+    assertEquals(treeMap{}, treeMap{});
+    
+    assertEquals(treeMap{}, HashMap{});
+    assertEquals(treeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
 }
 
 void doTestMapRemove(MutableMap<String,String> map) {
@@ -65,7 +70,7 @@ void doTestMapRemove(MutableMap<String,String> map) {
 
 shared test void testMapRemove(){
     doTestMapRemove(HashMap<String,String>());
-    doTestMapRemove(TreeMap<String,String>());
+    doTestMapRemove(TreeMap<String,String>(byIncreasing(id<String>)));
 }
 
 shared test void testMapConstructor(){
@@ -88,7 +93,10 @@ shared test void testMap2(){
 }
 
 shared test void testTreeMap() {
-    value treeMap = TreeMap<Integer, String>{200->"", 10->"wwwww", 5->"ddddd"};
+    value treeMap = TreeMap<Integer, String> { 
+        function compare(Integer x, Integer y) => x<=>y;  
+        200->"", 10->"wwwww", 5->"ddddd"
+    };
     treeMap.assertInvariants();
     //for (e in treeMap) {
     //    print(e);

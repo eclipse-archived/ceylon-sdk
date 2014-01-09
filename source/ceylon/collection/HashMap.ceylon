@@ -26,7 +26,7 @@ import ceylon.collection {
  The management of the backing array is controlled by the
  given [[hashtable]]."
 
-by("Stéphane Épardaud")
+by ("Stéphane Épardaud")
 shared class HashMap<Key, Item>
         (stability=linked, hashtable = Hashtable(), entries = {})
         satisfies MutableMap<Key, Item>

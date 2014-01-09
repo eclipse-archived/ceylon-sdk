@@ -25,7 +25,7 @@ import ceylon.collection {
  The management of the backing array is controlled by the
  given [[hashtable]]."
 
-by("Stéphane Épardaud", "Gavin King")
+by ("Stéphane Épardaud", "Gavin King")
 shared class HashSet<Element>
         (stability=linked, hashtable = Hashtable(), elements = {})
         satisfies MutableSet<Element>

@@ -1,8 +1,18 @@
-
-shared class TreeMap<Key, Item>({<Key->Item>*} entries={}) 
+"A [[MutableMap]] implemented using a red/black tree. 
+ Entries in the map are maintained in a sorted order, from
+ smallest to largest key, as determined by the given
+ [[comparator function|compare]]."
+by ("Gavin King")
+shared class TreeMap<Key, Item>(compare, entries={}) 
         satisfies MutableMap<Key, Item> 
-        given Key satisfies Comparable<Key>
+        given Key satisfies Object
         given Item satisfies Object {
+    
+    "A comparator function used to order the entries."
+    Comparison compare(Key x, Key y);
+    
+    "The initial entries in the map."
+    {<Key->Item>*} entries;
     
     class Node(key, item) {
         
@@ -128,7 +138,7 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries={})
     function lookup(Key key) {
         variable value node = root;
         while (exists n=node) {
-            switch (key<=>n.key) 
+            switch (compare(key,n.key)) 
             case (equal) {
                 return n;
             } 
@@ -243,7 +253,7 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries={})
         if (exists root=this.root) {
             variable Node node = root;
             while (true) {
-                switch (key<=>node.key)
+                switch (compare(key,node.key))
                 case (larger) {
                     if (exists nr=node.right) {
                         node = nr;
@@ -433,7 +443,7 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries={})
     }
     
     shared actual MutableMap<Key,Item> clone {
-        value clone = TreeMap<Key,Item>();
+        value clone = TreeMap<Key,Item>(compare);
         clone.root = root?.clone(clone);
         return clone;
     }
@@ -515,3 +525,10 @@ shared class TreeMap<Key, Item>({<Key->Item>*} entries={})
     }
     
 }
+
+"Create a [[TreeMap] with [[comparable|Comparable]]] keys,
+ sorted by the natural ordering of the keys."
+shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>({<Key->Item>*} entries)
+        given Key satisfies Comparable<Key>
+        given Item satisfies Object 
+        => TreeMap((Key x, Key y)=>x<=>y, entries);
