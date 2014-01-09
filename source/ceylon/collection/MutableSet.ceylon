@@ -15,13 +15,13 @@ shared interface SetMutator<in Element>
         given Element satisfies Object {
     
     "Add the given [[element]] to this set, returning `true`
-     if the element was not already a member of the set, or
-     `false` otherwise."
+     if the element was _not_ already a member of this set, 
+     or `false` otherwise."
     shared formal Boolean add(Element element);
     
     "Add the given [[elements]] to this set, returning `true`
-     if any of the given elements was not already a member
-     of the set, or `false` otherwise."
+     if any of the given elements was _not_ already a member
+     of this set, or `false` otherwise."
     shared formal Boolean addAll({Element*} elements);
     
     "Remove an [[element]] from this set, returning `true`
