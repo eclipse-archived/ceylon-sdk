@@ -6,7 +6,7 @@ see (`function naturalOrderTreeSet`)
 by ("Gavin King")
 shared class TreeSet<Element>(compare, elements={})
         satisfies MutableSet<Element> 
-                  & Ranged<Element,{Element*}>
+                  & Ranged<Element,TreeSet<Element>>
         given Element satisfies Object {
      
      "A comparator function used to sort the elements."
@@ -99,28 +99,37 @@ shared class TreeSet<Element>(compare, elements={})
      last => map.last?.key;
      
      shared {Element*} higherElements(Element element) 
-             => map.higherEntries(element).map((Element->Object entry)=>entry.key);
+             => map.higherEntries(element)
+                     .map((Element->Object entry)=>entry.key);
      
      shared {Element*} lowerElements(Element element) 
-             => map.lowerEntries(element).map((Element->Object entry)=>entry.key);
+             => map.lowerEntries(element)
+                     .map((Element->Object entry)=>entry.key);
      
-     segment(Element from, Integer length) => higherElements(from).taking(length);
+     segment(Element from, Integer length) 
+             => TreeSet(compare, higherElements(from).taking(length));
      
-     shared actual {Element*} span(Element from, Element to) {
+     shared actual TreeSet<Element> span(Element from, Element to) {
+         {Element*} elements;
          if (compare(from, to)==larger) {
-             return lowerElements(from)
-                     .takingWhile((Element elem) => compare(elem, to)!=smaller);
+             elements = lowerElements(from)
+                     .takingWhile((Element elem) 
+                             => compare(elem, to)!=smaller);
          }
          else {
-             return higherElements(from)
-                     .takingWhile((Element elem) => compare(elem, to)!=larger);
+             elements = higherElements(from)
+                     .takingWhile((Element elem) 
+                             => compare(elem, to)!=larger);
          }
+         return TreeSet(compare, elements);
      }
      
-     spanFrom(Element from) => higherElements(from);
+     spanFrom(Element from) 
+             => TreeSet(compare, higherElements(from));
      
      spanTo(Element to) 
-             => takingWhile((Element elem) => compare(elem, to)!=larger);
+             => TreeSet(compare, takingWhile((Element elem) 
+                     => compare(elem, to)!=larger));
      
      equals(Object that) => (super of Set<Element>).equals(that);
      hash => (super of Set<Element>).hash;

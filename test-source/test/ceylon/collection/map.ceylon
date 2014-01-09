@@ -112,6 +112,8 @@ shared test void testTreeMap() {
     print(treeMap);
     print(treeMap.higherEntries(4));
     print(treeMap.lowerEntries(4));
+    print(treeMap[2..4]);
+    print(treeMap[2:4]);
     assert (treeMap.size==8);
     treeMap.remove(5);
     treeMap.remove(-1);

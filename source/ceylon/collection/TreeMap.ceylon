@@ -5,8 +5,8 @@
 see (`function naturalOrderTreeMap`)
 by ("Gavin King")
 shared class TreeMap<Key, Item>(compare, entries={}) 
-        satisfies MutableMap<Key, Item> 
-                  & Ranged<Key,{<Key->Item>*}>
+        satisfies MutableMap<Key,Item> 
+                  & Ranged<Key,TreeMap<Key,Item>>
         given Key satisfies Object
         given Item satisfies Object {
     
@@ -638,23 +638,30 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return null;
     }
     
-    segment(Key from, Integer length) => higherEntries(from).taking(length);
+    segment(Key from, Integer length) 
+            => TreeMap(compare, higherEntries(from).taking(length));
     
-    shared actual {<Key->Item>*} span(Key from, Key to) {
+    shared actual TreeMap<Key,Item> span(Key from, Key to) {
+        {<Key->Item>*} entries;
         if (compare(from, to)==larger) {
-            return lowerEntries(from)
-                    .takingWhile((Key->Item entry) => compare(entry.key, to)!=smaller);
+            entries = lowerEntries(from)
+                    .takingWhile((Key->Item entry) 
+                            => compare(entry.key, to)!=smaller);
         }
         else {
-            return higherEntries(from)
-                    .takingWhile((Key->Item entry) => compare(entry.key, to)!=larger);
+            entries = higherEntries(from)
+                    .takingWhile((Key->Item entry) 
+                            => compare(entry.key, to)!=larger);
         }
+        return TreeMap(compare, entries);
     }
     
-    spanFrom(Key from) => higherEntries(from);
+    spanFrom(Key from) 
+            => TreeMap(compare, higherEntries(from));
     
     spanTo(Key to) 
-            => takingWhile((Key->Item entry) => compare(entry.key, to)!=larger);
+            => TreeMap(compare, takingWhile((Key->Item entry) 
+                    => compare(entry.key, to)!=larger));
     
 }
 
