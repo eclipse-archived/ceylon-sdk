@@ -6,6 +6,7 @@ see (`function naturalOrderTreeMap`)
 by ("Gavin King")
 shared class TreeMap<Key, Item>(compare, entries={}) 
         satisfies MutableMap<Key,Item> 
+                  & SortedMap<Key,Item>
                   & Ranged<Key,TreeMap<Key,Item>>
         given Key satisfies Object
         given Item satisfies Object {
@@ -459,14 +460,14 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared {<Key->Item>*} higherEntries(Key key) {
+    shared actual {<Key->Item>*} higherEntries(Key key) {
         object iterable satisfies {<Key->Item>*} {
             iterator() => NodeIterator(floor(key));
         }
         return iterable;
     }
     
-    shared {<Key->Item>*} lowerEntries(Key key) {
+    shared actual {<Key->Item>*} lowerEntries(Key key) {
         object iterable satisfies {<Key->Item>*} {
             iterator() => ReverseNodeIterator(ceiling(key));
         }

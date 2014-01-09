@@ -5,7 +5,8 @@
 see (`function naturalOrderTreeSet`)
 by ("Gavin King")
 shared class TreeSet<Element>(compare, elements={})
-        satisfies MutableSet<Element> 
+        satisfies MutableSet<Element>
+                  & SortedSet<Element>
                   & Ranged<Element,TreeSet<Element>>
         given Element satisfies Object {
      
@@ -98,11 +99,11 @@ shared class TreeSet<Element>(compare, elements={})
      first => map.first?.key;
      last => map.last?.key;
      
-     shared {Element*} higherElements(Element element) 
+     higherElements(Element element)
              => map.higherEntries(element)
                      .map((Element->Object entry)=>entry.key);
      
-     shared {Element*} lowerElements(Element element) 
+     lowerElements(Element element)
              => map.lowerEntries(element)
                      .map((Element->Object entry)=>entry.key);
      

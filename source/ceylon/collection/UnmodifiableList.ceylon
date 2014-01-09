@@ -17,13 +17,13 @@ class UnmodifiableList<out Element>(List<Element> list)
     
     reversed => list.reversed;
     
-    segment(Integer from, Integer length) 
+    segment(Integer from, Integer length)
             => list.segment(from, length);
-    span(Integer from, Integer to) 
+    span(Integer from, Integer to)
             => list.span(from, to);
-    spanFrom(Integer from) 
+    spanFrom(Integer from)
             => list.spanFrom(from);
-    spanTo(Integer to) 
+    spanTo(Integer to)
             => list.spanTo(to);
     
     equals(Object that) 
