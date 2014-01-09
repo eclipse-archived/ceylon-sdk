@@ -1,11 +1,7 @@
-abstract class Color() of red|black {}
-object black extends Color() {}
-object red extends Color() {}
-
 Boolean isRed<Key,Item>(Node<Key,Item>? node)
         given Key satisfies Comparable<Key> {
     if (exists node) {
-        return node.color==red;
+        return node.red;
     }
     else {
         return false;
@@ -32,36 +28,37 @@ Boolean onRight<Key,Item>(Node<Key,Item> n)
     }
 }
 
-class Node<Key,Item>(key, item, color) 
-        given Key satisfies Comparable<Key>
-{
+class Node<Key,Item>(key, item) 
+        given Key satisfies Comparable<Key> {
+    
     shared variable Key key;
     shared variable Item item;
     shared variable Node<Key,Item>? left=null;
     shared variable Node<Key,Item>? right=null;
     shared variable Node<Key,Item>? parent=null;
-    shared variable Color color;
+    shared variable Boolean red=true;
     
-    shared Node<Key,Item> grandparent {
-        assert (exists p=parent); // Not the root node
-        assert (exists gp=p.parent); // Not child of root
-        return gp;
-    }
+    shared Node<Key,Item>? grandparent => parent?.parent;
+    
     shared Node<Key,Item>? sibling {
-        assert (exists p=parent); // Root node has no sibling
-        if (exists l=p.left, this==l) {
-            return p.right;
+        if (exists p=parent) { 
+            if (onLeft(this)) {
+                return p.right;
+            }
+            else if (onRight(this)){
+                return p.left;
+            }
+            else {
+                assert (false);
+            }
         }
         else {
-            return p.left;
+            // Root node has no sibling
+            return null;
         }
     }
     
-    shared Node<Key,Item>? uncle {
-        assert (exists p=parent); // Root node has no uncle
-        assert (exists gp=p.parent); // Children of root have no uncle
-        return p.sibling;
-    }
+    shared Node<Key,Item>? uncle => parent?.sibling;
     
     shared actual String string {
         value stringBuilder = StringBuilder();
@@ -81,10 +78,7 @@ class Node<Key,Item>(key, item, color)
 }
 
 shared class RBTree<Key,Item>() 
-        given Key satisfies Comparable<Key>
-{
-    //shared static final boolean VERIFY_RBTREE = true;
-    //static final int INDENT_STEP = 4;
+        given Key satisfies Comparable<Key> {
     
     variable Node<Key,Item>? root=null;
 
@@ -97,59 +91,6 @@ shared class RBTree<Key,Item>()
         }
     }
     
-//    verifyProperties();
-//    shared void verifyProperties() {
-//        if (VERIFY_RBTREE) {
-//            verifyProperty1(root);
-//            verifyProperty2(root);
-//            // Property 3 is implicit
-//            verifyProperty4(root);
-//            verifyProperty5(root);
-//        }
-//    }
-//    static void verifyProperty1(Node<?,?> n) {
-//        assert nodeColor(n) == red || nodeColor(n) == black;
-//        if (n == null) return;
-//        verifyProperty1(n.left);
-//        verifyProperty1(n.right);
-//    }
-//    static void verifyProperty2(Node<?,?> root) {
-//        assert nodeColor(root) == black;
-//    }
-//    static Color nodeColor(Node<?,?> n) {
-//        return n == null ? black : n.color;
-//    }
-//    static void verifyProperty4(Node<?,?> n) {
-//        if (nodeColor(n) == red) {
-//            assert nodeColor(n.left)   == black;
-//            assert nodeColor(n.right)  == black;
-//            assert nodeColor(n.parent) == black;
-//        }
-//        if (n == null) return;
-//        verifyProperty4(n.left);
-//        verifyProperty4(n.right);
-//    }
-//    static void verifyProperty5(Node<?,?> root) {
-//        verifyProperty5Helper(root, 0, -1);
-//    }
-//
-//    static int verifyProperty5Helper(Node<?,?> n, int blackCount, int pathBlackCount) {
-//        if (nodeColor(n) == black) {
-//            blackCount++;
-//        }
-//        if (n == null) {
-//            if (pathBlackCount == -1) {
-//                pathBlackCount = blackCount;
-//            } else {
-//                assert blackCount == pathBlackCount;
-//            }
-//            return pathBlackCount;
-//        }
-//        pathBlackCount = verifyProperty5Helper(n.left,  blackCount, pathBlackCount);
-//        pathBlackCount = verifyProperty5Helper(n.right, blackCount, pathBlackCount);
-//        return pathBlackCount;
-//    }
-
     function lookup(Key key) {
         variable value node = root;
         while (exists n=node) {
@@ -212,7 +153,7 @@ shared class RBTree<Key,Item>()
     }
     
     shared void put(Key key, Item item) {
-        value newNode = Node(key, item, red);
+        value newNode = Node(key, item);
         if (exists root=this.root) {
             variable Node<Key,Item> node = root;
             while (true) {
@@ -245,74 +186,61 @@ shared class RBTree<Key,Item>()
         else {
             root = newNode;
         }
-        insertCase1(newNode);
+        recolorAfterInsert(newNode);
         //verifyProperties();
     }
     
-    void insertCase1(Node<Key,Item> n) {
-        if (n.parent exists) {
-            insertCase2(n);
+    void recolorAfterInsert(Node<Key,Item> newNode) {
+        if (exists parent = newNode.parent) {
+            if (isRed(parent)) {
+                if (exists uncle=newNode.uncle, isRed(uncle)) {
+                    // a red uncle! color parent+uncle
+                    // black, and grandparent red, then
+                    // go up the tree making adjustments
+                    // to accommodate this
+                    parent.red = false;
+                    uncle.red = false;
+                    assert (exists grandparent=newNode.grandparent);
+                    grandparent.red = true;
+                    recolorAfterInsert(grandparent);
+                }
+                else {
+                    //first rotation
+                    Node<Key,Item> adjustedNode;
+                    if (onRight(newNode) && onLeft(parent)) {
+                        rotateLeft(parent);
+                        assert (exists nl=newNode.left);
+                        adjustedNode=nl;
+                    } 
+                    else if (onLeft(newNode) && onRight(parent)) {
+                        rotateRight(parent);
+                        assert (exists nr=newNode.right);
+                        adjustedNode=nr;
+                    }
+                    else {
+                        adjustedNode=newNode;
+                    }
+                    //second rotation
+                    assert (exists adjustedParent=adjustedNode.parent);
+                    adjustedParent.red = false;
+                    assert (exists grandparent=adjustedNode.grandparent);
+                    grandparent.red = true;
+                    if (onLeft(adjustedNode) && onLeft(adjustedParent)) {
+                        rotateRight(grandparent);
+                    }
+                    else if (onRight(adjustedNode) && onRight(adjustedParent)) {
+                        rotateLeft(grandparent);
+                    }
+                    else {
+                        assert (false);
+                    }
+                }
+            }
+            //else if the parent is black we are good
         }
         else {
-            n.color = black;
-        }
-    }
-    
-    void insertCase2(Node<Key,Item> n) {
-        if (isRed(n.parent)) {
-            insertCase3(n);
-        }
-    }
-    
-    void insertCase3(Node<Key,Item> n) {
-        if (isRed(n.uncle)) {
-            assert (exists np=n.parent);
-            assert (exists nu=n.uncle);
-            np.color = black;
-            nu.color = black;
-            n.grandparent.color = red;
-            insertCase1(n.grandparent);
-        } else {
-            insertCase4(n);
-        }
-    }
-    
-    void insertCase4(Node<Key,Item> n) {
-        assert (exists np=n.parent);
-        Node<Key,Item>? nn;
-        if (exists npr=np.right, 
-            exists ngl= n.grandparent.left, 
-            n == npr && np == ngl) {
-            rotateLeft(np);
-            nn = n.left;
-        } 
-        else if (exists npl=np.left, 
-            exists ngr= n.grandparent.right, 
-            n == npl && np == ngr) {
-            rotateRight(np);
-            nn = n.right;
-        }
-        else {
-            nn = n;
-        }
-        assert (exists nn);
-        insertCase5(n);
-    }
-    
-    void insertCase5(Node<Key,Item> n) {
-        assert (exists np=n.parent);
-        np.color = black;
-        n.grandparent.color = red;
-        if (exists npl=np.left, 
-            exists ngl= n.grandparent.left,
-            n == npl && np == ngl) {
-            rotateRight(n.grandparent);
-        }
-        else {
-            assert (exists npr=np.right, 
-                exists ngr= n.grandparent.right,
-                n == npr && np == ngr);
-            rotateLeft(n.grandparent);
+            //root node is always black
+            newNode.red = false;
         }
     }
     
@@ -325,140 +253,158 @@ shared class RBTree<Key,Item>()
     }
     
     shared void remove(Key key) {
-        if (exists node = lookup(key)) {
-            Node<Key,Item> adjusted;
-            if (exists left=node.left, exists right=node.right) {
+        if (exists result = lookup(key)) {
+            Node<Key,Item> node;
+            if (exists left=result.left, 
+                exists right=result.right) {
                 // Copy key/value from predecessor and then delete it instead
-                Node<Key,Item> rightmost = rightmostChild(left);
-                node.key = rightmost.key;
-                node.item = rightmost.item;
-                adjusted = rightmost;
+                node = rightmostChild(left);
+                result.key = node.key;
+                result.item = node.item;
             }
             else {
-                adjusted = node;
+                node = result;
             }
             
             Node<Key,Item>? child;
-            if (exists left = adjusted.left) {
+            if (exists left = node.left) {
+                assert (!node.right exists);
                 child = left;
             }
-            else if (exists right = adjusted.right) {
+            else if (exists right = node.right) {
+                assert (!node.left exists);
                 child = right;
             }
             else {
                 child = null;
             }
             if (exists child, !isRed(node)) {
-                node.color = child.color;
-                deleteCase1(node);
+                node.red = child.red;
+                recolorAfterDeletion(node);
             }
             replaceNode(node, child);
         }
         //verifyProperties();
     }
     
-    void deleteCase1(Node<Key,Item> n) {
-        if (n.parent exists) {
-            deleteCase2(n);
-        }
-    }
-    
-    void deleteCase2(Node<Key,Item> n) {
-        if (exists np=n.parent, 
-            exists ns=n.sibling, 
-            isRed(ns)) {
-            np.color = red;
-            ns.color = black;
-            if (exists npl=np.left, n == npl) {
-                rotateLeft(np);
+    void recolorAfterDeletion(Node<Key,Item> node) {
+        if (exists parent=node.parent,
+            exists sibling=node.sibling) {
+            if (isRed(sibling)) {
+                parent.red = true;
+                sibling.red = false;
+                if (exists npl=parent.left, node == npl) {
+                    rotateLeft(parent);
+                }
+                else {
+                    rotateRight(parent);
+                }
+            }
+            if (!isRed(sibling) &&
+                !isRed(sibling.left) &&
+                !isRed(sibling.right)) {
+                sibling.red = true;
+                if (isRed(parent)) {
+                    parent.red = false;
+                }
+                else {
+                    recolorAfterDeletion(parent);
+                }
             }
             else {
-                rotateRight(np);
+                if (exists siblingLeft=sibling.left,
+                    onLeft(node) &&
+                    !isRed(sibling) &&
+                    isRed(sibling.left) &&
+                    !isRed(sibling.right)) {
+                    sibling.red = true;
+                    siblingLeft.red = false;
+                    rotateRight(sibling);
+                }
+                else if (exists siblingRight=sibling.right,
+                    onRight(node) &&
+                    !isRed(sibling) &&
+                    isRed(sibling.right) &&
+                    !isRed(sibling.left)) {
+                    sibling.red = true;
+                    siblingRight.red = false;
+                    rotateLeft(sibling);
+                }
+                sibling.red = parent.red;
+                parent.red = false;
+                if (onLeft(node)) {
+                    assert (exists siblingRight=sibling.right, 
+                        isRed(siblingRight));
+                    siblingRight.red = false;
+                    rotateLeft(parent);
+                }
+                else if (onRight(node)) {
+                    assert (exists siblingLeft=sibling.left, 
+                        isRed(siblingLeft));
+                    siblingLeft.red = false;
+                    rotateRight(parent);
+                }
+                else {
+                    assert (false);
+                }
             }
-        }
-        deleteCase3(n);
-    }
-    
-    void deleteCase3(Node<Key,Item> n) {
-        if (exists np=n.parent, 
-            exists ns=n.sibling,
-            !isRed(np) &&
-            !isRed(ns) &&
-            !isRed(ns.left) &&
-            !isRed(ns.right))
-        {
-            ns.color = red;
-            deleteCase1(np);
-        }
-        else {
-            deleteCase4(n);
-        }
-    }
-    
-    void deleteCase4(Node<Key,Item> n) {
-        if (exists np=n.parent, 
-            exists ns=n.sibling,
-            isRed(np) &&
-            !isRed(ns) &&
-            !isRed(ns.left) &&
-            !isRed(ns.right))
-        {
-            ns.color = red;
-            np.color = black;
-        }
-        else {
-            deleteCase5(n);
-        }
-    }
-    
-    void deleteCase5(Node<Key,Item> n) {
-        if (exists np=n.parent,
-            exists ns=n.sibling,
-            exists npl=np.left,
-            exists nsl=ns.left,
-            n == npl &&
-            !isRed(ns) &&
-            isRed(ns.left) &&
-            !isRed(ns.right))
-        {
-            ns.color = red;
-            nsl.color = black;
-            rotateRight(ns);
-        }
-        else if (exists np=n.parent,
-            exists ns=n.sibling,
-            exists npr=np.right,
-            exists nsr=ns.left,
-            n == npr &&
-            !isRed(ns) &&
-            isRed(ns.right) &&
-            !isRed(ns.left))
-        {
-            ns.color = red;
-            nsr.color = black;
-            rotateLeft(ns);
-        }
-        deleteCase6(n);
-    }
-    
-    void deleteCase6(Node<Key,Item> n) {
-        assert (exists ns=n.sibling, exists np=n.parent);
-        ns.color = np.color;
-        np.color = black;
-        if (exists npl = np.left, n == npl) {
-            assert (exists nsr=ns.right, isRed(nsr));
-            nsr.color = black;
-            rotateLeft(np);
-        }
-        else
-        {
-            assert (exists nsl=ns.left, isRed(ns.left));
-            nsl.color = black;
-            rotateRight(np);
         }
     }
     
 }
+
+//    verifyProperties();
+//    shared void verifyProperties() {
+//        if (VERIFY_RBTREE) {
+//            verifyProperty1(root);
+//            verifyProperty2(root);
+//            // Property 3 is implicit
+//            verifyProperty4(root);
+//            verifyProperty5(root);
+//        }
+//    }
+//    static void verifyProperty1(Node<?,?> n) {
+//        assert nodeColor(n) == red || nodeColor(n) == black;
+//        if (n == null) return;
+//        verifyProperty1(n.left);
+//        verifyProperty1(n.right);
+//    }
+//    static void verifyProperty2(Node<?,?> root) {
+//        assert nodeColor(root) == black;
+//    }
+//    static Color nodeColor(Node<?,?> n) {
+//        return n == null ? black : n.color;
+//    }
+//    static void verifyProperty4(Node<?,?> n) {
+//        if (nodeColor(n) == red) {
+//            assert nodeColor(n.left)   == black;
+//            assert nodeColor(n.right)  == black;
+//            assert nodeColor(n.parent) == black;
+//        }
+//        if (n == null) return;
+//        verifyProperty4(n.left);
+//        verifyProperty4(n.right);
+//    }
+//    static void verifyProperty5(Node<?,?> root) {
+//        verifyProperty5Helper(root, 0, -1);
+//    }
+//
+//    static int verifyProperty5Helper(Node<?,?> n, int blackCount, int pathBlackCount) {
+//        if (nodeColor(n) == black) {
+//            blackCount++;
+//        }
+//        if (n == null) {
+//            if (pathBlackCount == -1) {
+//                pathBlackCount = blackCount;
+//            } else {
+//                assert blackCount == pathBlackCount;
+//            }
+//            return pathBlackCount;
+//        }
+//        pathBlackCount = verifyProperty5Helper(n.left,  blackCount, pathBlackCount);
+//        pathBlackCount = verifyProperty5Helper(n.right, blackCount, pathBlackCount);
+//        return pathBlackCount;
+//    }
 
 
 shared void testTree() {
