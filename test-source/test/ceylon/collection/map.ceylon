@@ -1,62 +1,71 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
-shared test void testMap(){
-    MutableMap<String,String> map = HashMap<String,String>();
+void doTestMap(MutableMap<String,String> map) {
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
     assertTrue(!map.defines("fu"), "a");
-
     assertEquals(null, map.put("fu", "bar"));
     assertEquals("{ fu->bar }", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "b");
-
     assertEquals("bar", map.put("fu", "gee"));
     assertEquals("{ fu->gee }", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "c");
-
     map.put("stef", "epardaud");
     assertEquals(2, map.size);
     assertTrue(map.defines("fu"), "d");
     assertTrue(map.defines("stef"), "e");
-    
-
     assertEquals("epardaud", map["stef"]);
     assertEquals("gee", map["fu"]);
     assertEquals(null, map["bar"]);
-    
     map.clear();
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
-    assertTrue(!map.defines("fu"), "f");
-    
-    // equality
+    assertTrue(!map.defines("fu"), "f"); // equality
+}
+
+shared test void testMap(){
+    doTestMap(TreeMap<String,String>());
+    doTestMap(HashMap<String,String>());
+}
+
+shared test void testMapEquality() {
+    assertEquals(HashMap{}, HashMap{});
     assertEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{});
-    assertEquals(HashMap{}, HashMap{});
+    
+    assertEquals(TreeMap{"a"->1, "b"->2}, TreeMap{"b"->2, "a"->1});
+    assertNotEquals(TreeMap{"a"->1, "b"->2}, TreeMap{"b"->2, "a"->2});
+    assertNotEquals(TreeMap{"a"->1, "b"->2}, TreeMap{"b"->2});
+    assertNotEquals(TreeMap{"a"->1, "b"->2}, TreeMap{});
+    assertEquals(TreeMap{}, TreeMap{});
+    
+    assertEquals(TreeMap{}, HashMap{});
+    assertEquals(TreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
 }
 
-shared test void testMapRemove(){
-    MutableMap<String,String> map = HashMap<String,String>();
+void doTestMapRemove(MutableMap<String,String> map) {
     map.put("a", "b");
     map.put("c", "d");
     assertEquals(2, map.size);
-    
     assertEquals("b", map.remove("a"));
     assertEquals(1, map.size);
     assertEquals("d", map["c"]);
     assertEquals(null, map["a"]);
-
     assertEquals("d", map.remove("c"));
     assertEquals(0, map.size);
     assertEquals(null, map["c"]);
     assertEquals(null, map["a"]);
-
     assertEquals(null, map.remove("c"));
+}
+
+shared test void testMapRemove(){
+    doTestMapRemove(HashMap<String,String>());
+    doTestMapRemove(TreeMap<String,String>());
 }
 
 shared test void testMapConstructor(){
@@ -76,4 +85,42 @@ shared test void testMap2(){
     assertEquals(5, map.size);
     assertEquals(5, map.keys.size);
     assertEquals(5, map.values.size);
+}
+
+shared test void testTreeMap() {
+    value treeMap = TreeMap<Integer, String>{200->"", 10->"wwwww", 5->"ddddd"};
+    treeMap.assertInvariants();
+    //for (e in treeMap) {
+    //    print(e);
+    //}
+    //print(treeMap);
+    assert (treeMap.size==3);
+    treeMap.put(1, "hello");
+    treeMap.put(2, "world");
+    treeMap.put(3, "goodbye");
+    treeMap.put(-1, "gavin");
+    treeMap.put(2, "everyone");
+    treeMap.put(5, "stuff");
+    treeMap.put(0, "nothing");
+    treeMap.assertInvariants();
+    //for (e in treeMap) {
+    //    print(e);
+    //}
+    print(treeMap);
+    assert (treeMap.size==8);
+    treeMap.remove(5);
+    treeMap.remove(-1);
+    treeMap.remove(0);
+    treeMap.assertInvariants();
+    assert (treeMap.size==5);
+    treeMap.remove(200);
+    treeMap.remove(10);
+    treeMap.remove(5);
+    treeMap.assertInvariants();
+    //for (e in treeMap) {
+    //    print(e);
+    //}
+    //print(treeMap);
+    assert (treeMap.size==3);
+    
 }
