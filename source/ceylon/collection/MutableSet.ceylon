@@ -14,21 +14,21 @@ shared interface SetMutator<in Element>
         satisfies Set<Object>
         given Element satisfies Object {
     
-    "Add the given [[element]] to this set, returning `true` 
-     if the element was already a member of the set, or 
+    "Add the given [[element]] to this set, returning `true`
+     if the element was not already a member of the set, or
      `false` otherwise."
     shared formal Boolean add(Element element);
-
-    "Add the given [[elements]] to this set, returning `true` 
-     if any of the given elements was not already a member 
+    
+    "Add the given [[elements]] to this set, returning `true`
+     if any of the given elements was not already a member
      of the set, or `false` otherwise."
     shared formal Boolean addAll({Element*} elements);
     
-    "Remove an [[element]] from this set, returning `true` 
+    "Remove an [[element]] from this set, returning `true`
      if the element was previously a member of the set."
     shared formal Boolean remove(Element element);
     
-    "Remove every element from this set, leaving an empty 
+    "Remove every element from this set, leaving an empty
      set with no elements."
     shared formal void clear();
     

@@ -1,8 +1,6 @@
 import ceylon.collection { ... }
 import ceylon.test { ... }
 
-T id<T>(T t) => t;
-
 void doTestMap(MutableMap<String,String> map) {
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
@@ -29,7 +27,7 @@ void doTestMap(MutableMap<String,String> map) {
 }
 
 shared test void testMap(){
-    doTestMap(TreeMap<String,String>(byIncreasing(id<String>)));
+    doTestMap(TreeMap<String,String>((String x, String y)=>x<=>y));
     doTestMap(HashMap<String,String>());
 }
 
@@ -40,17 +38,14 @@ shared test void testMapEquality() {
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{});
     
-    function treeMap({<String->Integer>*} entries)
-        => TreeMap((String x, String y) => x<=>y, entries);
+    assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2, "a"->1});
+    assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2, "a"->2});
+    assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2});
+    assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{});
+    assertEquals(naturalOrderTreeMap{}, naturalOrderTreeMap{});
     
-    assertEquals(treeMap{"a"->1, "b"->2}, treeMap{"b"->2, "a"->1});
-    assertNotEquals(treeMap{"a"->1, "b"->2}, treeMap{"b"->2, "a"->2});
-    assertNotEquals(treeMap{"a"->1, "b"->2}, treeMap{"b"->2});
-    assertNotEquals(treeMap{"a"->1, "b"->2}, treeMap{});
-    assertEquals(treeMap{}, treeMap{});
-    
-    assertEquals(treeMap{}, HashMap{});
-    assertEquals(treeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
+    assertEquals(naturalOrderTreeMap{}, HashMap{});
+    assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
 }
 
 void doTestMapRemove(MutableMap<String,String> map) {
@@ -70,7 +65,7 @@ void doTestMapRemove(MutableMap<String,String> map) {
 
 shared test void testMapRemove(){
     doTestMapRemove(HashMap<String,String>());
-    doTestMapRemove(TreeMap<String,String>(byIncreasing(id<String>)));
+    doTestMapRemove(TreeMap<String,String>((String x, String y)=>x<=>y));
 }
 
 shared test void testMapConstructor(){

@@ -18,7 +18,7 @@ shared class TreeSet<Element>(compare, elements={})
      
      variable value map = TreeMap(compare, elements.map((Element e)=>e->present));
 
-     add(Element element) => map.put(element, present) exists;
+     add(Element element) => !map.put(element, present) exists;
      
      remove(Element element) => map.remove(element) exists;
      

@@ -29,7 +29,7 @@ shared interface MapMutator<in Key, in Item>
         satisfies Map<Object, Object>
         given Key satisfies Object
         given Item satisfies Object {
-
+    
     "Add an entry to this map, overwriting any existing 
      entry for the given [[key]], and returning the previous 
      value associated with the given `key`, if any, or 
@@ -49,4 +49,5 @@ shared interface MapMutator<in Key, in Item>
     "Remove every entry from this map, leaving an empty map
      with no entries."
     shared formal void clear();
+    
 }

@@ -21,6 +21,13 @@ void doSetTests(MutableSet<String> set) {
     assertEquals("{}", set.string);
     assertEquals(0, set.size);
     assertTrue(!set.contains("fu")); // equality
+}
+
+shared test void testSet() {
+    doSetTests(HashSet<String>(unlinked));
+    doSetTests(HashSet<String>());
+    doSetTests(TreeSet<String>((String x, String y)=>x<=>y));
+    
     assertEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a", "b"});
     assertNotEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a"});
     assertNotEquals(HashSet{"a", "b", "c"}, HashSet{});
@@ -28,11 +35,16 @@ void doSetTests(MutableSet<String> set) {
     assertEquals(HashSet{"a", 2}, HashSet{"a", "a"}.union(HashSet{2, "a"}));
     assertEquals(HashSet{"b", 2}, HashSet{"a", "b"}.exclusiveUnion(HashSet{2, "a"}));
     assertEquals(HashSet{"a"}, HashSet{"a", "b"}.intersection(HashSet{2, "a"}));
-}
+    
+    assertEquals(naturalOrderTreeSet{"a", "b", "c"}, naturalOrderTreeSet{"c", "a", "b"});
+    assertNotEquals(naturalOrderTreeSet{"a", "b", "c"}, naturalOrderTreeSet{"c", "a"});
+    assertNotEquals(naturalOrderTreeSet{"a", "b", "c"}, naturalOrderTreeSet{});
+    assertEquals(naturalOrderTreeSet{}, naturalOrderTreeSet{}); // unions and shit
+    assertEquals(naturalOrderTreeSet{"a"}, naturalOrderTreeSet{"a", "b"}.intersection(HashSet{2, "a"}));
 
-shared test void testSet() {
-    doSetTests(HashSet<String>(unlinked));
-    doSetTests(HashSet<String>());
+    assertEquals(HashSet{"a", "b", "c"}, naturalOrderTreeSet{"c", "a", "b"});
+    assertEquals(HashSet{}, naturalOrderTreeSet{}); // unions and shit
+    
     value set1 = HashSet<String>();
     set1.add("hello");
     set1.add("world");
