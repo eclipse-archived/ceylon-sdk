@@ -525,6 +525,20 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
+    shared actual <Key->Item>? first {
+        if (exists node = root?.leftmostChild) {
+            return node.key->node.item;
+        }
+        return null;
+    }
+    
+    shared actual <Key->Item>? last {
+        if (exists node = root?.rightmostChild) {
+            return node.key->node.item;
+        }
+        return null;
+    }
+    
 }
 
 "Create a [[TreeMap] with [[comparable|Comparable]]] keys,
