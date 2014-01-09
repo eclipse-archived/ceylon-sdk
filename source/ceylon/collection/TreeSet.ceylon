@@ -97,6 +97,12 @@ shared class TreeSet<Element>(compare, elements={})
      first => map.first?.key;
      last => map.last?.key;
      
+     shared {Element*} higherElements(Element element) 
+             => map.higherEntries(element).map((Element->Object entry)=>entry.key);
+     
+     shared {Element*} lowerElements(Element element) 
+             => map.lowerEntries(element).map((Element->Object entry)=>entry.key);
+     
      equals(Object that) => (super of Set<Element>).equals(that);
      hash => (super of Set<Element>).hash;
      

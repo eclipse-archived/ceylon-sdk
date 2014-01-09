@@ -153,6 +153,58 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return node;
     }
     
+    function ceiling(Key key) {
+        variable value node = root;
+        while (exists n=node) {
+            switch (compare(key,n.key)) 
+            case (equal) {
+                return n;
+            } 
+            case (smaller) {
+                //TODO: loop needed here, i think!
+                if (!n.left exists, 
+                    exists p=n.parent, 
+                    compare(p.key,key)==smaller) {
+                    return p;
+                }
+                node = n.left;
+            }
+            case (larger) {
+                if (!n.right exists) {
+                    return node;
+                }
+                node = n.right;
+            }
+        }
+        return node;
+    }
+    
+    function floor(Key key) {
+        variable value node = root;
+        while (exists n=node) {
+            switch (compare(key,n.key)) 
+            case (equal) {
+                return n;
+            } 
+            case (smaller) {
+                if (!n.left exists) {
+                    return node;
+                }
+                node = n.left;
+            }
+            case (larger) {
+                //TODO: loop needed here, i think!
+                if (!n.right exists, 
+                    exists p=n.parent, 
+                    compare(p.key,key)==larger) {
+                    return p;
+                }
+                node = n.right;
+            }
+        }
+        return node;
+    }
+    
     void replaceNode(Node old, Node? node) {
         if (exists parent=old.parent) {
             if (old.onLeft) {
@@ -402,46 +454,88 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared actual Iterator<Key->Item> iterator() {
-        if (exists root = this.root) {
-            object iterator 
-                    satisfies Iterator<Key->Item> {
-                variable Node? current = root.leftmostChild;
-                shared actual <Key->Item>|Finished next() {
-                    <Key->Item>|Finished entry;
-                    if (exists node=current) {
-                        entry = node.key->node.item;
-                    }
-                    else {
-                        entry = finished;
-                    }
-                    if (exists node=current,
-                    exists right=node.right) {
-                        current = right;
-                        while (exists left=current?.left) {
-                            current = left;
-                        }
-                    }
-                    else if (exists node=current) {
-                        current = node.parent;
-                        variable value child = node;
-                        while (exists parent=current, child.onRight) {
-                            child = parent;
-                            current = parent.parent;
-                        }
-                    }
-                    else {
-                        current = null;
-                    }
-                    return entry;
+    shared {<Key->Item>*} higherEntries(Key key) {
+        object iterable satisfies {<Key->Item>*} {
+            iterator() => NodeIterator(floor(key));
+        }
+        return iterable;
+    }
+    
+    shared {<Key->Item>*} lowerEntries(Key key) {
+        object iterable satisfies {<Key->Item>*} {
+            iterator() => ReverseNodeIterator(ceiling(key));
+        }
+        return iterable;
+    }
+    
+    class NodeIterator (current = root?.leftmostChild)
+            satisfies Iterator<Key->Item> {
+        variable Node? current;
+        shared actual <Key->Item>|Finished next() {
+            <Key->Item>|Finished entry;
+            if (exists node=current) {
+                entry = node.key->node.item;
+            }
+            else {
+                entry = finished;
+            }
+            if (exists node=current,
+            exists right=node.right) {
+                current = right;
+                while (exists left=current?.left) {
+                    current = left;
                 }
             }
-            return iterator;
-        }
-        else {
-            return emptyIterator;
+            else if (exists node=current) {
+                current = node.parent;
+                variable value child = node;
+                while (exists parent=current, child.onRight) {
+                    child = parent;
+                    current = parent.parent;
+                }
+            }
+            else {
+                current = null;
+            }
+            return entry;
         }
     }
+    
+    class ReverseNodeIterator(current = root?.rightmostChild)
+            satisfies Iterator<Key->Item> {
+        variable Node? current;
+        shared actual <Key->Item>|Finished next() {
+            <Key->Item>|Finished entry;
+            if (exists node=current) {
+                entry = node.key->node.item;
+            }
+            else {
+                entry = finished;
+            }
+            if (exists node=current,
+                exists left=node.left) {
+                current = left;
+                while (exists right=current?.right) {
+                    current = right;
+                }
+            }
+            else if (exists node=current) {
+                current = node.parent;
+                variable value child = node;
+                while (exists parent=current, child.onLeft) {
+                    child = parent;
+                    current = parent.parent;
+                }
+            }
+            else {
+                current = null;
+            }
+            return entry;
+        }
+    }
+    
+    shared actual Iterator<Key->Item> iterator() 
+            => NodeIterator();
     
     shared actual TreeMap<Key,Item> clone {
         value clone = TreeMap<Key,Item>(compare);
