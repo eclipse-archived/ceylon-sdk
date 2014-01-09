@@ -8,26 +8,6 @@ Boolean isRed<Key,Item>(Node<Key,Item>? node)
     }
 }
 
-Boolean onLeft<Key,Item>(Node<Key,Item> n)
-        given Key satisfies Comparable<Key> {
-    if (exists npl=n.parent?.left) {
-        return n==npl;
-    }
-    else {
-        return false;
-    }
-}
-
-Boolean onRight<Key,Item>(Node<Key,Item> n)
-        given Key satisfies Comparable<Key> {
-    if (exists npl=n.parent?.right) {
-        return n==npl;
-    }
-    else {
-        return false;
-    }
-}
-
 class Node<Key,Item>(key, item) 
         given Key satisfies Comparable<Key> {
     
@@ -38,14 +18,32 @@ class Node<Key,Item>(key, item)
     shared variable Node<Key,Item>? parent=null;
     shared variable Boolean red=true;
     
+    shared Boolean onLeft {
+        if (exists parentLeft=parent?.left) {
+            return this==parentLeft;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared Boolean onRight {
+        if (exists parentRight=parent?.right) {
+            return this==parentRight;
+        }
+        else {
+            return false;
+        }
+    }
+    
     shared Node<Key,Item>? grandparent => parent?.parent;
     
     shared Node<Key,Item>? sibling {
         if (exists p=parent) { 
-            if (onLeft(this)) {
+            if (onLeft) {
                 return p.right;
             }
-            else if (onRight(this)){
+            else if (onRight){
                 return p.left;
             }
             else {
@@ -113,10 +111,10 @@ shared class RBTree<Key,Item>()
     
     void replaceNode(Node<Key,Item> old, Node<Key,Item>? node) {
         if (exists parent=old.parent) {
-            if (onLeft(old)) {
+            if (old.onLeft) {
                 parent.left = node;
             }
-            else if (onRight(old)) {
+            else if (old.onRight) {
                 parent.right = node;
             }
             else {
@@ -208,12 +206,12 @@ shared class RBTree<Key,Item>()
                 else {
                     //first rotation
                     Node<Key,Item> adjustedNode;
-                    if (onRight(newNode) && onLeft(parent)) {
+                    if (newNode.onRight && parent.onLeft) {
                         rotateLeft(parent);
                         assert (exists nl=newNode.left);
                         adjustedNode=nl;
                     } 
-                    else if (onLeft(newNode) && onRight(parent)) {
+                    else if (newNode.onLeft && parent.onRight) {
                         rotateRight(parent);
                         assert (exists nr=newNode.right);
                         adjustedNode=nr;
@@ -226,10 +224,10 @@ shared class RBTree<Key,Item>()
                     adjustedParent.red = false;
                     assert (exists grandparent=adjustedNode.grandparent);
                     grandparent.red = true;
-                    if (onLeft(adjustedNode) && onLeft(adjustedParent)) {
+                    if (adjustedNode.onLeft && adjustedParent.onLeft) {
                         rotateRight(grandparent);
                     }
-                    else if (onRight(adjustedNode) && onRight(adjustedParent)) {
+                    else if (adjustedNode.onRight && adjustedParent.onRight) {
                         rotateLeft(grandparent);
                     }
                     else {
@@ -289,22 +287,23 @@ shared class RBTree<Key,Item>()
     }
     
     void recolorAfterDeletion(Node<Key,Item> node) {
-        if (exists parent=node.parent,
-            exists sibling=node.sibling) {
-            if (isRed(sibling)) {
+        if (exists parent=node.parent) {
+            if (exists sibling=node.sibling,
+                isRed(sibling)) {
                 parent.red = true;
                 sibling.red = false;
-                if (onLeft(parent)) {
+                if (parent.onLeft) {
                     rotateLeft(parent);
                 }
-                else if (onRight(parent)) {
+                else /*if (parent.onRight)*/ {
                     rotateRight(parent);
                 }
-                else {
-                    assert (false);
-                }
+                //else {
+                //    assert (false);
+                //}
             }
-            if (!isRed(sibling) &&
+            if (exists sibling=node.sibling,
+                !isRed(sibling) &&
                 !isRed(sibling.left) &&
                 !isRed(sibling.right)) {
                 sibling.red = true;
@@ -316,8 +315,9 @@ shared class RBTree<Key,Item>()
                 }
             }
             else {
-                if (exists siblingLeft=sibling.left,
-                    onLeft(node) &&
+                if (exists sibling=node.sibling,
+                    exists siblingLeft=sibling.left,
+                    node.onLeft &&
                     !isRed(sibling) &&
                     isRed(siblingLeft) &&
                     !isRed(sibling.right)) {
@@ -325,8 +325,9 @@ shared class RBTree<Key,Item>()
                     siblingLeft.red = false;
                     rotateRight(sibling);
                 }
-                else if (exists siblingRight=sibling.right,
-                    onRight(node) &&
+                else if (exists sibling=node.sibling,
+                    exists siblingRight=sibling.right,
+                    node.onRight &&
                     !isRed(sibling) &&
                     isRed(siblingRight) &&
                     !isRed(sibling.left)) {
@@ -334,22 +335,24 @@ shared class RBTree<Key,Item>()
                     siblingRight.red = false;
                     rotateLeft(sibling);
                 }
-                sibling.red = parent.red;
-                parent.red = false;
-                if (onLeft(node)) {
-                    assert (exists siblingRight=sibling.right, 
+                if (exists sibling=node.sibling) {
+                    sibling.red = parent.red;
+                    parent.red = false;
+                    if (node.onLeft) {
+                        assert (exists siblingRight=sibling.right, 
                         isRed(siblingRight));
-                    siblingRight.red = false;
-                    rotateLeft(parent);
-                }
-                else if (onRight(node)) {
-                    assert (exists siblingLeft=sibling.left, 
+                        siblingRight.red = false;
+                        rotateLeft(parent);
+                    }
+                    else /*if (node.onRight)*/ {
+                        assert (exists siblingLeft=sibling.left, 
                         isRed(siblingLeft));
-                    siblingLeft.red = false;
-                    rotateRight(parent);
-                }
-                else {
-                    assert (false);
+                        siblingLeft.red = false;
+                        rotateRight(parent);
+                    }
+                    //else {
+                    //    assert (false);
+                    //}
                 }
             }
         }
@@ -401,8 +404,6 @@ shared class RBTree<Key,Item>()
     }
     
 }
-
-
 
 shared void testTree() {
     value tree = RBTree<String, String>();
