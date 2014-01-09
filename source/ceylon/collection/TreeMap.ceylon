@@ -253,7 +253,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         node.parent = left;
     }
     
-    void recolorAfterInsert(Node newNode) {
+    void balanceAfterInsert(Node newNode) {
         if (exists parent = newNode.parent) {
             if (isRed(parent)) {
                 if (exists uncle=newNode.uncle, isRed(uncle)) {
@@ -265,7 +265,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                     uncle.red = false;
                     assert (exists grandparent=newNode.grandparent);
                     grandparent.red = true;
-                    recolorAfterInsert(grandparent);
+                    balanceAfterInsert(grandparent);
                 }
                 else {
                     //first rotation
@@ -342,11 +342,11 @@ shared class TreeMap<Key, Item>(compare, entries={})
         else {
             root = newNode;
         }
-        recolorAfterInsert(newNode);
+        balanceAfterInsert(newNode);
         return null;
     }
     
-    void recolorAfterDeletion(Node node) {
+    void balanceAfterDeletion(Node node) {
         if (exists parent=node.parent) {
             if (exists sibling=node.sibling,
             isRed(sibling)) {
@@ -371,7 +371,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                     parent.red = false;
                 }
                 else {
-                    recolorAfterDeletion(parent);
+                    balanceAfterDeletion(parent);
                 }
             }
             else {
@@ -450,7 +450,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             }
             if (!isRed(node)) {
                 node.red = isRed(child);
-                recolorAfterDeletion(node);
+                balanceAfterDeletion(node);
             }
             replaceNode(node, child);
             return result.item;
