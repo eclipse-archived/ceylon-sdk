@@ -2,7 +2,7 @@
  Elements of the set are maintained in a sorted order, from
  smallest to largest, as determined by the given
  [[comparator function|compare]]."
-//see (`function naturalOrderTreeSet`)
+see (`function naturalOrderTreeSet`)
 by ("Gavin King")
 shared class TreeSet<Element>(compare, elements={})
         satisfies MutableSet<Element>
@@ -98,3 +98,9 @@ shared class TreeSet<Element>(compare, elements={})
      hash => (super of Set<Element>).hash;
      
 }
+
+"Create a [[TreeSet] with [[comparable|Comparable]]] keys,
+ sorted by the natural ordering of the keys."
+shared TreeSet<Element> naturalOrderTreeSet<Element>({<Element>*} entries)
+        given Element satisfies Comparable<Element>
+        => TreeSet((Element x, Element y)=>x<=>y, entries);
