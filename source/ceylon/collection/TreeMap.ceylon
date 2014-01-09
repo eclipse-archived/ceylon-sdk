@@ -2,6 +2,7 @@
  Entries in the map are maintained in a sorted order, from
  smallest to largest key, as determined by the given
  [[comparator function|compare]]."
+see (`function naturalOrderTreeMap`)
 by ("Gavin King")
 shared class TreeMap<Key, Item>(compare, entries={}) 
         satisfies MutableMap<Key, Item> 
