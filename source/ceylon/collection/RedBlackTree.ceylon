@@ -76,11 +76,17 @@ class Node<Key,Item>(key, item)
     }
 }
 
-shared class RBTree<Key,Item>() 
-        given Key satisfies Comparable<Key> {
+shared class RedBlackTree<Key,Item>()
+        satisfies {<Key->Item>*}
+        given Key satisfies Comparable<Key>
+        given Item satisfies Object {
     
     variable Node<Key,Item>? root=null;
-
+    
+    shared void clear() {
+        root=null;
+    }
+    
     shared actual String string {
         if (exists r=root) {
             return "{ " + r.string + " }";
@@ -151,7 +157,7 @@ shared class RBTree<Key,Item>()
         node.parent = left;
     }
     
-    shared void put(Key key, Item item) {
+    shared Item? put(Key key, Item item) {
         value newNode = Node(key, item);
         if (exists root=this.root) {
             variable Node<Key,Item> node = root;
@@ -176,8 +182,9 @@ shared class RBTree<Key,Item>()
                     }
                 }
                 case (equal) {
+                    value oldItem = node.item;
                     node.item = item;
-                    return;
+                    return oldItem;
                 }
             }
             newNode.parent = node;
@@ -186,6 +193,7 @@ shared class RBTree<Key,Item>()
             root = newNode;
         }
         recolorAfterInsert(newNode);
+        return null;
         //verifyProperties();
     }
     
@@ -251,7 +259,15 @@ shared class RBTree<Key,Item>()
         return rightmost;
     }
     
-    shared void remove(Key key) {
+    Node<Key,Item> leftmostChild(Node<Key,Item> node) {
+        variable value leftmost = node;
+        while (exists left = leftmost.left) {
+            leftmost = left;
+        }
+        return leftmost;
+    }
+    
+    shared Item? remove(Key key) {
         if (exists result = lookup(key)) {
             Node<Key,Item> node;
             if (exists left=result.left, 
@@ -282,6 +298,10 @@ shared class RBTree<Key,Item>()
                 recolorAfterDeletion(node);
             }
             replaceNode(node, child);
+            return result.item;
+        }
+        else {
+            return null;
         }
         //verifyProperties();
     }
@@ -403,10 +423,51 @@ shared class RBTree<Key,Item>()
         }
     }
     
+    shared actual Iterator<Key->Item> iterator() {
+        if (exists root = this.root) {
+            object iterator 
+                    satisfies Iterator<Key->Item> {
+                variable Node<Key,Item>? current = leftmostChild(root);
+                shared actual <Key->Item>|Finished next() {
+                    <Key->Item>|Finished entry;
+                    if (exists node=current) {
+                        entry = node.key->node.item;
+                    }
+                    else {
+                        entry = finished;
+                    }
+                    if (exists node=current,
+                        exists right=node.right) {
+                        current = right;
+                        while (exists left=current?.left) {
+                            current = left;
+                        }
+                    }
+                    else if (exists node=current) {
+                        current = node.parent;
+                        variable value child = node;
+                        while (exists parent=current, child.onRight) {
+                            child = parent;
+                            current = parent.parent;
+                        }
+                    }
+                    else {
+                        current = null;
+                    }
+                    return entry;
+                }
+            }
+            return iterator;
+        }
+        else {
+            return emptyIterator;
+        }
+    }
+    
 }
 
 shared void testTree() {
-    value tree = RBTree<String, String>();
+    value tree = RedBlackTree<String, String>();
     tree.assertInvariants();
     tree.put("hello", "hello");
     tree.assertInvariants();
