@@ -42,8 +42,17 @@ shared class ArrayList<Element>
     function store(Integer capacity)
             => arrayOfSize<Element?>(capacity, null);
     
-    variable Array<Element?> array = store(initialCapacity);
-    variable Integer length=0;
+    variable Array<Element?> array;
+    variable Integer length;
+    
+    if (is List<Element> elements) {
+        length = elements.size;
+        array = store(length>initialCapacity then length else initialCapacity);
+    }
+    else {
+        length = 0;
+        array = store(initialCapacity);
+    }
     
     void grow(Integer increment) {
         value neededCapacity = length+increment;
@@ -61,12 +70,20 @@ shared class ArrayList<Element>
         }
     }
     
-    //grow(elements.size-initialCapacity);
-    for (element in elements) {
-        grow(1);
-        array.set(length++, element);
+    if (is List<Element> elements) {
+        variable value i=0;
+        while (i<length) {
+            array.set(i, elements[i]);
+            i++;
+        }
     }
-
+    else {
+        for (element in elements) {
+            grow(1);
+            array.set(length++, element);
+        }
+    }
+    
     shared actual void add(Element element) {
         grow(1);
         array.set(length++, element);
