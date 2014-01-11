@@ -6,9 +6,10 @@ shared interface MutableList<Element>
         satisfies List<Element> & 
                   ListMutator<Element> &
                   Cloneable<MutableList<Element>> {
+    
     "Remove the element at the specified [[index]], 
-     returning the removed element, or `null` if there was 
-     no such element."
+     returning the removed element, if any, or `null` if 
+     there was no such element."
     shared actual formal Element? delete(Integer index);
     
     "Remove the element with index `0` from this list, 
@@ -50,8 +51,10 @@ shared interface ListMutator<in Element>
              is, if `index<0` or if `index>lastIndex+1`")
     shared formal void insert(Integer index, Element element);
     
-    "Remove the element at the specified [[index]]."
-    shared formal void delete(Integer index);
+    "Remove the element at the specified [[index]], 
+     returning the removed element, if any, or `null` if 
+     there was no such element."
+    shared formal Anything delete(Integer index);
     
     "Remove all occurrences of the given [[value|element]] 
      from this list."
@@ -100,11 +103,15 @@ shared interface ListMutator<in Element>
      list with no elements."
     shared formal void clear();
     
-    "Remove the element with index `0` from this list."
-    shared formal void deleteFirst();
+    "Remove the element with index `0` from this list, 
+     returning the removed element, or `null` if there was 
+     no such element."
+    shared formal Anything deleteFirst();
     
-    "Remove the element with index `size-1` from this list."
-    shared formal void deleteLast();
+    "Remove the element with index `size-1` from this list, 
+     returning the removed element, or `null` if there was 
+     no such element."
+    shared formal Anything deleteLast();
     
     "Remove every element with an index in the spanned range 
      `from..to`."

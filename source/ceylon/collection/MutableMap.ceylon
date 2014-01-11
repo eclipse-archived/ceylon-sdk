@@ -34,7 +34,7 @@ shared interface MapMutator<in Key, in Item>
      entry for the given [[key]], and returning the previous 
      value associated with the given `key`, if any, or 
      `null` if no existing entry was overwritten."
-    shared formal void put(Key key, Item item);
+    shared formal Object? put(Key key, Item item);
     
     "Add the given [[entries]] to this map, overwriting any 
      existing entries with the same keys."
@@ -44,7 +44,7 @@ shared interface MapMutator<in Key, in Item>
      any, from this map, returning the value no longer 
      associated with the given `key`, if any, or `null` if
      there was no entry associated with the given `key`."
-    shared formal void remove(Key key);
+    shared formal Object? remove(Key key);
     
     "Remove every entry from this map, leaving an empty map
      with no entries."
