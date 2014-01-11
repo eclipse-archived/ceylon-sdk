@@ -85,10 +85,10 @@ shared class IdentityMap<Key, Item>
         variable value bucket = store[index];
         while(exists cell = bucket){
             if(cell.element.key === key){
-                Item oldValue = cell.element.item;
+                Item oldItem = cell.element.item;
                 // modify an existing entry
                 cell.element = key->item;
-                return oldValue;
+                return oldItem;
             }
             bucket = cell.rest;
         }

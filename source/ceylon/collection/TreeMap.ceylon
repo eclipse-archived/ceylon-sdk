@@ -332,7 +332,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                     }
                 }
                 case (equal) {
-                    value oldItem = node.item;
+                    Item oldItem = node.item;
                     node.item = item;
                     return oldItem;
                 }

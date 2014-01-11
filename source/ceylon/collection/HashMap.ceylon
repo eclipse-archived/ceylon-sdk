@@ -147,10 +147,10 @@ shared class HashMap<Key, Item>
         variable value bucket = store[index];
         while(exists cell = bucket){
             if(cell.element.key == key){
-                Item oldValue = cell.element.item;
+                Item oldItem = cell.element.item;
                 // modify an existing entry
                 cell.element = entry;
-                return oldValue;
+                return oldItem;
             }
             bucket = cell.rest;
         }
