@@ -129,10 +129,11 @@ shared class LinkedList<Element>(elements = {})
                         cell.rest = more;
                     }
                     else {
-                        cell.rest = tail = null;
+                        tail = cell;
+                        cell.rest = null;
                     }
                     length--;
-                    return cell.element;
+                    return rest?.element;
                 }
                 else {
                     iter = rest;
