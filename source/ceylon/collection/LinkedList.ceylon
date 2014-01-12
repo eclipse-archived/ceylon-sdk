@@ -133,7 +133,7 @@ shared class LinkedList<Element>(elements = {})
                         cell.rest = null;
                     }
                     length--;
-                    return cell.element;
+                    return rest?.element;
                 }
                 else {
                     iter = rest;
