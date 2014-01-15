@@ -71,10 +71,18 @@ shared class ArrayList<Element>
     }
     
     if (is List<Element> elements) {
-        variable value i=0;
-        while (i<length) {
-            array.set(i, elements[i]);
-            i++;
+        if (is ArrayList<Element> elements) {
+            elements.array.copyTo(array, 0, 0, length);
+        }
+        else {
+            /*variable value i=0;
+             while (i<length) {
+             array.set(i, elements[i]);
+             i++;
+             }*/
+            for (element in elements) {
+                array.set(length++, element);
+            }
         }
     }
     else {
