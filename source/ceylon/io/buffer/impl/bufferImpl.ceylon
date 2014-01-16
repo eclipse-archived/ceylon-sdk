@@ -1,5 +1,6 @@
 import java.nio { JavaByteBuffer = ByteBuffer { allocateJavaByteBuffer = allocate }}
 import ceylon.io.buffer { ByteBuffer }
+import ceylon.interop.java { toIntegerArray }
 
 Boolean needsWorkarounds = true;
 
@@ -86,7 +87,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         buf.position(position);
     }
     shared actual Array<Integer> bytes() {
-        return buf.array().array;
+        return toIntegerArray(buf.array());
     }
     
     shared actual Object? implementation => underlyingBuffer;

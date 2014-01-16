@@ -9,6 +9,7 @@ import io.undertow.websockets.core {
     WebSockets { sendCloseBlocking }, 
     UTF8Output}
 import org.xnio {IoUtils {safeClose}}
+import ceylon.interop.java { toIntegerArray }
 
 by("Matej Lazar")
 class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocketChannel webSocketChannel)
@@ -19,7 +20,7 @@ class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocket
     }
 
     shared actual void onFullBinaryMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) {
-        webSocketEndpoint.onBinary(webSocketChannel, newByteBufferWithData(*message.toByteArray().array));
+        webSocketEndpoint.onBinary(webSocketChannel, newByteBufferWithData(*toIntegerArray(message.toByteArray())));
     }
 
     shared actual void onFullCloseMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) {

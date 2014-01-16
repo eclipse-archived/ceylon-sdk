@@ -10,6 +10,7 @@ import io.undertow.websockets.core {
     UTF8Output,
     StreamSourceFrameChannel}
 import org.xnio {IoUtils {safeClose}}
+import ceylon.interop.java { toIntegerArray }
 
 by("Matej Lazar")
 class CeylonWebSocketFragmentedFrameHandler(WebSocketFragmentedEndpoint webSocketEndpoint, WebSocketChannel webSocketChannel)
@@ -26,7 +27,7 @@ class CeylonWebSocketFragmentedFrameHandler(WebSocketFragmentedEndpoint webSocke
         bufferedBinaryMessage.readBlocking(messageChannel);
         webSocketEndpoint.onBinary(
                 webSocketChannel, 
-                newByteBufferWithData(*bufferedBinaryMessage.toByteArray().array),
+                newByteBufferWithData(*toIntegerArray(bufferedBinaryMessage.toByteArray())),
                 messageChannel.finalFragment);
     }
 
