@@ -14,16 +14,23 @@ import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
 @Ceylon(major = 6)
 @Method
-@DocAnnotation$annotation$(description = "Takes a class instance and returns a Java `Class` reference for its type")
+@DocAnnotation$annotation$(description = javaClassFromInstance_.DOC)
 @SharedAnnotation$annotation$
-@Annotations({@Annotation(value = "doc", arguments = {"Takes a class instance and returns a Java `Class` reference for its type"}), @Annotation("shared")})
+@Annotations({@Annotation(value = "doc", arguments = {javaClassFromInstance_.DOC}), @Annotation("shared")})
 public final class javaClassFromInstance_ {
+	
+	@Ignore
+	protected static final String DOC = "Returns a Java [[java.lang::Class]] object representing the runtime type of the given [[instance]].";
 
     private javaClassFromInstance_() {}
 
     public static <T> java.lang.Class<T> javaClassFromInstance(
             @Ignore TypeDescriptor $reifiedT, 
             @Name("instance") @TypeInfo("ceylon.language::Object") T instance) {
+        //NOTE: this looks like an unsound cast, but in fact
+        //      since java.lang.Class is actually covariant,
+        //      and since Java generics aren't reified, it's
+        //      acceptable.
         return (java.lang.Class<T>) instance.getClass();
     }
 }
