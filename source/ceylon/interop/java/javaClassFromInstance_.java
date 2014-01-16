@@ -14,9 +14,9 @@ import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
 @Ceylon(major = 6)
 @Method
-@DocAnnotation$annotation$(description = "Takes a class instance and returns a Java `Class` reference for its type")
+@DocAnnotation$annotation$(description = "Returns a Java [[java.lang::Class]] object representing the runtime type of the given [[instance]].")
 @SharedAnnotation$annotation$
-@Annotations({@Annotation(value = "doc", arguments = {"Takes a class instance and returns a Java `Class` reference for its type"}), @Annotation("shared")})
+@Annotations({@Annotation(value = "doc", arguments = {"Returns a Java [[java.lang::Class]] object representing the runtime type of the given [[instance]]."}), @Annotation("shared")})
 public final class javaClassFromInstance_ {
 
     private javaClassFromInstance_() {}

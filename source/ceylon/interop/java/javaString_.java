@@ -12,9 +12,9 @@ import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
 @Ceylon(major = 6)
 @Method
-@DocAnnotation$annotation$(description = "Takes a Ceylon `String` and turns it into a Java `String`")
+@DocAnnotation$annotation$(description = "Cast the given Ceylon [[String]] to a Java [[java.lang::String]] without losing the identity of the original string.")
 @SharedAnnotation$annotation$
-@Annotations({@Annotation(value = "doc", arguments = {"Takes a Ceylon `String` and turns it into a Java `String`"}), @Annotation("shared")})
+@Annotations({@Annotation(value = "doc", arguments = {"Cast the given Ceylon [[String]] to a Java [[java.lang::String]] without losing the identity of the original string."}), @Annotation("shared")})
 public final class javaString_ {
 
     private javaString_() {}
