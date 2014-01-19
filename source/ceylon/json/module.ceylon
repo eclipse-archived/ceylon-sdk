@@ -44,6 +44,6 @@
  """
 by("Stéphane Épardaud")
 license("Apache Software License")
-module ceylon.json "1.0.1" {
+module ceylon.json "1.0.2" {
     shared import ceylon.collection "1.0.0";
 }

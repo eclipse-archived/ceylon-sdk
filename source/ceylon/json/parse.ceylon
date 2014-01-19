@@ -4,7 +4,7 @@ class Parser(String str){
     variable Integer line = 1;
     variable Integer column = 1;
 
-    throws(`class ParseException`, "If the specified string cannot be parsed")
+    throws(`class ParseException`, "If the specified string cannot be parsed as a JSON object")
     shared Object parseObject(){
         Object obj = Object{};
         
@@ -29,7 +29,8 @@ class Parser(String str){
         return obj;
     }
 
-    Array parseArray(){
+    throws(`class ParseException`, "If the specified string cannot be parsed as a JSON array")
+    shared Array parseArray(){
         Array arr = Array{};
         
         eatSpacesUntil('[');
@@ -49,6 +50,19 @@ class Parser(String str){
             }
         }
         return arr;
+    }
+    
+    throws(`class ParseException`, "If the specified string cannot be parsed as a JSON object or array")
+    shared Object | Array parseObjectOrArray(){
+        eatSpaces();
+        Character c = char();
+        if(c == '{'){
+            return parseObject();
+        }
+        if(c == '['){
+            return parseArray();
+        }
+        throw ParseException("Expected '[' or '{' but got `` char() ``", line, column);
     }
     
     String|Boolean|Integer|Float|Object|Array|NullInstance parseValue(){
@@ -301,7 +315,21 @@ class Parser(String str){
 
 "Parses a JSON string into a JSON Object"
 by("Stéphane Épardaud")
-throws(`class Exception`, "If the JSON string is invalid")
+throws(`class Exception`, "If the JSON string is not a valid JSON Object")
 shared Object parse(String str){
     return Parser(str).parseObject();
+}
+
+"Parses a JSON string into a JSON Array"
+by("Stephen Crawley")
+throws(`class Exception`, "If the JSON string is not a valid JSON Array")
+shared Array parseArray(String str){
+	return Parser(str).parseArray();
+}
+
+"Parses a JSON string into a JSON Array"
+by("Stephen Crawley")
+throws(`class Exception`, "If the JSON string is not a valid JSON Object or Array")
+shared Object | Array parseObjectOrArray(String str){
+	return Parser(str).parseObjectOrArray();
 }
