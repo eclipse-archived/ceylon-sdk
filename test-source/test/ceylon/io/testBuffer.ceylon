@@ -128,7 +128,7 @@ test void testByteBufferResize(){
 }
 
 
-test void testCharacterBuffer(){
+test void testStringBackedCharacterBuffer(){
     CharacterBuffer buffer = newCharacterBufferWithData("abcd");
     Character[] values = ['a', 'b', 'c', 'd'];
     testBuffer(buffer, values);
