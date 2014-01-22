@@ -42,3 +42,21 @@ test void queryTests() {
     }
     
 }
+
+test void selectSingleValue() {
+    sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("a", 1);
+    sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("b", 2);
+    sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("c", 3);
+    
+    value count = sql.Select("SELECT COUNT(*) FROM test1").singleValue<Integer>();
+    assert(count == 3);
+    
+    value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number>();
+    assert(min == 1);
+    
+    value max = sql.Select("SELECT MAX(count) FROM test1").singleValue<Object>();
+    assert(is Integer max, max == 3);
+    
+    value name = sql.Select("SELECT name FROM test1 WHERE count = ?").singleValue<String>(2);
+    assert(name == "b");
+}

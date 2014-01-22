@@ -13,7 +13,8 @@ import ceylon.math.whole {
 }
 
 import java.lang {
-    Long,
+    JInteger=Integer,
+    JLong=Long,
     JString=String
 }
 import java.math {
@@ -254,6 +255,21 @@ shared class Sql(newConnection) {
             }
         }
         
+        "Executes this query with the given [[arguments]] to its parameters,
+         the query result has to be single row/single column and is mapped to the given type.
+         
+             value count = sql.Select(\"select count(*) from table\").singleValue<Integer>();
+         
+        "
+        shared Value singleValue<Value>(Object* arguments) {
+            value rows = execute(*arguments);
+            assert(exists row = rows[0], 
+                   rows.size == 1, 
+                   row.size == 1, 
+                   is Value v = row.values.first);
+            return v;
+        }        
+        
         "Execute this query with the given [[arguments]] 
          to its parameters. The resulting instance of 
          `Results` may be iterated, producing [[Row]]s 
@@ -405,7 +421,8 @@ shared class Sql(newConnection) {
         Object? v;
         //TODO optimize these conversions
         switch (x)
-        case (is Long) { v = x.longValue(); }
+        case (is JInteger) { v = x.intValue(); }
+        case (is JLong) { v = x.longValue(); }
         case (is JString) { v = x.string; }
         case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
         case (is BigInteger) { v = parseWhole(x.string); }

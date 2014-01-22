@@ -9,7 +9,6 @@ test void batchUpdateTest() {
     value millisPerDay = 24*60*60*1000;
     for(i in 1..10) {
         sql.Insert("INSERT INTO test1(name, when, count) VALUES (?, ?, ?)").execute("name``i``", Date(i*millisPerDay), i);
-        print(i);
     }
     
     value count = sql.Select("SELECT COUNT(*) FROM test1").execute()[0]?.values?.first;
