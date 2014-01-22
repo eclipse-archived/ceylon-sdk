@@ -44,7 +44,7 @@ test void queryTests() {
 }
 
 test void selectSingleValue() {
-    sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("a", 1);
+    sql.Insert("INSERT INTO test1(name, count, flag) VALUES (?, ?, ?)").execute("a", 1, true);
     sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("b", 2);
     sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("c", 3);
     
@@ -59,4 +59,7 @@ test void selectSingleValue() {
     
     value name = sql.Select("SELECT name FROM test1 WHERE count = ?").singleValue<String>(2);
     assert(name == "b");
+    
+    value flag = sql.Select("SELECT flag FROM test1 WHERE name = ?").singleValue<Boolean>("a");
+    assert(flag);    
 }

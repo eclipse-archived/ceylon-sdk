@@ -13,6 +13,7 @@ import ceylon.math.whole {
 }
 
 import java.lang {
+    JBoolean=Boolean,
     JInteger=Integer,
     JLong=Long,
     JString=String
@@ -421,6 +422,7 @@ shared class Sql(newConnection) {
         Object? v;
         //TODO optimize these conversions
         switch (x)
+        case (is JBoolean) { v = x.booleanValue(); }
         case (is JInteger) { v = x.intValue(); }
         case (is JLong) { v = x.longValue(); }
         case (is JString) { v = x.string; }
