@@ -5,8 +5,6 @@ import java.util { Date }
 import ceylon.dbc { Row }
 
 test void queryTests() {
-    
-    sql.Insert("DELETE FROM test1").execute();
     sql.Insert("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)")
             .execute("First", Date(), 1);
     sql.Insert("INSERT INTO test1(name,when,count,price,flag) VALUES (?, ?, ?, ?, ?)")

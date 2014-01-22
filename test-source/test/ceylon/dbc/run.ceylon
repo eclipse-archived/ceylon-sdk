@@ -23,16 +23,22 @@ JdbcDataSource createDataSource() {
 shared Sql sql = Sql(newConnectionFromDatasource(createDataSource()));
 
 shared beforeTest void setup() {
-    //Some setup, with the same component
     try {
-        sql.Statement("CREATE TABLE test1 (row_id SERIAL PRIMARY KEY, name VARCHAR(40), when TIMESTAMP, day DATE, count INTEGER, price NUMERIC(10,4), flag BOOLEAN)")
-                .execute();
+        sql.Statement("CREATE TABLE test1 (
+                           row_id SERIAL PRIMARY KEY, 
+                           name VARCHAR(40), 
+                           when TIMESTAMP, 
+                           day DATE, 
+                           count INTEGER, 
+                           price NUMERIC(10,4), 
+                           flag BOOLEAN)").execute();
     }
     catch (Exception ex) {
         if (!"Table \"TEST1\" already exists" in ex.message) {
             throw ex;
         }
     }
+    sql.Update("DELETE FROM test1").execute();
 }
 
 void run() => createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();

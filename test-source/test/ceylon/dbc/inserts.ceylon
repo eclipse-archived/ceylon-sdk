@@ -1,15 +1,11 @@
 import ceylon.test {
     ...
 }
-
 import java.util {
     Date
 }
 
 test void insertTests() {
-    
-    sql.Update("DELETE FROM test1").execute();
-    
     assertEquals(1, sql.Update("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)")
             .execute("First", Date(), 1), "sql.update (inserting)");
     assertEquals(1, sql.Update("INSERT INTO test1(name,when,count,price,flag) VALUES (?, ?, ?, ?, ?)")
@@ -27,5 +23,4 @@ test void insertTests() {
             assertTrue(v>0);
         } else { fail("No key!!!"); }
     } else { fail("No insertion keys!"); }
-    
 }

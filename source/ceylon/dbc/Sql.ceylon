@@ -132,6 +132,39 @@ shared class Sql(newConnection) {
                 connectionStatus.close();
             }
         }
+        
+        "Execute this statement in a batch with the given batch of supplied arguments,
+         returning the sequence containing the numbers of rows affected by each update in the batch."
+        shared Integer[] executeBatch(Integer batchSize, {{Object*}*} batchArguments) {
+            value connectionStatus = connection.get();
+            try {
+                value stmt = prepareStatement(connectionStatus, sql, []);
+                try {
+                    value affectedRows = SequenceBuilder<Integer>();
+                    
+                    variable value i = 0;
+                    for(arguments in batchArguments) {
+                        setParameters(stmt, arguments);
+                        stmt.addBatch();
+                        
+                        i++;
+                        if( i % batchSize == 0 || i == batchArguments.size) {
+                            value results = stmt.executeBatch();
+                            affectedRows.appendAll({for(result in results.array) result.intValue()});
+                        }
+                    }
+                    
+                    return affectedRows.sequence;
+                }
+                finally {
+                    stmt.close();
+                }
+            }
+            finally {
+                connectionStatus.close();
+            }
+        }
+        
     }
     
     "Define a SQL `insert` [[statement|sql]] with parameters 
