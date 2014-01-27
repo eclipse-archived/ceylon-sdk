@@ -7,7 +7,7 @@ import ceylon.net.http { Header }
 import ceylon.collection { MutableList, LinkedList }
 
 import java.io { JIOException=IOException }
-import java.lang { arrays, ByteArray, Runnable }
+import java.lang { ByteArray, Runnable }
 import java.nio { 
     JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import org.xnio.channels { StreamSinkChannel }
