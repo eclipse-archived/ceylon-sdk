@@ -20,7 +20,7 @@ class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
     equals(Object that) => map.equals(that);    
     hash => map.hash;
     
-    clone => UnmodifiableMap(map.clone);
+    clone() => UnmodifiableMap(map.clone());
     
 }
 

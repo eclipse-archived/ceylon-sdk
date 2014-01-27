@@ -30,7 +30,7 @@ class UnmodifiableList<out Element>(List<Element> list)
             => list.equals(that);
     hash => list.hash;
     
-    clone => UnmodifiableList(list.clone);
+    clone() => UnmodifiableList(list.clone());
     
 }
 

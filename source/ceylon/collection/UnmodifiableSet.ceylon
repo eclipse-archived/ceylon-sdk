@@ -35,7 +35,7 @@ class UnmodifiableSet<out Element>(Set<Element> set)
             => set.equals(that);
     hash => set.hash;
     
-    clone => UnmodifiableSet(set.clone);
+    clone() => UnmodifiableSet(set.clone());
     
 }
 

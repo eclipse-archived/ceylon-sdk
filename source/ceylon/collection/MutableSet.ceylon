@@ -4,9 +4,12 @@ by("Stéphane Épardaud")
 see (`class HashSet`)
 shared interface MutableSet<Element>
         satisfies Set<Element> &
-                  SetMutator<Element> &
-                  Cloneable<MutableSet<Element>>
-        given Element satisfies Object {}
+                  SetMutator<Element>
+        given Element satisfies Object {
+    
+    shared actual formal MutableSet<Element> clone();
+    
+}
 
 "Protocol for mutation of a [[MutableSet]]."
 see (`interface MutableSet`)

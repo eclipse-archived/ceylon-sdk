@@ -8,8 +8,8 @@
 by ("Gavin King")
 shared class IdentitySet<Element>
         (hashtable=Hashtable(), elements = {})
-        satisfies {Element*} & Collection<Element> &
-                  Cloneable<IdentitySet<Element>>
+        satisfies {Element*} & 
+                  Collection<Element>
         given Element satisfies Identifiable {
     
     "The initial elements of the set."
@@ -191,7 +191,7 @@ shared class IdentitySet<Element>
         return false;
     }
     
-    shared actual IdentitySet<Element> clone {
+    shared actual IdentitySet<Element> clone() {
         value clone = IdentitySet<Element>();
         clone.length = length;
         clone.store = elementStore<Element>(store.size);
@@ -199,7 +199,7 @@ shared class IdentitySet<Element>
         // walk every bucket
         while(index < store.size){
             if(exists bucket = store[index]){
-                clone.store.set(index, bucket.clone); 
+                clone.store.set(index, bucket.clone()); 
             }
             index++;
         }

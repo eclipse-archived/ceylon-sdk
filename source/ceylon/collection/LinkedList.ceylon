@@ -414,7 +414,7 @@ shared class LinkedList<Element>(elements = {})
     
     iterator() => CellIterator(head);
     
-    shared actual MutableList<Element> clone {
+    shared actual MutableList<Element> clone() {
         value ret = LinkedList<Element>();
         ret.head = head;
         ret.tail = tail;

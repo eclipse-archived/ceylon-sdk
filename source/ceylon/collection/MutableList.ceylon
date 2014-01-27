@@ -4,8 +4,7 @@ see (`class LinkedList`, `class ArrayList`)
 by("Stéphane Épardaud")
 shared interface MutableList<Element> 
         satisfies List<Element> & 
-                  ListMutator<Element> &
-                  Cloneable<MutableList<Element>> {
+                  ListMutator<Element> {
     
     "Remove the element at the specified [[index]], 
      returning the removed element, if any, or `null` if 
@@ -21,6 +20,8 @@ shared interface MutableList<Element>
      returning the removed element, or `null` if there was 
      no such element."
     shared actual default Element? deleteLast() => delete(size-1);
+    
+    shared actual formal MutableList<Element> clone();
     
 }
 

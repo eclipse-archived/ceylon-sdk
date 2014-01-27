@@ -39,7 +39,7 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         return p.string;
     }
 
-    shared actual Array clone {
+    shared actual Array clone() {
         return Array(list);
     }
 
