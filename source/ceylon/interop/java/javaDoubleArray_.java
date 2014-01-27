@@ -31,10 +31,8 @@ public final class javaDoubleArray_ {
     public static double[] javaDoubleArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Float>|ceylon.language::Array<java.lang::Double>") 
     Array array){
-        // simplest is same underlying type
         if(array.toArray() instanceof double[]){
-            double[] src = (double[]) array.toArray();
-            return src;
+            return (double[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

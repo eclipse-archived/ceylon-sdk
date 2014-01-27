@@ -30,10 +30,8 @@ public final class javaStringArray_ {
     public static java.lang.String[] javaStringArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::String>") 
     Array<ceylon.language.String> array){
-        // simplest is same underlying type
         if(array.toArray() instanceof java.lang.String[]){
-        	java.lang.String[] src = (java.lang.String[]) array.toArray();
-            return src;
+            return (java.lang.String[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

@@ -30,10 +30,8 @@ public final class javaLongArray_ {
     public static long[] javaLongArray(@Name("array")
     @TypeInfo("ceylon.language::Array<ceylon.language::Integer>|ceylon.language::Array<java.lang::Long>") 
     Array array){
-        // simplest is same underlying type
         if(array.toArray() instanceof long[]){
-            long[] src = (long[]) array.toArray();
-            return src;
+            return (long[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

@@ -26,10 +26,8 @@ public final class javaShortArray_ {
      * @see ShortArray
      */
     public static short[] javaShortArray(@Name("array") Array<java.lang.Short> array){
-        // simplest is same underlying type
         if(array.toArray() instanceof short[]){
-            short[] src = (short[]) array.toArray();
-            return src;
+            return (short[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

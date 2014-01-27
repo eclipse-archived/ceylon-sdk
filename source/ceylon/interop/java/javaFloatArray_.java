@@ -27,10 +27,8 @@ public final class javaFloatArray_ {
      * @see FloatArray
      */
     public static float[] javaFloatArray(@Name("array") Array<java.lang.Float> array){
-        // simplest is same underlying type
         if(array.toArray() instanceof float[]){
-            float[] src = (float[]) array.toArray();
-            return src;
+            return (float[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

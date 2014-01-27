@@ -26,10 +26,8 @@ public final class javaCharArray_ {
      * @see CharArray
      */
     public static char[] javaCharArray(@Name("array") Array<java.lang.Character> array){
-        // simplest is same underlying type
         if(array.toArray() instanceof char[]){
-            char[] src = (char[]) array.toArray();
-            return src;
+            return (char[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

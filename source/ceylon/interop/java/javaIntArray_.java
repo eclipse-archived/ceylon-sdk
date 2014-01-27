@@ -31,10 +31,8 @@ public final class javaIntArray_ {
     public static int[] javaIntArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Character>|ceylon.language::Array<java.lang::Integer>") 
     Array array){
-        // simplest is same underlying type
         if(array.toArray() instanceof int[]){
-            int[] src = (int[]) array.toArray();
-            return src;
+            return (int[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }
