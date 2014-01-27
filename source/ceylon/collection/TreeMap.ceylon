@@ -543,7 +543,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
     shared actual Iterator<Key->Item> iterator() 
             => NodeIterator();
     
-    shared actual TreeMap<Key,Item> clone {
+    shared actual TreeMap<Key,Item> clone() {
         value clone = TreeMap<Key,Item>(compare);
         clone.root = root?.clone(clone);
         return clone;

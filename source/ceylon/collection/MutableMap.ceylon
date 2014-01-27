@@ -4,8 +4,7 @@ see (`class HashMap`)
 by("Stéphane Épardaud")
 shared interface MutableMap<Key, Item>
         satisfies Map<Key, Item> &
-                  MapMutator<Key, Item> &
-                  Cloneable<MutableMap<Key, Item>>
+                  MapMutator<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
     
@@ -20,6 +19,8 @@ shared interface MutableMap<Key, Item>
      associated with the given `key`, if any, or `null` if
      there was no entry associated with the given `key`."
     shared formal actual Item? remove(Key key);
+    
+    shared actual formal MutableMap<Key, Item> clone();
     
 }
 

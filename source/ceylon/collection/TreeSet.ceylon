@@ -36,9 +36,9 @@ shared class TreeSet<Element>(compare, elements={})
          return result;
      }
      
-     shared actual TreeSet<Element> clone {
+     shared actual TreeSet<Element> clone() {
          value clone = TreeSet(compare);
-         clone.map = map.clone;
+         clone.map = map.clone();
          return clone;
      }
      

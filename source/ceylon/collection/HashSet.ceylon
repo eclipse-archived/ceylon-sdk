@@ -257,7 +257,7 @@ shared class HashSet<Element>
         return false;
     }
     
-    shared actual HashSet<Element> clone {
+    shared actual HashSet<Element> clone() {
         value clone = HashSet<Element>();
         clone.length = length;
         clone.store = elementStore<Element>(store.size);
@@ -265,7 +265,7 @@ shared class HashSet<Element>
         // walk every bucket
         while(index < store.size){
             if(exists bucket = store[index]){
-                clone.store.set(index, bucket.clone); 
+                clone.store.set(index, bucket.clone()); 
             }
             index++;
         }

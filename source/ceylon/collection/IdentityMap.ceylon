@@ -8,9 +8,9 @@
 by ("Gavin King")
 shared class IdentityMap<Key, Item>
         (hashtable=Hashtable(), entries = {})
-        satisfies {<Key->Item>*} & Collection<Key->Item> &
-                  Correspondence<Key,Item> & 
-                  Cloneable<IdentityMap<Key,Item>>
+        satisfies {<Key->Item>*} & 
+                  Collection<Key->Item> &
+                  Correspondence<Key,Item>
         given Key satisfies Identifiable 
         given Item satisfies Object {
     
@@ -276,7 +276,7 @@ shared class IdentityMap<Key, Item>
         return false;
     }
     
-    shared actual IdentityMap<Key,Item> clone {
+    shared actual IdentityMap<Key,Item> clone() {
         value clone = IdentityMap<Key,Item>();
         clone.length = length;
         clone.store = entryStore<Key,Item>(store.size);
@@ -284,7 +284,7 @@ shared class IdentityMap<Key, Item>
         // walk every bucket
         while(index < store.size){
             if(exists bucket = store[index]){
-                clone.store.set(index, bucket.clone); 
+                clone.store.set(index, bucket.clone()); 
             }
             index++;
         }

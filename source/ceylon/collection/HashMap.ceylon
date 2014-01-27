@@ -336,7 +336,7 @@ shared class HashMap<Key, Item>
         return false;
     }
     
-    shared actual MutableMap<Key,Item> clone {
+    shared actual MutableMap<Key,Item> clone() {
         value clone = HashMap<Key,Item>();
         clone.length = length;
         clone.store = entryStore<Key,Item>(store.size);
@@ -344,7 +344,7 @@ shared class HashMap<Key, Item>
         // walk every bucket
         while(index < store.size){
             if(exists bucket = store[index]){
-                clone.store.set(index, bucket.clone); 
+                clone.store.set(index, bucket.clone()); 
             }
             index++;
         }

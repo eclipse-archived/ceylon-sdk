@@ -26,7 +26,7 @@ shared class Object({<String->String|Boolean|Integer|Float|Object|Array|NullInst
         contents.clear();
     }
     
-    shared actual Object clone {
+    shared actual Object clone() {
         return Object(contents);
     }
     

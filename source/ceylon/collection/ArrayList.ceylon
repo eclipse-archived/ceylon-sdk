@@ -359,7 +359,7 @@ shared class ArrayList<Element>
     
     hash => (super of List<Element>).hash;
     
-    clone => ArrayList(size, growthFactor, this);
+    clone() => ArrayList(size, growthFactor, this);
     
     push(Element element) => add(element);
     
