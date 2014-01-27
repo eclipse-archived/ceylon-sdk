@@ -5,12 +5,8 @@ import ceylon.math.whole {
 
 import java.math {
     MathContext,
-    BigDecimal {
-        bdzero=ZERO
-    },
-    JRoundingMode=RoundingMode {
-        jDown=DOWN
-    }
+    BigDecimal,
+    JRoundingMode=RoundingMode
 }
 
 
@@ -66,8 +62,8 @@ class DecimalImpl(BigDecimal num)
         } else {
             assert (false);
         }
-        return DividedWithRemainder(DecimalImpl(array[0] else bdzero), 
-                DecimalImpl(array[1] else bdzero));
+        return DividedWithRemainder(DecimalImpl(array[0] else BigDecimal.\iZERO), 
+                DecimalImpl(array[1] else BigDecimal.\iZERO));
     }
 
     "The precision of this decimal."
@@ -150,7 +146,8 @@ class DecimalImpl(BigDecimal num)
     }
     shared actual Decimal magnitude {
         return DecimalImpl(implementation
-                .round(MathContext(implementation.scale(), jDown)));
+                .round(MathContext(implementation.scale(), 
+                        JRoundingMode.\iDOWN)));
     }
     shared actual Decimal minus(Decimal other) {
         assert (is DecimalImpl other);
