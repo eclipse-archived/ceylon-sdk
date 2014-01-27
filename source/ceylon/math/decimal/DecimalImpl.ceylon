@@ -272,6 +272,19 @@ class DecimalImpl(BigDecimal num)
         return DecimalImpl(BigDecimal(this.implementation.toBigInteger()));
     }
     
+    "The result of multiplying this number by the given 
+     [[Integer]]."
+    shared actual Decimal timesInteger(Integer integer) {
+        return DecimalImpl(this.implementation.multiply(BigDecimal(integer)));
+    }
+    
+    "The result of adding this number to the given 
+     [[Integer]]."
+    shared actual Decimal plusInteger(Integer integer) {
+        return DecimalImpl(this.implementation.add(BigDecimal(integer)));
+    }
+    
+    
     /*shared actual Decimal castTo<Decimal>() {
         // TODO What do I do here return this;
         throw;

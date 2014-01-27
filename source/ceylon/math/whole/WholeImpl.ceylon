@@ -1,4 +1,10 @@
-import java.math { BigInteger { jzero=ZERO, jone=ONE } }
+import java.math {
+    BigInteger {
+        jzero=ZERO,
+        jone=ONE,
+        fromLong=valueOf
+    }
+}
 
 class WholeImpl(BigInteger num)
         satisfies Whole { //& Castable<Whole|Decimal>
@@ -178,6 +184,18 @@ class WholeImpl(BigInteger num)
     shared actual Integer integerValue {
         // See https://github.com/ceylon/ceylon.language/issues/92#issuecomment-7964218
         throw;
+    }
+    
+    "The result of multiplying this number by the given 
+     [[Integer]]."
+    shared actual Whole timesInteger(Integer integer) {
+        return WholeImpl(this.implementation.multiply(fromLong(integer)));
+    }
+    
+    "The result of adding this number to the given 
+     [[Integer]]."
+    shared actual Whole plusInteger(Integer integer) {
+        return WholeImpl(this.implementation.add(fromLong(integer)));
     }
     
     /*shared actual CastValue castTo<CastValue>() {
