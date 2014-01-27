@@ -6,7 +6,6 @@ import java.lang {
     Single=Float,
     Double,
     JavaString=String,
-    arrays,
     FloatArray,
     DoubleArray,
     ByteArray,
@@ -24,7 +23,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     switch (array)
     case (is Array<Byte>) {
         value size = array.size;
-        value nativeArray = arrays.asByteArray(array);
+        value nativeArray = javaByteArray(array);
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
@@ -35,7 +34,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     }
     case (is Array<Short>) {
         value size = array.size;
-        value nativeArray = arrays.asShortArray(array);
+        value nativeArray = javaShortArray(array);
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
@@ -46,7 +45,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     }
     case (is Array<Int>) {
         value size = array.size;
-        value nativeArray = arrays.asIntArray(array);
+        value nativeArray = javaIntArray(array);
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
@@ -57,7 +56,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     }
     case (is Array<Long>) {
         value size = array.size;
-        value nativeArray = arrays.asLongArray(array);
+        value nativeArray = javaLongArray(array);
         value result = LongArray(size);
         nativeArray.copyTo(result);
         return result.integerArray;
@@ -108,7 +107,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
     switch (array)
     case (is Array<Single>) {
         value size = array.size;
-        value nativeArray = arrays.asFloatArray(array);
+        value nativeArray = javaFloatArray(array);
         value result = DoubleArray(size);
         variable value i=0;
         while (i<size) {
@@ -119,7 +118,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
     }
     case (is Array<Double>) {
         value size = array.size;
-        value nativeArray = arrays.asDoubleArray(array);
+        value nativeArray = javaDoubleArray(array);
         value result = DoubleArray(size);
         nativeArray.copyTo(result);
         return result.floatArray;
