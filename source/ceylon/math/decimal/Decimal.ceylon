@@ -1,7 +1,14 @@
-import ceylon.math.whole { Whole }
+import ceylon.math.whole {
+    Whole
+}
 
-import java.lang { NumberFormatException }
-import java.math { BigInteger, BigDecimal }
+import java.lang {
+    NumberFormatException
+}
+import java.math {
+    BigInteger,
+    BigDecimal
+}
 
 shared class DividedWithRemainder(divided, remainder) {
     shared Decimal divided;

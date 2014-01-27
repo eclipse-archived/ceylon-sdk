@@ -1,13 +1,12 @@
 import java.math {
     BigInteger {
         jzero=ZERO,
-        jone=ONE,
-        fromLong=valueOf
+        jone=ONE
     }
 }
 
 class WholeImpl(BigInteger num)
-        satisfies Whole { //& Castable<Whole|Decimal>
+        satisfies Whole {
 
     shared actual BigInteger implementation = num;
 
@@ -84,125 +83,98 @@ class WholeImpl(BigInteger num)
     shared actual Boolean equals(Object other) {
         if (is WholeImpl other) {
             return implementation.equals(other.implementation);
+        } else {
+            return false;
         }
-        return false;
     }
 
     shared actual Comparison compare(Whole other) {
-        if (is WholeImpl other) {
-            Integer cmp = implementation
-                    .compareTo(other.implementation);
-            if (cmp > 0) {
-                return larger;
-            } else if (cmp < 0) {
-                return smaller;
-            } else {
-                return equal;
-            }
+        assert (is WholeImpl other);
+        Integer cmp = implementation
+                .compareTo(other.implementation)
+                .sign;
+        switch (cmp)
+        case (1) {
+            return larger;
+        } case (-1) {
+            return smaller;
+        } else {
+            return equal;
         }
-        throw;
     }
 
     shared actual WholeImpl plus(Whole other) {
-        if (is WholeImpl other) {
-            return WholeImpl(implementation
-                    .add(other.implementation));
-        }
-        throw;
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .add(other.implementation));
     }
 
     shared actual WholeImpl minus(Whole other) {
-        if (is WholeImpl other) {
-            return WholeImpl(implementation
-                    .subtract(other.implementation));
-        }
-        throw;
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .subtract(other.implementation));
     }
 
     shared actual WholeImpl times(Whole other) {
-        if (is WholeImpl other) {
-            return WholeImpl(implementation
-                    .multiply(other.implementation));
-        }
-        throw;
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .multiply(other.implementation));
     }
 
     shared actual WholeImpl divided(Whole other) {
-        if (is WholeImpl other) {
-            return WholeImpl(implementation
-                    .divide(other.implementation));
-        }
-        throw;
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .divide(other.implementation));
     }
 
     shared actual WholeImpl remainder(Whole other) {
-        if (is WholeImpl other) {
-            return WholeImpl(implementation
-                    .remainder(other.implementation));
-        }
-        throw;
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .remainder(other.implementation));
     }
 
     shared actual Whole power(Whole other) {
-        if (is WholeImpl other) {
-            if (this == -oneImpl) {
-                if (other % twoImpl == zeroImpl) {
-                    return oneImpl;
-                } else {
-                    return -oneImpl;
-                }
-            } else if (this == oneImpl) {
+        assert (is WholeImpl other);
+        if (this == -oneImpl) {
+            if (other % twoImpl == zeroImpl) {
                 return oneImpl;
+            } else {
+                return -oneImpl;
             }
-            if (other < zeroImpl) {
-                throw Exception("Unsupported power `` this 
-                        ``**`` other ``");
-            } else if (other == 0) {
-                return oneImpl;
-            } else if (other > maxIntImpl) {
-                throw Exception("Unsupported power `` this 
-                        ``**`` other ``");
-            }
-            return WholeImpl(implementation
-                    .pow(other.implementation.intValue()));
+        } else if (this == oneImpl) {
+            return oneImpl;
         }
-        throw;
+        if (other < zeroImpl) {
+            throw Exception("Unsupported power `` this 
+            ``**`` other ``");
+        } else if (other == 0) {
+            return oneImpl;
+        } else if (other > maxIntImpl) {
+            throw Exception("Unsupported power `` this 
+            ``**`` other ``");
+        }
+        return WholeImpl(implementation
+                .pow(other.implementation.intValue()));
     }
 
     shared actual Whole powerRemainder(Whole exponent, 
                                        Whole modulus) {
-        if (is WholeImpl exponent) {
-            if (is WholeImpl modulus) {
-                return WholeImpl(implementation
-                        .modPow(exponent.implementation, 
-                                modulus.implementation));
-            }
-        }
-        throw;
+        assert (is WholeImpl exponent, is WholeImpl modulus);
+        return WholeImpl(implementation
+                .modPow(exponent.implementation, 
+                        modulus.implementation));
     }
     
     shared actual Integer integerValue {
-        // See https://github.com/ceylon/ceylon.language/issues/92#issuecomment-7964218
-        throw;
+        return implementation.longValue();
     }
     
-    "The result of multiplying this number by the given 
-     [[Integer]]."
-    shared actual Whole timesInteger(Integer integer) {
-        return WholeImpl(this.implementation.multiply(fromLong(integer)));
-    }
-    
-    "The result of adding this number to the given 
-     [[Integer]]."
     shared actual Whole plusInteger(Integer integer) {
-        return WholeImpl(this.implementation.add(fromLong(integer)));
+        return WholeImpl(implementation.add(BigInteger.valueOf(integer)));
     }
     
-    /*shared actual CastValue castTo<CastValue>() {
-        // TODO what do I do here?
-        return bottom;
-        //return this;
-        //return Decimal(BigDecimal(this.val));
-    }*/
-
+    shared actual Whole timesInteger(Integer integer) {
+        return WholeImpl(implementation.multiply(BigInteger.valueOf(integer)));
+    }
+    
 }
