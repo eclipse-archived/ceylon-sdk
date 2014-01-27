@@ -6,6 +6,7 @@ import java.math {
     BigInteger,
     BigDecimal
 }
+
 "The number `number` converted to a `Decimal`."
 // TODO: Document peculiarities of passing a Float or switch 
 //       to using valueOf(double)
