@@ -1,4 +1,3 @@
-
 "Performs an arbitrary calcuation with the given rounding used 
  implicity when arithmetic operators are applied to `Decimal` 
  operands.
