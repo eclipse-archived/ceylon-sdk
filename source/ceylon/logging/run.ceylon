@@ -1,5 +1,13 @@
-"Run the module `ceylon.logging`."
+Logger myLogger = logger(`package ceylon.logging`);
+
 shared void run() {
-    addLogWriter((Priority p, Category c, String m) => print(p.string + " " + m));
-    logger(`package ceylon.logging`).error("Something bad happened!");
+    addLogWriter(void (Priority p, Category c, String m, Exception? e) {
+        print("[``system.milliseconds``] ``p.string`` ``m``");
+        if (exists e) {
+            e.printStackTrace();
+        }
+    });
+    myLogger.error("Something bad happened!");
+    myLogger.trace("Almost done");
+    myLogger.info("Terminating!");
 }
