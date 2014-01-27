@@ -21,19 +21,20 @@ public final class javaObjectArray_ {
     private javaObjectArray_() {}
     
     /**
-     * Cast a Ceylon <code>Array&lt;T&gt;</code> to a Java <code>ObjectArray&lt;T&gt;</code>,
-     * that is, to <code>T[]</code>, preserving the identity of the given array. 
+     * Cast a Ceylon <code>Array&lt;T&gt;</code> to a Java 
+     * <code>ObjectArray&lt;T&gt;</code>, that is, to <code>T[]</code>, 
+     * preserving the identity of the given array. 
      * 
+     * @throws AssertionException if the given array does not 
+     *         use a Java object array to store its elements
      * @see ObjectArray
      */
+    @SuppressWarnings("unchecked")
     public static <T> T[] javaObjectArray(@Ignore TypeDescriptor $reifiedT, 
             @TypeInfo("ceylon.language::Array<T|ceylon.language::Null>") 
             @Name("array") Array<T> array){
-        // simplest is same underlying type
         if(array.toArray() instanceof java.lang.Object[]){
-            @SuppressWarnings("unchecked")
-            T[] src = (T[]) array.toArray();
-            return src;
+            return (T[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

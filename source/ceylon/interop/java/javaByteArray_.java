@@ -26,10 +26,8 @@ public final class javaByteArray_ {
      * @see ByteArray
      */
     public static byte[] javaByteArray(@Name("array") Array<java.lang.Byte> array){
-        // simplest is same underlying type
         if(array.toArray() instanceof byte[]){
-            byte[] src = (byte[]) array.toArray();
-            return src;
+            return (byte[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }

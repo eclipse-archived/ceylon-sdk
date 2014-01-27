@@ -30,10 +30,8 @@ public final class javaBooleanArray_ {
     public static boolean[] javaBooleanArray(@Name("array")
     @TypeInfo("ceylon.language::Array<ceylon.language::Boolean>|ceylon.language::Array<java.lang::Boolean>")
     Array array){
-        // simplest is same underlying type
         if(array.toArray() instanceof boolean[]){
-            boolean[] src = (boolean[]) array.toArray();
-            return src;
+            return (boolean[]) array.toArray();
         }
         throw new AssertionException("Invalid source array type: "+array.toArray());
     }
