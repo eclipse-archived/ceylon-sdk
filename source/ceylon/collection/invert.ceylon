@@ -1,10 +1,7 @@
 "Invert a [[Map]], producing a map from items to sequences 
  of keys. Since various keys in the [[original map|map]] may 
  map to the same item, the resulting map contains a sequence 
- of keys for each distinct item.
- 
- (This function is a replacement for the deprecated 
- attribute [[Map.inverse]].)"
+ of keys for each distinct item."
 Map<Item,[Key+]> invert<Key,Item>(Map<Key,Item> map) 
         given Key satisfies Object
         given Item satisfies Object {
