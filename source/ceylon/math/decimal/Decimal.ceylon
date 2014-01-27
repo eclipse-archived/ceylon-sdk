@@ -2,52 +2,10 @@ import ceylon.math.whole {
     Whole
 }
 
-import java.lang {
-    NumberFormatException
-}
-import java.math {
-    BigInteger,
-    BigDecimal
-}
-
 shared class DividedWithRemainder(divided, remainder) {
     shared Decimal divided;
     shared Decimal remainder;
-}
-
-"Performs an arbitrary calcuation with the given rounding used 
- implicity when arithmetic operators are applied to `Decimal` 
- operands.
- 
- During a call to this method the `Decimal` operators
- `+`, `-`, `*`, `/` and `^` (or equivalently, the methods 
- `plus()`, `minus()`, `times()`, `divided()`, and `power()`)
- will implicitly use the given rounding. The behaviour of all 
- other `Decimal` methods are unchanged during a call to this 
- function.
- 
- The implicit rounding will only take effect on the current 
- thread. The `calculate()` function may itself call 
- `implicitlyRounded()` to apply a different implicit rounding 
- for a sub-calculation."
-see(`value implicitRounding`)
-shared Decimal implicitlyRounded(Decimal calculate(), Rounding rounding) {
-    Rounding? prev = defaultRounding.get();
-    try {
-        defaultRounding.set(rounding);
-        return calculate();
-    } finally {
-        defaultRounding.set(prev);
-    }
-}
-
-"The rounding currently being used implicitly by the `Decimal` 
- operators `+`, `-`, `*`, `/` and `^` (or equivalently, the 
- methods `plus()`, `minus()`, `times()`, `divided()`, and 
- `power()`)."
-see(`function implicitlyRounded`)
-shared Rounding? implicitRounding {
-    return defaultRounding.get();
+    shared [Decimal,Decimal] pair => [divided,remainder];
 }
 
 "A decimal floating point number. This class provides support 
@@ -62,8 +20,7 @@ see(`class Rounding`)
 see(`value unlimitedPrecision`)
 shared interface Decimal
         of DecimalImpl
-        satisfies //Castable<Decimal> &
-                  Scalar<Decimal> & 
+        satisfies Scalar<Decimal> & 
                   Exponentiable<Decimal,Integer> {
 
     "The platform-specific implementation object, if any. This 
@@ -222,55 +179,3 @@ shared interface Decimal
 
 }
 
-"The number `number` converted to a `Decimal`."
-// TODO: Document peculiarities of passing a Float or switch 
-//       to using valueOf(double)
-shared Decimal decimalNumber(Whole|Integer|Float number, 
-                             Rounding? rounding = null) {
-    BigDecimal val;
-    switch(number)
-    case(is Whole) {
-        if (is RoundingImpl rounding) {
-            Object? bi = number.implementation;
-            if (is BigInteger bi) {
-                val = BigDecimal(bi).plus(rounding.implementation);
-            } else {
-                throw;
-            }
-        } else {
-            Object? bi = number.implementation;
-            if (is BigInteger bi) {
-                val = BigDecimal(bi);
-            } else {
-                throw;
-            }
-        }
-    }
-    case(is Integer) {
-        if (is RoundingImpl rounding) {
-            val = BigDecimal(number, rounding.implementation);
-        } else {
-            val = BigDecimal(number);
-        }
-    }
-    case(is Float) {
-        if (is RoundingImpl rounding) {
-            val = BigDecimal(number, rounding.implementation);
-        } else {
-            val = BigDecimal(number);
-        }
-    }
-    return DecimalImpl(val);
-}
-
-"The `Decimal` repesented by the given string, or `null` 
- if the given string does not represent a `Decimal`."
-shared Decimal? parseDecimal(String str) {
-    BigDecimal bd;
-    try {
-        bd = BigDecimal(str);
-    } catch (NumberFormatException e) {
-        return null;
-    }
-    return DecimalImpl(bd);
-}

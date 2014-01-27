@@ -1,11 +1,7 @@
-import java.lang { NumberFormatException }
-import java.math { BigInteger { fromLong=valueOf } }
-
 "An arbitrary precision integer."
-shared interface Whole of WholeImpl
-        //extends IdentifiableObject()
-        satisfies //Castable<Whole|Decimal> &
-                  Integral<Whole> & Scalar<Whole> &
+shared interface Whole 
+        of WholeImpl
+        satisfies Integral<Whole> &
                   Exponentiable<Whole, Whole> {
 
     "The platform-specific implementation object, if any. 
@@ -37,42 +33,6 @@ shared interface Whole of WholeImpl
                                        Whole modulus);
 }
 
-"The `Whole` repesented by the given string, or `null` 
- if the given string does not represent a `Whole`."
-shared Whole? parseWhole(String num) {
-    BigInteger bi;
-    try {
-        //TODO: Use something more like the Ceylon literal 
-        //      format
-        bi = BigInteger(num);
-    } catch (NumberFormatException e) {
-        return null;
-    }
-    return WholeImpl(bi);
-}
-
-"The `number.integer` converted to a `Whole`."
-shared Whole wholeNumber(Number number) {
-    Integer int = number.integer;
-    if (int == 0) {
-        return zeroImpl;
-    } else if (int == 1) {
-        return oneImpl;
-    } else {
-        return WholeImpl(fromLong(int));
-    }
-}
-
-"Converts a platform-specific implementation object to a 
- `Whole` instance. This is provided for interoperation 
- with the runtime platform."
-//see(Whole.implementation)
-shared Whole fromImplementation(Object implementation) {
-    if(is BigInteger implementation) {
-        return WholeImpl(implementation);
-    }
-    throw;
-}
 
 /*
 "The greatest common divisor of the arguments."

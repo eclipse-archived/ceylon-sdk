@@ -1,4 +1,9 @@
-import java.lang { Math { jmin=min, jmax=max } }
+import java.lang {
+    Math {
+        jmin=min,
+        jmax=max
+    }
+}
 
 "The smaller of the two arguments."
 see(`function largest`)

@@ -1,4 +1,6 @@
-import java.lang { Math { jsin=sin, jcos=cos, jtan=tan, jsinh=sinh, jcosh=cosh, jtanh=tanh, jasin=asin, jacos=acos, jatan=atan, jatan2=atan2, jhypot=hypot, jexp=exp, jlog=log, jlog10=log10, jsqrt=sqrt, jcbrt=cbrt, jrandom=random, jfloor=floor, jceiling=ceil, jrint=rint, jmin=min, jmax=max, jscalb=scalb } }
+import java.lang {
+    Math
+}
 
 "\{#0001D452} raised to the power of the argument.
  
@@ -7,7 +9,7 @@ import java.lang { Math { jsin=sin, jcos=cos, jtan=tan, jsinh=sinh, jcosh=cosh, 
  * `exp(undefined)` is `undefined`.
  "
 shared Float exp(Float num) {
-    return jexp(num);
+    return Math.exp(num);
 }
 
 "The natural logarithm (base \{#0001D452}) of the 
@@ -20,7 +22,7 @@ shared Float exp(Float num) {
  "
 see(`function log10`)
 shared Float log(Float num) {
-    return jlog(num);
+    return Math.log(num);
 }
 
 "The base 10 logarithm of the argument.
@@ -32,7 +34,7 @@ shared Float log(Float num) {
  "
 see(`function log`)
 shared Float log10(Float num) {
-    return jlog10(num);
+    return Math.log10(num);
 }
 
 "The given angle (in radians) converted to degrees."
@@ -56,7 +58,7 @@ shared Float toRadians(Float num) {
  * `sin(undefined)` is `undefined`.
  "
 shared Float sin(Float num) {
-    return jsin(num);
+    return Math.sin(num);
 }
 
 "The cosine of the given angle specified in radians.
@@ -66,7 +68,7 @@ shared Float sin(Float num) {
  * `cos(undefined)` is `undefined`.
  "
 shared Float cos(Float num) {
-    return jcos(num);
+    return Math.cos(num);
 }
 
 "The tangent of the given angle specified in radians.
@@ -78,7 +80,7 @@ shared Float cos(Float num) {
  * `tan(undefined)` is `undefined`.
  "
 shared Float tan(Float num) {
-    return jtan(num);
+    return Math.tan(num);
 }
 
 "The hyperbolic sine of the given angle specified in 
@@ -91,7 +93,7 @@ shared Float tan(Float num) {
  * `sin(undefined)` is `undefined`.
  "
 shared Float sinh(Float num) {
-    return jsinh(num);
+    return Math.sinh(num);
 }
 
 "The hyperbolic cosine of the given angle specified in 
@@ -103,7 +105,7 @@ shared Float sinh(Float num) {
  * `cosh(undefined)` is `undefined`.
  "
 shared Float cosh(Float num) {
-    return jcosh(num);
+    return Math.cosh(num);
 }
 
 "The hyperbolic tangent of the given angle specified in 
@@ -116,7 +118,7 @@ shared Float cosh(Float num) {
  * `tanh(undefined)` is `undefined`.
  "
 shared Float tanh(Float num) {
-    return jtanh(num);
+    return Math.tanh(num);
 }
 
 "The arc sine of the given number.
@@ -128,7 +130,7 @@ shared Float tanh(Float num) {
  * `asin(undefined) is `undefined`.
  "
 shared Float asin(Float num) {
-    return jasin(num);
+    return Math.asin(num);
 }
 
 "The arc cosine of the given number.
@@ -138,7 +140,7 @@ shared Float asin(Float num) {
  * `acos(undefined) is `undefined`.
  "
 shared Float acos(Float num) {
-    return jacos(num);
+    return Math.acos(num);
 }
 
 "The arc tangent of the given number.
@@ -148,7 +150,7 @@ shared Float acos(Float num) {
  * `atan(undefined)` is `undefined`.
  "
 shared Float atan(Float num) {
-    return jatan(num);
+    return Math.atan(num);
 }
 
 "The angle from converting rectangular coordinates 
@@ -274,7 +276,7 @@ shared Float atan(Float num) {
  </table>
  "
 shared Float atan2(Float y, Float x) {
-    return jatan2(y, x);
+    return Math.atan2(y, x);
 }
 
 "Returns the length of the hypotenuse of a right angle 
@@ -288,7 +290,7 @@ shared Float atan2(Float y, Float x) {
    is `undefined`.
  "
 shared Float hypot(Float x, Float y) {
-    return jhypot(x, y);
+    return Math.hypot(x, y);
 }
 
 "The positive square root of the given number. This 
@@ -302,7 +304,7 @@ shared Float hypot(Float x, Float y) {
  * `sqrt(undefined)` is `undefined`.     
  "
 shared Float sqrt(Float num) {
-    return jsqrt(num);
+    return Math.sqrt(num);
 }
 
 "The cube root of the given number. This method may be 
@@ -315,14 +317,14 @@ shared Float sqrt(Float num) {
  * `cbrt(undefined)` is `undefined`.    
  "
 shared Float cbrt(Float num) {
-    return jcbrt(num);
+    return Math.cbrt(num);
 }
 
 "A number greater than or equal to positive zero and less 
  than `1.0`, chosen pseudorandomly and (approximately) 
  uniformly distributed."
 shared Float random() {
-    return jrandom();
+    return Math.random();
 }
 
 "The largest value that is less than or equal to the 
@@ -337,7 +339,7 @@ shared Float random() {
 see(`function ceiling`)
 see(`function halfEven`)
 shared Float floor(Float num) {
-    return jfloor(num);
+    return Math.floor(num);
 }
 
 "The smallest value that is greater than or equal to the 
@@ -353,7 +355,7 @@ shared Float floor(Float num) {
 see(`function floor`)
 see(`function halfEven`)
 shared Float ceiling(Float num) {
-    return jceiling(num);
+    return Math.ceil(num);
 }
 
 "The closest value to the argument that is equal to a
@@ -369,7 +371,7 @@ shared Float ceiling(Float num) {
 see(`function floor`)
 see(`function ceiling`)
 shared Float halfEven(Float num) {
-    return jrint(num);
+    return Math.rint(num);
 }
 
 "The smaller of the two arguments.
@@ -382,7 +384,7 @@ shared Float halfEven(Float num) {
  "
 see(`function largest`)
 shared Float smallest(Float x, Float y) {
-    return jmin(x, y);
+    return Math.min(x, y);
 }
 
 "The larger of the two arguments.
@@ -395,7 +397,7 @@ shared Float smallest(Float x, Float y) {
  "
 see(`function smallest`)
 shared Float largest(Float x, Float y) {
-    return jmax(x, y);
+    return Math.max(x, y);
 }
 
 "The sum of the given values, or `0.0` if there are no 
@@ -421,5 +423,5 @@ shared Float product(Float* values) {
 "The value of `x \{#00D7} 2\{#207F}`, calculated exactly 
  for reasonable values of `n`."
 shared Float scalb(Float x, Integer n) {
-    return jscalb(x, n);
+    return Math.scalb(x, n);
 }
