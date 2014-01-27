@@ -1,65 +1,77 @@
-import ceylon.math.whole { Whole, wrapBigInteger=fromImplementation }
+import ceylon.math.whole {
+    Whole,
+    wrapBigInteger=fromImplementation
+}
 
-import java.lang { ThreadLocal }
-import java.math { MathContext, BigDecimal { bdzero=ZERO }, 
-                   JRoundingMode=RoundingMode { jDown=DOWN } }
+import java.lang {
+    ThreadLocal
+}
+import java.math {
+    MathContext,
+    BigDecimal {
+        bdzero=ZERO
+    },
+    JRoundingMode=RoundingMode {
+        jDown=DOWN
+    }
+}
 
 ThreadLocal<Rounding?> defaultRounding = ThreadLocal<Rounding?>();
 
 class DecimalImpl(BigDecimal num)
-        satisfies //Castable<Decimal> &
-                  Decimal {
+        satisfies Decimal {
 
     shared actual BigDecimal implementation = num;
 
     shared actual Decimal dividedTruncated(Decimal other, 
                                            Rounding? rounding) {
-        if (is DecimalImpl other) {
-            if (is RoundingImpl rounding) {
-                return DecimalImpl(implementation
-                        .divideToIntegralValue(other.implementation, 
-                                rounding.implementation));
-            } else if (!rounding exists) {
-                return DecimalImpl(implementation
-                        .divideToIntegralValue(other.implementation));
-            }
+        assert (is DecimalImpl other);
+        switch (rounding)
+        case (is RoundingImpl) {
+            return DecimalImpl(implementation
+                    .divideToIntegralValue(other.implementation, 
+                            rounding.implementation));
+        } case (null) {
+            return DecimalImpl(implementation
+                    .divideToIntegralValue(other.implementation));
+        } else {
+            assert (false);
         }
-        throw;
     }
     
     shared actual Decimal remainderRounded(Decimal other, 
                                            Rounding? rounding) {
-        if (is DecimalImpl other) {
-            if (is RoundingImpl rounding) {
-                return DecimalImpl(implementation
-                        .remainder(other.implementation, 
-                                rounding.implementation));
-            } else if (!rounding exists) {
-                return DecimalImpl(implementation
-                        .remainder(other.implementation));
-            }
+        assert (is DecimalImpl other);
+        switch (rounding)
+        case (is RoundingImpl) {
+            return DecimalImpl(implementation
+                    .remainder(other.implementation, 
+                            rounding.implementation));
+        } case (null) {
+            return DecimalImpl(implementation
+                    .remainder(other.implementation));
+        } else {
+            assert (false);
         }
-        throw;
     }
 
     shared actual DividedWithRemainder dividedAndRemainder(Decimal other, 
                                                            Rounding? rounding) {
-        if (is DecimalImpl other) {
-            Array<BigDecimal?> array;
-            if (is RoundingImpl rounding) {
-                array = implementation
-                        .divideAndRemainder(other.implementation, 
-                                rounding.implementation).array;
-            } else if (!rounding exists) {
-                array = implementation
-                        .divideAndRemainder(other.implementation).array;
-            } else {
-                throw;
-            }
-            return DividedWithRemainder(DecimalImpl(array[0] else bdzero), 
-                    DecimalImpl(array[1] else bdzero));
+        assert (is DecimalImpl other);
+        Array<BigDecimal?> array;
+        switch (rounding)
+        case (is RoundingImpl) {
+            array = implementation
+                    .divideAndRemainder(other.implementation, 
+            rounding.implementation).array;
+        } case (null) {
+            array = implementation
+                    .divideAndRemainder(other.implementation).array;
+        } else {
+            assert (false);
         }
-        throw;
+        return DividedWithRemainder(DecimalImpl(array[0] else bdzero), 
+                DecimalImpl(array[1] else bdzero));
     }
 
     "The precision of this decimal."
@@ -76,63 +88,57 @@ class DecimalImpl(BigDecimal num)
     }
     "This value rounded according to the given context."
     shared actual Decimal round(Rounding rounding) {
-        if (is RoundingImpl rounding) {
-            return DecimalImpl(implementation
-                    .round(rounding.implementation));
-        }
-        throw;
+        assert (is RoundingImpl rounding);
+        return DecimalImpl(implementation
+                .round(rounding.implementation));
     }
     shared actual Comparison compare(Decimal other) {
-        if (is DecimalImpl other) {
-            Integer cmp = implementation
-                    .compareTo(other.implementation);
-            if (cmp < 0) {
-                return smaller;
-            } else if (cmp > 0) {
-                return larger;
-            }
+        assert (is DecimalImpl other);
+        Integer cmp = implementation
+                .compareTo(other.implementation)
+                .sign;
+        switch (cmp)
+        case (-1) {
+            return smaller;
+        } case (1) {
+            return larger;
+        } else {
             return equal;
         }
-        throw;
     }
     shared actual Decimal divided(Decimal other) {
-        if (is DecimalImpl other) {
-            Rounding? rounding = defaultRounding.get();
-            if (exists rounding) {
-                return dividedRounded(other, rounding);
-            }
+        assert (is DecimalImpl other);
+        if (exists rounding = defaultRounding.get()) {
+            return dividedRounded(other, rounding);
+        } else {
             return DecimalImpl(implementation
                     .divide(other.implementation));
         }
-        throw;
     }
     shared actual Decimal dividedRounded(Decimal other, 
                                          Rounding? rounding) {
-         if (is DecimalImpl other) {
-            if (is RoundingImpl rounding) {
-                return DecimalImpl(implementation
-                        .divide(other.implementation, 
-                                rounding.implementation));
-            } else if (!rounding exists) {
-                return DecimalImpl(implementation
-                        .divide(other.implementation));
-            }
+        assert (is DecimalImpl other);
+        switch (rounding)
+        case (is RoundingImpl) {
+            return DecimalImpl(implementation
+                    .divide(other.implementation, 
+            rounding.implementation));
+        } case (null) {
+            return DecimalImpl(implementation
+                    .divide(other.implementation));
+        } else {
+            assert (false);
         }
-        throw;
     }
     shared actual Boolean equals(Object that) {
-        if (is DecimalImpl that) {
-            return implementation===that.implementation
+        assert (is DecimalImpl that);
+        return implementation===that.implementation
                 || implementation.compareTo(that.implementation)==0;
-        }
-        return false;
     }
     shared actual Boolean strictlyEquals(Decimal that) {
-        if (is DecimalImpl that) {
-              return implementation===that.implementation
-                  || implementation==that.implementation;
-        }
-        throw;
+        assert (is DecimalImpl that);
+        return implementation===that.implementation
+                || implementation==that.implementation;
     }
     shared actual Float float {
         return implementation.doubleValue();
@@ -151,29 +157,29 @@ class DecimalImpl(BigDecimal num)
                 .round(MathContext(implementation.scale(), jDown)));
     }
     shared actual Decimal minus(Decimal other) {
-        if (is DecimalImpl other) {
-            Rounding? rounding = defaultRounding.get();
-            if (exists rounding) {
-                return minusRounded(other, rounding);
-            }
+        assert (is DecimalImpl other);
+        if (exists rounding = defaultRounding.get()) {
+            return minusRounded(other, rounding);
+        }
+        else {
             return DecimalImpl(implementation
                     .subtract(other.implementation));
         }
-        throw;
     }
     shared actual Decimal minusRounded(Decimal other, 
                                        Rounding? rounding) {
-         if (is DecimalImpl other) {
-             if (is RoundingImpl rounding) {
-                 return DecimalImpl(implementation
-                         .subtract(other.implementation, 
-                                 rounding.implementation));
-             } else if (!rounding exists) {
-                 return DecimalImpl(implementation
-                         .subtract(other.implementation));
-             }
-        }
-        throw;
+         assert (is DecimalImpl other);
+         switch (rounding)
+         case (is RoundingImpl) {
+             return DecimalImpl(implementation
+                     .subtract(other.implementation, 
+                             rounding.implementation));
+         } case (null) {
+             return DecimalImpl(implementation
+                     .subtract(other.implementation));
+         } else {
+             assert (false);
+         }
     }
     shared actual Decimal fractionalPart {
         return minus(this.magnitude);
@@ -185,29 +191,29 @@ class DecimalImpl(BigDecimal num)
         return DecimalImpl(implementation.negate());
     }
     shared actual Decimal plus(Decimal other) {
-        if (is DecimalImpl other) {
-            Rounding? rounding = defaultRounding.get();
-            if (exists rounding) {
-                return plusRounded(other, rounding);
-            }
+        assert (is DecimalImpl other);
+        if (exists rounding = defaultRounding.get()) {
+            return plusRounded(other, rounding);
+        }
+        else {
             return DecimalImpl(implementation
                     .add(other.implementation));
         }
-        throw;
     }
     shared actual Decimal plusRounded(Decimal other, 
                                       Rounding? rounding) {
-        if (is DecimalImpl other) {
-            if (is RoundingImpl rounding) {
-                return DecimalImpl(implementation
-                        .add(other.implementation, 
-                                rounding.implementation));
-            } else if (!rounding exists) {
-                return DecimalImpl(implementation
-                        .add(other.implementation));
-            }
+        assert (is DecimalImpl other);
+        switch (rounding)
+        case (is RoundingImpl) {
+            return DecimalImpl(implementation
+                    .add(other.implementation, 
+                            rounding.implementation));
+        } case (null) {
+            return DecimalImpl(implementation
+                    .add(other.implementation));
+        } else {
+            assert (false);
         }
-        throw;
     }
     shared actual Boolean positive {
         return implementation.signum() > 0;
@@ -216,25 +222,26 @@ class DecimalImpl(BigDecimal num)
         return this;
     }
     shared actual Decimal power(Integer other) {
-        Rounding? rounding = defaultRounding.get();
-        if (exists rounding) {
+        if (exists rounding = defaultRounding.get()) {
             return powerRounded(other, rounding);
-        }
-        if (other.sign < 0) {
+        } else if (other.sign < 0) {
             throw Exception("Negative powers are not supported with unlimited precision");
+        } else {
+            // TODO Special cases
+            return DecimalImpl(implementation.pow(other));
         }
-        // TODO Special cases
-        return DecimalImpl(implementation.pow(other));
     }
     shared actual Decimal powerRounded(Integer other, 
                                        Rounding? rounding) {
-        if (is RoundingImpl rounding) {
+        switch (rounding)
+        case (is RoundingImpl) {
             return DecimalImpl(implementation
                     .pow(other, rounding.implementation));
-        } else if (!rounding exists) {
+        } case (null) {
             return DecimalImpl(implementation.pow(other));
+        } else {
+            assert (false);
         }
-        throw;
     }
     shared actual Integer sign {
         return this.implementation.signum();
@@ -243,37 +250,39 @@ class DecimalImpl(BigDecimal num)
         return this.implementation.string;
     }
     shared actual Decimal times(Decimal other) {
-        if (is DecimalImpl other) {
-            Rounding? rounding = defaultRounding.get();
-            if (exists rounding) {
-                return timesRounded(other, rounding);
-            }
-            return DecimalImpl(implementation
-                    .multiply(other.implementation));
+        assert (is DecimalImpl other);
+        if (exists rounding = defaultRounding.get()) {
+            return timesRounded(other, rounding);
         }
-        throw;
+        return DecimalImpl(implementation
+                .multiply(other.implementation));
     }
     shared actual Decimal timesRounded(Decimal other, 
                                        Rounding? rounding) {
-        if (is DecimalImpl other) {
-            if (is RoundingImpl rounding) {
-                return DecimalImpl(implementation
-                        .multiply(other.implementation, 
-                                rounding.implementation));
-            } else if (!rounding exists) {
-                return DecimalImpl(implementation
-                        .multiply(other.implementation));
-            }
+        assert (is DecimalImpl other);
+        switch (rounding)
+        case (is RoundingImpl) {
+            return DecimalImpl(implementation
+                    .multiply(other.implementation, 
+            rounding.implementation));
+        } case (null) {
+            return DecimalImpl(implementation
+                    .multiply(other.implementation));
+        } else {
+            assert (false);
         }
-        throw;
     }
     
     shared actual Decimal wholePart {
         return DecimalImpl(BigDecimal(this.implementation.toBigInteger()));
     }
     
-    /*shared actual Decimal castTo<Decimal>() {
-        // TODO What do I do here return this;
-        throw;
-    }*/
+    shared actual Decimal plusInteger(Integer integer) {
+        return DecimalImpl(implementation.add(BigDecimal.valueOf(integer)));
+    }
+    
+    shared actual Decimal timesInteger(Integer integer) {
+        return DecimalImpl(implementation.multiply(BigDecimal.valueOf(integer)));
+    }
+    
 }
