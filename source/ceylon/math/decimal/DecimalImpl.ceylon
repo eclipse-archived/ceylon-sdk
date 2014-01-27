@@ -3,9 +3,6 @@ import ceylon.math.whole {
     wrapBigInteger=fromImplementation
 }
 
-import java.lang {
-    ThreadLocal
-}
 import java.math {
     MathContext,
     BigDecimal {
@@ -16,7 +13,6 @@ import java.math {
     }
 }
 
-ThreadLocal<Rounding?> defaultRounding = ThreadLocal<Rounding?>();
 
 class DecimalImpl(BigDecimal num)
         satisfies Decimal {

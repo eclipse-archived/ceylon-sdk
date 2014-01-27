@@ -136,7 +136,7 @@ class WholeImpl(BigInteger num)
     shared actual Whole power(Whole other) {
         assert (is WholeImpl other);
         if (this == -oneImpl) {
-            if (other % twoImpl == zeroImpl) {
+            if (other % two == zeroImpl) {
                 return oneImpl;
             } else {
                 return -oneImpl;
@@ -149,7 +149,7 @@ class WholeImpl(BigInteger num)
             ``**`` other ``");
         } else if (other == 0) {
             return oneImpl;
-        } else if (other > maxIntImpl) {
+        } else if (other > intMax) {
             throw Exception("Unsupported power `` this 
             ``**`` other ``");
         }

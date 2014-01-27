@@ -1,19 +1,9 @@
-import java.math { JRoundingMode=RoundingMode { jDown=\iDOWN, jUp=\iUP,
-                                                jFloor=\iFLOOR, 
-                                                jCeiling=\iCEILING,
-                                                jHalfDown=\iHALF_DOWN, 
-                                                jHalfUp=\iHALF_UP,
-                                                jHalfEven=\iHALF_EVEN,
-                                                jUnnecessary=\iUNNECESSARY },
-                   MathContext }
-
 "A strategy for rounding the result of an operation
  on two `Decimal`s."
 shared abstract class Mode() 
         of floor | ceiling | 
            halfUp | halfDown | halfEven | 
-           down | up | unnecessary {
-}
+           down | up | unnecessary {}
 
 "Round towards negative infinity."
 shared object floor extends Mode() {}
@@ -43,49 +33,40 @@ shared object up extends Mode() {}
  exception to be thrown if it is."
 shared object unnecessary extends Mode() {}
 
+"The rounding currently being used implicitly by the `Decimal` 
+ operators `+`, `-`, `*`, `/` and `^` (or equivalently, the 
+ methods `plus()`, `minus()`, `times()`, `divided()`, and 
+ `power()`)."
+see(`function implicitlyRounded`)
+shared Rounding? implicitRounding => defaultRounding.get();
+
 "Holds precision and rounding information for use in 
  decimal arithmetic. A precision of `0` means unlimited 
  precision."
-throws(`class Exception`, "The precision is negative.")
+throws(`class AssertionException`, 
+        "if the given [[precision]] is negative.")
 see(`interface Decimal`)
 see(`function round`)
 see(`value unlimitedPrecision`)
-shared abstract class Rounding(precision, mode) of RoundingImpl {
-    if (precision < 0) {
-        throw Exception("Precision cannot be negative");
-    }
-
+shared abstract class Rounding(precision, mode) 
+        of RoundingImpl {
+    "Precision cannot be negative"
+    assert (precision >= 0);
+    
     "The precision to apply when rounding."
     shared Integer precision;
-
+    
     "The kind of rounding to apply."
     shared Mode mode;
-
+    
     shared actual String string {
         if (precision == 0) {
             return "unlimited";
         }
         return "`` precision `` `` mode ``";
     }
-
+    
     shared formal Object? implementation;
-}
-
-class RoundingImpl(Integer precision, Mode mode) 
-        extends Rounding(precision, mode) {
-    JRoundingMode jmode;
-    switch(mode)
-    case (floor) {jmode = jFloor;}
-    case (ceiling) {jmode = jCeiling;}
-    case (up) {jmode = jUp;}
-    case (down) {jmode = jDown;}
-    case (halfUp) {jmode = jHalfUp;}
-    case (halfDown) {jmode = jHalfDown;}
-    case (halfEven) {jmode = jHalfEven;}
-    case (unnecessary) {jmode = jUnnecessary;}
-
-    shared actual MathContext implementation = 
-            MathContext(precision, jmode);
 }
 
 "Creates a rounding with the given precision and mode."
@@ -93,6 +74,6 @@ shared Rounding round(Integer precision, Mode mode) {
     return RoundingImpl(precision, mode);
 }
 
-"Unlimited precision"
+"Unlimited precision."
 shared Rounding unlimitedPrecision = RoundingImpl(0, halfUp);
 
