@@ -264,6 +264,8 @@ shared class Sql(newConnection) {
         "
         shared Value singleValue<Value>(Object* arguments) {
             value rows = execute(*arguments);
+            "SQL query must return a single row containing a 
+             single value of the given type"
             assert(exists row = rows[0], 
                    rows.size == 1, 
                    row.size == 1, 
