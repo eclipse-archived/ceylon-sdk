@@ -5,9 +5,10 @@
    [[addLogWriter]].
    
        addLogWriter(void (Priority p, Category c, String m, Exception? e) {
+           value print = p<=info then process.writeLine else process.writeError;
            print("[``system.milliseconds``] ``p.string`` ``m``");
            if (exists e) {
-               e.printStackTrace();
+               printStackTrace(e, print);
            }
        });
    
@@ -18,7 +19,7 @@
        Logger logger = logger(`module hello`);
    
    The methods [[Logger.fatal]], [[Logger.error]], 
-   [[Logger.warn]], [[Logger.info]], [[Logger.debug]]`, and 
+   [[Logger.warn]], [[Logger.info]], [[Logger.debug]], and 
    [[Logger.trace]] write log messages with various
    [[priorities|Priority]].
    
@@ -50,7 +51,14 @@
    Alternatively, we can assign an explicit priority to a
    specific `Logger` by assigning to [[Logger.priority]].
    
-       logger(`module hello`).priority = debug;"""
+       logger(`module hello`).priority = debug;
+   
+   For integration with other logging libraries, it is
+   possible to completely replace the [[logger]] function
+   with a custom function for producing `Logger`s.
+   
+       logger = (Category category)
+           => JDKLoggerImpl(JDKLogger.getLogger(category.qualifiedName));"""
 module ceylon.logging "1.0.0" {
     import ceylon.collection "1.0.0";
 }

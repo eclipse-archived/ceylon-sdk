@@ -40,6 +40,7 @@ test void run() {
     //jdkLogger.info("hello world");
     variable value count = 0;
     addLogWriter(void (Priority p, Category c, String m, Exception? e) {
+        value print = p<=info then process.writeLine else process.writeError;
         print("[``system.milliseconds``] ``p.string`` ``m``");
         if (exists e) {
             e.printStackTrace();
