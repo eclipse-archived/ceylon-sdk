@@ -15,10 +15,14 @@ import java.lang {
     ObjectArray
 }
 
+"An array whose elements can be represented as an 
+ `Array<Integer>`."
 shared alias IntegerArrayLike 
-        => Array<Byte>|Array<Short>|Array<Int>|Array<Long>
-        |  ByteArray | ShortArray | IntArray | LongArray;
+        => Array<Byte> | Array<Short> | Array<Int> | Array<Long>
+        |  ByteArray   | ShortArray   | IntArray   | LongArray;
 
+"Create an `Array<Integer>` with the same elements as the
+ given array."
 shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     switch (array)
     case (is Array<Byte>) {
@@ -99,10 +103,14 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     }
 }
 
+"An array whose elements can be represented as an 
+ `Array<Float>`."
 shared alias FloatArrayLike 
-        => Array<Single>|Array<Double>
-        |  FloatArray|DoubleArray;
+        => Array<Single> | Array<Double>
+        |  FloatArray    | DoubleArray;
 
+"Create an `Array<Float>` with the same elements as the
+ given array."
 shared Array<Float> toFloatArray(FloatArrayLike array) {
     switch (array)
     case (is Array<Single>) {
@@ -141,10 +149,73 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
     }
 }
 
-shared alias StringArray
-        => ObjectArray<String?>|ObjectArray<String>
-        |  Array<String>|Array<String?>;
-shared ObjectArray<JavaString> toNativeJavaStringArray(StringArray array) {
+
+//Array<JavaString?> toJavaStringCeylonArray(StringArrayLike array)
+//        => toJavaStringArray(array).array;
+
+"An array whose elements can be represented as an 
+ `Array<String?>`."
+shared alias StringArrayLike 
+        => ObjectArray<JavaString?> | ObjectArray<JavaString>
+        |  Array<JavaString?>       | Array<JavaString>;
+
+"Create an `Array<String?>` with the same elements as the
+ given array."
+shared Array<String?> toStringArray(StringArrayLike array) {
+    ObjectArray<String> javaArray;
+    switch (array)
+    case (is ObjectArray<JavaString?>) {
+        value size = array.size;
+        value result = ObjectArray<String>(size);
+        variable value i=0;
+        while (i<size) {
+            result.set(i, array.get(i)?.string);
+            i++;
+        }
+        javaArray = result;
+    }
+    case (is ObjectArray<JavaString>) {
+        value size = array.size;
+        value result = ObjectArray<String>(size);
+        variable value i=0;
+        while (i<size) {
+            result.set(i, array.get(i)?.string);
+            i++;
+        }
+        javaArray = result;
+    }
+    case (is Array<JavaString?>) {
+        value size = array.size;
+        value result = ObjectArray<String>(size);
+        variable value i=0;
+        while (i<size) {
+            result.set(i, array.get(i)?.string);
+            i++;
+        }
+        javaArray = result;
+    }
+    case (is Array<JavaString>) {
+        value size = array.size;
+        value result = ObjectArray<String>(size);
+        variable value i=0;
+        while (i<size) {
+            result.set(i, array.get(i)?.string);
+            i++;
+        }
+        javaArray = result;
+    }
+    return javaArray.array;
+}
+
+"An array whose elements can be represented as an 
+ `ObjectArray<JavaString>`."
+shared alias JavaStringArrayLike
+        => ObjectArray<String?> | ObjectArray<String>
+        |  Array<String>        | Array<String?>;
+
+"Create an `ObjectArray<JavaString>` with the same elements 
+ as the given array."
+shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
     switch (array)
     case (is ObjectArray<String?>) {
         value size = array.size;
@@ -193,57 +264,3 @@ shared ObjectArray<JavaString> toNativeJavaStringArray(StringArray array) {
         return result;
     }
 }
-
-Array<JavaString?> toJavaStringArray(StringArray array)
-        => toNativeJavaStringArray(array).array;
-
-shared alias JavaStringArray 
-        => ObjectArray<JavaString?>|ObjectArray<JavaString>
-        |  Array<JavaString?>|Array<JavaString>;
-
-ObjectArray<String> toNativeStringArray(JavaStringArray array) {
-    switch (array)
-    case (is ObjectArray<JavaString?>) {
-        value size = array.size;
-        value result = ObjectArray<String>(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, array.get(i)?.string);
-            i++;
-        }
-        return result;
-    }
-    case (is ObjectArray<JavaString>) {
-        value size = array.size;
-        value result = ObjectArray<String>(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, array.get(i)?.string);
-            i++;
-        }
-        return result;
-    }
-    case (is Array<JavaString?>) {
-        value size = array.size;
-        value result = ObjectArray<String>(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, array.get(i)?.string);
-            i++;
-        }
-        return result;
-    }
-    case (is Array<JavaString>) {
-        value size = array.size;
-        value result = ObjectArray<String>(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, array.get(i)?.string);
-            i++;
-        }
-        return result;
-    }
-}
-
-shared Array<String?> toStringArray(JavaStringArray array)
-        => toNativeStringArray(array).array;
