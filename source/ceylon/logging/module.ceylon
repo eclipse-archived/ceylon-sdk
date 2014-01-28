@@ -13,7 +13,7 @@
        });
    
    Log messages are written to a [[Logger]]. A canonical 
-   `Logger` instance for a package of module may be obtained 
+   `Logger` instance for a package or module may be obtained 
    by calling [[logger]].
    
        Logger logger = logger(`module hello`);
