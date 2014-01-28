@@ -1,12 +1,11 @@
 import ceylon.io.buffer { Buffer, CharacterBuffer, newCharacterBufferWithData }
-import java.nio { JavaCharBuffer=CharBuffer{ allocateJavaCharBuffer = allocate } }
-import java.lang { CharArray }
+import java.nio { JavaIntBuffer=IntBuffer{ allocateJavaIntBuffer = allocate } }
 
-"Represents a mutable [[Character]] [[Buffer]] backed by a Java CharBuffer."
+"Represents a mutable [[Character]] [[Buffer]] backed by a Java IntBuffer."
 by("Stéphane Épardaud", "Stephen Crawley")
 shared class CharacterBufferImpl(Integer initialCapacity) extends CharacterBuffer(){
-	variable JavaCharBuffer buf = allocateJavaCharBuffer(initialCapacity);
-	shared JavaCharBuffer underlyingBuffer {
+	variable JavaIntBuffer buf = allocateJavaIntBuffer(initialCapacity);
+	shared JavaIntBuffer underlyingBuffer {
 		return buf;
 	}
 	
@@ -26,10 +25,10 @@ shared class CharacterBufferImpl(Integer initialCapacity) extends CharacterBuffe
 		buf.position(position);
 	}
 	shared actual Character get() {
-		return buf.get();
+		return buf.get().character;
 	}
 	shared actual void put(Character char) {
-		buf.put(char);
+		buf.put(char.integer);
 	}
 	shared actual void clear() {
 		buf.clear();
@@ -46,7 +45,7 @@ shared class CharacterBufferImpl(Integer initialCapacity) extends CharacterBuffe
 			// FIXME: type
 			throw;
 		}
-		JavaCharBuffer dest = allocateJavaCharBuffer(newSize);
+		JavaIntBuffer dest = allocateJavaIntBuffer(newSize);
 		// save our position and limit
 		value position = min([this.position, newSize]);
 		Integer limit;
@@ -80,7 +79,7 @@ shared class CharacterBufferImpl(Integer initialCapacity) extends CharacterBuffe
 		value result = arrayOfSize<Character>(size, ' ');
 		variable value i=0;
 		while (i<size) {
-			result.set(i, nativeArray.get(i));
+			result.set(i, nativeArray.get(i).character);
 			i++;
 		}
 		return result;
