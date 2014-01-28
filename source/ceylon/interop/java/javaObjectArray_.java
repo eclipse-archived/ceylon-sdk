@@ -21,7 +21,7 @@ public final class javaObjectArray_ {
     private javaObjectArray_() {}
     
     /**
-     * Cast a Ceylon <code>Array&lt;T&gt;</code> to a Java 
+     * Cast a Ceylon <code>Array&lt;T?&gt;</code> to a Java 
      * <code>ObjectArray&lt;T&gt;</code>, that is, to <code>T[]</code>, 
      * preserving the identity of the given array. 
      * 
