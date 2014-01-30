@@ -28,17 +28,29 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import org.jboss.modules.Module;
+import org.jboss.modules.ModuleLoadException;
+import org.jboss.modules.ModuleIdentifier;
 
 public class XADSWrapperObjectFactory implements ObjectFactory {
 
-    private static Map<String, String> jdbcDrivers = new HashMap<String, String>()  {{
-        put("org.postgresql.Driver", "org.postgresql.xa.PGXADataSource");
-        put("org.h2.Driver", "org.h2.jdbcx.JdbcDataSource");
-        put("oracle.jdbc.driver.OracleDriver", "oracle.jdbc.xa.client.OracleXADataSource");
-        put("com.microsoft.sqlserver.jdbc.SQLServerDriver", "com.microsoft.sqlserver.jdbc.SQLServerXADataSource"); // no setPassword
-        put("com.mysql.jdbc.Driver", "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource");
-        put("com.ibm.db2.jcc.DB2Driver", "com.ibm.db2.jcc.DB2XADataSource"); // for DB2 version 8.2      // no setPassword
-        put("com.sybase.jdbc3.jdbc.SybDriver", "com.sybase.jdbc3.jdbc.SybXADataSource");  // no setPassword
+    private static class DriverSpec {
+        public final String module,version,dataSource;
+        DriverSpec(String module, String version, String dataSource){
+            this.module = module;
+            this.version = version;
+            this.dataSource = dataSource;
+        }
+    }
+
+    private static Map<String, DriverSpec> jdbcDrivers = new HashMap<String, DriverSpec>()  {{
+        put("org.postgresql.Driver", new DriverSpec(null, null, "org.postgresql.xa.PGXADataSource"));
+        put("org.h2.Driver", new DriverSpec("org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource"));
+        put("oracle.jdbc.driver.OracleDriver", new DriverSpec(null, null, "oracle.jdbc.xa.client.OracleXADataSource"));
+        put("com.microsoft.sqlserver.jdbc.SQLServerDriver", new DriverSpec(null, null, "com.microsoft.sqlserver.jdbc.SQLServerXADataSource")); // no setPassword
+        put("com.mysql.jdbc.Driver", new DriverSpec(null, null, "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"));
+        put("com.ibm.db2.jcc.DB2Driver", new DriverSpec(null, null, "com.ibm.db2.jcc.DB2XADataSource")); // for DB2 version 8.2      // no setPassword
+        put("com.sybase.jdbc3.jdbc.SybDriver", new DriverSpec(null, null, "com.sybase.jdbc3.jdbc.SybXADataSource"));  // no setPassword
     }};
 
     @Override
@@ -79,12 +91,23 @@ public class XADSWrapperObjectFactory implements ObjectFactory {
     public static XADSWrapper getXADataSource(String binding, String driver, String databaseName, String host, Integer port, String userName, String password)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         XADSWrapper wrapper;
-        String xaDSClassName = jdbcDrivers.get(driver);
+	DriverSpec driverSpec = jdbcDrivers.get(driver);
+        String xaDSClassName = driverSpec.dataSource;
 
-        if (xaDSClassName == null)
+        if (xaDSClassName == null || driverSpec.module == null)
             throw new RuntimeException("JDBC2 driver " + driver + " not recognised");
 
-        wrapper = new XADSWrapper(binding, driver, databaseName, host, port, xaDSClassName, userName, password);
+	// load the driver module
+	ModuleIdentifier moduleIdentifier = ModuleIdentifier.create(driverSpec.module, driverSpec.version);
+	ClassLoader moduleClassLoader;
+	try{
+	    Module module = Module.getCallerModuleLoader().loadModule(moduleIdentifier);
+	    moduleClassLoader = module.getClassLoader();
+	}catch(ModuleLoadException x){
+	    throw new RuntimeException("Failed to load module for driver " + driver, x);
+	}
+
+        wrapper = new XADSWrapper(binding, driver, databaseName, host, port, xaDSClassName, moduleClassLoader, userName, password);
 
         if( driver.equals("org.h2.Driver")) {
             wrapper.setProperty("URL", databaseName);

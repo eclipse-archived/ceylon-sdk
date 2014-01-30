@@ -69,6 +69,8 @@ module ceylon.transaction "1.0.0" {
     import java.base "7";
     import javax.naming "7";
 
+    import org.jboss.modules "1.1.3.GA";
+
     // ceylon.dbc dependencies
     import ceylon.collection "1.0.0";
     shared import ceylon.dbc "1.0.1";

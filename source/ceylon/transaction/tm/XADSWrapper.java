@@ -53,9 +53,9 @@ public class XADSWrapper implements XADataSource, Serializable, Referenceable, D
     private String password;
 
 
-    public XADSWrapper(String binding, String driver, String databaseName, String host, Integer port, String xaDSClassName, String userName, String password) {
+    public XADSWrapper(String binding, String driver, String databaseName, String host, Integer port, String xaDSClassName, ClassLoader classLoader, String userName, String password) {
         try {
-            xaDataSource = (XADataSource)Class.forName(xaDSClassName).newInstance();
+            xaDataSource = (XADataSource)classLoader.loadClass(xaDSClassName).newInstance();
             txDriverUrl = TransactionalDriver.arjunaDriver + binding;
 
             this.binding = binding;
