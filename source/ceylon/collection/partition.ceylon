@@ -34,6 +34,6 @@ shared {{Element*}*} chunk<Element>
     if (finalSegment.empty) {
         return {initialSegment, *chunk<Element>(finalSegment, len)};
     } else {
-    	return {initialSegment};
+        return {initialSegment};
     }
 }
