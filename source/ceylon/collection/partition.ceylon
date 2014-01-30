@@ -31,8 +31,8 @@ shared {{Element*}*} chunk<Element>
         ({Element*} elements, Integer len) {
     {Element*} initialSegment = elements.taking(len);
     {Element*} finalSegment = elements.skipping(len);
-    if (nonempty finalSegment) {
-	    return {initialSegment, *chunk<Element>(finalSegment, len)};
+    if (finalSegment.empty) {
+        return {initialSegment, *chunk<Element>(finalSegment, len)};
     } else {
     	return {initialSegment};
     }
