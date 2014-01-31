@@ -17,7 +17,7 @@ Boolean txnTestDo() {
     return true;
 }
 
-test
+//test
 void txnTest1() {
     UserTransaction? txn = tm.currentTransaction();
 
@@ -29,7 +29,7 @@ void txnTest2() {
     tm.transaction(txnTestDo);
 }
 
-test
+//test
 void txnTest3() {
     UserTransaction? transaction = tm.beginTransaction();
 
@@ -51,7 +51,7 @@ void txnTest3() {
     }
 }
 
-test
+//test
 void txnTest4() {
     tm.start();
 
@@ -79,7 +79,7 @@ void txnTest4() {
     tm.stop();
 }
 
-test
+//test
 void txnTest5() {
     TransactionManager? transactionManager = tm.getTransactionManager();
     assert (is TransactionManager transactionManager);

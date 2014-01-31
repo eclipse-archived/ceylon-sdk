@@ -100,7 +100,7 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
 }
 
 // Test XA transactions with one resource
-test
+//test
 void sqlTest1(Boolean doInTxn) {
     MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings2);
 
@@ -109,7 +109,6 @@ void sqlTest1(Boolean doInTxn) {
 }
 
 // Test XA transactions with multiple resources
-test
 void sqlTest2(Boolean doInTxn) {
     MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
 
@@ -122,8 +121,18 @@ void sqlTest2(Boolean doInTxn) {
     printRows("====== contents after commit:", sqlMap);
 }
 
-// same as sqlTest2 with a callable
+//test
+void sqlTest2a() {
+    sqlTest2(false);
+}
+
 test
+void sqlTest2b() {
+    sqlTest2(true);
+}
+
+// same as sqlTest2 with a callable
+//test
 void sqlTest3() {
     tm.start();
     MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
@@ -153,7 +162,7 @@ void sqlTest3() {
     printRows("====== contents after test3 commit:", sqlMap);
 }
 
-test
+//test
 void localTxnTest() {
     MutableSet<Sql> sqlSet = HashSet<Sql>();
     value ds = JdbcDataSource();
