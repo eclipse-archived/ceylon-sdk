@@ -3,7 +3,7 @@
    [[Sql]], an instance of which may be obtained for any 
    given [[javax.sql::DataSource]].
    
-       value sql = Sql(newConnectionFromDatasource(datasource));
+       value sql = Sql(newConnectionFromDataSource(dataSource));
 
    You can easily get a query result as a `Sequence` where 
    each row is a [[Map]]:
