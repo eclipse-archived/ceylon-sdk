@@ -537,8 +537,8 @@ shared class Sql(newConnection) {
         case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
         case (is BigInteger) { v = parseWhole(x.string); }
         case (is SqlTimestamp) { v = Instant(x.time).dateTime(); }
-        case (is SqlTime) { v = Instant(x.time).date(); }
-        case (is SqlDate) { v = Instant(x.time).time(); }
+        case (is SqlTime) { v = Instant(x.time).time(); }
+        case (is SqlDate) { v = Instant(x.time).date(); }
         else { v = x; }
         return columnName -> (v else SqlNull(meta.getColumnType(idx)));
     }
