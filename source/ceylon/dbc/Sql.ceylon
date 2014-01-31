@@ -4,6 +4,9 @@ import ceylon.collection {
 import ceylon.dbc {
     newConnectionFromDatasource
 }
+import ceylon.interop.java {
+    toIntegerArray
+}
 import ceylon.math.decimal {
     Decimal,
     parseDecimal
@@ -135,35 +138,53 @@ shared class Sql(newConnection) {
             }
         }
         
-        "Execute this statement in a batch with the given batch of supplied arguments,
-         returning the sequence containing the numbers of rows affected by each update in the batch."
-        shared Integer[] executeBatch(Integer batchSize, {{Object*}*} batchArguments) {
-            value connectionStatus = connection.get();
-            try {
-                value stmt = prepareStatement(connectionStatus, sql, []);
+        "Execute this statement multiple times, as a batch
+         update, once for each given sequence of arguments, 
+         returning a sequence containing the numbers of rows 
+         affected by each update in the batch."
+        shared Integer[] executeBatch({[Object*]*} batchArguments,
+                "The maximum number of inserts that will be
+                 batched into memory before being sent to
+                 the database."
+                Integer maxBatchSize=250) {
+            "maximum batch size must be strictly positive"
+            assert (maxBatchSize>0);
+            if (exists firstArgs = batchArguments.first) {
+                assert (batchArguments.fold(true, 
+                        (Boolean consistent, Object[] args) => 
+                                consistent && args.size==firstArgs.size));
+                value connectionStatus = connection.get();
                 try {
-                    value affectedRows = SequenceBuilder<Integer>();
-                    
-                    variable value i = 0;
-                    for(arguments in batchArguments) {
-                        setParameters(stmt, arguments);
-                        stmt.addBatch();
-                        
-                        i++;
-                        if( i % batchSize == 0 || i == batchArguments.size) {
-                            value results = stmt.executeBatch();
-                            affectedRows.appendAll({for(result in results.array) result.intValue()});
+                    value stmt = connectionStatus.connection()
+                            .prepareStatement(sql);
+                    value result = SequenceBuilder<Integer>();
+                    void runBatch()
+                            => result.appendAll(toIntegerArray(stmt.executeBatch()));
+                    variable value count=0;
+                    try {                    
+                        for (arguments in batchArguments) {
+                            setParameters(stmt, arguments);
+                            stmt.addBatch();
+                            if (++count>maxBatchSize) {
+                                runBatch();
+                                count=0;
+                            }
                         }
+                        if (count!=0) {
+                            runBatch();
+                        }
+                        return result.sequence;
                     }
-                    
-                    return affectedRows.sequence;
+                    finally {
+                        stmt.close();
+                    }
                 }
                 finally {
-                    stmt.close();
+                    connectionStatus.close();
                 }
             }
-            finally {
-                connectionStatus.close();
+            else {
+                return [];
             }
         }
         
@@ -172,6 +193,7 @@ shared class Sql(newConnection) {
     "Define a SQL `insert` [[statement|sql]] with parameters 
      indicated by `?` placeholders."
     shared class Insert(String sql) {
+        
         "Execute this statement with the given [[arguments]] 
          to its parameters, returning number of rows 
          inserted, and the generated keys, if any."
@@ -205,6 +227,54 @@ shared class Sql(newConnection) {
                 connectionStatus.close();
             }
         }
+        
+        "Execute this statement multiple times, as a batch
+         insert, once for each given sequence of arguments, 
+         returning a sequence containing the numbers of rows 
+         affected by each insert in the batch."
+        shared void executeBatch({[Object*]*} batchArguments,
+                "The maximum number of inserts that will be
+                 batched into memory before being sent to
+                 the database."
+                Integer maxBatchSize=250) {
+            "maximum batch size must be strictly positive"
+            assert (maxBatchSize>0);
+            if (exists firstArgs = batchArguments.first) {
+                assert (batchArguments.fold(true, 
+                (Boolean consistent, Object[] args) => 
+                        consistent && args.size==firstArgs.size));
+                value connectionStatus = connection.get();
+                try {
+                    value stmt = connectionStatus.connection()
+                            .prepareStatement(sql);
+                    value result = SequenceBuilder<Integer>();
+                    void runBatch()
+                            => result.appendAll(toIntegerArray(stmt.executeBatch()));
+                    variable value count=0;
+                    try {                    
+                        for (arguments in batchArguments) {
+                            setParameters(stmt, arguments);
+                            stmt.addBatch();
+                            if (++count>maxBatchSize) {
+                                runBatch();
+                                count=0;
+                            }
+                        }
+                        if (count!=0) {
+                            runBatch();
+                        }
+                        //TODO: generated keys?
+                    }
+                    finally {
+                        stmt.close();
+                    }
+                }
+                finally {
+                    connectionStatus.close();
+                }
+            }
+        }
+        
     }
     
     "Define a SQL callable [[statement|sql]], with 
@@ -256,12 +326,13 @@ shared class Sql(newConnection) {
             }
         }
         
-        "Executes this query with the given [[arguments]] to its parameters,
-         the query result has to be single row/single column and is mapped to the given type.
+        "Execute this query with the given [[arguments]] to 
+         its parameters, returning a single value. The query 
+         result must be single row/single column containing
+         a value assignable to the given type.
          
-             value count = sql.Select(\"select count(*) from table\").singleValue<Integer>();
-         
-        "
+             value count = sql.Select(\"select count(*) from table\")
+                     .singleValue<Integer>();"
         shared Value singleValue<Value>(Object* arguments) {
             value rows = execute(*arguments);
             "SQL query must return a single row containing a 
@@ -273,10 +344,9 @@ shared class Sql(newConnection) {
             return v;
         }        
         
-        "Execute this query with the given [[arguments]] 
-         to its parameters. The resulting instance of 
-         `Results` may be iterated, producing [[Row]]s 
-         lazily.
+        "Execute this query with the given [[arguments]] to 
+         its parameters. The resulting instance of `Results` 
+         may be iterated, producing [[Row]]s lazily.
          
          Should be instantiated using `try`:
          

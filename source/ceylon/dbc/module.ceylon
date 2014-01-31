@@ -90,5 +90,6 @@ module ceylon.dbc "1.0.0" {
     import ceylon.collection "1.0.0";
     shared import ceylon.math "1.0.0";
     import java.base "7";
+    import ceylon.interop.java "1.0.0";
     shared import java.jdbc "7";
 }
