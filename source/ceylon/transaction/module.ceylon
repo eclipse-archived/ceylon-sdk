@@ -74,4 +74,5 @@ module ceylon.transaction "1.0.0" {
     // ceylon.dbc dependencies
     import ceylon.collection "1.0.0";
     shared import ceylon.dbc "1.0.1";
+    import ceylon.interop.java "1.0.0";
 }

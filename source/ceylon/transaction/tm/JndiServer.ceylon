@@ -2,8 +2,9 @@ import org.jnp.server { Main, NamingBeanImpl }
 // guessing import
 import org.jnp.interfaces { NamingContextFactory }
 import javax.naming { InitialContext, NamingException }
-import java.lang { System { setProperty } }
+import java.lang { System { setProperty }, Thread { currentThread }, Class, ClassLoader }
 import ceylon.transaction.tm { DSHelper }
+import ceylon.interop.java { javaClassFromInstance }
 
 "Starts a JNDI server"
 by("Mike Musgrove")
@@ -19,7 +20,15 @@ shared class JndiServer(String bindAddress = "localhost", Integer port = 1099) {
 //        main.port = port;
 //        main.bindAddress = bindAddress;
 
-        namingBean.start();
+	Class<NamingBeanImpl> klass = javaClassFromInstance<NamingBeanImpl>(namingBean);
+	ClassLoader cl = klass.classLoader;
+	ClassLoader prevCl = currentThread().contextClassLoader;
+	try{
+	    currentThread().contextClassLoader = cl;
+            namingBean.start();
+	}finally{
+	    currentThread().contextClassLoader = prevCl;
+	}
 //        main.start();
     }
 
