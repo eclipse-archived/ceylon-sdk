@@ -14,6 +14,14 @@ import ceylon.math.decimal {
 import ceylon.math.whole {
     parseWhole
 }
+import ceylon.time {
+    today, Instant
+}
+import ceylon.time.internal {
+    GregorianDateTime,
+    GregorianDate,
+    TimeOfDay
+}
 
 import java.lang {
     JBoolean=Boolean,
@@ -30,7 +38,8 @@ import java.sql {
     CallableStatement,
     ResultSet,
     ResultSetMetaData,
-    Timestamp,
+    SqlTimestamp=Timestamp,
+    SqlTime=Time,
     SqlDate=Date,
     Statement {
         returnGeneratedKeys=RETURN_GENERATED_KEYS
@@ -68,24 +77,51 @@ shared class Sql(newConnection) {
         variable value i=1;
         for (argument in arguments) {
             switch (argument)
-            case (is Integer) { stmt.setLong(i,argument); }
-            case (is Boolean) { stmt.setBoolean(i,argument); }
-            case (is String)  { stmt.setString(i,argument); }
+            case (is Integer) { 
+                stmt.setLong(i,argument); 
+            }
+            case (is Boolean) { 
+                stmt.setBoolean(i,argument); 
+            }
+            case (is String)  { 
+                stmt.setString(i,argument); 
+            }
             case (is Decimal) {
                 assert (is BigDecimal bd = argument.implementation);
                 stmt.setBigDecimal(i,bd); 
             }
             case (is Date) {
-                if (is Timestamp argument) {
-                    stmt.setTimestamp(i,argument);
-                } else if (is SqlDate argument) {
+                if (is SqlTimestamp argument) {
+                    stmt.setTimestamp(i, argument);
+                } 
+                else if (is SqlTime argument) {
+                    stmt.setTime(i, argument);
+                }
+                else if (is SqlDate argument) {
                     stmt.setDate(i, argument);
-                } else {
-                    stmt.setDate(i, SqlDate(argument.time));
+                }
+                else {
+                    stmt.setTimestamp(i, SqlTimestamp(argument.time));
                 }
             }
-            case (is Float) { stmt.setDouble(i, argument); }
-            case (is SqlNull) { stmt.setNull(i, argument.sqlType); }
+            case (is Float) { 
+                stmt.setDouble(i, argument); 
+            }
+            case (is SqlNull) { 
+                stmt.setNull(i, argument.sqlType); 
+            }
+            case (is GregorianDateTime) {
+                stmt.setTimestamp(i, 
+                    SqlTimestamp(argument.instant().millisecondsOfEpoch));
+            }
+            case (is GregorianDate) {
+                stmt.setDate(i, 
+                    SqlDate(argument.at(TimeOfDay(0)).instant().millisecondsOfEpoch));
+            }
+            case (is TimeOfDay) {
+                stmt.setTime(i, 
+                    SqlTime(today().at(argument).instant().millisecondsOfEpoch));
+            }
             //TODO reader, inputStream, byte array
             else { stmt.setObject(i,argument); }
             i++;
@@ -500,8 +536,12 @@ shared class Sql(newConnection) {
         case (is JString) { v = x.string; }
         case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
         case (is BigInteger) { v = parseWhole(x.string); }
+        case (is SqlTimestamp) { v = Instant(x.time).dateTime(); }
+        case (is SqlTime) { v = Instant(x.time).date(); }
+        case (is SqlDate) { v = Instant(x.time).time(); }
         else { v = x; }
         return columnName -> (v else SqlNull(meta.getColumnType(idx)));
     }
 
 }
+

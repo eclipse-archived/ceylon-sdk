@@ -10,7 +10,7 @@ import java.math {
 }
 
 
-class DecimalImpl(BigDecimal num)
+final class DecimalImpl(BigDecimal num)
         satisfies Decimal {
 
     shared actual BigDecimal implementation = num;

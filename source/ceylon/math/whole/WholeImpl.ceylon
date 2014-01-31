@@ -5,7 +5,7 @@ import java.math {
     }
 }
 
-class WholeImpl(BigInteger num)
+final class WholeImpl(BigInteger num)
         satisfies Whole {
 
     shared actual BigInteger implementation = num;

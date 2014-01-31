@@ -6,7 +6,7 @@ import ceylon.time.timezone { TimeZone, timeZone }
 
 "Default implementation of a gregorian calendar"
 shared class GregorianDateTime( date, time ) 
-    satisfies  DateTime {
+    satisfies DateTime {
 
     "Returns [[Date]] representation of current _date and time_."
     shared actual Date date;

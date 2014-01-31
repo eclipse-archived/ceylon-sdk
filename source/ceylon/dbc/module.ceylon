@@ -92,4 +92,5 @@ module ceylon.dbc "1.0.0" {
     import java.base "7";
     import ceylon.interop.java "1.0.0";
     shared import java.jdbc "7";
+    import ceylon.time "1.0.0";
 }
