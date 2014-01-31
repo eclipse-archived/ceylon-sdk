@@ -1,6 +1,6 @@
 import ceylon.dbc {
     Sql,
-    newConnectionFromDatasource
+    newConnectionFromDataSource
 }
 import ceylon.test {
     beforeTest,
@@ -20,7 +20,7 @@ JdbcDataSource createDataSource() {
     return ds;
 }
 
-shared Sql sql = Sql(newConnectionFromDatasource(createDataSource()));
+shared Sql sql = Sql(newConnectionFromDataSource(createDataSource()));
 
 shared beforeTest void setup() {
     try {

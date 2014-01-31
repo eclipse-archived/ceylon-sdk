@@ -2,7 +2,7 @@ import ceylon.collection {
     HashMap
 }
 import ceylon.dbc {
-    newConnectionFromDatasource
+    newConnectionFromDataSource
 }
 import ceylon.interop.java {
     toIntegerArray
@@ -61,8 +61,8 @@ by ("Enrique Zamudio", "Gavin King")
 shared class Sql(newConnection) {
     
     "Obtain a JDBC connection."
-    see (`function newConnectionFromDatasource`,
-        `function newConnectionFromDatasourceWithCredentials`)
+    see (`function newConnectionFromDataSource`,
+        `function newConnectionFromDataSourceWithCredentials`)
     Connection newConnection();
     
     value connection = ThreadLocalConnection(newConnection);
