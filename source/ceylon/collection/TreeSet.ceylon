@@ -18,7 +18,8 @@ shared class TreeSet<Element>(compare, elements={})
      
      object present {}
      
-     variable value map = TreeMap(compare, elements.map((Element e)=>e->present));
+     variable value map = TreeMap(compare, 
+             elements map (Element e) => e->present);
 
      add(Element element) => !map.put(element, present) exists;
      
@@ -101,11 +102,13 @@ shared class TreeSet<Element>(compare, elements={})
      
      higherElements(Element element)
              => map.higherEntries(element)
-                     .map((Element->Object entry)=>entry.key);
+                     map (Element->Object entry)
+                             => entry.key;
      
      lowerElements(Element element)
              => map.lowerEntries(element)
-                     .map((Element->Object entry)=>entry.key);
+                     map (Element->Object entry)
+                             =>entry.key;
      
      segment(Element from, Integer length) 
              => TreeSet(compare, higherElements(from).taking(length));
@@ -114,13 +117,13 @@ shared class TreeSet<Element>(compare, elements={})
          {Element*} elements;
          if (compare(from, to)==larger) {
              elements = lowerElements(from)
-                     .takingWhile((Element elem) 
-                             => compare(elem, to)!=smaller);
+                     takingWhile (Element elem) 
+                             => compare(elem, to)!=smaller;
          }
          else {
              elements = higherElements(from)
-                     .takingWhile((Element elem) 
-                             => compare(elem, to)!=larger);
+                     takingWhile (Element elem) 
+                             => compare(elem, to)!=larger;
          }
          return TreeSet(compare, elements);
      }
@@ -141,4 +144,4 @@ shared class TreeSet<Element>(compare, elements={})
  sorted by the natural ordering of the keys."
 shared TreeSet<Element> naturalOrderTreeSet<Element>({<Element>*} entries)
         given Element satisfies Comparable<Element>
-        => TreeSet((Element x, Element y)=>x<=>y, entries);
+        => TreeSet((Element x, Element y) => x<=>y, entries);

@@ -602,7 +602,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    Integer? assertBlackNodesInPaths(node=root, blackCount=0, pathBlackCount=null) {
+    Integer? assertBlackNodesInPaths(node=root, blackCount=0, 
+            pathBlackCount=null) {
         Node? node;
         variable Integer blackCount;
         variable Integer? pathBlackCount;
@@ -610,8 +611,10 @@ shared class TreeMap<Key, Item>(compare, entries={})
             blackCount++;
         }
         if (exists node) {
-            pathBlackCount = assertBlackNodesInPaths(node.left, blackCount, pathBlackCount);
-            pathBlackCount = assertBlackNodesInPaths(node.right, blackCount, pathBlackCount);
+            pathBlackCount = assertBlackNodesInPaths(node.left, 
+                    blackCount, pathBlackCount);
+            pathBlackCount = assertBlackNodesInPaths(node.right, 
+                    blackCount, pathBlackCount);
             return pathBlackCount;
         }
         else {
@@ -646,13 +649,13 @@ shared class TreeMap<Key, Item>(compare, entries={})
         {<Key->Item>*} entries;
         if (compare(from, to)==larger) {
             entries = lowerEntries(from)
-                    .takingWhile((Key->Item entry) 
-                            => compare(entry.key, to)!=smaller);
+                    takingWhile (Key->Item entry) 
+                            => compare(entry.key, to)!=smaller;
         }
         else {
             entries = higherEntries(from)
-                    .takingWhile((Key->Item entry) 
-                            => compare(entry.key, to)!=larger);
+                    takingWhile (Key->Item entry) 
+                            => compare(entry.key, to)!=larger;
         }
         return TreeMap(compare, entries);
     }
@@ -671,4 +674,4 @@ shared class TreeMap<Key, Item>(compare, entries={})
 shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>({<Key->Item>*} entries)
         given Key satisfies Comparable<Key>
         given Item satisfies Object 
-        => TreeMap((Key x, Key y)=>x<=>y, entries);
+        => TreeMap((Key x, Key y) => x<=>y, entries);

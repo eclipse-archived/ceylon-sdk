@@ -129,8 +129,8 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
 
         attrs.appendAll(nonstandardAttributes);
 
-        attrs.appendAll(data.map(
-            (String->Object elem) => "data-``elem.key``"->elem.item));
+        attrs.appendAll(data map (String->Object elem) 
+                => "data-``elem.key``"->elem.item);
 
         // TODO append events attributes
         return attrs.sequence;
