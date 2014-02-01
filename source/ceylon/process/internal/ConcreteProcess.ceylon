@@ -1,13 +1,51 @@
-import ceylon.file { Path, Writer, Reader }
-import ceylon.process { stdin=currentInput, stdout=currentOutput, 
-                        stderr=currentError,  ...  }
+import ceylon.file {
+    Path,
+    Writer,
+    Reader
+}
+import ceylon.process {
+    stdin=currentInput,
+    stdout=currentOutput,
+    stderr=currentError,
+    ...
+}
 
-import java.io { JFile=File }
-import java.lang { IllegalThreadStateException, JString=String, 
-                   ProcessBuilder { Redirect { appendTo, to, INHERIT } } }
+import java.io {
+    JFile=File
+}
+import java.lang {
+    IllegalThreadStateException,
+    JString=String,
+    ProcessBuilder {
+        Redirect
+    }
+}
+
+String[] interpolate(String command, String[]? arguments) {
+    value parsedCommand = command.split();
+    if (exists arguments) {
+        value argIter = arguments.iterator();
+        value interpolatedCommand 
+                = parsedCommand collect (String string) {
+            variable value interpolatedString = string;
+            while (interpolatedString.contains('?')) {
+                "must be as many arguments as ? placeholders"
+                assert (is String arg = argIter.next());
+                interpolatedString = string.replaceFirst("?", arg);
+            }
+            return interpolatedString;
+        };
+        "must be as many ? placeholders as arguments"
+        assert (argIter.next() is Finished);
+        return interpolatedCommand;
+    }
+    else {
+        return parsedCommand.sequence;
+    }
+}
 
 shared class ConcreteProcess(
-        command, path, 
+        command, arguments, path, 
         Input? inputOrNone, 
         Output? outputOrNone, 
         Error? errorOrNone, 
@@ -15,13 +53,14 @@ shared class ConcreteProcess(
         satisfies Process {
 
     actual shared String command;
+    actual shared String[]? arguments;
     actual shared Path path;
     actual shared Input|Writer input;
     actual shared Output|Reader output;
     actual shared Error|Reader error;
     actual shared Iterable<String->String> environment;
     
-    value builder = ProcessBuilder(*command.split());
+    value builder = ProcessBuilder(*interpolate(command, arguments));
     builder.directory(JFile(path.string));
     for (e in environment) {
         builder.environment()
@@ -61,7 +100,7 @@ shared class ConcreteProcess(
 void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
     switch (inputOrNone)
     case (stdin) {
-        builder.redirectInput(\iINHERIT);
+        builder.redirectInput(Redirect.\iINHERIT);
     }
     case (is FileInput) {
         builder.redirectInput(JFile(inputOrNone.path.string));
@@ -72,13 +111,13 @@ void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
 void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
     switch (outputOrNone)
     case (stdout) {
-        builder.redirectOutput(\iINHERIT);
+        builder.redirectOutput(Redirect.\iINHERIT);
     }
     case (is AppendFileOutput) {
-        builder.redirectOutput(appendTo(JFile(outputOrNone.path.string)));
+        builder.redirectOutput(Redirect.appendTo(JFile(outputOrNone.path.string)));
     }
     case (is OverwriteFileOutput) {
-        builder.redirectOutput(to(JFile(outputOrNone.path.string)));
+        builder.redirectOutput(Redirect.to(JFile(outputOrNone.path.string)));
     }
     else {}
 }
@@ -86,13 +125,13 @@ void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
 void redirectError(Error? errorOrNone, ProcessBuilder builder) {
     switch (errorOrNone)
     case (stderr) {
-        builder.redirectError(\iINHERIT);
+        builder.redirectError(Redirect.\iINHERIT);
     }
     case (is AppendFileOutput) {
-        builder.redirectError(appendTo(JFile(errorOrNone.path.string)));
+        builder.redirectError(Redirect.appendTo(JFile(errorOrNone.path.string)));
     }
     case (is OverwriteFileOutput) {
-        builder.redirectError(to(JFile(errorOrNone.path.string)));
+        builder.redirectError(Redirect.to(JFile(errorOrNone.path.string)));
     }
     else {}
 }

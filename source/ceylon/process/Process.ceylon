@@ -9,6 +9,11 @@ shared interface Process {
      of its arguments."
     formal shared String command;
     
+    "An optional list of command arguments to 
+     interpolate into `?` placeholders in the
+     [[command]]."
+    formal shared String[]? arguments;
+    
     "The directory in which the process runs."
     formal shared Path path;
     
@@ -56,6 +61,10 @@ shared Process createProcess(
          process, usually a program with a list 
          of its arguments."
         String command,
+        "An optional list of command arguments to 
+         interpolate into `?` placeholders in the
+         [[command]]."
+        String[]? arguments=null,
         "The directory in which the process runs."
         Path path=current,
         "The source for the standard input stream
@@ -78,8 +87,8 @@ shared Process createProcess(
          the environment variables of the current
          virtual machine process."
         <String->String>* environment) => 
-            ConcreteProcess(command, path, input, output, 
-                    error, environment);
+            ConcreteProcess(command, arguments, path, 
+                    input, output, error, environment);
 
 "A source for the standard input stream of a process."
 shared interface Input 
