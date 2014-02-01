@@ -21,28 +21,6 @@ import java.lang {
     }
 }
 
-String[] interpolate(String command, String[]? arguments) {
-    value parsedCommand = command.split();
-    if (exists arguments) {
-        value argIter = arguments.iterator();
-        value interpolatedCommand 
-                = parsedCommand collect (String string) {
-            variable value interpolatedString = string;
-            while (interpolatedString.contains('?')) {
-                "must be as many arguments as ? placeholders"
-                assert (is String arg = argIter.next());
-                interpolatedString = string.replaceFirst("?", arg);
-            }
-            return interpolatedString;
-        };
-        "must be as many ? placeholders as arguments"
-        assert (argIter.next() is Finished);
-        return interpolatedCommand;
-    }
-    else {
-        return parsedCommand.sequence;
-    }
-}
 
 shared class ConcreteProcess(
         command, arguments, path, 
@@ -53,14 +31,14 @@ shared class ConcreteProcess(
         satisfies Process {
 
     actual shared String command;
-    actual shared String[]? arguments;
+    actual shared {String*} arguments;
     actual shared Path path;
     actual shared Input|Writer input;
     actual shared Output|Reader output;
     actual shared Error|Reader error;
     actual shared Iterable<String->String> environment;
     
-    value builder = ProcessBuilder(*interpolate(command, arguments));
+    value builder = ProcessBuilder(command, *arguments);
     builder.directory(JFile(path.string));
     for (e in environment) {
         builder.environment()

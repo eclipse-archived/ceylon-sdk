@@ -13,14 +13,12 @@ import ceylon.process.internal {
 see(`function createProcess`)
 shared interface Process {
     
-    "A _command_, usually a program with a list
-     of its arguments."
+    "A _command_, usually the name or path of 
+     a program to execute."
     formal shared String command;
     
-    "An optional list of command arguments to 
-     interpolate into `?` placeholders in the
-     [[command]]."
-    formal shared String[]? arguments;
+    "The arguments to the [[command]]."
+    formal shared {String*} arguments;
     
     "The directory in which the process runs."
     formal shared Path path;
@@ -66,17 +64,12 @@ shared interface Process {
  given command."
 shared Process createProcess(
         "The _command_ to be run in the new 
-         process, usually a program with a list 
-         of its arguments. If the command has
-         arguments or paths containing whitespace, 
-         they should be replaced with `?` 
-         placeholders and passed via the 
-         [[arguments]] sequence."
+         process, usually the name or path of a 
+         program. Command arguments must be passed
+         via the [[arguments]] sequence."
         String command,
-        "An optional list of command arguments to 
-         interpolate into `?` placeholders in the
-         [[command]]."
-        String[]? arguments = null,
+        "The arguments to the [[command]]."
+        {String*} arguments = {},
         "The directory in which the process runs."
         Path path = current,
         "The source for the standard input stream
