@@ -60,10 +60,10 @@ shared Process createProcess(
         "The _command_ to be run in the new 
          process, usually a program with a list 
          of its arguments. If the command has
-         arguments containing whitespace, they 
-         should be replaced with `?` placeholders
-         and passed via the [[arguments]] 
-         sequence."
+         arguments or paths containing whitespace, 
+         they should be replaced with `?` 
+         placeholders and passed via the 
+         [[arguments]] sequence."
         String command,
         "An optional list of command arguments to 
          interpolate into `?` placeholders in the
