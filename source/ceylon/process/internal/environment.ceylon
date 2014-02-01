@@ -1,11 +1,13 @@
-import java.lang { System { getenv } }
+import java.lang {
+    System
+}
 
 shared object environment 
         satisfies Iterable<String->String> {    
     
     shared actual Iterator<String->String> iterator() {
         object iterator satisfies Iterator<String->String> {   
-            value env = getenv().entrySet().iterator();
+            value env = System.getenv().entrySet().iterator();
             shared actual <String->String>|Finished next() {
                 if (env.hasNext()) {
                     value entry = env.next();

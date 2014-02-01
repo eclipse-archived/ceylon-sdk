@@ -1,6 +1,11 @@
-import ceylon.file { Writer }
+import ceylon.file {
+    Writer
+}
 
-import java.io { OutputStream, OutputStreamWriter }
+import java.io {
+    OutputStream,
+    OutputStreamWriter
+}
 
 class IncomingPipe(OutputStream stream)
         satisfies Writer {

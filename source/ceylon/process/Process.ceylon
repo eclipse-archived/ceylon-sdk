@@ -1,5 +1,13 @@
-import ceylon.file { Path, current, Reader, Writer }
-import ceylon.process.internal { ConcreteProcess, environment }
+import ceylon.file {
+    Path,
+    current,
+    Reader,
+    Writer
+}
+import ceylon.process.internal {
+    ConcreteProcess,
+    environment
+}
 
 "Represents a separate native process."
 see(`function createProcess`)

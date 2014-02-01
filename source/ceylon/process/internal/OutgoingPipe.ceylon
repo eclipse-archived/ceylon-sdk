@@ -1,6 +1,12 @@
-import ceylon.file { Reader }
+import ceylon.file {
+    Reader
+}
 
-import java.io { InputStream, BufferedReader, InputStreamReader }
+import java.io {
+    InputStream,
+    BufferedReader,
+    InputStreamReader
+}
 
 class OutgoingPipe(InputStream stream) 
         satisfies Reader {
