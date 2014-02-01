@@ -4,13 +4,17 @@
    [[LogWriter]] function at startup by calling 
    [[addLogWriter]].
    
-       addLogWriter(void (Priority p, Category c, String m, Exception? e) {
-           value print = p<=info then process.writeLine else process.writeError;
-           print("[``system.milliseconds``] ``p.string`` ``m``");
-           if (exists e) {
-               printStackTrace(e, print);
+       addLogWriter {
+           void log(Priority p, Category c, String m, Exception? e) {
+               value print = p<=info 
+                       then process.writeLine 
+                       else process.writeError;
+               print("[``system.milliseconds``] ``p.string`` ``m``");
+               if (exists e) {
+                   printStackTrace(e, print);
+               }
            }
-       });
+       };
    
    Log messages are written to a [[Logger]]. A canonical 
    `Logger` instance for a package or module may be obtained 
