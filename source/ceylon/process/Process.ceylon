@@ -59,7 +59,11 @@ shared interface Process {
 shared Process createProcess(
         "The _command_ to be run in the new 
          process, usually a program with a list 
-         of its arguments."
+         of its arguments. If the command has
+         arguments containing whitespace, they 
+         should be replaced with `?` placeholders
+         and passed via the [[arguments]] 
+         sequence."
         String command,
         "An optional list of command arguments to 
          interpolate into `?` placeholders in the
@@ -78,7 +82,7 @@ shared Process createProcess(
          current process."
         Output? output = null,
         "The destination for the standard output 
-         stream ofthe process, or `null` if the 
+         stream of the process, or `null` if the 
          standard error should be piped to the 
          current process."
         Error? error = null,
