@@ -10,9 +10,11 @@ see (`function addLogWriter`)
 shared alias LogWriter 
         => Anything(Priority,Category,String, Exception?);
 
-"Register a new [[LogWriter]] with the logging system. Log
- messages are directed to all registered [[LogWriter]]s."
-shared void addLogWriter(LogWriter logWriter) 
-        => logWriters.add(logWriter);
+"Register a new [[log writer function|log]] with the logging
+ system. Log messages are directed to all registered 
+ [[LogWriter]]s."
+shared void addLogWriter(LogWriter log) 
+        => logWriters.add(log);
 
-MutableList<LogWriter> logWriters = ArrayList<LogWriter>();
+MutableList<LogWriter> logWriters 
+        = ArrayList<LogWriter>();

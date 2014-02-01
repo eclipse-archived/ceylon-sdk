@@ -39,15 +39,19 @@ test void run() {
     //jdkLogger.level=jdkLevel(info);
     //jdkLogger.info("hello world");
     variable value count = 0;
-    addLogWriter(void (Priority p, Category c, String m, Exception? e) {
-        value print = p<=info then process.writeLine else process.writeError;
-        print("[``system.milliseconds``] ``p.string`` ``m``");
-        if (exists e) {
-            e.printStackTrace();
+    addLogWriter {
+        void log(Priority p, Category c, String m, Exception? e) {
+            value print = p<=info then process.writeLine else process.writeError;
+            print("[``system.milliseconds``] ``p.string`` ``m``");
+            if (exists e) {
+                e.printStackTrace();
+            }
         }
-    });
-    addLogWriter(void (Priority p, Category c, String m, Exception? e) => count++);
-    addLogWriter(void (Priority p, Category c, String m, Exception? e) => jdkLogger.log(jdkLevel(p), m));
+    };
+    addLogWriter (void (Priority p, Category c, String m, Exception? e) 
+                => count++);
+    addLogWriter(void (Priority p, Category c, String m, Exception? e) 
+                => jdkLogger.log(jdkLevel(p), m));
     myLogger.error("Something bad happened!");
     myLogger.trace("Almost done");
     myLogger.info("Terminating!");
