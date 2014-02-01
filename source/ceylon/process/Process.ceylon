@@ -64,9 +64,9 @@ shared Process createProcess(
         "An optional list of command arguments to 
          interpolate into `?` placeholders in the
          [[command]]."
-        String[]? arguments=null,
+        String[]? arguments = null,
         "The directory in which the process runs."
-        Path path=current,
+        Path path = current,
         "The source for the standard input stream
          of the process, or `null` if the standard 
          input should be piped from the current 
