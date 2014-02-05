@@ -897,6 +897,15 @@ shared test void testParse() {
     assertEquals("2012-04-11T10:20:59Z", o12["updated_at"]);
     assertEquals("https://api.github.com/repos/ceylon/ceylon-compiler", o12["url"]);
     assertEquals(74, o12["watchers"]);
+    
+    value o13 = parseArray("[]");
+    assertEquals(0, o13.size);
+    
+    value o14 = parseObjectOrArray("[]");
+    assertEquals(0, o14.size);
+    
+    value o15 = parseObjectOrArray("{}");
+    assertEquals(0, o15.size);
 
     // make sure this passes
     parse(herdJson);
