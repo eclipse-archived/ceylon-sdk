@@ -240,7 +240,19 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
             }
             declVar = classDecl;
             while(exists decl = declVar) {
-                value pkgCallbacks = decl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>();
+                variable FunctionDeclaration[] pkgCallbacks = [];
+                try {
+                    pkgCallbacks = decl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>();
+                }
+                catch(Exception e) {
+                    if( e.message == "interface ceylon.language.Annotation is not visible from class loader" ) {
+                        // XXX workaround for ceylon.language #410, ignore exception
+                    }
+                    else {
+                        throw e;
+                    }
+                }
+                
                 for(pkgCallback in pkgCallbacks) {
                     if( !callbacks.sequence.contains(pkgCallback) ) {
                        callbacks.append(pkgCallback);
