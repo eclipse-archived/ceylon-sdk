@@ -14,6 +14,7 @@ shared MutableMap<String, Preference> userPreferences(Module mod) {
     if ("jvm".equals(runtime.name)) {
         return JVMPreferencesMap(moduleNode(mod), false);
     } else {
+        // when JS compilation and support is enabled, a default implemenation
         return EphemeralPreferencesMap(moduleNode(mod), false);
     } 
 }
@@ -23,6 +24,7 @@ shared MutableMap<String, Preference> systemPreferences(Module mod) {
     if ("jvm".equals(runtime.name)) {
         return JVMPreferencesMap(moduleNode(mod), true);
     } else {
+        // when JS compilation and support is enabled, a default implemenation
         return EphemeralPreferencesMap(moduleNode(mod), true);
     }    
 }

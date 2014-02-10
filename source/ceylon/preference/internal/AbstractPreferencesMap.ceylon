@@ -4,12 +4,15 @@ import ceylon.preference { Preference }
 shared interface BackingStore<Key, Item> 
         given Key satisfies String
         given Item satisfies String {
-    
+ 
+    shared formal void flush();
+    shared formal void sync();
+       
     shared formal Item? get(Key key);
     shared formal void put(Key key, Item item);
     shared formal void clear();
     shared formal void remove(Key key);
-    shared formal void flush();
+
     shared formal Iterator<Key> keys;
 }
 
@@ -26,6 +29,7 @@ shared abstract class AbstractPreferencesMap (String node, Boolean system)
     }
     
     Preference? internalGet(String key) {
+        scopedPrefs.sync();
         if (exists v = scopedPrefs.get(key)) { // first to trap Integer
             if (v.every("-01234567890".contains)) {
                 return parseInteger(v);

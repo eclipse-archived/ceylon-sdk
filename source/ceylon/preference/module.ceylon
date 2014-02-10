@@ -1,13 +1,11 @@
 """Defines a platform-neutral API for writing and reading
    application preferences.  
    
-   The default implementation for the JVM (Java Virtual Machine) 
-   uses [[package java.util.prefs]] and the default (or other) 
-   backing store defined by the JVM.
-   
-   The alternate (currently Javascript) implementation does not
-   back on to a store and is entirely within the process context
-   and memory (e.g. a browser session).
+   The default implementation is only for the JVM 
+   (Java Virtual Machine) and uses the backing store defined
+   through the [[package java.util.prefs]] API.  By default, this
+   API uses the Windows(TM) registry on Windows and uses a 
+   directory- and file-based store on other operating systems.
    
    Two maps are provided: 
    * [[userPreferences]] 
@@ -26,7 +24,8 @@
    full name and a "/" at the beginning of a key will be ignored.
       
    Usage: 
-       userPreferences(`module hello`).put(...);"""
+       userPreferences(`module hello`).put("key.something", pref);
+       userPreferences(`module hello`).get("key.something");"""
 module ceylon.preference "1.0.0" {
     import java.prefs "7";
     shared import ceylon.collection "1.0.0";

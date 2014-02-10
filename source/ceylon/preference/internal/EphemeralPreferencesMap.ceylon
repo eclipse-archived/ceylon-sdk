@@ -40,6 +40,7 @@ shared class EphemeralPreferencesMap (String node, Boolean system)
         }
 
         shared actual void flush() {} // not flushable store
+        shared actual void sync() {} // always synced        
     }
  
     shared actual Boolean equals(Object that) {

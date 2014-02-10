@@ -48,7 +48,11 @@ shared class JVMPreferencesMap (String node, Boolean system)
 
         shared actual void flush() {
             scopedRoot.flush();
-        }   
+        }
+        
+        shared actual void sync() {
+            scopedRoot.flush();
+        }           
     }
  
     shared actual Boolean equals(Object that) {
