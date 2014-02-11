@@ -222,6 +222,59 @@ shared void shouldPropagateExceptionOnTestStart() {
     };
 }
 
+test
+void shouldNotifyListenerSpecifiedViaAnnotation() {
+    bazTestListenerLog.reset();
+    
+    value result = createTestRunner([`bazWithCustomListener`]).run();
+    
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
+    assertEquals(lines.size, 4);
+    assertEquals(lines[0], "TestRunStartEvent");
+    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::bazWithCustomListener]");
+    assertEquals(lines[2], "TestFinishEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
+    assertEquals(lines[3], "TestRunFinishEvent");
+    
+    assertResultCounts {
+        result;
+        successCount = 1;
+    };
+    assertResultContains {
+        result;
+        index = 0;
+        state = success;
+        source = `bazWithCustomListener`;
+    };
+}
+
+test
+void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
+    bazTestListenerLog.reset();
+    
+    createTestRunner([`BazWithCustomListener`]).run();
+    
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
+    assertEquals(lines.size, 6);
+    assertEquals(lines[0], "TestRunStartEvent");
+    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BazWithCustomListener]");
+    assertEquals(lines[2], "TestStartEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
+    assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
+    assertEquals(lines[4], "TestFinishEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
+    assertEquals(lines[5], "TestRunFinishEvent");
+}
+
+test
+void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun() {
+    bazTestListenerCounter = 0;
+    
+    createTestRunner([`bazWithCustomListener`]).run();
+    print(bazTestListenerCounter);
+    assert(bazTestListenerCounter == 1);
+    
+    createTestRunner([`bazWithCustomListener`, `BazWithCustomListener`]).run();
+    assert(bazTestListenerCounter == 2);
+}
+
 object recordingListener satisfies TestListener {
     
     StringBuilder buffer = StringBuilder();

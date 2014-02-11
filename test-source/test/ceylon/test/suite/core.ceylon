@@ -1,6 +1,9 @@
 import ceylon.language.meta.model {
     ...
 }
+import ceylon.language.meta.declaration {
+    ...
+}
 import ceylon.test {
     ...
 }
@@ -148,8 +151,8 @@ shared void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 10;
-            successCount = 8;
+            runCount = 11;
+            successCount = 9;
             failureCount = 1;
             errorCount = 1;
             ignoreCount = 6;
@@ -171,8 +174,8 @@ shared void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 14;
-            successCount = 12;
+            runCount = 15;
+            successCount = 13;
             failureCount = 1;
             errorCount = 13;
             ignoreCount = 7;
@@ -287,29 +290,6 @@ shared void shouldRunTestWithCustomExecutor() {
     };
 }
 
-test
-shared void shouldRunTestWithCustomListener() {
-    bazTestListenerLog.reset();
-    
-    value result = createTestRunner([`bazWithCustomListener`]).run();
-    
-    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
-    assertEquals(lines.size, 2);
-    assertEquals(lines[0], "TestStartEvent[test.ceylon.test.stubs::bazWithCustomListener]");
-    assertEquals(lines[1], "TestFinishEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
-    
-    assertResultCounts {
-        result;
-        successCount = 1;
-    };
-    assertResultContains {
-        result;
-        index = 0;
-        state = success;
-        source = `bazWithCustomListener`;
-    };
-}
-
 void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer ignoreCount = 0, Integer runCount = -1) {
     try {
         assert(runResult.successCount == successCount, 
@@ -340,10 +320,17 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
         r.state == state);
         
         if( exists source ) {
-            if( is Model source ) {
-                assert(exists s = r.description.declaration, s == source.declaration);
-            } else {
-                assert(exists s = r.description.declaration, s == source);
+            if( is FunctionDeclaration source ) {
+                assert(exists d = r.description.functionDeclaration, d == source);
+            }
+            else if( is ClassDeclaration source ) {
+                assert(exists d = r.description.classDeclaration, d == source);
+            }
+            else if( is FunctionModel source ) {
+                assert(exists d = r.description.functionDeclaration, d == source.declaration);
+            }
+            else if( is ClassModel source ) {
+                assert(exists d = r.description.classDeclaration, d == source.declaration);
             }
         }
         if( exists name ) {

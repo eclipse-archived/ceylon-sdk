@@ -38,7 +38,7 @@ shared class TestRunnerImpl(
 
     TestExecutor[] executors = initExecutors();
 
-    shared actual TestDescription description => TestDescription("root", null, executors*.description);
+    shared actual TestDescription description => TestDescription("root", null, null, executors*.description);
 
     shared actual TestRunResult run() {
         value result = TestRunResultImpl();
@@ -99,7 +99,7 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
 
     for(executorsWithClass in executorsWithClasses.sequence) {
         value sorted = executorsWithClass[1].sequence.sort(comparator);
-        executors.append(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, executorsWithClass[0], sorted*.description), sorted));
+        executors.append(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, null, executorsWithClass[0], sorted*.description), sorted));
     }
 
     return executors.sequence.sort(comparator);
@@ -131,7 +131,7 @@ TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotati
             sourcesBuilder.append(source);
         }
         else {
-            executorsBuilder.append(ErrorTestExecutor(TestDescription(source.qualifiedName, source) , Exception("declaration ``source.qualifiedName`` is invalid test suite source (only functions, classes, packages and modules are allowed)")));
+            executorsBuilder.append(ErrorTestExecutor(TestDescription(source.qualifiedName) , Exception("declaration ``source.qualifiedName`` is invalid test suite source (only functions, classes, packages and modules are allowed)")));
         }
     }
 
@@ -142,7 +142,7 @@ TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotati
         return ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("test suite ``funcDecl.qualifiedName`` does not contains any tests"));
     }
     else {
-        return GroupTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl, executors*.description), executors);
+        return GroupTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl, null, executors*.description), executors);
     }
 }
 

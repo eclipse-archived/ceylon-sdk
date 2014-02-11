@@ -36,7 +36,7 @@ shared void shouldFilterTestsByName() {
     value description = runner.description;
     assert(description.name == "root",
            description.children.size == 1,
-           description.children[0]?.declaration?.equals(`function foo`) else false); 
+           description.children[0]?.functionDeclaration?.equals(`function foo`) else false); 
 }
 
 test
@@ -52,5 +52,5 @@ shared void shouldFilterTestsAndFireExcludeEvent() {
         filter = (TestDescription d)=>!d.name.contains("Throwing");
     };
 
-    assert(exists d = excludedBuilder.sequence[0]?.declaration, d == `function fooThrowingAssertion`);
+    assert(exists d = excludedBuilder.sequence[0]?.functionDeclaration, d == `function fooThrowingAssertion`);
 }
