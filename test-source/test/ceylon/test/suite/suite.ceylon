@@ -19,9 +19,9 @@ shared void shouldRunTestSuite1() {
            exists barDesc = bazSuiteDesc.children[0],
            barDesc.children.size == 2,
            exists fooDesc = bazSuiteDesc.children[1],
-           bazSuiteDesc.declaration?.equals(`function bazSuite`) else false,
-           barDesc.declaration?.equals(`class Bar`) else false,
-           fooDesc.declaration?.equals(`function foo`) else false); 
+           bazSuiteDesc.functionDeclaration?.equals(`function bazSuite`) else false,
+           barDesc.classDeclaration?.equals(`class Bar`) else false,
+           fooDesc.functionDeclaration?.equals(`function foo`) else false); 
 }
 
 test
@@ -75,10 +75,10 @@ shared void shouldRunTestSuiteNested1() {
            exists barDesc = bazSuiteDesc.children[0],
            barDesc.children.size == 2,
            exists fooDesc = bazSuiteDesc.children[1],
-           bazSuiteNestedDesc.declaration?.equals(`function bazSuiteNested`) else false,
-           bazSuiteDesc.declaration?.equals(`function bazSuite`) else false,
-           barDesc.declaration?.equals(`class Bar`) else false,
-           fooDesc.declaration?.equals(`function foo`) else false);
+           bazSuiteNestedDesc.functionDeclaration?.equals(`function bazSuiteNested`) else false,
+           bazSuiteDesc.functionDeclaration?.equals(`function bazSuite`) else false,
+           barDesc.classDeclaration?.equals(`class Bar`) else false,
+           fooDesc.functionDeclaration?.equals(`function foo`) else false);
 }
 
 test

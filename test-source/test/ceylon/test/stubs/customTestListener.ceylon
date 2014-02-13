@@ -6,8 +6,11 @@ import ceylon.test.event {
 }
 
 shared StringBuilder bazTestListenerLog = StringBuilder();
+shared variable Integer bazTestListenerCounter = 0;
 
 shared class BazTestListener() satisfies TestListener {
+    
+    bazTestListenerCounter++;
 
     shared actual void testRunStart(TestRunStartEvent event) => log(event);
 
@@ -28,4 +31,13 @@ shared class BazTestListener() satisfies TestListener {
 test
 testListeners({`class BazTestListener`})
 shared void bazWithCustomListener() {
+}
+
+testListeners({`class BazTestListener`})
+shared class BazWithCustomListener() {
+    
+    test
+    testListeners({`class BazTestListener`})
+    shared void baz1() {}
+    
 }

@@ -13,9 +13,9 @@ shared void shouldSortTestsByNameAscending() {
     }.run();
     
     assertEquals(runResult.results.size, 3);
-    assertEquals(runResult.results[0]?.description?.declaration, `function foo`);
-    assertEquals(runResult.results[1]?.description?.declaration, `function fooThrowingAssertion`);
-    assertEquals(runResult.results[2]?.description?.declaration, `function fooThrowingException`);
+    assertEquals(runResult.results[0]?.description?.functionDeclaration, `function foo`);
+    assertEquals(runResult.results[1]?.description?.functionDeclaration, `function fooThrowingAssertion`);
+    assertEquals(runResult.results[2]?.description?.functionDeclaration, `function fooThrowingException`);
 }
 
 test
@@ -26,7 +26,7 @@ shared void shouldSortTestsByNameDescending() {
     }.run();
     
     assertEquals(runResult.results.size, 3);
-    assertEquals(runResult.results[0]?.description?.declaration, `function fooThrowingException`);
-    assertEquals(runResult.results[1]?.description?.declaration, `function fooThrowingAssertion`);
-    assertEquals(runResult.results[2]?.description?.declaration, `function foo`);
+    assertEquals(runResult.results[0]?.description?.functionDeclaration, `function fooThrowingException`);
+    assertEquals(runResult.results[1]?.description?.functionDeclaration, `function fooThrowingAssertion`);
+    assertEquals(runResult.results[2]?.description?.functionDeclaration, `function foo`);
 }

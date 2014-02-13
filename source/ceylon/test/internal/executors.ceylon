@@ -14,6 +14,7 @@ import ceylon.test.event {
 class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) satisfies TestExecutor {
 
     variable Object? instance = null;
+    
     Object getInstance() {
         if( exists i = instance ) {
             return i;
@@ -37,32 +38,24 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
         }
     }
 
-    shared actual default TestDescription description => TestDescription(getName(), funcDecl);
+    shared actual default TestDescription description = TestDescription(getName(), funcDecl, classDecl);
 
     shared actual default void execute(TestRunContext context) {
         try {
-            value listeners = findListeners();
-            try {
-                context.addTestListener(*listeners);
-                
-                void fireError(String msg) 
-                        => context.fireTestError(TestErrorEvent(TestResult(description, error, Exception(msg))));
-
-                Anything() handler =
-                        verifyClass(fireError,
-                        verifyFunction(fireError,
-                        verifyCallbacks(fireError, 
-                        handleTestIgnore(context,  
-                        handleTestExecution(context, 
-                        handleAfterCallbacks(
-                        handleBeforeCallbacks(
-                        invokeTest)))))));
-
-                handler();
-            }
-            finally {
-                context.removeTestListener(*listeners);
-            }
+            void fireError(String msg)
+                    => context.fireTestError(TestErrorEvent(TestResult(description, error, Exception(msg))));
+            
+            Anything() handler =
+                    verifyClass(fireError,
+                    verifyFunction(fireError,
+                    verifyCallbacks(fireError,
+                    handleTestIgnore(context,
+                    handleTestExecution(context,
+                    handleAfterCallbacks(
+                    handleBeforeCallbacks(
+                    invokeTest)))))));
+            
+            handler();
         }
         finally {
             instance = null;
@@ -203,31 +196,6 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
         else {
             throw MultipleFailureException(exceptions);
         }
-    }
-
-    TestListener[] findListeners() {
-        value listenersAnnotations = SequenceBuilder<TestListenersAnnotation>();
-        if( exists classDecl ) {
-            listenersAnnotations.appendAll(funcDecl.annotations<TestListenersAnnotation>());
-            listenersAnnotations.appendAll(findAnnotations<TestListenersAnnotation>(classDecl));
-            listenersAnnotations.appendAll(classDecl.containingPackage.annotations<TestListenersAnnotation>());
-            listenersAnnotations.appendAll(classDecl.containingModule.annotations<TestListenersAnnotation>());
-        }
-        else {
-            listenersAnnotations.appendAll(funcDecl.annotations<TestListenersAnnotation>());
-            listenersAnnotations.appendAll(funcDecl.containingPackage.annotations<TestListenersAnnotation>());
-            listenersAnnotations.appendAll(funcDecl.containingModule.annotations<TestListenersAnnotation>());
-        }
-
-        value listeners = SequenceBuilder<TestListener>();
-        for(listenersAnnotation in listenersAnnotations.sequence) {
-            for(listenerDecl in listenersAnnotation.listeners) {
-                assert(is TestListener listener = listenerDecl.instantiate());
-                listeners.append(listener);
-            }
-        }
-
-        return listeners.sequence;
     }
 
     FunctionDeclaration[] findCallbacks<CallbackType>() {
