@@ -211,6 +211,56 @@ shared class LinkedList<Element>(elements = {})
         return false;
     }
     
+    shared actual Boolean removeLast(Element&Object element) {
+        variable Cell<Element>? current = null;
+        while (exists cell = head, 
+               exists elem = cell.element, 
+               elem==element) {
+            if (exists rest = cell.rest) {
+                current = cell;
+            }
+            else {
+                head = tail = null;
+                length--;
+                return true;
+            }
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element, 
+                elem==element) {
+                if (exists more = rest.rest) {
+                    current = cell;
+                }
+                else {
+                    cell.rest = tail = null;
+                    length--;
+                    return true;
+                }
+            }
+            else {
+                iter = rest;
+            }
+        }
+        if (exists last=current) {
+            assert (exists cell=head);
+            if (last===cell) {
+                head = last.rest;
+            }
+            else {
+                assert (exists more = last.rest?.rest);
+                cell.rest = more;
+            }
+            length--;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     shared actual void prune() {
         while (exists cell = head, 
             !cell.element exists) {
@@ -265,6 +315,26 @@ shared class LinkedList<Element>(elements = {})
             iter = cell.rest;
         }
         return false;
+    }
+    
+    shared actual Boolean replaceLast(Element&Object element, 
+            Element replacement) {
+        variable Cell<Element>? last = null;
+        variable value iter = head;
+        while (exists cell = iter) {
+            if (exists elem = cell.element,
+            elem==element) {
+                last = cell;
+            }
+            iter = cell.rest;
+        }
+        if (exists cell=last) {
+            cell.element=replacement;
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     
     shared actual void infill(Element replacement) {

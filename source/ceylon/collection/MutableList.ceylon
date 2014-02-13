@@ -71,6 +71,14 @@ shared interface ListMutator<in Element>
             "The non-null value to remove"
             Element&Object element);
     
+    "Remove the last occurrence of the given 
+     [[value|element]] from this list, if any, returning 
+     `true` if the value occurs in the list, or `false` 
+     otherwise."
+    shared formal Boolean removeLast(
+        "The non-null value to remove"
+        Element&Object element);
+    
     "Remove all null elements from this list, leaving a list
      with no null elements."
     shared formal void prune();
@@ -93,6 +101,16 @@ shared interface ListMutator<in Element>
             Element&Object element,
             "The replacement value"
             Element replacement);
+    
+    "Replace the last occurrence of the given
+     [[value|element]] in this list, if any, with the given
+     [[replacement value|replacement]], returning `true` if
+     the value occurs in the list, or `false` otherwise."
+    shared formal Boolean replaceLast(
+        "The non-null value to replace"
+        Element&Object element,
+        "The replacement value"
+        Element replacement);
     
     "Replace all null values in this list with the given
      [[replacement value|replacement]]."

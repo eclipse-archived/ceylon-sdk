@@ -103,6 +103,10 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         return list.removeFirst(element);
     }
     
+    shared actual Boolean removeLast(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
+        return list.removeLast(element);
+    }
+    
     shared actual void prune() {
         list.prune();
     }
@@ -119,6 +123,11 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     shared actual Boolean replaceFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
             String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
         return list.replaceFirst(element, replacement);
+    }
+    
+    shared actual Boolean replaceLast(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
+    String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
+        return list.replaceLast(element, replacement);
     }
     
     shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {

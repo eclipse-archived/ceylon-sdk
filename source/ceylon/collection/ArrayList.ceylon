@@ -185,6 +185,16 @@ shared class ArrayList<Element>
         }
     }
     
+    shared actual Boolean removeLast(Element&Object element) {
+        if (exists index = lastOccurrence(element)) {
+            delete(index);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     shared actual void prune() {
         variable value i=0;
         variable value j=0;
@@ -212,6 +222,17 @@ shared class ArrayList<Element>
     shared actual Boolean replaceFirst(Element&Object element, 
             Element replacement) {
         if (exists index = firstOccurrence(element)) {
+            set(index, element);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual Boolean replaceLast(Element&Object element, 
+    Element replacement) {
+        if (exists index = lastOccurrence(element)) {
             set(index, element);
             return true;
         }
