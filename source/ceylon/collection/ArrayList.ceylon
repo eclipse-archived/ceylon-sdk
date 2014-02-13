@@ -180,7 +180,7 @@ shared class ArrayList<Element>
         variable value j=0;
         while (i<length) {
             if (exists elem = array[i++]) {
-                if (elem in elements) {
+                if (!elem in elements) {
                     array.set(j++,elem);
                 }
             }
