@@ -161,7 +161,7 @@ shared class HashMap<Key, Item>
         return null;
     }
     
-    shared actual void putAll({<Key->Item>*} entries){
+    shared actual void putAll({<Key->Item>*} entries) {
         for(entry in entries){
             if(addToStore(store, entry)){
                 length++;

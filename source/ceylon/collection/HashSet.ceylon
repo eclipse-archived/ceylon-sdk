@@ -151,7 +151,9 @@ shared class HashSet<Element>
     shared actual Boolean addAll({Element*} elements) {
         variable Boolean ret = false;
         for(elem in elements){
-            ret ||= add(elem);
+            if (addToStore(store, elem)) {
+                ret = true;
+            }
         }
         if (ret) {
             checkRehash();

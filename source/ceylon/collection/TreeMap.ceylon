@@ -557,12 +557,6 @@ shared class TreeMap<Key, Item>(compare, entries={})
             return null;
         }
     }
-        
-    shared actual void putAll({<Key->Item>*} entries) {
-        for (key->item in entries) {
-            put(key, item);
-        }
-    }
     
     clear() => root=null;
     

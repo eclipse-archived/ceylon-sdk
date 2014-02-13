@@ -39,7 +39,11 @@ shared interface MapMutator<in Key, in Item>
     
     "Add the given [[entries]] to this map, overwriting any 
      existing entries with the same keys."
-    shared formal void putAll({<Key->Item>*} entries);
+    shared default void putAll({<Key->Item>*} entries) {
+        for (key->item in entries) {
+            put(key, item);
+        }
+    }
     
     "Remove the entry associated with the given [[key]], if 
      any, from this map, returning the value no longer 

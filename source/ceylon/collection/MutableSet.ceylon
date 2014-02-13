@@ -25,17 +25,31 @@ shared interface SetMutator<in Element>
     "Add the given [[elements]] to this set, returning `true`
      if any of the given elements was _not_ already a member
      of this set, or `false` otherwise."
-    shared formal Boolean addAll({Element*} elements);
+    shared default Boolean addAll({Element*} elements) {
+         variable value result = false;
+         for (element in elements) {
+             if (add(element)) {
+                 result = true;
+             }
+         }
+         return result;
+     }
     
     "Remove an [[element]] from this set, returning `true`
      if the element was previously a member of the set."
     shared formal Boolean remove(Element element);
     
-    "Remove the given [[elements]] from this set."
-    shared default void removeAll({Element*} elements) {
+    "Remove the given [[elements]] from this set, returning 
+     `true` if at least one element was previously a member 
+     of the set."
+    shared default Boolean removeAll({Element*} elements) {
+        variable value result = false;
         for (element in elements) {
-            remove(element);
+            if (remove(element)) {
+                result = true;
+            }
         }
+        return result;
     }
     
     "Remove every element from this set, leaving an empty
