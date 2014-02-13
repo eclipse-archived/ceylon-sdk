@@ -47,6 +47,14 @@ shared interface MapMutator<in Key, in Item>
      there was no entry associated with the given `key`."
     shared formal Object? remove(Key key);
     
+    "Remove the entries associated with the given [[keys]], 
+     if any, from this map."
+    shared default void removeAll({Key*} keys) {
+        for (key in keys) {
+            remove(key);
+        }
+    }
+    
     "Remove every entry from this map, leaving an empty map
      with no entries."
     shared formal void clear();

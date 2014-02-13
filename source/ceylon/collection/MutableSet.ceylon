@@ -31,6 +31,13 @@ shared interface SetMutator<in Element>
      if the element was previously a member of the set."
     shared formal Boolean remove(Element element);
     
+    "Remove the given [[elements]] from this set."
+    shared default void removeAll({Element*} elements) {
+        for (element in elements) {
+            remove(element);
+        }
+    }
+    
     "Remove every element from this set, leaving an empty
      set with no elements."
     shared formal void clear();

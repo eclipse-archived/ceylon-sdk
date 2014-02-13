@@ -141,7 +141,7 @@ shared class HashMap<Key, Item>
     
     // End of initialiser section
     
-    shared actual Item? put(Key key, Item item){
+    shared actual Item? put(Key key, Item item) {
         Integer index = storeIndex(key, store);
         value entry = key->item;
         variable value bucket = store[index];
