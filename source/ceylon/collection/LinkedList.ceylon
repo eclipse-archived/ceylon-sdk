@@ -146,9 +146,9 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
-    shared actual void removeAll(Element&Object element) {
-        while (exists cell = head, 
-            exists elem = cell.element, 
+    shared actual void remove(Element&Object element) {
+        while (exists cell = head,
+            exists elem = cell.element,
             elem==element) {
             if (exists rest = cell.rest) {
                 head = rest;
@@ -164,6 +164,38 @@ shared class LinkedList<Element>(elements = {})
             if (exists rest,
                 exists elem = rest.element, 
                 elem==element) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
+                }
+                else {
+                    cell.rest = tail = null;
+                }
+                length--;
+            }
+            else {
+                iter = rest;
+            }
+        }
+    }
+    
+    shared actual void removeAll({<Element&Object>*} elements) {
+        while (exists cell = head,
+            exists elem = cell.element,
+            elem in elements) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element, 
+                elem in elements) {
                 if (exists more = rest.rest) {
                     cell.rest = more;
                 }
@@ -291,7 +323,7 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
-    shared actual void replaceAll(Element&Object element, 
+    shared actual void replace(Element&Object element, 
             Element replacement) {
         variable value iter = head;
         while (exists cell = iter) {

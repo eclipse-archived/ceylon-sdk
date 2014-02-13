@@ -27,7 +27,7 @@ class TestRunContextImpl(runner, result) satisfies TestRunContext {
 
     shared actual void removeTestListener(TestListener* listeners) {
         for(listener in listeners) {
-            listenersList.removeAll(listener);
+            listenersList.remove(listener);
         }
     }
 

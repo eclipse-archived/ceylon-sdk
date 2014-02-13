@@ -58,10 +58,19 @@ shared interface ListMutator<in Element>
     shared formal Anything delete(Integer index);
     
     "Remove all occurrences of the given [[value|element]] 
-     from this list."
-    shared formal void removeAll(
+     from this list.
+     
+     To remove just one occurrence of the given value, use 
+     [[removeFirst]] or [[removeLast]]."
+    shared formal void remove(
             "The non-null value to remove"
             Element&Object element);
+    
+    "Remove all occurrences of every one of the given 
+     [[values|elements]] from this list."
+    shared formal void removeAll(
+            "The non-null values to remove"
+            {Element&Object*} elements);
     
     "Remove the first occurrence of the given 
      [[value|element]] from this list, if any, returning 
@@ -76,8 +85,8 @@ shared interface ListMutator<in Element>
      `true` if the value occurs in the list, or `false` 
      otherwise."
     shared formal Boolean removeLast(
-        "The non-null value to remove"
-        Element&Object element);
+            "The non-null value to remove"
+            Element&Object element);
     
     "Remove all null elements from this list, leaving a list
      with no null elements."
@@ -85,8 +94,11 @@ shared interface ListMutator<in Element>
     
     "Replace all occurrences of the given [[value|element]]
      in this list with the given [[replacement 
-     value|replacement]]."
-    shared formal void replaceAll(
+     value|replacement]].
+     
+     To replace just one occurrence of the given value, use 
+     [[replaceFirst]] or [[replaceLast]]."
+    shared formal void replace(
             "The non-null value to replace"
             Element&Object element,
             "The replacement value"
@@ -107,10 +119,10 @@ shared interface ListMutator<in Element>
      [[replacement value|replacement]], returning `true` if
      the value occurs in the list, or `false` otherwise."
     shared formal Boolean replaceLast(
-        "The non-null value to replace"
-        Element&Object element,
-        "The replacement value"
-        Element replacement);
+            "The non-null value to replace"
+            Element&Object element,
+            "The replacement value"
+            Element replacement);
     
     "Replace all null values in this list with the given
      [[replacement value|replacement]]."
