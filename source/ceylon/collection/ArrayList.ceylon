@@ -75,13 +75,9 @@ shared class ArrayList<Element>
             elements.array.copyTo(array, 0, 0, length);
         }
         else {
-            /*variable value i=0;
-             while (i<length) {
-             array.set(i, elements[i]);
-             i++;
-             }*/
+            variable value i=0;
             for (element in elements) {
-                array.set(length++, element);
+                array.set(i++, element);
             }
         }
     }
