@@ -195,10 +195,10 @@ shared class HashMap<Key, Item>
         return null;
     }
     
-    shared actual void clear(){
+    shared actual void clear() {
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             store.set(index++, null);
         }
         length = 0;
@@ -211,18 +211,27 @@ shared class HashMap<Key, Item>
     size => length;
     
     shared actual Item? get(Object key) {
-        if(empty){
+        if (empty) {
             return null;
         }
         Integer index = storeIndex(key, store);
         variable value bucket = store[index];
-        while(exists cell = bucket){
+        while (exists cell = bucket) {
             if(cell.element.key == key){
                 return cell.element.item;
             }
             bucket = cell.rest;
         }
         return null;
+    }
+    
+    shared actual <Key->Item>? first {
+        if (stability==linked) {
+            return head?.element;
+        }
+        else {
+            return store[0]?.element;
+        }
     }
     
     /*shared actual Collection<Item> values {

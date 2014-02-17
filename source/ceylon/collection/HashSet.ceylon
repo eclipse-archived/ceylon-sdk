@@ -140,7 +140,7 @@ shared class HashSet<Element>
     // End of initialiser section
     
     shared actual Boolean add(Element element) {
-        if(addToStore(store, element)){
+        if (addToStore(store, element)) {
             length++;
             checkRehash();
             return true;
@@ -187,10 +187,10 @@ shared class HashSet<Element>
         return result;
     }
     
-    shared actual void clear(){
+    shared actual void clear() {
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             store.set(index++, null);
         }
         length = 0;
