@@ -152,6 +152,7 @@ shared class HashSet<Element>
         variable Boolean ret = false;
         for(elem in elements){
             if (addToStore(store, elem)) {
+                length++;
                 ret = true;
             }
         }
