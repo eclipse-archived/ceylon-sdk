@@ -8,7 +8,7 @@ import java.nio.channels {
         javaAcceptOp = \iOP_ACCEPT
     } 
 }
-import ceylon.collection { HashMap, MutableMap }
+import ceylon.collection { HashMap, MutableMap, HashSet, MutableSet }
 
 class Key(socket = null, onRead = null, onWrite = null, 
           connector = null, onConnect = null,
@@ -38,14 +38,14 @@ shared class SelectorImpl() satisfies Selector {
                     // update our key
                     key.onRead = callback;
                     key.socket = socket;
-                    javaKey.interestOps(javaKey.interestOps().or(javaReadOp));
+                    socket.interestOps(javaKey, javaKey.interestOps().or(javaReadOp));
                 }else{
                     throw;
                 }
             }else{
                 // new key
                 value key = Key{onRead = callback; socket = socket;};
-                value newJavaKey = socket.channel.register(javaSelector, javaReadOp, key);
+                value newJavaKey = socket.register(javaSelector, javaReadOp, key);
                 map.put(newJavaKey, key);
             }
         }else{
@@ -62,14 +62,14 @@ shared class SelectorImpl() satisfies Selector {
                     // update our key
                     key.onWrite = callback;
                     key.socket = socket;
-                    javaKey.interestOps(javaKey.interestOps().or(javaWriteOp));
+                    socket.interestOps(javaKey, javaKey.interestOps().or(javaWriteOp));
                 }else{
                     throw;
                 }
             }else{
                 // new key
                 value key = Key{onWrite = callback; socket = socket;};
-                value newJavaKey = socket.channel.register(javaSelector, javaWriteOp, key);
+                value newJavaKey = socket.register(javaSelector, javaWriteOp, key);
                 map.put(newJavaKey, key);
             }
         }else{
@@ -86,14 +86,14 @@ shared class SelectorImpl() satisfies Selector {
                     // update our key
                     key.onConnect = callback;
                     key.connector = connector;
-                    javaKey.interestOps(javaKey.interestOps().or(javaConnectOp));
+                    connector.interestOps(javaKey, javaKey.interestOps().or(javaConnectOp));
                 }else{
                     throw;
                 }
             }else{
                 // new key
                 value key = Key{onConnect = callback; connector = connector;};
-                value newJavaKey = connector.channel.register(javaSelector, javaConnectOp, key);
+                value newJavaKey = connector.register(javaSelector, javaConnectOp, key);
                 map.put(newJavaKey, key);
             }
         }else{
@@ -110,14 +110,14 @@ shared class SelectorImpl() satisfies Selector {
                     // update our key
                     key.onAccept = callback;
                     key.acceptor = acceptor;
-                    javaKey.interestOps(javaKey.interestOps().or(javaAcceptOp));
+                    acceptor.interestOps(javaKey, javaKey.interestOps().or(javaAcceptOp));
                 }else{
                     throw;
                 }
             }else{
                 // new key
                 value key = Key{onAccept = callback; acceptor = acceptor;};
-                value newJavaKey = acceptor.channel.register(javaSelector, javaAcceptOp, key);
+                value newJavaKey = acceptor.register(javaSelector, javaAcceptOp, key);
                 map.put(newJavaKey, key);
             }
         }else{
@@ -126,20 +126,35 @@ shared class SelectorImpl() satisfies Selector {
     }
 
     void checkRead(SelectionKey selectedKey, Key key) {
-        if(selectedKey.valid && selectedKey.readable){
-            if(exists socket = key.socket){
+        if(selectedKey.valid){
+            if(is SocketImpl socket = key.socket){
+                if(selectedKey.readable){
+                    // normal read
+                }else if(is SslSocketImpl socket, socket.dataToRead){
+                    // SSL data has leftover stuff to read from
+                }else{
+                    // nothing to read
+                    return;
+                }
+                // if we're handshaking and we have data, let's try to make it progress
+                if(selectedKey.readable, is SslSocketImpl socket, socket.isHandshakeUnwrap()){
+                    if(socket.readForHandshake() == dataNeedsNeedsData){
+                        // nothing left to do but wait
+                        return;
+                    }
+                }
                 if(exists callback = key.onRead){
                     value goOn = callback(socket);
-                    print("Do we keep it for reading? `` goOn ``");
+                    debug("Do we keep it for reading? `` goOn ``");
                     if(!goOn){
                         // are we still writing?
                         if(key.onWrite exists){
                             // drop the reading bits
-                        print("Dropping read interest");
-                            selectedKey.interestOps(selectedKey.interestOps().xor(javaReadOp));
+                            debug("Dropping read interest");
+                            socket.interestOps(selectedKey, selectedKey.interestOps().xor(javaReadOp));
                             key.onRead = null;
                         }else{
-                            print("Cancelling key");
+                            debug("Cancelling key");
                             selectedKey.cancel();
                             map.remove(selectedKey);
                         }
@@ -147,33 +162,35 @@ shared class SelectorImpl() satisfies Selector {
                 }else{
                     throw;
                 }
-            }else{
-                throw;
             }
         }
     }
     
     void checkWrite(SelectionKey selectedKey, Key key) {
         if(selectedKey.valid && selectedKey.writable){
-            if(exists socket = key.socket){
+            if(is SocketImpl socket = key.socket){
+                // special case for SSL where we may have pending SSL data to write before we let the
+                // user play
+                if(is SslSocketImpl socket, socket.writePendingData() != dataNeedsOk){
+                    // we're not ready for something else
+                    return;
+                }
                 if(exists callback = key.onWrite){
                     value goOn = callback(socket);
-                    print("Do we keep it for writing? `` goOn ``");
+                    debug("Do we keep it for writing? `` goOn ``");
                     if(!goOn){
                         // are we still reading?
                         if(key.onRead exists){
                             // drop the reading bits
-                            print("Dropping write interest");
-                            selectedKey.interestOps(selectedKey.interestOps().xor(javaWriteOp));
+                            debug("Dropping write interest");
+                            socket.interestOps(selectedKey, selectedKey.interestOps().xor(javaWriteOp));
                             key.onWrite = null;
                         }else{
-                            print("Cancelling key");
+                            debug("Cancelling key");
                             selectedKey.cancel();
                             map.remove(selectedKey);
                         }
                     }
-                }else{
-                    throw;
                 }
             }else{
                 throw;
@@ -188,17 +205,17 @@ shared class SelectorImpl() satisfies Selector {
                     // FIXME: check
                     connector.channel.finishConnect();
                     // create a new socket
-                    value socket = SocketImpl(connector.channel);
+                    value socket = connector.createSocket();
                     callback(socket);
                     // did we just register for read/write events?
                     if(key.onRead exists || key.onWrite exists){
                         // drop the connect bits
-                        print("Dropping connect interest");
-                        selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));
+                        debug("Dropping connect interest");
+                        connector.interestOps(selectedKey, selectedKey.interestOps().xor(javaConnectOp));
                         key.onConnect = null;
                         key.connector = null;
                     }else{
-                        print("Cancelling key");
+                        debug("Cancelling key");
                         selectedKey.cancel();
                         map.remove(selectedKey);
                     }
@@ -224,12 +241,12 @@ shared class SelectorImpl() satisfies Selector {
                         // did we just register for read/write events?
                         if(key.onRead exists || key.onWrite exists){
                             // drop the connect bits
-                            print("Dropping connect interest");
-                            selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));
+                            debug("Dropping connect interest");
+                            connector.interestOps(selectedKey, selectedKey.interestOps().xor(javaConnectOp));
                             key.onConnect = null;
                             key.connector = null;
                         }else{
-                            print("Cancelling key");
+                            debug("Cancelling key");
                             selectedKey.cancel();
                             map.remove(selectedKey);
                         }
@@ -244,15 +261,38 @@ shared class SelectorImpl() satisfies Selector {
     }
     
     shared actual void process() {
+        MutableSet<Key> sslKeysWithDataToRead = HashSet<Key>();
         while(!map.empty){
-            print("Select! with `` javaSelector.keys().size() `` keys ");
-            javaSelector.select();
+            debug("Select! with `` javaSelector.keys().size() `` keys ");
+            // make sure we get out of select if we have SSL sockets with things ready to read
+            value keysIterator = javaSelector.keys().iterator();
+            variable Boolean dataToRead = false;
+            while(keysIterator.hasNext()){
+                value selectionKey = keysIterator.next();
+                assert(is Key key = selectionKey.attachment());
+                if(is SslSocketImpl socket = key.socket,
+                   socket.dataToRead){
+                    dataToRead = true;
+                    sslKeysWithDataToRead.add(key);
+                }
+            }
+            debug("Has SSL data to read: ``dataToRead``");
+            if(dataToRead){
+                javaSelector.selectNow();
+            }else{
+                javaSelector.select();
+            }
+            
             // process results
-            print("Got `` javaSelector.selectedKeys().size() `` selected keys");
+            debug("Got `` javaSelector.selectedKeys().size() `` selected keys");
             value it = javaSelector.selectedKeys().iterator();
             while(it.hasNext()){
                 value selectedKey = it.next();
                 if(is Key key = selectedKey.attachment()){
+                    debug("Key available:``selectedKey.acceptable``, connectable: ``selectedKey.connectable``,
+                             readable: ``selectedKey.readable``, writable: ``selectedKey.writable``,
+                             valid: ``selectedKey.valid``");
+                    sslKeysWithDataToRead.remove(key);
                     checkRead(selectedKey, key);
                     checkWrite(selectedKey, key);
                     checkConnect(selectedKey, key);
@@ -260,6 +300,13 @@ shared class SelectorImpl() satisfies Selector {
                 }else{
                     throw;
                 }
+            }
+            debug("Got `` sslKeysWithDataToRead.size `` extra SSL keys");
+            // make sure we treat ssl sockets with data to read that weren't selected
+            for(key in sslKeysWithDataToRead){
+                assert(is SslSocketImpl socket = key.socket);
+                assert(exists javaKey = socket.channel.keyFor(javaSelector));
+                checkRead(javaKey, key);
             }
         }
     }

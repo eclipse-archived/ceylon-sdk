@@ -1,6 +1,6 @@
 import ceylon.io { SocketAddress, ServerSocket, Socket, Selector }
 import java.net { InetSocketAddress }
-import java.nio.channels { ServerSocketChannel { openSocket=open } }
+import java.nio.channels { ServerSocketChannel { openSocket=open }, JavaSelector = Selector, SelectionKey }
 
 shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) extends ServerSocket(bindAddress){
 
@@ -31,5 +31,13 @@ shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) e
 
     shared actual void close() {
         channel.close();
+    }
+    
+    shared default SelectionKey register(JavaSelector selector, Integer ops, Object attachment){
+        return channel.register(selector, ops, attachment);
+    }
+    
+    shared default void interestOps(SelectionKey key, Integer ops) {
+        key.interestOps(ops);
     }
 }
