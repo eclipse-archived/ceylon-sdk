@@ -40,17 +40,13 @@ shared class OpenFileImpl(resource) satisfies OpenFile {
     }
 
     shared actual Integer read(ByteBuffer buffer) {
-        if(is ByteBufferImpl buffer){
-            return channel.read(buffer.underlyingBuffer);
-        }
-        throw;
+        assert(is ByteBufferImpl buffer);
+        return channel.read(buffer.underlyingBuffer);
     }
 
     shared actual Integer write(ByteBuffer buffer) {
-        if(is ByteBufferImpl buffer){
-            return channel.write(buffer.underlyingBuffer);
-        }
-        throw;
+        assert(is ByteBufferImpl buffer);
+        return channel.write(buffer.underlyingBuffer);
     }
 
 }

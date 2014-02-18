@@ -12,16 +12,12 @@ shared class SocketImpl(channel) satisfies Socket {
         channel.close();
     }
     shared default actual Integer read(ByteBuffer buffer) {
-        if(is ByteBufferImpl buffer){
-            return channel.read(buffer.underlyingBuffer);
-        }
-        throw;
+        assert(is ByteBufferImpl buffer);
+        return channel.read(buffer.underlyingBuffer);
     }
     shared default actual Integer write(ByteBuffer buffer) {
-        if(is ByteBufferImpl buffer){
-            return channel.write(buffer.underlyingBuffer);
-        }
-        throw;
+        assert(is ByteBufferImpl buffer);
+        return channel.write(buffer.underlyingBuffer);
     }
     
     shared actual void setNonBlocking() {

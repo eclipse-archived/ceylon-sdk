@@ -13,11 +13,8 @@ shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) e
         channel.bind(null, backlog);
     }
 
-    if(is InetSocketAddress socketAddress = channel.localAddress){
-        localAddress = SocketAddress(socketAddress.hostString, socketAddress.port);
-    }else{
-        throw;
-    }
+    assert(is InetSocketAddress socketAddress = channel.localAddress);
+    localAddress = SocketAddress(socketAddress.hostString, socketAddress.port);
 
     shared actual Socket accept() {
         return SocketImpl(channel.accept());
