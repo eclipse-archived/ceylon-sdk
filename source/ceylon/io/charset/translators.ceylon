@@ -12,7 +12,6 @@ by("Stéphane Épardaud")
 shared Callable<Anything,[ByteBuffer]> byteConsumerToStringConsumer(Charset charset, void consumer(String buffer)){
     Decoder decoder = charset.newDecoder();
     void translator(ByteBuffer buffer){
-        print("Translator called");
         decoder.decode(buffer);
         value decoded = decoder.consumeAvailable();
         if(exists decoded){

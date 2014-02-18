@@ -21,7 +21,6 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
             if(socket.read(buffer) >= 0){
                 buffer.flip();
                 // FIXME: should the consumer be allowed to stop us?
-                print("Calling consumer");
                 consume(buffer);
                 return true;
             }else{
