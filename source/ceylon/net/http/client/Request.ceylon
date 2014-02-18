@@ -1,7 +1,7 @@
 import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
 import ceylon.net.uri { Uri, Parameter }
 import ceylon.io.charset { ascii }
-import ceylon.io { newSocketConnector, SocketAddress }
+import ceylon.io { newSocketConnector, SocketAddress, newSslSocketConnector }
 import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength, get, Method }
 
 "Represents an HTTP Request"
@@ -25,6 +25,9 @@ shared class Request(uri, method = get){
     "The port to connect to. Defaults to 80 for `http` Uris and to 443 for `https` uris, unless
      overridden in the [[uri]]."
     shared variable Integer port = 80;
+    
+    "Set to true to use SSL. Defaults to true for port 443."
+    shared variable Boolean ssl = false;
 
     if(uri.relative){
         throw Exception("Can't request a relative URI");
@@ -40,7 +43,7 @@ shared class Request(uri, method = get){
             port = 80;
         }else if(scheme == "https"){
             port = 443;
-            throw Exception("HTTPS not currently supported (sorry)");
+            ssl = true;
         }
     }else{
         throw Exception("Missing URI scheme");
@@ -108,8 +111,6 @@ shared class Request(uri, method = get){
     }
 
     Header defaultContentTypeHeader() {
-        //TODO log debug
-        print("Using default Content-Type");
         Header contentTypeHeader = contentType(contentTypeFormUrlEncoded);
         headers.add(contentTypeHeader);
         return contentTypeHeader; 
@@ -172,7 +173,8 @@ shared class Request(uri, method = get){
         value requestBuffer = ascii.encode(requestContents);
         
         // now open a socket to the host
-        value connector = newSocketConnector(SocketAddress(host, port));
+        value socketAddress = SocketAddress(host, port);
+        value connector = ssl then newSslSocketConnector(socketAddress) else newSocketConnector(socketAddress);
         value socket = connector.connect();
         
         // send the full request
