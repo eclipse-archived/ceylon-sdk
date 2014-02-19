@@ -61,16 +61,20 @@ shared void shouldRunCallbacksFromAncestor() {
     createTestRunner([`BarWithCallbacks.bar`]).run();
 
     value lines = callbackLogger.string.trimmed.lines.sequence;
-    assertEquals(lines.size, 9);
+    assertEquals(lines.size, 13);
     assertEquals(lines[0], "fooToplevelBefore");
     assertEquals(lines[1], "barToplevelBefore");
-    assertEquals(lines[2], "FooWithCallbacks.fooBefore");
-    assertEquals(lines[3], "BarWithCallbacks.barBefore");
-    assertEquals(lines[4], "BarWithCallbacks.bar");
-    assertEquals(lines[5], "BarWithCallbacks.barAfter");
-    assertEquals(lines[6], "FooWithCallbacks.fooAfter");
-    assertEquals(lines[7], "barToplevelAfter");
-    assertEquals(lines[8], "fooToplevelAfter");
+    assertEquals(lines[2], "BarWithCallbacksInterface2.bar2Before");
+    assertEquals(lines[3], "BarWithCallbacksInterface1.bar1Before");
+    assertEquals(lines[4], "FooWithCallbacks.fooBefore");
+    assertEquals(lines[5], "BarWithCallbacks.barBefore");
+    assertEquals(lines[6], "BarWithCallbacks.bar");
+    assertEquals(lines[7], "BarWithCallbacks.barAfter");
+    assertEquals(lines[8], "FooWithCallbacks.fooAfter");
+    assertEquals(lines[9], "BarWithCallbacksInterface1.bar1After");
+    assertEquals(lines[10], "BarWithCallbacksInterface2.bar2After");
+    assertEquals(lines[11], "barToplevelAfter");
+    assertEquals(lines[12], "fooToplevelAfter");
 }
 
 test

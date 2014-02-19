@@ -1,7 +1,9 @@
 import test.ceylon.test.stubs.beforeafter {
     ...
 }
-import ceylon.test { afterTest, beforeTest, test }
+import ceylon.test {
+    ...
+}
 
 beforeTest
 shared void barToplevelBefore() {
@@ -12,9 +14,36 @@ afterTest
 shared void barToplevelAfter() {
     callbackLogger.append("barToplevelAfter").appendNewline();
 }
- 
 
-shared class BarWithCallbacks() extends FooWithCallbacks() {
+shared interface BarWithCallbacksInterface1 satisfies BarWithCallbacksInterface2 {
+    
+    beforeTest
+    shared default void bar1Before() {
+        callbackLogger.append("BarWithCallbacksInterface1.bar1Before").appendNewline();
+    }
+    
+    afterTest
+    shared default void bar1After() {
+        callbackLogger.append("BarWithCallbacksInterface1.bar1After").appendNewline();
+    }
+     
+}
+
+shared interface BarWithCallbacksInterface2 {
+    
+    beforeTest
+    shared default void bar2Before() {
+        callbackLogger.append("BarWithCallbacksInterface2.bar2Before").appendNewline();
+    }
+    
+    afterTest
+    shared default void bar2After() {
+        callbackLogger.append("BarWithCallbacksInterface2.bar2After").appendNewline();
+    }
+    
+}
+
+shared class BarWithCallbacks() extends FooWithCallbacks() satisfies BarWithCallbacksInterface1 {
     
     beforeTest
     shared void barBefore() {
