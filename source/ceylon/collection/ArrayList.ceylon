@@ -75,13 +75,9 @@ shared class ArrayList<Element>
             elements.array.copyTo(array, 0, 0, length);
         }
         else {
-            /*variable value i=0;
-             while (i<length) {
-             array.set(i, elements[i]);
-             i++;
-             }*/
+            variable value i=0;
             for (element in elements) {
-                array.set(length++, element);
+                array.set(i++, element);
             }
         }
     }
@@ -156,12 +152,31 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual void removeAll(Element&Object element) {
+    shared actual void remove(Element&Object element) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
             if (exists elem = array[i++]) {
                 if (elem!=element) {
+                    array.set(j++,elem);
+                }
+            }
+            else {
+                array.set(j++, null);
+            }
+        }
+        length=j;
+        while (j<i) {
+            array.set(j++, null);
+        }
+    }
+    
+    shared actual void removeAll({<Element&Object>*} elements) {
+        variable value i=0;
+        variable value j=0;
+        while (i<length) {
+            if (exists elem = array[i++]) {
+                if (!elem in elements) {
                     array.set(j++,elem);
                 }
             }
@@ -185,6 +200,16 @@ shared class ArrayList<Element>
         }
     }
     
+    shared actual Boolean removeLast(Element&Object element) {
+        if (exists index = lastOccurrence(element)) {
+            delete(index);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     shared actual void prune() {
         variable value i=0;
         variable value j=0;
@@ -199,7 +224,7 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual void replaceAll(Element&Object element, 
+    shared actual void replace(Element&Object element, 
             Element replacement) {
         variable value i=0;
         while (i<length) {
@@ -212,6 +237,17 @@ shared class ArrayList<Element>
     shared actual Boolean replaceFirst(Element&Object element, 
             Element replacement) {
         if (exists index = firstOccurrence(element)) {
+            set(index, element);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual Boolean replaceLast(Element&Object element, 
+    Element replacement) {
+        if (exists index = lastOccurrence(element)) {
             set(index, element);
             return true;
         }

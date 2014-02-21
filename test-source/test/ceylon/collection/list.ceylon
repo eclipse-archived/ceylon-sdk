@@ -113,7 +113,7 @@ void doListTests(MutableList<String> l) {
     l.add("end");
     assertEquals("{ foo, bar, empty, empty, empty, last, end }", l.string);
     assertEquals(7, l.size);
-    l.removeAll("empty");
+    l.remove("empty");
     assertEquals("{ foo, bar, last, end }", l.string);
     assertEquals(4, l.size);
     l.truncate(3);

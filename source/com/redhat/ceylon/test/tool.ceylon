@@ -5,13 +5,15 @@ import ceylon.test {
     createTestRunner,
     TestSource,
     SimpleLoggingListener,
-    TestListener
+    TestListener,
+    TestRunResult
 }
 import com.redhat.ceylon.test.eclipse {
     TestEventPublisher,
     Util {
         createSocket,
-        createObjectOutputStream
+        createObjectOutputStream,
+        setColor
     }
 }
 import java.io {
@@ -40,13 +42,13 @@ shared void run() {
 }
 
 class Runner() {
-    
+
     value moduleNameAndVersions = SequenceBuilder<[String, String]>();
     value testSources = SequenceBuilder<TestSource>();
     variable Integer port = -1;
     variable Socket? socket = null;
     variable ObjectOutputStream? oos = null;
-    
+
     shared void run() {
         try {
             init();
@@ -59,25 +61,52 @@ class Runner() {
                     testSources.append(m);
                 }
             }
-            
+
             TestListener[] testListeners;
             if( exists o = oos ) {
                 testListeners = [TestEventPublisher(o)];
             }
             else {
-                testListeners = [SimpleLoggingListener()];
+                object loggingListener extends SimpleLoggingListener() {
+
+                    value colorCodeRed = 1;
+                    value colorCodeGreen = 2;
+                    value colorCodeWhite = 7;
+
+                    shared actual void writeBannerSuccess(TestRunResult result) {
+                        setColor(colorCodeGreen);
+                        try {
+                            super.writeBannerSuccess(result);
+                        }
+                        finally {
+                            setColor(colorCodeWhite);
+                        }
+                    }
+
+                    shared actual void writeBannerFailed(TestRunResult result) {
+                        setColor(colorCodeRed);
+                        try {
+                            super.writeBannerFailed(result);
+                        }
+                        finally {
+                            setColor(colorCodeWhite);
+                        }
+                    }
+
+                }
+                testListeners = [loggingListener];
             }
-            
-            createTestRunner(testSources.sequence, testListeners).run();        
+
+            createTestRunner(testSources.sequence, testListeners).run();
         }
         finally {
             disconnect();
         }
     }
-    
+
     void init() {
         variable String prev = "";
-        
+
         for(String arg in process.arguments) {
             if( prev == "--module" ) {
                 assert(exists i = arg.firstInclusion("/"));
@@ -96,20 +125,20 @@ class Runner() {
             prev = arg;
         }
     }
-    
+
     void loadModules() {
         for(value moduleNameAndVersion in moduleNameAndVersions.sequence) {
             loadModule(moduleNameAndVersion[0], moduleNameAndVersion[1]);
         }
     }
-    
+
     void loadModule(String modName, String modVersion) {
         ModuleIdentifier modIdentifier = createModuleIdentifier(modName, modVersion);
         Module mod = ceylonModuleLoader.loadModule(modIdentifier);
         ModuleClassLoader modClassLoader = mod.classLoader;
         modClassLoader.loadClass(modName+".module_");
     }
-    
+
     void connect() {
         if( port != -1 ) {
             variable Exception? lastException = null;
@@ -130,7 +159,7 @@ class Runner() {
             throw Exception("failed connect to port ``port``", lastException);
         }
     }
-    
+
     void disconnect() {
         try {
             if( oos exists ) {
@@ -140,15 +169,15 @@ class Runner() {
         } catch (IOException e) {
             // noop
         }
-        
+
         try {
             if( socket exists ) {
                 socket?.close();
                 socket = null;
             }
         } catch (IOException e) {
-            // noop            
+            // noop
         }
     }
-    
+
 }

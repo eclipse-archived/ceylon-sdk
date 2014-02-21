@@ -95,12 +95,20 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.deleteSpan(from, to);
     }
     
-    shared actual void removeAll(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.removeAll(val);
+    shared actual void remove(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
+        list.remove(val);
+    }
+    
+    shared actual void removeAll({<String|Boolean|Integer|Float|Object|Array|NullInstance>*} elements) {
+        list.removeAll(elements);
     }
     
     shared actual Boolean removeFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
         return list.removeFirst(element);
+    }
+    
+    shared actual Boolean removeLast(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
+        return list.removeLast(element);
     }
     
     shared actual void prune() {
@@ -111,14 +119,19 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         list.truncate(size);
     }
     
-    shared actual void replaceAll(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
+    shared actual void replace(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
             String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
-        list.replaceAll(val, newVal);
+        list.replace(val, newVal);
     }
     
     shared actual Boolean replaceFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
             String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
         return list.replaceFirst(element, replacement);
+    }
+    
+    shared actual Boolean replaceLast(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
+    String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
+        return list.replaceLast(element, replacement);
     }
     
     shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {

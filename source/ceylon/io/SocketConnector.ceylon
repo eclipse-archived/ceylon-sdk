@@ -1,4 +1,4 @@
-import ceylon.io.impl { SocketConnectorImpl }
+import ceylon.io.impl { SocketConnectorImpl, SslSocketConnectorImpl }
 
 "Represents an object that you can use to connect to a remote host.
  
@@ -12,7 +12,7 @@ import ceylon.io.impl { SocketConnectorImpl }
  "
 by("Stéphane Épardaud")
 see(`function newSocketConnector`)
-shared abstract class SocketConnector(SocketAddress addr){
+shared interface SocketConnector{
     
     "Blocks the current thread until we can make a connection to the
      specified [[addr]]."
@@ -27,8 +27,16 @@ shared abstract class SocketConnector(SocketAddress addr){
     shared formal void close();
 }
 
+shared interface SslSocketConnector satisfies SocketConnector {
+    shared formal actual SslSocket connect();
+}
+
 "Creates a new [[SocketConnector]] to connect to the specified [[addr]]."
-see(`class SocketConnector`)
+see(`interface SocketConnector`)
 shared SocketConnector newSocketConnector(SocketAddress addr){
     return SocketConnectorImpl(addr);
+}
+
+shared SslSocketConnector newSslSocketConnector(SocketAddress addr){
+    return SslSocketConnectorImpl(addr);
 }

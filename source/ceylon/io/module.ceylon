@@ -11,5 +11,6 @@ module ceylon.io "1.0.0" {
     shared import ceylon.file "1.0.0";
     import ceylon.collection "1.0.0";
     import java.base "7";
+    import java.tls "7";
     import ceylon.interop.java "1.0.0";
 }

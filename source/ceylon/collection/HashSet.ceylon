@@ -139,8 +139,8 @@ shared class HashSet<Element>
     
     // End of initialiser section
     
-    shared actual Boolean add(Element element){
-        if(addToStore(store, element)){
+    shared actual Boolean add(Element element) {
+        if (addToStore(store, element)) {
             length++;
             checkRehash();
             return true;
@@ -148,10 +148,13 @@ shared class HashSet<Element>
         return false;
     }
     
-    shared actual Boolean addAll({Element*} elements){
+    shared actual Boolean addAll({Element*} elements) {
         variable Boolean ret = false;
         for(elem in elements){
-            ret ||= add(elem);
+            if (addToStore(store, elem)) {
+                length++;
+                ret = true;
+            }
         }
         if (ret) {
             checkRehash();
@@ -185,11 +188,10 @@ shared class HashSet<Element>
         return result;
     }
     
-    "Removes every element"
-    shared actual void clear(){
+    shared actual void clear() {
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             store.set(index++, null);
         }
         length = 0;

@@ -1,7 +1,7 @@
 import ceylon.io.buffer { ... }
 import ceylon.io.charset { ... }
 import ceylon.net.uri { parse }
-import ceylon.io { Socket, Selector, newSelector, SocketConnector, SocketAddress, newSocketConnector }
+import ceylon.io { Socket, Selector, newSelector, SocketConnector, SocketAddress, newSocketConnector, newSslSocketConnector }
 
 void readResponse(Socket socket) {
     // blocking read
@@ -83,7 +83,8 @@ void readAndWriteAsync(String request, Socket socket){
     socket.readAsync(select, byteConsumerToStringConsumer(utf8, (String string) => process.write(string)));
     // run the event loop
     select.process();
-    print("");
+    socket.close();
+    print("Done read/write");
 }
 
 void connectReadAndWriteAsync(String request, SocketConnector connector){
@@ -97,16 +98,17 @@ void connectReadAndWriteAsync(String request, SocketConnector connector){
     // run the event loop
     select.process();
     connector.close();
-    print("");
+    print("Done connect/read/write");
 }
 
 
 void testGrrr(){
     // /wiki/Chunked_transfer_encoding in thai
-    value uri = parse("http://th.wikipedia.org/wiki/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%82%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%8A%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99");
+    //value uri = parse("http://th.wikipedia.org/wiki/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%82%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%8A%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99");
+    value uri = parse("https://api.github.com/repos/ceylon/ceylon-compiler");
     value host = notNull(uri.authority.host);
-    value connector = newSocketConnector(SocketAddress(host, 80));
-//    value socket = connector.connect();
+    value connector = newSslSocketConnector(SocketAddress(host, 443));
+    value socket = connector.connect();
     print("Getting ``uri.humanRepresentation``");
     value request = "GET ``uri.path.string`` HTTP/1.1
                      Host: ``host``
@@ -116,13 +118,14 @@ void testGrrr(){
     print(request);
     
     print("Writing request");
+    writeRequest(request, socket);
     //writeAsyncRequest(request, socket);
     
     print("Reading response");
-    //readResponse(socket);
+    readResponse(socket);
 
-    connectReadAndWriteAsync(request, connector);
+    //connectReadAndWriteAsync(request, connector);
     //readAndWriteAsync(request, socket);
 
-    //socket.close();
+    socket.close();
 }

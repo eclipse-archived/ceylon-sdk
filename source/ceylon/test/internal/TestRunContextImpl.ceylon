@@ -21,15 +21,11 @@ class TestRunContextImpl(runner, result) satisfies TestRunContext {
 
     value listenersCache = HashMap<ClassDeclaration, TestListener>();
 
-    shared actual void addTestListener(TestListener* listeners) {
-        listenersList.addAll(listeners);
-    }
+    shared actual void addTestListener(TestListener* listeners)
+            => listenersList.addAll(listeners);
 
-    shared actual void removeTestListener(TestListener* listeners) {
-        for(listener in listeners) {
-            listenersList.removeAll(listener);
-        }
-    }
+    shared actual void removeTestListener(TestListener* listeners)
+            => listenersList.removeAll(listeners);
 
     shared actual void fireTestRunStart(TestRunStartEvent event)
             => fire(event.runner.description, (TestListener l) => l.testRunStart(event));

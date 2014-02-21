@@ -4,7 +4,7 @@ import ceylon.net.http.client { ... }
 import ceylon.test { ... }
 
 void testJSON(Object json){
-    assertEquals(32, json.size, "Object size");
+    assertEquals(70, json.size, "Object size");
     assertEquals("http://ceylon-lang.org", json["homepage"], "Homepage");
     
     if(is Object owner = json["owner"]){
@@ -14,7 +14,6 @@ void testJSON(Object json){
     }
 }
 
-ignore("Disabled until we support HTTPS")
 test void testGETAndParseJSON(){
     value request = parse("https://api.github.com/repos/ceylon/ceylon-compiler").get();
     value response = request.execute();

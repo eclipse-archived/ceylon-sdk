@@ -10,6 +10,9 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection {
+    ... 
+}
 
 class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) satisfies TestExecutor {
 
@@ -199,38 +202,44 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
     }
 
     FunctionDeclaration[] findCallbacks<CallbackType>() {
-        SequenceBuilder<FunctionDeclaration> callbacks = SequenceBuilder<FunctionDeclaration>();
+        value callbacks = HashSet<FunctionDeclaration>();
+
         if( exists classDecl ) {
-            variable ClassDeclaration? declVar = classDecl;
-            while(exists decl = declVar) {
-                callbacks.appendAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>());
-                declVar = decl.extendedType?.declaration;
+
+            void visit(ClassOrInterfaceDeclaration? decl, void do(ClassOrInterfaceDeclaration decl)) {
+                if(exists decl) {
+                    try {
+                        do(decl);
+                    }
+                    catch(Exception e) {
+                        if( e.message == "interface ceylon.language.Annotation is not visible from class loader" ) {
+                            // XXX workaround for ceylon.language #410, ignore exception
+                        }
+                        else {
+                            throw e;
+                        }
+                    }
+                    
+                    visit(decl.extendedType?.declaration, do);
+                    for(satisfiedType in decl.satisfiedTypes) {
+                        visit(satisfiedType.declaration, do);
+                    }
+                }
             }
-            declVar = classDecl;
-            while(exists decl = declVar) {
-                variable FunctionDeclaration[] pkgCallbacks = [];
-                try {
-                    pkgCallbacks = decl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>();
-                }
-                catch(Exception e) {
-                    if( e.message == "interface ceylon.language.Annotation is not visible from class loader" ) {
-                        // XXX workaround for ceylon.language #410, ignore exception
-                    }
-                    else {
-                        throw e;
-                    }
-                }
-                
-                for(pkgCallback in pkgCallbacks) {
-                    if( !callbacks.sequence.contains(pkgCallback) ) {
-                       callbacks.append(pkgCallback);
-                    }
-                }
-                declVar = decl.extendedType?.declaration;
-            }
+
+            visit(classDecl, void (ClassOrInterfaceDeclaration decl) {
+                callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>() else []);
+            });
+            visit(classDecl, void (ClassOrInterfaceDeclaration decl) {
+                callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>() else []);
+            });
+            visit(classDecl, void (ClassOrInterfaceDeclaration decl) {
+                callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>());
+            });
+
         }
         else {
-            callbacks.appendAll(funcDecl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>());
+            callbacks.addAll(funcDecl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>());
         }
 
         return callbacks.sequence;

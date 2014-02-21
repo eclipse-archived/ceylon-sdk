@@ -27,16 +27,6 @@ shared class TreeSet<Element>(compare, elements={})
      
      clear() => map.clear();
      
-     shared actual Boolean addAll({Element*} elements) {
-         variable value result = false;
-         for (element in elements) {
-             if (add(element)) {
-                 result = true;
-             }
-         }
-         return result;
-     }
-     
      shared actual TreeSet<Element> clone() {
          value clone = TreeSet(compare);
          clone.map = map.clone();
