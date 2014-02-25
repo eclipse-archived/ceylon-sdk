@@ -165,7 +165,7 @@ shared void forEachLine(File file, void do(String line)) {
 "Return a [[File]], creating a new file if the given 
  resource is [[Nil]], or returning the given [[File]]
  otherwise."
-File createFileIfNil(File|Nil res) { 
+shared File createFileIfNil(File|Nil res) { 
     switch (res)
     case (is File) { return res; }
     case (is Nil) { return res.createFile(); }
@@ -173,25 +173,28 @@ File createFileIfNil(File|Nil res) {
 
 "Copy lines from [[one file|from]] to [[a second file|to]],
  appending to the second file."
-void readAndAppendLines(File from, File to,
+shared void readAndAppendLines(File from, File to,
         "A transformation to apply to each line of text."
         String replacing(String line) => line) {
     try (reader = from.Reader(), writer = to.Appender()) {
-        while (exists line = reader.readLine()) {
-            writer.writeLine(replacing(line));
-        }
+        copyLines(reader, writer, replacing);
     }
 }
 
 "Copy lines from [[one file|from]] to [[a second file|to]],
  overwriting the second file."
-void readAndOverwriteLines(File from, File to, 
+shared void readAndOverwriteLines(File from, File to, 
         "A transformation to apply to each line of text."
         String replacing(String line) => line) {
     try (reader = from.Reader(), writer = to.Overwriter()) {
-        while (exists line = reader.readLine()) {
-            writer.writeLine(replacing(line));
-        }
+        copyLines(reader, writer, replacing);
+    }
+}
+
+void copyLines(Reader reader, Writer writer, 
+        String replacing(String line)) {
+    while (exists line = reader.readLine()) {
+        writer.writeLine(replacing(line));
     }
 }
 
