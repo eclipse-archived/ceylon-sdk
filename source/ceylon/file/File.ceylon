@@ -185,10 +185,10 @@ void readAndAppendLines(File from, File to,
 
 "Copy lines from [[one file|from]] to [[a second file|to]],
  overwriting the second file."
-void readAndOverwiteLines(File from, File to, 
+void readAndOverwriteLines(File from, File to, 
         "A transformation to apply to each line of text."
         String transform(String line) => line) {
-    try (reader = from.Reader(), writer = to.Appender()) {
+    try (reader = from.Reader(), writer = to.Overwriter()) {
         while (exists line = reader.readLine()) {
             writer.writeLine(transform(line));
         }
