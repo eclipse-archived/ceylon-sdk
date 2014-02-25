@@ -162,4 +162,41 @@ shared void forEachLine(File file, void do(String line)) {
     }
 }
 
+"Return a [[File]], creating a new file if the given 
+ resource is [[Nil]], or returning the given [[File]]
+ otherwise."
+File createFileIfNil(File|Nil res) { 
+    switch (res)
+    case (is File) { return res; }
+    case (is Nil) { return res.createFile(); }
+}
+
+"Copy lines from [[one file|from]] to [[a second file|to]],
+ appending to the second file."
+void readAndAppendLines(File from, File to,
+        "A transformation to apply to each line of text."
+        String replacing(String line) => line) {
+    try (reader = from.Reader(),
+    writer = to.Appender()) {
+        while (exists line = reader.readLine()) {
+            writer.writeLine(replacing(line));
+        }
+    }
+}
+
+"Copy lines from [[one file|from]] to [[a second file|to]],
+ overwriting the second file."
+void readAndOverwiteLines(File from, File to, 
+        "A transformation to apply to each line of text."
+        String transform(String line) => line) {
+    try (reader = from.Reader(),
+    writer = to.Appender()) {
+        while (exists line = reader.readLine()) {
+            writer.writeLine(transform(line));
+        }
+    }
+}
+
+"Determines if the two given [[File]] objects represent the
+ same file."
 shared Boolean sameFile(File x, File y) => sameFileInternal(x, y);
