@@ -176,8 +176,7 @@ File createFileIfNil(File|Nil res) {
 void readAndAppendLines(File from, File to,
         "A transformation to apply to each line of text."
         String replacing(String line) => line) {
-    try (reader = from.Reader(),
-    writer = to.Appender()) {
+    try (reader = from.Reader(), writer = to.Appender()) {
         while (exists line = reader.readLine()) {
             writer.writeLine(replacing(line));
         }
@@ -189,8 +188,7 @@ void readAndAppendLines(File from, File to,
 void readAndOverwiteLines(File from, File to, 
         "A transformation to apply to each line of text."
         String transform(String line) => line) {
-    try (reader = from.Reader(),
-    writer = to.Appender()) {
+    try (reader = from.Reader(), writer = to.Appender()) {
         while (exists line = reader.readLine()) {
             writer.writeLine(transform(line));
         }
