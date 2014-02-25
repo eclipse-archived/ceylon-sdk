@@ -187,10 +187,10 @@ void readAndAppendLines(File from, File to,
  overwriting the second file."
 void readAndOverwriteLines(File from, File to, 
         "A transformation to apply to each line of text."
-        String transform(String line) => line) {
+        String replacing(String line) => line) {
     try (reader = from.Reader(), writer = to.Overwriter()) {
         while (exists line = reader.readLine()) {
-            writer.writeLine(transform(line));
+            writer.writeLine(replacing(line));
         }
     }
 }
