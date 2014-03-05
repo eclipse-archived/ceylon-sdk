@@ -156,6 +156,16 @@ shared test void testListConstructor(){
     assertEquals("b", list[1]);
 }
 
+shared test void testListFirstAndLast(){
+	List<String> listArray = ArrayList{"a", "b"};
+	assertEquals("a", listArray.first);
+	assertEquals("b", listArray.last);
+	
+	List<String> listLinked = LinkedList{"a", "b"};
+	assertEquals("a", listLinked.first);
+	assertEquals("b", listLinked.last);
+}
+
 "See [ceylon/ceylon-sdk#183](https://github.com/ceylon/ceylon-sdk/issues/183)."
 shared test void testLinkedListIssue183(){
     LinkedList<Integer> l = LinkedList<Integer>();
