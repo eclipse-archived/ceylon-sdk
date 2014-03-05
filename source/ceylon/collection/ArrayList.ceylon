@@ -267,7 +267,7 @@ shared class ArrayList<Element>
     
     shared actual Element? first {
         if (length>0) {
-             return array[length];
+             return array[0];
         }
         else {
             return null;
