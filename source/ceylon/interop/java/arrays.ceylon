@@ -12,7 +12,8 @@ import java.lang {
     ShortArray,
     IntArray,
     LongArray,
-    ObjectArray
+    ObjectArray,
+    BooleanArray
 }
 
 "An array whose elements can be represented as an 
@@ -264,3 +265,31 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         return result;
     }
 }
+
+shared BooleanArray createJavaBooleanArray({Boolean*} booleans)
+        => javaBooleanArray(Array(booleans));
+
+shared LongArray createJavaLongArray({Integer*} elements)
+        => javaLongArray(Array(elements));
+
+shared IntArray createJavaIntArray({Integer*} elements)
+        => javaIntArray(Array { for (i in elements) Int(i) });
+
+shared ShortArray createJavaShortArray({Integer*} elements)
+        => javaShortArray(Array { for (i in elements) Short(i) });
+
+shared ByteArray createJavaByteArray({Integer*} elements)
+        => javaByteArray(Array { for (i in elements) Byte(i) });
+
+shared FloatArray createJavaFloatArray({Float*} elements)
+        => javaFloatArray(Array { for (f in elements) Single(f) });
+
+shared DoubleArray createJavaDoubleArray({Float*} elements)
+        => javaDoubleArray(Array(elements));
+
+shared ObjectArray<JavaString> createJavaStringArray({String*} elements)
+        => javaStringArray(Array(elements));
+
+shared ObjectArray<T> createJavaObjectArray<T>({T?*} elements)
+        given T satisfies Object
+        => javaObjectArray(Array(elements));
