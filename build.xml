@@ -43,6 +43,7 @@
         <!--<module name="ceylon.interop.java"/>-->
         <module name="ceylon.time"/>
     	<module name="ceylon.html"/>
+    	<module name="com.redhat.ceylon.testjs"/>
     </moduleset>
     
     <moduleset id="modules.test.jvm">
