@@ -118,10 +118,7 @@ shared class HashMap<Key, Item>
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element.key, newStore);
-                    variable value newBucket = newStore[newIndex];
-                    while (exists newCell = newBucket?.rest) {
-                        newBucket = newCell;
-                    }
+                    value newBucket = newStore[newIndex];
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
