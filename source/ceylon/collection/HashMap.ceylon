@@ -342,7 +342,7 @@ shared class HashMap<Key, Item>
         return false;
     }
     
-    shared actual MutableMap<Key,Item> clone() {
+    shared actual HashMap<Key,Item> clone() {
         value clone = HashMap<Key,Item>();
         clone.length = length;
         clone.store = entryStore<Key,Item>(store.size);

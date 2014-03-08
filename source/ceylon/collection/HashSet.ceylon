@@ -96,11 +96,7 @@ shared class HashSet<Element>
     
     shared actual HashSet<Element> clone() {
         value clone = HashSet<Element>();
-        clone.map = HashMap {
-            stability = stability;
-            hashtable = hashtable;
-            entries = map;
-        };
+        clone.map = map.clone();
         return clone;
     }
     
