@@ -1,8 +1,7 @@
-import ceylon.collection {
-    Cell,
-    MutableSet,
-    elementStore
-}
+import ceylon.collection { MutableSet }
+
+interface None of none {}
+object none satisfies None {}
 
 "A [[MutableSet]] implemented as a hash set stored in an 
  [[Array]] of singly linked lists. Each element is assigned 
@@ -41,253 +40,72 @@ shared class HashSet<Element>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
     
-    variable value store = elementStore<Element>
-            (hashtable.initialCapacity);
-    variable Integer length = 0;
+    function toEntries({Element*} elements) => { for (element in elements) element->none };
     
-    variable LinkedCell<Element>? head = null;
-    variable LinkedCell<Element>? tip = null;
+    variable value map = HashMap {
+        stability = stability;
+        hashtable = hashtable;
+        entries = toEntries(elements);
+    };
     
-    // Write
-    
-    Integer storeIndex(Object elem, Array<Cell<Element>?> store)
-            => (elem.hash % store.size).magnitude;
-    
-    Cell<Element> createCell(Element elem, Cell<Element>? rest) {
-        if (stability==linked) {
-            value cell = LinkedCell(elem, rest, tip);
-            if (exists last = tip) {
-                last.next = cell;
-            }
-            tip = cell;
-            if (!head exists) {
-                head = cell;
-            }
-            return cell;
-        }
-        else {
-            return Cell(elem, rest);
-        }
-    }
-    
-    void deleteCell(Cell<Element> cell) {
-        if (stability==linked) {
-            assert (is LinkedCell<Element> cell);
-            if (exists last = cell.previous) {
-                last.next = cell.next;
-            }
-            else {
-                head = cell.next;
-            }
-            if (exists next = cell.next) {
-                next.previous = cell.previous;
-            }
-            else {
-                tip = cell.previous;
-            }
-        }
-    }
-    
-    Boolean addToStore(Array<Cell<Element>?> store, Element element) {
-        Integer index = storeIndex(element, store);
-        variable value bucket = store[index];
-        while (exists cell = bucket) {
-            if (cell.element == element) {
-                // modify an existing entry
-                cell.element = element;
-                return false;
-            }
-            bucket = cell.rest;
-        }
-        // add a new entry
-        store.set(index, createCell(element, store[index]));
-        return true;
-    }
-    
-    void checkRehash() {
-        if (hashtable.rehash(length, store.size)) {
-            // must rehash
-            value newStore = elementStore<Element>
-                    (hashtable.capacity(length));
-            variable Integer index = 0;
-            // walk every bucket
-            while (index < store.size) {
-                variable value bucket = store[index];
-                while (exists cell = bucket) {
-                    bucket = cell.rest;
-                    Integer newIndex = storeIndex(cell.element, newStore);
-                    variable value newBucket = newStore[newIndex];
-                    while (exists newCell = newBucket?.rest) {
-                        newBucket = newCell;
-                    }
-                    cell.rest = newBucket;
-                    newStore.set(newIndex, cell);
-                }
-                index++;
-            }
-            store = newStore;
-        }
-    }
-    
-    // Add initial values
-    for (val in elements) {
-        if (addToStore(store, val)) {
-            length++;
-        }        
-    }
-    checkRehash();
-    
-    // End of initialiser section
-    
-    shared actual Boolean add(Element element) {
-        if (addToStore(store, element)) {
-            length++;
-            checkRehash();
-            return true;
-        }
-        return false;
-    }
+    shared actual Boolean add(Element element) => !(map.put(element, none) exists);
     
     shared actual Boolean addAll({Element*} elements) {
-        variable Boolean ret = false;
-        for(elem in elements){
-            if (addToStore(store, elem)) {
-                length++;
-                ret = true;
-            }
-        }
-        if (ret) {
-            checkRehash();
-        }
-        return ret;
+        Integer previousSize = size;
+        map.putAll(toEntries(elements));
+        return size > previousSize;
     }
     
-    shared actual Boolean remove(Element element) {
-        variable value result = false;
-        Integer index = storeIndex(element, store);
-        while (exists head = store[index], 
-            head.element == element) {
-            store.set(index,head.rest);
-            length--;
-            result = true;
-        }
-        variable value bucket = store[index];
-        while (exists cell = bucket) {
-            value rest = cell.rest;
-            if (exists rest,
-                rest.element == element) {
-                cell.rest = rest.rest;
-                deleteCell(cell);
-                length--;
-                result = true;
-            }
-            else {
-                bucket = rest;
-            }
-        }
-        return result;
-    }
+    shared actual Boolean remove(Element element) => map.remove(element) exists;
     
-    shared actual void clear() {
-        variable Integer index = 0;
-        // walk every bucket
-        while (index < store.size) {
-            store.set(index++, null);
-        }
-        length = 0;
-        head = null;
-        tip = null;
-    }
+    shared actual void clear() => map.clear();
     
     // Read
     
-    size => length;
+    size => map.size;
     
-    iterator() => stability==linked 
-            then LinkedCellIterator(head)
-            else StoreIterator(store);
-    
-    shared actual Integer count(Boolean selecting(Element element)) {
-        variable Integer count = 0;
-        variable Integer index = 0;
-        // walk every bucket
-        while(index < store.size){
-            variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(selecting(cell.element)){
-                    count++;
+    shared actual Iterator<Element> iterator() {
+        value mapIt = map.iterator();
+        object it satisfies Iterator<Element> {
+            
+            shared actual Element|Finished next() {
+                value entry = mapIt.next();
+                switch(entry)
+                case (is Element->None) {
+                    return entry.key;
+                } case (is Finished) {
+                    return entry;
                 }
-                bucket = cell.rest;
             }
-            index++;
+            
         }
-        return count;
+        return it;
     }
     
-    shared actual Integer hash {
-        variable Integer index = 0;
-        variable Integer hash = 0;
-        // walk every bucket
-        while (index < store.size){
-            variable value bucket = store[index];
-            while (exists cell = bucket){
-                hash += cell.element.hash;
-                bucket = cell.rest;
-            }
-            index++;
-        }
-        return hash;
-    }
+    shared actual Integer count(Boolean selecting(Element element))
+            => map.count((Element->None entry) => selecting(entry.key));
+    
+    shared actual Integer hash => map.hash;
     
     shared actual Boolean equals(Object that) {
-        if(is Set<Object> that,
-            size == that.size){
-            variable Integer index = 0;
-            // walk every bucket
-            while(index < store.size){
-                variable value bucket = store[index];
-                while(exists cell = bucket){
-                    if(!that.contains(cell.element)){
-                        return false;
-                    }
-                    bucket = cell.rest;
-                }
-                index++;
-            }
-            return true;
+        if(is Set<Object> that, size == that.size){
+            return map.definesEvery(that);
         }
         return false;
     }
     
     shared actual HashSet<Element> clone() {
         value clone = HashSet<Element>();
-        clone.length = length;
-        clone.store = elementStore<Element>(store.size);
-        variable Integer index = 0;
-        // walk every bucket
-        while(index < store.size){
-            if(exists bucket = store[index]){
-                clone.store.set(index, bucket.clone()); 
-            }
-            index++;
-        }
+        clone.map = HashMap {
+            stability = stability;
+            hashtable = hashtable;
+            entries = map;
+        };
         return clone;
     }
     
     shared actual Boolean contains(Object element) {
-        variable Integer index = 0;
-        // walk every bucket
-        while(index < store.size){
-            variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(cell.element == element){
-                    return true;
-                }
-                bucket = cell.rest;
-            }
-            index++;
-        }
-        return false;
+        return map.defines(element);
     }
     
     shared actual HashSet<Element> complement<Other>
@@ -340,26 +158,7 @@ shared class HashSet<Element>
         return ret;
     }
     
-    shared actual Element? first {
-        if (stability==linked) {
-            return head?.element;
-        }
-        else {
-            return store[0]?.element;
-        }
-    }
+    shared actual Element? first => map.first?.key;
     
-    shared actual Element? last {
-        if (stability==linked) {
-            return tip?.element;
-        }
-        else {
-            variable value bucket = store[store.size-1];
-            while (exists cell = bucket?.rest) {
-                bucket = cell;
-            }
-            return bucket?.element;
-        }
-    }
-    
+    shared actual Element? last => map.last?.key;
 }
