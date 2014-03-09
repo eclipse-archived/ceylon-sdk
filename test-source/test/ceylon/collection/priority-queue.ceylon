@@ -69,6 +69,15 @@ shared test void testOfferToPriorityQueue() {
     checkEmptyQueue(queue, orderedValues);
 }
 
+shared test void testPriorityQueueIterable() {
+    value queue = newQueue(elementsIterable);
+    value sb = SequenceBuilder<Integer>();
+    for (element in queue) {
+        sb.append(element);
+    }
+    assertEquals(sb.sequence, [-5, 1, 5, 4, 7, 9, 8]);
+}
+
 PriorityQueue<Integer> newQueue({Integer*} elements = {}) => PriorityQueue {
     compare = (Integer first, Integer second) => first.compare(second);
     elements = elements;
