@@ -87,6 +87,28 @@ shared test void testMap2(){
     assertEquals(5, map.values.size);
 }
 
+shared test void testMapDefines() {
+    value entries = {
+        "ceylon.math" -> 0,
+        "ceylon.net" -> 0,
+        "ceylon.process" -> 0,
+        "ceylon.unicode" -> 0,
+        "com.redhat.ceylon.test" -> 0,
+        "test.ceylon.dbc" -> 0,
+        "test.ceylon.file" -> 0,
+        "test.ceylon.interop.java" -> 0,
+        "test.ceylon.io" -> 0,
+        "test.ceylon.math" -> 0,
+        "test.ceylon.net" -> 0,
+        "test.ceylon.process" -> 0,
+        "test.ceylon.test" -> 0
+    };
+    value map = HashMap { entries = entries; };
+    for (entry in entries) {
+        assert(map.defines(entry.key));
+    }
+}
+
 shared test void testTreeMap() {
     value treeMap = TreeMap<Integer, String> { 
         function compare(Integer x, Integer y) => x<=>y;  
