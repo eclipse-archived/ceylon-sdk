@@ -130,7 +130,7 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
             }
         }
         if (length > 0) {
-            for (index in (length-1)..0) {
+            for (index in parent(length-1)..0) {
                 bubbleDown(index);
             }
         }
