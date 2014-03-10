@@ -66,9 +66,26 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
         length++;
     }
     
-    Integer parent(Integer index) => index / 2;
-    Integer leftChild(Integer index) => index * 2;
-    Integer rightChild(Integer index) => index * 2 + 1;
+    "Consider i1 as index in an array whose first element index is 1
+     Consider i0 as index in an array whose first element index is 0
+     i1 = i0 + 1
+     parent index is defined by parent1 = i1 / 2
+     parent0 =  (i0 + 1) / 2 - 1"
+    Integer parent(Integer index) => (index + 1) / 2 - 1;
+    
+    "Consider i1 as index in an array whose first element index is 1
+     Consider i0 as index in an array whose first element index is 0
+     i1 = i0 + 1
+     left child index is defined by left1 = i1 * 2
+     left0 =  i0 * 2 + 1"
+    Integer leftChild(Integer index) => index * 2 + 1;
+    
+    "Consider i1 as index in an array whose first element index is 1
+     Consider i0 as index in an array whose first element index is 0
+     i1 = i0 + 1
+     right child index is defined by right1 = i1 * 2 + 1
+     right0 =  i0 * 2 + 2"
+    Integer rightChild(Integer index) => index * 2 + 2;
     
     Element elt(Integer index) {
         assert(exists element = array[index]);
