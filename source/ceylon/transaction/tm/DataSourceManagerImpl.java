@@ -23,19 +23,28 @@ package ceylon.transaction.tm;
 
 import com.arjuna.ats.arjuna.logging.tsLogger;
 import com.arjuna.ats.jdbc.TransactionalDriver;
-//import io.narayana.spi.InitializationException;
 import ceylon.transaction.tm.InitializationException;
 
 import javax.naming.*;
 import java.util.*;
 
+/**
+ * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
+ */
 public class DataSourceManagerImpl {
+    public void registerDriverSpec(String driverClassName, String moduleName, String moduleVersion,
+                                   String dataSourceClassName) {
+        XADSWrapperObjectFactory.registerDriverSpec(driverClassName, moduleName, moduleVersion, dataSourceClassName);
+    }
 
-    public void registerDataSource(String binding, String driver, String databaseUrl, String userName, String password) throws InitializationException {
+    public void registerDataSource(String binding, String driver, String databaseUrl,
+                                   String userName, String password) throws InitializationException {
         registerDataSource(binding, driver, databaseUrl, null, -1, userName, password);
     }
 
-    public void registerDataSource(String binding, String driver, String databaseName, String host, long port, String userName, String password) throws InitializationException {
+    public void registerDataSource(String binding, String driver, String databaseName,
+                                   String host, long port, String userName,
+                                   String password) throws InitializationException {
         XADSWrapper xaDataSourceToBind;
         Properties p = System.getProperties();
         String driversProp = (String) p.get("jdbc.drivers");
@@ -51,7 +60,8 @@ public class DataSourceManagerImpl {
         System.setProperties(p);
 
         try {
-            xaDataSourceToBind = XADSWrapperObjectFactory.getXADataSource(binding, driver, databaseName, host, (int) port, userName, password);
+            xaDataSourceToBind = XADSWrapperObjectFactory.getXADataSource(
+                binding, driver, databaseName, host, (int) port, userName, password);
         } catch (Exception e) {
             if (tsLogger.logger.isInfoEnabled())
                 tsLogger.logger.info("Cannot bind " + databaseName + " for driver " + driver);
@@ -59,14 +69,9 @@ public class DataSourceManagerImpl {
             throw new InitializationException("Cannot bind " + databaseName + " for driver " + driver, e);
         }
 
-        try
-        {
-            // initJndi should have already been called resulting in suitable java.naming.provider.url and java.naming.factory.initial
-            // system properties being set.
+        try {
             new InitialContext().rebind(binding, xaDataSourceToBind);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             if (tsLogger.logger.isInfoEnabled())
                 tsLogger.logger.infof("%s: Cannot bind datasource into JNDI: %s", binding, e.getMessage());
 

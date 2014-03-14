@@ -1,11 +1,13 @@
 package ceylon.transaction.tm;
 
-//import io.narayana.spi.InitializationException;
 import ceylon.transaction.tm.InitializationException;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
+ */
 public class DSHelper {
     private static final String DB_PROPERTIES_NAME = "dbc.properties";
     private static final DataSourceManagerImpl dataSourceManager = new DataSourceManagerImpl();
@@ -13,6 +15,11 @@ public class DSHelper {
 
     public static void bindDataSources() throws InitializationException {
         registerJndiBindings(DB_PROPERTIES_NAME);
+    }
+
+    public static void registerDriverSpec(String driverClassName,
+                            String moduleName, String moduleVersion, String dataSourceClassName) {
+        dataSourceManager.registerDriverSpec(driverClassName, moduleName, moduleVersion, dataSourceClassName);
     }
 
     public static void registerDSUrl(String binding, String driver, String databaseUrl,

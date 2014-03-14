@@ -1,4 +1,5 @@
 import ceylon.transaction.tm { TM, getTM }
+import java.lang { System { setProperty } }
 import javax.sql { DataSource }
 
 import ceylon.test { createTestRunner, SimpleLoggingListener }
@@ -21,6 +22,9 @@ shared DataSource? getXADataSource(String binding) {
 
 shared void run() {
     assert (!tm.isTxnActive());
+    setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", "tmp");
+    setProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", "tmp");
+
     tm.start();
 
     tm.getJndiServer().registerDSUrl("h2", "org.h2.Driver", "jdbc:h2:~/ceylondb", "sa", "sa");

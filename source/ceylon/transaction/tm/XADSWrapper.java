@@ -37,6 +37,9 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+/**
+ * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
+ */
 public class XADSWrapper implements XADataSource, Serializable, Referenceable, DataSource {
 
     private TransactionalDriver arjunaJDBC2Driver = new com.arjuna.ats.jdbc.TransactionalDriver();

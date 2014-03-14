@@ -22,6 +22,9 @@
 package ceylon.transaction.tm;
 
 /**
+ * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
+ */
+/**
  * Exception class for reporting problems starting the transaction service
  */
 public class InitializationException extends Exception {

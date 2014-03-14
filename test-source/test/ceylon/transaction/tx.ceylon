@@ -6,18 +6,17 @@ import javax.transaction {
     Status { status_no_transaction = \iSTATUS_NO_TRANSACTION, status_active = \iSTATUS_ACTIVE }
 }
 
+// A callable which is expected to be run inside a transaction
 Boolean txnTestDo() {
     UserTransaction? transaction = tm.currentTransaction();
 
-    print("asserting is userTransaction");
     assert (is UserTransaction transaction);
-    print("asserting status_active");
-    assert (transaction.status == status_active);
+    assertEquals (status_active, transaction.status, "Callable called without an active transaction");
 
     return true;
 }
 
-//test
+test
 void txnTest1() {
     UserTransaction? txn = tm.currentTransaction();
 
@@ -26,35 +25,30 @@ void txnTest1() {
 
 test
 void txnTest2() {
+    tm.start();
     tm.transaction(txnTestDo);
 }
 
-//test
+test
 void txnTest3() {
+    tm.start();
     UserTransaction? transaction = tm.beginTransaction();
 
-    if (is UserTransaction transaction) {
-        variable Integer status = transaction.status;
+    assert (is UserTransaction transaction);
 
-        if (!tm.isTxnActive()) {
-            print("Error, tx status should have been active but was ``status``");
-        }
+    variable Integer status = transaction.status;
 
-        transaction.commit();
-        status = transaction.status;
+    assertTrue(tm.isTxnActive(), "tx status should have been active but was ``status``");
 
-        if (status != status_no_transaction) {
-          print("Error, tx status should have been no_transaction");
-        }
-    } else {
-        print("Error, failed to lookup user transaction");
-    }
+    transaction.commit();
+    status = transaction.status;
+
+    assertEquals(status_no_transaction, status, "Wrong tx status (was ``status``)");
 }
 
-//test
+test
 void txnTest4() {
     tm.start();
-
     TransactionManager? transactionManager = tm.getTransactionManager();
     assert (is TransactionManager transactionManager);
 
@@ -76,11 +70,11 @@ void txnTest4() {
     transactionManager.commit();
     UserTransaction?  txn5 = tm.currentTransaction();
     assert (! is UserTransaction txn5);
-    tm.stop();
 }
 
-//test
+test
 void txnTest5() {
+    tm.start();
     TransactionManager? transactionManager = tm.getTransactionManager();
     assert (is TransactionManager transactionManager);
 
@@ -89,7 +83,7 @@ void txnTest5() {
 
     try {
         transactionManager.commit();
-        assert (false);
+        fail ("committed a rollback only transaction");
     } catch (Exception ex) {
     }
 }

@@ -26,6 +26,9 @@ import com.arjuna.common.util.propertyservice.PropertiesFactory;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
+ */
 public class DbProps {
     public static final String DB_PREFIXES_NAME = "DB_PREFIXES";
 

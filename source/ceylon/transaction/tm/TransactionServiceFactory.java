@@ -36,6 +36,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
+ */
 public class TransactionServiceFactory {
     private static RecoveryManager recoveryManager;
     private static boolean initialized = false;
@@ -54,6 +57,7 @@ public class TransactionServiceFactory {
             return;
 
         try {
+            Thread.currentThread().setContextClassLoader(TransactionServiceFactory.class.getClassLoader());
             initialContext =  new InitialContext();
 
             replacedJndiProperties =  jdbcPropertyManager.getJDBCEnvironmentBean().getJndiProperties().size() == 0;
@@ -125,10 +129,11 @@ public class TransactionServiceFactory {
                     "com.arjuna.ats.internal.arjuna.recovery.AtomicActionRecoveryModule",
                     "com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule"));
 
-            RecoveryManager.delayRecoveryManagerThread();
-
+//            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//            Thread.currentThread().setContextClassLoader(RecoveryManager.class.getClassLoader());
             recoveryManager = RecoveryManager.manager();
             recoveryManager.initialize();
+//            Thread.currentThread().setContextClassLoader(cl);
         }
     }
 

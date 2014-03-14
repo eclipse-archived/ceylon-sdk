@@ -3,10 +3,6 @@ import ceylon.transaction.tm { TransactionServiceFactory, JndiServer, DSHelper {
 import java.lang { Class }
 import javax.sql { XADataSource }
 
-//import io.narayana.spi {
-//    TransactionServiceFactory
-//}
-
 import javax.transaction {
     TransactionManager,
     UserTransaction,
@@ -17,37 +13,36 @@ shared class TMImpl() satisfies TM {
 
     JndiServer jndiServer = JndiServer();
     TransactionServiceFactory transactionServiceFactory = TransactionServiceFactory();
-	variable UserTransaction? userTransaction = null;
-	variable TransactionManager? transactionManager = null;
+    variable UserTransaction? userTransaction = null;
+    variable TransactionManager? transactionManager = null;
 
     shared actual void start(Boolean recovery) {
         jndiServer.start();
 
-		bindDataSources();
+        bindDataSources();
         transactionServiceFactory.start(recovery);
 
         Object? ut = jndiServer.lookup("java:/UserTransaction");
         if (is UserTransaction ut) {
-		    userTransaction = ut;
-		}
+            userTransaction = ut;
+        }
 
         Object? tm = jndiServer.lookup("java:/TransactionManager");
         if (is TransactionManager tm) {
-		    transactionManager = tm;
-		} else {
-		    print("java:/TransactionManager lookup failed");
-		}
+            transactionManager = tm;
+        } else {
+            print("java:/TransactionManager lookup failed");
+        }
     }
 
     shared actual void stop() {
         transactionServiceFactory.stop();
-        jndiServer.stop();
-		userTransaction = null;
-		transactionManager = null;
+        userTransaction = null;
+        transactionManager = null;
     }
 
     shared actual UserTransaction? beginTransaction() {
-        Object? ut = userTransaction; //jndiServer.lookup("java:/UserTransaction");
+        Object? ut = userTransaction;
 
         if (is UserTransaction ut) {
             ut.begin();
@@ -61,10 +56,10 @@ shared class TMImpl() satisfies TM {
         Object? ut = userTransaction;
 
         if (is UserTransaction ut ) {
-		    if (ut.status != status_no_transaction) {
-		        return ut;
-			}
-		}
+            if (ut.status != status_no_transaction) {
+                return ut;
+            }
+        }
 
         return null;
     }
@@ -73,24 +68,24 @@ shared class TMImpl() satisfies TM {
         Object? tm = transactionManager;
 
         if (is TransactionManager tm ) {
-		    return tm;
-		}
+            return tm;
+        }
 
         return null;
     }
 
-	shared actual Boolean isTxnActive() {
-	    UserTransaction? txn = currentTransaction();
+    shared actual Boolean isTxnActive() {
+        UserTransaction? txn = currentTransaction();
 
         if (is UserTransaction txn) {
-		    return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     shared actual JndiServer getJndiServer() {
-	    return jndiServer;
+        return jndiServer;
     }
 
     "Execute the passed Callable within a transaction. If any
