@@ -15,6 +15,7 @@ import ceylon.test.event { TestIgnoreEvent, TestFinishEvent, TestRunFinishEvent,
  
  ~~~tap
  TAP version 13
+ 1..4
  ok 1 - test.my.module::testFeature
    ---
    elapsed: 163
@@ -94,7 +95,6 @@ import ceylon.test.event { TestIgnoreEvent, TestFinishEvent, TestRunFinishEvent,
          at com.redhat.ceylon.launcher.Launcher.run(Launcher.java:89)
          at com.redhat.ceylon.launcher.Launcher.main(Launcher.java:21)
    ...
- 1..4
  ~~~"
 shared class TapLoggingListener(write = print) satisfies TestListener {
     
@@ -103,8 +103,10 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
     
     variable Integer count = 1;
     
-    shared actual void testRunStart(TestRunStartEvent event)
-            => write("TAP version 13");
+    shared actual void testRunStart(TestRunStartEvent event) {
+        write("TAP version 13");
+        write("1..``event.description.children.size``");
+    }
     
     void testSomething(TestFinishEvent|TestIgnoreEvent event) {
         TestResult result;
@@ -174,7 +176,4 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
     
     shared actual void testIgnore(TestIgnoreEvent event)
             => testSomething(event);
-    
-    shared actual void testRunFinish(TestRunFinishEvent event)
-            => write("1..``count-1``");
 }
