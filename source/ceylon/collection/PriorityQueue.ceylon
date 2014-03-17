@@ -8,7 +8,7 @@
  of the `PriorityQueue`. The capacity of a new instance is
  specified by the given [[initialCapacity]]. The capacity is
  increased when [[size]] exceeds the capacity. The new
- capacity is the product of the current capacity and the
+ capacity is the product of the needed capacity and the
  given [[growthFactor]]."
 by ("Loic Rouchon")
 shared class PriorityQueue<Element>(compare, initialCapacity = 0,
