@@ -125,7 +125,7 @@ class Runner() {
                 assert(exists p = parseInteger(arg[7...]));
                 port = p;
             }
-            if( arg == "--tap") {
+            if( arg == "--tap" ) {
                 defaultTestListener = TapLoggingListener();
             }
             prev = arg;
