@@ -4,13 +4,16 @@ import ceylon.language.meta {
 import ceylon.test {
     createTestRunner,
     TestSource,
-    SimpleLoggingListener
+    TestListener,
+    SimpleLoggingListener,
+    TapLoggingListener
 }
 
 shared void run() {
     value moduleNameAndVersions = SequenceBuilder<[String, String]>();
     value testSources = SequenceBuilder<TestSource>();
     variable String prev = "";
+    variable TestListener listener = SimpleLoggingListener();
     
     for(String arg in process.arguments) {
         if( prev == "__module" ) {
@@ -23,6 +26,9 @@ shared void run() {
         if( prev == "__test" ) {
             testSources.append(arg);
         }
+        if( arg == "__tap" ) {
+            listener = TapLoggingListener();
+        }
         prev = arg;
     }
     
@@ -33,5 +39,5 @@ shared void run() {
         }
     }
     
-    createTestRunner(testSources.sequence, [SimpleLoggingListener()]).run();
+    createTestRunner(testSources.sequence, [listener]).run();
 }
