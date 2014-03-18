@@ -11,7 +11,7 @@ shared class CeylonResource<Resource>(shared Resource resource)
         satisfies Closeable 
         given Resource satisfies AutoCloseable {
     
-    shared actual void close(Exception? exception) {
+    shared actual void close(Throwable? exception) {
         try {
             resource.close();
         }

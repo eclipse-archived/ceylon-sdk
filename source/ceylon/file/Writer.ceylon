@@ -20,8 +20,8 @@ shared interface Writer
     
     shared actual void open() {}
 
-    "Closes this `Writer` after `flush` is called automatically."    
-    shared actual void close(Exception? exception) =>
+    "Closes this `Writer` after `flush` is called automatically."
+    shared actual void close(Throwable? exception) =>
             destroy();
     
 }

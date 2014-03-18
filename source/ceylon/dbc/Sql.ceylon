@@ -432,7 +432,7 @@ shared class Sql(newConnection) {
                 return iterator;
             }
             
-            shared actual void close(Exception? exception) {
+            shared actual void close(Throwable? exception) {
                 for (resultSet in this.resultSets) {
                     try {
                         assert (is ResultSet resultSet); //TODO: should not be necessary, nasty hack to work around backend bug!
@@ -491,7 +491,7 @@ shared class Sql(newConnection) {
             connectionStatus.beginTransaction();
         }
         
-        shared actual void close(Exception? exception) {
+        shared actual void close(Throwable? exception) {
             if (exists connectionStatus = this.connectionStatus) {
                 try {
                     if (rollback||exception exists) {
