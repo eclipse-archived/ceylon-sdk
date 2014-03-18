@@ -19,7 +19,7 @@ shared interface WebSocketChannel {
     shared formal void sendBinaryAsynchronous(
             ByteBuffer binary,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError = null);
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError = null);
 
     "Send the a text websocket frame and blocks until complete.
      The implementation is responsible to queue them up and send them in the correct order.
@@ -36,7 +36,7 @@ shared interface WebSocketChannel {
     shared formal void sendTextAsynchronous(
             String text,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError = null);
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError = null);
 
     "Send the a CLOSE websocket frame and notify the `SendCallback` once done.
      After the CLOSE is sent the connections will be closed.
@@ -45,7 +45,7 @@ shared interface WebSocketChannel {
     shared formal void sendCloseAsynchronous(
             CloseReason reason,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError = null);
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError = null);
 
     "Send the a CLOSE websocket frame and blocks until complete.
      After the CLOSE is sent the connections will be closed."

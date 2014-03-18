@@ -10,14 +10,14 @@ shared abstract class WebSocketBaseEndpoint(Matcher path, onOpen, onClose, onErr
 
     shared void onClose(WebSocketChannel channel, CloseReason closeReason);
 
-    shared void onError(WebSocketChannel channel, Exception? throwable);
+    shared void onError(WebSocketChannel channel, Throwable? throwable);
 }
 
 shared class WebSocketEndpoint(
             Matcher path,
             void onOpen(WebSocketChannel channel),
             void onClose(WebSocketChannel channel, CloseReason closeReason),
-            void onError(WebSocketChannel channel, Exception? throwable),
+            void onError(WebSocketChannel channel, Throwable? throwable),
             onText,
             onBinary)
         extends WebSocketBaseEndpoint(path, onOpen, onClose, onError) {
@@ -30,7 +30,7 @@ shared class WebSocketEndpoint(
 shared class WebSocketFragmentedEndpoint(Matcher path,
             void onOpen(WebSocketChannel channel),
             void onClose(WebSocketChannel channel, CloseReason closeReason),
-            void onError(WebSocketChannel channel, Exception? throwable),
+            void onError(WebSocketChannel channel, Throwable? throwable),
             onText,
             onBinary)
         extends WebSocketBaseEndpoint(path, onOpen, onClose, onError) {

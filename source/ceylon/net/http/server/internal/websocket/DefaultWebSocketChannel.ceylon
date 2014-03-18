@@ -45,7 +45,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     shared actual void sendBinaryAsynchronous(
             ByteBuffer binary,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendBinary(toJavaByteBuffer(binary), channel, wrapCallbackSend(onCompletion, onError, this));
     }
@@ -57,7 +57,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     shared actual void sendTextAsynchronous(
             String text,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendText(text, channel, wrapCallbackSend(onCompletion, onError, this));
     }
@@ -73,7 +73,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     shared actual void sendCloseAsynchronous(
             CloseReason reason,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendClose(
             CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(),

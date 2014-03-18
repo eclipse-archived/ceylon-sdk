@@ -29,7 +29,7 @@ test void testWebSocketServer() {
         print("server: Closing channel...");
     }
     
-    void onError(WebSocketChannel webSocketChannel, Exception? throwable) {
+    void onError(WebSocketChannel webSocketChannel, Throwable? throwable) {
         //TODO
     }
 
