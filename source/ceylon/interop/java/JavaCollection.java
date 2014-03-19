@@ -1,7 +1,8 @@
 package ceylon.interop.java;
 
-import com.redhat.ceylon.compiler.java.Util;
+import ceylon.language.Finished;
 
+import com.redhat.ceylon.compiler.java.Util;
 
 @com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 6)
 @ceylon.language.DocAnnotation$annotation$(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
@@ -151,12 +152,33 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
 
     @java.lang.Override
     public final java.lang.Object[] toArray() {
-        return Util.collectIterable(items).toArray();
+        return Util.toArray(items, Object.class);
     }
 
     @java.lang.Override
     public <S> S[] toArray(S[] arr) {
-		return Util.collectIterable(items).toArray(arr);
+        if (items.longerThan(arr.length)) {
+            Util.ReflectingObjectArrayBuilder<S> builder = new Util.ReflectingObjectArrayBuilder<S>(5, (Class<S>)arr.getClass().getComponentType());
+            ceylon.language.Iterator iterator = items.iterator();
+            Object o;
+            while (!((o = iterator.next()) instanceof Finished)) {
+                builder.appendRef((S)o);
+            }
+            return builder.build();
+        } else {
+            int ii = 0;
+            ceylon.language.Iterator iterator = items.iterator();
+            Object o;
+            while (!((o = iterator.next()) instanceof Finished)) {
+                arr[ii] = (S)o;
+                ii++;
+            }
+            if (ii < arr.length) {
+                arr[ii] = null;
+            }
+            return arr;
+        }
+
     }
     
     @ceylon.language.SharedAnnotation$annotation$
