@@ -1,7 +1,7 @@
 import ceylon.net.http.server.websocket { WebSocketChannel }
 import io.undertow.websockets.core { WebSocketCallback, UtWebSocketChannel = WebSocketChannel, FragmentedMessageChannel }
 import java.lang { Void }
-import ceylon.net.http.server { HttpException = Exception }
+import ceylon.net.http.server { HttpException = ServerException }
 
 by("Matej Lazar")
 shared class WebSocketCallbackWrapper(

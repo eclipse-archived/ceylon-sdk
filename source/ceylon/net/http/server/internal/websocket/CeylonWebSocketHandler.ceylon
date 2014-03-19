@@ -5,7 +5,7 @@ import io.undertow.websockets.core.handler { WebSocketConnectionCallback }
 import io.undertow.websockets.core { UtWebSocketChannel = WebSocketChannel }
 import org.xnio { IoUtils { safeClose }}
 import ceylon.net.http.server.internal { Endpoints }
-import ceylon.net.http.server { Exception }
+import ceylon.net.http.server { ServerException }
 
 by("Matej Lazar")
 shared class CeylonWebSocketHandler() satisfies WebSocketConnectionCallback {
@@ -32,11 +32,11 @@ shared class CeylonWebSocketHandler() satisfies WebSocketConnectionCallback {
                 endpoint.onOpen(webSocketChannel);
                 channel.receiveSetter.set(frameHandler(endpoint, webSocketChannel));
                 channel.resumeReceives();
-            } catch (Exception e) {
+            } catch (ServerException e) {
                 safeClose(channel);
             }
         } else {
-            throw Exception("Endpoint should be defined.");
+            throw ServerException("Endpoint should be defined.");
         }
     }
 

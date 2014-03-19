@@ -10,7 +10,7 @@ shared interface Response {
     shared formal void writeStringAsynchronous(
         String string, 
         Callable<Anything, []> onCompletion,
-        Callable<Anything, [Exception]>? onError = null);
+        Callable<Anything, [ServerException]>? onError = null);
 
     "Writes bytes to the response."
     shared formal void writeBytes(Array<Integer> bytes);
@@ -18,7 +18,7 @@ shared interface Response {
     shared formal void writeBytesAsynchronous(
         Array<Integer> bytes,
         Callable<Anything, []> onCompletion,
-        Callable<Anything, [Exception]>? onError = null);
+        Callable<Anything, [ServerException]>? onError = null);
 
     "Writes ByteBuffer to the response."
     shared formal void writeByteBuffer(ByteBuffer buffer);
@@ -26,7 +26,7 @@ shared interface Response {
     shared formal void writeByteBufferAsynchronous(
         ByteBuffer byteBuffer,
         Callable<Anything, []> onCompletion,
-        Callable<Anything, [Exception]>? onError = null);
+        Callable<Anything, [ServerException]>? onError = null);
 
     "Add a header to response. Multiple headers can have the same name.
      Throws Exception if headers have been already sent to client."
