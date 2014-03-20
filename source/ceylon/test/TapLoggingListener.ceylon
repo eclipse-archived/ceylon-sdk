@@ -1,4 +1,6 @@
-import ceylon.test.event { TestIgnoreEvent, TestFinishEvent, TestRunFinishEvent, TestRunStartEvent }
+import ceylon.test.event {
+    ...
+}
 
 "A [[TestListener]] that prints information about test execution to a given logging function,
  in [Test Anything Protocol v13](http://testanything.org/tap-version-13-specification.html) format.
@@ -13,7 +15,7 @@ import ceylon.test.event { TestIgnoreEvent, TestFinishEvent, TestRunFinishEvent,
  
  ### Example
  
- ~~~tap
+ ~~~text
  TAP version 13
  1..4
  ok 1 - test.my.module::testFeature
@@ -108,33 +110,44 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
         write("1..``event.description.children.size``");
     }
     
-    void testSomething(TestFinishEvent|TestIgnoreEvent event) {
+    shared actual void testFinish(TestFinishEvent event) => writeProtocol(event);
+    
+    shared actual void testIgnore(TestIgnoreEvent event) => writeProtocol(event);
+    
+    shared actual void testError(TestErrorEvent event) => writeProtocol(event);
+    
+    void writeProtocol(TestFinishEvent|TestIgnoreEvent|TestErrorEvent event) {
         TestResult result;
-        if (is TestFinishEvent event) {
-            result = event.result;
-        } else {
-            assert (is TestIgnoreEvent event); // ceylon-spec#74
-            result = event.result;
-        }
+        Exception? exception;
+        Integer? elapsed;
+        String? ignoreReason;
+        
+        switch(event)
+            case(is TestFinishEvent) {
+                result = event.result;
+                exception = event.result.exception;
+                elapsed = event.result.elapsedTime;
+                ignoreReason = null;
+            }
+            case(is TestIgnoreEvent) {
+                result = event.result;
+                ignoreReason = result.exception?.message;
+                exception = null;
+                elapsed = null;
+            }
+            case(is TestErrorEvent) {
+                result = event.result;
+                exception = event.result.exception;
+                elapsed = null;
+                ignoreReason = null;
+            }
+        
         String okOrNotOk = result.state == success then "ok" else "not ok";
         String directive = result.state == ignored then "# SKIP ignored" else "";
+        String? severity = result.state == failure then "failure" else (result.state == error then "error");
+        
         write("``okOrNotOk`` ``count`` - ``result.description.name`` `` directive``");
         
-        // YAML
-        Integer? elapsed = event is TestFinishEvent then result.elapsedTime;
-        String? ignoreReason;
-        if (is TestIgnoreEvent event) {
-            ignoreReason = result.exception?.message;
-        } else {
-            ignoreReason = null;
-        }
-        String? severity = result.state == failure then "failure" else (result.state == error then "error");
-        Exception? exception;
-        if (is TestFinishEvent event) {
-            exception = result.exception;
-        } else {
-            exception = null;
-        }
         if (elapsed exists || ignoreReason exists || exception exists) {
             write("  ---");
             if (exists elapsed) {
@@ -167,13 +180,8 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
             }
             write("  ...");
         }
-        
+
         count++;
     }
-    
-    shared actual void testFinish(TestFinishEvent event)
-            => testSomething(event);
-    
-    shared actual void testIgnore(TestIgnoreEvent event)
-            => testSomething(event);
+
 }
