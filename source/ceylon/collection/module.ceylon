@@ -22,6 +22,8 @@
    [[Array]].
  - [[LinkedList]] is a `MutableList` implemented using a
    singly-linked list.
+ - [[PriorityQueue]] is a `Queue` implemented using an
+   [[Array]] where the front of the queue is the smallest element
  - [[HashSet]] is a mutable hash set implemented using an 
    [[Array]] of singly-linked lists.
  - [[HashMap]] is a mutable hash map implemented using an 
