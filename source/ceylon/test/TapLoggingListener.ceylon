@@ -118,7 +118,7 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
     
     void writeProtocol(TestFinishEvent|TestIgnoreEvent|TestErrorEvent event) {
         TestResult result;
-        Exception? exception;
+        Throwable? exception;
         Integer? elapsed;
         String? ignoreReason;
         

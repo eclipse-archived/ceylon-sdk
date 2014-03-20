@@ -150,7 +150,7 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
             handler();
             context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime()), i));
         }
-        catch(Exception e) {
+        catch(Throwable e) {
             if( e is AssertionException ) {
                 context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime()), i));
             }
@@ -169,11 +169,11 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
     }
 
     void handleAfterCallbacks(Anything() handler)() {
-        value exceptionsBuilder = SequenceBuilder<Exception>();
+        value exceptionsBuilder = SequenceBuilder<Throwable>();
         try {
             handler();
         }
-        catch(Exception e) {
+        catch(Throwable e) {
             exceptionsBuilder.append(e);
         }
         finally {
@@ -182,7 +182,7 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
                 try {
                     invokeFunction(callback);
                 }
-                catch(Exception e) {
+                catch(Throwable e) {
                     exceptionsBuilder.append(e);
                 }
             }
@@ -211,7 +211,7 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
                     try {
                         do(decl);
                     }
-                    catch(Exception e) {
+                    catch(Throwable e) {
                         if( e.message == "interface ceylon.language.Annotation is not visible from class loader" ) {
                             // XXX workaround for ceylon.language #410, ignore exception
                         }
@@ -310,7 +310,7 @@ class GroupTestExecutor(description, TestExecutor[] children) satisfies TestExec
 
 }
 
-class ErrorTestExecutor(description, Exception exception) satisfies TestExecutor {
+class ErrorTestExecutor(description, Throwable exception) satisfies TestExecutor {
 
     shared actual TestDescription description;
 

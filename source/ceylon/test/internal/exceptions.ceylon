@@ -5,12 +5,12 @@ import ceylon.language.meta {
 class IgnoreException(shared String reason) extends Exception(reason) {
 }
 
-class MultipleFailureException(shared Exception[] exceptions) extends Exception() {
+class MultipleFailureException(shared Throwable[] exceptions) extends Exception() {
     
     shared actual String message {
         value message = StringBuilder();
         message.append("There were ``exceptions.size`` exceptions:");
-        for(Exception e in exceptions) {
+        for(e in exceptions) {
             message.appendNewline();
             message.append("    ");
             message.append(type(e).declaration.qualifiedName);

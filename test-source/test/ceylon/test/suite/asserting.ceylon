@@ -169,7 +169,7 @@ shared void testAssertThatException() {
     }
     
     try {
-        assertThatException(OverflowException()).hasType((ClassModel<Exception, Nothing> t)=>false);
+        assertThatException(OverflowException()).hasType((ClassModel<Throwable, Nothing> t)=>false);
         assert(false);
     }
     catch(AssertionException e) {

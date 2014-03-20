@@ -62,7 +62,7 @@ class TestRunContextImpl(runner, result) satisfies TestRunContext {
                 try {
                     handler(listener);
                 }
-                catch(Exception e) {
+                catch(Throwable e) {
                     if( propagateException ) {
                         throw e;
                     }

@@ -9,7 +9,7 @@ shared class TestResult(description, state, exception = null, elapsedTime = 0) {
     shared TestState state;
 
     "The exception thrown during this test, if any."
-    shared Exception? exception;
+    shared Throwable? exception;
 
     "The total elapsed time in miliseconds."
     shared Integer elapsedTime;

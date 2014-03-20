@@ -107,15 +107,15 @@ shared void assertNotEquals(
 throws(`class AssertionException`, "When _exceptionSource()_ doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
         "The checked exception or callback which should throw exception." 
-        Exception|Anything() exceptionSource) {
-    if(is Exception exception = exceptionSource) {
+        Throwable|Anything() exceptionSource) {
+    if(is Throwable exception = exceptionSource) {
         return ExceptionAssert(exception);
     }
     else {
         assert(is Anything() exceptionCallback = exceptionSource);
         try {
             exceptionCallback();
-        } catch(Exception exception) {
+        } catch(Throwable exception) {
             return ExceptionAssert(exception);
         }
         throw AssertionException("assertion failed: expected exception will be thrown");
@@ -124,18 +124,18 @@ shared ExceptionAssert assertThatException(
 
 "An assertions applicable to exceptions, see [[assertThatException]]."
 shared class ExceptionAssert(
-        "The exception to be checked." Exception exception) {
+        "The exception to be checked." Throwable exception) {
 
     "Verifies that the actual _exception_ has expected type."
     throws(`class AssertionException`, "When _exception_ hasn't expected type.")
     shared ExceptionAssert hasType(
-            "The expected type or type predicate." Class<Exception,Nothing>|Boolean(ClassModel<Exception,Nothing>) typeCondition) {
-        if(is Class<Exception,Nothing> typeCondition) {
+            "The expected type or type predicate." Class<Throwable,Nothing>|Boolean(ClassModel<Throwable,Nothing>) typeCondition) {
+        if(is Class<Throwable,Nothing> typeCondition) {
             value actualType = type(exception);
             if(actualType != typeCondition) {
                 throw AssertionException("assertion failed: expected exception with type ``typeCondition``, but has ``actualType``");
             }
-        } else if ( is Boolean(ClassModel<Exception,Nothing>) typeCondition) {
+        } else if ( is Boolean(ClassModel<Throwable,Nothing>) typeCondition) {
             if( !typeCondition(type(exception)) ) {
                 throw AssertionException("assertion failed: expected exception with different type than ``type(exception)``");
             }
