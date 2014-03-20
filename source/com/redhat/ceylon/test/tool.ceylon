@@ -5,6 +5,7 @@ import ceylon.test {
     createTestRunner,
     TestSource,
     SimpleLoggingListener,
+    TapLoggingListener,
     TestListener,
     TestRunResult
 }
@@ -43,8 +44,37 @@ shared void run() {
 
 class Runner() {
 
+    object loggingListener extends SimpleLoggingListener() {
+        
+        value colorCodeRed = 1;
+        value colorCodeGreen = 2;
+        value colorCodeWhite = 7;
+        
+        shared actual void writeBannerSuccess(TestRunResult result) {
+            setColor(colorCodeGreen);
+            try {
+                super.writeBannerSuccess(result);
+            }
+            finally {
+                setColor(colorCodeWhite);
+            }
+        }
+        
+        shared actual void writeBannerFailed(TestRunResult result) {
+            setColor(colorCodeRed);
+            try {
+                super.writeBannerFailed(result);
+            }
+            finally {
+                setColor(colorCodeWhite);
+            }
+        }
+        
+    }
+
     value moduleNameAndVersions = SequenceBuilder<[String, String]>();
     value testSources = SequenceBuilder<TestSource>();
+    variable TestListener defaultTestListener = loggingListener;
     variable Integer port = -1;
     variable Socket? socket = null;
     variable ObjectOutputStream? oos = null;
@@ -67,34 +97,7 @@ class Runner() {
                 testListeners = [TestEventPublisher(o)];
             }
             else {
-                object loggingListener extends SimpleLoggingListener() {
-
-                    value colorCodeRed = 1;
-                    value colorCodeGreen = 2;
-                    value colorCodeWhite = 7;
-
-                    shared actual void writeBannerSuccess(TestRunResult result) {
-                        setColor(colorCodeGreen);
-                        try {
-                            super.writeBannerSuccess(result);
-                        }
-                        finally {
-                            setColor(colorCodeWhite);
-                        }
-                    }
-
-                    shared actual void writeBannerFailed(TestRunResult result) {
-                        setColor(colorCodeRed);
-                        try {
-                            super.writeBannerFailed(result);
-                        }
-                        finally {
-                            setColor(colorCodeWhite);
-                        }
-                    }
-
-                }
-                testListeners = [loggingListener];
+                testListeners = [defaultTestListener];
             }
 
             createTestRunner(testSources.sequence, testListeners).run();
@@ -121,6 +124,9 @@ class Runner() {
             if( arg.startsWith("--port") ) {
                 assert(exists p = parseInteger(arg[7...]));
                 port = p;
+            }
+            if( arg == "--tap" ) {
+                defaultTestListener = TapLoggingListener();
             }
             prev = arg;
         }
