@@ -161,7 +161,7 @@ shared void testAssertThatException() {
             hasNoCause();
     
     try {
-        assertThatException(OverflowException()).hasType(`InitializationException`);
+        assertThatException(OverflowException()).hasType(`InitializationError`);
         assert(false);
     }
     catch(AssertionError e) {
