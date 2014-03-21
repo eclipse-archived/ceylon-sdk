@@ -8,7 +8,7 @@ test void wholeTests() {
        if (exists result) {
            return result;
        }
-       throw AssertionException("``str`` didn't parse");
+       throw AssertionError("``str`` didn't parse");
     }
 
     print("Whole instantiation, equality");

@@ -285,7 +285,7 @@ shared class ArrayList<Element>
             }
             else {
                 value error {
-                    throw AssertionException("underlying array may not contain null");
+                    throw AssertionError("underlying array may not contain null");
                 }
                 return { for (i in 0:length) array[i] else error }.iterator();
             }
@@ -304,7 +304,7 @@ shared class ArrayList<Element>
             }
             else {
                 value error {
-                    throw AssertionException("underlying array may not contain null");
+                    throw AssertionError("underlying array may not contain null");
                 }
                 iterable = { for (i in length-1..0) array[i] else error };
             }

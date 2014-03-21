@@ -40,14 +40,14 @@ shared interface ListMutator<in Element>
     
     "Replace the existing element at the specified [[index]]
      with the given [[element]]."
-    throws (`class AssertionException`, 
+    throws (`class AssertionError`, 
             "if the given index is out of bounds, that 
              is, if `index<0` or if `index>lastIndex`")
     shared formal void set(Integer index, Element element);
     
     "Insert the given [[element]] at the specified [[index]],
      incrementing the [[length|List.size]] of the list."
-    throws (`class AssertionException`, 
+    throws (`class AssertionError`, 
             "if the given index is out of bounds, that 
              is, if `index<0` or if `index>lastIndex+1`")
     shared formal void insert(Integer index, Element element);
@@ -155,7 +155,7 @@ shared interface ListMutator<in Element>
     "Truncate this list to the given [[size]], by removing
      elements from the end of the list, leaving a list
      shorter than the given size."
-    throws (`class AssertionException`, "if `size<0`")
+    throws (`class AssertionError`, "if `size<0`")
     shared formal void truncate(Integer size);
     
 }

@@ -72,7 +72,7 @@ Integer[] firstDayOfMonth = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 3
  
  If input is an Integer, this method returns a month according to the integer 
  value of the [[Month]] (i.e. 1=[[january]], 2=[[february]], ... 12=[[december]])
- Any invalid values will throw an [[AssertionException]].
+ Any invalid values will throw an [[AssertionError]].
  
  If the imput value is a [[Month]], the input value is returned as is."
 shared Month monthOf(Integer|Month month){

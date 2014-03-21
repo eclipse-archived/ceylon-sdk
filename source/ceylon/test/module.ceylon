@@ -29,11 +29,11 @@
    ```
    
    It's also perfectly acceptable to throw 
-   [[AssertionException]] directly.
+   [[AssertionError]] directly.
    
    A test function which completes without propagating an exception is 
    classified as a [[success]]. A test function which propagates 
-   an [[AssertionException]] is classified as a [[failure]]. A test 
+   an [[AssertionError]] is classified as a [[failure]]. A test 
    function which propagates any other type of `Exception` is classified as 
    an [[error]].
    

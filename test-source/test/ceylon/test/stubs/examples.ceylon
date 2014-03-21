@@ -9,7 +9,7 @@ shared void foo() {
 
 test
 shared void fooThrowingAssertion() {
-    throw AssertionException("assertion failed");
+    throw AssertionError("assertion failed");
 }
 
 test

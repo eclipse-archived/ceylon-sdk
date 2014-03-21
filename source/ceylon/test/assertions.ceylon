@@ -14,7 +14,7 @@ shared class AssertionComparisonException(
     "The message describing the problem." 
     String message, 
     actualValue, expectedValue) 
-        extends AssertionException(message) {
+        extends AssertionError(message) {
 
     "The actual string value."
     shared String actualValue;
@@ -24,52 +24,52 @@ shared class AssertionComparisonException(
 
 }
 
-"Throws an [[AssertionException]] to fail a test."
-throws(`class AssertionException`, "always")
+"Throws an [[AssertionError]] to fail a test."
+throws(`class AssertionError`, "always")
 shared void fail("The message describing the problem." String? message = null) {
-    throw AssertionException(message else "assertion failed");
+    throw AssertionError(message else "assertion failed");
 }
 
 "Fails the test if the _condition_ is false."
-throws(`class AssertionException`, "When _condition_ is false.")
+throws(`class AssertionError`, "When _condition_ is false.")
 shared void assertTrue(
         "The condition to be checked." Boolean condition, 
         "The message describing the problem." 
         String? message = null)  {
     if (!condition) {
-        throw AssertionException(message else "assertion failed: expected true");
+        throw AssertionError(message else "assertion failed: expected true");
     }
 }
 
 "Fails the test if the _condition_ is true."
-throws(`class AssertionException`, "When _condition_ is true.")
+throws(`class AssertionError`, "When _condition_ is true.")
 shared void assertFalse(
         "The condition to be checked."
         Boolean condition, 
         "The message describing the problem."
         String? message = null) {
     if (condition) {
-        throw AssertionException(message else "assertion failed: expected false");
+        throw AssertionError(message else "assertion failed: expected false");
     }
 }
 
 "Fails the test if the given _value_ is not null."
-throws(`class AssertionException`, "When _val_ is not null.")
+throws(`class AssertionError`, "When _val_ is not null.")
 shared void assertNull(
         "The value to be checked." Object? val, 
         "The message describing the problem." String? message = null) {
     if (exists val) {
-        throw AssertionException(message else "assertion failed: expected null, but was ``val``");
+        throw AssertionError(message else "assertion failed: expected null, but was ``val``");
     }
 }
 
 "Fails the test if the given _value_ is null."
-throws(`class AssertionException`, "When _val_ is null.")
+throws(`class AssertionError`, "When _val_ is null.")
 shared void assertNotNull(
         "The value to be checked." Object? val, 
         "The message describing the problem." String? message = null) {
     if (! val exists) {
-        throw AssertionException(message else "assertion failed: expected not null");
+        throw AssertionError(message else "assertion failed: expected not null");
     }
 }
 
@@ -104,7 +104,7 @@ shared void assertNotEquals(
 }
 
 "Fails the test if expected exception isn't thrown."
-throws(`class AssertionException`, "When _exceptionSource()_ doesn't throw an Exception")
+throws(`class AssertionError`, "When _exceptionSource()_ doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
         "The checked exception or callback which should throw exception." 
         Throwable|Anything() exceptionSource) {
@@ -118,7 +118,7 @@ shared ExceptionAssert assertThatException(
         } catch(Throwable exception) {
             return ExceptionAssert(exception);
         }
-        throw AssertionException("assertion failed: expected exception will be thrown");
+        throw AssertionError("assertion failed: expected exception will be thrown");
     }
 }
 
@@ -127,45 +127,45 @@ shared class ExceptionAssert(
         "The exception to be checked." Throwable exception) {
 
     "Verifies that the actual _exception_ has expected type."
-    throws(`class AssertionException`, "When _exception_ hasn't expected type.")
+    throws(`class AssertionError`, "When _exception_ hasn't expected type.")
     shared ExceptionAssert hasType(
             "The expected type or type predicate." Class<Throwable,Nothing>|Boolean(ClassModel<Throwable,Nothing>) typeCondition) {
         if(is Class<Throwable,Nothing> typeCondition) {
             value actualType = type(exception);
             if(actualType != typeCondition) {
-                throw AssertionException("assertion failed: expected exception with type ``typeCondition``, but has ``actualType``");
+                throw AssertionError("assertion failed: expected exception with type ``typeCondition``, but has ``actualType``");
             }
         } else if ( is Boolean(ClassModel<Throwable,Nothing>) typeCondition) {
             if( !typeCondition(type(exception)) ) {
-                throw AssertionException("assertion failed: expected exception with different type than ``type(exception)``");
+                throw AssertionError("assertion failed: expected exception with different type than ``type(exception)``");
             }
         }
         return this;
     }
 
     "Verifies that the actual _exception_ has expected message."
-    throws(`class AssertionException`, "When _exception_ hasn't expected message.")
+    throws(`class AssertionError`, "When _exception_ hasn't expected message.")
     shared ExceptionAssert hasMessage(
             "The expected message or message predicate." String|Boolean(String) messageCondition) {
         switch(messageCondition)
         case(is String) {
             if(exception.message != messageCondition) {
-                throw AssertionException("assertion failed: expected exception with message ``messageCondition``, but has ``exception.message``");
+                throw AssertionError("assertion failed: expected exception with message ``messageCondition``, but has ``exception.message``");
             }
         }
         case(is Boolean(String)) {
             if(!messageCondition(exception.message)) {
-                throw AssertionException("assertion failed: expected different exception message than ``exception.message``");
+                throw AssertionError("assertion failed: expected different exception message than ``exception.message``");
             }
         }
         return this;
     }
 
     "Verifies that the actual _exception_ does not have a cause."
-    throws(`class AssertionException`, "When _exception_ has some cause.")
+    throws(`class AssertionError`, "When _exception_ has some cause.")
     shared ExceptionAssert hasNoCause() {
         if(exists cause = exception.cause) {
-            throw AssertionException("assertion failed: expected exception without cause, but has ``cause``");
+            throw AssertionError("assertion failed: expected exception without cause, but has ``cause``");
         }
         return this;
     }

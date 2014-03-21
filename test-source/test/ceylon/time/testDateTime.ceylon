@@ -162,7 +162,7 @@ shared test void testWithDay40_DateTime() {
     try {
         data_1982_12_13_09_08_07_0050.withDay(40);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -171,7 +171,7 @@ shared test void testWithDay0_DateTime() {
     try {
         data_1982_12_13_09_08_07_0050.withDay(0);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -180,7 +180,7 @@ shared test void testWithDayNegative_DateTime() {
     try {
         data_1982_12_13_09_08_07_0050.withDay(-10);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -189,7 +189,7 @@ shared test void testWithDay29FebNotLeap_DateTime() {
     try {
         dateTime(2011, february,1).withDay(29);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }

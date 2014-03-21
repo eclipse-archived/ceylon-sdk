@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
 import ceylon.language.Array;
-import ceylon.language.AssertionException;
+import ceylon.language.AssertionError;
 import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.language.ByteArray;
@@ -29,7 +29,7 @@ public final class javaByteArray_ {
         if(array.toArray() instanceof byte[]){
             return (byte[]) array.toArray();
         }
-        throw new AssertionException("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+array.toArray());
     }
 
 }

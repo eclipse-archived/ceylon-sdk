@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
 import ceylon.language.Array;
-import ceylon.language.AssertionException;
+import ceylon.language.AssertionError;
 import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.language.ShortArray;
@@ -29,7 +29,7 @@ public final class javaShortArray_ {
         if(array.toArray() instanceof short[]){
             return (short[]) array.toArray();
         }
-        throw new AssertionException("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+array.toArray());
     }
 
 }

@@ -108,7 +108,7 @@ test void testServer() {
                         request.session.put("count", ci2);
                         response.writeString(ci2.string);
                     } else {
-                        AssertionException("Invalid object type retreived from session");
+                        AssertionError("Invalid object type retreived from session");
                     }
                 } else {
                     request.session.put("count", Integer(1));
@@ -444,7 +444,7 @@ void acceptMethodTest() {
     if (exists Header allow = response2.headersByName["allow"]) {
         assertEquals(allow.values.get(0), "POST, GET");
     } else {
-        throw AssertionException("Missing allow header.");
+        throw AssertionError("Missing allow header.");
     }
 
     //accept all methods

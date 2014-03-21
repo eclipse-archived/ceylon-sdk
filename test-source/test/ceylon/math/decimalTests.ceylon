@@ -23,7 +23,7 @@ Decimal parseOrFail(String str) {
     if (exists result) {
         return result;
     }
-    throw AssertionException("``str`` didn't parse");
+    throw AssertionError("``str`` didn't parse");
 }
 
 test void instantiationAndEquality() {

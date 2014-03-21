@@ -151,7 +151,7 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
             context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime()), i));
         }
         catch(Throwable e) {
-            if( e is AssertionException ) {
+            if( e is AssertionError) {
                 context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime()), i));
             }
             else {

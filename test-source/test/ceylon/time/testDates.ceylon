@@ -56,7 +56,7 @@ shared test void test_invalid_date_jan_0() {
     try {
         date(2013,january,0);
         fail("It should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -65,7 +65,7 @@ shared test void test_invalid_date_feb_29() {
     try {
         date(2013,february,29);
         fail("It should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -74,7 +74,7 @@ shared test void test_invalid_date_maximum_year() {
     try {
         date(years.maximum+1,february,29);
         fail("It should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Invalid year"));
     }
 }
@@ -83,7 +83,7 @@ shared test void test_invalid_date_minimum_year() {
     try {
         date(years.minimum-1,february,29);
         fail("It should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Invalid year"));
     }
 }
@@ -202,7 +202,7 @@ shared test void testWithDay40() {
     try {
         data_1982_12_13.withDay(40);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -211,7 +211,7 @@ shared test void testWithDay0() {
     try {
         data_1982_12_13.withDay(0);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -220,7 +220,7 @@ shared test void testWithDayNegative() {
     try {
         data_1982_12_13.withDay(-10);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -229,7 +229,7 @@ shared test void testWithDay29FebNotLeap() {
     try {
         date(2011, february,1).withDay(29);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -243,7 +243,7 @@ shared test void testWithMonthLessDaysException() {
     try {
         date(2012, december, 31).withMonth(february);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
     }
 }
@@ -264,7 +264,7 @@ shared test void testWithYearLeap() {
     try {
         date( 2012, february, 29).withYear(2011);
         fail("Should throw exception...");
-    } catch( AssertionException e ) {
+    } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date value"));
     }
 }
@@ -326,7 +326,7 @@ shared test void testAtInvalidHour() {
     try {
         data_1982_12_13.at( time(-10, 0) );
         fail("Should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Hours value should be between 0 and 23"));
     }
 }
@@ -335,7 +335,7 @@ shared test void testAtInvalidMinute() {
     try {
         data_1982_12_13.at( time(10, 60) );
         fail("Should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Minutes value should be between 0 and 59"));
     }
 }
@@ -344,7 +344,7 @@ shared test void testAtInvalidSecond() {
     try {
         data_1982_12_13.at( time(10, 59, -1) );
         fail("Should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Seconds value should be between 0 and 59"));
     }
 }
@@ -353,7 +353,7 @@ shared test void testAtInvalidMillis() {
     try {
         data_1982_12_13.at( time(10, 59, 59, 1000) );
         fail("Should throw exception...");
-    } catch ( AssertionException e ) {
+    } catch ( AssertionError e ) {
         assertTrue(e.message.contains("Milliseconds value should be between 0 and 999"));
     }
 }

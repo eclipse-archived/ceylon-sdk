@@ -43,7 +43,7 @@ shared Rounding? implicitRounding => defaultRounding.get();
 "Holds precision and rounding information for use in 
  decimal arithmetic. A precision of `0` means unlimited 
  precision."
-throws(`class AssertionException`, 
+throws(`class AssertionError`, 
         "if the given [[precision]] is negative.")
 see(`interface Decimal`)
 see(`function round`)
