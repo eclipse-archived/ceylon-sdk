@@ -6,7 +6,7 @@ shared class CloseReason(code, reason = null) {
     shared String? reason;
 
     if (!isValid(code)) {
-        throw InitializationError("Invalid close status code ``code``");
+        throw Exception("Invalid close status code ``code``");
     }
 }
 
