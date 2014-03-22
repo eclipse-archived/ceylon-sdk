@@ -14,8 +14,8 @@ shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
 "A simple time zone with a constant offset from UTC."
 shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
 
-    "The value that represents this constant offset."
-    Integer offsetMilliseconds;
+    "The value that represents this constant offset in milliseconds."
+    shared Integer offsetMilliseconds;
 
     "Always returns a constant offset."
     shared actual Integer offset(Instant instant) => offsetMilliseconds;
@@ -74,7 +74,7 @@ shared object timeZone {
     }
 
     "Represents fixed timeZone created based on given values."
-    shared TimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
+    shared OffsetTimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
 		value offsetMilliseconds = hours * ms.perHour + minutes * ms.perMinute + milliseconds;
 		assert (-12 * ms.perHour <= offsetMilliseconds <= 12 * ms.perHour);
 		if (offsetMilliseconds == 0) {
