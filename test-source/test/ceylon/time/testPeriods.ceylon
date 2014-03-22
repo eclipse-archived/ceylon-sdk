@@ -14,7 +14,7 @@ import ceylon.time.base {
     hours
 }
 
-Period oneMilli = Period { milliseconds = 1; };
+Period oneMillisecond = Period { milliseconds = 1; };
 Period oneSecond = Period { seconds = 1; };
 Period oneMinute = Period { minutes = 1; };
 Period oneHour = Period { hours = 1; };
@@ -59,8 +59,8 @@ shared test void testPlusMinutesSameInstancePeriods() => assertTrue( oneMinute.p
 shared test void testPlusSecondsPeriods() => assertEquals( Period { seconds = 60; }, oneSecond.plusSeconds(59) );
 shared test void testPlusSecondsSameInstancePeriods() => assertTrue( oneSecond.plusSeconds(0) === oneSecond );
 
-shared test void testPlusMillisecondsPeriods() => assertEquals( Period { milliseconds = 1000; }, oneMilli.plusMilliseconds(999) );
-shared test void testPlusMillisecondsSameInstancePeriods() => assertTrue( oneMilli.plusMilliseconds(0) === oneMilli );
+shared test void testPlusMillisecondsPeriods() => assertEquals( Period { milliseconds = 1000; }, oneMillisecond.plusMilliseconds(999) );
+shared test void testPlusMillisecondsSameInstancePeriods() => assertTrue( oneMillisecond.plusMilliseconds(0) === oneMillisecond );
 
 shared test void testMinusYears_Periods() => assertEquals( Period { years = 0; months = 6; }, oneHalfYear.minusYears(1) );
 shared test void testMinusYearsNegative_Periods() => assertEquals( Period{ years = -1; }, oneYear.minusYears(2) );
@@ -86,9 +86,9 @@ shared test void testMinusSeconds_Periods() => assertEquals( Period{ seconds = 0
 shared test void testMinusSecondsNegative_Periods() => assertEquals( Period{ seconds = -1; }, oneSecond.minusSeconds(2) );
 shared test void testMinusSecondsSameInstance_Periods() => assertTrue( oneSecond.minusSeconds(0) === oneSecond );
 
-shared test void testMinusMillis_Periods() => assertEquals( Period{ milliseconds = 0; }, oneMilli.minusMilliseconds(1) );
-shared test void testMinusMillisNegative_Periods() => assertEquals( Period{ milliseconds = -1; }, oneMilli.minusMilliseconds(2) );
-shared test void testMinusMillisSameInstance_Periods() => assertTrue( oneMilli.minusMilliseconds(0) === oneMilli );
+shared test void testMinusMillis_Periods() => assertEquals( Period{ milliseconds = 0; }, oneMillisecond.minusMilliseconds(1) );
+shared test void testMinusMillisNegative_Periods() => assertEquals( Period{ milliseconds = -1; }, oneMillisecond.minusMilliseconds(2) );
+shared test void testMinusMillisSameInstance_Periods() => assertTrue( oneMillisecond.minusMilliseconds(0) === oneMillisecond );
 
 shared test void testComparableYearMonth_Periods() => assertEquals( oneYear <=> twelveMonths, equal );
 shared test void testComparableYearYearHalf_Periods() => assertEquals( oneYear < oneHalfYear, true );
