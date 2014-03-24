@@ -10,7 +10,7 @@ import ceylon.language.meta.model {
  same\" (according to some comparison function) were in fact 
  different."
 see(`function assertEquals`, `function assertNotEquals`)
-shared class AssertionComparisonException(
+shared class AssertionComparisonError(
     "The message describing the problem." 
     String message, 
     actualValue, expectedValue) 
@@ -74,7 +74,7 @@ shared void assertNotNull(
 }
 
 "Fails the test if the given values are not equal according to the given compare function."
-throws(`class AssertionComparisonException`, "When _actual_ != _expected_.")
+throws(`class AssertionComparisonError`, "When _actual_ != _expected_.")
 shared void assertEquals(
         "The actual value to be checked." Object? actual, 
         "The expected value." Object? expected, 
@@ -84,12 +84,12 @@ shared void assertEquals(
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
         value exceptionMessage = "``message else "assertion failed"``: ``actualText`` != ``expectedText``";
-        throw AssertionComparisonException(exceptionMessage, actualText, expectedText);
+        throw AssertionComparisonError(exceptionMessage, actualText, expectedText);
     }
 }
 
 "Fails the test if the given values are equal according to the given compare function."
-throws(`class AssertionComparisonException`, "When _actual_ == _expected_.")
+throws(`class AssertionComparisonError`, "When _actual_ == _expected_.")
 shared void assertNotEquals(
         "The actual value to be checked." Object? actual, 
         "The expected value." Object? expected, 
@@ -99,7 +99,7 @@ shared void assertNotEquals(
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
         value exceptionMessage = "``message else "assertion failed"``: ``actualText`` == ``expectedText``";
-        throw AssertionComparisonException(exceptionMessage, actualText, expectedText);
+        throw AssertionComparisonError(exceptionMessage, actualText, expectedText);
     }
 }
 

@@ -94,7 +94,7 @@ shared class TestEventPublisher(ObjectOutputStream oos) satisfies TestListener {
         testElement.exception = exc; 
         testElement.elapsedTimeInMilis = result.elapsedTime;
 
-        if (is AssertionComparisonException ace = result.exception) {
+        if (is AssertionComparisonError ace = result.exception) {
             testElement.expectedValue = ace.expectedValue;
             testElement.actualValue = ace.actualValue;
         }

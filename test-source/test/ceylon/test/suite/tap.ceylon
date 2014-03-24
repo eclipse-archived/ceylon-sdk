@@ -48,6 +48,6 @@ void assertTap(TestSource[] sources, String expectedProtocol) {
     createTestRunner(sources, [TapLoggingListener(printProtocol)]).run();
 
     if( !protocolBuilder.string.contains(expectedProtocol) ) {
-        throw AssertionComparisonException("", protocolBuilder.string, expectedProtocol);
+        throw AssertionComparisonError("", protocolBuilder.string, expectedProtocol);
     }
 }

@@ -84,31 +84,31 @@ shared void testAssertEquals() {
     assertEquals({1, 2, 3}, {1, 2, 3});
     
     assertThatException(()=>assertEquals(true, false, "wops")).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("wops: true != false");
     
     assertThatException(()=>assertEquals(1, 2)).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: 1 != 2");
     
     assertThatException(()=>assertEquals(1.1, 2.2)).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: 1.1 != 2.2");
     
     assertThatException(()=>assertEquals('f', 'b')).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: f != b");
     
     assertThatException(()=>assertEquals("foo", "bar")).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: foo != bar");
     
     assertThatException(()=>assertEquals([1, 2, 3], [3, 2, 1])).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: [1, 2, 3] != [3, 2, 1]");
     
     assertThatException(()=>assertEquals({1, 2, 3}, {3, 2, 1})).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: [1, 2, 3] != [3, 2, 1]");
 }
 
@@ -117,7 +117,7 @@ shared void testAssertEqualsCompare() {
     assertEquals(1, 2, "never false", (Object? o1, Object? o2) => true);
     
     assertThatException(()=>assertEquals(1, 1, "never true", (Object? o1, Object? o2) => false)).
-            hasType(`AssertionComparisonException`);
+            hasType(`AssertionComparisonError`);
 }
 
 test
@@ -126,7 +126,7 @@ shared void testAssertEqualsException() {
         assertEquals(true, false);
         assert(false);
     }
-    catch(AssertionComparisonException e) {
+    catch(AssertionComparisonError e) {
         assert(e.actualValue == "true");
         assert(e.expectedValue == "false");
     }
@@ -144,11 +144,11 @@ shared void testAssertNotEquals() {
     assertNotEquals({1, 2, 3}, {3, 2, 1});
     
     assertThatException(()=>assertNotEquals(true, true)).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: true == true");
     
     assertThatException(()=>assertNotEquals(true, true, "wops")).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("wops: true == true");
 }
 
