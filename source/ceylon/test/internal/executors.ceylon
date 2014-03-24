@@ -208,18 +208,7 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
 
             void visit(ClassOrInterfaceDeclaration? decl, void do(ClassOrInterfaceDeclaration decl)) {
                 if(exists decl) {
-                    try {
-                        do(decl);
-                    }
-                    catch(Throwable e) {
-                        if( e.message == "interface ceylon.language.Annotation is not visible from class loader" ) {
-                            // XXX workaround for ceylon.language #410, ignore exception
-                        }
-                        else {
-                            throw e;
-                        }
-                    }
-                    
+                    do(decl);
                     visit(decl.extendedType?.declaration, do);
                     for(satisfiedType in decl.satisfiedTypes) {
                         visit(satisfiedType.declaration, do);
