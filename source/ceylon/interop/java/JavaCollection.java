@@ -156,7 +156,7 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
     @java.lang.Override
     public <S> S[] toArray(S[] arr) {
         if (items.longerThan(arr.length)) {
-            Util.ReflectingObjectArrayBuilder<S> builder = new Util.ReflectingObjectArrayBuilder<S>(5, (Class<S>)arr.getClass().getComponentType());
+            ReflectingObjectArrayBuilder<S> builder = new ReflectingObjectArrayBuilder<S>(5, (Class<S>)arr.getClass().getComponentType());
             ceylon.language.Iterator iterator = items.iterator();
             Object o;
             while (!((o = iterator.next()) instanceof Finished)) {
@@ -189,6 +189,73 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
             }
         }
         return list;
+    }
+    
+    private static abstract class ArrayBuilder<A> {
+        private static final int MIN_CAPACITY = 5;
+        private static final int MAX_CAPACITY = java.lang.Integer.MAX_VALUE;
+        /** The number of elements in {@link #array}. This is always <= {@link #capacity} */
+        protected int size;
+        /** The length of {@link #array} */
+        protected int capacity;
+        /** The array */
+        protected A array;
+        ArrayBuilder(int initialSize) {
+            capacity = Math.max(initialSize, MIN_CAPACITY);
+            array = allocate(capacity);
+            size = 0;
+        }
+        /** Append all the elements in the given array */
+        final void appendArray(A elements) {
+            int increment = size(elements);
+            int newsize = this.size + increment;
+            ensure(newsize);
+            System.arraycopy(elements, 0, array, this.size, increment);
+            this.size = newsize;
+        }
+        /** Ensure the {@link #array} is as big, or bigger than the given capacity */
+        protected final void ensure(int requestedCapacity) {
+            if (this.capacity >= requestedCapacity) {
+                return;
+            }
+            
+            int newcapacity = requestedCapacity+(requestedCapacity>>1);
+            if (newcapacity < MIN_CAPACITY) {
+                newcapacity = MIN_CAPACITY;
+            } else if (newcapacity > MAX_CAPACITY) {
+                newcapacity = requestedCapacity;
+                if (newcapacity > MAX_CAPACITY) {
+                    throw new AssertionError("can't allocate array bigger than " + MAX_CAPACITY);
+                }
+            }
+            
+            A newArray = allocate(newcapacity);
+            System.arraycopy(this.array, 0, newArray, 0, this.size);
+            this.capacity = newcapacity;
+            this.array = newArray;
+        }
+        
+        /**
+         * Allocate and return an array of the given size
+         */
+        protected abstract A allocate(int size);
+        /**
+         * The size of the given array
+         */
+        protected abstract int size(A array);
+        
+        /**
+         * Returns an array of exactly the right size to contain all the 
+         * appended elements.
+         */
+        A build() {
+            if (this.capacity == this.size) {
+                return array;
+            }
+            A result = allocate(this.size);
+            System.arraycopy(this.array, 0, result, 0, this.size);
+            return result;
+        }
     }
     
     private static final class ReflectingObjectArrayBuilder<T> extends ArrayBuilder<T[]> {
