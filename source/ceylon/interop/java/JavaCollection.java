@@ -2,8 +2,6 @@ package ceylon.interop.java;
 
 import ceylon.language.Finished;
 
-import com.redhat.ceylon.compiler.java.Util;
-
 @com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 6)
 @ceylon.language.DocAnnotation$annotation$(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
 @ceylon.language.SharedAnnotation$annotation$
@@ -152,7 +150,7 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
 
     @java.lang.Override
     public final java.lang.Object[] toArray() {
-        return Util.toArray(items, Object.class);
+        return collectIterable(items).toArray();
     }
 
     @java.lang.Override
@@ -178,7 +176,47 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
             }
             return arr;
         }
-
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T> java.util.List<T> collectIterable(ceylon.language.Iterable<? extends T, ?> sequence) {
+        java.util.List<T> list = new java.util.LinkedList<T>();
+        if (sequence != null) {
+            ceylon.language.Iterator<? extends T> iterator = sequence.iterator();
+            Object o; 
+            while((o = iterator.next()) != ceylon.language.finished_.get_()){
+                list.add((T)o);
+            }
+        }
+        return list;
+    }
+    
+    private static final class ReflectingObjectArrayBuilder<T> extends ArrayBuilder<T[]> {
+        private final java.lang.Class<T> klass;
+        public ReflectingObjectArrayBuilder(int initialSize, java.lang.Class<T> klass) {
+            super(initialSize);
+            this.klass = klass;
+        }
+        @SuppressWarnings("unchecked")
+        @Override
+        protected T[] allocate(int size) {
+            return (T[])new Object[size];
+        }
+        @Override
+        protected int size(T[] array) {
+            return array.length;
+        }
+        
+        public void appendRef(T t) {
+            ensure(size+1);
+            array[size] = t;
+            size++;
+        }
+        public T[] build() {
+            T[] result = (T[])java.lang.reflect.Array.newInstance(klass, this.size);
+            System.arraycopy(this.array, 0, result, 0, this.size);
+            return result;
+        }
     }
     
     @ceylon.language.SharedAnnotation$annotation$
