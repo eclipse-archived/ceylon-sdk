@@ -13,7 +13,7 @@ class OutgoingPipe(InputStream stream)
     
     value reader = BufferedReader(InputStreamReader(stream));
     
-    destroy() => reader.close();
+    close() => reader.close();
     
     readLine() => reader.readLine();
     
