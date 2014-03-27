@@ -395,18 +395,21 @@ shared class Sql(newConnection) {
                 satisfies Destroyable & {Row*} {
             variable ConnectionStatus connectionStatus=connection.get();
             variable PreparedStatement preparedStatement;
+            variable {Object*} resultSets; //TODO: should be ResultSet, nasty hack to work around backend bug!
             try {
                 preparedStatement=prepareStatement(connectionStatus, sql, arguments);
+                if (exists maxRows = limit) {
+                    preparedStatement.maxRows=maxRows;
+                }
+                resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
             } catch (Exception e) {
-                connectionStatus.close();
+                try {
+                    connectionStatus.close();
+                } catch (Exception e2) {
+                    e.addSuppressed(e2);
+                }
                 throw e;
             }
-            variable {Object*} resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
-            
-            if (exists maxRows = limit) {
-                preparedStatement.maxRows=maxRows;
-            }
-            
             
             shared actual Iterator<Row> iterator() {
                 object iterator
@@ -469,7 +472,16 @@ shared class Sql(newConnection) {
         try {
             connectionStatus.beginTransaction();
         } catch (Exception e) {
-            connectionStatus.close();
+            try {
+                connectionStatus.rollback();
+            } catch (Exception e2) {
+                e.addSuppressed(e2);
+            }
+            try {
+                connectionStatus.close();
+            } catch (Exception e2) {
+                e.addSuppressed(e2);
+            }
             throw e;
         }
         
