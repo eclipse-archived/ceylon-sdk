@@ -180,7 +180,7 @@ final class DecimalImpl(BigDecimal num)
     shared actual Boolean negative {
         return implementation.signum() < 0;
     }
-    shared actual Decimal negativeValue {
+    shared actual Decimal negated {
         return DecimalImpl(implementation.negate());
     }
     shared actual Decimal plus(Decimal other) {
@@ -210,9 +210,6 @@ final class DecimalImpl(BigDecimal num)
     }
     shared actual Boolean positive {
         return implementation.signum() > 0;
-    }
-    shared actual Decimal positiveValue {
-        return this;
     }
     shared actual Decimal power(Integer other) {
         if (exists rounding = defaultRounding.get()) {

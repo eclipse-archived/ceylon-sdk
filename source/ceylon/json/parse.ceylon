@@ -89,7 +89,7 @@ class Parser(String str){
             Integer fractionPart = parseDigits();
             Integer digits = index - start;
             Float float = wholePart.float + (fractionPart.float / (10 ^ digits).float);
-            Float signedFloat = negative then float.negativeValue else float;
+            Float signedFloat = negative then -float else float;
             Integer? exp = parseExponent();
             if(exists exp){
                 return signedFloat * (10.float ^ exp.float);
@@ -97,7 +97,7 @@ class Parser(String str){
             return signedFloat;
         }
 
-        Integer signedInteger = negative then wholePart.negativeValue else wholePart;
+        Integer signedInteger = negative then -wholePart else wholePart;
         Integer? exp = parseExponent();
         if(exists exp){
             return signedInteger.float * (10.float ^ exp.float);

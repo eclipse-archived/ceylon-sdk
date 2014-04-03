@@ -22,11 +22,7 @@ final class WholeImpl(BigInteger num)
         return WholeImpl(implementation.subtract(jone));
     }
 
-    shared actual WholeImpl positiveValue {
-        return this;
-    }
-
-    shared actual WholeImpl negativeValue {
+    shared actual WholeImpl negated {
         return WholeImpl(implementation.negate());
     }
 

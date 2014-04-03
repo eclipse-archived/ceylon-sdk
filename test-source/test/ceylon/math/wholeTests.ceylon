@@ -131,10 +131,8 @@ test void wholeTests() {
     assertEquals(2.0, wholeNumber(2).float, "2.float");
 
     print("Whole misc");
-    assertEquals(wholeNumber(2), wholeNumber(2).positiveValue, "2.positiveValue");
-    assertEquals(wholeNumber(-2), wholeNumber(2).negativeValue, "2.negativeValue");
-    assertEquals(wholeNumber(0), wholeNumber(0).positiveValue, "0.positiveValue");
-    assertEquals(wholeNumber(0), wholeNumber(0).negativeValue, "0.negativeValue");
+    assertEquals(wholeNumber(-2), wholeNumber(2).negated, "2.negated");
+    assertEquals(wholeNumber(0), wholeNumber(0).negated, "0.negated");
     assertEquals(wholeNumber(2), wholeNumber(2).magnitude, "2.magnitude");
     assertEquals(wholeNumber(2), wholeNumber(-2).magnitude, "-2.magnitude");
     assertEquals(wholeNumber(2), wholeNumber(2).wholePart, "2.wholePart");
