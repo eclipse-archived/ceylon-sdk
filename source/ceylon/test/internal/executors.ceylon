@@ -201,7 +201,7 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
         }
     }
 
-    FunctionDeclaration[] findCallbacks<CallbackType>() {
+    FunctionDeclaration[] findCallbacks<CallbackType>() given CallbackType satisfies Annotation{
         value callbacks = HashSet<FunctionDeclaration>();
 
         if( exists classDecl ) {
