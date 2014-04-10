@@ -12,7 +12,7 @@ import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
-@Ceylon(major = 6)
+@Ceylon(major = 7)
 @Method
 @DocAnnotation$annotation$(description = "Returns a Java [[java.lang::Class]] object representing the runtime type of the given [[instance]].")
 @SharedAnnotation$annotation$
