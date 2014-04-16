@@ -20,7 +20,7 @@ test void testGETAndParseJSON(){
     print(response);
     assertFalse(response.contents empty, "Has contents");
 
-    Object json = parseJson(response.contents);
+    assert(is Object json = parseJson(response.contents));
     testJSON(json);    
 }
 
