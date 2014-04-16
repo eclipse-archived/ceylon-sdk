@@ -789,54 +789,54 @@ String herdJson = """
                      """;
 
 shared test void testParse() {
-    value o1 = parse("{}");
+    assert(is Object o1 = parse("{}"));
     assertEquals(0, o1.size);
     
-    value o2 = parse("{\"foo\": \"bar\"}");
+    assert(is Object o2 = parse("{\"foo\": \"bar\"}"));
     assertEquals(1, o2.size);
     assertEquals("bar", o2["foo"]);
     
-    value o3 = parse("{\"s\": \"bar\", \"t\": true, \"f\": false, \"n\": null}");
+    assert(is Object o3 = parse("{\"s\": \"bar\", \"t\": true, \"f\": false, \"n\": null}"));
     assertEquals(4, o3.size);
     assertEquals("bar", o3["s"]);
     assertEquals(true, o3["t"]);
     assertEquals(false, o3["f"]);
     assertEquals(nil, o3["n"]);
     
-    value o4 = parse("{\"i\": 12, \"f\": 12.34, \"ie\": 12e10, \"fe\": 12.34e10}");
+    assert(is Object o4 = parse("{\"i\": 12, \"f\": 12.34, \"ie\": 12e10, \"fe\": 12.34e10}"));
     assertEquals(4, o4.size);
     assertEquals(12, o4["i"]);
     assertEquals(12.34, o4["f"]);
     assertEquals(12.0e10.integer, o4["ie"]);
     assertEquals(12.34e10, o4["fe"]);
     
-    value o5 = parse("{\"i\": -12, \"f\": -12.34, \"ie\": -12e10, \"fe\": -12.34e10}");
+    assert(is Object o5 = parse("{\"i\": -12, \"f\": -12.34, \"ie\": -12e10, \"fe\": -12.34e10}"));
     assertEquals(4, o5.size);
     assertEquals(-12, o5["i"]);
     assertEquals(-12.34, o5["f"]);
     assertEquals(-12.0e10.integer, o5["ie"]);
     assertEquals(-12.34e10, o5["fe"]);
     
-    value o6 = parse("{\"ie\": 12E10, \"fe\": 12.34E10}");
+    assert(is Object o6 = parse("{\"ie\": 12E10, \"fe\": 12.34E10}"));
     assertEquals(2, o6.size);
     assertEquals(12.0e10.integer, o6["ie"]);
     assertEquals(12.34e10, o6["fe"]);
     
-    value o7 = parse("{\"ie\": 12e+10, \"fe\": 12.34e+10}");
+    assert(is Object o7 = parse("{\"ie\": 12e+10, \"fe\": 12.34e+10}"));
     assertEquals(2, o7.size);
     assertEquals(12.0e10.integer, o7["ie"]);
     assertEquals(12.34e10, o7["fe"]);
     
-    value o8 = parse("{\"ie\": 12e-10, \"fe\": 12.34e-10}");
+    assert(is Object o8 = parse("{\"ie\": 12e-10, \"fe\": 12.34e-10}"));
     assertEquals(2, o8.size);
     assertEquals(12.0e-10, o8["ie"]);
     assertEquals(12.34e-10, o8["fe"]);
     
-    value o9 = parse("{\"s\": \"escapes \\\\ \\\" \\/ \\b \\f \\t \\n \\r \\u0053 \\u3042\"}");
+    assert(is Object o9 = parse("{\"s\": \"escapes \\\\ \\\" \\/ \\b \\f \\t \\n \\r \\u0053 \\u3042\"}"));
     assertEquals(1, o9.size);
     assertEquals("escapes \\ \" / \b \f \t \n \r \{#0053} \{#3042}", o9["s"]);
     
-    value o10 = parse("{\"obj\": {\"gee\": \"bar\"}}");
+    assert(is Object o10 = parse("{\"obj\": {\"gee\": \"bar\"}}"));
     assertEquals(1, o10.size);
     if(is Object obj = o10["obj"]){
         assertEquals("bar", obj["gee"]);
@@ -844,7 +844,7 @@ shared test void testParse() {
         fail();
     }
     
-    value o11 = parse("{\"arr\": [1, 2, 3]}");
+    assert(is Object o11 = parse("{\"arr\": [1, 2, 3]}"));
     assertEquals(1, o11.size);
     if(is Array arr = o11["arr"]){
         assertEquals(3, arr.size);
@@ -855,7 +855,7 @@ shared test void testParse() {
         fail();
     }
     
-    value o12 = parse("{\"svn_url\":\"https://github.com/ceylon/ceylon-compiler\",\"has_downloads\":true,\"homepage\":\"http://ceylon-lang.org\",\"mirror_url\":null,\"has_issues\":true,\"updated_at\":\"2012-04-11T10:20:59Z\",\"forks\":22,\"clone_url\":\"https://github.com/ceylon/ceylon-compiler.git\",\"ssh_url\":\"git@github.com:ceylon/ceylon-compiler.git\",\"html_url\":\"https://github.com/ceylon/ceylon-compiler\",\"language\":\"Java\",\"organization\":{\"gravatar_id\":\"a38479e9dc888f68fb6911d4ce05d7cc\",\"url\":\"https://api.github.com/users/ceylon\",\"avatar_url\":\"https://secure.gravatar.com/avatar/a38479e9dc888f68fb6911d4ce05d7cc?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-orgs.png\",\"id\":579261,\"login\":\"ceylon\"},\"has_wiki\":true,\"fork\":false,\"git_url\":\"git://github.com/ceylon/ceylon-compiler.git\",\"created_at\":\"2011-01-24T14:25:50Z\",\"url\":\"https://api.github.com/repos/ceylon/ceylon-compiler\",\"size\":2413,\"private\":false,\"open_issues\":81,\"description\":\"Ceylon compiler (ceylonc: Java backend), Ceylon documentation generator (ceylond) and Ceylon ant tasks.\",\"owner\":{\"gravatar_id\":\"a38479e9dc888f68fb6911d4ce05d7cc\",\"url\":\"https://api.github.com/users/ceylon\",\"avatar_url\":\"https://secure.gravatar.com/avatar/a38479e9dc888f68fb6911d4ce05d7cc?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-orgs.png\",\"id\":579261,\"login\":\"ceylon\"},\"name\":\"ceylon-compiler\",\"watchers\":74,\"pushed_at\":\"2012-04-11T07:43:33Z\",\"id\":1287859}");
+    assert(is Object o12 = parse("{\"svn_url\":\"https://github.com/ceylon/ceylon-compiler\",\"has_downloads\":true,\"homepage\":\"http://ceylon-lang.org\",\"mirror_url\":null,\"has_issues\":true,\"updated_at\":\"2012-04-11T10:20:59Z\",\"forks\":22,\"clone_url\":\"https://github.com/ceylon/ceylon-compiler.git\",\"ssh_url\":\"git@github.com:ceylon/ceylon-compiler.git\",\"html_url\":\"https://github.com/ceylon/ceylon-compiler\",\"language\":\"Java\",\"organization\":{\"gravatar_id\":\"a38479e9dc888f68fb6911d4ce05d7cc\",\"url\":\"https://api.github.com/users/ceylon\",\"avatar_url\":\"https://secure.gravatar.com/avatar/a38479e9dc888f68fb6911d4ce05d7cc?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-orgs.png\",\"id\":579261,\"login\":\"ceylon\"},\"has_wiki\":true,\"fork\":false,\"git_url\":\"git://github.com/ceylon/ceylon-compiler.git\",\"created_at\":\"2011-01-24T14:25:50Z\",\"url\":\"https://api.github.com/repos/ceylon/ceylon-compiler\",\"size\":2413,\"private\":false,\"open_issues\":81,\"description\":\"Ceylon compiler (ceylonc: Java backend), Ceylon documentation generator (ceylond) and Ceylon ant tasks.\",\"owner\":{\"gravatar_id\":\"a38479e9dc888f68fb6911d4ce05d7cc\",\"url\":\"https://api.github.com/users/ceylon\",\"avatar_url\":\"https://secure.gravatar.com/avatar/a38479e9dc888f68fb6911d4ce05d7cc?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-orgs.png\",\"id\":579261,\"login\":\"ceylon\"},\"name\":\"ceylon-compiler\",\"watchers\":74,\"pushed_at\":\"2012-04-11T07:43:33Z\",\"id\":1287859}"));
     assertEquals(26, o12.size);
     assertEquals("https://github.com/ceylon/ceylon-compiler.git", o12["clone_url"]);
     assertEquals("2011-01-24T14:25:50Z", o12["created_at"]);
