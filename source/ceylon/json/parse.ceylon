@@ -4,8 +4,7 @@ class Parser(String str){
     variable Integer line = 1;
     variable Integer column = 1;
 
-    throws(`class ParseException`, "If the specified string cannot be parsed")
-    shared Object parseObject(){
+    Object parseObject(){
         Object obj = Object{};
         
         eatSpacesUntil('{');
@@ -51,7 +50,8 @@ class Parser(String str){
         return arr;
     }
     
-    String|Boolean|Integer|Float|Object|Array|NullInstance parseValue(){
+    throws(`class ParseException`, "If the specified string cannot be parsed")
+    shared String|Boolean|Integer|Float|Object|Array|NullInstance parseValue(){
         eatSpaces();
         Character c = char();
         if(c == '{'){
@@ -299,9 +299,9 @@ class Parser(String str){
     }
 }
 
-"Parses a JSON string into a JSON Object"
+"Parses a JSON string into a JSON value"
 by("Stéphane Épardaud")
 throws(`class Exception`, "If the JSON string is invalid")
-shared Object parse(String str){
-    return Parser(str).parseObject();
+shared String|Boolean|Integer|Float|Object|Array|NullInstance parse(String str){
+    return Parser(str).parseValue();
 }
