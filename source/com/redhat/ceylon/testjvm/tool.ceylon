@@ -5,21 +5,23 @@ import ceylon.test {
     createTestRunner,
     TestSource,
     SimpleLoggingListener,
-    TapLoggingListener,
     TestListener,
     TestRunResult
 }
-import com.redhat.ceylon.test.eclipse {
+import com.redhat.ceylon.test {
     TestEventPublisher,
+    TapLoggingListener
+}
+import com.redhat.ceylon.testjvm {
     Util {
         createSocket,
-        createObjectOutputStream,
+        createPrintWriter,
         setColor
     }
 }
 import java.io {
-    ObjectOutputStream,
-    IOException
+    IOException,
+    PrintWriter
 }
 import java.lang {
     Thread,
@@ -77,7 +79,7 @@ class Runner() {
     variable TestListener defaultTestListener = loggingListener;
     variable Integer port = -1;
     variable Socket? socket = null;
-    variable ObjectOutputStream? oos = null;
+    variable PrintWriter? writer = null;
 
     shared void run() {
         try {
@@ -93,8 +95,13 @@ class Runner() {
             }
 
             TestListener[] testListeners;
-            if( exists o = oos ) {
-                testListeners = [TestEventPublisher(o)];
+            if( exists w = writer ) {
+                void publishEvent(String json) {
+                    w.write(json);
+                    w.write('\{END OF TRANSMISSION}'.integer);
+                    w.flush();
+                }
+                testListeners = [TestEventPublisher(publishEvent)];
             }
             else {
                 testListeners = [defaultTestListener];
@@ -151,7 +158,7 @@ class Runner() {
             for (value i in 0..10) {
                 try {
                     socket = createSocket(null, port);
-                    oos = createObjectOutputStream(socket);
+                    writer = createPrintWriter(socket);
                     return;
                 } catch (IOException e) {
                     lastException = e;
@@ -168,9 +175,9 @@ class Runner() {
 
     void disconnect() {
         try {
-            if( oos exists ) {
-                oos?.close();
-                oos = null;
+            if( writer exists ) {
+                writer?.close();
+                writer = null;
             }
         } catch (IOException e) {
             // noop

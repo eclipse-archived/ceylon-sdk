@@ -1,13 +1,10 @@
-package com.redhat.ceylon.test.eclipse;
+package com.redhat.ceylon.testjvm;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -18,23 +15,9 @@ public class Util {
 		return new Socket(host, port);
 	}
 
-	public static ObjectOutputStream createObjectOutputStream(Socket socket) throws IOException {
-		return new ObjectOutputStream(socket.getOutputStream());
+	public static PrintWriter createPrintWriter(Socket socket) throws IOException {
+		return new PrintWriter(socket.getOutputStream());
 	}
-	
-    public static String convertThrowable(Throwable t) {
-        if (t != null) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            t.printStackTrace(pw);
-            return sw.toString();
-        }
-        return null;
-    }
-    
-    public static TestElement[] convertToArray(List<TestElement> testElements) {
-    	return testElements.toArray(new TestElement[] {});
-    }
     
     public static void setColor(int colorCode) {
         try (InputStream is = Runtime.getRuntime().exec("tput setaf " + colorCode).getInputStream();

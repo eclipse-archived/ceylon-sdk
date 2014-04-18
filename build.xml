@@ -27,22 +27,31 @@
     </reposet>
     
     <moduleset id="modules.sdk.jvm">
-        <sourcemodules dir="source"/>
+        <module name="ceylon.collection"/>    	
+        <module name="ceylon.dbc"/>
+        <module name="ceylon.file"/>
+        <module name="ceylon.html"/>
+        <module name="ceylon.interop.java"/>
+        <module name="ceylon.io"/>
+        <module name="ceylon.json"/>
+    	<module name="ceylon.logging"/>
+        <module name="ceylon.math"/>
+        <module name="ceylon.net"/>
+        <module name="ceylon.process"/>
+        <module name="ceylon.test"/>
+        <module name="ceylon.time"/>
+    	<module name="ceylon.unicode"/>
+        <module name="com.redhat.ceylon.test"/>
+    	<module name="com.redhat.ceylon.testjvm"/>
     </moduleset>
     
     <moduleset id="modules.sdk.js">
-        <!--<module name="ceylon.math"/>-->
-        <module name="ceylon.test"/>
         <module name="ceylon.collection"/>
-        <!--<module name="ceylon.file"/>-->
-        <!--<module name="ceylon.io"/>-->
-        <module name="ceylon.json"/>
-        <!--<module name="ceylon.net"/>-->
-        <!--<module name="ceylon.process"/>-->
-        <!--<module name="ceylon.dbc"/>-->
-        <!--<module name="ceylon.interop.java"/>-->
-        <module name="ceylon.time"/>
     	<module name="ceylon.html"/>
+        <module name="ceylon.json"/>
+        <module name="ceylon.test"/>
+        <module name="ceylon.time"/>
+    	<module name="com.redhat.ceylon.test"/>
     	<module name="com.redhat.ceylon.testjs"/>
     </moduleset>
     
@@ -63,18 +72,11 @@
     </moduleset>
     
     <moduleset id="modules.test.js">
-        <!--<module name="com.redhat.ceylon.sdk.test"/>-->
-        <!--<module name="test.ceylon.math"/>-->
+    	<module name="test.ceylon.test.suite"/>
         <module name="test.ceylon.collection"/>
-        <!--<module name="test.ceylon.file"/>-->
-        <!--<module name="test.ceylon.io"/>-->
-        <module name="test.ceylon.json"/>
-        <!--<module name="test.ceylon.net"/>-->
-        <!--<module name="test.ceylon.process"/>-->
-        <module name="test.ceylon.time"/>
-        <!--<module name="test.ceylon.dbc"/>-->
-        <!--<module name="test.ceylon.interop"/>-->
         <module name="test.ceylon.html"/>
+        <module name="test.ceylon.json"/>
+        <module name="test.ceylon.time"/>
     </moduleset>
     
     <target name="clean"
@@ -107,7 +109,6 @@
             description="Compiles the SDK modules to the 'modules' repository" />
 
     <target name="compile-test-jvm" depends="compile-jvm">
-        
         <ceylon-compile executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -117,20 +118,18 @@
         	<module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.jvm"/>
         </ceylon-compile>
-        
     </target>
 
     <target name="compile-test-js" depends="compile-js">
-        
         <ceylon-compile-js executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
             verbose="${ceylon.verbosity}"
             encoding="UTF-8">
             <reposet refid="reposet.compile.test"/>
+        	<module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.js"/>
         </ceylon-compile-js>
-        
     </target>
             
     <target name="compile-test" depends="compile,compile-test-jvm,compile-test-js"
@@ -192,6 +191,8 @@
             <fileset dir="${out.repo}">
                 <include name="ceylon/test/**"/>
             	<include name="com/redhat/ceylon/test/**"/>
+            	<include name="com/redhat/ceylon/testjs/**"/>
+            	<include name="com/redhat/ceylon/testjvm/**"/>
                 <include name="ceylon/math/**"/>
                 <include name="ceylon/collection/**"/>
                 <include name="ceylon/file/**"/>

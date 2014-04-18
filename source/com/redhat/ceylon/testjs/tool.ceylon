@@ -5,7 +5,10 @@ import ceylon.test {
     createTestRunner,
     TestSource,
     TestListener,
-    SimpleLoggingListener,
+    SimpleLoggingListener
+}
+import com.redhat.ceylon.test {
+    TestEventPublisher,
     TapLoggingListener
 }
 
@@ -14,6 +17,7 @@ shared void run() {
     value testSources = SequenceBuilder<TestSource>();
     variable String prev = "";
     variable TestListener listener = SimpleLoggingListener();
+    variable Integer port = -1;
     
     for(String arg in process.arguments) {
         if( prev == "__module" ) {
@@ -29,7 +33,33 @@ shared void run() {
         if( arg == "__tap" ) {
             listener = TapLoggingListener();
         }
+        if( arg.startsWith("--port") ) {
+            assert(exists p = parseInteger(arg[7...]));
+            port = p;
+        }
+        
         prev = arg;
+    }
+
+    if( port != -1 ) {
+        dynamic {
+            dynamic net = require("net");
+            dynamic socket = net.connect(port);
+
+            void publishEvent(String json) {
+                dynamic {
+                    socket.write(json);
+                    socket.write("\{END OF TRANSMISSION}");
+                }
+            }
+
+            listener = TestEventPublisher(publishEvent);
+        }
+    }
+
+    // initialize tested modules
+    for(value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+        assert(exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
     }
     
     if( testSources.empty ) {

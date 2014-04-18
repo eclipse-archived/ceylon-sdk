@@ -1,6 +1,7 @@
 import ceylon.test.event {
     ...
 }
+import ceylon.test { error, AssertionComparisonError, TestListener, TestResult, success, ignored, failure }
 
 "A [[TestListener]] that prints information about test execution to a given logging function,
  in [Test Anything Protocol v13](http://testanything.org/tap-version-13-specification.html) format.

@@ -1,6 +1,9 @@
 import ceylon.test {
     ...
 }
+import com.redhat.ceylon.test {
+    ...
+}
 import test.ceylon.test.stubs {
     ...
 }
