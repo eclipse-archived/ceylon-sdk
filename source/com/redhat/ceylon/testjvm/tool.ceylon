@@ -4,20 +4,12 @@ import ceylon.language.meta {
 import ceylon.test {
     createTestRunner,
     TestSource,
-    SimpleLoggingListener,
-    TestListener,
-    TestRunResult
+    TestListener
 }
 import com.redhat.ceylon.test {
     TestEventPublisher,
-    TapLoggingListener
-}
-import com.redhat.ceylon.testjvm {
-    Util {
-        createSocket,
-        createPrintWriter,
-        setColor
-    }
+    TapLoggingListener,
+    TestLoggingListener
 }
 import java.io {
     IOException,
@@ -46,40 +38,12 @@ shared void run() {
 
 class Runner() {
 
-    object loggingListener extends SimpleLoggingListener() {
-        
-        value colorCodeRed = 1;
-        value colorCodeGreen = 2;
-        value colorCodeWhite = 7;
-        
-        shared actual void writeBannerSuccess(TestRunResult result) {
-            setColor(colorCodeGreen);
-            try {
-                super.writeBannerSuccess(result);
-            }
-            finally {
-                setColor(colorCodeWhite);
-            }
-        }
-        
-        shared actual void writeBannerFailed(TestRunResult result) {
-            setColor(colorCodeRed);
-            try {
-                super.writeBannerFailed(result);
-            }
-            finally {
-                setColor(colorCodeWhite);
-            }
-        }
-        
-    }
-
     value moduleNameAndVersions = SequenceBuilder<[String, String]>();
     value testSources = SequenceBuilder<TestSource>();
-    variable TestListener defaultTestListener = loggingListener;
     variable Integer port = -1;
     variable Socket? socket = null;
     variable PrintWriter? writer = null;
+    variable Boolean tap = false;
 
     shared void run() {
         try {
@@ -94,20 +58,27 @@ class Runner() {
                 }
             }
 
-            TestListener[] testListeners;
+            TestListener testListener;
             if( exists w = writer ) {
                 void publishEvent(String json) {
                     w.write(json);
                     w.write('\{END OF TRANSMISSION}'.integer);
                     w.flush();
                 }
-                testListeners = [TestEventPublisher(publishEvent)];
+                testListener = TestEventPublisher(publishEvent);
+            }
+            else if( tap ) {
+                testListener = TapLoggingListener();
             }
             else {
-                testListeners = [defaultTestListener];
+                testListener = TestLoggingListener {
+                    colorWhite = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.white"); 
+                    colorGreen = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.green"); 
+                    colorRed = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.red"); 
+                };
             }
 
-            createTestRunner(testSources.sequence, testListeners).run();
+            createTestRunner(testSources.sequence, [testListener]).run();
         }
         finally {
             disconnect();
@@ -133,7 +104,7 @@ class Runner() {
                 port = p;
             }
             if( arg == "--tap" ) {
-                defaultTestListener = TapLoggingListener();
+                tap = true;
             }
             prev = arg;
         }
@@ -157,8 +128,9 @@ class Runner() {
             variable Exception? lastException = null;
             for (value i in 0..10) {
                 try {
-                    socket = createSocket(null, port);
-                    writer = createPrintWriter(socket);
+                    String? host = null;
+                    socket = Socket(host, port);
+                    writer = PrintWriter(socket?.outputStream);
                     return;
                 } catch (IOException e) {
                     lastException = e;

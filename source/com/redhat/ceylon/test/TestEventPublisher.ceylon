@@ -47,7 +47,7 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
                 convertTestDescription(child, json);
                 json.append(", ");
             }
-            json.delete(json.size-2, 2);
+            json.deleteTerminal(2);
         }
         json.append("]");
         json.append("}");
@@ -69,7 +69,7 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
             json.append("'expectedValue':'``ace.expectedValue``', ");
             json.append("'actualValue':'``ace.actualValue``', ");
         }
-        json.delete(json.size-2, 2);
+        json.deleteTerminal(2);
         json.append("}");
         return json;
     }

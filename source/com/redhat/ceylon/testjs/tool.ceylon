@@ -4,20 +4,25 @@ import ceylon.language.meta {
 import ceylon.test {
     createTestRunner,
     TestSource,
-    TestListener,
-    SimpleLoggingListener
+    TestListener
 }
+
 import com.redhat.ceylon.test {
     TestEventPublisher,
-    TapLoggingListener
+    TapLoggingListener,
+    TestLoggingListener
 }
 
 shared void run() {
     value moduleNameAndVersions = SequenceBuilder<[String, String]>();
     value testSources = SequenceBuilder<TestSource>();
     variable String prev = "";
-    variable TestListener listener = SimpleLoggingListener();
+    variable TestListener listener;
     variable Integer port = -1;
+    variable Boolean tap = false;
+    variable String? colorWhite = null;
+    variable String? colorGreen = null;
+    variable String? colorRed = null;
     
     for(String arg in process.arguments) {
         if( prev == "__module" ) {
@@ -31,11 +36,20 @@ shared void run() {
             testSources.append(arg);
         }
         if( arg == "__tap" ) {
-            listener = TapLoggingListener();
+            tap = true;
         }
         if( arg.startsWith("--port") ) {
             assert(exists p = parseInteger(arg[7...]));
             port = p;
+        }
+        if( prev == "__com.redhat.ceylon.common.tool.terminal.color.white" ) {
+            colorWhite = arg;
+        }
+        if( prev == "__com.redhat.ceylon.common.tool.terminal.color.green" ) {
+            colorGreen = arg;
+        }
+        if( prev == "__com.redhat.ceylon.common.tool.terminal.color.red" ) {
+            colorRed = arg;
         }
         
         prev = arg;
@@ -55,6 +69,12 @@ shared void run() {
 
             listener = TestEventPublisher(publishEvent);
         }
+    }
+    else if( tap ) {
+        listener = TapLoggingListener();
+    }
+    else {
+        listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
     }
 
     // initialize tested modules
