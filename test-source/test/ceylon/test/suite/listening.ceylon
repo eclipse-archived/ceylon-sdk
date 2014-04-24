@@ -24,7 +24,7 @@ shared void shouldFireEvents() {
     assertEquals(lines[5], "TestStartEvent[test.ceylon.test.stubs::foo]");
     assertEquals(lines[6], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
     assertEquals(lines[7], "TestStartEvent[test.ceylon.test.stubs::fooThrowingAssertion]");
-    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language.AssertionError: assertion failed)]");
+    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language.AssertionError \"assertion failed\")]");
     assertEquals(lines[9], "TestStartEvent[test.ceylon.test.stubs::fooThrowingException]");
     assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language.Exception \"unexpected exception\")]");
     assertEquals(lines[11], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language.Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");

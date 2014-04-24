@@ -81,7 +81,6 @@ shared void testAssertEquals() {
     assertEquals('f', 'f');
     assertEquals("foo", "foo");
     assertEquals([1, 2, 3], [1, 2, 3]);
-    assertEquals({1, 2, 3}, {1, 2, 3});
     
     assertThatException(()=>assertEquals(true, false, "wops")).
             hasType(`AssertionComparisonError`).
@@ -107,9 +106,9 @@ shared void testAssertEquals() {
             hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: [1, 2, 3] != [3, 2, 1]");
     
-    assertThatException(()=>assertEquals({1, 2, 3}, {3, 2, 1})).
+    assertThatException(()=>assertEquals({1, 2, 3}, [])).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: [1, 2, 3] != [3, 2, 1]");
+            hasMessage("assertion failed: { 1, 2, 3 } != []");
 }
 
 test
