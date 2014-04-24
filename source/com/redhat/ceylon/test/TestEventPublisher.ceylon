@@ -39,7 +39,7 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
 
     StringBuilder convertTestDescription(TestDescription description, StringBuilder json = StringBuilder()) {
         json.append("{");
-        json.append("'name':``description.name``, ");
+        json.append("'name':``escape(description.name)``, ");
         json.append("'state':'undefined', ");
         json.append("'children':[");
         if( !description.children.empty ) {
@@ -56,22 +56,37 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
     
     StringBuilder convertTestResult(TestResult result, StringBuilder json = StringBuilder()) {
         json.append("{");
-        json.append("'name':'``result.description.name``', ");
-        json.append("'state':'``result.state``', ");
+        json.append("'name':'``escape(result.description.name)``', ");
+        json.append("'state':'``escape(result.state.string)``', ");
         json.append("'elapsedTime':``result.elapsedTime``, ");
         if(exists e = result.exception) {
             json.append("'exception':'");
-            void appendStackTrace(String s) => json.append(s);
+            void appendStackTrace(String s) => json.append(escape(s));
             printStackTrace(e, appendStackTrace);
             json.append("', ");
         }
         if(is AssertionComparisonError ace = result.exception) {
-            json.append("'expectedValue':'``ace.expectedValue``', ");
-            json.append("'actualValue':'``ace.actualValue``', ");
+            json.append("'expectedValue':'``escape(ace.expectedValue)``', ");
+            json.append("'actualValue':'``escape(ace.actualValue)``', ");
         }
         json.deleteTerminal(2);
         json.append("}");
         return json;
+    }
+    
+    String escape(String s) {
+        value sb = StringBuilder();
+        for(c in s) {
+            if( c == '\'' || c == '"' || c == '\\' || c == '/' || 
+                c == '\b' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || 
+                c == '\{END OF TRANSMISSION}' ) {
+                 sb.appendCharacter('\\').appendCharacter(c);
+            }
+            else {
+                sb.appendCharacter(c);
+            }
+        }
+        return sb.string;
     }
 
 }
