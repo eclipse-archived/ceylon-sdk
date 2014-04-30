@@ -1,11 +1,11 @@
-"A [[MutableMap]] implemented using a red/black tree. 
+"A [[MutableMap]] implemented using a red/black tree.
  Entries in the map are maintained in a sorted order, from
  smallest to largest key, as determined by the given
  [[comparator function|compare]]."
 see (`function naturalOrderTreeMap`)
 by ("Gavin King")
-shared class TreeMap<Key, Item>(compare, entries={}) 
-        satisfies MutableMap<Key,Item> 
+shared class TreeMap<Key, Item>(compare, entries={})
+        satisfies MutableMap<Key,Item>
                   & SortedMap<Key,Item>
                   & Ranged<Key,TreeMap<Key,Item>>
         given Key satisfies Object
@@ -47,7 +47,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         shared Node? grandparent => parent?.parent;
         
         shared Node? sibling {
-            if (exists p=parent) { 
+            if (exists p=parent) {
                 if (onLeft) {
                     return p.right;
                 }
@@ -141,10 +141,10 @@ shared class TreeMap<Key, Item>(compare, entries={})
     function lookup(Key key) {
         variable value node = root;
         while (exists n=node) {
-            switch (compare(key,n.key)) 
+            switch (compare(key,n.key))
             case (equal) {
                 return n;
-            } 
+            }
             case (smaller) {
                 node = n.left;
             }
@@ -158,14 +158,14 @@ shared class TreeMap<Key, Item>(compare, entries={})
     function ceiling(Key key) {
         variable value node = root;
         while (exists n=node) {
-            switch (compare(key,n.key)) 
+            switch (compare(key,n.key))
             case (equal) {
                 return n;
-            } 
+            }
             case (smaller) {
                 if (!n.left exists) {
                     variable value child = n;
-                    while (exists parent=child.parent, 
+                    while (exists parent=child.parent,
                         child.onLeft) {
                         child=parent;
                     }
@@ -186,10 +186,10 @@ shared class TreeMap<Key, Item>(compare, entries={})
     function floor(Key key) {
         variable value node = root;
         while (exists n=node) {
-            switch (compare(key,n.key)) 
+            switch (compare(key,n.key))
             case (equal) {
                 return n;
-            } 
+            }
             case (smaller) {
                 if (!n.left exists) {
                     return n;
@@ -199,7 +199,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             case (larger) {
                 if (!n.right exists) {
                     variable value child = n;
-                    while (exists parent=child.parent, 
+                    while (exists parent=child.parent,
                         child.onRight) {
                         child=parent;
                     }
@@ -274,7 +274,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                         rotateLeft(parent);
                         assert (exists nl=newNode.left);
                         adjustedNode=nl;
-                    } 
+                    }
                     else if (newNode.onLeft && parent.onRight) {
                         rotateRight(parent);
                         assert (exists nr=newNode.right);
@@ -399,13 +399,13 @@ shared class TreeMap<Key, Item>(compare, entries={})
                     sibling.red = parent.red;
                     parent.red = false;
                     if (node.onLeft) {
-                        assert (exists siblingRight=sibling.right, 
+                        assert (exists siblingRight=sibling.right,
                         isRed(siblingRight));
                         siblingRight.red = false;
                         rotateLeft(parent);
                     }
                     else /*if (node.onRight)*/ {
-                        assert (exists siblingLeft=sibling.left, 
+                        assert (exists siblingLeft=sibling.left,
                         isRed(siblingLeft));
                         siblingLeft.red = false;
                         rotateRight(parent);
@@ -425,7 +425,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
     shared actual Item? remove(Key key) {
         if (exists result = lookup(key)) {
             Node node;
-            if (exists left=result.left, 
+            if (exists left=result.left,
             exists right=result.right) {
                 // Copy key/value from predecessor and then delete it instead
                 node = left.rightmostChild;
@@ -494,7 +494,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             }
             else if (exists node=current) {
                 variable value child = node;
-                while (exists parent=child.parent, 
+                while (exists parent=child.parent,
                     child.onRight) {
                     child = parent;
                 }
@@ -540,7 +540,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared actual Iterator<Key->Item> iterator() 
+    shared actual Iterator<Key->Item> iterator()
             => NodeIterator();
     
     shared actual TreeMap<Key,Item> clone() {
@@ -596,7 +596,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    Integer? assertBlackNodesInPaths(node=root, blackCount=0, 
+    Integer? assertBlackNodesInPaths(node=root, blackCount=0,
             pathBlackCount=null) {
         Node? node;
         variable Integer blackCount;
@@ -605,9 +605,9 @@ shared class TreeMap<Key, Item>(compare, entries={})
             blackCount++;
         }
         if (exists node) {
-            pathBlackCount = assertBlackNodesInPaths(node.left, 
+            pathBlackCount = assertBlackNodesInPaths(node.left,
                     blackCount, pathBlackCount);
-            pathBlackCount = assertBlackNodesInPaths(node.right, 
+            pathBlackCount = assertBlackNodesInPaths(node.right,
                     blackCount, pathBlackCount);
             return pathBlackCount;
         }
@@ -636,29 +636,29 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return null;
     }
     
-    segment(Key from, Integer length) 
-            => TreeMap(compare, higherEntries(from).taking(length));
+    segment(Key from, Integer length)
+            => TreeMap(compare, higherEntries(from).take(length));
     
     shared actual TreeMap<Key,Item> span(Key from, Key to) {
         {<Key->Item>*} entries;
         if (compare(from, to)==larger) {
             entries = lowerEntries(from)
-                    takingWhile (Key->Item entry) 
+                    takeWhile (Key->Item entry)
                             => compare(entry.key, to)!=smaller;
         }
         else {
             entries = higherEntries(from)
-                    takingWhile (Key->Item entry) 
+                    takeWhile (Key->Item entry)
                             => compare(entry.key, to)!=larger;
         }
         return TreeMap(compare, entries);
     }
     
-    spanFrom(Key from) 
+    spanFrom(Key from)
             => TreeMap(compare, higherEntries(from));
     
-    spanTo(Key to) 
-            => TreeMap(compare, takingWhile((Key->Item entry) 
+    spanTo(Key to)
+            => TreeMap(compare, takeWhile((Key->Item entry)
                     => compare(entry.key, to)!=larger));
     
 }
@@ -667,5 +667,5 @@ shared class TreeMap<Key, Item>(compare, entries={})
  sorted by the natural ordering of the keys."
 shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>({<Key->Item>*} entries)
         given Key satisfies Comparable<Key>
-        given Item satisfies Object 
+        given Item satisfies Object
         => TreeMap((Key x, Key y) => x<=>y, entries);

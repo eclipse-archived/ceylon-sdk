@@ -1,4 +1,4 @@
-"A [[MutableSet]] implemented using a red/black tree. 
+"A [[MutableSet]] implemented using a red/black tree.
  Elements of the set are maintained in a sorted order, from
  smallest to largest, as determined by the given
  [[comparator function|compare]]."
@@ -18,7 +18,7 @@ shared class TreeSet<Element>(compare, elements={})
      
      object present {}
      
-     variable value map = TreeMap(compare, 
+     variable value map = TreeMap(compare,
              elements map (Element e) => e->present);
 
      add(Element element) => !map.put(element, present) exists;
@@ -34,7 +34,7 @@ shared class TreeSet<Element>(compare, elements={})
      }
      
      shared actual HashSet<Element> complement<Other>
-             (Set<Other> set) 
+             (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element>();
          for(elem in this){
@@ -46,7 +46,7 @@ shared class TreeSet<Element>(compare, elements={})
      }
      
      shared actual HashSet<Element|Other> exclusiveUnion<Other>
-             (Set<Other> set) 
+             (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element|Other>();
          for(elem in this){
@@ -63,7 +63,7 @@ shared class TreeSet<Element>(compare, elements={})
      }
      
      shared actual HashSet<Element&Other> intersection<Other>
-             (Set<Other> set) 
+             (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element&Other>();
          for(elem in this){
@@ -75,7 +75,7 @@ shared class TreeSet<Element>(compare, elements={})
      }
      
      shared actual HashSet<Element|Other> union<Other>
-             (Set<Other> set) 
+             (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element|Other>();
          ret.addAll(this);
@@ -100,29 +100,29 @@ shared class TreeSet<Element>(compare, elements={})
                      map (Element->Object entry)
                              =>entry.key;
      
-     segment(Element from, Integer length) 
-             => TreeSet(compare, higherElements(from).taking(length));
+     segment(Element from, Integer length)
+             => TreeSet(compare, higherElements(from).take(length));
      
      shared actual TreeSet<Element> span(Element from, Element to) {
          {Element*} elements;
          if (compare(from, to)==larger) {
              elements = lowerElements(from)
-                     takingWhile (Element elem) 
+                     takeWhile (Element elem)
                              => compare(elem, to)!=smaller;
          }
          else {
              elements = higherElements(from)
-                     takingWhile (Element elem) 
+                     takeWhile (Element elem)
                              => compare(elem, to)!=larger;
          }
          return TreeSet(compare, elements);
      }
      
-     spanFrom(Element from) 
+     spanFrom(Element from)
              => TreeSet(compare, higherElements(from));
      
-     spanTo(Element to) 
-             => TreeSet(compare, takingWhile((Element elem) 
+     spanTo(Element to)
+             => TreeSet(compare, takeWhile((Element elem)
                      => compare(elem, to)!=larger));
      
      equals(Object that) => (super of Set<Element>).equals(that);

@@ -275,7 +275,7 @@ shared class ArrayList<Element>
     }
     
     shared actual List<Element> rest
-            => ArrayList(initialCapacity-1, growthFactor, skipping(1));
+            => ArrayList(initialCapacity-1, growthFactor, skip(1));
     
     shared actual Iterator<Element> iterator() {
         if (length>0) {
@@ -326,7 +326,7 @@ shared class ArrayList<Element>
         value fst = from<0 then 0 else from;
         value len = from<0 then length+from else length;
         return fst<this.length && len>0
-            then ArrayList(len, growthFactor, skipping(fst).taking(len))
+            then ArrayList(len, growthFactor, skip(fst).take(len))
             else ArrayList();
     }
     
@@ -336,7 +336,7 @@ shared class ArrayList<Element>
         value fst = start<0 then 0 else start;
         value len = (end<0 then 0) else (start<0 then end+1) else end-start+1;
         return fst<this.length && len>0 
-            then ArrayList(len, growthFactor, skipping(fst).taking(len))
+            then ArrayList(len, growthFactor, skip(fst).take(len))
             else ArrayList();
     }
     
