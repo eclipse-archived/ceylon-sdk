@@ -19,6 +19,13 @@ shared class Duration(milliseconds) satisfies ReadableDuration & Scalable<Intege
         }
         return false;
     }
+    
+    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        value prime = 11;
+        value result = 3;
+        return prime * result + milliseconds.hash;
+    }
 
     "Returns a new [[Duration]] with it´s milliseconds scaled."
     shared actual Duration scale(Integer scale) => Duration( scale * milliseconds );
