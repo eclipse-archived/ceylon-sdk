@@ -51,7 +51,11 @@ class Chunk( character ) extends Input() {
             return this.character == other;
         }
         return false;
-    } 
+    }
+
+    shared actual Integer hash {
+        return character.hash;
+    }
 }
 
 "Represents the end of the parser"
