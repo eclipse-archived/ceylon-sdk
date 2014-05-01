@@ -11,6 +11,10 @@ shared class ParserError( message ) {
         return false;
     }
 
+    shared actual Integer hash {
+        return message.hash;
+    }
+
 }
 
 "Timezone offset parser based on ISO-8601, currently it accepts the following time zone offset patterns:
