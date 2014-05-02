@@ -89,7 +89,8 @@
         
         <ceylon-compile executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
-            encoding="UTF-8">
+            encoding="UTF-8"
+            pack200="true">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
         
