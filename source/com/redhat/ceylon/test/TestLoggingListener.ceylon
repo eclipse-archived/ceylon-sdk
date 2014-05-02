@@ -10,20 +10,22 @@ shared class TestLoggingListener(colorWhite, colorGreen, colorRed) extends Simpl
         if(exists colorGreen) {
             process.write(colorGreen);
         }
-        super.writeBannerSuccess(result);
+        process.write(banner("TESTS SUCCESS"));
         if(exists colorWhite) {
             process.write(colorWhite);
         }
+        process.writeLine();
     }
 
     shared actual void writeBannerFailed(TestRunResult result) {
         if(exists colorRed) {
             process.write(colorRed);
         }
-        super.writeBannerFailed(result);
+        process.write(banner("TESTS FAILED !"));
         if(exists colorWhite) {
             process.write(colorWhite);
         }
+        process.writeLine();
     }
 
 }
