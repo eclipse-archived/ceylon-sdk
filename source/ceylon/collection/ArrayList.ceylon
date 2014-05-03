@@ -300,7 +300,7 @@ shared class ArrayList<Element>
         }
     }
 
-    rest => skipping(1).sequence;
+    rest => ArrayList{ elements = skip(1); };
 
     shared actual Iterator<Element> iterator() {
         if (length>0) {
@@ -352,9 +352,8 @@ shared class ArrayList<Element>
     shared actual List<Element> segment(Integer from, Integer length) {
         value first = atLeastZero(from);
         value len = atLeastZero(length);
-        print("Will use first=``first`` and len=``len``");
         return first < this.length && len > 0
-            then ArrayList(len, growthFactor, skipping(first).taking(len))
+            then ArrayList(len, growthFactor, skip(first).take(len))
             else ArrayList();
     }
 
@@ -408,13 +407,13 @@ shared class ArrayList<Element>
         }
     }
 
-    spanFrom(Integer from) => from>=length
+    spanFrom(Integer from) => from >= length
             then ArrayList()
-            else span(from,length-1);
+            else span(from, length-1);
 
-    spanTo(Integer to) => to<0 then ArrayList() else span(0,to);
+    spanTo(Integer to) => to < 0 then ArrayList() else span(0, to);
 
-    lastIndex => length>1 then length-1;
+    lastIndex => length >= 1 then length - 1;
 
     size => length;
 

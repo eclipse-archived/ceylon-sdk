@@ -191,17 +191,21 @@ shared abstract class MutableListTests() {
     }
 
     test shared void testDeleteSegment() {
-        value list =  createList {"A", "B", "C", "D", "E", "F"};
+        variable value list =  createList {"A", "B", "C", "D", "E", "F"};
         list.deleteSegment(2, 3);
         assertEquals(list, ["A", "B", "F"]);
         list.deleteSegment(1, 5);
         assertEquals(list, ["A"]);
-    }
-
-    test shared void testDeleteSegmentWithBadInputs() {
-        value list =  createList {"A", "B", "C", "D", "E", "F"};
-        list.deleteSegment(-2, 3);
-        assertEquals(list, ["A", "B", "F"]);
+        list.deleteSegment(1, 5);
+        assertEquals(list, ["A"]);
+        list.deleteSegment(0, -5);
+        assertEquals(list, ["A"]);
+        list.deleteSegment(-3, -5);
+        assertEquals(list, ["A"]);
+        list.deleteSegment(-1, 2);
+        assertEquals(list, []);
+        list.deleteSegment(0, 2);
+        assertEquals(list, []);
     }
 
     test shared void testDeleteSpan() {
@@ -210,6 +214,16 @@ shared abstract class MutableListTests() {
         assertEquals(list, ["A", "B", "F"]);
         list.deleteSpan(1, 5);
         assertEquals(list, ["A"]);
+        list.deleteSpan(2, 4);
+        assertEquals(list, ["A"]);
+        list.deleteSpan(-2, -1);
+        assertEquals(list, ["A"]);
+        list.deleteSpan(-1, -2);
+        assertEquals(list, ["A"]);
+        list.deleteSpan(-1, 1);
+        assertEquals(list, []);
+        list.deleteSpan(0, 5);
+        assertEquals(list, []);
     }
 
 }

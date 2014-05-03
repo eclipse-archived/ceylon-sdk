@@ -24,7 +24,7 @@ shared class ArrayListTest() extends MutableListTests() {
         list.delete(0);
         list.addAll {"e", "f", "g", "h"};
 
-        assertEquals(ArrayList { "b", "c", "d", "e", "f", "g", "h" }, list);
+        assertEquals(ArrayList { "b", "c", "e", "f", "g", "h" }, list);
         assertEquals(9, list.capacity);
     }
 
