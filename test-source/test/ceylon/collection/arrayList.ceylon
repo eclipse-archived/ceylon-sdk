@@ -3,8 +3,7 @@ import ceylon.collection {
 }
 import ceylon.test {
     test,
-    assertEquals,
-    assertTrue
+    assertEquals
 }
 
 shared class ArrayListTest() extends MutableListTests() {
@@ -12,14 +11,21 @@ shared class ArrayListTest() extends MutableListTests() {
     createList({String?*} strings) => ArrayList<String?>{ elements = strings; };
 
     test shared void testChangingCapacity() {
-        value list = ArrayList { initialCapacity = 3; elements = { "a", "b", "c" }; };
-        assertEquals(3, list.capacity);
+        value list = ArrayList { initialCapacity = 2; growthFactor = 1.5; elements = { "a", "b" }; };
+        assertEquals(2, list.capacity);
 
         // cause array to grow
-        list.add("d");
+        list.add("c");
 
-        assertEquals(ArrayList { "a", "b", "c", "d" }, list);
-        assertTrue(list.capacity > 3);
+        assertEquals(ArrayList { "a", "b", "c" }, list);
+        assertEquals(4, list.capacity);
+
+        // grow again, but delete something first
+        list.delete(0);
+        list.addAll {"e", "f", "g", "h"};
+
+        assertEquals(ArrayList { "b", "c", "d", "e", "f", "g", "h" }, list);
+        assertEquals(9, list.capacity);
     }
 
 }
