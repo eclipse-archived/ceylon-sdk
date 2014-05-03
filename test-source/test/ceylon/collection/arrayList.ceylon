@@ -3,16 +3,23 @@ import ceylon.collection {
 }
 import ceylon.test {
     test,
-    assertEquals
+    assertEquals,
+    assertTrue
 }
 
-shared test void basicArrayListTests() {
-    doListTests(ArrayList<String>());
-}
+shared class ArrayListTest() extends MutableListTests() {
 
-shared test void testArrayListFirstAndLast() {
-    List<String> listArray = ArrayList{"a", "b"};
-    assertEquals("a", listArray.first);
-    assertEquals("b", listArray.last);
-}
+    createList({String?*} strings) => ArrayList<String?>{ elements = strings; };
 
+    test shared void testChangingCapacity() {
+        value list = ArrayList { initialCapacity = 3; elements = { "a", "b", "c" }; };
+        assertEquals(3, list.capacity);
+
+        // cause array to grow
+        list.add("d");
+
+        assertEquals(ArrayList { "a", "b", "c", "d" }, list);
+        assertTrue(list.capacity > 3);
+    }
+
+}

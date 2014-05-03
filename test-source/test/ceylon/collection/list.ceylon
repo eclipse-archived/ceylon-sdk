@@ -5,127 +5,170 @@ import ceylon.test {
     ...
 }
 
-void doListTests(MutableList<String> l) {
-    assertEquals("{}", l.string);
-    assertEquals(0, l.size);
-    assertTrue(!l.contains("fu"));
-    l.add("fu");
-    assertEquals("{ fu }", l.string);
-    assertEquals(1, l.size);
-    assertEquals("fu", l[0]);
-    assertTrue(l.contains("fu"));
-    l.add("bar");
-    assertEquals("{ fu, bar }", l.string);
-    assertEquals(2, l.size);
-    assertTrue(l.contains("fu"));
-    assertTrue(l.contains("bar"));
-    assertTrue(!l.contains("stef"));
-    assertEquals("fu", l[0]);
-    assertEquals("bar", l[1]);
-    l.set(0, "foo");
-    assertEquals("{ foo, bar }", l.string);
-    assertEquals(2, l.size);
-    assertTrue(l.contains("foo"));
-    assertTrue(l.contains("bar"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("foo", l[0]);
-    assertEquals("bar", l[1]); //l.set(5, "empty");
-    l.addAll { for (i in 0:4) "empty" };
-    assertEquals("{ foo, bar, empty, empty, empty, empty }", l.string);
-    assertEquals(6, l.size);
-    assertTrue(l.contains("foo"));
-    assertTrue(l.contains("bar"));
-    assertTrue(l.contains("empty"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("foo", l[0]);
-    assertEquals("bar", l[1]);
-    assertEquals("empty", l[5]);
-    l.insert(1, "stef");
-    assertEquals("{ foo, stef, bar, empty, empty, empty, empty }", l.string);
-    assertEquals(7, l.size);
-    assertTrue(l.contains("foo"));
-    assertTrue(l.contains("stef"));
-    assertTrue(l.contains("bar"));
-    assertTrue(l.contains("empty"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("foo", l[0]);
-    assertEquals("stef", l[1]);
-    assertEquals("bar", l[2]);
-    assertEquals("empty", l[6]);
-    l.insert(0, "first");
-    assertEquals("{ first, foo, stef, bar, empty, empty, empty, empty }", l.string);
-    assertEquals(8, l.size);
-    assertTrue(l.contains("first"));
-    assertTrue(l.contains("foo"));
-    assertTrue(l.contains("stef"));
-    assertTrue(l.contains("bar"));
-    assertTrue(l.contains("empty"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("first", l[0]);
-    assertEquals("foo", l[1]);
-    assertEquals("stef", l[2]);
-    assertEquals("bar", l[3]);
-    assertEquals("empty", l[7]);
-    l.insert(8, "last");
-    assertEquals("{ first, foo, stef, bar, empty, empty, empty, empty, last }", l.string);
-    assertEquals(9, l.size);
-    assertTrue(l.contains("first"));
-    assertTrue(l.contains("foo"));
-    assertTrue(l.contains("stef"));
-    assertTrue(l.contains("bar"));
-    assertTrue(l.contains("empty"));
-    assertTrue(l.contains("last"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("first", l[0]);
-    assertEquals("foo", l[1]);
-    assertEquals("stef", l[2]);
-    assertEquals("bar", l[3]);
-    assertEquals("empty", l[7]);
-    assertEquals("last", l[8]);
-    l.delete(0);
-    assertEquals("{ foo, stef, bar, empty, empty, empty, empty, last }", l.string);
-    assertEquals(8, l.size);
-    assertTrue(!l.contains("first"));
-    assertTrue(l.contains("foo"));
-    assertTrue(l.contains("stef"));
-    assertTrue(l.contains("bar"));
-    assertTrue(l.contains("empty"));
-    assertTrue(l.contains("last"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("foo", l[0]);
-    assertEquals("stef", l[1]);
-    assertEquals("bar", l[2]);
-    assertEquals("empty", l[6]);
-    assertEquals("last", l[7]);
-    l.delete(1);
-    assertEquals("{ foo, bar, empty, empty, empty, empty, last }", l.string);
-    assertEquals(7, l.size);
-    assertTrue(!l.contains("first"));
-    assertTrue(l.contains("foo"));
-    assertTrue(!l.contains("stef"));
-    assertTrue(l.contains("bar"));
-    assertTrue(l.contains("empty"));
-    assertTrue(l.contains("last"));
-    assertTrue(!l.contains("fu"));
-    assertEquals("foo", l[0]);
-    assertEquals("bar", l[1]);
-    assertEquals("empty", l[5]);
-    assertEquals("last", l[6]);
-    l.delete(5);
-    assertEquals(6, l.size);
-    assertEquals("{ foo, bar, empty, empty, empty, last }", l.string);
-    l.add("end");
-    assertEquals("{ foo, bar, empty, empty, empty, last, end }", l.string);
-    assertEquals(7, l.size);
-    l.remove("empty");
-    assertEquals("{ foo, bar, last, end }", l.string);
-    assertEquals(4, l.size);
-    l.truncate(3);
-    assertEquals("{ foo, bar, last }", l.string);
-    assertEquals(3, l.size);
-    l.clear();
-    assertEquals("{}", l.string);
-    assertEquals(0, l.size);
-    assertTrue(l.empty);
-    assertTrue(!l.contains("foo"));
+shared abstract class MutableListTests() {
+
+    shared formal MutableList<String?> createList({String?*} strings);
+
+    {[{String?*}, {String?*}]+} positiveEqualExamples = {
+        [{}, {}],
+        [{"a"}, {"a"}],
+        [{null}, {null}],
+        [{"c", null}, {"c", null}],
+        [{"a", "b", "c", "something"}, {"a", "b", "c", "something"}]
+    };
+
+    {[{String?*}, {String?*}]+} negativeEqualExamples = {
+        [{}, {null}],
+        [{null}, {}],
+        [{null}, {"a"}],
+        [{"a", null}, {null, "a"}],
+        [{"M"}, {"m"}],
+        [{"b", "c", "d"}, {"c", "d"}],
+        [{"a", "b", "c"}, {"c", "b", "a"}]
+    };
+
+    test shared void doListTests() {
+        value list = createList({});
+        assertEquals("{}", list.string);
+        assertEquals(0, list.size);
+        assertTrue(!list.contains("fu"));
+        list.add("fu");
+        assertEquals("{ fu }", list.string);
+        assertEquals(1, list.size);
+        assertEquals("fu", list[0]);
+        assertTrue(list.contains("fu"));
+        list.add("bar");
+        assertEquals("{ fu, bar }", list.string);
+        assertEquals(2, list.size);
+        assertTrue(list.contains("fu"));
+        assertTrue(list.contains("bar"));
+        assertTrue(!list.contains("stef"));
+        assertEquals("fu", list[0]);
+        assertEquals("bar", list[1]);
+        list.set(0, "foo");
+        assertEquals("{ foo, bar }", list.string);
+        assertEquals(2, list.size);
+        assertTrue(list.contains("foo"));
+        assertTrue(list.contains("bar"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("foo", list[0]);
+        assertEquals("bar", list[1]); //l.set(5, "empty");
+        list.addAll { for (i in 0:4) "empty" };
+        assertEquals("{ foo, bar, empty, empty, empty, empty }", list.string);
+        assertEquals(6, list.size);
+        assertTrue(list.contains("foo"));
+        assertTrue(list.contains("bar"));
+        assertTrue(list.contains("empty"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("foo", list[0]);
+        assertEquals("bar", list[1]);
+        assertEquals("empty", list[5]);
+        list.insert(1, "stef");
+        assertEquals("{ foo, stef, bar, empty, empty, empty, empty }", list.string);
+        assertEquals(7, list.size);
+        assertTrue(list.contains("foo"));
+        assertTrue(list.contains("stef"));
+        assertTrue(list.contains("bar"));
+        assertTrue(list.contains("empty"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("foo", list[0]);
+        assertEquals("stef", list[1]);
+        assertEquals("bar", list[2]);
+        assertEquals("empty", list[6]);
+        list.insert(0, "first");
+        assertEquals("{ first, foo, stef, bar, empty, empty, empty, empty }", list.string);
+        assertEquals(8, list.size);
+        assertTrue(list.contains("first"));
+        assertTrue(list.contains("foo"));
+        assertTrue(list.contains("stef"));
+        assertTrue(list.contains("bar"));
+        assertTrue(list.contains("empty"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("first", list[0]);
+        assertEquals("foo", list[1]);
+        assertEquals("stef", list[2]);
+        assertEquals("bar", list[3]);
+        assertEquals("empty", list[7]);
+        list.insert(8, "last");
+        assertEquals("{ first, foo, stef, bar, empty, empty, empty, empty, last }", list.string);
+        assertEquals(9, list.size);
+        assertTrue(list.contains("first"));
+        assertTrue(list.contains("foo"));
+        assertTrue(list.contains("stef"));
+        assertTrue(list.contains("bar"));
+        assertTrue(list.contains("empty"));
+        assertTrue(list.contains("last"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("first", list[0]);
+        assertEquals("foo", list[1]);
+        assertEquals("stef", list[2]);
+        assertEquals("bar", list[3]);
+        assertEquals("empty", list[7]);
+        assertEquals("last", list[8]);
+        list.delete(0);
+        assertEquals("{ foo, stef, bar, empty, empty, empty, empty, last }", list.string);
+        assertEquals(8, list.size);
+        assertTrue(!list.contains("first"));
+        assertTrue(list.contains("foo"));
+        assertTrue(list.contains("stef"));
+        assertTrue(list.contains("bar"));
+        assertTrue(list.contains("empty"));
+        assertTrue(list.contains("last"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("foo", list[0]);
+        assertEquals("stef", list[1]);
+        assertEquals("bar", list[2]);
+        assertEquals("empty", list[6]);
+        assertEquals("last", list[7]);
+        list.delete(1);
+        assertEquals("{ foo, bar, empty, empty, empty, empty, last }", list.string);
+        assertEquals(7, list.size);
+        assertTrue(!list.contains("first"));
+        assertTrue(list.contains("foo"));
+        assertTrue(!list.contains("stef"));
+        assertTrue(list.contains("bar"));
+        assertTrue(list.contains("empty"));
+        assertTrue(list.contains("last"));
+        assertTrue(!list.contains("fu"));
+        assertEquals("foo", list[0]);
+        assertEquals("bar", list[1]);
+        assertEquals("empty", list[5]);
+        assertEquals("last", list[6]);
+        list.delete(5);
+        assertEquals(6, list.size);
+        assertEquals("{ foo, bar, empty, empty, empty, last }", list.string);
+        list.add("end");
+        assertEquals("{ foo, bar, empty, empty, empty, last, end }", list.string);
+        assertEquals(7, list.size);
+        list.remove("empty");
+        assertEquals("{ foo, bar, last, end }", list.string);
+        assertEquals(4, list.size);
+        list.truncate(3);
+        assertEquals("{ foo, bar, last }", list.string);
+        assertEquals(3, list.size);
+        list.clear();
+        assertEquals("{}", list.string);
+        assertEquals(0, list.size);
+        assertTrue(list.empty);
+        assertTrue(!list.contains("foo"));
+        assertTrue(list.first is Null);
+        assertTrue(list.last is Null);
+        list.add("a");
+        assertEquals("a", list.first);
+        assertEquals("a", list.last);
+        list.add("b");
+        assertEquals("a", list.first);
+        assertEquals("b", list.last);
+    }
+
+    test shared void testEquals() {
+        for (example in positiveEqualExamples) {
+            assertEquals(createList(example.first), createList(example.last));
+        }
+        for (example in negativeEqualExamples) {
+            assertNotEquals(createList(example.first), createList(example.last));
+        }
+    }
+
+
 }
