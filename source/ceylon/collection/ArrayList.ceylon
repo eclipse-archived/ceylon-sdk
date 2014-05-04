@@ -340,21 +340,7 @@ shared class ArrayList<Element>
         }
     }
 
-    shared actual void deleteSpan(Integer from, Integer to) {
-        value start = from>to then to else from;
-        value end = from>to then from else to;
-        value fst = start<0 then 0 else start;
-        value l = (end<0 then 0) else (start<0 then end+1) else end-start+1;
-        value len = l+fst>this.length then this.length-fst else l;
-        if (fst<this.length && len>0) {
-            array.copyTo(array, fst+len, fst, this.length-len-fst);
-            variable value i = this.length-len;
-            while (i<this.length) {
-                array.set(i++, null);
-            }
-            this.length-=len;
-        }
-    }
+    deleteSpan(Integer from, Integer to) => deleteSegment(from, lengthFromIndexes(from, to));
 
     shared actual void truncate(Integer size) {
         assert (size>=0);
