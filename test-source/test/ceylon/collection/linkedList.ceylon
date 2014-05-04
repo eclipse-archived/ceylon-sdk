@@ -7,7 +7,7 @@ import ceylon.test {
     assertEquals
 }
 
-shared class LinkedListTest() extends MutableListTests() {
+shared class LinkedListTest() satisfies MutableListTests {
 
     createList({String?*} strings) => LinkedList(strings);
 

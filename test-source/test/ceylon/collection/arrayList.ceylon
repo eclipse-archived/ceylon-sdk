@@ -7,7 +7,7 @@ import ceylon.test {
     assertTrue
 }
 
-shared class ArrayListTest() extends MutableListTests() {
+shared class ArrayListTest() satisfies MutableListTests {
 
     createList({String?*} strings) => ArrayList<String?>{ elements = strings; };
 

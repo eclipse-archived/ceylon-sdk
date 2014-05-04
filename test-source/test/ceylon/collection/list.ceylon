@@ -8,27 +8,9 @@ import ceylon.test {
     ...
 }
 
-shared abstract class MutableListTests() {
+shared interface MutableListTests {
 
     shared formal MutableList<String?> createList({String?*} strings);
-
-    {[{String?*}, {String?*}]+} positiveEqualExamples = {
-        [{}, {}],
-        [{"a"}, {"a"}],
-        [{null}, {null}],
-        [{"c", null}, {"c", null}],
-        [{"a", "b", "c", "something"}, {"a", "b", "c", "something"}]
-    };
-
-    {[{String?*}, {String?*}]+} negativeEqualExamples = {
-        [{}, {null}],
-        [{null}, {}],
-        [{null}, {"a"}],
-        [{"a", null}, {null, "a"}],
-        [{"M"}, {"m"}],
-        [{"b", "c", "d"}, {"c", "d"}],
-        [{"a", "b", "c"}, {"c", "b", "a"}]
-    };
 
     test shared void doListTests() {
         value list = createList({});
@@ -165,6 +147,24 @@ shared abstract class MutableListTests() {
     }
 
     test shared void testEquals() {
+        {[{String?*}, {String?*}]+} positiveEqualExamples = {
+            [{}, {}],
+            [{"a"}, {"a"}],
+            [{null}, {null}],
+            [{"c", null}, {"c", null}],
+            [{"a", "b", "c", "something"}, {"a", "b", "c", "something"}]
+        };
+
+        {[{String?*}, {String?*}]+} negativeEqualExamples = {
+            [{}, {null}],
+            [{null}, {}],
+            [{null}, {"a"}],
+            [{"a", null}, {null, "a"}],
+            [{"M"}, {"m"}],
+            [{"b", "c", "d"}, {"c", "d"}],
+            [{"a", "b", "c"}, {"c", "b", "a"}]
+        };
+
         for (example in positiveEqualExamples) {
             assertEquals(createList(example.first), createList(example.last));
         }
@@ -336,3 +336,4 @@ shared abstract class MutableListTests() {
     }
 
 }
+
