@@ -11,6 +11,8 @@ shared class LinkedListTest() satisfies MutableListTests {
 
     createList({String?*} strings) => LinkedList(strings);
 
+    createRanged = createList;
+
     shared test void testLinkedListEquals() {
         assertEquals(LinkedList{"a", "b"}, LinkedList{"a", "b"});
         assertNotEquals(LinkedList{"a", "b"}, LinkedList{"b", "a"});

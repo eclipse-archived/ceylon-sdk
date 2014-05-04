@@ -8,9 +8,9 @@ import ceylon.test {
     ...
 }
 
-shared interface MutableListTests {
+shared interface MutableListTests satisfies ListTests {
 
-    shared formal MutableList<String?> createList({String?*} strings);
+    shared actual formal MutableList<String?> createList({String?*} strings);
 
     test shared void doListTests() {
         value list = createList({});
@@ -146,53 +146,6 @@ shared interface MutableListTests {
         assertEquals("b", list.last);
     }
 
-    test shared void testEquals() {
-        {[{String?*}, {String?*}]+} positiveEqualExamples = {
-            [{}, {}],
-            [{"a"}, {"a"}],
-            [{null}, {null}],
-            [{"c", null}, {"c", null}],
-            [{"a", "b", "c", "something"}, {"a", "b", "c", "something"}]
-        };
-
-        {[{String?*}, {String?*}]+} negativeEqualExamples = {
-            [{}, {null}],
-            [{null}, {}],
-            [{null}, {"a"}],
-            [{"a", null}, {null, "a"}],
-            [{"M"}, {"m"}],
-            [{"b", "c", "d"}, {"c", "d"}],
-            [{"a", "b", "c"}, {"c", "b", "a"}]
-        };
-
-        for (example in positiveEqualExamples) {
-            assertEquals(createList(example.first), createList(example.last));
-        }
-        for (example in negativeEqualExamples) {
-            assertNotEquals(createList(example.first), createList(example.last));
-        }
-    }
-
-    test shared void testSpan() {
-        variable value list = createList {};
-        assertEquals(list.span(0, 1), []);
-        assertEquals(list.span(-1, 1), []);
-        assertEquals(list.span(-10, -5), []);
-        assertEquals(list.span(1, -5), []);
-
-        list = createList {"A", "B", "C", "D", "E"};
-        assertEquals(list.span(0, 0), ["A"]);
-        assertEquals(list.span(0, 1), ["A", "B"]);
-        assertEquals(list.span(1, 2), ["B", "C"]);
-        assertEquals(list.span(2, 3), ["C", "D"]);
-        assertEquals(list.span(0, 20), ["A", "B", "C", "D", "E"]);
-        assertEquals(list.span(3, 20), ["D", "E"]);
-        assertEquals(list.span(-10, 0), ["A"]);
-        assertEquals(list.span(-3, 1), ["A", "B"]);
-        assertEquals(list.span(-10, -2), []);
-        assertEquals(list.span(1, -2), []);
-    }
-
     test shared void testDeleteSegment() {
         variable value list =  createList {"A", "B", "C", "D", "E", "F"};
         list.deleteSegment(2, 3);
@@ -265,7 +218,7 @@ shared interface MutableListTests {
         assertEquals(list, [null]);
     }
 
-    test shared void testReversed() {
+    test shared void testReversedAfterMutation() {
         variable value list = createList {};
         assertEquals(list.reversed, []);
         list.add("A");
@@ -282,7 +235,7 @@ shared interface MutableListTests {
         assertEquals(type(list.reversed), type(list));
     }
 
-    test shared void testIterator() {
+    test shared void testIteratorAfterMutation() {
         variable value iter = createList({}).iterator();
         assertTrue(iter.next() is Finished);
         assertTrue(iter.next() is Finished);
