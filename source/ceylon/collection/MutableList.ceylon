@@ -159,3 +159,10 @@ shared interface ListMutator<in Element>
     shared formal void truncate(Integer size);
 
 }
+
+[Integer, Integer] spanToSegment(Integer from, Integer to) {
+    if ((from < 0 && to < 0) || from > to) {
+        return [0, -1];
+    }
+    return [from, to - from + 1];
+}

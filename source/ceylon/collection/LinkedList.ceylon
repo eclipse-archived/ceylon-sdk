@@ -398,24 +398,7 @@ shared class LinkedList<Element>(elements = {})
         return null;
     }
 
-    shared actual List<Element> span(Integer from, Integer to) {
-        value start = from>to then to else from;
-        value end = from>to then from else to;
-        value ret = LinkedList<Element>();
-        variable value iter = head;
-        variable Integer i = 0;
-        while (exists cell = iter) {
-            if(i > end) {
-                break;
-            }
-            if(i >= start) {
-                ret.add(cell.element);
-            }
-            i++;
-            iter = cell.rest;
-        }
-        return ret;
-    }
+    span(Integer from, Integer to) => segment(*spanToSegment(from, to));
 
     shared actual List<Element> spanFrom(Integer from) {
         value ret = LinkedList<Element>();

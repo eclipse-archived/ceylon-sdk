@@ -318,13 +318,6 @@ shared class ArrayList<Element>
             else ArrayList();
     }
 
-    [Integer, Integer] spanToSegment(Integer from, Integer to) {
-        if ((from < 0 && to < 0) || from > to) {
-            return [0, -1];
-        }
-        return [from, to - from + 1];
-    }
-
     span(Integer from, Integer to) => segment(*spanToSegment(from, to));
 
     shared actual void deleteSegment(Integer from, Integer length) {
