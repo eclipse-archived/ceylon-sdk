@@ -308,21 +308,24 @@ shared class ArrayList<Element>
     }
 
     shared actual List<Element> segment(Integer from, Integer length) {
+        if (length <= 0) {
+            return ArrayList();
+        }
         value first = max { 0, from };
-        value len = max { 0, length };
+        value len = max { 0, from < 0 then length + from else length };
         return first < this.length && len > 0
             then ArrayList(len, growthFactor, skip(first).take(len))
             else ArrayList();
     }
 
-    Integer lengthFromIndexes(Integer from, Integer to) {
-        if (from < 0 && to < 0 || from > to) {
-            return 0;
+    [Integer, Integer] spanToSegment(Integer from, Integer to) {
+        if ((from < 0 && to < 0) || from > to) {
+            return [0, -1];
         }
-        return 1 + max { 0, to } - max { 0, from };
+        return [from, to - from + 1];
     }
 
-    span(Integer from, Integer to) => segment(from, lengthFromIndexes(from, to));
+    span(Integer from, Integer to) => segment(*spanToSegment(from, to));
 
     shared actual void deleteSegment(Integer from, Integer length) {
         internalDelSegment(from, length);
@@ -348,7 +351,7 @@ shared class ArrayList<Element>
         length -= removedCount;
     }
 
-    deleteSpan(Integer from, Integer to) => deleteSegment(from, lengthFromIndexes(from, to));
+    deleteSpan(Integer from, Integer to) => deleteSegment(*spanToSegment(from, to));
 
     shared actual void truncate(Integer size) {
         assert (size >= 0);
