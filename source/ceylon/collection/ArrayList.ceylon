@@ -344,7 +344,7 @@ shared class ArrayList<Element>
         length -= removedCount;
     }
 
-    deleteSpan(Integer from, Integer to) => deleteSegment(*spanToSegment(from, to));
+    deleteSpan(Integer from, Integer to) => internalDelSegment(*spanToSegment(from, to));
 
     shared actual void truncate(Integer size) {
         assert (size >= 0);

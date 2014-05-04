@@ -149,8 +149,11 @@ shared interface MutableListTests satisfies ListTests {
     test shared void testDeleteSegment() {
         variable value list =  createList {"A", "B", "C", "D", "E", "F"};
         list.deleteSegment(2, 3);
-        assertEquals(list, ["A", "B", "F"]);
+        assertEquals(list.first, "A");
+        assertEquals(list.rest.first, "B");
+        assertEquals(list.last, "F");
         assertEquals(list.size, 3);
+        assertEquals(list, ["A", "B", "F"]);
         list.deleteSegment(1, 5);
         assertEquals(list, ["A"]);
         assertEquals(list.size, 1);

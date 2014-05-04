@@ -3,7 +3,8 @@ import ceylon.collection {
 }
 import ceylon.test {
     test,
-    assertEquals
+    assertEquals,
+    assertTrue
 }
 
 shared class LinkedListTest() satisfies MutableListTests {
@@ -39,6 +40,26 @@ shared class LinkedListTest() satisfies MutableListTests {
         l.add(1);
         assertEquals(l.delete(1), 1);
         assertEquals(l, LinkedList{0});
+    }
+
+    shared test void ensureDeleteSpanDoesntBreakListFirstAndLast() {
+        value list = createList { "A", "B", "C" };
+        list.deleteSpan(0, 1);
+        assertEquals(list.first, "C");
+        assertEquals(list.last, "C");
+        list.deleteSpan(-10, 20);
+        assertEquals(list, []);
+        assertTrue(list.first is Null);
+        assertTrue(list.last is Null);
+        list.addAll {"A", "B"};
+        assertEquals(list.first, "A");
+        assertEquals(list.last, "B");
+        assertEquals(list.size, 2);
+        list.deleteSpan(0, 1);
+        assertEquals(list.size, 0);
+        assertEquals(list, []);
+        assertTrue(list.first is Null);
+        assertTrue(list.last is Null);
     }
 
 }
