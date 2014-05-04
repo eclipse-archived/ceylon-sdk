@@ -268,4 +268,29 @@ shared abstract class MutableListTests() {
         assertEquals(type(list.reversed), type(list));
     }
 
+    test shared void testIterator() {
+        variable value iter = createList({}).iterator();
+        assertTrue(iter.next() is Finished);
+        assertTrue(iter.next() is Finished);
+        iter = createList({"A"}).iterator();
+        assertEquals(iter.next(), "A");
+        assertTrue(iter.next() is Finished);
+        iter = createList({"A", "B", "C"}).iterator();
+        assertEquals(iter.next(), "A");
+        assertEquals(iter.next(), "B");
+        assertEquals(iter.next(), "C");
+        assertTrue(iter.next() is Finished);
+        value list = createList {};
+        assertTrue(list.iterator().next() is Finished);
+        list.add("A");
+        iter = list.iterator();
+        assertEquals(iter.next(), "A");
+        assertTrue(iter.next() is Finished);
+        list.add(null);
+        iter = list.iterator();
+        assertEquals(iter.next(), "A");
+        assertEquals(iter.next(), null);
+        assertTrue(iter.next() is Finished);
+    }
+
 }

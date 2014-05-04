@@ -52,5 +52,4 @@ shared class ArrayListTest() extends MutableListTests() {
         assertEquals(list, []);
     }
 
-
 }

@@ -21,7 +21,6 @@ import ceylon.language {
     true,
     false,
     Iterator,
-    AssertionError,
     emptyIterator
 }
 "A [[MutableList]] implemented using a backing [[Array]].
@@ -288,18 +287,8 @@ shared class ArrayList<Element>
 
     shared actual Iterator<Element> iterator() {
         if (length > 0) {
-            //wow, ugly:
-            if (is Element null) {
-                return { for (i in 0:length) array[i] else null }.iterator();
-            }
-            else {
-                value error {
-                    throw AssertionError("underlying array may not contain null");
-                }
-                return { for (i in 0:length) array[i] else error }.iterator();
-            }
-        }
-        else {
+            return { for (i in 0..(length - 1)) if (is Element elem = array[i]) elem }.iterator();
+        } else {
             return emptyIterator;
         }
     }
@@ -308,8 +297,7 @@ shared class ArrayList<Element>
         if (length > 0) {
             value iterable = [ for (i in (length - 1)..0) if (is Element elem = array[i]) elem ];
             return ArrayList(initialCapacity, growthFactor, iterable);
-        }
-        else {
+        } else {
             return ArrayList();
         }
     }
