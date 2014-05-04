@@ -3,7 +3,8 @@ import ceylon.collection {
 }
 import ceylon.test {
     test,
-    assertEquals
+    assertEquals,
+    assertTrue
 }
 
 shared class ArrayListTest() extends MutableListTests() {
@@ -39,6 +40,7 @@ shared class ArrayListTest() extends MutableListTests() {
         };
         assertEquals(list.capacity, 50);
         assertEquals(list.size, 50);
+        assertTrue(list.every((Character c) => c == 'a'));
     }
 
 

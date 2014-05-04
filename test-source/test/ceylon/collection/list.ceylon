@@ -52,7 +52,7 @@ shared abstract class MutableListTests() {
         assertTrue(list.contains("bar"));
         assertTrue(!list.contains("fu"));
         assertEquals("foo", list[0]);
-        assertEquals("bar", list[1]); //l.set(5, "empty");
+        assertEquals("bar", list[1]);
         list.addAll { for (i in 0:4) "empty" };
         assertEquals("{ foo, bar, empty, empty, empty, empty }", list.string);
         assertEquals(6, list.size);
@@ -224,6 +224,28 @@ shared abstract class MutableListTests() {
         assertEquals(list, []);
         list.deleteSpan(0, 5);
         assertEquals(list, []);
+    }
+
+    test shared void testInfill() {
+        variable value list = createList {"A", null, "B", "C", null};
+        list.infill("Z");
+        assertEquals(list, ["A", "Z", "B", "C", "Z"]);
+        list.infill("M");
+        assertEquals(list, ["A", "Z", "B", "C", "Z"]);
+        list.infill(null);
+        assertEquals(list, ["A", "Z", "B", "C", "Z"]);
+
+        list.clear();
+        list.infill("A");
+        assertEquals(list, []);
+
+        list = createList {null};
+        list.infill("A");
+        assertEquals(list, ["A"]);
+
+        list = createList {null};
+        list.infill(null);
+        assertEquals(list, [null]);
     }
 
 }

@@ -266,16 +266,17 @@ shared class ArrayList<Element>
     }
 
     shared actual void infill(Element replacement) {
-        variable value i=0;
-        while (i<length) {
+        variable value i = 0;
+        while (i < length) {
             if (!array[i] exists) {
                 array.set(i, replacement);
             }
+            i++;
         }
     }
 
     shared actual Element? first {
-        if (length>0) {
+        if (length > 0) {
              return array[0];
         }
         else {
