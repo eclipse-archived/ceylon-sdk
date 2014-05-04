@@ -307,4 +307,32 @@ shared abstract class MutableListTests() {
         assertTrue(iter.next() is Finished);
     }
 
+    test shared void testTuncrate() {
+        variable value list = createList {};
+        list.truncate(0);
+        assertEquals(list, []);
+        assertEquals(list.size, 0);
+        list.truncate(5);
+        assertEquals(list, []);
+        assertEquals(list.size, 0);
+        list = createList {null};
+        list.truncate(5);
+        assertEquals(list, [null]);
+        assertEquals(list.size, 1);
+        list.addAll("abcdefg".map((Character c) => c.string));
+        list.truncate(5);
+        assertEquals(list, [null, "a", "b", "c", "d"]);
+        assertEquals(list.size, 5);
+        list.deleteFirst();
+        list.truncate(2);
+        assertEquals(list, ["a", "b"]);
+        assertEquals(list.size, 2);
+        assertThatException(() => list.truncate(-1)).hasType(`AssertionError`);
+        assertEquals(list, ["a", "b"]);
+        assertEquals(list.size, 2);
+        list.truncate(0);
+        assertEquals(list.size, 0);
+        assertEquals(list, []);
+    }
+
 }

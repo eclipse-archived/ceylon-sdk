@@ -78,8 +78,6 @@ shared class ArrayList<Element>
         }
     }
 
-    Integer atLeast(Integer min, Integer int) => int > min then int else min;
-
     void grow(Integer increment) {
         value neededCapacity = length + increment;
         value maxArraySize = runtime.maxArraySize;
@@ -310,8 +308,8 @@ shared class ArrayList<Element>
     }
 
     shared actual List<Element> segment(Integer from, Integer length) {
-        value first = atLeast(0, from);
-        value len = atLeast(0, length);
+        value first = max { 0, from };
+        value len = max { 0, length };
         return first < this.length && len > 0
             then ArrayList(len, growthFactor, skip(first).take(len))
             else ArrayList();
@@ -321,7 +319,7 @@ shared class ArrayList<Element>
         if (from < 0 && to < 0 || from > to) {
             return 0;
         }
-        return 1 + atLeast(0, to) - atLeast(0, from);
+        return 1 + max { 0, to } - max { 0, from };
     }
 
     span(Integer from, Integer to) => segment(from, lengthFromIndexes(from, to));
@@ -353,13 +351,13 @@ shared class ArrayList<Element>
     deleteSpan(Integer from, Integer to) => deleteSegment(from, lengthFromIndexes(from, to));
 
     shared actual void truncate(Integer size) {
-        assert (size>=0);
-        if (size<length) {
+        assert (size >= 0);
+        if (size < length) {
             variable value i = size;
-            while (i<length) {
+            while (i < length) {
                 array.set(i++, null);
             }
-            length=size;
+            length = size;
         }
     }
 
