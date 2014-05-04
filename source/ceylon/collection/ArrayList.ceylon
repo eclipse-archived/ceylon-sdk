@@ -327,17 +327,27 @@ shared class ArrayList<Element>
     span(Integer from, Integer to) => segment(from, lengthFromIndexes(from, to));
 
     shared actual void deleteSegment(Integer from, Integer length) {
-        value fst = from<0 then 0 else from;
-        value l = from<0 then length+from else length;
-        value len = l+fst>this.length then this.length-fst else l;
-        if (fst<this.length && len>0) {
-            array.copyTo(array, fst+len, fst, this.length-len-fst);
-            variable value i = this.length-len;
-            while (i<this.length) {
-                array.set(i++, null);
-            }
-            this.length-=len;
+        internalDelSegment(from, length);
+    }
+
+    void internalDelSegment(Integer from, Integer len) {
+        value wantedLast = from + len - 1;
+        if (len <= 0 || wantedLast < 0) {
+            return;
         }
+        value fst = max { 0, from };
+        value lst = min { wantedLast, length - 1 };
+        if (lst < fst) {
+            return;
+        }
+        value removedCount = 1 + lst - fst;
+        value fstTrailing = fst + removedCount;
+        value originalLength = length;
+        array.copyTo(array, fstTrailing, fst, length - fstTrailing);
+        for (i in (length - removedCount)..(originalLength - 1)) {
+            array.set(i, null);
+        }
+        length -= removedCount;
     }
 
     deleteSpan(Integer from, Integer to) => deleteSegment(from, lengthFromIndexes(from, to));
