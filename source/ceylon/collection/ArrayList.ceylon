@@ -287,7 +287,7 @@ shared class ArrayList<Element>
     rest => ArrayList(initialCapacity - 1, growthFactor, skip(1));
 
     shared actual Iterator<Element> iterator() {
-        if (length>0) {
+        if (length > 0) {
             //wow, ugly:
             if (is Element null) {
                 return { for (i in 0:length) array[i] else null }.iterator();
@@ -305,18 +305,8 @@ shared class ArrayList<Element>
     }
 
     shared actual List<Element> reversed {
-        if (length>0) {
-            {Element+} iterable;
-            //wow, ugly:
-            if (is Element null) {
-                iterable = { for (i in length-1..0) array[i] else null };
-            }
-            else {
-                value error {
-                    throw AssertionError("underlying array may not contain null");
-                }
-                iterable = { for (i in length-1..0) array[i] else error };
-            }
+        if (length > 0) {
+            value iterable = [ for (i in (length - 1)..0) if (is Element elem = array[i]) elem ];
             return ArrayList(initialCapacity, growthFactor, iterable);
         }
         else {

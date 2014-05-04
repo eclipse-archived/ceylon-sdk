@@ -43,5 +43,14 @@ shared class ArrayListTest() extends MutableListTests() {
         assertTrue(list.every((Character c) => c == 'a'));
     }
 
+    test shared void testReversedWithNoNullsAllowed() {
+        value list = ArrayList { 1, 2, 3 };
+        assertEquals(list.reversed, [3, 2, 1]);
+        assertEquals(list, [1, 2, 3]);
+        list.clear();
+        assertEquals(list.reversed, []);
+        assertEquals(list, []);
+    }
+
 
 }

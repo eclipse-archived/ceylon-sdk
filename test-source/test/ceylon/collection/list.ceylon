@@ -1,6 +1,9 @@
 import ceylon.collection {
     ...
 }
+import ceylon.language.meta {
+    type
+}
 import ceylon.test {
     ...
 }
@@ -246,6 +249,23 @@ shared abstract class MutableListTests() {
         list = createList {null};
         list.infill(null);
         assertEquals(list, [null]);
+    }
+
+    test shared void testReversed() {
+        variable value list = createList {};
+        assertEquals(list.reversed, []);
+        list.add("A");
+        assertEquals(list.reversed, ["A"]);
+        list.add("B");
+        assertEquals(list.reversed, ["B", "A"]);
+        assertEquals(list, ["A", "B"]);
+        list.add(null);
+        assertEquals(list.reversed, [null, "B", "A"]);
+        assertEquals(list, ["A", "B", null]);
+        list.set(0, "C");
+        assertEquals(list.reversed, [null, "B", "C"]);
+        assertEquals(list, ["C", "B", null]);
+        assertEquals(type(list.reversed), type(list));
     }
 
 }
