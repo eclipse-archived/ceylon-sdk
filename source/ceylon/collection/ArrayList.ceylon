@@ -57,60 +57,43 @@ shared class ArrayList<Element>
     {Element*} elements;
 
     "initial capacity cannot be negative"
-    assert (initialCapacity>=0);
+    assert (initialCapacity >= 0);
 
     "initial capacity too large"
-    assert (initialCapacity<=runtime.maxArraySize);
+    assert (initialCapacity <= runtime.maxArraySize);
 
     "growth factor must be at least 1.0"
-    assert (growthFactor>=1.0);
+    assert (growthFactor >= 1.0);
 
     function store(Integer capacity)
             => arrayOfSize<Element?>(capacity, null);
 
-    variable Array<Element?> array;
-    variable Integer length;
+    variable Integer length = elements.size;
+    variable Array<Element?> array = store(length > initialCapacity then length else initialCapacity);
 
-    if (is List<Element> elements) {
-        length = elements.size;
-        array = store(length>initialCapacity then length else initialCapacity);
+    if (is ArrayList<Element> elements) {
+       elements.array.copyTo(this.array, 0, 0, length);
+    } else {
+        for (i -> element in entries(elements)) {
+            array.set(i, element);
+        }
     }
-    else {
-        length = 0;
-        array = store(initialCapacity);
-    }
+
+    Integer atLeast(Integer min, Integer int) => int > min then int else min;
 
     void grow(Integer increment) {
-        value neededCapacity = length+increment;
+        value neededCapacity = length + increment;
         value maxArraySize = runtime.maxArraySize;
-        if (neededCapacity>maxArraySize) {
+        if (neededCapacity > maxArraySize) {
             throw OverflowException(); //TODO: give it a message!
         }
-        if (neededCapacity>array.size) {
-            value grownCapacity = (neededCapacity*growthFactor).integer;
-            value newCapacity = grownCapacity<neededCapacity||grownCapacity>maxArraySize
+        if (neededCapacity > array.size) {
+            value grownCapacity = (neededCapacity * growthFactor).integer;
+            value newCapacity = grownCapacity < neededCapacity || grownCapacity > maxArraySize
                     then maxArraySize else grownCapacity;
             value grown = store(newCapacity);
             array.copyTo(grown);
             array = grown;
-        }
-    }
-
-    if (is List<Element> elements) {
-        if (is ArrayList<Element> elements) {
-            elements.array.copyTo(array, 0, 0, length);
-        }
-        else {
-            variable value i=0;
-            for (element in elements) {
-                array.set(i++, element);
-            }
-        }
-    }
-    else {
-        for (element in elements) {
-            grow(1);
-            array.set(length++, element);
         }
     }
 
@@ -136,16 +119,16 @@ shared class ArrayList<Element>
     shared Integer capacity => array.size;
     assign capacity {
         "capacity must be at least as large as list size"
-        assert (capacity>=size);
+        assert (capacity >= size);
         "capacity too large"
-        assert (capacity<=runtime.maxArraySize);
+        assert (capacity <= runtime.maxArraySize);
         value resized = store(capacity);
         array.copyTo(resized, 0, 0, length);
         array = resized;
     }
 
     shared actual Element? get(Integer index) {
-        if (0<=index<length) {
+        if (0 <= index < length) {
             return array[index];
         }
         else {
@@ -156,19 +139,19 @@ shared class ArrayList<Element>
     shared actual void insert(Integer index, Element element) {
         "index may not be negative or greater than the
          length of the list"
-        assert (0<=index<=length);
+        assert (0 <= index <= length);
         grow(1);
-        if (index<length) {
-            array.copyTo(array, index, index+1, length-index);
+        if (index < length) {
+            array.copyTo(array, index, index + 1, length - index);
         }
         length++;
         array.set(index, element);
     }
 
     shared actual Element? delete(Integer index) {
-        if (0<=index<length) {
+        if (0 <= index < length) {
             Element? result = array[index];
-            array.copyTo(array, index+1, index, length-index-1);
+            array.copyTo(array, index + 1, index, length - index - 1);
             length--;
             array.set(length, null);
             return result;
@@ -300,7 +283,7 @@ shared class ArrayList<Element>
         }
     }
 
-    rest => ArrayList{ elements = skip(1); };
+    rest => ArrayList(initialCapacity - 1, growthFactor, skip(1));
 
     shared actual Iterator<Element> iterator() {
         if (length>0) {
@@ -347,11 +330,9 @@ shared class ArrayList<Element>
         array.set(index,element);
     }
 
-    Integer atLeastZero(Integer int) => int > 0 then int else 0;
-
     shared actual List<Element> segment(Integer from, Integer length) {
-        value first = atLeastZero(from);
-        value len = atLeastZero(length);
+        value first = atLeast(0, from);
+        value len = atLeast(0, length);
         return first < this.length && len > 0
             then ArrayList(len, growthFactor, skip(first).take(len))
             else ArrayList();
@@ -361,7 +342,7 @@ shared class ArrayList<Element>
         if (from < 0 && to < 0 || from > to) {
             return 0;
         }
-        return 1 + atLeastZero(to) - atLeastZero(from);
+        return 1 + atLeast(0, to) - atLeast(0, from);
     }
 
     span(Integer from, Integer to) => segment(from, lengthFromIndexes(from, to));
