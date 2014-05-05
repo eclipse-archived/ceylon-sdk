@@ -296,10 +296,10 @@ shared class ArrayList<Element>
     span(Integer from, Integer to) => segment(*spanToSegment(from, to));
 
     shared actual void deleteSegment(Integer from, Integer length) {
-        internalDelSegment(from, length);
+        internalDeleteSegment(from, length);
     }
 
-    void internalDelSegment(Integer from, Integer len) {
+    void internalDeleteSegment(Integer from, Integer len) {
         value wantedLast = from + len - 1;
         if (len <= 0 || wantedLast < 0) {
             return;
@@ -319,7 +319,7 @@ shared class ArrayList<Element>
         length -= removedCount;
     }
 
-    deleteSpan(Integer from, Integer to) => internalDelSegment(*spanToSegment(from, to));
+    deleteSpan(Integer from, Integer to) => internalDeleteSegment(*spanToSegment(from, to));
 
     shared actual void truncate(Integer size) {
         assert (size >= 0);
