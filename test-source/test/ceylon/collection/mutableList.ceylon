@@ -13,7 +13,7 @@ shared interface MutableListTests satisfies ListTests {
     shared actual formal MutableList<String?> createList({String?*} strings);
 
     test shared void doListTests() {
-        value list = createList({});
+        value list = createList {};
         assertEquals("{}", list.string);
         assertEquals(0, list.size);
         assertTrue(!list.contains("fu"));
@@ -147,7 +147,7 @@ shared interface MutableListTests satisfies ListTests {
     }
 
     test shared void testDeleteSegment() {
-        variable value list =  createList {"A", "B", "C", "D", "E", "F"};
+        value list =  createList {"A", "B", "C", "D", "E", "F"};
         list.deleteSegment(2, 3);
         assertEquals(list.first, "A");
         assertEquals(list.rest.first, "B");
@@ -222,7 +222,7 @@ shared interface MutableListTests satisfies ListTests {
     }
 
     test shared void testReversedAfterMutation() {
-        variable value list = createList {};
+        value list = createList {};
         assertEquals(list.reversed, []);
         list.add("A");
         assertEquals(list.reversed, ["A"]);
