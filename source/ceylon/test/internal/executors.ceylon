@@ -14,19 +14,6 @@ import ceylon.collection {
     ...
 }
 
-/*
- 
- - jak zachovat open/close princip
- - umoznit aby invokeTest neco vracel a propagoval v stacku
- - ohlidat ze dojde k uvolneni instance i kdyz nekdo pretizi execute
- - vsechny clanky stacku by meli mit stejnou signaturu, resp. dostat kontext
- - fireError idealne nepredavat, ale umoznit volat vsem
- - asi bude potreba zverenit i vyjimky ignore a multiple
- 
- ? zamyslet se nad implementaci parametrizovanyho testu / vertx.(asynch) testu / arq.testu
- 
- */
-
 class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) satisfies TestExecutor {
     
     variable Object? instance = null;
