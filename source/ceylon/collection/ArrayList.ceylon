@@ -1,28 +1,3 @@
-import ceylon.collection {
-    MutableList,
-    Stack,
-    Queue
-}
-import ceylon.language {
-    by,
-    shared,
-    Integer,
-    Float,
-    runtime,
-    arrayOfSize,
-    null,
-    variable,
-    Array,
-    List,
-    OverflowException,
-    actual,
-    Object,
-    Boolean,
-    true,
-    false,
-    Iterator,
-    emptyIterator
-}
 "A [[MutableList]] implemented using a backing [[Array]].
  Also:
 
