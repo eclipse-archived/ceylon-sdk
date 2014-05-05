@@ -42,15 +42,14 @@ shared class ArrayList<Element>
     function store(Integer capacity)
             => arrayOfSize<Element?>(capacity, null);
 
-    variable Integer length = elements.size;
-    variable Array<Element?> array = store(length > initialCapacity then length else initialCapacity);
+    variable Array<Element?> array = Array<Element?>(elements);
 
-    if (is ArrayList<Element> elements) {
-       elements.array.copyTo(this.array, 0, 0, length);
-    } else {
-        for (i -> element in entries(elements)) {
-            array.set(i, element);
-        }
+    variable Integer length = array.size;
+
+    if (length < initialCapacity) {
+        value newArray = store(initialCapacity);
+        array.copyTo(newArray, 0, 0, length);
+        array = newArray;
     }
 
     void grow(Integer increment) {
