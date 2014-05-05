@@ -1,7 +1,15 @@
 import ceylon.test.event {
     ...
 }
-import ceylon.test { error, AssertionComparisonError, TestListener, TestResult, success, ignored, failure }
+import ceylon.test {
+    error,
+    AssertionComparisonError,
+    TestListener,
+    TestResult,
+    success,
+    ignored,
+    failure
+}
 
 "A [[TestListener]] that prints information about test execution to a given logging function,
  in [Test Anything Protocol v13](http://testanything.org/tap-version-13-specification.html) format.
@@ -123,31 +131,31 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
         Integer? elapsed;
         String? ignoreReason;
         
-        switch(event)
-            case(is TestFinishEvent) {
-                result = event.result;
-                exception = event.result.exception;
-                elapsed = event.result.elapsedTime;
-                ignoreReason = null;
-            }
-            case(is TestIgnoreEvent) {
-                result = event.result;
-                ignoreReason = result.exception?.message;
-                exception = null;
-                elapsed = null;
-            }
-            case(is TestErrorEvent) {
-                result = event.result;
-                exception = event.result.exception;
-                elapsed = null;
-                ignoreReason = null;
-            }
+        switch (event)
+        case (is TestFinishEvent) {
+            result = event.result;
+            exception = event.result.exception;
+            elapsed = event.result.elapsedTime;
+            ignoreReason = null;
+        }
+        case (is TestIgnoreEvent) {
+            result = event.result;
+            ignoreReason = result.exception?.message;
+            exception = null;
+            elapsed = null;
+        }
+        case (is TestErrorEvent) {
+            result = event.result;
+            exception = event.result.exception;
+            elapsed = null;
+            ignoreReason = null;
+        }
         
         String okOrNotOk = result.state == success then "ok" else "not ok";
         String directive = result.state == ignored then "# SKIP ignored" else "";
         String? severity = result.state == failure then "failure" else (result.state == error then "error");
         
-        write("``okOrNotOk`` ``count`` - ``result.description.name`` `` directive``");
+        write("``okOrNotOk`` ``count`` - ``result.description.name`` ``directive``");
         
         if (elapsed exists || ignoreReason exists || exception exists) {
             write("  ---");
@@ -173,16 +181,15 @@ shared class TapLoggingListener(write = print) satisfies TestListener {
                 } else {
                     write("  exception: |");
                     printStackTrace(exception, void(String string) {
-                        for (line in string.replace("\r\n", "\n").split('\n'.equals).filter((String s) => !s.empty)) {
-                            write("    ``line.replace("\t", "    ")``");
-                        }
-                    });
+                            for (line in string.replace("\r\n", "\n").split('\n'.equals).filter((String s) => !s.empty)) {
+                                write("    ``line.replace("\t", "    ")``");
+                            }
+                        });
                 }
             }
             write("  ...");
         }
-
+        
         count++;
     }
-
 }

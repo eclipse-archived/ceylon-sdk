@@ -10,12 +10,12 @@
  
 "
 shared interface TestExecutor {
-
+    
     "The description of the test to be run."
     shared formal TestDescription description;
-
+    
     "Run the test."
     shared formal void execute(
-        "The context of this test."TestRunContext context);
-
+        "The context of this test."
+        TestRunContext context);
 }

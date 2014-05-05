@@ -11,38 +11,49 @@ import ceylon.test.event {
     ...
 }
 import ceylon.collection {
-    ... 
+    ...
 }
 
-class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) satisfies TestExecutor {
+/*
+ 
+ - jak zachovat open/close princip
+ - umoznit aby invokeTest neco vracel a propagoval v stacku
+ - ohlidat ze dojde k uvolneni instance i kdyz nekdo pretizi execute
+ - vsechny clanky stacku by meli mit stejnou signaturu, resp. dostat kontext
+ - fireError idealne nepredavat, ale umoznit volat vsem
+ - asi bude potreba zverenit i vyjimky ignore a multiple
+ 
+ ? zamyslet se nad implementaci parametrizovanyho testu / vertx.(asynch) testu / arq.testu
+ 
+ */
 
+class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) satisfies TestExecutor {
+    
     variable Object? instance = null;
     
     Object getInstance() {
-        if( exists i = instance ) {
+        if (exists i = instance) {
             return i;
-        }
-        else {
-            assert(exists classDecl);
-            assert(is Class<Object, []> classModel = classDecl.apply<Object>());
+        } else {
+            assert (exists classDecl);
+            assert (is Class<Object,[]> classModel = classDecl.apply<Object>());
             Object i = classModel();
             instance = i;
             return i;
         }
     }
-
+    
     String getName() {
-        if( funcDecl.toplevel ) {
+        if (funcDecl.toplevel) {
             return funcDecl.qualifiedName;
-        }
-        else {
-            assert(exists classDecl);
+        } else {
+            assert (exists classDecl);
             return classDecl.qualifiedName + "." + funcDecl.name;
         }
     }
-
+    
     shared actual default TestDescription description = TestDescription(getName(), funcDecl, classDecl);
-
+    
     shared actual default void execute(TestRunContext context) {
         try {
             void fireError(String msg)
@@ -50,13 +61,13 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
             
             Anything() handler =
                     verifyClass(fireError,
-                    verifyFunction(fireError,
+                verifyFunction(fireError,
                     verifyCallbacks(fireError,
-                    handleTestIgnore(context,
-                    handleTestExecution(context,
-                    handleAfterCallbacks(
-                    handleBeforeCallbacks(
-                    invokeTest)))))));
+                        handleTestIgnore(context,
+                            handleTestExecution(context,
+                                handleAfterCallbacks(
+                                    handleBeforeCallbacks(
+                                        invokeTest)))))));
             
             handler();
         }
@@ -64,97 +75,96 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
             instance = null;
         }
     }
-
+    
     void verifyClass(Anything(String) fireError, Anything() handler)() {
-        if( exists classDecl ) {
-            if( !classDecl.toplevel ) {
+        if (exists classDecl) {
+            if (!classDecl.toplevel) {
                 fireError("class ``classDecl.qualifiedName`` should be toplevel");
                 return;
             }
-            if( classDecl.abstract ) {
+            if (classDecl.abstract) {
                 fireError("class ``classDecl.qualifiedName`` should not be abstract");
                 return;
             }
-            if( classDecl.anonymous ) {
+            if (classDecl.anonymous) {
                 fireError("class ``classDecl.qualifiedName`` should not be anonymous");
                 return;
             }
-            if( !classDecl.parameterDeclarations.empty ) {
+            if (!classDecl.parameterDeclarations.empty) {
                 fireError("class ``classDecl.qualifiedName`` should have no parameters");
                 return;
             }
-            if( !classDecl.typeParameterDeclarations.empty ) {
+            if (!classDecl.typeParameterDeclarations.empty) {
                 fireError("class ``classDecl.qualifiedName`` should have no type parameters");
                 return;
             }
         }
         handler();
     }
-
+    
     void verifyFunction(Anything(String) fireError, Anything() handler)() {
-        if( funcDecl.annotations<TestAnnotation>().empty ) {
+        if (funcDecl.annotations<TestAnnotation>().empty) {
             fireError("function ``funcDecl.qualifiedName`` should be annotated with test");
             return;
         }
-        if( !funcDecl.parameterDeclarations.empty ) {
+        if (!funcDecl.parameterDeclarations.empty) {
             fireError("function ``funcDecl.qualifiedName`` should have no parameters");
             return;
         }
-        if( !funcDecl.typeParameterDeclarations.empty ) {
+        if (!funcDecl.typeParameterDeclarations.empty) {
             fireError("function ``funcDecl.qualifiedName`` should have no type parameters");
             return;
         }
-        if(is OpenClassOrInterfaceType openType = funcDecl.openType, openType.declaration != `class Anything`) {
+        if (is OpenClassOrInterfaceType openType = funcDecl.openType, openType.declaration != `class Anything`) {
             fireError("function ``funcDecl.qualifiedName`` should be void");
             return;
         }
         handler();
     }
-
+    
     void verifyCallbacks(Anything(String) fireError, Anything() handler)() {
         value callbacks = findCallbacks<BeforeTestAnnotation|AfterTestAnnotation>();
-        for(callback in callbacks) {
+        for (callback in callbacks) {
             value callbackType = callback.annotations<BeforeTestAnnotation>().empty then "after" else "before";
-            if( !callback.parameterDeclarations.empty ) {
+            if (!callback.parameterDeclarations.empty) {
                 fireError("``callbackType`` callback ``callback.qualifiedName`` should have no parameters");
                 return;
             }
-            if( !callback.typeParameterDeclarations.empty ) {
+            if (!callback.typeParameterDeclarations.empty) {
                 fireError("``callbackType`` callback ``callback.qualifiedName`` should have no type parameters");
                 return;
             }
-            if(is OpenClassOrInterfaceType openType = callback.openType, openType.declaration != `class Anything`) {
+            if (is OpenClassOrInterfaceType openType = callback.openType, openType.declaration != `class Anything`) {
                 fireError("``callbackType`` callback ``callback.qualifiedName`` should be void");
                 return;
             }
         }
         handler();
     }
-
+    
     void handleTestIgnore(TestRunContext context, Anything() handler)() {
         value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(funcDecl, classDecl);
-        if( exists ignoreAnnotation ) {
+        if (exists ignoreAnnotation) {
             context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, IgnoreException(ignoreAnnotation.reason))));
             return;
         }
         handler();
     }
-
+    
     void handleTestExecution(TestRunContext context, Anything() handler)() {
         value i = !funcDecl.toplevel then getInstance() else null;
         value startTime = system.milliseconds;
         function elapsedTime() => system.milliseconds - startTime;
-
+        
         try {
             context.fireTestStart(TestStartEvent(description, i));
             handler();
             context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime()), i));
         }
-        catch(Throwable e) {
-            if( e is AssertionError) {
+        catch (Throwable e) {
+            if (e is AssertionError) {
                 context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime()), i));
-            }
-            else {
+            } else {
                 context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime()), i));
             }
         }
@@ -162,101 +172,96 @@ class DefaultTestExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classD
     
     void handleBeforeCallbacks(Anything() handler)() {
         value callbacks = findCallbacks<BeforeTestAnnotation>().reversed;
-        for(callback in callbacks) {
+        for (callback in callbacks) {
             invokeFunction(callback);
         }
         handler();
     }
-
+    
     void handleAfterCallbacks(Anything() handler)() {
         value exceptionsBuilder = SequenceBuilder<Throwable>();
         try {
             handler();
         }
-        catch(Throwable e) {
+        catch (Throwable e) {
             exceptionsBuilder.append(e);
         }
         finally {
             value callbacks = findCallbacks<AfterTestAnnotation>();
-            for(callback in callbacks) {
+            for (callback in callbacks) {
                 try {
                     invokeFunction(callback);
                 }
-                catch(Throwable e) {
+                catch (Throwable e) {
                     exceptionsBuilder.append(e);
                 }
             }
         }
-
+        
         value exceptions = exceptionsBuilder.sequence;
-        if( exceptions.size == 0 ) {
+        if (exceptions.size == 0) {
             // noop
-        }
-        else if( exceptions.size == 1 ) {
-            assert(exists e = exceptions.first);
+        } else if (exceptions.size == 1) {
+            assert (exists e = exceptions.first);
             throw e;
-        }
-        else {
+        } else {
             throw MultipleFailureException(exceptions);
         }
     }
-
-    FunctionDeclaration[] findCallbacks<CallbackType>() given CallbackType satisfies Annotation{
+    
+    FunctionDeclaration[] findCallbacks<CallbackType>()
+            given CallbackType satisfies Annotation {
         value callbacks = HashSet<FunctionDeclaration>();
-
-        if( exists classDecl ) {
-
+        
+        if (exists classDecl) {
+            
             void visit(ClassOrInterfaceDeclaration? decl, void do(ClassOrInterfaceDeclaration decl)) {
-                if(exists decl) {
+                if (exists decl) {
                     do(decl);
                     visit(decl.extendedType?.declaration, do);
-                    for(satisfiedType in decl.satisfiedTypes) {
+                    for (satisfiedType in decl.satisfiedTypes) {
                         visit(satisfiedType.declaration, do);
                     }
                 }
             }
-
-            visit(classDecl, void (ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>() else []);
-            });
-            visit(classDecl, void (ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration, CallbackType>() else []);
-            });
-            visit(classDecl, void (ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>());
-            });
-
+            
+            visit(classDecl, void(ClassOrInterfaceDeclaration decl) {
+                    callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
+                });
+            visit(classDecl, void(ClassOrInterfaceDeclaration decl) {
+                    callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
+                });
+            visit(classDecl, void(ClassOrInterfaceDeclaration decl) {
+                    callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
+                });
+        } else {
+            callbacks.addAll(funcDecl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
         }
-        else {
-            callbacks.addAll(funcDecl.containingPackage.annotatedMembers<FunctionDeclaration, CallbackType>());
-        }
-
+        
         return callbacks.sequence;
     }
-
+    
     void invokeTest() {
         invokeFunction(funcDecl);
     }
     
     void invokeFunction(FunctionDeclaration f) {
-        if( f.toplevel ) {
+        if (f.toplevel) {
             f.invoke();
-        }
-        else {
+        } else {
             f.memberInvoke(getInstance());
         }
     }
-
 }
 
 class GroupTestExecutor(description, TestExecutor[] children) satisfies TestExecutor {
     
     shared actual TestDescription description;
-
+    
     shared actual void execute(TestRunContext context) {
         variable TestState worstState = ignored;
         void updateWorstState(TestState state) {
-            if( compareStates(worstState, state) == smaller ) {
+            if (compareStates(worstState, state) == smaller) {
                 worstState = state;
             }
         }
@@ -265,46 +270,40 @@ class GroupTestExecutor(description, TestExecutor[] children) satisfies TestExec
             shared actual void testError(TestErrorEvent event) => updateWorstState(event.result.state);
             shared actual void testIgnore(TestIgnoreEvent event) => updateWorstState(ignored);
         }
-
+        
         context.addTestListener(updateWorstStateListener);
         try {
             context.fireTestStart(TestStartEvent(description));
             value startTime = system.milliseconds;
             children*.execute(context);
             value endTime = system.milliseconds;
-            context.fireTestFinish(TestFinishEvent(TestResult(description, worstState, null, endTime-startTime)));
+            context.fireTestFinish(TestFinishEvent(TestResult(description, worstState, null, endTime - startTime)));
         }
         finally {
             context.removeTestListener(updateWorstStateListener);
         }
     }
-
+    
     Comparison compareStates(TestState state1, TestState state2) {
-        if( state1 == state2 ) {
+        if (state1 == state2) {
             return equal;
-        }
-        else if( state1 == ignored && (state2 == success || state2 == failure || state2 == error)) {
+        } else if (state1 == ignored && (state2 == success || state2 == failure || state2 == error)) {
             return smaller;
-        }
-        else if( state1 == success && (state2 == failure || state2 == error)) {
+        } else if (state1 == success && (state2 == failure || state2 == error)) {
             return smaller;
-        }
-        else if( state1 == failure && state2 == error) {
+        } else if (state1 == failure && state2 == error) {
             return smaller;
-        }
-        else {
+        } else {
             return larger;
         }
     }
-
 }
 
 class ErrorTestExecutor(description, Throwable exception) satisfies TestExecutor {
-
+    
     shared actual TestDescription description;
-
+    
     shared actual void execute(TestRunContext context) {
         context.fireTestError(TestErrorEvent(TestResult(description, error, exception)));
     }
-
 }

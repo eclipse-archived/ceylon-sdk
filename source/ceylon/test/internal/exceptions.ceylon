@@ -10,7 +10,7 @@ class MultipleFailureException(shared Throwable[] exceptions) extends Exception(
     shared actual String message {
         value message = StringBuilder();
         message.append("There were ``exceptions.size`` exceptions:");
-        for(e in exceptions) {
+        for (e in exceptions) {
             message.appendNewline();
             message.append("    ");
             message.append(type(e).declaration.qualifiedName);
@@ -20,5 +20,4 @@ class MultipleFailureException(shared Throwable[] exceptions) extends Exception(
         }
         return message.string;
     }
-    
 }

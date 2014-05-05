@@ -85,8 +85,8 @@
    but this API is usually not necessary to use directly. 
    
    """
-by("Tom Bentley", "Tomáš Hradec")
-license("Apache Software License")
+by ("Tom Bentley", "Tomáš Hradec")
+license ("Apache Software License")
 module ceylon.test "1.1.0" {
     import ceylon.collection "1.1.0";
 }

@@ -37,94 +37,92 @@ shared void run() {
 }
 
 class Runner() {
-
+    
     value moduleNameAndVersions = SequenceBuilder<[String, String]>();
     value testSources = SequenceBuilder<TestSource>();
     variable Integer port = -1;
     variable Socket? socket = null;
     variable PrintWriter? writer = null;
     variable Boolean tap = false;
-
+    
     shared void run() {
         try {
             init();
             loadModules();
             connect();
             
-            if( testSources.empty ) {
-                for(value moduleNameAndVersion in moduleNameAndVersions.sequence) {
-                    assert(exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
+            if (testSources.empty) {
+                for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+                    assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
                     testSources.append(m);
                 }
             }
-
+            
             TestListener testListener;
-            if( exists w = writer ) {
+            if (exists w = writer) {
                 void publishEvent(String json) {
                     w.write(json);
                     w.write('\{END OF TRANSMISSION}'.integer);
                     w.flush();
                 }
                 testListener = TestEventPublisher(publishEvent);
-            }
-            else if( tap ) {
+            } else if (tap) {
                 testListener = TapLoggingListener();
-            }
-            else {
+            } else {
                 testListener = TestLoggingListener {
-                    colorWhite = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.white"); 
-                    colorGreen = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.green"); 
-                    colorRed = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.red"); 
+                    colorWhite = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.white");
+                    colorGreen = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.green");
+                    colorRed = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.red");
                 };
             }
-
+            
             createTestRunner(testSources.sequence, [testListener]).run();
         }
         finally {
             disconnect();
         }
     }
-
+    
     void init() {
         variable String prev = "";
-
-        for(String arg in process.arguments) {
-            if( prev == "--module" ) {
-                assert(exists i = arg.firstInclusion("/"));
-                String moduleName = arg[0..i-1];
-                String moduleVersion = arg[i+1...];
+        
+        for (String arg in process.arguments) {
+            if (prev == "--module") {
+                assert (exists i = arg.firstInclusion("/"));
+                String moduleName = arg[0 .. i - 1];
+                String moduleVersion = arg[i + 1 ...];
                 
                 moduleNameAndVersions.append([moduleName, moduleVersion]);
             }
-            if( prev == "--test" ) {
+            if (prev == "--test") {
                 testSources.append(arg);
             }
-            if( arg.startsWith("--port") ) {
-                assert(exists p = parseInteger(arg[7...]));
+            if (arg.startsWith("--port")) {
+                assert (exists p = parseInteger(arg[7...]));
                 port = p;
             }
-            if( arg == "--tap" ) {
+            if (arg == "--tap") {
                 tap = true;
             }
             prev = arg;
         }
     }
-
+    
     void loadModules() {
-        for(value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+        for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
             loadModule(moduleNameAndVersion[0], moduleNameAndVersion[1]);
         }
     }
-
+    
     void loadModule(String modName, String modVersion) {
         ModuleIdentifier modIdentifier = createModuleIdentifier(modName, modVersion);
         Module mod = ceylonModuleLoader.loadModule(modIdentifier);
         ModuleClassLoader modClassLoader = mod.classLoader;
-        modClassLoader.loadClass(modName+".module_");
+        modClassLoader.loadClass(modName + ".module_");
     }
-
+    
     void connect() {
-        if( port != -1 ) {
+        if (port != -1) {
             variable Exception? lastException = null;
             for (value i in 0..10) {
                 try {
@@ -144,19 +142,19 @@ class Runner() {
             throw Exception("failed connect to port ``port``", lastException);
         }
     }
-
+    
     void disconnect() {
         try {
-            if( writer exists ) {
+            if (writer exists) {
                 writer?.close();
                 writer = null;
             }
         } catch (IOException e) {
             // noop
         }
-
+        
         try {
-            if( socket exists ) {
+            if (socket exists) {
                 socket?.close();
                 socket = null;
             }
@@ -164,5 +162,4 @@ class Runner() {
             // noop
         }
     }
-
 }

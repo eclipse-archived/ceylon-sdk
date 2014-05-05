@@ -12,7 +12,6 @@ import ceylon.language.meta.declaration {
 "
 shared annotation TestAnnotation test() => TestAnnotation();
 
-
 "Annotation to specify test suite, which allow combine several tests or test suites and run them together.
  
      testSuite({`class YodaTest`,
@@ -21,8 +20,8 @@ shared annotation TestAnnotation test() => TestAnnotation();
      shared void starwarsTestSuite() {}
 "
 shared annotation TestSuiteAnnotation testSuite(
-    "The program elements from which tests will be executed." {Declaration+} sources) => TestSuiteAnnotation(sources);
-
+    "The program elements from which tests will be executed."
+    {Declaration+} sources) => TestSuiteAnnotation(sources);
 
 "Annotation to specify custom [[TestExecutor]] implementation, which will be used for running test.
  
@@ -33,8 +32,8 @@ shared annotation TestSuiteAnnotation testSuite(
       package com.acme;
 "
 shared annotation TestExecutorAnnotation testExecutor(
-    "The class declaration of [[TestExecutor]]." ClassDeclaration executor) => TestExecutorAnnotation(executor);
-
+    "The class declaration of [[TestExecutor]]."
+    ClassDeclaration executor) => TestExecutorAnnotation(executor);
 
 "Annotation to specify custom [[TestListener]]s, which will be used during running test.
  
@@ -46,8 +45,8 @@ shared annotation TestExecutorAnnotation testExecutor(
      package com.acme;
 "
 shared annotation TestListenersAnnotation testListeners(
-    "The class declarations of [[TestListener]]s" {ClassDeclaration+} listeners) => TestListenersAnnotation(listeners);
-
+    "The class declarations of [[TestListener]]s"
+    {ClassDeclaration+} listeners) => TestListenersAnnotation(listeners);
 
 "Marks a function which will be run before each test in its scope.
  
@@ -64,7 +63,6 @@ shared annotation TestListenersAnnotation testListeners(
 "
 shared annotation BeforeTestAnnotation beforeTest() => BeforeTestAnnotation();
 
-
 "Marks a function which will be run after each test in its scope.
  
  It allow to place common initialization logic into separate place.
@@ -80,7 +78,6 @@ shared annotation BeforeTestAnnotation beforeTest() => BeforeTestAnnotation();
  "
 shared annotation AfterTestAnnotation afterTest() => AfterTestAnnotation();
 
-
 "Marks a test or group of tests which should not be executed.
  
  It can be set on several places: on concrete test, on class which contains tests, on whole package or even module.
@@ -91,43 +88,47 @@ shared annotation AfterTestAnnotation afterTest() => AfterTestAnnotation();
  
 "
 shared annotation IgnoreAnnotation ignore(
-    "Reason why the test is ignored." String reason = "") => IgnoreAnnotation(reason);
-
+    "Reason why the test is ignored."
+    String reason = "") => IgnoreAnnotation(reason);
 
 "Annotation class for [[test]]."
-shared final annotation class TestAnnotation() 
-        satisfies OptionalAnnotation<TestAnnotation, FunctionDeclaration> {}
+shared final annotation class TestAnnotation()
+        satisfies OptionalAnnotation<TestAnnotation,FunctionDeclaration> {}
 
 
 "Annotation class for [[testSuite]]"
 shared final annotation class TestSuiteAnnotation(
-    "The program elements from which tests will be executed." shared {Declaration+} sources) 
-        satisfies OptionalAnnotation<TestSuiteAnnotation, FunctionDeclaration> {}
+    "The program elements from which tests will be executed."
+    shared {Declaration+} sources)
+        satisfies OptionalAnnotation<TestSuiteAnnotation,FunctionDeclaration> {}
 
 
 "Annotation class for [[testExecutor]]."
 shared final annotation class TestExecutorAnnotation(
-    "The class declaration of [[TestExecutor]]." shared ClassDeclaration executor) 
-        satisfies OptionalAnnotation<TestExecutorAnnotation, FunctionDeclaration|ClassDeclaration|Package|Module> {}
+    "The class declaration of [[TestExecutor]]."
+    shared ClassDeclaration executor)
+        satisfies OptionalAnnotation<TestExecutorAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
 
 
 "Annotation class for [[testListeners]]."
 shared final annotation class TestListenersAnnotation(
-    "The class declarations of [[TestListener]]s" shared {ClassDeclaration+} listeners) 
-        satisfies OptionalAnnotation<TestListenersAnnotation, FunctionDeclaration|ClassDeclaration|Package|Module> {}
+    "The class declarations of [[TestListener]]s"
+    shared {ClassDeclaration+} listeners)
+        satisfies OptionalAnnotation<TestListenersAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
 
 
 "Annotation class for [[beforeTest]]."
-shared final annotation class BeforeTestAnnotation() 
-        satisfies OptionalAnnotation<BeforeTestAnnotation, FunctionDeclaration> {}
+shared final annotation class BeforeTestAnnotation()
+        satisfies OptionalAnnotation<BeforeTestAnnotation,FunctionDeclaration> {}
 
 
 "Annotation class for [[afterTest]]."
-shared final annotation class AfterTestAnnotation() 
-        satisfies OptionalAnnotation<AfterTestAnnotation, FunctionDeclaration> {}
+shared final annotation class AfterTestAnnotation()
+        satisfies OptionalAnnotation<AfterTestAnnotation,FunctionDeclaration> {}
 
 
 "Annotation class for [[ignore]]."
 shared final annotation class IgnoreAnnotation(
-    "Reason why the test is ignored." shared String reason) 
-        satisfies OptionalAnnotation<IgnoreAnnotation, FunctionDeclaration|ClassDeclaration|Package|Module> {}
+    "Reason why the test is ignored."
+    shared String reason)
+        satisfies OptionalAnnotation<IgnoreAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}

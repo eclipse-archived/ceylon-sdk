@@ -6,44 +6,44 @@ import ceylon.test.event {
 }
 
 shared class TestEventPublisher(void publishEvent(String json)) satisfies TestListener {
-
+    
     shared actual void testRunStart(TestRunStartEvent e) {
         value json = "{'event':'testRunStart', 'element':``convertTestDescription(e.description)``}";
         publishEvent(json);
     }
-
+    
     shared actual void testRunFinish(TestRunFinishEvent e) {
         value json = "{'event':'testRunFinish'}";
         publishEvent(json);
     }
-
+    
     shared actual void testStart(TestStartEvent e) {
         value json = "{'event':'testStart', 'element':{'name':``e.description.name``, 'state':'running'}}";
         publishEvent(json);
     }
-
+    
     shared actual void testFinish(TestFinishEvent e) {
         value json = "{'event':'testFinish', 'element':``convertTestResult(e.result)``}";
         publishEvent(json);
     }
-
+    
     shared actual void testError(TestErrorEvent e) {
         value json = "{'event':'testError', 'element':``convertTestResult(e.result)``}";
         publishEvent(json);
     }
-
+    
     shared actual void testIgnore(TestIgnoreEvent e) {
         value json = "{'event':'testIgnore', 'element':``convertTestResult(e.result)``}";
         publishEvent(json);
     }
-
+    
     StringBuilder convertTestDescription(TestDescription description, StringBuilder json = StringBuilder()) {
         json.append("{");
         json.append("'name':``escape(description.name)``, ");
         json.append("'state':'undefined', ");
         json.append("'children':[");
-        if( !description.children.empty ) {
-            for( child in description.children ) {
+        if (!description.children.empty) {
+            for (child in description.children) {
                 convertTestDescription(child, json);
                 json.append(", ");
             }
@@ -59,13 +59,13 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
         json.append("'name':'``escape(result.description.name)``', ");
         json.append("'state':'``escape(result.state.string)``', ");
         json.append("'elapsedTime':``result.elapsedTime``, ");
-        if(exists e = result.exception) {
+        if (exists e = result.exception) {
             json.append("'exception':'");
             void appendStackTrace(String s) => json.append(escape(s));
             printStackTrace(e, appendStackTrace);
             json.append("', ");
         }
-        if(is AssertionComparisonError ace = result.exception) {
+        if (is AssertionComparisonError ace = result.exception) {
             json.append("'expectedValue':'``escape(ace.expectedValue)``', ");
             json.append("'actualValue':'``escape(ace.actualValue)``', ");
         }
@@ -76,17 +76,15 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
     
     String escape(String s) {
         value sb = StringBuilder();
-        for(c in s) {
-            if( c == '\'' || c == '"' || c == '\\' || c == '/' || 
-                c == '\b' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || 
-                c == '\{END OF TRANSMISSION}' ) {
-                 sb.appendCharacter('\\').appendCharacter(c);
-            }
-            else {
+        for (c in s) {
+            if (c == '\'' || c == '"' || c == '\\' || c == '/' ||
+                c == '\b' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
+                c == '\{END OF TRANSMISSION}') {
+                sb.appendCharacter('\\').appendCharacter(c);
+            } else {
                 sb.appendCharacter(c);
             }
         }
         return sb.string;
     }
-
 }

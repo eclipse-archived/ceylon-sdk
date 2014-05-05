@@ -1,8 +1,8 @@
 import ceylon.language.meta.declaration {
-...
+    ...
 }
 import ceylon.language.meta.model {
-...
+    ...
 }
 import ceylon.test.internal {
     TestRunnerImpl
@@ -24,13 +24,12 @@ shared alias TestComparator => Comparison(TestDescription, TestDescription);
  For running tests is more convenient to use command line tool `ceylon test` 
  or use integration with IDE, so it is not necessary to use this API directly."
 shared interface TestRunner {
-
+    
     "The description of all tests to be run."
     shared formal TestDescription description;
-
+    
     "Runs all the tests and returns a summary result."
     shared formal TestRunResult run();
-
 }
 
 "Create a new [[TestRunner]] for the given test sources and configures it 

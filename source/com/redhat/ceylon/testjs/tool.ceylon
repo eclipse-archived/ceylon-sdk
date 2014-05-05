@@ -6,7 +6,6 @@ import ceylon.test {
     TestSource,
     TestListener
 }
-
 import com.redhat.ceylon.test {
     TestEventPublisher,
     TapLoggingListener,
@@ -24,67 +23,65 @@ shared void run() {
     variable String? colorGreen = null;
     variable String? colorRed = null;
     
-    for(String arg in process.arguments) {
-        if( prev == "__module" ) {
-            assert(exists i = arg.firstInclusion("/"));
-            String moduleName = arg[0..i-1];
-            String moduleVersion = arg[i+1...];
+    for (String arg in process.arguments) {
+        if (prev == "__module") {
+            assert (exists i = arg.firstInclusion("/"));
+            String moduleName = arg[0 .. i - 1];
+            String moduleVersion = arg[i + 1 ...];
             
             moduleNameAndVersions.append([moduleName, moduleVersion]);
         }
-        if( prev == "__test" ) {
+        if (prev == "__test") {
             testSources.append(arg);
         }
-        if( arg == "__tap" ) {
+        if (arg == "__tap") {
             tap = true;
         }
-        if( arg.startsWith("--port") ) {
-            assert(exists p = parseInteger(arg[7...]));
+        if (arg.startsWith("--port")) {
+            assert (exists p = parseInteger(arg[7...]));
             port = p;
         }
-        if( prev == "__com.redhat.ceylon.common.tool.terminal.color.white" ) {
+        if (prev == "__com.redhat.ceylon.common.tool.terminal.color.white") {
             colorWhite = arg;
         }
-        if( prev == "__com.redhat.ceylon.common.tool.terminal.color.green" ) {
+        if (prev == "__com.redhat.ceylon.common.tool.terminal.color.green") {
             colorGreen = arg;
         }
-        if( prev == "__com.redhat.ceylon.common.tool.terminal.color.red" ) {
+        if (prev == "__com.redhat.ceylon.common.tool.terminal.color.red") {
             colorRed = arg;
         }
         
         prev = arg;
     }
-
-    if( port != -1 ) {
+    
+    if (port != -1) {
         dynamic {
             dynamic net = require("net");
             dynamic socket = net.connect(port);
-
+            
             void publishEvent(String json) {
                 dynamic {
                     socket.write(json);
                     socket.write("\{END OF TRANSMISSION}");
                 }
             }
-
+            
             listener = TestEventPublisher(publishEvent);
         }
-    }
-    else if( tap ) {
+    } else if (tap) {
         listener = TapLoggingListener();
-    }
-    else {
+    } else {
         listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
     }
-
+    
     // initialize tested modules
-    for(value moduleNameAndVersion in moduleNameAndVersions.sequence) {
-        assert(exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
+    for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+        assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
     }
     
-    if( testSources.empty ) {
-        for(value moduleNameAndVersion in moduleNameAndVersions.sequence) {
-            assert(exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
+    if (testSources.empty) {
+        for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+            assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
             testSources.append(m);
         }
     }

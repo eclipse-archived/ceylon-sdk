@@ -1,6 +1,6 @@
 "The result state of test execution."
-shared abstract class TestState(shared actual String string) 
-    of success | failure | error | ignored {}
+shared abstract class TestState(shared actual String string)
+        of success|failure|error|ignored {}
 
 "A test state is _success_, if it complete normally (that is, does not throw an exception)."
 shared object success extends TestState("success") {}
