@@ -65,4 +65,25 @@ shared interface ListTests satisfies RangedTests {
         assertEquals(type(createList({"A"}).reversed), type(createList({"B"})));
     }
 
+    test shared void testFirst() {
+        assertEquals(createList({}).first, null);
+        assertEquals(createList({"A"}).first, "A");
+        assertEquals(createList({"A", "B"}).first, "A");
+        assertEquals(createList({"Z", "B", "C", "D"}).first, "Z");
+    }
+
+    test shared void testLast() {
+        assertEquals(createList({}).last, null);
+        assertEquals(createList({"A"}).last, "A");
+        assertEquals(createList({"A", "B"}).last, "B");
+        assertEquals(createList({"Z", "B", "C", "D"}).last, "D");
+    }
+
+    test shared void testRest() {
+        assertEquals(createList({}).rest, []);
+        assertEquals(createList({"A"}).rest, []);
+        assertEquals(createList({"A", "B"}).rest, ["B"]);
+        assertEquals(createList({"A", "B", "C", "D"}).rest, ["B", "C", "D"]);
+    }
+
 }
