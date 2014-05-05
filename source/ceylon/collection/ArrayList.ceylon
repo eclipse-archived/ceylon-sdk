@@ -256,7 +256,7 @@ shared class ArrayList<Element>
         }
     }
 
-    rest => ArrayList(length - 1, growthFactor, skip(1));
+    rest => ArrayList(max { 0, length - 1 }, growthFactor, skip(1));
 
     shared actual Iterator<Element> iterator() {
         if (length > 0) {
