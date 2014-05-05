@@ -448,7 +448,7 @@ shared class LinkedList<Element>(elements = {})
     }
 
     shared actual void deleteSegment(Integer from, Integer length) {
-        internalDelSegment(from, length);
+        internalDeleteSegment(from, length);
     }
 
     Cell<Element>? advanceBy(Integer cells, Cell<Element>? start) {
@@ -464,7 +464,7 @@ shared class LinkedList<Element>(elements = {})
         return result;
     }
 
-    void internalDelSegment(Integer from, Integer len) {
+    void internalDeleteSegment(Integer from, Integer len) {
         value wantedLast = from + len - 1;
         if (len <= 0 || wantedLast < 0) {
             return;
@@ -492,7 +492,7 @@ shared class LinkedList<Element>(elements = {})
         length -= removedCount;
     }
 
-    deleteSpan(Integer from, Integer to) => internalDelSegment(*spanToSegment(from, to));
+    deleteSpan(Integer from, Integer to) => internalDeleteSegment(*spanToSegment(from, to));
 
     defines(Integer index)
             => index >= 0 && index < length;
