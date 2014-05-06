@@ -37,30 +37,46 @@ shared test void testMapEquality() {
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{});
-    
+
     assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2, "a"->1});
     assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2, "a"->2});
     assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2});
     assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{});
     assertEquals(naturalOrderTreeMap{}, naturalOrderTreeMap{});
-    
+
     assertEquals(naturalOrderTreeMap{}, HashMap{});
     assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
 }
 
 void doTestMapRemove(MutableMap<String,String> map) {
-    map.put("a", "b");
-    map.put("c", "d");
-    assertEquals(2, map.size);
-    assertEquals("b", map.remove("a"));
-    assertEquals(1, map.size);
-    assertEquals("d", map["c"]);
-    assertEquals(null, map["a"]);
-    assertEquals("d", map.remove("c"));
-    assertEquals(0, map.size);
-    assertEquals(null, map["c"]);
-    assertEquals(null, map["a"]);
-    assertEquals(null, map.remove("c"));
+    assertEquals(map.put("a", "A"), null);
+    assertEquals(map.put("b", "B"), null);
+    assertEquals(map.put("c", "C"), null);
+    assertEquals(map.remove("A"), null);
+    assertEquals(map.remove("WHATEVER"), null);
+    assertEquals(map.remove("a"), "A");
+    assertEquals(map.size, 2);
+    assertEquals(map["b"], "B" );
+    assertEquals(map["c"], "C" );
+    assertEquals(map.remove("a"), null);
+    assertEquals(map.remove("b"), "B");
+    assertEquals(map.size, 1);
+    assertEquals(map["b"], null );
+    assertEquals(map["c"], "C" );
+    assertEquals(map.put("d", "D"), null);
+    assertEquals(map["a"], null );
+    assertEquals(map["b"], null );
+    assertEquals(map["c"], "C" );
+    assertEquals(map["d"], "D" );
+    assertEquals(map.size, 2);
+    assertEquals(map.remove("b"), null);
+    assertEquals(map.remove("c"), "C");
+    assertEquals(map.remove("d"), "D");
+    assertEquals(map["a"], null );
+    assertEquals(map["b"], null );
+    assertEquals(map["c"], null );
+    assertEquals(map["d"], null );
+    assertEquals(map.size, 0);
 }
 
 shared test void testMapRemove(){
