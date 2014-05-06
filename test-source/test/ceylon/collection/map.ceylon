@@ -1,5 +1,9 @@
-import ceylon.collection { ... }
-import ceylon.test { ... }
+import ceylon.collection {
+    ...
+}
+import ceylon.test {
+    ...
+}
 
 void doTestMap(MutableMap<String,String> map) {
     assertEquals("{}", map.string);
@@ -126,8 +130,8 @@ shared test void testMapDefines() {
 }
 
 shared test void testTreeMap() {
-    value treeMap = TreeMap<Integer, String> { 
-        function compare(Integer x, Integer y) => x<=>y;  
+    value treeMap = TreeMap<Integer, String> {
+        function compare(Integer x, Integer y) => x<=>y;
         200->"", 10->"wwwww", 5->"ddddd"
     };
     treeMap.assertInvariants();
@@ -167,5 +171,5 @@ shared test void testTreeMap() {
     //}
     //print(treeMap);
     assert (treeMap.size==3);
-    
+
 }
