@@ -1,0 +1,79 @@
+import ceylon.test {
+    test,
+    assertEquals
+}
+
+shared interface RangedTests {
+
+    shared formal Ranged<Integer, List<String?>> createRanged({String?*} strings);
+
+    test shared void testSpan() {
+        variable value ranged = createRanged {};
+        assertEquals(ranged.span(0, 1), []);
+        assertEquals(ranged.span(-1, 1), []);
+        assertEquals(ranged.span(-10, -5), []);
+        assertEquals(ranged.span(1, -5), []);
+
+        ranged = createRanged {"A", "B", "C", "D", "E"};
+        assertEquals(ranged.span(0, 0), ["A"]);
+        assertEquals(ranged.span(0, 1), ["A", "B"]);
+        assertEquals(ranged.span(1, 2), ["B", "C"]);
+        assertEquals(ranged.span(2, 3), ["C", "D"]);
+        assertEquals(ranged.span(0, 20), ["A", "B", "C", "D", "E"]);
+        assertEquals(ranged.span(3, 20), ["D", "E"]);
+        assertEquals(ranged.span(-10, 0), ["A"]);
+        assertEquals(ranged.span(-3, 1), ["A", "B"]);
+        assertEquals(ranged.span(-10, -2), []);
+        assertEquals(ranged.span(1, -2), []);
+   }
+
+   test shared void testSpanFrom() {
+       variable value ranged = createRanged {};
+       assertEquals(ranged.spanFrom(0), []);
+       assertEquals(ranged.spanFrom(-1), []);
+       assertEquals(ranged.spanFrom(1), []);
+
+       ranged = createRanged {"A", "B", "C", "D", "E"};
+       assertEquals(ranged.spanFrom(0), ["A", "B", "C", "D", "E"]);
+       assertEquals(ranged.spanFrom(1), ["B", "C", "D", "E"]);
+       assertEquals(ranged.spanFrom(4), ["E"]);
+       assertEquals(ranged.spanFrom(5), []);
+       assertEquals(ranged.spanFrom(6), []);
+   }
+
+   test shared void testSpanTo() {
+       variable value ranged = createRanged {};
+       assertEquals(ranged.spanTo(0), []);
+       assertEquals(ranged.spanTo(-1), []);
+       assertEquals(ranged.spanTo(1), []);
+
+       ranged = createRanged {"A", "B", "C", "D", "E"};
+       assertEquals(ranged.spanTo(10), ["A", "B", "C", "D", "E"]);
+       assertEquals(ranged.spanTo(4), ["A", "B", "C", "D", "E"]);
+       assertEquals(ranged.spanTo(3), ["A", "B", "C", "D"]);
+       assertEquals(ranged.spanTo(0), ["A"]);
+       assertEquals(ranged.spanTo(-1), []);
+       assertEquals(ranged.spanTo(-10), []);
+   }
+
+   test shared void testSegment() {
+       variable value ranged = createRanged {};
+       assertEquals(ranged.segment(0, 1), []);
+       assertEquals(ranged.segment(-1, 1), []);
+       assertEquals(ranged.segment(-10, -5), []);
+       assertEquals(ranged.segment(1, -5), []);
+
+       ranged = createRanged {"A", "B", "C", "D", "E"};
+       assertEquals(ranged.segment(0, 0), []);
+       assertEquals(ranged.segment(0, 1), ["A"]);
+       assertEquals(ranged.segment(1, 2), ["B", "C"]);
+       assertEquals(ranged.segment(2, 3), ["C", "D", "E"]);
+       assertEquals(ranged.segment(0, 20), ["A", "B", "C", "D", "E"]);
+       assertEquals(ranged.segment(3, 20), ["D", "E"]);
+       assertEquals(ranged.segment(-10, 0), []);
+       assertEquals(ranged.segment(-3, 4), ["A"]);
+       assertEquals(ranged.segment(-10, -2), []);
+       assertEquals(ranged.segment(1, -2), []);
+   }
+
+}
