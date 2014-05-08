@@ -14,17 +14,21 @@ shared interface RangedTests {
         assertEquals(ranged.span(-10, -5), []);
         assertEquals(ranged.span(1, -5), []);
 
-        ranged = createRanged {"A", "B", "C", "D", "E"};
+        ranged = createRanged { "A", "B", "C", "D", "E" };
+
         assertEquals(ranged.span(0, 0), ["A"]);
         assertEquals(ranged.span(0, 1), ["A", "B"]);
         assertEquals(ranged.span(1, 2), ["B", "C"]);
         assertEquals(ranged.span(2, 3), ["C", "D"]);
         assertEquals(ranged.span(0, 20), ["A", "B", "C", "D", "E"]);
         assertEquals(ranged.span(3, 20), ["D", "E"]);
+        assertEquals(ranged.span(5, 20), []);
+        assertEquals(ranged.span(3, 1), ["D", "C", "B"]);
         assertEquals(ranged.span(-10, 0), ["A"]);
         assertEquals(ranged.span(-3, 1), ["A", "B"]);
         assertEquals(ranged.span(-10, -2), []);
-        assertEquals(ranged.span(1, -2), []);
+        assertEquals(ranged.span(1, -2), ["B", "A"]);
+        assertEquals(ranged.span(10, -50), ["E", "D", "C", "B", "A" ]);
    }
 
    test shared void testSpanFrom() {
