@@ -14,7 +14,8 @@ import ceylon.test.event {
     ...
 }
 
-shared class TestRunnerImpl(
+"Default implementation of [[TestRunner]]."
+shared class DefaultTestRunner(
     TestSource[] sources,
     TestListener[] listeners,
     TestFilter filter,

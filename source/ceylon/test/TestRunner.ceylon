@@ -5,7 +5,7 @@ import ceylon.language.meta.model {
     ...
 }
 import ceylon.test.internal {
-    TestRunnerImpl
+    DefaultTestRunner
 }
 
 "Alias for program elements from which tests can be run."
@@ -46,7 +46,7 @@ shared TestRunner createTestRunner(
     "A comparator used to sort the tests, used tests in certain order.
      The default comparator runs the tests in alphabetical order."
     TestComparator comparator = defaultTestComparator)
-        => TestRunnerImpl(sources, listeners, filter, comparator);
+        => DefaultTestRunner(sources, listeners, filter, comparator);
 
 "Default test filter, always return true."
 shared Boolean defaultTestFilter(TestDescription description) => true;
