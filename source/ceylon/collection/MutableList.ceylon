@@ -160,9 +160,25 @@ shared interface ListMutator<in Element>
 
 }
 
-[Integer, Integer] spanToSegment(Integer from, Integer to) {
-    if ((from < 0 && to < 0) || from > to) {
-        return [0, -1];
+"Converts the indexes of a segment to those of an equivalent span."
+[Integer, Integer] segmentToSpan(Integer from, Integer length) {
+    if (length <= 0) {
+        return [-1, -1];
     }
-    return [from, to - from + 1];
+    return [from, from + length - 1];
+}
+
+"Converts the indexes of a span to those of an equivalent segment which may be reversed
+ (ie. the span might have [[from > to]] to express that the elements of the segment should be reversed).
+
+ The returned tuple contains [[ [ actualFrom, length, isReversed ] ]]."
+[Integer, Integer, Boolean] toReversableSegment(Integer from, Integer to, Integer listLength) {
+    if (listLength == 0 || from < 0 && to < 0) {
+        return [0, 0, false];
+    }
+    value isReversed = from > to;
+    value actualFrom = max { 0, isReversed then to else from };
+    value actualTo = min { listLength - 1, isReversed then from else to };
+    value len = 1 + actualTo - actualFrom;
+    return [ actualFrom, len, isReversed ];
 }
