@@ -281,44 +281,33 @@ shared class ArrayList<Element>
         array.set(index,element);
     }
 
-    shared actual List<Element> segment(Integer from, Integer length) {
-        if (length <= 0) {
-            return ArrayList();
-        }
-        value first = max { 0, from };
-        value len = max { 0, from < 0 then length + from else length };
-        return first < this.length && len > 0
-            then ArrayList(len, growthFactor, skip(first).take(len))
-            else ArrayList();
+    shared actual List<Element> span(Integer from, Integer to) {
+        value reversableSegment = toReversableSegment(from, to, length);
+        value actualFrom = reversableSegment[0];
+        value len = reversableSegment[1];
+        value isReversed = reversableSegment[2];
+        value result = ArrayList(len, growthFactor, skip(actualFrom).take(len));
+        return isReversed then result.reversed else result;
     }
 
-    span(Integer from, Integer to) => segment(*spanToSegment(from, to));
+    segment(Integer from, Integer length) => span(*segmentToSpan(from, length));
 
-    shared actual void deleteSegment(Integer from, Integer length) {
-        internalDeleteSegment(from, length);
-    }
+    deleteSegment(Integer from, Integer length) => deleteSpan(*segmentToSpan(from, length));
 
-    void internalDeleteSegment(Integer from, Integer len) {
-        value wantedLast = from + len - 1;
-        if (len <= 0 || wantedLast < 0) {
+    shared actual void deleteSpan(Integer from, Integer to) {
+        value reversableSegment = toReversableSegment(from, to, length);
+        value actualFrom = reversableSegment[0];
+        value len = reversableSegment[1];
+        if (actualFrom >= length || len <= 0) {
             return;
         }
-        value fst = max { 0, from };
-        value lst = min { wantedLast, length - 1 };
-        if (lst < fst) {
-            return;
-        }
-        value removedCount = 1 + lst - fst;
-        value fstTrailing = fst + removedCount;
-        value originalLength = length;
-        array.copyTo(array, fstTrailing, fst, length - fstTrailing);
-        for (i in (length - removedCount)..(originalLength - 1)) {
+        value fstTrailing = actualFrom + len;
+        array.copyTo(array, fstTrailing, actualFrom, length - fstTrailing);
+        for (i in (length - len)..(length - 1)) {
             array.set(i, null);
         }
-        length -= removedCount;
+        length -= len;
     }
-
-    deleteSpan(Integer from, Integer to) => internalDeleteSegment(*spanToSegment(from, to));
 
     shared actual void truncate(Integer size) {
         assert (size >= 0);
