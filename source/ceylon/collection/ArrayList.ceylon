@@ -59,9 +59,13 @@ shared class ArrayList<Element>
             throw OverflowException(); //TODO: give it a message!
         }
         if (neededCapacity > array.size) {
-            value grownCapacity = (neededCapacity * growthFactor).integer;
-            value newCapacity = grownCapacity < neededCapacity || grownCapacity > maxArraySize
-                    then maxArraySize else grownCapacity;
+            value grownCapacity 
+                    = (neededCapacity * growthFactor).integer;
+            value newCapacity 
+                    = grownCapacity < neededCapacity || 
+                      grownCapacity > maxArraySize
+                        then maxArraySize 
+                        else grownCapacity;
             value grown = store(newCapacity);
             array.copyTo(grown);
             array = grown;
@@ -113,7 +117,7 @@ shared class ArrayList<Element>
         assert (0 <= index <= length);
         grow(1);
         if (index < length) {
-            array.copyTo(array, index, index + 1, length - index);
+            array.copyTo(array, index, index+1, length-index);
         }
         length++;
         array.set(index, element);
@@ -122,7 +126,7 @@ shared class ArrayList<Element>
     shared actual Element? delete(Integer index) {
         if (0 <= index < length) {
             Element? result = array[index];
-            array.copyTo(array, index + 1, index, length - index - 1);
+            array.copyTo(array, index+1, index, length-index-1);
             length--;
             array.set(length, null);
             return result;
@@ -255,21 +259,29 @@ shared class ArrayList<Element>
         }
     }
 
-    rest => ArrayList(max { 0, length - 1 }, growthFactor, skip(1));
+    rest => ArrayList {
+        initialCapacity = largest(0, length-1);
+        growthFactor = growthFactor;
+        elements = skip(1);
+    };
 
-    shared actual Iterator<Element> iterator() {
-        if (length > 0) {
-            return { for (i in 0..(length - 1)) if (is Element elem = array[i]) elem }.iterator();
-        } else {
-            return emptyIterator;
-        }
-    }
+    shared actual Iterator<Element> iterator() 
+            => { for (i in 0:length) 
+                 if (is Element elem = array[i]) 
+                 elem }
+                .iterator();
 
     shared actual List<Element> reversed {
         if (length > 0) {
-            value iterable = [ for (i in (length - 1)..0) if (is Element elem = array[i]) elem ];
-            return ArrayList(initialCapacity, growthFactor, iterable);
-        } else {
+            return ArrayList {
+                initialCapacity = initialCapacity;
+                growthFactor = growthFactor;
+                for (i in length-1..0) 
+                    if (is Element elem = array[i]) 
+                        elem 
+            };
+        }
+        else {
             return ArrayList();
         }
     }
@@ -282,33 +294,40 @@ shared class ArrayList<Element>
     }
 
     shared actual List<Element> span(Integer from, Integer to) {
-        value reversableSegment = toReversableSegment(from, to, length);
-        value actualFrom = reversableSegment[0];
-        value len = reversableSegment[1];
-        value isReversed = reversableSegment[2];
-        value result = ArrayList(len, growthFactor, skip(actualFrom).take(len));
-        return isReversed then result.reversed else result;
+        value segment = spanToSegment(from, to, length);
+        value start = segment[0];
+        value len = segment[1];
+        value reversed = segment[2];
+        value result = ArrayList { 
+            initialCapacity = len; 
+            growthFactor = growthFactor; 
+            elements = skip(start).take(len); 
+        };
+        return reversed then result.reversed else result;
     }
-
-    segment(Integer from, Integer length) => span(*segmentToSpan(from, length));
-
-    deleteSegment(Integer from, Integer length) => deleteSpan(*segmentToSpan(from, length));
 
     shared actual void deleteSpan(Integer from, Integer to) {
-        value reversableSegment = toReversableSegment(from, to, length);
-        value actualFrom = reversableSegment[0];
-        value len = reversableSegment[1];
-        if (actualFrom >= length || len <= 0) {
-            return;
+        value segment = spanToSegment(from, to, length);
+        value start = segment[0];
+        value len = segment[1];
+        if (start < length && len > 0) {
+            value fstTrailing = start + len;
+            array.copyTo(array, fstTrailing, start,
+                length - fstTrailing);
+            variable value i = length-len;
+            while (i < length) {
+                array.set(i++, null);
+            }
+            length -= len;
         }
-        value fstTrailing = actualFrom + len;
-        array.copyTo(array, fstTrailing, actualFrom, length - fstTrailing);
-        for (i in (length - len)..(length - 1)) {
-            array.set(i, null);
-        }
-        length -= len;
     }
 
+    segment(Integer from, Integer length) 
+            => span(*segmentToSpan(from, length));
+    
+    deleteSegment(Integer from, Integer length) 
+            => deleteSpan(*segmentToSpan(from, length));
+    
     shared actual void truncate(Integer size) {
         assert (size >= 0);
         if (size < length) {
@@ -320,17 +339,20 @@ shared class ArrayList<Element>
         }
     }
 
-    spanFrom(Integer from) => from >= length
-            then ArrayList()
-            else span(from, length-1);
+    spanFrom(Integer from) 
+            => from >= length
+                then ArrayList()
+                else span(from, length-1);
 
-    spanTo(Integer to) => to < 0 then ArrayList() else span(0, to);
+    spanTo(Integer to) 
+            => to < 0 then ArrayList() else span(0, to);
 
     lastIndex => length >= 1 then length - 1;
 
     size => length;
 
-    equals(Object that) => (super of List<Element>).equals(that);
+    equals(Object that) 
+            => (super of List<Element>).equals(that);
 
     hash => (super of List<Element>).hash;
 

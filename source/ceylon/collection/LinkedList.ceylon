@@ -398,15 +398,6 @@ shared class LinkedList<Element>(elements = {})
         return null;
     }
 
-    shared actual List<Element> span(Integer from, Integer to) {
-        value reversableSegment = toReversableSegment(from, to, length);
-        value actualFrom = reversableSegment[0];
-        value len = reversableSegment[1];
-        value isReversed = reversableSegment[2];
-        value result = LinkedList(skip(actualFrom).take(len));
-        return isReversed then result.reversed else result;
-    }
-
     shared actual List<Element> spanFrom(Integer from) {
         value ret = LinkedList<Element>();
         variable value iter = head;
@@ -436,7 +427,37 @@ shared class LinkedList<Element>(elements = {})
         return ret;
     }
 
-    segment(Integer from, Integer length) => span(*segmentToSpan(from, length));
+    shared actual List<Element> span(Integer from, Integer to) {
+        value segment = spanToSegment(from, to, length);
+        value start = segment[0];
+        value len = segment[1];
+        value reversed = segment[2];
+        value result = LinkedList(skip(start).take(len));
+        return reversed then result.reversed else result;
+    }
+    
+    shared actual void deleteSpan(Integer from, Integer to)  {
+        value segment = spanToSegment(from, to, length);
+        value start = segment[0];
+        value len = segment[1];
+        if (start < length && len > 0) {
+            value keepHead = start > 0;
+            value lastPreSegmentCell = advanceBy(start-1, head);
+            value skipCells = len + (keepHead then 1 else 0);
+            value firstPostSegmentCell 
+                    = advanceBy(skipCells, lastPreSegmentCell else head);
+            if (!keepHead) {
+                head = lastPreSegmentCell else firstPostSegmentCell;
+            }
+            if (exists preCell = lastPreSegmentCell) {
+                preCell.rest = firstPostSegmentCell;
+            }
+            if (len >= length) {
+                tail = null;
+            }
+            length -= len;
+        }
+    }
 
     Cell<Element>? advanceBy(Integer cells, Cell<Element>? start) {
         if (cells < 0) {
@@ -450,32 +471,13 @@ shared class LinkedList<Element>(elements = {})
         }
         return result;
     }
-
-    deleteSegment(Integer from, Integer length) => deleteSpan(*segmentToSpan(from, length));
-
-    shared actual void deleteSpan(Integer from, Integer to)  {
-        value reversableSegment = toReversableSegment(from, to, length);
-        value actualFrom = reversableSegment[0];
-        value len = reversableSegment[1];
-        if (actualFrom >= length || len <= 0) {
-            return;
-        }
-        value keepHead = actualFrom > 0;
-        value lastPreSegmentCell = advanceBy(actualFrom - 1, head);
-        value skipCells = len + (keepHead then 1 else 0);
-        value firstPostSegmentCell  = advanceBy(skipCells, lastPreSegmentCell else head);
-        if (!keepHead) {
-            head = lastPreSegmentCell else firstPostSegmentCell;
-        }
-        if (exists preCell = lastPreSegmentCell) {
-            preCell.rest = firstPostSegmentCell;
-        }
-        if (len >= length) {
-            tail = null;
-        }
-        length -= len;
-    }
-
+    
+    segment(Integer from, Integer length) 
+            => span(*segmentToSpan(from, length));
+    
+    deleteSegment(Integer from, Integer length) 
+            => deleteSpan(*segmentToSpan(from, length));
+    
     defines(Integer index)
             => index >= 0 && index < length;
 
