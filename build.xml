@@ -72,11 +72,11 @@
     </moduleset>
     
     <moduleset id="modules.test.js">
-    	<module name="test.ceylon.test.suite"/>
-        <module name="test.ceylon.collection"/>
-        <module name="test.ceylon.html"/>
-        <module name="test.ceylon.json"/>
-        <module name="test.ceylon.time"/>
+    	<module name="test.ceylon.test.suite" version="1.1.0"/>
+        <module name="test.ceylon.collection" version="1.1.0"/>
+        <module name="test.ceylon.html" version="1.1.0"/>
+        <module name="test.ceylon.json" version="1.1.0"/>
+        <module name="test.ceylon.time" version="1.1.0"/>
     </moduleset>
     
     <target name="clean"
@@ -145,27 +145,10 @@
     </target>
 
     <target name="test-js" depends="compile-test-js">
-        <ceylon-run-js module="test.ceylon.collection/${sdk.version}"
-            executable="${ceylon.executable}">
+        <ceylon-test-js>
             <reposet refid="reposet.run.test"/>
-        </ceylon-run-js>
-        
-        <ceylon-run-js module="test.ceylon.json/${sdk.version}"
-            executable="${ceylon.executable}">
-            <reposet refid="reposet.run.test"/>
-        </ceylon-run-js>
-        
-        <ceylon-run-js module="test.ceylon.time/${sdk.version}"
-            executable="${ceylon.executable}">
-            <reposet refid="reposet.run.test"/>
-          <rep url="${test.repo}"/>
-        </ceylon-run-js>
-        
-        <ceylon-run-js module="test.ceylon.html/${sdk.version}"
-            executable="${ceylon.executable}">
-            <reposet refid="reposet.run.test"/>
-        </ceylon-run-js>
-
+            <moduleset refid="modules.test.js"/>
+        </ceylon-test-js>
     </target>
 
     <target name="test" depends="compile-test,test-jvm,test-js"

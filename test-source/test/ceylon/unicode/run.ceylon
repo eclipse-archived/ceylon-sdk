@@ -27,7 +27,3 @@ test void testDirectionality() {
     assertEquals(paragraphSeparator, directionality('\n'));
     assertEquals(arabicNumber, directionality('\{ARABIC-INDIC DIGIT ONE}'));
 }
-
-shared void run(){
-    createTestRunner([`module test.ceylon.unicode`], [SimpleLoggingListener()]).run();
-}

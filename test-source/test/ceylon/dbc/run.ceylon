@@ -3,9 +3,7 @@ import ceylon.dbc {
     newConnectionFromDataSource
 }
 import ceylon.test {
-    beforeTest,
-    SimpleLoggingListener,
-    createTestRunner
+    beforeTest
 }
 
 import org.h2.jdbcx {
@@ -40,5 +38,3 @@ shared beforeTest void setup() {
     }
     sql.Update("DELETE FROM test1").execute();
 }
-
-void run() => createTestRunner([`module test.ceylon.dbc`], [SimpleLoggingListener()]).run();
