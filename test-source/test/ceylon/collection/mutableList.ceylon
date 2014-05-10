@@ -277,7 +277,7 @@ shared interface MutableListTests satisfies ListTests {
         assertTrue(iter.next() is Finished);
     }
 
-    test shared void testTuncrate() {
+    test shared void testTruncate() {
         variable value list = createList {};
         list.truncate(0);
         assertEquals(list, []);
