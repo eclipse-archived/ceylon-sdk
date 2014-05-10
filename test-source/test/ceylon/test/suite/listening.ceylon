@@ -41,9 +41,9 @@ shared void shouldFireEventsForIgnored() {
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BarWithIgnore]");
-    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.internal.IgnoreException \"\")]");
+    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.core.IgnoreException \"\")]");
     assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::BarWithIgnore - ignored]");
-    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.internal.IgnoreException \"ignore function foo\")]");
+    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core.IgnoreException \"ignore function foo\")]");
     assertEquals(lines[5], "TestRunFinishEvent");
 }
 
