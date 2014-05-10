@@ -67,8 +67,8 @@ module ceylon.net "1.1.0" {
     // -- java modules --
     import io.undertow.core "1.0.0.Beta20";
 
-    import "org.jboss.xnio.api" "3.1.0.CR7";
-    import "org.jboss.xnio.nio" "3.1.0.CR7";
+    import org.jboss.xnio.api "3.1.0.CR7";
+    import org.jboss.xnio.nio "3.1.0.CR7";
     import ceylon.interop.java "1.1.0";
     
     //TODO remove transitive dependency
