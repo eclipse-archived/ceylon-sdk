@@ -1,6 +1,11 @@
-import ceylon.test { ... }
+import ceylon.test {
+    ...
+}
+import ceylon.test.core {
+    DefaultLoggingListener
+}
 
-shared class TestLoggingListener(colorWhite, colorGreen, colorRed) extends SimpleLoggingListener() {
+shared class TestLoggingListener(colorWhite, colorGreen, colorRed) extends DefaultLoggingListener() {
     
     String? colorWhite;
     String? colorGreen;

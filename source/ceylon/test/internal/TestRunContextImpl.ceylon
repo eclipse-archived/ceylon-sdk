@@ -11,7 +11,7 @@ import ceylon.test.event {
     ...
 }
 
-class TestRunContextImpl(runner, result) satisfies TestRunContext {
+shared class TestRunContextImpl(runner, result) satisfies TestRunContext {
     
     shared actual TestRunner runner;
     

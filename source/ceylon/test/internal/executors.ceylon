@@ -5,7 +5,7 @@ import ceylon.test.event {
     ...
 }
 
-class GroupTestExecutor(description, TestExecutor[] children) satisfies TestExecutor {
+shared class GroupTestExecutor(description, TestExecutor[] children) satisfies TestExecutor {
     
     shared actual TestDescription description;
     
@@ -51,7 +51,7 @@ class GroupTestExecutor(description, TestExecutor[] children) satisfies TestExec
     
 }
 
-class ErrorTestExecutor(description, Throwable exception) satisfies TestExecutor {
+shared class ErrorTestExecutor(description, Throwable exception) satisfies TestExecutor {
     
     shared actual TestDescription description;
     

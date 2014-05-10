@@ -13,6 +13,9 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.test.internal {
+    ...
+}
 
 "Default implementation of [[TestRunner]]."
 shared class DefaultTestRunner(

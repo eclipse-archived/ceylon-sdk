@@ -5,7 +5,7 @@ import ceylon.test.event {
     ...
 }
 
-class TestRunResultImpl() satisfies TestRunResult {
+shared class TestRunResultImpl() satisfies TestRunResult {
     
     value resultsBuilder = SequenceBuilder<TestResult>();
     
