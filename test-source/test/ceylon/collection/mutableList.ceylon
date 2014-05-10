@@ -304,6 +304,16 @@ shared interface MutableListTests satisfies ListTests {
         assertEquals(list.size, 0);
         assertEquals(list, []);
     }
+    
+    test shared void testReplace() {
+        value list = createList { "A", "B", "C" };
+        list.replace("A", "a");
+        assertEquals(list.sequence, ["a", "B", "C"], "replace");
+        assertTrue(list.replaceFirst("B", "b"), "can replaceFirst");
+        assertEquals(list.sequence, ["a", "b", "C"], "replaceFirst");
+        assertTrue(list.replaceLast("C", "c"), "can replaceLast");
+        assertEquals(list.sequence, ["a", "b", "c"], "replaceLast");
+    }
 
 }
 
