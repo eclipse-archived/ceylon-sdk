@@ -1,2 +1,2 @@
 "Contains internal implementation of the test module."
-package ceylon.test.internal;
+shared package ceylon.test.internal;

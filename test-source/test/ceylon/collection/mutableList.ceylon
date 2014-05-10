@@ -197,6 +197,20 @@ shared interface MutableListTests satisfies ListTests {
         list.deleteSpan(0, 5);
         assertEquals(list, []);
         assertEquals(list.size, 0);
+
+        list.addAll { "A", "B", "C", "D", "E", "F"};
+        list.deleteSpan(4, 2);
+        assertEquals(list, ["A", "B", "F"]);
+        assertEquals(list.size, 3);
+        list.deleteSpan(5, 1);
+        assertEquals(list, ["A"]);
+        assertEquals(list.size, 1);
+        list.deleteSpan(4, 2);
+        assertEquals(list, ["A"]);
+        assertEquals(list.size, 1);
+        list.deleteSpan(2, -1);
+        assertEquals(list, []);
+        assertEquals(list.size, 0);
     }
 
     test shared void testInfill() {

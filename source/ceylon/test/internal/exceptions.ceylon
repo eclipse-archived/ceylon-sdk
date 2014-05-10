@@ -2,10 +2,19 @@ import ceylon.language.meta {
     type
 }
 
-class IgnoreException(shared String reason) extends Exception(reason) {
+"Thrown when test is ignored."
+shared class IgnoreException(reason) extends Exception(reason) {
+    
+    "Reason why the test is ignored."
+    shared String reason;
+    
 }
 
-class MultipleFailureException(shared Throwable[] exceptions) extends Exception() {
+"Thrown when multiple exceptions occurs."
+shared class MultipleFailureException(exceptions) extends Exception() {
+    
+    "The collected exceptions."
+    shared Throwable[] exceptions;
     
     shared actual String message {
         value message = StringBuilder();
@@ -20,4 +29,5 @@ class MultipleFailureException(shared Throwable[] exceptions) extends Exception(
         }
         return message.string;
     }
+    
 }
