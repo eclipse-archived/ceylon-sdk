@@ -2,7 +2,7 @@
 by ("Gavin King")
 shared interface SortedSet<Element>
         satisfies Set<Element> 
-                  & Ranged<Element,SortedSet<Element>>
+                  & Ranged<Element,Element,SortedSet<Element>>
         given Element satisfies Object {
     
     "The elements larger than the given [[value|element]],

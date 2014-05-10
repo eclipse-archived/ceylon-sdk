@@ -2,7 +2,7 @@
 by ("Gavin King")
 shared interface SortedMap<Key,out Item>
         satisfies Map<Key,Item> 
-                  & Ranged<Key,SortedMap<Key,Item>>
+                  & Ranged<Key,Key->Item,SortedMap<Key,Item>>
         given Key satisfies Object
         given Item satisfies Object {
     

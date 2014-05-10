@@ -5,7 +5,7 @@ import ceylon.test {
 
 shared interface RangedTests {
 
-    shared formal Ranged<Integer, List<String?>> createRanged({String?*} strings);
+    shared formal Ranged<Integer, String?, List<String?>> createRanged({String?*} strings);
 
     test shared void testSpan() {
         variable value ranged = createRanged {};
