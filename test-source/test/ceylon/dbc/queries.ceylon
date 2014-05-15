@@ -51,7 +51,7 @@ test void selectSingleValue() {
     value count = sql.Select("SELECT COUNT(*) FROM test1").singleValue<Integer>();
     assert(count == 3);
     
-    value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number>();
+    value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number<Integer>>();
     assert(min == 1);
     
     value max = sql.Select("SELECT MAX(count) FROM test1").singleValue<Object>();

@@ -7,7 +7,7 @@ by ("Gavin King")
 shared class TreeMap<Key, Item>(compare, entries={})
         satisfies MutableMap<Key,Item>
                   & SortedMap<Key,Item>
-                  & Ranged<Key,TreeMap<Key,Item>>
+                  & Ranged<Key,Key->Item,TreeMap<Key,Item>>
         given Key satisfies Object
         given Item satisfies Object {
     

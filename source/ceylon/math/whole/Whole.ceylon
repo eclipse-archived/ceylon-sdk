@@ -31,6 +31,16 @@ shared interface Whole
     throws(`class Exception`, "If passed a negative modulus")
     shared formal Whole powerRemainder(Whole exponent, 
                                        Whole modulus);
+    
+    "The number, represented as an [[Integer]]. If the number is too 
+     big to fit in an Integer then an Integer corresponding to the
+     lower order bits is returned."
+    shared formal Integer integer;
+    
+    "The number, represented as a [[Float]]. If the magnitude of this number 
+     is too large the result will be `infinity` or `-infinity`. If the result
+     is finite, precision may still be lost."
+    shared formal Float float;
 }
 
 

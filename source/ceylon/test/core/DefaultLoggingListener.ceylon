@@ -1,9 +1,12 @@
+import ceylon.test {
+    ...
+}
 import ceylon.test.event {
     ...
 }
 
-"A [[TestListener]] which prints information about test execution to the standard output."
-shared class SimpleLoggingListener(
+"A [[TestListener]] which prints information about test execution."
+shared class DefaultLoggingListener(
     "A function that log the given line."
     void write(String line) => print(line)) satisfies TestListener {
     
@@ -98,4 +101,5 @@ shared class SimpleLoggingListener(
         }
         return sb.string;
     }
+    
 }

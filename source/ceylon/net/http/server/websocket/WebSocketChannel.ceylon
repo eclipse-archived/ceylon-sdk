@@ -6,7 +6,7 @@ shared interface WebSocketChannel {
     "Idle timeout in milliseconds for this WebSocketSession. 
      The session will be closed if nothing was received or send in this time.
      If smaller then 1 no timeout is used."
-    shared formal Number idleTimeout;
+    shared formal Integer idleTimeout;
 
     "Return true if the session is open and connected"
     shared formal Boolean open();

@@ -4,7 +4,7 @@ import ceylon.language.meta.declaration {
 import ceylon.language.meta.model {
     ...
 }
-import ceylon.test.internal {
+import ceylon.test.core {
     DefaultTestRunner
 }
 

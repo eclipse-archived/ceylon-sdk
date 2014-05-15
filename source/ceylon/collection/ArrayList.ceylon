@@ -215,13 +215,14 @@ shared class ArrayList<Element>
             if (exists elem = array[i], elem==element) {
                 array.set(i, replacement);
             }
+            i++;
         }
     }
 
     shared actual Boolean replaceFirst(Element&Object element,
             Element replacement) {
         if (exists index = firstOccurrence(element)) {
-            set(index, element);
+            set(index, replacement);
             return true;
         }
         else {
@@ -232,7 +233,7 @@ shared class ArrayList<Element>
     shared actual Boolean replaceLast(Element&Object element,
     Element replacement) {
         if (exists index = lastOccurrence(element)) {
-            set(index, element);
+            set(index, replacement);
             return true;
         }
         else {

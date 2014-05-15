@@ -60,7 +60,7 @@ shared void assertFalse(
 throws (`class AssertionError`, "When _val_ is not null.")
 shared void assertNull(
     "The value to be checked."
-    Object? val,
+    Anything val,
     "The message describing the problem."
     String? message = null) {
     if (exists val) {
@@ -72,7 +72,7 @@ shared void assertNull(
 throws (`class AssertionError`, "When _val_ is null.")
 shared void assertNotNull(
     "The value to be checked."
-    Object? val,
+    Anything val,
     "The message describing the problem."
     String? message = null) {
     if (!val exists) {
@@ -84,13 +84,13 @@ shared void assertNotNull(
 throws (`class AssertionComparisonError`, "When _actual_ != _expected_.")
 shared void assertEquals(
     "The actual value to be checked."
-    Object? actual,
+    Anything actual,
     "The expected value."
-    Object? expected,
+    Anything expected,
     "The message describing the problem."
     String? message = null,
     "The compare function."
-    Boolean compare(Object? val1, Object? val2) => equalsCompare(actual, expected)) {
+    Boolean compare(Anything val1, Anything val2) => equalsCompare(actual, expected)) {
     if (!compare(actual, expected)) {
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
@@ -103,13 +103,13 @@ shared void assertEquals(
 throws (`class AssertionComparisonError`, "When _actual_ == _expected_.")
 shared void assertNotEquals(
     "The actual value to be checked."
-    Object? actual,
+    Anything actual,
     "The expected value."
-    Object? expected,
+    Anything expected,
     "The message describing the problem."
     String? message = null,
     "The compare function."
-    Boolean compare(Object? val1, Object? val2) => equalsCompare(actual, expected)) {
+    Boolean compare(Anything val1, Anything val2) => equalsCompare(actual, expected)) {
     if (compare(actual, expected)) {
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
@@ -190,7 +190,7 @@ shared class ExceptionAssert(
 
 "Compares two things. Returns true if both are null or both are non-null and 
  are the same according to [[Object.equals]]."
-shared Boolean equalsCompare(Object? obj1, Object? obj2) {
+shared Boolean equalsCompare(Anything obj1, Anything obj2) {
     if (exists obj1) {
         if (exists obj2) {
             return obj1 == obj2;
@@ -199,7 +199,7 @@ shared Boolean equalsCompare(Object? obj1, Object? obj2) {
     return obj1 exists == obj2 exists;
 }
 
-String nullSafeString(Object? obj) {
+String nullSafeString(Anything obj) {
     if (exists obj) {
         return obj.string;
     }

@@ -24,7 +24,7 @@ shared class MessageToBig(String? reason = null) extends CloseReason(1009, reaso
 shared class MissingExtension(String? reason = null) extends CloseReason(1010, reason) {}
 shared class UnexpectedError(String? reason = null) extends CloseReason(1011, reason) {}
 
-Boolean isValid(Number code) {
+Boolean isValid(Integer code) {
     value intCode = code.integer;
     if (intCode > 0 && intCode <= 999 || intCode >= 1004 && intCode <= 1006
             || intCode >= 1012 && intCode <= 2999) {

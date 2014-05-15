@@ -7,7 +7,7 @@ by ("Gavin King")
 shared class TreeSet<Element>(compare, elements={})
         satisfies MutableSet<Element>
                   & SortedSet<Element>
-                  & Ranged<Element,TreeSet<Element>>
+                  & Ranged<Element,Element,TreeSet<Element>>
         given Element satisfies Object {
 
      "A comparator function used to sort the elements."

@@ -131,6 +131,10 @@ final class WholeImpl(BigInteger num)
 
     shared actual Whole power(Whole other) {
         assert (is WholeImpl other);
+        "exponent must be non-negative"
+        assert (!other.negative);
+        "exponent too large"
+        assert (other <= intMax);
         if (this == -oneImpl) {
             if (other % two == zeroImpl) {
                 return oneImpl;
@@ -140,14 +144,8 @@ final class WholeImpl(BigInteger num)
         } else if (this == oneImpl) {
             return oneImpl;
         }
-        if (other < zeroImpl) {
-            throw Exception("Unsupported power `` this 
-            ``**`` other ``");
-        } else if (other == 0) {
+        if (other.zero) {
             return oneImpl;
-        } else if (other > intMax) {
-            throw Exception("Unsupported power `` this 
-            ``**`` other ``");
         }
         return WholeImpl(implementation
                 .pow(other.implementation.intValue()));
@@ -172,5 +170,12 @@ final class WholeImpl(BigInteger num)
     shared actual Whole timesInteger(Integer integer) {
         return WholeImpl(implementation.multiply(BigInteger.valueOf(integer)));
     }
+    
+    shared actual Whole powerOfInteger(Integer integer) {
+        "exponent must be non-negative"
+        assert (integer>=0);
+        return WholeImpl(implementation.pow(integer));
+    }
+    
     
 }

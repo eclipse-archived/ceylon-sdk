@@ -4,7 +4,7 @@ import ceylon.test { ... }
 
 import java.lang { ArithmeticException }
 
-Boolean strictly(Object? expect, Object? got) {
+Boolean strictly(Anything expect, Anything got) {
     if (exists expect) {
         if (is Decimal expect) {
             if (exists got) {
