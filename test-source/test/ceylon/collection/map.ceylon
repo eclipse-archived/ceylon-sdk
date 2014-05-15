@@ -27,11 +27,34 @@ void doTestMap(MutableMap<String,String> map) {
     map.clear();
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
-    assertTrue(!map.defines("fu"), "f"); // equality
+    assertTrue(!map.defines("fu"), "f");
+    
+    function toString(Integer i) => i.string;
+    
+    // clone test
+    for (number in 1..100) {
+        map.put(number.string, "#" + number.string);
+    }
+    value clone = map.clone();
+    assertEquals(map, clone);
+    map.remove("10");
+    assertTrue(map.definesEvery((1..9).map(toString)));
+    assertTrue(map.definesEvery((11..100).map(toString)));
+    assertFalse(map.defines("10"));
+    assertTrue(clone.definesEvery((1..100).map(toString)));
+    
+    clone.removeAll((60..70).map(toString));
+    assertTrue(clone.definesEvery((1..59).map(toString)));
+    assertTrue(clone.definesEvery((71..100).map(toString)));
+    assertFalse(clone.definesAny((60..70).map(toString)));
+    assertTrue(map.definesEvery((11..100).map(toString)));
 }
 
 shared test void testMap(){
-    doTestMap(TreeMap<String,String>((String x, String y)=>x<=>y));
+    value treeMap = TreeMap<String,String>((String x, String y)=>x<=>y);
+    doTestMap(treeMap);
+    treeMap.assertInvariants();
+    treeMap.clone().assertInvariants();
     doTestMap(HashMap<String,String>());
 }
 
