@@ -1,5 +1,9 @@
-import ceylon.collection { ... }
-import ceylon.test { ... }
+import ceylon.collection {
+    ...
+}
+import ceylon.test {
+    ...
+}
 
 void doTestMap(MutableMap<String,String> map) {
     assertEquals("{}", map.string);
@@ -37,30 +41,46 @@ shared test void testMapEquality() {
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{"b"->2});
     assertNotEquals(HashMap{"a"->1, "b"->2}, HashMap{});
-    
+
     assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2, "a"->1});
     assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2, "a"->2});
     assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{"b"->2});
     assertNotEquals(naturalOrderTreeMap{"a"->1, "b"->2}, naturalOrderTreeMap{});
     assertEquals(naturalOrderTreeMap{}, naturalOrderTreeMap{});
-    
+
     assertEquals(naturalOrderTreeMap{}, HashMap{});
     assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
 }
 
 void doTestMapRemove(MutableMap<String,String> map) {
-    map.put("a", "b");
-    map.put("c", "d");
-    assertEquals(2, map.size);
-    assertEquals("b", map.remove("a"));
-    assertEquals(1, map.size);
-    assertEquals("d", map["c"]);
-    assertEquals(null, map["a"]);
-    assertEquals("d", map.remove("c"));
-    assertEquals(0, map.size);
-    assertEquals(null, map["c"]);
-    assertEquals(null, map["a"]);
-    assertEquals(null, map.remove("c"));
+    assertEquals(map.put("a", "A"), null);
+    assertEquals(map.put("b", "B"), null);
+    assertEquals(map.put("c", "C"), null);
+    assertEquals(map.remove("A"), null);
+    assertEquals(map.remove("WHATEVER"), null);
+    assertEquals(map.remove("a"), "A");
+    assertEquals(map.size, 2);
+    assertEquals(map["b"], "B" );
+    assertEquals(map["c"], "C" );
+    assertEquals(map.remove("a"), null);
+    assertEquals(map.remove("b"), "B");
+    assertEquals(map.size, 1);
+    assertEquals(map["b"], null );
+    assertEquals(map["c"], "C" );
+    assertEquals(map.put("d", "D"), null);
+    assertEquals(map["a"], null );
+    assertEquals(map["b"], null );
+    assertEquals(map["c"], "C" );
+    assertEquals(map["d"], "D" );
+    assertEquals(map.size, 2);
+    assertEquals(map.remove("b"), null);
+    assertEquals(map.remove("c"), "C");
+    assertEquals(map.remove("d"), "D");
+    assertEquals(map["a"], null );
+    assertEquals(map["b"], null );
+    assertEquals(map["c"], null );
+    assertEquals(map["d"], null );
+    assertEquals(map.size, 0);
 }
 
 shared test void testMapRemove(){
@@ -110,46 +130,138 @@ shared test void testMapDefines() {
 }
 
 shared test void testTreeMap() {
-    value treeMap = TreeMap<Integer, String> { 
-        function compare(Integer x, Integer y) => x<=>y;  
-        200->"", 10->"wwwww", 5->"ddddd"
+    value treeMap = TreeMap<Character, Integer> {
+        function compare(Character c1, Character c2) => c1 <=> c2;
     };
+
+    assertEquals(treeMap.put('a', 1), null);
+    assertEquals(treeMap.put('b', 2), null);
+    assertEquals(treeMap.put('c', 3), null);
     treeMap.assertInvariants();
-    //for (e in treeMap) {
-    //    print(e);
-    //}
-    //print(treeMap);
-    assert (treeMap.size==3);
-    treeMap.put(1, "hello");
-    treeMap.put(2, "world");
-    treeMap.put(3, "goodbye");
-    treeMap.put(-1, "gavin");
-    treeMap.put(2, "everyone");
-    treeMap.put(5, "stuff");
-    treeMap.put(0, "nothing");
+
+    assertEquals(treeMap.remove('A'), null);
     treeMap.assertInvariants();
-    //for (e in treeMap) {
-    //    print(e);
-    //}
-    print(treeMap);
-    print(treeMap.higherEntries(4));
-    print(treeMap.lowerEntries(4));
-    print(treeMap[2..4]);
-    print(treeMap[2:4]);
-    assert (treeMap.size==8);
-    treeMap.remove(5);
-    treeMap.remove(-1);
-    treeMap.remove(0);
+
+    assertEquals(treeMap.remove('W'), null);
     treeMap.assertInvariants();
-    assert (treeMap.size==5);
-    treeMap.remove(200);
-    treeMap.remove(10);
-    treeMap.remove(5);
+    assertEquals(treeMap.remove('a'), 1);
     treeMap.assertInvariants();
-    //for (e in treeMap) {
-    //    print(e);
-    //}
-    //print(treeMap);
-    assert (treeMap.size==3);
-    
+
+    assertEquals(treeMap.size, 2);
+    assertEquals(treeMap['b'], 2 );
+    assertEquals(treeMap['c'], 3 );
+    assertEquals(treeMap.remove('a'), null);
+    treeMap.assertInvariants();
+    assertEquals(treeMap.remove('b'), 2);
+    treeMap.assertInvariants();
+
+    assertEquals(treeMap.size, 1);
+    assertEquals(treeMap['b'], null );
+    assertEquals(treeMap['c'], 3 );
+    treeMap.assertInvariants();
+    assertEquals(treeMap.put('d', 4), null);
+    assertEquals(treeMap['a'], null );
+    assertEquals(treeMap['b'], null );
+    assertEquals(treeMap['c'], 3 );
+    assertEquals(treeMap['d'], 4 );
+    assertEquals(treeMap.size, 2);
+    assertEquals(treeMap.remove('b'), null);
+    assertEquals(treeMap.remove('c'), 3);
+    assertEquals(treeMap.remove('d'), 4);
+    assertEquals(treeMap['a'], null );
+    assertEquals(treeMap['b'], null );
+    assertEquals(treeMap['c'], null );
+    assertEquals(treeMap['d'], null );
+    assertEquals(treeMap.size, 0);
+
+}
+
+test shared void treeMapLowerEntriesTest() {
+    value entries = { for (c in 'z'..'a') c -> 0 };
+    value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    assertEquals(map.lowerEntries('0').sequence, []);
+    assertEquals(map.lowerEntries('a').sequence, ['a' -> 0]);
+    assertEquals(map.lowerEntries('c').sequence, ['c' -> 0, 'b' -> 0, 'a' -> 0]);
+}
+
+test shared void treeMapHigherEntriesTest() {
+    value entries = { for (c in 'z'..'a') c -> 0 };
+    value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    assertEquals(map.higherEntries('~').sequence, []);
+    assertEquals(map.higherEntries('z').sequence, ['z' -> 0]);
+    assertEquals(map.higherEntries('x').sequence, ['x' -> 0, 'y' -> 0, 'z' -> 0]);
+}
+
+test shared void treeMapRangeTest() {
+    value entries = { for (c in 'z'..'a') c -> 0 };
+    value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    assertEquals(map['A'..'Z'].sequence, []);
+    assertEquals(map['c'..'f'].sequence, ['c' -> 0, 'd' -> 0, 'e' -> 0, 'f' -> 0]);
+    assertEquals(map['y':10].sequence, ['y' -> 0, 'z' -> 0]);
+}
+
+test shared void treeMapSegmentTest() {
+    value entries = { for (c in 'z'..'a') c -> 0 };
+    value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    assertEquals(map['a':0].sequence, []);
+    //assertEquals(map['A':2].sequence, []);
+    assertEquals(map['c':4].sequence, ['c' -> 0, 'd' -> 0, 'e' -> 0, 'f' -> 0]);
+    assertEquals(map['y':10].sequence, ['y' -> 0, 'z' -> 0]);
+}
+
+test shared void treeMapRemoveTest() {
+
+    value entries = { for (c in 'z'..'a') c -> 0 };
+    variable value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    function asEntry(Character c) => c -> 0;
+
+    // simplest-case, remove red leaf without rotation or repainting
+    map.remove('a');
+    map.assertInvariants();
+    assertTrue(map.containsEvery(('b'..'z').map(asEntry)));
+
+    map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    // remove black node with single, red child - no rotation, should just repaint the child black
+    map.remove('b');
+    map.assertInvariants();
+    assertTrue(map.containsEvery(('a'..'a').map(asEntry)));
+    assertTrue(map.containsEvery(('c'..'z').map(asEntry)));
+
+    map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    // remove black leaf node whose parent is red, causing a rotation to the right
+    map.remove('d');
+    map.assertInvariants();
+    assertTrue(map.containsEvery(('a'..'c').map(asEntry)));
+    assertTrue(map.containsEvery(('e'..'z').map(asEntry)));
+
+    map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    // remove black node with 2 children, left being red, right being black, requiring simple rotation
+    map.remove('e');
+    map.assertInvariants();
+    assertTrue(map.containsEvery(('a'..'d').map(asEntry)));
+    assertTrue(map.containsEvery(('f'..'z').map(asEntry)));
+
+    map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
+
+    // remove childless black node with red sibling, black parent, red grandparent
+    map.remove('f');
+    map.assertInvariants();
+    assertFalse(map.get('d') is Null);
+    assertTrue(map.containsEvery(('a'..'e').map(asEntry)));
+    assertTrue(map.containsEvery(('g'..'z').map(asEntry)));
+
+    // remove leaf node whose sibling and parent are black, causing the whole tree to rebalance
+    map.remove('v');
+    map.assertInvariants();
+    assertTrue(map.containsEvery((('a'..'e').map(asEntry))));
+    assertTrue(map.containsEvery(('g'..'u').map(asEntry)));
+    assertTrue(map.containsEvery(('w'..'z').map(asEntry)));
 }
