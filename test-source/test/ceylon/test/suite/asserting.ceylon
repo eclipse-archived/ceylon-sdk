@@ -113,9 +113,9 @@ shared void testAssertEquals() {
 
 test
 shared void testAssertEqualsCompare() {
-    assertEquals(1, 2, "never false", (Object? o1, Object? o2) => true);
+    assertEquals(1, 2, "never false", (Anything o1, Anything o2) => true);
     
-    assertThatException(()=>assertEquals(1, 1, "never true", (Object? o1, Object? o2) => false)).
+    assertThatException(()=>assertEquals(1, 1, "never true", (Anything o1, Anything o2) => false)).
             hasType(`AssertionComparisonError`);
 }
 
