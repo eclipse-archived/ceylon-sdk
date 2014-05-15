@@ -103,7 +103,7 @@ shared abstract class Printer(Boolean pretty = false){
     }
 
     "Prints an `Integer|Float`"
-    shared default void printNumber(Number n){
+    shared default void printNumber(Integer|Float n){
         print(n.string);
     }
 

@@ -24,7 +24,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
 
     shared actual Boolean closeFrameReceived => channel.closeFrameReceived;
 
-    shared actual Number idleTimeout => channel.idleTimeout;
+    shared actual Integer idleTimeout => channel.idleTimeout;
 
     shared actual Boolean open() => channel.open;
 
