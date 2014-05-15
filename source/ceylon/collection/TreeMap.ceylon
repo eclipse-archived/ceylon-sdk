@@ -405,8 +405,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                     rotateRight(p);
                 }
             }
-            value newParent = node.parent;
-            assert(exists newParent);
+            assert(exists newParent = node.parent);
             case3(node, newParent, node.sibling);
         }
 
@@ -443,9 +442,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 sr.red = false;
                 rotateLeft(s);
             }
-            value newParent = node.parent;
-            value newS = node.sibling;
-            assert(exists newParent, exists newS);
+            assert(exists newParent = node.parent, exists newS = node.sibling);
             case6(node, newParent, newS);
         }
 
