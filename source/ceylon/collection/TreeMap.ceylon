@@ -17,14 +17,14 @@ shared class TreeMap<Key, Item>(compare, entries={})
     "The initial entries in the map."
     {<Key->Item>*} entries;
     
-    class Node(key, item) {
+    class Node(key, item, red) {
         
         shared variable Key key;
         shared variable Item item;
         shared variable Node? left=null;
         shared variable Node? right=null;
         shared variable Node? parent=null;
-        shared variable Boolean red=true;
+        shared variable Boolean red;
         
         shared Boolean onLeft {
             if (exists parentLeft=parent?.left) {
@@ -100,7 +100,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
         
         shared Node clone(TreeMap<Key,Item> clonedMap) {
-            value clone = clonedMap.Node(key, item);
+            value clone = clonedMap.Node(key, item, red);
             if (exists left = this.left) {
                 value leftClone = left.clone(clonedMap);
                 clone.left = leftClone;
@@ -316,7 +316,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
     }
     
     shared actual Item? put(Key key, Item item) {
-        value newNode = Node(key, item);
+        value newNode = Node(key, item, true);
         if (exists root=this.root) {
             variable Node node = root;
             while (true) {
