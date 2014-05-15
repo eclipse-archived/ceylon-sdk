@@ -20,7 +20,7 @@ see(`class Rounding`)
 see(`value unlimitedPrecision`)
 shared interface Decimal
         of DecimalImpl
-        satisfies Scalar<Decimal> & 
+        satisfies Number<Decimal> & 
                   Exponentiable<Decimal,Integer> {
 
     "The platform-specific implementation object, if any. This 
@@ -176,6 +176,16 @@ shared interface Decimal
     see(`interface Whole`)
     see(`value integer`)
     shared formal Whole whole;
+    
+    "The number, represented as an [[Integer]]. If the number is too 
+     big to fit in an Integer then an Integer corresponding to the
+     lower order bits is returned."
+    shared formal Integer integer;
+    
+    "The number, represented as a [[Float]]. If the magnitude of this number 
+     is too large the result will be `infinity` or `-infinity`. If the result
+     is finite, precision may still be lost."
+    shared formal Float float;
 
 }
 

@@ -5,8 +5,8 @@ import java.math {
 }
 
 "The `number.integer` converted to a `Whole`."
-shared Whole wholeNumber(Number number) {
-    Integer int = number.integer;
+shared Whole wholeNumber(Integer number) {
+    Integer int = number;
     if (int == 0) {
         return zeroImpl;
     } else if (int == 1) {
