@@ -70,16 +70,16 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
     "Transforms a sequence of 3 bytes into 4 characters based on base64 table"
     void encodeBytesToChars( ByteBuffer input, ByteBuffer encoded ) {
         value available = input.available;
-        value codePoint1 = input.get().integer;
+        value codePoint1 = input.get();
         assert(exists char1 = table[codePoint1.rightLogicalShift(2)]);
 
         variable value codePoint2 = 0;
         variable value codePoint3 = 0;
         if( available >= 3 ) {
-            codePoint2 = input.get().integer;
-            codePoint3 = input.get().integer;
+            codePoint2 = input.get();
+            codePoint3 = input.get();
         } else if( available == 2 ) {
-            codePoint2 = input.get().integer;
+            codePoint2 = input.get();
         }
 
         assert(exists char2 = table[((codePoint1.and(3)).leftLogicalShift(4)).or((codePoint2.rightLogicalShift(4)))]);

@@ -63,7 +63,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     }
 
     shared actual void sendClose(CloseReason reason) {
-        wsSendCloseBlocking(CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(), channel);
+        wsSendCloseBlocking(CloseMessage(reason.code, reason.reason else "").toByteBuffer(), channel);
     }
 
     shared actual String hostname => exchange.getRequestHeader(hostStringHeader);
@@ -76,7 +76,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
             Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendClose(
-            CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(),
+            CloseMessage(reason.code, reason.reason else "").toByteBuffer(),
             channel,
             wrapCallbackSend(onCompletion, onError, this));
     }
