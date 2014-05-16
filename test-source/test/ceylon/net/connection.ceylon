@@ -4,7 +4,7 @@ import ceylon.net.http.client { ... }
 import ceylon.test { ... }
 
 void testJSON(Object json){
-    assertEquals(70, json.size, "Object size");
+    assertEquals(69, json.size, "Object size");
     assertEquals("http://ceylon-lang.org", json["homepage"], "Homepage");
     
     if(is Object owner = json["owner"]){
