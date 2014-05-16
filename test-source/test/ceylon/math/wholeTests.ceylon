@@ -74,11 +74,11 @@ test void wholeTests() {
     try {
         Whole w = wholeNumber(0) ^ wholeNumber(-1);
         fail("0^-1");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
     try {
         Whole w = wholeNumber(0) ^ wholeNumber(-2);
         fail("0^-2");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
 
     assertEquals(wholeNumber(-1), wholeNumber(-1) ^ wholeNumber(1), "-1^1");
     assertEquals(wholeNumber(1), wholeNumber(-1) ^ wholeNumber(0), "-1^0");
@@ -90,11 +90,11 @@ test void wholeTests() {
     try {
         Whole w = wholeNumber(-2) ^ wholeNumber(-1);
         fail("-2^-1");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
     try {
         Whole w = wholeNumber(-2) ^ wholeNumber(-2);
         fail("-2^-2");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
 
     print("Whole comparison");
     assertTrue(larger == wholeNumber(2).compare(wholeNumber(1)), "2.compare(1)");

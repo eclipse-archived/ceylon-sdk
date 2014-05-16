@@ -149,7 +149,7 @@ test void power() {
     try {
         Decimal d = decimalNumber(2)^(-2);
         fail();
-    } catch (Exception e) {
+    } catch (AssertionError e) {
     }
 
     value r = round(2, halfUp);
