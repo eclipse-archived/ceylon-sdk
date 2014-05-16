@@ -72,11 +72,11 @@
     </moduleset>
     
     <moduleset id="modules.test.js">
-    	<module name="test.ceylon.test.suite" version="1.1.0"/>
-        <module name="test.ceylon.collection" version="1.1.0"/>
-        <module name="test.ceylon.html" version="1.1.0"/>
-        <module name="test.ceylon.json" version="1.1.0"/>
-        <module name="test.ceylon.time" version="1.1.0"/>
+    	<module name="test.ceylon.test.suite"/>
+        <module name="test.ceylon.collection"/>
+        <module name="test.ceylon.html"/>
+        <module name="test.ceylon.json"/>
+        <module name="test.ceylon.time"/>
     </moduleset>
     
     <target name="clean"
