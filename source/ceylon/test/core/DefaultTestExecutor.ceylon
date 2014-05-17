@@ -17,8 +17,6 @@ import ceylon.test.event {
     ...
 }
 
-
-
 "Default implementation of [[TestExecutor]]."
 shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassDeclaration? classDeclaration) satisfies TestExecutor {
     
@@ -63,7 +61,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
         
     }
-
+        
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
@@ -79,46 +77,43 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     
     shared default void verify(TestRunContext context, void execute())() {
         try {
-            verifyClassAttributes();
-            verifyClassParameters();
-            verifyClassTypeParameters();
+            if (exists classDeclaration,
+                is Exception result = classValidationCache.getResultFor(classDeclaration, this)) {
+                throw result;
+            }
             verifyFunctionAnnotations();
             verifyFunctionParameters();
             verifyFunctionTypeParameters();
             verifyFunctionReturnType();
             verifyBeforeCallbacks();
             verifyAfterCallbacks();
+            execute();
         }
         catch (Exception e) {
             context.fireTestError(TestErrorEvent(TestResult(description, error, e)));
-            return;
-        }
-        
-        execute();
-    }
-    
-    shared default void verifyClassAttributes() {
-        if (exists classDeclaration) {
-            if (!classDeclaration.toplevel) {
-                throw Exception("class ``classDeclaration.qualifiedName`` should be toplevel");
-            }
-            if (classDeclaration.abstract) {
-                throw Exception("class ``classDeclaration.qualifiedName`` should not be abstract");
-            }
-            if (classDeclaration.anonymous) {
-                throw Exception("class ``classDeclaration.qualifiedName`` should not be anonymous");
-            }
         }
     }
     
-    shared default void verifyClassParameters() {
-        if (exists classDeclaration, !classDeclaration.parameterDeclarations.empty) {
+    shared default void verifyClassAttributes(ClassDeclaration classDeclaration) {
+        if (!classDeclaration.toplevel) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should be toplevel");
+        }
+        if (classDeclaration.abstract) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should not be abstract");
+        }
+        if (classDeclaration.anonymous) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should not be anonymous");
+        }
+    }
+    
+    shared default void verifyClassParameters(ClassDeclaration classDeclaration) {
+        if (!classDeclaration.parameterDeclarations.empty) {
             throw Exception("class ``classDeclaration.qualifiedName`` should have no parameters");
         }
     }
     
-    shared default void verifyClassTypeParameters() {
-        if (exists classDeclaration, !classDeclaration.typeParameterDeclarations.empty) {
+    shared default void verifyClassTypeParameters(ClassDeclaration classDeclaration) {
+        if (!classDeclaration.typeParameterDeclarations.empty) {
             throw Exception("class ``classDeclaration.qualifiedName`` should have no type parameters");
         }
     }
@@ -284,6 +279,35 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         } else {
             assert(exists i = instance());
             f.memberInvoke(i);
+        }
+    }
+    
+}
+
+object classValidationCache {
+    
+    value validatedClasses = HashMap<ClassDeclaration, Exception|Boolean>();
+    
+    shared Exception? getResultFor(ClassDeclaration declaration, DefaultTestExecutor executor) {
+        value result = validatedClasses.get(declaration) else doValidate(declaration, executor) else true;
+        validatedClasses.put(declaration, result);
+        switch(result)
+        case (is Exception) {
+            return result;
+        }
+        case (is Boolean) {
+            return null;
+        }
+    }
+    
+    Exception? doValidate(ClassDeclaration classDeclaration, DefaultTestExecutor executor) {
+        try {
+            executor.verifyClassAttributes(classDeclaration);
+            executor.verifyClassParameters(classDeclaration);
+            executor.verifyClassTypeParameters(classDeclaration);
+            return null;
+        } catch(e) {
+            return e;
         }
     }
     
