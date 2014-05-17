@@ -1,3 +1,9 @@
+import ceylon.collection {
+    ...
+}
+import ceylon.language.meta {
+    typeLiteral
+}
 import ceylon.language.meta.declaration {
     ...
 }
@@ -10,13 +16,54 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
-import ceylon.collection {
-    ...
-}
+
+
 
 "Default implementation of [[TestExecutor]]."
 shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassDeclaration? classDeclaration) satisfies TestExecutor {
     
+    function findClassCallbacks<CallbackType>()
+            given CallbackType satisfies Annotation {
+        void visit(ClassOrInterfaceDeclaration? decl, void do(ClassOrInterfaceDeclaration decl)) {
+            if (exists decl) {
+                do(decl);
+                visit(decl.extendedType?.declaration, do);
+                for (satisfiedType in decl.satisfiedTypes) {
+                    visit(satisfiedType.declaration, do);
+                }
+            }
+        }
+        value callbacks = HashSet<FunctionDeclaration>();
+        
+        visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
+            callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
+        });
+        visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
+            callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
+        });
+        visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
+            callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
+        });
+        return callbacks.sequence;    
+    }
+    
+    object callbackCache {
+        
+        value cache = HashMap<String, FunctionDeclaration[]>();
+        
+        shared FunctionDeclaration[] get(ClassDeclaration classDeclaration, Type<Object> callbackType) {
+            value key = classDeclaration.string + callbackType.string;
+            value cached = cache[key];
+            if (exists cached) {
+                return cached;
+            }
+            value callbacks = findClassCallbacks();
+            cache.put(key, callbacks);
+            return callbacks;
+        }
+        
+    }
+
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
@@ -224,34 +271,11 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     }
     
     FunctionDeclaration[] findCallbacks<CallbackType>() given CallbackType satisfies Annotation {
-        value callbacks = HashSet<FunctionDeclaration>();
-        
         if (exists classDeclaration) {
-            
-            void visit(ClassOrInterfaceDeclaration? decl, void do(ClassOrInterfaceDeclaration decl)) {
-                if (exists decl) {
-                    do(decl);
-                    visit(decl.extendedType?.declaration, do);
-                    for (satisfiedType in decl.satisfiedTypes) {
-                        visit(satisfiedType.declaration, do);
-                    }
-                }
-            }
-            
-            visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
-            });
-            visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
-            });
-            visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
-            });
+            return callbackCache.get(classDeclaration, typeLiteral<CallbackType>());
         } else {
-            callbacks.addAll(functionDeclaration.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
+            return functionDeclaration.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>();
         }
-        
-        return callbacks.sequence;
     }
     
     void invokeFunction(FunctionDeclaration f, Object?() instance) {
