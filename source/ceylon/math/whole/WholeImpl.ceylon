@@ -177,5 +177,8 @@ final class WholeImpl(BigInteger num)
         return WholeImpl(implementation.pow(integer));
     }
     
+    shared actual Whole neighbour(Integer offset) {
+        return plusInteger(offset);
+    }
     
 }

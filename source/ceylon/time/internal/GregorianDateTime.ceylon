@@ -420,5 +420,7 @@ shared class GregorianDateTime( date, time )
      Note that to have the _milliseconds of epoch_ it apply UTC zone."
     shared actual Integer integerValue => instant(timeZone.utc).millisecondsOfEpoch;
     
+    shared actual DateTime neighbour(Integer offset) => plusMilliseconds(offset);
+    
 
 }

@@ -289,6 +289,8 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Returns _day of era_ as it enumerable value"
     shared actual Integer integerValue => dayOfEra;
+    
+    shared actual Date neighbour(Integer offset) => plusDays(offset);
      
 }
 

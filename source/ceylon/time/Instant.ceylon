@@ -99,9 +99,6 @@ shared class Instant(millisecondsOfEpoch)
 	
     shared actual Integer integerValue => millisecondsOfEpoch;
     
-    shared actual Instant predecessor => Instant(millisecondsOfEpoch - 1);
-    
-    shared actual Instant successor => Instant(millisecondsOfEpoch + 1);
-    
+    shared actual Instant neighbour(Integer offset) => Instant(millisecondsOfEpoch+offset);
 
 }
