@@ -285,20 +285,16 @@ FunctionDeclaration[] findClassCallbacks<CallbackType>(ClassOrInterfaceDeclarati
             visit(satisfiedType.declaration, do);
         }
     }
-    value callbacks = HashSet<FunctionDeclaration>();
-    
     if (exists classDeclaration) {
+        value callbacks = HashSet<FunctionDeclaration>();
         visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-            callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
-        });
-        visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-            callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
-        });
-        visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
+            if (decl is ClassDeclaration|InterfaceDeclaration) {
+                callbacks.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
+            }
             callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
-        });    
+        });
     }
-    return callbacks.sequence;    
+    return [];
 }
 
 object callbackCache {
