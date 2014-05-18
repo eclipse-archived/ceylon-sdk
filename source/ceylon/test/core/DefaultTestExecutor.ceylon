@@ -288,9 +288,7 @@ FunctionDeclaration[] findClassCallbacks<CallbackType>(ClassOrInterfaceDeclarati
     if (exists classDeclaration) {
         value callbacks = HashSet<FunctionDeclaration>();
         visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-            if (decl is ClassDeclaration|InterfaceDeclaration) {
-                callbacks.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
-            }
+            callbacks.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
             callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
         });
     }
