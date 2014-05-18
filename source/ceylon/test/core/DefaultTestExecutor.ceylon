@@ -39,9 +39,10 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
      Returns true if the context is ok, false if any errors were fired."
     shared default Boolean verify(TestRunContext context) {
         try {
-            if (exists classDeclaration,
-                is Exception result = classValidationCache.getResultFor(classDeclaration, this)) {
-                throw result;
+            if (exists classDeclaration) {
+                verifyClassAttributes(classDeclaration);
+                verifyClassParameters(classDeclaration);
+                verifyClassTypeParameters(classDeclaration);
             }
             verifyFunctionAnnotations();
             verifyFunctionParameters();
@@ -231,36 +232,6 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     }
     
 }
-
-object classValidationCache {
-    
-    value validatedClasses = HashMap<ClassDeclaration, Exception|Boolean>();
-    
-    shared Exception? getResultFor(ClassDeclaration declaration, DefaultTestExecutor executor) {
-        value result = validatedClasses.get(declaration) else doValidate(declaration, executor) else true;
-        validatedClasses.put(declaration, result);
-        switch(result)
-        case (is Exception) {
-            return result;
-        }
-        case (is Boolean) {
-            return null;
-        }
-    }
-    
-    Exception? doValidate(ClassDeclaration classDeclaration, DefaultTestExecutor executor) {
-        try {
-            executor.verifyClassAttributes(classDeclaration);
-            executor.verifyClassParameters(classDeclaration);
-            executor.verifyClassTypeParameters(classDeclaration);
-            return null;
-        } catch(e) {
-            return e;
-        }
-    }
-    
-}
-
 
 FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDeclaration declaration, Type<CallbackType> type)
         given CallbackType satisfies Annotation {
