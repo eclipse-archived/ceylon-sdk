@@ -277,12 +277,17 @@ FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDecl
     }
     switch (declaration)
     case (is ClassOrInterfaceDeclaration){
-        value callbacks = HashSet<FunctionDeclaration>();
+        value callbacks = HashMap<Character, HashSet<FunctionDeclaration>> {
+            entries = { 'c'-> HashSet<FunctionDeclaration>(),
+                        'i' -> HashSet<FunctionDeclaration>(),
+                        'p' -> HashSet<FunctionDeclaration>() };
+        };
         visit(declaration, void(ClassOrInterfaceDeclaration decl) {
-            callbacks.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
-            callbacks.addAll(callbackCache.get(declaration.containingPackage, type));
+            value key = decl is ClassDeclaration then 'c' else 'i';
+            callbacks[key]?.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
+            callbacks['p']?.addAll(callbackCache.get(decl.containingPackage, type));
         });
-        return callbacks.sequence;
+        return concatenate(callbacks['c'] else {}, callbacks['i'] else {}, callbacks['p'] else {});
     }
     case (is Package) {
         return declaration.annotatedMembers<FunctionDeclaration,CallbackType>();
