@@ -257,7 +257,7 @@ object classValidationCache {
 }
 
 
-FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDeclaration declaration)
+FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDeclaration declaration, Type<CallbackType> type)
         given CallbackType satisfies Annotation {
     
     void visit(ClassOrInterfaceDeclaration decl, void do(ClassOrInterfaceDeclaration decl)) {
@@ -288,13 +288,14 @@ object callbackCache {
     
     value cache = HashMap<String, FunctionDeclaration[]>();
     
-    shared FunctionDeclaration[] get(ClassDeclaration|Package declaration, Type<Object> callbackType) {
+    shared FunctionDeclaration[] get<CallbackType>(ClassDeclaration|Package declaration, Type<CallbackType> callbackType)
+            given CallbackType satisfies Annotation {
         value key = declaration.string + callbackType.string;
         value cached = cache[key];
         if (exists cached) {
             return cached;
         }
-        value callbacks = doFindCallbacks(declaration);
+        value callbacks = doFindCallbacks(declaration, callbackType);
         cache.put(key, callbacks);
         return callbacks;
     }
