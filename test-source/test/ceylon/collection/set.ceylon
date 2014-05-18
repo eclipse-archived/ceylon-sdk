@@ -91,5 +91,11 @@ shared interface SetTests satisfies CategoryTests {
         assertEquals(createSet{"A", "B", "C"}.intersection(createSet{"Z", "X", "A", "M", "B"}), createSet{"A", "B"});
     }
 
+    test shared void testClone() {
+        value set = HashSet {"foo", "bar"};
+        assertEquals(set, set.clone());
+        assertEquals(set.clone().size, 2);
+        assertEquals(set.clone().string, "{ foo, bar }");
+    }
 
 }

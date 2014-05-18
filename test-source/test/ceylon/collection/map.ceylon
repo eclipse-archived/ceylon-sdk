@@ -288,3 +288,15 @@ test shared void treeMapRemoveTest() {
     assertTrue(map.containsEvery(('g'..'u').map(asEntry)));
     assertTrue(map.containsEvery(('w'..'z').map(asEntry)));
 }
+
+test shared void testMapClone() {
+    value map = HashMap {1->"foo", 2->"bar"};
+    assertEquals(map, map.clone());
+    assertEquals(map.clone().size, 2);
+    assertEquals(map.clone().string, "{ 1->foo, 2->bar }");
+    value tree = TreeMap { function compare(Integer x, Integer y) => x<=>y; 1->"foo", 2->"bar" };
+    assertEquals(tree, tree.clone());
+    assertEquals(tree.clone().size, 2);
+    assertEquals(tree.clone().string, "{ 1->foo, 2->bar }");
+}
+
