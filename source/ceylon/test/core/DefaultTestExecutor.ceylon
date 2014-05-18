@@ -213,11 +213,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     }
     
     FunctionDeclaration[] findCallbacks<CallbackType>() given CallbackType satisfies Annotation {
-        if (exists classDeclaration) {
-            return callbackCache.get(classDeclaration, typeLiteral<CallbackType>());
-        } else {
-            return functionDeclaration.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>();
-        }
+        return callbackCache.get(classDeclaration else functionDeclaration.containingPackage, typeLiteral<CallbackType>());
     }
     
     void invokeFunction(FunctionDeclaration f, Object? instance) {
@@ -261,7 +257,7 @@ object classValidationCache {
 }
 
 
-FunctionDeclaration[] findClassCallbacks<CallbackType>(ClassOrInterfaceDeclaration? classDeclaration)
+FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDeclaration declaration)
         given CallbackType satisfies Annotation {
     
     void visit(ClassOrInterfaceDeclaration decl, void do(ClassOrInterfaceDeclaration decl)) {
@@ -274,27 +270,31 @@ FunctionDeclaration[] findClassCallbacks<CallbackType>(ClassOrInterfaceDeclarati
             visit(satisfiedType.declaration, do);
         }
     }
-    if (exists classDeclaration) {
+    switch (declaration)
+    case (is ClassOrInterfaceDeclaration){
         value callbacks = HashSet<FunctionDeclaration>();
-        visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
+        visit(declaration, void(ClassOrInterfaceDeclaration decl) {
             callbacks.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
             callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
         });
+        return callbacks.sequence;
     }
-    return [];
+    case (is Package) {
+        return declaration.annotatedMembers<FunctionDeclaration,CallbackType>();
+    }
 }
 
 object callbackCache {
     
     value cache = HashMap<String, FunctionDeclaration[]>();
     
-    shared FunctionDeclaration[] get(ClassDeclaration classDeclaration, Type<Object> callbackType) {
-        value key = classDeclaration.string + callbackType.string;
+    shared FunctionDeclaration[] get(ClassDeclaration|Package declaration, Type<Object> callbackType) {
+        value key = declaration.string + callbackType.string;
         value cached = cache[key];
         if (exists cached) {
             return cached;
         }
-        value callbacks = findClassCallbacks(classDeclaration);
+        value callbacks = doFindCallbacks(declaration);
         cache.put(key, callbacks);
         return callbacks;
     }
