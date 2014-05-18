@@ -24,14 +24,13 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     
     shared actual default void execute(TestRunContext context) {
         Boolean contextOk = verify(context);
-        if (contextOk) {
+        if (contextOk && !testIgnored(context)) {
             Object? instance = getInstance();
-            Anything() executor = handleTestIgnore(context,
-                handleTestExecution(context, instance,
+            Anything() executor = handleTestExecution(context, instance,
                     handleAfterCallbacks(context, instance,
                         handleBeforeCallbacks(context, instance,
-                            handleTestInvocation(context, instance)))));
-            executor();    
+                            handleTestInvocation(context, instance))));
+            executor();
         }
     }
     
@@ -132,13 +131,13 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default void handleTestIgnore(TestRunContext context, void execute())() {
+    shared default Boolean testIgnored(TestRunContext context) {
         value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(functionDeclaration, classDeclaration);
         if (exists ignoreAnnotation) {
             context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, IgnoreException(ignoreAnnotation.reason))));
-            return;
+            return true;
         }
-        execute();
+        return false;
     }
     
     shared default void handleTestExecution(TestRunContext context, Object? instance, void execute())() {
