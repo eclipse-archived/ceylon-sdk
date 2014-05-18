@@ -23,17 +23,22 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
-        Object? instance = getInstance();
-        Anything() executor = verify(context,
-            handleTestIgnore(context,
+        Boolean contextOk = verify(context);
+        if (contextOk) {
+            Object? instance = getInstance();
+            Anything() executor = handleTestIgnore(context,
                 handleTestExecution(context, instance,
                     handleAfterCallbacks(context, instance,
                         handleBeforeCallbacks(context, instance,
-                            handleTestInvocation(context, instance))))));
-        executor();
+                            handleTestInvocation(context, instance)))));
+            executor();    
+        }
     }
     
-    shared default void verify(TestRunContext context, void execute())() {
+    "Verifies that the test context does not contain any errors.
+     
+     Returns true if the context is ok, false if any errors were fired."
+    shared default Boolean verify(TestRunContext context) {
         try {
             if (exists classDeclaration,
                 is Exception result = classValidationCache.getResultFor(classDeclaration, this)) {
@@ -45,10 +50,11 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             verifyFunctionReturnType();
             verifyBeforeCallbacks();
             verifyAfterCallbacks();
-            execute();
+            return true;
         }
         catch (Exception e) {
             context.fireTestError(TestErrorEvent(TestResult(description, error, e)));
+            return false;
         }
     }
     
