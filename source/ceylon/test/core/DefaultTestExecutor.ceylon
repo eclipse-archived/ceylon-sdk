@@ -182,12 +182,10 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
         
         value exceptions = exceptionsBuilder.sequence;
-        if (exceptions.size == 0) {
-            // noop
-        } else if (exceptions.size == 1) {
+        if (exceptions.size == 1) {
             assert (exists e = exceptions.first);
             throw e;
-        } else {
+        } else if (!exceptions.empty) {
             throw MultipleFailureException(exceptions);
         }
     }
