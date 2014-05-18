@@ -23,7 +23,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
-        Object?() instance = getInstanceProvider();
+        Object? instance = getInstance();
         Anything() executor = verify(context,
             handleTestIgnore(context,
                 handleTestExecution(context, instance,
@@ -135,25 +135,25 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         execute();
     }
     
-    shared default void handleTestExecution(TestRunContext context, Object?() instance, void execute())() {
+    shared default void handleTestExecution(TestRunContext context, Object? instance, void execute())() {
         value startTime = system.milliseconds;
         value elapsedTime => system.milliseconds - startTime;
         
         try {
-            context.fireTestStart(TestStartEvent(description, instance()));
+            context.fireTestStart(TestStartEvent(description, instance));
             execute();
-            context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime), instance()));
+            context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime), instance));
         }
         catch (Throwable e) {
             if (e is AssertionError) {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime), instance()));
+                context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime), instance));
             } else {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime), instance()));
+                context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime), instance));
             }
         }
     }
     
-    shared default void handleBeforeCallbacks(TestRunContext context, Object?() instance, void execute())() {
+    shared default void handleBeforeCallbacks(TestRunContext context, Object? instance, void execute())() {
         value callbacks = findCallbacks<BeforeTestAnnotation>().reversed;
         for (callback in callbacks) {
             invokeFunction(callback, instance);
@@ -161,7 +161,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         execute();
     }
     
-    shared default void handleAfterCallbacks(TestRunContext context, Object?() instance, void execute())() {
+    shared default void handleAfterCallbacks(TestRunContext context, Object? instance, void execute())() {
         value exceptionsBuilder = SequenceBuilder<Throwable>();
         try {
             execute();
@@ -192,7 +192,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default void handleTestInvocation(TestRunContext context, Object?() instance)() {
+    shared default void handleTestInvocation(TestRunContext context, Object? instance)() {
         invokeFunction(functionDeclaration, instance);
     }
     
@@ -205,22 +205,13 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default Object?() getInstanceProvider() {
-        object instanceProvider {
-            variable Object? instance = null;
-            shared Object? getInstance() {
-                if (exists classDeclaration) {
-                    if (!(instance exists)) {
-                        assert (is Class<Object,[]> classModel = classDeclaration.apply<Object>());
-                        instance = classModel();
-                    }
-                    return instance;
-                } else {
-                    return null;
-                }
-            }
+    shared default Object? getInstance() {
+        if (exists classDeclaration) {
+            assert (is Class<Object,[]> classModel = classDeclaration.apply<Object>());
+            return classModel();
+        } else {
+            return null;
         }
-        return instanceProvider.getInstance;
     }
     
     FunctionDeclaration[] findCallbacks<CallbackType>() given CallbackType satisfies Annotation {
@@ -231,11 +222,11 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    void invokeFunction(FunctionDeclaration f, Object?() instance) {
+    void invokeFunction(FunctionDeclaration f, Object? instance) {
         if (f.toplevel) {
             f.invoke();
         } else {
-            assert(exists i = instance());
+            assert(exists i = instance);
             f.memberInvoke(i);
         }
     }
