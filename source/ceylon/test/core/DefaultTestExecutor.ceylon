@@ -281,7 +281,7 @@ FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDecl
         value callbacks = HashSet<FunctionDeclaration>();
         visit(declaration, void(ClassOrInterfaceDeclaration decl) {
             callbacks.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
-            callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
+            callbacks.addAll(callbackCache.get(declaration.containingPackage, type));
         });
         return callbacks.sequence;
     }
