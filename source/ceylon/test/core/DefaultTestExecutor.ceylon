@@ -1,3 +1,9 @@
+import ceylon.collection {
+    ...
+}
+import ceylon.language.meta {
+    typeLiteral
+}
 import ceylon.language.meta.declaration {
     ...
 }
@@ -10,68 +16,68 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
-import ceylon.collection {
-    ...
-}
 
 "Default implementation of [[TestExecutor]]."
 shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassDeclaration? classDeclaration) satisfies TestExecutor {
-    
+        
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
-        Object?() instance = getInstanceProvider();
-        Anything() executor = verify(context,
-            handleTestIgnore(context,
-                handleTestExecution(context, instance,
+        Boolean contextOk = verify(context);
+        if (contextOk && !testIgnored(context)) {
+            Object? instance = getInstance();
+            Anything() executor = handleTestExecution(context, instance,
                     handleAfterCallbacks(context, instance,
                         handleBeforeCallbacks(context, instance,
-                            handleTestInvocation(context, instance))))));
-        executor();
+                            handleTestInvocation(context, instance))));
+            executor();
+        }
     }
     
-    shared default void verify(TestRunContext context, void execute())() {
+    "Verifies that the test context does not contain any errors.
+     
+     Returns true if the context is ok, false if any errors were fired."
+    shared default Boolean verify(TestRunContext context) {
         try {
-            verifyClassAttributes();
-            verifyClassParameters();
-            verifyClassTypeParameters();
+            if (exists classDeclaration) {
+                verifyClassAttributes(classDeclaration);
+                verifyClassParameters(classDeclaration);
+                verifyClassTypeParameters(classDeclaration);
+            }
             verifyFunctionAnnotations();
             verifyFunctionParameters();
             verifyFunctionTypeParameters();
             verifyFunctionReturnType();
             verifyBeforeCallbacks();
             verifyAfterCallbacks();
+            return true;
         }
         catch (Exception e) {
             context.fireTestError(TestErrorEvent(TestResult(description, error, e)));
-            return;
-        }
-        
-        execute();
-    }
-    
-    shared default void verifyClassAttributes() {
-        if (exists classDeclaration) {
-            if (!classDeclaration.toplevel) {
-                throw Exception("class ``classDeclaration.qualifiedName`` should be toplevel");
-            }
-            if (classDeclaration.abstract) {
-                throw Exception("class ``classDeclaration.qualifiedName`` should not be abstract");
-            }
-            if (classDeclaration.anonymous) {
-                throw Exception("class ``classDeclaration.qualifiedName`` should not be anonymous");
-            }
+            return false;
         }
     }
     
-    shared default void verifyClassParameters() {
-        if (exists classDeclaration, !classDeclaration.parameterDeclarations.empty) {
+    shared default void verifyClassAttributes(ClassDeclaration classDeclaration) {
+        if (!classDeclaration.toplevel) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should be toplevel");
+        }
+        if (classDeclaration.abstract) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should not be abstract");
+        }
+        if (classDeclaration.anonymous) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should not be anonymous");
+        }
+    }
+    
+    shared default void verifyClassParameters(ClassDeclaration classDeclaration) {
+        if (!classDeclaration.parameterDeclarations.empty) {
             throw Exception("class ``classDeclaration.qualifiedName`` should have no parameters");
         }
     }
     
-    shared default void verifyClassTypeParameters() {
-        if (exists classDeclaration, !classDeclaration.typeParameterDeclarations.empty) {
+    shared default void verifyClassTypeParameters(ClassDeclaration classDeclaration) {
+        if (!classDeclaration.typeParameterDeclarations.empty) {
             throw Exception("class ``classDeclaration.qualifiedName`` should have no type parameters");
         }
     }
@@ -126,34 +132,34 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default void handleTestIgnore(TestRunContext context, void execute())() {
+    shared default Boolean testIgnored(TestRunContext context) {
         value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(functionDeclaration, classDeclaration);
         if (exists ignoreAnnotation) {
             context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, IgnoreException(ignoreAnnotation.reason))));
-            return;
+            return true;
         }
-        execute();
+        return false;
     }
     
-    shared default void handleTestExecution(TestRunContext context, Object?() instance, void execute())() {
+    shared default void handleTestExecution(TestRunContext context, Object? instance, void execute())() {
         value startTime = system.milliseconds;
         value elapsedTime => system.milliseconds - startTime;
         
         try {
-            context.fireTestStart(TestStartEvent(description, instance()));
+            context.fireTestStart(TestStartEvent(description, instance));
             execute();
-            context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime), instance()));
+            context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime), instance));
         }
         catch (Throwable e) {
             if (e is AssertionError) {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime), instance()));
+                context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime), instance));
             } else {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime), instance()));
+                context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime), instance));
             }
         }
     }
     
-    shared default void handleBeforeCallbacks(TestRunContext context, Object?() instance, void execute())() {
+    shared default void handleBeforeCallbacks(TestRunContext context, Object? instance, void execute())() {
         value callbacks = findCallbacks<BeforeTestAnnotation>().reversed;
         for (callback in callbacks) {
             invokeFunction(callback, instance);
@@ -161,7 +167,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         execute();
     }
     
-    shared default void handleAfterCallbacks(TestRunContext context, Object?() instance, void execute())() {
+    shared default void handleAfterCallbacks(TestRunContext context, Object? instance, void execute())() {
         value exceptionsBuilder = SequenceBuilder<Throwable>();
         try {
             execute();
@@ -182,17 +188,15 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
         
         value exceptions = exceptionsBuilder.sequence;
-        if (exceptions.size == 0) {
-            // noop
-        } else if (exceptions.size == 1) {
+        if (exceptions.size == 1) {
             assert (exists e = exceptions.first);
             throw e;
-        } else {
+        } else if (!exceptions.empty) {
             throw MultipleFailureException(exceptions);
         }
     }
     
-    shared default void handleTestInvocation(TestRunContext context, Object?() instance)() {
+    shared default void handleTestInvocation(TestRunContext context, Object? instance)() {
         invokeFunction(functionDeclaration, instance);
     }
     
@@ -205,62 +209,77 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default Object?() getInstanceProvider() {
-        object instanceProvider {
-            variable Object? instance = null;
-            shared Object? getInstance() {
-                if (exists classDeclaration) {
-                    if (!(instance exists)) {
-                        assert (is Class<Object,[]> classModel = classDeclaration.apply<Object>());
-                        instance = classModel();
-                    }
-                    return instance;
-                } else {
-                    return null;
-                }
-            }
+    shared default Object? getInstance() {
+        if (exists classDeclaration) {
+            assert (is Class<Object,[]> classModel = classDeclaration.apply<Object>());
+            return classModel();
+        } else {
+            return null;
         }
-        return instanceProvider.getInstance;
     }
     
     FunctionDeclaration[] findCallbacks<CallbackType>() given CallbackType satisfies Annotation {
-        value callbacks = HashSet<FunctionDeclaration>();
-        
-        if (exists classDeclaration) {
-            
-            void visit(ClassOrInterfaceDeclaration? decl, void do(ClassOrInterfaceDeclaration decl)) {
-                if (exists decl) {
-                    do(decl);
-                    visit(decl.extendedType?.declaration, do);
-                    for (satisfiedType in decl.satisfiedTypes) {
-                        visit(satisfiedType.declaration, do);
-                    }
-                }
-            }
-            
-            visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll((decl is ClassDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
-            });
-            visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll((decl is InterfaceDeclaration) then decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>() else []);
-            });
-            visit(classDeclaration, void(ClassOrInterfaceDeclaration decl) {
-                callbacks.addAll(decl.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
-            });
-        } else {
-            callbacks.addAll(functionDeclaration.containingPackage.annotatedMembers<FunctionDeclaration,CallbackType>());
-        }
-        
-        return callbacks.sequence;
+        return callbackCache.get(classDeclaration else functionDeclaration.containingPackage, typeLiteral<CallbackType>());
     }
     
-    void invokeFunction(FunctionDeclaration f, Object?() instance) {
+    void invokeFunction(FunctionDeclaration f, Object? instance) {
         if (f.toplevel) {
             f.invoke();
         } else {
-            assert(exists i = instance());
+            assert(exists i = instance);
             f.memberInvoke(i);
         }
     }
     
 }
+
+FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDeclaration declaration, Type<CallbackType> type)
+        given CallbackType satisfies Annotation {
+    
+    void visit(ClassOrInterfaceDeclaration decl, void do(ClassOrInterfaceDeclaration decl)) {
+        do(decl);
+        value extendedType = decl.extendedType?.declaration;
+        if (exists extendedType, extendedType != `class Basic`) {
+            visit(extendedType, do);    
+        }
+        for (satisfiedType in decl.satisfiedTypes) {
+            visit(satisfiedType.declaration, do);
+        }
+    }
+    switch (declaration)
+    case (is ClassOrInterfaceDeclaration){
+        value callbacks = HashMap<Character, HashSet<FunctionDeclaration>> {
+            entries = { 'c'-> HashSet<FunctionDeclaration>(),
+                        'i' -> HashSet<FunctionDeclaration>(),
+                        'p' -> HashSet<FunctionDeclaration>() };
+        };
+        visit(declaration, void(ClassOrInterfaceDeclaration decl) {
+            value key = decl is ClassDeclaration then 'c' else 'i';
+            callbacks[key]?.addAll(decl.annotatedDeclaredMemberDeclarations<FunctionDeclaration,CallbackType>());
+            callbacks['p']?.addAll(callbackCache.get(decl.containingPackage, type));
+        });
+        return concatenate(callbacks['c'] else {}, callbacks['i'] else {}, callbacks['p'] else {});
+    }
+    case (is Package) {
+        return declaration.annotatedMembers<FunctionDeclaration,CallbackType>();
+    }
+}
+
+object callbackCache {
+    
+    value cache = HashMap<String, FunctionDeclaration[]>();
+    
+    shared FunctionDeclaration[] get<CallbackType>(ClassDeclaration|Package declaration, Type<CallbackType> callbackType)
+            given CallbackType satisfies Annotation {
+        value key = declaration.string + callbackType.string;
+        value cached = cache[key];
+        if (exists cached) {
+            return cached;
+        }
+        value callbacks = doFindCallbacks(declaration, callbackType);
+        cache.put(key, callbacks);
+        return callbacks;
+    }
+    
+}
+
