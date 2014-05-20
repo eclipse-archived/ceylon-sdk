@@ -37,4 +37,11 @@ shared class Parameter(String initialName, String? initialValue = null) {
         }
         return false;
     }
+    
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + name.hash;
+        hash = 31*hash + (val?.hash else 0);
+        return hash;
+    }
 }

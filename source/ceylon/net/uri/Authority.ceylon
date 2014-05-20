@@ -77,4 +77,14 @@ shared class Authority(user = null, password = null, host = null, port = null){
         }
         return false;
     }
+    
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + (user?.hash else 0);
+        hash = 31*hash + (password?.hash else 0);
+        hash = 31*hash + (host?.hash else 0);
+        hash = 31*hash + (port?.hash else 0);
+        hash = 31*hash + ipLiteral.hash;
+        return hash;
+    }
 }
