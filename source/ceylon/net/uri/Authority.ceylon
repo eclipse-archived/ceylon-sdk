@@ -73,8 +73,7 @@ shared class Authority(user = null, password = null, host = null, port = null){
                 && eq(password, that.password)
                 && eq(host, that.host)
                 && eq(port, that.port)
-                && ipLiteral == that.ipLiteral
-                && eq(user, that.user);
+                && ipLiteral == that.ipLiteral;
         }
         return false;
     }
