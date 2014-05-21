@@ -5,12 +5,40 @@ import ceylon.test {
     test,
     assertEquals,
     assertTrue,
-    assertNotEquals
+    assertNotEquals,
+    assertFalse
 }
 
 shared interface ListTests satisfies RangedTests {
 
     shared formal List<String?> createList({String?*} strings);
+    
+    test shared void testShorterThan() {
+        assertFalse(createList({}).shorterThan(0));
+        assertFalse(createList({}).shorterThan(-1));
+        assertTrue(createList({}).shorterThan(1));
+        assertFalse(createList({"a"}).shorterThan(0));
+        assertFalse(createList({"a"}).shorterThan(1));
+        assertTrue(createList({"a"}).shorterThan(2));
+        value longList = createList((1..100).map(Object.string));
+        assertFalse(longList.shorterThan(99));
+        assertFalse(longList.shorterThan(100));
+        assertTrue(longList.shorterThan(101));
+        assertTrue(longList.shorterThan(1000));
+    }
+    
+    test shared void testLongerThan() {
+        assertFalse(createList({}).longerThan(0));
+        assertFalse(createList({}).longerThan(1));
+        assertTrue(createList({}).longerThan(-1));
+        assertTrue(createList({"a"}).longerThan(0));
+        assertFalse(createList({"a"}).longerThan(1));
+        assertFalse(createList({"a"}).longerThan(2));
+        value longList = createList((1..100).map(Object.string));
+        assertTrue(longList.longerThan(99));
+        assertFalse(longList.longerThan(100));
+        assertFalse(longList.longerThan(1000));
+    }
 
     test shared void testEquals() {
         {[{String?*}, [String?*]]+} positiveEqualExamples = {
