@@ -1,3 +1,4 @@
+import ceylon.collection{ ArrayList }
 
 "Useful alias to indicate that a sequence of [[Entry]] can be
  used to add any nonstandard attribute to the element."
@@ -55,17 +56,17 @@ shared object move extends DropZone() {}
 
 "A sequence builder used to build valid HTML attributes."
 class AttributeSequenceBuilder()
-        extends SequenceBuilder<String->Object>() {
+        extends ArrayList<String->Object>() {
 
     shared void addAttribute(String name, Object? val) {
         if (exists val) {
-            append(name->val);
+            add(name->val);
         }
     }
 
     shared void addNamedBooleanAttribute(String name, Boolean? val) {
         if (exists val, val) {
-            append(name->name);
+            add(name->name);
         }
     }
 

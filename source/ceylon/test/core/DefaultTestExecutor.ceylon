@@ -167,13 +167,14 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         execute();
     }
     
+
     shared default void handleAfterCallbacks(TestRunContext context, Object? instance, void execute())() {
-        value exceptionsBuilder = SequenceBuilder<Throwable>();
+        value exceptionsBuilder = ArrayList<Throwable>();
         try {
             execute();
         }
         catch (Throwable e) {
-            exceptionsBuilder.append(e);
+            exceptionsBuilder.add(e);
         }
         finally {
             value callbacks = findCallbacks<AfterTestAnnotation>();
@@ -182,7 +183,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
                     invokeFunction(callback, instance);
                 }
                 catch (Throwable e) {
-                    exceptionsBuilder.append(e);
+                    exceptionsBuilder.add(e);
                 }
             }
         }

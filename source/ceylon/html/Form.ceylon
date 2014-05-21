@@ -65,7 +65,7 @@ shared class Form(action, method = "", acceptCharset = null,
         attrs.addAttribute("action", action);
         attrs.addAttribute("method", method);
         attrs.addAttribute("name", name);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("acceptcharset", acceptCharset);
         attrs.addOnOffBooleanAttribute("autocomplete", autoComplete);
         attrs.addAttribute("enctype", encType);
@@ -136,7 +136,7 @@ shared abstract class FormElement(
         attrs.addAttribute("form", form);
         attrs.addNamedBooleanAttribute("readonly", readOnly);
         attrs.addNamedBooleanAttribute("required", required);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         return attrs.sequence;
     }
 

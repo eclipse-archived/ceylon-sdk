@@ -16,6 +16,9 @@ import ceylon.test.event {
 import ceylon.test.internal {
     ...
 }
+import ceylon.collection {
+    ArrayList
+}
 
 "Default implementation of [[TestRunner]]."
 shared class DefaultTestRunner(
@@ -63,8 +66,8 @@ alias TestCandidate => [FunctionDeclaration, ClassDeclaration?]|ErrorTestExecuto
 TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filter, Comparison(TestExecutor, TestExecutor) comparator) {
     TestCandidate[] candidates = findCandidates(sources);
     
-    value executors = SequenceBuilder<TestExecutor>();
-    value executorsWithClasses = SequenceBuilder<[ClassDeclaration, SequenceBuilder<TestExecutor>]>();
+    value executors = ArrayList<TestExecutor>();
+    value executorsWithClasses = ArrayList<[ClassDeclaration, ArrayList<TestExecutor>]>();
     
     for (candidate in candidates) {
         switch (candidate)
@@ -75,32 +78,34 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
             if (exists suiteAnnotation = funcDecl.annotations<TestSuiteAnnotation>()[0]) {
                 value suiteExecutor = createSuiteExecutor(funcDecl, suiteAnnotation, filter, comparator);
                 if (filter(suiteExecutor)) {
-                    executors.append(suiteExecutor);
+                    executors.add(suiteExecutor);
                 }
             } else {
                 value executor = createExecutor(funcDecl, classDecl);
                 if (filter(executor)) {
                     if (exists classDecl) {
-                        value executorsWithClass = executorsWithClasses.sequence.find(([ClassDeclaration, SequenceBuilder<TestExecutor>] elem) => elem[0] == classDecl);
+                        value executorsWithClass = executorsWithClasses.sequence.find(([ClassDeclaration, ArrayList<TestExecutor>] elem) => elem[0] == classDecl);
                         if (exists executorsWithClass) {
-                            executorsWithClass[1].append(executor);
+                            executorsWithClass[1].add(executor);
                         } else {
-                            executorsWithClasses.append([classDecl, SequenceBuilder<TestExecutor>().append(executor)]);
+                            value list = ArrayList<TestExecutor>();
+                            list.add(executor);
+                            executorsWithClasses.add([classDecl, list]);
                         }
                     } else {
-                        executors.append(executor);
+                        executors.add(executor);
                     }
                 }
             }
         }
         case (is ErrorTestExecutor) {
-            executors.append(candidate);
+            executors.add(candidate);
         }
     }
     
     for (executorsWithClass in executorsWithClasses.sequence) {
         value sorted = executorsWithClass[1].sequence.sort(comparator);
-        executors.append(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, null, executorsWithClass[0], sorted*.description), sorted));
+        executors.add(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, null, executorsWithClass[0], sorted*.description), sorted));
     }
     
     return executors.sequence.sort(comparator);
@@ -115,24 +120,24 @@ TestExecutor createExecutor(FunctionDeclaration funcDecl, ClassDeclaration? clas
 }
 
 TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotation suiteAnnotation, Boolean(TestExecutor) filter, Comparison(TestExecutor, TestExecutor) comparator) {
-    value executorsBuilder = SequenceBuilder<TestExecutor>();
-    value sourcesBuilder = SequenceBuilder<TestSource>();
+    value executorsBuilder = ArrayList<TestExecutor>();
+    value sourcesBuilder = ArrayList<TestSource>();
     
     for (source in suiteAnnotation.sources) {
         if (is ClassDeclaration source) {
-            sourcesBuilder.append(source);
+            sourcesBuilder.add(source);
         } else if (is FunctionDeclaration source) {
-            sourcesBuilder.append(source);
+            sourcesBuilder.add(source);
         } else if (is Package source) {
-            sourcesBuilder.append(source);
+            sourcesBuilder.add(source);
         } else if (is Module source) {
-            sourcesBuilder.append(source);
+            sourcesBuilder.add(source);
         } else {
-            executorsBuilder.append(ErrorTestExecutor(TestDescription(source.qualifiedName), Exception("declaration ``source.qualifiedName`` is invalid test suite source (only functions, classes, packages and modules are allowed)")));
+            executorsBuilder.add(ErrorTestExecutor(TestDescription(source.qualifiedName), Exception("declaration ``source.qualifiedName`` is invalid test suite source (only functions, classes, packages and modules are allowed)")));
         }
     }
     
-    executorsBuilder.appendAll(createExecutors(sourcesBuilder.sequence, filter, comparator));
+    executorsBuilder.addAll(createExecutors(sourcesBuilder.sequence, filter, comparator));
     
     value executors = executorsBuilder.sequence;
     if (executors.empty) {
@@ -143,7 +148,7 @@ TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotati
 }
 
 TestCandidate[] findCandidates(TestSource[] sources) {
-    value candidates = SequenceBuilder<TestCandidate>();
+    value candidates = ArrayList<TestCandidate>();
     for (source in sources) {
         if (is Module source) {
             findCandidatesInModule(candidates, source);
@@ -164,49 +169,49 @@ TestCandidate[] findCandidates(TestSource[] sources) {
     return candidates.sequence;
 }
 
-void findCandidatesInModule(SequenceBuilder<TestCandidate> candidates, Module mod) {
+void findCandidatesInModule(ArrayList<TestCandidate> candidates, Module mod) {
     for (pkg in mod.members) {
         findCandidatesInPackage(candidates, pkg);
     }
 }
 
-void findCandidatesInPackage(SequenceBuilder<TestCandidate> candidates, Package pkg) {
+void findCandidatesInPackage(ArrayList<TestCandidate> candidates, Package pkg) {
     for (FunctionDeclaration funcDecl in pkg.annotatedMembers<FunctionDeclaration,TestAnnotation>()) {
-        candidates.append([funcDecl, null]);
+        candidates.add([funcDecl, null]);
     }
     for (ClassDeclaration classDecl in pkg.members<ClassDeclaration>()) {
         findCandidatesInClass(candidates, classDecl);
     }
 }
 
-void findCandidatesInClass(SequenceBuilder<TestCandidate> candidates, ClassDeclaration classDecl) {
+void findCandidatesInClass(ArrayList<TestCandidate> candidates, ClassDeclaration classDecl) {
     if (!classDecl.abstract && !classDecl.anonymous) {
         for (funcDecl in classDecl.annotatedMemberDeclarations<FunctionDeclaration,TestAnnotation>()) {
-            candidates.append([funcDecl, classDecl]);
+            candidates.add([funcDecl, classDecl]);
         }
     }
 }
 
-void findCandidatesInFunction(SequenceBuilder<TestCandidate> candidates, FunctionDeclaration funcDecl, ClassDeclaration? classDecl = null) {
+void findCandidatesInFunction(ArrayList<TestCandidate> candidates, FunctionDeclaration funcDecl, ClassDeclaration? classDecl = null) {
     if (funcDecl.annotations<TestAnnotation>().empty && funcDecl.annotations<TestSuiteAnnotation>().empty) {
-        candidates.append(ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("function ``funcDecl.qualifiedName`` should be annotated with test or testSuite")));
+        candidates.add(ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("function ``funcDecl.qualifiedName`` should be annotated with test or testSuite")));
         return;
     }
     
     if (funcDecl.toplevel) {
-        candidates.append([funcDecl, null]);
+        candidates.add([funcDecl, null]);
     } else {
         if (exists classDecl) {
-            candidates.append([funcDecl, classDecl]);
+            candidates.add([funcDecl, classDecl]);
         } else if (is ClassDeclaration c = funcDecl.container) {
-            candidates.append([funcDecl, c]);
+            candidates.add([funcDecl, c]);
         } else {
-            candidates.append(ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("function ``funcDecl.qualifiedName`` should be toplevel function or class method")));
+            candidates.add(ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("function ``funcDecl.qualifiedName`` should be toplevel function or class method")));
         }
     }
 }
 
-void findCandidatesInTypeLiteral(SequenceBuilder<TestCandidate> candidates, String typeLiteral) {
+void findCandidatesInTypeLiteral(ArrayList<TestCandidate> candidates, String typeLiteral) {
     if (typeLiteral.startsWith("module ")) {
         if (findCandidatesInModuleLiteral(candidates, typeLiteral[7...])) {
             return;
@@ -228,10 +233,10 @@ void findCandidatesInTypeLiteral(SequenceBuilder<TestCandidate> candidates, Stri
             return;
         }
     }
-    candidates.append(ErrorTestExecutor(TestDescription(typeLiteral), Exception("invalid type literal: ``typeLiteral`` (allowed syntax is prefix function, class, package or module followed with qualified name of declaration)")));
+    candidates.add(ErrorTestExecutor(TestDescription(typeLiteral), Exception("invalid type literal: ``typeLiteral`` (allowed syntax is prefix function, class, package or module followed with qualified name of declaration)")));
 }
 
-Boolean findCandidatesInModuleLiteral(SequenceBuilder<TestCandidate> candidates, String modName) {
+Boolean findCandidatesInModuleLiteral(ArrayList<TestCandidate> candidates, String modName) {
     value mod = modules.list.find((Module m) => m.name == modName);
     if (exists mod) {
         findCandidatesInModule(candidates, mod);
@@ -240,7 +245,7 @@ Boolean findCandidatesInModuleLiteral(SequenceBuilder<TestCandidate> candidates,
     return false;
 }
 
-Boolean findCandidatesInPackageLiteral(SequenceBuilder<TestCandidate> candidates, String pkgName) {
+Boolean findCandidatesInPackageLiteral(ArrayList<TestCandidate> candidates, String pkgName) {
     value pgk = findPackage(pkgName);
     if (exists pgk) {
         findCandidatesInPackage(candidates, pgk);
@@ -249,7 +254,7 @@ Boolean findCandidatesInPackageLiteral(SequenceBuilder<TestCandidate> candidates
     return false;
 }
 
-Boolean findCandidatesInClassLiteral(SequenceBuilder<TestCandidate> candidates, String fqn) {
+Boolean findCandidatesInClassLiteral(ArrayList<TestCandidate> candidates, String fqn) {
     Integer? pkgDelimiter = fqn.firstInclusion("::");
     if (exists pkgDelimiter) {
         String pkgName = fqn[0 .. pkgDelimiter - 1];
@@ -265,7 +270,7 @@ Boolean findCandidatesInClassLiteral(SequenceBuilder<TestCandidate> candidates, 
     return false;
 }
 
-Boolean findCandidatesInFunctionLiteral(SequenceBuilder<TestCandidate> candidates, String fqn) {
+Boolean findCandidatesInFunctionLiteral(ArrayList<TestCandidate> candidates, String fqn) {
     Integer? pkgDelimiter = fqn.firstInclusion("::");
     if (exists pkgDelimiter) {
         String pkgName = fqn[0 .. pkgDelimiter - 1];
@@ -296,7 +301,7 @@ Boolean findCandidatesInFunctionLiteral(SequenceBuilder<TestCandidate> candidate
     return false;
 }
 
-Boolean findCandidatesInFullQualifiedName(SequenceBuilder<TestCandidate> candidates, String fqn) {
+Boolean findCandidatesInFullQualifiedName(ArrayList<TestCandidate> candidates, String fqn) {
     Integer? pkgDelimiter = fqn.firstInclusion("::");
     if (exists pkgDelimiter) {
         value pkgName = fqn[0 .. pkgDelimiter - 1];
@@ -363,10 +368,10 @@ A? findAnnotation<out A>(FunctionDeclaration funcDecl, ClassDeclaration? classDe
 
 A[] findAnnotations<out A>(ClassDeclaration classDecl)
         given A satisfies Annotation {
-    value annotationBuilder = SequenceBuilder<A>();
+    value annotationBuilder = ArrayList<A>();
     variable ClassDeclaration? declVar = classDecl;
     while (exists decl = declVar) {
-        annotationBuilder.appendAll(decl.annotations<A>());
+        annotationBuilder.addAll(decl.annotations<A>());
         declVar = decl.extendedType?.declaration;
     }
     return annotationBuilder.sequence;

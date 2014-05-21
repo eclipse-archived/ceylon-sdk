@@ -9,22 +9,25 @@ shared Map<Group,[Element+]> group<Group, Element>
      group the specified element."
     Group grouping(Element element);
     
-    class Appender([Element] element) 
-            => SequenceAppender<Element>(element);
     /*
      We've no idea how long the iterable is, nor how 
      selective the grouping function is, so it's really 
      hard to accurately estimate the size of the HashMap.
     */
-    value map = HashMap<Group,Appender>();
+    value map = HashMap<Group,ArrayList<Element>>();
     for (element in elements) {
         Group group = grouping(element);
         if (exists sb = map[group]) {
-            sb.append(element);
+            sb.add(element);
         } else {
-            map.put(group, Appender([element]));
+            value list = ArrayList<Element>();
+            list.add(element);
+            map.put(group, list);
         }
     }
-    return map.mapItems((Group group, Appender sa) 
-            => sa.sequence);
+    [Element+] mapping(Group group, ArrayList<Element> sa) { 
+        assert(is [Element+] result = sa.sequence);
+        return result;
+    }
+    return map.mapItems(mapping);
 }

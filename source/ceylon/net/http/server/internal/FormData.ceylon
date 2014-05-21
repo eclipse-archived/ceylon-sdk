@@ -1,36 +1,39 @@
-import ceylon.collection { HashMap }
+import ceylon.collection { 
+    HashMap,
+    ArrayList
+}
 import ceylon.net.http.server { UploadedFile }
 
 shared class FormDataBuilder() {
     
-    value parameters = HashMap<String, SequenceBuilder<String>>();
-    value files = HashMap<String, SequenceBuilder<UploadedFile>>();
+    value parameters = HashMap<String, ArrayList<String>>();
+    value files = HashMap<String, ArrayList<UploadedFile>>();
     
     shared void addParameter(String name, String val) {
-        getPostedParameterValues(name).append(val);
+        getPostedParameterValues(name).add(val);
     }
     
     shared void addFile(String name, UploadedFile val) {
-        getPostedFileValues(name).append(val);
+        getPostedFileValues(name).add(val);
     }
     
-    SequenceBuilder<String> getPostedParameterValues(String name) {
-        variable SequenceBuilder<String>? builder = parameters.get(name);
+    ArrayList<String> getPostedParameterValues(String name) {
+        variable ArrayList<String>? builder = parameters.get(name);
         if (exists b = builder) {
             return b;
         } else {
-            value b = SequenceBuilder<String>();
+            value b = ArrayList<String>();
             parameters.put(name, b);
             return b;
         }
     }
     
-    SequenceBuilder<UploadedFile> getPostedFileValues(String name) {
-        variable SequenceBuilder<UploadedFile>? builder = files.get(name);
+    ArrayList<UploadedFile> getPostedFileValues(String name) {
+        variable ArrayList<UploadedFile>? builder = files.get(name);
         if (exists b = builder) {
             return b;
         } else {
-            value b = SequenceBuilder<UploadedFile>();
+            value b = ArrayList<UploadedFile>();
             files.put(name, b);
             return b;
         }

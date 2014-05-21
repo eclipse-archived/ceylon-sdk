@@ -71,9 +71,9 @@ shared test void testOfferToPriorityQueue() {
 
 shared test void testPriorityQueueIterable() {
     value queue = newQueue(elementsIterable);
-    value sb = SequenceBuilder<Integer>();
+    value sb = ArrayList<Integer>();
     for (element in queue) {
-        sb.append(element);
+        sb.add(element);
     }
     assertEquals(sb.sequence, [-5, 1, 5, 8, 4, 9, 7]);
 }

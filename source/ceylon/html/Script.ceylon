@@ -31,7 +31,7 @@ shared class Script(src = null, type = javascript, String? id = null,
         value attrs = AttributeSequenceBuilder();
         attrs.addAttribute("src", src);
         attrs.addAttribute("type", type);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("charset", charset);
         attrs.addNamedBooleanAttribute("async", async);
         attrs.addNamedBooleanAttribute("defer", defer);

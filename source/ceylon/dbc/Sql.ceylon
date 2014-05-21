@@ -1,5 +1,6 @@
 import ceylon.collection {
-    HashMap
+    HashMap,
+    ArrayList
 }
 import ceylon.dbc {
     newConnectionFromDataSource
@@ -193,9 +194,9 @@ shared class Sql(newConnection) {
                 try {
                     value stmt = connectionStatus.connection()
                             .prepareStatement(sql);
-                    value result = SequenceBuilder<Integer>();
+                    value result = ArrayList<Integer>();
                     void runBatch()
-                            => result.appendAll(toIntegerArray(stmt.executeBatch()));
+                            => result.addAll(toIntegerArray(stmt.executeBatch()));
                     variable value count=0;
                     try {                    
                         for (arguments in batchArguments) {
@@ -245,9 +246,9 @@ shared class Sql(newConnection) {
                     try {
                         value meta = resultSet.metaData;
                         value range = 1..meta.columnCount;
-                        value builder = SequenceBuilder<Row>();
+                        value builder = ArrayList<Row>();
                         while (resultSet.next()) {
-                            builder.append(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
+                            builder.add(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
                         }
                         return [updateCount, builder.sequence];
                     }
@@ -283,9 +284,9 @@ shared class Sql(newConnection) {
                 try {
                     value stmt = connectionStatus.connection()
                             .prepareStatement(sql);
-                    value result = SequenceBuilder<Integer>();
+                    value result = ArrayList<Integer>();
                     void runBatch()
-                            => result.appendAll(toIntegerArray(stmt.executeBatch()));
+                            => result.addAll(toIntegerArray(stmt.executeBatch()));
                     variable value count=0;
                     try {                    
                         for (arguments in batchArguments) {

@@ -39,7 +39,7 @@ shared class Select(String? name = null, Boolean? autoFocus = null,
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("size", size);
         attrs.addNamedBooleanAttribute("multiple", multiple);
         return attrs.sequence;
@@ -70,7 +70,7 @@ shared class Option(text = "", String? id = null,
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addNamedBooleanAttribute("disabled", disabled);
         attrs.addNamedBooleanAttribute("selected", selected);
         attrs.addAttribute("value", valueOf);
@@ -100,7 +100,7 @@ shared class OptionGroup(text = "",
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addNamedBooleanAttribute("disabled", disabled);
         return attrs.sequence;
     }

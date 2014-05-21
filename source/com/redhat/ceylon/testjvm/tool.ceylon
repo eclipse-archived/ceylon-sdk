@@ -31,6 +31,9 @@ import org.jboss.modules {
     },
     ModuleClassLoader
 }
+import ceylon.collection {
+    ArrayList
+}
 
 shared void run() {
     Runner().run();
@@ -38,8 +41,8 @@ shared void run() {
 
 class Runner() {
     
-    value moduleNameAndVersions = SequenceBuilder<[String, String]>();
-    value testSources = SequenceBuilder<TestSource>();
+    value moduleNameAndVersions = ArrayList<[String, String]>();
+    value testSources = ArrayList<TestSource>();
     variable Integer port = -1;
     variable Socket? socket = null;
     variable PrintWriter? writer = null;
@@ -54,7 +57,7 @@ class Runner() {
             if (testSources.empty) {
                 for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
                     assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
-                    testSources.append(m);
+                    testSources.add(m);
                 }
             }
             
@@ -92,10 +95,10 @@ class Runner() {
                 String moduleName = arg[0 .. i - 1];
                 String moduleVersion = arg[i + 1 ...];
                 
-                moduleNameAndVersions.append([moduleName, moduleVersion]);
+                moduleNameAndVersions.add([moduleName, moduleVersion]);
             }
             if (prev == "--test") {
-                testSources.append(arg);
+                testSources.add(arg);
             }
             if (arg.startsWith("--port")) {
                 assert (exists p = parseInteger(arg[7...]));

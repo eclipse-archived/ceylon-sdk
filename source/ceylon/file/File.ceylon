@@ -2,6 +2,9 @@ import ceylon.file {
     AbstractReader=Reader,
     AbstractWriter=Writer
 }
+import ceylon.collection {
+    ArrayList
+}
 import ceylon.file.internal {
     sameFileInternal=sameFile
 }
@@ -131,10 +134,10 @@ shared interface File
 
 "All lines of text in the given file."
 shared String[] lines(File file) {
-    value sb = SequenceBuilder<String>();
+    value sb = ArrayList<String>();
     try (reader = file.Reader()) {
         while (exists line = reader.readLine()) {
-            sb.append(line);
+            sb.add(line);
         }
     }
     return sb.sequence;

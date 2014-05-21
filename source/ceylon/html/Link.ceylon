@@ -19,7 +19,7 @@ shared class Link(rel, href, type = null, String? id = null)
         attrs.addAttribute("rel", rel);
         attrs.addAttribute("href", href);
         attrs.addAttribute("type", type);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         return attrs.sequence;
     }
 

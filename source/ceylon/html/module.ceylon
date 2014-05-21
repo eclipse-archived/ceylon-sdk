@@ -3,4 +3,5 @@
 by("Daniel Rochetti")
 tagged("web", "html", "template", "layout")
 module ceylon.html "1.1.0" {
+    import ceylon.collection "1.1.0";
 }

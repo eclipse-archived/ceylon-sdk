@@ -6,18 +6,20 @@ Map<Item,[Key+]> invert<Key,Item>(Map<Key,Item> map)
         given Key satisfies Object
         given Item satisfies Object {
     
-    class Appender([Key] element) 
-            => SequenceAppender<Key>(element);
-    
-    value result = HashMap<Item,Appender>();
+    value result = HashMap<Item,ArrayList<Key>>();
     for (key->item in map) {
         if (exists sb = result[item]) {
-            sb.append(key);
+            sb.add(key);
         }
         else {
-            result.put(item, Appender([key]));
+            value list = ArrayList<Key>();
+            list.add(key);
+            result.put(item, list);
         }
     }
-    return result.mapItems((Item item, Appender sa) 
-            => sa.sequence);
+    [Key+] mapping(Item item, ArrayList<Key> sa) {
+        assert(is [Key+] result = sa.sequence);
+        return result;
+    }
+    return result.mapItems(mapping);
 }

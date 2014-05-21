@@ -38,7 +38,7 @@ shared class Label(text = "", forControl = null, form = null,
         value attrs = AttributeSequenceBuilder();
         attrs.addAttribute("for", forControl);
         attrs.addAttribute("form", form);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         return attrs.sequence;
     }
 

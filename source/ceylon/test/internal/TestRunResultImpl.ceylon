@@ -4,10 +4,13 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection {
+    ArrayList
+}
 
 shared class TestRunResultImpl() satisfies TestRunResult {
     
-    value resultsBuilder = SequenceBuilder<TestResult>();
+    value resultsBuilder = ArrayList<TestResult>();
     
     variable Integer runCounter = 0;
     variable Integer successCounter = 0;
@@ -72,7 +75,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         shared actual void testIgnore(TestIgnoreEvent event) => handleResult(event.result, false);
         
         void handleResult(TestResult result, Boolean wasRun) {
-            resultsBuilder.append(result);
+            resultsBuilder.add(result);
             if (result.state == success && result.description.children.empty) {
                 successCounter++;
                 runCounter += wasRun then 1 else 0;

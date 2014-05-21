@@ -31,7 +31,7 @@ shared abstract class StyledElement(String? id, classNames = [], style = null)
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         if (is String[] classNames) {
             attrs.addAttribute("class", " ".join(classNames));
         } else if (is String classNames) {
@@ -114,11 +114,11 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("accesskey", accessKey);
         attrs.addAttribute("contextmenu", contextMenu);
         attrs.addAttribute("draggable", draggable);
-        attrs.addAttribute("dropzone", dropZone);
+        attrs.addAttribute("addne", dropZone);
         attrs.addAttribute("hidden", hidden);
         attrs.addAttribute("inert", inert);
         attrs.addAttribute("lang", lang);
@@ -127,9 +127,9 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
         attrs.addAttribute("title", title);
         attrs.addYesNoBooleanAttribute("translate", translate);
 
-        attrs.appendAll(nonstandardAttributes);
+        attrs.addAll(nonstandardAttributes);
 
-        attrs.appendAll(data map (String->Object elem) 
+        attrs.addAll(data map (String->Object elem) 
                 => "data-``elem.key``"->elem.item);
 
         // TODO append events attributes

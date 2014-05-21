@@ -2,6 +2,10 @@ import ceylon.file {
     ...
 }
 
+import ceylon.collection {
+    ArrayList
+}
+
 import java.lang {
     JString=String
 }
@@ -33,19 +37,19 @@ class ConcreteSystem(FileSystem fs)
             ConcretePath(fs.getPath(pathString));
      
     shared actual Path[] rootPaths {
-        value sb = SequenceBuilder<Path>();
+        value sb = ArrayList<Path>();
         value iter = fs.rootDirectories.iterator();
         while (iter.hasNext()) {
-            sb.append(ConcretePath(iter.next()));
+            sb.add(ConcretePath(iter.next()));
         }
         return sb.sequence;
     }
     
     shared actual Store[] stores {
-        value sb = SequenceBuilder<Store>();
+        value sb = ArrayList<Store>();
         value iter = fs.fileStores.iterator();
         while (iter.hasNext()) {
-            sb.append(ConcreteStore(iter.next()));
+            sb.add(ConcreteStore(iter.next()));
         }
         return sb.sequence;
     }
