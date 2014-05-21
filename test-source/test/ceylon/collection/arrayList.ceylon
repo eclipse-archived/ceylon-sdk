@@ -12,6 +12,7 @@ shared class ArrayListTest() satisfies MutableListTests {
     createList({String?*} strings) => ArrayList<String?>{ elements = strings; };
 
     createRanged = createList;
+    createCorrespondence = createList;
 
     test shared void testChangingCapacity() {
         value list = ArrayList { initialCapacity = 2; growthFactor = 1.5; elements = { "a", "b" }; };

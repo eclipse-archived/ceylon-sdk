@@ -9,7 +9,7 @@ import ceylon.test {
     assertFalse
 }
 
-shared interface ListTests satisfies RangedTests {
+shared interface ListTests satisfies RangedTests & CorrespondenceTests {
 
     shared formal List<String?> createList({String?*} strings);
     

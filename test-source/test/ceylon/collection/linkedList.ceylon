@@ -12,6 +12,7 @@ shared class LinkedListTest() satisfies MutableListTests {
     createList({String?*} strings) => LinkedList(strings);
 
     createRanged = createList;
+    createCorrespondence = createList;
 
     shared test void testLinkedListConstructor(){
         List<String> list = LinkedList{"a", "b"};
