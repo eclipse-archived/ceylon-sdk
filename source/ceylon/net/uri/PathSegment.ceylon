@@ -26,6 +26,13 @@ shared class PathSegment(String initialName, Parameter* initialParameters) {
         return false;
     }
     
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + name.hash;
+        hash = 31*hash + parameters.hash;
+        return hash;
+    }
+    
     String serialiseParameter(Parameter param, Boolean human){
         if(human){
             return param.toRepresentation(true);

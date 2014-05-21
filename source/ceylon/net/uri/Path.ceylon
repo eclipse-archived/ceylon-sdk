@@ -68,6 +68,13 @@ shared class Path(Boolean initialAbsolute = false, PathSegment* initialSegments)
         return false;
     }
     
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + absolute.hash;
+        hash = 31*hash + segments.hash;
+        return hash;
+    }
+    
     "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human) { 
         if(segments.empty){

@@ -4,6 +4,9 @@ shared interface Method {
     shared default actual Boolean equals(Object that) {
         return methodEquals(this, that);
     }
+    
+    shared default actual Integer hash
+            => string.hash;
 }
 
 Boolean methodEquals(Object thisObject, Object that) {
@@ -18,7 +21,8 @@ shared abstract class AbstractMethod()
     of options | get | head | post | put | delete | trace | connect 
     satisfies Method {
 
-    shared actual Boolean equals(Object that) => methodEquals(this, that); 
+    shared actual Boolean equals(Object that) => methodEquals(this, that);
+    shared actual Integer hash => string.hash;
 }
 
 shared object options extends AbstractMethod() {
@@ -76,6 +80,7 @@ shared Method parseMethod(String method) {
         object m satisfies Method {
             shared actual String string = method.uppercased;
             shared actual Boolean equals(Object that) =>  methodEquals(this, that); 
+            shared actual Integer hash => string.hash;
         }
         return m;
     }
