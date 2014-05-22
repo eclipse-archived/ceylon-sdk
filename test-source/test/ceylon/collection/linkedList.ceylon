@@ -13,6 +13,8 @@ shared class LinkedListTest() satisfies MutableListTests {
 
     createRanged = createList;
     createCorrespondence = createList;
+    createIterable = createList;
+    createCategory = createList;
 
     shared test void testLinkedListConstructor(){
         List<String> list = LinkedList{"a", "b"};

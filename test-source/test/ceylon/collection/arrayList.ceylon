@@ -13,6 +13,8 @@ shared class ArrayListTest() satisfies MutableListTests {
 
     createRanged = createList;
     createCorrespondence = createList;
+    createIterable = createList;
+    createCategory = createList;
 
     test shared void testChangingCapacity() {
         value list = ArrayList { initialCapacity = 2; growthFactor = 1.5; elements = { "a", "b" }; };
