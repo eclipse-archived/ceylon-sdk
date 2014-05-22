@@ -5,7 +5,7 @@ import ceylon.test {
     ...
 }
 
-shared interface SetTests satisfies CategoryTests {
+shared interface SetTests satisfies IterableTests {
     shared formal Set<String> createSet({String*} strings);
 
     test shared void testEquals() {

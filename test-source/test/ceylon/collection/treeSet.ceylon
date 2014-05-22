@@ -18,6 +18,8 @@ shared class TreeSetTest() satisfies MutableSetTests {
     };
 
     createCategory = createSet;
+    
+    shared actual {String*} createIterable({String?*} strings) => createSet(strings.coalesced);
 
     test shared void elementsAreKeptInOrder() {
         value set = createSet { "A", "B", "C" };

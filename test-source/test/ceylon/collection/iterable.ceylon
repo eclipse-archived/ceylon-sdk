@@ -65,10 +65,10 @@ shared interface IterableTests satisfies CategoryTests {
     }
     
     test shared void testRest() {
-        assertEquals(createIterable({}).rest, []);
-        assertEquals(createIterable({"A"}).rest, []);
-        assertEquals(createIterable({"A", "B"}).rest, ["B"]);
-        assertEquals(createIterable({"A", "B", "C", "D"}).rest, ["B", "C", "D"]);
+        assertEquals(createIterable({}).rest.sequence, []);
+        assertEquals(createIterable({"A"}).rest.sequence, []);
+        assertEquals(createIterable({"A", "B"}).rest.sequence, ["B"]);
+        assertEquals(createIterable({"A", "B", "C", "D"}).rest.sequence, ["B", "C", "D"]);
     }
     
 }

@@ -13,6 +13,8 @@ class HashSetTest() satisfies MutableSetTests {
     shared actual MutableSet<String> createSet({String*} strings) => HashSet { elements = strings; };
 
     createCategory = createSet;
+    
+    shared actual {String*} createIterable({String?*} strings) => createSet(strings.coalesced);
 
     test shared void elementsAreKeptInOrder() {
         value set = HashSet { "A", "B", "C" };
@@ -28,6 +30,8 @@ class UnlinkedHashSetTest() satisfies MutableSetTests {
     shared actual MutableSet<String> createSet({String*} strings) => HashSet { stability = unlinked; elements = strings; };
 
     createCategory = createSet;
+    
+    shared actual {String*} createIterable({String?*} strings) => createSet(strings.coalesced);
 
     test shared void unlinkedSet() {
 
