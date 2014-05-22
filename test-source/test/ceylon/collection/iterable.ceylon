@@ -36,7 +36,7 @@ shared interface IterableTests satisfies CategoryTests {
         assertFalse(longList.longerThan(1000));
     }
 
-    test shared void testIterator() {
+    test shared default void testIterator() {
         variable value iter = createIterable({}).iterator();
         assertTrue(iter.next() is Finished);
         assertTrue(iter.next() is Finished);
@@ -50,21 +50,21 @@ shared interface IterableTests satisfies CategoryTests {
         assertTrue(iter.next() is Finished);
     }
     
-    test shared void testFirst() {
+    test shared default void testFirst() {
         assertEquals(createIterable({}).first, null);
         assertEquals(createIterable({"A"}).first, "A");
         assertEquals(createIterable({"A", "B"}).first, "A");
         assertEquals(createIterable({"Z", "B", "C", "D"}).first, "Z");
     }
     
-    test shared void testLast() {
+    test shared default void testLast() {
         assertEquals(createIterable({}).last, null);
         assertEquals(createIterable({"A"}).last, "A");
         assertEquals(createIterable({"A", "B"}).last, "B");
         assertEquals(createIterable({"Z", "B", "C", "D"}).last, "D");
     }
     
-    test shared void testRest() {
+    test shared default void testRest() {
         assertEquals(createIterable({}).rest.sequence, []);
         assertEquals(createIterable({"A"}).rest.sequence, []);
         assertEquals(createIterable({"A", "B"}).rest.sequence, ["B"]);
