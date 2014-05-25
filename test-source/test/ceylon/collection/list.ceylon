@@ -7,7 +7,7 @@ import ceylon.test {
     assertNotEquals
 }
 
-shared interface ListTests satisfies RangedTests & CorrespondenceTests & IterableTests {
+shared interface ListTests satisfies RangedTests & CorrespondenceTests & InsertionOrderIterableWithNullsTests {
 
     shared formal List<String?> createList({String?*} strings);
 

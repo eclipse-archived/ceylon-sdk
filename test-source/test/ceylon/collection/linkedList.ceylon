@@ -10,10 +10,11 @@ import ceylon.test {
 shared class LinkedListTest() satisfies MutableListTests {
 
     createList({String?*} strings) => LinkedList(strings);
+    createIterable({String*} strings) => LinkedList(strings);
 
     createRanged = createList;
     createCorrespondence = createList;
-    createIterable = createList;
+    createIterableWithNulls = createList;
     createCategory = createList;
 
     shared test void testLinkedListConstructor(){
@@ -64,5 +65,5 @@ shared class LinkedListTest() satisfies MutableListTests {
         assertTrue(list.first is Null);
         assertTrue(list.last is Null);
     }
-
+    
 }

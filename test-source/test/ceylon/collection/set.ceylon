@@ -34,7 +34,7 @@ shared interface SetTests satisfies IterableTests {
         }
     }
 
-    test shared void testString() {
+    test shared actual void testString() {
         assertEquals(createSet({}).string, "{}");
         assertEquals(createSet({"ABC"}).string, "{ ABC }");
 

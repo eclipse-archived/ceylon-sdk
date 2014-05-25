@@ -10,10 +10,11 @@ import ceylon.test {
 shared class ArrayListTest() satisfies MutableListTests {
 
     createList({String?*} strings) => ArrayList<String?>{ elements = strings; };
+    createIterable({String*} strings) => ArrayList<String>{ elements = strings; };
 
     createRanged = createList;
     createCorrespondence = createList;
-    createIterable = createList;
+    createIterableWithNulls = createList;
     createCategory = createList;
 
     test shared void testChangingCapacity() {
