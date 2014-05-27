@@ -11,10 +11,13 @@ import com.redhat.ceylon.test {
     TapLoggingListener,
     TestLoggingListener
 }
+import ceylon.collection {
+    ArrayList
+}
 
 shared void run() {
-    value moduleNameAndVersions = SequenceBuilder<[String, String]>();
-    value testSources = SequenceBuilder<TestSource>();
+    value moduleNameAndVersions = ArrayList<[String, String]>();
+    value testSources = ArrayList<TestSource>();
     variable String prev = "";
     variable TestListener listener;
     variable Integer port = -1;
@@ -29,10 +32,10 @@ shared void run() {
             String moduleName = arg[0 .. i - 1];
             String moduleVersion = arg[i + 1 ...];
             
-            moduleNameAndVersions.append([moduleName, moduleVersion]);
+            moduleNameAndVersions.add([moduleName, moduleVersion]);
         }
         if (prev == "__test") {
-            testSources.append(arg);
+            testSources.add(arg);
         }
         if (arg == "__tap") {
             tap = true;
@@ -82,7 +85,7 @@ shared void run() {
     if (testSources.empty) {
         for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
             assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
-            testSources.append(m);
+            testSources.add(m);
         }
     }
     
