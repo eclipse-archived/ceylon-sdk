@@ -4,7 +4,7 @@ import ceylon.test {
 
 test
 shared void foo() {
-    sum(0..1M);
+    sum(0..1k);
 }
 
 test
@@ -30,13 +30,13 @@ shared class Bar() {
 
     test
     shared void bar1() {
-        sum(0..1M);
+        sum(0..1k);
         barInstance1 = this;
     }
     
     test
     shared void bar2() {
-        sum(0..1M);
+        sum(0..1k);
         barInstance2 = this;
     }
 

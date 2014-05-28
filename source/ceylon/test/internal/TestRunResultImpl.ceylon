@@ -10,7 +10,7 @@ import ceylon.collection {
 
 shared class TestRunResultImpl() satisfies TestRunResult {
     
-    value resultsBuilder = ArrayList<TestResult>();
+    value resultsList = ArrayList<TestResult>();
     
     variable Integer runCounter = 0;
     variable Integer successCounter = 0;
@@ -32,7 +32,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     shared actual Integer endTime => endTimeMilliseconds;
     shared actual Integer elapsedTime => endTime - startTime;
     
-    shared actual TestResult[] results => resultsBuilder.sequence;
+    shared actual TestResult[] results => resultsList.sequence;
     
     shared actual String string {
         value b = StringBuilder();
@@ -75,7 +75,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         shared actual void testIgnore(TestIgnoreEvent event) => handleResult(event.result, false);
         
         void handleResult(TestResult result, Boolean wasRun) {
-            resultsBuilder.add(result);
+            resultsList.add(result);
             if (result.state == success && result.description.children.empty) {
                 successCounter++;
                 runCounter += wasRun then 1 else 0;

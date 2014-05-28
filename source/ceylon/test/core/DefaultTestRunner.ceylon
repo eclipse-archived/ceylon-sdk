@@ -17,7 +17,7 @@ import ceylon.test.internal {
     ...
 }
 import ceylon.collection {
-    ArrayList
+    ...
 }
 
 "Default implementation of [[TestRunner]]."
@@ -120,30 +120,29 @@ TestExecutor createExecutor(FunctionDeclaration funcDecl, ClassDeclaration? clas
 }
 
 TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotation suiteAnnotation, Boolean(TestExecutor) filter, Comparison(TestExecutor, TestExecutor) comparator) {
-    value executorsBuilder = ArrayList<TestExecutor>();
-    value sourcesBuilder = ArrayList<TestSource>();
+    value executors = ArrayList<TestExecutor>();
+    value sources = ArrayList<TestSource>();
     
     for (source in suiteAnnotation.sources) {
         if (is ClassDeclaration source) {
-            sourcesBuilder.add(source);
+            sources.add(source);
         } else if (is FunctionDeclaration source) {
-            sourcesBuilder.add(source);
+            sources.add(source);
         } else if (is Package source) {
-            sourcesBuilder.add(source);
+            sources.add(source);
         } else if (is Module source) {
-            sourcesBuilder.add(source);
+            sources.add(source);
         } else {
-            executorsBuilder.add(ErrorTestExecutor(TestDescription(source.qualifiedName), Exception("declaration ``source.qualifiedName`` is invalid test suite source (only functions, classes, packages and modules are allowed)")));
+            executors.add(ErrorTestExecutor(TestDescription(source.qualifiedName), Exception("declaration ``source.qualifiedName`` is invalid test suite source (only functions, classes, packages and modules are allowed)")));
         }
     }
     
-    executorsBuilder.addAll(createExecutors(sourcesBuilder.sequence, filter, comparator));
+    executors.addAll(createExecutors(sources.sequence, filter, comparator));
     
-    value executors = executorsBuilder.sequence;
     if (executors.empty) {
         return ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("test suite ``funcDecl.qualifiedName`` does not contains any tests"));
     } else {
-        return GroupTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl, null, executors*.description), executors);
+        return GroupTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl, null, executors*.description), executors.sequence);
     }
 }
 

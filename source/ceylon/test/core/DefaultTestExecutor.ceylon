@@ -2,7 +2,7 @@ import ceylon.collection {
     ...
 }
 import ceylon.language.meta {
-    typeLiteral
+    ...
 }
 import ceylon.language.meta.declaration {
     ...
@@ -23,8 +23,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
-        Boolean contextOk = verify(context);
-        if (contextOk && !testIgnored(context)) {
+        if (verify(context) && !handleIgnored(context)) {
             Object? instance = getInstance();
             Anything() executor = handleTestExecution(context, instance,
                     handleAfterCallbacks(context, instance,
@@ -132,7 +131,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default Boolean testIgnored(TestRunContext context) {
+    shared default Boolean handleIgnored(TestRunContext context) {
         value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(functionDeclaration, classDeclaration);
         if (exists ignoreAnnotation) {
             context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, IgnoreException(ignoreAnnotation.reason))));
@@ -169,12 +168,12 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     
 
     shared default void handleAfterCallbacks(TestRunContext context, Object? instance, void execute())() {
-        value exceptionsBuilder = ArrayList<Throwable>();
+        value exceptions = ArrayList<Throwable>();
         try {
             execute();
         }
         catch (Throwable e) {
-            exceptionsBuilder.add(e);
+            exceptions.add(e);
         }
         finally {
             value callbacks = findCallbacks<AfterTestAnnotation>();
@@ -183,17 +182,16 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
                     invokeFunction(callback, instance);
                 }
                 catch (Throwable e) {
-                    exceptionsBuilder.add(e);
+                    exceptions.add(e);
                 }
             }
         }
         
-        value exceptions = exceptionsBuilder.sequence;
         if (exceptions.size == 1) {
             assert (exists e = exceptions.first);
             throw e;
-        } else if (!exceptions.empty) {
-            throw MultipleFailureException(exceptions);
+        } else if (exceptions.size > 1) {
+            throw MultipleFailureException(exceptions.sequence);
         }
     }
     
