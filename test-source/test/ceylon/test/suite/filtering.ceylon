@@ -7,6 +7,9 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection {
+    ArrayList
+}
 
 test
 shared void shouldFilterEverything() {
@@ -41,9 +44,9 @@ shared void shouldFilterTestsByName() {
 
 test
 shared void shouldFilterTestsAndFireExcludeEvent() {
-    value excludedBuilder = SequenceBuilder<TestDescription>();
+    value excludedBuilder = ArrayList<TestDescription>();
     object excludedListener satisfies TestListener {
-        shared actual void testExclude(TestExcludeEvent event) => excludedBuilder.append(event.description);
+        shared actual void testExclude(TestExcludeEvent event) => excludedBuilder.add(event.description);
     }
 
     createTestRunner{
