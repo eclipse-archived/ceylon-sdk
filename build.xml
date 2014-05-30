@@ -6,6 +6,13 @@
     <property name="out.repo" location="modules"/>
     <property name="deps.repo" location="test-deps"/>
     <property name="test.repo" location="modules"/>
+	
+    <property name="p2" location="${basedir}/p2" />
+    <property name="p2.build" location="${p2}/build" />
+    <property name="p2.dist" location="${p2.build}/dist" />
+    <property name="p2.build.plugins" location="${p2.build}/plugins" />
+    <property name="p2.dist.repository" location="${p2.dist}/repository" />
+	
 
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
@@ -227,4 +234,52 @@
         </ceylon-doc>
         
     </target>
+	
+	<!-- Rule to setup a plugins directory with required bundles -->
+    <target name="generate-p2-repo">
+    	<delete failonerror="false" dir="${p2.build.plugins}"/>
+        <mkdir dir="${p2.build.plugins}" />
+    	<delete failonerror="false" dir="${p2.dist.repository}"/>
+        <mkdir dir="${p2.dist.repository}" />    	
+		<copy todir="${p2.build.plugins}" flatten="true">
+			<fileset dir="${out.repo}" includes="**/*.car"/>
+			<globmapper from="*.car" to="*.jar"/>
+		</copy>
+    	<makeurl property="destinationRepository" file="${p2.dist.repository}"/>
+    	<makeurl property="categoryDefinition" file="${p2}/category.xml"/>
+    	<exec dir="${basedir}" executable="eclipse" failonerror="true">
+    		<arg value="-noSplash"/>
+    		<arg value="-console"/>
+    		<arg value="-consolelog"/>
+    		<arg value="--launcher.suppressErrors"/>
+    		<arg value="-application"/>
+    		<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-artifactRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-source"/>
+    		<arg file="${p2.build}"/>
+    		<arg value="-publishArtifacts"/>
+    	</exec>
+    	<exec dir="${basedir}" executable="eclipse">
+    		<arg value="-noSplash"/>
+    		<arg value="-console"/>
+    		<arg value="-consolelog"/>
+    		<arg value="--launcher.suppressErrors"/>
+    		<arg value="-application"/>
+    		<arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-categoryDefinition"/>
+    		<arg value="${categoryDefinition}"/>
+    		<arg value="-categoryQualifier"/>
+    		<arg value="ceylon.sdk.osgi.bundles"/>
+    	</exec>
+    </target>
+
+	<target name="ide" depends="compile-jvm,ide-quick"/>
+
+    <target name="ide-quick" depends="generate-p2-repo"/>
+
 </project>
