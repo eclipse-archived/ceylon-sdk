@@ -520,8 +520,6 @@ shared class LinkedList<Element>(elements = {})
         return ret;
     }
 
-    keys => empty then {} else 0..length;
-
     /*shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("[");

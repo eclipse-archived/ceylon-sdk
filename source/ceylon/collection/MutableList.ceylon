@@ -22,6 +22,8 @@ shared interface MutableList<Element>
     shared actual default Element? deleteLast() => delete(size-1);
 
     shared actual formal MutableList<Element> clone();
+    
+    shared actual default Category keys => 0:size;
 
 }
 
