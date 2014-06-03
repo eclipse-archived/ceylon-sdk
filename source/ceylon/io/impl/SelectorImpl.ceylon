@@ -1,6 +1,6 @@
 import ceylon.io { Selector, Socket, FileDescriptor, SocketConnector, ServerSocket }
 import java.nio.channels { 
-    JavaSelector = Selector { javaOpenSelector = open },
+    JavaSelector = Selector,
     SelectionKey { 
         javaReadOp = \iOP_READ,
         javaWriteOp = \iOP_WRITE,
@@ -27,7 +27,7 @@ class Key(socket = null, onRead = null, onWrite = null,
 
 shared class SelectorImpl() satisfies Selector {
     
-    value javaSelector = javaOpenSelector();
+    value javaSelector = JavaSelector.open();
     value map = HashMap<SelectionKey, Key>();
     
     shared actual void addConsumer(FileDescriptor socket, Boolean callback(FileDescriptor s)) {
