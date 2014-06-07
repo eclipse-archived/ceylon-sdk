@@ -21,10 +21,17 @@ shared interface MutableList<Element>
      no such element."
     shared actual default Element? deleteLast() => delete(size-1);
 
+    "A new list with the same elements as this list."
     shared actual formal MutableList<Element> clone();
+        
+    "A new list, containing the current elements of this 
+     list, in reverse order."
+    shared actual formal List<Element> reversed;
     
-    shared actual default Category keys => 0:size;
-
+    "A new list, containing the current elements of this 
+     list, except for the first element."
+    shared actual formal List<Element> rest;
+    
 }
 
 "Protocol for mutation of a [[MutableList]]."
