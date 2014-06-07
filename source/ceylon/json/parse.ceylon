@@ -1,5 +1,5 @@
 class Parser(String str){
-    Character[] chars = str.sequence;
+    Character[] chars = str.sequence();
     variable Integer index = 0;
     variable Integer line = 1;
     variable Integer column = 1;

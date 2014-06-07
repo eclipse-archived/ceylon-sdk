@@ -60,7 +60,7 @@ shared class A(text = "", href = "#", target = null, download = null,
         attrs.addAttribute("rel", rel);
         attrs.addAttribute("hreflang", hrefLang);
         attrs.addAttribute("type", type);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

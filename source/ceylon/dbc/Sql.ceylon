@@ -210,7 +210,7 @@ shared class Sql(newConnection) {
                         if (count!=0) {
                             runBatch();
                         }
-                        return result.sequence;
+                        return result.sequence();
                     }
                     finally {
                         stmt.close();
@@ -250,7 +250,7 @@ shared class Sql(newConnection) {
                         while (resultSet.next()) {
                             builder.add(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
                         }
-                        return [updateCount, builder.sequence];
+                        return [updateCount, builder.sequence()];
                     }
                     finally {
                         resultSet.close();
@@ -348,7 +348,7 @@ shared class Sql(newConnection) {
          to its parameters, returning a sequence of [[Row]]s."
         shared Row[] execute(Object* arguments) {
             try (results = Results(*arguments)) {
-                return results.sequence;
+                return results.sequence();
             }
         }
         

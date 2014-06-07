@@ -65,7 +65,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
             value params = contentTypeLine.split((Character c) => c == ';').rest;
             for(param in params){
                 value trimmed = param.trimmed;
-                value keyValue = trimmed.split((Character c) => c == '=').sequence;
+                value keyValue = trimmed.split((Character c) => c == '=').sequence();
                 if(nonempty keyValue){
                     if(keyValue.first == "charset"){
                         return keyValue[1];

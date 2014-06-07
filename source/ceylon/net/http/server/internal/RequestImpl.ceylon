@@ -103,7 +103,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
                 value paramValue = valuesIt.next(); 
                 sequenceBuilder.add(paramValue.string);
             }
-            queryParameters.put(key.string, sequenceBuilder.sequence);
+            queryParameters.put(key.string, sequenceBuilder.sequence());
         }
         return queryParameters;
     }
@@ -132,7 +132,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
             sequenceBuilder.add(header.string);
         }
         
-        return sequenceBuilder.sequence;
+        return sequenceBuilder.sequence();
     }
 
     shared actual String[] parameters(String name, Boolean forseFormParse) {
@@ -151,7 +151,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         if (exists posted = formData.parameters.get(name)) {
             mergedParams.addAll(posted);
         }
-        return mergedParams.sequence;
+        return mergedParams.sequence();
     }
 
     shared actual String? parameter(String name, Boolean forseFormParsing) {

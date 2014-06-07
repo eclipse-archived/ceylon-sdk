@@ -28,7 +28,7 @@ object dummyTrustManager satisfies X509TrustManager {
 JavaByteBuffer emptyBuf = allocateJavaByteBuffer(0);
 
 ObjectArray<TrustManager> makeObjectArray(Iterable<TrustManager> items) {
-    value seq = items.sequence;
+    value seq = items.sequence();
     value ret = ObjectArray<TrustManager>(seq.size);
     variable Integer i = 0;
     for(item in seq){

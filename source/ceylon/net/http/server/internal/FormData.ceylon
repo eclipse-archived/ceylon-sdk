@@ -44,11 +44,11 @@ shared class FormDataBuilder() {
         value filesSequence = HashMap<String, UploadedFile[]>();
         
         for (key->parameterValues in parameters) {
-            parametersSequence.put(key, parameterValues.sequence);
+            parametersSequence.put(key, parameterValues.sequence());
         }
         
         for (key->fileValues in files) {
-            filesSequence.put(key, fileValues.sequence);
+            filesSequence.put(key, fileValues.sequence());
         }
         
         

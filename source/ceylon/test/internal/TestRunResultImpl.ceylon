@@ -32,7 +32,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     shared actual Integer endTime => endTimeMilliseconds;
     shared actual Integer elapsedTime => endTime - startTime;
     
-    shared actual TestResult[] results => resultsList.sequence;
+    shared actual TestResult[] results => resultsList.sequence();
     
     shared actual String string {
         value b = StringBuilder();

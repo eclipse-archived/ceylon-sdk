@@ -51,7 +51,7 @@ shared class Img(src, alt = "", useMap = null,
         attrs.addAttribute("ismap", isMap);
         attrs.addAttribute("height", height);
         attrs.addAttribute("width", width);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

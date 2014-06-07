@@ -56,7 +56,7 @@ shared abstract class Media(src,
         attrs.addNamedBooleanAttribute("muted", muted);
         attrs.addAttribute("preload", preload);
         attrs.addAll(super.attributes);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }
@@ -178,7 +178,7 @@ shared class Video(String src,
         attrs.addAttribute("poster", poster);
         attrs.addAttribute("height", height);
         attrs.addAttribute("width", width);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

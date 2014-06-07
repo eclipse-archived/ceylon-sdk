@@ -71,7 +71,7 @@ shared class Form(action, method = "", acceptCharset = null,
         attrs.addAttribute("enctype", encType);
         attrs.addNamedBooleanAttribute("novalidate", noValidate);
         attrs.addAttribute("target", target);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }
@@ -137,7 +137,7 @@ shared abstract class FormElement(
         attrs.addNamedBooleanAttribute("readonly", readOnly);
         attrs.addNamedBooleanAttribute("required", required);
         attrs.addAll(super.attributes);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

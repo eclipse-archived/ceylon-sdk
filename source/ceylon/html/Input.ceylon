@@ -161,7 +161,7 @@ shared class Input(String? name = null, type = text, accept = null, autoComplete
         attrs.addAttribute("height", height);
         attrs.addAttribute("width", width);
 
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

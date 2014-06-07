@@ -31,7 +31,7 @@ class ConcreteDirectory(JPath jpath)
             sb.add(ConcretePath(iter.next()));
         }
         stream.close();
-        return sb.sequence;
+        return sb.sequence();
     }
     
     children(String filter) =>

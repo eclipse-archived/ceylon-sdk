@@ -140,7 +140,7 @@ shared String[] lines(File file) {
             sb.add(line);
         }
     }
-    return sb.sequence;
+    return sb.sequence();
 }
 
 "Call the given function for each line of 

@@ -49,5 +49,5 @@ shared Directory[] rootDirectories {
             sb.add(r);
         }
     }
-    return sb.sequence;
+    return sb.sequence();
 }

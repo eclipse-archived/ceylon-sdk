@@ -29,7 +29,7 @@ class AttributeSequenceBuilder() {
         }
     }
     
-    shared <String->Object>[] sequence => list.sequence;
+    shared <String->Object>[] sequence() => list.sequence();
     
     shared void addAll({<String->Object>*} attributes)
             => list.addAll(attributes);

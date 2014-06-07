@@ -191,7 +191,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             assert (exists e = exceptions.first);
             throw e;
         } else if (exceptions.size > 1) {
-            throw MultipleFailureException(exceptions.sequence);
+            throw MultipleFailureException(exceptions.sequence());
         }
     }
     

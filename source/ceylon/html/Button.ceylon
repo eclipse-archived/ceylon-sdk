@@ -37,7 +37,7 @@ shared class Button(text = "", type = button,
         value attrs = AttributeSequenceBuilder();
         attrs.addAttribute("type", type);
         attrs.addAll(super.attributes);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

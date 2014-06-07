@@ -84,7 +84,7 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
                 value executor = createExecutor(funcDecl, classDecl);
                 if (filter(executor)) {
                     if (exists classDecl) {
-                        value executorsWithClass = executorsWithClasses.sequence.find(([ClassDeclaration, ArrayList<TestExecutor>] elem) => elem[0] == classDecl);
+                        value executorsWithClass = executorsWithClasses.sequence().find(([ClassDeclaration, ArrayList<TestExecutor>] elem) => elem[0] == classDecl);
                         if (exists executorsWithClass) {
                             executorsWithClass[1].add(executor);
                         } else {
@@ -103,12 +103,12 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
         }
     }
     
-    for (executorsWithClass in executorsWithClasses.sequence) {
-        value sorted = executorsWithClass[1].sequence.sort(comparator);
+    for (executorsWithClass in executorsWithClasses.sequence()) {
+        value sorted = executorsWithClass[1].sequence().sort(comparator);
         executors.add(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, null, executorsWithClass[0], sorted*.description), sorted));
     }
     
-    return executors.sequence.sort(comparator);
+    return executors.sequence().sort(comparator);
 }
 
 TestExecutor createExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) {
@@ -137,12 +137,12 @@ TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotati
         }
     }
     
-    executors.addAll(createExecutors(sources.sequence, filter, comparator));
+    executors.addAll(createExecutors(sources.sequence(), filter, comparator));
     
     if (executors.empty) {
         return ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("test suite ``funcDecl.qualifiedName`` does not contains any tests"));
     } else {
-        return GroupTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl, null, executors*.description), executors.sequence);
+        return GroupTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl, null, executors*.description), executors.sequence());
     }
 }
 
@@ -165,7 +165,7 @@ TestCandidate[] findCandidates(TestSource[] sources) {
             findCandidatesInTypeLiteral(candidates, source);
         }
     }
-    return candidates.sequence;
+    return candidates.sequence();
 }
 
 void findCandidatesInModule(ArrayList<TestCandidate> candidates, Module mod) {
@@ -373,5 +373,5 @@ A[] findAnnotations<out A>(ClassDeclaration classDecl)
         annotationBuilder.addAll(decl.annotations<A>());
         declVar = decl.extendedType?.declaration;
     }
-    return annotationBuilder.sequence;
+    return annotationBuilder.sequence();
 }

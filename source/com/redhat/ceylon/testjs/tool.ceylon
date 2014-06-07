@@ -57,37 +57,37 @@ shared void run() {
         prev = arg;
     }
     
-    if (port != -1) {
-        dynamic {
-            dynamic net = require("net");
-            dynamic socket = net.connect(port);
-            
-            void publishEvent(String json) {
-                dynamic {
-                    socket.write(json);
-                    socket.write("\{END OF TRANSMISSION}");
-                }
-            }
-            
-            listener = TestEventPublisher(publishEvent);
-        }
-    } else if (tap) {
-        listener = TapLoggingListener();
-    } else {
-        listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
-    }
+    //if (port != -1) {
+    //    dynamic {
+    //        dynamic net = require("net");
+    //        dynamic socket = net.connect(port);
+    //        
+    //        void publishEvent(String json) {
+    //            dynamic {
+    //                socket.write(json);
+    //                socket.write("\{END OF TRANSMISSION}");
+    //            }
+    //        }
+    //        
+    //        listener = TestEventPublisher(publishEvent);
+    //    }
+    //} else if (tap) {
+    //    listener = TapLoggingListener();
+    //} else {
+    //    listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
+    //}
     
     // initialize tested modules
-    for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+    for (value moduleNameAndVersion in moduleNameAndVersions.sequence()) {
         assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
     }
     
     if (testSources.empty) {
-        for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+        for (value moduleNameAndVersion in moduleNameAndVersions.sequence()) {
             assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
             testSources.add(m);
         }
     }
     
-    createTestRunner(testSources.sequence, [listener]).run();
+    //createTestRunner(testSources.sequence(), [listener]).run();
 }

@@ -52,7 +52,7 @@ shared Path[] rootPaths {
     while (iter.hasNext()) {
         sb.add(ConcretePath(iter.next()));
     }
-    return sb.sequence;
+    return sb.sequence();
 }
 
 JPath asJPath(String|Path path) {
@@ -102,7 +102,7 @@ class ConcretePath(jpath)
         while (iter.hasNext()){
             sb.add(ConcretePath(iter.next()));
         }
-        return sb.sequence;
+        return sb.sequence();
     }
     
     shared actual String[] elements {
@@ -111,7 +111,7 @@ class ConcretePath(jpath)
         while (iter.hasNext()){
             sb.add(iter.next().string);
         }
-        return sb.sequence;
+        return sb.sequence();
     }
     
     compare(Path other) => jpath.compareTo(asJPath(other))<=>0;

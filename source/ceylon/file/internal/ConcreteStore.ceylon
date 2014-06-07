@@ -19,7 +19,7 @@ shared Store[] stores {
     while (iter.hasNext()) {
         sb.add(ConcreteStore(iter.next()));
     }
-    return sb.sequence;
+    return sb.sequence();
 }
 
 class ConcreteStore(JFileStore jstore) 

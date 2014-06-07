@@ -21,5 +21,5 @@ shared [Element[],Element[]] partition<Element>
             rejected.add(element);
         }
     }
-    return [selected.sequence, rejected.sequence];
+    return [selected.sequence(), rejected.sequence()];
 }

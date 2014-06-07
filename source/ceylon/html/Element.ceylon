@@ -13,7 +13,7 @@ shared abstract class Element(id = null)
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
         attrs.addAttribute("id", id);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }
@@ -38,7 +38,7 @@ shared abstract class StyledElement(String? id, classNames = [], style = null)
             attrs.addAttribute("class", classNames);
         }
         attrs.addAttribute("style", style);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }
@@ -133,7 +133,7 @@ shared abstract class BaseElement(String? id = null, CssClass classNames = [],
                 => "data-``elem.key``"->elem.item);
 
         // TODO append events attributes
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

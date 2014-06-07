@@ -42,7 +42,7 @@ shared class Select(String? name = null, Boolean? autoFocus = null,
         attrs.addAll(super.attributes);
         attrs.addAttribute("size", size);
         attrs.addNamedBooleanAttribute("multiple", multiple);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }
@@ -74,7 +74,7 @@ shared class Option(text = "", String? id = null,
         attrs.addNamedBooleanAttribute("disabled", disabled);
         attrs.addNamedBooleanAttribute("selected", selected);
         attrs.addAttribute("value", valueOf);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }
@@ -102,7 +102,7 @@ shared class OptionGroup(text = "",
         value attrs = AttributeSequenceBuilder();
         attrs.addAll(super.attributes);
         attrs.addNamedBooleanAttribute("disabled", disabled);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

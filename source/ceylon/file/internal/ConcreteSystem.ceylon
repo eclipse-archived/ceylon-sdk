@@ -42,7 +42,7 @@ class ConcreteSystem(FileSystem fs)
         while (iter.hasNext()) {
             sb.add(ConcretePath(iter.next()));
         }
-        return sb.sequence;
+        return sb.sequence();
     }
     
     shared actual Store[] stores {
@@ -51,7 +51,7 @@ class ConcreteSystem(FileSystem fs)
         while (iter.hasNext()) {
             sb.add(ConcreteStore(iter.next()));
         }
-        return sb.sequence;
+        return sb.sequence();
     }
     
 }

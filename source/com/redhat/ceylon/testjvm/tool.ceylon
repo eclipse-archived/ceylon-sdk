@@ -55,7 +55,7 @@ class Runner() {
             connect();
             
             if (testSources.empty) {
-                for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+                for (value moduleNameAndVersion in moduleNameAndVersions.sequence()) {
                     assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
                     testSources.add(m);
                 }
@@ -79,7 +79,7 @@ class Runner() {
                 };
             }
             
-            createTestRunner(testSources.sequence, [testListener]).run();
+            createTestRunner(testSources.sequence(), [testListener]).run();
         }
         finally {
             disconnect();
@@ -112,7 +112,7 @@ class Runner() {
     }
     
     void loadModules() {
-        for (value moduleNameAndVersion in moduleNameAndVersions.sequence) {
+        for (value moduleNameAndVersion in moduleNameAndVersions.sequence()) {
             loadModule(moduleNameAndVersion[0], moduleNameAndVersion[1]);
         }
     }
