@@ -589,33 +589,7 @@ shared class LinkedList<Element>(elements = {})
         }
         return false;
     }
-
-    shared actual List<Element> reversed {
-        value ret = LinkedList<Element>();
-        variable value iter = head;
-        while (exists cell = iter) {
-            // append before the head
-            ret.head = Cell(cell.element, ret.head);
-            if (!ret.tail exists) {
-                ret.tail = ret.head;
-            }
-            iter = cell.rest;
-        }
-        ret.length = length;
-        return ret;
-    }
-
-    shared actual List<Element> rest {
-        // this would be a lot cheaper if we were not mutable, but there we are
-        value ret = LinkedList<Element>();
-        variable value iter = head?.rest; // skip the first one
-        while (exists cell = iter) {
-            ret.add(cell.element);
-            iter = cell.rest;
-        }
-        return ret;
-    }
-
+    
     shared actual void truncate(Integer size) {
         assert (size>=0);
         if (size==0) {

@@ -259,33 +259,12 @@ shared class ArrayList<Element>
             return null;
         }
     }
-
-    rest => ArrayList {
-        initialCapacity = largest(0, length-1);
-        growthFactor = growthFactor;
-        elements = skip(1);
-    };
-
+    
     shared actual Iterator<Element> iterator() 
             => { for (i in 0:length) 
                  if (is Element elem = array[i]) 
                  elem }
                 .iterator();
-
-    shared actual List<Element> reversed {
-        if (length > 0) {
-            return ArrayList {
-                initialCapacity = initialCapacity;
-                growthFactor = growthFactor;
-                for (i in length-1..0) 
-                    if (is Element elem = array[i]) 
-                        elem 
-            };
-        }
-        else {
-            return ArrayList();
-        }
-    }
 
     shared actual void set(Integer index, Element element) {
         "index may not be negative or greater than the

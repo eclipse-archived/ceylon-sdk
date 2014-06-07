@@ -23,14 +23,6 @@ shared interface MutableList<Element>
 
     "A new list with the same elements as this list."
     shared actual formal MutableList<Element> clone();
-        
-    "A new list, containing the current elements of this 
-     list, in reverse order."
-    shared actual formal List<Element> reversed;
-    
-    "A new list, containing the current elements of this 
-     list, except for the first element."
-    shared actual formal List<Element> rest;
     
 }
 
