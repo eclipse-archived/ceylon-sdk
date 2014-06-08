@@ -522,7 +522,7 @@ shared class Sql(newConnection) {
     "An [[Entry]] with the column data at the specified 
      index."
     String->Object columnEntry(ResultSet rs, ResultSetMetaData meta, Integer idx) {
-        String columnName = meta.getColumnName(idx).lowercased;
+        String columnName = meta.getColumnLabel(idx).lowercased;
         Object? x = rs.getObject(idx);
         Object? v;
         //TODO optimize these conversions
