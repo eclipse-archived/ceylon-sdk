@@ -52,7 +52,7 @@ shared test void testPriorityQueueWithSeveralElementsCollection() {
 }
 
 shared test void testPriorityQueueWithSeveralElementsSequence() {
-    value queue = newQueue(elementsIterable.sequence);
+    value queue = newQueue(elementsIterable.sequence());
     checkEmptyQueue(queue, orderedValues);
 }
 

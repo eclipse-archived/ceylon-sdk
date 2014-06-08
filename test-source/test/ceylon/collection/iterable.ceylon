@@ -106,7 +106,7 @@ shared interface IterableTests satisfies CategoryTests {
      If needed, override that method."
     test shared void testMap() {
         testMappingFunction(({String*} strings) => 
-            compose(Iterable<String>.sequence, strings.map<String>));
+            compose(({String*} it)=>it.sequence(), strings.map<String>));
     }
 
     "This test calls [[testMappingFunction]] with the collect function.
@@ -127,7 +127,7 @@ shared interface IterableTests satisfies CategoryTests {
      If needed, override that method."
     test shared void testFilter() {
         testFilteringFunction(({String*} strings) =>
-            compose(Iterable<String>.sequence, strings.filter));
+            compose(({String*} it)=>it.sequence(), strings.filter));
     }
     
     "This test calls [[testFilteringFunction]] with the select function.
@@ -340,7 +340,7 @@ shared interface IterableTests satisfies CategoryTests {
     shared void testStringWith({String?*} items) {
         value builder = StringBuilder();
         builder.append("{ ");
-        for (item in items.sequence[0:(items.size - 1)]) {
+        for (item in items.sequence()[0:(items.size - 1)]) {
             builder.append(item else "<null>").append(", ");
         }
         builder.append(items.last else "<null>").append(" }");
@@ -364,7 +364,8 @@ shared interface IterableTests satisfies CategoryTests {
     "This test calls [[testCycleFunction]] with the cycle function.
      If needed, override that method."
     test shared void testCycle() {
-        testCycleFunction(({String?*} strings) => compose(Iterable<String?>.sequence, strings.cycle));
+        testCycleFunction(({String?*} strings) => 
+            compose(({String?*} it)=>it.sequence(), strings.cycle));
     }
     
     "This test calls [[testCycleFunction]] with the cycle function.

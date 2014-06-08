@@ -67,7 +67,7 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
      If needed, override that method."
     test shared void testMapWithNulls() {
         testMappingFunctionWithNulls(({String?*} strings) => 
-            compose(Iterable<String?>.sequence, strings.map<String?>));
+            compose(({String?*} it)=>it.sequence(), strings.map<String?>));
     }
     
     "This test calls [[testMappingFunctionWithNulls]] with the collect function.
@@ -87,7 +87,7 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
      If needed, override that method."
     test shared void testFilterWithNulls() {
         testFilteringFunctionWithNulls(({String?*} strings) =>
-            compose(Iterable<String?>.sequence, strings.filter));
+            compose(({String?*} it)=>it.sequence(), strings.filter));
     }
     
     "This test calls [[testFilteringFunctionWithNulls]] with the select function.
@@ -236,7 +236,8 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
     "This test calls [[testCycleFunctionWithNulls]] with the cycle function.
      If needed, override that method."
     test shared void testCycleWithNulls() {
-        testCycleFunctionWithNulls(({String?*} strings) => compose(Iterable<String?>.sequence, strings.cycle));
+        testCycleFunctionWithNulls(({String?*} strings) => 
+            compose(({String?*} it)=>it.sequence(), strings.cycle));
     }
     
     "This test calls [[testCycleFunctionWithNulls]] with the repeat function.
@@ -261,7 +262,7 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
             }
             index++;
         }
-        return nullIndexes.sequence;
+        return nullIndexes.sequence();
     }
     
 }

@@ -14,7 +14,7 @@ shared void shouldFireEvents() {
         [`foo`, `fooThrowingAssertion`, `fooThrowingException`, `fooWithoutTestAnnotation`, `Bar.bar1`], 
         [recordingListener]).run();
     
-    value lines = recordingListener.result.lines.sequence;
+    value lines = recordingListener.result.lines.sequence();
     assertEquals(lines.size, 13);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::Bar]");
@@ -37,7 +37,7 @@ shared void shouldFireEventsForIgnored() {
         [`fooWithIgnore`, `BarWithIgnore.bar1`], 
         [recordingListener]).run();
     
-    value lines = recordingListener.result.lines.sequence;
+    value lines = recordingListener.result.lines.sequence();
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BarWithIgnore]");
@@ -97,7 +97,7 @@ shared void shouldHandleMultipleExceptions() {
         [`foo`], 
         [throwExceptionOnTestFinishListener, throwExceptionOnTestErrorListener, recordingListener]).run();
     
-    value lines = recordingListener.result.lines.sequence;
+    value lines = recordingListener.result.lines.sequence();
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::foo]");
@@ -228,7 +228,7 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
     
     value result = createTestRunner([`bazWithCustomListener`]).run();
     
-    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 4);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::bazWithCustomListener]");
@@ -253,7 +253,7 @@ void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
     
     createTestRunner([`BazWithCustomListener`]).run();
     
-    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BazWithCustomListener]");
