@@ -5,7 +5,7 @@ by ("Gavin King")
 class UnmodifiableList<out Element>(List<Element> list) 
         satisfies List<Element> {
 
-    get(Integer index) => list.get(index);
+    elementAt(Integer index) => list.get(index);
     
     size => list.size;
     lastIndex => list.lastIndex;

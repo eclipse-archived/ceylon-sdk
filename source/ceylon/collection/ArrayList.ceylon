@@ -102,7 +102,7 @@ shared class ArrayList<Element>
         array = resized;
     }
 
-    shared actual Element? get(Integer index) {
+    shared actual Element? elementAt(Integer index) {
         if (0 <= index < length) {
             return array[index];
         }

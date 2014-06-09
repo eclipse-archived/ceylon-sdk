@@ -386,7 +386,7 @@ shared class LinkedList<Element>(elements = {})
 
     // Read
 
-    shared actual Element? get(Integer index) {
+    shared actual Element? elementAt(Integer index) {
         variable value iter = head;
         variable Integer i = 0;
         while (exists cell = iter) {
