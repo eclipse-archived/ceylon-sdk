@@ -16,9 +16,9 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
     }
     
     "Gets the value at the given index, or `null` if it does not exist"
-    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance|Null 
+    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance|Finished 
     elementAt(Integer index){
-        return list[index];
+        return list.elementAt(index);
     }
     
     "Returns the number of elements in this array"

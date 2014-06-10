@@ -386,7 +386,7 @@ shared class LinkedList<Element>(elements = {})
 
     // Read
 
-    shared actual Element? elementAt(Integer index) {
+    shared actual Element|Finished elementAt(Integer index) {
         variable value iter = head;
         variable Integer i = 0;
         while (exists cell = iter) {
@@ -395,7 +395,7 @@ shared class LinkedList<Element>(elements = {})
             }
             iter = cell.rest;
         }
-        return null;
+        return finished;
     }
 
     shared actual List<Element> spanFrom(Integer from) {

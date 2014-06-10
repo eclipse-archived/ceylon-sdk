@@ -102,12 +102,13 @@ shared class ArrayList<Element>
         array = resized;
     }
 
-    shared actual Element? elementAt(Integer index) {
+    shared actual Element|Finished elementAt(Integer index) {
         if (0 <= index < length) {
-            return array[index];
+            assert(exists element=array.elementAt(index));
+            return element;
         }
         else {
-            return null;
+            return finished;
         }
     }
 
