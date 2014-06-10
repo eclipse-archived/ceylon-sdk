@@ -15,6 +15,7 @@ shared void shouldFireEvents() {
         [recordingListener]).run();
     
     value lines = recordingListener.result.lines.sequence();
+    value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 13);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::Bar]");
@@ -24,10 +25,10 @@ shared void shouldFireEvents() {
     assertEquals(lines[5], "TestStartEvent[test.ceylon.test.stubs::foo]");
     assertEquals(lines[6], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
     assertEquals(lines[7], "TestStartEvent[test.ceylon.test.stubs::fooThrowingAssertion]");
-    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language.AssertionError \"assertion failed\")]");
+    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language``sep``AssertionError \"assertion failed\")]");
     assertEquals(lines[9], "TestStartEvent[test.ceylon.test.stubs::fooThrowingException]");
-    assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language.Exception \"unexpected exception\")]");
-    assertEquals(lines[11], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language.Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
+    assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")]");
+    assertEquals(lines[11], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language``sep``Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
     assertEquals(lines[12], "TestRunFinishEvent");
 }
 
@@ -38,12 +39,13 @@ shared void shouldFireEventsForIgnored() {
         [recordingListener]).run();
     
     value lines = recordingListener.result.lines.sequence();
+    value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BarWithIgnore]");
-    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.core.IgnoreException \"\")]");
+    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.core``sep``IgnoreException \"\")]");
     assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::BarWithIgnore - ignored]");
-    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core.IgnoreException \"ignore function foo\")]");
+    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core``sep``IgnoreException \"ignore function foo\")]");
     assertEquals(lines[5], "TestRunFinishEvent");
 }
 
@@ -98,11 +100,12 @@ shared void shouldHandleMultipleExceptions() {
         [throwExceptionOnTestFinishListener, throwExceptionOnTestErrorListener, recordingListener]).run();
     
     value lines = recordingListener.result.lines.sequence();
+    value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::foo]");
-    assertEquals(lines[2], "TestErrorEvent[test mechanism - error (ceylon.language.Exception \"testError\")]");
-    assertEquals(lines[3], "TestErrorEvent[test mechanism - error (ceylon.language.Exception \"testFinish\")]");
+    assertEquals(lines[2], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testError\")]");
+    assertEquals(lines[3], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testFinish\")]");
     assertEquals(lines[4], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
     assertEquals(lines[5], "TestRunFinishEvent");
 }
