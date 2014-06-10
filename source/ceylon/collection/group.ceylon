@@ -26,7 +26,7 @@ shared Map<Group,[Element+]> group<Group, Element>
         }
     }
     [Element+] mapping(Group group, ArrayList<Element> sa) { 
-        assert(is [Element+] result = sa.sequence);
+        assert(is [Element+] result = sa.sequence());
         return result;
     }
     return map.mapItems(mapping);

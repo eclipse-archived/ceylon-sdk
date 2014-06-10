@@ -18,7 +18,7 @@ Map<Item,[Key+]> invert<Key,Item>(Map<Key,Item> map)
         }
     }
     [Key+] mapping(Item item, ArrayList<Key> sa) {
-        assert(is [Key+] result = sa.sequence);
+        assert(is [Key+] result = sa.sequence());
         return result;
     }
     return result.mapItems(mapping);
