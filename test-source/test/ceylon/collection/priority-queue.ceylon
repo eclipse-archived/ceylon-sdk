@@ -75,7 +75,7 @@ shared test void testPriorityQueueIterable() {
     for (element in queue) {
         sb.add(element);
     }
-    assertEquals(sb.sequence, [-5, 1, 5, 8, 4, 9, 7]);
+    assertEquals(sb.sequence(), [-5, 1, 5, 8, 4, 9, 7]);
 }
 
 PriorityQueue<Integer> newQueue({Integer*} elements = {}) => PriorityQueue {

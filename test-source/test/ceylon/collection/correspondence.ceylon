@@ -99,7 +99,7 @@ shared interface CorrespondenceTests {
         assertEquals(createCorrespondence({"a"}).items{-1, 1}, [null, null]);
         assertEquals(createCorrespondence({"a"}).items{-10, 0, 1}, [null, "a", null]);
         assertEquals(createCorrespondence({"a", "b", "c"}).items{0, 1}, ["a", "b"]);
-        assertEquals(createCorrespondence((0:10).map(Object.string)).items(0:10), (0:10).map(Object.string).sequence);
+        assertEquals(createCorrespondence((0:10).map(Object.string)).items(0:10), (0:10).map(Object.string).sequence());
     }
     
 }

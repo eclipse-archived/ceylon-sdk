@@ -203,37 +203,37 @@ test shared void treeMapLowerEntriesTest() {
     value entries = { for (c in 'z'..'a') c -> 0 };
     value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
 
-    assertEquals(map.lowerEntries('0').sequence, []);
-    assertEquals(map.lowerEntries('a').sequence, ['a' -> 0]);
-    assertEquals(map.lowerEntries('c').sequence, ['c' -> 0, 'b' -> 0, 'a' -> 0]);
+    assertEquals(map.lowerEntries('0').sequence(), []);
+    assertEquals(map.lowerEntries('a').sequence(), ['a' -> 0]);
+    assertEquals(map.lowerEntries('c').sequence(), ['c' -> 0, 'b' -> 0, 'a' -> 0]);
 }
 
 test shared void treeMapHigherEntriesTest() {
     value entries = { for (c in 'z'..'a') c -> 0 };
     value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
 
-    assertEquals(map.higherEntries('~').sequence, []);
-    assertEquals(map.higherEntries('z').sequence, ['z' -> 0]);
-    assertEquals(map.higherEntries('x').sequence, ['x' -> 0, 'y' -> 0, 'z' -> 0]);
+    assertEquals(map.higherEntries('~').sequence(), []);
+    assertEquals(map.higherEntries('z').sequence(), ['z' -> 0]);
+    assertEquals(map.higherEntries('x').sequence(), ['x' -> 0, 'y' -> 0, 'z' -> 0]);
 }
 
 test shared void treeMapRangeTest() {
     value entries = { for (c in 'z'..'a') c -> 0 };
     value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
 
-    assertEquals(map['A'..'Z'].sequence, []);
-    assertEquals(map['c'..'f'].sequence, ['c' -> 0, 'd' -> 0, 'e' -> 0, 'f' -> 0]);
-    assertEquals(map['y':10].sequence, ['y' -> 0, 'z' -> 0]);
+    assertEquals(map['A'..'Z'].sequence(), []);
+    assertEquals(map['c'..'f'].sequence(), ['c' -> 0, 'd' -> 0, 'e' -> 0, 'f' -> 0]);
+    assertEquals(map['y':10].sequence(), ['y' -> 0, 'z' -> 0]);
 }
 
 test shared void treeMapSegmentTest() {
     value entries = { for (c in 'z'..'a') c -> 0 };
     value map = TreeMap<Character, Integer>((Character x, Character y) => x <=> y, entries);
 
-    assertEquals(map['a':0].sequence, []);
-    //assertEquals(map['A':2].sequence, []);
-    assertEquals(map['c':4].sequence, ['c' -> 0, 'd' -> 0, 'e' -> 0, 'f' -> 0]);
-    assertEquals(map['y':10].sequence, ['y' -> 0, 'z' -> 0]);
+    assertEquals(map['a':0].sequence(), []);
+    //assertEquals(map['A':2].sequence(), []);
+    assertEquals(map['c':4].sequence(), ['c' -> 0, 'd' -> 0, 'e' -> 0, 'f' -> 0]);
+    assertEquals(map['y':10].sequence(), ['y' -> 0, 'z' -> 0]);
 }
 
 test shared void treeMapRemoveTest() {

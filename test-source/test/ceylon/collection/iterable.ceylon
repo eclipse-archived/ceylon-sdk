@@ -78,28 +78,28 @@ shared interface IterableTests satisfies CategoryTests {
     }
     
     test shared default void testSkip() {
-        assertEquals(createIterable({}).skip(0).sequence, []);
-        assertEquals(createIterable({}).skip(1).sequence, []);
-        assertEquals(createIterable({}).skip(-1).sequence, []);
-        assertEquals(createIterable({"A"}).skip(0).sequence, ["A"]);
-        assertEquals(createIterable({"A"}).skip(1).sequence, []);
-        assertEquals(createIterable({"A"}).skip(-1).sequence, ["A"]);
-        assertEquals(createIterable({"A", "B", "C"}).skip(0).sequence, createIterable({"A", "B", "C"}).sequence);
-        assertEquals(createIterable({"A", "B", "C"}).skip(-1).sequence, createIterable({"A", "B", "C"}).sequence);
+        assertEquals(createIterable({}).skip(0).sequence(), []);
+        assertEquals(createIterable({}).skip(1).sequence(), []);
+        assertEquals(createIterable({}).skip(-1).sequence(), []);
+        assertEquals(createIterable({"A"}).skip(0).sequence(), ["A"]);
+        assertEquals(createIterable({"A"}).skip(1).sequence(), []);
+        assertEquals(createIterable({"A"}).skip(-1).sequence(), ["A"]);
+        assertEquals(createIterable({"A", "B", "C"}).skip(0).sequence(), createIterable({"A", "B", "C"}).sequence());
+        assertEquals(createIterable({"A", "B", "C"}).skip(-1).sequence(), createIterable({"A", "B", "C"}).sequence());
         
         value iterable = createIterable({"a", "b", "c"});
         value iterator = iterable.iterator();
         iterator.next();
-        assertEquals(iterable.skip(1).sequence, [iterator.next(), iterator.next()]);
+        assertEquals(iterable.skip(1).sequence(), [iterator.next(), iterator.next()]);
     }
     
     "Implementation is dependent on how the Iterable type orders its elements"
     test shared formal void testSkipWhile();
     
     test shared default void testSequence() {
-        assertEquals(createIterable({}).sequence, []);
-        assertEquals(createIterable({"A"}).sequence, ["A"]);
-        assertEquals(createIterable({"A", "B", "C"}).sequence, createIterable({"A", "B", "C"}).sequence);
+        assertEquals(createIterable({}).sequence(), []);
+        assertEquals(createIterable({"A"}).sequence(), ["A"]);
+        assertEquals(createIterable({"A", "B", "C"}).sequence(), createIterable({"A", "B", "C"}).sequence());
     }
     
     "This test calls [[testMappingFunction]] with the map function.
@@ -118,9 +118,9 @@ shared interface IterableTests satisfies CategoryTests {
     "This function is called by testMap and testCollect"
     shared default void testMappingFunction({String*}(String(String))({String*}) map) {
         function str(String? s) => "@" + (s else "null");
-        assertEquals(map(createIterable {})(str).sequence, []);
-        assertEquals(map(createIterable {"a"})(str).sequence, ["@a"]);
-        assertEquals(map(createIterable {"a", "b", "c"})(str).sequence, createIterable({"@a", "@b", "@c"}).sequence);
+        assertEquals(map(createIterable {})(str).sequence(), []);
+        assertEquals(map(createIterable {"a"})(str).sequence(), ["@a"]);
+        assertEquals(map(createIterable {"a", "b", "c"})(str).sequence(), createIterable({"@a", "@b", "@c"}).sequence());
     }
     
     "This test calls [[testFilteringFunction]] with the filter function.
@@ -142,22 +142,22 @@ shared interface IterableTests satisfies CategoryTests {
         assertEquals(filter(createIterable({}))(short), []);
         assertEquals(filter(createIterable({"a"}))(short), ["a"]);
         assertEquals(filter(createIterable({"abcde"}))(short), []);
-        assertEquals(filter(createIterable({"a", "abcde", "fghijklmnopqrstuvxzwy", "b"}))(short), createIterable({"a", "b"}).sequence);
+        assertEquals(filter(createIterable({"a", "abcde", "fghijklmnopqrstuvxzwy", "b"}))(short), createIterable({"a", "b"}).sequence());
     }
     
     test shared default void testRest() {
-        assertEquals(createIterable({}).rest.sequence, []);
-        assertEquals(createIterable({"A"}).rest.sequence, []);
+        assertEquals(createIterable({}).rest.sequence(), []);
+        assertEquals(createIterable({"A"}).rest.sequence(), []);
         
         variable value iterable = createIterable {"A", "B"};
         variable value iterator = iterable.iterator();
         iterator.next();
-        assertEquals(iterable.rest.sequence, [iterator.next()]);
+        assertEquals(iterable.rest.sequence(), [iterator.next()]);
         
         iterable = createIterable {"A", "B", "C", "D"};
         iterator = iterable.iterator();
         iterator.next();
-        assertEquals(iterable.rest.sequence, [iterator.next(), iterator.next(), iterator.next()]);
+        assertEquals(iterable.rest.sequence(), [iterator.next(), iterator.next(), iterator.next()]);
     }
     
     test shared default void testReduce() {
@@ -231,34 +231,34 @@ shared interface IterableTests satisfies CategoryTests {
     }
     
     test shared default void testTake() {
-        assertEquals(createIterable({}).take(0).sequence, []);
-        assertEquals(createIterable({"a"}).take(0).sequence, []);
-        assertEquals(createIterable({"a", "b", "c"}).take(0).sequence, []);
-        assertEquals(createIterable({}).take(-1).sequence, []);
-        assertEquals(createIterable({"a"}).take(-1).sequence, []);
-        assertEquals(createIterable({"a", "b", "c"}).take(-10).sequence, []);
-        assertEquals(createIterable({"a"}).take(1).sequence, ["a"]);
-        assertEquals(createIterable({"a"}).take(2).sequence, ["a"]);
+        assertEquals(createIterable({}).take(0).sequence(), []);
+        assertEquals(createIterable({"a"}).take(0).sequence(), []);
+        assertEquals(createIterable({"a", "b", "c"}).take(0).sequence(), []);
+        assertEquals(createIterable({}).take(-1).sequence(), []);
+        assertEquals(createIterable({"a"}).take(-1).sequence(), []);
+        assertEquals(createIterable({"a", "b", "c"}).take(-10).sequence(), []);
+        assertEquals(createIterable({"a"}).take(1).sequence(), ["a"]);
+        assertEquals(createIterable({"a"}).take(2).sequence(), ["a"]);
         
         variable value iterable = createIterable({"a", "b", "c"});
         variable value iterator = iterable.iterator();
-        assertEquals(iterable.take(1).sequence, [iterator.next()]);
+        assertEquals(iterable.take(1).sequence(), [iterator.next()]);
         
         iterator = iterable.iterator();
-        assertEquals(iterable.take(2).sequence, [iterator.next(), iterator.next()]);
+        assertEquals(iterable.take(2).sequence(), [iterator.next(), iterator.next()]);
         
         iterator = iterable.iterator();
-        assertEquals(iterable.take(3).sequence, [iterator.next(), iterator.next(), iterator.next()]);
+        assertEquals(iterable.take(3).sequence(), [iterator.next(), iterator.next(), iterator.next()]);
     }
     
     "Implementation is dependent on how the Iterable type orders its elements"
     test shared formal void testTakeWhile();
     
     test shared default void testBy() {
-        assertEquals(createIterable({}).by(1).sequence, []);
-        assertEquals(createIterable({}).by(2).sequence, []);
-        assertEquals(createIterable({"a"}).by(1).sequence, ["a"]);
-        assertEquals(createIterable({"a", "b", "c"}).by(1).sequence, createIterable {"a", "b", "c"}.sequence);
+        assertEquals(createIterable({}).by(1).sequence(), []);
+        assertEquals(createIterable({}).by(2).sequence(), []);
+        assertEquals(createIterable({"a"}).by(1).sequence(), ["a"]);
+        assertEquals(createIterable({"a", "b", "c"}).by(1).sequence(), createIterable {"a", "b", "c"}.sequence());
         
         value iterable = createIterable {"a", "b", "c", "d", "e", "f", "g"};
         value iterator = iterable.iterator();
@@ -269,7 +269,7 @@ shared interface IterableTests satisfies CategoryTests {
         iterator.next();
         iterator.next();
         value third = iterator.next();
-        assertEquals(iterable.by(3).sequence, [first, second, third]);
+        assertEquals(iterable.by(3).sequence(), [first, second, third]);
     }
     
     test shared void byDoesNotAcceptValueSmallerThanOne() {
@@ -289,45 +289,45 @@ shared interface IterableTests satisfies CategoryTests {
     }
     
     test shared default void testCoalesced() {
-        assertEquals(createIterable({}).coalesced.sequence, []);
-        assertEquals(createIterable({"a"}).coalesced.sequence, ["a"]);
-        assertEquals(createIterable({"a", "b", "c"}).coalesced.sequence, createIterable({"a", "b", "c"}).sequence);
+        assertEquals(createIterable({}).coalesced.sequence(), []);
+        assertEquals(createIterable({"a"}).coalesced.sequence(), ["a"]);
+        assertEquals(createIterable({"a", "b", "c"}).coalesced.sequence(), createIterable({"a", "b", "c"}).sequence());
     }
  
     test shared default void testIndexed() {
-        assertEquals(createIterable({}).indexed.sequence, []);
-        assertEquals(createIterable({"a"}).indexed.sequence, [0->"a"]);
+        assertEquals(createIterable({}).indexed.sequence(), []);
+        assertEquals(createIterable({"a"}).indexed.sequence(), [0->"a"]);
         
         value iterable = createIterable {"a", "b", "c"};
         value iterator = iterable.iterator();
-        assertEquals(iterable.indexed.sequence, [
+        assertEquals(iterable.indexed.sequence(), [
             0 -> next<String>(iterator),
             1 -> next<String>(iterator),
             2 -> next<String>(iterator) ]);
     }
     
     test shared default void testFollowing() {
-        assertEquals(createIterable({}).following("a").sequence, ["a"]);
-        assertEquals(createIterable({"a"}).following("abc").sequence, ["abc", "a"]);
+        assertEquals(createIterable({}).following("a").sequence(), ["a"]);
+        assertEquals(createIterable({"a"}).following("abc").sequence(), ["abc", "a"]);
         value iterable = createIterable {"a", "z", "c", "x"};
         value iterator = iterable.iterator();
-        assertEquals(iterable.following("abc").sequence, ["abc", iterator.next(), iterator.next(), iterator.next(), iterator.next()]);
+        assertEquals(iterable.following("abc").sequence(), ["abc", iterator.next(), iterator.next(), iterator.next(), iterator.next()]);
     }
     
     test shared default void testChain() {
-        assertEquals(createIterable({}).chain({}).sequence, []);
-        assertEquals(createIterable({"a"}).chain({}).sequence, ["a"]);
-        assertEquals(createIterable({}).chain({"a"}).sequence, ["a"]);
-        assertEquals(createIterable({"a"}).chain({"a"}).sequence, ["a", "a"]);
+        assertEquals(createIterable({}).chain({}).sequence(), []);
+        assertEquals(createIterable({"a"}).chain({}).sequence(), ["a"]);
+        assertEquals(createIterable({}).chain({"a"}).sequence(), ["a"]);
+        assertEquals(createIterable({"a"}).chain({"a"}).sequence(), ["a", "a"]);
         value iterable = createIterable {"a", "c", "b"};
         value iterator = iterable.iterator();
-        assertEquals(iterable.chain({null, "c"}).sequence, [iterator.next(), iterator.next(), iterator.next(), null, "c"]);
+        assertEquals(iterable.chain({null, "c"}).sequence(), [iterator.next(), iterator.next(), iterator.next(), null, "c"]);
     }
     
     test shared default void testDefaultNullElements() {
-        assertEquals(createIterable({}).defaultNullElements("X").sequence, []);
-        assertEquals(createIterable({"a"}).defaultNullElements("X").sequence, ["a"]);
-        assertEquals(createIterable({"a", "b", "c"}).defaultNullElements("X").sequence, createIterable({"a", "b", "c"}).sequence);
+        assertEquals(createIterable({}).defaultNullElements("X").sequence(), []);
+        assertEquals(createIterable({"a"}).defaultNullElements("X").sequence(), ["a"]);
+        assertEquals(createIterable({"a", "b", "c"}).defaultNullElements("X").sequence(), createIterable({"a", "b", "c"}).sequence());
     }
     
     test shared default void testString() {
@@ -380,8 +380,8 @@ shared interface IterableTests satisfies CategoryTests {
         assertEquals(cycle(createIterable {})(1), []);
         assertEquals(cycle(createIterable {})(-1), []);
         assertEquals(cycle(createIterable {"a"})(1), ["a"]);
-        assertEquals(cycle(createIterable {"a", "b", "c"})(1), createIterable({"a", "b", "c"}).sequence);
-        assertEquals(cycle(createIterable {"a"})(2), createIterable({"a", "a"}).sequence);
+        assertEquals(cycle(createIterable {"a", "b", "c"})(1), createIterable({"a", "b", "c"}).sequence());
+        assertEquals(cycle(createIterable {"a"})(2), createIterable({"a", "a"}).sequence());
         assertEquals(cycle(createIterable {"a", "b", "c"})(3), createIterable({"a", "b", "c", "a", "b", "c", "a", "b", "c"}));
     }
  
@@ -415,26 +415,26 @@ shared interface InsertionOrderIterableTests satisfies IterableTests {
     
     test shared actual default void testSkipWhile() {
         function lessThanJ(String? s) => (s else "a") < "j";
-        assertEquals(createIterable({}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"z"}).skipWhile(lessThanJ).sequence, ["z"]);
-        assertEquals(createIterable({"x", "y", "z"}).skipWhile(lessThanJ).sequence, ["x", "y", "z"]);
-        assertEquals(createIterable({"a"}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a", "b", "c"}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a", "x", "y"}).skipWhile(lessThanJ).sequence, ["x", "y"]);
-        assertEquals(createIterable({"z", "a", "b"}).skipWhile(lessThanJ).sequence, ["z", "a", "b"]);
-        assertEquals(createIterable({"i", "j", "k"}).skipWhile(lessThanJ).sequence, ["j", "k"]);
+        assertEquals(createIterable({}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"z"}).skipWhile(lessThanJ).sequence(), ["z"]);
+        assertEquals(createIterable({"x", "y", "z"}).skipWhile(lessThanJ).sequence(), ["x", "y", "z"]);
+        assertEquals(createIterable({"a"}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a", "b", "c"}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a", "x", "y"}).skipWhile(lessThanJ).sequence(), ["x", "y"]);
+        assertEquals(createIterable({"z", "a", "b"}).skipWhile(lessThanJ).sequence(), ["z", "a", "b"]);
+        assertEquals(createIterable({"i", "j", "k"}).skipWhile(lessThanJ).sequence(), ["j", "k"]);
     }
     
     shared actual void testTakeWhile() {
         function lessThanJ(String? s) => (s else "a") < "j";
-        assertEquals(createIterable({}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"z"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"x", "y", "z"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a"}).takeWhile(lessThanJ).sequence, ["a"]);
-        assertEquals(createIterable({"a", "b", "c"}).takeWhile(lessThanJ).sequence, ["a", "b", "c"]);
-        assertEquals(createIterable({"a", "x", "y"}).takeWhile(lessThanJ).sequence, ["a"]);
-        assertEquals(createIterable({"z", "a", "b"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"i", "j", "k"}).takeWhile(lessThanJ).sequence, ["i"]);
+        assertEquals(createIterable({}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"z"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"x", "y", "z"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a"}).takeWhile(lessThanJ).sequence(), ["a"]);
+        assertEquals(createIterable({"a", "b", "c"}).takeWhile(lessThanJ).sequence(), ["a", "b", "c"]);
+        assertEquals(createIterable({"a", "x", "y"}).takeWhile(lessThanJ).sequence(), ["a"]);
+        assertEquals(createIterable({"z", "a", "b"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"i", "j", "k"}).takeWhile(lessThanJ).sequence(), ["i"]);
     }
     
 }
@@ -458,26 +458,26 @@ shared interface NaturalOrderIterableTests satisfies IterableTests {
     
     test shared actual default void testSkipWhile() {
         function lessThanJ(String? s) => (s else "a") < "j";
-        assertEquals(createIterable({}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"z"}).skipWhile(lessThanJ).sequence, ["z"]);
-        assertEquals(createIterable({"x", "y", "z"}).skipWhile(lessThanJ).sequence, ["x", "y", "z"]);
-        assertEquals(createIterable({"a"}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a", "b", "c"}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a", "x", "y"}).skipWhile(lessThanJ).sequence, ["x", "y"]);
-        assertEquals(createIterable({"z", "a", "b"}).skipWhile(lessThanJ).sequence, ["z"]);
-        assertEquals(createIterable({"i", "j", "k"}).skipWhile(lessThanJ).sequence, ["j", "k"]);
+        assertEquals(createIterable({}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"z"}).skipWhile(lessThanJ).sequence(), ["z"]);
+        assertEquals(createIterable({"x", "y", "z"}).skipWhile(lessThanJ).sequence(), ["x", "y", "z"]);
+        assertEquals(createIterable({"a"}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a", "b", "c"}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a", "x", "y"}).skipWhile(lessThanJ).sequence(), ["x", "y"]);
+        assertEquals(createIterable({"z", "a", "b"}).skipWhile(lessThanJ).sequence(), ["z"]);
+        assertEquals(createIterable({"i", "j", "k"}).skipWhile(lessThanJ).sequence(), ["j", "k"]);
     }
     
     shared actual void testTakeWhile() {
         function lessThanJ(String? s) => (s else "a") < "j";
-        assertEquals(createIterable({}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"z"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"x", "y", "z"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a"}).takeWhile(lessThanJ).sequence, ["a"]);
-        assertEquals(createIterable({"a", "b", "c"}).takeWhile(lessThanJ).sequence, ["a", "b", "c"]);
-        assertEquals(createIterable({"a", "x", "y"}).takeWhile(lessThanJ).sequence, ["a"]);
-        assertEquals(createIterable({"z", "a", "b"}).takeWhile(lessThanJ).sequence, ["a", "b"]);
-        assertEquals(createIterable({"i", "j", "k"}).takeWhile(lessThanJ).sequence, ["i"]);
+        assertEquals(createIterable({}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"z"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"x", "y", "z"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a"}).takeWhile(lessThanJ).sequence(), ["a"]);
+        assertEquals(createIterable({"a", "b", "c"}).takeWhile(lessThanJ).sequence(), ["a", "b", "c"]);
+        assertEquals(createIterable({"a", "x", "y"}).takeWhile(lessThanJ).sequence(), ["a"]);
+        assertEquals(createIterable({"z", "a", "b"}).takeWhile(lessThanJ).sequence(), ["a", "b"]);
+        assertEquals(createIterable({"i", "j", "k"}).takeWhile(lessThanJ).sequence(), ["i"]);
     }
     
 }
@@ -501,26 +501,26 @@ shared interface HashOrderIterableTests satisfies IterableTests {
 
     test shared actual default void testSkipWhile() {
         function lessThanJ(String? s) => (s else "a") < "j";
-        assertEquals(createIterable({}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"z"}).skipWhile(lessThanJ).sequence, ["z"]);
-        assertEquals(createIterable({"x", "y", "z"}).skipWhile(lessThanJ).sequence, ["x", "y", "z"]);
-        assertEquals(createIterable({"a"}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a", "b", "c"}).skipWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a", "x", "y"}).skipWhile(lessThanJ).sequence, ["x", "y"]);
-        assertEquals(createIterable({"z", "a", "b"}).skipWhile(lessThanJ).sequence, ["z"]);
-        assertEquals(createIterable({"i", "j", "k"}).skipWhile(lessThanJ).sequence, ["j", "k"]);
+        assertEquals(createIterable({}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"z"}).skipWhile(lessThanJ).sequence(), ["z"]);
+        assertEquals(createIterable({"x", "y", "z"}).skipWhile(lessThanJ).sequence(), ["x", "y", "z"]);
+        assertEquals(createIterable({"a"}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a", "b", "c"}).skipWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a", "x", "y"}).skipWhile(lessThanJ).sequence(), ["x", "y"]);
+        assertEquals(createIterable({"z", "a", "b"}).skipWhile(lessThanJ).sequence(), ["z"]);
+        assertEquals(createIterable({"i", "j", "k"}).skipWhile(lessThanJ).sequence(), ["j", "k"]);
     }
     
     shared actual void testTakeWhile() {
         function lessThanJ(String? s) => (s else "a") < "j";
-        assertEquals(createIterable({}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"z"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"x", "y", "z"}).takeWhile(lessThanJ).sequence, []);
-        assertEquals(createIterable({"a"}).takeWhile(lessThanJ).sequence, ["a"]);
-        assertEquals(createIterable({"a", "b", "c"}).takeWhile(lessThanJ).sequence, ["a", "b", "c"]);
-        assertEquals(createIterable({"a", "x", "y"}).takeWhile(lessThanJ).sequence, ["a"]);
-        assertEquals(createIterable({"z", "a", "b"}).takeWhile(lessThanJ).sequence, ["a", "b"]);
-        assertEquals(createIterable({"i", "j", "k"}).takeWhile(lessThanJ).sequence, ["i"]);
+        assertEquals(createIterable({}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"z"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"x", "y", "z"}).takeWhile(lessThanJ).sequence(), []);
+        assertEquals(createIterable({"a"}).takeWhile(lessThanJ).sequence(), ["a"]);
+        assertEquals(createIterable({"a", "b", "c"}).takeWhile(lessThanJ).sequence(), ["a", "b", "c"]);
+        assertEquals(createIterable({"a", "x", "y"}).takeWhile(lessThanJ).sequence(), ["a"]);
+        assertEquals(createIterable({"z", "a", "b"}).takeWhile(lessThanJ).sequence(), ["a", "b"]);
+        assertEquals(createIterable({"i", "j", "k"}).takeWhile(lessThanJ).sequence(), ["i"]);
     }
 
 }
