@@ -106,8 +106,14 @@ shared class ArrayList<Element>
 
     shared actual Element|Finished elementAt(Integer index) {
         if (0 <= index < length) {
-            assert(exists element=array.elementAt(index));
-            return element;
+            value element = array.elementAt(index);
+            if (exists element) {
+                return element;
+            }
+            else {
+                assert (is Element element);
+                return element;
+            }
         }
         else {
             return finished;
