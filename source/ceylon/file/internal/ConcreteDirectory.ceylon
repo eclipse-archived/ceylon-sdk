@@ -34,6 +34,10 @@ class ConcreteDirectory(JPath jpath)
         return sb.sequence();
     }
     
+    path =>  ConcretePath(jpath); 
+    
+    linkedResource => this;
+    
     children(String filter) =>
            {for (p in childPaths(filter)) 
                  if (is ExistingResource r=p.resource) r};
@@ -54,10 +58,6 @@ class ConcreteDirectory(JPath jpath)
         deletePath(jpath);
         return ConcreteNil(jpath);
     }
-    
-    path =>  ConcretePath(jpath); 
-    
-    linkedResource => this;
     
     readAttribute(Attribute attribute) 
             => getAttribute(jpath, attributeName(attribute));

@@ -46,6 +46,8 @@ shared class ArrayList<Element>
 
     variable Integer length = array.size;
 
+    size => length;
+
     if (length < initialCapacity) {
         value newArray = store(initialCapacity);
         array.copyTo(newArray, 0, 0, length);
@@ -329,8 +331,6 @@ shared class ArrayList<Element>
             => to < 0 then ArrayList() else span(0, to);
 
     lastIndex => length >= 1 then length - 1;
-
-    size => length;
 
     equals(Object that) 
             => (super of List<Element>).equals(that);
