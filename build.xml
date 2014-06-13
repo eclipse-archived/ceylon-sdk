@@ -101,7 +101,7 @@
         description="Deletes the test-modules and modules directories">
         <delete dir="${out.repo}"/>
         <delete dir="${test.repo}"/>
-        <delete dir="${osgi.dist}}"/>
+        <delete dir="${osgi.dist}"/>
     </target>
     
     <target name="compile-jvm">
