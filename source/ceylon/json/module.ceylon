@@ -19,7 +19,7 @@
            return parsedJson.getString("author")){
        }
    
-   You can iterate Json objects too:
+   You can iterate JSON objects too:
    
        {String*} getModules(String json){
            value parsedJson = parse(json);
