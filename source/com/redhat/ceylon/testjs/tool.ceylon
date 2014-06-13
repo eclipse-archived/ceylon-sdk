@@ -57,25 +57,25 @@ shared void run() {
         prev = arg;
     }
     
-    //if (port != -1) {
-    //    dynamic {
-    //        dynamic net = require("net");
-    //        dynamic socket = net.connect(port);
-    //        
-    //        void publishEvent(String json) {
-    //            dynamic {
-    //                socket.write(json);
-    //                socket.write("\{END OF TRANSMISSION}");
-    //            }
-    //        }
-    //        
-    //        listener = TestEventPublisher(publishEvent);
-    //    }
-    //} else if (tap) {
-    //    listener = TapLoggingListener();
-    //} else {
-    //    listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
-    //}
+    if (port != -1) {
+        dynamic {
+            dynamic net = require("net");
+            dynamic socket = net.connect(port);
+            
+            void publishEvent(String json) {
+                dynamic {
+                    socket.write(json);
+                    socket.write("\{END OF TRANSMISSION}");
+                }
+            }
+            
+            listener = TestEventPublisher(publishEvent);
+        }
+    } else if (tap) {
+        listener = TapLoggingListener();
+    } else {
+        listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
+    }
     
     // initialize tested modules
     for (value moduleNameAndVersion in moduleNameAndVersions.sequence()) {
@@ -89,5 +89,5 @@ shared void run() {
         }
     }
     
-    //createTestRunner(testSources.sequence(), [listener]).run();
+    createTestRunner(testSources.sequence(), [listener]).run();
 }
