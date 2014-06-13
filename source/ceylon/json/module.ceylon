@@ -1,4 +1,5 @@
-"""Contains everything required to parse and serialise JSON data.
+"""Contains everything required to parse and serialise JSON 
+   data.
    
    Sample usage for parsing and accessing JSON:
    
@@ -10,25 +11,28 @@
            throw Exception("Invalid JSON data");
        }
    
-   Or if you're really sure that you should have a String value:
+   Or if you're really sure that you should have a String 
+   value:
    
        String getAuthor(String json){
            value parsedJson = parse(json);
            return parsedJson.getString("author")){
        }
    
-   You can iterate Json objects too::
+   You can iterate Json objects too:
    
        {String*} getModules(String json){
            value parsedJson = parse(json);
            if(is Array modules = parsedJson.get("modules")){
                return { for (mod in modules) 
-                          if(is Object mod, is String name = mod.get("name")) 
+                          if(is Object mod, 
+                             is String name = mod.get("name")) 
                             name 
                       };
            }
            throw Exception("Invalid JSON data");
-       }     
+       }
+   
    Sample usage for generating JSON data:
    
        String getJSON(){

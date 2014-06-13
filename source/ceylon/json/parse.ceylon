@@ -1,4 +1,5 @@
 class Parser(String str){
+    
     Character[] chars = str.sequence();
     variable Integer index = 0;
     variable Integer line = 1;
@@ -13,15 +14,16 @@ class Parser(String str){
             while(true){
                 String key = parseString();
                 eatSpacesUntil(':');
-                String|Boolean|Integer|Float|Object|Array|NullInstance val = parseValue();
-                obj.put(key, val);
+                obj.put(key, parseValue());
                 
                 eatSpaces();
                 if(check('}')){
                     break;
                 }
                 if(!check(',')){
-                    throw ParseException("Expected '}' or ',' but got `` char() ``", line, column);
+                    throw ParseException(
+                        "Expected '}' or ',' but got `` char() ``", 
+                        line, column);
                 }
             }
         }
@@ -35,23 +37,25 @@ class Parser(String str){
         eatSpaces();
         if(!check(']')){
             while(true){
-                String|Boolean|Integer|Float|Object|Array|NullInstance val = parseValue();
-                arr.add(val);
+                arr.add(parseValue());
 
                 eatSpaces();
                 if(check(']')){
                     break;
                 }
                 if(!check(',')){
-                    throw ParseException("Expected ']' or ',' but got `` char() ``", line, column);
+                    throw ParseException(
+                        "Expected ']' or ',' but got `` char() ``", 
+                        line, column);
                 }
             }
         }
         return arr;
     }
     
-    throws(`class ParseException`, "If the specified string cannot be parsed")
-    shared String|Boolean|Integer|Float|Object|Array|NullInstance parseValue(){
+    throws(`class ParseException`, 
+        "If the specified string cannot be parsed")
+    shared Value parseValue(){
         eatSpaces();
         Character c = char();
         if(c == '{'){
@@ -76,7 +80,10 @@ class Parser(String str){
             || c == '-'){
             return parseNumber();
         }
-        throw ParseException("Invalid value: expecting object, array, string, number, true, false, null but got `` c ``", line, column);
+        throw ParseException(
+            "Invalid value: expecting object, array, string, " +
+            "number, true, false, null but got `` c ``", 
+            line, column);
     }
     
     Integer|Float parseNumber(){
@@ -88,7 +95,8 @@ class Parser(String str){
             Integer start = index;
             Integer fractionPart = parseDigits();
             Integer digits = index - start;
-            Float float = wholePart.float + (fractionPart.float / (10 ^ digits).float);
+            Float float = wholePart.float + 
+                    (fractionPart.float / (10 ^ digits).float);
             Float signedFloat = negative then -float else float;
             Integer? exp = parseExponent();
             if(exists exp){
@@ -97,7 +105,8 @@ class Parser(String str){
             return signedFloat;
         }
 
-        Integer signedInteger = negative then -wholePart else wholePart;
+        Integer signedInteger = 
+                negative then -wholePart else wholePart;
         Integer? exp = parseExponent();
         if(exists exp){
             return signedInteger.float * (10.float ^ exp.float);
@@ -117,15 +126,22 @@ class Parser(String str){
                 negativeExponent = false;
             }
             Integer exponentPart = parseDigits();
-            return negativeExponent then -exponentPart else exponentPart;
+            return negativeExponent 
+                then -exponentPart 
+                else exponentPart;
         }
         return null;
     }
         
+    function parseDigit(Character c)
+            => c.integer - '0'.integer;
+        
     Integer parseDigits(){
         Character c = eatChar();
         if(!isDigit(c)){
-            throw ParseException("Expected digit, got: `` c ``", line, column);
+            throw ParseException(
+                "Expected digit, got: `` c ``", 
+                line, column);
         }
         variable Integer digits = parseDigit(c);
         while(isDigit(char())){
@@ -133,10 +149,6 @@ class Parser(String str){
             digits += parseDigit(eatChar());
         }
         return digits;
-    }
-    
-    Integer parseDigit(Character c){
-        return c.integer - '0'.integer;
     }
     
     Boolean parseTrue(){
@@ -203,7 +215,9 @@ class Parser(String str){
         if(c == 'u'){
             return parseStringUnicode();
         }
-        throw ParseException("Expected String escape sequence, got `` c `` TERM ", line, column);
+        throw ParseException(
+            "Expected String escape sequence, got `` c `` TERM ", 
+            line, column);
     }
     
     Character parseStringUnicode(){
@@ -218,16 +232,21 @@ class Parser(String str){
     Integer parseHex(){
         Character c = eatChar();
         Integer codePoint = c.integer;
-        if(codePoint >= '0'.integer && codePoint <= '9'.integer){
+        if(codePoint >= '0'.integer && 
+            codePoint <= '9'.integer){
             return codePoint - '0'.integer;
         }
-        if(codePoint >= 'a'.integer && codePoint <= 'f'.integer){
+        if(codePoint >= 'a'.integer && 
+            codePoint <= 'f'.integer){
             return 10 + codePoint - 'a'.integer;
         }
-        if(codePoint >= 'A'.integer && codePoint <= 'F'.integer){
+        if(codePoint >= 'A'.integer && 
+            codePoint <= 'F'.integer){
             return 10 + codePoint - 'A'.integer;
         }
-        throw ParseException("Expecting hex number, got `` c ``", line, column);
+        throw ParseException(
+            "Expecting hex number, got `` c ``", 
+            line, column);
     }
     
     void eatSpaces(){
@@ -252,7 +271,9 @@ class Parser(String str){
     
     void eat(Character c){
         if(char() != c){
-            throw ParseException("Expected `` c `` but got `` char()``", line, column);
+            throw ParseException(
+                "Expected `` c `` but got `` char()``", 
+                line, column);
         }
         moveOne();
     }
@@ -261,7 +282,9 @@ class Parser(String str){
         if(exists Character c = chars[index]){
             return c;
         }
-        throw ParseException("Unexpected end of string", line, column);
+        throw ParseException(
+            "Unexpected end of string", 
+            line, column);
     }
     
     Character eatChar(){
@@ -270,12 +293,11 @@ class Parser(String str){
         return c;
     }
     
-    Boolean isSpace(Character c){
-        return c == ' ' 
+    Boolean isSpace(Character c)
+            => c == ' ' 
             || c == '\n'
             || c == '\r'
             || c == '\t';
-    }
 
     void moveOne() {
         value c = char();
@@ -295,13 +317,12 @@ class Parser(String str){
     
     Boolean isDigit(Character c){
         Integer codePoint = c.integer;
-        return codePoint >= '0'.integer && codePoint <= '9'.integer; 
+        return codePoint >= '0'.integer && 
+                codePoint <= '9'.integer; 
     }
 }
 
 "Parses a JSON string into a JSON value"
 by("Stéphane Épardaud")
 throws(`class Exception`, "If the JSON string is invalid")
-shared String|Boolean|Integer|Float|Object|Array|NullInstance parse(String str){
-    return Parser(str).parseValue();
-}
+shared Value parse(String str) => Parser(str).parseValue();

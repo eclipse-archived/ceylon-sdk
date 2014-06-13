@@ -1,4 +1,3 @@
-
 "Represents the type of the `null` value in JSON."
 shared abstract class NullInstance() of nil {}
 
