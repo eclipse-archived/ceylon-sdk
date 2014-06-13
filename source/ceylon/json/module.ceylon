@@ -5,18 +5,18 @@
    
        String getAuthor(String json){
            value parsedJson = parse(json);
-           if(is String author = parsedJson.get("author")){
-               return author;
-           }
-           throw Exception("Invalid JSON data");
+           "author must be a string"
+           assert(is String author = parsedJson["author"]);
+           return author;
        }
    
-   Or if you're really sure that you should have a String 
-   value:
+   Alternatively, this variation will result in an 
+   [[InvalidTypeException]] instead of an [[AssertionError]]
+   if the input JSON data doesn't have the expected format:
    
        String getAuthor(String json){
            value parsedJson = parse(json);
-           return parsedJson.getString("author")){
+           return parsedJson.getString("author");
        }
    
    You can iterate JSON objects too:
