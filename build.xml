@@ -7,13 +7,24 @@
     <property name="deps.repo" location="test-deps"/>
     <property name="test.repo" location="modules"/>
 	
-    <property name="p2" location="${basedir}/p2" />
-    <property name="p2.build" location="${p2}/build" />
-    <property name="p2.dist" location="${p2.build}/dist" />
-    <property name="p2.build.plugins" location="${p2.build}/plugins" />
-    <property name="p2.dist.repository" location="${p2.dist}/repository" />
+    <property name="osgi" location="${basedir}/osgi" />
+    <property name="osgi.p2" location="${osgi}/p2" />
+    <property name="osgi.dist" location="${osgi}/dist" />
+    <property name="osgi.dist.plugins" location="${osgi.dist}/plugins" />
 	
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${basedir}/../ceylon-dist/lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
 
+	<taskdef resource="taskdef.properties">
+		<classpath>
+	        <pathelement path="${basedir}/../ceylon-dist/osgi/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+		</classpath>
+	</taskdef>
+
+	
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
     
@@ -90,6 +101,7 @@
         description="Deletes the test-modules and modules directories">
         <delete dir="${out.repo}"/>
         <delete dir="${test.repo}"/>
+        <delete dir="${osgi.dist}}"/>
     </target>
     
     <target name="compile-jvm">
@@ -235,18 +247,47 @@
         
     </target>
 	
-	<!-- Rule to setup a plugins directory with required bundles -->
-    <target name="generate-p2-repo">
-    	<delete failonerror="false" dir="${p2.build.plugins}"/>
-        <mkdir dir="${p2.build.plugins}" />
-    	<delete failonerror="false" dir="${p2.dist.repository}"/>
-        <mkdir dir="${p2.dist.repository}" />    	
-		<copy todir="${p2.build.plugins}" flatten="true">
-			<fileset dir="${out.repo}" includes="**/*.car"/>
-			<globmapper from="*.car" to="*.jar"/>
+	<target name="prepareModuleArchiveForOSGI">
+    	<loadproperties>
+			<zipentry zipfile="${currentFile}" name="META-INF/MANIFEST.MF"/>
+    	     <filterchain>
+    	        <linecontainsregexp>
+    	        	<regexp pattern="^Bundle-Version: \s*\d+\.\d+\.\d+\..+\s*$"/>
+    	        </linecontainsregexp>
+    	     	<replaceregex pattern="\s+$" replace=""/>
+    	     	<replaceregex pattern="^\s+" replace=""/>
+    	      </filterchain>
+    	</loadproperties>
+    	
+    	<copy todir="${osgi.dist.plugins}" overwrite="true" >
+			<fileset file="${currentFile}"/>
+    		<chainedmapper>
+    			<mapper type="regexp" from="([^-]+)-(.+)\.car" to="\1_${Bundle-Version}.jar"/>
+    			<mapper type="flatten"/>
+    		</chainedmapper>
 		</copy>
-    	<makeurl property="destinationRepository" file="${p2.dist.repository}"/>
-    	<makeurl property="categoryDefinition" file="${p2}/category.xml"/>
+	</target>
+	
+    <target name="osgi-quick">
+        <mkdir dir="${osgi.dist.plugins}" />
+    	<foreach target="prepareModuleArchiveForOSGI" param="currentFile">
+    		<path>
+    			<fileset dir="${out.repo}" includes="**/*.car"/>
+    		</path>
+    	</foreach>
+    	<makeurl property="rootUrl" file="${osgi.dist}"/>
+    	<repoindex name="Ceylon Distribution Bundles"    		
+    		out="${osgi.dist}/repository.xml" 
+    		compressed="false"
+    		rooturl="${rootUrl}">
+    		<fileset dir="${osgi.dist.plugins}" includes="*.jar"/>    		
+    	</repoindex>
+    </target>
+
+	<!-- Rule to setup a plugins directory with required bundles -->
+    <target name="osgi-p2-quick" depends="osgi-quick">
+    	<makeurl property="destinationRepository" file="${osgi.dist}"/>
+    	<makeurl property="categoryDefinition" file="${osgi.p2}/category.xml"/>
     	<exec dir="${basedir}" executable="eclipse" failonerror="true">
     		<arg value="-noSplash"/>
     		<arg value="-console"/>
@@ -263,8 +304,9 @@
     		<arg value="-artifactRepository"/>
     		<arg value="${destinationRepository}"/>
     		<arg value="-source"/>
-    		<arg file="${p2.build}"/>
-    		<arg value="-publishArtifacts"/>
+    		<arg file="${osgi.dist}"/>
+			<arg value="-publishArtifacts"/>
+			<arg value="-append"/>
     	</exec>
     	<exec dir="${basedir}" executable="eclipse">
     		<arg value="-noSplash"/>
@@ -282,8 +324,9 @@
     	</exec>
     </target>
 
-	<target name="ide" depends="compile-jvm,ide-quick"/>
+	<target name="osgi" depends="compile-jvm,osgi-quick"/>
+	<target name="osgi-p2" depends="compile-jvm,osgi-p2-quick"/>
 
-    <target name="ide-quick" depends="generate-p2-repo"/>
-
+	<target name="ide" depends="osgi-p2"/>
+    <target name="ide-quick" depends="osgi-p2-quick"/>
 </project>
