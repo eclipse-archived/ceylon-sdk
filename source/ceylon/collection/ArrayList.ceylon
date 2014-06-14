@@ -112,6 +112,29 @@ shared class ArrayList<Element>
             return null;
         }
     }
+    
+    shared actual Iterator<Element> iterator() {
+        object iterator satisfies Iterator<Element> {
+            variable Integer index = 0;
+            value arrayIterator = array.iterator();
+            shared actual Finished|Element next() {
+                if (index++<length) {
+                    value next = arrayIterator.next();
+                    if (exists next) {
+                        return next;
+                    }
+                    else {
+                        assert (is Element null);
+                        return null;
+                    }
+                }
+                else {
+                    return finished;
+                }
+            }
+        }
+        return iterator;
+    }
 
     shared actual void insert(Integer index, Element element) {
         "index may not be negative or greater than the
