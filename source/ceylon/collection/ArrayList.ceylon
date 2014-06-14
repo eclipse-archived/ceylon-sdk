@@ -119,8 +119,7 @@ shared class ArrayList<Element>
             value arrayIterator = array.iterator();
             shared actual Finished|Element next() {
                 if (index++<length) {
-                    value next = arrayIterator.next();
-                    if (exists next) {
+                    if (exists next = arrayIterator.next()) {
                         return next;
                     }
                     else {
