@@ -104,19 +104,12 @@ shared class ArrayList<Element>
         array = resized;
     }
 
-    shared actual Element|Finished elementAt(Integer index) {
+    shared actual Element? getFromFirst(Integer index) {
         if (0 <= index < length) {
-            value element = array.elementAt(index);
-            if (exists element) {
-                return element;
-            }
-            else {
-                assert (is Element element);
-                return element;
-            }
+            return array.getFromFirst(index);
         }
         else {
-            return finished;
+            return null;
         }
     }
 

@@ -14,9 +14,7 @@ shared class Array({Value*} values = {})
     
     iterator() => list.iterator();
     
-    empty => super.empty; //TODO: remove, workaround for some kind of compiler bug!
-    
-    elementAt(Integer index) => list.elementAt(index);
+    getFromFirst(Integer index) => list.getFromFirst(index);
     
     "Adds a new value at the end of this array"
     shared actual void add(Value val) => list.add(val);

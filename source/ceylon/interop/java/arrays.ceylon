@@ -190,7 +190,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.elementAt(i)?.string);
+            result.set(i, array.getFromFirst(i)?.string);
             i++;
         }
         javaArray = result;
@@ -200,7 +200,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.elementAt(i).string);
+            result.set(i, array.getFromFirst(i)?.string);
             i++;
         }
         javaArray = result;
@@ -245,8 +245,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            if (exists element = array.elementAt(i),
-                    !is Finished element) {
+            if (exists element = array.getFromFirst(i)) {
                 result.set(i, javaString(element));
             }
             i++;
@@ -258,7 +257,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            if (!is Finished element = array.elementAt(i)) {
+            if (exists element = array.getFromFirst(i)) {
                 result.set(i, javaString(element));
             }
             i++;
