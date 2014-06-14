@@ -262,12 +262,6 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual Iterator<Element> iterator() 
-            => { for (i in 0:length) 
-                 if (is Element elem = array[i]) 
-                 elem }
-                .iterator();
-
     shared actual void set(Integer index, Element element) {
         "index may not be negative or greater than the
          last index in the list"
