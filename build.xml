@@ -6,7 +6,25 @@
     <property name="out.repo" location="modules"/>
     <property name="deps.repo" location="test-deps"/>
     <property name="test.repo" location="modules"/>
+	
+    <property name="osgi" location="${basedir}/osgi" />
+    <property name="osgi.p2" location="${osgi}/p2" />
+    <property name="osgi.dist" location="${osgi}/dist" />
+    <property name="osgi.dist.plugins" location="${osgi.dist}/plugins" />
+	
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${basedir}/../ceylon-dist/lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
 
+	<taskdef resource="taskdef.properties">
+		<classpath>
+	        <pathelement path="${basedir}/../ceylon-dist/osgi/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+		</classpath>
+	</taskdef>
+
+	
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
     
@@ -83,6 +101,7 @@
         description="Deletes the test-modules and modules directories">
         <delete dir="${out.repo}"/>
         <delete dir="${test.repo}"/>
+        <delete dir="${osgi.dist}"/>
     </target>
     
     <target name="compile-jvm">
@@ -227,4 +246,87 @@
         </ceylon-doc>
         
     </target>
+	
+	<target name="prepareModuleArchiveForOSGI">
+    	<loadproperties>
+			<zipentry zipfile="${currentFile}" name="META-INF/MANIFEST.MF"/>
+    	     <filterchain>
+    	        <linecontainsregexp>
+    	        	<regexp pattern="^Bundle-Version: \s*\d+\.\d+\.\d+\..+\s*$"/>
+    	        </linecontainsregexp>
+    	     	<replaceregex pattern="\s+$" replace=""/>
+    	     	<replaceregex pattern="^\s+" replace=""/>
+    	      </filterchain>
+    	</loadproperties>
+    	
+    	<copy todir="${osgi.dist.plugins}" overwrite="true" >
+			<fileset file="${currentFile}"/>
+    		<chainedmapper>
+    			<mapper type="regexp" from="([^-]+)-(.+)\.car" to="\1_${Bundle-Version}.jar"/>
+    			<mapper type="flatten"/>
+    		</chainedmapper>
+		</copy>
+	</target>
+	
+    <target name="osgi-quick">
+        <mkdir dir="${osgi.dist.plugins}" />
+    	<foreach target="prepareModuleArchiveForOSGI" param="currentFile">
+    		<path>
+    			<fileset dir="${out.repo}" includes="**/*.car"/>
+    		</path>
+    	</foreach>
+    	<makeurl property="rootUrl" file="${osgi.dist}"/>
+    	<repoindex name="Ceylon Distribution Bundles"    		
+    		out="${osgi.dist}/repository.xml" 
+    		compressed="false"
+    		rooturl="${rootUrl}">
+    		<fileset dir="${osgi.dist.plugins}" includes="*.jar"/>    		
+    	</repoindex>
+    </target>
+
+	<!-- Rule to setup a plugins directory with required bundles -->
+    <target name="osgi-p2-quick" depends="osgi-quick">
+    	<makeurl property="destinationRepository" file="${osgi.dist}"/>
+    	<makeurl property="categoryDefinition" file="${osgi.p2}/category.xml"/>
+    	<exec dir="${basedir}" executable="eclipse" failonerror="true">
+    		<arg value="-noSplash"/>
+    		<arg value="-console"/>
+    		<arg value="-consolelog"/>
+    		<arg value="--launcher.suppressErrors"/>
+    		<arg value="-application"/>
+    		<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
+    		<arg value="-metadataRepositoryName"/>
+    		<arg value="Ceylon SDK Bundles"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-artifactRepositoryName"/>
+    		<arg value="Ceylon SDK Bundles"/>
+    		<arg value="-artifactRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-source"/>
+    		<arg file="${osgi.dist}"/>
+			<arg value="-publishArtifacts"/>
+			<arg value="-append"/>
+    	</exec>
+    	<exec dir="${basedir}" executable="eclipse">
+    		<arg value="-noSplash"/>
+    		<arg value="-console"/>
+    		<arg value="-consolelog"/>
+    		<arg value="--launcher.suppressErrors"/>
+    		<arg value="-application"/>
+    		<arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-categoryDefinition"/>
+    		<arg value="${categoryDefinition}"/>
+    		<arg value="-categoryQualifier"/>
+    		<arg value="ceylon.sdk"/>
+    	</exec>
+    </target>
+
+	<target name="osgi" depends="compile-jvm,osgi-quick"/>
+	<target name="osgi-p2" depends="compile-jvm,osgi-p2-quick"/>
+
+	<target name="ide" depends="osgi-p2"/>
+    <target name="ide-quick" depends="osgi-p2-quick"/>
 </project>
