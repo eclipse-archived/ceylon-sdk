@@ -307,11 +307,11 @@ shared interface IterableTests satisfies CategoryTests {
     }
     
     test shared default void testFollowing() {
-        assertEquals(createIterable({}).following("a").sequence(), ["a"]);
-        assertEquals(createIterable({"a"}).following("abc").sequence(), ["abc", "a"]);
+        assertEquals(createIterable({}).follow("a").sequence(), ["a"]);
+        assertEquals(createIterable({"a"}).follow("abc").sequence(), ["abc", "a"]);
         value iterable = createIterable {"a", "z", "c", "x"};
         value iterator = iterable.iterator();
-        assertEquals(iterable.following("abc").sequence(), ["abc", iterator.next(), iterator.next(), iterator.next(), iterator.next()]);
+        assertEquals(iterable.follow("abc").sequence(), ["abc", iterator.next(), iterator.next(), iterator.next(), iterator.next()]);
     }
     
     test shared default void testChain() {

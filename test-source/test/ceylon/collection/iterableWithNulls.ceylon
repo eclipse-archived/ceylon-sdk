@@ -198,10 +198,10 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
     }
     
     test shared default void testFollowingWithNulls() {
-        assertEquals(createIterableWithNulls({null}).following("abc").sequence(), ["abc", null]);
+        assertEquals(createIterableWithNulls({null}).follow("abc").sequence(), ["abc", null]);
         value iterable = createIterableWithNulls {"a", null, "c", null};
         value iterator = iterable.iterator();
-        assertEquals(iterable.following("abc").sequence(), ["abc", iterator.next(), iterator.next(), iterator.next(), iterator.next()]);
+        assertEquals(iterable.follow("abc").sequence(), ["abc", iterator.next(), iterator.next(), iterator.next(), iterator.next()]);
     }
     
     test shared default void testChainWithNulls() {

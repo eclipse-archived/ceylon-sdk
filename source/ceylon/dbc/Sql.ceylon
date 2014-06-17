@@ -416,7 +416,7 @@ shared class Sql(newConnection) {
                 object iterator
                         satisfies Iterator<Row> {
                     value resultSet = preparedStatement.executeQuery();
-                    resultSets = resultSets.following(resultSet);
+                    resultSets = resultSets.follow(resultSet);
                     value meta = resultSet.metaData;
                     value range = 1..meta.columnCount;
                     shared actual Row|Finished next() {
