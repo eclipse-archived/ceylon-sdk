@@ -167,7 +167,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         if (exists files = formData.files.get(name)) {
             return files;
         }
-        return {};
+        return [];
     }
 
     shared actual UploadedFile? file(String name) {
