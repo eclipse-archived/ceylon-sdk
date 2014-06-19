@@ -179,7 +179,7 @@ final class WholeImpl(BigInteger num)
     
     shared actual Integer offset(Whole other) {
         Whole diff = this.minus(other);
-        if (intMin <= diff <= intMax) {
+        if (longMin <= diff <= longMax) {
             return diff.integer;
         }
         throw OverflowException();

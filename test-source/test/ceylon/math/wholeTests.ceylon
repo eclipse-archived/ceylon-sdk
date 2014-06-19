@@ -150,9 +150,10 @@ test void wholeTests() {
     
     assertEquals(-1, one.offset(two), "one.offset(two)");
     assertEquals(-runtime.maxIntegerValue, zero.offset(wholeNumber(runtime.maxIntegerValue)));
+    assertEquals(runtime.minIntegerValue, zero.offset(wholeNumber(runtime.maxIntegerValue)+one));
     try {
-        value off = zero.offset(wholeNumber(runtime.maxIntegerValue)+one);
-        fail("zero.offset(wholeNumber(runtime.maxIntegerValue)+one) returned ``off``");
+        value off = zero.offset(wholeNumber(runtime.maxIntegerValue)+two);
+        fail("zero.offset(wholeNumber(runtime.maxIntegerValue)+two) returned ``off``");
     } catch (OverflowException e) {
         // checking this is thrown
     }
