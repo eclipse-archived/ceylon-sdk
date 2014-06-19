@@ -202,7 +202,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     }
 
     shared actual Time neighbour(Integer offset) => plusMilliseconds(offset);
-    
-    shared actual Integer offset(Time other) => nothing;
 
+    shared actual Integer offset(Time other) => millisecondsOfDay - other.millisecondsOfDay;
+    
 }

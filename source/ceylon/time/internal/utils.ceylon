@@ -31,7 +31,7 @@ shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value
      assert(overlap([4, 2], [1, 3]) == [2, 3]);
      assert(is Empty o = overlap([1, 2], [3, 4]));
  "
-shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second) 
+shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second)
        given Value satisfies Enumerable<Value>&Comparable<Value> {
     value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
 
@@ -56,7 +56,7 @@ shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] 
      assert(gap([6, 5], [1, 2]) == [3, 4]);
      assert(is Empty g = gap([1, 3], [2, 4]));
  "
-shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] second) 
+shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] second)
        given Value satisfies Comparable<Value> & Enumerable<Value> {
 
     value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two

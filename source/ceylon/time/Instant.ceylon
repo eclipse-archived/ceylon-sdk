@@ -97,7 +97,7 @@ shared class Instant(millisecondsOfEpoch)
     shared actual String string => zoneDateTime(tz.utc).string;
 
     shared actual Instant neighbour(Integer offset) => Instant(millisecondsOfEpoch+offset);
-    
-    shared actual Integer offset(Instant other) => nothing;
+
+    shared actual Integer offset(Instant other) => millisecondsOfEpoch - other.millisecondsOfEpoch;
 
 }

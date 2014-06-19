@@ -416,7 +416,8 @@ shared class GregorianDateTime( date, time )
     }
 
     shared actual DateTime neighbour(Integer offset) => plusMilliseconds(offset);
-    
-    shared actual Integer offset(DateTime other) => nothing;
+
+    shared actual Integer offset(DateTime other) => instant(timeZone.utc).millisecondsOfEpoch
+                                                      - other.instant(timeZone.utc).millisecondsOfEpoch;
 
 }

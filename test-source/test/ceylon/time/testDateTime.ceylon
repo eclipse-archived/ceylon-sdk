@@ -28,9 +28,6 @@ import ceylon.time.base {
     february,
     april
 }
-import ceylon.time.timezone {
-    timeZone
-}
 
 DateTime data_1982_12_13_09_08_07_0050 = dateTime {
     year = 1982; month = december; day = 13;
@@ -387,9 +384,9 @@ shared test void testPeriodPreviousStepByMs_DateTime() {
 }
 
 shared test void testEnumerableDateTime() {
-    //assertEquals(data_1982_12_13_09_08_07_0050.instant(timeZone.utc).millisecondsOfEpoch, data_1982_12_13_09_08_07_0050.integerValue);
-    //assertEquals(data_1982_12_13_09_08_07_0050.successor.instant(timeZone.utc).millisecondsOfEpoch, data_1982_12_13_09_08_07_0050.integerValue + 1);
-    //assertEquals(data_1982_12_13_09_08_07_0050.predecessor.instant(timeZone.utc).millisecondsOfEpoch, data_1982_12_13_09_08_07_0050.integerValue - 1);
+    assertEquals(data_1982_12_13_09_08_07_0050.offset(data_1982_12_13_09_08_07_0050), 0);
+    assertEquals(data_1982_12_13_09_08_07_0050.successor.offset(data_1982_12_13_09_08_07_0050), 1);
+    assertEquals(data_1982_12_13_09_08_07_0050.predecessor.offset(data_1982_12_13_09_08_07_0050), - 1);
 }
 
 shared test void testPeriodFromNewYear_DateTimeNegative() {

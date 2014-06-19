@@ -300,6 +300,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
     }
 
     shared actual ZoneDateTime neighbour(Integer offset) => adjust( instant.dateTime(timeZone).plusMilliseconds(offset) );
-    
-    shared actual Integer offset(ZoneDateTime other) => nothing;
+
+    shared actual Integer offset(ZoneDateTime other) => instant.millisecondsOfEpoch - other.instant.millisecondsOfEpoch;
+
 }

@@ -4,7 +4,7 @@ import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.internal.math { adjustedMod }
 
 "Default implementation of a gregorian calendar"
-shared class GregorianDate( Integer dayOfEra ) 
+shared class GregorianDate( Integer dayOfEra )
       extends AbstractDate( dayOfEra ) {
 
     "Returns year of this gregorian date."
@@ -288,8 +288,9 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     shared actual Date neighbour(Integer offset) => plusDays(offset);
+
+    shared actual Integer offset(Date other) => dayOfEra - other.dayOfEra;
     
-    shared actual Integer offset(Date other) => nothing; 
      
 }
 
