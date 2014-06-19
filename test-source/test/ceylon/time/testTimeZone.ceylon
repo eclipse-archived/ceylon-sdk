@@ -5,14 +5,14 @@ import ceylon.time.timezone { timeZone, OffsetTimeZone }
 
 
 shared test void offsetTimeZoneAlwaysReturnsConstantOffset() {
-	value timeZone = OffsetTimeZone(2222);
-	
-	assertEquals(2222, timeZone.offset(now()));
+    value timeZone = OffsetTimeZone(2222);
+    
+    assertEquals(2222, timeZone.offset(now()));
 }
 
 shared test void testDateTimeToInstantUsesOffset() {
     value localDate = date(2013, september, 02);
-    
+
     assertEquals( localDate.at(time(12, 00)).instant( timeZone.utc ), 
                   localDate.at(time(15, 00)).instant( timeZone.offset( +3 ) ),
                   "Should apply positive timezone offset" );
@@ -29,7 +29,6 @@ shared test void testInstantToTimeUsesOffset() {
     assertEquals( time(15, 00), instant.time( timeZone.offset( 3) ) );
     assertEquals( time( 9, 00), instant.time( timeZone.offset(-3) ) );
 }
-
 
 shared test void testInstantToDateUsesOffset() {
     value instant = Instant( 1378123200000 ); // September 2. 2013 12:00 UTC
@@ -72,5 +71,5 @@ shared test void testTimeZoneString() {
 }
 
 shared test void offsetTimeZoneToString(){
-	assertEquals("Z", timeZone.utc.string);
+    assertEquals("Z", timeZone.utc.string);
 }
