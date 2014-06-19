@@ -87,6 +87,6 @@ shared test void testGapFunction(){
 }
 
 void assertGapEquals<Value>([Value, Value]|Empty expected, [Value, Value] first, [Value, Value] second)()
-              given Value satisfies Comparable<Value> & Ordinal<Value>{
+              given Value satisfies Comparable<Value> & Ordinal<Value> & Enumerable<Value>{
     assertEquals(expected, gap(first, second));
 }

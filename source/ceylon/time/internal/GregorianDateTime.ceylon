@@ -415,12 +415,11 @@ shared class GregorianDateTime( date, time )
         return GregorianDateTime( date.plusDays(totalDays), newTime);
     }
 
-    "Returns _millisecondsOfEpoch_ as it enumerable value. 
-
-     Note that to have the _milliseconds of epoch_ it apply UTC zone."
-    shared actual Integer integerValue => instant(timeZone.utc).millisecondsOfEpoch;
-    
     shared actual DateTime neighbour(Integer offset) => plusMilliseconds(offset);
+
+    shared actual Integer offset(DateTime other) => instant(timeZone.utc).millisecondsOfEpoch
+                                                      - other.instant(timeZone.utc).millisecondsOfEpoch;
+    
     
 
 }

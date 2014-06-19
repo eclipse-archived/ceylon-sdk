@@ -316,9 +316,9 @@ shared test void testPeriodFromMillisecondBeforeNegative() {
 }
 
 shared test void testEnumerableTime() {
-    assertEquals(time_14h_20m_07s_59ms.millisecondsOfDay, time_14h_20m_07s_59ms.integerValue);
-    assertEquals(time_14h_20m_07s_59ms.successor.millisecondsOfDay, time_14h_20m_07s_59ms.integerValue + 1);
-    assertEquals(time_14h_20m_07s_59ms.predecessor.millisecondsOfDay, time_14h_20m_07s_59ms.integerValue - 1);
+    assertEquals(time_14h_20m_07s_59ms.offset(time_14h_20m_07s_59ms), 0);
+    assertEquals(time_14h_20m_07s_59ms.successor.offset(time_14h_20m_07s_59ms), 1);
+    assertEquals(time_14h_20m_07s_59ms.predecessor.offset(time_14h_20m_07s_59ms), - 1);
 }
 
 shared test void testEqualsAndHashTime() {

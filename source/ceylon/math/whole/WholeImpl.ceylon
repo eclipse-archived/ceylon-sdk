@@ -159,8 +159,11 @@ final class WholeImpl(BigInteger num)
                         modulus.implementation));
     }
     
-    shared actual Integer integerValue {
-        return implementation.longValue();
+    shared actual Integer offset(Whole other) {
+        if(is WholeImpl other) {
+            return implementation.longValue() - other.implementation.longValue();
+        }
+        throw AssertionError("Unknow Implementation");
     }
     
     shared actual Whole plusInteger(Integer integer) {
