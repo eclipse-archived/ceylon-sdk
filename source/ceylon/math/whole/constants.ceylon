@@ -6,7 +6,7 @@ import java.lang {
     Long {
         maxLong=MAX_VALUE,
         minLong=MIN_VALUE
-    },
+    }
 }
 import java.math {
     BigInteger
