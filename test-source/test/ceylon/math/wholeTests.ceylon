@@ -1,5 +1,5 @@
 import ceylon.test { ... }
-import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, zero}
+import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, two, zero}
 
 test void wholeTests() {
 
@@ -143,7 +143,20 @@ test void wholeTests() {
     assertEquals(0, wholeNumber(0).sign, "0.sign");
     assertEquals(-1, wholeNumber(-2).sign, "-2.sign");
 
-    // TODO castTo
+    assertEquals([wholeNumber(1), wholeNumber(2)], one..two, "one..two");
+    assertEquals([wholeNumber(2), wholeNumber(1)], two..one, "two..one");
+    assertEquals([wholeNumber(0), wholeNumber(1), wholeNumber(2)], zero..two, "zero..two");
+    assertEquals([wholeNumber(2), wholeNumber(1), wholeNumber(0)], two..zero, "two..zero");
+    
+    assertEquals(-1, one.offset(two), "one.offset(two)");
+    assertEquals(-runtime.maxIntegerValue, zero.offset(wholeNumber(runtime.maxIntegerValue)));
+    try {
+        value off = zero.offset(wholeNumber(runtime.maxIntegerValue)+one);
+        fail("zero.offset(wholeNumber(runtime.maxIntegerValue)+one) returned ``off``");
+    } catch (OverflowException e) {
+        // checking this is thrown
+    }
+    
 
     //print("gcd");
     //assertEquals(Whole(6), gcd(Whole(12), Whole(18)), "gcd(12, 18)");

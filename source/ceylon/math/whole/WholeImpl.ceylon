@@ -159,10 +159,6 @@ final class WholeImpl(BigInteger num)
                         modulus.implementation));
     }
     
-    shared actual Integer integerValue {
-        return implementation.longValue();
-    }
-    
     shared actual Whole plusInteger(Integer integer) {
         return WholeImpl(implementation.add(BigInteger.valueOf(integer)));
     }
@@ -179,6 +175,14 @@ final class WholeImpl(BigInteger num)
     
     shared actual Whole neighbour(Integer offset) {
         return plusInteger(offset);
+    }
+    
+    shared actual Integer offset(Whole other) {
+        Whole diff = this.minus(other);
+        if (intMin <= diff <= intMax) {
+            return diff.integer;
+        }
+        throw OverflowException();
     }
     
 }

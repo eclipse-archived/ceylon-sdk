@@ -287,10 +287,9 @@ shared class GregorianDate( Integer dayOfEra )
         return DateRange(this, other); 
     }
 
-    "Returns _day of era_ as it enumerable value"
-    shared actual Integer integerValue => dayOfEra;
-    
     shared actual Date neighbour(Integer offset) => plusDays(offset);
+    
+    shared actual Integer offset(Date other) => nothing; 
      
 }
 

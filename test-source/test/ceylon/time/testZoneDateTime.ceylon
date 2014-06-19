@@ -100,9 +100,9 @@ shared class ZoneDateTimeEnumerableTest() {
 	
 	SimpleDstTimeZone dst = SimpleDstTimeZone(june_1, june_2.predecessor, timeZone.offset(2));
 	
-	shared test void enumerateUsesInstantValue() =>
-			assertEquals(may_31_12am.zoneDateTime(dst).integerValue,
-	                     may_31_12am.millisecondsOfEpoch);
+	//shared test void enumerateUsesInstantValue() =>
+	//		assertEquals(may_31_12am.zoneDateTime(dst).integerValue,
+	//                     may_31_12am.millisecondsOfEpoch);
 	
 	shared test void predecessor() =>
 			assertEquals(june_1.zoneDateTime(dst).predecessor,

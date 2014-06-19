@@ -86,7 +86,7 @@ shared class InstantTest() {
 	}
 	
 	shared test void enumerableIsBasedOnMillisecondsFromEpoch() {
-		assert(feb_13_2013_18_00_42_0057.integerValue == 1360778442057);
+		assert(feb_13_2013_18_00_42_0057.offset(feb_13_2013_18_00_42_0057) == 0);
 	}
 
 	

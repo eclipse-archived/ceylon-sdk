@@ -41,6 +41,11 @@ shared interface Whole
      is too large the result will be `infinity` or `-infinity`. If the result
      is finite, precision may still be lost."
     shared formal Float float;
+    
+    "The distance between this whole and the other whole"
+    throws(`class OverflowException`, 
+        "The numbers differ by an amount larger than can be represented as an `Integer`")
+    shared actual formal Integer offset(Whole other);
 }
 
 

@@ -559,9 +559,9 @@ shared test void testPeriodFromAfterDate() {
 }
 
 shared test void testEnumerableDate() {
-    assertEquals(data_1982_12_13.dayOfEra, data_1982_12_13.integerValue);
-    assertEquals(data_1982_12_13.successor.dayOfEra, data_1982_12_13.integerValue + 1);
-    assertEquals(data_1982_12_13.predecessor.dayOfEra, data_1982_12_13.integerValue - 1);
+    assertEquals(0, data_1982_12_13.offset(data_1982_12_13));
+    assertEquals(1, data_1982_12_13.successor.offset(data_1982_12_13));
+    assertEquals(-1, data_1982_12_13.predecessor.offset(data_1982_12_13));
 }
 
 shared test void testEqualsAndHashDate() {

@@ -96,9 +96,8 @@ shared class Instant(millisecondsOfEpoch)
      Reference: [ISO-8601 Time Offsets from UTC](https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC)"
     shared actual String string => zoneDateTime(tz.utc).string;
 
-	
-    shared actual Integer integerValue => millisecondsOfEpoch;
-    
     shared actual Instant neighbour(Integer offset) => Instant(millisecondsOfEpoch+offset);
+    
+    shared actual Integer offset(Instant other) => nothing;
 
 }
