@@ -20,6 +20,7 @@ public final class javaClass_ {
 
     private javaClass_() {}
 
+    @SuppressWarnings("unchecked")
     public static <T> java.lang.Class<T> javaClass(@Ignore TypeDescriptor $reifiedT) {
         if($reifiedT instanceof TypeDescriptor.Class){
             TypeDescriptor.Class klass = (Class) $reifiedT;

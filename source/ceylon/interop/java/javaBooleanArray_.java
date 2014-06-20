@@ -27,7 +27,7 @@ public final class javaBooleanArray_ {
      * 
      * @see BooleanArray
      */
-    public static boolean[] javaBooleanArray(@Name("array")
+    public static boolean[] javaBooleanArray(@SuppressWarnings("rawtypes") @Name("array")
     @TypeInfo("ceylon.language::Array<ceylon.language::Boolean>|ceylon.language::Array<java.lang::Boolean>")
     Array array){
         if(array.toArray() instanceof boolean[]){

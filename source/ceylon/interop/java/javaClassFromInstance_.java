@@ -21,6 +21,7 @@ public final class javaClassFromInstance_ {
 
     private javaClassFromInstance_() {}
 
+    @SuppressWarnings("unchecked")
     public static <T> java.lang.Class<T> javaClassFromInstance(
             @Ignore TypeDescriptor $reifiedT, 
             @Name("instance") @TypeInfo("ceylon.language::Object") T instance) {

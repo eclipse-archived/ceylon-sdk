@@ -28,7 +28,7 @@ public final class javaDoubleArray_ {
      * 
      * @see DoubleArray
      */
-    public static double[] javaDoubleArray(@Name("array") 
+    public static double[] javaDoubleArray(@SuppressWarnings("rawtypes") @Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Float>|ceylon.language::Array<java.lang::Double>") 
     Array array){
         if(array.toArray() instanceof double[]){
