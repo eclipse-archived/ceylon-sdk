@@ -326,7 +326,7 @@ shared class HashMap<Key, Item>
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    if(exists item = that.get(cell.element.key)){
+                    if(exists item = that[cell.element.key]){
                         if(item != cell.element.item){
                             return false;
                         }

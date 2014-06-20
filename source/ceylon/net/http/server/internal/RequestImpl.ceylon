@@ -139,7 +139,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
 
         value mergedParams = ArrayList<String>();
         if (queryParameters.keys.contains(name)) {
-            if (exists params = queryParameters.get(name)) {
+            if (exists params = queryParameters[name]) {
                 if (forseFormParse || initialized(lazyFormData)) {
                     mergedParams.addAll(params);
                 } else {
@@ -148,7 +148,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
             }
         }
 
-        if (exists posted = formData.parameters.get(name)) {
+        if (exists posted = formData.parameters[name]) {
             mergedParams.addAll(posted);
         }
         return mergedParams.sequence();
@@ -164,7 +164,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
 
     shared actual UploadedFile[] files(String name) {
-        if (exists files = formData.files.get(name)) {
+        if (exists files = formData.files[name]) {
             return files;
         }
         return [];
