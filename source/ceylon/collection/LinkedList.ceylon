@@ -627,5 +627,15 @@ shared class LinkedList<Element>(elements = {})
     back => last;
 
     front => first;
+    
+    shared actual Element[] sequence() {
+        value array = Array(this);
+        if (array.empty) {
+            return [];
+        }
+        else {
+            return ArraySequence(array);
+        }
+    }
 
 }
