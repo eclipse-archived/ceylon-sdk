@@ -609,6 +609,46 @@ shared class LinkedList<Element>(elements = {})
             }
         }
     }
+    
+    /*
+     The default List implementation of firstIndexWhere + lastIndexWhere
+     uses getFromFirst(index) instead of iterating over the list
+     because for tuples and array sequences that's slightly faster.
+     It is of course desastrous for a linked list, where getFromFirst(index)
+     runs in O(index) time, which means that the default firstIndexWhere()
+     and lastIndexWhere() run in O(size^2) time, so we refine it here.
+     */
+    
+    shared actual Integer? firstIndexWhere(
+            "The predicate function the indexed elements 
+             must satisfy"
+            Boolean selecting(Element&Object element)) {
+        variable value index = 0;
+        for (element in this) {
+            if (exists element,
+                selecting(element)) {
+                return index;
+            }
+            index++;
+        }
+        return null;
+    }
+    
+    shared actual Integer? lastIndexWhere(
+            "The predicate function the indexed elements 
+             must satisfy."
+            Boolean selecting(Element&Object element)) {
+        variable value index = 0;
+        variable Integer? result = null;
+        for (element in this) {
+            if (exists element,
+                selecting(element)) {
+                result = index;
+            }
+            index++;
+        }
+        return result;
+    }
 
     first => head?.element;
 
