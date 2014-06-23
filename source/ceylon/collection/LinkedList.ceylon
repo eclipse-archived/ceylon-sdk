@@ -668,14 +668,6 @@ shared class LinkedList<Element>(elements = {})
 
     front => first;
     
-    shared actual Element[] sequence() {
-        value array = Array(this);
-        if (array.empty) {
-            return [];
-        }
-        else {
-            return ArraySequence(array);
-        }
-    }
-
+    shared actual Element[] sequence()
+        => Array(this).sequence();
 }
