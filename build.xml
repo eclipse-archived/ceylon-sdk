@@ -247,30 +247,30 @@
         
     </target>
 	
-	<target name="prepareModuleArchiveForOSGI">
+	<target name="copyModuleArchiveForOSGI">
     	<loadproperties>
 			<zipentry zipfile="${currentFile}" name="META-INF/MANIFEST.MF"/>
     	     <filterchain>
     	        <linecontainsregexp>
-    	        	<regexp pattern="^Bundle-Version: \s*\d+\.\d+\.\d+\..+\s*$"/>
+    	        	<regexp pattern="^(Bundle-SymbolicName|Bundle-Version)"/>
     	        </linecontainsregexp>
     	     	<replaceregex pattern="\s+$" replace=""/>
     	     	<replaceregex pattern="^\s+" replace=""/>
     	      </filterchain>
     	</loadproperties>
-    	
-    	<copy todir="${osgi.dist.plugins}" overwrite="true" >
-			<fileset file="${currentFile}"/>
-    		<chainedmapper>
-    			<mapper type="regexp" from="([^-]+)-(.+)\.car" to="\1_${Bundle-Version}.jar"/>
-    			<mapper type="flatten"/>
-    		</chainedmapper>
-		</copy>
+		<if>
+			<isset property="Bundle-SymbolicName"/>
+			<then>
+		    	<copy file="${currentFile}" 
+		    		tofile="${osgi.dist.plugins}/${Bundle-SymbolicName}_${Bundle-Version}.jar" 
+		    		overwrite="true"/>
+			</then>
+		</if>
 	</target>
 	
     <target name="osgi-quick">
         <mkdir dir="${osgi.dist.plugins}" />
-    	<foreach target="prepareModuleArchiveForOSGI" param="currentFile">
+    	<foreach target="copyModuleArchiveForOSGI" param="currentFile">
     		<path>
     			<fileset dir="${out.repo}" includes="**/*.car"/>
     		</path>
