@@ -35,7 +35,7 @@ shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] 
        given Value satisfies Enumerable<Value>&Comparable<Value> {
     value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
 
-    if (range(*first).containsEvery(ordered) && range(*second).containsEvery(ordered)) {
+    if (span(*first).containsEvery(ordered) && span(*second).containsEvery(ordered)) {
         assert(exists start = ordered.first);
         assert(exists end = ordered.last);
 
@@ -60,7 +60,7 @@ shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] seco
        given Value satisfies Comparable<Value> & Enumerable<Value> {
 
     value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
-    if (range(*first).containsEvery(ordered) && range(*second).containsEvery(ordered)) {
+    if (span(*first).containsEvery(ordered) && span(*second).containsEvery(ordered)) {
         return empty;
     }
     
