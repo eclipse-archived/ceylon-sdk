@@ -60,24 +60,24 @@ shared interface RangedTests {
        assertEquals(ranged.spanTo(-10), []);
    }
 
-   test shared void testSegment() {
+   test shared void testMeasure() {
        variable value ranged = createRanged {};
-       assertEquals(ranged.segment(0, 1), []);
-       assertEquals(ranged.segment(-1, 1), []);
-       assertEquals(ranged.segment(-10, -5), []);
-       assertEquals(ranged.segment(1, -5), []);
+       assertEquals(ranged.measure(0, 1), []);
+       assertEquals(ranged.measure(-1, 1), []);
+       assertEquals(ranged.measure(-10, -5), []);
+       assertEquals(ranged.measure(1, -5), []);
 
        ranged = createRanged {"A", "B", "C", "D", "E"};
-       assertEquals(ranged.segment(0, 0), []);
-       assertEquals(ranged.segment(0, 1), ["A"]);
-       assertEquals(ranged.segment(1, 2), ["B", "C"]);
-       assertEquals(ranged.segment(2, 3), ["C", "D", "E"]);
-       assertEquals(ranged.segment(0, 20), ["A", "B", "C", "D", "E"]);
-       assertEquals(ranged.segment(3, 20), ["D", "E"]);
-       assertEquals(ranged.segment(-10, 0), []);
-       assertEquals(ranged.segment(-3, 4), ["A"]);
-       assertEquals(ranged.segment(-10, -2), []);
-       assertEquals(ranged.segment(1, -2), []);
+       assertEquals(ranged.measure(0, 0), []);
+       assertEquals(ranged.measure(0, 1), ["A"]);
+       assertEquals(ranged.measure(1, 2), ["B", "C"]);
+       assertEquals(ranged.measure(2, 3), ["C", "D", "E"]);
+       assertEquals(ranged.measure(0, 20), ["A", "B", "C", "D", "E"]);
+       assertEquals(ranged.measure(3, 20), ["D", "E"]);
+       assertEquals(ranged.measure(-10, 0), []);
+       assertEquals(ranged.measure(-3, 4), ["A"]);
+       assertEquals(ranged.measure(-10, -2), []);
+       assertEquals(ranged.measure(1, -2), []);
    }
 
 }

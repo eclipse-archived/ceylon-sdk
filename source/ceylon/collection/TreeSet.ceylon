@@ -100,7 +100,7 @@ shared class TreeSet<Element>(compare, elements={})
                      map (Element->Object entry)
                              =>entry.key;
 
-     segment(Element from, Integer length)
+     measure(Element from, Integer length)
              => TreeSet(compare, higherElements(from).take(length));
 
      shared actual TreeSet<Element> span(Element from, Element to) {

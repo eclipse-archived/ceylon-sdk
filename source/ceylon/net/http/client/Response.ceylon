@@ -49,7 +49,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
             // split it if required
             value sep = contentTypeLine.firstInclusion(";");
             if(exists sep){
-                return contentTypeLine.segment(0, sep);
+                return contentTypeLine.measure(0, sep);
             }else{
                 return contentTypeLine;
             }

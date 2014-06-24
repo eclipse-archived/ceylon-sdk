@@ -17,8 +17,8 @@ class UnmodifiableList<out Element>(List<Element> list)
     
     reversed => list.reversed;
     
-    segment(Integer from, Integer length)
-            => list.segment(from, length);
+    measure(Integer from, Integer length)
+            => list.measure(from, length);
     span(Integer from, Integer to)
             => list.span(from, to);
     spanFrom(Integer from)

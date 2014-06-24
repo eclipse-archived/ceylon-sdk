@@ -428,29 +428,29 @@ shared class LinkedList<Element>(elements = {})
     }
 
     shared actual List<Element> span(Integer from, Integer to) {
-        value segment = spanToSegment(from, to, length);
-        value start = segment[0];
-        value len = segment[1];
-        value reversed = segment[2];
+        value measure = spanToMeasure(from, to, length);
+        value start = measure[0];
+        value len = measure[1];
+        value reversed = measure[2];
         value result = LinkedList(skip(start).take(len));
         return reversed then result.reversed else result;
     }
     
     shared actual void deleteSpan(Integer from, Integer to)  {
-        value segment = spanToSegment(from, to, length);
-        value start = segment[0];
-        value len = segment[1];
+        value measure = spanToMeasure(from, to, length);
+        value start = measure[0];
+        value len = measure[1];
         if (start < length && len > 0) {
             value keepHead = start > 0;
-            value lastPreSegmentCell = advanceBy(start-1, head);
+            value lastPreMeasureCell = advanceBy(start-1, head);
             value skipCells = len + (keepHead then 1 else 0);
-            value firstPostSegmentCell 
-                    = advanceBy(skipCells, lastPreSegmentCell else head);
+            value firstPostMeasureCell 
+                    = advanceBy(skipCells, lastPreMeasureCell else head);
             if (!keepHead) {
-                head = lastPreSegmentCell else firstPostSegmentCell;
+                head = lastPreMeasureCell else firstPostMeasureCell;
             }
-            if (exists preCell = lastPreSegmentCell) {
-                preCell.rest = firstPostSegmentCell;
+            if (exists preCell = lastPreMeasureCell) {
+                preCell.rest = firstPostMeasureCell;
             }
             if (len >= length) {
                 tail = null;
@@ -472,11 +472,11 @@ shared class LinkedList<Element>(elements = {})
         return result;
     }
     
-    segment(Integer from, Integer length) 
-            => span(*segmentToSpan(from, length));
+    measure(Integer from, Integer length) 
+            => span(*measureToSpan(from, length));
     
-    deleteSegment(Integer from, Integer length) 
-            => deleteSpan(*segmentToSpan(from, length));
+    deleteMeasure(Integer from, Integer length) 
+            => deleteSpan(*measureToSpan(from, length));
     
     defines(Integer index)
             => index >= 0 && index < length;

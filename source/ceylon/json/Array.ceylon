@@ -44,8 +44,8 @@ shared class Array({Value*} values = {})
     
     shared actual Array rest => Array(list.rest);
     
-    shared actual Array segment(Integer from, Integer length) 
-            => Array(list.segment(from, length));
+    shared actual Array measure(Integer from, Integer length) 
+            => Array(list.measure(from, length));
     
     shared actual Array span(Integer from, Integer to) 
             => Array(list.span(from, to));
@@ -65,8 +65,8 @@ shared class Array({Value*} values = {})
     
     delete(Integer index) => list.delete(index);
     
-    deleteSegment(Integer from, Integer length) 
-            => list.deleteSegment(from, length);
+    deleteMeasure(Integer from, Integer length) 
+            => list.deleteMeasure(from, length);
     
     deleteSpan(Integer from, Integer to) 
             => list.deleteSpan(from, to);

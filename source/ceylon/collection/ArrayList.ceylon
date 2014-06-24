@@ -292,10 +292,10 @@ shared class ArrayList<Element>
     }
 
     shared actual List<Element> span(Integer from, Integer to) {
-        value segment = spanToSegment(from, to, length);
-        value start = segment[0];
-        value len = segment[1];
-        value reversed = segment[2];
+        value measure = spanToMeasure(from, to, length);
+        value start = measure[0];
+        value len = measure[1];
+        value reversed = measure[2];
         value result = ArrayList { 
             initialCapacity = len; 
             growthFactor = growthFactor; 
@@ -305,9 +305,9 @@ shared class ArrayList<Element>
     }
 
     shared actual void deleteSpan(Integer from, Integer to) {
-        value segment = spanToSegment(from, to, length);
-        value start = segment[0];
-        value len = segment[1];
+        value measure = spanToMeasure(from, to, length);
+        value start = measure[0];
+        value len = measure[1];
         if (start < length && len > 0) {
             value fstTrailing = start + len;
             array.copyTo(array, fstTrailing, start,
@@ -320,11 +320,11 @@ shared class ArrayList<Element>
         }
     }
 
-    segment(Integer from, Integer length) 
-            => span(*segmentToSpan(from, length));
+    measure(Integer from, Integer length) 
+            => span(*measureToSpan(from, length));
     
-    deleteSegment(Integer from, Integer length) 
-            => deleteSpan(*segmentToSpan(from, length));
+    deleteMeasure(Integer from, Integer length) 
+            => deleteSpan(*measureToSpan(from, length));
     
     shared actual void truncate(Integer size) {
         assert (size >= 0);

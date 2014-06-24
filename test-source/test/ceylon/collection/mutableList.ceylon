@@ -146,30 +146,30 @@ shared interface MutableListTests satisfies ListTests {
         assertEquals("b", list.last);
     }
 
-    test shared void testDeleteSegment() {
+    test shared void testDeleteMeasure() {
         value list =  createList {"A", "B", "C", "D", "E", "F"};
-        list.deleteSegment(2, 3);
+        list.deleteMeasure(2, 3);
         assertEquals(list.first, "A");
         assertEquals(list.rest.first, "B");
         assertEquals(list.last, "F");
         assertEquals(list.size, 3);
         assertEquals(list, ["A", "B", "F"]);
-        list.deleteSegment(1, 5);
+        list.deleteMeasure(1, 5);
         assertEquals(list, ["A"]);
         assertEquals(list.size, 1);
-        list.deleteSegment(1, 5);
+        list.deleteMeasure(1, 5);
         assertEquals(list, ["A"]);
         assertEquals(list.size, 1);
-        list.deleteSegment(0, -5);
+        list.deleteMeasure(0, -5);
         assertEquals(list, ["A"]);
         assertEquals(list.size, 1);
-        list.deleteSegment(-3, -5);
+        list.deleteMeasure(-3, -5);
         assertEquals(list, ["A"]);
         assertEquals(list.size, 1);
-        list.deleteSegment(-1, 2);
+        list.deleteMeasure(-1, 2);
         assertEquals(list, []);
         assertEquals(list.size, 0);
-        list.deleteSegment(0, 2);
+        list.deleteMeasure(0, 2);
         assertEquals(list, []);
         assertEquals(list.size, 0);
     }

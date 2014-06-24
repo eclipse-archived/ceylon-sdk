@@ -655,7 +655,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return null;
     }
     
-    segment(Key from, Integer length)
+    measure(Key from, Integer length)
             => TreeMap(compare, higherEntries(from).take(length));
     
     shared actual TreeMap<Key,Item> span(Key from, Key to) {

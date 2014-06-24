@@ -149,9 +149,9 @@ shared interface ListMutator<in Element>
      `from..to`."
     shared formal void deleteSpan(Integer from, Integer to);
 
-    "Remove every element with an index in the segmented
+    "Remove every element with an index in the measured
      range `from:length`."
-    shared formal void deleteSegment(Integer from, Integer length);
+    shared formal void deleteMeasure(Integer from, Integer length);
 
     "Truncate this list to the given [[size]] by removing
      elements from the end of the list, if necessary,
@@ -161,18 +161,18 @@ shared interface ListMutator<in Element>
 
 }
 
-"Converts the indexes of a segment to those of an equivalent 
+"Converts the indexes of a measure to those of an equivalent 
  span."
-[Integer, Integer] segmentToSpan(Integer from, Integer length)
+[Integer, Integer] measureToSpan(Integer from, Integer length)
         => length <= 0 then [-1, -1] else [from, from+length-1];
 
 "Converts the indexes of a span to those of an equivalent 
- segment which may be reversed (the span might have 
+ measure which may be reversed (the span might have 
  `from > to` to express that the elements of the segment 
  should be reversed). The returned tuple is of this form:
  
      [start, length, reversed]"
-[Integer, Integer, Boolean] spanToSegment
+[Integer, Integer, Boolean] spanToMeasure
         (Integer from, Integer to, Integer size) {
     if (size == 0 || from < 0 && to < 0) {
         return [0, 0, false];

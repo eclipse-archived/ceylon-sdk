@@ -8,7 +8,7 @@ shared String leftPad(Integer number, String padding = "00"){
     value digits = string.size;
     if (digits < padding.size) {
         value padded = padding + string;
-        return padded.segment(
+        return padded.measure(
                       padded.size - padding.size,
                       padding.size );
     }
@@ -33,7 +33,7 @@ shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value
  "
 shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second)
        given Value satisfies Enumerable<Value>&Comparable<Value> {
-    value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
+    value ordered = sort(concatenate(first, second)).measure(1, 2); // take the middle two
 
     if (span(*first).containsEvery(ordered) && span(*second).containsEvery(ordered)) {
         assert(exists start = ordered.first);
@@ -59,7 +59,7 @@ shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] 
 shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] second)
        given Value satisfies Comparable<Value> & Enumerable<Value> {
 
-    value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
+    value ordered = sort(concatenate(first, second)).measure(1, 2); // take the middle two
     if (span(*first).containsEvery(ordered) && span(*second).containsEvery(ordered)) {
         return empty;
     }
