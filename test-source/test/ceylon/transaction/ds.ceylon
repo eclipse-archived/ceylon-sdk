@@ -3,7 +3,7 @@ import ceylon.test { ... }
 import java.lang { System { setProperty } }
 import ceylon.transaction.tm { TM }
 import ceylon.collection { HashMap, MutableMap, HashSet, MutableSet }
-import ceylon.dbc { Sql }
+import ceylon.dbc { Sql, newConnectionFromDataSource }
 
 import javax.transaction {
     TransactionManager,
@@ -36,31 +36,32 @@ void fini() {
 
 Boolean updateTable(Sql sq, String dml, Boolean ignoreErrors) {
     try {
-        sq.update(dml);
+        sq.Update(dml).execute();
+
         return true;
     } catch (Exception ex) {
         print("``dml`` error: ``ex.message``");
         if (!ignoreErrors) {
             throw ex;
         }
+
         return false;
     }
 }
 
 void initDb(Sql sql) {
     updateTable(sql, "DROP TABLE CEYLONKV", true);
-
     updateTable(sql, "CREATE TABLE CEYLONKV (key VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY ( key ))", true);
 }
 
 // insert two values into each of the requested dbs
 Integer insertTable(Collection<Sql> dbs) {
     for (sql in dbs) {
-        sql.update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)", "k" + nextKey.string, "v" + nextKey.string);
+        sql.Update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)").execute( "k" + nextKey.string, "v" + nextKey.string);
     }
     nextKey = nextKey + 1;
     for (sql in dbs) {
-        sql.update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)", "k" + nextKey.string, "v" + nextKey.string);
+        sql.Update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)").execute( "k" + nextKey.string, "v" + nextKey.string);
     }
     nextKey = nextKey + 1;
 
@@ -99,7 +100,7 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
     for (dsName in bindings) {
         DataSource? ds = getXADataSource(dsName);
         assert (is DataSource ds);
-        Sql sql = Sql(ds);
+        Sql sql = Sql(newConnectionFromDataSource(ds));
         sqlMap.put(dsName, sql);
         initDb(sql);
     }
@@ -110,19 +111,16 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
 // Test XA transactions with one resource
 test
 void sqlTest1() {
-    init();
     MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings2);
 
     // local commit
     transactionalWork(false, true, sqlMap);
     // XA commit
     transactionalWork(true, true, sqlMap);
-    fini();
 }
 
 // Test XA transactions with multiple resources
 void sqlTest2(Boolean doInTxn) {
-    init();
     MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
 
     // XA abort
@@ -130,27 +128,21 @@ void sqlTest2(Boolean doInTxn) {
 
     // XA commit
     transactionalWork(doInTxn, true, sqlMap);
-    fini();
 }
 
 test
 void sqlTest2a() {
-    init();
     sqlTest2(false);
-    fini();
 }
 
 test
 void sqlTest2b() {
-    init();
     sqlTest2(true);
-    fini();
 }
 
 // same as sqlTest2 with a callable
 test
 void sqlTest3() {
-    init();
     MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
     variable MutableMap<String,Integer> counts = getRowCounts(sqlMap);
 
@@ -179,13 +171,10 @@ void sqlTest3() {
     };
 
     checkRowCounts(counts, getRowCounts(sqlMap), 2);
-
-    fini();
 }
 
 test
 void localTxnTest() {
-    init();
     MutableSet<Sql> sqlSet = HashSet<Sql>();
     value ds = JdbcDataSource();
 
@@ -193,7 +182,7 @@ void localTxnTest() {
     ds.user="sa";
     ds.password="sa";
 
-    Sql sql = Sql(ds);
+    Sql sql = Sql(newConnectionFromDataSource(ds));
 
     sqlSet.add(sql);
 
@@ -201,13 +190,14 @@ void localTxnTest() {
     updateTable(sql, "CREATE TABLE CEYLONKV (key VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY ( key ))", true);
 
     Integer rows = insertTable(sqlSet);
+	Integer? count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
+    
 
-    if (exists count = sql.queryForInteger("SELECT count(*) FROM CEYLONKV")) {
+    if (exists count ) {
         assert (count == rows);
     }
 
     updateTable(sql, "DROP TABLE CEYLONKV", true);
-    fini();
 }
 
 MutableMap<String,Integer> getRowCounts(MutableMap<String,Sql> sqlMap) {
@@ -215,7 +205,7 @@ MutableMap<String,Integer> getRowCounts(MutableMap<String,Sql> sqlMap) {
 
     for (entry in sqlMap) {
       Sql sql = entry.item;
-      Integer? count = sql.queryForInteger("SELECT count(*) FROM CEYLONKV");
+	  Integer? count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
 
       assert (exists count);
       values.put (entry.key, count);

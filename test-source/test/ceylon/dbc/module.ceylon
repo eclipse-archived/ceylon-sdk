@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 module test.ceylon.dbc "1.1.1" {
     import ceylon.dbc "1.1.1";
     import ceylon.math "1.1.0";

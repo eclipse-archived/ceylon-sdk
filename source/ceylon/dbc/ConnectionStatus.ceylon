@@ -1,11 +1,7 @@
-import java.sql {
-    Connection
-}
 import java.sql { Connection }
 import javax.sql { DataSource }
 import java.lang { ThreadLocal }
 import ceylon.transaction.tm { TM, getTM }
->>>>>>> 3c361245206aab946151d17ea65add7771e4e3cc
 
 class ConnectionStatus(Connection() connectionSource) {
 

@@ -1,5 +1,5 @@
 module test.ceylon.transaction "1.0.0" {
-    import ceylon.test "1.0.0";
+    import ceylon.test "1.1.0";
 
     shared import javax.transaction.api "1.2";
 
@@ -14,8 +14,8 @@ module test.ceylon.transaction "1.0.0" {
     //import javax.naming "7";
 
     // ceylon.dbc dependencies
-    import ceylon.collection "1.0.0";
-    import ceylon.dbc "1.0.1";
+    import ceylon.collection "1.1.0";
+    import ceylon.dbc "1.1.1";
 
     // use vendor specific datasources
     import org.h2 "1.3.168";

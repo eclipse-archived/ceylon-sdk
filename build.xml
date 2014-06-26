@@ -46,6 +46,7 @@
     
     <moduleset id="modules.sdk.jvm">
         <module name="ceylon.collection"/>    	
+        <module name="ceylon.transaction"/>
         <module name="ceylon.dbc"/>
         <module name="ceylon.file"/>
         <module name="ceylon.html"/>
@@ -205,6 +206,7 @@
                 <include name="ceylon/net/**"/>
                 <include name="ceylon/process/**"/>
                 <include name="ceylon/time/**"/>
+                <include name="ceylon/transaction/**"/>
                 <include name="ceylon/dbc/**"/>
                 <include name="ceylon/unicode/**"/>
                 <include name="ceylon/interop/java/**"/>

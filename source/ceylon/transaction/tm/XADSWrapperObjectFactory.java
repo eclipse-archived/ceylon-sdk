@@ -108,8 +108,11 @@ public class XADSWrapperObjectFactory implements ObjectFactory {
         XADSWrapper wrapper;
         DriverSpec driverSpec = jdbcDrivers.get(driver);
 
+        if (driverSpec == null)
+            throw new RuntimeException("Please register JDBC driver " + driver + " before using it");
+
         if (driverSpec.dataSource == null || driverSpec.module == null)
-            throw new RuntimeException("JDBC2 driver " + driver + " not recognised");
+            throw new RuntimeException("JDBC driver " + driver + " not recognised");
 
         // load the driver module
         ModuleIdentifier moduleIdentifier = ModuleIdentifier.create(driverSpec.module, driverSpec.version);
