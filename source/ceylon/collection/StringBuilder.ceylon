@@ -1,5 +1,11 @@
-"Builder utility for constructing [[strings|String]] by 
- incrementally appending strings or characters."
+"""Builder utility for constructing [[strings|String]] by 
+   incrementally appending strings or characters.
+   
+       value builder = StringBuilder();
+       builder.append("hello");
+       builder.append(' ');
+       builder.append("world");
+       String hello = builder.string; //hello world"""
 shared class StringBuilder() {
     "The storage"
     variable Array<Character> array 
