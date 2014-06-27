@@ -5,7 +5,7 @@ import ceylon.test.event {
     ...
 }
 import ceylon.collection {
-    ArrayList
+    ArrayList, StringBuilder
 }
 
 shared class TestRunResultImpl() satisfies TestRunResult {

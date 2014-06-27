@@ -1,4 +1,4 @@
-import ceylon.collection { LinkedList, MutableList }
+import ceylon.collection { LinkedList, MutableList, StringBuilder }
 import ceylon.io.charset { Charset }
 
 "Represents an HTTP Header"

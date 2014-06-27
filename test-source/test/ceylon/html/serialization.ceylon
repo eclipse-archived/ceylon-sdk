@@ -1,3 +1,6 @@
+import ceylon.collection {
+    StringBuilder
+}
 import ceylon.html {
     Html,
     Node,

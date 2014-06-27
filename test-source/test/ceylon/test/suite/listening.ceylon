@@ -7,6 +7,7 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection { StringBuilder }
 
 test
 shared void shouldFireEvents() {

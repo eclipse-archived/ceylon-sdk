@@ -4,6 +4,7 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection { StringBuilder }
 
 shared class TestEventPublisher(void publishEvent(String json)) satisfies TestListener {
     

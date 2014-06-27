@@ -4,6 +4,7 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection { StringBuilder }
 
 shared StringBuilder bazTestListenerLog = StringBuilder();
 shared variable Integer bazTestListenerCounter = 0;

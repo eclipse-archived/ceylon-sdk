@@ -1,3 +1,4 @@
+import ceylon.collection { StringBuilder }
 "A JSON Printer that prints to a [[String]]."
 by("Stéphane Épardaud")
 shared class StringPrinter(Boolean pretty = false) 

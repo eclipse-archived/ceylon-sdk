@@ -5,6 +5,7 @@ import ceylon.test {
     assertEquals,
     assertThatException
 }
+import ceylon.collection { StringBuilder }
 
 shared interface IterableTests satisfies CategoryTests {
     

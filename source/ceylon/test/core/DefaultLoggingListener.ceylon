@@ -4,6 +4,7 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection { StringBuilder }
 
 "A [[TestListener]] which prints information about test execution."
 shared class DefaultLoggingListener(

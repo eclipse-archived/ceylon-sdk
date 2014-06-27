@@ -7,6 +7,7 @@ import com.redhat.ceylon.test {
 import test.ceylon.test.stubs {
     ...
 }
+import ceylon.collection { StringBuilder }
 
 test
 shared void shouldWriteTapWhenSuccess() {

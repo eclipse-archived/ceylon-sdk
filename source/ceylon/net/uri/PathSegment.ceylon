@@ -1,4 +1,4 @@
-import ceylon.collection { LinkedList }
+import ceylon.collection { LinkedList, StringBuilder }
 
 "Represents a URI Path segment part"
 by("Stéphane Épardaud")

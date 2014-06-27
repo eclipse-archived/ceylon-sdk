@@ -3,6 +3,7 @@ import ceylon.io.buffer { ByteBuffer, newByteBuffer }
 import ceylon.io.readers { Reader, FileDescriptorReader }
 import ceylon.io.charset { ascii, getCharset }
 import ceylon.net.http { Header }
+import ceylon.collection { StringBuilder }
 
 "Represents an HTTP Response"
 by("Stéphane Épardaud")

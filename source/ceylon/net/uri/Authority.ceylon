@@ -1,4 +1,5 @@
 import ceylon.net.iop { eq }
+import ceylon.collection { StringBuilder }
 
 "Represents a URI Authority part (user, password, host and port)"
 by("Stéphane Épardaud")

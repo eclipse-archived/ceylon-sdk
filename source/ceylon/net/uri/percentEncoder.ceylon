@@ -1,5 +1,6 @@
 import java.lang { JString = String { format }, JByte = Byte, ByteArray }
 import java.util { BitSet }
+import ceylon.collection { StringBuilder }
 
 "Contains methods for percent-encoding. 
      See http://tools.ietf.org/html/rfc3986#appendix-A for specifications."

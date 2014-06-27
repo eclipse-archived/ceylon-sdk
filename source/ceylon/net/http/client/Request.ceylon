@@ -1,4 +1,4 @@
-import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
+import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap, StringBuilder }
 import ceylon.net.uri { Uri, Parameter }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress, newSslSocketConnector }
