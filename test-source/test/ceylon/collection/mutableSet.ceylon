@@ -51,7 +51,7 @@ shared interface MutableSetTests satisfies SetTests {
     }
     
     "This function is called by [[testCycle]] and [[testRepeat]]."
-    shared actual default void testCycleFunction(List<String?>(Integer)({String?*}) cycle) {
+    shared actual default void testRepeatFunction(List<String?>(Integer)({String?*}) cycle) {
         assertEquals(cycle(createIterable {})(0), []);
         assertEquals(cycle(createIterable {})(1), []);
         assertEquals(cycle(createIterable {})(-1), []);

@@ -362,21 +362,15 @@ shared interface IterableTests satisfies CategoryTests {
         }
     }
     
-    "This test calls [[testCycleFunction]] with the cycle function.
-     If needed, override that method."
-    test shared void testCycle() {
-        testCycleFunction(({String?*} strings) => 
-            compose(({String?*} it)=>it.sequence(), strings.cycle));
-    }
-    
-    "This test calls [[testCycleFunction]] with the cycle function.
+    "This test calls [[testRepeatFunction]] with the repeat function.
      If needed, override that method."
     test shared void testRepeat() {
-        testCycleFunction(({String?*} strings) => strings.repeat);
+        testRepeatFunction(({String?*} strings) => 
+            compose(({String?*} it)=>it.sequence(), strings.repeat));
     }
     
-    "This function is called by [[testCycle]] and [[testRepeat]]."
-    shared default void testCycleFunction(List<String?>(Integer)({String?*}) cycle) {
+    "This function is called by [[testRepeat]]."
+    shared default void testRepeatFunction(List<String?>(Integer)({String?*}) cycle) {
         assertEquals(cycle(createIterable {})(0), []);
         assertEquals(cycle(createIterable {})(1), []);
         assertEquals(cycle(createIterable {})(-1), []);

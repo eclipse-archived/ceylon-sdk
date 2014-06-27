@@ -233,21 +233,15 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
         }
     }
     
-    "This test calls [[testCycleFunctionWithNulls]] with the cycle function.
-     If needed, override that method."
-    test shared void testCycleWithNulls() {
-        testCycleFunctionWithNulls(({String?*} strings) => 
-            compose(({String?*} it)=>it.sequence(), strings.cycle));
-    }
-    
-    "This test calls [[testCycleFunctionWithNulls]] with the repeat function.
+    "This test calls [[testRepeatFunctionWithNulls]] with the repeat function.
      If needed, override that method."
     test shared void testRepeatWithNulls() {
-        testCycleFunctionWithNulls(({String?*} strings) => strings.repeat);
+        testRepeatFunctionWithNulls(({String?*} strings) => 
+            compose(({String?*} it)=>it.sequence(), strings.repeat));
     }
-    
-    "This function is called by [[testCycleWithNulls]] and [[testRepeatWithNulls]]."
-    shared default void testCycleFunctionWithNulls(List<String?>(Integer)({String?*}) cycle) {
+        
+    "This function is called by [[testRepeatWithNulls]]."
+    shared default void testRepeatFunctionWithNulls(List<String?>(Integer)({String?*}) cycle) {
         assertEquals(cycle(createIterableWithNulls {null})(1), [null]);
         assertEquals(cycle(createIterableWithNulls {"a", null, "c"})(3),
             createIterableWithNulls({"a", null, "c", "a", null, "c", "a", null, "c"}));
