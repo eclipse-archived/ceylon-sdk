@@ -249,7 +249,6 @@ shared interface MutableListTests satisfies ListTests {
         list.set(0, "C");
         assertEquals(list.reversed, [null, "B", "C"]);
         assertEquals(list, ["C", "B", null]);
-        assertEquals(type(list.reversed), type(list));
     }
 
     test shared void testIteratorAfterMutation() {
