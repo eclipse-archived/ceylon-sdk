@@ -34,7 +34,7 @@ see(`class ByteBuffer`,
     `function newByteBuffer`,
     `class Buffer`)
 shared ByteBuffer newByteBufferWithData(Integer* bytes){
-    value seq = bytes.sequence;
+    value seq = bytes.sequence();
     value buf = newByteBuffer(seq.size);
     for(Integer byte in seq){
         buf.put(byte);

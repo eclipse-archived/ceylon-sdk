@@ -8,7 +8,7 @@ shared String leftPad(Integer number, String padding = "00"){
     value digits = string.size;
     if (digits < padding.size) {
         value padded = padding + string;
-        return padded.segment(
+        return padded.measure(
                       padded.size - padding.size,
                       padding.size );
     }
@@ -31,11 +31,11 @@ shared Boolean intersect<Value>( Value start, Value end, Value otherStart, Value
      assert(overlap([4, 2], [1, 3]) == [2, 3]);
      assert(is Empty o = overlap([1, 2], [3, 4]));
  "
-shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second) 
-       given Value satisfies Comparable<Value> & Ordinal<Value> {
-    value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
+shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] second)
+       given Value satisfies Enumerable<Value>&Comparable<Value> {
+    value ordered = sort(concatenate(first, second)).measure(1, 2); // take the middle two
 
-    if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
+    if (span(*first).containsEvery(ordered) && span(*second).containsEvery(ordered)) {
         assert(exists start = ordered.first);
         assert(exists end = ordered.last);
 
@@ -56,11 +56,11 @@ shared [Value, Value]|Empty overlap<Value>([Value, Value] first, [Value, Value] 
      assert(gap([6, 5], [1, 2]) == [3, 4]);
      assert(is Empty g = gap([1, 3], [2, 4]));
  "
-shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] second) 
-       given Value satisfies Comparable<Value> & Ordinal<Value> {
+shared [Value, Value]|Empty gap<Value>([Value, Value] first, [Value, Value] second)
+       given Value satisfies Comparable<Value> & Enumerable<Value> {
 
-    value ordered = sort(concatenate(first, second)).segment(1, 2); // take the middle two
-    if (Range(*first).containsEvery(ordered) && Range(*second).containsEvery(ordered)) {
+    value ordered = sort(concatenate(first, second)).measure(1, 2); // take the middle two
+    if (span(*first).containsEvery(ordered) && span(*second).containsEvery(ordered)) {
         return empty;
     }
     

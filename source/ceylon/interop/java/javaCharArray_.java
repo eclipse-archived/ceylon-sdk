@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
 import ceylon.language.Array;
-import ceylon.language.AssertionException;
+import ceylon.language.AssertionError;
 import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.language.CharArray;
@@ -10,7 +10,7 @@ import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 
-@Ceylon(major = 6)
+@Ceylon(major = 7)
 @Method
 @SharedAnnotation$annotation$
 public final class javaCharArray_ {
@@ -29,7 +29,7 @@ public final class javaCharArray_ {
         if(array.toArray() instanceof char[]){
             return (char[]) array.toArray();
         }
-        throw new AssertionException("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+array.toArray());
     }
 
 }

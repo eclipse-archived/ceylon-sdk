@@ -1,6 +1,6 @@
 import ceylon.time.timezone { TimeZone }
 import ceylon.time.base { ReadableDateTime, DateTimeBehavior, Month }
-import ceylon.time { Date, Time, Instant, dateTime, DateTime }
+import ceylon.time { Date, Time, Instant, dateTime, DateTime, Duration }
 import ceylon.time.internal { GregorianZonedDateTime }
 import ceylon.time.chronology { unixTime }
 
@@ -16,7 +16,15 @@ shared interface ZoneDateTime
 
     "Instant used as base."
     shared formal Instant instant;
-
+    
+    "Returns current time zone offset from UTC in milliseconds"
+    shared default Integer currentOffsetMilliseconds => timeZone.offset(instant);
+    
+    "Local date and time according to the current time zone of this instance.
+     
+     **Note:** The resulting [[DateTime]], is a local representation of 
+     this date and time stripped of any time zone information."
+    shared formal DateTime dateTime;
 }
 
 "Returns a [[ZoneDateTime]] based on the specified [[TimeZone]], year, month, day of month, hour, minute, second and millisecond values."

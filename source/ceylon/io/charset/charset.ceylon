@@ -16,7 +16,7 @@ shared interface Charset {
     "Returns a list of aliases for this character set, as defined by 
      [the internet registry](http://www.iana.org/assignments/character-sets)."
     shared default String[] aliases {
-        return {};
+        return [];
     }
 
     "Returns a new [[Decoder]] which allows you to decode byte buffers

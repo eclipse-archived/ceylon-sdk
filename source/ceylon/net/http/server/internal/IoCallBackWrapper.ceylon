@@ -1,4 +1,4 @@
-import ceylon.net.http.server { HttpException=Exception }
+import ceylon.net.http.server { HttpException=ServerException }
 import io.undertow.io { IoCallback, Sender }
 import io.undertow.server { HttpServerExchange }
 import java.io { IOException }

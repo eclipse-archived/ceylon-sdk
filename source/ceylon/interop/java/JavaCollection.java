@@ -1,9 +1,8 @@
 package ceylon.interop.java;
 
-import com.redhat.ceylon.compiler.java.Util;
+import ceylon.language.Finished;
 
-
-@com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 6)
+@com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 7)
 @ceylon.language.DocAnnotation$annotation$(description = "Takes a Ceylon list of items and turns them into a Java `Collection`")
 @ceylon.language.SharedAnnotation$annotation$
 @com.redhat.ceylon.compiler.java.metadata.Annotations({@com.redhat.ceylon.compiler.java.metadata.Annotation(value = "doc", arguments = {"Takes a Ceylon list of items and turns them into a Java `Collection`"}), @com.redhat.ceylon.compiler.java.metadata.Annotation("shared")})
@@ -151,12 +150,140 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
 
     @java.lang.Override
     public final java.lang.Object[] toArray() {
-        return Util.collectIterable(items).toArray();
+        return collectIterable(items).toArray();
     }
 
     @java.lang.Override
     public <S> S[] toArray(S[] arr) {
-		return Util.collectIterable(items).toArray(arr);
+        if (items.longerThan(arr.length)) {
+            ReflectingObjectArrayBuilder<S> builder = new ReflectingObjectArrayBuilder<S>(5, (Class<S>)arr.getClass().getComponentType());
+            ceylon.language.Iterator iterator = items.iterator();
+            Object o;
+            while (!((o = iterator.next()) instanceof Finished)) {
+                builder.appendRef((S)o);
+            }
+            return builder.build();
+        } else {
+            int ii = 0;
+            ceylon.language.Iterator iterator = items.iterator();
+            Object o;
+            while (!((o = iterator.next()) instanceof Finished)) {
+                arr[ii] = (S)o;
+                ii++;
+            }
+            if (ii < arr.length) {
+                arr[ii] = null;
+            }
+            return arr;
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T> java.util.List<T> collectIterable(ceylon.language.Iterable<? extends T, ?> sequence) {
+        java.util.List<T> list = new java.util.LinkedList<T>();
+        if (sequence != null) {
+            ceylon.language.Iterator<? extends T> iterator = sequence.iterator();
+            Object o; 
+            while((o = iterator.next()) != ceylon.language.finished_.get_()){
+                list.add((T)o);
+            }
+        }
+        return list;
+    }
+    
+    private static abstract class ArrayBuilder<A> {
+        private static final int MIN_CAPACITY = 5;
+        private static final int MAX_CAPACITY = java.lang.Integer.MAX_VALUE;
+        /** The number of elements in {@link #array}. This is always <= {@link #capacity} */
+        protected int size;
+        /** The length of {@link #array} */
+        protected int capacity;
+        /** The array */
+        protected A array;
+        ArrayBuilder(int initialSize) {
+            capacity = Math.max(initialSize, MIN_CAPACITY);
+            array = allocate(capacity);
+            size = 0;
+        }
+        /** Append all the elements in the given array */
+        final void appendArray(A elements) {
+            int increment = size(elements);
+            int newsize = this.size + increment;
+            ensure(newsize);
+            System.arraycopy(elements, 0, array, this.size, increment);
+            this.size = newsize;
+        }
+        /** Ensure the {@link #array} is as big, or bigger than the given capacity */
+        protected final void ensure(int requestedCapacity) {
+            if (this.capacity >= requestedCapacity) {
+                return;
+            }
+            
+            int newcapacity = requestedCapacity+(requestedCapacity>>1);
+            if (newcapacity < MIN_CAPACITY) {
+                newcapacity = MIN_CAPACITY;
+            } else if (newcapacity > MAX_CAPACITY) {
+                newcapacity = requestedCapacity;
+                if (newcapacity > MAX_CAPACITY) {
+                    throw new AssertionError("can't allocate array bigger than " + MAX_CAPACITY);
+                }
+            }
+            
+            A newArray = allocate(newcapacity);
+            System.arraycopy(this.array, 0, newArray, 0, this.size);
+            this.capacity = newcapacity;
+            this.array = newArray;
+        }
+        
+        /**
+         * Allocate and return an array of the given size
+         */
+        protected abstract A allocate(int size);
+        /**
+         * The size of the given array
+         */
+        protected abstract int size(A array);
+        
+        /**
+         * Returns an array of exactly the right size to contain all the 
+         * appended elements.
+         */
+        A build() {
+            if (this.capacity == this.size) {
+                return array;
+            }
+            A result = allocate(this.size);
+            System.arraycopy(this.array, 0, result, 0, this.size);
+            return result;
+        }
+    }
+    
+    private static final class ReflectingObjectArrayBuilder<T> extends ArrayBuilder<T[]> {
+        private final java.lang.Class<T> klass;
+        public ReflectingObjectArrayBuilder(int initialSize, java.lang.Class<T> klass) {
+            super(initialSize);
+            this.klass = klass;
+        }
+        @SuppressWarnings("unchecked")
+        @Override
+        protected T[] allocate(int size) {
+            return (T[])new Object[size];
+        }
+        @Override
+        protected int size(T[] array) {
+            return array.length;
+        }
+        
+        public void appendRef(T t) {
+            ensure(size+1);
+            array[size] = t;
+            size++;
+        }
+        public T[] build() {
+            T[] result = (T[])java.lang.reflect.Array.newInstance(klass, this.size);
+            System.arraycopy(this.array, 0, result, 0, this.size);
+            return result;
+        }
     }
     
     @ceylon.language.SharedAnnotation$annotation$

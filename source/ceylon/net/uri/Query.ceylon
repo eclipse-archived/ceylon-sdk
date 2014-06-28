@@ -1,4 +1,4 @@
-import ceylon.collection { LinkedList }
+import ceylon.collection { LinkedList, StringBuilder }
 
 "Represents a URI Query part"
 by("Stéphane Épardaud")
@@ -35,6 +35,12 @@ shared class Query(Parameter* initialParameters) {
             return parameters == that.parameters; 
         }
         return false;
+    }
+    
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + parameters.hash;
+        return hash;
     }
     
     String serialiseParameter(Parameter param, Boolean human) {

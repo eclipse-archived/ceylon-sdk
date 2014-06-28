@@ -1,17 +1,17 @@
 import java.lang { AutoCloseable }
 
-"Adapts an instance of Java's `AutoCloseable` to Ceylon's `Closeable`,
+"Adapts an instance of Java's `AutoCloseable` to Ceylon's `Destroyable`,
  allowing it to be used as a `try` resource.
 
-     try (inputStream = CeylonResource(FileInputStream(file)) {
+     try (inputStream = CeylonDestroyable(FileInputStream(file)) {
          Integer byte = inputStream.resource.read();
          ...
      }"
-shared class CeylonResource<Resource>(shared Resource resource) 
-        satisfies Closeable 
+shared class CeylonDestroyable<Resource>(shared Resource resource) 
+        satisfies Destroyable 
         given Resource satisfies AutoCloseable {
     
-    shared actual void close(Exception? exception) {
+    shared actual void destroy(Throwable? exception) {
         try {
             resource.close();
         }
@@ -23,6 +23,4 @@ shared class CeylonResource<Resource>(shared Resource resource)
             throw e;
         }
     }
-    
-    shared actual void open() {}
 }

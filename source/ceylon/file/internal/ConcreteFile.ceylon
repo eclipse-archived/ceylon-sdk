@@ -135,7 +135,7 @@ class ConcreteFile(JPath jpath)
         
         readLine() => r.readLine();
         
-        destroy() => r.close();
+        close() => r.close();
         
     }
     
@@ -146,7 +146,7 @@ class ConcreteFile(JPath jpath)
         value w = newBufferedWriter(jpath, charset, 
                 \iWRITE, \iTRUNCATE_EXISTING);
         
-        destroy() => w.close();
+        close() => w.close();
         
         write(String string) => w.write(string);
         
@@ -165,7 +165,7 @@ class ConcreteFile(JPath jpath)
         value w = newBufferedWriter(jpath, charset, 
                 \iWRITE, \iAPPEND);
         
-        destroy() => w.close();
+        close() => w.close();
         
         write(String string) => w.write(string);
         

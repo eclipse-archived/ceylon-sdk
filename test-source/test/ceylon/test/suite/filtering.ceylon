@@ -7,6 +7,9 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection {
+    ArrayList
+}
 
 test
 shared void shouldFilterEverything() {
@@ -41,9 +44,9 @@ shared void shouldFilterTestsByName() {
 
 test
 shared void shouldFilterTestsAndFireExcludeEvent() {
-    value excludedBuilder = SequenceBuilder<TestDescription>();
+    value excludedList = ArrayList<TestDescription>();
     object excludedListener satisfies TestListener {
-        shared actual void testExclude(TestExcludeEvent event) => excludedBuilder.append(event.description);
+        shared actual void testExclude(TestExcludeEvent event) => excludedList.add(event.description);
     }
 
     createTestRunner{
@@ -51,6 +54,6 @@ shared void shouldFilterTestsAndFireExcludeEvent() {
         listeners = [excludedListener];
         filter = (TestDescription d)=>!d.name.contains("Throwing");
     };
-
-    assert(exists d = excludedBuilder.sequence[0]?.functionDeclaration, d == `function fooThrowingAssertion`);
+    
+    assertEquals(excludedList[0]?.functionDeclaration, `function fooThrowingAssertion`);
 }

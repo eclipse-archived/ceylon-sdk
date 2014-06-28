@@ -2,6 +2,10 @@ import ceylon.file {
     ...
 }
 
+import ceylon.collection {
+    ArrayList
+}
+
 import java.nio.file {
     JPath=Path,
     Files {
@@ -20,15 +24,19 @@ class ConcreteDirectory(JPath jpath)
     
     shared actual Iterable<Path> childPaths(String filter) {
         //TODO: efficient impl
-        value sb = SequenceBuilder<Path>();
+        value sb = ArrayList<Path>();
         value stream = newDirectoryStream(jpath, filter);
         value iter = stream.iterator();
         while (iter.hasNext()) {
-            sb.append(ConcretePath(iter.next()));
+            sb.add(ConcretePath(iter.next()));
         }
         stream.close();
-        return sb.sequence;
+        return sb.sequence();
     }
+    
+    path =>  ConcretePath(jpath); 
+    
+    linkedResource => this;
     
     children(String filter) =>
            {for (p in childPaths(filter)) 
@@ -50,10 +58,6 @@ class ConcreteDirectory(JPath jpath)
         deletePath(jpath);
         return ConcreteNil(jpath);
     }
-    
-    path =>  ConcretePath(jpath); 
-    
-    linkedResource => this;
     
     readAttribute(Attribute attribute) 
             => getAttribute(jpath, attributeName(attribute));

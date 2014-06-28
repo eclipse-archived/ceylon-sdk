@@ -1,16 +1,26 @@
 import ceylon.language.meta {
     type
 }
+import ceylon.collection { StringBuilder }
 
-class IgnoreException(shared String reason) extends Exception(reason) {
+"Thrown when test is ignored."
+shared class IgnoreException(reason) extends Exception(reason) {
+    
+    "Reason why the test is ignored."
+    shared String reason;
+    
 }
 
-class MultipleFailureException(shared Exception[] exceptions) extends Exception() {
+"Thrown when multiple exceptions occurs."
+shared class MultipleFailureException(exceptions) extends Exception() {
+    
+    "The collected exceptions."
+    shared Throwable[] exceptions;
     
     shared actual String message {
         value message = StringBuilder();
         message.append("There were ``exceptions.size`` exceptions:");
-        for(Exception e in exceptions) {
+        for (e in exceptions) {
             message.appendNewline();
             message.append("    ");
             message.append(type(e).declaration.qualifiedName);

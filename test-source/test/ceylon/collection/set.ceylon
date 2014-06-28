@@ -1,105 +1,101 @@
-import ceylon.collection { ... }
-import ceylon.test { ... }
-
-void doSetTests(MutableSet<String> set) {
-    assertEquals("{}", set.string);
-    assertEquals(0, set.size);
-    assertEquals(true, set.add("fu"));
-    assertEquals("{ fu }", set.string);
-    assertTrue(set.contains("fu"));
-    assertEquals(1, set.size);
-    assertEquals(false, set.add("fu"));
-    assertEquals("{ fu }", set.string);
-    assertTrue(set.contains("fu"));
-    assertEquals(1, set.size);
-    set.add("stef");
-    assertTrue(set.contains("fu"));
-    assertTrue(set.contains("stef"));
-    assertEquals(2, set.size);
-    assertTrue(!set.contains("bar"));
-    set.clear();
-    assertEquals("{}", set.string);
-    assertEquals(0, set.size);
-    assertTrue(!set.contains("fu")); // equality
+import ceylon.collection {
+    ...
+}
+import ceylon.test {
+    ...
 }
 
-shared test void testSet() {
-    doSetTests(HashSet<String>(unlinked));
-    doSetTests(HashSet<String>());
-    doSetTests(TreeSet<String>((String x, String y)=>x<=>y));
-    
-    assertEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a", "b"});
-    assertNotEquals(HashSet{"a", "b", "c"}, HashSet{"c", "a"});
-    assertNotEquals(HashSet{"a", "b", "c"}, HashSet{});
-    assertEquals(HashSet{}, HashSet{}); // unions and shit
-    assertEquals(HashSet{"a", 2}, HashSet{"a", "a"}.union(HashSet{2, "a"}));
-    assertEquals(HashSet{"b", 2}, HashSet{"a", "b"}.exclusiveUnion(HashSet{2, "a"}));
-    assertEquals(HashSet{"a"}, HashSet{"a", "b"}.intersection(HashSet{2, "a"}));
-    
-    assertEquals(naturalOrderTreeSet{"a", "b", "c"}, naturalOrderTreeSet{"c", "a", "b"});
-    assertNotEquals(naturalOrderTreeSet{"a", "b", "c"}, naturalOrderTreeSet{"c", "a"});
-    assertNotEquals(naturalOrderTreeSet{"a", "b", "c"}, naturalOrderTreeSet{});
-    assertEquals(naturalOrderTreeSet{}, naturalOrderTreeSet{}); // unions and shit
-    assertEquals(naturalOrderTreeSet{"a"}, naturalOrderTreeSet{"a", "b"}.intersection(HashSet{2, "a"}));
+shared interface SetTests satisfies IterableTests {
+    shared formal Set<String> createSet({String*} strings);
 
-    assertEquals(HashSet{"a", "b", "c"}, naturalOrderTreeSet{"c", "a", "b"});
-    assertEquals(HashSet{}, naturalOrderTreeSet{}); // unions and shit
-    
-    value set1 = HashSet<String>();
-    set1.add("hello");
-    set1.add("world");
-    set1.add("goodbye");
-    set1.add("world");
-    set1.add("12345");
-    set1.add("!@#$%");
-    set1.add("abcde");
-    value set2 = HashSet<String>(unlinked);
-    set2.add("hello");
-    set2.add("world");
-    set2.add("goodbye");
-    set2.add("world");
-    set2.add("12345");
-    set2.add("!@#$%");
-    set2.add("abcde");
-    print (set1.string);
-    print (set2.string);
-    assert (set1.string=="{ hello, world, goodbye, 12345, !@#$%, abcde }");
-    //the actual order is irrelevant:
-    assert (set2.string=="{ goodbye, world, hello, abcde, 12345, !@#$% }");
-}
+    test shared void testEquals() {
+        {[{String*}, [String*]]+} positiveEqualExamples = {
+            [{}, []],
+            [{"a"}, ["a"]],
+            [["A"], ["A"]],
+            [{"a", "b", "c", "something"}, ["a", "b", "c", "something"]],
+            [{"a", "b", "c", "something"}, ["a", "b", "something", "c"]],
+            [{"a", "b", "c"}, ["c", "b", "a"]]
+        };
 
-shared test void testSetRemove() {
-    MutableSet<String> set = HashSet<String>();
-    set.add("a");
-    set.add("b");
-    assertEquals(2, set.size);
-    
-    assertEquals(true, set.remove("a"));
-    assertEquals(1, set.size);
-    assertFalse(set.contains("a"));
-    assertTrue(set.contains("b"));
+        {[{String*}, {String*}]+} negativeEqualExamples = {
+            [{}, [""]],
+            [{""}, []],
+            [{}, ["a", "b", "c"]],
+            [{"M"}, ["m"]],
+            [{"b", "c", "d"}, ["c", "d"]]
+        };
 
-    assertEquals(true, set.remove("b"));
-    assertEquals(0, set.size);
-    assertFalse(set.contains("a"));
-    assertFalse(set.contains("b"));
+        for (example in positiveEqualExamples) {
+            assertEquals(createSet(example.first), createSet(example.last));
+        }
+        for (example in negativeEqualExamples) {
+            assertNotEquals(createSet(example.first), createSet(example.last));
+        }
+    }
 
-    assertEquals(false, set.remove("b"));
-}
+    test shared actual void testString() {
+        assertEquals(createSet({}).string, "{}");
+        assertEquals(createSet({"ABC"}).string, "{ ABC }");
 
-shared test void testSetConstructor() {
-    Set<String> set = HashSet{"a", "b"};
-    assertEquals(2, set.size);
-    assertTrue(set.contains("a"));
-    assertTrue(set.contains("b"));
-}
+        variable value string = createSet({"A", "B", "C", "D"}).string;
 
-shared test void testSet2() {
-    MutableSet<String> set = HashSet<String>();
-    set.add("gravatar_id");
-    set.add("url");
-    set.add("avatar_url");
-    set.add("id");
-    set.add("login");
-    assertEquals(5, set.size);
+        assertTrue(string.contains(" A"));
+        string = string.replace(" A", "");
+        assertTrue(string.contains(" B"));
+        string = string.replace(" B", "");
+        assertTrue(string.contains(" C"));
+        string = string.replace(" C", "");
+        assertTrue(string.contains(" D"));
+        string = string.replace(" D", "");
+
+        assertEquals(string, "{,,, }");
+    }
+
+    test shared void testUnion() {
+        assertEquals(createSet{}.union(createSet{}), createSet{});
+        assertEquals(createSet{}.union(createSet{"A"}), createSet{"A"});
+        assertEquals(createSet{"A"}.union(createSet{}), createSet{"A"});
+        assertEquals(createSet{"A"}.union(createSet{"B"}), createSet{"A", "B"});
+        assertEquals(createSet{"A"}.union(createSet{"A", "B", "C", "D"}), createSet{"A", "B", "C", "D"});
+        assertEquals(createSet{"A", "B"}.union(createSet{"C", "D"}), createSet{"A", "B", "C", "D"});
+        assertEquals(createSet{"A", "B", "C"}.union(createSet{"D"}), createSet{"A", "B", "C", "D"});
+        assertEquals(createSet{"A", "B", "C", "D"}.union(createSet{"A", "B", "C"}), createSet{"A", "B", "C", "D"});
+    }
+
+    test shared void testExclusiveUnion() {
+        assertEquals(createSet{}.exclusiveUnion(createSet{}), createSet{});
+        assertEquals(createSet{}.exclusiveUnion(createSet{"A"}), createSet{"A"});
+        assertEquals(createSet{"A"}.exclusiveUnion(createSet{}), createSet{"A"});
+        assertEquals(createSet{"A"}.exclusiveUnion(createSet{"B"}), createSet{"A", "B"});
+        assertEquals(createSet{"A"}.exclusiveUnion(createSet{"A", "B", "C", "D"}), createSet{"B", "C", "D"});
+        assertEquals(createSet{"A", "B"}.exclusiveUnion(createSet{"C", "D"}), createSet{"A", "B", "C", "D"});
+        assertEquals(createSet{"A", "B", "C"}.exclusiveUnion(createSet{"D"}), createSet{"A", "B", "C", "D"});
+        assertEquals(createSet{"A", "B", "C", "D"}.exclusiveUnion(createSet{"A", "B", "C"}), createSet{"D"});
+        assertEquals(createSet{"A", "B", "C"}.exclusiveUnion(createSet{"D", "C", "B", "Z"}), createSet{"A", "D", "Z", "D"});
+    }
+
+    test shared void testIntersection() {
+        assertEquals(createSet{}.intersection(createSet{}), createSet{});
+        assertEquals(createSet{}.intersection(createSet{"A"}), createSet{});
+        assertEquals(createSet{"A"}.intersection(createSet{}), createSet{});
+        assertEquals(createSet{"A", "B", "C"}.intersection(createSet{}), createSet{});
+        assertEquals(createSet{"A"}.intersection(createSet{"B"}), createSet{});
+        assertEquals(createSet{"A"}.intersection(createSet{"B", "C", "D"}), createSet{});
+        assertEquals(createSet{"A"}.intersection(createSet{"A"}), createSet{"A"});
+        assertEquals(createSet{"A", "B", "C"}.intersection(createSet{"A"}), createSet{"A"});
+        assertEquals(createSet{"A", "B", "C"}.intersection(createSet{"B"}), createSet{"B"});
+        assertEquals(createSet{"A"}.intersection(createSet{"A", "B", "C", "D"}), createSet{"A"});
+        assertEquals(createSet{"A", "B", "C"}.intersection(createSet{"A", "B", "C"}), createSet{"A", "B", "C"});
+        assertEquals(createSet{"A", "B", "C"}.intersection(createSet{"B", "C", "A"}), createSet{"A", "B", "C"});
+        assertEquals(createSet{"A", "B", "C"}.intersection(createSet{"Z", "X", "A", "M", "B"}), createSet{"A", "B"});
+    }
+
+    test shared void testClone() {
+        value set = HashSet {"foo", "bar"};
+        assertEquals(set, set.clone());
+        assertEquals(set.clone().size, 2);
+        assertEquals(set.clone().string, "{ foo, bar }");
+    }
+
 }

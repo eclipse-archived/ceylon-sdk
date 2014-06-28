@@ -180,7 +180,7 @@ final class DecimalImpl(BigDecimal num)
     shared actual Boolean negative {
         return implementation.signum() < 0;
     }
-    shared actual Decimal negativeValue {
+    shared actual Decimal negated {
         return DecimalImpl(implementation.negate());
     }
     shared actual Decimal plus(Decimal other) {
@@ -211,15 +211,12 @@ final class DecimalImpl(BigDecimal num)
     shared actual Boolean positive {
         return implementation.signum() > 0;
     }
-    shared actual Decimal positiveValue {
-        return this;
-    }
     shared actual Decimal power(Integer other) {
         if (exists rounding = defaultRounding.get()) {
             return powerRounded(other, rounding);
-        } else if (other.sign < 0) {
-            throw Exception("Negative powers are not supported with unlimited precision");
         } else {
+            "exponent must be non-negative"
+            assert (other>=0);
             // TODO Special cases
             return DecimalImpl(implementation.pow(other));
         }
@@ -276,6 +273,12 @@ final class DecimalImpl(BigDecimal num)
     
     shared actual Decimal timesInteger(Integer integer) {
         return DecimalImpl(implementation.multiply(BigDecimal.valueOf(integer)));
+    }
+    
+    shared actual Decimal powerOfInteger(Integer integer) {
+        "exponent must be non-negative"
+        assert (integer>=0);
+        return DecimalImpl(implementation.pow(integer));
     }
     
 }

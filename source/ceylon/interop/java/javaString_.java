@@ -10,7 +10,7 @@ import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
-@Ceylon(major = 6)
+@Ceylon(major = 7)
 @Method
 @DocAnnotation$annotation$(description = "Cast the given Ceylon [[String]] to a Java [[java.lang::String]] without losing the identity of the original string.")
 @SharedAnnotation$annotation$

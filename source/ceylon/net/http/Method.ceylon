@@ -1,9 +1,11 @@
 "Http request method"
 by ("Jean-Charles Roger", "Matej Lazar")
 shared interface Method {
-    shared default actual Boolean equals(Object that) {
-        return methodEquals(this, that);
-    }
+    shared default actual Boolean equals(Object that) 
+            => methodEquals(this, that);
+    
+    shared default actual Integer hash
+            => string.hash;
 }
 
 Boolean methodEquals(Object thisObject, Object that) {
@@ -18,39 +20,41 @@ shared abstract class AbstractMethod()
     of options | get | head | post | put | delete | trace | connect 
     satisfies Method {
 
-    shared actual Boolean equals(Object that) => methodEquals(this, that); 
+    shared actual Boolean equals(Object that) 
+            => methodEquals(this, that);
+    shared actual Integer hash => string.hash;
 }
 
 shared object options extends AbstractMethod() {
-    shared actual String string = "OPTIONS";
+    string => "OPTIONS";
 }
 
 shared object get extends AbstractMethod() {
-    shared actual String string = "GET";
+    string => "GET";
 }
 
 shared object head extends AbstractMethod() {
-    shared actual String string = "HEAD";
+    string => "HEAD";
 }
 
 shared object post extends AbstractMethod() {
-    shared actual String string = "POST";
+    string => "POST";
 }
 
 shared object put extends AbstractMethod() {
-    shared actual String string = "PUT";
+    string => "PUT";
 }
 
 shared object delete extends AbstractMethod() {
-    shared actual String string = "DELETE";
+    string => "DELETE";
 }
 
 shared object trace extends AbstractMethod() {
-    shared actual String string = "TRACE";
+    string => "TRACE";
 }
 
 shared object connect extends AbstractMethod() {
-    shared actual String string = "CONNECT";
+    string => "CONNECT";
 }
 
 "Parse a method string to Method instance"
@@ -75,7 +79,9 @@ shared Method parseMethod(String method) {
     } else {
         object m satisfies Method {
             shared actual String string = method.uppercased;
-            shared actual Boolean equals(Object that) =>  methodEquals(this, that); 
+            shared actual Boolean equals(Object that) 
+                    => methodEquals(this, that); 
+            shared actual Integer hash => string.hash;
         }
         return m;
     }

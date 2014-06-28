@@ -55,12 +55,12 @@ shared class A(text = "", href = "#", target = null, download = null,
         value attrs = AttributeSequenceBuilder();
         attrs.addAttribute("href", href);
         attrs.addAttribute("target", target);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("download", download);
         attrs.addAttribute("rel", rel);
         attrs.addAttribute("hreflang", hrefLang);
         attrs.addAttribute("type", type);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

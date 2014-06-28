@@ -28,7 +28,7 @@ test void testASCIIEncoder(){
 
 void testEncoder(Charset charset, String string, Integer* bytes){
     value encoded = charset.encode(string);
-    value sequence = bytes.sequence;
+    value sequence = bytes.sequence();
     assertEquals(0, encoded.position);
     assertEquals(sequence.size, encoded.limit);
     for(Integer byte in sequence){

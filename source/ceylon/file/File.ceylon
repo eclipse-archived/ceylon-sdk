@@ -2,6 +2,9 @@ import ceylon.file {
     AbstractReader=Reader,
     AbstractWriter=Writer
 }
+import ceylon.collection {
+    ArrayList
+}
 import ceylon.file.internal {
     sameFileInternal=sameFile
 }
@@ -131,13 +134,13 @@ shared interface File
 
 "All lines of text in the given file."
 shared String[] lines(File file) {
-    value sb = SequenceBuilder<String>();
+    value sb = ArrayList<String>();
     try (reader = file.Reader()) {
         while (exists line = reader.readLine()) {
-            sb.append(line);
+            sb.add(line);
         }
     }
-    return sb.sequence;
+    return sb.sequence();
 }
 
 "Call the given function for each line of 
@@ -162,4 +165,42 @@ shared void forEachLine(File file, void do(String line)) {
     }
 }
 
+"Return a [[File]], creating a new file if the given 
+ resource is [[Nil]], or returning the given [[File]]
+ otherwise."
+shared File createFileIfNil(File|Nil res) { 
+    switch (res)
+    case (is File) { return res; }
+    case (is Nil) { return res.createFile(); }
+}
+
+"Copy lines from [[one file|from]] to [[a second file|to]],
+ appending to the second file."
+shared void readAndAppendLines(File from, File to,
+        "A transformation to apply to each line of text."
+        String replacing(String line) => line) {
+    try (reader = from.Reader(), writer = to.Appender()) {
+        copyLines(reader, writer, replacing);
+    }
+}
+
+"Copy lines from [[one file|from]] to [[a second file|to]],
+ overwriting the second file."
+shared void readAndOverwriteLines(File from, File to, 
+        "A transformation to apply to each line of text."
+        String replacing(String line) => line) {
+    try (reader = from.Reader(), writer = to.Overwriter()) {
+        copyLines(reader, writer, replacing);
+    }
+}
+
+void copyLines(Reader reader, Writer writer, 
+        String replacing(String line)) {
+    while (exists line = reader.readLine()) {
+        writer.writeLine(replacing(line));
+    }
+}
+
+"Determines if the two given [[File]] objects represent the
+ same file."
 shared Boolean sameFile(File x, File y) => sameFileInternal(x, y);

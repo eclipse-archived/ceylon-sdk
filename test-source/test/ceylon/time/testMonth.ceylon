@@ -394,4 +394,3 @@ shared test void test_january_plus_13() => assertMonthAdd(january.add(13), [febr
 void assertMonthAdd(Month.Overflow actual, [Month, Integer] expected){
     assertEquals(expected, [actual.month, actual.years]);
 }
-

@@ -1,7 +1,7 @@
 "Reads lines of text from a `File`."
 see(`interface File`)
 shared interface Reader 
-        satisfies Closeable {
+        satisfies Destroyable {
     
     "The next line of text in the file,
      or `null` if there is no more text
@@ -9,13 +9,11 @@ shared interface Reader
     shared formal String? readLine();
     
     "Destroy this `Reader`. Called
-     automatically by `close()`."
-    see(`function close`)
-    shared formal void destroy();
+     automatically by `destroy()`."
+    see(`function destroy`)
+    shared formal void close();
     
-    shared actual void open() {}
-    
-    shared actual void close(Exception? exception) =>
-            destroy();
+    shared actual void destroy(Throwable? exception) =>
+            close();
     
 }

@@ -4,7 +4,7 @@ import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.internal.math { adjustedMod }
 
 "Default implementation of a gregorian calendar"
-shared class GregorianDate( Integer dayOfEra ) 
+shared class GregorianDate( Integer dayOfEra )
       extends AbstractDate( dayOfEra ) {
 
     "Returns year of this gregorian date."
@@ -158,8 +158,8 @@ shared class GregorianDate( Integer dayOfEra )
     "Subtracts specified date period from this date and returns the new [[Date]]."
     shared actual Date minus( ReadableDatePeriod amount ) {
         return addPeriod {
-                months = amount.years.negativeValue * months.perYear + amount.months.negativeValue;
-                days = amount.days.negativeValue; 
+                months = -amount.years * months.perYear + -amount.months;
+                days = -amount.days; 
         };
     }
 
@@ -170,10 +170,10 @@ shared class GregorianDate( Integer dayOfEra )
         variable Date _this = this;
         //do all subtractions first
         if ( days < 0 ) {
-            _this = _this.minusDays(days.negativeValue);
+            _this = _this.minusDays(-days);
         } 
         if ( months < 0 ) {
-            _this = _this.minusMonths(months.negativeValue);
+            _this = _this.minusMonths(-months);
         }
         
         //now we should do all additions
@@ -287,8 +287,10 @@ shared class GregorianDate( Integer dayOfEra )
         return DateRange(this, other); 
     }
 
-    "Returns _day of era_ as it enumerable value"
-    shared actual Integer integerValue => dayOfEra;
+    shared actual Date neighbour(Integer offset) => plusDays(offset);
+
+    shared actual Integer offset(Date other) => dayOfEra - other.dayOfEra;
+    
      
 }
 

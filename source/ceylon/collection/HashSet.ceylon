@@ -271,6 +271,8 @@ shared class HashSet<Element>
             }
             index++;
         }
+        clone.head = head;
+        clone.tip = tip;
         return clone;
     }
     
@@ -345,7 +347,7 @@ shared class HashSet<Element>
             return head?.element;
         }
         else {
-            return store[0]?.element;
+            return store.coalesced.first?.element;
         }
     }
     
@@ -354,7 +356,7 @@ shared class HashSet<Element>
             return tip?.element;
         }
         else {
-            variable value bucket = store[store.size-1];
+            variable value bucket = store.coalesced.last;
             while (exists cell = bucket?.rest) {
                 bucket = cell;
             }

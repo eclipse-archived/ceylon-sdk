@@ -1,4 +1,6 @@
-import ceylon.language { Obj=Object }
+import ceylon.language {
+    Obj=Object
+}
 
 "A JSON Printer"
 by("Stéphane Épardaud")
@@ -103,22 +105,19 @@ shared abstract class Printer(Boolean pretty = false){
     }
 
     "Prints an `Integer|Float`"
-    shared default void printNumber(Number n){
-        print(n.string);
-    }
+    shared default void printNumber(Integer|Float n)
+            => print(n.string);
 
     "Prints a `Boolean`"
-    shared default void printBoolean(Boolean v){
-        print(v.string);
-    }
+    shared default void printBoolean(Boolean v)
+            => print(v.string);
 
     "Prints `null`"
-    shared default void printNull(){
-        print("null");
-    }
+    shared default void printNull()
+            => print("null");
     
     "Prints a JSON value"
-    shared default void printValue(String|Boolean|Integer|Float|Object|Array|NullInstance val){
+    shared default void printValue(Value val){
         switch(val)
         case (is String){
             printString(val);

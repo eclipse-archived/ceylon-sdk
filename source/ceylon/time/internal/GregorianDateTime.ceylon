@@ -271,12 +271,12 @@ shared class GregorianDateTime( date, time )
     "Subtracts specified date period from this date and returns the new [[DateTime]]."
     shared actual DateTime minus( ReadablePeriod amount ) {
         return addPeriod { 
-            months = amount.years.negativeValue * months.perYear + amount.months.negativeValue; 
-            days = amount.days.negativeValue; 
-            hours = amount.hours.negativeValue; 
-            minutes = amount.minutes.negativeValue; 
-            seconds = amount.seconds.negativeValue; 
-            milliseconds = amount.milliseconds.negativeValue; 
+            months = -amount.years * months.perYear + -amount.months; 
+            days = -amount.days; 
+            hours = -amount.hours; 
+            minutes = -amount.minutes; 
+            seconds = -amount.seconds; 
+            milliseconds = -amount.milliseconds; 
         };
     }
 
@@ -292,13 +292,13 @@ shared class GregorianDateTime( date, time )
                         + milliseconds;
         //do all subtractions first
         if ( totalTime < 0 ) {
-            _this = _this.minusMilliseconds(totalTime.negativeValue);
+            _this = _this.minusMilliseconds(-totalTime);
         }
         if ( days < 0 ) {
-            _this = _this.minusDays(days.negativeValue);
+            _this = _this.minusDays(-days);
         } 
         if ( months < 0 ) {
-            _this = _this.minusMonths(months.negativeValue);
+            _this = _this.minusMonths(-months);
         }
         
         //now we should do all additions
@@ -415,10 +415,9 @@ shared class GregorianDateTime( date, time )
         return GregorianDateTime( date.plusDays(totalDays), newTime);
     }
 
-    "Returns _millisecondsOfEpoch_ as it enumerable value. 
+    shared actual DateTime neighbour(Integer offset) => plusMilliseconds(offset);
 
-     Note that to have the _milliseconds of epoch_ it apply UTC zone."
-    shared actual Integer integerValue => instant(timeZone.utc).millisecondsOfEpoch;
-    
+    shared actual Integer offset(DateTime other) => instant(timeZone.utc).millisecondsOfEpoch
+                                                      - other.instant(timeZone.utc).millisecondsOfEpoch;
 
 }

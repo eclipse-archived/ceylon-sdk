@@ -134,7 +134,7 @@ shared class Input(String? name = null, type = text, accept = null, autoComplete
         attrs.addNamedBooleanAttribute("checked", checked);
         attrs.addAttribute("placeholder", placeholder);
 
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
 
         attrs.addAttribute("accept", accept);
         attrs.addOnOffBooleanAttribute("autocomplete", autoComplete);
@@ -161,7 +161,7 @@ shared class Input(String? name = null, type = text, accept = null, autoComplete
         attrs.addAttribute("height", height);
         attrs.addAttribute("width", width);
 
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

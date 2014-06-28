@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
 import ceylon.language.Array;
-import ceylon.language.AssertionException;
+import ceylon.language.AssertionError;
 import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.language.ObjectArray;
@@ -12,7 +12,7 @@ import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
-@Ceylon(major = 6)
+@Ceylon(major = 7)
 @Method
 @SharedAnnotation$annotation$
 public final class javaObjectArray_ {
@@ -25,7 +25,7 @@ public final class javaObjectArray_ {
      * <code>ObjectArray&lt;T&gt;</code>, that is, to <code>T[]</code>, 
      * preserving the identity of the given array. 
      * 
-     * @throws AssertionException if the given array does not 
+     * @throws AssertionError if the given array does not 
      *         use a Java object array to store its elements
      * @see ObjectArray
      */
@@ -36,7 +36,7 @@ public final class javaObjectArray_ {
         if(array.toArray() instanceof java.lang.Object[]){
             return (T[]) array.toArray();
         }
-        throw new AssertionException("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+array.toArray());
     }
 
 }

@@ -5,7 +5,7 @@ by ("Gavin King")
 class UnmodifiableList<out Element>(List<Element> list) 
         satisfies List<Element> {
 
-    get(Integer index) => list.get(index);
+    getFromFirst(Integer index) => list.getFromFirst(index);
     
     size => list.size;
     lastIndex => list.lastIndex;
@@ -17,8 +17,8 @@ class UnmodifiableList<out Element>(List<Element> list)
     
     reversed => list.reversed;
     
-    segment(Integer from, Integer length)
-            => list.segment(from, length);
+    measure(Integer from, Integer length)
+            => list.measure(from, length);
     span(Integer from, Integer to)
             => list.span(from, to);
     spanFrom(Integer from)

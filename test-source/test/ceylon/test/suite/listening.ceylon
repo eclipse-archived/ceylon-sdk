@@ -7,6 +7,7 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.collection { StringBuilder }
 
 test
 shared void shouldFireEvents() {
@@ -14,7 +15,8 @@ shared void shouldFireEvents() {
         [`foo`, `fooThrowingAssertion`, `fooThrowingException`, `fooWithoutTestAnnotation`, `Bar.bar1`], 
         [recordingListener]).run();
     
-    value lines = recordingListener.result.lines.sequence;
+    value lines = recordingListener.result.lines.sequence();
+    value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 13);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::Bar]");
@@ -24,10 +26,10 @@ shared void shouldFireEvents() {
     assertEquals(lines[5], "TestStartEvent[test.ceylon.test.stubs::foo]");
     assertEquals(lines[6], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
     assertEquals(lines[7], "TestStartEvent[test.ceylon.test.stubs::fooThrowingAssertion]");
-    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language.AssertionException \"assertion failed\")]");
+    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language``sep``AssertionError \"assertion failed\")]");
     assertEquals(lines[9], "TestStartEvent[test.ceylon.test.stubs::fooThrowingException]");
-    assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language.Exception \"unexpected exception\")]");
-    assertEquals(lines[11], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language.Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
+    assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")]");
+    assertEquals(lines[11], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language``sep``Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
     assertEquals(lines[12], "TestRunFinishEvent");
 }
 
@@ -37,13 +39,14 @@ shared void shouldFireEventsForIgnored() {
         [`fooWithIgnore`, `BarWithIgnore.bar1`], 
         [recordingListener]).run();
     
-    value lines = recordingListener.result.lines.sequence;
+    value lines = recordingListener.result.lines.sequence();
+    value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BarWithIgnore]");
-    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.internal.IgnoreException \"\")]");
+    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.core``sep``IgnoreException \"\")]");
     assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::BarWithIgnore - ignored]");
-    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.internal.IgnoreException \"ignore function foo\")]");
+    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core``sep``IgnoreException \"ignore function foo\")]");
     assertEquals(lines[5], "TestRunFinishEvent");
 }
 
@@ -97,12 +100,13 @@ shared void shouldHandleMultipleExceptions() {
         [`foo`], 
         [throwExceptionOnTestFinishListener, throwExceptionOnTestErrorListener, recordingListener]).run();
     
-    value lines = recordingListener.result.lines.sequence;
+    value lines = recordingListener.result.lines.sequence();
+    value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::foo]");
-    assertEquals(lines[2], "TestErrorEvent[test mechanism - error (ceylon.language.Exception \"testError\")]");
-    assertEquals(lines[3], "TestErrorEvent[test mechanism - error (ceylon.language.Exception \"testFinish\")]");
+    assertEquals(lines[2], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testError\")]");
+    assertEquals(lines[3], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testFinish\")]");
     assertEquals(lines[4], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
     assertEquals(lines[5], "TestRunFinishEvent");
 }
@@ -228,7 +232,7 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
     
     value result = createTestRunner([`bazWithCustomListener`]).run();
     
-    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 4);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::bazWithCustomListener]");
@@ -253,7 +257,7 @@ void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
     
     createTestRunner([`BazWithCustomListener`]).run();
     
-    value lines = bazTestListenerLog.string.trimmed.lines.sequence;
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BazWithCustomListener]");
@@ -268,7 +272,6 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun()
     bazTestListenerCounter = 0;
     
     createTestRunner([`bazWithCustomListener`]).run();
-    print(bazTestListenerCounter);
     assert(bazTestListenerCounter == 1);
     
     createTestRunner([`bazWithCustomListener`, `BazWithCustomListener`]).run();

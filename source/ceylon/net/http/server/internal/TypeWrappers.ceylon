@@ -9,6 +9,7 @@ shared ByteArray toByteArray(Array<Integer> bufferBytes) {
     variable value i=0;
     while (i<bytes.size) {
         byteArray.set(i,bytes.get(i));
+        i++;
     }
     return byteArray;
 }

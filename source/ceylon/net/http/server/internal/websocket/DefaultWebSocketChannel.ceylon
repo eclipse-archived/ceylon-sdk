@@ -24,7 +24,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
 
     shared actual Boolean closeFrameReceived => channel.closeFrameReceived;
 
-    shared actual Number idleTimeout => channel.idleTimeout;
+    shared actual Integer idleTimeout => channel.idleTimeout;
 
     shared actual Boolean open() => channel.open;
 
@@ -45,7 +45,7 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     shared actual void sendBinaryAsynchronous(
             ByteBuffer binary,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendBinary(toJavaByteBuffer(binary), channel, wrapCallbackSend(onCompletion, onError, this));
     }
@@ -57,13 +57,13 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     shared actual void sendTextAsynchronous(
             String text,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendText(text, channel, wrapCallbackSend(onCompletion, onError, this));
     }
 
     shared actual void sendClose(CloseReason reason) {
-        wsSendCloseBlocking(CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(), channel);
+        wsSendCloseBlocking(CloseMessage(reason.code, reason.reason else "").toByteBuffer(), channel);
     }
 
     shared actual String hostname => exchange.getRequestHeader(hostStringHeader);
@@ -73,10 +73,10 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
     shared actual void sendCloseAsynchronous(
             CloseReason reason,
             Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError) {
+            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
 
         wsSendClose(
-            CloseMessage(reason.code.integer, reason.reason else "").toByteBuffer(),
+            CloseMessage(reason.code, reason.reason else "").toByteBuffer(),
             channel,
             wrapCallbackSend(onCompletion, onError, this));
     }

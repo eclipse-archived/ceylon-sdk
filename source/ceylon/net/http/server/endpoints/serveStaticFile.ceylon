@@ -1,7 +1,7 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { newOpenFile, OpenFile }
 import ceylon.io.buffer { ByteBuffer, newByteBuffer }
-import ceylon.net.http.server { Response, Request, Exception }
+import ceylon.net.http.server { Response, Request, ServerException }
 import ceylon.net.http { contentType, contentLength }
 
 
@@ -12,7 +12,7 @@ shared void serveStaticFile(
                 String fileMapper(Request request) => request.path,
                 Options options = Options(),
                 Callable<Anything, [Request]>? onSuccess = null,
-                Callable<Anything, [Exception,Request]>? onError = null)
+                Callable<Anything, [ServerException,Request]>? onError = null)
         (Request request, Response response, Callable<Anything, []> complete) {
     
     "Root directory containing files."
@@ -39,7 +39,7 @@ shared void serveStaticFile(
             complete();
         }
 
-        void _onError(Exception exception) {
+        void _onError(ServerException exception) {
             openFile.close();
             if (exists onError) {
                 onError(exception,request);
@@ -56,7 +56,7 @@ shared void serveStaticFile(
     }
 }
 
-class FileWriter(OpenFile openFile, Response response, Options options, void onSuccess(), void onError(Exception exception)) {
+class FileWriter(OpenFile openFile, Response response, Options options, void onSuccess(), void onError(ServerException exception)) {
     variable Integer available = openFile.size;
     variable Integer readFailed = 0;
     Integer bufferSize = options.outputBufferSize < available then options.outputBufferSize else available;
@@ -75,7 +75,7 @@ class FileWriter(OpenFile openFile, Response response, Options options, void onS
                 } else if (read == 0) {
                     readFailed ++;
                     if (readFailed > options.readAttempts) {
-                        onError(Exception("Error reading file ``openFile.resource.path``."));
+                        onError(ServerException("Error reading file ``openFile.resource.path``."));
                         return;
                     }
                 } else {
@@ -84,7 +84,7 @@ class FileWriter(OpenFile openFile, Response response, Options options, void onS
                 }
                 byteBuffer.flip();
                 write(onError);
-            } catch (Exception e) {
+            } catch (ServerException e) {
                 onError(e);
             }
         } else {
@@ -92,7 +92,7 @@ class FileWriter(OpenFile openFile, Response response, Options options, void onS
         }
     }
     
-    void write(void onError(Exception exception)) {
+    void write(void onError(ServerException exception)) {
         void onCompletion() {
             byteBuffer.clear();
             read();

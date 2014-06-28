@@ -2,6 +2,10 @@ import ceylon.file {
     ...
 }
 
+import ceylon.collection {
+    ArrayList
+}
+
 import java.io {
     IOException
 }
@@ -43,12 +47,12 @@ shared Path parseURI(String uriString) =>
         ConcretePath(newPath(newURI(uriString)));
 
 shared Path[] rootPaths {
-    value sb = SequenceBuilder<Path>();
+    value sb = ArrayList<Path>();
     value iter = defaultFileSystem.rootDirectories.iterator();
     while (iter.hasNext()) {
-        sb.append(ConcretePath(iter.next()));
+        sb.add(ConcretePath(iter.next()));
     }
-    return sb.sequence;
+    return sb.sequence();
 }
 
 JPath asJPath(String|Path path) {
@@ -93,21 +97,21 @@ class ConcretePath(jpath)
     uriString => jpath.toUri().string;
     
     shared actual Path[] elementPaths {
-        value sb = SequenceBuilder<Path>();
+        value sb = ArrayList<Path>();
         value iter = jpath.iterator();
         while (iter.hasNext()){
-            sb.append(ConcretePath(iter.next()));
+            sb.add(ConcretePath(iter.next()));
         }
-        return sb.sequence;
+        return sb.sequence();
     }
     
     shared actual String[] elements {
-        value sb = SequenceBuilder<String>();
+        value sb = ArrayList<String>();
         value iter = jpath.iterator();
         while (iter.hasNext()){
-            sb.append(iter.next().string);
+            sb.add(iter.next().string);
         }
-        return sb.sequence;
+        return sb.sequence();
     }
     
     compare(Path other) => jpath.compareTo(asJPath(other))<=>0;

@@ -118,10 +118,7 @@ shared class HashMap<Key, Item>
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element.key, newStore);
-                    variable value newBucket = newStore[newIndex];
-                    while (exists newCell = newBucket?.rest) {
-                        newBucket = newCell;
-                    }
+                    value newBucket = newStore[newIndex];
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
@@ -329,7 +326,7 @@ shared class HashMap<Key, Item>
             while(index < store.size){
                 variable value bucket = store[index];
                 while(exists cell = bucket){
-                    if(exists item = that.get(cell.element.key)){
+                    if(exists item = that[cell.element.key]){
                         if(item != cell.element.item){
                             return false;
                         }
@@ -357,6 +354,8 @@ shared class HashMap<Key, Item>
             }
             index++;
         }
+        clone.head = head;
+        clone.tip = tip;
         return clone;
     }
     

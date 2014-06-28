@@ -1,7 +1,21 @@
-import ceylon.time { Date, Time, Instant, DateTime }
-import ceylon.time.timezone { ZoneDateTime, TimeZone, tz = timeZone }
-import ceylon.time.base { Month, DayOfWeek, ms = milliseconds }
-import ceylon.time.chronology { unixTime }
+import ceylon.time {
+	Date,
+	Time,
+	Instant,
+	DateTime
+}
+import ceylon.time.base {
+	Month,
+	DayOfWeek
+}
+import ceylon.time.chronology {
+	unixTime
+}
+import ceylon.time.timezone {
+	ZoneDateTime,
+	TimeZone,
+	tz=timeZone
+}
 
 "Default implementation of gregorian calendar thats makes use of a [[TimeZone]] for it´s operations.
 
@@ -67,12 +81,15 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
     "Returns year of this gregorian date."
     shared actual Integer year => instant.dateTime(timeZone).year;
 
-    "Returns [[Date]] representation of current zoned _date and time_."
+    "Returns [[ceylon.time::Date]] representation of current zoned _date and time_."
     shared actual Date date => instant.dateTime(timeZone).date;
 
-    "Returns [[Time]] representation of current zoned _date and time_."
+    "Returns [[ceylon.time::Time]] representation of current zoned _date and time_."
     shared actual Time time => instant.dateTime(timeZone).time;
 
+	"Returns [[ceylon.time::DateTime]] representation of this zoned _date and time_."
+	shared actual DateTime dateTime => GregorianDateTime(date, time);
+	
     "Subtracts number of days from this _zoned date and time_ and returns the resulting [[ZoneDateTime]].
 
      **Note:** The resulting  [[ZoneDateTime]] can be affected by Daylight Saving Time."
@@ -282,7 +299,8 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
         return GregorianZonedDateTime( Instant( utcMillisecondsOfEpoch ), timeZone );
     }
 
-    "Returns _milliseconds of epoch_ as it enumerable value."
-    shared actual Integer integerValue => instant.millisecondsOfEpoch;
+    shared actual ZoneDateTime neighbour(Integer offset) => adjust( instant.dateTime(timeZone).plusMilliseconds(offset) );
+
+    shared actual Integer offset(ZoneDateTime other) => instant.millisecondsOfEpoch - other.instant.millisecondsOfEpoch;
 
 }

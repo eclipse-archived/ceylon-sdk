@@ -1,6 +1,11 @@
 import java.lang {
     JInt=Integer {
-        maxInt=MAX_VALUE
+        maxInt=MAX_VALUE,
+        minInt=MIN_VALUE
+    },
+    Long {
+        maxLong=MAX_VALUE,
+        minLong=MIN_VALUE
     }
 }
 import java.math {
@@ -19,3 +24,5 @@ WholeImpl oneImpl = WholeImpl(BigInteger.\iONE);
 shared Whole two = wholeNumber(2);
 
 Whole intMax = wholeNumber(maxInt);
+Whole longMax= wholeNumber(maxLong);
+Whole longMin = wholeNumber(minLong);

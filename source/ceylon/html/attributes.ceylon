@@ -52,33 +52,3 @@ shared object link extends DropZone() {}
 "Indicates that dropping an accepted item on the element
  will result in the dragged data being moved to the new location."
 shared object move extends DropZone() {}
-
-"A sequence builder used to build valid HTML attributes."
-class AttributeSequenceBuilder()
-        extends SequenceBuilder<String->Object>() {
-
-    shared void addAttribute(String name, Object? val) {
-        if (exists val) {
-            append(name->val);
-        }
-    }
-
-    shared void addNamedBooleanAttribute(String name, Boolean? val) {
-        if (exists val, val) {
-            append(name->name);
-        }
-    }
-
-    shared void addYesNoBooleanAttribute(String name, Boolean? val) {
-        if (exists val) {
-            addAttribute(name, val then "yes" else "no");
-        }
-    }
-
-    shared void addOnOffBooleanAttribute(String name, Boolean? val) {
-        if (exists val) {
-            addAttribute(name, val then "on" else "off");
-        }
-    }
-
-}

@@ -1,3 +1,5 @@
+import ceylon.collection{ ArrayList }
+
 "Represents a directory in a hierarchical file system."
 shared interface Directory 
         satisfies ExistingResource {
@@ -41,11 +43,11 @@ shared interface Directory
  the default file system."
 see(`value defaultSystem`)
 shared Directory[] rootDirectories {
-    value sb = SequenceBuilder<Directory>();
+    value sb = ArrayList<Directory>();
     for (p in rootPaths) {
         if (is Directory r=p.resource) {
-            sb.append(r);
+            sb.add(r);
         }
     }
-    return sb.sequence;
+    return sb.sequence();
 }

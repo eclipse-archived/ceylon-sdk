@@ -24,10 +24,11 @@ shared void testDescriptionString() {
 
 test
 shared void testResultString() {
+    value sep = runtime.name == "jvm" then "." else "::";
     value runResult = createTestRunner([`foo`, `fooThrowingException`, `fooWithIgnore`]).run();
     assert(runResult.results[0]?.string?.equals("test.ceylon.test.stubs::foo - success") else false);
-    assert(runResult.results[1]?.string?.equals("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language.Exception \"unexpected exception\")") else false);
-    assert(runResult.results[2]?.string?.equals("test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.internal.IgnoreException \"ignore function foo\")") else false);  
+    assert(runResult.results[1]?.string?.equals("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")") else false);
+    assert(runResult.results[2]?.string?.equals("test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core``sep``IgnoreException \"ignore function foo\")") else false);  
 }
 
 test
@@ -69,7 +70,8 @@ shared void testRunResultString3() {
                         ignored: 1
                         """;
     
+    value sep = runtime.name == "jvm" then "." else "::";
     assert(runResult.string.contains(expected), 
-    runResult.string.contains("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language.Exception \"unexpected exception\")"),
+    runResult.string.contains("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")"),
     runResult.string.contains("TESTS FAILED !"));
 }

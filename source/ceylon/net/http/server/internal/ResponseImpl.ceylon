@@ -1,4 +1,4 @@
-import ceylon.net.http.server { Response, Exception }
+import ceylon.net.http.server { Response, ServerException }
 
 import io.undertow.server { HttpServerExchange }
 import io.undertow.util { HttpString }
@@ -36,7 +36,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     shared actual void writeStringAsynchronous(
             String string,
             Callable<Anything, []> onCompletion,
-            Callable<Anything, [Exception]>? onError) {
+            Callable<Anything, [ServerException]>? onError) {
 
         void task() {
             applyHeadersToExchange();
@@ -64,7 +64,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     shared actual void writeBytesAsynchronous(
             Array<Integer> bytes,
             Callable<Anything, []> onCompletion,
-            Callable<Anything, [Exception]>? onError) {
+            Callable<Anything, [ServerException]>? onError) {
 
         applyHeadersToExchange();
         value jByteBuffer = wrapByteBuffer(toByteArray(bytes));
@@ -79,7 +79,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     shared actual void writeByteBufferAsynchronous(
             ByteBuffer byteBuffer,
             Callable<Anything, []> onCompletion,
-            Callable<Anything, [Exception]>? onError) {
+            Callable<Anything, [ServerException]>? onError) {
 
         applyHeadersToExchange();
         writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
@@ -91,7 +91,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
             try {
                 response.awaitWritable();
             } catch(JIOException e) {
-                throw Exception("Cannot write response.", e);
+                throw ServerException("Cannot write response.", e);
             }
         }
     }
@@ -105,7 +105,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     //TODO test adding header with same name
     shared actual void addHeader(Header header) {
         if (headersSent) {
-            throw Exception("Headers already sent to client.");
+            throw ServerException("Headers already sent to client.");
         }
         variable Boolean headerExists = false;
         for (h in headers) {
@@ -198,7 +198,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     class Task (
         Callable<Anything, []> task,
         Callable<Anything, []> onCompletion,
-        Callable<Anything, [Exception]>? onError)
+        Callable<Anything, [ServerException]>? onError)
             satisfies Runnable {
         
         shared actual void run() {

@@ -1,12 +1,12 @@
 import ceylon.net.http.server.websocket { WebSocketChannel }
 import io.undertow.websockets.core { WebSocketCallback, UtWebSocketChannel = WebSocketChannel, FragmentedMessageChannel }
 import java.lang { Void }
-import ceylon.net.http.server { HttpException = Exception }
+import ceylon.net.http.server { HttpException = ServerException }
 
 by("Matej Lazar")
 shared class WebSocketCallbackWrapper(
             Callable<Anything, [WebSocketChannel]>? onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onSocketError,
+            Callable<Anything, [WebSocketChannel, Throwable]>? onSocketError,
             WebSocketChannel channel)
         satisfies WebSocketCallback<Void> {
 
@@ -16,7 +16,7 @@ shared class WebSocketCallbackWrapper(
         }
     }
 
-    shared actual void onError(UtWebSocketChannel? webSocketChannel, Void? t, Exception? throwable) {
+    shared actual void onError(UtWebSocketChannel? webSocketChannel, Void? t, Throwable? throwable) {
         if (exists onSocketError) {
             if (exists throwable) {
                 onSocketError(channel, HttpException("WebSocket error.", throwable));
@@ -39,7 +39,7 @@ shared class WebSocketCallbackFragmentedWrapper(
         }
     }
 
-    shared actual void onError(UtWebSocketChannel? webSocketChannel, FragmentedMessageChannel ch, Exception? throwable) {
+    shared actual void onError(UtWebSocketChannel? webSocketChannel, FragmentedMessageChannel ch, Throwable? throwable) {
         if (exists onSocketError) {
             if (exists throwable) {
                 onSocketError(channel, HttpException("WebSocket error.", throwable));
@@ -52,7 +52,7 @@ shared class WebSocketCallbackFragmentedWrapper(
 
 shared WebSocketCallbackWrapper wrapCallbackSend(
         Callable<Anything, [WebSocketChannel]>? onCompletion,
-        Callable<Anything, [WebSocketChannel, Exception]>? onError,
+        Callable<Anything, [WebSocketChannel, Throwable]>? onError,
         WebSocketChannel channel) {
 
     return WebSocketCallbackWrapper(onCompletion, onError, channel);

@@ -201,7 +201,8 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
         return TimeRange(this, other); 
     }
 
-    "Returns _milliseconds of day_ as it enumerable value"
-    shared actual Integer integerValue => millisecondsOfDay;
+    shared actual Time neighbour(Integer offset) => plusMilliseconds(offset);
 
+    shared actual Integer offset(Time other) => millisecondsOfDay - other.millisecondsOfDay;
+    
 }

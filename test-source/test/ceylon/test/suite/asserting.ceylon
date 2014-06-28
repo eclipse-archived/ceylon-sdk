@@ -8,11 +8,11 @@ import ceylon.test {
 test
 shared void testFail() {
     assertThatException(()=>fail()).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("assertion failed");
     
     assertThatException(()=>fail("woops!")).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("woops!");
 }
 
@@ -22,11 +22,11 @@ shared void testAssertNull() {
     assertNull(null, "");
     
     assertThatException(()=>assertNull(true)).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("assertion failed: expected null, but was true");
     
     assertThatException(()=>assertNull(true, "woops!")).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("woops!");
 }
 
@@ -36,11 +36,11 @@ shared void testAssertNotNull() {
     assertNotNull(true, "");
     
     assertThatException(()=>assertNotNull(null)).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("assertion failed: expected not null");
     
     assertThatException(()=>assertNotNull(null, "woops!")).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("woops!");
 }
 
@@ -50,11 +50,11 @@ shared void testAssertTrue() {
     assertTrue(true, "");
     
     assertThatException(()=>assertTrue(false)).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("assertion failed: expected true");
     
     assertThatException(()=>assertTrue(false, "woops!")).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("woops!");
 }
 
@@ -64,11 +64,11 @@ shared void testAssertFalse() {
     assertFalse(false, "");
     
     assertThatException(()=>assertFalse(true)).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("assertion failed: expected false");
     
     assertThatException(()=>assertFalse(true, "woops!")).
-            hasType(`AssertionException`).
+            hasType(`AssertionError`).
             hasMessage("woops!");
 }
 
@@ -81,43 +81,42 @@ shared void testAssertEquals() {
     assertEquals('f', 'f');
     assertEquals("foo", "foo");
     assertEquals([1, 2, 3], [1, 2, 3]);
-    assertEquals({1, 2, 3}, {1, 2, 3});
     
     assertThatException(()=>assertEquals(true, false, "wops")).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("wops: true != false");
     
     assertThatException(()=>assertEquals(1, 2)).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: 1 != 2");
     
     assertThatException(()=>assertEquals(1.1, 2.2)).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: 1.1 != 2.2");
     
     assertThatException(()=>assertEquals('f', 'b')).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: f != b");
     
     assertThatException(()=>assertEquals("foo", "bar")).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: foo != bar");
     
     assertThatException(()=>assertEquals([1, 2, 3], [3, 2, 1])).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: [1, 2, 3] != [3, 2, 1]");
     
-    assertThatException(()=>assertEquals({1, 2, 3}, {3, 2, 1})).
-            hasType(`AssertionComparisonException`).
-            hasMessage("assertion failed: [1, 2, 3] != [3, 2, 1]");
+    assertThatException(()=>assertEquals({1, 2, 3}, [])).
+            hasType(`AssertionComparisonError`).
+            hasMessage("assertion failed: { 1, 2, 3 } != []");
 }
 
 test
 shared void testAssertEqualsCompare() {
-    assertEquals(1, 2, "never false", (Object? o1, Object? o2) => true);
+    assertEquals(1, 2, "never false", (Anything o1, Anything o2) => true);
     
-    assertThatException(()=>assertEquals(1, 1, "never true", (Object? o1, Object? o2) => false)).
-            hasType(`AssertionComparisonException`);
+    assertThatException(()=>assertEquals(1, 1, "never true", (Anything o1, Anything o2) => false)).
+            hasType(`AssertionComparisonError`);
 }
 
 test
@@ -126,7 +125,7 @@ shared void testAssertEqualsException() {
         assertEquals(true, false);
         assert(false);
     }
-    catch(AssertionComparisonException e) {
+    catch(AssertionComparisonError e) {
         assert(e.actualValue == "true");
         assert(e.expectedValue == "false");
     }
@@ -144,11 +143,11 @@ shared void testAssertNotEquals() {
     assertNotEquals({1, 2, 3}, {3, 2, 1});
     
     assertThatException(()=>assertNotEquals(true, true)).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("assertion failed: true == true");
     
     assertThatException(()=>assertNotEquals(true, true, "wops")).
-            hasType(`AssertionComparisonException`).
+            hasType(`AssertionComparisonError`).
             hasMessage("wops: true == true");
 }
 
@@ -161,18 +160,18 @@ shared void testAssertThatException() {
             hasNoCause();
     
     try {
-        assertThatException(OverflowException()).hasType(`InitializationException`);
+        assertThatException(OverflowException()).hasType(`InitializationError`);
         assert(false);
     }
-    catch(AssertionException e) {
+    catch(AssertionError e) {
         assert(e.message.startsWith("assertion failed: expected exception with type "));
     }
     
     try {
-        assertThatException(OverflowException()).hasType((ClassModel<Exception, Nothing> t)=>false);
+        assertThatException(OverflowException()).hasType((ClassModel<Throwable, Nothing> t)=>false);
         assert(false);
     }
-    catch(AssertionException e) {
+    catch(AssertionError e) {
         assert(e.message.startsWith("assertion failed: expected exception with different type than "));
     }
     
@@ -180,7 +179,7 @@ shared void testAssertThatException() {
         assertThatException(OverflowException()).hasMessage("wops!");
         assert(false);
     }
-    catch(AssertionException e) {
+    catch(AssertionError e) {
         assert(e.message == "assertion failed: expected exception with message wops!, but has Numeric overflow");
     }
     
@@ -188,7 +187,7 @@ shared void testAssertThatException() {
         assertThatException(OverflowException()).hasMessage((String m)=>m.contains("wops!"));
         assert(false);
     }
-    catch(AssertionException e) {
+    catch(AssertionError e) {
         assert(e.message == "assertion failed: expected different exception message than Numeric overflow");
     }
     
@@ -196,7 +195,7 @@ shared void testAssertThatException() {
         assertThatException(Exception("", OverflowException())).hasNoCause();
         assert(false);
     }
-    catch(AssertionException e) {
+    catch(AssertionError e) {
         assert(e.message == "assertion failed: expected exception without cause, but has ceylon.language.OverflowException \"Numeric overflow\"");
     }
     
@@ -204,7 +203,7 @@ shared void testAssertThatException() {
         assertThatException(()=>true);
         assert(false);
     }
-    catch(AssertionException e) {
+    catch(AssertionError e) {
         assert(e.message == "assertion failed: expected exception will be thrown");
     }
 }

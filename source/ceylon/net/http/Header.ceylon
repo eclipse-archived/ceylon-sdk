@@ -1,4 +1,4 @@
-import ceylon.collection { LinkedList, MutableList }
+import ceylon.collection { LinkedList, MutableList, StringBuilder }
 import ceylon.io.charset { Charset }
 
 "Represents an HTTP Header"
@@ -30,7 +30,7 @@ shared Header contentLength(String contentLength) => Header("Content-Length", co
 
 Header allowHeaders({Method*} methods) {
     StringBuilder sb = StringBuilder();
-    for (i -> method in entries(methods)) {
+    for (i -> method in methods.indexed) {
         if (i > 0) {
             sb.append(", ");
         }

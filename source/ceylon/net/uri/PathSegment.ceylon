@@ -1,4 +1,4 @@
-import ceylon.collection { LinkedList }
+import ceylon.collection { LinkedList, StringBuilder }
 
 "Represents a URI Path segment part"
 by("Stéphane Épardaud")
@@ -24,6 +24,13 @@ shared class PathSegment(String initialName, Parameter* initialParameters) {
                 && parameters == that.parameters;
         }
         return false;
+    }
+    
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + name.hash;
+        hash = 31*hash + parameters.hash;
+        return hash;
     }
     
     String serialiseParameter(Parameter param, Boolean human){

@@ -12,7 +12,7 @@ class IncomingPipe(OutputStream stream)
     
     value writer = OutputStreamWriter(stream);
     
-    destroy() => writer.close();
+    close() => writer.close();
     
     flush() => writer.flush();
     

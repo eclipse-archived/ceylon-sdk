@@ -1,4 +1,4 @@
-import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
+import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap, StringBuilder }
 import ceylon.net.uri { Uri, Parameter }
 import ceylon.io.charset { ascii }
 import ceylon.io { newSocketConnector, SocketAddress, newSslSocketConnector }
@@ -87,7 +87,7 @@ shared class Request(uri, method = get){
     
     "Returns a list of parameters, if it exists. Returns null otherwise."
     shared MutableList<Parameter>? getParameters(String name) {
-        return parameters.get(name);
+        return parameters[name];
     }
     
     "Returns first parameter, if it exists. Returns null otherwise.
@@ -101,7 +101,7 @@ shared class Request(uri, method = get){
     }
     
     shared void setParameter(Parameter parameter) {
-        if (exists MutableList<Parameter> params = parameters.get(parameter.name)) {
+        if (exists MutableList<Parameter> params = parameters[parameter.name]) {
             params.add(parameter);
         } else {
             MutableList<Parameter> params = LinkedList<Parameter>();

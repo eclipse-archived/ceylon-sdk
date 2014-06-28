@@ -6,7 +6,25 @@
     <property name="out.repo" location="modules"/>
     <property name="deps.repo" location="test-deps"/>
     <property name="test.repo" location="modules"/>
+	
+    <property name="osgi" location="${basedir}/osgi" />
+    <property name="osgi.p2" location="${osgi}/p2" />
+    <property name="osgi.dist" location="${osgi}/dist" />
+    <property name="osgi.dist.plugins" location="${osgi.dist}/plugins" />
+	
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${basedir}/../ceylon-dist/lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
 
+	<taskdef resource="taskdef.properties">
+		<classpath>
+	        <pathelement path="${basedir}/../ceylon-dist/osgi/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+		</classpath>
+	</taskdef>
+
+	
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
     
@@ -27,22 +45,32 @@
     </reposet>
     
     <moduleset id="modules.sdk.jvm">
-        <sourcemodules dir="source"/>
+        <module name="ceylon.collection"/>    	
+        <module name="ceylon.dbc"/>
+        <module name="ceylon.file"/>
+        <module name="ceylon.html"/>
+        <module name="ceylon.interop.java"/>
+        <module name="ceylon.io"/>
+        <module name="ceylon.json"/>
+    	<module name="ceylon.logging"/>
+        <module name="ceylon.math"/>
+        <module name="ceylon.net"/>
+        <module name="ceylon.process"/>
+        <module name="ceylon.test"/>
+        <module name="ceylon.time"/>
+    	<module name="ceylon.unicode"/>
+        <module name="com.redhat.ceylon.test"/>
+    	<module name="com.redhat.ceylon.testjvm"/>
     </moduleset>
     
     <moduleset id="modules.sdk.js">
-        <!--<module name="ceylon.math"/>-->
-        <module name="ceylon.test"/>
         <module name="ceylon.collection"/>
-        <!--<module name="ceylon.file"/>-->
-        <!--<module name="ceylon.io"/>-->
-        <module name="ceylon.json"/>
-        <!--<module name="ceylon.net"/>-->
-        <!--<module name="ceylon.process"/>-->
-        <!--<module name="ceylon.dbc"/>-->
-        <!--<module name="ceylon.interop.java"/>-->
-        <module name="ceylon.time"/>
     	<module name="ceylon.html"/>
+        <module name="ceylon.json"/>
+        <module name="ceylon.test"/>
+        <module name="ceylon.time"/>
+    	<module name="com.redhat.ceylon.test"/>
+    	<module name="com.redhat.ceylon.testjs"/>
     </moduleset>
     
     <moduleset id="modules.test.jvm">
@@ -62,31 +90,26 @@
     </moduleset>
     
     <moduleset id="modules.test.js">
-        <!--<module name="com.redhat.ceylon.sdk.test"/>-->
-        <!--<module name="test.ceylon.math"/>-->
+    	<module name="test.ceylon.test.suite"/>
         <module name="test.ceylon.collection"/>
-        <!--<module name="test.ceylon.file"/>-->
-        <!--<module name="test.ceylon.io"/>-->
-        <module name="test.ceylon.json"/>
-        <!--<module name="test.ceylon.net"/>-->
-        <!--<module name="test.ceylon.process"/>-->
-        <module name="test.ceylon.time"/>
-        <!--<module name="test.ceylon.dbc"/>-->
-        <!--<module name="test.ceylon.interop"/>-->
         <module name="test.ceylon.html"/>
+        <module name="test.ceylon.json"/>
+        <module name="test.ceylon.time"/>
     </moduleset>
     
     <target name="clean"
         description="Deletes the test-modules and modules directories">
         <delete dir="${out.repo}"/>
         <delete dir="${test.repo}"/>
+        <delete dir="${osgi.dist}"/>
     </target>
     
     <target name="compile-jvm">
         
         <ceylon-compile executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
-            encoding="UTF-8">
+            encoding="UTF-8"
+            pack200="true">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
         
@@ -106,7 +129,6 @@
             description="Compiles the SDK modules to the 'modules' repository" />
 
     <target name="compile-test-jvm" depends="compile-jvm">
-        
         <ceylon-compile executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -116,20 +138,18 @@
         	<module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.jvm"/>
         </ceylon-compile>
-        
     </target>
 
     <target name="compile-test-js" depends="compile-js">
-        
         <ceylon-compile-js executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
             verbose="${ceylon.verbosity}"
             encoding="UTF-8">
             <reposet refid="reposet.compile.test"/>
+        	<module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.js"/>
         </ceylon-compile-js>
-        
     </target>
             
     <target name="compile-test" depends="compile,compile-test-jvm,compile-test-js"
@@ -144,27 +164,10 @@
     </target>
 
     <target name="test-js" depends="compile-test-js">
-        <ceylon-run-js module="test.ceylon.collection/${sdk.version}"
-            executable="${ceylon.executable}">
+        <ceylon-test-js>
             <reposet refid="reposet.run.test"/>
-        </ceylon-run-js>
-        
-        <ceylon-run-js module="test.ceylon.json/${sdk.version}"
-            executable="${ceylon.executable}">
-            <reposet refid="reposet.run.test"/>
-        </ceylon-run-js>
-        
-        <ceylon-run-js module="test.ceylon.time/${sdk.version}"
-            executable="${ceylon.executable}">
-            <reposet refid="reposet.run.test"/>
-          <rep url="${test.repo}"/>
-        </ceylon-run-js>
-        
-        <ceylon-run-js module="test.ceylon.html/${sdk.version}"
-            executable="${ceylon.executable}">
-            <reposet refid="reposet.run.test"/>
-        </ceylon-run-js>
-
+            <moduleset refid="modules.test.js"/>
+        </ceylon-test-js>
     </target>
 
     <target name="test" depends="compile-test,test-jvm,test-js"
@@ -191,6 +194,8 @@
             <fileset dir="${out.repo}">
                 <include name="ceylon/test/**"/>
             	<include name="com/redhat/ceylon/test/**"/>
+            	<include name="com/redhat/ceylon/testjs/**"/>
+            	<include name="com/redhat/ceylon/testjvm/**"/>
                 <include name="ceylon/math/**"/>
                 <include name="ceylon/collection/**"/>
                 <include name="ceylon/file/**"/>
@@ -240,5 +245,111 @@
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-doc>
         
+    </target>
+	
+	<target name="copyModuleArchiveForOSGI">
+    	<loadproperties>
+			<zipentry zipfile="${currentFile}" name="META-INF/MANIFEST.MF"/>
+    	     <filterchain>
+    	        <linecontainsregexp>
+    	        	<regexp pattern="^(Bundle-SymbolicName|Bundle-Version)"/>
+    	        </linecontainsregexp>
+    	     	<replaceregex pattern="\s+$" replace=""/>
+    	     	<replaceregex pattern="^\s+" replace=""/>
+    	      </filterchain>
+    	</loadproperties>
+		<if>
+			<isset property="Bundle-SymbolicName"/>
+			<then>
+		    	<copy file="${currentFile}" 
+		    		tofile="${osgi.dist.plugins}/${Bundle-SymbolicName}_${Bundle-Version}.jar" 
+		    		overwrite="true"/>
+			</then>
+		</if>
+	</target>
+	
+    <target name="osgi-quick">
+        <mkdir dir="${osgi.dist.plugins}" />
+    	<foreach target="copyModuleArchiveForOSGI" param="currentFile">
+    		<path>
+    			<fileset dir="${out.repo}" includes="**/*.car"/>
+    		</path>
+    	</foreach>
+    	<makeurl property="rootUrl" file="${osgi.dist}"/>
+    	<repoindex name="Ceylon Distribution Bundles"    		
+    		out="${osgi.dist}/repository.xml" 
+    		compressed="false"
+    		rooturl="${rootUrl}">
+    		<fileset dir="${osgi.dist.plugins}" includes="*.jar"/>    		
+    	</repoindex>
+    </target>
+
+	<!-- Rule to setup a plugins directory with required bundles -->
+    <target name="osgi-p2-quick" depends="osgi-quick">
+    	<makeurl property="destinationRepository" file="${osgi.dist}"/>
+    	<makeurl property="categoryDefinition" file="${osgi.p2}/category.xml"/>
+    	<exec dir="${basedir}" executable="eclipse" failonerror="true">
+    		<arg value="-noSplash"/>
+    		<arg value="-console"/>
+    		<arg value="-consolelog"/>
+    		<arg value="--launcher.suppressErrors"/>
+    		<arg value="-application"/>
+    		<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
+    		<arg value="-metadataRepositoryName"/>
+    		<arg value="Ceylon SDK Bundles"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-artifactRepositoryName"/>
+    		<arg value="Ceylon SDK Bundles"/>
+    		<arg value="-artifactRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-source"/>
+    		<arg file="${osgi.dist}"/>
+			<arg value="-publishArtifacts"/>
+			<arg value="-append"/>
+    	</exec>
+    	<exec dir="${basedir}" executable="eclipse">
+    		<arg value="-noSplash"/>
+    		<arg value="-console"/>
+    		<arg value="-consolelog"/>
+    		<arg value="--launcher.suppressErrors"/>
+    		<arg value="-application"/>
+    		<arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="${destinationRepository}"/>
+    		<arg value="-categoryDefinition"/>
+    		<arg value="${categoryDefinition}"/>
+    		<arg value="-categoryQualifier"/>
+    		<arg value="ceylon.sdk"/>
+    	</exec>
+    </target>
+
+	<target name="osgi" depends="compile-jvm,osgi-quick"/>
+	<target name="osgi-p2" depends="compile-jvm,osgi-p2-quick"/>
+
+	<target name="ide" depends="osgi-p2"/>
+    <target name="ide-quick" depends="osgi-p2-quick">
+    	<foreach target="updateIdeProxyProject" param="archivePath">
+    		<path>
+    			<fileset dir="${out.repo}" includes="**/*.car"/>
+    		</path>
+    	</foreach>
+    </target>
+    <target name="updateIdeProxyProject">
+        <basename file="${archivePath}" property="archiveFileName"/>
+        <property name="proxy-project" value="../ceylon-ide-eclipse/required-bundle-proxies/${archiveFileName}"/>
+        <if>
+            <available file="${proxy-project}"/>
+            <then>
+                <delete failonerror="false" dir="${proxy-project}/META-INF"/>
+                <copy toDir="${proxy-project}" overwrite="true">
+                    <zipfileset src="${archivePath}" includes="META-INF/**"/>
+                    <fileset file="${archivePath}"/>
+                </copy>
+                <manifest file="${proxy-project}/META-INF/MANIFEST.MF" mode="update">
+                    <attribute name="Bundle-Classpath" value="${archiveFileName}"/>
+                </manifest>
+            </then>
+        </if>
     </target>
 </project>

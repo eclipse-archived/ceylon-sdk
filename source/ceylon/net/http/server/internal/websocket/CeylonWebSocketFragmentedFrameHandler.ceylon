@@ -47,7 +47,7 @@ class CeylonWebSocketFragmentedFrameHandler(WebSocketFragmentedEndpoint webSocke
         sendCloseBlocking(bufferedBinaryMessage.data, channel);
     }
 
-    shared actual void onError(UtWebSocketChannel channel, Exception error) {
+    shared actual void onError(UtWebSocketChannel channel, Throwable? error) {
         webSocketEndpoint.onError(webSocketChannel, error);
         safeClose(channel);
     }

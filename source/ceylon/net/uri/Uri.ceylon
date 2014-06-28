@@ -1,5 +1,6 @@
 import ceylon.net.iop { eq }
 import ceylon.net.http.client { Request }
+import ceylon.collection { StringBuilder }
 
 "The URI class. See http://tools.ietf.org/html/rfc3986 for specifications."
 by("Stéphane Épardaud")
@@ -80,6 +81,16 @@ shared class Uri(scheme = null, authority = Authority(), path = Path(), query = 
                 && eq(fragment, that.fragment); 
         }
         return false;
+    }
+    
+    shared actual Integer hash {
+        variable value hash = 1;
+        hash = 31*hash + (scheme?.hash else 0);
+        hash = 31*hash + authority.hash;
+        hash = 31*hash + path.hash;
+        hash = 31*hash + query.hash;
+        hash = 31*hash + (fragment?.hash else 0);
+        return hash;
     }
     
     "Returns a GET HTTP request"

@@ -1,5 +1,5 @@
 import ceylon.test { ... }
-import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, zero}
+import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, two, zero}
 
 test void wholeTests() {
 
@@ -8,7 +8,7 @@ test void wholeTests() {
        if (exists result) {
            return result;
        }
-       throw AssertionException("``str`` didn't parse");
+       throw AssertionError("``str`` didn't parse");
     }
 
     print("Whole instantiation, equality");
@@ -74,11 +74,11 @@ test void wholeTests() {
     try {
         Whole w = wholeNumber(0) ^ wholeNumber(-1);
         fail("0^-1");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
     try {
         Whole w = wholeNumber(0) ^ wholeNumber(-2);
         fail("0^-2");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
 
     assertEquals(wholeNumber(-1), wholeNumber(-1) ^ wholeNumber(1), "-1^1");
     assertEquals(wholeNumber(1), wholeNumber(-1) ^ wholeNumber(0), "-1^0");
@@ -90,11 +90,11 @@ test void wholeTests() {
     try {
         Whole w = wholeNumber(-2) ^ wholeNumber(-1);
         fail("-2^-1");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
     try {
         Whole w = wholeNumber(-2) ^ wholeNumber(-2);
         fail("-2^-2");
-    } catch (Exception e){}
+    } catch (AssertionError e){}
 
     print("Whole comparison");
     assertTrue(larger == wholeNumber(2).compare(wholeNumber(1)), "2.compare(1)");
@@ -131,10 +131,8 @@ test void wholeTests() {
     assertEquals(2.0, wholeNumber(2).float, "2.float");
 
     print("Whole misc");
-    assertEquals(wholeNumber(2), wholeNumber(2).positiveValue, "2.positiveValue");
-    assertEquals(wholeNumber(-2), wholeNumber(2).negativeValue, "2.negativeValue");
-    assertEquals(wholeNumber(0), wholeNumber(0).positiveValue, "0.positiveValue");
-    assertEquals(wholeNumber(0), wholeNumber(0).negativeValue, "0.negativeValue");
+    assertEquals(wholeNumber(-2), wholeNumber(2).negated, "2.negated");
+    assertEquals(wholeNumber(0), wholeNumber(0).negated, "0.negated");
     assertEquals(wholeNumber(2), wholeNumber(2).magnitude, "2.magnitude");
     assertEquals(wholeNumber(2), wholeNumber(-2).magnitude, "-2.magnitude");
     assertEquals(wholeNumber(2), wholeNumber(2).wholePart, "2.wholePart");
@@ -145,7 +143,21 @@ test void wholeTests() {
     assertEquals(0, wholeNumber(0).sign, "0.sign");
     assertEquals(-1, wholeNumber(-2).sign, "-2.sign");
 
-    // TODO castTo
+    assertEquals([wholeNumber(1), wholeNumber(2)], one..two, "one..two");
+    assertEquals([wholeNumber(2), wholeNumber(1)], two..one, "two..one");
+    assertEquals([wholeNumber(0), wholeNumber(1), wholeNumber(2)], zero..two, "zero..two");
+    assertEquals([wholeNumber(2), wholeNumber(1), wholeNumber(0)], two..zero, "two..zero");
+    
+    assertEquals(-1, one.offset(two), "one.offset(two)");
+    assertEquals(-runtime.maxIntegerValue, zero.offset(wholeNumber(runtime.maxIntegerValue)));
+    assertEquals(runtime.minIntegerValue, zero.offset(wholeNumber(runtime.maxIntegerValue)+one));
+    try {
+        value off = zero.offset(wholeNumber(runtime.maxIntegerValue)+two);
+        fail("zero.offset(wholeNumber(runtime.maxIntegerValue)+two) returned ``off``");
+    } catch (OverflowException e) {
+        // checking this is thrown
+    }
+    
 
     //print("gcd");
     //assertEquals(Whole(6), gcd(Whole(12), Whole(18)), "gcd(12, 18)");

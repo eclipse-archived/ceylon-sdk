@@ -9,7 +9,7 @@ import ceylon.net.http.server { Status,
                                   startsWith, endsWith, Options, stopped, newServer }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue, test }
-import ceylon.collection { LinkedList, MutableList }
+import ceylon.collection { LinkedList, MutableList, StringBuilder }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
 import java.util.concurrent { Semaphore }
 import java.lang { Runnable, Thread {threadSleep = sleep} }
@@ -108,7 +108,7 @@ test void testServer() {
                         request.session.put("count", ci2);
                         response.writeString(ci2.string);
                     } else {
-                        AssertionException("Invalid object type retreived from session");
+                        AssertionError("Invalid object type retreived from session");
                     }
                 } else {
                     request.session.put("count", Integer(1));
@@ -444,7 +444,7 @@ void acceptMethodTest() {
     if (exists Header allow = response2.headersByName["allow"]) {
         assertEquals(allow.values.get(0), "POST, GET");
     } else {
-        throw AssertionException("Missing allow header.");
+        throw AssertionError("Missing allow header.");
     }
 
     //accept all methods

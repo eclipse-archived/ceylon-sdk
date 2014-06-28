@@ -17,7 +17,7 @@ shared void shouldRunCallbacks1() {
 
     createTestRunner([`fooWithCallbacks`]).run();
 
-    value lines = callbackLogger.string.trimmed.lines.sequence;
+    value lines = callbackLogger.string.trimmed.lines.sequence();
     assertEquals(lines.size, 3);
     assertEquals(lines[0], "fooToplevelBefore");
     assertEquals(lines[1], "fooWithCallbacks");
@@ -30,7 +30,7 @@ shared void shouldRunCallbacks2() {
 
     createTestRunner([`FooWithCallbacks`]).run();
 
-    value lines = callbackLogger.string.trimmed.lines.sequence;
+    value lines = callbackLogger.string.trimmed.lines.sequence();
     assertEquals(lines.size, 5);
     assertEquals(lines[0], "fooToplevelBefore");
     assertEquals(lines[1], "FooWithCallbacks.fooBefore");
@@ -60,7 +60,7 @@ shared void shouldRunCallbacksFromAncestor() {
 
     createTestRunner([`BarWithCallbacks.bar`]).run();
 
-    value lines = callbackLogger.string.trimmed.lines.sequence;
+    value lines = callbackLogger.string.trimmed.lines.sequence();
     assertEquals(lines.size, 13);
     assertEquals(lines[0], "fooToplevelBefore");
     assertEquals(lines[1], "barToplevelBefore");
@@ -96,7 +96,7 @@ shared void shouldHandleExceptionInBeforeToplevelCallback() {
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
 
-        value lines = callbackLogger.string.trimmed.lines.sequence;
+        value lines = callbackLogger.string.trimmed.lines.sequence();
         assertEquals(lines.size, 3);
         assertEquals(lines[0], "fooToplevelBefore");
         assertEquals(lines[1], "FooWithCallbacks.fooAfter");
@@ -126,7 +126,7 @@ shared void shouldHandleExceptionInBeforeMemberCallback() {
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
 
-        value lines = callbackLogger.string.trimmed.lines.sequence;
+        value lines = callbackLogger.string.trimmed.lines.sequence();
         assertEquals(lines.size, 4);
         assertEquals(lines[0], "fooToplevelBefore");
         assertEquals(lines[1], "FooWithCallbacks.fooBefore");
@@ -157,7 +157,7 @@ shared void shouldHandleExceptionInAfterToplevelCallback() {
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
 
-        value lines = callbackLogger.string.trimmed.lines.sequence;
+        value lines = callbackLogger.string.trimmed.lines.sequence();
         assertEquals(lines.size, 5);
         assertEquals(lines[0], "fooToplevelBefore");
         assertEquals(lines[1], "FooWithCallbacks.fooBefore");
@@ -189,7 +189,7 @@ shared void shouldHandleExceptionInAfterMemberCallback() {
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
 
-        value lines = callbackLogger.string.trimmed.lines.sequence;
+        value lines = callbackLogger.string.trimmed.lines.sequence();
         assertEquals(lines.size, 5);
         assertEquals(lines[0], "fooToplevelBefore");
         assertEquals(lines[1], "FooWithCallbacks.fooBefore");
@@ -223,7 +223,7 @@ shared void shouldHandleExceptionsInCallbacks() {
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
         
-        value lines = callbackLogger.string.trimmed.lines.sequence;
+        value lines = callbackLogger.string.trimmed.lines.sequence();
         assertEquals(lines.size, 3);
         assertEquals(lines[0], "fooToplevelBefore");
         assertEquals(lines[1], "FooWithCallbacks.fooAfter");

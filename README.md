@@ -2,6 +2,10 @@
 
 This repository contains the Ceylon SDK.
 
+The module minor.major version aligns with the Ceylon distribution minor.major
+version that we use to compile/distribute them. The micro version of each module
+can be incremented as needed between Ceylon distribution releases.
+
 ## License
 
 The content of this repository is released under the ASL v2.0

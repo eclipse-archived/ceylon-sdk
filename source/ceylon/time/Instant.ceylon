@@ -16,7 +16,7 @@ shared Instant now(Clock? clock = null) {
  An instant represents a single point in time irrespective of 
  any time-zone offsets or geographical locations."
 shared class Instant(millisecondsOfEpoch)
-    satisfies ReadableInstant & Comparable<Instant> {
+    satisfies ReadableInstant & Comparable<Instant> & Enumerable<Instant> {
 
     "Internal value of an instant as a number of milliseconds since
      1970-01-01T00:00:00.000Z."
@@ -89,15 +89,15 @@ shared class Instant(millisecondsOfEpoch)
 
     "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
     shared actual Integer hash {
-        value prime = 31;
-        value result = 1;
-        return prime * result + millisecondsOfEpoch.hash;
+        return 31 + millisecondsOfEpoch.hash;
     }
 
-    "Returns ISO-8601 formatted String representation of this _time of day_.\n
-     Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
-    shared actual String string {
-        return zoneDateTime(tz.utc).string;
-    }
+    "Returns ISO-8601 formatted String representation of this _time of day_ in UTC.\n
+     Reference: [ISO-8601 Time Offsets from UTC](https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC)"
+    shared actual String string => zoneDateTime(tz.utc).string;
+
+    shared actual Instant neighbour(Integer offset) => Instant(millisecondsOfEpoch+offset);
+
+    shared actual Integer offset(Instant other) => millisecondsOfEpoch - other.millisecondsOfEpoch;
 
 }

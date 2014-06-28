@@ -29,11 +29,11 @@
    ```
    
    It's also perfectly acceptable to throw 
-   [[AssertionException]] directly.
+   [[AssertionError]] directly.
    
    A test function which completes without propagating an exception is 
    classified as a [[success]]. A test function which propagates 
-   an [[AssertionException]] is classified as a [[failure]]. A test 
+   an [[AssertionError]] is classified as a [[failure]]. A test 
    function which propagates any other type of `Exception` is classified as 
    an [[error]].
    
@@ -85,8 +85,8 @@
    but this API is usually not necessary to use directly. 
    
    """
-by("Tom Bentley", "Tomáš Hradec")
-license("Apache Software License")
-module ceylon.test "1.0.0" {
-    import ceylon.collection "1.0.0";
+by ("Tom Bentley", "Tomáš Hradec")
+license ("Apache Software License")
+module ceylon.test "1.1.0" {
+    import ceylon.collection "1.1.0";
 }

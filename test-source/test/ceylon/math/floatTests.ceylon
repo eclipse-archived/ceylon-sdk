@@ -3,7 +3,7 @@ import ceylon.math.float { ... }
 
 Float undefined = 0.0/0.0;
 
-Boolean approx(Object? expect, Object? got) {
+Boolean approx(Anything expect, Anything got) {
     if(exists expect){
         if(exists got){
             if (is Float expect) {
@@ -22,7 +22,7 @@ Boolean approx(Object? expect, Object? got) {
     return !got exists;
 }
 
-Boolean exact(Object? expect, Object? got) {
+Boolean exact(Anything expect, Anything got) {
     if(exists expect){
         if(exists got){
             if (is Float expect) {

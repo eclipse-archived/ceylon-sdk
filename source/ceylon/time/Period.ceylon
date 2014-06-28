@@ -2,6 +2,7 @@ import ceylon.time.base {
     ReadablePeriod, PeriodBehavior, ReadableDatePeriod, ReadableTimePeriod, 
     min = minutes, sec = seconds, ms = milliseconds}
 import ceylon.time.internal { leftPad }
+import ceylon.collection { StringBuilder }
 
 "An immutable period consisting of the ISO-8601 _years_, _months_, _days_, _hours_,
  _minutes_, _seconds_ and _milliseconds_, such as '3 Months, 4 Days and 7 Hours'.

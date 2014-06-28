@@ -2,6 +2,10 @@ import ceylon.file {
     Store
 }
 
+import ceylon.collection {
+    ArrayList
+}
+
 import java.nio.file {
     JFileStore=FileStore,
     FileSystems {
@@ -10,12 +14,12 @@ import java.nio.file {
 }
 
 shared Store[] stores {
-    value sb = SequenceBuilder<Store>();
+    value sb = ArrayList<Store>();
     value iter = defaultFileSystem.fileStores.iterator();
     while (iter.hasNext()) {
-        sb.append(ConcreteStore(iter.next()));
+        sb.add(ConcreteStore(iter.next()));
     }
-    return sb.sequence;
+    return sb.sequence();
 }
 
 class ConcreteStore(JFileStore jstore) 

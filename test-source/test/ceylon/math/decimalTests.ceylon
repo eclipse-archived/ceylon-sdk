@@ -4,7 +4,7 @@ import ceylon.test { ... }
 
 import java.lang { ArithmeticException }
 
-Boolean strictly(Object? expect, Object? got) {
+Boolean strictly(Anything expect, Anything got) {
     if (exists expect) {
         if (is Decimal expect) {
             if (exists got) {
@@ -23,7 +23,7 @@ Decimal parseOrFail(String str) {
     if (exists result) {
         return result;
     }
-    throw AssertionException("``str`` didn't parse");
+    throw AssertionError("``str`` didn't parse");
 }
 
 test void instantiationAndEquality() {
@@ -149,7 +149,7 @@ test void power() {
     try {
         Decimal d = decimalNumber(2)^(-2);
         fail();
-    } catch (Exception e) {
+    } catch (AssertionError e) {
     }
 
     value r = round(2, halfUp);

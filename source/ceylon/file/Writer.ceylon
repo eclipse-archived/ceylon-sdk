@@ -1,7 +1,7 @@
 "Writes text to a `File`."
 see(`interface File`)
 shared interface Writer 
-        satisfies Closeable {
+        satisfies Destroyable {
     
     "Write text to the file."
     shared formal void write(String string);
@@ -13,15 +13,13 @@ shared interface Writer
      file system."
     shared formal void flush();
     
-    "Destroy this `Writer`. Called 
-     automatically by `close()`."
-    see(`function close`)
-    shared formal void destroy();
-    
-    shared actual void open() {}
+    "Close this `Writer`. Called 
+     automatically by `destroy()`."
+    see(`function destroy`)
+    shared formal void close();
 
-    "Closes this `Writer` after `flush` is called automatically."    
-    shared actual void close(Exception? exception) =>
-            destroy();
+    "Closes this `Writer` after `flush` is called automatically."
+    shared actual void destroy(Throwable? exception) =>
+            close();
     
 }

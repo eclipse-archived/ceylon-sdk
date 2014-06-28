@@ -55,8 +55,8 @@ shared abstract class Media(src,
         attrs.addNamedBooleanAttribute("loop", loop);
         attrs.addNamedBooleanAttribute("muted", muted);
         attrs.addAttribute("preload", preload);
-        attrs.appendAll(super.attributes);
-        return attrs.sequence;
+        attrs.addAll(super.attributes);
+        return attrs.sequence();
     }
 
 }
@@ -174,11 +174,11 @@ shared class Video(String src,
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("poster", poster);
         attrs.addAttribute("height", height);
         attrs.addAttribute("width", width);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

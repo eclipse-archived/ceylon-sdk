@@ -11,15 +11,15 @@ shared [Element[],Element[]] partition<Element>
      to indicate that the element is rejected."
     Boolean selecting(Element element);
     
-    value selected = SequenceBuilder<Element>();
-    value rejected = SequenceBuilder<Element>();
+    value selected = ArrayList<Element>();
+    value rejected = ArrayList<Element>();
     for (element in elements) {
         if (selecting(element)) {
-            selected.append(element);
+            selected.add(element);
         }
         else {
-            rejected.append(element);
+            rejected.add(element);
         }
     }
-    return [selected.sequence, rejected.sequence];
+    return [selected.sequence(), rejected.sequence()];
 }

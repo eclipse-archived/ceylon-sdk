@@ -1,7 +1,7 @@
 package ceylon.interop.java;
 
 import ceylon.language.Array;
-import ceylon.language.AssertionException;
+import ceylon.language.AssertionError;
 import ceylon.language.SharedAnnotation$annotation$;
 
 import com.redhat.ceylon.compiler.java.language.IntArray;
@@ -12,7 +12,7 @@ import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
 
-@Ceylon(major = 6)
+@Ceylon(major = 7)
 @Method
 @SharedAnnotation$annotation$
 public final class javaIntArray_ {
@@ -28,13 +28,13 @@ public final class javaIntArray_ {
      * 
      * @see IntArray
      */
-    public static int[] javaIntArray(@Name("array") 
+    public static int[] javaIntArray(@SuppressWarnings("rawtypes") @Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Character>|ceylon.language::Array<java.lang::Integer>") 
     Array array){
         if(array.toArray() instanceof int[]){
             return (int[]) array.toArray();
         }
-        throw new AssertionException("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+array.toArray());
     }
 
 }

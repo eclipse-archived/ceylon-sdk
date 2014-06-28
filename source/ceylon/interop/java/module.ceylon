@@ -12,6 +12,6 @@
  - `javaClass(Object obj)` - takes a class instance and returns a Java Class reference for its type
  "
 by("The Ceylon Team")
-module ceylon.interop.java "1.0.0" {
+module ceylon.interop.java "1.1.0" {
     shared import java.base "7";
 }

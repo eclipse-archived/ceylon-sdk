@@ -1,3 +1,4 @@
+import ceylon.collection { StringBuilder }
 "Abstract class for [[Decoder]] objects, which abstracts
  the [[StringBuilder]]."
 by("Stéphane Épardaud")

@@ -1,5 +1,6 @@
 import ceylon.collection {
-    HashMap
+    HashMap,
+    ArrayList
 }
 import ceylon.dbc {
     newConnectionFromDataSource
@@ -193,9 +194,9 @@ shared class Sql(newConnection) {
                 try {
                     value stmt = connectionStatus.connection()
                             .prepareStatement(sql);
-                    value result = SequenceBuilder<Integer>();
+                    value result = ArrayList<Integer>();
                     void runBatch()
-                            => result.appendAll(toIntegerArray(stmt.executeBatch()));
+                            => result.addAll(toIntegerArray(stmt.executeBatch()));
                     variable value count=0;
                     try {                    
                         for (arguments in batchArguments) {
@@ -209,7 +210,7 @@ shared class Sql(newConnection) {
                         if (count!=0) {
                             runBatch();
                         }
-                        return result.sequence;
+                        return result.sequence();
                     }
                     finally {
                         stmt.close();
@@ -245,11 +246,11 @@ shared class Sql(newConnection) {
                     try {
                         value meta = resultSet.metaData;
                         value range = 1..meta.columnCount;
-                        value builder = SequenceBuilder<Row>();
+                        value builder = ArrayList<Row>();
                         while (resultSet.next()) {
-                            builder.append(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
+                            builder.add(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
                         }
-                        return [updateCount, builder.sequence];
+                        return [updateCount, builder.sequence()];
                     }
                     finally {
                         resultSet.close();
@@ -283,9 +284,9 @@ shared class Sql(newConnection) {
                 try {
                     value stmt = connectionStatus.connection()
                             .prepareStatement(sql);
-                    value result = SequenceBuilder<Integer>();
+                    value result = ArrayList<Integer>();
                     void runBatch()
-                            => result.appendAll(toIntegerArray(stmt.executeBatch()));
+                            => result.addAll(toIntegerArray(stmt.executeBatch()));
                     variable value count=0;
                     try {                    
                         for (arguments in batchArguments) {
@@ -347,7 +348,7 @@ shared class Sql(newConnection) {
          to its parameters, returning a sequence of [[Row]]s."
         shared Row[] execute(Object* arguments) {
             try (results = Results(*arguments)) {
-                return results.sequence;
+                return results.sequence();
             }
         }
         
@@ -391,33 +392,31 @@ shared class Sql(newConnection) {
                      //read the row here
                  }
              }"
-        shared class Results(Object* arguments)
-                satisfies Closeable & {Row*} {
-            
-            variable ConnectionStatus? connectionStatus=null;
-            variable PreparedStatement? preparedStatement=null;
-            variable {Object*} resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
-            
-            shared actual void open() {
-                value connectionStatus = connection.get();
-                this.connectionStatus = connectionStatus;
-                value preparedStatement = prepareStatement(connectionStatus, sql, arguments);
-                this.preparedStatement = preparedStatement;
+        shared class Results(Object* arguments) 
+                satisfies Destroyable & {Row*} {
+            variable ConnectionStatus connectionStatus=connection.get();
+            variable PreparedStatement preparedStatement;
+            variable {Object*} resultSets; //TODO: should be ResultSet, nasty hack to work around backend bug!
+            try {
+                preparedStatement=prepareStatement(connectionStatus, sql, arguments);
                 if (exists maxRows = limit) {
                     preparedStatement.maxRows=maxRows;
                 }
+                resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
+            } catch (Exception e) {
+                try {
+                    connectionStatus.close();
+                } catch (Exception e2) {
+                    e.addSuppressed(e2);
+                }
+                throw e;
             }
             
             shared actual Iterator<Row> iterator() {
                 object iterator
                         satisfies Iterator<Row> {
-                    //TODO: nasty hack to work around backend bug!
-                    value preparedStatement {
-                        assert (exists ps = outer.preparedStatement);
-                        return ps;
-                    }
                     value resultSet = preparedStatement.executeQuery();
-                    resultSets = resultSets.following(resultSet);
+                    resultSets = resultSets.follow(resultSet);
                     value meta = resultSet.metaData;
                     value range = 1..meta.columnCount;
                     shared actual Row|Finished next() {
@@ -432,7 +431,7 @@ shared class Sql(newConnection) {
                 return iterator;
             }
             
-            shared actual void close(Exception? exception) {
+            shared actual void destroy(Throwable? exception) {
                 for (resultSet in this.resultSets) {
                     try {
                         assert (is ResultSet resultSet); //TODO: should not be necessary, nasty hack to work around backend bug!
@@ -441,24 +440,17 @@ shared class Sql(newConnection) {
                     catch (e) {}
                 }
                 this.resultSets = [];
-                if (exists preparedStatement = this.preparedStatement) {
-                    try {
-                        preparedStatement.close();
-                    }
-                    catch (e) {}
+                try {
+                    preparedStatement.close();
                 }
-                this.preparedStatement = null;
-                if (exists connectionStatus = this.connectionStatus) {
-                    try {
-                        connectionStatus.close();
-                    }
-                    catch (e) {}
+                catch (e) {}
+                try {
+                    connectionStatus.close();
                 }
-                this.connectionStatus = null;
-            }
+                catch (e) {}
             
+            }
         }
-        
     }
     
     "Begin a new database transaction. If [[rollbackOnly]]
@@ -474,38 +466,43 @@ shared class Sql(newConnection) {
                  tx.rollbackOnly();
              }
          }"
-    shared class Transaction() satisfies Closeable {
-        
+    shared class Transaction() satisfies Destroyable {
         variable value rollback = false;
+        
+        variable ConnectionStatus connectionStatus=connection.get();
+        try {
+            connectionStatus.beginTransaction();
+        } catch (Exception e) {
+            try {
+                connectionStatus.rollback();
+            } catch (Exception e2) {
+                e.addSuppressed(e2);
+            }
+            try {
+                connectionStatus.close();
+            } catch (Exception e2) {
+                e.addSuppressed(e2);
+            }
+            throw e;
+        }
         
         "Set the transaction to roll back."
         shared void rollbackOnly() {
             rollback=true;
         }
         
-        variable ConnectionStatus? connectionStatus=null;
-        
-        shared actual void open() {
-            value connectionStatus = connection.get();
-            this.connectionStatus = connectionStatus;
-            connectionStatus.beginTransaction();
-        }
-        
-        shared actual void close(Exception? exception) {
-            if (exists connectionStatus = this.connectionStatus) {
-                try {
-                    if (rollback||exception exists) {
-                        connectionStatus.rollback();
-                    }
-                    else {
-                        connectionStatus.commit();
-                    }
+        shared actual void destroy(Throwable? exception) {
+            try {
+                if (rollback||exception exists) {
+                    connectionStatus.rollback();
                 }
-                finally {
-                    connectionStatus.close();
+                else {
+                    connectionStatus.commit();
                 }
             }
-            this.connectionStatus = null;
+            finally {
+                connectionStatus.close();
+            }
         }
         
     }
@@ -525,7 +522,7 @@ shared class Sql(newConnection) {
     "An [[Entry]] with the column data at the specified 
      index."
     String->Object columnEntry(ResultSet rs, ResultSetMetaData meta, Integer idx) {
-        String columnName = meta.getColumnName(idx).lowercased;
+        String columnName = meta.getColumnLabel(idx).lowercased;
         Object? x = rs.getObject(idx);
         Object? v;
         //TODO optimize these conversions

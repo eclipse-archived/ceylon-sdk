@@ -11,7 +11,7 @@ import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor.Class;
 
-@Ceylon(major = 6)
+@Ceylon(major = 7)
 @Method
 @DocAnnotation$annotation$(description = "Returns a Java [[java.lang::Class]] object representing the given [[type argument|T]].")
 @SharedAnnotation$annotation$
@@ -20,6 +20,7 @@ public final class javaClass_ {
 
     private javaClass_() {}
 
+    @SuppressWarnings("unchecked")
     public static <T> java.lang.Class<T> javaClass(@Ignore TypeDescriptor $reifiedT) {
         if($reifiedT instanceof TypeDescriptor.Class){
             TypeDescriptor.Class klass = (Class) $reifiedT;

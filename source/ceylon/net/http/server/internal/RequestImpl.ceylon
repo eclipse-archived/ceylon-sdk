@@ -1,19 +1,42 @@
-import ceylon.collection { HashMap }
+import ceylon.collection { 
+    HashMap,
+    ArrayList
+}
 import ceylon.io { SocketAddress }
-import ceylon.net.http.server { 
-    Request, Session, 
-    InternalException, HttpEndpoint, UploadedFile }
+import ceylon.net.http.server {
+    Request,
+    Session,
+    InternalException,
+    HttpEndpoint,
+    UploadedFile
+}
 
 import ceylon.net.http { Method }
-import ceylon.net.http.server.internal { JavaHelper { paramIsFile, paramFile, paramValue } }
+import ceylon.net.http.server.internal {
+    JavaHelper {
+        paramIsFile,
+        paramFile,
+        paramValue
+    } 
+}
 
 import io.undertow.server { HttpServerExchange }
-import io.undertow.server.handlers.form { FormDataParser, UtFormData = FormData, FormParserFactory }
+import io.undertow.server.handlers.form {
+    FormDataParser,
+    UtFormData = FormData,
+    FormParserFactory
+}
 import io.undertow.server.session { 
-        SessionManager { smAttachmentKey=ATTACHMENT_KEY }, 
-        UtSession=Session, SessionCookieConfig }
-import io.undertow.util { Headers { headerConntentType=CONTENT_TYPE }, 
-                         HttpString }
+        SessionManager {
+            smAttachmentKey=ATTACHMENT_KEY 
+        },
+        UtSession=Session,
+        SessionCookieConfig
+    }
+import io.undertow.util {
+    Headers { headerConntentType=CONTENT_TYPE },
+    HttpString
+}
 
 import java.lang { JString=String }
 import java.util { Deque, JMap=Map }
@@ -75,12 +98,12 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
             JString key = it.next();
             Deque<JString> values = utQueryParameters.get(key); 
             value valuesIt = values.iterator();
-            SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
+            ArrayList<String> sequenceBuilder = ArrayList<String>();
             while (valuesIt.hasNext()) {
                 value paramValue = valuesIt.next(); 
-                sequenceBuilder.append(paramValue.string);
+                sequenceBuilder.add(paramValue.string);
             }
-            queryParameters.put(key.string, sequenceBuilder.sequence);
+            queryParameters.put(key.string, sequenceBuilder.sequence());
         }
         return queryParameters;
     }
@@ -101,34 +124,34 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
 
     shared actual String[] headers(String name) {
         value headers = exchange.requestHeaders.get(HttpString(name));
-        SequenceBuilder<String> sequenceBuilder = SequenceBuilder<String>();
+        ArrayList<String> sequenceBuilder = ArrayList<String>();
         
         value it = headers.iterator();
         while (it.hasNext()) {
             value header = it.next();
-            sequenceBuilder.append(header.string);
+            sequenceBuilder.add(header.string);
         }
         
-        return sequenceBuilder.sequence;
+        return sequenceBuilder.sequence();
     }
 
     shared actual String[] parameters(String name, Boolean forseFormParse) {
 
-        value mergedParams = SequenceBuilder<String>();
+        value mergedParams = ArrayList<String>();
         if (queryParameters.keys.contains(name)) {
-            if (exists params = queryParameters.get(name)) {
+            if (exists params = queryParameters[name]) {
                 if (forseFormParse || initialized(lazyFormData)) {
-                    mergedParams.appendAll(params);
+                    mergedParams.addAll(params);
                 } else {
                     return params;
                 }
             }
         }
 
-        if (exists posted = formData.parameters.get(name)) {
-            mergedParams.appendAll(posted);
+        if (exists posted = formData.parameters[name]) {
+            mergedParams.addAll(posted);
         }
-        return mergedParams.sequence;
+        return mergedParams.sequence();
     }
 
     shared actual String? parameter(String name, Boolean forseFormParsing) {
@@ -141,10 +164,10 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
 
     shared actual UploadedFile[] files(String name) {
-        if (exists files = formData.files.get(name)) {
+        if (exists files = formData.files[name]) {
             return files;
         }
-        return {};
+        return [];
     }
 
     shared actual UploadedFile? file(String name) {

@@ -41,6 +41,15 @@ test void queryTests() {
         assertTrue(r6.size==1, "1 row");
     }
     
+    value q3 = sql.Select("SELECT name as id, count FROM test1");
+    try (r=q3.Results()) {
+        assert (!r.empty);
+        for (row in r) {
+            assert ("id" in row.keys);
+            assert ("count" in row.keys);
+            assert (!"name" in row.keys);
+        }
+    }
 }
 
 test void selectSingleValue() {
@@ -51,7 +60,7 @@ test void selectSingleValue() {
     value count = sql.Select("SELECT COUNT(*) FROM test1").singleValue<Integer>();
     assert(count == 3);
     
-    value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number>();
+    value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number<Integer>>();
     assert(min == 1);
     
     value max = sql.Select("SELECT MAX(count) FROM test1").singleValue<Object>();

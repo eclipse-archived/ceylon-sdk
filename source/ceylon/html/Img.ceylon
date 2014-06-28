@@ -46,12 +46,12 @@ shared class Img(src, alt = "", useMap = null,
         value attrs = AttributeSequenceBuilder();
         attrs.addAttribute("src", src);
         attrs.addAttribute("alt", alt);
-        attrs.appendAll(super.attributes);
+        attrs.addAll(super.attributes);
         attrs.addAttribute("usemap", useMap);
         attrs.addAttribute("ismap", isMap);
         attrs.addAttribute("height", height);
         attrs.addAttribute("width", width);
-        return attrs.sequence;
+        return attrs.sequence();
     }
 
 }

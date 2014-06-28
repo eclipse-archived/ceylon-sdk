@@ -2,6 +2,7 @@ import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
 import ceylon.time.internal { leftPad }
+import ceylon.collection { StringBuilder }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -14,8 +15,8 @@ shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
 "A simple time zone with a constant offset from UTC."
 shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
 
-    "The value that represents this constant offset."
-    Integer offsetMilliseconds;
+    "The value that represents this constant offset in milliseconds."
+    shared Integer offsetMilliseconds;
 
     "Always returns a constant offset."
     shared actual Integer offset(Instant instant) => offsetMilliseconds;
@@ -51,28 +52,21 @@ shared interface RuleBasedTimezone satisfies TimeZone {
     //TODO: Implement complex rule based time zones
 }
 
-"This constant represents common operations for time zone.
- 
- At same time it hold objects references for most commons used time zones around world.
- 
- Examples:
- * UTC
- * System (current machine offset)"
+"Common utility methods for getting time zone instances."
 shared object timeZone {
 
-    "Represents machine offset based on current VM."
+    "Current system time zone."
     shared object system extends OffsetTimeZone(sys.timezoneOffset) {}
 
-    "Represents Coordinated Universal Time."
+    "Coordinated Universal Time (UTC) time zone."
     shared object utc extends OffsetTimeZone(0) {
         "Returns ISO-8601 formatted String representation of this _time of day_.\n
          https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
-        shared actual String string {
-            return "Z";
-        }
-    }
+        shared actual String string  = "Z";
+	}
 
-    "Timezone offset parser based on ISO-8601, currently it accepts the following time zone offset patterns:
+    "Parses input string and returns approprate time zone.
+     Currently it accepts only ISO-8601 time zone offset patterns:
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.
  
      In addition, the special code `Z` is recognized as a shorthand for `+00:00`."
@@ -81,8 +75,13 @@ shared object timeZone {
     }
 
     "Represents fixed timeZone created based on given values."
-    shared TimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
-        return OffsetTimeZone(hours * ms.perHour + minutes * ms.perMinute + milliseconds);
+    shared OffsetTimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
+		value offsetMilliseconds = hours * ms.perHour + minutes * ms.perMinute + milliseconds;
+		assert (-12 * ms.perHour <= offsetMilliseconds <= 12 * ms.perHour);
+		if (offsetMilliseconds == 0) {
+			return utc;
+		}
+        return OffsetTimeZone( offsetMilliseconds );
     }
 
 }

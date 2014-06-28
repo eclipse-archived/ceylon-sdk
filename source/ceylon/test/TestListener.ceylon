@@ -27,36 +27,35 @@ shared interface TestListener {
     shared default void testRunStart(
         "The event object."
         TestRunStartEvent event) {}
-
+    
     "Called after all tests have finished."
     shared default void testRunFinish(
         "The event object."
         TestRunFinishEvent event) {}
-
+    
     "Called when a test is about to be started."
     shared default void testStart(
         "The event object."
         TestStartEvent event) {}
-
+    
     "Called when a test has finished, whether the test succeeds or not."
     shared default void testFinish(
         "The event object."
         TestFinishEvent event) {}
-
+    
     "Called when a test will *not* be run, because it is marked with [[ignore]] annotation."
     shared default void testIgnore(
         "The event object."
         TestIgnoreEvent event) {}
-
+    
     "Called when a test will not be run, because some error has occured.
      For example a invalid test function signature."
     shared default void testError(
         "The event object."
         TestErrorEvent event) {}
-
+    
     "Called when a test is excluded from the test run due [[TestFilter]]"
     shared default void testExclude(
         "The event object."
         TestExcludeEvent event) {}
-
 }

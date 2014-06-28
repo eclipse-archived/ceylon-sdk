@@ -23,7 +23,7 @@ class ConcreteWriter(JPath jpath, Charset charset)
     value w = newBufferedWriter(jpath, charset, \iWRITE, 
             \iTRUNCATE_EXISTING);
     
-    destroy() => w.close();
+    close() => w.close();
     
     write(String string) => w.write(string);
     
@@ -40,7 +40,7 @@ class ConcreteAppendingWriter(JPath jpath, Charset charset)
     
     value w = newBufferedWriter(jpath, charset, \iWRITE, \iAPPEND);
     
-    destroy() => w.close();
+    close() => w.close();
     
     write(String string) => w.write(string);
     

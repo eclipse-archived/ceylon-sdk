@@ -1,34 +1,38 @@
-"""Contains everything required to parse and serialise JSON data.
+"""Contains everything required to parse and serialise JSON 
+   data.
    
    Sample usage for parsing and accessing JSON:
    
        String getAuthor(String json){
            value parsedJson = parse(json);
-           if(is String author = parsedJson.get("author")){
-               return author;
-           }
-           throw Exception("Invalid JSON data");
+           "author must be a string"
+           assert(is String author = parsedJson["author"]);
+           return author;
        }
    
-   Or if you're really sure that you should have a String value:
+   Alternatively, this variation will result in an 
+   [[InvalidTypeException]] instead of an [[AssertionError]]
+   if the input JSON data doesn't have the expected format:
    
        String getAuthor(String json){
            value parsedJson = parse(json);
-           return parsedJson.getString("author")){
+           return parsedJson.getString("author");
        }
    
-   You can iterate Json objects too::
+   You can iterate JSON objects too:
    
        {String*} getModules(String json){
            value parsedJson = parse(json);
            if(is Array modules = parsedJson.get("modules")){
                return { for (mod in modules) 
-                          if(is Object mod, is String name = mod.get("name")) 
+                          if(is Object mod, 
+                             is String name = mod.get("name")) 
                             name 
                       };
            }
            throw Exception("Invalid JSON data");
-       }     
+       }
+   
    Sample usage for generating JSON data:
    
        String getJSON(){
@@ -44,6 +48,6 @@
  """
 by("Stéphane Épardaud")
 license("Apache Software License")
-module ceylon.json "1.0.1" {
-    shared import ceylon.collection "1.0.0";
+module ceylon.json "1.1.0" {
+    shared import ceylon.collection "1.1.0";
 }

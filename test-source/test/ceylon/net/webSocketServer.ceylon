@@ -29,7 +29,7 @@ test void testWebSocketServer() {
         print("server: Closing channel...");
     }
     
-    void onError(WebSocketChannel webSocketChannel, Exception? throwable) {
+    void onError(WebSocketChannel webSocketChannel, Throwable? throwable) {
         //TODO
     }
 
@@ -76,7 +76,7 @@ test void testWebSocketServer() {
                         exception = e.message;
                     }
                     if (!exception.contains("404 Not Found")) {
-                        throw AssertionException("Expected WebSocketHandshakeException with 404 Not Found.");
+                        throw AssertionError("Expected WebSocketHandshakeException with 404 Not Found.");
                     }
                 } finally {
                     group.shutdownGracefully();

@@ -1,29 +1,26 @@
-import ceylon.language { LangObject = Object }
-import ceylon.collection { ... }
+import ceylon.collection {
+    ...
+}
+import ceylon.language {
+    LangObject=Object
+}
 
 "Represents a JSON Array"
 by("Stéphane Épardaud")
-shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} values = {}) 
-    satisfies MutableList<String|Boolean|Integer|Float|Object|Array|NullInstance> {
+shared class Array({Value*} values = {}) 
+    satisfies MutableList<Value> {
     
-    value list = LinkedList<String|Boolean|Integer|Float|Object|Array|NullInstance>(values);
+    value list = LinkedList<Value>(values);
     
-    shared actual Iterator<String|Boolean|Integer|Float|Object|Array|NullInstance> iterator() => list.iterator();
+    iterator() => list.iterator();
+    
+    getFromFirst(Integer index) => list.getFromFirst(index);
     
     "Adds a new value at the end of this array"
-    shared actual void add(String|Boolean|Integer|Float|Object|Array|NullInstance val){
-        list.add(val);
-    }
-    
-    "Gets the value at the given index, or `null` if it does not exist"
-    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance|Null get(Integer index){
-        return list[index];
-    }
+    shared actual void add(Value val) => list.add(val);
     
     "Returns the number of elements in this array"
-    shared actual Integer size {
-        return list.size;
-    }
+    shared actual Integer size => list.size;
 
     "Returns a serialised JSON representation"
     shared actual String string {
@@ -39,112 +36,67 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         return p.string;
     }
 
-    shared actual Array clone() {
-        return Array(list);
-    }
+    shared actual Array clone() => Array(list);
 
-    shared actual Integer? lastIndex {
-        return list.lastIndex;
-    }
+    shared actual Integer? lastIndex => list.lastIndex;
     
-    shared actual Array reversed {
-        return Array(list.reversed);
-    }
+    shared actual Array reversed => Array(list.reversed);
     
-    shared actual Array rest {
-        return Array(list.rest);
-    }
+    shared actual Array rest => Array(list.rest);
     
-    shared actual Array segment(Integer from, Integer length) {
-        return Array(list.segment(from, length));
-    }
+    shared actual Array measure(Integer from, Integer length) 
+            => Array(list.measure(from, length));
     
-    shared actual Array span(Integer from, Integer to) {
-        return Array(list.span(from, to));
-    }
+    shared actual Array span(Integer from, Integer to) 
+            => Array(list.span(from, to));
     
-    shared actual Array spanFrom(Integer from) {
-        return Array(list.spanFrom(from));
-    }
+    shared actual Array spanFrom(Integer from) 
+            => Array(list.spanFrom(from));
     
-    shared actual Array spanTo(Integer to) {
-        return Array(list.spanTo(to));
-    }
+    shared actual Array spanTo(Integer to) 
+            => Array(list.spanTo(to));
     
-    shared actual void addAll({<String|Boolean|Integer|Float|Object|Array|NullInstance>*} values) {
-        list.addAll(values);
-    }
+    addAll({Value*} values) => list.addAll(values);
     
-    shared actual void clear() {
-        list.clear();
-    }
+    clear() => list.clear();
     
-    shared actual void insert(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.insert(index, val);
-    }
+    insert(Integer index, Value val) 
+            => list.insert(index, val);
     
-    shared actual String|Boolean|Integer|Float|Object|Array|NullInstance? delete(Integer index) {
-        return list.delete(index);
-    }
+    delete(Integer index) => list.delete(index);
     
-    shared actual void deleteSegment(Integer from, Integer length) {
-        list.deleteSegment(from, length);
-    }
+    deleteMeasure(Integer from, Integer length) 
+            => list.deleteMeasure(from, length);
     
-    shared actual void deleteSpan(Integer from, Integer to) {
-        list.deleteSpan(from, to);
-    }
+    deleteSpan(Integer from, Integer to) 
+            => list.deleteSpan(from, to);
     
-    shared actual void remove(String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.remove(val);
-    }
+    remove(Value val) => list.remove(val);
     
-    shared actual void removeAll({<String|Boolean|Integer|Float|Object|Array|NullInstance>*} elements) {
-        list.removeAll(elements);
-    }
+    removeAll({Value*} elements) => list.removeAll(elements);
     
-    shared actual Boolean removeFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
-        return list.removeFirst(element);
-    }
+    removeFirst(Value element) => list.removeFirst(element);
     
-    shared actual Boolean removeLast(String|Boolean|Integer|Float|Object|Array|NullInstance element) {
-        return list.removeLast(element);
-    }
+    removeLast(Value element) => list.removeLast(element);
     
-    shared actual void prune() {
-        list.prune();
-    }
+    prune() => list.prune();
     
-    shared actual void truncate(Integer size) {
-        list.truncate(size);
-    }
+    truncate(Integer size) => list.truncate(size);
     
-    shared actual void replace(String|Boolean|Integer|Float|Object|Array|NullInstance val, 
-            String|Boolean|Integer|Float|Object|Array|NullInstance newVal) {
-        list.replace(val, newVal);
-    }
+    replace(Value val, Value newVal) 
+            => list.replace(val, newVal);
     
-    shared actual Boolean replaceFirst(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
-            String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
-        return list.replaceFirst(element, replacement);
-    }
+    replaceFirst(Value element, Value replacement) 
+            => list.replaceFirst(element, replacement);
     
-    shared actual Boolean replaceLast(String|Boolean|Integer|Float|Object|Array|NullInstance element, 
-    String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
-        return list.replaceLast(element, replacement);
-    }
+    replaceLast(Value element, Value replacement) 
+            => list.replaceLast(element, replacement);
     
-    shared actual void infill(String|Boolean|Integer|Float|Object|Array|NullInstance replacement) {
-        list.infill(replacement);
-    }
+    infill(Value replacement) => list.infill(replacement);
     
-    shared actual void set(Integer index, String|Boolean|Integer|Float|Object|Array|NullInstance val) {
-        list.set(index, val);
-    }
+    set(Integer index, Value val) => list.set(index, val);
     
-    shared actual Integer hash {
-        return list.hash;
-    }
+    hash => list.hash;
     
     shared actual Boolean equals(LangObject that) {
         if(is Array that){
@@ -160,88 +112,89 @@ shared class Array({String|Boolean|Integer|Float|Object|Array|NullInstance*} val
         if(is Object val){
             return val;
         }
-        throw InvalidTypeException("Expecting Object but got `` val ``");
+        throw InvalidTypeException(
+            "Expecting Object but got `` val ``");
     }
 
     "Returns this array as a sequence of [[Object]] elements."
     throws(`class InvalidTypeException`,
         "If one element in this array is not an [[Object]].")
-    shared Iterable<Object> objects {
-        return { for (elem in list) checkObject(elem) };
-    }
+    shared Iterable<Object> objects 
+            => { for (elem in list) checkObject(elem) };
 
     throws(`class InvalidTypeException`)
     String checkString(LangObject val){
         if(is String val){
             return val;
         }
-        throw InvalidTypeException("Expecting String but got `` val ``");
+        throw InvalidTypeException(
+            "Expecting String but got `` val ``");
     }
 
     "Returns this array as a sequence of [[String]] elements."
     throws(`class InvalidTypeException`,
         "If one element in this array is not a [[String]].")
-    shared Iterable<String> strings {
-        return { for (elem in list) checkString(elem) };
-    }
+    shared Iterable<String> strings 
+            => { for (elem in list) checkString(elem) };
 
     throws(`class InvalidTypeException`)
     Integer checkInteger(LangObject val){
         if(is Integer val){
             return val;
         }
-        throw InvalidTypeException("Expecting Integer but got `` val ``");
+        throw InvalidTypeException(
+            "Expecting Integer but got `` val ``");
     }
 
     "Returns this array as a sequence of [[Integer]] elements."
     throws(`class InvalidTypeException`,
         "If one element in this array is not a [[Integer]].")
-    shared Iterable<Integer> integers {
-        return { for (elem in list) checkInteger(elem) };
-    }
+    shared Iterable<Integer> integers 
+            => { for (elem in list) checkInteger(elem) };
 
     throws(`class InvalidTypeException`)
     Float checkFloat(LangObject val){
         if(is Float val){
             return val;
         }
-        throw InvalidTypeException("Expecting Float but got `` val ``");
+        throw InvalidTypeException(
+            "Expecting Float but got `` val ``");
     }
 
     "Returns this array as a sequence of [[Float]] elements."
     throws(`class InvalidTypeException`,
         "If one element in this array is not a [[Float]].")
-    shared Iterable<Float> floats {
-        return { for (elem in list) checkFloat(elem) };
-    }
+    shared Iterable<Float> floats 
+            => { for (elem in list) checkFloat(elem) };
 
     throws(`class InvalidTypeException`)
     Boolean checkBoolean(LangObject val){
         if(is Boolean val){
             return val;
         }
-        throw InvalidTypeException("Expecting Boolean but got `` val ``");
+        throw InvalidTypeException(
+            "Expecting Boolean but got `` val ``");
     }
 
     "Returns this array as a sequence of [[Boolean]] elements."
     throws(`class InvalidTypeException`,
         "If one element in this array is not a [[Boolean]].")
-    shared Iterable<Boolean> booleans {
-        return { for (elem in list) checkBoolean(elem) };
-    }
+    shared Iterable<Boolean> booleans 
+            => { for (elem in list) checkBoolean(elem) };
 
     throws(`class InvalidTypeException`)
     Array checkArray(LangObject val){
         if(is Array val){
             return val;
         }
-        throw InvalidTypeException("Expecting Array but got `` val ``");
+        throw InvalidTypeException(
+            "Expecting Array but got `` val ``");
     }
 
     "Returns this array as a sequence of [[Array]] elements."
     throws(`class InvalidTypeException`,
         "If one element in this array is not an [[Array]].")
-    shared Iterable<Array> arrays {
-        return { for (elem in list) checkArray(elem) };
-    }
+    shared Iterable<Array> arrays 
+            => { for (elem in list) checkArray(elem) };
+    
 }
