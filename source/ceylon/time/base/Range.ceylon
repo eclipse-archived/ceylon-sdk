@@ -1,8 +1,9 @@
 import ceylon.time { Duration, Period }
 
 "An interface to represent a Range between same kinds of _Date_ or _DateTime_ or _Time_."
-shared interface Range<Element, StepBy> satisfies Iterable<Element, Null>
-                                given Element satisfies Ordinal<Element> & Enumerable<Element> {
+shared interface Range<Element, StepBy> 
+       satisfies Iterable<Element, Null>
+       given Element satisfies Enumerable<Element> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as
