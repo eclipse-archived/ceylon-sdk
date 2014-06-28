@@ -29,7 +29,7 @@ shared DayOfWeek dayOfWeek(Integer|DayOfWeek dayOfWeek){
     switch(dayOfWeek)
     case (is DayOfWeek) { return dayOfWeek; }
     case (is Integer) {
-        assert (0 <= dayOfWeek && dayOfWeek < 7);
+        assert (0 <= dayOfWeek < 7);
         assert (exists DayOfWeek dow = weekdays[dayOfWeek]);
         return dow;
     }
