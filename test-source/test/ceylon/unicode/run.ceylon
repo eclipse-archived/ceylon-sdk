@@ -1,8 +1,19 @@
 import ceylon.test { ... }
 import ceylon.unicode { ... }
-
+import java.lang{
+    JSystem = System { 
+        jgetSystemProperty=getProperty 
+    }
+}
 test void testUnicodeVersion() {
-    assertEquals("6.0.0", unicodeVersion);
+    String jreVersion = jgetSystemProperty("java.version");
+    if (jreVersion.startsWith("1.7")) {
+        assertEquals("6.0.0", unicodeVersion);
+    } else if (jreVersion.startsWith("1.8")) {
+        assertEquals("6.2.0", unicodeVersion);
+    } else {
+        throw AssertionError("new unicode version supported and not tested yet");
+    }
 }
 
 test void testCharacterName() {
