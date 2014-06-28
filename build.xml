@@ -201,7 +201,7 @@
                 <include name="ceylon/file/**"/>
                 <include name="ceylon/io/**"/>
                 <include name="ceylon/json/**"/>
-            	<include name="ceylon/logging/**"/>
+                <include name="ceylon/logging/**"/>
                 <include name="ceylon/net/**"/>
                 <include name="ceylon/process/**"/>
                 <include name="ceylon/time/**"/>
