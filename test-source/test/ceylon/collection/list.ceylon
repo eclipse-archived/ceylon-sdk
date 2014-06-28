@@ -47,7 +47,6 @@ shared interface ListTests satisfies RangedTests & CorrespondenceTests & Inserti
         assertEquals(createList({}).reversed, []);
         assertEquals(createList({"A"}).reversed, ["A"]);
         assertEquals(createList({"A", "B", "A", "C"}).reversed, ["C", "A", "B", "A"]);
-        assertEquals(type(createList({"A"}).reversed), type(createList({"B"})));
     }
     
     test shared void testFirstIndexWhere() {
