@@ -89,7 +89,7 @@ void doTestExpectedOutput(
         {<Node->String>+} expectedResults,
         Boolean prettyPrint = false) {
     for (node->string in expectedResults) {
-        assertEquals(string.trimmed, serializeToString(node, prettyPrint));
+        assertEquals(string.trimmed.replace("\n", operatingSystem.newline), serializeToString(node, prettyPrint));
     }
 }
 
