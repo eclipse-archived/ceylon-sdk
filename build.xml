@@ -3,9 +3,9 @@
     <property file="build.properties" />
     <property name="ceylon.verbosity" value="false"/>
     <property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
-    <property name="out.repo" location="modules"/>
-    <property name="deps.repo" location="test-deps"/>
-    <property name="test.repo" location="modules"/>
+    <property name="out.repo" location="${basedir}/modules"/>
+    <property name="deps.repo" location="${basedir}/test-deps"/>
+    <property name="test.repo" location="${basedir}/modules"/>
 	
     <property name="osgi" location="${basedir}/osgi" />
     <property name="osgi.p2" location="${osgi}/p2" />
@@ -110,7 +110,8 @@
         <ceylon-compile executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
             encoding="UTF-8"
-            pack200="true">
+            pack200="true"
+            out="${out.repo}">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
         
@@ -120,7 +121,8 @@
         
         <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
-            encoding="UTF-8">
+            encoding="UTF-8"
+            out="${out.repo}">
             <moduleset refid="modules.sdk.js"/>
         </ceylon-compile-js>
         
@@ -194,9 +196,9 @@
         <copy todir="${ceylon.repo.dir}" overwrite="true">
             <fileset dir="${out.repo}">
                 <include name="ceylon/test/**"/>
-            	<include name="com/redhat/ceylon/test/**"/>
-            	<include name="com/redhat/ceylon/testjs/**"/>
-            	<include name="com/redhat/ceylon/testjvm/**"/>
+                <include name="com/redhat/ceylon/test/**"/>
+                <include name="com/redhat/ceylon/testjs/**"/>
+                <include name="com/redhat/ceylon/testjvm/**"/>
                 <include name="ceylon/math/**"/>
                 <include name="ceylon/collection/**"/>
                 <include name="ceylon/file/**"/>
