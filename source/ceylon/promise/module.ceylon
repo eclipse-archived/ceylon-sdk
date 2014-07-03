@@ -135,7 +135,7 @@
  - the *Promise Resolution Procedure* is implemented for objects or promises but not for *thenable* as it requires
  a language with dynamic typing."
 by("Julien Viet")
-license("ASL2")
+license("Apache Software License")
 module ceylon.promise "1.1.0" {
   import java.base "7";
 }
