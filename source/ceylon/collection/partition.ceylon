@@ -23,3 +23,17 @@ shared [Element[],Element[]] partition<Element>
     }
     return [selected.sequence(), rejected.sequence()];
 }
+
+"Groups the given [[elements]] into consecutive subsequences of 
+ the original such that each subsequence (except possibly the 
+ last one) is of the given [[length|len]]."
+shared {{Element*}*} chunk<Element>
+        ({Element*} elements, Integer len) {
+    {Element*} initialSegment = elements.taking(len);
+    {Element*} finalSegment = elements.skipping(len);
+    if (finalSegment.empty) {
+        return {initialSegment};
+    } else {
+        return {initialSegment, *chunk<Element>(finalSegment, len)};
+    }
+}
