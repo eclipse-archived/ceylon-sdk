@@ -2,7 +2,7 @@
  each entry maps a distinct member of the given iterable
  [[elements]] to the number of times it occurs among the 
  given `elements`."
-shared Map<Element,Integer> frequences<Element>
+shared Map<Element,Integer> frequencies<Element>
         ({Element*} elements)
         given Element satisfies Object {
     /*
