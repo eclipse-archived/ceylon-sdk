@@ -27,30 +27,30 @@ shared void run() {
     variable String? colorRed = null;
     
     for (String arg in process.arguments) {
-        if (prev == "__module") {
+        if (prev == "--module") {
             assert (exists i = arg.firstInclusion("/"));
             String moduleName = arg[0 .. i - 1];
             String moduleVersion = arg[i + 1 ...];
             
             moduleNameAndVersions.add([moduleName, moduleVersion]);
         }
-        if (prev == "__test") {
+        if (prev == "--test") {
             testSources.add(arg);
         }
-        if (arg == "__tap") {
+        if (arg == "--tap") {
             tap = true;
         }
         if (arg.startsWith("--port")) {
             assert (exists p = parseInteger(arg[7...]));
             port = p;
         }
-        if (prev == "__com.redhat.ceylon.common.tool.terminal.color.white") {
+        if (prev == "--com.redhat.ceylon.common.tool.terminal.color.white") {
             colorWhite = arg;
         }
-        if (prev == "__com.redhat.ceylon.common.tool.terminal.color.green") {
+        if (prev == "--com.redhat.ceylon.common.tool.terminal.color.green") {
             colorGreen = arg;
         }
-        if (prev == "__com.redhat.ceylon.common.tool.terminal.color.red") {
+        if (prev == "--com.redhat.ceylon.common.tool.terminal.color.red") {
             colorRed = arg;
         }
         
