@@ -94,27 +94,26 @@ shared void assertEquals(
     if (!compare(actual, expected)) {
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
-        value exceptionMessage = "`` message else "assertion failed" ``: ``actualText`` != ``expectedText``";
+        value exceptionMessage = "`` message else "assertion failed" ``: expected <``actualText``> but was <``expectedText``>";
         throw AssertionComparisonError(exceptionMessage, actualText, expectedText);
     }
 }
 
 "Fails the test if the given values are equal according to the given compare function."
-throws (`class AssertionComparisonError`, "When _actual_ == _expected_.")
+throws (`class AssertionComparisonError`, "When _actual_ == _unexpected_.")
 shared void assertNotEquals(
     "The actual value to be checked."
     Anything actual,
     "The expected value."
-    Anything expected,
+    Anything unexpected,
     "The message describing the problem."
     String? message = null,
     "The compare function."
-    Boolean compare(Anything val1, Anything val2) => equalsCompare(actual, expected)) {
-    if (compare(actual, expected)) {
+    Boolean compare(Anything val1, Anything val2) => equalsCompare(actual, unexpected)) {
+    if (compare(actual, unexpected)) {
         value actualText = nullSafeString(actual);
-        value expectedText = nullSafeString(expected);
-        value exceptionMessage = "`` message else "assertion failed" ``: ``actualText`` == ``expectedText``";
-        throw AssertionComparisonError(exceptionMessage, actualText, expectedText);
+        value exceptionMessage = "`` message else "assertion failed" ``: expected not equals <``actualText``>";
+        throw AssertionError(exceptionMessage);
     }
 }
 
