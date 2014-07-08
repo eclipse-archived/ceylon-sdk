@@ -1,7 +1,6 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
-import ceylon.time.internal { leftPad }
 import ceylon.collection { StringBuilder }
 
 "The interface representing a timezone."
@@ -41,7 +40,7 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     shared default actual String string {
         value builder = StringBuilder();
         builder.append( offsetMilliseconds >= 0 then "+" else "-" )
-               .append( "``leftPad((offsetMilliseconds.magnitude / ms.perHour))``:``leftPad((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute)``" );
+               .append( "``((offsetMilliseconds.magnitude / ms.perHour)).string.padLeading(2, '0')``:``((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute).string.padLeading(2, '0')``" );
         return builder.string;
     }
 
