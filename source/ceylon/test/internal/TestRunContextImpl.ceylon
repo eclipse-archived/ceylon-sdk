@@ -92,9 +92,14 @@ shared class TestRunContextImpl(runner, result) satisfies TestRunContext {
                     assert (exists listener = listenersCache.get(listenerClass));
                     listeners.add(listener);
                 } else {
-                    assert (is TestListener listener = listenerClass.instantiate());
-                    listenersCache.put(listenerClass, listener);
-                    listeners.add(listener);
+                    if( listenerClass.anonymous ) {
+                        assert(is TestListener listener = listenerClass.objectValue?.get());
+                        listeners.add(listener);
+                    } else {
+                        assert (is TestListener listener = listenerClass.instantiate());
+                        listenersCache.put(listenerClass, listener);
+                        listeners.add(listener);
+                    }
                 }
             }
         }

@@ -151,8 +151,8 @@ shared void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 12;
-            successCount = 10;
+            runCount = 13;
+            successCount = 11;
             failureCount = 1;
             errorCount = 1;
             ignoreCount = 6;
@@ -174,8 +174,8 @@ shared void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 16;
-            successCount = 14;
+            runCount = 17;
+            successCount = 15;
             failureCount = 1;
             errorCount = 13;
             ignoreCount = 7;
