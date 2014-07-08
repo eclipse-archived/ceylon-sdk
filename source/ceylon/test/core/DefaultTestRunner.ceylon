@@ -184,7 +184,7 @@ void findCandidatesInPackage(ArrayList<TestCandidate> candidates, Package pkg) {
 }
 
 void findCandidatesInClass(ArrayList<TestCandidate> candidates, ClassDeclaration classDecl) {
-    if (!classDecl.abstract && !classDecl.anonymous) {
+    if (!classDecl.abstract) {
         for (funcDecl in classDecl.annotatedMemberDeclarations<FunctionDeclaration,TestAnnotation>()) {
             candidates.add([funcDecl, classDecl]);
         }

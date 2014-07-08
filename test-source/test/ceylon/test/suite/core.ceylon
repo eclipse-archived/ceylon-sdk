@@ -151,8 +151,8 @@ shared void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 11;
-            successCount = 9;
+            runCount = 12;
+            successCount = 10;
             failureCount = 1;
             errorCount = 1;
             ignoreCount = 6;
@@ -174,8 +174,8 @@ shared void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 15;
-            successCount = 13;
+            runCount = 16;
+            successCount = 14;
             failureCount = 1;
             errorCount = 13;
             ignoreCount = 7;
@@ -236,6 +236,49 @@ shared void shouldRunTestsFromAncestorOnExtendedInstance() {
     assert(is BarExtended i1 = barInstance1,
            is BarExtended i2 = barInstance2, 
            i1 != i2);    
+}
+
+test
+shared void shouldRunTestsFromAnonymousClasses() {
+    void assertResultTestBar(TestRunResult runResult) {
+        assertResultCounts {
+            runResult;
+            successCount = 1;
+        };
+        assertResultContains {
+            runResult;
+            index = 0;
+            state = success;
+            source = `bar.bar1`;
+        };
+        assertResultContains {
+            runResult;
+            index = 1;
+            state = success;
+            source = `class bar`;
+        };
+    }
+    
+    value result1 = createTestRunner([`class bar`]).run();
+    assertResultTestBar(result1);
+    
+    value result2 = createTestRunner(["test.ceylon.test.stubs::bar"]).run();
+    assertResultTestBar(result2);
+    
+    value result3 = createTestRunner(["class test.ceylon.test.stubs::bar"]).run();
+    assertResultTestBar(result3);
+    
+    value result4 = createTestRunner(["test.ceylon.test.stubs::bar.bar1"]).run();
+    assertResultTestBar(result4);
+    
+    value result5 = createTestRunner(["function test.ceylon.test.stubs::bar.bar1"]).run();
+    assertResultTestBar(result5);
+    
+    value result6 = createTestRunner([`bar.bar1`]).run();
+    assertResultTestBar(result6);
+    
+    value result7 = createTestRunner([`function bar.bar1`]).run();
+    assertResultTestBar(result7);
 }
 
 test

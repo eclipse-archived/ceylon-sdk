@@ -64,9 +64,6 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         if (classDeclaration.abstract) {
             throw Exception("class ``classDeclaration.qualifiedName`` should not be abstract");
         }
-        if (classDeclaration.anonymous) {
-            throw Exception("class ``classDeclaration.qualifiedName`` should not be anonymous");
-        }
     }
     
     shared default void verifyClassParameters(ClassDeclaration classDeclaration) {
@@ -210,8 +207,13 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     
     shared default Object? getInstance() {
         if (exists classDeclaration) {
-            assert (is Class<Object,[]> classModel = classDeclaration.apply<Object>());
-            return classModel();
+            if( classDeclaration.anonymous ) {
+                assert(exists objectInstance = classDeclaration.objectValue?.get());
+                return objectInstance;
+            } else {
+                assert (is Class<Object,[]> classModel = classDeclaration.apply<Object>());
+                return classModel();
+            }
         } else {
             return null;
         }
