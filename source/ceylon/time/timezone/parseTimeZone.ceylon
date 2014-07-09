@@ -1,6 +1,6 @@
 import ceylon.time.base { ms = milliseconds }
 
-"Represents the problem that occured while parsing. It can be recovered from _message_ field"
+"Represents the problem that occurred while parsing. It can be recovered from _message_ field"
 shared class ParserError( message ) {
     shared String message;
 
@@ -40,7 +40,7 @@ shared TimeZone|ParserError parseTimeZone( String offset ) {
 }
 
 
-"Represents each elelment or the end of the parser"
+"Represents each element or the end of the parser"
 abstract class Input() of Chunk | EOF {}
 
 "Represents each character"
@@ -64,7 +64,7 @@ abstract class EOF() of eof extends Input() {}
 "Singleton implementation to represent the end of the parser"
 object eof extends EOF() {}
 
-"All states avaiable for the parser"
+"All states available for the parser"
 abstract class State() of Initial | Zulu | Sign | Hours | Minutes | Final | Error | Colon {
 
     "Each state is responsible to check if the next state is valid and call it"
@@ -188,7 +188,7 @@ class Colon( Integer sign, Integer hours ) extends State() {
     }
 }
 
-"Rrepresents the parser successfully finished"
+"Represents the parser successfully finished"
 class Final( Integer sign = 1, Integer hours = 0, Integer minutes = 0 ) extends State() {
     shared actual State next(Input character) => this;
     shared Integer evaluate() {

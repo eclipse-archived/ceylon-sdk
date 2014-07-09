@@ -258,7 +258,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
      **Note:** The resulting  [[ZoneDateTime]] can be affected by Daylight Saving Time."
     shared actual ZoneDateTime predecessor => adjust( instant.dateTime(timeZone).predecessor );
 
-    "For sucessor its used the lowest unit of time, this way we can benefit
+    "For successor its used the lowest unit of time, this way we can benefit
      from maximum precision. In this case the successor is the current value plus 1 millisecond.
 
      **Note:** The resulting  [[ZoneDateTime]] can be affected by Daylight Saving Time."

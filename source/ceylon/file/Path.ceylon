@@ -112,7 +112,7 @@ shared class Visitor() {
     
     "Called before visiting files and subdirectories
      of the given directory. If this method returns 
-     `false`, the files and subdirecties of the given 
+     `false`, the files and subdirectories of the given 
      directory will not be visited."
     shared default Boolean beforeDirectory(Directory dir) { return true; }
     

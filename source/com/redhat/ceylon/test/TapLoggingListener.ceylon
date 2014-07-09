@@ -18,9 +18,9 @@ import ceylon.test {
  
  * `elapsed` for the [[elapsed time|TestResult.elapsedTime]], in milliseconds (not for ignored tests)
  * `reason` for the [[ignore reason|IgnoreAnnotation.reason]], if present
- * `severity` for the [[state|TestResult.state]], one of `failure` or `error` (omitted for sucessful tests)
+ * `severity` for the [[state|TestResult.state]], one of `failure` or `error` (omitted for successful tests)
  * `actual`, `expected` if the [[exception|TestResult.exception]] is an [[AssertionComparisonError]]
- * `exception` for the exception’s stacktrace if it exists, but isn’t an [[AssertionComparisonError]].
+ * `exception` for the exception’s stack trace if it exists, but isn’t an [[AssertionComparisonError]].
  
  ### Example
  

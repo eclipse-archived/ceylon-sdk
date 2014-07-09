@@ -614,7 +614,7 @@ shared class LinkedList<Element>(elements = {})
      The default List implementation of firstIndexWhere + lastIndexWhere
      uses getFromFirst(index) instead of iterating over the list
      because for tuples and array sequences that's slightly faster.
-     It is of course desastrous for a linked list, where getFromFirst(index)
+     It is of course disastrous for a linked list, where getFromFirst(index)
      runs in O(index) time, which means that the default firstIndexWhere()
      and lastIndexWhere() run in O(size^2) time, so we refine it here.
      */

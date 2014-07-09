@@ -1,6 +1,6 @@
 
 "Represents a collection of form-associated elements, some of
- which can representeditable values that can be submitted to
+ which can represent editable values that can be submitted to
  a server for processing.
  
  Technical details about this element can be found on the

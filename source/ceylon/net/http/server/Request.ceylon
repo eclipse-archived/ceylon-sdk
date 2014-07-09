@@ -6,11 +6,11 @@ import ceylon.net.http { Method }
 by("Matej Lazar")
 shared interface Request {
     
-    "Returns a single parameters wit given name. If there are more, the first one is returned.
+    "Returns a single parameters with given name. If there are more, the first one is returned.
      If `forseFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed."
     shared formal String? parameter(String name, Boolean forseFormParsing = false);
     
-    "Returns all parameters wit given name.
+    "Returns all parameters with given name.
      If `forseFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed.
      It is returned, only if it is already parsed."
     shared formal String[] parameters(String name, Boolean forseFormParsing = false);
@@ -22,7 +22,7 @@ shared interface Request {
     "Returns a single header with given name."
     shared formal String? header(String name);
     
-    "Returns all haaders with given name."
+    "Returns all headers with given name."
     shared formal String[] headers(String name);
     
     "Get the HTTP request method. {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"

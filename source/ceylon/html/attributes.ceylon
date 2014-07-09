@@ -4,7 +4,7 @@
 shared alias NonstandardAttributes => [<String->Object>*];
 
 "Useful alias to indicate that a sequence of [[Entry]] can be
- used to add `data-` prefixed attributes tto he element."
+ used to add `data-` prefixed attributes to the element."
 shared alias DataContainer => [<String->Object>*];
 
 "Alias to represent a collection of CSS classes."

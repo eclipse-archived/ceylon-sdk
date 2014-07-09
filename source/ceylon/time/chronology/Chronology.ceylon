@@ -90,7 +90,7 @@ shared object gregorian extends GregorianCalendar() {
     shared Integer december = 12;
 
     "Gregorian leap year rule states that every fourth year
-     is a leap year except cenury years not divisible by 400."
+     is a leap year except century years not divisible by 400."
     shared actual Boolean leapYear(Integer year) {
         return (year % 100 == 0) then year % 400 == 0
                                  else year % 4 == 0;
@@ -154,7 +154,7 @@ shared object gregorian extends GregorianCalendar() {
         return [year, month, day];
     }
 
-    "Retunrs the month number of the gregorian calendar from the fixed date value."
+    "Returns the month number of the gregorian calendar from the fixed date value."
     shared Integer monthFrom(Integer date){
         return dateFrom(date)[1];
     }

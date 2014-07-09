@@ -7,7 +7,7 @@ shared class PathSegment(String initialName, Parameter* initialParameters) {
     "The path segment name"
     shared variable String name = initialName;
     
-    "The path segment paramters"
+    "The path segment parameters"
     shared LinkedList<Parameter> parameters = LinkedList<Parameter>();
     
     for(Parameter p in initialParameters){

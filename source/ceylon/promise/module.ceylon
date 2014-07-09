@@ -5,7 +5,7 @@
  - the [[Completable]] interface forming the ground of promise, implemented primarily by the [[Promise]] interface.
  - the [[Promise]] interface, a promise is a [[Completable]] for a single value.
  - the [[Deferred]] type providing support for the [[Promise]] interface.
- - the [[Term]] interface for combining promises into a conjonction promise.
+ - the [[Term]] interface for combining promises into a conjunction promise.
 
  # Goal
  
@@ -30,7 +30,7 @@
  
  ## Deferred
  
- A [[Deferred]] object provides an implementation of the [[Promise]] interface and can be transitionned to a fulfillment
+ A [[Deferred]] object provides an implementation of the [[Promise]] interface and can be transitioned to a fulfillment
  or a reject resolution. It should remain private to the part of the code using it and only its promise should be visible.
 
  The [[Promise]] of a deferred can be retrieved with its `promise` field.
@@ -99,7 +99,7 @@
  
  ## Feeding with a promise
  
- Deferred can be transitionned with a promise instead of a value:
+ Deferred can be transitioned with a promise instead of a value:
  
      Deferred<String> deferred1 = getDeferred1();
      Deferred<String> deferred2 = getDeferred2();

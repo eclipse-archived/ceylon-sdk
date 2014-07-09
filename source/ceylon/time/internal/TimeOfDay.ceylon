@@ -37,7 +37,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     shared actual Time predecessor => minusMilliseconds(1);
 
     "For successor its used the lowest unit of time, this way we can benefit
-     from maximum precision. In this case the sucessor is the current value plus 1 millisecond."
+     from maximum precision. In this case the successor is the current value plus 1 millisecond."
     shared actual Time successor => plusMilliseconds(1);
 
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
@@ -51,7 +51,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     shared actual Time plusHours(Integer hours) => plusMilliseconds( hours * ms.perHour );
 
     "Subtracts specified number of hours from this time of day 
-     and returns the resul as new time of day."
+     and returns the result as new time of day."
     shared actual Time minusHours(Integer hours) => minusMilliseconds( hours * ms.perHour );
 
     "Adds specified number of minutes to this time of day 

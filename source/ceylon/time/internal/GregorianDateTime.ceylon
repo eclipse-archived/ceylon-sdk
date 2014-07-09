@@ -14,7 +14,7 @@ shared class GregorianDateTime( date, time )
     "Returns [[Time]] representation of current _date and time_."
     shared actual Time time;
 
-    "Comparing [[DateTime]] is based on [[Date]] and [[Time]] comparision."
+    "Comparing [[DateTime]] is based on [[Date]] and [[Time]] comparison."
     shared actual Comparison compare(DateTime other) {
         return date != other.date then date <=> other.date
                                   else time <=> other.time;
