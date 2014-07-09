@@ -78,7 +78,7 @@ shared Process createProcess(
          process."
         Input? input = null,
         "The destination for the standard output 
-         stream ofthe process, or `null` if the 
+         stream of the process, or `null` if the 
          standard output should be piped to the 
          current process."
         Output? output = null,

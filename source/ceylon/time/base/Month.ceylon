@@ -74,7 +74,7 @@ Integer[] firstDayOfMonth = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 3
  value of the [[Month]] (i.e. 1=[[january]], 2=[[february]], ... 12=[[december]])
  Any invalid values will throw an [[AssertionError]].
  
- If the imput value is a [[Month]], the input value is returned as is."
+ If the input value is a [[Month]], the input value is returned as is."
 shared Month monthOf(Integer|Month month){
     switch (month)
     case (is Month) { return month; }
@@ -142,7 +142,7 @@ shared object august extends Month(gregorian.august) {
     shared actual Month successor => september;
 }
 
-"September. The nineth month of a gregorian calendar system."
+"September. The ninth month of a gregorian calendar system."
 shared object september extends Month(gregorian.september) {
     shared actual String string = "september";
     shared actual Month predecessor => august;
@@ -163,7 +163,7 @@ shared object november extends Month(gregorian.november) {
     shared actual Month successor => december;
 }
 
-"December. The twelveth (last) month of a gregorian calendar system."
+"December. The twelfth (last) month of a gregorian calendar system."
 shared object december extends Month(gregorian.december) {
     shared actual String string = "december";
     shared actual Month predecessor => november;

@@ -7,14 +7,14 @@ import javax.sql {
 }
 
 "Obtain a connection source, that is, an instance of 
- `Connnection()`, for a given JDBC [[dataSource]]."
+ `Connection()`, for a given JDBC [[dataSource]]."
 see (`function newConnectionFromDataSourceWithCredentials`)
 shared Connection newConnectionFromDataSource
         (DataSource dataSource)()
         => dataSource.connection;
 
 "Obtain a connection source, that is, an instance of 
- `Connnection()`, for a given JDBC [[dataSource]], and
+ `Connection()`, for a given JDBC [[dataSource]], and
  given credentials."
 see (`function newConnectionFromDataSource`)
 shared Connection newConnectionFromDataSourceWithCredentials

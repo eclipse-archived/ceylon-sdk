@@ -51,10 +51,10 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
     "Returns characters table"
     shared formal [Character+] table;
 
-    "Retuns padding character"
+    "Returns padding character"
     shared Character pad = '=';
 
-    "Retuns index for ignored character"
+    "Returns index for ignored character"
     Integer ignoreCharIndex = 64;
 
     shared actual ByteBuffer encode( ByteBuffer input ) {

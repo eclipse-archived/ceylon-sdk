@@ -48,7 +48,7 @@ shared interface TestListener {
         "The event object."
         TestIgnoreEvent event) {}
     
-    "Called when a test will not be run, because some error has occured.
+    "Called when a test will not be run, because some error has occurred.
      For example a invalid test function signature."
     shared default void testError(
         "The event object."

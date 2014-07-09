@@ -11,7 +11,7 @@ shared interface WebSocketChannel {
     "Return true if the session is open and connected"
     shared formal Boolean open();
 
-    "Return true if a close frame has been recieved"
+    "Return true if a close frame has been received"
     shared formal Boolean closeFrameReceived;
 
     shared formal void sendBinary(ByteBuffer binary);

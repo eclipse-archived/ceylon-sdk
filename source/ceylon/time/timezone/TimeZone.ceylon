@@ -64,7 +64,7 @@ shared object timeZone {
         shared actual String string  = "Z";
 	}
 
-    "Parses input string and returns approprate time zone.
+    "Parses input string and returns appropriate time zone.
      Currently it accepts only ISO-8601 time zone offset patterns:
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.
  

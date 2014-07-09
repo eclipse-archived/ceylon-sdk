@@ -1,7 +1,7 @@
 
 "Represents a memory buffer that can be read and written to with no
  allocation. The easiest way to get an idea of what a buffer is, is that
- it constists in an array of a given [[capacity]], a [[position]] index within the 
+ it consists in an array of a given [[capacity]], a [[position]] index within the 
  array, and a [[limit]] index.
  
  Typical operations on a buffer will be to fill it, which you do with [[put]]
@@ -62,7 +62,7 @@ shared abstract class Buffer<T>() satisfies Iterable<T> {
      the optional parameter [[growLimit]] is set to `true` (defaults to `false`),
      because when you are writing it makes sense to grow the limit, but when
      you are reading it usually does not, as growing a buffer does not generate
-     new meaningfull data."
+     new meaningful data."
     shared formal void resize(Integer newSize, Boolean growLimit = false);
 
     "Returns `true` if this buffer is writable, or `false` if it is read-only."

@@ -8,7 +8,7 @@ import ceylon.time.internal { _gap = gap, _overlap = overlap }
  * Easy way to recover [[Duration]]
  * Recover the overlap between [[DateRange]] types
  * Recover the gap between [[DateRange]] types
- * Allows cutomized way to iterate as navigate between values by [[UnitOfDate]] cases
+ * Allows customized way to iterate as navigate between values by [[UnitOfDate]] cases
  "
 see(`interface Range`)
 shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate> {

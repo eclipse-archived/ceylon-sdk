@@ -22,14 +22,14 @@ shared class GregorianDate( Integer dayOfEra )
     "Returns _day of year_ value of this gregorian date."
     shared actual Integer dayOfYear => month.firstDayOfYear( leapYear ) + day - 1;
 
-    "Returns gregorian date immediately preceeding this date.\n
+    "Returns gregorian date immediately preceding this date.\n
      For successor its used the lowest unit of date, this way we can benefit
-     from maximum precision. In this case the sucessor is the current value minus 1 day."
+     from maximum precision. In this case the successor is the current value minus 1 day."
     shared actual Date predecessor => minusDays( 1 );
 
     "Returns gregorian date immediately succeeding this date.\n
      For successor its used the lowest unit of date, this way we can benefit
-     from maximum precision. In this case the sucessor is the current value plus 1 day."
+     from maximum precision. In this case the successor is the current value plus 1 day."
     shared actual Date successor => plusDays( 1 );
 
     "Returns current day of the week."

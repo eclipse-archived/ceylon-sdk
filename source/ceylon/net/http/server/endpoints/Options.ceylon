@@ -1,5 +1,5 @@
 "outputBufferSize: size of output buffer
- readAttempts: abort reading after n unsucessful attempts"
+ readAttempts: abort reading after n unsuccessful attempts"
 by("Matej Lazar")
 shared class Options( 
         outputBufferSize = 8192,

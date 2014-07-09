@@ -1,5 +1,5 @@
-"Performs an arbitrary calcuation with the given rounding used 
- implicity when arithmetic operators are applied to `Decimal` 
+"Performs an arbitrary calculation with the given rounding used 
+ implicitly when arithmetic operators are applied to `Decimal` 
  operands.
  
  During a call to this method the `Decimal` operators
