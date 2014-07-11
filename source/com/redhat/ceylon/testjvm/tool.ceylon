@@ -121,7 +121,7 @@ class Runner() {
         ModuleIdentifier modIdentifier = createModuleIdentifier(modName, modVersion);
         Module mod = ceylonModuleLoader.loadModule(modIdentifier);
         ModuleClassLoader modClassLoader = mod.classLoader;
-        modClassLoader.loadClass(modName + ".module_");
+        modClassLoader.loadClass(modName + ".$module_");
     }
     
     void connect() {
