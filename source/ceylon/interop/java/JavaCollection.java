@@ -1,5 +1,7 @@
 package ceylon.interop.java;
 
+import java.util.Iterator;
+
 import ceylon.language.Finished;
 
 @com.redhat.ceylon.compiler.java.metadata.Ceylon(major = 7)
@@ -77,13 +79,18 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
     public final boolean containsAll(@com.redhat.ceylon.compiler.java.metadata.Name("collection")
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("ceylon.language::Null|java.util::Collection<ceylon.language::Object>")
     final java.util.Collection<?> collection) {
-//        java.util.Collection<?> $collection$4;
-//        if (($collection$4 = collection) != null) {
-//            final java.util.Collection<java.lang.Object> $collection$5 = (java.util.Collection<Object>) $collection$4;
-//            return items.containsEvery(new ceylon.interop.java.CeylonIterable<java.lang.Object>(ceylon.language.Object.$TypeDescriptor, $collection$5));
-//        } else {
+        if (collection != null) {
+            ceylon.language.Iterator iterator = items.iterator();
+            Object o;
+            while (!((o = iterator.next()) instanceof Finished)) {
+                if (!items.contains(o)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
             return false;
-//        }
+        }
     }
     
   
@@ -102,8 +109,7 @@ public class JavaCollection<T> implements com.redhat.ceylon.compiler.java.runtim
     @java.lang.Override
     @com.redhat.ceylon.compiler.java.metadata.TypeInfo("java.util::Iterator<T>")
     public final java.util.Iterator<T> iterator() {
-        return null;
-//        return new ceylon.interop.java.JavaIterator<T>($reifiedT, items.iterator());
+        return new ceylon.interop.java.JavaIterator<T>($reifiedT, items.iterator());
     }
     
     @ceylon.language.SharedAnnotation$annotation$
