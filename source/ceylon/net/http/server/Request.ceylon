@@ -7,13 +7,13 @@ by("Matej Lazar")
 shared interface Request {
     
     "Returns a single parameters with given name. If there are more, the first one is returned.
-     If `forseFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed."
-    shared formal String? parameter(String name, Boolean forseFormParsing = false);
+     If `forceFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed."
+    shared formal String? parameter(String name, Boolean forceFormParsing = false);
     
     "Returns all parameters with given name.
-     If `forseFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed.
+     If `forceFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed.
      It is returned, only if it is already parsed."
-    shared formal String[] parameters(String name, Boolean forseFormParsing = false);
+    shared formal String[] parameters(String name, Boolean forceFormParsing = false);
 
     shared formal UploadedFile? file(String name);
 
