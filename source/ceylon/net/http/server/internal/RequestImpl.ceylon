@@ -154,7 +154,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         return mergedParams.sequence();
     }
 
-    shared actual String? parameter(String name, Boolean forseFormParsing) {
+    shared actual String? parameter(String name, Boolean forceFormParsing) {
         value params = parameters(name);
         if (nonempty params) {
             return params.first;
