@@ -3,7 +3,7 @@ import java.util {
 }
 
 "Adapts an instance of Java's `Iterator` to Ceylon's `Iterator`."
-shared class CeylonIterator<T>(JIterator<T> iterator) 
+shared class CeylonIterator<T>(JIterator<out T> iterator) 
         satisfies Iterator<T> {
 
     shared actual T|Finished next() {

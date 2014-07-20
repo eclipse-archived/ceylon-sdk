@@ -1,13 +1,13 @@
 import java.lang {
-    UnsupOpEx=UnsupportedOperationException,
-    ObjectArray
+    UnsupportedOperationException
 }
 import java.util {
-    JIterator=Iterator,
-    JCollection=Collection
+    JIterator=Iterator
 }
 
-"Takes a Ceylon `Iterator` and turns it into a Java `Iterator`"
+"A Java [[java.util::Iterator]] that wraps a Ceylon
+ [[Iterator]]. This iterator is unmodifiable, throwing
+ [[UnsupportedOperationException]] from [[remove]]."
 shared class JavaIterator<T>(Iterator<T> iterator)
         satisfies JIterator<T> {
     
@@ -37,7 +37,7 @@ shared class JavaIterator<T>(Iterator<T> iterator)
     }
     
     shared actual void remove() { 
-        throw UnsupOpEx("remove()"); 
+        throw UnsupportedOperationException("remove()"); 
     }
     
 }

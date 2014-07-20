@@ -5,7 +5,7 @@ import java.util {
     JIterator=Iterator
 }
 
-"Takes a Ceylon `Iterable` and turns it into a Java `Iterable`"
+"A Java [[JIterable]] that wraps a Ceylon [[Iterable]]."
 shared class JavaIterable<T>(Iterable<T> iter) 
         satisfies JIterable<T> {
 

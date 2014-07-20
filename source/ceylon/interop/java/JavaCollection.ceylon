@@ -1,53 +1,61 @@
-import java.util {
-    JIterator=Iterator,
-    JCollection=Collection
-}
 import java.lang {
-    UnsupOpEx=UnsupportedOperationException,
-    ObjectArray
+    ObjectArray,
+    ArrayStoreException
+}
+import java.util {
+    Iterator,
+    AbstractCollection
 }
 
-shared class JavaCollection<T>(Collection<T> collection)
-        satisfies JCollection<T> {
-    shared actual JIterator<T> iterator() 
+"A Java [[java.util::Collection]] that wraps a Ceylon
+ [[Collection]]. This collection is unmodifiable, throwing 
+ [[java.lang::UnsupportedOperationException]] from mutator 
+ methods."
+shared class JavaCollection<E>(Collection<E> collection)
+        extends AbstractCollection<E>() {
+    
+    shared actual Iterator<E> iterator() 
             => JavaIterator(collection.iterator());
-    shared actual Boolean empty => collection.empty;
+    
     shared actual Integer size() => collection.size;
-    shared actual Boolean add(T? \iobject) {
-        throw UnsupOpEx("add()");
+    
+    shared actual ObjectArray<Object> toArray() 
+            => createJavaObjectArray<Object> { 
+        for (e in collection) e of Object?
+    };
+    
+    shared actual ObjectArray<T> toArray<T>(ObjectArray<T> array) {
+        if (is {T?*} collection) {
+            if (collection.size<=array.size) {
+                variable value i = 0;
+                for (e in collection) {
+                    array.set(i++, e);
+                }
+                while (i<array.size) {
+                    array.set(i++, null);
+                }
+                return array;
+            }
+            else {
+                return createJavaObjectArray<T>(collection);
+            }
+        }
+        else {
+            throw ArrayStoreException("collection cannot be stored in given array");
+        }
     }
-    shared actual Boolean addAll(JCollection<out T>? collection) {
-        throw UnsupOpEx("addAll()");
-    }
-    shared actual Boolean remove(Object? \iobject) {
-        throw UnsupOpEx("remove()");
-    }
-    shared actual Boolean removeAll(JCollection<out Object>? collection) {
-        throw UnsupOpEx("removeAll()");
-    }
-    shared actual Boolean retainAll(JCollection<out Object>? collection) {
-        throw UnsupOpEx("retainAll()");
-    }
-    shared actual Boolean contains(Object? obj) {
-        assert (exists obj);
-        return collection.contains(obj);
-    }
-    shared actual Boolean containsAll(JCollection<out Object>? collection) {
-        assert (exists collection);
-        return collection.containsAll(collection);
-    }
-    shared actual void clear() {
-        throw UnsupOpEx("clear()");
-    }
-    shared actual Integer hash => collection.hash;
+    
     shared actual Boolean equals(Object that) {
-        if (is JavaCollection<Anything> that) {
+        //TODO: this does not obey the contract of Collection
+        if (is JavaCollection<out Anything> that) {
             return collection==that.collection;
         }
         else {
             return false;
         }
     }
-    shared actual ObjectArray<Object> toArray() 
-            => createJavaObjectArray<Object>(collection.coalesced);
+    
+    shared actual Integer hash => collection.hash;
+    
 }
+

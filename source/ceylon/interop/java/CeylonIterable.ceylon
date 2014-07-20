@@ -8,7 +8,7 @@ import java.lang {
      for (int in CeylonIterable(Arrays.asList(ints))) {
          ...
      }"
-shared class CeylonIterable<T>(JIterable<T> iterable) 
+shared class CeylonIterable<T>(JIterable<out T> iterable) 
         satisfies Iterable<T> {
 
     shared actual Iterator<T> iterator() {
