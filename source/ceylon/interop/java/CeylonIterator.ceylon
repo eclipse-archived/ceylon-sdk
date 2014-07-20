@@ -1,5 +1,6 @@
-
-import java.util { JIterator=Iterator }
+import java.util {
+    JIterator=Iterator
+}
 
 "Adapts an instance of Java's `Iterator` to Ceylon's `Iterator`."
 shared class CeylonIterator<T>(JIterator<T> iterator) 

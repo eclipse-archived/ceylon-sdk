@@ -53,7 +53,7 @@ test void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAnE
 }
 
 test void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAnError() {
-	testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAThrowable(() => Error());
+	testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAThrowable(() => AssertionError(""));
 }
 
 void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAThrowable<T>(T fail()) given T satisfies Throwable {

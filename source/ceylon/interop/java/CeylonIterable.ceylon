@@ -1,5 +1,6 @@
-
-import java.lang { JIterable=Iterable }
+import java.lang {
+    JIterable=Iterable
+}
 
 "Adapts an instance of Java's `Iterable` to Ceylon's `Iterable`,
  allowing its elements to be iterated using `for`.

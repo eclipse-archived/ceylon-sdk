@@ -20,7 +20,7 @@ test void stringTests() {
 }
 
 test void collectionTests() {
-    value lst = ArrayList<Integer>(JavaCollection({ 1, 2, 3 }));
+    value lst = ArrayList<Integer>(JavaCollection([ 1, 2, 3 ]));
     
     value iter = CeylonIterator(lst.iterator());
     variable value val = 1;
@@ -35,11 +35,11 @@ test void collectionTests() {
 }
 
 test void bug264() {
-    HashSet<Date>().addAll(JavaCollection<Date>({}));
-    LinkedHashSet<Date>().addAll(JavaCollection<Date>({}));
-    TreeSet<Date>().addAll(JavaCollection<Date>({}));
-    ArrayList<Date>().addAll(JavaCollection<Date>({}));
-    LinkedList<Date>().addAll(JavaCollection<Date>({}));
+    HashSet<Date>().addAll(JavaCollection<Date>([]));
+    LinkedHashSet<Date>().addAll(JavaCollection<Date>([]));
+    TreeSet<Date>().addAll(JavaCollection<Date>([]));
+    ArrayList<Date>().addAll(JavaCollection<Date>([]));
+    LinkedList<Date>().addAll(JavaCollection<Date>([]));
 }
 
 test void classTests() {

@@ -1,15 +1,22 @@
-
-import java.lang { UnsupOpEx=UnsupportedOperationException }
-import java.util { JIterator=Iterator }
+import java.lang {
+    UnsupOpEx=UnsupportedOperationException,
+    ObjectArray
+}
+import java.util {
+    JIterator=Iterator,
+    JCollection=Collection
+}
 
 "Takes a Ceylon `Iterator` and turns it into a Java `Iterator`"
-shared class JavaIterator<T>(Iterator<T> iter) satisfies JIterator<T> {
+shared class JavaIterator<T>(Iterator<T> iterator)
+        satisfies JIterator<T> {
+    
     variable Boolean first = true;
     variable T|Finished item = finished;
     
     shared actual Boolean hasNext() {
         if (first) {
-            item = iter.next();
+            item = iterator.next();
             first = false;
         }
         return !item is Finished;
@@ -17,11 +24,11 @@ shared class JavaIterator<T>(Iterator<T> iter) satisfies JIterator<T> {
     
     shared actual T? next() {
         if (first) {
-            item = iter.next();
+            item = iterator.next();
             first = false;
         }
         T|Finished olditem = item;
-        item = iter.next();
+        item = iterator.next();
         if (!is Finished olditem) {
             return olditem;
         } else {
@@ -29,6 +36,10 @@ shared class JavaIterator<T>(Iterator<T> iter) satisfies JIterator<T> {
         }
     }
     
-    shared actual void remove() { throw UnsupOpEx("remove()"); }
+    shared actual void remove() { 
+        throw UnsupOpEx("remove()"); 
+    }
     
 }
+
+

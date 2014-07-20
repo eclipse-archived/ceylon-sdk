@@ -153,7 +153,7 @@ void useCases() {
     testReject();
     testFail();
     testCatchReason(() => Exception());
-    testCatchReason(() => Error());
+    testCatchReason(() => AssertionError(""));
     testResolveWithPromise();
     testComposeWithPromise();
 }
