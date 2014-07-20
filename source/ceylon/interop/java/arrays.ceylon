@@ -291,5 +291,5 @@ shared ObjectArray<JavaString> createJavaStringArray({String*} elements)
         => javaStringArray(Array(elements));
 
 shared ObjectArray<T> createJavaObjectArray<T>({T?*} elements)
-        given T satisfies Object
+        //given T satisfies Object
         => javaObjectArray(Array(elements));
