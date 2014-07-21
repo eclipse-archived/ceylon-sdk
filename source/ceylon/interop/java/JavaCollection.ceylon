@@ -1,10 +1,5 @@
-import java.lang {
-    ObjectArray
-}
 import java.util {
-    Iterator,
-    AbstractCollection,
-    Arrays
+    AbstractCollection
 }
 
 "A Java [[java.util::Collection]] that wraps a Ceylon
@@ -14,18 +9,9 @@ import java.util {
 shared class JavaCollection<E>(Collection<E> collection)
         extends AbstractCollection<E>() {
     
-    shared actual Iterator<E> iterator() 
-            => JavaIterator(collection.iterator());
+    iterator() => JavaIterator(collection.iterator());
     
-    shared actual Integer size() => collection.size;
-    
-    shared actual ObjectArray<Object> toArray() 
-            => createJavaObjectArray<Object> { 
-        for (e in collection) e of Object?
-    };
-    
-    shared actual ObjectArray<T> toArray<T>(ObjectArray<T> array) 
-            => Arrays.asList(createJavaObjectArray(collection)).toArray(array);
+    size() => collection.size;
     
     shared actual Boolean equals(Object that) {
         //TODO: this does not obey the contract of Collection
