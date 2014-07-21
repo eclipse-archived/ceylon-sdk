@@ -1,10 +1,10 @@
 import java.lang {
-    ObjectArray,
-    ArrayStoreException
+    ObjectArray
 }
 import java.util {
     Iterator,
-    AbstractCollection
+    AbstractCollection,
+    Arrays
 }
 
 "A Java [[java.util::Collection]] that wraps a Ceylon
@@ -24,26 +24,8 @@ shared class JavaCollection<E>(Collection<E> collection)
         for (e in collection) e of Object?
     };
     
-    shared actual ObjectArray<T> toArray<T>(ObjectArray<T> array) {
-        if (is {T?*} collection) {
-            if (collection.size<=array.size) {
-                variable value i = 0;
-                for (e in collection) {
-                    array.set(i++, e);
-                }
-                while (i<array.size) {
-                    array.set(i++, null);
-                }
-                return array;
-            }
-            else {
-                return createJavaObjectArray<T>(collection);
-            }
-        }
-        else {
-            throw ArrayStoreException("collection cannot be stored in given array");
-        }
-    }
+    shared actual ObjectArray<T> toArray<T>(ObjectArray<T> array) 
+            => Arrays.asList(createJavaObjectArray(collection)).toArray(array);
     
     shared actual Boolean equals(Object that) {
         //TODO: this does not obey the contract of Collection
