@@ -1,7 +1,8 @@
 import java.lang { AutoCloseable }
 
-"Adapts an instance of Java's `AutoCloseable` to Ceylon's `Destroyable`,
- allowing it to be used as a `try` resource.
+"A Ceylon [[Destroyable]] that adapts an instance of Java's 
+ [[AutoCloseable]], allowing it to be used as a resource in
+ the `try` construct.
 
      try (inputStream = CeylonDestroyable(FileInputStream(file)) {
          Integer byte = inputStream.resource.read();

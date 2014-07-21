@@ -2,17 +2,15 @@ import java.lang {
     JIterable=Iterable
 }
 
-"Adapts an instance of Java's `Iterable` to Ceylon's `Iterable`,
- allowing its elements to be iterated using `for`.
- 
-     for (int in CeylonIterable(Arrays.asList(ints))) {
+"A Ceylon [[Iterable]] that adapts an instance of Java's 
+ [[java.lang::Iterable]], allowing its elements to be 
+ iterated using a `for` loop.
+     
+     IntArray ints = ... ;
+     for (int in CeylonIterable(Arrays.asList(*ints.array))) {
          ...
      }"
 shared class CeylonIterable<T>(JIterable<out T> iterable) 
         satisfies Iterable<T> {
-
-    shared actual Iterator<T> iterator() {
-        return CeylonIterator(iterable.iterator());
-    }
-    
+    iterator() => CeylonIterator(iterable.iterator());    
 }

@@ -2,7 +2,8 @@ import java.util {
     JIterator=Iterator
 }
 
-"Adapts an instance of Java's `Iterator` to Ceylon's `Iterator`."
+"A Ceylon [[Iterator]] that adapts an instance of Java's 
+ [[java.util::Iterator]]."
 shared class CeylonIterator<T>(JIterator<out T> iterator) 
         satisfies Iterator<T> {
 
