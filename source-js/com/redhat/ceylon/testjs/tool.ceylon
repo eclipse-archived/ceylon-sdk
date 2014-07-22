@@ -58,20 +58,19 @@ shared void run() {
     }
     
     if (port != -1) {
-        throw;
-        //dynamic {
-        //    dynamic net = require("net");
-        //    dynamic socket = net.connect(port);
-        //    
-        //    void publishEvent(String json) {
-        //        dynamic {
-        //            socket.write(json);
-        //            socket.write("\{END OF TRANSMISSION}");
-        //        }
-        //    }
-        //    
-        //    listener = TestEventPublisher(publishEvent);
-        //}
+        dynamic {
+            dynamic net = require("net");
+            dynamic socket = net.connect(port);
+            
+            void publishEvent(String json) {
+                dynamic {
+                    socket.write(json);
+                    socket.write("\{END OF TRANSMISSION}");
+                }
+            }
+            
+            listener = TestEventPublisher(publishEvent);
+        }
     } else if (tap) {
         listener = TapLoggingListener();
     } else {
