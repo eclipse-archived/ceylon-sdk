@@ -33,7 +33,7 @@ shared sealed class Language(tag,
     assert (is String? displayVariant = cols.next());
     assert (is String? currencyCode = cols.next());
     
-    return [Language {
+    value language = Language {
         tag = tag;
         languageCode = languageCode;
         countryCode = countryCode;
@@ -42,7 +42,8 @@ shared sealed class Language(tag,
         displayLanguage = displayLanguage;
         displayCountry = displayCountry;
         displayVariant = displayVariant;
-    }, currencyCode];
+    };
+    return [language, currencyCode];
 }
 
 HashMap<String,Language> parseLanguages(Iterator<String> lines) {
