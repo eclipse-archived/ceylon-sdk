@@ -1,0 +1,380 @@
+de-LU, de, LU, , German (Luxembourg), German, Luxembourg, , EUR
+dd.MM.yy, dd.MM.yyyy, d. MMMM yyyy
+HH:mm, HH:mm:ss, HH:mm:ss z
+#,##0, #,##0.###, #,##0%, #,##0.00 ¤
+
+ms-MY, ms, MY, , Malay (Malaysia), Malay, Malaysia, 
+ar-QA, ar, QA, , Arabisch (Katar), Arabisch, Katar, 
+is-IS, is, IS, , Isländisch (Island), Isländisch, Island, 
+fi-FI, fi, FI, , Finnisch (Finnland), Finnisch, Finnland, 
+pl, pl, , , Polnisch, Polnisch, , 
+en-MT, en, MT, , Englisch (Malta), Englisch, Malta, 
+it-CH, it, CH, , Italienisch (Schweiz), Italienisch, Schweiz, 
+nl-BE, nl, BE, , Niederländisch (Belgien), Niederländisch, Belgien, 
+ar-SA, ar, SA, , Arabisch (Saudi-Arabien), Arabisch, Saudi-Arabien, 
+ar-IQ, ar, IQ, , Arabisch (Irak), Arabisch, Irak, 
+es-PR, es, PR, , Spanisch (Puerto Rico), Spanisch, Puerto Rico, 
+es-CL, es, CL, , Spanisch (Chile), Spanisch, Chile, 
+fi, fi, , , Finnisch, Finnisch, , 
+de-AT, de, AT, , Deutsch (Österreich), Deutsch, Österreich, 
+da, da, , , Dänisch, Dänisch, , 
+en-GB, en, GB, , Englisch (Vereinigtes Königreich), Englisch, Vereinigtes Königreich, 
+es-PA, es, PA, , Spanisch (Panama), Spanisch, Panama, 
+sr, sr, , , Serbisch, Serbisch, , 
+ar-YE, ar, YE, , Arabisch (Jemen), Arabisch, Jemen, 
+mk-MK, mk, MK, , Mazedonisch (Mazedonien), Mazedonisch, Mazedonien, 
+mk, mk, , , Mazedonisch, Mazedonisch, , 
+en-CA, en, CA, , Englisch (Kanada), Englisch, Kanada, 
+vi-VN, vi, VN, , Vietnamesisch (Vietnam), Vietnamesisch, Vietnam, 
+nl-NL, nl, NL, , Niederländisch (Niederlande), Niederländisch, Niederlande, 
+es-US, es, US, , Spanisch (Vereinigte Staaten von Amerika), Spanisch, Vereinigte Staaten von Amerika, 
+zh-CN, zh, CN, , Chinesisch (China), Chinesisch, China, 
+es-HN, es, HN, , Spanisch (Honduras), Spanisch, Honduras, 
+en-US, en, US, , Englisch (Vereinigte Staaten von Amerika), Englisch, Vereinigte Staaten von Amerika, 
+fr, fr, , , Französisch, Französisch, , 
+th, th, , , Thai, Thai, , 
+ar, ar, , , Arabisch, Arabisch, , 
+ar-MA, ar, MA, , Arabisch (Marokko), Arabisch, Marokko, 
+lv, lv, , , Lettisch, Lettisch, , 
+de, de, , , Deutsch, Deutsch, , 
+id-ID, in, ID, , Indonesisch (Indonesien), Indonesisch, Indonesien, 
+hr, hr, , , Kroatisch, Kroatisch, , 
+en-ZA, en, ZA, , Englisch (Südafrika), Englisch, Südafrika, 
+ko-KR, ko, KR, , Koreanisch (Südkorea), Koreanisch, Südkorea, 
+ar-TN, ar, TN, , Arabisch (Tunesien), Arabisch, Tunesien, 
+id, in, , , Indonesisch, Indonesisch, , 
+ja, ja, , , Japanisch, Japanisch, , 
+sr-RS, sr, RS, , Serbisch (Serbien), Serbisch, Serbien, 
+be-BY, be, BY, , Belorussisch (Belarus), Belorussisch, Belarus, 
+zh-TW, zh, TW, , Chinesisch (Taiwan), Chinesisch, Taiwan, 
+ar-SD, ar, SD, , Arabisch (Sudan), Arabisch, Sudan, 
+pt, pt, , , Portugiesisch, Portugiesisch, , 
+is, is, , , Isländisch, Isländisch, , 
+ja-JP-u-ca-japanese-x-lvariant-JP, ja, JP, JP, Japanisch (Japan,JP), Japanisch, Japan, JP
+es-BO, es, BO, , Spanisch (Bolivien), Spanisch, Bolivien, 
+ar-DZ, ar, DZ, , Arabisch (Algerien), Arabisch, Algerien, 
+ms, ms, , , Malay, Malay, , 
+es-AR, es, AR, , Spanisch (Argentinien), Spanisch, Argentinien, 
+ar-AE, ar, AE, , Arabisch (Vereinigte Arabische Emirate), Arabisch, Vereinigte Arabische Emirate, 
+fr-CA, fr, CA, , Französisch (Kanada), Französisch, Kanada, 
+sl, sl, , , Slowenisch, Slowenisch, , 
+es, es, , , Spanisch, Spanisch, , 
+lt-LT, lt, LT, , Litauisch (Litauen), Litauisch, Litauen, 
+sr-Latn-ME, sr, ME, , Serbisch (Lateinisch,Montenegro), Serbisch, Montenegro, 
+ar-SY, ar, SY, , Arabisch (Syrien), Arabisch, Syrien, 
+ru-RU, ru, RU, , Russisch (Russland), Russisch, Russland, 
+fr-BE, fr, BE, , Französisch (Belgien), Französisch, Belgien, 
+es-ES, es, ES, , Spanisch (Spanien), Spanisch, Spanien, 
+bg, bg, , , Bulgarisch, Bulgarisch, , 
+he-IL, iw, IL, , Hebräisch (Israel), Hebräisch, Israel, 
+sv, sv, , , Schwedisch, Schwedisch, , 
+en, en, , , Englisch, Englisch, , 
+he, iw, , , Hebräisch, Hebräisch, , 
+da-DK, da, DK, , Dänisch (Dänemark), Dänisch, Dänemark, 
+es-CR, es, CR, , Spanisch (Costa Rica), Spanisch, Costa Rica, 
+zh-HK, zh, HK, , Chinesisch (Hongkong), Chinesisch, Hongkong, 
+zh, zh, , , Chinesisch, Chinesisch, , 
+ca-ES, ca, ES, , Katalanisch (Spanien), Katalanisch, Spanien, 
+th-TH, th, TH, , Thai (Thailand), Thai, Thailand, 
+uk-UA, uk, UA, , Ukrainisch (Ukraine), Ukrainisch, Ukraine, 
+es-DO, es, DO, , Spanisch (Dominikanische Republik), Spanisch, Dominikanische Republik, 
+es-VE, es, VE, , Spanisch (Venezuela), Spanisch, Venezuela, 
+pl-PL, pl, PL, , Polnisch (Polen), Polnisch, Polen, 
+ar-LY, ar, LY, , Arabisch (Libyen), Arabisch, Libyen, 
+ar-JO, ar, JO, , Arabisch (Jordanien), Arabisch, Jordanien, 
+it, it, , , Italienisch, Italienisch, , 
+uk, uk, , , Ukrainisch, Ukrainisch, , 
+hu-HU, hu, HU, , Ungarisch (Ungarn), Ungarisch, Ungarn, 
+ga, ga, , , Irisch, Irisch, , 
+es-GT, es, GT, , Spanisch (Guatemala), Spanisch, Guatemala, 
+es-PY, es, PY, , Spanisch (Paraguay), Spanisch, Paraguay, 
+bg-BG, bg, BG, , Bulgarisch (Bulgarien), Bulgarisch, Bulgarien, 
+hr-HR, hr, HR, , Kroatisch (Kroatien), Kroatisch, Kroatien, 
+sr-Latn-BA, sr, BA, , Serbisch (Lateinisch,Bosnien und Herzegowina), Serbisch, Bosnien und Herzegowina, 
+ro-RO, ro, RO, , Rumänisch (Rumänien), Rumänisch, Rumänien, 
+fr-LU, fr, LU, , Französisch (Luxemburg), Französisch, Luxemburg, 
+no, no, , , Norwegisch, Norwegisch, , 
+lt, lt, , , Litauisch, Litauisch, , 
+en-SG, en, SG, , Englisch (Singapur), Englisch, Singapur, 
+es-EC, es, EC, , Spanisch (Ecuador), Spanisch, Ecuador, 
+sr-BA, sr, BA, , Serbisch (Bosnien und Herzegowina), Serbisch, Bosnien und Herzegowina, 
+es-NI, es, NI, , Spanisch (Nicaragua), Spanisch, Nicaragua, 
+sk, sk, , , Slowakisch, Slowakisch, , 
+ru, ru, , , Russisch, Russisch, , 
+mt, mt, , , Maltesisch, Maltesisch, , 
+es-SV, es, SV, , Spanisch (El Salvador), Spanisch, El Salvador, 
+nl, nl, , , Niederländisch, Niederländisch, , 
+hi-IN, hi, IN, , Hindi (Indien), Hindi, Indien, 
+et, et, , , Estnisch, Estnisch, , 
+el-GR, el, GR, , Griechisch (Griechenland), Griechisch, Griechenland, 
+sl-SI, sl, SI, , Slowenisch (Slowenien), Slowenisch, Slowenien, 
+it-IT, it, IT, , Italienisch (Italien), Italienisch, Italien, 
+ja-JP, ja, JP, , Japanisch (Japan), Japanisch, Japan, 
+de-LU, de, LU, , Deutsch (Luxemburg), Deutsch, Luxemburg, 
+fr-CH, fr, CH, , Französisch (Schweiz), Französisch, Schweiz, 
+mt-MT, mt, MT, , Maltesisch (Malta), Maltesisch, Malta, 
+ar-BH, ar, BH, , Arabisch (Bahrain), Arabisch, Bahrain, 
+sq, sq, , , Albanisch, Albanisch, , 
+vi, vi, , , Vietnamesisch, Vietnamesisch, , 
+sr-ME, sr, ME, , Serbisch (Montenegro), Serbisch, Montenegro, 
+pt-BR, pt, BR, , Portugiesisch (Brasilien), Portugiesisch, Brasilien, 
+no-NO, no, NO, , Norwegisch (Norwegen), Norwegisch, Norwegen, 
+el, el, , , Griechisch, Griechisch, , 
+de-CH, de, CH, , Deutsch (Schweiz), Deutsch, Schweiz, 
+zh-SG, zh, SG, , Chinesisch (Singapur), Chinesisch, Singapur, 
+ar-KW, ar, KW, , Arabisch (Kuwait), Arabisch, Kuwait, 
+ar-EG, ar, EG, , Arabisch (Ägypten), Arabisch, Ägypten, 
+ga-IE, ga, IE, , Irisch (Irland), Irisch, Irland, 
+es-PE, es, PE, , Spanisch (Peru), Spanisch, Peru, 
+cs-CZ, cs, CZ, , Tschechisch (Tschechische Republik), Tschechisch, Tschechische Republik, 
+tr-TR, tr, TR, , Türkisch (Türkei), Türkisch, Türkei, 
+cs, cs, , , Tschechisch, Tschechisch, , 
+es-UY, es, UY, , Spanisch (Uruguay), Spanisch, Uruguay, 
+en-IE, en, IE, , Englisch (Irland), Englisch, Irland, 
+en-IN, en, IN, , Englisch (Indien), Englisch, Indien, 
+ar-OM, ar, OM, , Arabisch (Oman), Arabisch, Oman, 
+sr-CS, sr, CS, , Serbisch (Serbien und Montenegro), Serbisch, Serbien und Montenegro, 
+ca, ca, , , Katalanisch, Katalanisch, , 
+be, be, , , Belorussisch, Belorussisch, , 
+sr-Latn, sr, , , Serbisch (Lateinisch), Serbisch, , 
+ko, ko, , , Koreanisch, Koreanisch, , 
+sq-AL, sq, AL, , Albanisch (Albanien), Albanisch, Albanien, 
+pt-PT, pt, PT, , Portugiesisch (Portugal), Portugiesisch, Portugal, 
+lv-LV, lv, LV, , Lettisch (Lettland), Lettisch, Lettland, 
+sr-Latn-RS, sr, RS, , Serbisch (Lateinisch,Serbien), Serbisch, Serbien, 
+sk-SK, sk, SK, , Slowakisch (Slowakei), Slowakisch, Slowakei, 
+es-MX, es, MX, , Spanisch (Mexiko), Spanisch, Mexiko, 
+en-AU, en, AU, , Englisch (Australien), Englisch, Australien, 
+nn-NO, no, NO, NY, Norwegisch (Norwegen,Nynorsk), Norwegisch, Norwegen, Nynorsk
+en-NZ, en, NZ, , Englisch (Neuseeland), Englisch, Neuseeland, 
+sv-SE, sv, SE, , Schwedisch (Schweden), Schwedisch, Schweden, 
+ro, ro, , , Rumänisch, Rumänisch, , 
+ar-LB, ar, LB, , Arabisch (Libanon), Arabisch, Libanon, 
+de-DE, de, DE, , Deutsch (Deutschland), Deutsch, Deutschland, 
+th-TH-u-nu-thai-x-lvariant-TH, th, TH, TH, Thai (Thailand,TH), Thai, Thailand, TH
+tr, tr, , , Türkisch, Türkisch, , 
+es-CO, es, CO, , Spanisch (Kolumbien), Spanisch, Kolumbien, 
+en-PH, en, PH, , Englisch (Philippinen), Englisch, Philippinen, 
+et-EE, et, EE, , Estnisch (Estland), Estnisch, Estland, 
+el-CY, el, CY, , Griechisch (Zypern), Griechisch, Zypern, 
+hu, hu, , , Ungarisch, Ungarisch, , 
+fr-FR, fr, FR, , Französisch (Frankreich), Französisch, Frankreich, 
+
+XDR, 960, Sonderziehungsrechte, XDR, -1
+SDG, 938, Sudanesisches Pfund, SDG, 2
+GBP, 826, Pfund Sterling, GBP, 2
+UGX, 800, Uganda-Schilling, UGX, 2
+SYP, 760, Syrisches Pfund, SYP, 2
+GEL, 981, Georgischer Lari, GEL, 2
+YUM, 891, Neuer Dinar, YUM, 2
+TMT, 934, Neuer Turkmenistan-Manat, TMT, 2
+KMF, 174, Komoren Franc, KMF, 0
+LYD, 434, Libyscher Dinar, LYD, 3
+PHP, 608, Philippinischer Peso, PHP, 2
+XAG, 961, Unze Silber, XAG, -1
+XCD, 951, Ostkaribischer Dollar, XCD, 2
+YER, 886, Jemen-Rial, YER, 2
+GYD, 328, Guyana-Dollar, GYD, 2
+PLN, 985, Zloty, PLN, 2
+HTG, 332, Gourde, HTG, 2
+XSU, 994, XSU, XSU, -1
+AYM, 945, AYM, AYM, 2
+XBA, 955, Europäische Rechnungseinheit, XBA, -1
+MMK, 104, Kyat, MMK, 2
+NLG, 528, Holländischer Gulden, NLG, 2
+LBP, 422, Libanesisches Pfund, LBP, 2
+KWD, 414, Kuwait Dinar, KWD, 3
+BDT, 50, Taka, BDT, 2
+IDR, 360, Rupiah, IDR, 2
+HKD, 344, Hongkong-Dollar, HKD, 2
+NOK, 578, Norwegische Krone, NOK, 2
+TPE, 626, Timor-Escudo, TPE, 0
+DOP, 214, Dominikanischer Peso, DOP, 2
+BBD, 52, Barbados-Dollar, BBD, 2
+MNT, 496, Tugrik, MNT, 2
+JPY, 392, Yen, JPY, 0
+SOS, 706, Somalia-Schilling, SOS, 2
+XAF, 950, CFA Franc (Äquatorial), XAF, 0
+GTQ, 320, Quetzal, GTQ, 2
+TRL, 792, Alte Türkische Lira, TRL, 0
+NIO, 558, Gold-Cordoba, NIO, 2
+SVC, 222, El Salvador Colon, SVC, 2
+PEN, 604, Neuer Sol, PEN, 2
+SCR, 690, Seychellen-Rupie, SCR, 2
+COP, 170, Kolumbianischer Peso, COP, 2
+KGS, 417, Som, KGS, 2
+XAU, 959, Unze Gold, XAU, -1
+ANG, 532, Niederl. Antillen Gulden, ANG, 2
+ALL, 8, Lek, ALL, 2
+LRD, 430, Liberianischer Dollar, LRD, 2
+AFN, 971, Afghani, AFN, 2
+PTE, 620, Portugiesischer Escudo, PTE, 0
+SRD, 968, Surinamischer Dollar, SRD, 2
+GHC, 288, Cedi, GHC, 2
+PKR, 586, Pakistanische Rupie, PKR, 2
+LAK, 418, Kip, LAK, 2
+HRK, 191, Kuna, HRK, 2
+XTS, 963, Testwährung, XTS, -1
+MTL, 470, Maltesische Lira, MTL, 2
+HNL, 340, Lempira, HNL, 2
+BEF, 56, Belgischer Franc, BEF, 0
+BGL, 100, Lew (1962-1999), BGL, 2
+XFU, 0, Französischer UIC-Franc, XFU, -1
+AFA, 4, Afghani (1927-2002), AFA, 2
+ILS, 376, Schekel, ILS, 2
+LUF, 442, Luxemburgischer Franc, F, 0
+TMM, 795, Turkmenistan-Manat, TMM, 2
+RSD, 941, Serbischer Dinar, RSD, 2
+BRL, 986, Real, BRL, 2
+ATS, 40, Österreichischer Schilling, ATS, 2
+QAR, 634, Katar Riyal, QAR, 2
+AWG, 533, Aruba Florin, AWG, 2
+USS, 998, US Dollar (Gleicher Tag), USS, 2
+VND, 704, Dong, VND, 2
+GRD, 300, Griechische Drachme, GRD, 0
+SGD, 702, Singapur-Dollar, SGD, 2
+PAB, 590, Balboa, PAB, 2
+WST, 882, Tala, WST, 2
+DEM, 276, Deutsche Mark, DEM, 2
+SLL, 694, Leone, SLL, 2
+BGN, 975, Lew, BGN, 2
+GWP, 624, Guinea Bissau Peso, GWP, 2
+DZD, 12, Algerischer Dinar, DZD, 2
+OMR, 512, Rial Omani, OMR, 3
+FKP, 238, Falkland-Pfund, FKP, 2
+INR, 356, Indische Rupie, INR, 2
+TTD, 780, Trinidad- und Tobago-Dollar, TTD, 2
+CDF, 976, Franc congolais, CDF, 2
+MXV, 979, Mexican Unidad de Inversion (UDI), MXV, 2
+BWP, 72, Pula, BWP, 2
+JMD, 388, Jamaika-Dollar, JMD, 2
+NGN, 566, Naira, NGN, 2
+ERN, 232, Nakfa, ERN, 2
+RON, 946, Rumänischer Leu, RON, 2
+MWK, 454, Malawi Kwacha, MWK, 2
+SKK, 703, Slowakische Krone, SKK, 2
+CZK, 203, Tschechische Krone, CZK, 2
+LVL, 428, Lettischer Lats, LVL, 2
+LSL, 426, Loti, LSL, 2
+GIP, 292, Gibraltar-Pfund, GIP, 2
+UZS, 860, Usbekistan Sum, UZS, 2
+MOP, 446, Pataca, MOP, 2
+TRY, 949, Türkische Lira, TRY, 2
+ZWR, 935, Zimbabwean Dollar (2008), ZWR, 2
+CSD, 891, Alter Serbischer Dinar, CSD, 2
+BIF, 108, Burundi-Franc, BIF, 0
+USD, 840, US-Dollar, USD, 2
+CVE, 132, Kap Verde Escudo, CVE, 2
+CNY, 156, Renminbi Yuan, CNY, 2
+MZN, 943, Metical, MZN, 2
+VEF, 937, Bolívar Fuerte, VEF, 2
+LKR, 144, Sri Lanka Rupie, LKR, 2
+AZN, 944, Aserbaidschan-Manat, AZN, 2
+NZD, 554, Neuseeland-Dollar, NZD, 2
+DJF, 262, Dschibuti-Franc, DJF, 0
+BND, 96, Brunei-Dollar, BND, 2
+BYR, 974, Belarus Rubel (neu), BYR, 0
+PGK, 598, Kina, PGK, 2
+CUC, 931, Kubanischer Peso (konvertibel), CUC, 2
+MUR, 480, Mauritius-Rupie, MUR, 2
+STD, 678, Dobra, STD, 2
+XBD, 958, Europäische Rechnungseinheit (XBD), XBD, -1
+SEK, 752, Schwedische Krone, SEK, 2
+AOA, 973, Kwanza, AOA, 2
+BYB, 112, Belarus Rubel (alt), BYB, 0
+RUB, 643, Russischer Rubel (neu), RUB, 2
+PYG, 600, Guarani, PYG, 0
+XOF, 952, CFA Franc (West), XOF, 0
+GHS, 936, Ghanaische Cedi, GHS, 2
+GNF, 324, Guinea-Franc, GNF, 0
+KES, 404, Kenia-Schilling, KES, 2
+EEK, 233, Estnische Krone, EEK, 2
+MAD, 504, Marokkanischer Dirham, MAD, 2
+SRG, 740, Suriname Gulden, SRG, 2
+SAR, 682, Saudi Riyal, SAR, 2
+MDL, 498, Moldau Leu, MDL, 2
+MKD, 807, Denar, MKD, 2
+ETB, 230, Birr, ETB, 2
+EGP, 818, Ägyptisches Pfund, EGP, 2
+MGF, 450, Madagaskar-Franc, MGF, 0
+MXN, 484, Mexikanischer Peso, MXN, 2
+ESP, 724, Spanische Peseta, ESP, 0
+HUF, 348, Forint, HUF, 2
+CLF, 990, Unidades de Fomento, CLF, 0
+ARS, 32, Argentinischer Peso, ARS, 2
+BAM, 977, Konvertierbare Mark, BAM, 2
+FJD, 242, Fidschi-Dollar, FJD, 2
+AZM, 31, Aserbaidschan-Manat (1993-2006), AZM, 2
+ZWL, 932, Simbabwe-Dollar (2009), ZWL, 2
+TJS, 972, Tadschikistan Somoni, TJS, 2
+TWD, 901, Neuer Taiwan-Dollar, TWD, 2
+XXX, 999, Unbekannte Währung, XXX, -1
+ZAR, 710, Südafrikanischer Rand, ZAR, 2
+KYD, 136, Kaiman-Dollar, KYD, 2
+SDD, 736, Sudanesischer Dinar, SDD, 2
+MZM, 508, Alter Metical, MZM, 2
+TOP, 776, Paʻanga, TOP, 2
+XPT, 962, Unze Platin, XPT, -1
+CAD, 124, Kanadischer Dollar, CAD, 2
+SHP, 654, St. Helena Pfund, SHP, 2
+NPR, 524, Nepalesische Rupie, NPR, 2
+CLP, 152, Chilenischer Peso, CLP, 0
+CUP, 192, Kubanischer Peso, CUP, 2
+UAH, 980, Hryvnia, UAH, 2
+AUD, 36, Australischer Dollar, AUD, 2
+VUV, 548, Vatu, VUV, 0
+KRW, 410, Südkoreanischer Won, KRW, 0
+MRO, 478, Ouguiya, MRO, 2
+XUA, 965, XUA, XUA, -1
+CYP, 196, Zypern-Pfund, CYP, 2
+AMD, 51, Dram, AMD, 2
+SIT, 705, Tolar, SIT, 2
+XFO, 0, Französischer Gold-Franc, XFO, -1
+BOV, 984, Mvdol, BOV, 2
+KPW, 408, Nordkoreanischer Won, KPW, 2
+NAD, 516, Namibia-Dollar, NAD, 2
+JOD, 400, Jordanischer Dinar, JOD, 3
+IEP, 372, Irisches Pfund, IEP, 2
+SBD, 90, Salomonen-Dollar, SBD, 2
+THB, 764, Baht, THB, 2
+BSD, 44, Bahama-Dollar, BSD, 2
+USN, 997, US Dollar (Nächster Tag), USN, 2
+MVR, 462, Rufiyaa, MVR, 2
+UYU, 858, Uruguayischer Peso, UYU, 2
+BOB, 68, Boliviano, BOB, 2
+ROL, 946, Leu, ROL, 2
+XBC, 957, Europäische Rechnungseinheit (XBC), XBC, -1
+RWF, 646, Ruanda-Franc, RWF, 0
+BTN, 64, Ngultrum, BTN, 2
+MYR, 458, Malaysischer Ringgit, MYR, 2
+ISK, 352, Isländische Krone, ISK, 0
+CHF, 756, Schweizer Franken, CHF, 2
+IRR, 364, Rial, IRR, 2
+TZS, 834, Tansania-Schilling, TZS, 2
+XPD, 964, Unze Palladium, XPD, -1
+KHR, 116, Riel, KHR, 2
+VEB, 862, Bolivar, VEB, 2
+DKK, 208, Dänische Krone, DKK, 2
+XBB, 956, Europäische Währungseinheit (XBB), XBB, -1
+ZMK, 894, Kwacha, ZMK, 2
+XPF, 953, CFP Franc, XPF, 0
+ADP, 20, Andorranische Pesete, ADP, 0
+SZL, 748, Lilangeni, SZL, 2
+FRF, 250, Französischer Franc, FRF, 2
+CRC, 188, Costa Rica Colon, CRC, 2
+BZD, 84, Belize-Dollar, BZD, 2
+IQD, 368, Irak Dinar, IQD, 3
+KZT, 398, Tenge, KZT, 2
+BMD, 60, Bermuda-Dollar, BMD, 2
+AED, 784, UAE Dirham, AED, 2
+ZWN, 942, ZWN, ZWN, 2
+RUR, 810, Russischer Rubel (alt), RUR, 2
+FIM, 246, Finnische Mark, FIM, 2
+TND, 788, Tunesischer Dinar, TND, 3
+LTL, 440, Litauischer Litas, LTL, 2
+BHD, 48, Bahrain-Dinar, BHD, 3
+ITL, 380, Italienische Lira, ITL, 0
+MGA, 969, Madagaskar Ariary, MGA, 2
+GMD, 270, Dalasi, GMD, 2
+EUR, 978, Euro, €, 2
+ZWD, 716, Simbabwe-Dollar, ZWD, 2

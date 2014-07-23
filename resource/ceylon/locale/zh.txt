@@ -1,0 +1,380 @@
+zh, zh, , , Chinese, Chinese, , , 
+yy-M-d, yyyy-M-d, yyyy'年'M'月'd'日'
+ah:mm, H:mm:ss, ahh'时'mm'分'ss'秒'
+#,##0, #,##0.###, #,##0%, ¤ #,##0.00
+
+ms-MY, ms, MY, , 马来文 (马来西亚), 马来文, 马来西亚, 
+ar-QA, ar, QA, , 阿拉伯文 (卡塔尔), 阿拉伯文, 卡塔尔, 
+is-IS, is, IS, , 冰岛文 (冰岛), 冰岛文, 冰岛, 
+fi-FI, fi, FI, , 芬兰文 (芬兰), 芬兰文, 芬兰, 
+pl, pl, , , 波兰文, 波兰文, , 
+en-MT, en, MT, , 英文 (马耳他), 英文, 马耳他, 
+it-CH, it, CH, , 意大利文 (瑞士), 意大利文, 瑞士, 
+nl-BE, nl, BE, , 荷兰文 (比利时), 荷兰文, 比利时, 
+ar-SA, ar, SA, , 阿拉伯文 (沙特阿拉伯), 阿拉伯文, 沙特阿拉伯, 
+ar-IQ, ar, IQ, , 阿拉伯文 (伊拉克), 阿拉伯文, 伊拉克, 
+es-PR, es, PR, , 西班牙文 (波多黎哥), 西班牙文, 波多黎哥, 
+es-CL, es, CL, , 西班牙文 (智利), 西班牙文, 智利, 
+fi, fi, , , 芬兰文, 芬兰文, , 
+de-AT, de, AT, , 德文 (奥地利), 德文, 奥地利, 
+da, da, , , 丹麦文, 丹麦文, , 
+en-GB, en, GB, , 英文 (英国), 英文, 英国, 
+es-PA, es, PA, , 西班牙文 (巴拿马), 西班牙文, 巴拿马, 
+sr, sr, , , 塞尔维亚文, 塞尔维亚文, , 
+ar-YE, ar, YE, , 阿拉伯文 (也门), 阿拉伯文, 也门, 
+mk-MK, mk, MK, , 马其顿文 (马其顿王国), 马其顿文, 马其顿王国, 
+mk, mk, , , 马其顿文, 马其顿文, , 
+en-CA, en, CA, , 英文 (加拿大), 英文, 加拿大, 
+vi-VN, vi, VN, , 越南文 (越南), 越南文, 越南, 
+nl-NL, nl, NL, , 荷兰文 (荷兰), 荷兰文, 荷兰, 
+es-US, es, US, , 西班牙文 (美国), 西班牙文, 美国, 
+zh-CN, zh, CN, , 中文 (中国), 中文, 中国, 
+es-HN, es, HN, , 西班牙文 (洪都拉斯), 西班牙文, 洪都拉斯, 
+en-US, en, US, , 英文 (美国), 英文, 美国, 
+fr, fr, , , 法文, 法文, , 
+th, th, , , 泰文, 泰文, , 
+ar, ar, , , 阿拉伯文, 阿拉伯文, , 
+ar-MA, ar, MA, , 阿拉伯文 (摩洛哥), 阿拉伯文, 摩洛哥, 
+lv, lv, , , 拉托维亚文(列托), 拉托维亚文(列托), , 
+de, de, , , 德文, 德文, , 
+id-ID, in, ID, , 印度尼西亚文 (印度尼西亚), 印度尼西亚文, 印度尼西亚, 
+hr, hr, , , 克罗地亚文, 克罗地亚文, , 
+en-ZA, en, ZA, , 英文 (南非), 英文, 南非, 
+ko-KR, ko, KR, , 朝鲜文 (韩国), 朝鲜文, 韩国, 
+ar-TN, ar, TN, , 阿拉伯文 (突尼斯), 阿拉伯文, 突尼斯, 
+id, in, , , 印度尼西亚文, 印度尼西亚文, , 
+ja, ja, , , 日文, 日文, , 
+sr-RS, sr, RS, , 塞尔维亚文 (塞尔维亚), 塞尔维亚文, 塞尔维亚, 
+be-BY, be, BY, , 白俄罗斯文 (白俄罗斯), 白俄罗斯文, 白俄罗斯, 
+zh-TW, zh, TW, , 中文 (台湾地区), 中文, 台湾地区, 
+ar-SD, ar, SD, , 阿拉伯文 (苏丹), 阿拉伯文, 苏丹, 
+pt, pt, , , 葡萄牙文, 葡萄牙文, , 
+is, is, , , 冰岛文, 冰岛文, , 
+ja-JP-u-ca-japanese-x-lvariant-JP, ja, JP, JP, 日文 (日本,JP), 日文, 日本, JP
+es-BO, es, BO, , 西班牙文 (玻利维亚), 西班牙文, 玻利维亚, 
+ar-DZ, ar, DZ, , 阿拉伯文 (阿尔及利亚), 阿拉伯文, 阿尔及利亚, 
+ms, ms, , , 马来文, 马来文, , 
+es-AR, es, AR, , 西班牙文 (阿根廷), 西班牙文, 阿根廷, 
+ar-AE, ar, AE, , 阿拉伯文 (阿拉伯联合酋长国), 阿拉伯文, 阿拉伯联合酋长国, 
+fr-CA, fr, CA, , 法文 (加拿大), 法文, 加拿大, 
+sl, sl, , , 斯洛文尼亚文, 斯洛文尼亚文, , 
+es, es, , , 西班牙文, 西班牙文, , 
+lt-LT, lt, LT, , 立陶宛文 (立陶宛), 立陶宛文, 立陶宛, 
+sr-Latn-ME, sr, ME, , 塞尔维亚文 (拉丁文,黑山), 塞尔维亚文, 黑山, 
+ar-SY, ar, SY, , 阿拉伯文 (叙利亚), 阿拉伯文, 叙利亚, 
+ru-RU, ru, RU, , 俄文 (俄罗斯), 俄文, 俄罗斯, 
+fr-BE, fr, BE, , 法文 (比利时), 法文, 比利时, 
+es-ES, es, ES, , 西班牙文 (西班牙), 西班牙文, 西班牙, 
+bg, bg, , , 保加利亚文, 保加利亚文, , 
+he-IL, iw, IL, , 希伯来文 (以色列), 希伯来文, 以色列, 
+sv, sv, , , 瑞典文, 瑞典文, , 
+en, en, , , 英文, 英文, , 
+he, iw, , , 希伯来文, 希伯来文, , 
+da-DK, da, DK, , 丹麦文 (丹麦), 丹麦文, 丹麦, 
+es-CR, es, CR, , 西班牙文 (哥斯达黎加), 西班牙文, 哥斯达黎加, 
+zh-HK, zh, HK, , 中文 (香港), 中文, 香港, 
+zh, zh, , , 中文, 中文, , 
+ca-ES, ca, ES, , 加泰罗尼亚文 (西班牙), 加泰罗尼亚文, 西班牙, 
+th-TH, th, TH, , 泰文 (泰国), 泰文, 泰国, 
+uk-UA, uk, UA, , 乌克兰文 (乌克兰), 乌克兰文, 乌克兰, 
+es-DO, es, DO, , 西班牙文 (多米尼加共和国), 西班牙文, 多米尼加共和国, 
+es-VE, es, VE, , 西班牙文 (委内瑞拉), 西班牙文, 委内瑞拉, 
+pl-PL, pl, PL, , 波兰文 (波兰), 波兰文, 波兰, 
+ar-LY, ar, LY, , 阿拉伯文 (利比亚), 阿拉伯文, 利比亚, 
+ar-JO, ar, JO, , 阿拉伯文 (约旦), 阿拉伯文, 约旦, 
+it, it, , , 意大利文, 意大利文, , 
+uk, uk, , , 乌克兰文, 乌克兰文, , 
+hu-HU, hu, HU, , 匈牙利文 (匈牙利), 匈牙利文, 匈牙利, 
+ga, ga, , , 爱尔兰文, 爱尔兰文, , 
+es-GT, es, GT, , 西班牙文 (危地马拉), 西班牙文, 危地马拉, 
+es-PY, es, PY, , 西班牙文 (巴拉圭), 西班牙文, 巴拉圭, 
+bg-BG, bg, BG, , 保加利亚文 (保加利亚), 保加利亚文, 保加利亚, 
+hr-HR, hr, HR, , 克罗地亚文 (克罗地亚), 克罗地亚文, 克罗地亚, 
+sr-Latn-BA, sr, BA, , 塞尔维亚文 (拉丁文,波斯尼亚和黑山共和国), 塞尔维亚文, 波斯尼亚和黑山共和国, 
+ro-RO, ro, RO, , 罗马尼亚文 (罗马尼亚), 罗马尼亚文, 罗马尼亚, 
+fr-LU, fr, LU, , 法文 (卢森堡), 法文, 卢森堡, 
+no, no, , , 挪威文, 挪威文, , 
+lt, lt, , , 立陶宛文, 立陶宛文, , 
+en-SG, en, SG, , 英文 (新加坡), 英文, 新加坡, 
+es-EC, es, EC, , 西班牙文 (厄瓜多尔), 西班牙文, 厄瓜多尔, 
+sr-BA, sr, BA, , 塞尔维亚文 (波斯尼亚和黑山共和国), 塞尔维亚文, 波斯尼亚和黑山共和国, 
+es-NI, es, NI, , 西班牙文 (尼加拉瓜), 西班牙文, 尼加拉瓜, 
+sk, sk, , , 斯洛伐克文, 斯洛伐克文, , 
+ru, ru, , , 俄文, 俄文, , 
+mt, mt, , , 马耳他文, 马耳他文, , 
+es-SV, es, SV, , 西班牙文 (萨尔瓦多), 西班牙文, 萨尔瓦多, 
+nl, nl, , , 荷兰文, 荷兰文, , 
+hi-IN, hi, IN, , 印地文 (印度), 印地文, 印度, 
+et, et, , , 爱沙尼亚文, 爱沙尼亚文, , 
+el-GR, el, GR, , 希腊文 (希腊), 希腊文, 希腊, 
+sl-SI, sl, SI, , 斯洛文尼亚文 (斯洛文尼亚), 斯洛文尼亚文, 斯洛文尼亚, 
+it-IT, it, IT, , 意大利文 (意大利), 意大利文, 意大利, 
+ja-JP, ja, JP, , 日文 (日本), 日文, 日本, 
+de-LU, de, LU, , 德文 (卢森堡), 德文, 卢森堡, 
+fr-CH, fr, CH, , 法文 (瑞士), 法文, 瑞士, 
+mt-MT, mt, MT, , 马耳他文 (马耳他), 马耳他文, 马耳他, 
+ar-BH, ar, BH, , 阿拉伯文 (巴林), 阿拉伯文, 巴林, 
+sq, sq, , , 阿尔巴尼亚文, 阿尔巴尼亚文, , 
+vi, vi, , , 越南文, 越南文, , 
+sr-ME, sr, ME, , 塞尔维亚文 (黑山), 塞尔维亚文, 黑山, 
+pt-BR, pt, BR, , 葡萄牙文 (巴西), 葡萄牙文, 巴西, 
+no-NO, no, NO, , 挪威文 (挪威), 挪威文, 挪威, 
+el, el, , , 希腊文, 希腊文, , 
+de-CH, de, CH, , 德文 (瑞士), 德文, 瑞士, 
+zh-SG, zh, SG, , 中文 (新加坡), 中文, 新加坡, 
+ar-KW, ar, KW, , 阿拉伯文 (科威特), 阿拉伯文, 科威特, 
+ar-EG, ar, EG, , 阿拉伯文 (埃及), 阿拉伯文, 埃及, 
+ga-IE, ga, IE, , 爱尔兰文 (爱尔兰), 爱尔兰文, 爱尔兰, 
+es-PE, es, PE, , 西班牙文 (秘鲁), 西班牙文, 秘鲁, 
+cs-CZ, cs, CZ, , 捷克文 (捷克共和国), 捷克文, 捷克共和国, 
+tr-TR, tr, TR, , 土耳其文 (土耳其), 土耳其文, 土耳其, 
+cs, cs, , , 捷克文, 捷克文, , 
+es-UY, es, UY, , 西班牙文 (乌拉圭), 西班牙文, 乌拉圭, 
+en-IE, en, IE, , 英文 (爱尔兰), 英文, 爱尔兰, 
+en-IN, en, IN, , 英文 (印度), 英文, 印度, 
+ar-OM, ar, OM, , 阿拉伯文 (阿曼), 阿拉伯文, 阿曼, 
+sr-CS, sr, CS, , 塞尔维亚文 (塞尔维亚及黑山), 塞尔维亚文, 塞尔维亚及黑山, 
+ca, ca, , , 加泰罗尼亚文, 加泰罗尼亚文, , 
+be, be, , , 白俄罗斯文, 白俄罗斯文, , 
+sr-Latn, sr, , , 塞尔维亚文 (拉丁文), 塞尔维亚文, , 
+ko, ko, , , 朝鲜文, 朝鲜文, , 
+sq-AL, sq, AL, , 阿尔巴尼亚文 (阿尔巴尼亚), 阿尔巴尼亚文, 阿尔巴尼亚, 
+pt-PT, pt, PT, , 葡萄牙文 (葡萄牙), 葡萄牙文, 葡萄牙, 
+lv-LV, lv, LV, , 拉托维亚文(列托) (拉脱维亚), 拉托维亚文(列托), 拉脱维亚, 
+sr-Latn-RS, sr, RS, , 塞尔维亚文 (拉丁文,塞尔维亚), 塞尔维亚文, 塞尔维亚, 
+sk-SK, sk, SK, , 斯洛伐克文 (斯洛伐克), 斯洛伐克文, 斯洛伐克, 
+es-MX, es, MX, , 西班牙文 (墨西哥), 西班牙文, 墨西哥, 
+en-AU, en, AU, , 英文 (澳大利亚), 英文, 澳大利亚, 
+nn-NO, no, NO, NY, 挪威文 (挪威,Nynorsk), 挪威文, 挪威, Nynorsk
+en-NZ, en, NZ, , 英文 (新西兰), 英文, 新西兰, 
+sv-SE, sv, SE, , 瑞典文 (瑞典), 瑞典文, 瑞典, 
+ro, ro, , , 罗马尼亚文, 罗马尼亚文, , 
+ar-LB, ar, LB, , 阿拉伯文 (黎巴嫩), 阿拉伯文, 黎巴嫩, 
+de-DE, de, DE, , 德文 (德国), 德文, 德国, 
+th-TH-u-nu-thai-x-lvariant-TH, th, TH, TH, 泰文 (泰国,TH), 泰文, 泰国, TH
+tr, tr, , , 土耳其文, 土耳其文, , 
+es-CO, es, CO, , 西班牙文 (哥伦比亚), 西班牙文, 哥伦比亚, 
+en-PH, en, PH, , 英文 (菲律宾), 英文, 菲律宾, 
+et-EE, et, EE, , 爱沙尼亚文 (爱沙尼亚), 爱沙尼亚文, 爱沙尼亚, 
+el-CY, el, CY, , 希腊文 (塞浦路斯), 希腊文, 塞浦路斯, 
+hu, hu, , , 匈牙利文, 匈牙利文, , 
+fr-FR, fr, FR, , 法文 (法国), 法文, 法国, 
+
+XDR, 960, Special Drawing Rights, XDR, -1
+SDG, 938, Sudanese Pound, SDG, 2
+GBP, 826, British Pound Sterling, GBP, 2
+UGX, 800, Ugandan Shilling, UGX, 2
+SYP, 760, Syrian Pound, SYP, 2
+GEL, 981, Georgian Lari, GEL, 2
+YUM, 891, Yugoslavian New Dinar (1994-2002), YUM, 2
+TMT, 934, Turkmenistani Manat, TMT, 2
+KMF, 174, Comorian Franc, KMF, 0
+LYD, 434, Libyan Dinar, LYD, 3
+PHP, 608, Philippine Peso, PHP, 2
+XAG, 961, Silver, XAG, -1
+XCD, 951, East Caribbean Dollar, XCD, 2
+YER, 886, Yemeni Rial, YER, 2
+GYD, 328, Guyanaese Dollar, GYD, 2
+PLN, 985, Polish Zloty, PLN, 2
+HTG, 332, Haitian Gourde, HTG, 2
+XSU, 994, XSU, XSU, -1
+AYM, 945, AYM, AYM, 2
+XBA, 955, European Composite Unit, XBA, -1
+MMK, 104, Myanma Kyat, MMK, 2
+NLG, 528, Dutch Guilder, NLG, 2
+LBP, 422, Lebanese Pound, LBP, 2
+KWD, 414, Kuwaiti Dinar, KWD, 3
+BDT, 50, Bangladeshi Taka, BDT, 2
+IDR, 360, Indonesian Rupiah, IDR, 2
+HKD, 344, Hong Kong Dollar, HKD, 2
+NOK, 578, Norwegian Krone, NOK, 2
+TPE, 626, Timorese Escudo, TPE, 0
+DOP, 214, Dominican Peso, DOP, 2
+BBD, 52, Barbadian Dollar, BBD, 2
+MNT, 496, Mongolian Tugrik, MNT, 2
+JPY, 392, Japanese Yen, JPY, 0
+SOS, 706, Somali Shilling, SOS, 2
+XAF, 950, CFA Franc BEAC, XAF, 0
+GTQ, 320, Guatemalan Quetzal, GTQ, 2
+TRL, 792, Turkish Lira (1922-2005), TRL, 0
+NIO, 558, Nicaraguan Córdoba, NIO, 2
+SVC, 222, Salvadoran Colón, SVC, 2
+PEN, 604, Peruvian Nuevo Sol, PEN, 2
+SCR, 690, Seychellois Rupee, SCR, 2
+COP, 170, Colombian Peso, COP, 2
+KGS, 417, Kyrgystani Som, KGS, 2
+XAU, 959, Gold, XAU, -1
+ANG, 532, Netherlands Antillean Guilder, ANG, 2
+ALL, 8, Albanian Lek, ALL, 2
+LRD, 430, Liberian Dollar, LRD, 2
+AFN, 971, Afghan Afghani, AFN, 2
+PTE, 620, Portuguese Escudo, PTE, 0
+SRD, 968, Surinamese Dollar, SRD, 2
+GHC, 288, Ghanaian Cedi (1979-2007), GHC, 2
+PKR, 586, Pakistani Rupee, PKR, 2
+LAK, 418, Laotian Kip, LAK, 2
+HRK, 191, Croatian Kuna, HRK, 2
+XTS, 963, Testing Currency Code, XTS, -1
+MTL, 470, Maltese Lira, MTL, 2
+HNL, 340, Honduran Lempira, HNL, 2
+BEF, 56, Belgian Franc, BEF, 0
+BGL, 100, Bulgarian Hard Lev, BGL, 2
+XFU, 0, French UIC-Franc, XFU, -1
+AFA, 4, Afghan Afghani (1927-2002), AFA, 2
+ILS, 376, Israeli New Sheqel, ILS, 2
+LUF, 442, Luxembourgian Franc, LUF, 0
+TMM, 795, Turkmenistani Manat (1993-2009), TMM, 2
+RSD, 941, Serbian Dinar, RSD, 2
+BRL, 986, Brazilian Real, BRL, 2
+ATS, 40, Austrian Schilling, ATS, 2
+QAR, 634, Qatari Rial, QAR, 2
+AWG, 533, Aruban Florin, AWG, 2
+USS, 998, US Dollar (Same day), USS, 2
+VND, 704, Vietnamese Dong, VND, 2
+GRD, 300, Greek Drachma, GRD, 0
+SGD, 702, Singapore Dollar, SGD, 2
+PAB, 590, Panamanian Balboa, PAB, 2
+WST, 882, Samoan Tala, WST, 2
+DEM, 276, German Mark, DEM, 2
+SLL, 694, Sierra Leonean Leone, SLL, 2
+BGN, 975, Bulgarian Lev, BGN, 2
+GWP, 624, Guinea-Bissau Peso, GWP, 2
+DZD, 12, Algerian Dinar, DZD, 2
+OMR, 512, Omani Rial, OMR, 3
+FKP, 238, Falkland Islands Pound, FKP, 2
+INR, 356, Indian Rupee, INR, 2
+TTD, 780, Trinidad and Tobago Dollar, TTD, 2
+CDF, 976, Congolese Franc, CDF, 2
+MXV, 979, Mexican Investment Unit, MXV, 2
+BWP, 72, Botswanan Pula, BWP, 2
+JMD, 388, Jamaican Dollar, JMD, 2
+NGN, 566, Nigerian Naira, NGN, 2
+ERN, 232, Eritrean Nakfa, ERN, 2
+RON, 946, Romanian Leu, RON, 2
+MWK, 454, Malawian Kwacha, MWK, 2
+SKK, 703, Slovak Koruna, SKK, 2
+CZK, 203, Czech Republic Koruna, CZK, 2
+LVL, 428, Latvian Lats, LVL, 2
+LSL, 426, Lesotho Loti, LSL, 2
+GIP, 292, Gibraltar Pound, GIP, 2
+UZS, 860, Uzbekistan Som, UZS, 2
+MOP, 446, Macanese Pataca, MOP, 2
+TRY, 949, Turkish Lira, TRY, 2
+ZWR, 935, Zimbabwean Dollar (2008), ZWR, 2
+CSD, 891, Serbian Dinar (2002-2006), CSD, 2
+BIF, 108, Burundian Franc, BIF, 0
+USD, 840, US Dollar, USD, 2
+CVE, 132, Cape Verdean Escudo, CVE, 2
+CNY, 156, Chinese Yuan, CNY, 2
+MZN, 943, Mozambican Metical, MZN, 2
+VEF, 937, Venezuelan Bolívar, VEF, 2
+LKR, 144, Sri Lankan Rupee, LKR, 2
+AZN, 944, Azerbaijani Manat, AZN, 2
+NZD, 554, New Zealand Dollar, NZD, 2
+DJF, 262, Djiboutian Franc, DJF, 0
+BND, 96, Brunei Dollar, BND, 2
+BYR, 974, Belarusian Ruble, BYR, 0
+PGK, 598, Papua New Guinean Kina, PGK, 2
+CUC, 931, Cuban Convertible Peso, CUC, 2
+MUR, 480, Mauritian Rupee, MUR, 2
+STD, 678, São Tomé and Príncipe Dobra, STD, 2
+XBD, 958, European Unit of Account (XBD), XBD, -1
+SEK, 752, Swedish Krona, SEK, 2
+AOA, 973, Angolan Kwanza, AOA, 2
+BYB, 112, Belarusian New Ruble (1994-1999), BYB, 0
+RUB, 643, Russian Ruble, RUB, 2
+PYG, 600, Paraguayan Guarani, PYG, 0
+XOF, 952, CFA Franc BCEAO, XOF, 0
+GHS, 936, Ghanaian Cedi, GHS, 2
+GNF, 324, Guinean Franc, GNF, 0
+KES, 404, Kenyan Shilling, KES, 2
+EEK, 233, Estonian Kroon, EEK, 2
+MAD, 504, Moroccan Dirham, MAD, 2
+SRG, 740, Surinamese Guilder, SRG, 2
+SAR, 682, Saudi Riyal, SAR, 2
+MDL, 498, Moldovan Leu, MDL, 2
+MKD, 807, Macedonian Denar, MKD, 2
+ETB, 230, Ethiopian Birr, ETB, 2
+EGP, 818, Egyptian Pound, EGP, 2
+MGF, 450, Malagasy Franc, MGF, 0
+MXN, 484, Mexican Peso, MXN, 2
+ESP, 724, Spanish Peseta, ESP, 0
+HUF, 348, Hungarian Forint, HUF, 2
+CLF, 990, Chilean Unit of Account (UF), CLF, 0
+ARS, 32, Argentine Peso, ARS, 2
+BAM, 977, Bosnia-Herzegovina Convertible Mark, BAM, 2
+FJD, 242, Fijian Dollar, FJD, 2
+AZM, 31, Azerbaijani Manat (1993-2006), AZM, 2
+ZWL, 932, Zimbabwean Dollar (2009), ZWL, 2
+TJS, 972, Tajikistani Somoni, TJS, 2
+TWD, 901, New Taiwan Dollar, TWD, 2
+XXX, 999, Unknown Currency, XXX, -1
+ZAR, 710, South African Rand, ZAR, 2
+KYD, 136, Cayman Islands Dollar, KYD, 2
+SDD, 736, Sudanese Dinar (1992-2007), SDD, 2
+MZM, 508, Mozambican Metical (1980-2006), MZM, 2
+TOP, 776, Tongan Paʻanga, TOP, 2
+XPT, 962, Platinum, XPT, -1
+CAD, 124, Canadian Dollar, CAD, 2
+SHP, 654, Saint Helena Pound, SHP, 2
+NPR, 524, Nepalese Rupee, NPR, 2
+CLP, 152, Chilean Peso, CLP, 0
+CUP, 192, Cuban Peso, CUP, 2
+UAH, 980, Ukrainian Hryvnia, UAH, 2
+AUD, 36, Australian Dollar, AUD, 2
+VUV, 548, Vanuatu Vatu, VUV, 0
+KRW, 410, South Korean Won, KRW, 0
+MRO, 478, Mauritanian Ouguiya, MRO, 2
+XUA, 965, XUA, XUA, -1
+CYP, 196, Cypriot Pound, CYP, 2
+AMD, 51, Armenian Dram, AMD, 2
+SIT, 705, Slovenian Tolar, SIT, 2
+XFO, 0, French Gold Franc, XFO, -1
+BOV, 984, Bolivian Mvdol, BOV, 2
+KPW, 408, North Korean Won, KPW, 2
+NAD, 516, Namibian Dollar, NAD, 2
+JOD, 400, Jordanian Dinar, JOD, 3
+IEP, 372, Irish Pound, IEP, 2
+SBD, 90, Solomon Islands Dollar, SBD, 2
+THB, 764, Thai Baht, THB, 2
+BSD, 44, Bahamian Dollar, BSD, 2
+USN, 997, US Dollar (Next day), USN, 2
+MVR, 462, Maldivian Rufiyaa, MVR, 2
+UYU, 858, Uruguayan Peso, UYU, 2
+BOB, 68, Bolivian Boliviano, BOB, 2
+ROL, 946, Romanian Leu (1952-2006), ROL, 2
+XBC, 957, European Unit of Account (XBC), XBC, -1
+RWF, 646, Rwandan Franc, RWF, 0
+BTN, 64, Bhutanese Ngultrum, BTN, 2
+MYR, 458, Malaysian Ringgit, MYR, 2
+ISK, 352, Icelandic Króna, ISK, 0
+CHF, 756, Swiss Franc, CHF, 2
+IRR, 364, Iranian Rial, IRR, 2
+TZS, 834, Tanzanian Shilling, TZS, 2
+XPD, 964, Palladium, XPD, -1
+KHR, 116, Cambodian Riel, KHR, 2
+VEB, 862, Venezuelan Bolívar (1871-2008), VEB, 2
+DKK, 208, Danish Krone, DKK, 2
+XBB, 956, European Monetary Unit, XBB, -1
+ZMK, 894, Zambian Kwacha, ZMK, 2
+XPF, 953, CFP Franc, XPF, 0
+ADP, 20, Andorran Peseta, ADP, 0
+SZL, 748, Swazi Lilangeni, SZL, 2
+FRF, 250, French Franc, FRF, 2
+CRC, 188, Costa Rican Colón, CRC, 2
+BZD, 84, Belize Dollar, BZD, 2
+IQD, 368, Iraqi Dinar, IQD, 3
+KZT, 398, Kazakhstani Tenge, KZT, 2
+BMD, 60, Bermudan Dollar, BMD, 2
+AED, 784, United Arab Emirates Dirham, AED, 2
+ZWN, 942, ZWN, ZWN, 2
+RUR, 810, Russian Ruble (1991-1998), RUR, 2
+FIM, 246, Finnish Markka, FIM, 2
+TND, 788, Tunisian Dinar, TND, 3
+LTL, 440, Lithuanian Litas, LTL, 2
+BHD, 48, Bahraini Dinar, BHD, 3
+ITL, 380, Italian Lira, ITL, 0
+MGA, 969, Malagasy Ariary, MGA, 2
+GMD, 270, Gambian Dalasi, GMD, 2
+EUR, 978, Euro, EUR, 2
+ZWD, 716, Zimbabwean Dollar (1980-2008), ZWD, 2
