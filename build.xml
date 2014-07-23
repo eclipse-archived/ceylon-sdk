@@ -60,6 +60,7 @@
         <module name="ceylon.test"/>
         <module name="ceylon.time"/>
     	<module name="ceylon.unicode"/>
+    	<module name="ceylon.locale"/>
         <module name="com.redhat.ceylon.test"/>
     	<module name="com.redhat.ceylon.testjvm"/>
     </moduleset>
@@ -221,6 +222,7 @@
                 <include name="ceylon/time/**"/>
                 <include name="ceylon/dbc/**"/>
                 <include name="ceylon/unicode/**"/>
+            	<include name="ceylon/locale/**"/>
                 <include name="ceylon/interop/java/**"/>
                 <include name="ceylon/html/**"/>
             </fileset>
