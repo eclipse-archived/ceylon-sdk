@@ -4,3 +4,8 @@ lookup=./test-deps
 
 [defaults]
 encoding=UTF-16
+
+[compiler]
+source=./source
+source=./test-source
+resource=./resource
