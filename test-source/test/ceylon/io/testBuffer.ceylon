@@ -1,6 +1,8 @@
 import ceylon.test { assertEquals, test }
 
-import ceylon.io.buffer { newByteBuffer, ByteBuffer, Buffer, newCharacterBufferWithData, CharacterBuffer }
+import ceylon.io.buffer { 
+	newByteBuffer, ByteBuffer, Buffer, 
+	newCharacterBufferWithData, CharacterBuffer, newCharacterBuffer }
 
 void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
     // check initial state
@@ -128,8 +130,63 @@ test void testByteBufferResize(){
 }
 
 
-test void testCharacterBuffer(){
+test void testStringBackedCharacterBuffer(){
     CharacterBuffer buffer = newCharacterBufferWithData("abcd");
     Character[] values = ['a', 'b', 'c', 'd'];
     testBuffer(buffer, values);
+}
+
+test void testRegularCharacterBuffer(){
+	CharacterBuffer buffer = newCharacterBuffer(4);
+	Character[] values = ['a', 'b', 'c', 'd'];
+	testBuffer(buffer, values);
+}
+
+test void testCharacterBufferResize(){
+	CharacterBuffer buffer = newCharacterBuffer(4);
+	Character[] values = ['1', '2', '3', '4'];
+	for(Character val in values){
+		buffer.put(val);
+	}
+	
+	// flip it and eat a byte to get to position 1 
+	buffer.flip();
+	buffer.get();
+	assertEquals(1, buffer.position);
+	
+	// check initial state
+	assertEquals(4, buffer.capacity);
+	assertEquals(4, buffer.limit);
+	assertEquals(3, buffer.available);
+	assertEquals(1, buffer.position);
+	assertEquals(true, buffer.hasAvailable);
+	
+	// expand
+	buffer.resize(6);
+	// check expanded state
+	assertEquals(6, buffer.capacity);
+	assertEquals(4, buffer.limit);
+	assertEquals(3, buffer.available);
+	assertEquals(1, buffer.position);
+	assertEquals(true, buffer.hasAvailable);
+	
+	assertEquals('2', buffer.get());
+	assertEquals('3', buffer.get());
+	assertEquals('4', buffer.get());
+	
+	// flip it and eat a byte to get to position 1 
+	buffer.flip();
+	buffer.get();
+	assertEquals(1, buffer.position);
+	
+	// shrink
+	buffer.resize(2);
+	// check reduced state
+	assertEquals(2, buffer.capacity);
+	assertEquals(2, buffer.limit);
+	assertEquals(1, buffer.available);
+	assertEquals(1, buffer.position);
+	assertEquals(true, buffer.hasAvailable);
+	
+	assertEquals('2', buffer.get());
 }
