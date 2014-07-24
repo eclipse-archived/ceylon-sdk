@@ -2,6 +2,9 @@ import ceylon.time {
     Date,
     Time
 }
+import ceylon.time.timezone {
+    TimeZone
+}
 
 shared sealed class Formats(
     shortDateFormat, 
@@ -65,16 +68,38 @@ shared sealed class Formats(
         return String(tokens.indexed.flatMap(interpolateToken));
     }
     
-    String formatDateToken(String token, Date date) 
-            => token
-                .replaceFirst("MMMM", monthNames[date.month.integer-1] else date.month.string)
-                .replaceFirst("MMM", monthAbbreviations[date.month.integer-1] else date.month.string.initial(3))
-                .replaceFirst("MM", date.month.integer.string.padLeading(2,'0'))
-                .replaceFirst("M", date.month.integer.string)
-                .replaceFirst("dd", date.day.string.padLeading(2,'0'))
-                .replaceFirst("d", date.day.string)
-                .replaceFirst("yyyy", date.year.string.padLeading(4,'0')) 
-                .replaceFirst("yy", date.year.string.padLeading(2,'0').terminal(2));
+    String formatDateToken(String token, Date date) {
+        value weekdayName = weekdayNames[date.dayOfWeek.integer-1] else date.dayOfWeek.string;
+        value weekdayAbbr = weekdayAbbreviations[date.dayOfWeek.integer-1] else date.dayOfWeek.string.initial(3);
+        value monthName = monthNames[date.month.integer-1] else date.month.string;
+        value monthAbbr = monthAbbreviations[date.month.integer-1] else date.month.string.initial(3);
+        value month = date.month.integer.string;
+        value twoDigitMonth = month.padLeading(2,'0');
+        value day = date.day.string;
+        value twoDigitDay = day.padLeading(2,'0');
+        value fourDigitYear = date.year.string.padLeading(4,'0');
+        value twoDigitYear = date.year.string.padLeading(2,'0').terminal(2);
+        value weekOfYear = date.weekOfYear.string;
+        return token
+                .replaceFirst("EEEE", weekdayName)
+                .replaceFirst("EEE", weekdayAbbr)
+                .replaceFirst("EE", weekdayAbbr)
+                .replaceFirst("E", weekdayAbbr)
+                .replaceFirst("MMMM", monthName)
+                .replaceFirst("MMM", monthAbbr)
+                .replaceFirst("MM", twoDigitMonth)
+                .replaceFirst("M", month)
+                .replaceFirst("dd", twoDigitDay)
+                .replaceFirst("d", day)
+                .replaceFirst("yyyy", fourDigitYear)
+                .replaceFirst("yyy", fourDigitYear)
+                .replaceFirst("yy", twoDigitYear)
+                .replaceFirst("y", fourDigitYear) //yes, really
+                .replaceFirst("W", "") //TODO: week of month
+                .replaceFirst("F", "") //TODO: day of week in month
+                .replaceFirst("w", weekOfYear)
+                .trimmed;
+    }
     
     function twelveHour(Integer hour) {
         if (hour==0) {
@@ -88,17 +113,36 @@ shared sealed class Formats(
         }
     }
     
-    String formatTimeToken(String token, Time time) 
-            => token
-            .replaceFirst("hh", twelveHour(time.hours)[0].string.padLeading(2, '0'))
-            .replaceFirst("h", twelveHour(time.hours)[0].string)
-            .replaceFirst("HH", time.hours.string.padLeading(2, '0'))
-            .replaceFirst("H", time.hours.string)
-            .replaceFirst("a", twelveHour(time.hours)[1])
-            .replaceFirst("mm", time.minutes.string.padLeading(2, '0'))
-            .replaceFirst("ss", time.seconds.string.padLeading(2, '0'))
-            .replaceFirst("z", "")
-            .trimmed; //TimeZone not yet supported
+    String formatTimeToken(String token, Time time, TimeZone? zone=null) {
+        value hourAndAmpm = twelveHour(time.hours);
+        value twelvehour = hourAndAmpm[0].string;
+        value weirdTwelvehour = (time.hours<12 then time.hours else time.hours-12).string;
+        value twoDigitTwelvehour = hourAndAmpm[0].string.padLeading(2, '0');
+        value twoDigitWeirdTwelvehour = weirdTwelvehour.padLeading(2, '0');
+        value ampm = hourAndAmpm[1];
+        value hour = time.hours.string;
+        value twoDigitHour = hour.padLeading(2, '0');
+        value twoDigitMins = time.minutes.string.padLeading(2, '0');
+        value twoDigitSecs = time.seconds.string.padLeading(2, '0');
+        value threeDigitMillis = time.milliseconds.string.padLeading(3,'0');
+        return token
+                .replaceFirst("hh", twoDigitTwelvehour)
+                .replaceFirst("h", twelvehour)
+                .replaceFirst("KK", twoDigitWeirdTwelvehour)
+                .replaceFirst("K", weirdTwelvehour)
+                .replaceFirst("HH", twoDigitHour)
+                .replaceFirst("H", hour)
+                .replaceFirst("a", ampm)
+                .replaceFirst("mm", twoDigitMins)
+                .replaceFirst("m", twoDigitMins)
+                .replaceFirst("ss", twoDigitSecs)
+                .replaceFirst("s", twoDigitMins)
+                .replaceFirst("S", threeDigitMillis)
+                .replaceFirst("Z", "") //TODO TimeZone not yet supported
+                .replaceFirst("z", "") //TODO TimeZone not yet supported
+                .replaceFirst("G", "") //TODO: era
+                .trimmed;
+    }
 }
 
 Formats parseFormats(Iterator<String> lines) {
