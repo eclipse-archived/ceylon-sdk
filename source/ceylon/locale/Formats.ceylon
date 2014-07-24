@@ -122,6 +122,8 @@ shared sealed class Formats(
         value ampm = hourAndAmpm[1];
         value hour = time.hours.string;
         value twoDigitHour = hour.padLeading(2, '0');
+        value weirdHour = (time.hours+1).string;
+        value twoDigitWeirdHour = weirdHour.padLeading(2, '0');
         value twoDigitMins = time.minutes.string.padLeading(2, '0');
         value twoDigitSecs = time.seconds.string.padLeading(2, '0');
         value threeDigitMillis = time.milliseconds.string.padLeading(3,'0');
@@ -132,6 +134,8 @@ shared sealed class Formats(
                 .replaceFirst("K", weirdTwelvehour)
                 .replaceFirst("HH", twoDigitHour)
                 .replaceFirst("H", hour)
+                .replaceFirst("kk", twoDigitWeirdHour)
+                .replaceFirst("k", weirdHour)
                 .replaceFirst("a", ampm)
                 .replaceFirst("mm", twoDigitMins)
                 .replaceFirst("m", twoDigitMins)
