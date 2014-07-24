@@ -72,6 +72,7 @@
         <module name="ceylon.test"/>
         <module name="ceylon.time"/>
         <module name="ceylon.logging"/>
+    	<module name="ceylon.locale"/>
     	<module name="com.redhat.ceylon.test"/>
     	<!-- workaround due IDE, moved into source-js folder -->
     	<!-- module name="com.redhat.ceylon.testjs"/ -->
