@@ -198,6 +198,6 @@ Formats parseFormats(Iterator<String> lines) {
         monthNames = monthNames;
         monthAbbreviations = monthAbbreviations;
         weekdayNames = dayNames;
-        weekdayAbbreviations = dayNames;
+        weekdayAbbreviations = dayAbbreviations;
     };
 }
