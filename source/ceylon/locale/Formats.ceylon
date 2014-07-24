@@ -1,6 +1,3 @@
-import ceylon.time {
-    DateTime
-}
 import ceylon.time.base {
     ReadableDate,
     ReadableTime
@@ -42,8 +39,6 @@ shared sealed class Formats(
             => formatDate(mediumDateFormat, date);
     shared String longFormatDate(ReadableDate date) 
             => formatDate(longDateFormat, date);
-    shared String isoFormatDate(ReadableDate time)
-            => formatDate("yyyy-MM-dd", time);
     
     shared String shortFormatTime(ReadableTime time) 
             => formatTime(shortTimeFormat, time);
@@ -51,12 +46,6 @@ shared sealed class Formats(
             => formatTime(mediumTimeFormat, time);
     shared String longFormatTime(ReadableTime time) 
             => formatTime(longTimeFormat, time);
-    shared String isoFormatTime(ReadableTime time)
-            => formatTime("HH:mm:ss", time);
-    
-    shared String isoFormatDateTime(DateTime dateTime)
-            => isoFormatDate(dateTime.date) + "T" + 
-               isoFormatTime(dateTime.time);
     
     String formatDate(String format, ReadableDate date) {
         function interpolateToken(Integer->String token) 
@@ -77,10 +66,14 @@ shared sealed class Formats(
     }
     
     String formatDateToken(String token, ReadableDate date) {
-        value weekdayName = weekdayNames[date.dayOfWeek.integer-1] else date.dayOfWeek.string;
-        value weekdayAbbr = weekdayAbbreviations[date.dayOfWeek.integer-1] else date.dayOfWeek.string.initial(3);
-        value monthName = monthNames[date.month.integer-1] else date.month.string;
-        value monthAbbr = monthAbbreviations[date.month.integer-1] else date.month.string.initial(3);
+        value weekdayName = weekdayNames[date.dayOfWeek.integer-1] 
+                else date.dayOfWeek.string;
+        value weekdayAbbr = weekdayAbbreviations[date.dayOfWeek.integer-1] 
+                else date.dayOfWeek.string.initial(3);
+        value monthName = monthNames[date.month.integer-1] 
+                else date.month.string;
+        value monthAbbr = monthAbbreviations[date.month.integer-1] 
+                else date.month.string.initial(3);
         value month = date.month.integer.string;
         value twoDigitMonth = month.padLeading(2,'0');
         value day = date.day.string;
