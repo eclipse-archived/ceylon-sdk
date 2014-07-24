@@ -46,7 +46,7 @@ shared void mine() {
             try (writer = file.Overwriter()) {
                 value w = writer;
                 void writeData({String*} values) {
-                    w.writeLine(", ".join(values));
+                    w.writeLine(" | ".join(values));
                 }
             
                 value currency = 

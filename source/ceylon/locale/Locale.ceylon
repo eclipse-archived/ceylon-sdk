@@ -43,8 +43,7 @@ shared Locale? locale(String tag) {
     if (exists resource = 
             localeModule.resourceByPath(filePath)) {
         Iterator<String> lines = resource.textContent()
-                .split('\n'.equals, true, false)
-                .iterator();
+                .lines.iterator();
         
         value languageAndCurrency = parseLanguage(lines, tag);
         
@@ -64,7 +63,7 @@ shared Locale? locale(String tag) {
 Module localeModule = `module ceylon.locale`;
 
 Iterator<String?> columns(String line) 
-        => line.split(','.equals, true, false)
+        => line.split('|'.equals, true, false)
         .map(String.trimmed)
         .map((String col) => !col.empty then col)
         .iterator();
