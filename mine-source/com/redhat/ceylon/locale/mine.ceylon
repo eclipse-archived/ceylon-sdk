@@ -16,7 +16,8 @@ import java.text {
     NumberFormat {
         ...
     },
-    DecimalFormat
+    DecimalFormat,
+    DateFormatSymbols
 }
 import java.util {
     Locale,
@@ -63,6 +64,15 @@ shared void mine() {
                     locale.displayVariant,
                     currency?.currencyCode else ""
                 };
+                value dateFormatSymbols = DateFormatSymbols.getInstance(locale);
+                writeData { 
+                    dateFormatSymbols.amPmStrings.get(0).string,
+                    dateFormatSymbols.amPmStrings.get(1).string
+                };
+                writeData { for (i in 0:12) dateFormatSymbols.months.get(i).string };
+                writeData { for (i in 0:12) dateFormatSymbols.shortMonths.get(i).string };
+                writeData { for (i in 1:7) dateFormatSymbols.weekdays.get(i).string };
+                writeData { for (i in 1:7) dateFormatSymbols.shortWeekdays.get(i).string };
                 writeData {
                     pattern(getDateInstance(short, locale)),
                     pattern(getDateInstance(medium, locale)),

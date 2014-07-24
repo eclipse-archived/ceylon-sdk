@@ -1,4 +1,9 @@
 zh-HK | zh | HK |  | Chinese (Hong Kong) | Chinese | Hong Kong |  | HKD
+上午 | 下午
+一月 | 二月 | 三月 | 四月 | 五月 | 六月 | 七月 | 八月 | 九月 | 十月 | 十一月 | 十二月
+1月 | 2月 | 3月 | 4月 | 5月 | 6月 | 7月 | 8月 | 9月 | 10月 | 11月 | 12月
+星期日 | 星期一 | 星期二 | 星期三 | 星期四 | 星期五 | 星期六
+日 | 一 | 二 | 三 | 四 | 五 | 六
 yy'年'M'月'd'日' | yyyy'年'M'月'd'日' | yyyy'年'MM'月'dd'日' EEEE
 ah:mm | ahh:mm:ss | ahh'時'mm'分'ss'秒'
 #,##0 | #,##0.### | #,##0% | ¤#,##0.00;(¤#,##0.00)
@@ -160,221 +165,221 @@ el-CY | el | CY |  | 希臘文 (賽普勒斯) | 希臘文 | 賽普勒斯 |
 hu | hu |  |  | 匈牙利文 | 匈牙利文 |  | 
 fr-FR | fr | FR |  | 法文 (法國) | 法文 | 法國 | 
 
-KMF | 174 | 科摩羅法郎 | KMF | 0
-BWP | 72 | 波札那普拉 | BWP | 2
-XPF | 953 | CFP 法郎 | XPF | 0
-BYB | 112 | 白俄羅斯新盧布 (1994-1999) | BYB | 0
-MUR | 480 | 模里西斯盧布 | MUR | 2
-CYP | 196 | 賽普勒斯鎊 | CYP | 2
-AZN | 944 | 亞塞拜然馬納特 | AZN | 2
-AOA | 973 | 安哥拉寬扎 | AOA | 2
-XBD | 958 | 歐洲會計單位 (XBD) | XBD | -1
-LTL | 440 | 立陶宛里塔 | LTL | 2
-GIP | 292 | 直布羅陀鎊 | GIP | 2
-NIO | 558 | 尼加拉瓜金科多巴 | NIO | 2
-DKK | 208 | 丹麥克羅納 | DKK | 2
-SDG | 938 | 蘇丹鎊 | SDG | 2
-UYU | 858 | 烏拉圭披索 | UYU | 2
-USS | 998 | 美元 (同一天) | USS | 2
-MAD | 504 | 摩洛哥迪拉姆 | MAD | 2
-PKR | 586 | 巴基斯坦盧布 | PKR | 2
-AMD | 51 | 亞美尼亞德拉姆 | AMD | 2
-XAU | 959 | 黃金 | XAU | -1
-ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
-ATS | 40 | 奧地利先令 | ATS | 2
-XPD | 964 | 钯 | XPD | -1
-STD | 678 | 聖多美島和普林西比島多布拉 | STD | 2
-CAD | 124 | 加幣 | CAD | 2
-KPW | 408 | 北韓圜 | KPW | 2
-JOD | 400 | 約旦第納爾 | JOD | 3
-PHP | 608 | 菲律賓披索 | PHP | 2
-ZAR | 710 | 南非蘭特 | ZAR | 2
-GWP | 624 | 幾內亞比索披索 | GWP | 2
-BND | 96 | 汶萊元 | BND | 2
-VND | 704 | 越南盾 | VND | 2
-BTN | 64 | 不丹努扎姆 | BTN | 2
-RUR | 810 | 俄羅斯盧布 (1991-1998) | RUR | 2
-XPT | 962 | 铂 | XPT | -1
-GNF | 324 | 幾內亞法郎 | GNF | 0
-CRC | 188 | 哥斯大黎加科郎 | CRC | 2
-BMD | 60 | 百慕達幣 | BMD | 2
-WST | 882 | 西薩摩亞塔拉 | WST | 2
-NPR | 524 | 尼泊爾盧布 | NPR | 2
-GBP | 826 | 英鎊 | GBP | 2
-MKD | 807 | 馬其頓第納爾 | MKD | 2
-XBB | 956 | 歐洲貨幣單位 XBB | XBB | -1
-FRF | 250 | 法國法郎 | FRF | 2
-CLF | 990 | 卡林油達佛曼跎 | CLF | 0
-TZS | 834 | 坦桑尼亚先令 | TZS | 2
-ZWL | 932 | 辛巴威元 (2009) | ZWL | 2
-XUA | 965 | XUA | XUA | -1
-XAG | 961 | XAG | XAG | -1
-XFU | 0 | 法國 UIC 法郎 | XFU | -1
-IEP | 372 | 愛爾蘭鎊 | IEP | 2
-AFA | 4 | 阿富汗尼 (1927-2002) | AFA | 2
-PYG | 600 | 巴拉圭瓜拉尼 | PYG | 0
-EUR | 978 | 歐元 | EUR | 2
-NZD | 554 | 紐西蘭幣 | NZD | 2
-BYR | 974 | 白俄羅斯盧布 | BYR | 0
-PTE | 620 | 葡萄牙埃斯庫多 | PTE | 0
-TJS | 972 | 塔吉克斯坦索莫尼 | TJS | 2
-XFO | 0 | 法國金法郎 | XFO | -1
-ITL | 380 | 義大利里拉 | ITL | 0
-BDT | 50 | 孟加拉塔卡 | BDT | 2
-KZT | 398 | 卡扎克斯坦坦吉 | KZT | 2
-GHS | 936 | 迦納仙蔕 | GHS | 2
-BOB | 68 | 玻利維亞貨幣單位 | BOB | 2
-AFN | 971 | 阿富汗尼 | AFN | 2
-RON | 946 | 羅馬尼亞列伊 | RON | 2
-ZMK | 894 | 尚比亞克瓦查 | ZMK | 2
-GMD | 270 | 甘比亞達拉西 | GMD | 2
-HRK | 191 | 克羅地亞庫納 | HRK | 2
-MRO | 478 | 茅利塔尼亞烏吉亞 | MRO | 2
-BGL | 100 | 保加利亞硬列弗 | BGL | 2
-KES | 404 | 肯尼亞先令 | KES | 2
-RSD | 941 | 塞爾維亞戴納 | RSD | 2
-XDR | 960 | 特殊提款權 | XDR | -1
-NLG | 528 | 荷蘭盾 | NLG | 2
-PGK | 598 | 巴布亞紐幾內亞基那 | PGK | 2
-BIF | 108 | 蒲隆地法郎 | BIF | 0
-LKR | 144 | 斯里蘭卡盧布 | LKR | 2
-SIT | 705 | 斯洛維尼亞托勒 | SIT | 2
-MNT | 496 | 蒙古圖格里克 | MNT | 2
-TMT | 934 | 土庫曼新馬納特 | TMT | 2
-MMK | 104 | 緬甸元 | MMK | 2
-ZWN | 942 | ZWN | ZWN | 2
-ANG | 532 | 古英文 | ANG | 2
-RWF | 646 | 盧安達法郎 | RWF | 0
-MXN | 484 | 墨西哥披索 | MXN | 2
-SEK | 752 | 瑞典克羅納 | SEK | 2
-ADP | 20 | 安道爾陪士特 | ADP | 0
-VEF | 937 | 委內瑞拉強勢玻利瓦 | VEF | 2
-LAK | 418 | 老挝基普 | LAK | 2
-HKD | 344 | 港元 | HK$ | 2
-MOP | 446 | 澳門元 | MOP | 2
-VUV | 548 | 萬那杜萬杜 | VUV | 0
-TND | 788 | 突尼西亞第納爾 | TND | 3
-INR | 356 | 印度盧比 | INR | 2
-TOP | 776 | 東加潘加 | TOP | 2
-ROL | 946 | 旧罗马尼亚列伊 | ROL | 2
-SZL | 748 | 斯威士兰里兰吉尼 | SZL | 2
-MYR | 458 | 馬來西亞令吉 | MYR | 2
-BSD | 44 | 巴哈馬元 | BSD | 2
-LVL | 428 | 拉脫維亞拉特銀幣 | LVL | 2
-BZD | 84 | 貝里斯元 | BZD | 2
-XBC | 957 | 歐洲會計單位 (XBC) | XBC | -1
-ARS | 32 | 阿根廷披索 | ARS | 2
-GYD | 328 | 圭亞那元 | GYD | 2
-YUM | 891 | 南斯拉夫挪威亞第納爾 | YUM | 2
-AUD | 36 | 澳幣 | AUD | 2
-TPE | 626 | 帝汶埃斯库多 | TPE | 0
-KGS | 417 | 吉爾吉斯索馬 | KGS | 2
-PLN | 985 | 波蘭茲羅提 | PLN | 2
-UGX | 800 | 烏干達先令 | UGX | 2
-DJF | 262 | 吉布地法郎 | DJF | 0
-NOK | 578 | 挪威克羅納 | NOK | 2
-SDD | 736 | 蘇丹第納爾 | SDD | 2
-KYD | 136 | 開曼群島美元 | KYD | 2
-IQD | 368 | 伊拉克第納爾 | IQD | 3
-MTL | 470 | 馬爾他里拉 | MTL | 2
-IRR | 364 | 伊朗里亞爾 | IRR | 2
-SHP | 654 | 圣赫勒拿群岛磅 | SHP | 2
-TTD | 780 | 特立尼达和多巴哥元 | TTD | 2
-BHD | 48 | 巴林第納爾 | BHD | 3
-SGD | 702 | 新加坡幣 | SGD | 2
-SAR | 682 | 沙烏地里雅 | SAR | 2
-UZS | 860 | 烏茲別克索姆 | UZS | 2
-ETB | 230 | 衣索比亞比爾 | ETB | 2
-TRY | 949 | 新土耳其里拉 | TRY | 2
 TWD | 901 | 新臺幣 | TWD | 2
-SLL | 694 | 獅子山利昂 | SLL | 2
-ERN | 232 | 厄立特里亞納克法 | ERN | 2
-VEB | 862 | 委內瑞拉玻利瓦 | VEB | 2
-NGN | 566 | 奈及利亞奈拉 | NGN | 2
-ISK | 352 | 冰島克朗 | ISK | 0
-HUF | 348 | 匈牙利福林 | HUF | 2
-SVC | 222 | 萨尔瓦多科朗 | SVC | 2
-SRD | 968 | 苏里南元 | SRD | 2
-DEM | 276 | 德國馬克 | DEM | 2
-TRL | 792 | 土耳其里拉 | TRL | 0
-COP | 170 | 哥倫比亞披索 | COP | 2
-MWK | 454 | 馬拉維克瓦查 | MWK | 2
-SRG | 740 | 蘇利南基爾 | SRG | 2
-KHR | 116 | 柬埔寨瑞爾 | KHR | 2
-NAD | 516 | 納米比亞元 | NAD | 2
-CDF | 976 | 剛果法郎 | CDF | 2
-USD | 840 | 美元 | USD | 2
-EGP | 818 | 埃及鎊 | EGP | 2
-MZM | 508 | 莫三比克梅蒂卡爾 | MZM | 2
-BEF | 56 | 比利時法郎 | BEF | 0
-KRW | 410 | 韓圜 | KRW | 0
-AZM | 31 | 亞塞拜然馬納特 (1993-2006) | AZM | 2
+BSD | 44 | 巴哈馬元 | BSD | 2
 XOF | 952 | 西非法郎 BCEAO | XOF | 0
-SKK | 703 | 斯洛伐克克朗 | SKK | 2
-LUF | 442 | 盧森堡法郎 | LUF | 0
-ZWD | 716 | 辛巴威元 | ZWD | 2
-CVE | 132 | 維德角埃斯庫多 | CVE | 2
-DZD | 12 | 阿爾及利亞第納爾 | DZD | 2
-OMR | 512 | 阿曼里奧 | OMR | 3
-AWG | 533 | 阿魯巴盾 | AWG | 2
-CSD | 891 | 旧塞尔维亚第纳尔 | CSD | 2
-GHC | 288 | 迦納仙蔕 (1979-2007) | GHC | 2
-SBD | 90 | 索羅門群島元 | SBD | 2
-RUB | 643 | 俄羅斯盧布 | RUB | 2
-MDL | 498 | 摩杜雲列伊 | MDL | 2
-LSL | 426 | 賴索托羅蒂 | LSL | 2
-SCR | 690 | 塞席爾盧比 | SCR | 2
-FIM | 246 | 芬蘭馬克 | FIM | 2
-BRL | 986 | 巴西里拉 | BRL | 2
-HTG | 332 | 海地古德 | HTG | 2
-LBP | 422 | 黎巴嫩鎊 | LBP | 2
-IDR | 360 | 印尼盾 | IDR | 2
-THB | 764 | 泰銖 | THB | 2
-MGA | 969 | 馬達加斯加艾瑞爾 | MGA | 2
-JMD | 388 | 牙買加元 | JMD | 2
-CLP | 152 | 智利披索 | CLP | 0
-XAF | 950 | 西非法郎 BEAC | XAF | 0
-XTS | 963 | XTS | XTS | -1
-CHF | 756 | 瑞士法郎 | CHF | 2
-AED | 784 | 阿拉伯聯合大公國迪爾汗 | AED | 2
-PEN | 604 | 秘魯新太陽幣 | PEN | 2
-GRD | 300 | 希臘德拉克馬 | GRD | 0
-AYM | 945 | AYM | AYM | 2
-PAB | 590 | 巴拿馬巴波亞 | PAB | 2
-EEK | 233 | 愛沙尼亞克朗 | EEK | 2
-CUC | 931 | 古巴可轉換披索 | CUC | 2
-GEL | 981 | 喬治拉里 | GEL | 2
+CLF | 990 | 卡林油達佛曼跎 | CLF | 0
 CUP | 192 | 古巴披索 | CUP | 2
-XBA | 955 | 歐洲綜合單位 | XBA | -1
-XSU | 994 | XSU | XSU | -1
-ESP | 724 | 西班牙陪士特 | ESP | 0
-KWD | 414 | 科威特第納爾 | KWD | 3
-QAR | 634 | 卡達爾里亞爾 | QAR | 2
-ALL | 8 | 阿爾巴尼亞列克 | ALL | 2
-SYP | 760 | 敘利亞鎊 | SYP | 2
-HNL | 340 | 洪都拉斯倫皮拉 | HNL | 2
-MXV | 979 | 墨西哥 Unidad de Inversion (UDI)（资金） | MXV | 2
-TMM | 795 | 土庫曼馬納特 | TMM | 2
-XCD | 951 | 格瑞那達元 | XCD | 2
-MGF | 450 | 馬達加斯加法郎 | MGF | 0
-BAM | 977 | 波士尼亞-黑塞哥維那可轉換馬克 | BAM | 2
-SOS | 706 | 索馬利亞先令 | SOS | 2
-ILS | 376 | 以色列新謝克爾 | ILS | 2
-LYD | 434 | 利比亞第納爾 | LYD | 3
-CNY | 156 | 人民幣 | CNY | 2
-USN | 997 | 美元 (第二天) | USN | 2
-MVR | 462 | 馬爾地夫海島盧非亞 | MVR | 2
-DOP | 214 | 多明尼加披索 | DOP | 2
-XXX | 999 | XXX | XXX | -1
+ANG | 532 | 古英文 | ANG | 2
+SZL | 748 | 斯威士兰里兰吉尼 | SZL | 2
+KZT | 398 | 卡扎克斯坦坦吉 | KZT | 2
+LKR | 144 | 斯里蘭卡盧布 | LKR | 2
+AMD | 51 | 亞美尼亞德拉姆 | AMD | 2
+VUV | 548 | 萬那杜萬杜 | VUV | 0
+ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
+SIT | 705 | 斯洛維尼亞托勒 | SIT | 2
 UAH | 980 | 烏克蘭格里夫那 | UAH | 2
-CZK | 203 | 捷克克朗 | CZK | 2
-MZN | 943 | 莫三比克美提卡 | MZN | 2
-FKP | 238 | 福克蘭群島鎊 | FKP | 2
-BOV | 984 | 玻利維亞幕多 | BOV | 2
+MYR | 458 | 馬來西亞令吉 | MYR | 2
+MGF | 450 | 馬達加斯加法郎 | MGF | 0
+LYD | 434 | 利比亞第納爾 | LYD | 3
 BBD | 52 | 巴貝多元 | BBD | 2
-LRD | 430 | 賴比瑞亞元 | LRD | 2
-FJD | 242 | 斐濟元 | FJD | 2
 GTQ | 320 | 瓜地馬拉格查爾 | GTQ | 2
-YER | 886 | 葉門里雅 | YER | 2
-JPY | 392 | 日圓 | JPY | 0
+IQD | 368 | 伊拉克第納爾 | IQD | 3
+CAD | 124 | 加幣 | CAD | 2
+UZS | 860 | 烏茲別克索姆 | UZS | 2
+DKK | 208 | 丹麥克羅納 | DKK | 2
 BGN | 975 | 保加利亞新列弗 | BGN | 2
+AWG | 533 | 阿魯巴盾 | AWG | 2
+SCR | 690 | 塞席爾盧比 | SCR | 2
+DEM | 276 | 德國馬克 | DEM | 2
+XBD | 958 | 歐洲會計單位 (XBD) | XBD | -1
+XPD | 964 | 钯 | XPD | -1
+MMK | 104 | 緬甸元 | MMK | 2
+SGD | 702 | 新加坡幣 | SGD | 2
+HUF | 348 | 匈牙利福林 | HUF | 2
+AZN | 944 | 亞塞拜然馬納特 | AZN | 2
+BIF | 108 | 蒲隆地法郎 | BIF | 0
+BYR | 974 | 白俄羅斯盧布 | BYR | 0
+RUB | 643 | 俄羅斯盧布 | RUB | 2
+KGS | 417 | 吉爾吉斯索馬 | KGS | 2
+BYB | 112 | 白俄羅斯新盧布 (1994-1999) | BYB | 0
+SLL | 694 | 獅子山利昂 | SLL | 2
+SRG | 740 | 蘇利南基爾 | SRG | 2
+LTL | 440 | 立陶宛里塔 | LTL | 2
+GHC | 288 | 迦納仙蔕 (1979-2007) | GHC | 2
+AZM | 31 | 亞塞拜然馬納特 (1993-2006) | AZM | 2
+MDL | 498 | 摩杜雲列伊 | MDL | 2
+RON | 946 | 羅馬尼亞列伊 | RON | 2
+MKD | 807 | 馬其頓第納爾 | MKD | 2
+BDT | 50 | 孟加拉塔卡 | BDT | 2
+CZK | 203 | 捷克克朗 | CZK | 2
+DJF | 262 | 吉布地法郎 | DJF | 0
+NPR | 524 | 尼泊爾盧布 | NPR | 2
+CUC | 931 | 古巴可轉換披索 | CUC | 2
+SDG | 938 | 蘇丹鎊 | SDG | 2
+KHR | 116 | 柬埔寨瑞爾 | KHR | 2
+ADP | 20 | 安道爾陪士特 | ADP | 0
+XTS | 963 | XTS | XTS | -1
+SDD | 736 | 蘇丹第納爾 | SDD | 2
+SOS | 706 | 索馬利亞先令 | SOS | 2
+BEF | 56 | 比利時法郎 | BEF | 0
+USD | 840 | 美元 | USD | 2
+MWK | 454 | 馬拉維克瓦查 | MWK | 2
+SKK | 703 | 斯洛伐克克朗 | SKK | 2
+USN | 997 | 美元 (第二天) | USN | 2
+LVL | 428 | 拉脫維亞拉特銀幣 | LVL | 2
+ILS | 376 | 以色列新謝克爾 | ILS | 2
+QAR | 634 | 卡達爾里亞爾 | QAR | 2
+GHS | 936 | 迦納仙蔕 | GHS | 2
+BWP | 72 | 波札那普拉 | BWP | 2
+XDR | 960 | 特殊提款權 | XDR | -1
+SRD | 968 | 苏里南元 | SRD | 2
+AYM | 945 | AYM | AYM | 2
+YUM | 891 | 南斯拉夫挪威亞第納爾 | YUM | 2
+LBP | 422 | 黎巴嫩鎊 | LBP | 2
+CVE | 132 | 維德角埃斯庫多 | CVE | 2
+FJD | 242 | 斐濟元 | FJD | 2
+BHD | 48 | 巴林第納爾 | BHD | 3
+DZD | 12 | 阿爾及利亞第納爾 | DZD | 2
+VND | 704 | 越南盾 | VND | 2
+NOK | 578 | 挪威克羅納 | NOK | 2
+MRO | 478 | 茅利塔尼亞烏吉亞 | MRO | 2
+THB | 764 | 泰銖 | THB | 2
+SVC | 222 | 萨尔瓦多科朗 | SVC | 2
+FKP | 238 | 福克蘭群島鎊 | FKP | 2
+CLP | 152 | 智利披索 | CLP | 0
+PAB | 590 | 巴拿馬巴波亞 | PAB | 2
+XUA | 965 | XUA | XUA | -1
+TRL | 792 | 土耳其里拉 | TRL | 0
+NAD | 516 | 納米比亞元 | NAD | 2
+MGA | 969 | 馬達加斯加艾瑞爾 | MGA | 2
+XAG | 961 | XAG | XAG | -1
+NGN | 566 | 奈及利亞奈拉 | NGN | 2
+TND | 788 | 突尼西亞第納爾 | TND | 3
+AFN | 971 | 阿富汗尼 | AFN | 2
+BOV | 984 | 玻利維亞幕多 | BOV | 2
+BMD | 60 | 百慕達幣 | BMD | 2
+NZD | 554 | 紐西蘭幣 | NZD | 2
+CHF | 756 | 瑞士法郎 | CHF | 2
+CYP | 196 | 賽普勒斯鎊 | CYP | 2
+WST | 882 | 西薩摩亞塔拉 | WST | 2
+TPE | 626 | 帝汶埃斯库多 | TPE | 0
+GYD | 328 | 圭亞那元 | GYD | 2
+BRL | 986 | 巴西里拉 | BRL | 2
+YER | 886 | 葉門里雅 | YER | 2
+XFO | 0 | 法國金法郎 | XFO | -1
+MXN | 484 | 墨西哥披索 | MXN | 2
+SHP | 654 | 圣赫勒拿群岛磅 | SHP | 2
+LUF | 442 | 盧森堡法郎 | LUF | 0
+AOA | 973 | 安哥拉寬扎 | AOA | 2
+XSU | 994 | XSU | XSU | -1
+KES | 404 | 肯尼亞先令 | KES | 2
+SAR | 682 | 沙烏地里雅 | SAR | 2
+XAU | 959 | 黃金 | XAU | -1
+BND | 96 | 汶萊元 | BND | 2
+XBA | 955 | 歐洲綜合單位 | XBA | -1
+JPY | 392 | 日圓 | JPY | 0
+ARS | 32 | 阿根廷披索 | ARS | 2
+AED | 784 | 阿拉伯聯合大公國迪爾汗 | AED | 2
+ATS | 40 | 奧地利先令 | ATS | 2
+NLG | 528 | 荷蘭盾 | NLG | 2
+BTN | 64 | 不丹努扎姆 | BTN | 2
+TJS | 972 | 塔吉克斯坦索莫尼 | TJS | 2
+MUR | 480 | 模里西斯盧布 | MUR | 2
+LAK | 418 | 老挝基普 | LAK | 2
+PYG | 600 | 巴拉圭瓜拉尼 | PYG | 0
+MZN | 943 | 莫三比克美提卡 | MZN | 2
+HNL | 340 | 洪都拉斯倫皮拉 | HNL | 2
+PLN | 985 | 波蘭茲羅提 | PLN | 2
+VEB | 862 | 委內瑞拉玻利瓦 | VEB | 2
+XBB | 956 | 歐洲貨幣單位 XBB | XBB | -1
+MOP | 446 | 澳門元 | MOP | 2
+FRF | 250 | 法國法郎 | FRF | 2
+XFU | 0 | 法國 UIC 法郎 | XFU | -1
+BOB | 68 | 玻利維亞貨幣單位 | BOB | 2
+EEK | 233 | 愛沙尼亞克朗 | EEK | 2
+MZM | 508 | 莫三比克梅蒂卡爾 | MZM | 2
+CDF | 976 | 剛果法郎 | CDF | 2
+BZD | 84 | 貝里斯元 | BZD | 2
+ISK | 352 | 冰島克朗 | ISK | 0
+XPF | 953 | CFP 法郎 | XPF | 0
+IEP | 372 | 愛爾蘭鎊 | IEP | 2
+HTG | 332 | 海地古德 | HTG | 2
+DOP | 214 | 多明尼加披索 | DOP | 2
+MXV | 979 | 墨西哥 Unidad de Inversion (UDI)（资金） | MXV | 2
+TZS | 834 | 坦桑尼亚先令 | TZS | 2
+PGK | 598 | 巴布亞紐幾內亞基那 | PGK | 2
+INR | 356 | 印度盧比 | INR | 2
+PHP | 608 | 菲律賓披索 | PHP | 2
+GIP | 292 | 直布羅陀鎊 | GIP | 2
+ZAR | 710 | 南非蘭特 | ZAR | 2
+GRD | 300 | 希臘德拉克馬 | GRD | 0
+CSD | 891 | 旧塞尔维亚第纳尔 | CSD | 2
+IDR | 360 | 印尼盾 | IDR | 2
+SEK | 752 | 瑞典克羅納 | SEK | 2
+KMF | 174 | 科摩羅法郎 | KMF | 0
+TMT | 934 | 土庫曼新馬納特 | TMT | 2
+ZWN | 942 | ZWN | ZWN | 2
+JMD | 388 | 牙買加元 | JMD | 2
+TTD | 780 | 特立尼达和多巴哥元 | TTD | 2
+GBP | 826 | 英鎊 | GBP | 2
+ALL | 8 | 阿爾巴尼亞列克 | ALL | 2
+JOD | 400 | 約旦第納爾 | JOD | 3
+BGL | 100 | 保加利亞硬列弗 | BGL | 2
+IRR | 364 | 伊朗里亞爾 | IRR | 2
+TOP | 776 | 東加潘加 | TOP | 2
+USS | 998 | 美元 (同一天) | USS | 2
+HKD | 344 | 港元 | HK$ | 2
+XXX | 999 | XXX | XXX | -1
+VEF | 937 | 委內瑞拉強勢玻利瓦 | VEF | 2
+MNT | 496 | 蒙古圖格里克 | MNT | 2
+ETB | 230 | 衣索比亞比爾 | ETB | 2
+XBC | 957 | 歐洲會計單位 (XBC) | XBC | -1
+EUR | 978 | 歐元 | EUR | 2
+CRC | 188 | 哥斯大黎加科郎 | CRC | 2
+EGP | 818 | 埃及鎊 | EGP | 2
+AUD | 36 | 澳幣 | AUD | 2
+ESP | 724 | 西班牙陪士特 | ESP | 0
+UGX | 800 | 烏干達先令 | UGX | 2
+ERN | 232 | 厄立特里亞納克法 | ERN | 2
+GNF | 324 | 幾內亞法郎 | GNF | 0
+SBD | 90 | 索羅門群島元 | SBD | 2
+LRD | 430 | 賴比瑞亞元 | LRD | 2
+RSD | 941 | 塞爾維亞戴納 | RSD | 2
+RUR | 810 | 俄羅斯盧布 (1991-1998) | RUR | 2
+GWP | 624 | 幾內亞比索披索 | GWP | 2
+NIO | 558 | 尼加拉瓜金科多巴 | NIO | 2
+LSL | 426 | 賴索托羅蒂 | LSL | 2
+XPT | 962 | 铂 | XPT | -1
+MAD | 504 | 摩洛哥迪拉姆 | MAD | 2
+COP | 170 | 哥倫比亞披索 | COP | 2
+UYU | 858 | 烏拉圭披索 | UYU | 2
+RWF | 646 | 盧安達法郎 | RWF | 0
+TRY | 949 | 新土耳其里拉 | TRY | 2
+KYD | 136 | 開曼群島美元 | KYD | 2
+PEN | 604 | 秘魯新太陽幣 | PEN | 2
+GMD | 270 | 甘比亞達拉西 | GMD | 2
+ZMK | 894 | 尚比亞克瓦查 | ZMK | 2
+XAF | 950 | 西非法郎 BEAC | XAF | 0
+OMR | 512 | 阿曼里奧 | OMR | 3
+FIM | 246 | 芬蘭馬克 | FIM | 2
+STD | 678 | 聖多美島和普林西比島多布拉 | STD | 2
+KRW | 410 | 韓圜 | KRW | 0
+HRK | 191 | 克羅地亞庫納 | HRK | 2
+BAM | 977 | 波士尼亞-黑塞哥維那可轉換馬克 | BAM | 2
+MTL | 470 | 馬爾他里拉 | MTL | 2
+ITL | 380 | 義大利里拉 | ITL | 0
+PKR | 586 | 巴基斯坦盧布 | PKR | 2
+ROL | 946 | 旧罗马尼亚列伊 | ROL | 2
+ZWL | 932 | 辛巴威元 (2009) | ZWL | 2
+ZWD | 716 | 辛巴威元 | ZWD | 2
+PTE | 620 | 葡萄牙埃斯庫多 | PTE | 0
+TMM | 795 | 土庫曼馬納特 | TMM | 2
+CNY | 156 | 人民幣 | CNY | 2
+KPW | 408 | 北韓圜 | KPW | 2
+GEL | 981 | 喬治拉里 | GEL | 2
+MVR | 462 | 馬爾地夫海島盧非亞 | MVR | 2
+KWD | 414 | 科威特第納爾 | KWD | 3
+AFA | 4 | 阿富汗尼 (1927-2002) | AFA | 2
+SYP | 760 | 敘利亞鎊 | SYP | 2
+XCD | 951 | 格瑞那達元 | XCD | 2

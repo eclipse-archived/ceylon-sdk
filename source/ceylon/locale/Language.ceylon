@@ -22,7 +22,7 @@ shared sealed class Language(tag,
 [Language,String?] parseLanguage(Iterator<String> lines, String tag) {
     
     assert (!is Finished firstLine = lines.next());
-    value cols = columns(firstLine);
+    value cols = columns(firstLine).iterator();
     assert (is String loc = cols.next(), loc==tag);
     assert (is String languageCode = cols.next());
     assert (is String? countryCode = cols.next());
@@ -48,8 +48,9 @@ shared sealed class Language(tag,
 
 HashMap<String,Language> parseLanguages(Iterator<String> lines) {
     value languages = HashMap<String,Language>();
-    while (!is Finished langLine = lines.next(), !langLine.empty) {
-        value langCols = columns(langLine);
+    while (!is Finished langLine = lines.next(), 
+           !langLine.empty) {
+        value langCols = columns(langLine).iterator();
         assert (is String langTag = langCols.next());
         assert (is String langLanguageCode = langCols.next());
         assert (is String? langCountryCode = langCols.next());

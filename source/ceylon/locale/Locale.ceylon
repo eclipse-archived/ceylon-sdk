@@ -62,8 +62,6 @@ shared Locale? locale(String tag) {
 
 Module localeModule = `module ceylon.locale`;
 
-Iterator<String?> columns(String line) 
-        => line.split('|'.equals, true, false)
+{String?*} columns(String line) => line.split('|'.equals, true, false)
         .map(String.trimmed)
-        .map((String col) => !col.empty then col)
-        .iterator();
+        .map((String col) => !col.empty then col);

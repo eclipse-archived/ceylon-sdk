@@ -13,7 +13,12 @@ shared sealed class Formats(
     integerFormat, 
     floatFormat, 
     percentageFormat, 
-    currencyFormat) {
+    currencyFormat,
+    String[] monthNames,
+    String[] monthAbbreviations,
+    String[] weekdayNames,
+    String[] weekdayAbbreviations,
+    [String,String] ampm) {
     
     shared String shortDateFormat;
     shared String mediumDateFormat;
@@ -62,8 +67,8 @@ shared sealed class Formats(
     
     String formatDateToken(String token, Date date) 
             => token
-                .replaceFirst("MMMM", date.month.string[0..0].uppercased + date.month.string[1...])
-                .replaceFirst("MMM", date.month.string[0..0].uppercased + date.month.string[1..2])
+                .replaceFirst("MMMM", monthNames[date.month.integer-1] else date.month.string)
+                .replaceFirst("MMM", monthAbbreviations[date.month.integer-1] else date.month.string.initial(3))
                 .replaceFirst("MM", date.month.integer.string.padLeading(2,'0'))
                 .replaceFirst("M", date.month.integer.string)
                 .replaceFirst("dd", date.day.string.padLeading(2,'0'))
@@ -73,13 +78,13 @@ shared sealed class Formats(
     
     function twelveHour(Integer hour) {
         if (hour==0) {
-            return [12,"AM"];
+            return [12,ampm[0]];
         }
         else if (hour<=12) {
-            return [hour,"AM"];
+            return [hour,ampm[0]];
         }
         else {
-            return [hour-12,"PM"];
+            return [hour-12,ampm[1]];
         }
     }
     
@@ -98,20 +103,35 @@ shared sealed class Formats(
 
 Formats parseFormats(Iterator<String> lines) {
     
+    assert (!is Finished ampmLine = lines.next());
+    value ampmCols = columns(ampmLine).iterator();
+    assert (is String am=ampmCols.next(), 
+        is String pm=ampmCols.next());
+    
+    assert (!is Finished monthsNameLine = lines.next());
+    value monthNames = columns(monthsNameLine).coalesced.sequence();
+    assert (!is Finished monthsAbbrLine = lines.next());
+    value monthAbbreviations = columns(monthsAbbrLine).coalesced.sequence();
+    
+    assert (!is Finished dayNameLine = lines.next());
+    value dayNames = columns(dayNameLine).coalesced.sequence();
+    assert (!is Finished dayAbbrLine = lines.next());
+    value dayAbbreviations = columns(dayAbbrLine).coalesced.sequence();
+    
     assert (!is Finished dateFormats = lines.next());
-    value dateCols = columns(dateFormats);
+    value dateCols = columns(dateFormats).iterator();
     assert (is String shortDateFormat = dateCols.next());
     assert (is String mediumDateFormat = dateCols.next());
     assert (is String longDateFormat = dateCols.next());
     assert (!is Finished timeFormats = lines.next());
     
-    value timeCols = columns(timeFormats);
+    value timeCols = columns(timeFormats).iterator();
     assert (is String shortTimeFormat = timeCols.next());
     assert (is String mediumTimeFormat = timeCols.next());
     assert (is String longTimeFormat = timeCols.next());
     assert (!is Finished numberFormats = lines.next());
     
-    value numCols = columns(numberFormats);
+    value numCols = columns(numberFormats).iterator();
     assert (is String integerFormat = numCols.next());
     assert (is String floatFormat = numCols.next());
     assert (is String percentageFormat = numCols.next());
@@ -130,5 +150,10 @@ Formats parseFormats(Iterator<String> lines) {
         floatFormat = floatFormat;
         percentageFormat = percentageFormat;
         currencyFormat = currencyFormat;
+        ampm = [am,pm];
+        monthNames = monthNames;
+        monthAbbreviations = monthAbbreviations;
+        weekdayNames = dayNames;
+        weekdayAbbreviations = dayNames;
     };
 }

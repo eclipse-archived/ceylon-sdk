@@ -12,8 +12,9 @@ shared sealed class Currency(String code,
 
 HashMap<String,Currency> parseCurrencies(Iterator<String> lines) {
     value currencies = HashMap<String,Currency>();
-    while (!is Finished currencyLine = lines.next(), !currencyLine.empty) {
-        Iterator<String?> langCols = columns(currencyLine);
+    while (!is Finished currencyLine = lines.next(), 
+           !currencyLine.empty) {
+        value langCols = columns(currencyLine).iterator();
         assert (is String code = langCols.next());
         assert (is String numericCode = langCols.next());
         assert (is String name = langCols.next());
