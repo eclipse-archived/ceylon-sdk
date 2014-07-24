@@ -44,9 +44,9 @@ shared sealed class Formats(
     
     String formatDate(String format, Date date) {
         function interpolateToken(Integer->String token) 
-            => (2 divides token.key) 
-                then formatDateToken(token.item, date) 
-                else token.item;
+                => (2 divides token.key) 
+                    then formatDateToken(token.item, date) 
+                    else token.item;
         value tokens = format.split('\''.equals, true, false);
         return String(tokens.indexed.flatMap(interpolateToken));
     }
@@ -54,8 +54,8 @@ shared sealed class Formats(
     String formatTime(String format, Time time) {
         function interpolateToken(Integer->String token) 
                 => (2 divides token.key) 
-        then formatTimeToken(token.item, time) 
-        else token.item;
+                    then formatTimeToken(token.item, time) 
+                    else token.item;
         value tokens = format.split('\''.equals, true, false);
         return String(tokens.indexed.flatMap(interpolateToken));
     }
