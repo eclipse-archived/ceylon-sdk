@@ -1,9 +1,9 @@
 import ceylon.time {
-    Date,
-    Time
+    DateTime
 }
-import ceylon.time.timezone {
-    TimeZone
+import ceylon.time.base {
+    ReadableDate,
+    ReadableTime
 }
 
 shared sealed class Formats(
@@ -36,21 +36,29 @@ shared sealed class Formats(
     shared String percentageFormat;
     shared String currencyFormat;
     
-    shared String shortFormatDate(Date date) 
+    shared String shortFormatDate(ReadableDate date) 
             => formatDate(shortDateFormat, date);
-    shared String mediumFormatDate(Date date) 
+    shared String mediumFormatDate(ReadableDate date) 
             => formatDate(mediumDateFormat, date);
-    shared String longFormatDate(Date date) 
+    shared String longFormatDate(ReadableDate date) 
             => formatDate(longDateFormat, date);
+    shared String isoFormatDate(ReadableDate time)
+            => formatDate("yyyy-MM-dd", time);
     
-    shared String shortFormatTime(Time time) 
+    shared String shortFormatTime(ReadableTime time) 
             => formatTime(shortTimeFormat, time);
-    shared String mediumFormatTime(Time time) 
+    shared String mediumFormatTime(ReadableTime time) 
             => formatTime(mediumTimeFormat, time);
-    shared String longFormatTime(Time time) 
+    shared String longFormatTime(ReadableTime time) 
             => formatTime(longTimeFormat, time);
+    shared String isoFormatTime(ReadableTime time)
+            => formatTime("HH:mm:ss", time);
     
-    String formatDate(String format, Date date) {
+    shared String isoFormatDateTime(DateTime dateTime)
+            => isoFormatDate(dateTime.date) + "T" + 
+               isoFormatTime(dateTime.time);
+    
+    String formatDate(String format, ReadableDate date) {
         function interpolateToken(Integer->String token) 
                 => (2 divides token.key) 
                     then formatDateToken(token.item, date) 
@@ -59,7 +67,7 @@ shared sealed class Formats(
         return String(tokens.indexed.flatMap(interpolateToken));
     }
     
-    String formatTime(String format, Time time) {
+    String formatTime(String format, ReadableTime time) {
         function interpolateToken(Integer->String token) 
                 => (2 divides token.key) 
                     then formatTimeToken(token.item, time) 
@@ -68,7 +76,7 @@ shared sealed class Formats(
         return String(tokens.indexed.flatMap(interpolateToken));
     }
     
-    String formatDateToken(String token, Date date) {
+    String formatDateToken(String token, ReadableDate date) {
         value weekdayName = weekdayNames[date.dayOfWeek.integer-1] else date.dayOfWeek.string;
         value weekdayAbbr = weekdayAbbreviations[date.dayOfWeek.integer-1] else date.dayOfWeek.string.initial(3);
         value monthName = monthNames[date.month.integer-1] else date.month.string;
@@ -113,7 +121,7 @@ shared sealed class Formats(
         }
     }
     
-    String formatTimeToken(String token, Time time, TimeZone? zone=null) {
+    String formatTimeToken(String token, ReadableTime time) {
         value hourAndAmpm = twelveHour(time.hours);
         value twelvehour = hourAndAmpm[0].string;
         value weirdTwelvehour = (time.hours<12 then time.hours else time.hours-12).string;
