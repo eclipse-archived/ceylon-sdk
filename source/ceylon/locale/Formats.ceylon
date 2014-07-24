@@ -137,6 +137,8 @@ shared sealed class Formats(
                 .replaceFirst("m", twoDigitMins)
                 .replaceFirst("ss", twoDigitSecs)
                 .replaceFirst("s", twoDigitMins)
+                .replaceFirst("SSS", threeDigitMillis)
+                .replaceFirst("SS", threeDigitMillis)
                 .replaceFirst("S", threeDigitMillis)
                 .replaceFirst("Z", "") //TODO TimeZone not yet supported
                 .replaceFirst("z", "") //TODO TimeZone not yet supported
