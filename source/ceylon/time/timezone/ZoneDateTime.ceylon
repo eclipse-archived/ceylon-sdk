@@ -1,6 +1,6 @@
 import ceylon.time.timezone { TimeZone }
 import ceylon.time.base { ReadableDateTime, DateTimeBehavior, Month }
-import ceylon.time { Date, Time, Instant, dateTime, DateTime, Duration }
+import ceylon.time { Date, Time, Instant, dateTime, DateTime }
 import ceylon.time.internal { GregorianZonedDateTime }
 import ceylon.time.chronology { unixTime }
 
