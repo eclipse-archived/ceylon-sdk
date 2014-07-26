@@ -19,8 +19,8 @@ import ceylon.collection {
    list. Iteration of the map follows this linked list, from 
    least recently added elements to most recently added 
    elements.
- - An [[unlinked]] set has an unstable iteration order that 
-   may change when the set is modified. The order itself is 
+ - An [[unlinked]] map has an unstable iteration order that 
+   may change when the map is modified. The order itself is 
    not meaningful to a client.
  
  The management of the backing array is controlled by the
@@ -33,7 +33,7 @@ shared class HashMap<Key, Item>
         given Key satisfies Object 
         given Item satisfies Object {
     
-    "Determines whether this is a linked hash set with a
+    "Determines whether this is a linked hash map with a
      stable iteration order."
     Stability stability;
     
