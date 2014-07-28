@@ -2,6 +2,15 @@ import ceylon.file {
     ...
 }
 
+import java.io {
+    BufferedReader,
+    InputStreamReader,
+    BufferedWriter,
+    OutputStreamWriter
+}
+import java.lang {
+    ByteArray
+}
 import java.nio.file {
     JPath=Path,
     Files {
@@ -24,8 +33,8 @@ import java.nio.file {
         getOwner,
         setOwner,
         newSymbolicLink=createSymbolicLink,
-        newBufferedReader,
-        newBufferedWriter
+        newInputStream,
+        newOutputStream
     },
     StandardCopyOption {
         REPLACE_EXISTING,
@@ -131,11 +140,25 @@ class ConcreteFile(JPath jpath)
             extends super.Reader(encoding) {
         value charset = parseCharset(encoding);
         
-        value r = newBufferedReader(jpath, charset);
+        value stream = newInputStream(jpath); 
         
-        readLine() => r.readLine();
+        value reader = BufferedReader(InputStreamReader(stream, 
+            charset.newDecoder()));
         
-        close() => r.close();
+        close() => reader.close();
+        
+        readLine() => reader.readLine();
+        
+        shared actual Byte[] readBytes(Integer max) {
+            value byteArray = ByteArray(max);
+            value size = stream.read(byteArray);
+            if (size==max) {
+                return sequence(byteArray.byteArray) else [];
+            }
+            else {
+                return [ for (b in byteArray.iterable) b ];
+            }
+        }
         
     }
     
@@ -143,37 +166,61 @@ class ConcreteFile(JPath jpath)
             extends super.Overwriter(encoding) {
         value charset = parseCharset(encoding);
         
-        value w = newBufferedWriter(jpath, charset, 
-                \iWRITE, \iTRUNCATE_EXISTING);
+        value stream = newOutputStream(jpath, \iWRITE, \iTRUNCATE_EXISTING);
         
-        close() => w.close();
+        value writer = BufferedWriter(OutputStreamWriter(stream, 
+            charset.newEncoder()));
         
-        write(String string) => w.write(string);
+        close() => writer.close();
+        
+        flush() => writer.flush();
+        
+        write(String string) => writer.write(string);
         
         shared actual void writeLine(String line) {
-            w.write(line); w.newLine();
+            writer.write(line); 
+            writer.newLine();
         }
         
-        flush() => w.flush();
-        
+        shared actual void writeBytes({Byte*} bytes) {
+            value byteArray = ByteArray(bytes.size);
+            variable value i=0;
+            for (b in bytes) {
+                byteArray.set(i++, b.signed);
+            }
+            stream.write(byteArray);
+        }
+                
     }
     
     shared actual class Appender(String? encoding) 
             extends super.Appender(encoding) {
         value charset = parseCharset(encoding);
         
-        value w = newBufferedWriter(jpath, charset, 
-                \iWRITE, \iAPPEND);
+        value stream = newOutputStream(jpath, \iWRITE, \iAPPEND);
         
-        close() => w.close();
+        value writer = BufferedWriter(OutputStreamWriter(stream, 
+            charset.newEncoder()));
         
-        write(String string) => w.write(string);
+        close() => writer.close();
+        
+        flush() => writer.flush();
+        
+        write(String string) => writer.write(string);
         
         shared actual void writeLine(String line) {
-            w.write(line); w.newLine();
+            writer.write(line); 
+            writer.newLine();
         }
         
-        flush() => w.flush();
+        shared actual void writeBytes({Byte*} bytes) {
+            value byteArray = ByteArray(bytes.size);
+            variable value i=0;
+            for (b in bytes) {
+                byteArray.set(i++, b.signed);
+            }
+            stream.write(byteArray);
+        }
         
     }
 

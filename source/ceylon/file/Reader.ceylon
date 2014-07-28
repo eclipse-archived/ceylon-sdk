@@ -8,6 +8,8 @@ shared interface Reader
      in the file."
     shared formal String? readLine();
     
+    shared formal Byte[] readBytes(Integer max);
+    
     "Destroy this `Reader`. Called
      automatically by `destroy()`."
     see(`function destroy`)

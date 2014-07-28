@@ -6,6 +6,9 @@ import java.io {
     OutputStream,
     OutputStreamWriter
 }
+import java.lang {
+    ByteArray
+}
 
 class IncomingPipe(OutputStream stream)
         satisfies Writer {
@@ -20,6 +23,15 @@ class IncomingPipe(OutputStream stream)
     
     shared actual void writeLine(String line) {
         write(line); write(operatingSystem.newline);
+    }
+    
+    shared actual void writeBytes({Byte*} bytes) {
+        value byteArray = ByteArray(bytes.size);
+        variable value i=0;
+        for (b in bytes) {
+            byteArray.set(i++, b.signed);
+        }
+        stream.write(byteArray);
     }
     
 }
