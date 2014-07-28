@@ -56,7 +56,10 @@ public class XADSWrapper implements XADataSource, Serializable, Referenceable, D
     private String password;
 
 
-    public XADSWrapper(String binding, String driver, String databaseName, String host, Integer port, String xaDSClassName, ClassLoader classLoader, String userName, String password) {
+    public XADSWrapper(String binding, String driver, String databaseName,
+            String host, Integer port, String xaDSClassName, ClassLoader classLoader,
+            String userName, String password) {
+
         try {
             xaDataSource = (XADataSource)classLoader.loadClass(xaDSClassName).newInstance();
             txDriverUrl = TransactionalDriver.arjunaDriver + binding;
@@ -136,9 +139,8 @@ public class XADSWrapper implements XADataSource, Serializable, Referenceable, D
 
     public Connection getConnection(String u, String p) throws SQLException {
         Properties dbProperties = new Properties(properties);
-
-        dbProperties.put(TransactionalDriver.userName, userName);
-        dbProperties.put(TransactionalDriver.password, password);
+        dbProperties.put(TransactionalDriver.userName, u);
+        dbProperties.put(TransactionalDriver.password, p);
 
         return arjunaJDBC2Driver.connect(txDriverUrl, dbProperties);
     }

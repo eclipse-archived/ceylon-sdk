@@ -31,8 +31,8 @@
 
    Now you may use the datasource just like any other datasource:
 
-	   Sql sql1 = Sql(ds1);
-	   Sql sql2 = Sql(ds2);
+   Sql sql1 = Sql(ds1);
+   Sql sql2 = Sql(ds2);
 
    But to make updates to both within a single transaction you must demarcate the transaction boundaries:
 
@@ -57,22 +57,20 @@
 by("Mike Musgrove")
 license("Apache Software License 2.0")
 module ceylon.transaction "1.0.0" {
-    shared import javax.transaction.api "1.2";
-
-    // ceylon.transaction dependencies
-    import org.jboss.logging "3.1.3.GA";
-    import org.jboss.jnpserver "5.0.3.GA";
 
     // transaction manager dependencies
-    import org.jboss.narayana.jta "5.0.0.CR3-SNAPSHOT";
+    shared import org.jboss.narayana.jta "5.0.0.Final";
 
-    import java.base "7";
-    import javax.naming "7";
+    shared import java.base "7";
+    shared import javax.naming "7";
+    shared import java.jdbc "7";
 
+    //import org.jboss.modules "1.1.3.GA"; // this one fails
     import org.jboss.modules "1.3.3.Final";
 
     // ceylon.dbc dependencies
-    import ceylon.collection "1.1.0";
     shared import ceylon.dbc "1.1.1";
-    import ceylon.interop.java "1.1.0";
+    shared import ceylon.interop.java "1.1.0";
+
+    import ceylon.file "1.1.0";
 }

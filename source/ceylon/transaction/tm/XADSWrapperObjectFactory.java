@@ -57,13 +57,15 @@ public class XADSWrapperObjectFactory implements ObjectFactory {
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "com.mysql.jdbc.Driver",
         "com.ibm.db2.jcc.DB2Driver",
-        "com.sybase.jdbc3.jdbc.SybDriver"
+        "com.sybase.jdbc3.jdbc.SybDriver",
+        "org.apache.derby.jdbc.ClientDriver" // not sure if it works but adding it for testing
     );
 
     public static void registerDriverSpec(String driverClassName, String moduleName, String moduleVersion,
                                    String dataSourceClassName) {
         if (!supportedDrivers.contains(driverClassName))
-            throw new IllegalArgumentException("Unsupported driver: " + driverClassName);
+            System.err.printf("Warning, " + driverClassName + " is an unsupported driver%n");
+ //           throw new IllegalArgumentException("Unsupported driver: " + driverClassName);
 
         jdbcDrivers.put(driverClassName, new DriverSpec(moduleName, moduleVersion, dataSourceClassName));
     }
@@ -124,10 +126,15 @@ public class XADSWrapperObjectFactory implements ObjectFactory {
             throw new RuntimeException("Failed to load module for driver " + driver, x);
         }
 
-        wrapper = new XADSWrapper(binding, driver, databaseName, host, port, driverSpec.dataSource, moduleClassLoader, userName, password);
+        wrapper = new XADSWrapper(binding, driver, databaseName, host, port,
+            driverSpec.dataSource, moduleClassLoader, userName, password);
 
-        if( driver.equals("org.h2.Driver")) {
+        if (driver.equals("org.h2.Driver")) {
             wrapper.setProperty("URL", databaseName);
+        } else if(driver.equals("org.hsqldb.jdbcDriver")) {
+            wrapper.setProperty("Url", databaseName);
+            wrapper.setProperty("User", userName);
+            wrapper.setProperty("Password", password);
         } else {
             wrapper.setProperty("databaseName", databaseName);
             wrapper.setProperty("serverName", host);

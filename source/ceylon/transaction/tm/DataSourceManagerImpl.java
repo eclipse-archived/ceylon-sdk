@@ -77,5 +77,7 @@ public class DataSourceManagerImpl {
 
             throw new InitializationException(binding + ": Cannot bind datasource into JNDI", e);
         }
+
+        TransactionServiceFactory.registerJDBCXARecoveryHelper(binding, userName, password);
     }
 }

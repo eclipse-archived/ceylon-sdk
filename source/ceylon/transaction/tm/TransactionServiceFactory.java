@@ -36,6 +36,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
+// recovery helpers
+import com.arjuna.ats.arjuna.recovery.RecoveryModule;
+import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
+import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
+
+import java.util.Enumeration;
+import java.util.Vector;
+import ceylon.transaction.rm.RecoveryHelper;
+// end recovery helpers
+
 /**
  * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
  */
@@ -45,6 +55,8 @@ public class TransactionServiceFactory {
     private static InitialContext initialContext;
     private static Set<String> jndiBindings = new HashSet<String>();
     private static boolean replacedJndiProperties = false;
+    private static XARecoveryModule xarm = null;
+    private static Map<String, RecoveryHelper> recoveryHelpers = new HashMap<String, RecoveryHelper>();
 
     /**
      * Makes the transaction service available by bind various transaction related object into the default
@@ -93,6 +105,10 @@ public class TransactionServiceFactory {
         });
     }
 
+    public static synchronized void recoveryScan() {
+        if (recoveryManager != null)
+            recoveryManager.scan();
+    }
 
     /**
      * Stop the transaction service. If the recovery manager was started previously then it to will be stopped.
@@ -102,6 +118,11 @@ public class TransactionServiceFactory {
             return;
 
         if (recoveryManager != null) {
+            synchronized (recoveryHelpers) {
+                for (RecoveryHelper rh : recoveryHelpers.values())
+                    xarm.removeXAResourceRecoveryHelper((XAResourceRecoveryHelper) rh);
+            }
+
             recoveryManager.terminate();
             recoveryManager = null;
         }
@@ -121,7 +142,7 @@ public class TransactionServiceFactory {
         initialized = false;
     }
 
-    private static void startRecoveryService() {
+     static void startRecoveryService() {
         if (recoveryManager == null) {
             final RecoveryEnvironmentBean recoveryEnvironmentBean = recoveryPropertyManager.getRecoveryEnvironmentBean();
 
@@ -133,7 +154,40 @@ public class TransactionServiceFactory {
 //            Thread.currentThread().setContextClassLoader(RecoveryManager.class.getClassLoader());
             recoveryManager = RecoveryManager.manager();
             recoveryManager.initialize();
-//            Thread.currentThread().setContextClassLoader(cl);
+
+            Vector recoveryModules = recoveryManager.getModules();
+            if (recoveryModules != null) {
+                Enumeration modules = recoveryModules.elements();
+
+                while (modules.hasMoreElements()) {
+                    RecoveryModule m = (RecoveryModule) modules.nextElement();
+
+                    if (m instanceof XARecoveryModule) {
+                        synchronized (recoveryHelpers) {
+                            xarm = (XARecoveryModule) m;
+
+                            for (RecoveryHelper rh : recoveryHelpers.values())
+                                xarm.addXAResourceRecoveryHelper((XAResourceRecoveryHelper) rh);
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void registerJDBCXARecoveryHelper(String binding, String user, String password) {
+        //RecoveryHelper recoveryHelper = new RecoveryHelper(binding, user, password);
+        RecoveryHelper recoveryHelper = new RecoveryHelper(binding, user, password);
+
+        synchronized (recoveryHelpers) {
+            if (!recoveryHelpers.containsKey(binding)) {
+                recoveryHelpers.put(binding, recoveryHelper);
+
+                if (xarm != null)
+                    xarm.addXAResourceRecoveryHelper((XAResourceRecoveryHelper) recoveryHelper);
+            }
         }
     }
 

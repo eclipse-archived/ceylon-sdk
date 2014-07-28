@@ -1,6 +1,8 @@
 import ceylon.transaction.tm { TransactionServiceFactory, JndiServer, DSHelper { bindDataSources } }
 
-import java.lang { Class }
+import ceylon.interop.java { javaClassFromInstance }
+
+import java.lang { Class, ClassLoader, Thread { currentThread } }
 import javax.sql { XADataSource }
 
 import javax.transaction {
@@ -17,9 +19,11 @@ shared class TMImpl() satisfies TM {
     variable TransactionManager? transactionManager = null;
 
     shared actual void start(Boolean recovery) {
+        String? dataSourceConfigPropertyFile = process.propertyValue("dbc.properties");
+
         jndiServer.start();
 
-        bindDataSources();
+        bindDataSources(dataSourceConfigPropertyFile);
         transactionServiceFactory.start(recovery);
 
         Object? ut = jndiServer.lookup("java:/UserTransaction");

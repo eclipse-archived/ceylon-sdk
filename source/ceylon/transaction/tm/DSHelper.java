@@ -14,7 +14,11 @@ public class DSHelper {
     private static final Set<String> jndiBindings = new HashSet<String>();
 
     public static void bindDataSources() throws InitializationException {
-        registerJndiBindings(DB_PROPERTIES_NAME);
+        bindDataSources(DB_PROPERTIES_NAME);
+    }
+
+    public static void bindDataSources(String dbConfigFileName) throws InitializationException {
+        registerJndiBindings(dbConfigFileName);
     }
 
     public static void registerDriverSpec(String driverClassName,
@@ -38,7 +42,8 @@ public class DSHelper {
         for (DbProps props : dbConfigs.values()) {
             String url = props.getDatabaseURL();
 
-	        System.out.printf("binding datasource %s%n", props.getBinding());
+            dataSourceManager.registerDriverSpec(props.getDriver(), props.getModuleName(),
+                props.getModuleVersion(), props.getDataSourceClassName());
 
             if (url != null && url.length() > 0)
                 dataSourceManager.registerDataSource(props.getBinding(), props.getDriver(), url,
