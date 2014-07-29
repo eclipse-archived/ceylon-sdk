@@ -74,11 +74,7 @@ class ISO_8859_1Decoder(charset) extends AbstractDecoder()  {
     
     shared actual void decode(ByteBuffer buffer) {
         for(byte in buffer){
-            if(byte.signed < 0){
-                // FIXME: type
-                throw Exception("Invalid ISO_8859-1 byte value: `` byte ``");
-            }
-            builder.appendCharacter(byte.signed.character);
+            builder.appendCharacter(byte.unsigned.character);
         }
     }
 }

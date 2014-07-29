@@ -16,18 +16,19 @@ Integer fromHex(Integer hex){
 "Decodes a percent-encoded ASCII string."
 by("Stéphane Épardaud")
 shared String decodePercentEncoded(String str){
+    Byte percent = '%'.integer.byte;
     ByteArray array = JString(str).getBytes("ASCII");
     variable Integer r = 0;
     variable Integer w = 0;
     while(r < array.size){
         Byte char = array.get(r);
-        if(char == '%'.integer){
+        if(char == percent){
             // must read the next two items
             if(++r < array.size){
                 Byte first = array.get(r);
                 if(++r < array.size){
                     Byte second = array.get(r);
-                    array.set(w, (16 * fromHex(first.signed) + fromHex(second.signed)).byte);
+                    array.set(w, (16 * fromHex(first.unsigned) + fromHex(second.unsigned)).byte);
                 }else{
                     throw Exception("Missing second hex number");
                 }

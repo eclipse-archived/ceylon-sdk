@@ -5,7 +5,8 @@ import ceylon.io.buffer { ByteBuffer }
 by("Stéphane Épardaud")
 shared interface Reader {
     
-    "Reads data into the specified [[buffer]] and return the number
-     of bytes read, or `-1` if the end of file is reached."
+    "Reads data into the specified [[buffer]] and return the 
+     number of bytes read, or `-1` if the end of file is 
+     reached."
     formal shared Integer read(ByteBuffer buffer);
 }
