@@ -22,19 +22,19 @@ shared class FileDescriptorReader(fileDescriptor,
     "Reads data into the specified [[buffer]] and return the number
      of bytes read, or `-1` if the end of file is reached."
     shared actual Integer read(ByteBuffer buffer) {
-        if(exists length){
+        if(exists length) {
             // check that we didn't already read it all
-            if(position == length){
+            if(position == length) {
                 return -1;
             }
             // maybe decrease the max to read from the buffer if required
             Integer remaining = length - position;
-            if(buffer.available > remaining){
+            if(buffer.available > remaining) {
                 buffer.limit = buffer.position + remaining;
             }
         }
         Integer r = fileDescriptor.read(buffer);
-        if(r == -1){
+        if(r == -1) {
             return r;
         }
         position += r;

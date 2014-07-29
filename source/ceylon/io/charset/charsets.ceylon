@@ -13,14 +13,14 @@ shared Charset[] charsets = [ascii, iso_8859_1, utf8, utf16];
 "Gets a character set by name or alias."
 by("Stéphane Épardaud")
 see(`value charsets`)
-shared Charset? getCharset(String name){
+shared Charset? getCharset(String name) {
     value lc = name.lowercased;
-    for(charset in charsets){
-        if(charset.name.lowercased == lc){
+    for(charset in charsets) {
+        if(charset.name.lowercased == lc) {
             return charset;
         }
-        for(aliasName in charset.aliases){
-            if(aliasName.lowercased == lc){
+        for(aliasName in charset.aliases) {
+            if(aliasName.lowercased == lc) {
                 return charset;
             }
         }

@@ -12,9 +12,9 @@
  
  If you want to decode something according to any encoding:
  
-     String decode(String encoding, ByteBuffer buffer){
+     String decode(String encoding, ByteBuffer buffer) {
          Charset? charset = getCharset(encoding);
-         if(exists charset){
+         if(exists charset) {
              return charset.decode(buffer);
          }
          throw Exception(\"Unknown character set\");

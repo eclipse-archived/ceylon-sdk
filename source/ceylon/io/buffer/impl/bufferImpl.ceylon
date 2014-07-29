@@ -12,7 +12,7 @@ import java.nio {
 }
 
 shared class ByteBufferImpl(Integer initialCapacity) 
-        extends ByteBuffer(){
+        extends ByteBuffer() {
     
     variable JavaByteBuffer buf = 
             allocateJavaByteBuffer(initialCapacity);
@@ -32,10 +32,10 @@ shared class ByteBufferImpl(Integer initialCapacity)
     flip() => buf.flip();
     
     shared actual void resize(Integer newSize, Boolean growLimit) {
-        if(newSize == capacity){
+        if(newSize == capacity) {
             return;
         }
-        if(newSize < 0){
+        if(newSize < 0) {
             // FIXME: type
             throw;
         }
@@ -43,10 +43,10 @@ shared class ByteBufferImpl(Integer initialCapacity)
         // save our position and limit
         value position = smallest(this.position, newSize);
         Integer limit;
-        if(newSize < capacity){
+        if(newSize < capacity) {
             // shrink the limit
             limit = smallest(this.limit, newSize);
-        }else if(growLimit && this.limit == capacity){
+        }else if(growLimit && this.limit == capacity) {
             // grow the limit if it was the max and we want that
             limit = newSize;
         }else{

@@ -23,7 +23,7 @@ shared class ServerSocketImpl(SocketAddress? bindAddress,
     shared ServerSocketChannel channel = openSocket();
     shared actual SocketAddress localAddress;
 
-    if(exists bindAddress){
+    if(exists bindAddress) {
         value address = 
                 InetSocketAddress(bindAddress.address, bindAddress.port);
         channel.bind(address, backlog);

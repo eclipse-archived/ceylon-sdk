@@ -78,16 +78,12 @@ shared sealed abstract class Buffer<T>()
     
     "Returns `true` if the current [[position]] is smaller 
      than the [[limit]]."
-    shared Boolean hasAvailable {
-        return available > 0;
-    }
+    shared Boolean hasAvailable => available > 0;
     
     "Returns the number of objects that can be read/written 
      from the current
      [[position]] until we reach the [[limit]]."
-    shared Integer available {
-        return limit - position;
-    }
+    shared Integer available => limit - position;
     
     "Reads an object from this buffer at the current 
      [[position]]. Increases the [[position]] by `1`."
@@ -119,7 +115,7 @@ shared sealed abstract class Buffer<T>()
     shared actual Iterator<T> iterator() {
         object it satisfies Iterator<T> {
             shared actual T|Finished next() {
-                if(hasAvailable){
+                if(hasAvailable) {
                     return get();
                 }
                 return finished;

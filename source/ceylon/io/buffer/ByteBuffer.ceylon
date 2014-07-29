@@ -12,7 +12,7 @@ see(`class Buffer`,
     `function newByteBuffer`,
     `function newByteBufferWithData`)
 shared sealed abstract class ByteBuffer() 
-        extends Buffer<Byte>(){
+        extends Buffer<Byte>() {
     
     shared formal Array<Byte> bytes();
     
@@ -39,10 +39,10 @@ by("Stéphane Épardaud")
 see(`class ByteBuffer`,
     `function newByteBuffer`,
     `class Buffer`)
-shared ByteBuffer newByteBufferWithData(Byte* bytes){
+shared ByteBuffer newByteBufferWithData(Byte* bytes) {
     value seq = bytes.sequence();
     value buf = newByteBuffer(seq.size);
-    for(byte in seq){
+    for(byte in seq) {
         buf.put(byte);
     }
     buf.flip();

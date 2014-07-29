@@ -32,14 +32,14 @@ shared sealed interface FileDescriptor {
      This method makes no sense if the file descriptor is in
      `non-blocking` mode."
     shared void readFully(void consume(ByteBuffer buffer), 
-            ByteBuffer buffer = newBuffer()){
+            ByteBuffer buffer = newBuffer()) {
         // FIXME: should we allocate the buffer ourselves?
         // FIXME: should we clear the buffer passed?
         // I guess not, because there might be something left 
         // by the consumer at the beginning that we don't want 
         // to override?
         // FIXME: should we check that the FD is in blocking mode? 
-        while(read(buffer) >= 0){
+        while(read(buffer) >= 0) {
             buffer.flip();
             consume(buffer);
             // FIXME: should we clear the buffer or should 
@@ -74,8 +74,8 @@ shared sealed interface FileDescriptor {
      entirely, until either the buffer has been entirely 
      written, or until end of file. This method makes no 
      sense if the file descriptor is in `non-blocking` mode."
-    shared void writeFully(ByteBuffer buffer){
-        while(buffer.hasAvailable && write(buffer) >= 0){}
+    shared void writeFully(ByteBuffer buffer) {
+        while(buffer.hasAvailable && write(buffer) >= 0) {}
     }
     
     "Writes all the data produced by the given producer to 
@@ -86,14 +86,14 @@ shared sealed interface FileDescriptor {
      it only has to stop adding data to the buffer. This
      method makes no sense in `non-blocking` mode."
     shared void writeFrom(void producer(ByteBuffer buffer), 
-            ByteBuffer buffer = newBuffer()){
+            ByteBuffer buffer = newBuffer()) {
         // refill
-        while(true){
+        while(true) {
             // fill our buffer
             producer(buffer);
             // flip it for reading
             buffer.flip();
-            if(!buffer.hasAvailable){
+            if(!buffer.hasAvailable) {
                 // EOI
                 return;
             }

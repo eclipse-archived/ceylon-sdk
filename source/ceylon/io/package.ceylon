@@ -16,7 +16,7 @@
  Sample usage for reading all the available bytes from a 
  remote socket in a blocking way:
  
-     void readResponse(Socket socket){
+     void readResponse(Socket socket) {
          // create a new decoder from ASCII bytes
          Decoder decoder = ascii.newDecoder();
          // read,decode it all, blocking
@@ -28,7 +28,7 @@
  Here's the same code, but in an asynchronous way, using a 
  [[Selector]] object to treat `read` events:
  
-     void readResponseAsync(Socket socket){
+     void readResponseAsync(Socket socket) {
          // create a new selector for reading from this socket
          Selector select = newSelector();
          // read, decode, print as we get data
@@ -50,7 +50,7 @@
  Here's how you would write a request to a [[Socket]] in an 
  asynchronous way:
  
-     void writeRequestAsync(String request, Socket socket){
+     void writeRequestAsync(String request, Socket socket) {
          Selector select = newSelector();
          // encode and write as we can
          socket.writeAsync(select, stringToByteProducer(ascii, request));
@@ -61,7 +61,7 @@
  Finally, here's how you can read and write asynchronously 
  to the same socket:
  
-     void readAndWriteAsync(String request, Socket socket){
+     void readAndWriteAsync(String request, Socket socket) {
          Selector select = newSelector();
          // encode and write as we can
          socket.writeAsync(select, stringToByteProducer(ascii, request));

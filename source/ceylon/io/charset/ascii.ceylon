@@ -41,13 +41,13 @@ shared object ascii satisfies Charset {
     ];
 
     "Returns 1."
-    shared actual Integer minimumBytesPerCharacter = 1;
+    shared actual Integer minimumBytesPerCharacter => 1;
     
     "Returns 1."
-    shared actual Integer maximumBytesPerCharacter = 1;
+    shared actual Integer maximumBytesPerCharacter => 1;
 
     "Returns 1."
-    shared actual Integer averageBytesPerCharacter = 1;
+    shared actual Integer averageBytesPerCharacter => 1;
 
     shared actual class Decoder() 
             extends super.Decoder() {
@@ -55,8 +55,8 @@ shared object ascii satisfies Charset {
         value builder = StringBuilder();
         
         shared actual void decode(ByteBuffer buffer) {
-            for(byte in buffer){
-                if(byte.signed < 0){
+            for(byte in buffer) {
+                if(byte.signed < 0) {
                     // FIXME: type
                     throw Exception("Invalid ASCII byte value: ``byte``");
                 }
@@ -76,9 +76,9 @@ shared object ascii satisfies Charset {
         
         shared actual void encode(CharacterBuffer input, ByteBuffer output) {
             // give up if there's no input or no room for output
-            while(input.hasAvailable && output.hasAvailable){
+            while(input.hasAvailable && output.hasAvailable) {
                 value char = input.get().integer;
-                if(char > 127){
+                if(char > 127) {
                     // FIXME: type
                     throw Exception("Invalid ASCII byte value: ``char``");
                 }

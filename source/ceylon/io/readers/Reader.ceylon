@@ -23,11 +23,11 @@ shared abstract class Reader() {
      read or end of file is reached, so if the underlying 
      reader is non-blocking then this method will do very 
      expensive active polling."
-    shared Byte? readByte(){
+    shared Byte? readByte() {
         buffer.clear();
-        while(read(buffer) >= 0){
+        while(read(buffer) >= 0) {
             // did we get anything?
-            if(!buffer.hasAvailable){
+            if(!buffer.hasAvailable) {
                 buffer.flip();
                 return buffer.get();
             }

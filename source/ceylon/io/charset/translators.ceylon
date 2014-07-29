@@ -17,12 +17,12 @@ import ceylon.io.charset {
  [[consumer]] method which accepts decoded [[String]] objects."
 by("Stéphane Épardaud")
 shared Anything(ByteBuffer) byteConsumerToStringConsumer
-        (Charset charset, void consumer(String buffer)){
+        (Charset charset, void consumer(String buffer)) {
     value decoder = charset.Decoder();
-    void translator(ByteBuffer buffer){
+    void translator(ByteBuffer buffer) {
         decoder.decode(buffer);
         value decoded = decoder.consume();
-        if(!decoded.empty){
+        if(!decoded.empty) {
             consumer(decoded);
         }
     }
@@ -37,10 +37,10 @@ shared Anything(ByteBuffer) byteConsumerToStringConsumer
  the given [[string]], encoded using the given [[charset]]."
 by("Stéphane Épardaud")
 shared Anything(ByteBuffer) stringToByteProducer
-        (Charset charset, String string){
+        (Charset charset, String string) {
     value encoder = charset.Encoder();
     CharacterBuffer input = newCharacterBufferWithData(string);
-    void producer(ByteBuffer buffer){
+    void producer(ByteBuffer buffer) {
         encoder.encode(input, buffer);
     }
     return producer;

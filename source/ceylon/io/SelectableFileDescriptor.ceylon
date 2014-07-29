@@ -22,11 +22,11 @@ shared sealed interface SelectableFileDescriptor
     see(`interface Selector`)
     shared void readAsync(Selector selector, 
             void consume(ByteBuffer buffer), 
-            ByteBuffer buffer = newBuffer()){
+            ByteBuffer buffer = newBuffer()) {
         blocking = true;
-        Boolean readData(FileDescriptor socket){
+        Boolean readData(FileDescriptor socket) {
             buffer.clear();
-            if(socket.read(buffer) >= 0){
+            if(socket.read(buffer) >= 0) {
                 buffer.flip();
                 // FIXME: should the consumer be allowed to stop us?
                 consume(buffer);
@@ -50,24 +50,24 @@ shared sealed interface SelectableFileDescriptor
     see(`interface Selector`)
     shared void writeAsync(Selector selector, 
             void producer(ByteBuffer buffer), 
-            ByteBuffer buffer = newBuffer()){
+            ByteBuffer buffer = newBuffer()) {
         blocking=true;
         variable Boolean needNewData = true;
-        Boolean writeData(FileDescriptor socket){
+        Boolean writeData(FileDescriptor socket) {
             // get new data if we ran out
-            if(needNewData){
+            if(needNewData) {
                 buffer.clear();
                 producer(buffer);
                 // flip it for reading
                 buffer.flip();
-                if(!buffer.hasAvailable){
+                if(!buffer.hasAvailable) {
                     // EOI
                     return false;
                 }
                 needNewData = false;
             }
             // try to write it
-            if(socket.write(buffer) >= 0){
+            if(socket.write(buffer) >= 0) {
                 // did we manage to write everything?
                 needNewData = !buffer.hasAvailable;
                 return true;

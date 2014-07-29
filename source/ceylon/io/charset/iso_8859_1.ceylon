@@ -45,22 +45,22 @@ shared object iso_8859_1 satisfies Charset {
     ];
 
     "Returns 1."
-    shared actual Integer minimumBytesPerCharacter = 1;
+    shared actual Integer minimumBytesPerCharacter => 1;
 
     "Returns 1."
-    shared actual Integer maximumBytesPerCharacter = 1;
+    shared actual Integer maximumBytesPerCharacter => 1;
     
     "Returns 1."
-    shared actual Integer averageBytesPerCharacter = 1;
+    shared actual Integer averageBytesPerCharacter => 1;
 
     shared actual class Encoder() 
             extends super.Encoder() {
         
         shared actual void encode(CharacterBuffer input, ByteBuffer output) {
             // give up if there's no input or no room for output
-            while(input.hasAvailable && output.hasAvailable){
+            while(input.hasAvailable && output.hasAvailable) {
                 value char = input.get().integer;
-                if(char > 255){
+                if(char > 255) {
                     // FIXME: type
                     throw Exception("Invalid ISO_8859-1 byte value: `` char ``");
                 }
@@ -75,7 +75,7 @@ shared object iso_8859_1 satisfies Charset {
         value builder = StringBuilder();
         
         shared actual void decode(ByteBuffer buffer) {
-            for(byte in buffer){
+            for(byte in buffer) {
                 builder.appendCharacter(byte.unsigned.character);
             }
         }

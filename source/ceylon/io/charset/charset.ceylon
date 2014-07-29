@@ -26,9 +26,7 @@ shared interface Charset {
      defined by [the internet registry][].
      
      [the internet registry]: http://www.iana.org/assignments/character-sets"
-    shared default String[] aliases {
-        return [];
-    }
+    shared default String[] aliases => [];
 
     "The minimum number of bytes taken when encoding a 
      character into bytes."    
@@ -51,13 +49,13 @@ shared interface Charset {
     
     "Encodes the given [[string]] into a newly-created 
      [[ByteBuffer]]. This is a convenience method."
-    shared ByteBuffer encode(String string){
+    shared ByteBuffer encode(String string) {
         value output = newByteBuffer(string.size * averageBytesPerCharacter);
         value input = newCharacterBufferWithData(string);
         value encoder = Encoder();
-        while(input.hasAvailable || !encoder.done){
+        while(input.hasAvailable || !encoder.done) {
             // grow the output buffer if our estimate turned out wrong
-            if(!output.hasAvailable){
+            if(!output.hasAvailable) {
                 output.resize(string.size * maximumBytesPerCharacter, true);
             }
             encoder.encode(input, output);
@@ -69,26 +67,27 @@ shared interface Charset {
     
     "Decodes the given [[ByteBuffer]] into a newly-created 
      [[String]]. This is a convenience method."
-    shared String decode(ByteBuffer buffer){
+    shared String decode(ByteBuffer buffer) {
         value decoder = Decoder();
         decoder.decode(buffer);
         return decoder.consume();
     }
     
-    "Encodes a sequence of characters into a sequence of bytes."
+    "Encodes a sequence of characters into a sequence of 
+     bytes."
     by("Stéphane Épardaud")
     shared formal class Encoder() {
         
-        "Returns true if there are no bytes pending to be output. 
-         Returns false if there are some characters that were 
-         read but could not yet be entirely output due to output 
-         buffer availability."
+        "Returns true if there are no bytes pending to be 
+         output. Returns false if there are some characters 
+         that were read but could not yet be entirely output 
+         due to output buffer availability."
         shared default Boolean done => true;
         
-        "Encodes the given [[input]] character buffer into the 
-         given [[output]] byte buffer. Attempts to encode as 
-         many characters as are available and fit in the output 
-         buffer."
+        "Encodes the given [[input]] character buffer into 
+         the given [[output]] byte buffer. Attempts to 
+         encode as many characters as are available and fit 
+         in the output buffer."
         shared formal void encode(CharacterBuffer input, 
             ByteBuffer output);
     }
@@ -96,6 +95,12 @@ shared interface Charset {
     "Decodes a sequence of bytes into a sequence of characters."
     by("Stéphane Épardaud")
     shared formal class Decoder() {
+        
+        "Returns true if there are no bytes pending to be 
+         output. Returns false if there are some bytes 
+         that were read but could not yet be entirely output 
+         due to representing incomplete characters."
+        shared default Boolean done => true;
         
         "Decodes the given byte [[buffer]] into an underlying 
          character buffer. Attempts to decode as many bytes as 

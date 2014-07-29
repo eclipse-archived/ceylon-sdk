@@ -45,7 +45,7 @@ abstract class AbstractBase64() {
     shared ByteBuffer encode(ByteBuffer input) {
         //Base64 has an output grow about 33%
         value result = newByteBuffer((2 + input.available - ((input.available + 2) % 3)) * 4 / 3);
-        while( input.hasAvailable ){
+        while( input.hasAvailable ) {
             encodeBytesToChars( input, result );
         }
         result.flip();

@@ -23,7 +23,7 @@ shared class SocketConnectorImpl(SocketAddress address)
     
     shared SocketChannel channel = openSocket();
     
-    shared default actual Socket connect(){
+    shared default actual Socket connect() {
         channel.connect(InetSocketAddress(address.address, 
             address.port));
         return createSocket();
@@ -32,7 +32,7 @@ shared class SocketConnectorImpl(SocketAddress address)
     shared default Socket createSocket() => SocketImpl(channel);
     
     shared actual void connectAsync(Selector selector, 
-        void connect(Socket socket)){
+        void connect(Socket socket)) {
         channel.configureBlocking(false);
         channel.connect(InetSocketAddress(address.address, 
             address.port));
@@ -53,7 +53,7 @@ shared class SslSocketConnectorImpl(SocketAddress address)
         extends SocketConnectorImpl(address)
     satisfies SslSocketConnector {
 
-    shared actual SslSocket connect(){
+    shared actual SslSocket connect() {
         channel.connect(InetSocketAddress(address.address, 
             address.port));
         return createSocket();

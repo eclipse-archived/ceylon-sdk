@@ -47,15 +47,15 @@ shared object utf16 satisfies Charset {
         
         shared actual void encode(CharacterBuffer input, ByteBuffer output) {
             // give up if there's no input or no room for output
-            while((input.hasAvailable || bytes.hasAvailable) && output.hasAvailable){
+            while((input.hasAvailable || bytes.hasAvailable) && output.hasAvailable) {
                 // first flush our buffer
-                if(bytes.hasAvailable){
+                if(bytes.hasAvailable) {
                     output.put(bytes.get());
                 }else{
                     // now read from input
                     value codePoint = input.get().integer;
                     // how many bytes?
-                    if(codePoint < #10000){
+                    if(codePoint < #10000) {
                         // single 16-bit value
                         // two bytes
                         value b1 = codePoint.and(#FF00).rightLogicalShift(8).byte;
@@ -65,7 +65,7 @@ shared object utf16 satisfies Charset {
                         bytes.clear();
                         bytes.put(b2);
                         bytes.flip();
-                    }else if(codePoint < #10FFFF){
+                    }else if(codePoint < #10FFFF) {
                         // two 16-bit values
                         value u = codePoint - #10000;
                         // keep the high 10 bits
@@ -109,12 +109,14 @@ shared object utf16 satisfies Charset {
         
         value builder = StringBuilder(); 
         
+        done => !needsMoreBytes && !needsLowSurrogate;
+        
         shared actual String consume() {
-            if(needsMoreBytes){
+            if(needsMoreBytes) {
                 // FIXME: type
                 throw Exception("Invalid UTF-16 sequence: missing a byte");
             }
-            if(needsLowSurrogate){
+            if(needsLowSurrogate) {
                 // FIXME: type
                 throw Exception("Invalid UTF-16 sequence: missing low surrogate");
             }
@@ -124,7 +126,7 @@ shared object utf16 satisfies Charset {
         }
         
         Integer assembleBytes(Byte a, Byte b) { 
-            if(bigEndian){
+            if(bigEndian) {
                 return a.unsigned.leftLogicalShift(8).or(b.unsigned);
             }else{
                 return a.unsigned.or(b.unsigned.leftLogicalShift(8));
@@ -132,16 +134,16 @@ shared object utf16 satisfies Charset {
         }
         
         shared actual void decode(ByteBuffer buffer) {
-            for(byte in buffer){
+            for(byte in buffer) {
                 // are we looking at the first byte of a 16-bit word?
-                if(!needsMoreBytes){
+                if(!needsMoreBytes) {
                     // keep this byte in any case
                     firstByte = byte;
                     needsMoreBytes = true;
                     continue;
                 }
                 // are we looking at the second byte?
-                if(needsMoreBytes){
+                if(needsMoreBytes) {
                     Integer char;
                     
                     // assemble the two bytes
@@ -149,12 +151,12 @@ shared object utf16 satisfies Charset {
                     needsMoreBytes = false;
                     
                     // are we looking at the first 16-bit word?
-                    if(!needsLowSurrogate){
+                    if(!needsLowSurrogate) {
                         // Single 16bit value
-                        if(word < #D800 || word > #DFFF){
+                        if(word < #D800 || word > #DFFF) {
                             // we got the char
                             char = word;
-                        }else if(word > #DBFF){
+                        }else if(word > #DBFF) {
                             // FIXME: type
                             throw Exception("Invalid UTF-16 high surrogate value: `` word ``");
                         }else{
@@ -165,7 +167,7 @@ shared object utf16 satisfies Charset {
                         }
                     }else{
                         // we have the second 16-bit word, check it
-                        if(word < #DC00 || word > #DFFF){
+                        if(word < #DC00 || word > #DFFF) {
                             // FIXME: type
                             throw Exception("Invalid UTF-16 low surrogate value: `` word ``");
                         }
@@ -178,9 +180,9 @@ shared object utf16 satisfies Charset {
                     }
                     
                     // 0xFEFF is the Byte Order Mark in UTF8
-                    if(char == #FEFF && builder.size == 0 && !byteOrderMarkSeen){
+                    if(char == #FEFF && builder.size == 0 && !byteOrderMarkSeen) {
                         byteOrderMarkSeen = true;
-                    }else if(char == #FFFE && builder.size == 0 && !byteOrderMarkSeen){
+                    }else if(char == #FFFE && builder.size == 0 && !byteOrderMarkSeen) {
                         byteOrderMarkSeen = true;
                         bigEndian = false;
                     }else{
