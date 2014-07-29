@@ -4,38 +4,22 @@ import ceylon.interop.java { toByteArray }
 
 
 shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
-    variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
-    shared JavaByteBuffer underlyingBuffer {
-        return buf;
-    }
     
-    shared actual Integer capacity {
-        return buf.capacity();
-    }
-    shared actual Integer limit {
-        return buf.limit();
-    }
-    assign limit {
-        buf.limit(limit);
-    }
-    shared actual Integer position {
-        return buf.position();
-    }
-    assign position {
-        buf.position(position);
-    }
-    shared actual Byte get() {
-        return buf.get();
-    }
-    shared actual void put(Byte byte) {
-        buf.put(byte);
-    }
-    shared actual void clear() {
-        buf.clear();
-    }
-    shared actual void flip() {
-        buf.flip();
-    }
+    variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
+    shared JavaByteBuffer underlyingBuffer => buf;
+    
+    capacity => buf.capacity();
+    
+    shared actual Integer limit => buf.limit();
+    assign limit => buf.limit(limit);
+    
+    shared actual Integer position => buf.position();
+    assign position => buf.position(position);
+    
+    get() => buf.get();
+    put(Byte byte) => buf.put(byte);
+    clear() => buf.clear();
+    flip() => buf.flip();
     
     shared actual void resize(Integer newSize, Boolean growLimit) {
         if(newSize == capacity){
@@ -47,11 +31,11 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         }
         JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
         // save our position and limit
-        value position = min([this.position, newSize]);
+        value position = smallest(this.position, newSize);
         Integer limit;
         if(newSize < capacity){
             // shrink the limit
-            limit = min([this.limit, newSize]);
+            limit = smallest(this.limit, newSize);
         }else if(growLimit && this.limit == capacity){
             // grow the limit if it was the max and we want that
             limit = newSize;
@@ -60,7 +44,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
             limit = this.limit;
         }
         // copy everything unless we shrink
-        value copyUntil = min([this.capacity, newSize]);
+        value copyUntil = smallest(this.capacity, newSize);
         // prepare our limits for copying
         buf.position(0);
         buf.limit(copyUntil);
@@ -72,11 +56,15 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         buf.limit(limit);
         buf.position(position);
     }
+    
     shared actual Array<Byte> bytes() {
+        //TODO: could it be buf.array().byteArray
+        //downside: that exposes the internal state
+        //of the underyling Java buffer
         return toByteArray(buf.array());
     }
     
     shared actual Object? implementation => underlyingBuffer;
-
+    
 }
 
