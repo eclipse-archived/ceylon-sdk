@@ -28,7 +28,7 @@ import ceylon.net.uri {
 
 "Represents an HTTP Request"
 by("Stéphane Épardaud", "Matej Lazar")
-shared class Request(uri, method = get){
+shared class Request(uri, method = get) {
     // constant
     String crLf = "\r\n";
 
@@ -52,19 +52,19 @@ shared class Request(uri, method = get){
     "Set to true to use SSL. Defaults to true for port 443."
     shared variable Boolean ssl = false;
 
-    if(uri.relative){
+    if(uri.relative) {
         throw Exception("Can't request a relative URI");
     }
-    if(exists String scheme = uri.scheme){
+    if(exists String scheme = uri.scheme) {
         if(scheme != "http"
-            && scheme != "https"){
+            && scheme != "https") {
             throw Exception("Only HTTP and HTTPS schemes are supported");
         }
-        if(exists tmpPort = uri.authority.port){
+        if(exists tmpPort = uri.authority.port) {
             port = tmpPort;
-        }else if(scheme == "http"){
+        }else if(scheme == "http") {
             port = 80;
-        }else if(scheme == "https"){
+        }else if(scheme == "https") {
             port = 443;
             ssl = true;
         }
@@ -74,17 +74,17 @@ shared class Request(uri, method = get){
     
     "The host to connect to. Extracted from the specified [[uri]]."
     shared String host;
-    if(exists tmpHost = uri.authority.host){
+    if(exists tmpHost = uri.authority.host) {
         host = tmpHost;
     }else{
         throw Exception("URI host is not set");
     }
     
     "Returns a request header, if it exists. Returns null otherwise."
-    shared Header? getHeader(String name){
+    shared Header? getHeader(String name) {
         String lc = name.lowercased;
-        for(header in headers){
-            if(header.name.lowercased == lc){
+        for(header in headers) {
+            if(header.name.lowercased == lc) {
                 return header;
             }
         }
@@ -92,8 +92,8 @@ shared class Request(uri, method = get){
     }
     
     "Sets a request header."
-    shared void setHeader(String name, String* values){
-        if(exists header = getHeader(name)){
+    shared void setHeader(String name, String* values) {
+        if(exists header = getHeader(name)) {
             header.values.clear();
             header.values.addAll(values);
         }else{
@@ -159,7 +159,7 @@ shared class Request(uri, method = get){
     
     String prepareRequest() {
         variable String path = uri.pathPart;
-        if(path.empty){
+        if(path.empty) {
             path = "/";
         }
         if(exists query = uri.queryPart) {
@@ -180,8 +180,8 @@ shared class Request(uri, method = get){
         }
         
         // headers
-        for(header in headers){
-            for(val in header.values){
+        for(header in headers) {
+            for(val in header.values) {
                 builder.append(header.name)
                         .append(": ")
                         .append(val)
@@ -198,7 +198,7 @@ shared class Request(uri, method = get){
     }
     
     "Executes this request by connecting to the server and returns a [[Response]]."
-    shared Response execute(){
+    shared Response execute() {
         // prepare the request
         value requestContents = prepareRequest();
         // ready to send, convert to a byte buffer

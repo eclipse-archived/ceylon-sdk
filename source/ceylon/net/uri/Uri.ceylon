@@ -16,7 +16,7 @@ shared class Uri(scheme = null,
     authority = Authority(), 
     path = Path(), 
     query = Query(), 
-    fragment = null){
+    fragment = null) {
     
     "The optional URI scheme: `http`, `https`, `mailto`…"
     shared variable String? scheme;
@@ -53,20 +53,20 @@ shared class Uri(scheme = null,
     
     String toRepresentation(Boolean human) {
         StringBuilder b = StringBuilder();
-        if(exists String scheme = scheme){
+        if(exists String scheme = scheme) {
             b.append(scheme);
             b.append(":");
         }
-        if(authority.specified){
+        if(authority.specified) {
             b.append("//");
             b.append(authority.toRepresentation(human));
         }
         b.append(path.toRepresentation(human));
-        if(query.specified){
+        if(query.specified) {
             b.append("?");
             b.append(query.toRepresentation(human));
         }
-        if(exists String fragment = fragment){
+        if(exists String fragment = fragment) {
             b.append("#");
             b.append(human then fragment else percentEncoder.encodeFragment(fragment));
         }
@@ -88,8 +88,8 @@ shared class Uri(scheme = null,
     "Returns true if the given object is the same as this 
      object"
     shared actual Boolean equals(Object that) {
-        if(is Uri that){
-            if(this === that){
+        if(is Uri that) {
+            if(this === that) {
                 return true;
             }
             return eq(scheme, that.scheme)
@@ -112,7 +112,7 @@ shared class Uri(scheme = null,
     }
     
     "Returns a GET HTTP request"
-    shared Request get(){
+    shared Request get() {
         return Request(this);
     }
 }

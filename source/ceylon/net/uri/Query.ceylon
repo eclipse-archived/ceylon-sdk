@@ -11,7 +11,7 @@ shared class Query(Parameter* initialParameters) {
     shared LinkedList<Parameter> parameters 
             = LinkedList<Parameter>();
     
-    for(p in initialParameters){
+    for(p in initialParameters) {
         parameters.add(p);
     }
 
@@ -28,8 +28,8 @@ shared class Query(Parameter* initialParameters) {
 
     "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
-        if(is Query that){
-            if(this === that){
+        if(is Query that) {
+            if(this === that) {
                 return true;
             }
             return parameters == that.parameters; 
@@ -44,10 +44,10 @@ shared class Query(Parameter* initialParameters) {
     }
     
     String serialiseParameter(Parameter param, Boolean human) {
-        if(human){
+        if(human) {
             return param.toRepresentation(true);
         }
-        if(exists String val = param.val){
+        if(exists String val = param.val) {
             return percentEncoder.encodeQueryPart(param.name) + "=" + percentEncoder.encodeQueryPart(val);
         }else{
             return percentEncoder.encodeQueryPart(param.name);
@@ -56,13 +56,13 @@ shared class Query(Parameter* initialParameters) {
 
     "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human) { 
-        if(parameters.empty){
+        if(parameters.empty) {
             return "";
         }
         StringBuilder b = StringBuilder();
         variable Integer i = 0;
-        for(Parameter p in parameters){
-            if(i++ > 0){
+        for(Parameter p in parameters) {
+            if(i++ > 0) {
                 b.appendCharacter('&');
             }
             b.append(serialiseParameter(p, human));

@@ -58,13 +58,13 @@ shared class Response(status, reason, major, minor,
 
     "The charset, if set. Null otherwise."
     shared String? charset {
-        if(exists contentTypeLine = this.contentTypeLine){
+        if(exists contentTypeLine = this.contentTypeLine) {
             // split it if required
             value params = contentTypeLine.split(';'.equals).rest;
-            for(param in params){
+            for(param in params) {
                 value trimmed = param.trimmed;
-                if(nonempty keyValue = trimmed.split('='.equals).sequence()){
-                    if(keyValue.first == "charset"){
+                if(nonempty keyValue = trimmed.split('='.equals).sequence()) {
+                    if(keyValue.first == "charset") {
                         return keyValue[1];
                     }
                 }
@@ -76,9 +76,9 @@ shared class Response(status, reason, major, minor,
     "Returns a single header value, if there is a single 
      value present. Returns null if the header cannot be 
      found or has more than one value."
-    shared String? getSingleHeader(String name){
-        if(exists contentType = this[name]){
-            if(contentType.values.size != 1){
+    shared String? getSingleHeader(String name) {
+        if(exists contentType = this[name]) {
+            if(contentType.values.size != 1) {
                 return null;
             }
             return contentType.values[0];
@@ -95,8 +95,8 @@ shared class Response(status, reason, major, minor,
     shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("HTTP/`` major ``.`` minor `` `` status `` `` reason ``\n");
-        for(header in headers){
-            for(val in header.values){
+        for(header in headers) {
+            for(val in header.values) {
                 b.append(header.name)
                  .append(": ")
                  .append(val)
@@ -113,13 +113,13 @@ shared class Response(status, reason, major, minor,
 
     "Returns a [[Reader]] for the entity body."
     throws(`class Exception`, "If the status is not 200 OK.")
-    shared Reader getReader(){
-        if(status != 200){
+    shared Reader getReader() {
+        if(status != 200) {
             throw Exception("Status is not OK");
         }
         if(exists transferEncoding 
             = getSingleHeader("Transfer-Encoding"),
-                transferEncoding == "chunked"){
+                transferEncoding == "chunked") {
             return ChunkedEntityReader(socket);
         }
         return FileDescriptorReader(socket, contentLength);
@@ -132,35 +132,35 @@ shared class Response(status, reason, major, minor,
         variable Integer nextChunkSize = 0;
         variable Boolean lastChunkRead = false;
 
-        void parseChunkHeader(){
+        void parseChunkHeader() {
             nextChunkSize = parser.parseChunkHeader(firstChunk);
             firstChunk = false;
             lastChunkRead = nextChunkSize == 0;
-            if(lastChunkRead){
+            if(lastChunkRead) {
                 // add optional headers
                 parser.parseChunkTrailer();
             }
         }
         
         shared actual Integer read(ByteBuffer buffer) {
-            if(lastChunkRead){
+            if(lastChunkRead) {
                 return -1;
             }
             // did we deplete the last chunk?
-            if(nextChunkSize == 0){
+            if(nextChunkSize == 0) {
                 // read a new chunk and goto 0
                 parseChunkHeader();
                 return read(buffer);
             }
             // only read up to the chunk size available
-            if(buffer.available > nextChunkSize){
+            if(buffer.available > nextChunkSize) {
                 buffer.limit = buffer.position + nextChunkSize;
             }
             Integer bytesRead = fileDescriptor.read(buffer);
             // if we came to EOF, mark ourselves as EOF even 
             // though it's not normal
             // FIXME: should we barf?
-            if(bytesRead == -1){
+            if(bytesRead == -1) {
                 lastChunkRead = true;
             }else{
                 nextChunkSize -= bytesRead;
@@ -173,17 +173,17 @@ shared class Response(status, reason, major, minor,
     throws(`class Exception`, 
         "If the status code is not 200")
     shared String contents {
-        if(exists x = readException){
+        if(exists x = readException) {
             throw x;
         }
-        if(exists c = readContents){
+        if(exists c = readContents) {
             return c;
         }
         try{
             String c = readEntityBody();
             readContents = c;
             return c;
-        }catch(Exception x){
+        }catch(Exception x) {
             readException = x;
             throw x;
         }
@@ -191,12 +191,12 @@ shared class Response(status, reason, major, minor,
     
     String readEntityBody() {
         // that's a bit of a simplification ;)
-        if(status == 200){
+        if(status == 200) {
             value reader = getReader();
             ByteBuffer buffer = newByteBuffer(4096);
             value encoding = getCharset(charset else "ASCII") else ascii;
             value decoder = encoding.Decoder();
-            while(reader.read(buffer) != -1){
+            while(reader.read(buffer) != -1) {
                 buffer.flip();
                 decoder.decode(buffer);
                 buffer.clear();
@@ -212,7 +212,7 @@ shared class Response(status, reason, major, minor,
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13
 
         if(exists header = getSingleHeader("Content-Length"),
-           exists int = parseInteger(header)){
+           exists int = parseInteger(header)) {
             // Spec says that negative numbers should not count
             return int >= 0 then int;
         }

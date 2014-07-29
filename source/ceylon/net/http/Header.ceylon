@@ -9,7 +9,7 @@ import ceylon.io.charset {
 
 "Represents an HTTP Header"
 by("Stéphane Épardaud")
-shared class Header(name, String* initialValues){
+shared class Header(name, String* initialValues) {
     
     "Header name"
     shared String name;
@@ -17,7 +17,7 @@ shared class Header(name, String* initialValues){
     "Header value"
     shared MutableList<String> values = LinkedList<String>();
     
-    for(val in initialValues){
+    for(val in initialValues) {
         values.add(val);
     }
 }

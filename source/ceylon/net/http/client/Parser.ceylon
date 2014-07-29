@@ -22,7 +22,7 @@ import ceylon.net.http {
 
 "Parses an HTTP message from the given [[FileDescriptor]]."
 by("Stéphane Épardaud")
-shared class Parser(FileDescriptor socket){
+shared class Parser(FileDescriptor socket) {
     
     variable Integer byte = 0;
     value buffer = newByteBuffer(1024);
@@ -44,39 +44,39 @@ shared class Parser(FileDescriptor socket){
     //
     // Tests the current byte
     
-    Boolean isText(){
+    Boolean isText() {
         // TEXT: 0-255 (Latin1 char) except CTLs
         return byte <= 255 && !isCtl();
     }
     
-    Boolean isChar(){
+    Boolean isChar() {
         // CHAR: 0-127 (ASCII char)
         return byte <= 127;
     }
     
-    Boolean isCtl(){
+    Boolean isCtl() {
         // CTL: 0-31 and 127 (DEL)
         return byte <= 31 || byte == 127;
     }
     
-    Boolean isDigit(){
+    Boolean isDigit() {
         // DIGIT: 0-9
         return byte >= '0'.integer && byte <= '9'.integer;
     }
     
-    Boolean isHexDigit(){
+    Boolean isHexDigit() {
         // HEX DIGIT: 0-9 or a-f or A-F
         return byte >= '0'.integer && byte <= '9'.integer
          || byte >= 'a'.integer && byte <= 'f'.integer
          || byte >= 'A'.integer && byte <= 'F'.integer;
     }
     
-    Boolean isToken(){
+    Boolean isToken() {
         // token: CHAR except CTLs or separators
         return isChar() && !isCtl() && !isSeparator();
     }
 
-    Boolean isSeparator(){
+    Boolean isSeparator() {
         // separators = "(" | ")" | "<" | ">" | "@"
         //            | "," | ";" | ":" | "\" | <">
         //            | "/" | "[" | "]" | "?" | "="
@@ -96,7 +96,7 @@ shared class Parser(FileDescriptor socket){
 
     "Reads a byte"
     throws(`class Exception`, "On end of file")
-    void readByte(){
+    void readByte() {
         if (exists b = reader.readByte()) {
             byte = b.signed;
         }
@@ -107,15 +107,15 @@ shared class Parser(FileDescriptor socket){
     
     "Reads a byte and pushes it on the buffer"
     throws(`class Exception`, "On end of file")
-    void saveByte(){
+    void saveByte() {
         readByte();
         pushByte();
     }
     
     "Pushes the last byte read on to the buffer"
-    void pushByte(){
+    void pushByte() {
         // grow the line buffer if required
-        if(!buffer.hasAvailable){
+        if(!buffer.hasAvailable) {
             buffer.resize(buffer.capacity + 1024, true);
         }
         // save the byte
@@ -123,7 +123,7 @@ shared class Parser(FileDescriptor socket){
     }
 
     "Gets the contents of the buffer as ASCII"
-    String getString(){
+    String getString() {
         buffer.flip();
         decoder.decode(buffer);
         return decoder.consume();
@@ -131,7 +131,7 @@ shared class Parser(FileDescriptor socket){
     
     "Throws an exception about an unexpected input read"
     throws(`class Exception`, "All the time")
-    Exception unexpected(String expected){
+    Exception unexpected(String expected) {
         // try to read some context for an error
         ByteBuffer buffer = newByteBuffer(40);
         buffer.put(byte.byte);
@@ -147,7 +147,7 @@ shared class Parser(FileDescriptor socket){
     throws(`class Exception`, 
         "If the byte read is not equal to the given ASCII 
          character")
-    void readChar(Character c){
+    void readChar(Character c) {
         readByte();
         atChar(c);
     }
@@ -157,8 +157,8 @@ shared class Parser(FileDescriptor socket){
     throws(`class Exception`, 
         "If the current byte is not equal to the given ASCII 
          character")
-    void atChar(Character c){
-        if(byte != c.integer){
+    void atChar(Character c) {
+        if(byte != c.integer) {
             throw unexpected(c.string);
         }
     }
@@ -167,8 +167,8 @@ shared class Parser(FileDescriptor socket){
     throws(`class Exception`, 
         "If the bytes read do not match the given ASCII 
          string.")
-    void readString(String string){
-        for(c in string){
+    void readString(String string) {
+        for(c in string) {
             readChar(c);
         }
     }
@@ -176,7 +176,7 @@ shared class Parser(FileDescriptor socket){
     "Reads a space."
     throws(`class Exception`, 
         "If the byte read is not a space")
-    void readSpace(){
+    void readSpace() {
         readChar(' ');
     }
     
@@ -184,9 +184,9 @@ shared class Parser(FileDescriptor socket){
      Returns the digit read."
     throws(`class Exception`, 
         "If the byte read is not a digit")
-    Integer parseDigit(){
+    Integer parseDigit() {
         readByte();
-        if(!isDigit()){
+        if(!isDigit()) {
             throw unexpected("digit");
         }
         return byte - '0'.integer;
@@ -196,7 +196,7 @@ shared class Parser(FileDescriptor socket){
       Returns the digit read."
     throws(`class Exception`, 
         "If the byte read is not a hex digit.")
-    Integer parseHexDigit(){
+    Integer parseHexDigit() {
         readByte();
         return atHexDigit();
     }*/
@@ -205,15 +205,15 @@ shared class Parser(FileDescriptor socket){
      Returns the digit."
     throws(`class Exception`, 
         "If the current byte is not a hex digit.")
-    Integer atHexDigit(){
-        if(!isHexDigit()){
+    Integer atHexDigit() {
+        if(!isHexDigit()) {
             throw unexpected("hex digit");
         }
-        if(isDigit()){
+        if(isDigit()) {
             return byte - '0'.integer;
-        }else if(byte >= 'a'.integer && byte <= 'f'.integer){
+        }else if(byte >= 'a'.integer && byte <= 'f'.integer) {
             return 10 + byte - 'a'.integer;
-        }else if(byte >= 'A'.integer && byte <= 'F'.integer){
+        }else if(byte >= 'A'.integer && byte <= 'F'.integer) {
             return 10 + byte - 'A'.integer;
         }else{
             // can't happen
@@ -222,7 +222,7 @@ shared class Parser(FileDescriptor socket){
     }
     
     "Reads an HTTP version part"
-    void parseHttpVersion(){
+    void parseHttpVersion() {
         readString("HTTP/");
         major = parseDigit();
         readChar('.');
@@ -233,14 +233,14 @@ shared class Parser(FileDescriptor socket){
      to be the start of token."
     throws(`class Exception`, 
         "If the current byte is not a token byte")
-    String atTokenPlusOne(){
+    String atTokenPlusOne() {
         buffer.clear();
-        while(isToken()){
+        while(isToken()) {
             pushByte();
             readByte();
         }
         value ret = getString();
-        if(!ret.empty){
+        if(!ret.empty) {
             return ret;
         }
         throw unexpected("token");
@@ -251,8 +251,8 @@ shared class Parser(FileDescriptor socket){
     throws(`class Exception`, 
         "If the current byte is not a CR and if the next is 
          not a LF.")
-    void atCrLf(){
-        if(byte != '\r'.integer){
+    void atCrLf() {
+        if(byte != '\r'.integer) {
             throw unexpected("\\r");
         }
         readChar('\n');
@@ -262,10 +262,10 @@ shared class Parser(FileDescriptor socket){
      to be on the CR."
     throws(`class Exception`, 
         "If the current byte is not at the start of a LWS.")
-    void atLws(){
+    void atLws() {
         atCrLf();
         readByte();
-        if(byte != ' '.integer && byte != '\t'.integer){
+        if(byte != ' '.integer && byte != '\t'.integer) {
             throw unexpected("SP or HT");
         }
         // FIXME: should we eat the rest?
@@ -276,21 +276,21 @@ shared class Parser(FileDescriptor socket){
     throws(`class Exception`, 
         "If the current byte does not start a valid quoted 
          string.")
-    void atQuotedText(){
+    void atQuotedText() {
         atChar('"');
         readByte();
         buffer.clear();
-        while(byte != '"'.integer){
-            if(byte == '\\'.integer){
+        while(byte != '"'.integer) {
+            if(byte == '\\'.integer) {
                 saveByte();
-                if(!isChar()){
+                if(!isChar()) {
                     throw unexpected("CHAR");
                 }
-            }else if(byte == '\r'.integer){
+            }else if(byte == '\r'.integer) {
                 atLws();
                 byte = ' '.integer;
                 saveByte();
-            }else if(isText()){
+            }else if(isText()) {
                 pushByte();
             }else{
                 throw unexpected("TEXT");
@@ -306,14 +306,14 @@ shared class Parser(FileDescriptor socket){
      HttpVersion StatusCode Reason? CRLF."
     throws(`class Exception`, 
         "If the status line is invalid.")
-    void parseStatusLine(){
+    void parseStatusLine() {
         parseHttpVersion();
         readSpace();
         status = parseDigit() * 100 + parseDigit() * 10 + parseDigit();
         readSpace();
         buffer.clear();
         saveByte();
-        while(isText() && byte != '\r'.integer && byte != '\n'.integer){
+        while(isText() && byte != '\r'.integer && byte != '\n'.integer) {
             saveByte();
         }
         buffer.position = buffer.position - 1;
@@ -326,21 +326,21 @@ shared class Parser(FileDescriptor socket){
      name token."
     throws(`class Exception`, 
         "If the header line is invalid.")
-    void atHeaderPlusOne(){
+    void atHeaderPlusOne() {
         String name = atTokenPlusOne();
         atChar(':');
         buffer.clear();
         // eat until EOL
-        while(true){
+        while(true) {
             readByte();
-            while(isText()){
+            while(isText()) {
                 pushByte();
                 readByte();
             }
             atCrLf();
             // go again if we have a SP or HT
             readByte();
-            if(byte != ' '.integer && byte != '\t'.integer){
+            if(byte != ' '.integer && byte != '\t'.integer) {
                 break;
             }
         }
@@ -348,7 +348,7 @@ shared class Parser(FileDescriptor socket){
         // FIXME: trimmed?
         String contents = getString().trimmed;
         value header = headersByName[name.lowercased];
-        if(exists header){
+        if(exists header) {
             header.values.add(contents);
         }else{
             value newHeader = Header(name, contents);
@@ -364,7 +364,7 @@ shared class Parser(FileDescriptor socket){
     shared Integer parseChunkHeader(Boolean firstChunk) {
         // if it's not the first chunk we must have an 
         // end of chunk marker
-        if(!firstChunk){
+        if(!firstChunk) {
             readByte();
             atCrLf();
         }
@@ -372,19 +372,19 @@ shared class Parser(FileDescriptor socket){
         readByte();
         variable Integer size = atHexDigit();
         readByte();
-        while(isHexDigit()){
+        while(isHexDigit()) {
             value digit = atHexDigit();
             size = 16 * size + digit;
             readByte();
         }
         // optional extensions
-        while(byte == ';'.integer){
+        while(byte == ';'.integer) {
             // eat extension
             atTokenPlusOne();
-            if(byte == '='.integer){
+            if(byte == '='.integer) {
                 // we have a value
                 readByte();
-                if(isToken()){
+                if(isToken()) {
                     atTokenPlusOne();
                 }else{
                     // must be a quoted string
@@ -412,10 +412,10 @@ shared class Parser(FileDescriptor socket){
         "On invalid headers or EOF")
     shared void parseHeaders() {
         readByte();
-        while(true){
-            if(isToken()){
+        while(true) {
+            if(isToken()) {
                 atHeaderPlusOne();
-            }else if(byte == '\r'.integer){
+            }else if(byte == '\r'.integer) {
                 // final line?
                 atCrLf();
                 break;
@@ -432,10 +432,10 @@ shared class Parser(FileDescriptor socket){
         // all the headers are defined in ASCII
         parseStatusLine();
         parseHeaders();
-        if(exists status = status){
-            if(exists major = major){
-                if(exists minor = minor){
-                    if(exists reason = reason){
+        if(exists status = status) {
+            if(exists major = major) {
+                if(exists minor = minor) {
+                    if(exists reason = reason) {
                         return Response(status, reason, 
                             major, minor, socket, this);
                     }

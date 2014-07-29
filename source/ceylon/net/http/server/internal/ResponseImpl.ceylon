@@ -171,8 +171,8 @@ class ResponseImpl(HttpServerExchange exchange,
         if (headersSent) {
             return;
         }
-        for(header in headers){
-            for(val in header.values){
+        for(header in headers) {
+            for(val in header.values) {
                 //TODO log fine print("Applying header [``header.name``] with value [``val``].");
                 exchange.responseHeaders.put(HttpString(header.name), val);
             }

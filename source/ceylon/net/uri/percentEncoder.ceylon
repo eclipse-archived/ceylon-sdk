@@ -256,7 +256,7 @@ shared object percentEncoder {
             => encodePart(str, "UTF-8", authority);
     
     "Percent-encodes a string for use in an path/segment name URI part"
-    shared String encodePathSegmentName(String str){
+    shared String encodePathSegmentName(String str) {
         return encodePart(str, "UTF-8", path_segment);
     }
 
@@ -276,7 +276,7 @@ shared object percentEncoder {
     shared String encodeFragment(String str)
             => encodePart(str, "UTF-8", fragment);
     
-    String encodePart(String str, String encoding, BitSet allowed){
+    String encodePart(String str, String encoding, BitSet allowed) {
         value encoded = StringBuilder();
         for (c in str) {
             if (allowed.get(c.integer)) {
