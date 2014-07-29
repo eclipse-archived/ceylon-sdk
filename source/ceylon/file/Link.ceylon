@@ -1,5 +1,5 @@
 "Represents a symbolic link."
-shared interface Link 
+shared sealed interface Link 
         satisfies ExistingResource {
     
     "The linked path."

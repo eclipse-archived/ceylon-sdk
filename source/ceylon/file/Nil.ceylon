@@ -1,6 +1,6 @@
 "Represents the absence of any existing file or directory 
  at a certain path in a hierarchical file system."
-shared interface Nil 
+shared sealed interface Nil 
         satisfies Resource {
     
     "Create a new file at the location that this object

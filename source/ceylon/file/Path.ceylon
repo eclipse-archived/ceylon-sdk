@@ -14,7 +14,7 @@ import java.lang {
  path is a sequence of path elements. A path may be 
  an absolute path that begins at the root of the 
  file system, or a relative path."
-shared interface Path
+shared sealed interface Path
         satisfies Comparable<Path> {
     
     "This path, after removing the last path element."
