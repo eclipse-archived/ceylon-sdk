@@ -6,17 +6,14 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
     // we put it in a buffer of 2 so we can test multiple calls to decode
     // with 3-4 byte chars split between buffers
     value buf = newByteBuffer(2);
-    value iter = bytes.map(Integer.byte).iterator();
+    value iter = bytes.iterator();
     value decoder = charset.newDecoder();
     
     while(true){
         // put as much as fits
-        while(buf.hasAvailable){
-            if(!is Finished byte = iter.next()){
-                buf.put(byte);
-            }else{
-                break;
-            }
+        while(buf.hasAvailable,
+            !is Finished byte = iter.next()){
+                buf.put(byte.byte);
         }
         if(buf.position == 0){
             break;

@@ -106,9 +106,9 @@ test void testByteBufferResize(){
     assertEquals(1, buffer.position);
     assertEquals(true, buffer.hasAvailable);
 
-    assertEquals(2, buffer.get());
-    assertEquals(3, buffer.get());
-    assertEquals(4, buffer.get());
+    assertEquals(2.byte, buffer.get());
+    assertEquals(3.byte, buffer.get());
+    assertEquals(4.byte, buffer.get());
 
     // flip it and eat a byte to get to position 1 
     buffer.flip();
@@ -124,7 +124,7 @@ test void testByteBufferResize(){
     assertEquals(1, buffer.position);
     assertEquals(true, buffer.hasAvailable);
 
-    assertEquals(2, buffer.get());
+    assertEquals(2.byte, buffer.get());
 }
 
 

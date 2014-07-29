@@ -13,8 +13,8 @@ test void testASCIIEncoder(){
     assertEquals(2, output.position);
     
     output.flip();
-    assertEquals('a'.integer, output.get());
-    assertEquals('s'.integer, output.get());
+    assertEquals('a'.integer.byte, output.get());
+    assertEquals('s'.integer.byte, output.get());
     output.clear();
     
     // decode remaining char
@@ -23,7 +23,7 @@ test void testASCIIEncoder(){
     assertEquals(1, output.position);
     
     output.flip();
-    assertEquals('d'.integer, output.get());
+    assertEquals('d'.integer.byte, output.get());
 }
 
 void testEncoder(Charset charset, String string, Integer* bytes){
@@ -32,7 +32,7 @@ void testEncoder(Charset charset, String string, Integer* bytes){
     assertEquals(0, encoded.position);
     assertEquals(sequence.size, encoded.limit);
     for(Integer byte in sequence){
-        assertEquals(byte, encoded.get());
+        assertEquals(byte.byte, encoded.get());
     }
     print("Encoded ``string`` OK");
 }
