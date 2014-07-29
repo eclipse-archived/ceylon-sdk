@@ -1,6 +1,12 @@
-import ceylon.net.http { contentTypeFormUrlEncoded }
-import ceylon.net.uri { Parameter }
-import ceylon.collection { StringBuilder }
+import ceylon.collection {
+    StringBuilder
+}
+import ceylon.net.http {
+    contentTypeFormUrlEncoded
+}
+import ceylon.net.uri {
+    Parameter
+}
 
 by("Matej Lazar")
 shared interface ContentEncoder {

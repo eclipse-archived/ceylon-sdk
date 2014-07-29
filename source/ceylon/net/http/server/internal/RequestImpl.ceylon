@@ -1,8 +1,16 @@
-import ceylon.collection { 
+import ceylon.collection {
     HashMap,
     ArrayList
 }
-import ceylon.io { SocketAddress }
+import ceylon.file {
+    parsePath
+}
+import ceylon.io {
+    SocketAddress
+}
+import ceylon.net.http {
+    Method
+}
 import ceylon.net.http.server {
     Request,
     Session,
@@ -10,40 +18,42 @@ import ceylon.net.http.server {
     HttpEndpoint,
     UploadedFile
 }
-
-import ceylon.net.http { Method }
 import ceylon.net.http.server.internal {
     JavaHelper {
         paramIsFile,
         paramFile,
         paramValue
-    } 
+    }
 }
 
-import io.undertow.server { HttpServerExchange }
+import io.undertow.server {
+    HttpServerExchange
+}
 import io.undertow.server.handlers.form {
-    FormDataParser,
-    UtFormData = FormData,
+    UtFormData=FormData,
     FormParserFactory
 }
-import io.undertow.server.session { 
-        SessionManager {
-            smAttachmentKey=ATTACHMENT_KEY 
-        },
-        UtSession=Session,
-        SessionCookieConfig
-    }
+import io.undertow.server.session {
+    SessionManager {
+        smAttachmentKey=ATTACHMENT_KEY
+    },
+    UtSession=Session,
+    SessionCookieConfig
+}
 import io.undertow.util {
-    Headers { headerConntentType=CONTENT_TYPE },
+    Headers {
+        headerConntentType=CONTENT_TYPE
+    },
     HttpString
 }
 
-import java.lang { JString=String }
-import java.util { Deque, JMap=Map }
-import ceylon.file { parsePath }
+import java.lang {
+    JString=String
+}
 
 by("Matej Lazar")
-shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formParserFactory, endpoint, path, method)
+class RequestImpl(HttpServerExchange exchange, 
+    FormParserFactory formParserFactory, endpoint, path, method)
         satisfies Request {
 
     shared HttpEndpoint endpoint;
@@ -53,8 +63,7 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     shared actual Method method;
 
     UtFormData getUtFormData() {
-        FormDataParser? formDataParser = formParserFactory.createParser(exchange);
-        if (exists fdp = formDataParser) {
+        if (exists fdp = formParserFactory.createParser(exchange)) {
             return fdp.parseBlocking();
             //TODO ASYNC parsing for async endpoint formData = fdp.parse(nextHandler);
         } else {
@@ -70,19 +79,19 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         
         value formDataIt = utFormData.iterator();
         while (formDataIt.hasNext()) {
-            JString key = formDataIt.next();
-            Deque<UtFormData.FormValue> values = utFormData.get(key.string); 
-            value valuesIt = values.iterator();
+            JString key = formDataIt.next(); 
+            value valuesIt = utFormData.get(key.string).iterator();
             while (valuesIt.hasNext()) {
                 value parameterValue = valuesIt.next();
                 if (paramIsFile(parameterValue)) {
-                    UploadedFile uploadedFile = UploadedFile { 
+                    value uploadedFile = UploadedFile { 
                         file = parsePath(paramFile(parameterValue).absolutePath);
                         fileName = parameterValue.fileName;
                     };
                     formDataBuilder.addFile(key.string, uploadedFile);
                 } else {
-                    formDataBuilder.addParameter(key.string, paramValue(parameterValue));
+                    formDataBuilder.addParameter(key.string, 
+                        paramValue(parameterValue));
                 }
             }
         }
@@ -90,15 +99,15 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
     
     Map<String, String[]> readQueryParameters() {
-        HashMap<String, String[]> queryParameters = HashMap<String, String[]>();
-        JMap<JString,Deque<JString>> utQueryParameters = exchange.queryParameters;
+        value queryParameters = HashMap<String, String[]>();
+        value utQueryParameters = exchange.queryParameters;
         
         value it = utQueryParameters.keySet().iterator();
         while (it.hasNext()) {
             JString key = it.next();
-            Deque<JString> values = utQueryParameters.get(key); 
+            value values = utQueryParameters.get(key); 
             value valuesIt = values.iterator();
-            ArrayList<String> sequenceBuilder = ArrayList<String>();
+            value sequenceBuilder = ArrayList<String>();
             while (valuesIt.hasNext()) {
                 value paramValue = valuesIt.next(); 
                 sequenceBuilder.add(paramValue.string);
@@ -109,20 +118,16 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
 
     variable Map<String, String[]>? lazyQueryParameters = null;
-    Map<String, String[]> queryParameters 
-            => lazyQueryParameters else (lazyQueryParameters = readQueryParameters());
+    value queryParameters => lazyQueryParameters 
+            else (lazyQueryParameters = readQueryParameters());
 
     variable FormData? lazyFormData = null;
-    FormData formData => lazyFormData else (lazyFormData = buildFormData()) ;
-
-    shared actual String? header(String name) => getHeader(name);
-
-    String? getHeader(String name) 
-            => exchange.requestHeaders.getFirst(HttpString(name));
+    value formData => lazyFormData 
+            else (lazyFormData = buildFormData()) ;
 
     shared actual String[] headers(String name) {
         value headers = exchange.requestHeaders.get(HttpString(name));
-        ArrayList<String> sequenceBuilder = ArrayList<String>();
+        value sequenceBuilder = ArrayList<String>();
         
         value it = headers.iterator();
         while (it.hasNext()) {
@@ -133,7 +138,8 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         return sequenceBuilder.sequence();
     }
 
-    shared actual String[] parameters(String name, Boolean forseFormParse) {
+    shared actual String[] parameters(String name, 
+            Boolean forseFormParse) {
 
         value mergedParams = ArrayList<String>();
         if (queryParameters.keys.contains(name)) {
@@ -152,7 +158,8 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         return mergedParams.sequence();
     }
 
-    shared actual String? parameter(String name, Boolean forceFormParsing) {
+    shared actual String? parameter(String name, 
+            Boolean forceFormParsing) {
         value params = parameters(name);
         if (nonempty params) {
             return params.first;
@@ -177,35 +184,40 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
         }
     }
 
-    shared actual String uri => exchange.requestURI;
+    uri => exchange.requestURI;
 
-    shared actual String relativePath {
-        return endpoint.path.relativePath(path);
+    relativePath => endpoint.path.relativePath(path);
+
+    queryString => exchange.queryString;
+
+    scheme => exchange.requestScheme;
+
+    contentType => getHeader(headerConntentType.string);
+    
+    header(String name) => getHeader(name);
+    
+    String? getHeader(String name) 
+            => exchange.requestHeaders.getFirst(HttpString(name));
+    
+    shared actual SocketAddress sourceAddress {
+        value address = exchange.sourceAddress;
+        return SocketAddress(address.hostString, address.port);
     }
 
     shared actual SocketAddress destinationAddress {
         value address = exchange.destinationAddress;
         return SocketAddress(address.hostString, address.port);
     }
-
-    shared actual String queryString => exchange.queryString;
-
-    shared actual String scheme => exchange.requestScheme;
-
-    shared actual SocketAddress sourceAddress {
-        value address = exchange.sourceAddress;
-        return SocketAddress(address.hostString, address.port);
-    }
-
-    shared actual String? contentType => getHeader(headerConntentType.string);
-
+    
     shared actual Session session {
-        SessionManager sessionManager = exchange.getAttachment(smAttachmentKey);
+        SessionManager sessionManager 
+                = exchange.getAttachment(smAttachmentKey);
 
         //TODO configurable session cookie
-        SessionCookieConfig sessionCookieConfig = SessionCookieConfig();
+        value sessionCookieConfig = SessionCookieConfig();
 
-        variable UtSession|Null utSession = sessionManager.getSession(exchange, sessionCookieConfig);
+        variable UtSession? utSession = 
+                sessionManager.getSession(exchange, sessionCookieConfig);
 
         if (!utSession exists) {
             utSession = sessionManager.createSession(exchange, sessionCookieConfig);

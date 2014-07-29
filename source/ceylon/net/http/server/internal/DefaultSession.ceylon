@@ -1,27 +1,33 @@
-import ceylon.net.http.server { Session }
+import ceylon.net.http.server {
+    Session
+}
 
-import io.undertow.server.session { UtSession=Session }
+import io.undertow.server.session {
+    UtSession=Session
+}
 
 by("Matej Lazar")
-class DefaultSession(UtSession utSession) satisfies Session {
+class DefaultSession(UtSession utSession) 
+        satisfies Session {
     
-    shared actual String id => utSession.id;
+    id => utSession.id;
     
-    shared actual Object? get(String key) => 
-            utSession.getAttribute(key.string);
+    get(String key) 
+            => utSession.getAttribute(key.string);
     
-    shared actual void put(String key, Object item) =>
-            utSession.setAttribute(key, item);
+    put(String key, Object item) 
+            => utSession.setAttribute(key, item);
     
-    shared actual Object? remove(String key) =>
-            utSession.removeAttribute(key);
+    remove(String key) 
+            => utSession.removeAttribute(key);
     
-    shared actual Integer creationTime => utSession.creationTime;
+    creationTime => utSession.creationTime;
     
-    shared actual Integer lastAccessedTime => utSession.lastAccessedTime;
+    lastAccessedTime => utSession.lastAccessedTime;
     
     shared actual Integer? timeout {
-        value maxInactiveInterval = utSession.maxInactiveInterval;
+        value maxInactiveInterval 
+                = utSession.maxInactiveInterval;
         return maxInactiveInterval>=0 then maxInactiveInterval;
     }
     assign timeout {

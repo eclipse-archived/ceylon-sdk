@@ -1,4 +1,7 @@
-import java.lang { JString = String, ByteArray }
+import java.lang {
+    JString=String,
+    ByteArray
+}
 
 Integer fromHex(Integer hex){
     if(hex >= '0'.integer && hex <= '9'.integer){

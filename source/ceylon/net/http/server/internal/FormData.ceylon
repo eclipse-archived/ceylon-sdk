@@ -4,7 +4,7 @@ import ceylon.collection {
 }
 import ceylon.net.http.server { UploadedFile }
 
-shared class FormDataBuilder() {
+class FormDataBuilder() {
     
     value parameters = HashMap<String, ArrayList<String>>();
     value files = HashMap<String, ArrayList<UploadedFile>>();
@@ -57,7 +57,7 @@ shared class FormDataBuilder() {
     }
 }
 
-shared class FormData(parameters, files) {
+class FormData(parameters, files) {
     shared Map<String, String[]> parameters;
     shared Map<String, UploadedFile[]> files;
 }

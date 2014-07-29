@@ -1,5 +1,11 @@
-import ceylon.collection { LinkedList, MutableList, StringBuilder }
-import ceylon.io.charset { Charset }
+import ceylon.collection {
+    LinkedList,
+    MutableList,
+    StringBuilder
+}
+import ceylon.io.charset {
+    Charset
+}
 
 "Represents an HTTP Header"
 by("Stéphane Épardaud")
@@ -26,7 +32,8 @@ shared Header contentType(String contentType, Charset? charset = null) {
     return Header("Content-Type", headerValue);
 }
 
-shared Header contentLength(String contentLength) => Header("Content-Length", contentLength);
+shared Header contentLength(String contentLength) 
+        => Header("Content-Length", contentLength);
 
 Header allowHeaders({Method*} methods) {
     StringBuilder sb = StringBuilder();
@@ -38,6 +45,8 @@ Header allowHeaders({Method*} methods) {
     }
     return Header("Allow", sb.string);
 }
-shared Header allow({Method*} methods = empty) => allowHeaders(methods);
+shared Header allow({Method*} methods = empty) 
+        => allowHeaders(methods);
 
-shared String contentTypeFormUrlEncoded = "application/x-www-form-urlencoded";
+shared String contentTypeFormUrlEncoded 
+        = "application/x-www-form-urlencoded";

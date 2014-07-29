@@ -1,19 +1,27 @@
-import ceylon.net.http.server.websocket { FragmentedBinarySender, WebSocketChannel }
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.net.http.server.internal { toJavaByteBuffer }
-import io.undertow.websockets.core { FragmentedMessageChannel,
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.net.http.server.websocket {
+    FragmentedBinarySender,
+    WebSocketChannel
+}
+
+import io.undertow.websockets.core {
     WebSockets {
-        wsSendBinary = sendBinary,
-        wsSendBinaryBlocking = sendBinaryBlocking }}
+        wsSendBinary=sendBinary,
+        wsSendBinaryBlocking=sendBinaryBlocking
+    }
+}
 
 by("Matej Lazar")
-shared class DefaultFragmentedBinarySender( DefaultWebSocketChannel channel )
+shared class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
         satisfies FragmentedBinarySender {
 
-    FragmentedMessageChannel fragmentedChannel = channel.underlyingChannel.sendFragmentedBinary();
+    value fragmentedChannel = channel.underlyingChannel.sendFragmentedBinary();
 
     shared actual void sendBinary(ByteBuffer binary, Boolean finalFrame) {
-        wsSendBinaryBlocking(toJavaByteBuffer(binary), finalFrame, fragmentedChannel);
+        wsSendBinaryBlocking(createJavaByteBuffer(binary), 
+            finalFrame, fragmentedChannel);
     }
     
     shared actual void sendBinaryAsynchronous(
@@ -23,7 +31,7 @@ shared class DefaultFragmentedBinarySender( DefaultWebSocketChannel channel )
             Boolean finalFrame) {
 
         wsSendBinary(
-            toJavaByteBuffer(binary),
+            createJavaByteBuffer(binary),
             finalFrame,
             fragmentedChannel,
             wrapFragmentedCallbackSend(onCompletion, onError, channel));

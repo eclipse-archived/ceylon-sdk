@@ -1,6 +1,14 @@
-import java.io { InputStream }
-import java.nio { ByteBuffer { allocate } }
-import java.lang { JString = String }
+import java.io {
+    InputStream
+}
+import java.lang {
+    JString=String
+}
+import java.nio {
+    ByteBuffer {
+        allocate
+    }
+}
 
 "Reads an InputStream of the given length into a String using the specified charset"
 by("Stéphane Épardaud")

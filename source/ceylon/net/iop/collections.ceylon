@@ -1,5 +1,9 @@
-import java.util { JIterator = Iterator }
-import java.lang { JIterable = Iterable }
+import java.lang {
+    JIterable=Iterable
+}
+import java.util {
+    JIterator=Iterator
+}
 
 "Wraps a Java Iterator into a Ceylon Iterator"
 by("Stéphane Épardaud")

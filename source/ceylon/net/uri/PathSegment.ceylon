@@ -1,14 +1,20 @@
-import ceylon.collection { LinkedList, StringBuilder }
+import ceylon.collection {
+    LinkedList,
+    StringBuilder
+}
 
 "Represents a URI Path segment part"
 by("Stéphane Épardaud")
-shared class PathSegment(String initialName, Parameter* initialParameters) {
+shared class PathSegment(
+    String initialName, 
+    Parameter* initialParameters) {
     
     "The path segment name"
     shared variable String name = initialName;
     
     "The path segment parameters"
-    shared LinkedList<Parameter> parameters = LinkedList<Parameter>();
+    shared LinkedList<Parameter> parameters 
+            = LinkedList<Parameter>();
     
     for(Parameter p in initialParameters){
         parameters.add(p);

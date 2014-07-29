@@ -1,8 +1,30 @@
-import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap, StringBuilder }
-import ceylon.net.uri { Uri, Parameter }
-import ceylon.io.charset { ascii }
-import ceylon.io { newSocketConnector, SocketAddress, newSslSocketConnector }
-import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength, get, Method }
+import ceylon.collection {
+    MutableList,
+    LinkedList,
+    MutableMap,
+    HashMap,
+    StringBuilder
+}
+import ceylon.io {
+    newSocketConnector,
+    SocketAddress,
+    newSslSocketConnector
+}
+import ceylon.io.charset {
+    ascii
+}
+import ceylon.net.http {
+    Header,
+    contentType,
+    contentTypeFormUrlEncoded,
+    contentLength,
+    get,
+    Method
+}
+import ceylon.net.uri {
+    Uri,
+    Parameter
+}
 
 "Represents an HTTP Request"
 by("Stéphane Épardaud", "Matej Lazar")
@@ -14,7 +36,8 @@ shared class Request(uri, method = get){
     shared Uri uri;
     
     "The list of request parameters."
-    MutableMap<String, MutableList<Parameter>> parameters = HashMap<String, MutableList<Parameter>>();
+    MutableMap<String, MutableList<Parameter>> parameters 
+            = HashMap<String, MutableList<Parameter>>();
     
     "The list of request headers."
     shared MutableList<Header> headers = LinkedList<Header>();
@@ -100,7 +123,7 @@ shared class Request(uri, method = get){
     }
     
     shared void setParameter(Parameter parameter) {
-        if (exists MutableList<Parameter> params = parameters[parameter.name]) {
+        if (exists params = parameters[parameter.name]) {
             params.add(parameter);
         } else {
             MutableList<Parameter> params = LinkedList<Parameter>();

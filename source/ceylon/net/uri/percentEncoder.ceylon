@@ -1,6 +1,17 @@
-import java.lang { JString = String { format }, JByte = Byte, ByteArray }
-import java.util { BitSet }
-import ceylon.collection { StringBuilder }
+import ceylon.collection {
+    StringBuilder
+}
+
+import java.lang {
+    JString=String {
+        format
+    },
+    JByte=Byte,
+    ByteArray
+}
+import java.util {
+    BitSet
+}
 
 "Contains methods for percent-encoding. 
      See http://tools.ietf.org/html/rfc3986#appendix-A for specifications."
@@ -233,19 +244,16 @@ shared object percentEncoder {
     fragment.set('?'.integer);
 
     "Percent-encodes a string for use in an authority/user URI part"
-    shared String encodeUser(String str){
-        return encodePart(str, "UTF-8", authority);
-    }
+    shared String encodeUser(String str)
+            => encodePart(str, "UTF-8", authority);
 
     "Percent-encodes a string for use in an authority/password URI part"
-    shared String encodePassword(String str){
-        return encodePart(str, "UTF-8", authority);
-    }
+    shared String encodePassword(String str)
+            => encodePart(str, "UTF-8", authority);
 
     "Percent-encodes a string for use in an authority/regName URI part (host name or IPV4Literal)"
-    shared String encodeRegName(String str){
-        return encodePart(str, "UTF-8", authority);
-    }
+    shared String encodeRegName(String str)
+            => encodePart(str, "UTF-8", authority);
     
     "Percent-encodes a string for use in an path/segment name URI part"
     shared String encodePathSegmentName(String str){
@@ -253,28 +261,24 @@ shared object percentEncoder {
     }
 
     "Percent-encodes a string for use in an path/segment parameter name URI part"
-    shared String encodePathSegmentParamName(String str){
-        return encodePart(str, "UTF-8", path_param_name);
-    }
+    shared String encodePathSegmentParamName(String str)
+            => encodePart(str, "UTF-8", path_param_name);
 
     "Percent-encodes a string for use in an path/segment parameter value URI part"
-    shared String encodePathSegmentParamValue(String str){
-        return encodePart(str, "UTF-8", path_param_value);
-    }
+    shared String encodePathSegmentParamValue(String str)
+            => encodePart(str, "UTF-8", path_param_value);
     
     "Percent-encodes a string for use in an query parameter name or value URI part"
-    shared String encodeQueryPart(String str){
-        return encodePart(str, "UTF-8", query);
-    }
+    shared String encodeQueryPart(String str)
+            => encodePart(str, "UTF-8", query);
 
     "Percent-encodes a string for use in a fragment URI part"
-    shared String encodeFragment(String str){
-        return encodePart(str, "UTF-8", fragment);
-    }
+    shared String encodeFragment(String str)
+            => encodePart(str, "UTF-8", fragment);
     
     String encodePart(String str, String encoding, BitSet allowed){
-        StringBuilder encoded = StringBuilder();
-        for (Character c in str) {
+        value encoded = StringBuilder();
+        for (c in str) {
             if (allowed.get(c.integer)) {
                 encoded.append(c.string);
             }

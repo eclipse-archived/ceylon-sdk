@@ -1,2 +1,6 @@
 import ceylon.file { Path }
-shared class UploadedFile(shared Path file, shared String fileName) {}
+
+shared class UploadedFile(file, fileName) {
+    shared Path file;
+    shared String fileName;
+}

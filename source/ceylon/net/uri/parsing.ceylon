@@ -10,7 +10,8 @@ shared Parameter parseParameter(String part){
 }
 
 "Parses a URI"
-throws(`class InvalidUriException`, "If the URI is invalid")
+throws(`class InvalidUriException`, 
+    "If the URI is invalid")
 shared Uri parse(String uri){
     variable String? scheme = null;
     Authority authority = Authority(null, null, null, null);

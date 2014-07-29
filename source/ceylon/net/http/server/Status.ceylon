@@ -1,4 +1,4 @@
-
+"The status of a [[Server]]."
 shared abstract class Status() 
         of starting | started | stopping | stopped {}
 

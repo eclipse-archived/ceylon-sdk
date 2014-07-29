@@ -1,5 +1,9 @@
-import ceylon.net.http.server { EndpointBase }
-import ceylon.collection { LinkedList }
+import ceylon.collection {
+    LinkedList
+}
+import ceylon.net.http.server {
+    EndpointBase
+}
 
 shared class Endpoints() {
 

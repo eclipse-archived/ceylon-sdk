@@ -1,24 +1,38 @@
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.net.http.server.websocket {
+    WebSocketChannel,
+    FragmentedBinarySender,
+    FragmentedTextSender,
+    CloseReason
+}
 
-import ceylon.net.http.server.websocket { WebSocketChannel, FragmentedBinarySender, FragmentedTextSender, CloseReason }
-
-import ceylon.net.http.server.internal { toJavaByteBuffer}
-import io.undertow.websockets.core { 
-    UtWebSocketChannel = WebSocketChannel,
-    WebSockets {
-        wsSendBinary = sendBinary,
-        wsSendBinaryBlocking = sendBinaryBlocking,
-        wsSendText = sendText,
-        wsSendTextBlocking = sendTextBlocking,
-        wsSendClose = sendClose,
-        wsSendCloseBlocking = sendCloseBlocking
-        }, CloseMessage
+import io.undertow.util {
+    Headers {
+        hostStringHeader=HOST_STRING
     }
-import io.undertow.websockets.spi { WebSocketHttpExchange }
-import io.undertow.util { Headers {hostStringHeader = \iHOST_STRING} }
+}
+import io.undertow.websockets.core {
+    UtWebSocketChannel=WebSocketChannel,
+    WebSockets {
+        wsSendBinary=sendBinary,
+        wsSendBinaryBlocking=sendBinaryBlocking,
+        wsSendText=sendText,
+        wsSendTextBlocking=sendTextBlocking,
+        wsSendClose=sendClose,
+        wsSendCloseBlocking=sendCloseBlocking
+    },
+    CloseMessage
+}
+import io.undertow.websockets.spi {
+    WebSocketHttpExchange
+}
 
 by("Matej Lazar")
-shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocketChannel channel) satisfies WebSocketChannel {
+shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, 
+    UtWebSocketChannel channel) 
+        satisfies WebSocketChannel {
 
     shared UtWebSocketChannel underlyingChannel => channel;
 
@@ -37,14 +51,14 @@ shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocket
             => DefaultFragmentedBinarySender(this);
 
     shared actual void sendBinary(ByteBuffer binary) 
-            => wsSendBinaryBlocking(toJavaByteBuffer(binary), channel);
+            => wsSendBinaryBlocking(createJavaByteBuffer(binary), channel);
 
     shared actual void sendBinaryAsynchronous(
             ByteBuffer binary,
             Anything(WebSocketChannel) onCompletion,
             Anything(WebSocketChannel,Throwable)? onError) {
 
-        wsSendBinary(toJavaByteBuffer(binary), channel, 
+        wsSendBinary(createJavaByteBuffer(binary), channel, 
             wrapCallbackSend(onCompletion, onError, this));
     }
 

@@ -1,51 +1,99 @@
+import ceylon.collection {
+    MutableList,
+    LinkedList
+}
+import ceylon.io {
+    SocketAddress
+}
+import ceylon.net.http.server {
+    Server,
+    Options,
+    Status,
+    starting,
+    started,
+    stopping,
+    stopped,
+    InternalException,
+    HttpEndpoint
+}
+import ceylon.net.http.server.internal.websocket {
+    CeylonWebSocketHandler,
+    WebSocketProtocolHandshakeHandler
+}
+import ceylon.net.http.server.websocket {
+    WebSocketBaseEndpoint
+}
+
+import io.undertow {
+    UndertowOptions {
+        utBufferPipelinedData=BUFFER_PIPELINED_DATA
+    }
+}
+import io.undertow.server {
+    HttpHandler
+}
+import io.undertow.server.handlers.error {
+    SimpleErrorPageHandler
+}
+import io.undertow.server.protocol.http {
+    HttpOpenListener
+}
+import io.undertow.server.session {
+    InMemorySessionManager,
+    SessionAttachmentHandler,
+    SessionCookieConfig
+}
+
 import java.lang {
-    JInt = Integer,
-    Runtime { jRuntime = runtime },
-    JThread = Thread, 
-    JRunnable = Runnable 
+    JInt=Integer,
+    Runtime {
+        jRuntime=runtime
+    },
+    JThread=Thread,
+    JRunnable=Runnable
 }
-import java.net { InetSocketAddress}
-import org.xnio { 
-    Xnio { xnioInstance = instance },
-    XnioWorker, 
-    OptionMap { omBuilder = builder },
-    XnioOptions = Options { 
-        xnioWorkerIoThreads = \iWORKER_IO_THREADS,
-        xnioConnectionLowWatter = \iCONNECTION_LOW_WATER,
-        xnioConnectionHighWatter = \iCONNECTION_HIGH_WATER,
-        xnioWorkerTaskCoreThreads = \iWORKER_TASK_CORE_THREADS,
-        xnioWorkerTaskMaxThreads = \iWORKER_TASK_MAX_THREADS,
-        xnioTcpNoDelay = \iTCP_NODELAY,
-        xnioReuseAddress = \iREUSE_ADDRESSES,
-        xnioCork = \iCORK
-    }, 
-    ByteBufferSlicePool, 
-    BufferAllocator {directByteBufferAllocator  = \iDIRECT_BYTE_BUFFER_ALLOCATOR},
-    ChannelListeners { clOpenListenerAdapter = openListenerAdapter},
-    StreamConnection, ChannelListener
+import java.net {
+    InetSocketAddress
 }
-import org.xnio.channels { AcceptingChannel }
-import io.undertow.server { HttpHandler }
-import io.undertow.server.protocol.http { HttpOpenListener }
-import io.undertow.server.handlers.error { SimpleErrorPageHandler }
-import ceylon.net.http.server { Server, Options, Status, starting, started, stopping, stopped, InternalException, HttpEndpoint }
-import io.undertow.server.session { InMemorySessionManager, SessionAttachmentHandler, SessionCookieConfig }
-import io.undertow { UndertowOptions { utBufferPipelinedData = \iBUFFER_PIPELINED_DATA} }
-import ceylon.net.http.server.internal.websocket { CeylonWebSocketHandler, WebSocketProtocolHandshakeHandler }
-import ceylon.net.http.server.websocket { WebSocketBaseEndpoint }
-import ceylon.collection { MutableList, LinkedList }
-import ceylon.io { SocketAddress }
+
+import org.xnio {
+    Xnio {
+        xnioInstance=instance
+    },
+    XnioWorker,
+    OptionMap {
+        omBuilder=builder
+    },
+    XnioOptions=Options {
+        xnioWorkerIoThreads=WORKER_IO_THREADS,
+        xnioConnectionLowWatter=CONNECTION_LOW_WATER,
+        xnioConnectionHighWatter=CONNECTION_HIGH_WATER,
+        xnioWorkerTaskCoreThreads=WORKER_TASK_CORE_THREADS,
+        xnioWorkerTaskMaxThreads=WORKER_TASK_MAX_THREADS,
+        xnioTcpNoDelay=TCP_NODELAY,
+        xnioReuseAddress=REUSE_ADDRESSES,
+        xnioCork=CORK
+    },
+    ByteBufferSlicePool,
+    BufferAllocator {
+        directByteBufferAllocator=DIRECT_BYTE_BUFFER_ALLOCATOR
+    },
+    ChannelListeners {
+        clOpenListenerAdapter=openListenerAdapter
+    }
+}
 
 by("Matej Lazar")
 shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         satisfies Server {
 
     Endpoints httpEndpoints = Endpoints();
-    CeylonWebSocketHandler webSocketHandler = CeylonWebSocketHandler();
+    value webSocketHandler = CeylonWebSocketHandler();
 
     variable XnioWorker? worker = null;
 
-    MutableList<Callable<Anything, [Status]>> statusListeners = LinkedList<Callable<Anything, [Status]>>();
+    MutableList<Callable<Anything, [Status]>> statusListeners 
+            = LinkedList<Callable<Anything, [Status]>>();
 
     for (endpoint in endpoints) {
         switch (endpoint)
@@ -57,14 +105,14 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         }
     }
 
-    HttpHandler getHeandlers(Options options, HttpHandler next) {
-        value webSocketProtocolHandshakeHandler = WebSocketProtocolHandshakeHandler(
-                                                        webSocketHandler,
-                                                        next);
+    HttpHandler getHandlers(Options options, HttpHandler next) {
+        value protocolHandshakeHandler 
+                = WebSocketProtocolHandshakeHandler(webSocketHandler,next);
         
         value sessionconfig = SessionCookieConfig();
-        SessionAttachmentHandler sessionHandler = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
-        sessionHandler.setNext(webSocketProtocolHandshakeHandler);
+        value sessionHandler 
+                = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
+        sessionHandler.setNext(protocolHandshakeHandler);
         
         HttpHandler errPageHandler = SimpleErrorPageHandler(sessionHandler);
         
@@ -75,15 +123,14 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         notifyListeners(starting);
         //TODO log
         print("Starting on ``socketAddress.address``:``socketAddress.port``");
-        CeylonRequestHandler ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
+        value ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
 
         HttpOpenListener openListener = HttpOpenListener(
-        ByteBufferSlicePool(
-            directByteBufferAllocator, 8192, 8192 * 8192), 
-            omBuilder().set(utBufferPipelinedData, false).map ,
-            8192 );
+            ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 
+            omBuilder().set(utBufferPipelinedData,false).map,
+            8192);
         
-        openListener.rootHandler = getHeandlers(options, ceylonRequestHandler);
+        openListener.rootHandler = getHandlers(options, ceylonRequestHandler);
         
         OptionMap workerOptions = omBuilder()
                 .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))
@@ -102,13 +149,15 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         
         worker = xnioInstance.createWorker(workerOptions);
         
-        InetSocketAddress jSocketAddress = InetSocketAddress(socketAddress.address, socketAddress.port);
+        InetSocketAddress jSocketAddress 
+                = InetSocketAddress(socketAddress.address, socketAddress.port);
         
-        ChannelListener<AcceptingChannel<StreamConnection>> acceptListener = clOpenListenerAdapter(openListener);
+        value acceptListener = clOpenListenerAdapter(openListener);
         
         if (exists w = worker) {
-            AcceptingChannel<StreamConnection> server = w.createStreamConnectionServer(jSocketAddress, acceptListener, serverOptions);
-            server.resumeAccepts();
+            w.createStreamConnectionServer(jSocketAddress, 
+                acceptListener, serverOptions)
+                    .resumeAccepts();
         } else {
             throw InternalException("Missing xnio worker!");
         }
@@ -119,7 +168,8 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
             }
         }
         
-        JThread shutdownThread = JThread(shutdownHook, "Shutdown thread");
+        JThread shutdownThread 
+                = JThread(shutdownHook, "Shutdown thread");
         shutdownThread.daemon = false;
         jRuntime.addShutdownHook(shutdownThread);
         
@@ -132,7 +182,8 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         }
     }
     
-    shared actual void startInBackground(SocketAddress socketAddress, Options options) {
+    shared actual void startInBackground(SocketAddress socketAddress, 
+            Options options) {
         object httpd satisfies JRunnable {
             shared actual void run() {
                 start(socketAddress, options);
@@ -158,16 +209,13 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         }
     }
 
-    shared actual void addEndpoint(HttpEndpoint endpoint) {
-        httpEndpoints.add(endpoint);
-    }
+    addEndpoint(HttpEndpoint endpoint) 
+            => httpEndpoints.add(endpoint);
     
-    shared actual void addWebSocketEndpoint(WebSocketBaseEndpoint endpoint) {
-        webSocketHandler.addEndpoint(endpoint);
-    }
+    addWebSocketEndpoint(WebSocketBaseEndpoint endpoint) 
+            => webSocketHandler.addEndpoint(endpoint);
     
-    shared actual void addListener(void listener(Status status)) {
-        statusListeners.add( listener );
-    }
+    addListener(void listener(Status status)) 
+            => statusListeners.add( listener );
 }
 

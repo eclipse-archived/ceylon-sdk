@@ -1,14 +1,36 @@
-import io.undertow.server { JHttpServerExchange = HttpServerExchange, HttpHandler}
-import ceylon.net.http.server { Request, AsynchronousEndpoint, Endpoint, Options, InternalException, HttpEndpoint }
-import ceylon.net.http { Method, allow, parseMethod }
-import io.undertow.server.handlers.form { FormParserFactory { formParserFactoryBuilder = builder } }
+import ceylon.net.http {
+    Method,
+    allow,
+    parseMethod
+}
+import ceylon.net.http.server {
+    Request,
+    AsynchronousEndpoint,
+    Endpoint,
+    Options,
+    InternalException,
+    HttpEndpoint
+}
+
+import io.undertow.server {
+    JHttpServerExchange=HttpServerExchange,
+    HttpHandler
+}
+import io.undertow.server.handlers.form {
+    FormParserFactory {
+        formParserFactoryBuilder=builder
+    }
+}
 
 by("Matej Lazar")
-shared class CeylonRequestHandler(Options options, Endpoints endpoints) satisfies HttpHandler {
+shared class CeylonRequestHandler(Options options, Endpoints endpoints) 
+        satisfies HttpHandler {
     
-    FormParserFactory formParserFactory = formParserFactoryBuilder().build();
+    value formParserFactory 
+            = formParserFactoryBuilder().build();
     
-    void endResponse(JHttpServerExchange exchange, ResponseImpl response, Integer responseStatus) {
+    void endResponse(JHttpServerExchange exchange, 
+            ResponseImpl response, Integer responseStatus) {
         response.responseStatus = responseStatus;
         response.responseDone();
         exchange.endExchange();
@@ -16,7 +38,8 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints) satisfie
     
     shared actual void handleRequest(JHttpServerExchange? exchange) {
         if (exists exc = exchange) {
-            ResponseImpl response = ResponseImpl(exc, options.defaultCharset);
+            ResponseImpl response = 
+                    ResponseImpl(exc, options.defaultCharset);
             try {
                 String requestPath = exc.requestPath;
                 Method method = parseMethod(exc.requestMethod.string.uppercased);
@@ -51,17 +74,22 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints) satisfie
         }
     }
 
-    void invokeEndpoint(HttpEndpoint endpoint, Request request, ResponseImpl response, JHttpServerExchange exchange ) {
+    void invokeEndpoint(HttpEndpoint endpoint, 
+            Request request, ResponseImpl response, 
+            JHttpServerExchange exchange ) {
         switch (endpoint)
         case (is AsynchronousEndpoint) {
-            exchange.dispatch(AsyncInvoker(endpoint, request, response));
+            exchange.dispatch(AsyncInvoker(endpoint, 
+                request, response));
         }
         case (is Endpoint) {
-            exchange.dispatch(SynchronousInvoker(endpoint, request, response));
+            exchange.dispatch(SynchronousInvoker(endpoint, 
+                request, response));
         }
     }
 
-    class AsyncInvoker(AsynchronousEndpoint endpoint, Request request, ResponseImpl response) 
+    class AsyncInvoker(AsynchronousEndpoint endpoint, 
+            Request request, ResponseImpl response) 
             satisfies HttpHandler {
 
         shared actual void handleRequest(JHttpServerExchange? httpServerExchange) {
@@ -73,7 +101,8 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints) satisfie
         }
     }
 
-    class SynchronousInvoker(Endpoint endpoint, Request request, ResponseImpl response) 
+    class SynchronousInvoker(Endpoint endpoint, 
+            Request request, ResponseImpl response) 
             satisfies HttpHandler {
 
         shared actual void handleRequest(JHttpServerExchange? httpServerExchange) {

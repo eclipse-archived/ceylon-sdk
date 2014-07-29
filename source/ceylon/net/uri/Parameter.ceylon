@@ -1,4 +1,6 @@
-import ceylon.net.iop { eq }
+import ceylon.net.iop {
+    eq
+}
 
 "Represents a URI path segment or query parameter"
 by("Stéphane Épardaud")

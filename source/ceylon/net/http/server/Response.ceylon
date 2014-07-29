@@ -1,5 +1,10 @@
-import ceylon.net.http { Header }
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.net.http {
+    Header
+}
+
 "An object to assist sending response to the client."
 by("Matej Lazar")
 shared sealed interface Response {

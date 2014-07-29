@@ -1,15 +1,38 @@
-import java.nio { JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
-import ceylon.net.http.server.websocket { WebSocketChannel, WebSocketEndpoint, CloseReason, NoReason }
-import ceylon.io.buffer { newByteBufferWithData }
-import io.undertow.websockets.core { 
-    AbstractReceiveListener, 
-    BufferedTextMessage, 
-    UtWebSocketChannel = WebSocketChannel, 
-    BufferedBinaryMessage, 
-    WebSockets { sendCloseBlocking }, 
-    UTF8Output}
-import org.xnio {IoUtils {safeClose}}
-import ceylon.interop.java { toByteArray }
+import ceylon.interop.java {
+    toByteArray
+}
+import ceylon.io.buffer {
+    newByteBufferWithData
+}
+import ceylon.net.http.server.websocket {
+    WebSocketChannel,
+    WebSocketEndpoint,
+    CloseReason,
+    NoReason
+}
+
+import io.undertow.websockets.core {
+    AbstractReceiveListener,
+    BufferedTextMessage,
+    UtWebSocketChannel=WebSocketChannel,
+    BufferedBinaryMessage,
+    WebSockets {
+        sendCloseBlocking
+    },
+    UTF8Output
+}
+
+import java.nio {
+    JByteBuffer=ByteBuffer {
+        wrapByteBuffer=wrap
+    }
+}
+
+import org.xnio {
+    IoUtils {
+        safeClose
+    }
+}
 
 by("Matej Lazar")
 class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocketChannel webSocketChannel)

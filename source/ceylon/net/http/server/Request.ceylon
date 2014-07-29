@@ -6,14 +6,21 @@ import ceylon.net.http { Method }
 by("Matej Lazar")
 shared sealed interface Request {
     
-    "Returns a single parameters with given name. If there are more, the first one is returned.
-     If `forceFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed."
-    shared formal String? parameter(String name, Boolean forceFormParsing = false);
+    "Returns a single parameters with given name. If there 
+     are more, the first one is returned. If 
+     [[forceFormParsing]] is false (default) and parameter 
+     with the same name exists in a query string, posted 
+     data is not parsed."
+    shared formal String? parameter(String name, 
+        Boolean forceFormParsing = false);
     
-    "Returns all parameters with given name.
-     If `forceFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed.
-     It is returned, only if it is already parsed."
-    shared formal String[] parameters(String name, Boolean forceFormParsing = false);
+    "Returns all parameters with given name. If 
+     [[forceFormParsing]] is false (default) and parameter 
+     with the same name exists in a query string, posted 
+     data is not parsed. It is returned, only if it is 
+     already parsed."
+    shared formal String[] parameters(String name, 
+        Boolean forceFormParsing = false);
 
     shared formal UploadedFile? file(String name);
 
@@ -25,7 +32,8 @@ shared sealed interface Request {
     "Returns all headers with given name."
     shared formal String[] headers(String name);
     
-    "Get the HTTP request method. {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
+    "Get the HTTP request method. 
+     {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
     shared formal Method method;
     
     "Get the request URI scheme. {http, https}"
@@ -41,10 +49,12 @@ shared sealed interface Request {
     
 
     "Return path relative to endpoint mapping path.
-     Relative path is a substring of path without [[startsWith]] mappings.
+     Relative path is a substring of path without 
+     [[startsWith]] mappings.
      
-     Note that endpoints mapped with [[And]] and [[endsWith]] will return complete path instead of relative.
-     See [[Matcher.relativePath]] for details."
+     Note that endpoints mapped with [[And]] and [[endsWith]] 
+     will return complete path instead of relative. See 
+     [[Matcher.relativePath]] for details."
     shared formal String relativePath;
     
     shared formal String queryString;

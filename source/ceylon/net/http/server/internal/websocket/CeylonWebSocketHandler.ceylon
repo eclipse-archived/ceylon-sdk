@@ -1,11 +1,31 @@
-import io.undertow.websockets.spi { WebSocketHttpExchange }
-import ceylon.net.http.server.websocket { 
-    WebSocketEndpoint, WebSocketFragmentedEndpoint, WebSocketChannel, WebSocketBaseEndpoint }
-import io.undertow.websockets.core.handler { WebSocketConnectionCallback }
-import io.undertow.websockets.core { UtWebSocketChannel = WebSocketChannel }
-import org.xnio { IoUtils { safeClose }}
-import ceylon.net.http.server.internal { Endpoints }
-import ceylon.net.http.server { ServerException }
+import ceylon.net.http.server {
+    ServerException
+}
+import ceylon.net.http.server.internal {
+    Endpoints
+}
+import ceylon.net.http.server.websocket {
+    WebSocketEndpoint,
+    WebSocketFragmentedEndpoint,
+    WebSocketChannel,
+    WebSocketBaseEndpoint
+}
+
+import io.undertow.websockets.core {
+    UtWebSocketChannel=WebSocketChannel
+}
+import io.undertow.websockets.core.handler {
+    WebSocketConnectionCallback
+}
+import io.undertow.websockets.spi {
+    WebSocketHttpExchange
+}
+
+import org.xnio {
+    IoUtils {
+        safeClose
+    }
+}
 
 by("Matej Lazar")
 shared class CeylonWebSocketHandler() satisfies WebSocketConnectionCallback {
@@ -24,7 +44,8 @@ shared class CeylonWebSocketHandler() satisfies WebSocketConnectionCallback {
         }
     }
 
-    shared actual void onConnect(WebSocketHttpExchange exchange, UtWebSocketChannel channel) {
+    shared actual void onConnect(WebSocketHttpExchange exchange, 
+            UtWebSocketChannel channel) {
         value webSocketChannel = DefaultWebSocketChannel(exchange, channel);
         value endpoint = endpoints.getEndpointMatchingPath(webSocketChannel.requestPath);
         if (is WebSocketBaseEndpoint endpoint) {
