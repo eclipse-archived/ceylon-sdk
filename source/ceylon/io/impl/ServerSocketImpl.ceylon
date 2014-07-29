@@ -16,9 +16,7 @@ shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) e
     assert(is InetSocketAddress socketAddress = channel.localAddress);
     localAddress = SocketAddress(socketAddress.hostString, socketAddress.port);
 
-    shared actual Socket accept() {
-        return SocketImpl(channel.accept());
-    }
+    shared actual Socket accept() => SocketImpl(channel.accept());
 
     shared actual void acceptAsync(Selector selector, Boolean accept(Socket socket)) {
         channel.configureBlocking(false);
@@ -26,15 +24,11 @@ shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) e
         selector.addAcceptListener(this, accept);
     }
 
-    shared actual void close() {
-        channel.close();
-    }
+    shared actual void close() => channel.close();
     
-    shared default SelectionKey register(JavaSelector selector, Integer ops, Object attachment){
-        return channel.register(selector, ops, attachment);
-    }
+    shared default SelectionKey register(JavaSelector selector, Integer ops, Object attachment)
+            => channel.register(selector, ops, attachment);
     
-    shared default void interestOps(SelectionKey key, Integer ops) {
-        key.interestOps(ops);
-    }
+    shared default void interestOps(SelectionKey key, Integer ops) 
+            => key.interestOps(ops);
 }

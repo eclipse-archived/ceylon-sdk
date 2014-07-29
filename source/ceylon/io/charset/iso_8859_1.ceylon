@@ -43,14 +43,12 @@ shared object iso_8859_1 satisfies Charset {
     shared actual Integer averageBytesPerCharacter = 1;
 
     "Returns a new ISO-8859-1 decoder."
-    shared actual Decoder newDecoder(){
-        return ISO_8859_1Decoder(this);
-    }
+    shared actual Decoder newDecoder()
+            => ISO_8859_1Decoder(this);
 
     "Returns a new ISO-8859-1 encoder."
-    shared actual Encoder newEncoder() {
-        return ISO_8859_1Encoder(this);
-    }
+    shared actual Encoder newEncoder() 
+            => ISO_8859_1Encoder(this);
 }
 
 class ISO_8859_1Encoder(charset) satisfies Encoder {

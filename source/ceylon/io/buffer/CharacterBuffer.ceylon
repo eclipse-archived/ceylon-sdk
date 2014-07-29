@@ -65,6 +65,5 @@ shared class CharacterBuffer(String string) extends Buffer<Character>(){
 "Allocates a new [[CharacterBuffer]] with the underlying [[data]]."
 by("Stéphane Épardaud")
 see(`class CharacterBuffer`)
-shared CharacterBuffer newCharacterBufferWithData(String data){
-    return CharacterBuffer(data);
-}
+shared CharacterBuffer newCharacterBufferWithData(String data)
+        => CharacterBuffer(data);

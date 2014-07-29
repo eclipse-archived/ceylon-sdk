@@ -28,14 +28,12 @@ shared object utf16 satisfies Charset {
     shared actual Integer averageBytesPerCharacter = 2;
 
     "Returns a new UTF-16 decoder."
-    shared actual Decoder newDecoder(){
-        return UTF16Decoder(this);
-    }
+    shared actual Decoder newDecoder()
+            => UTF16Decoder(this);
 
     "Returns a new UTF-16 encoder."
-    shared actual Encoder newEncoder() {
-        return UTF16Encoder(this);
-    }
+    shared actual Encoder newEncoder() 
+            => UTF16Encoder(this);
 }
 
 class UTF16Encoder(charset) satisfies Encoder {

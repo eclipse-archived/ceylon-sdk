@@ -20,24 +20,14 @@ shared class OpenFileImpl(resource) satisfies OpenFile {
 	FileChannel channel = javaOpenFileChannel(javaGetPath(resource.path.string), 
 		javaCreateOption, javaWriteOption, javaReadOption);
     
-    shared actual void close() {
-        channel.close();
-    }
+    close() => channel.close();
 
-    shared actual Integer position {
-        return channel.position();
-    }
-    assign position {
-        channel.position(position);
-    }
-
-    shared actual Integer size {
-        return channel.size();
-    }
-
-    shared actual void truncate(Integer size) {
-        channel.truncate(size);
-    }
+    size => channel.size();
+    
+    truncate(Integer size) => channel.truncate(size);
+    
+    shared actual Integer position => channel.position();
+    assign position => channel.position(position);
 
     shared actual Integer read(ByteBuffer buffer) {
         assert(is ByteBufferImpl buffer);

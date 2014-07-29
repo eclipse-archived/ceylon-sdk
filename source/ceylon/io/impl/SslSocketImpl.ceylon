@@ -14,15 +14,14 @@ import ceylon.io.buffer.impl { ByteBufferImpl }
 
 object dummyTrustManager satisfies X509TrustManager {
 
-    shared actual ObjectArray<X509Certificate> acceptedIssuers => ObjectArray<X509Certificate>(0);
+    shared actual ObjectArray<X509Certificate> acceptedIssuers 
+            => ObjectArray<X509Certificate>(0);
     
-    shared actual void checkClientTrusted(ObjectArray<X509Certificate> chain, String authType) {
-        debug("UNKNOWN CLIENT CERTIFICATE: ``chain.get(0).subjectDN``");
-    }
+    shared actual void checkClientTrusted(ObjectArray<X509Certificate> chain, String authType) 
+            => debug("UNKNOWN CLIENT CERTIFICATE: ``chain.get(0).subjectDN``");
     
-    shared actual void checkServerTrusted(ObjectArray<X509Certificate> chain, String authType) {
-        debug("UNKNOWN SERVER CERTIFICATE: ``chain.get(0).subjectDN``");
-    }
+    shared actual void checkServerTrusted(ObjectArray<X509Certificate> chain, String authType) 
+            => debug("UNKNOWN SERVER CERTIFICATE: ``chain.get(0).subjectDN``");
 }
 
 JavaByteBuffer emptyBuf = allocateJavaByteBuffer(0);
@@ -175,9 +174,7 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
         return dataNeedsOk;
     }
     
-    shared DataNeeds readForHandshake() {
-        return checkForHandshake();
-    }
+    shared DataNeeds readForHandshake() => checkForHandshake();
 
     shared actual Integer read(ByteBuffer contents) {
         assert(is ByteBufferImpl contents);
@@ -444,20 +441,16 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
         selectionKey?.interestOps(this.selectionOps);
     }
     
-    shared Boolean dataToWrite {
-        return this.hasDataToWrite_ || isHandshakeWrap();
-    }
+    shared Boolean dataToWrite 
+            => this.hasDataToWrite_ || isHandshakeWrap();
 
-    shared Boolean isHandshakeUnwrap(){
-        return sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_UNWRAP;
-    }
+    shared Boolean isHandshakeUnwrap()
+            => sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_UNWRAP;
     
-    Boolean isHandshakeWrap() {
-        return sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_WRAP;
-    }
+    Boolean isHandshakeWrap() 
+            => sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_WRAP;
 
-    shared Boolean dataToRead {
-        return this.hasAppData || (this.hasReadNetData && !this.needMoreData);
-    }
+    shared Boolean dataToRead 
+            => this.hasAppData || (this.hasReadNetData && !this.needMoreData);
 
 }

@@ -12,9 +12,7 @@ shared class SocketConnectorImpl(SocketAddress addr) satisfies SocketConnector{
         return createSocket();
     }
     
-    shared default Socket createSocket(){
-        return SocketImpl(channel);
-    }
+    shared default Socket createSocket() => SocketImpl(channel);
     
     shared actual void connectAsync(Selector selector, void connect(Socket socket)){
         channel.configureBlocking(false);
@@ -22,17 +20,13 @@ shared class SocketConnectorImpl(SocketAddress addr) satisfies SocketConnector{
         selector.addConnectListener(this, connect);
     }
     
-    shared actual void close() {
-        channel.close();
-    }
+    shared actual void close() => channel.close();
     
-    shared default SelectionKey register(JavaSelector selector, Integer ops, Object attachment){
-        return channel.register(selector, ops, attachment);
-    }
+    shared default SelectionKey register(JavaSelector selector, Integer ops, Object attachment)
+            => channel.register(selector, ops, attachment);
     
-    shared default void interestOps(SelectionKey key, Integer ops) {
-        key.interestOps(ops);
-    }
+    shared default void interestOps(SelectionKey key, Integer ops) 
+            => key.interestOps(ops);
 }
 
 shared class SslSocketConnectorImpl(SocketAddress addr) extends SocketConnectorImpl(addr)
@@ -43,7 +37,5 @@ shared class SslSocketConnectorImpl(SocketAddress addr) extends SocketConnectorI
         return createSocket();
     }
     
-    shared actual SslSocket createSocket(){
-        return SslSocketImpl(channel);
-    }
+    shared actual SslSocket createSocket() => SslSocketImpl(channel);
 }

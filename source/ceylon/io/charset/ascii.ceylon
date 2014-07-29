@@ -37,14 +37,12 @@ shared object ascii satisfies Charset {
     shared actual Integer averageBytesPerCharacter = 1;
 
     "Returns a new ASCII decoder"
-    shared actual Decoder newDecoder(){
-        return ASCIIDecoder(this);
-    }
+    shared actual Decoder newDecoder()
+            => ASCIIDecoder(this);
 
     "Returns a new ASCII encoder"
-    shared actual Encoder newEncoder() {
-        return ASCIIEncoder(this);
-    }
+    shared actual Encoder newEncoder()
+            => ASCIIEncoder(this);
 }
 
 class ASCIIDecoder(charset) extends AbstractDecoder() {

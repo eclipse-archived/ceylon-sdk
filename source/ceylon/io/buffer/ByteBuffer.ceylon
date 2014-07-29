@@ -20,9 +20,8 @@ by("Stéphane Épardaud")
 see(`class ByteBuffer`,
     `function newByteBufferWithData`,
     `class Buffer`)
-shared ByteBuffer newByteBuffer(Integer capacity){
-    return ByteBufferImpl(capacity);
-}
+shared ByteBuffer newByteBuffer(Integer capacity)
+        => ByteBufferImpl(capacity);
 
 "Allocates a new [[ByteBuffer]] filled with the [[bytes]] given
  as parameter. The capacity of the new buffer will be the number
