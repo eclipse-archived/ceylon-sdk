@@ -294,7 +294,7 @@ shared object symbolOther extends Symbol("So", "Symbol, other"){}
 
 "The general category of the given character"
 shared GeneralCategory generalCategory(Character character) {
-    Integer gc = getType(character.integer);
+    Byte gc = getType(character.integer).byte;
     if (gc == gcCOMBINING_SPACING_MARK) { return markCombiningSpacing; }
     else if (gc == gcCONNECTOR_PUNCTUATION) { return punctuationConnector; }
     else if (gc == gcCONTROL) { return otherControl; }
