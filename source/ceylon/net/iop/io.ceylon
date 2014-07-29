@@ -10,7 +10,8 @@ import java.nio {
     }
 }
 
-"Reads an InputStream of the given length into a String using the specified charset"
+"Reads an `InputStream` of the given length into a `String` 
+ using the specified charset."
 by("Stéphane Épardaud")
 shared String readString(InputStream stream, Integer length, String charset){
     ByteBuffer total = allocate(length);
