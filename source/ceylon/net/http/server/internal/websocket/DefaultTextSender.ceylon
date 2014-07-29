@@ -15,9 +15,9 @@ shared class DefaultFragmentedTextSender(DefaultWebSocketChannel channel)
     }
 
     shared actual void sendTextAsynchronous(String text,
-            Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError,
-            Boolean finalFrame) {
+        Anything(WebSocketChannel) onCompletion,
+        Anything(WebSocketChannel,Exception)? onError,
+        Boolean finalFrame) {
 
         wsSendText(text, finalFrame, fragmentedChannel, wrapFragmentedCallbackSend(onCompletion, onError, channel));
     }

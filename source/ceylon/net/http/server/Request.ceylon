@@ -4,7 +4,7 @@ import ceylon.net.http { Method }
 "Defines an object to provide client request information 
  to a web endpoint."
 by("Matej Lazar")
-shared interface Request {
+shared sealed interface Request {
     
     "Returns a single parameters with given name. If there are more, the first one is returned.
      If `forceFormParsing` is false (default) and parameter with the same name exists in a query string, posted data is not parsed."

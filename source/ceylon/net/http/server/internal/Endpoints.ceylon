@@ -5,9 +5,8 @@ shared class Endpoints() {
 
     value endpoints = LinkedList<EndpointBase>();
 
-    shared void add(EndpointBase endpoint) {
-        endpoints.add(endpoint);
-    }
+    shared void add(EndpointBase endpoint) 
+            => endpoints.add(endpoint);
 
     shared EndpointBase? getEndpointMatchingPath(String requestPath) {
         for (endpoint in endpoints) {

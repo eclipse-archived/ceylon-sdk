@@ -109,18 +109,16 @@ shared class RequestImpl(HttpServerExchange exchange, FormParserFactory formPars
     }
 
     variable Map<String, String[]>? lazyQueryParameters = null;
-    Map<String, String[]> queryParameters => lazyQueryParameters else (lazyQueryParameters = readQueryParameters());
+    Map<String, String[]> queryParameters 
+            => lazyQueryParameters else (lazyQueryParameters = readQueryParameters());
 
     variable FormData? lazyFormData = null;
     FormData formData => lazyFormData else (lazyFormData = buildFormData()) ;
 
-    shared actual String? header(String name) {
-        return getHeader(name);
-    }
+    shared actual String? header(String name) => getHeader(name);
 
-    String? getHeader(String name) {
-        return exchange.requestHeaders.getFirst(HttpString(name));
-    }
+    String? getHeader(String name) 
+            => exchange.requestHeaders.getFirst(HttpString(name));
 
     shared actual String[] headers(String name) {
         value headers = exchange.requestHeaders.get(HttpString(name));

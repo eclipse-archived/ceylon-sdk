@@ -18,8 +18,8 @@ shared class DefaultFragmentedBinarySender( DefaultWebSocketChannel channel )
     
     shared actual void sendBinaryAsynchronous(
             ByteBuffer binary,
-            Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError,
+            Anything(WebSocketChannel) onCompletion,
+            Anything(WebSocketChannel,Exception)? onError,
             Boolean finalFrame) {
 
         wsSendBinary(

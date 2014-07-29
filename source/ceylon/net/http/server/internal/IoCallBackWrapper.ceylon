@@ -9,9 +9,8 @@ shared class IoCallbackWrapper(
             Callable<Anything, [HttpException]>? onError)
         satisfies IoCallback {
 
-    shared actual void onComplete(HttpServerExchange? httpServerExchange, Sender? sender) {
-        onCompletion();
-    }
+    shared actual void onComplete(HttpServerExchange? httpServerExchange, Sender? sender) 
+            => onCompletion();
 
     shared actual void onException(HttpServerExchange? httpServerExchange, Sender? sender, IOException? iOException) {
         if (exists onError) {

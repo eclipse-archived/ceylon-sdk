@@ -53,15 +53,11 @@ shared class WebSocketCallbackFragmentedWrapper(
 shared WebSocketCallbackWrapper wrapCallbackSend(
         Callable<Anything, [WebSocketChannel]>? onCompletion,
         Callable<Anything, [WebSocketChannel, Throwable]>? onError,
-        WebSocketChannel channel) {
-
-    return WebSocketCallbackWrapper(onCompletion, onError, channel);
-}
+        WebSocketChannel channel) 
+        => WebSocketCallbackWrapper(onCompletion, onError, channel);
 
 shared WebSocketCallbackFragmentedWrapper wrapFragmentedCallbackSend(
         Callable<Anything, [WebSocketChannel]>? onCompletion,
         Callable<Anything, [WebSocketChannel, Exception]>? onError,
-        WebSocketChannel channel) {
-
-    return WebSocketCallbackFragmentedWrapper(onCompletion, onError, channel);
-}
+        WebSocketChannel channel) 
+        => WebSocketCallbackFragmentedWrapper(onCompletion, onError, channel);

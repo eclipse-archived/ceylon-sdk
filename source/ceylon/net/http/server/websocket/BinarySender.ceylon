@@ -8,8 +8,8 @@ shared interface FragmentedBinarySender {
 
     shared formal void sendBinaryAsynchronous(
         ByteBuffer binary,
-        Callable<Anything, [WebSocketChannel]> onCompletion,
-        Callable<Anything, [WebSocketChannel, Exception]>? onError = null,
+        Anything(WebSocketChannel) onCompletion,
+        Anything(WebSocketChannel,Exception)? onError = null,
         Boolean finalFrame = false);
 
 }

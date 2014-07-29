@@ -11,9 +11,9 @@ shared void serveStaticFile(
                 externalPath, 
                 String fileMapper(Request request) => request.path,
                 Options options = Options(),
-                Callable<Anything, [Request]>? onSuccess = null,
-                Callable<Anything, [ServerException,Request]>? onError = null)
-        (Request request, Response response, Callable<Anything, []> complete) {
+                Anything(Request)? onSuccess = null,
+                Anything(ServerException,Request)? onError = null)
+        (Request request, Response response, Anything() complete) {
     
     "Root directory containing files."
     String externalPath;

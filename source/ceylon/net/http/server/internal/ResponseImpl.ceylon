@@ -35,8 +35,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
 
     shared actual void writeStringAsynchronous(
             String string,
-            Callable<Anything, []> onCompletion,
-            Callable<Anything, [ServerException]>? onError) {
+            Anything() onCompletion,
+            Anything(ServerException)? onError) {
 
         void task() {
             applyHeadersToExchange();
@@ -63,8 +63,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     
     shared actual void writeBytesAsynchronous(
             Array<Byte> bytes,
-            Callable<Anything, []> onCompletion,
-            Callable<Anything, [ServerException]>? onError) {
+            Anything() onCompletion,
+            Anything(ServerException)? onError) {
 
         applyHeadersToExchange();
         value jByteBuffer = wrapByteBuffer(toByteArray(bytes));
@@ -78,8 +78,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
 
     shared actual void writeByteBufferAsynchronous(
             ByteBuffer byteBuffer,
-            Callable<Anything, []> onCompletion,
-            Callable<Anything, [ServerException]>? onError) {
+            Anything() onCompletion,
+            Anything(ServerException)? onError) {
 
         applyHeadersToExchange();
         writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
@@ -196,9 +196,9 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     }
     
     class Task (
-        Callable<Anything, []> task,
-        Callable<Anything, []> onCompletion,
-        Callable<Anything, [ServerException]>? onError)
+        Anything() task,
+        Anything() onCompletion,
+        Anything(ServerException)? onError)
             satisfies Runnable {
         
         shared actual void run() {

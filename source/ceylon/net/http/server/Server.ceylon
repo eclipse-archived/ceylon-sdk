@@ -5,7 +5,7 @@ import ceylon.io { SocketAddress }
 "A HTTP server."
 by("Matej Lazar")
 see(`function newServer`)
-shared interface Server {
+shared sealed interface Server {
     
     "Start the server in the current thread."
     shared formal void start(
