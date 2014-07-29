@@ -1,4 +1,6 @@
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer
+}
 
 "Represents an object that can read data from a source
  into byte buffers."

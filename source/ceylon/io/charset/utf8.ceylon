@@ -1,4 +1,8 @@
-import ceylon.io.buffer { newByteBuffer, ByteBuffer, CharacterBuffer }
+import ceylon.io.buffer {
+    newByteBuffer,
+    ByteBuffer,
+    CharacterBuffer
+}
 
 "Represents a UTF-8 character set as defined by
  (the specification)[http://tools.ietf.org/html/rfc3629]."
@@ -8,9 +12,11 @@ shared object utf8 satisfies Charset {
     "Returns `UTF-8`."
     shared actual String name = "UTF-8";
     
-    "Returns a list of common aliases such as `utf8` and `utf_8` even
-     though these are not defined officially as aliases by
-     [the internet registry](http://www.iana.org/assignments/character-sets)."
+    "Returns a list of common aliases such as `utf8` and 
+     `utf_8` even though these are not defined officially as 
+     aliases by [the internet registry][].
+     
+     [the internet registry]: http://www.iana.org/assignments/character-sets"
     shared actual String[] aliases = ["utf8", "utf_8"];
     
     "Returns 1."
@@ -31,7 +37,8 @@ shared object utf8 satisfies Charset {
             => UTF8Encoder(this);
 }
 
-class UTF8Encoder(charset) satisfies Encoder {
+class UTF8Encoder(charset) 
+        satisfies Encoder {
     
     shared actual Charset charset;
     ByteBuffer bytes = newByteBuffer(3);
@@ -97,7 +104,8 @@ class UTF8Encoder(charset) satisfies Encoder {
     }
 }
 
-class UTF8Decoder(charset) extends AbstractDecoder()  {
+class UTF8Decoder(charset) 
+        extends AbstractDecoder()  {
     shared actual Charset charset;
     
     variable Integer needsMoreBytes = 0;

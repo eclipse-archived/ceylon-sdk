@@ -1,11 +1,21 @@
-import java.nio { JavaByteBuffer = ByteBuffer { allocateJavaByteBuffer = allocate }}
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.interop.java { toByteArray }
+import ceylon.interop.java {
+    toByteArray
+}
+import ceylon.io.buffer {
+    ByteBuffer
+}
 
+import java.nio {
+    JavaByteBuffer=ByteBuffer {
+        allocateJavaByteBuffer=allocate
+    }
+}
 
-shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
+shared class ByteBufferImpl(Integer initialCapacity) 
+        extends ByteBuffer(){
     
-    variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
+    variable JavaByteBuffer buf = 
+            allocateJavaByteBuffer(initialCapacity);
     shared JavaByteBuffer underlyingBuffer => buf;
     
     capacity => buf.capacity();

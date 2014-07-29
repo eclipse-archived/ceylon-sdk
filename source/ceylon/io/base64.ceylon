@@ -1,52 +1,56 @@
-import ceylon.io.buffer { ByteBuffer, newByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer,
+    newByteBuffer
+}
 
 "Represents a Base64 implementation of RFC 4648
  (the specification)[http://tools.ietf.org/html/rfc4648]."
 by("Diego Coronel")
 shared object base64 {
     
-    "Returns a [[Encoder]] that encodes using the Basic type base64 encoding scheme."
-    shared Encoder getEncoder() {
-        return Base64Standard();
-    }
+    "Returns a [[Encoder]] that encodes using the Basic type 
+     base64 encoding scheme."
+    shared Encoder getEncoder() => Base64Standard();
    
-    "Returns a [[Decoder]] that decodes using the Basic type base64 encoding scheme."
-    shared Decoder getDecoder() {
-        return Base64Standard();
-    }
+    "Returns a [[Decoder]] that decodes using the Basic type 
+     base64 encoding scheme."
+    shared Decoder getDecoder() => Base64Standard();
     
-    "Returns a [[Encoder]] that encodes using the URL and Filename safe type base64 encoding scheme."
-    shared Encoder getUrlEncoder() {
-        return Base64Url();
-    }
+    "Returns a [[Encoder]] that encodes using the URL and 
+     Filename safe type base64 encoding scheme."
+    shared Encoder getUrlEncoder() => Base64Url();
    
-    "Returns a [[Decoder]] that decodes using the URL and Filename safe type base64 encoding scheme."
-    shared Decoder getUrlDecoder() {
-        return Base64Url();
-    }
+    "Returns a [[Decoder]] that decodes using the URL and 
+     Filename safe type base64 encoding scheme."
+    shared Decoder getUrlDecoder() => Base64Url();
     
 }
 
-"Allows you to encode a sequence of bytes into a sequence of 6 bits characters."
+"Allows you to encode a sequence of bytes into a sequence of 
+ 6 bits characters."
 by("Diego Coronel")
 shared interface Encoder {
 
-    "Encodes all remaining bytes from the specified byte buffer 
-     into a newly-allocated ByteBuffer using the Base64 encoding scheme."
-    shared formal ByteBuffer encode( ByteBuffer input );
+    "Encodes all remaining bytes from the specified byte 
+     buffer into a newly-allocated ByteBuffer using the 
+     Base64 encoding scheme."
+    shared formal ByteBuffer encode(ByteBuffer input);
 }
 
-"Allows you to decode a group of four 6 bits characters into bytes."
+"Allows you to decode a group of four 6 bits characters into 
+ bytes."
 by("Diego Coronel")
 shared interface Decoder {
 
-    "Decodes all bytes from the input byte buffer using the Base64 encoding scheme, 
-     writing the results into a newly-allocated ByteBuffer."
-    shared formal ByteBuffer decode( ByteBuffer input );
+    "Decodes all bytes from the input byte buffer using the 
+     Base64 encoding scheme, writing the results into a 
+     newly-allocated ByteBuffer."
+    shared formal ByteBuffer decode(ByteBuffer input);
 }
 
 "Abstract implementations for [[Decoder]] and [[Encoder]]"
-abstract class AbstractBase64() satisfies Encoder & Decoder {
+abstract class AbstractBase64()
+         satisfies Encoder & Decoder {
  
     "Returns characters table"
     shared formal [Character+] table;
@@ -57,7 +61,7 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
     "Returns index for ignored character"
     Integer ignoreCharIndex = 64;
 
-    shared actual ByteBuffer encode( ByteBuffer input ) {
+    shared actual ByteBuffer encode(ByteBuffer input) {
         //Base64 has an output grow about 33%
         value result = newByteBuffer((2 + input.available - ((input.available + 2) % 3)) * 4 / 3);
         while( input.hasAvailable ){
@@ -67,11 +71,13 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
         return result;
     }
 
-    "Transforms a sequence of 3 bytes into 4 characters based on base64 table"
-    void encodeBytesToChars( ByteBuffer input, ByteBuffer encoded ) {
+    "Transforms a sequence of 3 bytes into 4 characters 
+     based on base64 table"
+    void encodeBytesToChars(ByteBuffer input, ByteBuffer encoded) {
         value available = input.available;
         value codePoint1 = input.get();
-        assert(exists char1 = table[codePoint1.rightLogicalShift(2).signed]);
+        assert(exists char1 
+            = table[codePoint1.rightLogicalShift(2).signed]);
 
         variable value codePoint2 = 0.byte;
         variable value codePoint3 = 0.byte;
@@ -92,9 +98,10 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
         encoded.put(available >= 3 then char4.integer.byte else pad.integer.byte);
     }
 
-    "Returns index of an encoded char
-     This code is based on base64 tables where just special chars are changed"
-    Integer indexOf( Character char ) {
+    "Returns index of an encoded character. This code is 
+     based on base64 tables where just special chars are 
+     changed"
+    Integer indexOf(Character char) {
         if( 'A'.integer <= char.integer <= 'Z'.integer ) {
             return char.integer - 'A'.integer;
         }
@@ -159,7 +166,8 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
 
 }
 
-class Base64Standard() extends AbstractBase64() {
+class Base64Standard() 
+        extends AbstractBase64() {
     "The Base64 Basic index table"
     shared actual [Character+] table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -171,7 +179,8 @@ class Base64Standard() extends AbstractBase64() {
                                         '4', '5', '6', '7', '8', '9', '+', '/'];
 }
 
-class Base64Url() extends AbstractBase64() {
+class Base64Url() 
+        extends AbstractBase64() {
     "The Base64 Safe Url index table"
     shared actual [Character+] table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',

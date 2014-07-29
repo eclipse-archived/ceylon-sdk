@@ -1,24 +1,40 @@
-import ceylon.file { Resource }
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.io { OpenFile }
-
-import java.nio.channels { FileChannel { javaOpenFileChannel = open }}
-import java.nio.file { 
-	Paths { javaGetPath = get },
-	StandardOpenOption { 
-		javaCreateOption = \iCREATE,
-		javaWriteOption = \iWRITE,
-		javaReadOption = \iREAD
-	}
+import ceylon.file {
+    Resource
 }
-import ceylon.io.buffer.impl { ByteBufferImpl }
+import ceylon.io {
+    OpenFile
+}
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.io.buffer.impl {
+    ByteBufferImpl
+}
 
-shared class OpenFileImpl(resource) satisfies OpenFile {
+import java.nio.channels {
+    FileChannel {
+        javaOpenFileChannel=open
+    }
+}
+import java.nio.file {
+    Paths {
+        javaGetPath=get
+    },
+    StandardOpenOption {
+        javaCreateOption=CREATE,
+        javaWriteOption=WRITE,
+        javaReadOption=READ
+    }
+}
+
+shared class OpenFileImpl(resource) 
+        satisfies OpenFile {
     
     shared actual Resource resource;
 
-	FileChannel channel = javaOpenFileChannel(javaGetPath(resource.path.string), 
-		javaCreateOption, javaWriteOption, javaReadOption);
+	FileChannel channel = 
+			javaOpenFileChannel(javaGetPath(resource.path.string), 
+		            javaCreateOption, javaWriteOption, javaReadOption);
     
     close() => channel.close();
 

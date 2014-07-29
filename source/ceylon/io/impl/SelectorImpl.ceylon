@@ -1,15 +1,28 @@
-import ceylon.io { Selector, Socket, FileDescriptor, SocketConnector, ServerSocket }
-import java.nio.channels { 
-    JavaSelector = Selector,
-    SelectionKey { 
-        javaReadOp = \iOP_READ,
-        javaWriteOp = \iOP_WRITE,
-        javaConnectOp = \iOP_CONNECT,
-        javaAcceptOp = \iOP_ACCEPT
-    } 
+import ceylon.collection {
+    HashMap,
+    HashSet,
+    MutableSet
 }
-import ceylon.collection { HashMap, HashSet, MutableSet }
-import ceylon.interop.java { CeylonIterable }
+import ceylon.interop.java {
+    CeylonIterable
+}
+import ceylon.io {
+    Selector,
+    Socket,
+    FileDescriptor,
+    SocketConnector,
+    ServerSocket
+}
+
+import java.nio.channels {
+    JavaSelector=Selector,
+    SelectionKey {
+        javaReadOp=OP_READ,
+        javaWriteOp=OP_WRITE,
+        javaConnectOp=OP_CONNECT,
+        javaAcceptOp=OP_ACCEPT
+    }
+}
 
 class Key(socket = null, onRead = null, onWrite = null, 
           connector = null, onConnect = null,
@@ -25,15 +38,16 @@ class Key(socket = null, onRead = null, onWrite = null,
     shared variable ServerSocketImpl? acceptor;
 }
 
-shared class SelectorImpl() satisfies Selector {
+shared class SelectorImpl() 
+        satisfies Selector {
     
     value javaSelector = JavaSelector.open();
     value map = HashMap<SelectionKey, Key>();
     
-    shared actual void addConsumer(FileDescriptor socket, Boolean callback(FileDescriptor s)) {
+    shared actual void addConsumer(FileDescriptor socket, 
+        Boolean callback(FileDescriptor s)) {
         assert(is SocketImpl socket);
-        SelectionKey? javaKey = socket.channel.keyFor(javaSelector);
-        if(exists javaKey){
+        if(exists javaKey = socket.channel.keyFor(javaSelector)){
             assert(exists key = map[javaKey]);
             // update our key
             key.onRead = callback;
@@ -47,53 +61,59 @@ shared class SelectorImpl() satisfies Selector {
         }
     }
 
-    shared actual void addProducer(FileDescriptor socket, Boolean callback(FileDescriptor s)) {
+    shared actual void addProducer(FileDescriptor socket, 
+        Boolean callback(FileDescriptor s)) {
         assert(is SocketImpl socket);
-        SelectionKey? javaKey = socket.channel.keyFor(javaSelector);
-        if(exists javaKey){
+        if(exists javaKey = socket.channel.keyFor(javaSelector)){
             assert(exists key = map[javaKey]);
             // update our key
             key.onWrite = callback;
             key.socket = socket;
-            socket.interestOps(javaKey, javaKey.interestOps().or(javaWriteOp));
+            socket.interestOps(javaKey, 
+                javaKey.interestOps().or(javaWriteOp));
         }else{
             // new key
-            value key = Key{onWrite = callback; socket = socket;};
-            value newJavaKey = socket.register(javaSelector, javaWriteOp, key);
+            value key = Key { onWrite = callback; socket = socket; } ;
+            value newJavaKey = 
+                    socket.register(javaSelector, javaWriteOp, key);
             map.put(newJavaKey, key);
         }
     }
 
-    shared actual void addConnectListener(SocketConnector connector, void callback(Socket s)) {
+    shared actual void addConnectListener(SocketConnector connector, 
+        void callback(Socket s)) {
         assert(is SocketConnectorImpl connector);
-        SelectionKey? javaKey = connector.channel.keyFor(javaSelector);
-        if(exists javaKey){
+        if(exists javaKey = connector.channel.keyFor(javaSelector)){
             assert(exists key = map[javaKey]);
             // update our key
             key.onConnect = callback;
             key.connector = connector;
-            connector.interestOps(javaKey, javaKey.interestOps().or(javaConnectOp));
+            connector.interestOps(javaKey, 
+                javaKey.interestOps().or(javaConnectOp));
         }else{
             // new key
-            value key = Key{onConnect = callback; connector = connector;};
-            value newJavaKey = connector.register(javaSelector, javaConnectOp, key);
+            value key = Key { onConnect = callback; connector = connector; };
+            value newJavaKey = 
+                    connector.register(javaSelector, javaConnectOp, key);
             map.put(newJavaKey, key);
         }
     }
 
-    shared actual void addAcceptListener(ServerSocket acceptor, Boolean callback(Socket s)) {
+    shared actual void addAcceptListener(ServerSocket acceptor, 
+        Boolean callback(Socket s)) {
         assert(is ServerSocketImpl acceptor);
-        SelectionKey? javaKey = acceptor.channel.keyFor(javaSelector);
-        if(exists javaKey){
+        if(exists javaKey = acceptor.channel.keyFor(javaSelector)){
             assert(exists key = map[javaKey]);
             // update our key
             key.onAccept = callback;
             key.acceptor = acceptor;
-            acceptor.interestOps(javaKey, javaKey.interestOps().or(javaAcceptOp));
+            acceptor.interestOps(javaKey, 
+                javaKey.interestOps().or(javaAcceptOp));
         }else{
             // new key
-            value key = Key{onAccept = callback; acceptor = acceptor;};
-            value newJavaKey = acceptor.register(javaSelector, javaAcceptOp, key);
+            value key = Key { onAccept = callback; acceptor = acceptor; };
+            value newJavaKey = 
+                    acceptor.register(javaSelector, javaAcceptOp, key);
             map.put(newJavaKey, key);
         }
     }

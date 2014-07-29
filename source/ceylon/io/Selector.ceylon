@@ -1,20 +1,30 @@
-import ceylon.io.impl { SelectorImpl }
+import ceylon.io.impl {
+    SelectorImpl
+}
 
-"Represents a listener that can listen for read/write/connect/accept events
- directly from the operating system. 
+"Supports registration of listeners that are notified of 
+ events raised directly by the operating system, of the 
+ following kinds:
  
- You can register listeners for :
+ - read,
+ - write,
+ - connect, and
+ - accept.
+ 
+ A listener may be registered for:
  
  - read/write events on [[SelectableFileDescriptor]],
- - accept events on [[ServerSocket]],
+ - accept events on [[ServerSocket]], or
  - connect events on [[SocketConnector]].
  
- Those listeners will then be called by this selector when you invoke [[process]] until
- there are no more listeners.
+ The listener will then be notified by this selector when 
+ you invoke [[process]] until there are no more listeners.
  
- Every listener can signal the selector object that it is no longer interested in
- notifications by returning `false` when invoked, except for `connect` listeners which
- are only notified once (since you can only connect a [[Socket]] once). 
+ Every listener can signal the selector object that it is no 
+ longer interested in notifications by returning `false` 
+ when invoked, except for `connect` listeners which are only 
+ notified once (since a given [[Socket]] is connected once
+ at most ). 
  
  Listeners should be registered with:
  
@@ -23,16 +33,19 @@ import ceylon.io.impl { SelectorImpl }
  - [[addConnectListener]] for `connect` events, and
  - [[addAcceptListener]] for `accept` events.
  
- You can instantiate new selectors with [[newSelector]].
- "
+ A new instance of `Selector` may be obtained by calling
+ [[newSelector]]."
+see(`function newSelector`)
 by("Stéphane Épardaud")
-shared interface Selector {
+shared sealed interface Selector {
     
-    "Invokes all the listeners that are ready to be notified, until there are no more
-     listeners. This method will block until every registered listener has signaled
-     to this selector that it is no longer interested in events by returning `false`
-     when invoked, except for `connect` listeners which are only notified once (since
-     you can only connect a [[Socket]] once).
+    "Invokes all the listeners that are ready to be notified, 
+     until there are no more listeners. This method will 
+     block until every registered listener has signaled to 
+     this selector that it is no longer interested in events 
+     by returning `false` when invoked, except for `connect` 
+     listeners which are only notified once (since you can 
+     only connect a [[Socket]] once).
      
      Listeners should be registered with:
      
@@ -43,48 +56,51 @@ shared interface Selector {
      "
     shared formal void process();
     
-    "Registers a `read` listener on the given [[SelectableFileDescriptor]].
+    "Registers a `read` listener on the given 
+     [[SelectableFileDescriptor]].
      
-     The given [[callback]] will be invoked by [[process]] whenever there is data
-     ready to be read from the specified [[socket]] without blocking.
+     The given [[callback]] will be invoked by [[process]] 
+     whenever there is data ready to be read from the 
+     specified [[socket]] without blocking.
      
-     If your listener is no longer interested in `read` events from this selector,
-     it should return `false`.
-     "
-    shared formal void addConsumer(FileDescriptor socket, Boolean callback(FileDescriptor s));
+     If your listener is no longer interested in `read` 
+     events from this selector, it should return `false`."
+    shared formal void addConsumer(FileDescriptor socket, 
+        Boolean callback(FileDescriptor s));
 
-    "Registers a `write` listener on the given [[SelectableFileDescriptor]].
+    "Registers a `write` listener on the given 
+     [[SelectableFileDescriptor]]. The given [[callback]] 
+     will be invoked by [[process]] whenever there is data 
+     ready to be written to the specified [[socket]] without 
+     blocking.
      
-     The given [[callback]] will be invoked by [[process]] whenever there is data
-     ready to be written to the specified [[socket]] without blocking.
-     
-     If your listener is no longer interested in `write` events from this selector,
-     it should return `false`.
-     "
-    shared formal void addProducer(FileDescriptor socket, Boolean callback(FileDescriptor s));
+     If the callback is no longer interested in `write` 
+     events from this selector, it should return `false`."
+    shared formal void addProducer(FileDescriptor socket, 
+        Boolean callback(FileDescriptor s));
 
-    "Registers a `connect` listener on the given [[SocketConnector]].
+    "Registers a `connect` listener on the given 
+     [[SocketConnector]]. The given [[callback function|connect]] 
+     will be invoked by [[process]] as soon as the given 
+     [[socketConnector]] can be connected without blocking.
      
-     The given [[connect]] will be invoked by [[process]] as soon as the
-     specified [[socketConnector]] can be connected without blocking.
-     
-     Your listener will only be invoked once.
-     "
-    shared formal void addConnectListener(SocketConnector socketConnector, void connect(Socket s));
+     The callback function will only be invoked at most once."
+    shared formal void addConnectListener(SocketConnector socketConnector, 
+        void connect(Socket s));
 
-    "Registers an `accept` listener on the given [[ServerSocket]].
+    "Registers an `accept` listener on the given 
+     [[ServerSocket]]. The given [[callback function|accept]] 
+     will be invoked by [[process]] whenever there is a
+     [[Socket]] ready to be accepted from the specified 
+     [[socketAcceptor]] without blocking.
      
-     The given [[accept]] will be invoked by [[process]] whenever there is a
-     [[Socket]] ready to be accepted from the specified [[socketAcceptor]] without blocking.
-     
-     If your listener is no longer interested in `accept` events from this selector,
-     it should return `false`.
+     If the callback is no longer interested in `accept` 
+     events from this selector, it should return `false`.
      "
-    shared formal void addAcceptListener(ServerSocket socketAcceptor, Boolean accept(Socket s));
+    shared formal void addAcceptListener(ServerSocket socketAcceptor, 
+        Boolean accept(Socket s));
 }
 
-"Returns a new selector object."
+"Creates a new [[Selector]]."
 see(`interface Selector`)
-shared Selector newSelector(){
-    return SelectorImpl();
-}
+shared Selector newSelector() => SelectorImpl();

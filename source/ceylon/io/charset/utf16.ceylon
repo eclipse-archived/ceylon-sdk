@@ -1,21 +1,27 @@
-import ceylon.io.buffer { ByteBuffer, newByteBuffer, CharacterBuffer }
+import ceylon.io.buffer {
+    ByteBuffer,
+    newByteBuffer,
+    CharacterBuffer
+}
 
 "Represents a UTF-16 character set as defined by
  (the specification)[http://www.ietf.org/rfc/rfc2781.txt].
  
  Decoders for UTF-16 will properly recognize `BOM` 
  (_byte order mark_) markers for both big and little endian
- encodings, but encoders will generate big-endian UTF-16 with
- no `BOM` markers."
+ encodings, but encoders will generate big-endian UTF-16 
+ with no `BOM` markers."
 by("Stéphane Épardaud")
 shared object utf16 satisfies Charset {
     
     "Returns `UTF-16`."
     shared actual String name = "UTF-16";
 
-    "Returns a list of common aliases such as `utf16` and `utf_16` even
-     though these are not defined officially as aliases by
-     [the internet registry](http://www.iana.org/assignments/character-sets)."
+    "Returns a list of common aliases such as `utf16` and 
+     `utf_16` even though these are not defined officially 
+     as aliases by [the internet registry][].
+     
+     [the internet registry]: http://www.iana.org/assignments/character-sets"
     shared actual String[] aliases = ["utf16", "utf_16"];
     
     "Returns 2."
@@ -36,7 +42,8 @@ shared object utf16 satisfies Charset {
             => UTF16Encoder(this);
 }
 
-class UTF16Encoder(charset) satisfies Encoder {
+class UTF16Encoder(charset) 
+        satisfies Encoder {
     
     shared actual Charset charset;
     ByteBuffer bytes = newByteBuffer(3);
@@ -96,7 +103,8 @@ class UTF16Encoder(charset) satisfies Encoder {
 }
 
 
-class UTF16Decoder(charset) extends AbstractDecoder()  {
+class UTF16Decoder(charset) 
+        extends AbstractDecoder()  {
     shared actual Charset charset;
     
     variable Boolean needsMoreBytes = false;

@@ -1,14 +1,32 @@
-import ceylon.io { SocketAddress, ServerSocket, Socket, Selector }
-import java.net { InetSocketAddress }
-import java.nio.channels { ServerSocketChannel { openSocket=open }, JavaSelector = Selector, SelectionKey }
+import ceylon.io {
+    SocketAddress,
+    ServerSocket,
+    Socket,
+    Selector
+}
 
-shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) extends ServerSocket(bindAddress){
+import java.net {
+    InetSocketAddress
+}
+import java.nio.channels {
+    ServerSocketChannel {
+        openSocket=open
+    },
+    JavaSelector=Selector,
+    SelectionKey
+}
+
+shared class ServerSocketImpl(SocketAddress? bindAddress, 
+    Integer backlog = 0) 
+        satisfies ServerSocket{
 
     shared ServerSocketChannel channel = openSocket();
     shared actual SocketAddress localAddress;
 
     if(exists bindAddress){
-        channel.bind(InetSocketAddress(bindAddress.address, bindAddress.port), backlog);
+        value address = 
+                InetSocketAddress(bindAddress.address, bindAddress.port);
+        channel.bind(address, backlog);
     }else{
         channel.bind(null, backlog);
     }
@@ -18,7 +36,8 @@ shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) e
 
     shared actual Socket accept() => SocketImpl(channel.accept());
 
-    shared actual void acceptAsync(Selector selector, Boolean accept(Socket socket)) {
+    shared actual void acceptAsync(Selector selector, 
+            Boolean accept(Socket socket)) {
         channel.configureBlocking(false);
         channel.accept();
         selector.addAcceptListener(this, accept);
@@ -26,7 +45,8 @@ shared class ServerSocketImpl(SocketAddress? bindAddress, Integer backlog = 0) e
 
     shared actual void close() => channel.close();
     
-    shared default SelectionKey register(JavaSelector selector, Integer ops, Object attachment)
+    shared default SelectionKey register(JavaSelector selector, 
+        Integer ops, Object attachment)
             => channel.register(selector, ops, attachment);
     
     shared default void interestOps(SelectionKey key, Integer ops) 

@@ -1,20 +1,30 @@
-import ceylon.io.buffer { ByteBuffer, CharacterBuffer }
+import ceylon.io.buffer {
+    ByteBuffer,
+    CharacterBuffer
+}
 
-"Implementation of the ASCII character set. 
- See [the ASCII specification](http://tools.ietf.org/html/rfc20) for more information."
+"Implementation of the ASCII character set. See 
+ [the ASCII specification][] for more information.
+ 
+ [the ASCII specification]: http://tools.ietf.org/html/rfc20"
 by("Stéphane Épardaud")
 shared object ascii satisfies Charset {
     
     "Returns `US-ASCII`. This deviates a bit from 
-     [the internet registry](http://www.iana.org/assignments/character-sets) which defines it as
-     `ANSI_X3.4-1968`, whereas we use its _preferred MIME name_ because that is more widely known."
+     [the internet registry][] which defines it as
+     `ANSI_X3.4-1968`, whereas we use its _preferred MIME 
+     name_ because that is more widely known.
+     
+     [the internet registry]: http://www.iana.org/assignments/character-sets"
     shared actual String name = "US-ASCII";
 
-    "The set of aliases, as defined by 
-     [the internet registry](http://www.iana.org/assignments/character-sets). Note that
-     because we use the _preferred MIME name_ (`US-ASCII`) as [[name]], we include the
-     official character set name `ANSI_X3.4-1968` in the aliases, thereby deviating
-     from the spec."
+    "The set of aliases, as defined by [the internet registry][]. 
+     Note that because we use the _preferred MIME name_ 
+     (`US-ASCII`) as [[name]], we include the official 
+     character set name `ANSI_X3.4-1968` in the aliases, 
+     thereby deviating from the spec.
+     
+     [the internet registry]: http://www.iana.org/assignments/character-sets"
     shared actual String[] aliases = [
         "ANSI_X3.4-1968",
         "iso-ir-6",
@@ -45,7 +55,8 @@ shared object ascii satisfies Charset {
             => ASCIIEncoder(this);
 }
 
-class ASCIIDecoder(charset) extends AbstractDecoder() {
+class ASCIIDecoder(charset) 
+        extends AbstractDecoder() {
     shared actual Charset charset;
 
     shared actual void decode(ByteBuffer buffer) {
@@ -59,7 +70,8 @@ class ASCIIDecoder(charset) extends AbstractDecoder() {
     }
 }
 
-class ASCIIEncoder(charset) satisfies Encoder {
+class ASCIIEncoder(charset) 
+        satisfies Encoder {
     shared actual Charset charset;
     
     shared actual void encode(CharacterBuffer input, ByteBuffer output) {

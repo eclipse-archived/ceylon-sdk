@@ -1,14 +1,18 @@
-import ceylon.collection { StringBuilder }
-"Abstract class for [[Decoder]] objects, which abstracts
+import ceylon.collection {
+    StringBuilder
+}
+
+"Abstract superclass for [[Decoder]] objects, which holds
  the [[StringBuilder]]."
 by("Stéphane Épardaud")
-abstract class AbstractDecoder() satisfies Decoder {
+abstract class AbstractDecoder() 
+        satisfies Decoder {
     
     // FIXME: this shouldn't really be exposed, should it?
     shared StringBuilder builder = StringBuilder();
 
-    "Consumes all the characters available in the underlying [[builder]]. Returns null if empty.
-     Resets the builder."
+    "Consumes all the characters available in the underlying 
+     [[builder]]. Returns null if empty. Resets the builder."
     shared actual String? consumeAvailable() {
         // consume all we have without checking for missing things
         if(builder.size > 0){
@@ -20,7 +24,8 @@ abstract class AbstractDecoder() satisfies Decoder {
         }
     }
 
-    "Returns the contents of the underlying [[builder]] and resets it."
+    "Returns the contents of the underlying [[builder]] and 
+     resets it."
     default shared actual String done() {
         value ret = builder.string;
         builder.reset();

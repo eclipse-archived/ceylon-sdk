@@ -1,6 +1,6 @@
 "The list of all supported character sets.
  
- Currently this lists consists of:
+ Currently this lists contains:
  
  - ASCII
  - ISO 8859 1
@@ -8,7 +8,7 @@
  - UTF-16
  "
 by("Stéphane Épardaud")
-shared Charset[] charsets = [ ascii, iso_8859_1, utf8, utf16 ];
+shared Charset[] charsets = [ascii, iso_8859_1, utf8, utf16];
 
 "Gets a character set by name or alias."
 by("Stéphane Épardaud")

@@ -1,11 +1,14 @@
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer
+}
 
 "Represents a [[FileDescriptor]] that you can `select`. This means that you can
  register listeners for this file descriptor on a given [[Selector]] object that
  will be called whenever there is data available to be read or written without
  blocking the reading/writing thread."
 by("Stéphane Épardaud")
-shared interface SelectableFileDescriptor satisfies FileDescriptor {
+shared interface SelectableFileDescriptor 
+        satisfies FileDescriptor {
 
     "Register a reading listener to the given [[selector]]. The reading listener will
      be invoked by the [[Selector]] whenever data can be read from this file
@@ -14,7 +17,9 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
      If you are no longer interested in `read` events from the selector, you should return
      `false` from your listener when invoked."
     see(`interface Selector`)
-    shared void readAsync(Selector selector, void consume(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
+    shared void readAsync(Selector selector, 
+            void consume(ByteBuffer buffer), 
+            ByteBuffer buffer = newBuffer()){
         setNonBlocking();
         Boolean readData(FileDescriptor socket){
             buffer.clear();
@@ -38,7 +43,9 @@ shared interface SelectableFileDescriptor satisfies FileDescriptor {
      If you are no longer interested in `write` events from the selector, you should return
      `false` from your listener when invoked."
     see(`interface Selector`)
-    shared void writeAsync(Selector selector, void producer(ByteBuffer buffer), ByteBuffer buffer = newBuffer()){
+    shared void writeAsync(Selector selector, 
+            void producer(ByteBuffer buffer), 
+            ByteBuffer buffer = newBuffer()){
         setNonBlocking();
         variable Boolean needNewData = true;
         Boolean writeData(FileDescriptor socket){

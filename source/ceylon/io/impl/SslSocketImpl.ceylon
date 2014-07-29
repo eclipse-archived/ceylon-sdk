@@ -1,16 +1,37 @@
 import ceylon.io {
     SslSocket
 }
-
-import java.nio.channels {
-    SocketChannel, SelectionKey, Selector
+import ceylon.io.buffer {
+    ByteBuffer
 }
-import javax.net.ssl { X509TrustManager, SSLContext, SSLEngine, TrustManager, SSLEngineResult  }
-import java.security.cert { X509Certificate }
-import java.lang { ObjectArray }
-import java.nio { JavaByteBuffer = ByteBuffer {allocateJavaByteBuffer = allocate }}
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.io.buffer.impl { ByteBufferImpl }
+import ceylon.io.buffer.impl {
+    ByteBufferImpl
+}
+
+import java.lang {
+    ObjectArray
+}
+import java.nio {
+    JavaByteBuffer=ByteBuffer {
+        allocateJavaByteBuffer=allocate
+    }
+}
+import java.nio.channels {
+    SocketChannel,
+    SelectionKey,
+    Selector
+}
+import java.security.cert {
+    X509Certificate
+}
+
+import javax.net.ssl {
+    X509TrustManager,
+    SSLContext,
+    SSLEngine,
+    TrustManager,
+    SSLEngineResult
+}
 
 object dummyTrustManager satisfies X509TrustManager {
 
@@ -36,14 +57,19 @@ ObjectArray<TrustManager> makeObjectArray(Iterable<TrustManager> items) {
     return ret;
 }
 
-ObjectArray<TrustManager> dummyTrustManagers = makeObjectArray{dummyTrustManager};
+ObjectArray<TrustManager> dummyTrustManagers 
+        = makeObjectArray{dummyTrustManager};
 
-shared interface DataNeeds of dataNeedsOk | dataNeedsNeedsData | dataNeedsEndOfFile {}
+shared interface DataNeeds 
+        of dataNeedsOk | dataNeedsNeedsData | dataNeedsEndOfFile {}
 shared object dataNeedsEndOfFile satisfies DataNeeds {}
 shared object dataNeedsNeedsData satisfies DataNeeds {}
 shared object dataNeedsOk satisfies DataNeeds {}
 
-shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) satisfies SslSocket {
+shared class SslSocketImpl(SocketChannel socket) 
+        extends SocketImpl(socket) 
+        satisfies SslSocket {
+    
     SSLContext sslContext;
     SSLEngine sslEngine;
     JavaByteBuffer readAppBuf;
@@ -437,9 +463,8 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                 && handshakeStatus != SSLEngineResult.HandshakeStatus.\iNOT_HANDSHAKING;
     }
 
-    void userOps(){
-        selectionKey?.interestOps(this.selectionOps);
-    }
+    void userOps() 
+            => selectionKey?.interestOps(this.selectionOps);
     
     shared Boolean dataToWrite 
             => this.hasDataToWrite_ || isHandshakeWrap();

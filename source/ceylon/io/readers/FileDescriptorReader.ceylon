@@ -1,12 +1,19 @@
-import ceylon.io { FileDescriptor }
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io {
+    FileDescriptor
+}
+import ceylon.io.buffer {
+    ByteBuffer
+}
 
 "Reader that can read from a [[FileDescriptor]].
  
- If [[length]] is specified, this reader will read at most [[length]] bytes
- until it considers that it reached end of file."
+ If [[length]] is specified, this reader will read at most 
+ [[length]] bytes until it considers that it reached end of 
+ file."
 by("Stéphane Épardaud")
-shared class FileDescriptorReader(FileDescriptor fileDescriptor, Integer? length = null) satisfies Reader {
+shared class FileDescriptorReader(FileDescriptor fileDescriptor, 
+    Integer? length = null) 
+        satisfies Reader {
     
     variable Integer position = 0;
     

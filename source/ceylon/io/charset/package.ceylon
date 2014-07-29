@@ -1,7 +1,8 @@
-"This package contains everything required to convert bytes to [[String]]s according
- to character sets.
+"This package contains everything required to convert bytes 
+ to [[String]]s according to character sets.
  
- Sample code for converting a [[String]] to an ASCII [[ceylon.io.buffer::ByteBuffer]]
+ Sample code for converting a [[String]] to an ASCII 
+ [[ceylon.io.buffer::ByteBuffer]]
  
      ByteBuffer buffer = ascii.encode(\"Hello World\");
  
