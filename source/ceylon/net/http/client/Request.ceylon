@@ -70,8 +70,7 @@ shared class Request(uri, method = get){
     
     "Sets a request header."
     shared void setHeader(String name, String* values){
-        Header? header = getHeader(name);
-        if(exists header){
+        if(exists header = getHeader(name)){
             header.values.clear();
             header.values.addAll(values);
         }else{
@@ -117,7 +116,9 @@ shared class Request(uri, method = get){
     }
     
     Header contentTypeHeader() {
-        variable Header? contentTypeHeader = headers.find((Header header) => header.name.lowercased.startsWith("content-type"));
+        variable Header? contentTypeHeader = 
+                headers.find((Header header) 
+            => header.name.lowercased.startsWith("content-type"));
         return contentTypeHeader else defaultContentTypeHeader();
     }
     
@@ -143,7 +144,12 @@ shared class Request(uri, method = get){
         }
 
         value builder = StringBuilder();
-        builder.append(method.string).append(" ").append(path).append(" ").append("HTTP/1.1").append(crLf);
+        builder.append(method.string)
+                .append(" ")
+                .append(path)
+                .append(" ")
+                .append("HTTP/1.1")
+                .append(crLf);
 
         String postData = preparePostData();
         if (!postData.empty) {
@@ -153,7 +159,10 @@ shared class Request(uri, method = get){
         // headers
         for(header in headers){
             for(val in header.values){
-                builder.append(header.name).append(": ").append(val).append(crLf);
+                builder.append(header.name)
+                        .append(": ")
+                        .append(val)
+                        .append(crLf);
             }
         }
         builder.append(crLf);
@@ -174,7 +183,8 @@ shared class Request(uri, method = get){
         
         // now open a socket to the host
         value socketAddress = SocketAddress(host, port);
-        value connector = ssl then newSslSocketConnector(socketAddress) else newSocketConnector(socketAddress);
+        value connector = ssl then newSslSocketConnector(socketAddress) 
+                              else newSocketConnector(socketAddress);
         value socket = connector.connect();
         
         // send the full request

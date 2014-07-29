@@ -7,7 +7,8 @@ import ceylon.collection { StringBuilder }
 
 "Represents an HTTP Response"
 by("Stéphane Épardaud")
-shared class Response(status, reason, major, minor, FileDescriptor socket, Parser parser) satisfies Correspondence<String, Header>{
+shared class Response(status, reason, major, minor, FileDescriptor socket, Parser parser) 
+        satisfies Correspondence<String, Header>{
     
     "The HTTP status code"
     shared Integer status;
@@ -25,48 +26,27 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     variable String? readContents = null;
     
     "The HTTP headers as a [[List]]"
-    shared List<Header> headers {
-        return parser.headers;
-    }
+    shared List<Header> headers => parser.headers;
 
     "The HTTP headers as a [[Map]]"
-    shared Map<String,Header> headersByName {
-        return parser.headersByName;
-    }
+    shared Map<String,Header> headersByName => parser.headersByName;
 
     "True if the content-type starts with `text/`"
-    shared Boolean isText {
-        String? contentType = this.contentTypeLine;
-        if(exists contentType){
-            return contentType.startsWith("text/");
-        }
-        return false;
-    }
+    shared Boolean isText 
+            => this.contentTypeLine?.startsWith("text/") else false;
 
     "The content-type, if set. Null otherwise."
-    shared String? contentType {
-        String? contentTypeLine = this.contentTypeLine;
-        if(exists contentTypeLine){
-            // split it if required
-            value sep = contentTypeLine.firstInclusion(";");
-            if(exists sep){
-                return contentTypeLine.measure(0, sep);
-            }else{
-                return contentTypeLine;
-            }
-        }
-        return null;
-    }
+    shared String? contentType 
+            => this.contentTypeLine?.split(';'.equals)?.first else null;
 
     "The charset, if set. Null otherwise."
     shared String? charset {
-        String? contentTypeLine = this.contentTypeLine;
-        if(exists contentTypeLine){
+        if(exists contentTypeLine = this.contentTypeLine){
             // split it if required
-            value params = contentTypeLine.split((Character c) => c == ';').rest;
+            value params = contentTypeLine.split(';'.equals).rest;
             for(param in params){
                 value trimmed = param.trimmed;
-                value keyValue = trimmed.split((Character c) => c == '=').sequence();
+                value keyValue = trimmed.split('='.equals).sequence();
                 if(nonempty keyValue){
                     if(keyValue.first == "charset"){
                         return keyValue[1];
@@ -80,8 +60,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     "Returns a single header value, if there is a single value present.
      Returns null if the header cannot be found or has more than one value."
     shared String? getSingleHeader(String name){
-        Header? contentType = this[name];
-        if(exists contentType){
+        if(exists contentType = this[name]){
             if(contentType.values.size != 1){
                 return null;
             }
@@ -92,9 +71,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
 
     "Returns the content type header, unparsed."
-    shared String? contentTypeLine {
-        return getSingleHeader("Content-Type");
-    }
+    shared String? contentTypeLine => getSingleHeader("Content-Type");
     
     "Builds a debugging representation of this HTTP response."
     shared actual String string {
@@ -109,9 +86,7 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     }
     
     "Fetches a header by name, returns null if the header does not exist."
-    shared actual Header? get(String key) {
-        return headersByName[key.lowercased];
-    }
+    shared actual Header? get(String key) => headersByName[key.lowercased];
 
     "Returns a [[Reader]] for the entity body."
     throws(`class Exception`, "If the status is not 200 OK.")
@@ -119,11 +94,9 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
         if(status != 200){
             throw Exception("Status is not OK");
         }
-        String? transferEncoding = getSingleHeader("Transfer-Encoding");
-        if(exists transferEncoding){
-            if(transferEncoding == "chunked"){
-                return ChunkedEntityReader(socket);
-            }
+        if(exists transferEncoding = getSingleHeader("Transfer-Encoding"),
+                transferEncoding == "chunked"){
+            return ChunkedEntityReader(socket);
         }
         return FileDescriptorReader(socket, contentLength);
     }
@@ -209,19 +182,15 @@ shared class Response(status, reason, major, minor, FileDescriptor socket, Parse
     "Returns the entity `Content-Length`, if known. Returns `null` otherwise."
     shared Integer? contentLength {
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13
-        value header = getSingleHeader("Content-Length");
-        if(exists header){
-            value int = parseInteger(header);
-            if(exists int){
-                // Spec says that negative numbers should not count
-                return int >= 0 then int;
-            }
+
+        if(exists header = getSingleHeader("Content-Length"),
+           exists int = parseInteger(header)){
+            // Spec says that negative numbers should not count
+            return int >= 0 then int;
         }
         return null;
     }
 
     "Closes the underlying [[FileDescriptor]]."    
-    shared void close(){
-        socket.close();
-    }
+    shared void close() => socket.close();
 }
