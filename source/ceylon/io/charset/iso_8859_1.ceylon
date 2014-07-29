@@ -2,6 +2,9 @@ import ceylon.io.buffer {
     ByteBuffer,
     CharacterBuffer
 }
+import ceylon.collection {
+    StringBuilder
+}
 
 "Represents the ISO 8859-1 character set as defined by the 
  [specification](http://www.iso.org/iso/catalogue_detail?csnumber=28245)."
@@ -50,39 +53,38 @@ shared object iso_8859_1 satisfies Charset {
     "Returns 1."
     shared actual Integer averageBytesPerCharacter = 1;
 
-    "Returns a new ISO-8859-1 decoder."
-    shared actual Decoder newDecoder()
-            => ISO_8859_1Decoder(this);
-
-    "Returns a new ISO-8859-1 encoder."
-    shared actual Encoder newEncoder() 
-            => ISO_8859_1Encoder(this);
-}
-
-class ISO_8859_1Encoder(charset) 
-        satisfies Encoder {
-    shared actual Charset charset;
-    
-    shared actual void encode(CharacterBuffer input, ByteBuffer output) {
-        // give up if there's no input or no room for output
-        while(input.hasAvailable && output.hasAvailable){
-            value char = input.get().integer;
-            if(char > 255){
-                // FIXME: type
-                throw Exception("Invalid ISO_8859-1 byte value: `` char ``");
+    shared actual class Encoder() 
+            extends super.Encoder() {
+        
+        shared actual void encode(CharacterBuffer input, ByteBuffer output) {
+            // give up if there's no input or no room for output
+            while(input.hasAvailable && output.hasAvailable){
+                value char = input.get().integer;
+                if(char > 255){
+                    // FIXME: type
+                    throw Exception("Invalid ISO_8859-1 byte value: `` char ``");
+                }
+                output.put(char.byte);
             }
-            output.put(char.byte);
-        }
-    } 
-}
-
-class ISO_8859_1Decoder(charset) 
-        extends AbstractDecoder()  {
-    shared actual Charset charset;
+        } 
+    }
     
-    shared actual void decode(ByteBuffer buffer) {
-        for(byte in buffer){
-            builder.appendCharacter(byte.unsigned.character);
+    shared actual class Decoder() 
+            extends super.Decoder()  {
+        
+        value builder = StringBuilder();
+        
+        shared actual void decode(ByteBuffer buffer) {
+            for(byte in buffer){
+                builder.appendCharacter(byte.unsigned.character);
+            }
+        }
+        
+        shared actual String consume() {
+            value result = builder.string;
+            builder.reset();
+            return result;
         }
     }
 }
+

@@ -4,8 +4,7 @@ import ceylon.io.buffer {
     CharacterBuffer
 }
 import ceylon.io.charset {
-    Charset,
-    Decoder
+    Charset
 }
 
 "Transforms a [consumer] method that accepts [[String]]s 
@@ -19,11 +18,11 @@ import ceylon.io.charset {
 by("Stéphane Épardaud")
 shared Anything(ByteBuffer) byteConsumerToStringConsumer
         (Charset charset, void consumer(String buffer)){
-    Decoder decoder = charset.newDecoder();
+    value decoder = charset.Decoder();
     void translator(ByteBuffer buffer){
         decoder.decode(buffer);
-        value decoded = decoder.consumeAvailable();
-        if(exists decoded){
+        value decoded = decoder.consume();
+        if(!decoded.empty){
             consumer(decoded);
         }
     }
@@ -39,7 +38,7 @@ shared Anything(ByteBuffer) byteConsumerToStringConsumer
 by("Stéphane Épardaud")
 shared Anything(ByteBuffer) stringToByteProducer
         (Charset charset, String string){
-    Encoder encoder = charset.newEncoder();
+    value encoder = charset.Encoder();
     CharacterBuffer input = newCharacterBufferWithData(string);
     void producer(ByteBuffer buffer){
         encoder.encode(input, buffer);

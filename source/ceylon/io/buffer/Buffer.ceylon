@@ -32,7 +32,7 @@ see (`class ByteBuffer`,
      `function newByteBufferWithData`,
      `class CharacterBuffer`, 
      `function newCharacterBufferWithData`)
-shared abstract class Buffer<T>() 
+shared sealed abstract class Buffer<T>() 
         satisfies Iterable<T> {
     
     "The current position index within this buffer. Starts 

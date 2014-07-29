@@ -1,6 +1,17 @@
-import ceylon.io.charset { utf8, Charset, ascii, iso_8859_1 }
-import ceylon.io { base64, Encoder, Decoder }
-import ceylon.test { assertEquals, test }
+import ceylon.io.base64 {
+    encode,
+    decode
+}
+import ceylon.io.charset {
+    utf8,
+    Charset,
+    ascii,
+    iso_8859_1
+}
+import ceylon.test {
+    assertEquals,
+    test
+}
 
 test void testBase64WithIso88591(){
     //Some texts from wikipedia
@@ -87,12 +98,12 @@ test void testBase64WithAscii(){
     assertBase64(input, expected, ascii);
 }
 
-void assertBase64( String input, String expectedEncode, Charset charset, Encoder encoder = base64.getEncoder(), Decoder decoder = base64.getDecoder() ) {
+void assertBase64( String input, String expectedEncode, Charset charset) {
     assertEquals{
         expected = expectedEncode; 
-        actual = charset.decode(encoder.encode(charset.encode(input)));
+        actual = charset.decode(encode(charset.encode(input)));
     };
 
-    value encoded = encoder.encode(charset.encode(input));
-    assertEquals(input, charset.decode(decoder.decode(encoded)));
+    value encoded = encode(charset.encode(input));
+    assertEquals(input, charset.decode(decode(encoded)));
 }

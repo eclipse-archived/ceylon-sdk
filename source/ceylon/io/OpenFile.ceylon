@@ -8,8 +8,9 @@ import ceylon.io.impl {
     OpenFileImpl
 }
 
-"Represents a file object we can read/write to."
-shared interface OpenFile 
+"Represents a file object we can read from and write to."
+see(`function newOpenFile`)
+shared sealed interface OpenFile 
         satisfies FileDescriptor {
 
     "Returns the [[Resource]] object that contains metadata 
@@ -28,9 +29,10 @@ shared interface OpenFile
     "Truncates this open file to the given [[size]]. The new 
      `size` has to be smaller than the current `size`."
     // FIXME: should this be the setter for `size`?
-    // due to the semantics of truncate (only works if smaller) this is not clear:
-    // if we call truncate with a larger than size param, the size will not change
-    // unless we also write there 
+    // due to the semantics of truncate (only works if smaller) 
+    // this is not clear:
+    // if we call truncate with a larger than size param, 
+    // the size will not change unless we also write there 
     shared formal void truncate(Integer size);
 
 }

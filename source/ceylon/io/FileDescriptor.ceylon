@@ -9,7 +9,7 @@ import ceylon.io.buffer {
 see(`interface Socket`,
     `interface SelectableFileDescriptor`)
 by("Stéphane Épardaud")
-shared interface FileDescriptor {
+shared sealed interface FileDescriptor {
 
     "Reads everything we can from this file descriptor into 
      the specified buffer.
@@ -32,7 +32,7 @@ shared interface FileDescriptor {
      This method makes no sense if the file descriptor is in
      `non-blocking` mode."
     shared void readFully(void consume(ByteBuffer buffer), 
-        ByteBuffer buffer = newBuffer()){
+            ByteBuffer buffer = newBuffer()){
         // FIXME: should we allocate the buffer ourselves?
         // FIXME: should we clear the buffer passed?
         // I guess not, because there might be something left 
@@ -75,9 +75,7 @@ shared interface FileDescriptor {
      written, or until end of file. This method makes no 
      sense if the file descriptor is in `non-blocking` mode."
     shared void writeFully(ByteBuffer buffer){
-        while(buffer.hasAvailable
-            && write(buffer) >= 0){
-        }
+        while(buffer.hasAvailable && write(buffer) >= 0){}
     }
     
     "Writes all the data produced by the given producer to 
@@ -88,7 +86,7 @@ shared interface FileDescriptor {
      it only has to stop adding data to the buffer. This
      method makes no sense in `non-blocking` mode."
     shared void writeFrom(void producer(ByteBuffer buffer), 
-        ByteBuffer buffer = newBuffer()){
+            ByteBuffer buffer = newBuffer()){
         // refill
         while(true){
             // fill our buffer

@@ -9,9 +9,7 @@ import ceylon.io.impl {
  - use [[connect]] to block until the socket is connected, 
    or
  - use [[connectAsync]] to register a listener that will be 
-   invoked when the socket is connected.
- 
- You create new socket connectors with [[newSocketConnector]]."
+   invoked when the socket is connected."
 by("Stéphane Épardaud")
 see(`function newSocketConnector`)
 shared sealed interface SocketConnector{
@@ -31,6 +29,14 @@ shared sealed interface SocketConnector{
     shared formal void close();
 }
 
+"An object that connects to a remote host, returning an
+ [[SslSocket]], either synchronously or asynchronously:
+ 
+ - use [[connect]] to block until the socket is connected, 
+   or
+ - use [[connectAsync]] to register a listener that will be 
+   invoked when the socket is connected."
+see(`function newSslSocketConnector`)
 shared sealed interface SslSocketConnector 
         satisfies SocketConnector {
     shared formal actual SslSocket connect();

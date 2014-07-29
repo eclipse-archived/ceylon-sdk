@@ -3,54 +3,35 @@ import ceylon.io.buffer {
     newByteBuffer
 }
 
-"Represents a Base64 implementation of RFC 4648
- (the specification)[http://tools.ietf.org/html/rfc4648]."
-by("Diego Coronel")
-shared object base64 {
-    
-    "Returns a [[Encoder]] that encodes using the Basic type 
-     base64 encoding scheme."
-    shared Encoder getEncoder() => Base64Standard();
-   
-    "Returns a [[Decoder]] that decodes using the Basic type 
-     base64 encoding scheme."
-    shared Decoder getDecoder() => Base64Standard();
-    
-    "Returns a [[Encoder]] that encodes using the URL and 
-     Filename safe type base64 encoding scheme."
-    shared Encoder getUrlEncoder() => Base64Url();
-   
-    "Returns a [[Decoder]] that decodes using the URL and 
-     Filename safe type base64 encoding scheme."
-    shared Decoder getUrlDecoder() => Base64Url();
-    
-}
+"Encode the given [[input]] using the Basic type base64 
+ encoding scheme of [RFC 4648][rfc4648].
+ 
+ [rfc4648]: http://tools.ietf.org/html/rfc4648"
+shared ByteBuffer encode(ByteBuffer input) 
+        => base64Standard.encode(input);
 
-"Allows you to encode a sequence of bytes into a sequence of 
- 6 bits characters."
-by("Diego Coronel")
-shared interface Encoder {
+"Decode the given [[input]] using the Basic type base64 
+ encoding scheme of [RFC 4648][rfc4648].
+ 
+ [rfc4648]: http://tools.ietf.org/html/rfc4648"
+shared ByteBuffer decode(ByteBuffer input) 
+        => base64Standard.decode(input);
 
-    "Encodes all remaining bytes from the specified byte 
-     buffer into a newly-allocated ByteBuffer using the 
-     Base64 encoding scheme."
-    shared formal ByteBuffer encode(ByteBuffer input);
-}
+"Encode the given [[url]] using the URL and Filename 
+ safe type base64 encoding scheme of [RFC 4648][rfc4648].
+ 
+ [rfc4648]: http://tools.ietf.org/html/rfc4648"
+shared ByteBuffer encodeUrl(ByteBuffer url) 
+        => base64Url.encode(url);
 
-"Allows you to decode a group of four 6 bits characters into 
- bytes."
-by("Diego Coronel")
-shared interface Decoder {
+"Decode the given [[url]] using the URL and Filename 
+ safe type base64 encoding scheme of [RFC 4648][rfc4648].
+ 
+ [rfc4648]: http://tools.ietf.org/html/rfc4648"
+shared ByteBuffer decodeUrl(ByteBuffer url) 
+        => base64Url.decode(url);
 
-    "Decodes all bytes from the input byte buffer using the 
-     Base64 encoding scheme, writing the results into a 
-     newly-allocated ByteBuffer."
-    shared formal ByteBuffer decode(ByteBuffer input);
-}
-
-"Abstract implementations for [[Decoder]] and [[Encoder]]"
-abstract class AbstractBase64()
-         satisfies Encoder & Decoder {
+abstract class AbstractBase64() {
  
     "Returns characters table"
     shared formal [Character+] table;
@@ -61,7 +42,7 @@ abstract class AbstractBase64()
     "Returns index for ignored character"
     Integer ignoreCharIndex = 64;
 
-    shared actual ByteBuffer encode(ByteBuffer input) {
+    shared ByteBuffer encode(ByteBuffer input) {
         //Base64 has an output grow about 33%
         value result = newByteBuffer((2 + input.available - ((input.available + 2) % 3)) * 4 / 3);
         while( input.hasAvailable ){
@@ -129,7 +110,7 @@ abstract class AbstractBase64()
         throw Exception("Bad character found: '``char``' ");
     }
 
-    shared actual ByteBuffer decode(ByteBuffer encoded) {
+    shared ByteBuffer decode(ByteBuffer encoded) {
         //Currently theres no implementation that discard padding. 
         //In this case we always have a group of 4 bytes.
         if( encoded.available % 4 != 0 ) {
@@ -166,28 +147,26 @@ abstract class AbstractBase64()
 
 }
 
-class Base64Standard() 
+object base64Standard 
         extends AbstractBase64() {
-    "The Base64 Basic index table"
-    shared actual [Character+] table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-                                        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-                                        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-                                        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-                                        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-                                        'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-                                        'w', 'x', 'y', 'z', '0', '1', '2', '3',
-                                        '4', '5', '6', '7', '8', '9', '+', '/'];
+    table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+             'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+             'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+             'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+             'w', 'x', 'y', 'z', '0', '1', '2', '3',
+             '4', '5', '6', '7', '8', '9', '+', '/'];
 }
 
-class Base64Url() 
+object base64Url 
         extends AbstractBase64() {
-    "The Base64 Safe Url index table"
-    shared actual [Character+] table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-                                        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-                                        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-                                        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-                                        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-                                        'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-                                        'w', 'x', 'y', 'z', '0', '1', '2', '3',
-                                        '4', '5', '6', '7', '8', '9', '-', '_'];
+    table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+             'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+             'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+             'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+             'w', 'x', 'y', 'z', '0', '1', '2', '3',
+             '4', '5', '6', '7', '8', '9', '-', '_'];
 }

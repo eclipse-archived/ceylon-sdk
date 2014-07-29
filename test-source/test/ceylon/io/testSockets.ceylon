@@ -1,15 +1,28 @@
-import ceylon.io.buffer { ... }
-import ceylon.io.charset { ... }
-import ceylon.net.uri { parse }
-import ceylon.io { Socket, Selector, newSelector, SocketConnector, SocketAddress, newSocketConnector, newSslSocketConnector }
+import ceylon.io {
+    Socket,
+    Selector,
+    newSelector,
+    SocketConnector,
+    SocketAddress,
+    newSslSocketConnector
+}
+import ceylon.io.buffer {
+    ...
+}
+import ceylon.io.charset {
+    ...
+}
+import ceylon.net.uri {
+    parse
+}
 
 void readResponse(Socket socket) {
     // blocking read
-    Decoder decoder = utf8.newDecoder();
+    value decoder = utf8.Decoder();
     // read,decode it all, blocking
     socket.readFully((ByteBuffer buffer) => decoder.decode(buffer));
     // print it all
-    print(decoder.done());
+    print(decoder.consume());
 }
 
 void readAsyncResponse2(Socket socket){
@@ -23,13 +36,13 @@ void readAsyncResponse2(Socket socket){
 
 void readAsyncResponse(Socket socket){
     Selector select = newSelector();
-    Decoder decoder = utf8.newDecoder();
+    value decoder = utf8.Decoder();
     // read, decode it all as we get data
     socket.readAsync(select, (ByteBuffer buffer) => decoder.decode(buffer));
     // run the event loop
     select.process();
     // print it all
-    print(decoder.done());
+    print(decoder.consume());
 }
 
 T notNull<T>(T? o) given T satisfies Object{
@@ -49,7 +62,7 @@ void writeRequest(String request, Socket socket) {
 void writeRequestInPipeline(String request, Socket socket) {
     // encode it and send it by chunks
     value requestBuffer = newByteBuffer(200);
-    value encoder = ascii.newEncoder();
+    value encoder = ascii.Encoder();
     value input = newCharacterBufferWithData(request);
     while(input.hasAvailable){
         encoder.encode(input, requestBuffer);

@@ -5,7 +5,7 @@
  to `0` and the [[limit]] set to size of the given [[string]]."
 by("Stéphane Épardaud")
 see(`class Buffer`,`function newCharacterBufferWithData`)
-shared class CharacterBuffer(String string) 
+shared sealed class CharacterBuffer(String string) 
         extends Buffer<Character>(){
     
     "The size of the given [[string]]."

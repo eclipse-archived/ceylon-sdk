@@ -2,25 +2,28 @@ import ceylon.io.buffer {
     ByteBuffer
 }
 
-"Represents a [[FileDescriptor]] that you can `select`. This means that you can
- register listeners for this file descriptor on a given [[Selector]] object that
- will be called whenever there is data available to be read or written without
- blocking the reading/writing thread."
+"Represents a [[FileDescriptor]] that you can `select`. 
+ This means that you can register listeners for this file 
+ descriptor on a given [[Selector]] object that will be 
+ called whenever there is data available to be read or 
+ written without blocking the reading/writing thread."
 by("Stéphane Épardaud")
-shared interface SelectableFileDescriptor 
+shared sealed interface SelectableFileDescriptor 
         satisfies FileDescriptor {
 
-    "Register a reading listener to the given [[selector]]. The reading listener will
-     be invoked by the [[Selector]] whenever data can be read from this file
-     descriptor without blocking.
+    "Register a reading listener to the given [[selector]]. 
+     The reading listener will be invoked by the [[Selector]] 
+     whenever data can be read from this file descriptor 
+     without blocking.
      
-     If you are no longer interested in `read` events from the selector, you should return
-     `false` from your listener when invoked."
+     If you are no longer interested in `read` events from 
+     the selector, you should return `false` from your 
+     listener when invoked."
     see(`interface Selector`)
     shared void readAsync(Selector selector, 
             void consume(ByteBuffer buffer), 
             ByteBuffer buffer = newBuffer()){
-        setNonBlocking();
+        blocking = true;
         Boolean readData(FileDescriptor socket){
             buffer.clear();
             if(socket.read(buffer) >= 0){
@@ -36,17 +39,19 @@ shared interface SelectableFileDescriptor
         selector.addConsumer(this, readData);
     }
 
-    "Register a writing listener to the given [[selector]]. The writing listener will
-     be invoked by the [[Selector]] whenever data can be written to this file
-     descriptor without blocking.
+    "Register a writing listener to the given [[selector]]. 
+     The writing listener will be invoked by the [[Selector]] 
+     whenever data can be written to this file descriptor 
+     without blocking.
      
-     If you are no longer interested in `write` events from the selector, you should return
-     `false` from your listener when invoked."
+     If you are no longer interested in `write` events from 
+     the selector, you should return `false` from your 
+     listener when invoked."
     see(`interface Selector`)
     shared void writeAsync(Selector selector, 
             void producer(ByteBuffer buffer), 
             ByteBuffer buffer = newBuffer()){
-        setNonBlocking();
+        blocking=true;
         variable Boolean needNewData = true;
         Boolean writeData(FileDescriptor socket){
             // get new data if we ran out
@@ -75,6 +80,6 @@ shared interface SelectableFileDescriptor
     }
 
     // FIXME: revisit, pull up
-    "Sets this file descriptor in `non-blocking` mode."
-    shared formal void setNonBlocking();
+    "The blocking mode."
+    shared formal variable Boolean blocking;
 }

@@ -126,7 +126,7 @@ shared class Response(status, reason, major, minor,
     }
 
     class ChunkedEntityReader(FileDescriptor fileDescriptor) 
-            satisfies Reader {
+            extends Reader() {
     
         variable Boolean firstChunk = true;
         variable Integer nextChunkSize = 0;
@@ -195,13 +195,13 @@ shared class Response(status, reason, major, minor,
             value reader = getReader();
             ByteBuffer buffer = newByteBuffer(4096);
             value encoding = getCharset(charset else "ASCII") else ascii;
-            value decoder = encoding.newDecoder();
+            value decoder = encoding.Decoder();
             while(reader.read(buffer) != -1){
                 buffer.flip();
                 decoder.decode(buffer);
                 buffer.clear();
             }
-            return decoder.done();
+            return decoder.consume();
         }
         throw Exception("Failed to read contents");
     }

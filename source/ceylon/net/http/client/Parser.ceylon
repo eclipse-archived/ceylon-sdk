@@ -14,7 +14,6 @@ import ceylon.io.charset {
     ascii
 }
 import ceylon.io.readers {
-    ByteReader,
     FileDescriptorReader
 }
 import ceylon.net.http {
@@ -27,8 +26,8 @@ shared class Parser(FileDescriptor socket){
     
     variable Integer byte = 0;
     value buffer = newByteBuffer(1024);
-    value reader = ByteReader(FileDescriptorReader(socket));
-    value decoder = ascii.newDecoder();
+    value reader = FileDescriptorReader(socket);
+    value decoder = ascii.Decoder();
     
     variable Integer? status = null;
     variable String? reason = null;
@@ -98,8 +97,10 @@ shared class Parser(FileDescriptor socket){
     "Reads a byte"
     throws(`class Exception`, "On end of file")
     void readByte(){
-        byte = reader.readByte().signed;
-        if(byte < 0){
+        if (exists b = reader.readByte()) {
+            byte = b.signed;
+        }
+        else {
             throw Exception("Premature EOF");
         }
     }
@@ -122,10 +123,10 @@ shared class Parser(FileDescriptor socket){
     }
 
     "Gets the contents of the buffer as ASCII"
-    String? getString(){
+    String getString(){
         buffer.flip();
         decoder.decode(buffer);
-        return decoder.consumeAvailable();
+        return decoder.consume();
     }
     
     "Throws an exception about an unexpected input read"
@@ -239,7 +240,7 @@ shared class Parser(FileDescriptor socket){
             readByte();
         }
         value ret = getString();
-        if(exists ret){
+        if(!ret.empty){
             return ret;
         }
         throw unexpected("token");
@@ -297,7 +298,7 @@ shared class Parser(FileDescriptor socket){
             readByte();
         }
         atChar('"');
-        String txt = getString() else "";
+        String txt = getString();
         print("Quoted text: `` txt ``");
     }
     
@@ -316,7 +317,7 @@ shared class Parser(FileDescriptor socket){
             saveByte();
         }
         buffer.position = buffer.position - 1;
-        reason = getString() else "";
+        reason = getString();
         atCrLf();
     }
 
@@ -345,7 +346,7 @@ shared class Parser(FileDescriptor socket){
         }
         // we must have eaten a CRLF+1
         // FIXME: trimmed?
-        String contents = getString()?.trimmed else "";
+        String contents = getString().trimmed;
         value header = headersByName[name.lowercased];
         if(exists header){
             header.values.add(contents);

@@ -2,6 +2,9 @@ import ceylon.io.buffer {
     ByteBuffer,
     CharacterBuffer
 }
+import ceylon.collection {
+    StringBuilder
+}
 
 "Implementation of the ASCII character set. See 
  [the ASCII specification][] for more information.
@@ -46,45 +49,44 @@ shared object ascii satisfies Charset {
     "Returns 1."
     shared actual Integer averageBytesPerCharacter = 1;
 
-    "Returns a new ASCII decoder"
-    shared actual Decoder newDecoder()
-            => ASCIIDecoder(this);
-
-    "Returns a new ASCII encoder"
-    shared actual Encoder newEncoder()
-            => ASCIIEncoder(this);
-}
-
-class ASCIIDecoder(charset) 
-        extends AbstractDecoder() {
-    shared actual Charset charset;
-
-    shared actual void decode(ByteBuffer buffer) {
-        for(byte in buffer){
-            if(byte.signed < 0){
-                // FIXME: type
-                throw Exception("Invalid ASCII byte value: ``byte``");
+    shared actual class Decoder() 
+            extends super.Decoder() {
+        
+        value builder = StringBuilder();
+        
+        shared actual void decode(ByteBuffer buffer) {
+            for(byte in buffer){
+                if(byte.signed < 0){
+                    // FIXME: type
+                    throw Exception("Invalid ASCII byte value: ``byte``");
+                }
+                builder.appendCharacter(byte.signed.character);
             }
-            builder.appendCharacter(byte.signed.character);
+        }
+
+        shared actual String consume() {
+            value result = builder.string;
+            builder.reset();
+            return result;
         }
     }
-}
-
-class ASCIIEncoder(charset) 
-        satisfies Encoder {
-    shared actual Charset charset;
     
-    shared actual void encode(CharacterBuffer input, ByteBuffer output) {
-        // give up if there's no input or no room for output
-        while(input.hasAvailable && output.hasAvailable){
-            value char = input.get().integer;
-            if(char > 127){
-                // FIXME: type
-                throw Exception("Invalid ASCII byte value: ``char``");
+    shared actual class Encoder() 
+            extends super.Encoder() {
+        
+        shared actual void encode(CharacterBuffer input, ByteBuffer output) {
+            // give up if there's no input or no room for output
+            while(input.hasAvailable && output.hasAvailable){
+                value char = input.get().integer;
+                if(char > 127){
+                    // FIXME: type
+                    throw Exception("Invalid ASCII byte value: ``char``");
+                }
+                output.put(char.byte);
             }
-            output.put(char.byte);
         }
+        
     }
-
 }
+
 

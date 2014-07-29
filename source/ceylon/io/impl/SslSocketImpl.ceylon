@@ -66,7 +66,7 @@ shared object dataNeedsEndOfFile satisfies DataNeeds {}
 shared object dataNeedsNeedsData satisfies DataNeeds {}
 shared object dataNeedsOk satisfies DataNeeds {}
 
-shared class SslSocketImpl(SocketChannel socket) 
+class SslSocketImpl(SocketChannel socket) 
         extends SocketImpl(socket) 
         satisfies SslSocket {
     

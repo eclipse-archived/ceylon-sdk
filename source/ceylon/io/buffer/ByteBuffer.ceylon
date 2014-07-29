@@ -11,7 +11,7 @@ by("Stéphane Épardaud")
 see(`class Buffer`,
     `function newByteBuffer`,
     `function newByteBufferWithData`)
-shared abstract class ByteBuffer() 
+shared sealed abstract class ByteBuffer() 
         extends Buffer<Byte>(){
     
     shared formal Array<Byte> bytes();

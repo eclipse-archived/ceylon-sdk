@@ -7,7 +7,7 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
     // with 3-4 byte chars split between buffers
     value buf = newByteBuffer(2);
     value iter = bytes.iterator();
-    value decoder = charset.newDecoder();
+    value decoder = charset.Decoder();
     
     while(true){
         // put as much as fits
@@ -22,7 +22,7 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
         decoder.decode(buf);
         buf.clear();
     }
-    assertEquals(expected, decoder.done());
+    assertEquals(expected, decoder.consume());
     print("Decoded ``expected`` OK");
 }
 

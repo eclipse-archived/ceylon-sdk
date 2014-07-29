@@ -11,9 +11,11 @@ import ceylon.io.buffer {
  [[length]] bytes until it considers that it reached end of 
  file."
 by("Stéphane Épardaud")
-shared class FileDescriptorReader(FileDescriptor fileDescriptor, 
+shared class FileDescriptorReader(fileDescriptor, 
     Integer? length = null) 
-        satisfies Reader {
+        extends Reader() {
+    
+    shared FileDescriptor fileDescriptor;
     
     variable Integer position = 0;
     

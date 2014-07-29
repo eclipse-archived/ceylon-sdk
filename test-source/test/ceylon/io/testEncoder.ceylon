@@ -1,9 +1,21 @@
-import ceylon.test { assertEquals, test }
-import ceylon.io.charset { ascii, Encoder, Charset, iso_8859_1, utf8, utf16 }
-import ceylon.io.buffer { newCharacterBufferWithData, newByteBuffer }
+import ceylon.io.buffer {
+    newCharacterBufferWithData,
+    newByteBuffer
+}
+import ceylon.io.charset {
+    ascii,
+    Charset,
+    iso_8859_1,
+    utf8,
+    utf16
+}
+import ceylon.test {
+    assertEquals,
+    test
+}
 
 test void testASCIIEncoder(){
-    Encoder encoder = ascii.newEncoder();
+    value encoder = ascii.Encoder();
     value input = newCharacterBufferWithData("asd");
     value output = newByteBuffer(2);
     // decode 2 chars (max output)

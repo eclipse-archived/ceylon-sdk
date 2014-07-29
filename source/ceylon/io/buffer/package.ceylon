@@ -1,4 +1,4 @@
-"This package contains all the required bits to deal with 
- buffers of bytes and characters."
+"Defines [[byte buffers|ByteBuffer]] and 
+ [[character buffers|CharacterBuffer]]."
 by("Stéphane Épardaud")
 shared package ceylon.io.buffer;
