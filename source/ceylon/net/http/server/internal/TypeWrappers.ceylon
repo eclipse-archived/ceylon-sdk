@@ -1,10 +1,10 @@
 import java.nio { JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
 import java.lang { ByteArray }
 import ceylon.io.buffer { ByteBuffer }
-import ceylon.interop.java { javaLongArray }
+import ceylon.interop.java { javaByteArray }
 
-shared ByteArray toByteArray(Array<Integer> bufferBytes) {
-    value bytes = javaLongArray(bufferBytes);
+shared ByteArray toByteArray(Array<Byte> bufferBytes) {
+    value bytes = javaByteArray(bufferBytes);
     value byteArray = ByteArray(bytes.size);
     variable value i=0;
     while (i<bytes.size) {

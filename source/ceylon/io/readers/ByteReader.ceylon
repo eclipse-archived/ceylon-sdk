@@ -14,7 +14,7 @@ shared class ByteReader(Reader reader) satisfies Reader {
      or end of file is reached, so if the underlying reader
      is `non-blocking` then this method will do very expensive
      active polling."
-    shared Integer readByte(){
+    shared Byte readByte(){
         buffer.clear();
         while(read(buffer) >= 0){
             // did we get anything?
@@ -25,7 +25,7 @@ shared class ByteReader(Reader reader) satisfies Reader {
             // try again
         }
         // EOF
-        return -1;
+        return (-1).byte;
     }
  
     "Reads the specified buffer, pass-through to the underlying

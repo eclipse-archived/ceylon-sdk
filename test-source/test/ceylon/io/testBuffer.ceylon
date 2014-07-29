@@ -74,14 +74,14 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
 
 test void testByteBuffer(){
     ByteBuffer buffer = newByteBuffer(4);
-    Integer[] values = [1, 200, 200, 200];
+    Byte[] values = [1, 200, 200, 200]*.byte;
     testBuffer(buffer, values);
 }
 
 test void testByteBufferResize(){
     ByteBuffer buffer = newByteBuffer(4);
-    Integer[] values = [1, 2, 3, 4];
-    for(Integer val in values){
+    Byte[] values = [1, 2, 3, 4]*.byte;
+    for(val in values){
         buffer.put(val);
     }
 

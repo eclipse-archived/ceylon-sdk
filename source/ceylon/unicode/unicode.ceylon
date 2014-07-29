@@ -124,7 +124,7 @@ shared object whitespace extends Directionality("WS"){}
 
 "The directionality of the given character."
 shared Directionality directionality(Character character) {
-    Integer dir = getDirectionality(character.integer);
+    Byte dir = getDirectionality(character.integer);
     
     // Take a guess about the likelihood of various directionalities
     if (dir == dirLEFT_TO_RIGHT) { return leftToRight; }

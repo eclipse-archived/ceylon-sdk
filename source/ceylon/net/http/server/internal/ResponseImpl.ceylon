@@ -54,7 +54,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         );
     }
 
-    shared actual void writeBytes(Array<Integer> bytes) {
+    shared actual void writeBytes(Array<Byte> bytes) {
         applyHeadersToExchange();
 
         value jByteBuffer = wrapByteBuffer(toByteArray(bytes));
@@ -62,7 +62,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     }
     
     shared actual void writeBytesAsynchronous(
-            Array<Integer> bytes,
+            Array<Byte> bytes,
             Callable<Anything, []> onCompletion,
             Callable<Anything, [ServerException]>? onError) {
 

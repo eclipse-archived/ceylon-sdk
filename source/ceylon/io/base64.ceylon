@@ -71,10 +71,10 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
     void encodeBytesToChars( ByteBuffer input, ByteBuffer encoded ) {
         value available = input.available;
         value codePoint1 = input.get();
-        assert(exists char1 = table[codePoint1.rightLogicalShift(2)]);
+        assert(exists char1 = table[codePoint1.rightLogicalShift(2).signed]);
 
-        variable value codePoint2 = 0;
-        variable value codePoint3 = 0;
+        variable value codePoint2 = 0.byte;
+        variable value codePoint3 = 0.byte;
         if( available >= 3 ) {
             codePoint2 = input.get();
             codePoint3 = input.get();
@@ -82,14 +82,14 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
             codePoint2 = input.get();
         }
 
-        assert(exists char2 = table[((codePoint1.and(3)).leftLogicalShift(4)).or((codePoint2.rightLogicalShift(4)))]);
-        assert(exists char3 = table[((codePoint2.and(15)).leftLogicalShift(2)).or(codePoint3.rightLogicalShift(6))]);
-        assert(exists char4 = table[codePoint3.and(63)]);
+        assert(exists char2 = table[((codePoint1.and(3.byte)).leftLogicalShift(4)).or((codePoint2.rightLogicalShift(4))).signed]);
+        assert(exists char3 = table[((codePoint2.and(15.byte)).leftLogicalShift(2)).or(codePoint3.rightLogicalShift(6)).signed]);
+        assert(exists char4 = table[codePoint3.and(63.byte).signed]);
 
-        encoded.put(char1.integer);
-        encoded.put(char2.integer);
-        encoded.put(available >= 2 then char3.integer else pad.integer);
-        encoded.put(available >= 3 then char4.integer else pad.integer);
+        encoded.put(char1.integer.byte);
+        encoded.put(char2.integer.byte);
+        encoded.put(available >= 2 then char3.integer.byte else pad.integer.byte);
+        encoded.put(available >= 3 then char4.integer.byte else pad.integer.byte);
     }
 
     "Returns index of an encoded char
@@ -132,19 +132,19 @@ abstract class AbstractBase64() satisfies Encoder & Decoder {
         //Estimate output buffer size
         value result = newByteBuffer(encoded.available * 3 / 4);
         while( encoded.hasAvailable ) {
-            value char1 = indexOf(encoded.get().character);
-            value char2 = indexOf(encoded.get().character);
-            value char3 = indexOf(encoded.get().character);
-            value char4 = indexOf(encoded.get().character);
+            value char1 = indexOf(encoded.get().signed.character);
+            value char2 = indexOf(encoded.get().signed.character);
+            value char3 = indexOf(encoded.get().signed.character);
+            value char4 = indexOf(encoded.get().signed.character);
 
             value bits =     char1.leftLogicalShift(18)
                          .or(char2.leftLogicalShift(12))
                          .or(char3.leftLogicalShift(6))
                          .or(char4);
 
-            value byte1 = bits.rightLogicalShift(16).and(#FF);
-            value byte2 = bits.rightLogicalShift(8).and(#FF);
-            value byte3 = bits.and(#FF);
+            value byte1 = bits.rightLogicalShift(16).and(#FF).byte;
+            value byte2 = bits.rightLogicalShift(8).and(#FF).byte;
+            value byte3 = bits.and(#FF).byte;
 
             result.put(byte1);
             if ( char3 != ignoreCharIndex ) {

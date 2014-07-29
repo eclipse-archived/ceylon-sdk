@@ -81,7 +81,7 @@ shared class Parser(FileDescriptor socket){
     "Reads a byte"
     throws(`class Exception`, "On end of file")
     void readByte(){
-        byte = reader.readByte();
+        byte = reader.readByte().signed;
         if(byte < 0){
             throw Exception("Premature EOF");
         }
@@ -101,7 +101,7 @@ shared class Parser(FileDescriptor socket){
             buffer.resize(buffer.capacity + 1024, true);
         }
         // save the byte
-        buffer.put(byte);
+        buffer.put(byte.byte);
     }
 
     "Gets the contents of the buffer as ASCII"
@@ -116,7 +116,7 @@ shared class Parser(FileDescriptor socket){
     Exception unexpected(String expected){
         // try to read some context for an error
         ByteBuffer buffer = newByteBuffer(40);
-        buffer.put(byte);
+        buffer.put(byte.byte);
         socket.read(buffer);
         buffer.flip();
         String line = ascii.decode(buffer);

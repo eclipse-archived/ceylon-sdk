@@ -1,5 +1,5 @@
 import java.lang {
-    Byte,
+    Bits=Byte,
     Short,
     Int=Integer,
     Long,
@@ -19,24 +19,13 @@ import java.lang {
 "An array whose elements can be represented as an 
  `Array<Integer>`."
 shared alias IntegerArrayLike 
-        => Array<Byte> | Array<Short> | Array<Int> | Array<Long>
-        |  ByteArray   | ShortArray   | IntArray   | LongArray;
+        => Array<Short> | Array<Int> | Array<Long>
+        | ShortArray   | IntArray   | LongArray;
 
 "Create an `Array<Integer>` with the same elements as the
  given array."
 shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     switch (array)
-    case (is Array<Byte>) {
-        value size = array.size;
-        value nativeArray = javaByteArray(array);
-        value result = LongArray(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, nativeArray.get(i));
-            i++;
-        }
-        return result.integerArray;
-    }
     case (is Array<Short>) {
         value size = array.size;
         value nativeArray = javaShortArray(array);
@@ -64,16 +53,6 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value nativeArray = javaLongArray(array);
         value result = LongArray(size);
         nativeArray.copyTo(result);
-        return result.integerArray;
-    }
-    case (is ByteArray) {
-        value size = array.size;
-        value result = LongArray(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, array.get(i));
-            i++;
-        }
         return result.integerArray;
     }
     case (is ShortArray) {
@@ -147,6 +126,34 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         value result = DoubleArray(size);
         array.copyTo(result);
         return result.floatArray;
+    }
+}
+
+"An array whose elements can be represented as an 
+ `Array<Byte>`."
+shared alias ByteArrayLike 
+        => Array<Bits> | ByteArray;
+
+"Create an `Array<Byte>` with the same elements as the
+ given array."
+shared Array<Byte> toByteArray(ByteArrayLike array) {
+    switch (array)
+    case (is Array<Bits>) {
+        value size = array.size;
+        value nativeArray = javaByteArray(array);
+        value result = ByteArray(size);
+        variable value i=0;
+        while (i<size) {
+            result.set(i, nativeArray.get(i));
+            i++;
+        }
+        return result.byteArray;
+    }
+    case (is ByteArray) {
+        value size = array.size;
+        value result = ByteArray(size);
+        array.copyTo(result);
+        return result.byteArray;
     }
 }
 
@@ -278,8 +285,8 @@ shared IntArray createJavaIntArray({Integer*} elements)
 shared ShortArray createJavaShortArray({Integer*} elements)
         => javaShortArray(Array { for (i in elements) Short(i) });
 
-shared ByteArray createJavaByteArray({Integer*} elements)
-        => javaByteArray(Array { for (i in elements) Byte(i) });
+shared ByteArray createJavaByteArray({Byte*} elements)
+        => javaByteArray(Array { for (i in elements) i });
 
 shared FloatArray createJavaFloatArray({Float*} elements)
         => javaFloatArray(Array { for (f in elements) Single(f) });

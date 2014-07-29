@@ -8,8 +8,8 @@ by("Stéphane Épardaud")
 see(`class Buffer`,
     `function newByteBuffer`,
     `function newByteBufferWithData`)
-shared abstract class ByteBuffer() extends Buffer<Integer>(){
-    shared formal Array<Integer> bytes();
+shared abstract class ByteBuffer() extends Buffer<Byte>(){
+    shared formal Array<Byte> bytes();
     
     "The platform-specific implementation object, if any."
     shared formal Object? implementation;
@@ -33,10 +33,10 @@ by("Stéphane Épardaud")
 see(`class ByteBuffer`,
     `function newByteBuffer`,
     `class Buffer`)
-shared ByteBuffer newByteBufferWithData(Integer* bytes){
+shared ByteBuffer newByteBufferWithData(Byte* bytes){
     value seq = bytes.sequence();
     value buf = newByteBuffer(seq.size);
-    for(Integer byte in seq){
+    for(byte in seq){
         buf.put(byte);
     }
     buf.flip();

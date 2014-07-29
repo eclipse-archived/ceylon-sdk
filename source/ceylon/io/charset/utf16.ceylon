@@ -62,8 +62,8 @@ class UTF16Encoder(charset) satisfies Encoder {
                 if(codePoint < #10000){
                     // single 16-bit value
                     // two bytes
-                    value b1 = codePoint.and(#FF00).rightLogicalShift(8);
-                    value b2 = codePoint.and(#FF);
+                    value b1 = codePoint.and(#FF00).rightLogicalShift(8).byte;
+                    value b2 = codePoint.and(#FF).byte;
                     output.put(b1);
                     // save it for later
                     bytes.clear();
@@ -77,10 +77,10 @@ class UTF16Encoder(charset) satisfies Encoder {
                     // and the low 10 bits
                     value low = u.and($1111111111).or(#DC00);
                     // now turn them into four bytes
-                    value b1 = high.and(#FF00).rightLogicalShift(8);
-                    value b2 = high.and(#FF);
-                    value b3 = low.and(#FF00).rightLogicalShift(8);
-                    value b4 = low.and(#FF);
+                    value b1 = high.and(#FF00).rightLogicalShift(8).byte;
+                    value b2 = high.and(#FF).byte;
+                    value b3 = low.and(#FF00).rightLogicalShift(8).byte;
+                    value b4 = low.and(#FF).byte;
                     output.put(b1);
                     // save it for later
                     bytes.clear();
@@ -132,15 +132,15 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
     }
     
     shared actual void decode(ByteBuffer buffer) {
-        for(Integer byte in buffer){
-            if(byte < 0 || byte > 255){
+        for(byte in buffer){
+            if(byte.signed < 0){
                 // FIXME: type
                 throw Exception("Invalid UTF-16 byte value: `` byte ``");
             }
             // are we looking at the first byte of a 16-bit word?
             if(!needsMoreBytes){
                 // keep this byte in any case
-                firstByte = byte;
+                firstByte = byte.signed;
                 needsMoreBytes = true;
                 continue;
             }
@@ -149,7 +149,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                 Integer char;
                 
                 // assemble the two bytes
-                Integer word = assembleBytes(firstByte, byte);
+                Integer word = assembleBytes(firstByte, byte.signed);
                 needsMoreBytes = false;
                 
                 // are we looking at the first 16-bit word?

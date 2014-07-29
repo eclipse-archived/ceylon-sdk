@@ -1,8 +1,7 @@
 import java.nio { JavaByteBuffer = ByteBuffer { allocateJavaByteBuffer = allocate }}
 import ceylon.io.buffer { ByteBuffer }
-import ceylon.interop.java { toIntegerArray }
+import ceylon.interop.java { toByteArray }
 
-Boolean needsWorkarounds = true;
 
 shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
     variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
@@ -25,30 +24,17 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
     assign position {
         buf.position(position);
     }
-    shared actual Integer get() {
-        return signedByteToUnsigned(buf.get());
+    shared actual Byte get() {
+        return buf.get();
     }
-    shared actual void put(Integer byte) {
-        buf.put(unsignedByteToSigned(byte));
+    shared actual void put(Byte byte) {
+        buf.put(byte);
     }
     shared actual void clear() {
         buf.clear();
     }
     shared actual void flip() {
         buf.flip();
-    }
-    Integer signedByteToUnsigned(Integer b) { 
-        if(needsWorkarounds && b < 0){
-            return b + 256;
-        }
-        return b;
-    }
-    
-    Integer unsignedByteToSigned(Integer b) { 
-        if(needsWorkarounds && b > 127){
-            return b - 256;
-        }
-        return b;
     }
     
     shared actual void resize(Integer newSize, Boolean growLimit) {
@@ -86,8 +72,8 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         buf.limit(limit);
         buf.position(position);
     }
-    shared actual Array<Integer> bytes() {
-        return toIntegerArray(buf.array());
+    shared actual Array<Byte> bytes() {
+        return toByteArray(buf.array());
     }
     
     shared actual Object? implementation => underlyingBuffer;

@@ -51,12 +51,12 @@ class ASCIIDecoder(charset) extends AbstractDecoder() {
     shared actual Charset charset;
 
     shared actual void decode(ByteBuffer buffer) {
-        for(Integer byte in buffer){
-            if(byte < 0 || byte > 127){
+        for(byte in buffer){
+            if(byte.signed < 0){
                 // FIXME: type
                 throw Exception("Invalid ASCII byte value: ``byte``");
             }
-            builder.appendCharacter(byte.character);
+            builder.appendCharacter(byte.signed.character);
         }
     }
 }
@@ -72,7 +72,7 @@ class ASCIIEncoder(charset) satisfies Encoder {
                 // FIXME: type
                 throw Exception("Invalid ASCII byte value: ``char``");
             }
-            output.put(char);
+            output.put(char.byte);
         }
     }
 

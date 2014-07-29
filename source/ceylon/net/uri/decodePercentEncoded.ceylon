@@ -20,14 +20,14 @@ shared String decodePercentEncoded(String str){
     variable Integer r = 0;
     variable Integer w = 0;
     while(r < array.size){
-        Integer char = array.get(r);
+        Byte char = array.get(r);
         if(char == '%'.integer){
             // must read the next two items
             if(++r < array.size){
-                Integer first = array.get(r);
+                Byte first = array.get(r);
                 if(++r < array.size){
-                    Integer second = array.get(r);
-                    array.set(w, 16 * fromHex(first) + fromHex(second));
+                    Byte second = array.get(r);
+                    array.set(w, (16 * fromHex(first.signed) + fromHex(second.signed)).byte);
                 }else{
                     throw Exception("Missing second hex number");
                 }

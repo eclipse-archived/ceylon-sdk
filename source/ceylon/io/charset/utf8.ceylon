@@ -56,11 +56,11 @@ class UTF8Encoder(charset) satisfies Encoder {
                 // how many bytes?
                 if(codePoint < #80){
                     // single byte
-                    output.put(codePoint);
+                    output.put(codePoint.byte);
                 }else if(codePoint < #800){
                     // two bytes
-                    value b1 = codePoint.and($11111000000).rightLogicalShift(6).or($11000000);
-                    value b2 = codePoint.and($111111).or($10000000);
+                    value b1 = codePoint.and($11111000000).rightLogicalShift(6).or($11000000).byte;
+                    value b2 = codePoint.and($111111).or($10000000).byte;
                     output.put(b1);
                     // save it for later
                     bytes.clear();
@@ -68,9 +68,9 @@ class UTF8Encoder(charset) satisfies Encoder {
                     bytes.flip();
                 }else if(codePoint < #10000){
                     // three bytes
-                    value b1 = codePoint.and($1111000000000000).rightLogicalShift(12).or($11100000);
-                    value b2 = codePoint.and($111111000000).rightLogicalShift(6).or($10000000);
-                    value b3 = codePoint.and($111111).or($10000000);
+                    value b1 = codePoint.and($1111000000000000).rightLogicalShift(12).or($11100000).byte;
+                    value b2 = codePoint.and($111111000000).rightLogicalShift(6).or($10000000).byte;
+                    value b3 = codePoint.and($111111).or($10000000).byte;
                     output.put(b1);
                     // save it for later
                     bytes.clear();
@@ -79,10 +79,10 @@ class UTF8Encoder(charset) satisfies Encoder {
                     bytes.flip();
                 }else if(codePoint < #10FFFF){
                     // four bytes
-                    value b1 = codePoint.and($111000000000000000000).rightLogicalShift(18).or($11110000);
-                    value b2 = codePoint.and($111111000000000000).rightLogicalShift(12).or($10000000);
-                    value b3 = codePoint.and($111111000000).rightLogicalShift(6).or($10000000);
-                    value b4 = codePoint.and($111111).or($10000000);
+                    value b1 = codePoint.and($111000000000000000000).rightLogicalShift(18).or($11110000).byte;
+                    value b2 = codePoint.and($111111000000000000).rightLogicalShift(12).or($10000000).byte;
+                    value b3 = codePoint.and($111111000000).rightLogicalShift(6).or($10000000).byte;
+                    value b4 = codePoint.and($111111).or($10000000).byte;
                     output.put(b1);
                     // save it for later
                     bytes.clear();
@@ -115,46 +115,47 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
     }
     
     shared actual void decode(ByteBuffer buffer) {
-        for(Integer byte in buffer){
-            if(byte < 0 || byte > 255){
+        for(byte in buffer){
+            value unsigned = byte.unsigned;
+            if(unsigned < 0){
                 // FIXME: type
                 throw Exception("Invalid UTF-8 byte value: `` byte ``");
             }
             // are we looking at the first byte?
             if(needsMoreBytes == 0){
                 // 0b0000 0000 <= byte < 0b1000 0000
-                if(byte < #80){
+                if(unsigned < #80){
                     // one byte
-                    builder.appendCharacter(byte.character);
+                    builder.appendCharacter(byte.signed.character);
                     continue;
                 }
                 // invalid range
-                if(byte < $11000000){
+                if(unsigned < $11000000){
                     // FIXME: type
                     throw Exception("Invalid UTF-8 byte value: `` byte ``");
                 }
                 // invalid range
-                if(byte >= $11111000){
+                if(unsigned >= $11111000){
                     throw Exception("Invalid UTF-8 first byte value: `` byte ``");
                 }
                 // keep this byte in any case
                 bytes.put(byte);
-                if(byte < $11100000){
+                if(unsigned < $11100000){
                     needsMoreBytes = 1;
                     continue;
                 }
-                if(byte < $11110000){
+                if(unsigned < $11110000){
                     needsMoreBytes = 2;
                     continue;
                 }
                 // 0b1111 0000 <= byte < 0b1111 1000
-                if(byte < $11111000){
+                if(unsigned < $11111000){
                     needsMoreBytes = 3;
                     continue;
                 }
             }
             // if we got this far, we must have a second byte at least
-            if(byte < $10000000 || byte >= $11000000){
+            if(unsigned < $10000000 || unsigned >= $11000000){
                 // FIXME: type
                 throw Exception("Invalid UTF-8 second byte value: `` byte ``");
             }
@@ -168,26 +169,26 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
             bytes.flip();
             Integer char;
             if(bytes.available == 1){
-                Integer part1 = bytes.get().and($00011111);
-                Integer part2 = byte.and($00111111);
+                Byte part1 = bytes.get().and($00011111.byte);
+                Byte part2 = byte.and($00111111.byte);
                 char = part1.leftLogicalShift(6)
-                    .or(part2);
+                    .or(part2).unsigned;
             }else if(bytes.available == 2){
-                Integer part1 = bytes.get().and($00001111);
-                Integer part2 = bytes.get().and($00111111);
-                Integer part3 = byte.and($00111111);
+                Byte part1 = bytes.get().and($00001111.byte);
+                Byte part2 = bytes.get().and($00111111.byte);
+                Byte part3 = byte.and($00111111.byte);
                 char = part1.leftLogicalShift(12)
                     .or(part2.leftLogicalShift(6))
-                    .or(part3);
+                    .or(part3).unsigned;
             }else{
-                Integer part1 = bytes.get().and($00000111);
-                Integer part2 = bytes.get().and($00111111);
-                Integer part3 = bytes.get().and($00111111);
-                Integer part4 = byte.and($00111111);
+                Byte part1 = bytes.get().and($00000111.byte);
+                Byte part2 = bytes.get().and($00111111.byte);
+                Byte part3 = bytes.get().and($00111111.byte);
+                Byte part4 = byte.and($00111111.byte);
                 char = part1.leftLogicalShift(18)
                     .or(part2.leftLogicalShift(12))
                     .or(part3.leftLogicalShift(6))
-                    .or(part4);
+                    .or(part4).unsigned;
             }
             // 0xFEFF is the Byte Order Mark in UTF8
             if(char == #FEFF && builder.size == 0 && !byteOrderMarkSeen){

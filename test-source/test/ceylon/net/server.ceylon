@@ -528,7 +528,7 @@ void testAsyncStream() {
     value responseReader = response.getReader();
     value buffSize = 100;
     value buffer = newByteBuffer(buffSize);
-    MutableList<Integer> content = LinkedList<Integer>();
+    MutableList<Byte> content = LinkedList<Byte>();
     variable Integer remaining = parseInteger(response.getSingleHeader("content-length") else "0") else 0;
     print("cointent-size: ``remaining``");
     variable Integer loops = 0;
@@ -540,7 +540,9 @@ void testAsyncStream() {
         }
         remaining -= read;
         buffer.flip();
-        buffer.map((Integer elem) => content.add(elem));
+        for (b in buffer) {
+            content.add(b);
+        }
         buffer.flip();
         if (loops < 2) {
             assertEquals(asyncServiceStatus, "returning");
@@ -551,9 +553,9 @@ void testAsyncStream() {
     print("Read in ``system.milliseconds - startTime``ms.");
     
     ByteBuffer contentBuff = newByteBuffer(content.size);
-    content.collect((Integer element) => {
-        contentBuff.put(element)
-    });
+    for (b in content) {
+        contentBuff.put(b);
+    }
     contentBuff.flip();
     value responseContent = utf8.decode(contentBuff);
     //TODO log

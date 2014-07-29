@@ -13,10 +13,10 @@ shared interface Response {
         Callable<Anything, [ServerException]>? onError = null);
 
     "Writes bytes to the response."
-    shared formal void writeBytes(Array<Integer> bytes);
+    shared formal void writeBytes(Array<Byte> bytes);
 
     shared formal void writeBytesAsynchronous(
-        Array<Integer> bytes,
+        Array<Byte> bytes,
         Callable<Anything, []> onCompletion,
         Callable<Anything, [ServerException]>? onError = null);
 

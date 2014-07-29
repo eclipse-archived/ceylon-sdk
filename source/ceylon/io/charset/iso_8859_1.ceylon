@@ -64,7 +64,7 @@ class ISO_8859_1Encoder(charset) satisfies Encoder {
                 // FIXME: type
                 throw Exception("Invalid ISO_8859-1 byte value: `` char ``");
             }
-            output.put(char);
+            output.put(char.byte);
         }
     } 
 }
@@ -73,12 +73,12 @@ class ISO_8859_1Decoder(charset) extends AbstractDecoder()  {
     shared actual Charset charset;
     
     shared actual void decode(ByteBuffer buffer) {
-        for(Integer byte in buffer){
-            if(byte < 0 || byte > 255){
+        for(byte in buffer){
+            if(byte.signed < 0){
                 // FIXME: type
                 throw Exception("Invalid ISO_8859-1 byte value: `` byte ``");
             }
-            builder.appendCharacter(byte.character);
+            builder.appendCharacter(byte.signed.character);
         }
     }
 }
