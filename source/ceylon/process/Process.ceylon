@@ -11,7 +11,7 @@ import ceylon.process.internal {
 
 "Represents a separate native process."
 see(`function createProcess`)
-shared interface Process {
+shared sealed interface Process {
     
     "A _command_, usually the name or path of 
      a program to execute."
