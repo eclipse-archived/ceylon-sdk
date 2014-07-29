@@ -9,7 +9,8 @@ import ceylon.io.charset { Charset, Decoder }
  and passes them on to the given [[consumer]]
  method which accepts decoded [[String]] objects."
 by("Stéphane Épardaud")
-shared Callable<Anything,[ByteBuffer]> byteConsumerToStringConsumer(Charset charset, void consumer(String buffer)){
+shared Anything(ByteBuffer) byteConsumerToStringConsumer
+        (Charset charset, void consumer(String buffer)){
     Decoder decoder = charset.newDecoder();
     void translator(ByteBuffer buffer){
         decoder.decode(buffer);
@@ -28,7 +29,8 @@ shared Callable<Anything,[ByteBuffer]> byteConsumerToStringConsumer(Charset char
  [[ByteBuffer]] parameters, and fills them with the given [[string]],
  encoded using the given [[charset]]."
 by("Stéphane Épardaud")
-shared Callable<Anything,[ByteBuffer]> stringToByteProducer(Charset charset, String string){
+shared Anything(ByteBuffer) stringToByteProducer
+        (Charset charset, String string){
     Encoder encoder = charset.newEncoder();
     CharacterBuffer input = newCharacterBufferWithData(string);
     void producer(ByteBuffer buffer){
