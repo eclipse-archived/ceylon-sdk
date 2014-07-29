@@ -117,16 +117,12 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
     shared actual void decode(ByteBuffer buffer) {
         for(byte in buffer){
             value unsigned = byte.unsigned;
-            if(unsigned < 0){
-                // FIXME: type
-                throw Exception("Invalid UTF-8 byte value: `` byte ``");
-            }
             // are we looking at the first byte?
             if(needsMoreBytes == 0){
                 // 0b0000 0000 <= byte < 0b1000 0000
                 if(unsigned < #80){
                     // one byte
-                    builder.appendCharacter(byte.signed.character);
+                    builder.appendCharacter(unsigned.character);
                     continue;
                 }
                 // invalid range
@@ -169,26 +165,26 @@ class UTF8Decoder(charset) extends AbstractDecoder()  {
             bytes.flip();
             Integer char;
             if(bytes.available == 1){
-                Byte part1 = bytes.get().and($00011111.byte);
-                Byte part2 = byte.and($00111111.byte);
+                Integer part1 = bytes.get().and($00011111.byte).unsigned;
+                Integer part2 = byte.and($00111111.byte).unsigned;
                 char = part1.leftLogicalShift(6)
-                    .or(part2).unsigned;
+                    .or(part2);
             }else if(bytes.available == 2){
-                Byte part1 = bytes.get().and($00001111.byte);
-                Byte part2 = bytes.get().and($00111111.byte);
-                Byte part3 = byte.and($00111111.byte);
+                Integer part1 = bytes.get().and($00001111.byte).unsigned;
+                Integer part2 = bytes.get().and($00111111.byte).unsigned;
+                Integer part3 = byte.and($00111111.byte).unsigned;
                 char = part1.leftLogicalShift(12)
                     .or(part2.leftLogicalShift(6))
-                    .or(part3).unsigned;
+                    .or(part3);
             }else{
-                Byte part1 = bytes.get().and($00000111.byte);
-                Byte part2 = bytes.get().and($00111111.byte);
-                Byte part3 = bytes.get().and($00111111.byte);
-                Byte part4 = byte.and($00111111.byte);
+                Integer part1 = bytes.get().and($00000111.byte).unsigned;
+                Integer part2 = bytes.get().and($00111111.byte).unsigned;
+                Integer part3 = bytes.get().and($00111111.byte).unsigned;
+                Integer part4 = byte.and($00111111.byte).unsigned;
                 char = part1.leftLogicalShift(18)
                     .or(part2.leftLogicalShift(12))
                     .or(part3.leftLogicalShift(6))
-                    .or(part4).unsigned;
+                    .or(part4);
             }
             // 0xFEFF is the Byte Order Mark in UTF8
             if(char == #FEFF && builder.size == 0 && !byteOrderMarkSeen){

@@ -102,7 +102,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
     shared actual Charset charset;
     
     variable Boolean needsMoreBytes = false;
-    variable Integer firstByte = 0;
+    variable Byte firstByte = 0.byte;
 
     variable Boolean needsLowSurrogate = false;
     variable Integer highSurrogate = 0;
@@ -123,24 +123,20 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
         return super.done();
     }
     
-    Integer assembleBytes(Integer a, Integer b) { 
+    Integer assembleBytes(Byte a, Byte b) { 
         if(bigEndian){
-            return a.leftLogicalShift(8).or(b);
+            return a.unsigned.leftLogicalShift(8).or(b.unsigned);
         }else{
-            return a.or(b.leftLogicalShift(8));
+            return a.unsigned.or(b.unsigned.leftLogicalShift(8));
         }
     }
     
     shared actual void decode(ByteBuffer buffer) {
         for(byte in buffer){
-            if(byte.signed < 0){
-                // FIXME: type
-                throw Exception("Invalid UTF-16 byte value: `` byte ``");
-            }
             // are we looking at the first byte of a 16-bit word?
             if(!needsMoreBytes){
                 // keep this byte in any case
-                firstByte = byte.signed;
+                firstByte = byte;
                 needsMoreBytes = true;
                 continue;
             }
@@ -149,7 +145,7 @@ class UTF16Decoder(charset) extends AbstractDecoder()  {
                 Integer char;
                 
                 // assemble the two bytes
-                Integer word = assembleBytes(firstByte, byte.signed);
+                Integer word = assembleBytes(firstByte, byte);
                 needsMoreBytes = false;
                 
                 // are we looking at the first 16-bit word?
