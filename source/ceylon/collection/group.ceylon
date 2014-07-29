@@ -17,16 +17,17 @@ shared Map<Group,[Element+]> group<Group, Element>
     value map = HashMap<Group,ArrayList<Element>>();
     for (element in elements) {
         Group group = grouping(element);
-        if (exists sb = map[group]) {
-            sb.add(element);
-        } else {
+        if (exists list = map[group]) {
+            list.add(element);
+        }
+        else {
             value list = ArrayList<Element>();
             list.add(element);
             map.put(group, list);
         }
     }
-    [Element+] mapping(Group group, ArrayList<Element> sa) { 
-        assert(is [Element+] result = sa.sequence());
+    [Element+] mapping(Group group, ArrayList<Element> list) { 
+        assert(is [Element+] result = list.sequence());
         return result;
     }
     return map.mapItems(mapping);
