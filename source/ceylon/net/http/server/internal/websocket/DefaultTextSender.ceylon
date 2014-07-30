@@ -11,21 +11,18 @@ import io.undertow.websockets.core {
 }
 
 by("Matej Lazar")
-shared class DefaultFragmentedTextSender(DefaultWebSocketChannel channel) 
+class DefaultFragmentedTextSender(DefaultWebSocketChannel channel) 
         satisfies FragmentedTextSender {
 
     value fragmentedChannel = channel.underlyingChannel.sendFragmentedText();
 
-    shared actual void sendText(String text, Boolean finalFrame) {
-        wsSendTextBlocking(text, finalFrame, fragmentedChannel);
-    }
-
-    shared actual void sendTextAsynchronous(String text,
+    sendText(String text, Boolean finalFrame) 
+            => wsSendTextBlocking(text, finalFrame, fragmentedChannel);
+    
+    sendTextAsynchronous(String text,
         Anything(WebSocketChannel) onCompletion,
         Anything(WebSocketChannel,Exception)? onError,
-        Boolean finalFrame) {
-
-        wsSendText(text, finalFrame, fragmentedChannel, 
-            wrapFragmentedCallbackSend(onCompletion, onError, channel));
-    }
+        Boolean finalFrame) 
+            => wsSendText(text, finalFrame, fragmentedChannel, 
+                    wrapFragmentedCallbackSend(onCompletion, onError, channel));
 }

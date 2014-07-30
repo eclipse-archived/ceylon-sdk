@@ -64,7 +64,7 @@ shared object iso_8859_1 satisfies Charset {
                     // FIXME: type
                     throw Exception("Invalid ISO_8859-1 byte value: `` char ``");
                 }
-                output.put(char.byte);
+                output.putByte(char.byte);
             }
         } 
     }

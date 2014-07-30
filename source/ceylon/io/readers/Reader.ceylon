@@ -8,8 +8,8 @@ import ceylon.io.buffer {
 by("Stéphane Épardaud")
 shared abstract class Reader() {
     
-    "Reads data into the specified [[buffer]] and return the 
-     number of bytes read, or `-1` if the end of file is 
+    "Reads data into the given [[buffer]] and returns the 
+     number of bytes read, or `-1` if the end of the file is 
      reached."
     formal shared Integer read(ByteBuffer buffer);
     
@@ -23,7 +23,7 @@ shared abstract class Reader() {
      read or end of file is reached, so if the underlying 
      reader is non-blocking then this method will do very 
      expensive active polling."
-    shared Byte? readByte() {
+    shared default Byte? readByte() {
         buffer.clear();
         while(read(buffer) >= 0) {
             // did we get anything?
@@ -35,6 +35,20 @@ shared abstract class Reader() {
         }
         // EOF
         return null;
+    }
+    
+    "Reads data into the given [[byte array|array]] and 
+     returns the number of bytes read, or `-1` if the end of 
+     the file is reached."
+    shared default Integer readByteArray(Array<Byte> array) {
+        //TODO: is it horribly inefficient to allocate
+        //      a new byte buffer here??
+        value buffer = newByteBuffer(array.size);
+        value result = read(buffer);
+        for (i in 0:result) {
+            array.set(i, buffer.getByte());
+        }
+        return result;
     }
     
 }

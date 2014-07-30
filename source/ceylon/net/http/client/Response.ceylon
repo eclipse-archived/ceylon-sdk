@@ -19,6 +19,9 @@ import ceylon.io.readers {
 import ceylon.net.http {
     Header
 }
+import ceylon.interop.java {
+    javaByteArray
+}
 
 "Represents an HTTP Response"
 by("Stéphane Épardaud")
@@ -166,6 +169,18 @@ shared class Response(status, reason, major, minor,
                 nextChunkSize -= bytesRead;
             }
             return bytesRead;
+        }
+
+        shared actual Integer readByteArray(Array<Byte> array) {
+            //TODO: is it horribly inefficient to allocate
+            //      a new byte buffer here??
+            value buffer = newByteBuffer(array.size);
+            value result = read(buffer);
+            value byteArray = javaByteArray(array);
+            for (i in 0:result) {
+                byteArray.set(i, buffer.getByte());
+            }
+            return result;
         }
     }
     

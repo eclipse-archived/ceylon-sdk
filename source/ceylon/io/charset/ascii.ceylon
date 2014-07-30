@@ -82,7 +82,7 @@ shared object ascii satisfies Charset {
                     // FIXME: type
                     throw Exception("Invalid ASCII byte value: ``char``");
                 }
-                output.put(char.byte);
+                output.putByte(char.byte);
             }
         }
         

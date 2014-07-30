@@ -73,10 +73,10 @@ abstract class AbstractBase64() {
         assert(exists char3 = table[((codePoint2.and(15.byte)).leftLogicalShift(2)).or(codePoint3.rightLogicalShift(6)).signed]);
         assert(exists char4 = table[codePoint3.and(63.byte).signed]);
 
-        encoded.put(char1.integer.byte);
-        encoded.put(char2.integer.byte);
-        encoded.put(available >= 2 then char3.integer.byte else pad.integer.byte);
-        encoded.put(available >= 3 then char4.integer.byte else pad.integer.byte);
+        encoded.putByte(char1.integer.byte);
+        encoded.putByte(char2.integer.byte);
+        encoded.putByte(available >= 2 then char3.integer.byte else pad.integer.byte);
+        encoded.putByte(available >= 3 then char4.integer.byte else pad.integer.byte);
     }
 
     "Returns index of an encoded character. This code is 
@@ -134,11 +134,11 @@ abstract class AbstractBase64() {
             value byte2 = bits.rightLogicalShift(8).and(#FF).byte;
             value byte3 = bits.and(#FF).byte;
 
-            result.put(byte1);
+            result.putByte(byte1);
             if ( char3 != ignoreCharIndex ) {
-                result.put(byte2);
+                result.putByte(byte2);
             } if ( char4 != ignoreCharIndex ) {
-                result.put(byte3);
+                result.putByte(byte3);
             }
         }
         result.flip();

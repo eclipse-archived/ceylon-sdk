@@ -14,26 +14,28 @@ import io.undertow.websockets.core {
 }
 
 by("Matej Lazar")
-shared class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
+class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
         satisfies FragmentedBinarySender {
 
     value fragmentedChannel = channel.underlyingChannel.sendFragmentedBinary();
 
-    shared actual void sendBinary(ByteBuffer binary, Boolean finalFrame) {
-        wsSendBinaryBlocking(createJavaByteBuffer(binary), 
-            finalFrame, fragmentedChannel);
-    }
+    sendBinary(ByteBuffer binary, Boolean finalFrame)
+            //TODO: is this copy really necessary or can
+            //we just send the underlying implementation?
+            => wsSendBinaryBlocking(copyToJavaByteBuffer(binary), 
+                finalFrame, fragmentedChannel);
     
-    shared actual void sendBinaryAsynchronous(
+    sendBinaryAsynchronous(
             ByteBuffer binary,
             Anything(WebSocketChannel) onCompletion,
             Anything(WebSocketChannel,Exception)? onError,
-            Boolean finalFrame) {
-
-        wsSendBinary(
-            createJavaByteBuffer(binary),
+            Boolean finalFrame)
+        => wsSendBinary(
+            //TODO: is this copy really necessary or can
+            //we just send the underlying implementation?
+            copyToJavaByteBuffer(binary),
             finalFrame,
             fragmentedChannel,
             wrapFragmentedCallbackSend(onCompletion, onError, channel));
-    }
+    
 }

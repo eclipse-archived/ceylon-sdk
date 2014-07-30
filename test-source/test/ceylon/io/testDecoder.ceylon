@@ -13,7 +13,7 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
         // put as much as fits
         while(buf.hasAvailable,
             !is Finished byte = iter.next()){
-                buf.put(byte.byte);
+                buf.putByte(byte.byte);
         }
         if(buf.position == 0){
             break;

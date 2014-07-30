@@ -50,7 +50,7 @@ shared object utf16 satisfies Charset {
             while((input.hasAvailable || bytes.hasAvailable) && output.hasAvailable) {
                 // first flush our buffer
                 if(bytes.hasAvailable) {
-                    output.put(bytes.get());
+                    output.putByte(bytes.get());
                 }else{
                     // now read from input
                     value codePoint = input.get().integer;
@@ -60,10 +60,10 @@ shared object utf16 satisfies Charset {
                         // two bytes
                         value b1 = codePoint.and(#FF00).rightLogicalShift(8).byte;
                         value b2 = codePoint.and(#FF).byte;
-                        output.put(b1);
+                        output.putByte(b1);
                         // save it for later
                         bytes.clear();
-                        bytes.put(b2);
+                        bytes.putByte(b2);
                         bytes.flip();
                     }else if(codePoint < #10FFFF) {
                         // two 16-bit values
@@ -77,12 +77,12 @@ shared object utf16 satisfies Charset {
                         value b2 = high.and(#FF).byte;
                         value b3 = low.and(#FF00).rightLogicalShift(8).byte;
                         value b4 = low.and(#FF).byte;
-                        output.put(b1);
+                        output.putByte(b1);
                         // save it for later
                         bytes.clear();
-                        bytes.put(b2);
-                        bytes.put(b3);
-                        bytes.put(b4);
+                        bytes.putByte(b2);
+                        bytes.putByte(b3);
+                        bytes.putByte(b4);
                         bytes.flip();
                     }else{
                         // FIXME: type

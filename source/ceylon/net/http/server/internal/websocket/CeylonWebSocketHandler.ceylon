@@ -28,13 +28,13 @@ import org.xnio {
 }
 
 by("Matej Lazar")
-shared class CeylonWebSocketHandler() satisfies WebSocketConnectionCallback {
+shared class CeylonWebSocketHandler() 
+        satisfies WebSocketConnectionCallback {
 
     Endpoints endpoints = Endpoints();
 
-    shared void addEndpoint(WebSocketBaseEndpoint endpoint) {
-        endpoints.add(endpoint);
-    }
+    shared void addEndpoint(WebSocketBaseEndpoint endpoint) 
+            => endpoints.add(endpoint);
 
     shared Boolean endpointExists(String requestPath) {
         if (exists e = endpoints.getEndpointMatchingPath(requestPath)) {

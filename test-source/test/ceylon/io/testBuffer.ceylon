@@ -82,7 +82,7 @@ test void testByteBufferResize(){
     ByteBuffer buffer = newByteBuffer(4);
     Byte[] values = [1, 2, 3, 4]*.byte;
     for(val in values){
-        buffer.put(val);
+        buffer.putByte(val);
     }
 
     // flip it and eat a byte to get to position 1 

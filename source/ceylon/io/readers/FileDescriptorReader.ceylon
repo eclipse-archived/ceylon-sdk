@@ -2,7 +2,11 @@ import ceylon.io {
     FileDescriptor
 }
 import ceylon.io.buffer {
-    ByteBuffer
+    ByteBuffer,
+    newByteBuffer
+}
+import ceylon.interop.java {
+    javaByteArray
 }
 
 "Reader that can read from a [[FileDescriptor]].
@@ -39,5 +43,17 @@ shared class FileDescriptorReader(fileDescriptor,
         }
         position += r;
         return r;
+    }
+
+    shared actual Integer readByteArray(Array<Byte> array) {
+        //TODO: is it horribly inefficient to allocate
+        //      a new byte buffer here??
+        value buffer = newByteBuffer(array.size);
+        value result = read(buffer);
+        value byteArray = javaByteArray(array);
+        for (i in 0:result) {
+            byteArray.set(i, buffer.getByte());
+        }
+        return result;
     }
 }

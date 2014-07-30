@@ -1,6 +1,3 @@
-import ceylon.interop.java {
-    toByteArray
-}
 import ceylon.io.buffer {
     ByteBuffer
 }
@@ -25,6 +22,9 @@ shared class ByteBufferImpl(Integer initialCapacity)
     
     shared actual Integer position => buf.position();
     assign position => buf.position(position);
+    
+    getByte() => buf.get();
+    putByte(Byte byte) => buf.put(byte);
     
     get() => buf.get();
     put(Byte byte) => buf.put(byte);
@@ -67,12 +67,12 @@ shared class ByteBufferImpl(Integer initialCapacity)
         buf.position(position);
     }
     
-    shared actual Array<Byte> bytes() {
-        //TODO: could it be buf.array().byteArray
-        //downside: that exposes the internal state
-        //of the underyling Java buffer
-        return toByteArray(buf.array());
-    }
+    //shared actual Array<Byte> bytes() {
+    //    //TODO: could it be buf.array().byteArray
+    //    //downside: that exposes the internal state
+    //    //of the underyling Java buffer
+    //    return toByteArray(buf.array());
+    //}
     
     shared actual Object? implementation => underlyingBuffer;
     

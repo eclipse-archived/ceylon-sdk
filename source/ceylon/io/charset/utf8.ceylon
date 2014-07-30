@@ -45,33 +45,33 @@ shared object utf8 satisfies Charset {
             while((input.hasAvailable || bytes.hasAvailable) && output.hasAvailable) {
                 // first flush our buffer
                 if(bytes.hasAvailable) {
-                    output.put(bytes.get());
+                    output.putByte(bytes.get());
                 }else{
                     // now read from input
                     value codePoint = input.get().integer;
                     // how many bytes?
                     if(codePoint < #80) {
                         // single byte
-                        output.put(codePoint.byte);
+                        output.putByte(codePoint.byte);
                     }else if(codePoint < #800) {
                         // two bytes
                         value b1 = codePoint.and($11111000000).rightLogicalShift(6).or($11000000).byte;
                         value b2 = codePoint.and($111111).or($10000000).byte;
-                        output.put(b1);
+                        output.putByte(b1);
                         // save it for later
                         bytes.clear();
-                        bytes.put(b2);
+                        bytes.putByte(b2);
                         bytes.flip();
                     }else if(codePoint < #10000) {
                         // three bytes
                         value b1 = codePoint.and($1111000000000000).rightLogicalShift(12).or($11100000).byte;
                         value b2 = codePoint.and($111111000000).rightLogicalShift(6).or($10000000).byte;
                         value b3 = codePoint.and($111111).or($10000000).byte;
-                        output.put(b1);
+                        output.putByte(b1);
                         // save it for later
                         bytes.clear();
-                        bytes.put(b2);
-                        bytes.put(b3);
+                        bytes.putByte(b2);
+                        bytes.putByte(b3);
                         bytes.flip();
                     }else if(codePoint < #10FFFF) {
                         // four bytes
@@ -79,12 +79,12 @@ shared object utf8 satisfies Charset {
                         value b2 = codePoint.and($111111000000000000).rightLogicalShift(12).or($10000000).byte;
                         value b3 = codePoint.and($111111000000).rightLogicalShift(6).or($10000000).byte;
                         value b4 = codePoint.and($111111).or($10000000).byte;
-                        output.put(b1);
+                        output.putByte(b1);
                         // save it for later
                         bytes.clear();
-                        bytes.put(b2);
-                        bytes.put(b3);
-                        bytes.put(b4);
+                        bytes.putByte(b2);
+                        bytes.putByte(b3);
+                        bytes.putByte(b4);
                         bytes.flip();
                     }else{
                         // FIXME: type
@@ -137,7 +137,7 @@ shared object utf8 satisfies Charset {
                         throw Exception("Invalid UTF-8 first byte value: `` byte ``");
                     }
                     // keep this byte in any case
-                    bytes.put(byte);
+                    bytes.putByte(byte);
                     if(unsigned < $11100000) {
                         needsMoreBytes = 1;
                         continue;
@@ -159,7 +159,7 @@ shared object utf8 satisfies Charset {
                 }
                 if(--needsMoreBytes > 0) {
                     // not enough bytes
-                    bytes.put(byte);
+                    bytes.putByte(byte);
                     continue;
                 }
                 // we have enough bytes! they are all in the bytes buffer except the last one

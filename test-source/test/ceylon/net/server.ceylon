@@ -554,7 +554,7 @@ void testAsyncStream() {
     
     ByteBuffer contentBuff = newByteBuffer(content.size);
     for (b in content) {
-        contentBuff.put(b);
+        contentBuff.putByte(b);
     }
     contentBuff.flip();
     value responseContent = utf8.decode(contentBuff);

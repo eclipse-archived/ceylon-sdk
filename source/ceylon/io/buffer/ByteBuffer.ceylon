@@ -14,7 +14,11 @@ see(`class Buffer`,
 shared sealed abstract class ByteBuffer() 
         extends Buffer<Byte>() {
     
-    shared formal Array<Byte> bytes();
+    //shared formal Array<Byte> bytes();
+    
+    shared formal Byte getByte();
+    
+    shared formal void putByte(Byte byte);
     
     "The platform-specific implementation object, if any."
     shared formal Object? implementation;
@@ -43,7 +47,7 @@ shared ByteBuffer newByteBufferWithData(Byte* bytes) {
     value seq = bytes.sequence();
     value buf = newByteBuffer(seq.size);
     for(byte in seq) {
-        buf.put(byte);
+        buf.putByte(byte);
     }
     buf.flip();
     return buf;
