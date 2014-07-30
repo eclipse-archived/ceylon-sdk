@@ -23,7 +23,7 @@ shared sealed interface SelectableFileDescriptor
     shared void readAsync(Selector selector, 
             void consume(ByteBuffer buffer), 
             ByteBuffer buffer = newBuffer()) {
-        blocking = true;
+        blocking = false;
         Boolean readData(FileDescriptor socket) {
             buffer.clear();
             if(socket.read(buffer) >= 0) {
@@ -51,7 +51,7 @@ shared sealed interface SelectableFileDescriptor
     shared void writeAsync(Selector selector, 
             void producer(ByteBuffer buffer), 
             ByteBuffer buffer = newBuffer()) {
-        blocking=true;
+        blocking = false;
         variable Boolean needNewData = true;
         Boolean writeData(FileDescriptor socket) {
             // get new data if we ran out
