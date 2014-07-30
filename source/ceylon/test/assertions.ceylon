@@ -94,7 +94,7 @@ shared void assertEquals(
     if (!compare(actual, expected)) {
         value actualText = nullSafeString(actual);
         value expectedText = nullSafeString(expected);
-        value exceptionMessage = "`` message else "assertion failed" ``: expected <``actualText``> but was <``expectedText``>";
+        value exceptionMessage = "`` message else "assertion failed" ``: expected <``expectedText``> but was <``actualText``>";
         throw AssertionComparisonError(exceptionMessage, actualText, expectedText);
     }
 }
