@@ -1,5 +1,12 @@
+import ceylon.interop.java {
+    javaByteArray
+}
 import ceylon.io.buffer {
-    ByteBuffer
+    ByteBuffer,
+    newByteBuffer
+}
+import ceylon.io.readers {
+    Reader
 }
 
 import java.nio {
@@ -78,3 +85,14 @@ shared class ByteBufferImpl(Integer initialCapacity)
     
 }
 
+shared Integer readByteArray(Array<Byte> array, Reader reader) {
+    //TODO: is it horribly inefficient to allocate
+    //      a new byte buffer here??
+    value buffer = newByteBuffer(array.size);
+    value result = reader.read(buffer);
+    value byteArray = javaByteArray(array);
+    for (i in 0:result) {
+        byteArray.set(i, buffer.getByte());
+    }
+    return result;
+}

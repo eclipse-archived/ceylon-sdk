@@ -2,6 +2,9 @@ import ceylon.io.buffer {
     ByteBuffer,
     newByteBuffer
 }
+import ceylon.io.buffer.impl {
+    readArray=readByteArray
+}
 
 "Represents an object that can read data from a source
  into byte buffers."
@@ -40,15 +43,7 @@ shared abstract class Reader() {
     "Reads data into the given [[byte array|array]] and 
      returns the number of bytes read, or `-1` if the end of 
      the file is reached."
-    shared default Integer readByteArray(Array<Byte> array) {
-        //TODO: is it horribly inefficient to allocate
-        //      a new byte buffer here??
-        value buffer = newByteBuffer(array.size);
-        value result = read(buffer);
-        for (i in 0:result) {
-            array.set(i, buffer.getByte());
-        }
-        return result;
-    }
+    shared default Integer readByteArray(Array<Byte> array) 
+            => readArray(array, this);
     
 }

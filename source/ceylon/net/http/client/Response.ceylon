@@ -170,18 +170,7 @@ shared class Response(status, reason, major, minor,
             }
             return bytesRead;
         }
-
-        shared actual Integer readByteArray(Array<Byte> array) {
-            //TODO: is it horribly inefficient to allocate
-            //      a new byte buffer here??
-            value buffer = newByteBuffer(array.size);
-            value result = read(buffer);
-            value byteArray = javaByteArray(array);
-            for (i in 0:result) {
-                byteArray.set(i, buffer.getByte());
-            }
-            return result;
-        }
+        
     }
     
     "Returns the entity body as a [[String]]."
