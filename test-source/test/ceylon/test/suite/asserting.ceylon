@@ -84,31 +84,31 @@ shared void testAssertEquals() {
     
     assertThatException(()=>assertEquals(true, false, "wops")).
             hasType(`AssertionComparisonError`).
-            hasMessage("wops: expected <true> but was <false>");
+            hasMessage("wops: expected <false> but was <true>");
     
     assertThatException(()=>assertEquals(1, 2)).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: expected <1> but was <2>");
+            hasMessage("assertion failed: expected <2> but was <1>");
     
     assertThatException(()=>assertEquals(1.1, 2.2)).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: expected <1.1> but was <2.2>");
+            hasMessage("assertion failed: expected <2.2> but was <1.1>");
     
     assertThatException(()=>assertEquals('f', 'b')).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: expected <f> but was <b>");
+            hasMessage("assertion failed: expected <b> but was <f>");
     
     assertThatException(()=>assertEquals("foo", "bar")).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: expected <foo> but was <bar>");
+            hasMessage("assertion failed: expected <bar> but was <foo>");
     
     assertThatException(()=>assertEquals([1, 2, 3], [3, 2, 1])).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: expected <[1, 2, 3]> but was <[3, 2, 1]>");
+            hasMessage("assertion failed: expected <[3, 2, 1]> but was <[1, 2, 3]>");
     
     assertThatException(()=>assertEquals({1, 2, 3}, [])).
             hasType(`AssertionComparisonError`).
-            hasMessage("assertion failed: expected <{ 1, 2, 3 }> but was <[]>");
+            hasMessage("assertion failed: expected <[]> but was <{ 1, 2, 3 }>");
 }
 
 test
