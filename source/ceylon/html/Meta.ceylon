@@ -31,8 +31,8 @@ shared class CharsetMeta(charset = "utf-8")
     "Document content charset. Defaults to `utf-8`."
     shared String charset;
 
-    attributes => [
+    shared actual default [<String->Object>*] attributes => concatenate(super.attributes, [
         "charset"->charset
-    ];
+    ]);
 
 }
