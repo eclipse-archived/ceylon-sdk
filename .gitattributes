@@ -1,0 +1,8 @@
+# Always enforce LF line-endings for all text files
+* text eol=lf
+
+# Binary files
+*.jar binary
+*.car binary
+*.zip bibary
+
