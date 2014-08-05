@@ -4,5 +4,9 @@
 # Binary files
 *.jar binary
 *.car binary
+*.car.idx binary
 *.zip bibary
+*.png binary
+*.jpg binary
+*.gif binary
 
