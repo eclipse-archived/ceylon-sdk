@@ -1,6 +1,9 @@
 # Always enforce LF line-endings for all text files
 * text eol=lf
 
+# Specific Windows text files
+*.bat text eol=crlf
+
 # Binary files
 *.jar binary
 *.car binary
