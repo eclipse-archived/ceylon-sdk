@@ -66,7 +66,7 @@ shared class Form(action, method = "", acceptCharset = null,
         attrs.addAttribute("method", method);
         attrs.addAttribute("name", name);
         attrs.addAll(super.attributes);
-        attrs.addAttribute("acceptcharset", acceptCharset);
+        attrs.addAttribute("accept-charset", acceptCharset);
         attrs.addOnOffBooleanAttribute("autocomplete", autoComplete);
         attrs.addAttribute("enctype", encType);
         attrs.addNamedBooleanAttribute("novalidate", noValidate);

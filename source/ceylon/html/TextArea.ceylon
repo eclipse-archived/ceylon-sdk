@@ -56,6 +56,22 @@ shared class TextArea(text = "", String? name = null,
     shared TextAreaWrap? wrap;
 
     tag = Tag("textarea");
+    
+    shared actual default [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.addAttribute("rows", rows);
+        attrs.addAttribute("cols", cols);
+
+        attrs.addAttribute("maxlength", maxLength);
+        attrs.addAttribute("minlength", minLength);
+
+        attrs.addAttribute("placeholder", placeholder);
+        attrs.addAttribute("wrap", wrap);
+        
+        attrs.addAll(super.attributes);
+
+        return attrs.sequence();
+    }
 
 }
 
