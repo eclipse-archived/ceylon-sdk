@@ -12,7 +12,7 @@ import java.lang {
         getSystemProperty=getProperty
     }
 }
-import java.util { ArrayList, HashSet, LinkedHashSet, TreeSet, LinkedList, Date, UUID{randomUUID} }
+import java.util { ArrayList, HashSet, LinkedHashSet, TreeSet, LinkedList, Date }
 
 test void stringTests() {
     value val = javaString(getSystemProperty("user.home"));
@@ -20,9 +20,6 @@ test void stringTests() {
 }
 
 test void collectionTests() {
-	value uuidArray = 
-			createJavaObjectArray({randomUUID(),randomUUID()});
-
     value lst = ArrayList<Integer>(JavaCollection([ 1, 2, 3 ]));
     
     value iter = CeylonIterator(lst.iterator());

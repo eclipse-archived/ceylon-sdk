@@ -29,7 +29,7 @@ import java.lang {
     JInteger=Integer,
     JLong=Long,
     JString=String,
-	ObjectArray
+    ObjectArray
 }
 import java.math {
     BigDecimal,
@@ -195,10 +195,10 @@ shared class Sql(newConnection) {
             }
         }
 
-		// TODO: This is a bug.  If it's the user's intent to provide an empty array, it is impossible to know
-		// which type that array is for.  Fixing this is blocked by: 
-		// https://github.com/ceylon/ceylon-compiler/issues/1753
-		throw Exception("Cannot infer the type of an empty array so it will be impossible to insert or update it");
+        // TODO: This is a bug.  If it's the user's intent to provide an empty array, it is impossible to know
+        // which type that array is for.  Fixing this is blocked by: 
+        // https://github.com/ceylon/ceylon-compiler/issues/1753
+        throw Exception("Cannot infer the type of an empty array so it will be impossible to insert or update it");
     }
     
     CallableStatement prepareCall(ConnectionStatus conn, String sql, {Object*} arguments) {

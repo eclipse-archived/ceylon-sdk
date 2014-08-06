@@ -1,9 +1,9 @@
 import java.lang {
-	ObjectArray
+    ObjectArray
 }
 import java.sql {
-	Connection,
-	SqlArray=Array
+    Connection, 
+    SqlArray=Array
 }
 
 class ConnectionStatus(Connection() connectionSource) {
