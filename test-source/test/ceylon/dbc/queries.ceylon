@@ -1,8 +1,19 @@
-import ceylon.test {
-    ...
+import ceylon.dbc {
+	Row
 }
-import java.util { Date }
-import ceylon.dbc { Row }
+import ceylon.interop.java {
+	createJavaObjectArray
+}
+import ceylon.test {
+	...
+}
+
+import java.util {
+	Date,
+	UUID {
+		randomUUID
+	}
+}
 
 test void queryTests() {
     sql.Insert("INSERT INTO test1(name,when,count) VALUES (?, ?, ?)")
@@ -18,7 +29,7 @@ test void queryTests() {
     try (r1 = q1.Results("First")) {
         assertTrue(r1.size==1, "Rows with 'First'");
         for (row in r1) {
-            assertTrue(row.size==7);
+            assertTrue(row.size==8);
         }
     }
     try (r2 = q1.Results("Second")) {
@@ -53,22 +64,30 @@ test void queryTests() {
 }
 
 test void selectSingleValue() {
+	value uuid1 = randomUUID();
+	
     sql.Insert("INSERT INTO test1(name, count, flag) VALUES (?, ?, ?)").execute("a", 1, true);
     sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("b", 2);
     sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("c", 3);
+    sql.Insert("INSERT INTO test1(name, count, a_uuid) VALUES (?, ?, ?)")
+            .execute("c", 4, uuid1);
     
     value count = sql.Select("SELECT COUNT(*) FROM test1").singleValue<Integer>();
-    assert(count == 3);
+    assert(count == 4);
     
     value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number<Integer>>();
     assert(min == 1);
     
     value max = sql.Select("SELECT MAX(count) FROM test1").singleValue<Object>();
-    assert(is Integer max, max == 3);
+    assert(is Integer max, max == 4);
     
     value name = sql.Select("SELECT name FROM test1 WHERE count = ?").singleValue<String>(2);
     assert(name == "b");
     
     value flag = sql.Select("SELECT flag FROM test1 WHERE name = ?").singleValue<Boolean>("a");
     assert(flag);    
+
+    value uuidResult = 
+            sql.Select("SELECT a_uuid FROM test1 WHERE a_uuid = ?").singleValue<UUID>(uuid1);
+    assertEquals(uuidResult, uuid1);   
 }

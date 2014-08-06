@@ -28,7 +28,8 @@ import java.lang {
     JBoolean=Boolean,
     JInteger=Integer,
     JLong=Long,
-    JString=String
+    JString=String,
+	ObjectArray
 }
 import java.math {
     BigDecimal,
@@ -39,6 +40,7 @@ import java.sql {
     CallableStatement,
     ResultSet,
     ResultSetMetaData,
+    SqlArray=Array,
     SqlTimestamp=Timestamp,
     SqlTime=Time,
     SqlDate=Date,
@@ -48,8 +50,10 @@ import java.sql {
     Connection
 }
 import java.util {
-    Date
+    Date,
+    UUID
 }
+
 
 "A row of results is represented as a [[Map]] with column
  names as keys, and values as items."
@@ -123,10 +127,78 @@ shared class Sql(newConnection) {
                 stmt.setTime(i, 
                     SqlTime(today().at(argument).instant().millisecondsOfEpoch));
             }
+            // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
+            case(is UUID) {
+                stmt.setObject(i, argument);
+            }
+            case(is ObjectArray<Object>) {
+                stmt.setArray(i, connection.get().createSqlArray( argument, sqlArrayType(argument)));
+            }
             //TODO reader, inputStream, byte array
             else { stmt.setObject(i,argument); }
             i++;
         }
+    }
+    
+    String sqlArrayType(ObjectArray<Object> argument) {
+        if (argument.size > 0) {
+            value first = argument.get(0);
+            
+            // TODO:  JDK 8 has java.sql.JDBCType that contains these String values, but JDK 7 does not,
+            //	      so if and when Ceylon no longer support JDK 7 we should use JDBCType values instead.
+            switch (first)
+            case (is String) {
+                return "varchar";
+            }
+            case (is Integer) {
+                return "integer";
+            }
+            case (is Boolean) {
+                return "boolean";
+            }
+            case (is Decimal) {
+                return "decimal";
+            }
+            case (is Float) {
+                return "float";
+            }
+            case (is Date) {
+                if (is SqlTimestamp first) {
+                    return "timestamp";
+                } 
+                else if (is SqlTime first) {
+                    return "time";
+                }
+                else if (is SqlDate first) {
+                    return "date";
+                }
+                else {
+                    return "timestamp";
+                }
+            }
+            case (is GregorianDateTime) {
+                return "timestamp";
+            }
+            case (is GregorianDate) {
+                return "date";
+            }
+            case (is TimeOfDay) {
+                return "time";
+            }
+            // This is a special case not part of JDBCTypes but is supported by H2 and PostgreSQL.
+            case (is UUID) {
+                return "uuid";
+            }
+            else {
+                // TODO:  All other possible array types
+                throw Exception("Unsupported array data type");
+            }
+        }
+
+		// TODO: This is a bug.  If it's the user's intent to provide an empty array, it is impossible to know
+		// which type that array is for.  Fixing this is blocked by: 
+		// https://github.com/ceylon/ceylon-compiler/issues/1753
+		throw Exception("Cannot infer the type of an empty array so it will be impossible to insert or update it");
     }
     
     CallableStatement prepareCall(ConnectionStatus conn, String sql, {Object*} arguments) {
@@ -525,20 +597,32 @@ shared class Sql(newConnection) {
         String columnName = meta.getColumnLabel(idx).lowercased;
         Object? x = rs.getObject(idx);
         Object? v;
-        //TODO optimize these conversions
-        switch (x)
-        case (is JBoolean) { v = x.booleanValue(); }
-        case (is JInteger) { v = x.intValue(); }
-        case (is JLong) { v = x.longValue(); }
-        case (is JString) { v = x.string; }
-        case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
-        case (is BigInteger) { v = parseWhole(x.string); }
-        case (is SqlTimestamp) { v = Instant(x.time).dateTime(); }
-        case (is SqlTime) { v = Instant(x.time).time(); }
-        case (is SqlDate) { v = Instant(x.time).date(); }
-        else { v = x; }
+        
+        // Can't put this in the switch statement because Array is an interface so there will be a disjoint
+        // types error with the other types in the switch statement below.
+        if (is SqlArray x) {
+            value javaArray = x.array;
+            assert(is ObjectArray<Object> javaArray);
+            v = javaArray.array.sequence();
+        }
+        else {
+            //TODO optimize these conversions
+            switch (x)
+            case (is JBoolean) { v = x.booleanValue(); }
+            case (is JInteger) { v = x.intValue(); }
+            case (is JLong) { v = x.longValue(); }
+            case (is JString) { v = x.string; }
+            case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
+            case (is BigInteger) { v = parseWhole(x.string); }
+            case (is SqlTimestamp) { v = Instant(x.time).dateTime(); }
+            case (is SqlTime) { v = Instant(x.time).time(); }
+            case (is SqlDate) { v = Instant(x.time).date(); }
+            // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
+            case (is UUID) { v = x; }
+            else { v = x; }
+        }
+
         return columnName -> (v else SqlNull(meta.getColumnType(idx)));
     }
-
 }
 
