@@ -144,8 +144,12 @@ shared class Sql(newConnection) {
         if (argument.size > 0) {
             value first = argument.get(0);
             
-            // TODO:  JDK 8 has java.sql.JDBCType that contains these String values, but JDK 7 does not,
-            //	      so if and when Ceylon no longer support JDK 7 we should use JDBCType values instead.
+            /*
+             TODO:  JDK 8 has java.sql.JDBCType that contains these String values, but JDK 7 does not,
+                    so if and when Ceylon no longer support JDK 7 we should use JDBCType values instead.
+                    There is also the question of non-standard behaviour for at least on database, PostgreSQL,
+                    which will only accept lowercase versions of the types below.  (ex varchar, but not VARCHAR).
+             */
             switch (first)
             case (is String) {
                 return "varchar";
