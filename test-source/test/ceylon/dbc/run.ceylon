@@ -22,6 +22,7 @@ shared Sql sql = Sql(newConnectionFromDataSource(createDataSource()));
 
 shared beforeTest void setup() {
     try {
+        sql.Statement("DROP TABLE test1").execute();
         sql.Statement("CREATE TABLE test1 (
                            row_id SERIAL PRIMARY KEY, 
                            name VARCHAR(40), 
@@ -29,6 +30,7 @@ shared beforeTest void setup() {
                            day DATE, 
                            count INTEGER, 
                            price NUMERIC(10,4), 
+                           a_uuid UUID,
                            flag BOOLEAN)").execute();
     }
     catch (Exception ex) {
