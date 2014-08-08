@@ -145,10 +145,13 @@ shared class Sql(newConnection) {
             value first = argument.get(0);
             
             /*
-             TODO:  JDK 8 has java.sql.JDBCType that contains these String values, but JDK 7 does not,
-                    so if and when Ceylon no longer support JDK 7 we should use JDBCType values instead.
+             TODO:  Due to https://github.com/ceylon/ceylon-compiler/issues/1753, we need to check the type of 
+                    first element of the array to determine the type of the database array.
                     There is also the question of non-standard behaviour for at least on database, PostgreSQL,
                     which will only accept lowercase versions of the types below.  (ex varchar, but not VARCHAR).
+                    As well, JDK 8 has java.sql.JDBCType that contains these String values, but JDK 7 does not,
+                    which is why the values below are hard-coded.
+                    
              */
             switch (first)
             case (is String) {
