@@ -1,9 +1,6 @@
 import ceylon.dbc {
 	Row
 }
-import ceylon.interop.java {
-	createJavaObjectArray
-}
 import ceylon.test {
 	...
 }
