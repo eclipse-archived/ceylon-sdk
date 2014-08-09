@@ -6,7 +6,11 @@ import ceylon.dbc {
     newConnectionFromDataSource
 }
 import ceylon.interop.java {
-    toIntegerArray
+    toIntegerArray,
+    createJavaObjectArray
+}
+import ceylon.language.meta.model {
+    Type
 }
 import ceylon.math.decimal {
     Decimal,
@@ -16,7 +20,11 @@ import ceylon.math.whole {
     parseWhole
 }
 import ceylon.time {
-    today, Instant
+    today,
+    Instant,
+    Time,
+    DateTime,
+    Date
 }
 import ceylon.time.internal {
     GregorianDateTime,
@@ -50,7 +58,7 @@ import java.sql {
     Connection
 }
 import java.util {
-    Date,
+    JDate=Date,
     UUID
 }
 
@@ -95,7 +103,7 @@ shared class Sql(newConnection) {
                 assert (is BigDecimal bd = argument.implementation);
                 stmt.setBigDecimal(i,bd); 
             }
-            case (is Date) {
+            case (is JDate) {
                 if (is SqlTimestamp argument) {
                     stmt.setTimestamp(i, argument);
                 } 
@@ -134,10 +142,77 @@ shared class Sql(newConnection) {
             case(is ObjectArray<Object>) {
                 stmt.setArray(i, connection.get().createSqlArray( argument, sqlArrayType(argument)));
             }
+            case(is Array<String>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<Integer>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<UUID>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<Date>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<Boolean>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<Float>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<Time>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<DateTime>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<GregorianDate>) {
+                setArray(i, argument, stmt);
+            }
+            case(is Array<TimeOfDay>) {
+                setArray(i, argument, stmt);
+            }
             //TODO reader, inputStream, byte array
             else { stmt.setObject(i,argument); }
             i++;
         }
+    }
+
+    void setArray<in ArrayType>(Integer position, Array<ArrayType> array, PreparedStatement stmt) 
+            given ArrayType satisfies Object { 
+        Type<ArrayType> type = `ArrayType`;
+        
+        String sqlArrayType;
+
+        if (type.exactly(`String`)) {
+            sqlArrayType = "varchar";
+        } else if (type.exactly(`Integer`)) {
+            sqlArrayType = "integer";
+        } else if (type.exactly(`Decimal`)) {
+            sqlArrayType = "decimal";
+        } else if (type.exactly(`Boolean`)) {
+            sqlArrayType = "boolean";
+        } else if (type.exactly(`Float`)) {
+            sqlArrayType = "float";
+        } else if (type.exactly(`Date`)) {
+            sqlArrayType = "date";
+        } else if (type.exactly(`Time`)) {
+            sqlArrayType = "time";
+        } else if (type.exactly(`DateTime`)) {
+            sqlArrayType = "timestamp";
+        } else if (type.exactly(`GregorianDate`)) {
+            sqlArrayType = "date";
+        } else if (type.exactly(`TimeOfDay`)) {
+            sqlArrayType = "time";
+        // This is a special case not part of JDBCTypes but is supported by H2 and PostgreSQL.
+        } else if (type.exactly(`UUID`)) {
+            sqlArrayType = "uuid";
+        } else {
+            throw Exception("Unknown or unsupported array type for SQL array conversion: ``array``");
+        }
+
+        stmt.setArray(position, 
+            connection.get().createSqlArray(createJavaObjectArray<Object>(array), sqlArrayType));
     }
     
     String sqlArrayType(ObjectArray<Object> argument) {
@@ -169,7 +244,7 @@ shared class Sql(newConnection) {
             case (is Float) {
                 return "float";
             }
-            case (is Date) {
+            case (is JDate) {
                 if (is SqlTimestamp first) {
                     return "timestamp";
                 } 
