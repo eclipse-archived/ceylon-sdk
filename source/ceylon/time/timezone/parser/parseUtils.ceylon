@@ -50,7 +50,7 @@ DayOfWeek findDayOfWeek(String dayOfWeek) {
  
  P.S.: This is a good case to add this feature to Time. something like:
        time(1,0).period"
-Period toPeriod([Time, Integer] time) {
+Period toPeriod([Time, Signal, AtTimeRuleDefinition] time) {
     return Period {
         hours = time[0].hours * time[1];
         minutes = time[0].minutes * time[1];
@@ -61,24 +61,46 @@ Period toPeriod([Time, Integer] time) {
 
 "Return the time based on #Rule token.
  It does return a Tuple of the Time and its Signal."
-[Time, Signal] parseTime(String atTime) {
+[Time, Signal, AtTimeRuleDefinition] parseTime(String atTime) {
     if( atTime.equals("-") ) {
-        return [time(0, 0), 1];
+        return [time(0, 0), 1, wallClockDefinition];
     }
     value signal = atTime.startsWith("-") then -1 else 1;
     value position = atTime.startsWith("-") then 1 else 0;
     
     if(! atTime.firstOccurrence(':') exists ) {
         assert(exists hours = parseInteger(atTime));
-        return [adjustToEndOfDayIfNecessary(hours, 0), signal];
+        return [adjustToEndOfDayIfNecessary(hours, 0), signal, wallClockDefinition];
     }
     
     assert( exists index = atTime.firstOccurrence(':') );
     assert( exists hours = parseInteger(atTime.span(position, index-1)));
-    //TODO: Here we are discarding last letter if exists, 1:00u or 1:00s
     assert( exists minutes = parseInteger(atTime.span(index +1,index  + 2 )));
+    value ruleDefinition = parseAtTimeRuleDefinition(atTime.spanFrom(index + 3));
     
-    return [adjustToEndOfDayIfNecessary( hours, minutes ), signal];
+    return [adjustToEndOfDayIfNecessary( hours, minutes ), signal, ruleDefinition ];
+}
+
+shared AtTimeRuleDefinition parseAtTimeRuleDefinition(String token) {
+    switch (token)
+    case("s") {
+        return standardTimeDefinition;
+    }
+    case("g") {
+        return gmtTimeDefinition;
+    }
+    case("u") {
+        return utcTimeDefinition;
+    }
+    case("z") {
+        return zuluTimeDefinition;
+    }
+    case("w") {
+        return wallClockDefinition;
+    } 
+    else {
+        return wallClockDefinition;
+    }
 }
 
 "Return the month based on #Rule token."
@@ -87,4 +109,44 @@ shared Month parseMonth(String month) {
     assert(exists currentMonth = months.all.find((Month elem) 
         => elem.string.lowercased.startsWith(month.trimmed.lowercased)));
     return currentMonth;
+}
+
+shared AtTimeRule parseAtTimeRule(String token) {
+    value result = parseTime(token);
+    return AtTimeRule(result[0], result[2]);
+}
+
+shared OnDayRule parseOnDayRule(String token) {
+    //Split all values
+    value result = parseOnDay(token);
+    
+    //now apply correct type
+    if(exists day = result[0]) {
+        if(exists dayOfWeek = result[1]) {
+            return OnFirstOfMonthRule(dayOfWeek, day);
+        } else {
+            return OnFixedDayRule(day);
+        }
+    } 
+    assert(exists dayOfWeek = result[1]);
+    return OnLastOfMonthRule(dayOfWeek);
+}
+
+"Return the day based on #Rule token."
+[DayOfMonth?, DayOfWeek?, Comparison] parseOnDay(String token) {
+    variable [DayOfMonth?, DayOfWeek?, Comparison] result = [null,null, equal];
+    if (token.startsWith("last")) {
+        result = [null, findDayOfWeek(token.spanFrom(4)), larger];
+    } else {
+        value gtIdx = token.firstInclusion(">=");
+        value stIdx = token.firstInclusion("<=");
+        if (exists gtIdx , gtIdx > 0) {
+            result = [parseInteger(token.spanFrom(gtIdx + 2).trimmed), findDayOfWeek(token.span(0, gtIdx -1)), larger];
+        } else if( exists stIdx, stIdx > 0) {
+            result = [parseInteger(token.spanFrom(stIdx + 2)), findDayOfWeek(token.span(0, stIdx-1)), smaller];
+        } else {
+            result = [parseInteger(token), null, equal];
+        }
+    }
+    return result;
 }

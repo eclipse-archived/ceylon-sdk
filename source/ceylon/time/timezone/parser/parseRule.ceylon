@@ -4,7 +4,7 @@ shared [String, Rule] parseRuleLine(Iterator<String> token) {
     assert( is String name = token.next() );
     assert( is String startYearText = token.next() );
     assert( is String endYearText = token.next() );
-    assert( is String typeText = token.next() );
+    assert( is String typeText = token.next() ); //just to discard
     assert( is String monthText = token.next() );
     assert( is String dayRuleText = token.next() );
     assert( is String timeRuleText = token.next() );
@@ -17,11 +17,10 @@ shared [String, Rule] parseRuleLine(Iterator<String> token) {
         Rule{
             fromYear = year;
             toYear = parseYear(endYearText, year);
-            type = typeText.trimmed;
-            month = parseMonth(monthText);
-            onDay = DayRule(dayRuleText.trimmed);
-            atTime = TimeRule(timeRuleText.trimmed);
-            offset = toPeriod(parseTime(savingAmountsText.trimmed));
+            inMonth = parseMonth(monthText);
+            onDay = parseOnDayRule(dayRuleText.trimmed);
+            atTime = parseAtTimeRule(timeRuleText.trimmed);
+            save = toPeriod(parseTime(savingAmountsText.trimmed));
             letter = letterText.trimmed;
         }
     ];
