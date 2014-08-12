@@ -83,19 +83,13 @@ Period toPeriod([Time, Signal, AtTimeRuleDefinition] time) {
 
 shared AtTimeRuleDefinition parseAtTimeRuleDefinition(String token) {
     switch (token)
-    case("s") {
+    case("s", "S") {
         return standardTimeDefinition;
     }
-    case("g") {
-        return gmtTimeDefinition;
-    }
-    case("u") {
+    case("g", "G", "u", "U", "z", "Z") {
         return utcTimeDefinition;
     }
-    case("z") {
-        return zuluTimeDefinition;
-    }
-    case("w") {
+    case("w", "W") {
         return wallClockDefinition;
     } 
     else {
