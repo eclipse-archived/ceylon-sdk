@@ -39,7 +39,7 @@ shared Locale currentLocale {
 }
 
 shared Locale? locale(String tag) {
-    value filePath = "ceylon/locale/" + tag + ".txt";
+    value filePath = tag + ".txt";
     if (exists resource = 
             localeModule.resourceByPath(filePath)) {
         Iterator<String> lines = resource.textContent()
