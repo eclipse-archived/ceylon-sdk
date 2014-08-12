@@ -33,18 +33,12 @@ shared class AtTimeRule(time, timeDefinition) {
  The time can also be suffixed with ‘w’ meaning “wall clock time;” 
  but it usually isn’t because that’s the default."
 shared abstract class AtTimeRuleDefinition() 
-        of   StandardTimeDefinition | GmtTimeDefinition | UtcTimeDefinition 
-           | ZuluTimeDefinition | WallClockDefinition {
+        of   standardTimeDefinition | gmtTimeDefinition | utcTimeDefinition 
+           | zuluTimeDefinition | wallClockDefinition {
 }
 
-shared class StandardTimeDefinition() extends AtTimeRuleDefinition(){}
-shared class GmtTimeDefinition() extends AtTimeRuleDefinition(){}
-shared class UtcTimeDefinition() extends AtTimeRuleDefinition(){}
-shared class ZuluTimeDefinition() extends AtTimeRuleDefinition(){}
-shared class WallClockDefinition() extends AtTimeRuleDefinition(){}
-
-shared object standardTimeDefinition extends StandardTimeDefinition(){}
-shared object gmtTimeDefinition extends StandardTimeDefinition(){}
-shared object utcTimeDefinition extends StandardTimeDefinition(){}
-shared object zuluTimeDefinition extends StandardTimeDefinition(){}
-shared object wallClockDefinition extends StandardTimeDefinition(){}
+shared object standardTimeDefinition extends AtTimeRuleDefinition(){}
+shared object gmtTimeDefinition extends AtTimeRuleDefinition(){}
+shared object utcTimeDefinition extends AtTimeRuleDefinition(){}
+shared object zuluTimeDefinition extends AtTimeRuleDefinition(){}
+shared object wallClockDefinition extends AtTimeRuleDefinition(){}
