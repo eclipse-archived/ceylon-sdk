@@ -1,3 +1,7 @@
+import ceylon.time.timezone.model {
+	Year,
+	Rule
+}
 "Parse current token using http://www.cstdbill.com/tzdb/tz-how-to.html 
  columns as reference"
 shared [String, Rule] parseRuleLine(Iterator<String> token) {
@@ -18,8 +22,8 @@ shared [String, Rule] parseRuleLine(Iterator<String> token) {
             fromYear = year;
             toYear = parseYear(endYearText, year);
             inMonth = parseMonth(monthText);
-            onDay = parseOnDayRule(dayRuleText.trimmed);
-            atTime = parseAtTimeRule(timeRuleText.trimmed);
+            onDay = parseOnDay(dayRuleText.trimmed);
+            atTime = parseAtTime(timeRuleText.trimmed);
             save = toPeriod(parseTime(savingAmountsText.trimmed));
             letter = letterText.trimmed;
         }

@@ -2,19 +2,19 @@ import ceylon.time {
     Time
 }
 
-"Model that represents the TimeRule from #Rule.
+"Model that represents the AtTime rules.
  
- All the models are intended to be unrelated of the database.
+ All the models are intended to be unrelated of the database origin.
  
  P.S.: Its not intended to be used outside of ceylon.time and currently
  its as shared because we need to test it."
-shared class AtTimeRule(time, timeDefinition) {
+shared class AtTime(time, timeDefinition) {
     
     shared Time time;
-    shared AtTimeRuleDefinition timeDefinition;
+    shared AtTimeDefinition timeDefinition;
     
     shared actual Boolean equals(Object other) {
-        if(is AtTimeRule other) {
+        if(is AtTime other) {
             return time == other.time 
                    && timeDefinition == other.timeDefinition;
         }
@@ -31,11 +31,16 @@ shared class AtTimeRule(time, timeDefinition) {
  ‘u’ stands for “UT” or “UTC” (whichever was official at the time); 
  ‘z’ stands for the nautical time zone Z (a.k.a. “Zulu” which, in turn, stands for ‘Z’). 
  The time can also be suffixed with ‘w’ meaning “wall clock time;” 
- but it usually isn’t because that’s the default."
-shared abstract class AtTimeRuleDefinition() 
+ but it usually isn’t because that’s the default.
+ 
+ All the models are intended to be unrelated of the database origin.
+ 
+ P.S.: Its not intended to be used outside of ceylon.time and currently
+ its as shared because we need to test it."
+shared abstract class AtTimeDefinition() 
         of   standardTimeDefinition | utcTimeDefinition | wallClockDefinition {
 }
 
-shared object standardTimeDefinition extends AtTimeRuleDefinition(){}
-shared object utcTimeDefinition extends AtTimeRuleDefinition(){}
-shared object wallClockDefinition extends AtTimeRuleDefinition(){}
+shared object standardTimeDefinition extends AtTimeDefinition(){}
+shared object utcTimeDefinition extends AtTimeDefinition(){}
+shared object wallClockDefinition extends AtTimeDefinition(){}

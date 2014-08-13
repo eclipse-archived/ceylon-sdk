@@ -3,12 +3,39 @@ import ceylon.time.base {
     weekdays,
     DayOfWeek,
     months,
-    Month
+    Month,
+    january
 }
 import ceylon.time {
     Time,
     time,
-    Period
+    Period,
+    dateTime,
+    DateTime
+}
+import ceylon.time.timezone.model {
+    wallClockDefinition,
+    AtTimeDefinition,
+    standardTimeDefinition,
+    utcTimeDefinition,
+    AtTime,
+    OnLastOfMonth,
+    OnDay,
+    DayOfMonth,
+    OnFixedDay,
+    OnFirstOfMonth,
+    ZoneRule,
+    standardZoneRule,
+    PeriodZoneRule,
+    ZoneUntil,
+    standardZoneFormat,
+    ZoneFormat,
+    PairAbbreviationZoneFormat,
+    ReplacedZoneFormat,
+    AbbreviationZoneFormat
+}
+import ceylon.time.timezone {
+    timeZone
 }
 
 "Alias to represent a specific signal:
@@ -50,7 +77,7 @@ DayOfWeek findDayOfWeek(String dayOfWeek) {
  
  P.S.: This is a good case to add this feature to Time. something like:
        time(1,0).period"
-Period toPeriod([Time, Signal, AtTimeRuleDefinition] time) {
+Period toPeriod([Time, Signal, AtTimeDefinition] time) {
     return Period {
         hours = time[0].hours * time[1];
         minutes = time[0].minutes * time[1];
@@ -61,7 +88,7 @@ Period toPeriod([Time, Signal, AtTimeRuleDefinition] time) {
 
 "Return the time based on #Rule token.
  It does return a Tuple of the Time and its Signal."
-[Time, Signal, AtTimeRuleDefinition] parseTime(String atTime) {
+[Time, Signal, AtTimeDefinition] parseTime(String atTime) {
     if( atTime.equals("-") ) {
         return [time(0, 0), 1, wallClockDefinition];
     }
@@ -69,19 +96,74 @@ Period toPeriod([Time, Signal, AtTimeRuleDefinition] time) {
     value position = atTime.startsWith("-") then 1 else 0;
     
     if(! atTime.firstOccurrence(':') exists ) {
-        assert(exists hours = parseInteger(atTime));
+        assert(exists hours = parseInteger(atTime.spanFrom(position)));
         return [adjustToEndOfDayIfNecessary(hours, 0), signal, wallClockDefinition];
     }
     
-    assert( exists index = atTime.firstOccurrence(':') );
-    assert( exists hours = parseInteger(atTime.span(position, index-1)));
-    assert( exists minutes = parseInteger(atTime.span(index +1,index  + 2 )));
-    value ruleDefinition = parseAtTimeRuleDefinition(atTime.spanFrom(index + 3));
+    value indexes = atTime.indexesWhere(':'.equals).sequence();
     
-    return [adjustToEndOfDayIfNecessary( hours, minutes ), signal, ruleDefinition ];
+    assert( exists firstIndex = indexes[0] );
+    assert( exists hours = parseInteger(atTime.span(position, firstIndex-1)));
+    assert( exists minutes = parseInteger(atTime.span(firstIndex +1,firstIndex  + 2 )));
+    variable value partialTime = adjustToEndOfDayIfNecessary( hours, minutes ); 
+    AtTimeDefinition ruleDefinition;
+    if( indexes.size == 1 ) {
+        ruleDefinition = parseAtTimeDefinition(atTime.spanFrom(firstIndex + 3));
+    } else {
+        assert( exists secondIndex = indexes[1] );  
+        assert( exists seconds = parseInteger(atTime.span(secondIndex + 1 ,secondIndex  + 2 ))); 
+        
+        partialTime = partialTime.plusSeconds(seconds);   
+        ruleDefinition = parseAtTimeDefinition(atTime.spanFrom(secondIndex + 3));
+    }
+    
+    return [partialTime, signal, ruleDefinition ];
 }
 
-shared AtTimeRuleDefinition parseAtTimeRuleDefinition(String token) {
+shared ZoneUntil parseUntil([String*] token) {
+    variable DateTime result = dateTime(0, january, 1);
+    if( exists yearText = token[0], yearText != "") {
+        assert(exists year = parseInteger(yearText));
+        result = result.withYear(year);
+    } else {
+        result = result.withYear(years.maximum);
+    }
+    
+    if( exists monthText = token[1], monthText != "") {
+        result = result.withMonth(parseMonth(monthText));
+    }
+    
+    if( exists dayText = token[2], dayText != "") {
+        value parsed = parseOnDay(dayText);
+        switch(parsed)
+        case(is OnFixedDay){
+            result = result.withDay(parsed.fixedDate);
+        }
+        case(is OnFirstOfMonth){
+            result = result.withDay(parsed.firstOfMonth(result.year, result.month).day);
+        }
+        case(is OnLastOfMonth){
+            result = result.withDay(parsed.lastOfMonth(result.year, result.month).day);
+        }
+    }
+    
+    AtTimeDefinition definition;
+    if( exists timeText = token[3], timeText != "") {
+        value timeResult = parseTime(timeText);
+        //Use case to add DateTime::at(Time) or DateTime::withTime(Time) ?
+        result.withHours(timeResult[0].hours);
+        result.withMinutes(timeResult[0].minutes);
+        result.withSeconds(timeResult[0].seconds);
+        result.withMilliseconds(timeResult[0].milliseconds);
+        definition = timeResult[2];
+    } else {
+        definition = standardTimeDefinition;
+    }
+    
+    return ZoneUntil(result.instant(timeZone.utc), definition);
+}
+
+shared AtTimeDefinition parseAtTimeDefinition(String token) {
     switch (token)
     case("s", "S") {
         return standardTimeDefinition;
@@ -105,29 +187,42 @@ shared Month parseMonth(String month) {
     return currentMonth;
 }
 
-shared AtTimeRule parseAtTimeRule(String token) {
+shared AtTime parseAtTime(String token) {
     value result = parseTime(token);
-    return AtTimeRule(result[0], result[2]);
+    return AtTime(result[0], result[2]);
 }
 
-shared OnDayRule parseOnDayRule(String token) {
+shared OnDay parseOnDay(String token) {
     //Split all values
-    value result = parseOnDay(token);
+    value result = parseOnDayToken(token);
     
     //now apply correct type
     if(exists day = result[0]) {
         if(exists dayOfWeek = result[1]) {
-            return OnFirstOfMonthRule(dayOfWeek, day);
+            return OnFirstOfMonth(dayOfWeek, day);
         } else {
-            return OnFixedDayRule(day);
+            return OnFixedDay(day);
         }
     } 
     assert(exists dayOfWeek = result[1]);
-    return OnLastOfMonthRule(dayOfWeek);
+    return OnLastOfMonth(dayOfWeek);
+}
+
+shared ZoneRule parseZoneRule(String token) {
+    if(token == "-") {
+        return standardZoneRule;
+    }
+    
+    value indexes = "".indexesWhere(':'.equals).sequence();
+    if(nonempty indexes) {
+        return PeriodZoneRule(toPeriod(parseTime(token)));
+    } else {
+        return standardZoneRule;
+    }
 }
 
 "Return the day based on #Rule token."
-[DayOfMonth?, DayOfWeek?, Comparison] parseOnDay(String token) {
+[DayOfMonth?, DayOfWeek?, Comparison] parseOnDayToken(String token) {
     variable [DayOfMonth?, DayOfWeek?, Comparison] result = [null,null, equal];
     if (token.startsWith("last")) {
         result = [null, findDayOfWeek(token.spanFrom(4)), larger];
@@ -143,4 +238,24 @@ shared OnDayRule parseOnDayRule(String token) {
         }
     }
     return result;
+}
+
+shared ZoneFormat parseZoneFormat(String token) {
+    if(token == "zzz") {
+        return standardZoneFormat;    
+    } else if(exists index = token.firstOccurrence('/')) {
+        value abbreviation = token.spanTo(index-1);
+        value daylightAbbreviation = token.spanFrom(index+1);
+        return PairAbbreviationZoneFormat(abbreviation, daylightAbbreviation);
+    } else if( exists index = token.firstInclusion("%s")) {
+        return ReplacedZoneFormat(token);
+    } else if( !token.empty ) {
+        return AbbreviationZoneFormat(token);
+    }
+    
+    return standardZoneFormat;
+}
+
+shared Boolean tokenDelimiter(Character char) {
+    return char == ' ' || char == '\t';
 }

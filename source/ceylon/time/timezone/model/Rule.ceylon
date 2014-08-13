@@ -9,22 +9,23 @@ import ceylon.time.timezone {
 	timeZone
 }
 
+
 "Alias to represent a specific year."
 shared alias Year => Integer;
 
 "Model to #Rule rules, then we can read from any source.
  
- All the models are intended to be unrelated of the database.
+ All the models are intended to be unrelated of the database origin.
  
-  P.S.: Its not intended to be used outside of ceylon.time and currently
+ P.S.: Its not intended to be used outside of ceylon.time and currently
  its as shared because we need to test it."
 shared class Rule(fromYear, toYear, inMonth, onDay, atTime, save, letter) {
 
     shared Year fromYear;
     shared Year toYear;
     shared Month inMonth;
-    shared OnDayRule onDay;
-    shared AtTimeRule atTime;
+    shared OnDay onDay;
+    shared AtTime atTime;
     shared Period save;
     shared String letter;
     
