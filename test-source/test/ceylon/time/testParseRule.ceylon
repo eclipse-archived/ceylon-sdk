@@ -1,13 +1,4 @@
-import ceylon.time.timezone.parser {
-    Rule,
-    OnDayRule,
-    AtTimeRule,
-    OnFixedDayRule,
-    OnFirstOfMonthRule,
-    OnLastOfMonthRule,
-    wallClockDefinition,
-    utcTimeDefinition
-}
+
 import ceylon.time.base {
     october,
     Month,
@@ -35,6 +26,16 @@ import ceylon.test {
 import ceylon.time.timezone {
     timeZone
 }
+import ceylon.time.timezone.model {
+	wallClockDefinition,
+	AtTime,
+	utcTimeDefinition,
+	OnLastOfMonth,
+	OnDay,
+	OnFixedDay,
+	OnFirstOfMonth,
+	Rule
+}
 
 List<Rule>? brazilRules = provider.rules.get("Brazil");
 List<Rule>? falkRules = provider.rules.get("Falk");
@@ -46,8 +47,8 @@ test void testBrazilRules() {
         _fromYear = 1931;
         _toYear = 1931;
         _month = october;
-        _onDayRule = OnFixedDayRule(3);
-        _atTimeRule = AtTimeRule(newTime(11,0), wallClockDefinition);
+        _onDayRule = OnFixedDay(3);
+        _atTimeRule = AtTime(newTime(11,0), wallClockDefinition);
         _period = Period{hours = 1;};
         _letter = "S";
         _rules = brazilRules;
@@ -58,8 +59,8 @@ test void testBrazilRules() {
         _fromYear = 2013;
         _toYear = 2014;
         _month = february;
-        _onDayRule = OnFirstOfMonthRule(sunday, 15);
-        _atTimeRule = AtTimeRule(newTime(0,0), wallClockDefinition);
+        _onDayRule = OnFirstOfMonth(sunday, 15);
+        _atTimeRule = AtTime(newTime(0,0), wallClockDefinition);
         _period = Period();
         _letter = "-";
         _rules = brazilRules;
@@ -73,8 +74,8 @@ test void testChileRules() {
         _fromYear = 1987;
         _toYear = 1987;
         _month = april;
-        _onDayRule = OnFixedDayRule(12);
-        _atTimeRule = AtTimeRule(newTime(3,0), utcTimeDefinition);
+        _onDayRule = OnFixedDay(12);
+        _atTimeRule = AtTime(newTime(3,0), utcTimeDefinition);
         _period = Period();
         _letter = "-";
         _rules = chileRules;
@@ -87,8 +88,8 @@ test void testFalkRules() {
         _fromYear = 1984;
         _toYear = 1985;
         _month = april;
-        _onDayRule = OnLastOfMonthRule(sunday);
-        _atTimeRule = AtTimeRule(newTime(0,0), wallClockDefinition);
+        _onDayRule = OnLastOfMonth(sunday);
+        _atTimeRule = AtTime(newTime(0,0), wallClockDefinition);
         _period = Period();
         _letter = "-";
         _rules = falkRules;
@@ -102,8 +103,8 @@ test void testRulesShouldMatch() {
         fromYear = 1983;
         toYear = 1983;
         inMonth = september;
-        onDay = OnLastOfMonthRule(sunday); //day 25
-        atTime = AtTimeRule(newTime(0,0), wallClockDefinition);
+        onDay = OnLastOfMonth(sunday); //day 25
+        atTime = AtTime(newTime(0,0), wallClockDefinition);
         save = Period{ hours = 1; };
         letter = "S";
     };
@@ -117,11 +118,11 @@ test void testRulesShouldMatch() {
 }
 
 test void testOnFixedDayRuleShouldMatch() {
-    value sundayGreaterOrEqual31 = OnFixedDayRule(31);
+    value sundayGreaterOrEqual31 = OnFixedDay(31);
     assertFalse(sundayGreaterOrEqual31.matches(date(2014, june, 29)));
     assertTrue(sundayGreaterOrEqual31.matches(date(2014, august, 31)));
     
-    value saturdayGreaterOrEqual15 = OnFixedDayRule(1);
+    value saturdayGreaterOrEqual15 = OnFixedDay(1);
     assertTrue(saturdayGreaterOrEqual15.matches(date(2014, august, 2)));
     assertTrue(saturdayGreaterOrEqual15.matches(date(2014, august, 9)));
     assertTrue(saturdayGreaterOrEqual15.matches(date(2014, august, 15)));
@@ -132,11 +133,10 @@ test void testOnFixedDayRuleShouldMatch() {
 }
 
 test void testOnFirstOfMonthRuleShouldMatch() {
-    value sundayGreaterOrEqual31 = OnFirstOfMonthRule(sunday, 31);
-    assertFalse(sundayGreaterOrEqual31.matches(date(2014, june, 29)));
+    value sundayGreaterOrEqual31 = OnFirstOfMonth(sunday, 31);
     assertTrue(sundayGreaterOrEqual31.matches(date(2014, august, 31)));
     
-    value saturdayGreaterOrEqual15 = OnFirstOfMonthRule(saturday, 15);
+    value saturdayGreaterOrEqual15 = OnFirstOfMonth(saturday, 15);
     assertFalse(saturdayGreaterOrEqual15.matches(date(2014, august, 2)));
     assertFalse(saturdayGreaterOrEqual15.matches(date(2014, august, 9)));
     assertFalse(saturdayGreaterOrEqual15.matches(date(2014, august, 15)));
@@ -147,7 +147,7 @@ test void testOnFirstOfMonthRuleShouldMatch() {
 }
 
 test void testOnLastOfMonthRuleShouldMatch() {
-    value result = OnLastOfMonthRule(sunday);
+    value result = OnLastOfMonth(sunday);
     assertTrue(result.matches(date(2014, january, 26)));
     assertTrue(result.matches(date(2014, march, 30)));
     assertTrue(result.matches(date(2014, june, 29)));
@@ -155,8 +155,8 @@ test void testOnLastOfMonthRuleShouldMatch() {
 }
 
 void assertRule(Integer _fromYear, Integer _toYear, Month _month, 
-                OnDayRule _onDayRule,
-                AtTimeRule _atTimeRule,
+                OnDay _onDayRule,
+                AtTime _atTimeRule,
                 Period _period, String _letter, List<Rule>? _rules) {
     assert(exists _rules);
 
