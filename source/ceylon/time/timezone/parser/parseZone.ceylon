@@ -5,7 +5,7 @@ import ceylon.time.timezone.model {
     ZoneTimeline
 }
 
-shared [String, ZoneTimeline] parseZone(Iterator<String> token, String? ruleName = null) {
+shared [String, ZoneTimeline] parseZoneLine(Iterator<String> token, String? ruleName = null) {
     String name;
     if(exists ruleName) {
         name = ruleName;

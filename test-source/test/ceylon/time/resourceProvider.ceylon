@@ -1,6 +1,6 @@
 import ceylon.time.timezone.parser {
     parseRuleLine,
-    parseZone,
+    parseZoneLine,
     tokenDelimiter
 }
 import ceylon.collection {
@@ -64,17 +64,18 @@ shared object provider {
                         
                     }
                     case ("Zone") {
-                        value zoneTime = parseZone(token);
+                        value zoneTime = parseZoneLine(token);
                         addZone(zoneTime, zones);
                         lastZoneName = zoneTime[0];
                     }
                     case ("Link") {
                         lastZoneName = null;
+                        print("Link: ``fixedLine``");
                     }
                     else {
                         if(exists name = lastZoneName) {
                             //print("fromZone: '``fixedLine``'");
-                            value zoneTime = parseZone(fixedLine.split(tokenDelimiter).iterator(), name);
+                            value zoneTime = parseZoneLine(fixedLine.split(tokenDelimiter).iterator(), name);
                             addZone(zoneTime, zones);
                         }
                     }
