@@ -1,7 +1,8 @@
 import ceylon.time.timezone.parser {
     parseRuleLine,
     parseZoneLine,
-    tokenDelimiter
+    tokenDelimiter,
+	parseLinkLine
 }
 import ceylon.collection {
     MutableMap,
@@ -11,7 +12,8 @@ import ceylon.collection {
 }
 import ceylon.time.timezone.model {
     Rule,
-    ZoneTimeline
+    ZoneTimeline,
+	Link
 }
 
 "Currently the database supported is: http://www.iana.org/time-zones
@@ -27,6 +29,7 @@ shared object provider {
     
     shared MutableMap<String, MutableList<Rule>> rules = HashMap<String, MutableList<Rule>>();
     shared MutableMap<String, MutableList<ZoneTimeline>> zones = HashMap<String, MutableList<ZoneTimeline>>();
+    shared MutableMap<String, String> links = HashMap<String,String>();
     
     for (database in supportedDatabases) {
         value resource = `module ceylon.time`.resourceByPath("``database``");
@@ -70,7 +73,8 @@ shared object provider {
                     }
                     case ("Link") {
                         lastZoneName = null;
-                        print("Link: ``fixedLine``");
+                        Link link = parseLinkLine(token);
+                        links.put(link[1], link[0]);
                     }
                     else {
                         if(exists name = lastZoneName) {
