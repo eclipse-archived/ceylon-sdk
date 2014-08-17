@@ -1,14 +1,9 @@
 import ceylon.time {
-    Period,
-	Instant
+    Period
 }
 import ceylon.time.base {
     Month
 }
-import ceylon.time.timezone {
-	timeZone
-}
-
 
 "Alias to represent a specific year."
 shared alias Year => Integer;
@@ -22,20 +17,6 @@ shared class Rule(fromYear, toYear, inMonth, onDay, atTime, save, letter) {
     shared AtTime atTime;
     shared Period save;
     shared String letter;
-    
-    "True, if the provided instant matches the given rule"
-    shared Boolean matches(Instant instant) {
-        value dateTime = instant.dateTime(timeZone.utc);
-        
-        value matchesYear = fromYear <= dateTime.year <= toYear;
-        value matchesMonth = inMonth == dateTime.month;
-        value matchesDay = onDay.matches(dateTime.date);
-        
-        //TODO: How does timeDefinition should be handled here?
-        value matchesTime = dateTime.time >= atTime.time;
-        
-        return matchesYear && matchesMonth && matchesDay && matchesTime;
-    }
 
     shared actual Boolean equals(Object other) {
         if(is Rule other) {

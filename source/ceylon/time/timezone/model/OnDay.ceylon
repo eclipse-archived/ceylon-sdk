@@ -4,7 +4,7 @@ import ceylon.time.base {
 }
 import ceylon.time {
     Date,
-	date
+    newDate = date
 }
 
 "Alias to represent a specific day."
@@ -12,17 +12,14 @@ shared alias DayOfMonth => Integer;
 
 shared abstract class OnDay() of OnFixedDay | OnFirstOfMonth | OnLastOfMonth {
 
-    "True, if the provided date matches the given rule"
-    shared formal Boolean matches(Date date);
+    shared formal Date date(Year year, Month month);
     
 }
 
 "Represents a fixed day without any other rule, for example:
  * 3
  * 15
- * 30
- 
- All them without day of week and comparison."
+ * 30"
 shared class OnFixedDay(fixedDate) extends OnDay() {
     shared DayOfMonth fixedDate;
     
@@ -33,8 +30,8 @@ shared class OnFixedDay(fixedDate) extends OnDay() {
         return false;
     }
     
-    shared actual Boolean matches(Date date) {
-        return date.day >= fixedDate;
+    shared actual Date date(Year year, Month month) {
+        return newDate(year, month, fixedDate);
     }
     
 }
@@ -56,9 +53,9 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
         return false;
     }
     
-    shared actual Boolean matches(Date date) {
-        value result = firstOfMonth(date.year, date.month);
-        return date >= result;
+    shared actual Date date(Year year, Month month) {
+        value result = firstOfMonth(year, month);
+        return newDate(year, month, result.day);
     }
     
     shared Date firstOfMonth(Year year, Month month) {
@@ -67,7 +64,7 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
                     &&     dateTime.dayOfWeek == dayOfWeek;
         }
         
-        value initial = date(year, month, 1);
+        value initial = newDate(year, month, 1);
         
         "onDateOrAfter should always be a valid day for the month"
         assert(exists result = initial.rangeTo(initial.withDay(month.numberOfDays(initial.leapYear))).find(matchesDayOfWeekAndDay));
@@ -89,12 +86,13 @@ shared class OnLastOfMonth(dayOfWeek) extends OnDay() {
         }
         return false;
     }
-    shared actual Boolean matches(Date date) {
-        return date >= lastOfMonth(date.year, date.month);
+    shared actual Date date(Year year, Month month) {
+        value result = lastOfMonth(year, month);
+        return newDate(year, month, result.day);
     }
     
     shared Date lastOfMonth(Year year, Month month) {
-        value initial = date(year, month, 1);
+        value initial = newDate(year, month, 1);
 
         Date? result =
                 initial.rangeTo(initial.withDay(initial.month.numberOfDays(initial.leapYear)))
