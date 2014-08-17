@@ -37,6 +37,35 @@ import ceylon.time.timezone.model {
 	Rule
 }
 
+//Sample of more simple and correct tests:
+//shared test void parseSimpleRuleLine() {
+//	assertEquals(parseRule("Rule    Brazil    1931    only    -    Oct     3    11:00    1:00    S"),
+//		Rule("Brazil", 1931, 1931, October, OnFixedDay(3), AtLocalTime(11, 00), Period{minutes=1}, "S"));
+//}
+
+//shared test void onFixedDayRuleProducesFixedDate() {
+//	// This assumes my new designed proposed earlier
+//	assert(OnFixedDate(3).date(1984, October) == Date(1984, October, 3));
+//}
+
+//"Last Sunday of February 2004 is February, 29th 2004"
+//assert(OnLastOfMonth(Sunday).date(2004, February) == Date(2004, February, 29));
+//
+//"Last Sunday of February 2014 is February, 23th 2014"
+//assert(OnLastOfMonth(Sunday).date(2014, February) == Date(2014, February, 23));
+//
+//"First Sunday on or after 15th of 2004 is February, 15. 2004"
+//assert(OnFirstOfMonth(Saturday, 15).date(2004, February) == Date(2004, February, 15));
+//
+//"First Sunday on or after 15th of February 2012 is February, 19th 2012"
+//assert(OnFirstOfMonth(Saturday, 15).date(2014, February) == Date(2012, February, 19));
+//
+//"First Sunday on or after 15th of February 2012 is February, 19th 2012"
+//assert(OnFirstOfMonth(Saturday, 15).date(2014, February) == Date(2012, February, 19));
+//
+//"First Sunday on or after 28 of February is March, 4th 2012"
+//assert(OnFirstOfMonth(Saturday, 28).date(2012, February) == Date(2012, March, 4));
+
 List<Rule>? brazilRules = provider.rules.get("Brazil");
 List<Rule>? falkRules = provider.rules.get("Falk");
 List<Rule>? chileRules = provider.rules.get("Chile");
