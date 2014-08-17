@@ -27,12 +27,7 @@ shared class AtTime(time, timeDefinition) {
  ‘u’ stands for “UT” or “UTC” (whichever was official at the time); 
  ‘z’ stands for the nautical time zone Z (a.k.a. “Zulu” which, in turn, stands for ‘Z’). 
  The time can also be suffixed with ‘w’ meaning “wall clock time;” 
- but it usually isn’t because that’s the default.
- 
- All the models are intended to be unrelated of the database origin.
- 
- P.S.: Its not intended to be used outside of ceylon.time and currently
- its as shared because we need to test it."
+ but it usually isn’t because that’s the default."
 shared abstract class AtTimeDefinition() 
         of   standardTimeDefinition | utcTimeDefinition | wallClockDefinition {
 }
