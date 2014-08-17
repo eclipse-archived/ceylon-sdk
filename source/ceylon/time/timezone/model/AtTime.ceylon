@@ -2,12 +2,6 @@ import ceylon.time {
     Time
 }
 
-"Model that represents the AtTime rules.
- 
- All the models are intended to be unrelated of the database origin.
- 
- P.S.: Its not intended to be used outside of ceylon.time and currently
- its as shared because we need to test it."
 shared class AtTime(time, timeDefinition) {
     
     shared Time time;

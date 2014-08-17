@@ -10,12 +10,6 @@ import ceylon.time {
 "Alias to represent a specific day."
 shared alias DayOfMonth => Integer;
 
-"Model to represent OnDay rules.
- 
- All the models are intended to be unrelated of the database origin.
- 
- P.S.: Its not intended to be used outside of ceylon.time and currently
- its as shared because we need to test it."
 shared abstract class OnDay() of OnFixedDay | OnFirstOfMonth | OnLastOfMonth {
 
     "True, if the provided date matches the given rule"
@@ -28,12 +22,7 @@ shared abstract class OnDay() of OnFixedDay | OnFirstOfMonth | OnLastOfMonth {
  * 15
  * 30
  
- All them without day of week and comparison.
- 
- All the models are intended to be unrelated of the database origin.
- 
- P.S.: Its not intended to be used outside of ceylon.time and currently
- its as shared because we need to test it."
+ All them without day of week and comparison."
 shared class OnFixedDay(fixedDate) extends OnDay() {
     shared DayOfMonth fixedDate;
     
@@ -53,12 +42,7 @@ shared class OnFixedDay(fixedDate) extends OnDay() {
 "Represents a day equal or higher than a day of week, for example:
  * Sun>=1
  * Sun>=9
- * Sat>=25
- 
- All the models are intended to be unrelated of the database origin.
- 
- P.S.: Its not intended to be used outside of ceylon.time and currently
- its as shared because we need to test it."
+ * Sat>=25"
 shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
     
     shared DayOfWeek dayOfWeek;
@@ -94,12 +78,7 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
 
 "Represents the last day of week, for example:
  * lastSun
- * lastSat
- 
- All the models are intended to be unrelated of the database origin.
- 
- P.S.: Its not intended to be used outside of ceylon.time and currently
- its as shared because we need to test it."
+ * lastSat"
 shared class OnLastOfMonth(dayOfWeek) extends OnDay() {
     
     shared DayOfWeek dayOfWeek;
