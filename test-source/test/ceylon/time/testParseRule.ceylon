@@ -18,8 +18,8 @@ import ceylon.time.timezone.model {
     OnFixedDay,
     OnFirstOfMonth,
     Rule,
-	AtWallClockTime,
-	AtUtcTime
+    AtWallClockTime,
+    AtUtcTime
 }
 import ceylon.time.timezone.parser {
     parseRuleLine
