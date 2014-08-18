@@ -93,6 +93,7 @@
         <module name="test.ceylon.interop.java"/>
         <module name="test.ceylon.unicode"/>
         <module name="test.ceylon.html"/>
+        <module name="test.ceylon.locale"/>
     </moduleset>
     
     <moduleset id="modules.test.js">
@@ -101,6 +102,7 @@
         <module name="test.ceylon.html"/>
         <module name="test.ceylon.json"/>
         <module name="test.ceylon.time"/>
+        <module name="test.ceylon.locale"/>
     </moduleset>
     
     <target name="clean"
