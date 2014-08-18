@@ -57,21 +57,16 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
     }
     
     shared actual Date date(Year year, Month month) {
-        value result = firstOfMonth(year, month);
-        return newDate(year, month, result.day);
-    }
-    
-    shared Date firstOfMonth(Year year, Month month) {
-        Boolean matchesDayOfWeekAndDay(Date dateTime) {
-            return         dateTime.day >= onDateOrAfter
-                    &&     dateTime.dayOfWeek == dayOfWeek;
-        }
-        
         value initial = newDate(year, month, onDateOrAfter);
         
         "onDateOrAfter should always be a valid day for the month"
         assert(exists result = initial.rangeTo(initial.withDay(month.numberOfDays(initial.leapYear))).find(matchesDayOfWeekAndDay));
         return result;
+    }
+    
+    Boolean matchesDayOfWeekAndDay(Date dateTime) {
+        return         dateTime.day >= onDateOrAfter
+                &&     dateTime.dayOfWeek == dayOfWeek;
     }
     
 }
@@ -90,11 +85,6 @@ shared class OnLastOfMonth(dayOfWeek) extends OnDay() {
         return false;
     }
     shared actual Date date(Year year, Month month) {
-        value result = lastOfMonth(year, month);
-        return newDate(year, month, result.day);
-    }
-    
-    shared Date lastOfMonth(Year year, Month month) {
         value initial = newDate(year, month, month.numberOfDays(gregorian.leapYear(year)));
         
         Date? result =
@@ -104,5 +94,5 @@ shared class OnLastOfMonth(dayOfWeek) extends OnDay() {
         
         return result;
     }
-    
+
 }
