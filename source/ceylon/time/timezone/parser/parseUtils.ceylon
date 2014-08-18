@@ -8,14 +8,15 @@ import ceylon.time.base {
 import ceylon.time.timezone.model {
     AtTime,
     OnDay,
-    AtTimeDefinition,
-    wallClockDefinition,
     OnFirstOfMonth,
     OnFixedDay,
     OnLastOfMonth,
-    standardTimeDefinition,
-    utcTimeDefinition,
-    DayOfMonth
+    DayOfMonth,
+	AtLocalMeanTime,
+	AtUtcTime,
+	AtNauticalTime,
+	AtGmtTime,
+	AtWallClockTime
 }
 import ceylon.time {
     Time,
@@ -47,16 +48,16 @@ shared Month parseMonth(String month) {
     return currentMonth;
 }
 
-[Time, Signal, AtTimeDefinition] parseTime(String atTime) {
+[AtTime, Signal] parseTime(String atTime) {
     if( atTime.equals("-") ) {
-        return [time(0, 0), 1, wallClockDefinition];
+        return [AtWallClockTime(time(0, 0)), 1];
     }
     value signal = atTime.startsWith("-") then -1 else 1;
     value position = atTime.startsWith("-") then 1 else 0;
     
     if(! atTime.firstOccurrence(':') exists ) {
         assert(exists hours = parseInteger(atTime.spanFrom(position)));
-        return [adjustToEndOfDayIfNecessary(hours, 0), signal, wallClockDefinition];
+        return [AtWallClockTime(adjustToEndOfDayIfNecessary(hours, 0)), signal];
     }
     
     value indexes = atTime.indexesWhere(':'.equals).sequence();
@@ -65,23 +66,23 @@ shared Month parseMonth(String month) {
     assert( exists hours = parseInteger(atTime.span(position, firstIndex-1)));
     assert( exists minutes = parseInteger(atTime.span(firstIndex +1,firstIndex  + 2 )));
     variable value partialTime = adjustToEndOfDayIfNecessary( hours, minutes ); 
-    AtTimeDefinition ruleDefinition;
+    AtTime ruleDefinition;
     if( indexes.size == 1 ) {
-        ruleDefinition = parseAtTimeDefinition(atTime.spanFrom(firstIndex + 3));
+        ruleDefinition = atTimeDefinition(partialTime, atTime.spanFrom(firstIndex + 3));
     } else {
         assert( exists secondIndex = indexes[1] );  
         assert( exists seconds = parseInteger(atTime.span(secondIndex + 1 ,secondIndex  + 2 ))); 
         
         partialTime = partialTime.plusSeconds(seconds);   
-        ruleDefinition = parseAtTimeDefinition(atTime.spanFrom(secondIndex + 3));
+        ruleDefinition = atTimeDefinition(partialTime, atTime.spanFrom(secondIndex + 3));
     }
     
-    return [partialTime, signal, ruleDefinition ];
+    return [ruleDefinition, signal];
 }
 
 shared AtTime parseAtTime(String token) {
     value result = parseTime(token);
-    return AtTime(result[0], result[2]);
+    return result[0];
 }
 
 shared OnDay parseOnDay(String token) {
@@ -110,19 +111,25 @@ Time adjustToEndOfDayIfNecessary(Integer hours, Integer minutes) {
     return time( hours, minutes );
 }
 
-shared AtTimeDefinition parseAtTimeDefinition(String token) {
+shared AtTime atTimeDefinition(Time time, String token) {
     switch (token)
     case("s", "S") {
-        return standardTimeDefinition;
+        return AtLocalMeanTime(time);
     }
-    case("g", "G", "u", "U", "z", "Z") {
-        return utcTimeDefinition;
+    case("u", "U") {
+        return AtUtcTime(time);
+    }
+    case("z", "Z") {
+        return AtNauticalTime(time);
+    }
+    case("g", "G") {
+        return AtGmtTime(time);
     }
     case("w", "W") {
-        return wallClockDefinition;
+        return AtWallClockTime(time);
     } 
     else {
-        return wallClockDefinition;
+        return AtWallClockTime(time);
     }
 }
 
@@ -153,12 +160,12 @@ DayOfWeek findDayOfWeek(String dayOfWeek) {
  
  P.S.: This is a good case to add this feature to Time. something like:
        time(1,0).period"
-Period toPeriod([Time, Signal, AtTimeDefinition] time) {
+Period toPeriod([AtTime, Signal] time) {
     return Period {
-        hours = time[0].hours * time[1];
-        minutes = time[0].minutes * time[1];
-        seconds = time[0].seconds * time[1];
-        milliseconds = time[0].milliseconds * time[1];
+        hours = time[0].time.hours * time[1];
+        minutes = time[0].time.minutes * time[1];
+        seconds = time[0].time.seconds * time[1];
+        milliseconds = time[0].time.milliseconds * time[1];
     };
 }
 

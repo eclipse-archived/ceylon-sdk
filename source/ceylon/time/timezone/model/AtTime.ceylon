@@ -2,23 +2,6 @@ import ceylon.time {
     Time
 }
 
-shared class AtTime(time, timeDefinition) {
-    
-    shared Time time;
-    shared AtTimeDefinition timeDefinition;
-    
-    shared actual Boolean equals(Object other) {
-        if(is AtTime other) {
-            return time == other.time 
-                    && timeDefinition == other.timeDefinition;
-        }
-        return false;
-    }
-    
-    string => "time: '``time``', timeDefinition: '``timeDefinition``'";
-    
-}
-
 "First, the time that something happens (in the AT column) is not necessarily the local wall clock time. 
  
  The time can be suffixed with ‘s’ (for “standard”) to mean local standard time (different from wall clock time when observing daylight saving time); 
@@ -28,10 +11,26 @@ shared class AtTime(time, timeDefinition) {
  ‘z’ stands for the nautical time zone Z (a.k.a. “Zulu” which, in turn, stands for ‘Z’). 
  The time can also be suffixed with ‘w’ meaning “wall clock time;” 
  but it usually isn’t because that’s the default."
-shared abstract class AtTimeDefinition() 
-        of   standardTimeDefinition | utcTimeDefinition | wallClockDefinition {
+shared abstract class AtTime(time, letter) of AtWallClockTime | AtLocalMeanTime
+                           		| AtGmtTime | AtUtcTime | AtNauticalTime {
+    
+    shared Time time;
+    shared String letter;
+    
+    shared actual Boolean equals(Object other) {
+        if(is AtTime other) {
+            return time == other.time 
+                    && letter == other.letter;
+        }
+        return false;
+    }
+    
+    string => "time: '``time``', letter: '``letter``'";
+    
 }
 
-shared object standardTimeDefinition extends AtTimeDefinition(){}
-shared object utcTimeDefinition extends AtTimeDefinition(){}
-shared object wallClockDefinition extends AtTimeDefinition(){}
+shared class AtWallClockTime(Time time) extends AtTime(time, "u"){}
+shared class AtLocalMeanTime(Time time) extends AtTime(time, "s"){}
+shared class AtGmtTime(Time time) extends AtTime(time, "g"){}
+shared class AtUtcTime(Time time) extends AtTime(time, "u"){}
+shared class AtNauticalTime(Time time) extends AtTime(time, "z"){}

@@ -14,13 +14,12 @@ import ceylon.test {
     assertEquals
 }
 import ceylon.time.timezone.model {
-    wallClockDefinition,
-    AtTime,
-    utcTimeDefinition,
     OnLastOfMonth,
     OnFixedDay,
     OnFirstOfMonth,
-    Rule
+    Rule,
+	AtWallClockTime,
+	AtUtcTime
 }
 import ceylon.time.timezone.parser {
     parseRuleLine
@@ -31,22 +30,22 @@ shared test void parseSimpleRuleLine() {
     variable value rule = parseRuleLine("Rule    Brazil    1931    only    -    Oct     3    11:00    1:00    S");
     assertEquals(rule[0], "Brazil");
     assertEquals(rule[1],
-        Rule(1931, 1931, october, OnFixedDay(3), AtTime(newTime(11,0), wallClockDefinition), Period{hours=1;}, "S"));
+        Rule(1931, 1931, october, OnFixedDay(3), AtWallClockTime(newTime(11,0)), Period{hours=1;}, "S"));
     
     rule = parseRuleLine("Rule    Brazil    2013    2014    -    Feb    Sun>=15    0:00    0    -");
     assertEquals(rule[0], "Brazil");
     assertEquals(rule[1],
-        Rule(2013, 2014, february, OnFirstOfMonth(sunday, 15), AtTime(newTime(0,0), wallClockDefinition), Period(), "-"));
+        Rule(2013, 2014, february, OnFirstOfMonth(sunday, 15), AtWallClockTime(newTime(0,0)), Period(), "-"));
     
     rule = parseRuleLine("Rule    Chile    1987    only    -    Apr    12    3:00u    0    -");
     assertEquals(rule[0], "Chile");
     assertEquals(rule[1],
-        Rule(1987, 1987, april, OnFixedDay(12), AtTime(newTime(3,0), utcTimeDefinition), Period(), "-"));
+        Rule(1987, 1987, april, OnFixedDay(12), AtUtcTime(newTime(3,0)), Period(), "-"));
     
     rule = parseRuleLine("Rule    Falk    1984    1985    -    Apr    lastSun    0:00    0    -");
     assertEquals(rule[0], "Falk");
     assertEquals(rule[1],
-        Rule(1984, 1985, april, OnLastOfMonth(sunday), AtTime(newTime(0,0), wallClockDefinition), Period(), "-"));
+        Rule(1984, 1985, april, OnLastOfMonth(sunday), AtWallClockTime(newTime(0,0)), Period(), "-"));
 }
 
 shared test void onFixedDayRuleProducesFixedDate() {
