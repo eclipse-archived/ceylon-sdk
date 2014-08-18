@@ -64,7 +64,7 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
                     &&     dateTime.dayOfWeek == dayOfWeek;
         }
         
-        value initial = newDate(year, month, 1);
+        value initial = newDate(year, month, onDateOrAfter);
         
         "onDateOrAfter should always be a valid day for the month"
         assert(exists result = initial.rangeTo(initial.withDay(month.numberOfDays(initial.leapYear))).find(matchesDayOfWeekAndDay));

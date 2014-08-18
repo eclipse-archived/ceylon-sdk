@@ -2,7 +2,8 @@ import ceylon.time.base {
     october,
     february,
     sunday,
-    april
+    april,
+	january
 }
 import ceylon.time {
     Period,
@@ -61,4 +62,9 @@ shared test void onLastOfMonthDayRuleProducesLastOfMonthDate() {
     assertEquals(OnLastOfMonth(sunday).date(1983, april), date(1983, april, 24));
     assertEquals(OnLastOfMonth(sunday).date(1984, april), date(1984, april, 29));
     assertEquals(OnLastOfMonth(sunday).date(2004, february), date(2004, february, 29));
+}
+
+shared test void testFirstOfMonth() {
+    assertEquals(OnFirstOfMonth(sunday, 15).firstOfMonth(2013, january), date(2013, january, 20));
+    assertEquals(OnFirstOfMonth(sunday, 9).firstOfMonth(2014, january), date(2014, january, 12));
 }
