@@ -6,6 +6,9 @@ import ceylon.time {
     Date,
     newDate = date
 }
+import ceylon.time.chronology {
+	gregorian
+}
 
 "Alias to represent a specific day."
 shared alias DayOfMonth => Integer;
@@ -92,11 +95,11 @@ shared class OnLastOfMonth(dayOfWeek) extends OnDay() {
     }
     
     shared Date lastOfMonth(Year year, Month month) {
-        value initial = newDate(year, month, 1);
+        value initial = newDate(year, month, month.numberOfDays(gregorian.leapYear(year)));
         
         Date? result =
-                initial.rangeTo(initial.withDay(initial.month.numberOfDays(initial.leapYear)))
-                .findLast((Date element) => element.dayOfWeek == dayOfWeek);
+                initial.rangeTo(initial.withDay(1))
+                .find((Date element) => element.dayOfWeek == dayOfWeek);
         assert(exists result);
         
         return result;

@@ -68,3 +68,8 @@ shared test void testFirstOfMonth() {
     assertEquals(OnFirstOfMonth(sunday, 15).firstOfMonth(2013, january), date(2013, january, 20));
     assertEquals(OnFirstOfMonth(sunday, 9).firstOfMonth(2014, january), date(2014, january, 12));
 }
+
+shared test void testLastOfMonth() {
+    assertEquals(OnLastOfMonth(sunday).lastOfMonth(2013, january), date(2013, january, 27));
+    assertEquals(OnLastOfMonth(sunday).lastOfMonth(2014, january), date(2014, january, 26));
+}
