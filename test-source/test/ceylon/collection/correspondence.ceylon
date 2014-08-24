@@ -89,17 +89,17 @@ shared interface CorrespondenceTests {
     }
     
     test shared void testItems() {
-        assertEquals(createCorrespondence({}).items{}, []);
-        assertEquals(createCorrespondence({"a"}).items{}, []);
-        assertEquals(createCorrespondence({}).items{0}, [null]);
-        assertEquals(createCorrespondence({}).items{1}, [null]);
-        assertEquals(createCorrespondence({}).items{-1}, [null]);
-        assertEquals(createCorrespondence({"a"}).items{0}, ["a"]);
-        assertEquals(createCorrespondence({"a"}).items{0, 1}, ["a", null]);
-        assertEquals(createCorrespondence({"a"}).items{-1, 1}, [null, null]);
-        assertEquals(createCorrespondence({"a"}).items{-10, 0, 1}, [null, "a", null]);
-        assertEquals(createCorrespondence({"a", "b", "c"}).items{0, 1}, ["a", "b"]);
-        assertEquals(createCorrespondence((0:10).map(Object.string)).items(0:10), (0:10).map(Object.string).sequence());
+        assertEquals(createCorrespondence({}).getAll{}, []);
+        assertEquals(createCorrespondence({"a"}).getAll{}, []);
+        assertEquals(createCorrespondence({}).getAll{0}, [null]);
+        assertEquals(createCorrespondence({}).getAll{1}, [null]);
+        assertEquals(createCorrespondence({}).getAll{-1}, [null]);
+        assertEquals(createCorrespondence({"a"}).getAll{0}, ["a"]);
+        assertEquals(createCorrespondence({"a"}).getAll{0, 1}, ["a", null]);
+        assertEquals(createCorrespondence({"a"}).getAll{-1, 1}, [null, null]);
+        assertEquals(createCorrespondence({"a"}).getAll{-10, 0, 1}, [null, "a", null]);
+        assertEquals(createCorrespondence({"a", "b", "c"}).getAll{0, 1}, ["a", "b"]);
+        assertEquals(createCorrespondence((0:10).map(Object.string)).getAll(0:10), (0:10).map(Object.string).sequence());
     }
     
 }

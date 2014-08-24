@@ -19,7 +19,7 @@ test void insertTests() {
     print(keys[0]);
     if (exists k=keys[0]) {
         assertEquals(1, k.size);
-        if (is Integer v=k.values.first) {
+        if (is Integer v=k.items.first) {
             assertTrue(v>0);
         } else { fail("No key!!!"); }
     } else { fail("No insertion keys!"); }

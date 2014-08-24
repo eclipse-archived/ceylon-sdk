@@ -531,7 +531,7 @@ shared class Sql(newConnection) {
             assert(exists row = rows[0], 
                    rows.size == 1, 
                    row.size == 1, 
-                   is Value v = row.values.first);
+                   is Value v = row.items.first);
             return v;
         }        
         

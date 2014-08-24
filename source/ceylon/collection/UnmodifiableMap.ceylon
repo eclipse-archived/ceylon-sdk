@@ -15,7 +15,7 @@ class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
     size => map.size;
     
     keys => map.keys;
-    values = map.values;
+    items = map.items;
     
     equals(Object that) => map.equals(that);    
     hash => map.hash;

@@ -13,7 +13,7 @@ test void batchUpdateTest() {
     }
     
     value count = sql.Select("SELECT COUNT(*) FROM test1")
-            .execute()[0]?.values?.first;
+            .execute()[0]?.items?.first;
     assert (is Integer count, count == 10);
     
     value count2 = sql.Select("SELECT COUNT(*) FROM test1")

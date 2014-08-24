@@ -127,7 +127,7 @@ shared test void testMap2(){
     map.put("login", "ceylon");
     assertEquals(5, map.size);
     assertEquals(5, map.keys.size);
-    assertEquals(5, map.values.size);
+    assertEquals(5, map.items.size);
 }
 
 shared test void testMapDefines() {
