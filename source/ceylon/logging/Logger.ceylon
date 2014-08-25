@@ -15,15 +15,15 @@ shared alias Category => Module|Package;
  [[topic|category]]. A `Logger` instance for a [[Category]] 
  may be obtained by invoking [[logger]].
  
-     Logger logger = logger(`module org.hibernate`);
+     Logger log = logger(`module org.hibernate`);
  
  Each `Logger` has a [[priority]]. Log messages with a 
  priority lower than the current priority of the `Logger` 
  will not be sent.
  
-     logger.priority = warn;
-     logger.info(\"hello\"); //not sent
-     logger.error(\"sos\"); //sent"
+     log.priority = warn;
+     log.info(\"hello\"); //not sent
+     log.error(\"sos\"); //sent"
 see (`value logger`)
 shared interface Logger {
     
