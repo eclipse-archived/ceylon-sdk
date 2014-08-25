@@ -1,4 +1,4 @@
-package ceylon.interop.java;
+package ceylon.interop.java.internal;
 
 import ceylon.language.Array;
 import ceylon.language.AssertionError;

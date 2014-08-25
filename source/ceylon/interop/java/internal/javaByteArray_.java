@@ -1,4 +1,4 @@
-package ceylon.interop.java;
+package ceylon.interop.java.internal;
 
 import ceylon.language.Array;
 import ceylon.language.AssertionError;
@@ -29,11 +29,13 @@ public final class javaByteArray_ {
      */
     public static byte[] javaByteArray(@SuppressWarnings("rawtypes") @Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Byte>|ceylon.language::Array<java.lang::Byte>") 
-    Array array){
-        if (array.toArray() instanceof byte[]){
-            return (byte[]) array.toArray();
+    Object array){
+        @SuppressWarnings("rawtypes")
+        Object a = ((Array) array).toArray();
+        if (a instanceof byte[]){
+            return (byte[]) a;
         }
-        throw new AssertionError("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+a);
     }
 
 }

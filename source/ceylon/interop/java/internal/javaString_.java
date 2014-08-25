@@ -1,4 +1,4 @@
-package ceylon.interop.java;
+package ceylon.interop.java.internal;
 
 import ceylon.language.DocAnnotation$annotation$;
 import ceylon.language.SharedAnnotation$annotation$;

@@ -1,4 +1,6 @@
 import java.lang {
+    Char=Character,
+    Bool=Boolean,
     Bits=Byte,
     Short,
     Int=Integer,
@@ -13,8 +15,72 @@ import java.lang {
     IntArray,
     LongArray,
     ObjectArray,
-    BooleanArray
+    BooleanArray,
+    CharArray
 }
+
+import ceylon.interop.java.internal {
+    booleanArray=javaBooleanArray,
+    byteArray=javaByteArray,
+    charArray=javaCharArray,
+    doubleArray=javaDoubleArray,
+    floatArray=javaFloatArray,
+    intArray=javaIntArray,
+    longArray=javaLongArray,
+    shortArray=javaShortArray,
+    objectArray=javaObjectArray,
+    stringArray=javaStringArray
+}
+
+"The Java `boolean[]` array underyling the given Ceylon 
+ [[array]]."
+shared BooleanArray javaBooleanArray(Array<Boolean>|Array<Bool> array)
+        => booleanArray(array);
+
+"The Java `byte[]` array underyling the given Ceylon 
+ [[array]]."
+shared ByteArray javaByteArray(Array<Byte>|Array<Bits> array)
+        => byteArray(array);
+
+"The Java `short[]` array underyling the given Ceylon 
+ [[array]]."
+shared ShortArray javaShortArray(Array<Short> array)
+        => shortArray(array);
+
+"The Java `int[]` array underyling the given Ceylon 
+ [[array]]."
+shared IntArray javaIntArray(Array<Character>|Array<Int> array)
+        => intArray(array);
+
+"The Java `long[]` array underyling the given Ceylon 
+ [[array]]."
+shared LongArray javaLongArray(Array<Integer>|Array<Long> array)
+        => longArray(array);
+
+"The Java `float[]` array underyling the given Ceylon 
+ [[array]]."
+shared FloatArray javaFloatArray(Array<Single> array)
+        => floatArray(array);
+
+"The Java `double[]` array underyling the given Ceylon 
+ [[array]]."
+shared DoubleArray javaDoubleArray(Array<Float>|Array<Double> array)
+        => doubleArray(array);
+
+"The Java `char[]` array underyling the given Ceylon 
+ [[array]]."
+shared CharArray javaCharArray(Array<Char> array)
+        => charArray(array);
+
+"The Java object array underyling the given Ceylon 
+ [[array]]."
+shared ObjectArray<Element> javaObjectArray<Element>(Array<Element?> array)
+        => objectArray(array);
+
+"The Java `String[]` array underyling the given Ceylon 
+ [[array]]."
+shared ObjectArray<JavaString> javaStringArray(Array<String> array)
+        => stringArray(array);
 
 "An array whose elements can be represented as an 
  `Array<Integer>`."

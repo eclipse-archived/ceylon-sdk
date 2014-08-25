@@ -1,4 +1,4 @@
-package ceylon.interop.java;
+package ceylon.interop.java.internal;
 
 import ceylon.language.Array;
 import ceylon.language.AssertionError;
@@ -29,11 +29,13 @@ public final class javaLongArray_ {
      */
     public static long[] javaLongArray(@SuppressWarnings("rawtypes") @Name("array")
     @TypeInfo("ceylon.language::Array<ceylon.language::Integer>|ceylon.language::Array<java.lang::Long>") 
-    Array array){
-        if(array.toArray() instanceof long[]){
-            return (long[]) array.toArray();
+    Object array){
+        @SuppressWarnings("rawtypes")
+        Object a = ((Array) array).toArray();
+        if(a instanceof long[]){
+            return (long[]) a;
         }
-        throw new AssertionError("Invalid source array type: "+array.toArray());
+        throw new AssertionError("Invalid source array type: "+a);
     }
 
 }
