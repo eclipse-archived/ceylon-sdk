@@ -14,7 +14,8 @@ shared class CeylonSet<Element>(JSet<Element> set)
     
     iterator() => CeylonIterator(set.iterator());
     
-    shared actual Set<Element> complement<Other>(Set<Other> set)
+    shared actual Set<Element> 
+            complement<Other>(Set<Other> set)
             given Other satisfies Object {
         value complement = HashSet<Element>();
         for (e in this) {
@@ -25,7 +26,8 @@ shared class CeylonSet<Element>(JSet<Element> set)
         return CeylonSet(complement);
     }
     
-    shared actual Set<Element|Other> exclusiveUnion<Other>(Set<Other> set)
+    shared actual Set<Element|Other> 
+            exclusiveUnion<Other>(Set<Other> set)
             given Other satisfies Object {
         value exclusiveUnion = HashSet<Element|Other>();
         for (e in this) {
@@ -41,7 +43,8 @@ shared class CeylonSet<Element>(JSet<Element> set)
         return CeylonSet(exclusiveUnion);
     }
     
-    shared actual Set<Element&Other> intersection<Other>(Set<Other> set)
+    shared actual Set<Element&Other> 
+            intersection<Other>(Set<Other> set)
             given Other satisfies Object {
         value intersection = HashSet<Element&Other>();
         for (e in this) {
@@ -52,7 +55,8 @@ shared class CeylonSet<Element>(JSet<Element> set)
         return CeylonSet(intersection);
     }
     
-    shared actual Set<Element|Other> union<Other>(Set<Other> set)
+    shared actual Set<Element|Other> 
+            union<Other>(Set<Other> set)
             given Other satisfies Object {
         value union = HashSet<Element|Other>();
         for (e in this) {
@@ -72,7 +76,8 @@ shared class CeylonSet<Element>(JSet<Element> set)
     
     clone() => CeylonSet(HashSet(set));
     
-    equals(Object that) => (super of Set<Element>).equals(that);
+    equals(Object that) 
+            => (super of Set<Element>).equals(that);
     
     hash => (super of Set<Element>).hash;
     
