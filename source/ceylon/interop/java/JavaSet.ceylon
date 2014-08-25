@@ -1,5 +1,13 @@
 import java.util {
-    AbstractSet
+    AbstractSet,
+    Collection
+}
+import ceylon.collection {
+    MutableSet
+}
+import java.lang {
+    UnsupportedOperationException,
+    IllegalArgumentException
 }
 
 "A Java [[java.util::Set]] that wraps a Ceylon [[Set]]. This 
@@ -13,5 +21,73 @@ shared class JavaSet<E>(Set<E> set)
     iterator() => JavaIterator<E>(set.iterator());
     
     size() => set.size;
+    
+    shared actual Boolean add(E? e) {
+        if (exists e) {
+            if (is MutableSet<E> set) {
+                return set.add(e);
+            }
+            else {
+                throw UnsupportedOperationException("not a mutable set");
+            }
+        }
+        else {
+            throw IllegalArgumentException("set may not have null elements");
+        }
+    }
+    
+    shared actual Boolean remove(Object? e) {
+        if (is E e) {
+            if (is MutableSet<E> set) {
+                return set.remove(e);
+            }
+            else {
+                throw UnsupportedOperationException("not a mutable set");
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual Boolean removeAll(Collection<out Object> collection) {
+        if (is MutableSet<E> set) {
+            variable Boolean result = false;
+            for (e in CeylonIterable(collection)) {
+                if (is E e, set.remove(e)) {
+                    result = true;
+                }
+            }
+            return result;
+        }
+        else {
+            throw UnsupportedOperationException("not a mutable set");
+        }
+    }
+    
+    shared actual Boolean retainAll(Collection<out Object> collection) {
+        if (is MutableSet<E> set) {
+            variable Boolean result = false;
+            for (e in set.clone()) { //TODO: is the clone really necessary?
+                if (!collection.contains(e)) {
+                    set.remove(e);
+                    result = true;
+                }
+            }
+            return result;
+        }
+        else {
+            throw UnsupportedOperationException("not a mutable set");
+        }
+    }
+    
+    shared actual void clear() {
+        if (is MutableSet<E> set) {
+            set.clear();
+        }
+        else {
+            throw UnsupportedOperationException("not a mutable set");
+        }
+    }
     
 }

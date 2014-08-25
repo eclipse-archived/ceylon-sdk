@@ -3,12 +3,12 @@ import ceylon.collection {
 }
 
 import java.util {
-    JavaMap=Map,
+    JMap=Map,
     HashMap
 }
 
 "A Ceylon [[Map]] that wraps a [[java.util::Map]]."
-shared class CeylonMap<Key, Item>(JavaMap<Key, Item> map) 
+shared class CeylonMap<Key, Item>(JMap<Key, Item> map) 
         satisfies MutableMap<Key, Item> 
         given Key satisfies Object 
         given Item satisfies Object {

@@ -1,5 +1,10 @@
+import ceylon.collection {
+    MutableMap
+}
+
 import java.lang {
-    UnsupportedOperationException
+    UnsupportedOperationException,
+    IllegalArgumentException
 }
 import java.util {
     JSet=Set,
@@ -10,7 +15,7 @@ import java.util {
     }
 }
 
-class JavaEntry<K,V>(Entry<K,V> entry) 
+class JavaEntry<K,V>(K->V entry) 
         extends Object()
         satisfies JEntry<K,V> 
         given K satisfies Object 
@@ -62,4 +67,40 @@ shared class JavaMap<K,V>(Map<K,V> map)
         return result;
     }
     
+    shared actual V? put(K? k, V? v) {
+        if (exists k, exists v) {
+            if (is MutableMap<K,V> map) {
+                return map.put(k,v);
+            }
+            else {
+                throw UnsupportedOperationException("not a mutable map");
+            }
+        }
+        else {
+            throw IllegalArgumentException("map may not have null keys or items");
+        }
+    }
+    
+    shared actual V? remove(Object? k) {
+        if (is K k) {
+            if (is MutableMap<K,V> map) {
+                return map.remove(k);
+            }
+            else {
+                throw UnsupportedOperationException("not a mutable map");
+            }
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual void clear() {
+        if (is MutableMap<K,V> map) {
+            map.clear();
+        }
+        else {
+            throw UnsupportedOperationException("not a mutable map");
+        }
+    }
 }

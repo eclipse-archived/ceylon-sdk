@@ -3,12 +3,12 @@ import ceylon.collection {
 }
 
 import java.util {
-    JavaSet=Set,
+    JSet=Set,
     HashSet
 }
 
 "A Ceylon [[Set]] that wraps a [[java.util::Set]]."
-shared class CeylonSet<Element>(JavaSet<Element> set) 
+shared class CeylonSet<Element>(JSet<Element> set) 
         satisfies MutableSet<Element> 
         given Element satisfies Object {
     
