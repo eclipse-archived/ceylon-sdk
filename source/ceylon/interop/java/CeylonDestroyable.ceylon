@@ -1,4 +1,6 @@
-import java.lang { AutoCloseable }
+import java.lang {
+    AutoCloseable
+}
 
 "A Ceylon [[Destroyable]] that adapts an instance of Java's 
  [[AutoCloseable]], allowing it to be used as a resource in
