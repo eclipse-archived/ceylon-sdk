@@ -41,7 +41,7 @@ class JavaEntry<K,V>(Entry<K,V> entry)
 }
 
 "A Java [[java.util::Map]] that wraps a Ceylon [[Map]]. This 
- amp is unmodifiable, throwing 
+ map is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
 shared class JavaMap<K,V>(Map<K,V> map)
