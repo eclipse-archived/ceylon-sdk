@@ -7,7 +7,8 @@ import ceylon.dbc {
 }
 import ceylon.interop.java {
     toIntegerArray,
-    createJavaObjectArray
+    createJavaObjectArray,
+    javaByteArray
 }
 import ceylon.language.meta.model {
     Type
@@ -32,12 +33,16 @@ import ceylon.time.internal {
     TimeOfDay
 }
 
+import java.io {
+    ByteArrayInputStream
+}
 import java.lang {
     JBoolean=Boolean,
     JInteger=Integer,
     JLong=Long,
     JString=String,
-    ObjectArray
+    ObjectArray,
+    ByteArray
 }
 import java.math {
     BigDecimal,
@@ -172,6 +177,12 @@ shared class Sql(newConnection) {
             case(is Array<TimeOfDay>) {
                 setArray(i, argument, stmt);
             }
+            case(is ByteArray) {
+                setBinaryStream(i, argument, stmt);
+            }
+            case(is Array<Byte>) {
+                setBinaryStream(i, argument, stmt);
+            }
             //TODO reader, inputStream, byte array
             else { stmt.setObject(i,argument); }
             i++;
@@ -213,6 +224,20 @@ shared class Sql(newConnection) {
 
         stmt.setArray(position, 
             connection.get().createSqlArray(createJavaObjectArray<Object>(array), sqlArrayType));
+    }
+    
+    void setBinaryStream(Integer position, ByteArray|Array<Byte> array, PreparedStatement stmt ) {
+        ByteArray byteArray;
+        
+        switch (array)
+            case (is ByteArray) {
+                byteArray = array;
+            }
+            case (is Array<Byte>) {
+                byteArray = javaByteArray(array);
+            }
+
+        stmt.setBinaryStream(position, ByteArrayInputStream(byteArray), byteArray.size); 
     }
     
     String sqlArrayType(ObjectArray<Object> argument) {
@@ -701,6 +726,7 @@ shared class Sql(newConnection) {
             case (is SqlDate) { v = Instant(x.time).date(); }
             // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
             case (is UUID) { v = x; }
+            case (is ByteArray) {v = x.byteArray; }
             else { v = x; }
         }
 
