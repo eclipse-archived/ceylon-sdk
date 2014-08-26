@@ -22,7 +22,7 @@ shared Sql sql = Sql(newConnectionFromDataSource(createDataSource()));
 
 shared beforeTest void setup() {
     try {
-        sql.Statement("DROP TABLE test1").execute();
+        sql.Statement("DROP TABLE if exists test1").execute();
         sql.Statement("CREATE TABLE test1 (
                            row_id SERIAL PRIMARY KEY, 
                            name VARCHAR(40), 
@@ -31,7 +31,8 @@ shared beforeTest void setup() {
                            count INTEGER, 
                            price NUMERIC(10,4), 
                            a_uuid UUID,
-                           flag BOOLEAN)").execute();
+                           flag BOOLEAN,
+                           bytes BINARY)").execute();
     }
     catch (Exception ex) {
         if (!"Table \"TEST1\" already exists" in ex.message) {

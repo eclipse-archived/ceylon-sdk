@@ -26,7 +26,7 @@ test void queryTests() {
     try (r1 = q1.Results("First")) {
         assertTrue(r1.size==1, "Rows with 'First'");
         for (row in r1) {
-            assertTrue(row.size==8);
+            assertTrue(row.size==9);
         }
     }
     try (r2 = q1.Results("Second")) {
@@ -61,22 +61,25 @@ test void queryTests() {
 }
 
 test void selectSingleValue() {
-	value uuid1 = randomUUID();
-	
+    value uuid1 = randomUUID();
+    value byteArray = Array({1.byte, 2.byte, 3.byte});
+    
     sql.Insert("INSERT INTO test1(name, count, flag) VALUES (?, ?, ?)").execute("a", 1, true);
     sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("b", 2);
     sql.Insert("INSERT INTO test1(name, count) VALUES (?, ?)").execute("c", 3);
     sql.Insert("INSERT INTO test1(name, count, a_uuid) VALUES (?, ?, ?)")
             .execute("c", 4, uuid1);
+    sql.Insert("INSERT INTO test1(name, count, bytes) VALUES (?, ?, ?)")
+            .execute("d", 5, byteArray);
     
     value count = sql.Select("SELECT COUNT(*) FROM test1").singleValue<Integer>();
-    assert(count == 4);
+    assert(count == 5);
     
     value min = sql.Select("SELECT MIN(count) FROM test1").singleValue<Number<Integer>>();
     assert(min == 1);
     
     value max = sql.Select("SELECT MAX(count) FROM test1").singleValue<Object>();
-    assert(is Integer max, max == 4);
+    assert(is Integer max, max == 5);
     
     value name = sql.Select("SELECT name FROM test1 WHERE count = ?").singleValue<String>(2);
     assert(name == "b");
@@ -86,5 +89,9 @@ test void selectSingleValue() {
 
     value uuidResult = 
             sql.Select("SELECT a_uuid FROM test1 WHERE a_uuid = ?").singleValue<UUID>(uuid1);
-    assertEquals(uuidResult, uuid1);   
+    assertEquals(uuidResult, uuid1);
+
+    value byteArrayResult = 
+            sql.Select("SELECT bytes FROM test1 WHERE name = ?").singleValue<Array<Byte>>("d");
+    assertEquals(byteArrayResult, byteArray);
 }
