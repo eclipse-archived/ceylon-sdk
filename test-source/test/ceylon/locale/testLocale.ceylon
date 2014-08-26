@@ -13,7 +13,7 @@ import ceylon.time.base {
     december
 }
 
-test void testLocale() {
+test shared void testLocale() {
     assert(exists ptBr = locale("pt-BR"));
     assert(exists ptBrCurrency = ptBr.currency);
     
