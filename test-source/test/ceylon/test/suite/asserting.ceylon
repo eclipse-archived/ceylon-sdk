@@ -196,7 +196,8 @@ shared void testAssertThatException() {
         assert(false);
     }
     catch(AssertionError e) {
-        assert(e.message == "assertion failed: expected exception without cause, but has ceylon.language.OverflowException \"Numeric overflow\"");
+        assert(e.message == "assertion failed: expected exception without cause, but has ceylon.language.OverflowException \"Numeric overflow\"" ||
+               e.message == "assertion failed: expected exception without cause, but has ceylon.language::OverflowException \"Numeric overflow\"");
     }
     
     try {
