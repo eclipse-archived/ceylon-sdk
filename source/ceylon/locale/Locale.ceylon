@@ -42,7 +42,7 @@ shared Locale? locale(String tag) {
     value filePath = tag + ".txt";
     if (exists resource = 
             localeModule.resourceByPath(filePath)) {
-        Iterator<String> lines = resource.textContent()
+        value lines = resource.textContent()
                 .lines.iterator();
         
         value languageAndCurrency = parseLanguage(lines, tag);
@@ -64,4 +64,4 @@ Module localeModule = `module ceylon.locale`;
 
 {String?*} columns(String line) => line.split('|'.equals, true, false)
         .map(String.trimmed)
-        .map((String col) => !col.empty then col);
+        .map((col) => !col.empty then col);
