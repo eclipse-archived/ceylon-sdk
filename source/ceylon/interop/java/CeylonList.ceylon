@@ -38,7 +38,7 @@ shared class CeylonList<Element>(JList<Element> list)
             => list.add(index, element);
     
     remove(Element element) 
-            => list.remove(singleton(element));
+            => list.removeAll(singleton(element));
     
     delete(Integer index) => list.remove(index);
     
