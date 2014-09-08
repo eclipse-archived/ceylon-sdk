@@ -5,7 +5,7 @@ class Cell<Element>(element, rest) {
     "The next link in the list."
     shared variable Cell<Element>? rest;
     // shallow clone
-    shared Cell<Element> clone()
+    shared default Cell<Element> clone()
             => Cell<Element>(element, rest?.clone());
 }
 

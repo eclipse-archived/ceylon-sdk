@@ -2,6 +2,8 @@ class LinkedCell<Element>(Element car, Cell<Element>? cdr, previous)
         extends Cell<Element>(car, cdr) {
     shared variable LinkedCell<Element>? next = null;
     shared variable LinkedCell<Element>? previous;
+    shared actual LinkedCell<Element> clone()
+            => LinkedCell<Element>(element, rest?.clone(), previous);
 }
 
 class LinkedCellIterator<Element>(iter) 

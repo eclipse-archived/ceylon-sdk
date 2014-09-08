@@ -354,8 +354,9 @@ shared class HashMap<Key, Item>
             }
             index++;
         }
-        clone.head = head;
-        clone.tip = tip;
+        //TODO: fix!!!
+        clone.head = head?.clone();
+        clone.tip = tip?.clone();
         return clone;
     }
     

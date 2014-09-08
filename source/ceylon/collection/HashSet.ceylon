@@ -271,8 +271,9 @@ shared class HashSet<Element>
             }
             index++;
         }
-        clone.head = head;
-        clone.tip = tip;
+        //TODO: fix!!!
+        clone.head = head?.clone();
+        clone.tip = tip?.clone();
         return clone;
     }
     
