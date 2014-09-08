@@ -514,8 +514,8 @@ shared class LinkedList<Element>(elements = {})
 
     shared actual MutableList<Element> clone() {
         value ret = LinkedList<Element>();
-        ret.head = head;
-        ret.tail = tail;
+        ret.head = head?.clone();
+        ret.tail = tail?.clone();
         ret.length = size;
         return ret;
     }
