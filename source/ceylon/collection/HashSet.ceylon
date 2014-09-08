@@ -260,20 +260,24 @@ shared class HashSet<Element>
     }
     
     shared actual HashSet<Element> clone() {
-        value clone = HashSet<Element>();
-        clone.length = length;
-        clone.store = elementStore<Element>(store.size);
-        variable Integer index = 0;
-        // walk every bucket
-        while (index < store.size) {
-            if (exists bucket = store[index]) {
-                clone.store.set(index, bucket.clone()); 
+        value clone = HashSet<Element>(stability);
+        if (stability==unlinked) {
+            clone.length = length;
+            clone.store = elementStore<Element>(store.size);
+            variable Integer index = 0;
+            // walk every bucket
+            while (index < store.size) {
+                if (exists bucket = store[index]) {
+                    clone.store.set(index, bucket.clone());
+                }
+                index++;
             }
-            index++;
         }
-        //TODO: fix!!!
-        clone.head = head?.clone();
-        clone.tip = tip?.clone();
+        else {
+            for (element in this) {
+                clone.add(element);
+            }
+        }
         return clone;
     }
     

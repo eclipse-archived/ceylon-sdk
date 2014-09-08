@@ -343,20 +343,24 @@ shared class HashMap<Key, Item>
     }
     
     shared actual MutableMap<Key,Item> clone() {
-        value clone = HashMap<Key,Item>();
-        clone.length = length;
-        clone.store = entryStore<Key,Item>(store.size);
-        variable Integer index = 0;
-        // walk every bucket
-        while (index < store.size) {
-            if (exists bucket = store[index]) {
-                clone.store.set(index, bucket.clone()); 
+        value clone = HashMap<Key,Item>(stability);
+        if (stability==unlinked) {
+            clone.length = length;
+            clone.store = entryStore<Key,Item>(store.size);
+            variable Integer index = 0;
+            // walk every bucket
+            while (index < store.size) {
+                if (exists bucket = store[index]) {
+                    clone.store.set(index, bucket.clone()); 
+                }
+                index++;
             }
-            index++;
         }
-        //TODO: fix!!!
-        clone.head = head?.clone();
-        clone.tip = tip?.clone();
+        else {
+            for (entry in this) {
+                clone.put(entry.key, entry.item);
+            }
+        }
         return clone;
     }
     

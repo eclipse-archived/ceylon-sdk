@@ -294,6 +294,12 @@ test shared void testMapClone() {
     assertEquals(map, map.clone());
     assertEquals(map.clone().size, 2);
     assertEquals(map.clone().string, "{ 1->foo, 2->bar }");
+    assertEquals([for (e in map.clone()) e], [1->"foo", 2->"bar"]);
+    value linkedMap = HashMap<Integer,String>(linked);
+    linkedMap.put(1, "foo");
+    linkedMap.put(2, "bar");
+    linkedMap.put(3, "baz");
+    assertEquals([for (e in linkedMap.clone()) e], [1->"foo", 2->"bar", 3->"baz"]);
     value tree = TreeMap { function compare(Integer x, Integer y) => x<=>y; 1->"foo", 2->"bar" };
     assertEquals(tree, tree.clone());
     assertEquals(tree.clone().size, 2);

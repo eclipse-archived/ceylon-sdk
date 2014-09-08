@@ -5,7 +5,7 @@ class Cell<Element>(element, rest) {
     "The next link in the list."
     shared variable Cell<Element>? rest;
     // shallow clone
-    shared default Cell<Element> clone()
+    shared Cell<Element> clone()
             => Cell<Element>(element, rest?.clone());
 }
 
@@ -14,7 +14,7 @@ class CellIterator<Element>(iter)
     variable Cell<Element>? iter;
     
     shared actual Element|Finished next() {
-        if(exists iter = iter){
+        if (exists iter = iter) {
             this.iter = iter.rest;
             return iter.element;
         }
