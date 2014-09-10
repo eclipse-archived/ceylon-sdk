@@ -52,9 +52,9 @@ shared class IdentityMap<Key, Item>
                     (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
-            while (index < store.size){
+            while (index < store.size) {
                 variable value bucket = store[index];
-                while (exists cell = bucket){
+                while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element.key, newStore);
                     variable value newBucket = newStore[newIndex];
@@ -80,11 +80,11 @@ shared class IdentityMap<Key, Item>
     
     // End of initialiser section
     
-    shared Item? put(Key key, Item item){
+    shared Item? put(Key key, Item item) {
         Integer index = storeIndex(key, store);
         variable value bucket = store[index];
-        while(exists cell = bucket){
-            if(cell.element.key === key){
+        while (exists cell = bucket) {
+            if (cell.element.key === key) {
                 Item oldItem = cell.element.item;
                 // modify an existing entry
                 cell.element = key->item;
@@ -101,9 +101,9 @@ shared class IdentityMap<Key, Item>
     
     "Adds a collection of key/value mappings to this map, 
      may be used to change existing mappings"
-    shared void putAll({<Key->Item>*} entries){
-        for(entry in entries){
-            if(addToStore(store, entry)){
+    shared void putAll({<Key->Item>*} entries) {
+        for (entry in entries) {
+            if (addToStore(store, entry)) {
                 length++;
             }
         }
@@ -179,10 +179,10 @@ shared class IdentityMap<Key, Item>
     }
     
     "Removes every key/value mapping"
-    shared void clear(){
+    shared void clear() {
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             store.set(index++, null);
         }
         length = 0;
@@ -193,13 +193,13 @@ shared class IdentityMap<Key, Item>
     size => length;
     
     shared actual Item? get(Key key) {
-        if(empty){
+        if (empty) {
             return null;
         }
         Integer index = storeIndex(key, store);
         variable value bucket = store[index];
-        while(exists cell = bucket){
-            if(cell.element.key === key){
+        while (exists cell = bucket) {
+            if (cell.element.key === key) {
                 return cell.element.item;
             }
             bucket = cell.rest;
@@ -211,9 +211,9 @@ shared class IdentityMap<Key, Item>
         value ret = LinkedList<Item>();
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             variable value bucket = store[index];
-            while(exists cell = bucket){
+            while (exists cell = bucket) {
                 ret.add(cell.element.item);
                 bucket = cell.rest;
             }
@@ -226,9 +226,9 @@ shared class IdentityMap<Key, Item>
         value ret = IdentitySet<Key>();
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             variable value bucket = store[index];
-            while(exists cell = bucket){
+            while (exists cell = bucket) {
                 ret.add(cell.element.key);
                 bucket = cell.rest;
             }
@@ -241,10 +241,10 @@ shared class IdentityMap<Key, Item>
         value ret = HashMap<Item,MutableSet<Key>>();
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(exists keys = ret[cell.car.item]){
+            while (exists cell = bucket) {
+                if (exists keys = ret[cell.car.item]) {
                     keys.add(cell.car.key);
                 }else{
                     value k = HashSet<Key>();
@@ -264,10 +264,10 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         variable Integer count = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(selecting(cell.element)){
+            while (exists cell = bucket) {
+                if (selecting(cell.element)) {
                     count++;
                 }
                 bucket = cell.rest;
@@ -281,9 +281,9 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         variable Integer hash = 17;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             variable value bucket = store[index];
-            while(exists cell = bucket){
+            while (exists cell = bucket) {
                 hash = hash * 31 + identityHash(cell.element.key);
                 hash = hash * 31 + cell.element.item.hash;
                 bucket = cell.rest;
@@ -294,15 +294,15 @@ shared class IdentityMap<Key, Item>
     }
     
     shared actual Boolean equals(Object that) {
-        if(is IdentityMap<Object,Object> that,
-            size == that.size){
+        if (is IdentityMap<Object,Object> that,
+            size == that.size) {
             variable Integer index = 0;
             // walk every bucket
-            while(index < store.size){
+            while (index < store.size) {
                 variable value bucket = store[index];
-                while(exists cell = bucket){
-                    if(exists item = that.get(cell.element.key)){
-                        if(item != cell.element.item){
+                while (exists cell = bucket) {
+                    if (exists item = that.get(cell.element.key)) {
+                        if (item != cell.element.item) {
                             return false;
                         }
                     }else{
@@ -323,8 +323,8 @@ shared class IdentityMap<Key, Item>
         clone.store = entryStore<Key,Item>(store.size);
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
-            if(exists bucket = store[index]){
+        while (index < store.size) {
+            if (exists bucket = store[index]) {
                 clone.store.set(index, bucket.clone()); 
             }
             index++;
@@ -335,10 +335,10 @@ shared class IdentityMap<Key, Item>
     shared actual Boolean contains(Object element) {
         variable Integer index = 0;
         // walk every bucket
-        while(index < store.size){
+        while (index < store.size) {
             variable value bucket = store[index];
-            while(exists cell = bucket){
-                if(cell.element.item == element){
+            while (exists cell = bucket) {
+                if (cell.element.item == element) {
                     return true;
                 }
                 bucket = cell.rest;
