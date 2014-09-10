@@ -192,6 +192,41 @@ shared class HashMap<Key, Item>
         return null;
     }
     
+    shared actual Boolean removeEntry(Key key, Item item) {
+        Integer index = storeIndex(key, store);
+        while (exists head = store[index], 
+            head.element.key == key) {
+            if (head.element.item==item) {
+                store.set(index,head.rest);
+                length--;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        variable value bucket = store[index];
+        while (exists cell = bucket) {
+            value rest = cell.rest;
+            if (exists rest,
+                rest.element.key == key) {
+                if (rest.element.item==item) {
+                    cell.rest = rest.rest;
+                    deleteCell(cell);
+                    length--;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                bucket = rest;
+            }
+        }
+        return false;
+    }
+    
     shared actual void clear() {
         variable Integer index = 0;
         // walk every bucket

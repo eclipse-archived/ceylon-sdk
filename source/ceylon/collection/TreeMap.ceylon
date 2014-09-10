@@ -478,7 +478,26 @@ shared class TreeMap<Key, Item>(compare, entries={})
             return null;
         }
     }
-
+    
+    shared actual Boolean removeEntry(Key key, Item item) {
+        if (exists result = lookup(key), result.item==item) {
+            Node node;
+            if (exists left=result.left,
+                exists right=result.right) {
+                // Copy key/value from predecessor and then delete it instead
+                node = left.rightmostChild;
+                result.key = node.key;
+                result.item = node.item;
+            } else {
+                node = result;
+            }
+            removeCases.removeNodeWithAtMostOneChild(node);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     shared actual {<Key->Item>*} higherEntries(Key key) {
         object iterable satisfies {<Key->Item>*} {
             iterator() => NodeIterator(floor(key));

@@ -51,6 +51,20 @@ shared interface MapMutator<in Key, in Item>
      there was no entry associated with the given `key`."
     shared formal Object? remove(Key key);
     
+    "Remove the entry associated with the given [[key]],
+     if any, only if its item is equal to the given 
+     [[item]]. Return [[true]] if an entry was removed,
+     or [[false]] otherwise."
+    shared default Boolean removeEntry(Key key, Item item) {
+        if (exists it=get(key), it==item) {
+            remove(key);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     "Remove the entries associated with the given [[keys]], 
      if any, from this map."
     shared default void removeAll({Key*} keys) {
