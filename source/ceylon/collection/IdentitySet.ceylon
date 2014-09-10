@@ -123,6 +123,16 @@ shared class IdentitySet<Element>
         return result;
     }
     
+    shared Boolean removeAll({Element*} elements) {
+        variable value result = false;
+        for (element in elements) {
+            if (remove(element)) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    
     "Removes every element"
     shared void clear(){
         variable Integer index = 0;
