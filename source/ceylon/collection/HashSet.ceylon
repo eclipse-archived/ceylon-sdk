@@ -168,6 +168,7 @@ shared class HashSet<Element>
         while (exists head = store[index], 
             head.element == element) {
             store.set(index,head.rest);
+            deleteCell(head);
             length--;
             result = true;
         }

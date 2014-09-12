@@ -172,6 +172,7 @@ shared class HashMap<Key, Item>
         while (exists head = store[index], 
             head.element.key == key) {
             store.set(index,head.rest);
+            deleteCell(head);
             length--;
             return head.element.item;
         }
