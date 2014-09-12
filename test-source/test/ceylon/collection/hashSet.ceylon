@@ -22,6 +22,15 @@ class HashSetTest() satisfies MutableSetTests & InsertionOrderIterableTests {
         assertEquals(set.rest.first, "B");
         assertEquals(set.rest.rest.first, "C");
     }
+    
+    test shared void elementsAreRemovedFromLinkedList(){
+        value set = createSet{};
+        set.add("a");
+        set.add("b");
+        set.remove("a");
+        assertEquals(set.size, 1);
+        assertEquals({ for (item in set) item }.sequence(), ["b"]);
+    }
 }
 
 class UnlinkedHashSetTest() satisfies MutableSetTests & HashOrderIterableTests {

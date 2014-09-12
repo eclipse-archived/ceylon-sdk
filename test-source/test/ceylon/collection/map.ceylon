@@ -306,3 +306,11 @@ test shared void testMapClone() {
     assertEquals(tree.clone().string, "{ 1->foo, 2->bar }");
 }
 
+test shared void testMapBug301(){
+    value map = HashMap<String, String>();
+    map.put("a", "a");
+    map.put("b", "b");
+    map.remove("a");
+    assertEquals(map.size, 1);
+    assertEquals({ for (item in map) item }.sequence(), ["b"->"b"]);
+}
