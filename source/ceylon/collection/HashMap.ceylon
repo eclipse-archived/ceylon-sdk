@@ -43,11 +43,25 @@ shared class HashMap<Key, Item>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
     
-    variable value store = entryStore<Key,Item>
-                (hashtable.initialCapacity);
+    "Array of linked lists where we store the elements.
+     
+     Each element is stored in a linked list from this array
+     at the index of the hash code of the element, modulo the
+     array size."
+    variable value store = entryStore<Key,Item>(hashtable.initialCapacity);
+
+    "Number of elements in this map."
     variable Integer length = 0;
     
+    "Head of the traversal linked list if in `linked` mode. Storage is done in
+     [[store]], but traversal is done using an alternative linked list maintained
+     to have a stable iteration order. Note that the cells used are the same as in
+     the [[store]], except for storage we use [[Cell.rest]] for traversal, while
+     for the stable iteration we use the [[LinkedCell.next]]/[[LinkedCell.previous]]
+     attributes of the same cell."
     variable LinkedCell<Key->Item>? head = null;
+    
+    "Tip of the traversal linked list if in `linked` mode."
     variable LinkedCell<Key->Item>? tip = null;
     
     // Write

@@ -38,14 +38,28 @@ shared class HashSet<Element>
     "The initial elements of the set."
     {Element*} elements;
     
-    "Performance-related settings for the backing array."
+    "Performance-related settings for the backing array. "
     Hashtable hashtable;
     
-    variable value store = elementStore<Element>
-            (hashtable.initialCapacity);
+    "Array of linked lists where we store the elements.
+     
+     Each element is stored in a linked list from this array
+     at the index of the hash code of the element, modulo the
+     array size."
+    variable value store = elementStore<Element>(hashtable.initialCapacity);
+    
+    "Number of elements in this set."
     variable Integer length = 0;
     
+    "Head of the traversal linked list if in `linked` mode. Storage is done in
+     [[store]], but traversal is done using an alternative linked list maintained
+     to have a stable iteration order. Note that the cells used are the same as in
+     the [[store]], except for storage we use [[Cell.rest]] for traversal, while
+     for the stable iteration we use the [[LinkedCell.next]]/[[LinkedCell.previous]]
+     attributes of the same cell."
     variable LinkedCell<Element>? head = null;
+    
+    "Tip of the traversal linked list if in `linked` mode."
     variable LinkedCell<Element>? tip = null;
     
     // Write
