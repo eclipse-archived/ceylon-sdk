@@ -9,7 +9,7 @@ import java.util.concurrent.atomic {
 }
  
 "A promise represents a value that may not be available yet. The primary method for
-  interacting with a promise is its `then` method. A promise is a [[Completable]] element
+  interacting with a promise is its [[compose]] method. A promise is a [[Completable]] element
  restricted to a single value."
 by("Julien Viet")
 shared abstract class Promise<out Value>() satisfies Term<Value, [Value]> {
