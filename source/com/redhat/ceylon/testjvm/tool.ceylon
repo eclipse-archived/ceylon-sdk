@@ -1,3 +1,6 @@
+import ceylon.collection {
+    ArrayList
+}
 import ceylon.language.meta {
     modules
 }
@@ -31,9 +34,6 @@ import org.jboss.modules {
     },
     ModuleClassLoader
 }
-import ceylon.collection {
-    ArrayList
-}
 
 shared void run() {
     Runner().run();
@@ -43,10 +43,12 @@ class Runner() {
     
     value moduleNameAndVersions = ArrayList<[String, String]>();
     value testSources = ArrayList<TestSource>();
+    value testListeners = ArrayList<TestListener>();
     variable Integer port = -1;
     variable Socket? socket = null;
     variable PrintWriter? writer = null;
     variable Boolean tap = false;
+    variable Boolean report = false;
     
     shared void run() {
         try {
@@ -55,31 +57,34 @@ class Runner() {
             connect();
             
             if (testSources.empty) {
-                for (value moduleNameAndVersion in moduleNameAndVersions.sequence()) {
+                for (value moduleNameAndVersion in moduleNameAndVersions) {
                     assert (exists m = modules.find(moduleNameAndVersion[0], moduleNameAndVersion[1]));
                     testSources.add(m);
                 }
             }
             
-            TestListener testListener;
             if (exists w = writer) {
                 void publishEvent(String json) {
                     w.write(json);
                     w.write('\{END OF TRANSMISSION}'.integer);
                     w.flush();
                 }
-                testListener = TestEventPublisher(publishEvent);
+                testListeners.add(TestEventPublisher(publishEvent));
             } else if (tap) {
-                testListener = TapLoggingListener();
+                testListeners.add(TapLoggingListener());
             } else {
-                testListener = TestLoggingListener {
+                testListeners.add(TestLoggingListener {
                     colorWhite = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.white");
                     colorGreen = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.green");
                     colorRed = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.red");
-                };
+                });
             }
             
-            createTestRunner(testSources.sequence(), [testListener]).run();
+            if (report) {
+                testListeners.add(HtmlReportGenerator());
+            }
+            
+            createTestRunner(testSources.sequence(), testListeners.sequence()).run();
         }
         finally {
             disconnect();
@@ -106,6 +111,9 @@ class Runner() {
             }
             if (arg == "--tap") {
                 tap = true;
+            }
+            if (arg == "--report") {
+                report = true;
             }
             prev = arg;
         }

@@ -18,10 +18,11 @@ import ceylon.collection {
 shared void run() {
     value moduleNameAndVersions = ArrayList<[String, String]>();
     value testSources = ArrayList<TestSource>();
+    value testListeners = ArrayList<TestListener>();
     variable String prev = "";
-    variable TestListener listener;
     variable Integer port = -1;
     variable Boolean tap = false;
+    variable Boolean report = false;
     variable String? colorWhite = null;
     variable String? colorGreen = null;
     variable String? colorRed = null;
@@ -39,6 +40,9 @@ shared void run() {
         }
         if (arg == "--tap") {
             tap = true;
+        }
+        if (arg == "--report") {
+            report = true;
         }
         if (arg.startsWith("--port")) {
             assert (exists p = parseInteger(arg[7...]));
@@ -69,12 +73,16 @@ shared void run() {
                 }
             }
             
-            listener = TestEventPublisher(publishEvent);
+            testListeners.add(TestEventPublisher(publishEvent));
         }
     } else if (tap) {
-        listener = TapLoggingListener();
+        testListeners.add(TapLoggingListener());
     } else {
-        listener = TestLoggingListener(colorWhite, colorGreen, colorRed);
+        testListeners.add(TestLoggingListener(colorWhite, colorGreen, colorRed));
+    }
+    
+    if (report) {
+        testListeners.add(HtmlReportGenerator());
     }
     
     // initialize tested modules
@@ -89,5 +97,5 @@ shared void run() {
         }
     }
     
-    createTestRunner(testSources.sequence(), [listener]).run();
+    createTestRunner(testSources.sequence(), testListeners.sequence()).run();
 }

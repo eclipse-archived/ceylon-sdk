@@ -4,4 +4,5 @@ module com.redhat.ceylon.testjvm "1.1.0" {
     import java.base "7";
     import org.jboss.modules "1.3.3.Final";
     import ceylon.collection "1.1.0";
+    import ceylon.file "1.1.0";
 }
