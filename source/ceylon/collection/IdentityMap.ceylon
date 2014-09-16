@@ -340,6 +340,22 @@ shared class IdentityMap<Key, Item>
         return clone;
     }
     
+    shared actual Boolean defines(Key key) {
+        variable Integer index = 0;
+        // walk every bucket
+        while (index < store.size) {
+            variable value bucket = store[index];
+            while (exists cell = bucket) {
+                if (cell.element.key == key) {
+                    return true;
+                }
+                bucket = cell.rest;
+            }
+            index++;
+        }
+        return false;
+    }
+    
     shared actual Boolean contains(Object element) {
         variable Integer index = 0;
         // walk every bucket

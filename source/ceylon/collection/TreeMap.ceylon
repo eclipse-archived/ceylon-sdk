@@ -597,6 +597,15 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
+    shared actual Boolean defines(Object key) {
+        if (is Key key) {
+            return lookup(key) exists;
+        }
+        else {
+            return false;
+        }
+    }
+    
     clear() => root=null;
     
     size => root?.size else 0;
