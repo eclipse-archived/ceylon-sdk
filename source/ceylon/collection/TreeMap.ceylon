@@ -8,8 +8,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         satisfies MutableMap<Key,Item>
                   & SortedMap<Key,Item>
                   & Ranged<Key,Key->Item,TreeMap<Key,Item>>
-        given Key satisfies Object
-        given Item satisfies Object {
+        given Key satisfies Object {
     
     "A comparator function used to sort the entries."
     Comparison compare(Key x, Key y);
@@ -91,7 +90,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             stringBuilder//.append(red then "[R]" else "[B]")
                     .append(key.string)
                     .append("->")
-                    .append(item.string);
+                    .append(item?.string else "<null>");
             if (exists r=right) {
                 stringBuilder.append(", ").append(r.string);
             }
@@ -479,8 +478,10 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared actual Boolean removeEntry(Key key, Item item) {
-        if (exists result = lookup(key), result.item==item) {
+    shared actual Boolean removeEntry(Key key, Item&Object item) {
+        if (exists result = lookup(key), 
+            exists it=result.item, 
+            it==item) {
             Node node;
             if (exists left=result.left,
                 exists right=result.right) {
@@ -587,7 +588,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return clone;
     }
     
-    shared actual <Item&Object>? get(Object key) {
+    shared actual Item? get(Object key) {
         if (is Key key) {
             return lookup(key)?.item;
         }
