@@ -5,8 +5,7 @@ by("Stéphane Épardaud")
 shared interface MutableMap<Key, Item>
         satisfies Map<Key, Item> &
                   MapMutator<Key, Item>
-        given Key satisfies Object 
-        given Item satisfies Object {
+        given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 
      entry for the given [[key]], and returning the previous 
@@ -27,15 +26,14 @@ shared interface MutableMap<Key, Item>
 "Protocol for mutation of a [[MutableMap]]."
 see (`interface MutableMap`)
 shared interface MapMutator<in Key, in Item>
-        satisfies Map<Object, Object>
-        given Key satisfies Object
-        given Item satisfies Object {
+        satisfies Map<Object, Anything>
+        given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 
      entry for the given [[key]], and returning the previous 
      value associated with the given `key`, if any, or 
      `null` if no existing entry was overwritten."
-    shared formal Object? put(Key key, Item item);
+    shared formal Anything put(Key key, Item item);
     
     "Add the given [[entries]] to this map, overwriting any 
      existing entries with the same keys."
@@ -49,13 +47,13 @@ shared interface MapMutator<in Key, in Item>
      any, from this map, returning the value no longer 
      associated with the given `key`, if any, or `null` if
      there was no entry associated with the given `key`."
-    shared formal Object? remove(Key key);
+    shared formal Anything remove(Key key);
     
     "Remove the entry associated with the given [[key]],
      if any, only if its item is equal to the given 
      [[item]]. Return [[true]] if an entry was removed,
      or [[false]] otherwise."
-    shared default Boolean removeEntry(Key key, Item item) {
+    shared default Boolean removeEntry(Key key, Item&Object item) {
         if (exists it=get(key), it==item) {
             remove(key);
             return true;

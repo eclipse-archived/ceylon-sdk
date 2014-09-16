@@ -4,8 +4,7 @@
 by ("Gavin King")
 class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
         satisfies Map<Key,Item>
-        given Key satisfies Object
-        given Item satisfies Object {
+        given Key satisfies Object {
 
     get(Object key) => map.get(key);
     defines(Object key) => map.defines(key);

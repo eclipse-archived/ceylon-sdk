@@ -30,8 +30,7 @@ by ("Stéphane Épardaud")
 shared class HashMap<Key, Item>
         (stability=linked, hashtable = Hashtable(), entries = {})
         satisfies MutableMap<Key, Item>
-        given Key satisfies Object 
-        given Item satisfies Object {
+        given Key satisfies Object {
     
     "Determines whether this is a linked hash map with a
      stable iteration order."
@@ -207,11 +206,11 @@ shared class HashMap<Key, Item>
         return null;
     }
     
-    shared actual Boolean removeEntry(Key key, Item item) {
+    shared actual Boolean removeEntry(Key key, Item&Object item) {
         Integer index = storeIndex(key, store);
         while (exists head = store[index], 
             head.element.key == key) {
-            if (head.element.item==item) {
+            if (exists it = head.element.item, it==item) {
                 store.set(index,head.rest);
                 length--;
                 return true;
@@ -225,7 +224,7 @@ shared class HashMap<Key, Item>
             value rest = cell.rest;
             if (exists rest,
                 rest.element.key == key) {
-                if (rest.element.item==item) {
+                if (exists it = rest.element.item, it==item) {
                     cell.rest = rest.rest;
                     deleteCell(cell);
                     length--;
@@ -369,18 +368,25 @@ shared class HashMap<Key, Item>
     }
     
     shared actual Boolean equals(Object that) {
-        if (is Map<Object,Object> that,
+        if (is Map<Object,Anything> that,
             size == that.size) {
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
                 variable value bucket = store[index];
                 while (exists cell = bucket) {
-                    if (exists item = that[cell.element.key]) {
-                        if (item != cell.element.item) {
+                    value thatItem = that[cell.element.key];
+                    if (exists thisItem = cell.element.item) {
+                        if (exists thatItem) {
+                            if (thatItem!=thisItem) {
+                                return false;
+                            }
+                        }
+                        else {
                             return false;
                         }
-                    }else{
+                    }
+                    else if (thatItem exists) {
                         return false;
                     }
                     bucket = cell.rest;
@@ -420,7 +426,8 @@ shared class HashMap<Key, Item>
         while (index < store.size) {
             variable value bucket = store[index];
             while (exists cell = bucket) {
-                if (cell.element.item == element) {
+                if (exists it = cell.element.item, 
+                        it == element) {
                     return true;
                 }
                 bucket = cell.rest;
