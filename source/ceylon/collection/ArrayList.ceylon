@@ -113,6 +113,19 @@ shared class ArrayList<Element>
         }
     }
     
+    shared actual Boolean contains(Object element) {
+        for (index in 0:size) {
+            if (exists elem = array.getFromFirst(index)) {
+                if (elem==element) {
+                    return true;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    
     shared actual Iterator<Element> iterator() {
         object iterator satisfies Iterator<Element> {
             variable Integer index = 0;

@@ -403,7 +403,7 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable Integer i = 0;
         while (exists cell = iter) {
-            if(i >= from) {
+            if (i >= from) {
                 ret.add(cell.element);
             }
             i++;
@@ -485,7 +485,7 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         while (exists cell = iter) {
             if (exists elem = cell.element) {
-                if(elem == element) {
+                if (elem == element) {
                     return true;
                 }
             }
@@ -525,13 +525,14 @@ shared class LinkedList<Element>(elements = {})
         b.append("[");
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
-            if(is Object car = cell.car){
+            if (is Object car = cell.car){
                 b.append(car.string);
-            }else{
+            }
+            else {
                 b.append("null");
             }
             iter = cell.cdr;
-            if(iter exists){
+            if (iter exists){
                 b.append(", ");
             }
         }
