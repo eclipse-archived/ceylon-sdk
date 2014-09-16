@@ -367,5 +367,32 @@ shared class ArrayList<Element>
     back => last;
 
     front => first;
-
+    
+    "Sorts the elements in this list according to the 
+     order induced by the given 
+     [[comparison function|comparing]]. Null elements are 
+     sorted to the end of the list. This operation modifies 
+     the list."
+    shared void sortInPlace(
+        "A comparison function that compares pairs of
+         non-null elements of the array."
+        Comparison comparing(Element&Object x, Element&Object y)) {
+        array.sortInPlace((Element? x, Element? y) { 
+            if (exists x, exists y) {
+                return comparing(x, y);
+            }
+            else {
+                if (x exists && !y exists) {
+                    return smaller;
+                }
+                else if (y exists && !x exists) {
+                    return larger;
+                }
+                else {
+                    return equal;
+                }
+            }
+        });
+    }
+    
 }
