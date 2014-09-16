@@ -32,6 +32,8 @@ shared class Object({<String->Value>*} values = {})
     
     get(LangObject key) => contents[key];
     
+    defines(LangObject key) => contents.defines(key);
+    
     iterator() => contents.iterator();
     
     put(String key, Value item) => contents.put(key, item);

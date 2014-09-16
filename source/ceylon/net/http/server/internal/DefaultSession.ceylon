@@ -13,7 +13,10 @@ class DefaultSession(UtSession utSession)
     id => utSession.id;
     
     get(String key) 
-            => utSession.getAttribute(key.string);
+            => utSession.getAttribute(key);
+    
+    defines(String key)
+            => utSession.attributeNames.contains(key.string);
     
     put(String key, Object item) 
             => utSession.setAttribute(key, item);

@@ -114,6 +114,9 @@ shared class Response(status, reason, major, minor,
     shared actual Header? get(String key) 
             => headersByName[key.lowercased];
 
+    shared actual Boolean defines(String key) 
+            => headersByName.defines(key);
+
     "Returns a [[Reader]] for the entity body."
     throws(`class Exception`, "If the status is not 200 OK.")
     shared Reader getReader() {
