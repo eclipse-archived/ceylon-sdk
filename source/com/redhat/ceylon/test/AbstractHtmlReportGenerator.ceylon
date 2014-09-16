@@ -287,7 +287,7 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
     
     void generateResultRow(FileWriter fw, TestDescription parent, TestResult result, Integer depth) {
         value expandableFlag = result.exception exists;
-        value expandableSnippet = " expandable' onclick='toggleStackTrace()' title='Show/Hide more details'>";
+        value expandableSnippet = " expandable' onclick='toggleStackTrace(event)' title='Show/Hide more details'>";
         
         switch(result.state)
             case (success) {
@@ -341,7 +341,6 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
             """
                <script type='text/javascript'>
                    function toggleStackTrace(e) {
-                       e = e ? e : window.event;
                        var st = e.currentTarget.getElementsByClassName('stack-trace')[0];
                        if (st.style.display == 'none') {
                            st.style.display = '';
