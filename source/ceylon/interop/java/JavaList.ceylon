@@ -37,8 +37,7 @@ shared class JavaList<E>(List<E> list)
         }
     }
     
-    //TODO!!!!
-    /*shared actual void add(Integer index, E? e) {
+    shared actual void add(Integer index, E? e) {
         if (is E e) {
             if (is MutableList<E> list) {
                 list.insert(index, e);
@@ -50,7 +49,7 @@ shared class JavaList<E>(List<E> list)
         else {
             throw IllegalArgumentException("list may not have null elements");
         }
-    }*/
+    }
     
     shared actual Boolean remove(Object? e) {
         if (is E e) {
