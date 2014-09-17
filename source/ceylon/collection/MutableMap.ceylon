@@ -49,13 +49,34 @@ shared interface MapMutator<in Key, in Item>
      there was no entry associated with the given `key`."
     shared formal Anything remove(Key key);
     
-    "Remove the entry associated with the given [[key]],
-     if any, only if its item is equal to the given 
-     [[item]]. Return [[true]] if an entry was removed,
-     or [[false]] otherwise."
-    shared default Boolean removeEntry(Key key, Item&Object item) {
+    "Remove the entry associated with the given [[key]], if 
+     any, only if its item is equal to the given [[item]]. 
+     Return [[true]] if an entry was removed, or [[false]] 
+     otherwise."
+    shared default Boolean removeEntry(Key key,
+        "The item currently associated with the given [[key]]" 
+        Item&Object item) {
         if (exists it=get(key), it==item) {
             remove(key);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    "Modify the entry associated with the given [[key]], if 
+     any, setting its item to the given [[newItem]], only if 
+     the its item is currently equal to the given [[item]]. 
+     Return [[true]] if the item was replaced,or [[false]] 
+     otherwise."
+    shared default Boolean replaceEntry(Key key, 
+        "The item currently associated with the given [[key]]"
+        Item&Object item,
+        "The new item to associate with the given [[key]]" 
+        Item&Object newItem) {
+        if (exists it=get(key), it==item) {
+            put(key,item);
             return true;
         }
         else {
