@@ -18,31 +18,46 @@ import java.util {
 class JavaEntry<K,V>(K->V entry) 
         extends Object()
         satisfies JEntry<K,V> 
-        given K satisfies Object 
-        given V satisfies Object {
+        given K satisfies Object {
     
     key => entry.key;
     \ivalue => entry.item;
     //assign \ivalue {
     //    throw UnsupportedOperationException();
     //}
-    shared actual V setValue(V v) {
+    shared actual V setValue(V? v) {
         throw UnsupportedOperationException();
     }
     
     shared actual Boolean equals(Object that) {
-        if (is JEntry<out Anything,out Anything> that) {
-            if (exists thatKey = that.key, 
-                exists thatValue = that.\ivalue) {
-                return key==thatKey && 
-                        \ivalue==thatValue;
+        if (is JEntry<out Anything,out Anything> that,
+            exists thatKey = that.key) {
+            if (exists thatValue = that.\ivalue) {
+                if (exists thisValue = \ivalue) {
+                    return key==thatKey && 
+                            thisValue==thatValue;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return !\ivalue exists;
             }
         }
-        return false;
+        else {
+            return false;
+        }
     }
     
-    shared actual Integer hash 
-            => 31*key.hash+\ivalue.hash;
+    shared actual Integer hash {
+        if (exists val=\ivalue) {
+            return 31*key.hash+val.hash;
+        }
+        else {
+            return 31*key.hash;
+        }
+    }
 }
 
 "A Java [[java.util::Map]] that wraps a Ceylon [[Map]]. This 
@@ -50,9 +65,8 @@ class JavaEntry<K,V>(K->V entry)
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
 shared class JavaMap<K,V>(Map<K,V> map)
-        extends AbstractMap<K, V>() 
-        given K satisfies Object 
-        given V satisfies Object {
+        extends AbstractMap<K,V>() 
+        given K satisfies Object {
     
     shared actual JSet<JEntry<K,V>> entrySet() {
         object result
@@ -65,6 +79,15 @@ shared class JavaMap<K,V>(Map<K,V> map)
             
         }
         return result;
+    }
+    
+    shared actual Boolean containsKey(Object? k) {
+        if (exists k) {
+            return map.defines(k);
+        }
+        else {
+            return false;
+        }
     }
     
     shared actual V? put(K? k, V? v) {
