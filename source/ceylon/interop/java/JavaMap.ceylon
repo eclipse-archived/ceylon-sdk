@@ -104,7 +104,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
         }
     }
     
-    shared actual Boolean remove(Object? k, Object? v) {
+    /*shared actual Boolean remove(Object? k, Object? v) {
         if (is K k, is V v) {
             if (is MutableMap<K,V> map) {
                 return map.removeEntry(k, v);
@@ -130,8 +130,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
         else {
             throw IllegalArgumentException("map may not have null keys or items");
         }
-
-    }
+    }*/
     
     shared actual void clear() {
         if (is MutableMap<K,V> map) {
