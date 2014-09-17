@@ -74,7 +74,7 @@ shared interface MapMutator<in Key, in Item>
         "The item currently associated with the given [[key]]"
         Item&Object item,
         "The new item to associate with the given [[key]]" 
-        Item&Object newItem) {
+        Item newItem) {
         if (exists it=get(key), it==item) {
             put(key,item);
             return true;

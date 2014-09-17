@@ -81,18 +81,19 @@ shared class IdentityMap<Key, Item>
     
     shared Item? put(Key key, Item item) {
         Integer index = storeIndex(key, store);
+        value entry = key->item;
         variable value bucket = store[index];
         while (exists cell = bucket) {
             if (cell.element.key === key) {
                 Item oldItem = cell.element.item;
                 // modify an existing entry
-                cell.element = key->item;
+                cell.element = entry;
                 return oldItem;
             }
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(key->item, store[index]));
+        store.set(index, Cell(entry, store[index]));
         length++;
         checkRehash();
         return null;
@@ -109,7 +110,27 @@ shared class IdentityMap<Key, Item>
         checkRehash();
     }
     
-    
+    shared Boolean replaceEntry(Key key, 
+        Item&Object item, Item newItem) {
+        Integer index = storeIndex(key, store);
+        variable value bucket = store[index];
+        while (exists cell = bucket) {
+            if (cell.element.key === key) {
+                if (exists oldItem = cell.element.item, 
+                    oldItem==item) {
+                    // modify an existing entry
+                    cell.element = key->newItem;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            bucket = cell.rest;
+        }
+        return false;
+    }
+        
     "Removes a key/value mapping if it exists"
     shared Item? remove(Key key) {
         Integer index = storeIndex(key, store);

@@ -499,6 +499,42 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
+    shared actual Boolean replaceEntry(Key key, 
+        Item&Object item, Item newItem) {
+        if (exists root=this.root) {
+            variable Node node = root;
+            while (true) {
+                switch (compare(key,node.key))
+                case (larger) {
+                    if (exists nr=node.right) {
+                        node = nr;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                case (smaller) {
+                    if (exists nl = node.left) {
+                        node = nl;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                case (equal) {
+                    if (exists oldItem = node.item,
+                        oldItem==item) {
+                        node.item = newItem;
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     shared actual {<Key->Item>*} higherEntries(Key key) {
         object iterable satisfies {<Key->Item>*} {
             iterator() => NodeIterator(floor(key));

@@ -171,6 +171,28 @@ shared class HashMap<Key, Item>
         return null;
     }
     
+    shared actual Boolean replaceEntry(Key key, 
+        Item&Object item, Item newItem) {
+        Integer index = storeIndex(key, store);
+        variable value bucket = store[index];
+        while (exists cell = bucket) {
+            if (cell.element.key == key) {
+                if (exists oldItem = cell.element.item, 
+                    oldItem==item) {
+                    // modify an existing entry
+                    cell.element = key->newItem;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            bucket = cell.rest;
+        }
+        return false;
+    }
+
+    
     shared actual void putAll({<Key->Item>*} entries) {
         for (entry in entries) {
             if (addToStore(store, entry)) {
