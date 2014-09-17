@@ -26,6 +26,11 @@ shared class CeylonMap<Key, Item>(JMap<Key, Item> map)
     
     remove(Key key) => map.remove(key);
     
+    removeEntry(Key key, Item item) => map.remove(key, item);
+    
+    replaceEntry(Key key, Item item, Item newItem) 
+            => map.replace(key, item, newItem);
+    
     clear() => map.clear();
     
     clone() => CeylonMap(HashMap(map));
