@@ -41,8 +41,10 @@ test void testGetUtf8(){
 }
 
 test void testGetUtf8_2(){
-    value contents = get("http://www.somatik.be/temp/me.php");
-    assertTrue(contents.contains("Fränçis De Brabandere"), "Contains Fränçis De Brabandere");
+    value contents = get("http://ceylon-lang.org/community/team/");
+    assertTrue(contents.contains("Tomáš Hradec"), "Contains Tomáš Hradec");
+    assertTrue(contents.contains("Aleš Justin"), "Contains Aleš Justin");
+    assertTrue(contents.contains("Stéphane Épardaud"), "Contains Stéphane Épardaud");
 }
 
 test void testGetChunked(){

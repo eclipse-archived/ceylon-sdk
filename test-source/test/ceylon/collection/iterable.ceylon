@@ -386,7 +386,7 @@ shared interface IterableTests satisfies CategoryTests {
                 return next;
             }
         }
-        throw;
+        throw Exception("no more elements");
     }
  
 }
