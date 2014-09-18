@@ -13,7 +13,7 @@ import test.ceylon.test.stubs.beforeafter.sub {
 
 test
 shared void shouldRunCallbacks1() {
-    callbackLogger.reset();
+    callbackLogger.clear();
 
     createTestRunner([`fooWithCallbacks`]).run();
 
@@ -26,7 +26,7 @@ shared void shouldRunCallbacks1() {
 
 test
 shared void shouldRunCallbacks2() {
-    callbackLogger.reset();
+    callbackLogger.clear();
 
     createTestRunner([`FooWithCallbacks`]).run();
 
@@ -56,7 +56,7 @@ shared void shouldRunCallbacksWithEqualInstance() {
 
 test
 shared void shouldRunCallbacksFromAncestor() {
-    callbackLogger.reset();
+    callbackLogger.clear();
 
     createTestRunner([`BarWithCallbacks.bar`]).run();
 
@@ -91,7 +91,7 @@ shared void shouldRunCallbacksFromAncestorOnExtendedInstance() {
 
 test
 shared void shouldHandleExceptionInBeforeToplevelCallback() {
-    callbackLogger.reset();
+    callbackLogger.clear();
     fooToplevelBeforeException = true;
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
@@ -121,7 +121,7 @@ shared void shouldHandleExceptionInBeforeToplevelCallback() {
 
 test
 shared void shouldHandleExceptionInBeforeMemberCallback() {
-    callbackLogger.reset();
+    callbackLogger.clear();
     fooMemberBeforeException = true;
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
@@ -152,7 +152,7 @@ shared void shouldHandleExceptionInBeforeMemberCallback() {
 
 test
 shared void shouldHandleExceptionInAfterToplevelCallback() {
-    callbackLogger.reset();
+    callbackLogger.clear();
     fooToplevelAfterException = true;
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
@@ -184,7 +184,7 @@ shared void shouldHandleExceptionInAfterToplevelCallback() {
 
 test
 shared void shouldHandleExceptionInAfterMemberCallback() {
-    callbackLogger.reset();
+    callbackLogger.clear();
     fooMemberAfterException = true;
     try {
         value runResult = createTestRunner([`FooWithCallbacks`]).run();
@@ -216,7 +216,7 @@ shared void shouldHandleExceptionInAfterMemberCallback() {
 
 test
 shared void shouldHandleExceptionsInCallbacks() {
-    callbackLogger.reset();
+    callbackLogger.clear();
     fooToplevelBeforeException = true;
     fooToplevelAfterException = true;
     fooMemberAfterException = true;

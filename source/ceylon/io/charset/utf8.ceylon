@@ -112,7 +112,7 @@ shared object utf8 satisfies Charset {
                 throw Exception("Invalid UTF-8 sequence: missing `` needsMoreBytes `` bytes");
             }
             value result = builder.string;
-            builder.reset();
+            builder.clear();
             return result;
         }
         

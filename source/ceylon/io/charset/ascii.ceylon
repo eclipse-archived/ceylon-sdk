@@ -66,7 +66,7 @@ shared object ascii satisfies Charset {
 
         shared actual String consume() {
             value result = builder.string;
-            builder.reset();
+            builder.clear();
             return result;
         }
     }

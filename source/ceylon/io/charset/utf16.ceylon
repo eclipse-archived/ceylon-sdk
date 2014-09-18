@@ -121,7 +121,7 @@ shared object utf16 satisfies Charset {
                 throw Exception("Invalid UTF-16 sequence: missing low surrogate");
             }
             String result = builder.string;
-            builder.reset();
+            builder.clear();
             return result;
         }
         

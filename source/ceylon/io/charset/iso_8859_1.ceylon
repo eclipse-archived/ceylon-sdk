@@ -82,7 +82,7 @@ shared object iso_8859_1 satisfies Charset {
         
         shared actual String consume() {
             value result = builder.string;
-            builder.reset();
+            builder.clear();
             return result;
         }
     }

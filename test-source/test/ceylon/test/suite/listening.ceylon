@@ -228,7 +228,7 @@ shared void shouldPropagateExceptionOnTestStart() {
 
 test
 void shouldNotifyListenerSpecifiedViaAnnotation() {
-    bazTestListenerLog.reset();
+    bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithCustomListener`]).run();
     
@@ -253,7 +253,7 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
 
 test
 void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
-    bazTestListenerLog.reset();
+    bazTestListenerLog.clear();
     
     createTestRunner([`BazWithCustomListener`]).run();
     
@@ -280,7 +280,7 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun()
 
 test
 void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
-    bazTestListenerLog.reset();
+    bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithAnonymousTestListener`]).run();
     
@@ -309,7 +309,7 @@ shared object recordingListener satisfies TestListener {
     
     shared String result => buffer.string.trimmed;
     
-    shared actual void testRunStart(TestRunStartEvent event) { buffer.reset(); log(event); } 
+    shared actual void testRunStart(TestRunStartEvent event) { buffer.clear(); log(event); } 
     
     shared actual void testRunFinish(TestRunFinishEvent event) => log(event); 
     

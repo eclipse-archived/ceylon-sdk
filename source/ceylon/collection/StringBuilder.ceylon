@@ -7,98 +7,58 @@
        builder.append("world");
        String hello = builder.string; //hello world"""
 shared class StringBuilder() {
-    "The storage"
-    variable Array<Character> array 
-            = arrayOfSize<Character>(10, 'X');
-    "The number of items in [[array]] which have actually 
-     been appended."
-    variable Integer length = 0;
     
-    "Resize policy"
-    Integer newSize(
-        Integer existingSize, Integer extra) {
-        value requiredSize = length+extra;
-        variable value result = existingSize*2+2;
-        "Overflow"
-        assert (requiredSize > 0);
-        if (result < requiredSize) {
-            result = requiredSize;
-        }
-        "Required array too large"
-        assert (result <= runtime.maxArraySize);
-        return result;
-    }
+    "The total length of all the strings that have been 
+     appended."
+    variable value length = 0;
     
-    "Returns the storage array ready for storing [[extra]] 
-     more elements. Reallocates and copies existing entries 
-     if needed."
-    Array<Character> getStorage(Integer extra) {
-        // extra should be > 0
-        if (array.size >= length + extra) {
-            return array;
-        } else {
-            value newArray 
-                    = arrayOfSize<Character>
-                        (newSize(array.size, extra), 'X');
-            array.copyTo(newArray);
-            array = newArray;
-            return newArray;
-        }
-    }
+    "The strings that have been appended."
+    value strings = LinkedList<String>();
     
+    "Returns the length of the current content, that is,
+     the [[size|String.size]] of the produced [[string]]."
+    shared Integer size => length;
     
     "The resulting string. If no characters have been
      appended, the empty string."
-    shared actual String string {
-        return String(array.take(length));
-    }
+    shared actual String string => "".join(strings);
     
     "Append the characters in the given [[string]]."
     shared StringBuilder append(String string) {
         if (!string.empty) {
-            value store = getStorage(string.size);
-            variable value i = 0;
-            while (i < string.size) {
-                assert(exists char=string[i]);
-                store.set(length+i, char);
-                i++;
-            }
-            length += string.size;
+            strings.add(string);
+            length+=string.size;
         }
         return this;
     }
     
     "Append the characters in the given [[strings]]."
     shared StringBuilder appendAll({String*} strings) {
+        this.strings.addAll(strings);
         for (s in strings) {
-            append(s);
+            length+=string.size;
         }
         return this;
     }
     
     "Append the given [[character]]."
     shared StringBuilder appendCharacter(Character character) {
-        value store = getStorage(1);
-        store.set(length, character);
+        strings.add(character.string);
         length++;
         return this;
     }
     
     "Append a newline character."
-    shared StringBuilder appendNewline() {
-        appendCharacter('\n');
-        return this;
-    }
+    shared StringBuilder appendNewline()
+            => appendCharacter('\n');
     
     "Append a space character."
-    shared StringBuilder appendSpace() {
-        appendCharacter(' ');
-        return this;
-    }
+    shared StringBuilder appendSpace() 
+            => appendCharacter(' ');
     
     "Remove all content and return to initial state."
-    shared StringBuilder reset() {
-        // TODO The sequence version is called deleteAll
+    shared StringBuilder clear() {
+        strings.clear();
         length = 0;
         return this;
     }
@@ -111,19 +71,33 @@ shared class StringBuilder() {
     shared StringBuilder insert(Integer index, 
         String string) {
         if (!string.empty) {
-            value store = getStorage(string.size);
-            // make the gap
-            store.copyTo(store, index, 
-                index+string.size, 
-                this.length-index);
-            // copy into it
-            variable value i = 0;
-            while (i < string.size) {
-                assert(exists char = string[i]);
-                store.set(index+i, char);
-                i++;
+            if (index>=length) {
+                strings.add(string);
             }
-            length+= string.size;
+            else if (index<=0) {
+                strings.insert(0, string);
+            }
+            else {
+                variable value start=0;
+                variable value slot=0;
+                for (str in strings) {
+                    value end=start+str.size;
+                    if (index==end) {
+                        strings.insert(slot+1, string);
+                        break;
+                    }
+                    else if (index<end) {
+                        value loc = index-start;
+                        strings.set(slot, string);
+                        strings.insert(slot, str[...loc-1]);
+                        strings.insert(slot+2, str[loc...]);
+                        break;
+                    }
+                    slot++;
+                    start=end;
+                }
+            }
+            length+=string.size;
         }
         return this;
     }
@@ -134,9 +108,8 @@ shared class StringBuilder() {
      content. If the `index` is a negative number, the new 
      content is inserted at index 0."
     shared StringBuilder insertCharacter(Integer index, 
-        Character character) {
-        return insert(index, character.string);
-    }
+        Character character) 
+            => insert(index, character.string);
     
     "Deletes the specified [[number of characters|length]] 
      from the current content, starting at the specified 
@@ -146,21 +119,28 @@ shared class StringBuilder() {
      characters from the given `index`, the content is 
      truncated at the given `index`. If `length` is 
      nonpositive, nothing is deleted."
-    shared StringBuilder delete(variable Integer index, 
+    shared StringBuilder delete(Integer index, 
             Integer length=1) {
-        if (index < 0) {
-            index = 0;
-        } else if (index >= this.length) {
-            return this;
+        if (length<=0 || index>=this.length || index+length<=0) {
+            //nothing to do
         }
-        value srcPos = smallest(index+length, this.length);
-        array.copyTo(array, srcPos, index, this.length-srcPos);
-        if (index+length > this.length) {
-            this.length = index;
-        } else {
-            this.length -= length;
+        else if (index<=0 && length+index>=this.length) {
+            clear();
         }
-        
+        else {
+            //TODO: not very efficient
+            value str = string;
+            strings.clear();
+            value first = str[...index-1];
+            value second = str[index+length...];
+            if (!first.empty) {
+                strings.add(first);
+            }
+            if (!second.empty) {
+                strings.add(second);
+            }
+            this.length = first.size+second.size;
+        }
         return this;
     }
     
@@ -174,10 +154,6 @@ shared class StringBuilder() {
      from the end of the string. If `length` is nonpositive, 
      nothing is deleted."
     shared StringBuilder deleteTerminal(Integer length) 
-            => delete(size-length, length);
-    
-    "Returns the length of the current content, that is,
-     the [[size|String.size]] of the produced [[string]]."
-    shared Integer size => length;
-    
+            => delete(this.length-length, length);
+        
 }
