@@ -185,7 +185,7 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
     }
     
     test shared default void testIndexedWithNulls() {
-        assertEquals(createIterableWithNulls({null}).indexed.sequence(), []);
+        assertEquals(createIterableWithNulls({null}).indexed.sequence(), [0->null]);
         
         value iterable = createIterableWithNulls {"a", null, "b", "c", null}; 
         value iterator = iterable.iterator();
