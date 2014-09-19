@@ -58,4 +58,10 @@ shared class ArrayListTest() satisfies MutableListTests {
         assertEquals(list, []);
     }
 
+    test shared void testSortInPlaceWithNulls() {
+        function comparing(String? s1, String? s2) => (s1 else "") <=> (s2 else "");
+        value list = ArrayList { initialCapacity = 10; elements = { "b", null, "a" , null}; };
+        list.sortInPlace(comparing);
+        assertEquals(list, [null, null, "a", "b"]);
+    }
 }

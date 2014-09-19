@@ -40,9 +40,9 @@ shared class ArrayList<Element>
     assert (growthFactor >= 1.0);
 
     function store(Integer capacity)
-            => arrayOfSize<Element?>(capacity, null);
+            => arrayOfSize<Element|Allocation>(capacity, allocation);
 
-    variable Array<Element?> array = Array<Element?>(elements);
+    variable Array<Element|Allocation> array = Array<Element|Allocation>(elements);
 
     variable Integer length = array.size;
 
@@ -106,7 +106,8 @@ shared class ArrayList<Element>
 
     shared actual Element? getFromFirst(Integer index) {
         if (0 <= index < length) {
-            return array.getFromFirst(index);
+            assert(!is Allocation elem = array.getFromFirst(index));
+            return elem;
         }
         else {
             return null;
@@ -132,13 +133,8 @@ shared class ArrayList<Element>
             value arrayIterator = array.iterator();
             shared actual Finished|Element next() {
                 if (index++<length) {
-                    if (exists next = arrayIterator.next()) {
-                        return next;
-                    }
-                    else {
-                        assert (is Element null);
-                        return null;
-                    }
+                    assert(!is Allocation next = arrayIterator.next());
+                    return next;
                 }
                 else {
                     return finished;
@@ -162,10 +158,10 @@ shared class ArrayList<Element>
 
     shared actual Element? delete(Integer index) {
         if (0 <= index < length) {
-            Element? result = array[index];
+            assert(!is Allocation result = array[index]);
             array.copyTo(array, index+1, index, length-index-1);
             length--;
-            array.set(length, null);
+            array.set(length, allocation);
             return result;
         }
         else {
@@ -183,12 +179,12 @@ shared class ArrayList<Element>
                 }
             }
             else {
-                array.set(j++, null);
+                array.set(j++, allocation);
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array.set(j++, allocation);
         }
     }
 
@@ -202,12 +198,12 @@ shared class ArrayList<Element>
                 }
             }
             else {
-                array.set(j++, null);
+                array.set(j++, allocation);
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array.set(j++, allocation);
         }
     }
 
@@ -241,7 +237,7 @@ shared class ArrayList<Element>
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array.set(j++, allocation);
         }
     }
 
@@ -290,7 +286,8 @@ shared class ArrayList<Element>
 
     shared actual Element? first {
         if (length > 0) {
-             return array[0];
+             assert(!is Allocation elem = array[0]);
+             return elem;
         }
         else {
             return null;
@@ -327,7 +324,7 @@ shared class ArrayList<Element>
                 length - fstTrailing);
             variable value i = length-len;
             while (i < length) {
-                array.set(i++, null);
+                array.set(i++, allocation);
             }
             length -= len;
         }
@@ -344,7 +341,7 @@ shared class ArrayList<Element>
         if (size < length) {
             variable value i = size;
             while (i < length) {
-                array.set(i++, null);
+                array.set(i++, allocation);
             }
             length = size;
         }
@@ -383,22 +380,21 @@ shared class ArrayList<Element>
     
     "Sorts the elements in this list according to the 
      order induced by the given 
-     [[comparison function|comparing]]. Null elements are 
-     sorted to the end of the list. This operation modifies 
+     [[comparison function|comparing]]. This operation modifies
      the list."
     shared void sortInPlace(
         "A comparison function that compares pairs of
          non-null elements of the array."
-        Comparison comparing(Element&Object x, Element&Object y)) {
-        array.sortInPlace((Element? x, Element? y) { 
-            if (exists x, exists y) {
+        Comparison comparing(Element x, Element y)) {
+        array.sortInPlace((Element|Allocation x, Element|Allocation y) {
+            if(!is Allocation x, !is Allocation y){
                 return comparing(x, y);
             }
             else {
-                if (x exists && !y exists) {
+                if (!x is Allocation && y is Allocation) {
                     return smaller;
                 }
-                else if (y exists && !x exists) {
+                else if (!y is Allocation && x is Allocation) {
                     return larger;
                 }
                 else {
@@ -408,4 +404,11 @@ shared class ArrayList<Element>
         });
     }
     
+}
+
+"Represents the type of an allocated element"
+abstract class Allocation() of allocation {}
+"The singleton that represents the `allocation` value."
+object allocation extends Allocation() {
+    shared actual String string = "allocation";
 }
