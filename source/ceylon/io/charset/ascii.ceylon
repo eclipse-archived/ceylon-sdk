@@ -2,9 +2,6 @@ import ceylon.io.buffer {
     ByteBuffer,
     CharacterBuffer
 }
-import ceylon.collection {
-    StringBuilder
-}
 
 "Implementation of the ASCII character set. See 
  [the ASCII specification][] for more information.

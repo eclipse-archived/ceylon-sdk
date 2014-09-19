@@ -1,7 +1,6 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
-import ceylon.collection { StringBuilder }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {

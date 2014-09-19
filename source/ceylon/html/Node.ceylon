@@ -1,5 +1,4 @@
 import ceylon.html.serializer { NodeSerializer }
-import ceylon.collection { StringBuilder }
 
 "Represents a single node in the `Document` tree.
  This is the **base type** for the entire Document

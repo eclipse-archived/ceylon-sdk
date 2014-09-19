@@ -1,7 +1,6 @@
 import ceylon.test {
     ...
 }
-import ceylon.collection { StringBuilder }
 
 shared StringBuilder callbackLogger = StringBuilder();
 

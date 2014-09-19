@@ -1,7 +1,6 @@
 import ceylon.collection {
     LinkedList,
-    MutableList,
-    StringBuilder
+    MutableList
 }
 import ceylon.io.charset {
     Charset

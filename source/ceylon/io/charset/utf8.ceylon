@@ -3,9 +3,6 @@ import ceylon.io.buffer {
     ByteBuffer,
     CharacterBuffer
 }
-import ceylon.collection {
-    StringBuilder
-}
 
 "Represents a UTF-8 character set as defined by
  (the specification)[http://tools.ietf.org/html/rfc3629]."

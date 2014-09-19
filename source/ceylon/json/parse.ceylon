@@ -1,4 +1,3 @@
-import ceylon.collection { StringBuilder }
 class Parser(String str){
     
     Character[] chars = str.sequence();

@@ -1,6 +1,5 @@
 import ceylon.collection {
-    LinkedList,
-    StringBuilder
+    LinkedList
 }
 
 "Represents a URI Path part"

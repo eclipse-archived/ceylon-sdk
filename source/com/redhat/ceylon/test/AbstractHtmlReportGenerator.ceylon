@@ -1,6 +1,5 @@
 import ceylon.collection {
     ArrayList,
-    StringBuilder,
     HashMap
 }
 import ceylon.language.meta.declaration {

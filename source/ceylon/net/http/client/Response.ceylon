@@ -1,6 +1,3 @@
-import ceylon.collection {
-    StringBuilder
-}
 import ceylon.io {
     FileDescriptor
 }

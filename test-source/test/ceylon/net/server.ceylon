@@ -9,7 +9,7 @@ import ceylon.net.http.server { Status,
                                   startsWith, endsWith, Options, stopped, newServer }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue, test }
-import ceylon.collection { LinkedList, MutableList, StringBuilder }
+import ceylon.collection { LinkedList, MutableList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
 import java.util.concurrent { Semaphore }
 import java.lang { Runnable, Thread {threadSleep = sleep} }

@@ -2,9 +2,6 @@ import ceylon.io.buffer {
     ByteBuffer,
     CharacterBuffer
 }
-import ceylon.collection {
-    StringBuilder
-}
 
 "Represents the ISO 8859-1 character set as defined by the 
  [specification](http://www.iso.org/iso/catalogue_detail?csnumber=28245)."

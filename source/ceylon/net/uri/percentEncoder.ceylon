@@ -1,7 +1,3 @@
-import ceylon.collection {
-    StringBuilder
-}
-
 import java.lang {
     JString=String {
         format

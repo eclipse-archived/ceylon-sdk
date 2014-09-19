@@ -2,8 +2,7 @@ import ceylon.collection {
     MutableList,
     LinkedList,
     MutableMap,
-    HashMap,
-    StringBuilder
+    HashMap
 }
 import ceylon.io {
     newSocketConnector,

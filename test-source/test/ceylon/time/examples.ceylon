@@ -1,6 +1,5 @@
 import ceylon.time { now, date, Date, Period, today, Time, dateTime, DateTime, DateRange, TimeRange, time }
 import ceylon.time.base { february, december, saturday, sunday, november, minutes }
-import ceylon.collection { StringBuilder }
 
 void dateRangeSamples() {
     Boolean weekday( Date day ) {

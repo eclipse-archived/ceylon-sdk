@@ -1,7 +1,6 @@
 import ceylon.language.meta {
     type
 }
-import ceylon.collection { StringBuilder }
 
 "Thrown when test is ignored."
 shared class IgnoreException(reason) extends Exception(reason) {
