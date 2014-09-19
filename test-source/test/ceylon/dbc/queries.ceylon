@@ -1,15 +1,12 @@
-import ceylon.dbc {
-	Row
-}
 import ceylon.test {
-	...
+    ...
 }
 
 import java.util {
-	Date,
-	UUID {
-		randomUUID
-	}
+    Date,
+    UUID {
+        randomUUID
+    }
 }
 
 test void queryTests() {
@@ -21,7 +18,7 @@ test void queryTests() {
             .execute("Second", Date(0), 2);
     
     value q1 = sql.Select("SELECT * FROM test1 WHERE name=?");
-    q1.forEachRow("Third")((Row row) => print(row["count"]));
+    q1.forEachRow("Third")((row) => print(row["count"]));
     assertEquals(q1.execute("Second").size, 1);
     try (r1 = q1.Results("First")) {
         assertTrue(r1.size==1, "Rows with 'First'");
