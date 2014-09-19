@@ -21,12 +21,14 @@ shared class TreeSet<Element>(compare, elements={})
      variable value map = TreeMap(compare,
              elements map (Element e) => e->present);
 
+     contains(Object element) => map.defines(element);
+     
      add(Element element) => !map.put(element, present) exists;
 
      remove(Element element) => map.remove(element) exists;
 
      clear() => map.clear();
-
+     
      shared actual TreeSet<Element> clone() {
          value clone = TreeSet(compare);
          clone.map = map.clone();
@@ -37,8 +39,8 @@ shared class TreeSet<Element>(compare, elements={})
              (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element>();
-         for(elem in this){
-             if(!set.contains(elem)){
+         for (elem in this) {
+             if (!set.contains(elem)) {
                  ret.add(elem);
              }
          }
@@ -49,13 +51,13 @@ shared class TreeSet<Element>(compare, elements={})
              (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element|Other>();
-         for(elem in this){
-             if(!set.contains(elem)){
+         for (elem in this) {
+             if (!set.contains(elem)) {
                  ret.add(elem);
              }
          }
-         for(elem in set){
-             if(!contains(elem)){
+         for (elem in set) {
+             if (!contains(elem)) {
                  ret.add(elem);
              }
          }
@@ -66,8 +68,8 @@ shared class TreeSet<Element>(compare, elements={})
              (Set<Other> set)
              given Other satisfies Object {
          value ret = HashSet<Element&Other>();
-         for(elem in this){
-             if(set.contains(elem), is Other elem){
+         for (elem in this) {
+             if (set.contains(elem), is Other elem) {
                  ret.add(elem);
              }
          }

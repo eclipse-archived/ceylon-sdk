@@ -50,7 +50,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 if (onLeft) {
                     return p.right;
                 }
-                else if (onRight){
+                else if (onRight) {
                     return p.left;
                 }
                 else {
@@ -636,6 +636,26 @@ shared class TreeMap<Key, Item>(compare, entries={})
     shared actual Boolean defines(Object key) {
         if (is Key key) {
             return lookup(key) exists;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual Boolean contains(Object entry) {
+        if (is Key->Item entry,
+            exists node = lookup(entry.key)) {
+            if (exists item = node.item) {
+                if (exists entryItem = entry.item) {
+                    return entryItem == item;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return !entry.item exists;
+            }
         }
         else {
             return false;
