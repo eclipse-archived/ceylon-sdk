@@ -443,9 +443,11 @@ shared class HashMap<Key, Item>
     }
     
     shared actual Boolean defines(Object key) {
-        variable Integer index = 0;
-        // walk every bucket
-        while (index < store.size) {
+        if (empty) {
+            return false;
+        }
+        else {
+            Integer index = storeIndex(key, store);
             variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (cell.element.key == key) {
@@ -453,26 +455,39 @@ shared class HashMap<Key, Item>
                 }
                 bucket = cell.rest;
             }
-            index++;
+            return false;
         }
-        return false;
     }
     
-    shared actual Boolean contains(Object element) {
-        variable Integer index = 0;
-        // walk every bucket
-        while (index < store.size) {
+    shared actual Boolean contains(Object entry) {
+        if (empty) {
+            return false;
+        }
+        else if (is Object->Anything entry) {
+            value key = entry.key;
+            Integer index = storeIndex(key, store);
             variable value bucket = store[index];
             while (exists cell = bucket) {
-                if (exists it = cell.element.item, 
-                        it == element) {
-                    return true;
+                if (cell.element.key == key) {
+                    if (exists item = cell.element.item) {
+                        if (exists elementItem = entry.item) {
+                            return item == elementItem;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                    else {
+                        return !entry.item exists;
+                    }
                 }
                 bucket = cell.rest;
             }
-            index++;
+            return false;
         }
-        return false;
+        else {
+            return false;
+        }
     }
     
 }

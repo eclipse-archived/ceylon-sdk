@@ -297,9 +297,11 @@ shared class HashSet<Element>
     }
     
     shared actual Boolean contains(Object element) {
-        variable Integer index = 0;
-        // walk every bucket
-        while (index < store.size) {
+        if (empty) {
+            return false;
+        }
+        else {
+            Integer index = storeIndex(element, store);
             variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (cell.element == element) {
@@ -307,9 +309,8 @@ shared class HashSet<Element>
                 }
                 bucket = cell.rest;
             }
-            index++;
+            return false;
         }
-        return false;
     }
     
     shared actual HashSet<Element> complement<Other>
