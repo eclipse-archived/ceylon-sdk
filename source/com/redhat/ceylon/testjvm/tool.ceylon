@@ -28,12 +28,9 @@ import java.net {
 import org.jboss.modules {
     Module {
         ceylonModuleLoader=callerModuleLoader
-    },
-    ModuleIdentifier {
-        createModuleIdentifier=create
-    },
-    ModuleClassLoader
+    }
 }
+import ceylon.modules.jboss.runtime { CeylonModuleLoader }
 
 shared void run() {
     Runner().run();
@@ -126,10 +123,8 @@ class Runner() {
     }
     
     void loadModule(String modName, String modVersion) {
-        ModuleIdentifier modIdentifier = createModuleIdentifier(modName, modVersion);
-        Module mod = ceylonModuleLoader.loadModule(modIdentifier);
-        ModuleClassLoader modClassLoader = mod.classLoader;
-        modClassLoader.loadClass(modName + ".$module_");
+        assert(is CeylonModuleLoader loader = ceylonModuleLoader);
+        loader.loadModuleSynchronous(modName, modVersion);
     }
     
     void connect() {
