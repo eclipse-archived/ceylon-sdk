@@ -84,6 +84,8 @@ class ConcretePath(jpath)
     siblingPath(String|Path subpath) =>
             ConcretePath(jpath.resolveSibling(asJPath(subpath)));
     
+    root => jpath.nameCount==0;
+    
     absolute => jpath.absolute;
     
     absolutePath => ConcretePath(jpath.toAbsolutePath());
@@ -191,6 +193,6 @@ class ConcretePath(jpath)
             }
         }
         walkFileTree(jpath, fileVisitor);
-    }
+    }    
     
 }

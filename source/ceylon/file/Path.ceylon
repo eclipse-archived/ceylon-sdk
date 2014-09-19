@@ -55,6 +55,10 @@ shared sealed interface Path
     "Determine if this is an absolute path."
     shared formal Boolean absolute;
     
+    "Determine if this is a root path, with no 
+     [[elements]]."
+    shared formal Boolean root;
+    
     "Obtain a `Resource` representing the file or
      directory located at this path."
     shared formal Resource resource;
