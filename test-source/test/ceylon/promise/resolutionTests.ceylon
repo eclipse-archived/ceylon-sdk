@@ -97,3 +97,8 @@ test void testOnRejectedAdoptPromiseThatRejects() {
     test.d2.reject(e2);
     test.check({},{e1},{},{e2});
 }
+
+test void testFulfillAnythingWithNull() {
+  Deferred<Anything> deferred = Deferred<Anything>();
+  deferred.fulfill(null);
+}

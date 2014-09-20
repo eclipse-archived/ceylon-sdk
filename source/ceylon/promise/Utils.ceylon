@@ -29,7 +29,12 @@ Promise<T> adaptValue<T>(T|Promise<T> val) {
   } else if (is Promise<T> val) {
     return val;
   } else {
-    throw Exception("not possible");
+    value t = `<T>`;
+    if (exists val) {
+      throw Exception("Cannot adapt ``val`` to ``t``");
+    } else {
+      throw Exception("Cannot adapt null to ``t``");
+    }
   }
 }
 
