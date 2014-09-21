@@ -5,18 +5,33 @@ import ceylon.language.meta.declaration {
     Module
 }
 
+"Aggregates localized information associated with a certain 
+ locale, including:
+ 
+ - the local [[language]],
+ - the local [[currency]],
+ - localized date, time, currency, and numeric [[formats]],
+ - local representations of other [[languages]] and
+   [[currencies]]."
 shared sealed class Locale(language, formats, 
     languages, currencies, currencyCode=null) {
     
+    "The language of this locale."
     shared Language language;
     
+    "Localized date, time, currency, and numeric formats
+     for this locale."
     shared Formats formats;
     
+    "Localized representations of other languages."
     shared HashMap<String,Language> languages;
+    
+    "Localized representations of other currencies."
     shared Map<String,Currency> currencies;
     
     String? currencyCode;
     
+    "The currency of this locale."
     shared Currency? currency {
         if (exists currencyCode) {
             return currencies[currencyCode];
@@ -29,15 +44,8 @@ shared sealed class Locale(language, formats,
     string => language.string;
 }
 
-Locale? current = locale(system.locale);
-
-shared Locale currentLocale {
-    //TODO: cache it
-    "locale data for current locale must exist"
-    assert (exists current);
-    return current;
-}
-
+"Returns a [[Locale]] containing information about the
+ locale with the given locale [[tag]]."
 shared Locale? locale(String tag) {
     value filePath = tag + ".txt";
     if (exists resource = 
@@ -60,8 +68,15 @@ shared Locale? locale(String tag) {
     }
 }
 
-Module localeModule = `module ceylon.locale`;
+"Returns a [[Locale]] containing information about the
+ locale of the current system."
+see (`value system.locale`)
+shared Locale systemLocale {
+    "locale data for current locale must exist"
+    assert (exists systemLocaleCache);
+    return systemLocaleCache;
+}
 
-{String?*} columns(String line) => line.split('|'.equals, true, false)
-        .map(String.trimmed)
-        .map((col) => !col.empty then col);
+Locale? systemLocaleCache = locale(system.locale);
+
+Module localeModule = `module ceylon.locale`;

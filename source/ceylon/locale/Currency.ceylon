@@ -2,11 +2,32 @@ import ceylon.collection {
     HashMap
 }
 
-shared sealed class Currency(String code, 
-    shared String numericCode, 
-    shared String displayName, 
-    shared String symbol,
-    shared Integer fractionalDigits) {
+"Localized information about the currency with the given 
+ ISO 4217 currency [[code]]."
+shared sealed class Currency(code, 
+    numericCode, 
+    displayName, 
+    symbol,
+    fractionalDigits) {
+    
+    "The ISO 4217 code for this currency, for example,
+     `USD`, or `EUR`."
+    shared String code;
+    
+    shared Integer fractionalDigits;
+    
+    "A localized symbol for this currency, for example, `$`,
+     or \{EURO SIGN}."
+    shared String symbol;
+    
+    "A localized displayable name for this currency, for 
+     example, `dólar estadounidense`."
+    shared String displayName;
+    
+    "ISO 4217 numeric code for this currency, for example,
+     `840`, or `978`."
+    shared String numericCode;
+    
     string => code;
 }
 

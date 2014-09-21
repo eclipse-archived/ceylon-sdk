@@ -3,6 +3,8 @@ import ceylon.time.base {
     ReadableTime
 }
 
+"Date, time, currency, and numeric formats for a certain
+ [[Locale]]."
 shared sealed class Formats(
     shortDateFormat, 
     mediumDateFormat, 
