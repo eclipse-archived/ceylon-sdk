@@ -4,11 +4,8 @@ import ceylon.collection {
 
 "Localized information about the currency with the given 
  ISO 4217 currency [[code]]."
-shared sealed class Currency(code, 
-    numericCode, 
-    displayName, 
-    symbol,
-    fractionalDigits) {
+shared sealed class Currency(code, numericCode, 
+        displayName, symbol,fractionalDigits) {
     
     "The ISO 4217 code for this currency, for example,
      `USD`, or `EUR`."

@@ -24,7 +24,7 @@ shared sealed class Locale(language, formats,
     shared Formats formats;
     
     "Localized representations of other languages."
-    shared HashMap<String,Language> languages;
+    shared Map<String,Language> languages;
     
     "Localized representations of other currencies."
     shared Map<String,Currency> currencies;
