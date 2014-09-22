@@ -26,13 +26,13 @@ public final class Util {
     }
     
     @SuppressWarnings("unchecked")
-    public <T> java.lang.Class<? extends T> 
+    public <T> java.lang.Class<T> 
     javaClass(@Ignore TypeDescriptor $reifiedT) {
         if ($reifiedT instanceof TypeDescriptor.Class){
             TypeDescriptor.Class klass = (TypeDescriptor.Class) $reifiedT;
             if (klass.getTypeArguments().length > 0)
                 throw new RuntimeException("given type has type arguments");
-            return (java.lang.Class<? extends T>) klass.getKlass();
+            return (java.lang.Class<T>) klass.getKlass();
         }
         throw new RuntimeException("unsupported type");
     }

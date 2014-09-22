@@ -14,7 +14,7 @@ shared JavaString javaString(String string)
 
 "A Java [[java.lang::Class]] object representing the given 
  [[Type]]."
-shared Class<out Type> javaClass<Type>() 
+shared Class<Type> javaClass<Type>() 
         given Type satisfies Object
         => util.javaClass<Type>();
 
