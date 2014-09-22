@@ -6,7 +6,8 @@ import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
-@Ceylon @com.redhat.ceylon.compiler.java.metadata.Class
+@Ceylon(major = 7) 
+@com.redhat.ceylon.compiler.java.metadata.Class
 public final class Util {
 
     @TypeInfo("java.lang::String")
