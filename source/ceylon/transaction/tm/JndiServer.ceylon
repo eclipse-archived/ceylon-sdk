@@ -28,8 +28,8 @@ shared class JndiServer(String bindAddress = "localhost", Integer port = 1099) {
         setProperty("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
         setProperty("java.naming.factory.url.pkgs", "org.jboss.naming:org.jnp.interfaces");
 
-        Class<NamingBeanImpl> nbClazz = javaClassFromInstance<NamingBeanImpl>(namingBean);
-        Class<Main> mClazz = javaClassFromInstance<Main>(jndiServer);
+        Class<out Object> nbClazz = javaClassFromInstance(namingBean);
+        Class<out Object> mClazz = javaClassFromInstance(jndiServer);
         ClassLoader cl = nbClazz.classLoader;
         ClassLoader prevCl = currentThread().contextClassLoader;
 
