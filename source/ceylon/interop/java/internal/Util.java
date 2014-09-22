@@ -21,6 +21,7 @@ public final class Util {
     @SuppressWarnings("unchecked")
     public <T> java.lang.Class<? extends T> 
     javaClassFromInstance(@Ignore TypeDescriptor $reifiedT,
+            @Name("instance")
             T instance) {
         return (Class<? extends T>) instance.getClass();
     }
