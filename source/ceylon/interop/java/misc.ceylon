@@ -21,7 +21,6 @@ shared Class<Type> javaClass<Type>()
 "A Java [[java.lang::Class]] object representing the 
  concrete type of the given [[instance]]."
 shared Class<out Type> javaClassFromInstance<Type>(Type instance) 
-        given Type satisfies Object
         => util.javaClassFromInstance(instance);
 
 Util util = Util();
