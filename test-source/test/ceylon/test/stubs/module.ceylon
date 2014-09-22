@@ -3,4 +3,5 @@
  executed directly, because contains failing and invalid code. "
 module test.ceylon.test.stubs "1.1.0" {
     shared import ceylon.test "1.1.0";
+    shared import ceylon.collection "1.1.0";
 }

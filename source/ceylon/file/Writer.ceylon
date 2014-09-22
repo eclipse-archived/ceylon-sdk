@@ -9,6 +9,9 @@ shared interface Writer
     "Write a line of text to the file."
     shared formal void writeLine(String line = "");
     
+    "Write the given bytes to the file."
+    shared formal void writeBytes({Byte*} bytes);
+    
     "Flush all written text to the underlying
      file system."
     shared formal void flush();

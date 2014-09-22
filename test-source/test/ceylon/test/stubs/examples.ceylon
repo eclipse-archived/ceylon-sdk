@@ -67,6 +67,13 @@ shared class BarWithInheritedIgnore() extends BarWithIgnore() {
 
 }
 
+shared object bar {
+    
+    test
+    shared void bar1() {}
+    
+}
+
 testSuite({`function foo`, `class Bar`})
 shared void bazSuite() {}
 

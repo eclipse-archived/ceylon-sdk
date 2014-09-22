@@ -35,9 +35,14 @@
  
  The functions [[unmodifiableList]], [[unmodifiableSet]],
  and [[unmodifiableMap]] may be used to hide these mutable 
- list, set, and map implementations from clients. 
+ list, set, and map implementations from clients.
  
- Finally, [[IdentitySet]] and [[IdentityMap]] are provided."
+ [[SingletonMap]] and [[SingletonSet]] are immutable 
+ collections with exactly one element.
+ 
+ Finally, [[IdentitySet]] and [[IdentityMap]] are mutable
+ collections based on [[identity|Identifiable]] instead of 
+ value equality."
 
 by("Stéphane Épardaud")
 license("Apache Software License")

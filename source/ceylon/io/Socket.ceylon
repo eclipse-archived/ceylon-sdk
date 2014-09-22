@@ -1,8 +1,9 @@
 
 "Represents a network socket."
 by("Stéphane Épardaud")
-shared interface Socket satisfies SelectableFileDescriptor {
-}
+shared sealed interface Socket 
+        satisfies SelectableFileDescriptor {}
 
-shared interface SslSocket satisfies Socket {
-}
+"Represents an SSL network socket."
+shared sealed interface SslSocket 
+        satisfies Socket {}

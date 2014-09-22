@@ -11,7 +11,7 @@ shared class TestResult(description, state, exception = null, elapsedTime = 0) {
     "The exception thrown during this test, if any."
     shared Throwable? exception;
     
-    "The total elapsed time in miliseconds."
+    "The total elapsed time in milliseconds."
     shared Integer elapsedTime;
     
     shared actual String string => "``description`` - ``state```` (exception exists) then " (`` exception?.string else "" ``)" else "" ``";

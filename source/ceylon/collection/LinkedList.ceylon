@@ -403,7 +403,7 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         variable Integer i = 0;
         while (exists cell = iter) {
-            if(i >= from) {
+            if (i >= from) {
                 ret.add(cell.element);
             }
             i++;
@@ -485,7 +485,7 @@ shared class LinkedList<Element>(elements = {})
         variable value iter = head;
         while (exists cell = iter) {
             if (exists elem = cell.element) {
-                if(elem == element) {
+                if (elem == element) {
                     return true;
                 }
             }
@@ -514,8 +514,8 @@ shared class LinkedList<Element>(elements = {})
 
     shared actual MutableList<Element> clone() {
         value ret = LinkedList<Element>();
-        ret.head = head;
-        ret.tail = tail;
+        ret.head = head?.clone();
+        ret.tail = tail?.clone();
         ret.length = size;
         return ret;
     }
@@ -525,13 +525,14 @@ shared class LinkedList<Element>(elements = {})
         b.append("[");
         variable Cell<Element>? iter = head;
         while(exists Cell<Element> cell = iter){
-            if(is Object car = cell.car){
+            if (is Object car = cell.car){
                 b.append(car.string);
-            }else{
+            }
+            else {
                 b.append("null");
             }
             iter = cell.cdr;
-            if(iter exists){
+            if (iter exists){
                 b.append(", ");
             }
         }
@@ -614,7 +615,7 @@ shared class LinkedList<Element>(elements = {})
      The default List implementation of firstIndexWhere + lastIndexWhere
      uses getFromFirst(index) instead of iterating over the list
      because for tuples and array sequences that's slightly faster.
-     It is of course desastrous for a linked list, where getFromFirst(index)
+     It is of course disastrous for a linked list, where getFromFirst(index)
      runs in O(index) time, which means that the default firstIndexWhere()
      and lastIndexWhere() run in O(size^2) time, so we refine it here.
      */

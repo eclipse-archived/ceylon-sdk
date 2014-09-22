@@ -1,7 +1,7 @@
 import ceylon.collection{ ArrayList }
 
 "Represents a directory in a hierarchical file system."
-shared interface Directory 
+shared sealed interface Directory 
         satisfies ExistingResource {
     
     "The files and subdirectories that directly belong

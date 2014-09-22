@@ -4,18 +4,16 @@ import ceylon.collection {
 }
 import ceylon.net.http.server { UploadedFile }
 
-shared class FormDataBuilder() {
+class FormDataBuilder() {
     
     value parameters = HashMap<String, ArrayList<String>>();
     value files = HashMap<String, ArrayList<UploadedFile>>();
     
-    shared void addParameter(String name, String val) {
-        getPostedParameterValues(name).add(val);
-    }
+    shared void addParameter(String name, String val) 
+            => getPostedParameterValues(name).add(val);
     
-    shared void addFile(String name, UploadedFile val) {
-        getPostedFileValues(name).add(val);
-    }
+    shared void addFile(String name, UploadedFile val) 
+            => getPostedFileValues(name).add(val);
     
     ArrayList<String> getPostedParameterValues(String name) {
         variable ArrayList<String>? builder = parameters.get(name);
@@ -59,7 +57,7 @@ shared class FormDataBuilder() {
     }
 }
 
-shared class FormData(parameters, files) {
+class FormData(parameters, files) {
     shared Map<String, String[]> parameters;
     shared Map<String, UploadedFile[]> files;
 }

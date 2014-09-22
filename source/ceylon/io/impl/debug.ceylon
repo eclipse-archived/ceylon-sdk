@@ -1,3 +1,3 @@
-void debug(Anything val){
+void debug(Anything val) {
     //print(val);
 }

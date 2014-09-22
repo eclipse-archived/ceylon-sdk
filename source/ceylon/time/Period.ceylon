@@ -1,7 +1,6 @@
 import ceylon.time.base {
     ReadablePeriod, PeriodBehavior, ReadableDatePeriod, ReadableTimePeriod, 
     min = minutes, sec = seconds, ms = milliseconds}
-import ceylon.time.internal { leftPad }
 
 "An immutable period consisting of the ISO-8601 _years_, _months_, _days_, _hours_,
  _minutes_, _seconds_ and _milliseconds_, such as '3 Months, 4 Days and 7 Hours'.
@@ -306,7 +305,7 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
                 if (seconds != 0 || milliseconds != 0) {
                     buf.append(seconds.string);
                     if (milliseconds != 0) {
-                        buf.append(".``leftPad(milliseconds,"000")``");
+                        buf.append(".``milliseconds.string.padLeading(3, '0')``");
                     }
                     buf.append("S");
                 }

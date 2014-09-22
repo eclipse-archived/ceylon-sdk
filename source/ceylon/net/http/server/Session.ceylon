@@ -1,7 +1,7 @@
 "An object representing a session between a server and a 
  client."
 by("Matej Lazar")
-shared interface Session 
+shared sealed interface Session 
         satisfies Correspondence<String, Object> {
     
     "Session unique id."

@@ -1,6 +1,6 @@
 
 "Represents a collection of form-associated elements, some of
- which can representeditable values that can be submitted to
+ which can represent editable values that can be submitted to
  a server for processing.
  
  Technical details about this element can be found on the
@@ -66,7 +66,7 @@ shared class Form(action, method = "", acceptCharset = null,
         attrs.addAttribute("method", method);
         attrs.addAttribute("name", name);
         attrs.addAll(super.attributes);
-        attrs.addAttribute("acceptcharset", acceptCharset);
+        attrs.addAttribute("accept-charset", acceptCharset);
         attrs.addOnOffBooleanAttribute("autocomplete", autoComplete);
         attrs.addAttribute("enctype", encType);
         attrs.addNamedBooleanAttribute("novalidate", noValidate);

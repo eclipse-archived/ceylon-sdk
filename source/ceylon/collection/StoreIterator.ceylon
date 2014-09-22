@@ -10,17 +10,17 @@ class StoreIterator<Element>(Array<Cell<Element>?> store)
     
     shared actual Element|Finished next() {
         // do we need a new bucket?
-        if(!bucket exists){
+        if (!bucket exists) {
             // find the next non-empty bucket
-            while(++index < store.size){
+            while (++index < store.size) {
                 bucket = store[index];
-                if(bucket exists){
+                if (bucket exists) {
                     break;
                 }
             }
         }
         // do we have a bucket?
-        if(exists bucket = bucket){
+        if (exists bucket = bucket) {
             value car = bucket.element;
             // advance to the next cell
             this.bucket = bucket.rest;

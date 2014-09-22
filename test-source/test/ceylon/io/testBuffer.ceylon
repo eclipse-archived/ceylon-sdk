@@ -74,15 +74,15 @@ void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
 
 test void testByteBuffer(){
     ByteBuffer buffer = newByteBuffer(4);
-    Integer[] values = [1, 200, 200, 200];
+    Byte[] values = [1, 200, 200, 200]*.byte;
     testBuffer(buffer, values);
 }
 
 test void testByteBufferResize(){
     ByteBuffer buffer = newByteBuffer(4);
-    Integer[] values = [1, 2, 3, 4];
-    for(Integer val in values){
-        buffer.put(val);
+    Byte[] values = [1, 2, 3, 4]*.byte;
+    for(val in values){
+        buffer.putByte(val);
     }
 
     // flip it and eat a byte to get to position 1 
@@ -106,9 +106,9 @@ test void testByteBufferResize(){
     assertEquals(1, buffer.position);
     assertEquals(true, buffer.hasAvailable);
 
-    assertEquals(2, buffer.get());
-    assertEquals(3, buffer.get());
-    assertEquals(4, buffer.get());
+    assertEquals(2.byte, buffer.get());
+    assertEquals(3.byte, buffer.get());
+    assertEquals(4.byte, buffer.get());
 
     // flip it and eat a byte to get to position 1 
     buffer.flip();
@@ -124,7 +124,7 @@ test void testByteBufferResize(){
     assertEquals(1, buffer.position);
     assertEquals(true, buffer.hasAvailable);
 
-    assertEquals(2, buffer.get());
+    assertEquals(2.byte, buffer.get());
 }
 
 

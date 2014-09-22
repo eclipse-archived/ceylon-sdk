@@ -1,13 +1,16 @@
-import ceylon.net.http.server { EndpointBase }
-import ceylon.collection { LinkedList }
+import ceylon.collection {
+    LinkedList
+}
+import ceylon.net.http.server {
+    EndpointBase
+}
 
 shared class Endpoints() {
 
     value endpoints = LinkedList<EndpointBase>();
 
-    shared void add(EndpointBase endpoint) {
-        endpoints.add(endpoint);
-    }
+    shared void add(EndpointBase endpoint) 
+            => endpoints.add(endpoint);
 
     shared EndpointBase? getEndpointMatchingPath(String requestPath) {
         for (endpoint in endpoints) {

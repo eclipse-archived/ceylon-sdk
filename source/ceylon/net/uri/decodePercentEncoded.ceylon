@@ -1,13 +1,16 @@
-import java.lang { JString = String, ByteArray }
+import java.lang {
+    JString=String,
+    ByteArray
+}
 
-Integer fromHex(Integer hex){
-    if(hex >= '0'.integer && hex <= '9'.integer){
+Integer fromHex(Integer hex) {
+    if(hex >= '0'.integer && hex <= '9'.integer) {
         return hex - '0'.integer;
     }
-    if(hex >= 'A'.integer && hex <= 'F'.integer){
+    if(hex >= 'A'.integer && hex <= 'F'.integer) {
         return 10 + hex - 'A'.integer;
     }
-    if(hex >= 'a'.integer && hex <= 'f'.integer){
+    if(hex >= 'a'.integer && hex <= 'f'.integer) {
         return 10 + hex - 'a'.integer;
     }
     throw Exception("Invalid hexadecimal number: "+hex.string);
@@ -15,19 +18,20 @@ Integer fromHex(Integer hex){
 
 "Decodes a percent-encoded ASCII string."
 by("Stéphane Épardaud")
-shared String decodePercentEncoded(String str){
+shared String decodePercentEncoded(String str) {
+    Byte percent = '%'.integer.byte;
     ByteArray array = JString(str).getBytes("ASCII");
     variable Integer r = 0;
     variable Integer w = 0;
-    while(r < array.size){
-        Integer char = array.get(r);
-        if(char == '%'.integer){
+    while(r < array.size) {
+        Byte char = array.get(r);
+        if(char == percent) {
             // must read the next two items
-            if(++r < array.size){
-                Integer first = array.get(r);
-                if(++r < array.size){
-                    Integer second = array.get(r);
-                    array.set(w, 16 * fromHex(first) + fromHex(second));
+            if(++r < array.size) {
+                Byte first = array.get(r);
+                if(++r < array.size) {
+                    Byte second = array.get(r);
+                    array.set(w, (16 * fromHex(first.unsigned) + fromHex(second.unsigned)).byte);
                 }else{
                     throw Exception("Missing second hex number");
                 }

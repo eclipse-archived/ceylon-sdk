@@ -69,13 +69,22 @@ class ConcretePath(jpath)
     
     shared JPath jpath;
     
-    parent => ConcretePath(jpath.parent);
+    shared actual ConcretePath parent {
+        if (exists jparent = jpath.parent) {
+            return ConcretePath(jparent);
+        }
+        else {
+            return this;
+        }
+    }
     
     childPath(String|Path subpath) =>
             ConcretePath(jpath.resolve(asJPath(subpath)));
     
     siblingPath(String|Path subpath) =>
             ConcretePath(jpath.resolveSibling(asJPath(subpath)));
+    
+    root => jpath.nameCount==0;
     
     absolute => jpath.absolute;
     
@@ -184,6 +193,6 @@ class ConcretePath(jpath)
             }
         }
         walkFileTree(jpath, fileVisitor);
-    }
+    }    
     
 }

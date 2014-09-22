@@ -8,8 +8,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         satisfies MutableMap<Key,Item>
                   & SortedMap<Key,Item>
                   & Ranged<Key,Key->Item,TreeMap<Key,Item>>
-        given Key satisfies Object
-        given Item satisfies Object {
+        given Key satisfies Object {
     
     "A comparator function used to sort the entries."
     Comparison compare(Key x, Key y);
@@ -51,7 +50,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 if (onLeft) {
                     return p.right;
                 }
-                else if (onRight){
+                else if (onRight) {
                     return p.left;
                 }
                 else {
@@ -91,7 +90,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             stringBuilder//.append(red then "[R]" else "[B]")
                     .append(key.string)
                     .append("->")
-                    .append(item.string);
+                    .append(item?.string else "<null>");
             if (exists r=right) {
                 stringBuilder.append(", ").append(r.string);
             }
@@ -478,7 +477,64 @@ shared class TreeMap<Key, Item>(compare, entries={})
             return null;
         }
     }
-
+    
+    shared actual Boolean removeEntry(Key key, Item&Object item) {
+        if (exists result = lookup(key), 
+            exists it=result.item, 
+            it==item) {
+            Node node;
+            if (exists left=result.left,
+                exists right=result.right) {
+                // Copy key/value from predecessor and then delete it instead
+                node = left.rightmostChild;
+                result.key = node.key;
+                result.item = node.item;
+            } else {
+                node = result;
+            }
+            removeCases.removeNodeWithAtMostOneChild(node);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    shared actual Boolean replaceEntry(Key key, 
+        Item&Object item, Item newItem) {
+        if (exists root=this.root) {
+            variable Node node = root;
+            while (true) {
+                switch (compare(key,node.key))
+                case (larger) {
+                    if (exists nr=node.right) {
+                        node = nr;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                case (smaller) {
+                    if (exists nl = node.left) {
+                        node = nl;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                case (equal) {
+                    if (exists oldItem = node.item,
+                        oldItem==item) {
+                        node.item = newItem;
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     shared actual {<Key->Item>*} higherEntries(Key key) {
         object iterable satisfies {<Key->Item>*} {
             iterator() => NodeIterator(floor(key));
@@ -568,12 +624,41 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return clone;
     }
     
-    shared actual <Item&Object>? get(Object key) {
+    shared actual Item? get(Object key) {
         if (is Key key) {
             return lookup(key)?.item;
         }
         else {
             return null;
+        }
+    }
+    
+    shared actual Boolean defines(Object key) {
+        if (is Key key) {
+            return lookup(key) exists;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    shared actual Boolean contains(Object entry) {
+        if (is Key->Item entry,
+            exists node = lookup(entry.key)) {
+            if (exists item = node.item) {
+                if (exists entryItem = entry.item) {
+                    return entryItem == item;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return !entry.item exists;
+            }
+        }
+        else {
+            return false;
         }
     }
     

@@ -1,7 +1,8 @@
-"This package contains everything required to convert bytes to [[String]]s according
- to character sets.
+"This package contains everything required to convert bytes 
+ to [[String]]s according to character sets.
  
- Sample code for converting a [[String]] to an ASCII [[ceylon.io.buffer::ByteBuffer]]
+ Sample code for converting a [[String]] to an ASCII 
+ [[ceylon.io.buffer::ByteBuffer]]
  
      ByteBuffer buffer = ascii.encode(\"Hello World\");
  
@@ -11,9 +12,9 @@
  
  If you want to decode something according to any encoding:
  
-     String decode(String encoding, ByteBuffer buffer){
+     String decode(String encoding, ByteBuffer buffer) {
          Charset? charset = getCharset(encoding);
-         if(exists charset){
+         if(exists charset) {
              return charset.decode(buffer);
          }
          throw Exception(\"Unknown character set\");

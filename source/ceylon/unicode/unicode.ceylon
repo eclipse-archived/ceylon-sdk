@@ -124,7 +124,7 @@ shared object whitespace extends Directionality("WS"){}
 
 "The directionality of the given character."
 shared Directionality directionality(Character character) {
-    Integer dir = getDirectionality(character.integer);
+    Byte dir = getDirectionality(character.integer);
     
     // Take a guess about the likelihood of various directionalities
     if (dir == dirLEFT_TO_RIGHT) { return leftToRight; }
@@ -294,7 +294,7 @@ shared object symbolOther extends Symbol("So", "Symbol, other"){}
 
 "The general category of the given character"
 shared GeneralCategory generalCategory(Character character) {
-    Integer gc = getType(character.integer);
+    Byte gc = getType(character.integer).byte;
     if (gc == gcCOMBINING_SPACING_MARK) { return markCombiningSpacing; }
     else if (gc == gcCONNECTOR_PUNCTUATION) { return punctuationConnector; }
     else if (gc == gcCONTROL) { return otherControl; }

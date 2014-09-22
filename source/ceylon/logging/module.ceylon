@@ -20,30 +20,30 @@
    `Logger` instance for a package or module may be obtained 
    by calling [[logger]].
    
-       Logger logger = logger(`module hello`);
+       Logger log = logger(`module hello`);
    
    The methods [[Logger.fatal]], [[Logger.error]], 
    [[Logger.warn]], [[Logger.info]], [[Logger.debug]], and 
    [[Logger.trace]] write log messages with various
    [[priorities|Priority]].
    
-       logger.debug("trying to do something");
+       log.debug("trying to do something");
        try {
            doSomething();
        }
        catch (e) {
-           logger.error("something bad happened", e);
+           log.error("something bad happened", e);
        }
    
    For log messages with interpolated expressions, these
    methods accept an anonymous function.
      
-       logger.debug(()=>"trying to do ``something``");
+       log.debug(()=>"trying to do ``something``");
        try {
            do(something);
        }
        catch (e) {
-           logger.error(()=>"badness happened doing ``something``", e);
+           log.error(()=>"badness happened doing ``something``", e);
        }
     
    By default, only log messages with priority at least 

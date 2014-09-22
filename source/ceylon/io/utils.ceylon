@@ -1,5 +1,6 @@
-import ceylon.io.buffer { ByteBuffer, newByteBuffer }
-
-ByteBuffer newBuffer() {
-    return newByteBuffer(4096);
+import ceylon.io.buffer {
+    ByteBuffer,
+    newByteBuffer
 }
+
+ByteBuffer newBuffer() => newByteBuffer(4096);

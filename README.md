@@ -6,6 +6,21 @@ The module minor.major version aligns with the Ceylon distribution minor.major
 version that we use to compile/distribute them. The micro version of each module
 can be incremented as needed between Ceylon distribution releases.
 
+Build the compiler and tools
+----------------------------
+
+For setting up the development environment and compiling and building the distribution
+take a look at [ceylon-dist](https://github.com/ceylon/ceylon-dist#ceylon-distribution).
+
+If after having built the distribution you want to build and test the SDK
+return to `ceylon-sdk` and run 
+
+    ant clean publish
+    
+To run the tests type
+
+    ant test
+
 ## License
 
 The content of this repository is released under the ASL v2.0

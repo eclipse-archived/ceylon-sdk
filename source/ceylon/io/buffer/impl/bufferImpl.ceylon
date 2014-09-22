@@ -1,72 +1,59 @@
-import java.nio { JavaByteBuffer = ByteBuffer { allocateJavaByteBuffer = allocate }}
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.interop.java { toIntegerArray }
+import ceylon.interop.java {
+    javaByteArray
+}
+import ceylon.io.buffer {
+    ByteBuffer,
+    newByteBuffer
+}
+import ceylon.io.readers {
+    Reader
+}
 
-Boolean needsWorkarounds = true;
+import java.nio {
+    JavaByteBuffer=ByteBuffer {
+        allocateJavaByteBuffer=allocate
+    }
+}
 
-shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
-    variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
-    shared JavaByteBuffer underlyingBuffer {
-        return buf;
-    }
+shared class ByteBufferImpl(Integer initialCapacity) 
+        extends ByteBuffer() {
     
-    shared actual Integer capacity {
-        return buf.capacity();
-    }
-    shared actual Integer limit {
-        return buf.limit();
-    }
-    assign limit {
-        buf.limit(limit);
-    }
-    shared actual Integer position {
-        return buf.position();
-    }
-    assign position {
-        buf.position(position);
-    }
-    shared actual Integer get() {
-        return signedByteToUnsigned(buf.get());
-    }
-    shared actual void put(Integer byte) {
-        buf.put(unsignedByteToSigned(byte));
-    }
-    shared actual void clear() {
-        buf.clear();
-    }
-    shared actual void flip() {
-        buf.flip();
-    }
-    Integer signedByteToUnsigned(Integer b) { 
-        if(needsWorkarounds && b < 0){
-            return b + 256;
-        }
-        return b;
-    }
+    variable JavaByteBuffer buf = 
+            allocateJavaByteBuffer(initialCapacity);
+    shared JavaByteBuffer underlyingBuffer => buf;
     
-    Integer unsignedByteToSigned(Integer b) { 
-        if(needsWorkarounds && b > 127){
-            return b - 256;
-        }
-        return b;
-    }
+    capacity => buf.capacity();
+    
+    shared actual Integer limit => buf.limit();
+    assign limit => buf.limit(limit);
+    
+    shared actual Integer position => buf.position();
+    assign position => buf.position(position);
+    
+    getByte() => buf.get();
+    putByte(Byte byte) => buf.put(byte);
+    
+    get() => buf.get();
+    put(Byte byte) => buf.put(byte);
+    clear() => buf.clear();
+    flip() => buf.flip();
     
     shared actual void resize(Integer newSize, Boolean growLimit) {
-        if(newSize == capacity){
+        if(newSize == capacity) {
             return;
         }
-        if(newSize < 0){
+        if(newSize < 0) {
             // FIXME: type
             throw;
         }
         JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
         // save our position and limit
-        value position = min([this.position, newSize]);
+        value position = smallest(this.position, newSize);
         Integer limit;
-        if(newSize < capacity){
+        if(newSize < capacity) {
             // shrink the limit
-            limit = min([this.limit, newSize]);
-        }else if(growLimit && this.limit == capacity){
+            limit = smallest(this.limit, newSize);
+        }else if(growLimit && this.limit == capacity) {
             // grow the limit if it was the max and we want that
             limit = newSize;
         }else{
@@ -74,7 +61,7 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
             limit = this.limit;
         }
         // copy everything unless we shrink
-        value copyUntil = min([this.capacity, newSize]);
+        value copyUntil = smallest(this.capacity, newSize);
         // prepare our limits for copying
         buf.position(0);
         buf.limit(copyUntil);
@@ -86,11 +73,26 @@ shared class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer(){
         buf.limit(limit);
         buf.position(position);
     }
-    shared actual Array<Integer> bytes() {
-        return toIntegerArray(buf.array());
-    }
+    
+    //shared actual Array<Byte> bytes() {
+    //    //TODO: could it be buf.array().byteArray
+    //    //downside: that exposes the internal state
+    //    //of the underyling Java buffer
+    //    return toByteArray(buf.array());
+    //}
     
     shared actual Object? implementation => underlyingBuffer;
-
+    
 }
 
+shared Integer readByteArray(Array<Byte> array, Reader reader) {
+    //TODO: is it horribly inefficient to allocate
+    //      a new byte buffer here??
+    value buffer = newByteBuffer(array.size);
+    value result = reader.read(buffer);
+    value byteArray = javaByteArray(array);
+    for (i in 0:result) {
+        byteArray.set(i, buffer.getByte());
+    }
+    return result;
+}

@@ -25,7 +25,7 @@
    lazily:
    
        try (results = sql.Select("select * from mytable where date>?")
-                   .Results(date)) {
+                         .Results(date)) {
            results.limit = 50;
            for (row in results) {
                ...
@@ -36,8 +36,7 @@
    verbose:
    
        sql.Select("select * from mytable where date>?")
-           .forEachRow(date)
-       ((Row row) {
+          .forEachRow(date)((row) {
            ...
        });
    
@@ -50,11 +49,11 @@
    And of course you can execute `update` and `insert` 
    statements, using [[Sql.Update]] and [[Sql.Insert]]:
    
-       Integer changed = sql.Update("update table SET col=? where key=?")
-                           .execute(newValue, key);
+       sql.Update("update table SET col=? where key=?")
+          .execute(newValue, key);
    
        sql.Insert("insert into table (key,col) values (?, ?)")
-                           .execute(key, initialValue);
+          .execute(key, initialValue);
    
    If you need to perform several operations within a single
    transaction, you can pass a function to the method
@@ -64,11 +63,12 @@
    the function returns `true`:
    
        sql.transaction {
-           Boolean do() {
+           function do() {
                sql.Insert("insert ... ").execute();
                sql.Update("update ... ").execute();
                sql.Update("delete ... ").execute();
-               //This will cause a commit - return false or throw to cause rollback
+               //return true to commit the transaction
+               //return false or throw to roll it back
                return true;
            }
        };
@@ -78,7 +78,7 @@
    [[java.sql::Types]]):
    
        sql.Update("update table set col=? where key=?")
-           .execute(SqlNull(Types.\iINTEGER));
+          .execute(SqlNull(Types.\iINTEGER));
    
    If a column is null on a result row, it will be 
    represented as a `SqlNull` instance under the column's 
@@ -86,7 +86,7 @@
 
 by ("Enrique Zamudio")
 license ("Apache Software License 2.0")
-module ceylon.dbc "1.1.1" {
+module ceylon.dbc "1.1.0" {
     import ceylon.collection "1.1.0";
     shared import ceylon.math "1.1.0";
     shared import ceylon.transaction "1.0.0";

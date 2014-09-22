@@ -1,28 +1,48 @@
 import ceylon.io {
     SslSocket
 }
-
-import java.nio.channels {
-    SocketChannel, SelectionKey, Selector
+import ceylon.io.buffer {
+    ByteBuffer
 }
-import javax.net.ssl { X509TrustManager, SSLContext, SSLEngine, TrustManager, SSLEngineResult  }
-import java.security.cert { X509Certificate }
-import java.lang { ObjectArray }
-import java.nio { JavaByteBuffer = ByteBuffer {allocateJavaByteBuffer = allocate }}
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.io.buffer.impl { ByteBufferImpl }
+import ceylon.io.buffer.impl {
+    ByteBufferImpl
+}
+
+import java.lang {
+    ObjectArray
+}
+import java.nio {
+    JavaByteBuffer=ByteBuffer {
+        allocateJavaByteBuffer=allocate
+    }
+}
+import java.nio.channels {
+    SocketChannel,
+    SelectionKey,
+    Selector
+}
+import java.security.cert {
+    X509Certificate
+}
+
+import javax.net.ssl {
+    X509TrustManager,
+    SSLContext,
+    SSLEngine,
+    TrustManager,
+    SSLEngineResult
+}
 
 object dummyTrustManager satisfies X509TrustManager {
 
-    shared actual ObjectArray<X509Certificate> acceptedIssuers => ObjectArray<X509Certificate>(0);
+    shared actual ObjectArray<X509Certificate> acceptedIssuers 
+            => ObjectArray<X509Certificate>(0);
     
-    shared actual void checkClientTrusted(ObjectArray<X509Certificate> chain, String authType) {
-        debug("UNKNOWN CLIENT CERTIFICATE: ``chain.get(0).subjectDN``");
-    }
+    shared actual void checkClientTrusted(ObjectArray<X509Certificate> chain, String authType) 
+            => debug("UNKNOWN CLIENT CERTIFICATE: ``chain.get(0).subjectDN``");
     
-    shared actual void checkServerTrusted(ObjectArray<X509Certificate> chain, String authType) {
-        debug("UNKNOWN SERVER CERTIFICATE: ``chain.get(0).subjectDN``");
-    }
+    shared actual void checkServerTrusted(ObjectArray<X509Certificate> chain, String authType) 
+            => debug("UNKNOWN SERVER CERTIFICATE: ``chain.get(0).subjectDN``");
 }
 
 JavaByteBuffer emptyBuf = allocateJavaByteBuffer(0);
@@ -31,20 +51,25 @@ ObjectArray<TrustManager> makeObjectArray(Iterable<TrustManager> items) {
     value seq = items.sequence();
     value ret = ObjectArray<TrustManager>(seq.size);
     variable Integer i = 0;
-    for(item in seq){
+    for(item in seq) {
         ret.set(i++, item);
     }
     return ret;
 }
 
-ObjectArray<TrustManager> dummyTrustManagers = makeObjectArray{dummyTrustManager};
+ObjectArray<TrustManager> dummyTrustManagers 
+        = makeObjectArray{dummyTrustManager};
 
-shared interface DataNeeds of dataNeedsOk | dataNeedsNeedsData | dataNeedsEndOfFile {}
+shared interface DataNeeds 
+        of dataNeedsOk | dataNeedsNeedsData | dataNeedsEndOfFile {}
 shared object dataNeedsEndOfFile satisfies DataNeeds {}
 shared object dataNeedsNeedsData satisfies DataNeeds {}
 shared object dataNeedsOk satisfies DataNeeds {}
 
-shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) satisfies SslSocket {
+class SslSocketImpl(SocketChannel socket) 
+        extends SocketImpl(socket) 
+        satisfies SslSocket {
+    
     SSLContext sslContext;
     SSLEngine sslEngine;
     JavaByteBuffer readAppBuf;
@@ -75,26 +100,26 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
     shared actual Integer write(ByteBuffer contents) {
         assert(is ByteBufferImpl contents);
         // nothing to write
-        if(!contents.hasAvailable){
+        if(!contents.hasAvailable) {
             return 0;
         }
 
-        if(writePendingData() == dataNeedsNeedsData){
+        if(writePendingData() == dataNeedsNeedsData) {
             return 0;
         }
         
-        while(contents.hasAvailable){
+        while(contents.hasAvailable) {
             SSLEngineResult result = sslEngine.wrap(contents.underlyingBuffer, writeNetBuf);
             value status = result.status;
-            if(status == SSLEngineResult.Status.\iBUFFER_OVERFLOW){
+            if(status == SSLEngineResult.Status.\iBUFFER_OVERFLOW) {
                 // not enough space in the net buffer
                 debug("Buffer overflow");
                 writeNetBuf = allocateJavaByteBuffer(writeNetBuf.capacity()*2);
-            }else if(status == SSLEngineResult.Status.\iBUFFER_UNDERFLOW){
+            }else if(status == SSLEngineResult.Status.\iBUFFER_UNDERFLOW) {
                 throw Exception("Buffer underflow");
-            }else if(status == SSLEngineResult.Status.\iCLOSED){
+            }else if(status == SSLEngineResult.Status.\iCLOSED) {
                 throw Exception("Buffer closed");
-            }else if(status == SSLEngineResult.Status.\iOK){
+            }else if(status == SSLEngineResult.Status.\iOK) {
                 debug("wrapped OK");
 
                 // leave contents buf as it is: if we still have things to read from it then fine
@@ -103,7 +128,7 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                 writeNetBuf.flip();
                 hasDataToWrite_ = writeNetBuf.hasRemaining();
                 // try to flush as much net data as possible
-                if(flushNetBuffer() == dataNeedsNeedsData){
+                if(flushNetBuffer() == dataNeedsNeedsData) {
                     // we can't write it all
                     // FIXME: how much did we write in total?
                     return 0;
@@ -112,13 +137,13 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
             }
             // now check handshaking status
             switch(handshake(result.handshakeStatus))
-            case(dataNeedsEndOfFile){
+            case(dataNeedsEndOfFile) {
                 throw Exception("EOF");
             }
-            case(dataNeedsNeedsData){
+            case(dataNeedsNeedsData) {
                 return 0;
             }
-            case(dataNeedsOk){
+            case(dataNeedsOk) {
                 // go on
             }
         }
@@ -128,7 +153,7 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
     DataNeeds checkForHandshake() {
         SSLEngineResult.HandshakeStatus handshakeStatus = sslEngine.handshakeStatus;
         if(handshakeStatus != SSLEngineResult.HandshakeStatus.\iFINISHED
-                && handshakeStatus != SSLEngineResult.HandshakeStatus.\iNOT_HANDSHAKING){
+                && handshakeStatus != SSLEngineResult.HandshakeStatus.\iNOT_HANDSHAKING) {
             // do the handshake
             return handshake(handshakeStatus);
         }
@@ -137,12 +162,12 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
 
     DataNeeds flushNetBuffer() {
         // first try to get rid of whatever we already have
-        while(writeNetBuf.hasRemaining()){
+        while(writeNetBuf.hasRemaining()) {
             Integer written = socket.write(writeNetBuf);
-            if(written == -1){
+            if(written == -1) {
                 throw Exception("EOF");
             }
-            if(written == 0){
+            if(written == 0) {
                 return dataNeedsNeedsData; // wait for another write event
             }
         }
@@ -155,53 +180,51 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
     shared DataNeeds writePendingData() {
         // are we in the middle of a handshake?
         switch(checkForHandshake())
-        case (dataNeedsNeedsData){
+        case (dataNeedsNeedsData) {
             return dataNeedsNeedsData;
         }
-        case (dataNeedsEndOfFile){
+        case (dataNeedsEndOfFile) {
             throw Exception("EOF");
         }
-        case (dataNeedsOk){
+        case (dataNeedsOk) {
             // go on
         }
         // at this point the handshake is over and we're good to write stuff
         
         // do we have stuff remaining to write?
-        if(hasDataToWrite_){
-            if(flushNetBuffer() == dataNeedsNeedsData){
+        if(hasDataToWrite_) {
+            if(flushNetBuffer() == dataNeedsNeedsData) {
                 return dataNeedsNeedsData;
             }
         }
         return dataNeedsOk;
     }
     
-    shared DataNeeds readForHandshake() {
-        return checkForHandshake();
-    }
+    shared DataNeeds readForHandshake() => checkForHandshake();
 
     shared actual Integer read(ByteBuffer contents) {
         assert(is ByteBufferImpl contents);
         
         // no place left?
-        if(!contents.hasAvailable){
+        if(!contents.hasAvailable) {
             return 0;
         }
         
         // are we in the middle of a handshake?
         switch(checkForHandshake())
-        case(dataNeedsEndOfFile){
+        case(dataNeedsEndOfFile) {
             return -1;
         }
-        case (dataNeedsNeedsData){
+        case (dataNeedsNeedsData) {
             return 0;
         }
-        case (dataNeedsOk){
+        case (dataNeedsOk) {
             // go on
         }
         // at this point the handshake is over and we're good to read stuff
 
         // did we have user data left over?
-        if(hasAppData){
+        if(hasAppData) {
             // put whatever fits
             Integer transfer = putAppData(contents);
             // stop here it's good enough
@@ -210,15 +233,15 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
         
         // at this point we have no more app data and we have space to read something in
         //READ:
-        while(true){
-            if(!hasReadNetData || needMoreData){
+        while(true) {
+            if(!hasReadNetData || needMoreData) {
                 Integer read = socket.read(readNetBuf);
                 debug("Read ``read`` bytes");
-                if(read == -1){
+                if(read == -1) {
                     sslEngine.closeInbound();
                     return -1;
                 }
-                if(read == 0){
+                if(read == 0) {
                     return 0; // wait for more data
                 }
             }
@@ -230,12 +253,12 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
             debug("unwrapped ``readNetBuf`` / ``readAppBuf``");
 
             value status = result.status;
-            if(status == SSLEngineResult.Status.\iBUFFER_OVERFLOW){
+            if(status == SSLEngineResult.Status.\iBUFFER_OVERFLOW) {
                 throw Exception("Buffer overflow");
-            }else if(status == SSLEngineResult.Status.\iBUFFER_UNDERFLOW){
+            }else if(status == SSLEngineResult.Status.\iBUFFER_UNDERFLOW) {
                 debug("Buffer underflow");
                 hasReadNetData = readNetBuf.hasRemaining();
-                if(hasReadNetData){
+                if(hasReadNetData) {
                     // put what remains at the start as if we just read it
                     readNetBuf.compact();
                 }else{
@@ -245,10 +268,10 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                 needMoreData = true;
                 continue;
             }else if(status == SSLEngineResult.Status.\iOK
-                     || status == SSLEngineResult.Status.\iCLOSED){
+                     || status == SSLEngineResult.Status.\iCLOSED) {
                 debug("unwrapped OK, remaining net bytes: ``readNetBuf.position()``");
                 hasReadNetData = readNetBuf.hasRemaining();
-                if(hasReadNetData){
+                if(hasReadNetData) {
                     // put what remains at the start as if we just read it
                     readNetBuf.compact();
                 }else{
@@ -274,7 +297,7 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
         readAppBuf.position(readAppBuf.position()+transfer);
         debug("New app buffer position: ``readAppBuf.position()``");
         // check if we're done
-        if(!readAppBuf.hasRemaining()){
+        if(!readAppBuf.hasRemaining()) {
             debug("App buffer empty");
             hasAppData = false;
             readAppBuf.clear();
@@ -287,34 +310,34 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
     DataNeeds handshake(status) {
         variable SSLEngineResult.HandshakeStatus status;
         //HANDSHAKE:
-        while(true){
+        while(true) {
             debug("Handshake status: ``status``");
-            if(status == SSLEngineResult.HandshakeStatus.\iNOT_HANDSHAKING){
+            if(status == SSLEngineResult.HandshakeStatus.\iNOT_HANDSHAKING) {
                 debug("Not handshaking");
                 userOps();
                 return dataNeedsOk;
-            }else if(status == SSLEngineResult.HandshakeStatus.\iFINISHED){
+            }else if(status == SSLEngineResult.HandshakeStatus.\iFINISHED) {
                 debug("Handshake finished");
                 userOps();
                 return dataNeedsOk;
-            }else if(status == SSLEngineResult.HandshakeStatus.\iNEED_TASK){
+            }else if(status == SSLEngineResult.HandshakeStatus.\iNEED_TASK) {
                 debug("Handshake needs task");
                 runTasks();
                 status = sslEngine.handshakeStatus;
                 continue;
-            }else if(status == SSLEngineResult.HandshakeStatus.\iNEED_UNWRAP){
+            }else if(status == SSLEngineResult.HandshakeStatus.\iNEED_UNWRAP) {
                 // read data
                 //READ:
-                while(true){
+                while(true) {
                     // if we have nothing in our net buffer or if it's not enough
-                    if(!hasReadNetData || needMoreData){
+                    if(!hasReadNetData || needMoreData) {
                         // read new or append to existing
                         Integer read = socket.read(readNetBuf);
                         debug("unwrap read bytes: ``read``");
-                        if(read == -1){
+                        if(read == -1) {
                             throw Exception("EOF");
                         }
-                        if(read == 0){
+                        if(read == 0) {
                             // no data to unwrap, must get some more
                             selectOps(SelectionKey.\iOP_READ);
                             return dataNeedsNeedsData;
@@ -326,12 +349,12 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                     debug("read net buf: ``readNetBuf``");
                     debug("read app buf: ``readAppBuf``");
                     value resultStatus = result.status;
-                    if(resultStatus == SSLEngineResult.Status.\iBUFFER_OVERFLOW){
+                    if(resultStatus == SSLEngineResult.Status.\iBUFFER_OVERFLOW) {
                         throw Exception("Buffer overflow");
-                    }else if(resultStatus == SSLEngineResult.Status.\iBUFFER_UNDERFLOW){
+                    }else if(resultStatus == SSLEngineResult.Status.\iBUFFER_UNDERFLOW) {
                         debug("Handshake unwrap buffer underflow");
                         hasReadNetData = readNetBuf.hasRemaining();
-                        if(hasReadNetData){
+                        if(hasReadNetData) {
                             // put what remains at the start as if we just read it
                             readNetBuf.compact();
                         }else{
@@ -339,11 +362,11 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                         }
                         // need to read more data, start over
                         needMoreData = true;
-                    }else if(resultStatus == SSLEngineResult.Status.\iCLOSED){
+                    }else if(resultStatus == SSLEngineResult.Status.\iCLOSED) {
                         throw Exception("EOF");
-                    }else if(resultStatus == SSLEngineResult.Status.\iOK){
+                    }else if(resultStatus == SSLEngineResult.Status.\iOK) {
                         hasReadNetData = readNetBuf.hasRemaining();
-                        if(hasReadNetData){
+                        if(hasReadNetData) {
                             // put what remains at the start as if we just read it
                             readNetBuf.compact();
                         }else{
@@ -357,40 +380,40 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                         break;
                     }
                 }
-            }else if(status == SSLEngineResult.HandshakeStatus.\iNEED_WRAP){
+            }else if(status == SSLEngineResult.HandshakeStatus.\iNEED_WRAP) {
                 // we need to send data, not our own
                 //WRITE:
-                while(true){
+                while(true) {
                     debug("Wrapping empty buffer");
                     // assume we are good to write
                     variable value resultStatus = SSLEngineResult.Status.\iOK;
                     // get something to write if we have nothing
-                    if(!hasDataToWrite_){
+                    if(!hasDataToWrite_) {
                         SSLEngineResult result = sslEngine.wrap(emptyBuf, writeNetBuf);
                         writeNetBuf.flip();
                         resultStatus = result.status;
                     }
                     
-                    if(resultStatus == SSLEngineResult.Status.\iBUFFER_OVERFLOW){
+                    if(resultStatus == SSLEngineResult.Status.\iBUFFER_OVERFLOW) {
                         // not enough space in the net buffer
                         debug("Buffer overflow");
                         writeNetBuf = allocateJavaByteBuffer(writeNetBuf.capacity()*2);
                         continue;
-                    }else if(resultStatus == SSLEngineResult.Status.\iBUFFER_UNDERFLOW){
+                    }else if(resultStatus == SSLEngineResult.Status.\iBUFFER_UNDERFLOW) {
                         throw Exception("Buffer underflow");
-                    }else if(resultStatus == SSLEngineResult.Status.\iCLOSED){
+                    }else if(resultStatus == SSLEngineResult.Status.\iCLOSED) {
                         return dataNeedsEndOfFile;
-                    }else if(resultStatus == SSLEngineResult.Status.\iOK){
+                    }else if(resultStatus == SSLEngineResult.Status.\iOK) {
                         // check the new handshake status
                         debug("wrap OK");
-                        while(writeNetBuf.hasRemaining()){
+                        while(writeNetBuf.hasRemaining()) {
                             Integer written = socket.write(writeNetBuf);
                             debug("wrap wrote bytes: ``written``");
-                            if(written == -1){
+                            if(written == -1) {
                                 throw Exception("EOF");
                             }
                             // we need to wait for further notification that we can write
-                            if(written == 0){
+                            if(written == 0) {
                                 hasDataToWrite_ = true;
                                 selectOps(SelectionKey.\iOP_WRITE);
                                 return dataNeedsNeedsData;
@@ -408,7 +431,7 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
     }
 
     void runTasks() {
-        while(exists task = sslEngine.delegatedTask){
+        while(exists task = sslEngine.delegatedTask) {
             debug("Running one task");
             task.run();
         }
@@ -422,14 +445,14 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
         return selectionKey;
     }
 
-    void selectOps(Integer ops){
+    void selectOps(Integer ops) {
         debug("select ops ``ops`` for key ``selectionKey else "null"``");
         selectionKey?.interestOps(ops);
     }
 
-    shared actual void interestOps(SelectionKey key, Integer ops){
+    shared actual void interestOps(SelectionKey key, Integer ops) {
         this.selectionOps = ops;
-        if(!handshaking){
+        if(!handshaking) {
             selectionKey?.interestOps(ops);
         }
     }
@@ -440,24 +463,19 @@ shared class SslSocketImpl(SocketChannel socket) extends SocketImpl(socket) sati
                 && handshakeStatus != SSLEngineResult.HandshakeStatus.\iNOT_HANDSHAKING;
     }
 
-    void userOps(){
-        selectionKey?.interestOps(this.selectionOps);
-    }
+    void userOps() 
+            => selectionKey?.interestOps(this.selectionOps);
     
-    shared Boolean dataToWrite {
-        return this.hasDataToWrite_ || isHandshakeWrap();
-    }
+    shared Boolean dataToWrite 
+            => this.hasDataToWrite_ || isHandshakeWrap();
 
-    shared Boolean isHandshakeUnwrap(){
-        return sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_UNWRAP;
-    }
+    shared Boolean isHandshakeUnwrap()
+            => sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_UNWRAP;
     
-    Boolean isHandshakeWrap() {
-        return sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_WRAP;
-    }
+    Boolean isHandshakeWrap() 
+            => sslEngine.handshakeStatus == SSLEngineResult.HandshakeStatus.\iNEED_WRAP;
 
-    shared Boolean dataToRead {
-        return this.hasAppData || (this.hasReadNetData && !this.needMoreData);
-    }
+    shared Boolean dataToRead 
+            => this.hasAppData || (this.hasReadNetData && !this.needMoreData);
 
 }

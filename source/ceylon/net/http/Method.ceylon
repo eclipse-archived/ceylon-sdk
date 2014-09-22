@@ -25,35 +25,43 @@ shared abstract class AbstractMethod()
     shared actual Integer hash => string.hash;
 }
 
-shared object options extends AbstractMethod() {
+shared object options 
+        extends AbstractMethod() {
     string => "OPTIONS";
 }
 
-shared object get extends AbstractMethod() {
+shared object get 
+        extends AbstractMethod() {
     string => "GET";
 }
 
-shared object head extends AbstractMethod() {
+shared object head 
+        extends AbstractMethod() {
     string => "HEAD";
 }
 
-shared object post extends AbstractMethod() {
+shared object post 
+        extends AbstractMethod() {
     string => "POST";
 }
 
-shared object put extends AbstractMethod() {
+shared object put 
+        extends AbstractMethod() {
     string => "PUT";
 }
 
-shared object delete extends AbstractMethod() {
+shared object delete 
+        extends AbstractMethod() {
     string => "DELETE";
 }
 
-shared object trace extends AbstractMethod() {
+shared object trace 
+        extends AbstractMethod() {
     string => "TRACE";
 }
 
-shared object connect extends AbstractMethod() {
+shared object connect 
+        extends AbstractMethod() {
     string => "CONNECT";
 }
 

@@ -48,17 +48,35 @@ shared class DefaultTestRunner(
     shared actual TestDescription description => TestDescription("root", null, null, executors*.description);
     
     shared actual TestRunResult run() {
-        value result = TestRunResultImpl();
-        value context = TestRunContextImpl(this, result);
+        verifyCycle();
+        try {
+            runningRunners.add(this);
+            
+            value result = TestRunResultImpl();
+            value context = TestRunContextImpl(this, result);
+            
+            context.addTestListener(result.listener, *listeners);
+            context.fireTestRunStart(TestRunStartEvent(this, description));
+            executors*.execute(context);
+            context.fireTestRunFinish(TestRunFinishEvent(this, result));
+            context.removeTestListener(result.listener, *listeners);
+            
+            return result;
+        }
+        finally {
+            runningRunners.remove(this);
+        }
         
-        context.addTestListener(result.listener, *listeners);
-        context.fireTestRunStart(TestRunStartEvent(this, description));
-        executors*.execute(context);
-        context.fireTestRunFinish(TestRunFinishEvent(this, result));
-        context.removeTestListener(result.listener, *listeners);
-        
-        return result;
     }
+    
+    void verifyCycle() {
+        for(runningRunner in runningRunners) {
+            if( runningRunner.description == description ) {
+                throw Exception("cycle in TestRunner execution was detected, TestRunner.run() is probably invoked from inside test function");
+            }
+        }
+    }
+    
 }
 
 alias TestCandidate => [FunctionDeclaration, ClassDeclaration?]|ErrorTestExecutor;
@@ -184,7 +202,7 @@ void findCandidatesInPackage(ArrayList<TestCandidate> candidates, Package pkg) {
 }
 
 void findCandidatesInClass(ArrayList<TestCandidate> candidates, ClassDeclaration classDecl) {
-    if (!classDecl.abstract && !classDecl.anonymous) {
+    if (!classDecl.abstract) {
         for (funcDecl in classDecl.annotatedMemberDeclarations<FunctionDeclaration,TestAnnotation>()) {
             candidates.add([funcDecl, classDecl]);
         }
@@ -375,3 +393,5 @@ A[] findAnnotations<out A>(ClassDeclaration classDecl)
     }
     return annotationBuilder.sequence();
 }
+
+IdentitySet<DefaultTestRunner> runningRunners = IdentitySet<DefaultTestRunner>();

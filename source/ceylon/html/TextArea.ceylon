@@ -28,7 +28,7 @@ shared class TextArea(text = "", String? name = null,
         satisfies InlineElement & TextNode {
     
     if (exists wrapMode = wrap, wrapMode == hard) {
-        "The number os columns must be specified when wrap mode is `hard`"
+        "The number of columns must be specified when wrap mode is `hard`"
         assert (exists cols);
     }
 
@@ -38,7 +38,7 @@ shared class TextArea(text = "", String? name = null,
     shared Integer? rows;
 
     "Specifies the visible width of a text area.
-     **Must** be secified when [[TextArea.wrap]] is [[hard]]"
+     **Must** be specified when [[TextArea.wrap]] is [[hard]]"
     shared Integer? cols;
 
     "Specifies the maximum number of characters allowed."
@@ -56,6 +56,22 @@ shared class TextArea(text = "", String? name = null,
     shared TextAreaWrap? wrap;
 
     tag = Tag("textarea");
+    
+    shared actual default [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.addAttribute("rows", rows);
+        attrs.addAttribute("cols", cols);
+
+        attrs.addAttribute("maxlength", maxLength);
+        attrs.addAttribute("minlength", minLength);
+
+        attrs.addAttribute("placeholder", placeholder);
+        attrs.addAttribute("wrap", wrap);
+        
+        attrs.addAll(super.attributes);
+
+        return attrs.sequence();
+    }
 
 }
 

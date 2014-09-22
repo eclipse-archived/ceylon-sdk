@@ -10,7 +10,7 @@ import ceylon.file.internal {
 }
 
 "Represents a file in a hierarchical file system."
-shared interface File 
+shared sealed interface File 
         satisfies ExistingResource {
     
     "The directory containing this file."

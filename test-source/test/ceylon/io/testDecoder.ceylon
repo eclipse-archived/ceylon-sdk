@@ -7,16 +7,13 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
     // with 3-4 byte chars split between buffers
     value buf = newByteBuffer(2);
     value iter = bytes.iterator();
-    value decoder = charset.newDecoder();
+    value decoder = charset.Decoder();
     
     while(true){
         // put as much as fits
-        while(buf.hasAvailable){
-            if(is Integer byte = iter.next()){
-                buf.put(byte);
-            }else{
-                break;
-            }
+        while(buf.hasAvailable,
+            !is Finished byte = iter.next()){
+                buf.putByte(byte.byte);
         }
         if(buf.position == 0){
             break;
@@ -25,7 +22,7 @@ void testDecoder(Charset charset, String expected, Integer* bytes){
         decoder.decode(buf);
         buf.clear();
     }
-    assertEquals(expected, decoder.done());
+    assertEquals(expected, decoder.consume());
     print("Decoded ``expected`` OK");
 }
 
@@ -49,8 +46,9 @@ test void testUTF8Decoder(){
     testDecoder(utf8, "日本語", #E6, #97, #A5, #E6, #9C, #AC, #E8, #AA, #9E);
     testDecoder(utf8, "𣎴", #EF, #BB, #BF, #F0, #A3, #8E, #B4);
 
-    value buffer = newByteBufferWithData(#24, #C2, #A2, #E2, #82, #AC, 
-                                         #F0, #A4, #AD, #A2);
+    value buffer = newByteBufferWithData(#24.byte, #C2.byte, #A2.byte, #E2.byte, 
+                                         #82.byte, #AC.byte, #F0.byte, #A4.byte, 
+                                         #AD.byte, #A2.byte);
     assertEquals("$¢€𤭢", utf8.decode(buffer));
 }
 

@@ -3,7 +3,7 @@ import ceylon.file.internal {
 }
 
 "Represents a file system store."
-shared interface Store {
+shared sealed interface Store {
     
     "The total number of bytes that can be
      held by this store."

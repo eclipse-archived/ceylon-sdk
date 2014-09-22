@@ -227,7 +227,7 @@ shared void shouldPropagateExceptionOnTestStart() {
 
 test
 void shouldNotifyListenerSpecifiedViaAnnotation() {
-    bazTestListenerLog.reset();
+    bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithCustomListener`]).run();
     
@@ -252,7 +252,7 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
 
 test
 void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
-    bazTestListenerLog.reset();
+    bazTestListenerLog.clear();
     
     createTestRunner([`BazWithCustomListener`]).run();
     
@@ -277,13 +277,38 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun()
     assert(bazTestListenerCounter == 2);
 }
 
-object recordingListener satisfies TestListener {
+test
+void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
+    bazTestListenerLog.clear();
+    
+    value result = createTestRunner([`bazWithAnonymousTestListener`]).run();
+    
+    value lines = bazTestListenerLog.string.trimmed.lines.sequence();
+    assertEquals(lines.size, 4);
+    assertEquals(lines[0], "TestRunStartEvent");
+    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
+    assertEquals(lines[2], "TestFinishEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
+    assertEquals(lines[3], "TestRunFinishEvent");
+    
+    assertResultCounts {
+        result;
+        successCount = 1;
+    };
+    assertResultContains {
+        result;
+        index = 0;
+        state = success;
+        source = `bazWithAnonymousTestListener`;
+    };
+}
+
+shared object recordingListener satisfies TestListener {
     
     StringBuilder buffer = StringBuilder();
     
     shared String result => buffer.string.trimmed;
     
-    shared actual void testRunStart(TestRunStartEvent event) { buffer.reset(); log(event); } 
+    shared actual void testRunStart(TestRunStartEvent event) { buffer.clear(); log(event); } 
     
     shared actual void testRunFinish(TestRunFinishEvent event) => log(event); 
     

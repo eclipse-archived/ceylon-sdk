@@ -1,5 +1,10 @@
-import ceylon.net.http.server { Matcher, EndpointBase }
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.net.http.server {
+    Matcher,
+    EndpointBase
+}
 
 void noop() {}
 
@@ -13,9 +18,11 @@ shared abstract class WebSocketBaseEndpoint(Matcher path,
 
     shared void onOpen(WebSocketChannel channel);
 
-    shared void onClose(WebSocketChannel channel, CloseReason closeReason);
+    shared void onClose(WebSocketChannel channel, 
+        CloseReason closeReason);
 
-    shared void onError(WebSocketChannel channel, Throwable? throwable);
+    shared void onError(WebSocketChannel channel, 
+        Throwable? throwable);
 }
 
 shared class WebSocketEndpoint(
@@ -40,7 +47,9 @@ shared class WebSocketFragmentedEndpoint(Matcher path,
 	    onBinary = (WebSocketChannel channel, ByteBuffer binary, Boolean finalFragment) => noop())
         extends WebSocketBaseEndpoint(path, onOpen, onClose, onError) {
 
-    shared void onText(WebSocketChannel channel, String text, Boolean finalFragment);
+    shared void onText(WebSocketChannel channel, 
+        String text, Boolean finalFragment);
 
-    shared void onBinary(WebSocketChannel channel, ByteBuffer binary, Boolean finalFragment);
+    shared void onBinary(WebSocketChannel channel, 
+        ByteBuffer binary, Boolean finalFragment);
 }

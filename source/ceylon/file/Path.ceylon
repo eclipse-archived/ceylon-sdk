@@ -14,10 +14,13 @@ import java.lang {
  path is a sequence of path elements. A path may be 
  an absolute path that begins at the root of the 
  file system, or a relative path."
-shared interface Path
+shared sealed interface Path
         satisfies Comparable<Path> {
     
-    "This path, after removing the last path element."
+    "The parent path of this path, formed by 
+     removing the last path element, or, if this 
+     path is the root path, and has no path elements, 
+     this root path."
     shared formal Path parent;
     
     "This path, after appending the given path 
@@ -51,6 +54,10 @@ shared interface Path
     
     "Determine if this is an absolute path."
     shared formal Boolean absolute;
+    
+    "Determine if this is a root path, with no 
+     [[elements]]."
+    shared formal Boolean root;
     
     "Obtain a `Resource` representing the file or
      directory located at this path."
@@ -112,7 +119,7 @@ shared class Visitor() {
     
     "Called before visiting files and subdirectories
      of the given directory. If this method returns 
-     `false`, the files and subdirecties of the given 
+     `false`, the files and subdirectories of the given 
      directory will not be visited."
     shared default Boolean beforeDirectory(Directory dir) { return true; }
     

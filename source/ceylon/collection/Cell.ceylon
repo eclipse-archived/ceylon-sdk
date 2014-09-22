@@ -14,7 +14,7 @@ class CellIterator<Element>(iter)
     variable Cell<Element>? iter;
     
     shared actual Element|Finished next() {
-        if(exists iter = iter){
+        if (exists iter = iter) {
             this.iter = iter.rest;
             return iter.element;
         }

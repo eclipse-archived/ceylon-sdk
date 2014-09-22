@@ -1,7 +1,7 @@
 "Parses a raw percent-encoded path parameter"
-shared Parameter parseParameter(String part){
+shared Parameter parseParameter(String part) {
     Integer? sep = part.firstOccurrence('=');
-    if(exists sep){
+    if(exists sep) {
         return Parameter(decodePercentEncoded(part.initial(sep)), 
             decodePercentEncoded(part.terminal(part.size - sep - 1)));
     }else{
@@ -10,18 +10,19 @@ shared Parameter parseParameter(String part){
 }
 
 "Parses a URI"
-throws(`class InvalidUriException`, "If the URI is invalid")
-shared Uri parse(String uri){
+throws(`class InvalidUriException`, 
+    "If the URI is invalid")
+shared Uri parse(String uri) {
     variable String? scheme = null;
     Authority authority = Authority(null, null, null, null);
     Path path = Path();
     Query query = Query();
     variable String? fragment = null;
     
-    String parseScheme(String uri){
+    String parseScheme(String uri) {
         Integer? sep = uri.firstInclusion(":");
-        if(exists sep){
-            if(sep > 0){
+        if(exists sep) {
+            if(sep > 0) {
                 scheme = uri.measure(0, sep);
                 return uri[sep+1...];
             }
@@ -32,7 +33,7 @@ shared Uri parse(String uri){
 
     void parseUserInfo(String userInfo) {
         Integer? sep = userInfo.firstOccurrence(':');
-        if(exists sep){
+        if(exists sep) {
             authority.user = decodePercentEncoded(userInfo.measure(0, sep));
             authority.password = decodePercentEncoded(userInfo[sep+1...]);
         }else{
@@ -43,14 +44,14 @@ shared Uri parse(String uri){
 
     void parseHostAndPort(String hostAndPort) {
         String? portString;
-        if(hostAndPort.startsWith("[")){
+        if(hostAndPort.startsWith("[")) {
             authority.ipLiteral = true;
             Integer? end = hostAndPort.firstOccurrence(']');
-            if(exists end){
+            if(exists end) {
                 // eat the delimiters
                 authority.host = hostAndPort.measure(1, end-1);
                 String rest = hostAndPort[end+1...];
-                if(rest.startsWith(":")){
+                if(rest.startsWith(":")) {
                     portString = rest[1...];
                 }else{
                     portString = null;
@@ -61,7 +62,7 @@ shared Uri parse(String uri){
         }else{
             authority.ipLiteral = false;
             Integer? sep = hostAndPort.lastOccurrence(':');
-            if(exists sep){
+            if(exists sep) {
                 authority.host = decodePercentEncoded(hostAndPort.measure(0, sep));
                 portString = hostAndPort[sep+1...];
             }else{
@@ -69,10 +70,10 @@ shared Uri parse(String uri){
                 portString = null;
             }
         }
-        if(exists portString){
+        if(exists portString) {
             authority.port = parseInteger(portString);
-            if(exists Integer port = authority.port){
-                if(port < 0){
+            if(exists Integer port = authority.port) {
+                if(port < 0) {
                     throw InvalidUriException("Invalid port number: "+portString);
                 }
             }else{
@@ -83,8 +84,8 @@ shared Uri parse(String uri){
         }
     }
     
-    String parseAuthority(String uri){
-        if(!uri.startsWith("//")){
+    String parseAuthority(String uri) {
+        if(!uri.startsWith("//")) {
             return uri;
         }
         // eat the two slashes
@@ -94,7 +95,7 @@ shared Uri parse(String uri){
             else part.firstOccurrence('#');
         String authority;
         String remains;
-        if(exists sep){
+        if(exists sep) {
             authority = part.measure(0, sep);
             remains = part[sep...];
         }else{
@@ -104,7 +105,7 @@ shared Uri parse(String uri){
         }
         Integer? userInfoSep = authority.firstOccurrence('@');
         String hostAndPort;
-        if(exists userInfoSep){
+        if(exists userInfoSep) {
             parseUserInfo(authority.measure(0, userInfoSep));
             hostAndPort = authority[userInfoSep+1...]; 
         }else{
@@ -114,11 +115,11 @@ shared Uri parse(String uri){
         return remains;
     }
 
-    String parsePath(String uri){
+    String parsePath(String uri) {
         Integer? sep = uri.firstOccurrence('?') else uri.firstOccurrence('#');
         String pathPart;
         String remains;
-        if(exists sep){
+        if(exists sep) {
             pathPart = uri.measure(0, sep);
             remains = uri[sep...];
         }else{
@@ -126,10 +127,10 @@ shared Uri parse(String uri){
             pathPart = uri;
             remains = "";
         }
-        if(!pathPart.empty){
+        if(!pathPart.empty) {
             variable Boolean first = true;
-            for(String part in pathPart.split((Character ch) => ch == '/', true, false)){
-                if(first && part.empty){
+            for(String part in pathPart.split((Character ch) => ch == '/', true, false)) {
+                if(first && part.empty) {
                     path.absolute = true;
                     first = false;
                     continue;
@@ -143,15 +144,15 @@ shared Uri parse(String uri){
     }
 
     void parseQueryPart(String queryPart) {
-        for(String part in queryPart.split((Character ch) => ch == '&', true, false)){
+        for(String part in queryPart.split((Character ch) => ch == '&', true, false)) {
             query.addRaw(part);
         }
     }
 
-    String parseQuery(String uri){
+    String parseQuery(String uri) {
         Character? c = uri[0];
-        if(exists c){
-            if(c == '?'){
+        if(exists c) {
+            if(c == '?') {
                 // we have a query part
                 Integer end = uri.firstOccurrence('#') else uri.size;
                 parseQueryPart(uri.measure(1, end-1));
@@ -162,10 +163,10 @@ shared Uri parse(String uri){
         return uri;
     }
 
-    String parseFragment(String uri){
+    String parseFragment(String uri) {
         Character? c = uri[0];
-        if(exists c){
-            if(c == '#'){
+        if(exists c) {
+            if(c == '#') {
                 // we have a fragment part
                 fragment = decodePercentEncoded(uri[1...]);
                 return "";

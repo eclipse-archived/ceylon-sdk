@@ -1,12 +1,33 @@
-import ceylon.collection { MutableList, LinkedList, MutableMap, HashMap }
-import ceylon.net.uri { Uri, Parameter }
-import ceylon.io.charset { ascii }
-import ceylon.io { newSocketConnector, SocketAddress, newSslSocketConnector }
-import ceylon.net.http { Header, contentType, contentTypeFormUrlEncoded, contentLength, get, Method }
+import ceylon.collection {
+    MutableList,
+    LinkedList,
+    MutableMap,
+    HashMap
+}
+import ceylon.io {
+    newSocketConnector,
+    SocketAddress,
+    newSslSocketConnector
+}
+import ceylon.io.charset {
+    ascii
+}
+import ceylon.net.http {
+    Header,
+    contentType,
+    contentTypeFormUrlEncoded,
+    contentLength,
+    get,
+    Method
+}
+import ceylon.net.uri {
+    Uri,
+    Parameter
+}
 
 "Represents an HTTP Request"
 by("Stéphane Épardaud", "Matej Lazar")
-shared class Request(uri, method = get){
+shared class Request(uri, method = get) {
     // constant
     String crLf = "\r\n";
 
@@ -14,7 +35,8 @@ shared class Request(uri, method = get){
     shared Uri uri;
     
     "The list of request parameters."
-    MutableMap<String, MutableList<Parameter>> parameters = HashMap<String, MutableList<Parameter>>();
+    MutableMap<String, MutableList<Parameter>> parameters 
+            = HashMap<String, MutableList<Parameter>>();
     
     "The list of request headers."
     shared MutableList<Header> headers = LinkedList<Header>();
@@ -29,19 +51,19 @@ shared class Request(uri, method = get){
     "Set to true to use SSL. Defaults to true for port 443."
     shared variable Boolean ssl = false;
 
-    if(uri.relative){
+    if(uri.relative) {
         throw Exception("Can't request a relative URI");
     }
-    if(exists String scheme = uri.scheme){
+    if(exists String scheme = uri.scheme) {
         if(scheme != "http"
-            && scheme != "https"){
+            && scheme != "https") {
             throw Exception("Only HTTP and HTTPS schemes are supported");
         }
-        if(exists tmpPort = uri.authority.port){
+        if(exists tmpPort = uri.authority.port) {
             port = tmpPort;
-        }else if(scheme == "http"){
+        }else if(scheme == "http") {
             port = 80;
-        }else if(scheme == "https"){
+        }else if(scheme == "https") {
             port = 443;
             ssl = true;
         }
@@ -51,17 +73,17 @@ shared class Request(uri, method = get){
     
     "The host to connect to. Extracted from the specified [[uri]]."
     shared String host;
-    if(exists tmpHost = uri.authority.host){
+    if(exists tmpHost = uri.authority.host) {
         host = tmpHost;
     }else{
         throw Exception("URI host is not set");
     }
     
     "Returns a request header, if it exists. Returns null otherwise."
-    shared Header? getHeader(String name){
+    shared Header? getHeader(String name) {
         String lc = name.lowercased;
-        for(header in headers){
-            if(header.name.lowercased == lc){
+        for(header in headers) {
+            if(header.name.lowercased == lc) {
                 return header;
             }
         }
@@ -69,9 +91,8 @@ shared class Request(uri, method = get){
     }
     
     "Sets a request header."
-    shared void setHeader(String name, String* values){
-        Header? header = getHeader(name);
-        if(exists header){
+    shared void setHeader(String name, String* values) {
+        if(exists header = getHeader(name)) {
             header.values.clear();
             header.values.addAll(values);
         }else{
@@ -101,7 +122,7 @@ shared class Request(uri, method = get){
     }
     
     shared void setParameter(Parameter parameter) {
-        if (exists MutableList<Parameter> params = parameters[parameter.name]) {
+        if (exists params = parameters[parameter.name]) {
             params.add(parameter);
         } else {
             MutableList<Parameter> params = LinkedList<Parameter>();
@@ -117,7 +138,9 @@ shared class Request(uri, method = get){
     }
     
     Header contentTypeHeader() {
-        variable Header? contentTypeHeader = headers.find((Header header) => header.name.lowercased.startsWith("content-type"));
+        variable Header? contentTypeHeader = 
+                headers.find((Header header) 
+            => header.name.lowercased.startsWith("content-type"));
         return contentTypeHeader else defaultContentTypeHeader();
     }
     
@@ -135,7 +158,7 @@ shared class Request(uri, method = get){
     
     String prepareRequest() {
         variable String path = uri.pathPart;
-        if(path.empty){
+        if(path.empty) {
             path = "/";
         }
         if(exists query = uri.queryPart) {
@@ -143,7 +166,12 @@ shared class Request(uri, method = get){
         }
 
         value builder = StringBuilder();
-        builder.append(method.string).append(" ").append(path).append(" ").append("HTTP/1.1").append(crLf);
+        builder.append(method.string)
+                .append(" ")
+                .append(path)
+                .append(" ")
+                .append("HTTP/1.1")
+                .append(crLf);
 
         String postData = preparePostData();
         if (!postData.empty) {
@@ -151,9 +179,12 @@ shared class Request(uri, method = get){
         }
         
         // headers
-        for(header in headers){
-            for(val in header.values){
-                builder.append(header.name).append(": ").append(val).append(crLf);
+        for(header in headers) {
+            for(val in header.values) {
+                builder.append(header.name)
+                        .append(": ")
+                        .append(val)
+                        .append(crLf);
             }
         }
         builder.append(crLf);
@@ -166,7 +197,7 @@ shared class Request(uri, method = get){
     }
     
     "Executes this request by connecting to the server and returns a [[Response]]."
-    shared Response execute(){
+    shared Response execute() {
         // prepare the request
         value requestContents = prepareRequest();
         // ready to send, convert to a byte buffer
@@ -174,7 +205,8 @@ shared class Request(uri, method = get){
         
         // now open a socket to the host
         value socketAddress = SocketAddress(host, port);
-        value connector = ssl then newSslSocketConnector(socketAddress) else newSocketConnector(socketAddress);
+        value connector = ssl then newSslSocketConnector(socketAddress) 
+                              else newSocketConnector(socketAddress);
         value socket = connector.connect();
         
         // send the full request

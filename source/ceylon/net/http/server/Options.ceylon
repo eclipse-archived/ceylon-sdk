@@ -1,4 +1,11 @@
-import ceylon.io.charset { utf8, Charset }
+import ceylon.io.charset {
+    utf8,
+    Charset
+}
+
+"Options for starting a [[Server]]."
+see (`function Server.start`, 
+     `function Server.startInBackground`)
 by("Matej Lazar")
 shared class Options(
         workerIoThreads = 4, //TODO cpuCount x 2
@@ -13,7 +20,7 @@ shared class Options(
     shared variable Integer connectionLowWatter;
     shared variable Integer connectionHighWatter;
     
-    "Default charset is used to encode string, when there is no charset header in response.
-     Default value is [[utf8]]."
+    "Default charset is used to encode string, when there is 
+     no charset header in response. Default to [[utf8]]."
     shared variable Charset defaultCharset;
 }

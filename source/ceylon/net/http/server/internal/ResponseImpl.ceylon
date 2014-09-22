@@ -1,25 +1,60 @@
-import ceylon.net.http.server { Response, ServerException }
+import ceylon.collection {
+    MutableList,
+    LinkedList
+}
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.io.charset {
+    Charset,
+    getCharset
+}
+import ceylon.net.http {
+    Header
+}
+import ceylon.net.http.server {
+    Response,
+    ServerException
+}
 
-import io.undertow.server { HttpServerExchange }
-import io.undertow.util { HttpString }
-import ceylon.io.charset { Charset, getCharset }
-import ceylon.net.http { Header }
-import ceylon.collection { MutableList, LinkedList }
+import io.undertow.io {
+    JIoCallback=IoCallback
+}
+import io.undertow.server {
+    HttpServerExchange
+}
+import io.undertow.util {
+    HttpString
+}
 
-import java.io { JIOException=IOException }
-import java.lang { ByteArray, Runnable }
-import java.nio { 
-    JByteBuffer=ByteBuffer { wrapByteBuffer=wrap }}
-import org.xnio.channels { StreamSinkChannel }
-import ceylon.io.buffer { ByteBuffer }
-import io.undertow.io { JIoCallback = IoCallback }
+import java.io {
+    JIOException=IOException
+}
+import java.lang {
+    ByteArray,
+    Runnable
+}
+import java.nio {
+    JByteBuffer=ByteBuffer {
+        wrapByteBuffer=wrap
+    }
+}
+
+import org.xnio.channels {
+    StreamSinkChannel
+}
+import ceylon.interop.java {
+    javaByteArray
+}
 
 by("Matej Lazar")
-shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset) 
+class ResponseImpl(HttpServerExchange exchange, 
+    Charset defaultCharset) 
         satisfies Response {
 
     variable StreamSinkChannel? lazyResponse = null;
-    StreamSinkChannel response => lazyResponse else (lazyResponse=exchange.responseChannel);
+    StreamSinkChannel response => lazyResponse 
+            else (lazyResponse=exchange.responseChannel);
 
     MutableList<Header> headers = LinkedList<Header>();
     variable value headersSent = false;
@@ -35,14 +70,15 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
 
     shared actual void writeStringAsynchronous(
             String string,
-            Callable<Anything, []> onCompletion,
-            Callable<Anything, [ServerException]>? onError) {
+            Anything() onCompletion,
+            Anything(ServerException)? onError) {
 
         void task() {
             applyHeadersToExchange();
             value charset = findCharset();
             ByteBuffer byteBuffer = charset.encode(string);
-            writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
+            writeByteBufferAsynchronous(byteBuffer, 
+                onCompletion, onError);
         }
 
         exchange.dispatch(
@@ -54,21 +90,19 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         );
     }
 
-    shared actual void writeBytes(Array<Integer> bytes) {
+    shared actual void writeBytes(Array<Byte> bytes) {
         applyHeadersToExchange();
-
-        value jByteBuffer = wrapByteBuffer(toByteArray(bytes));
-        writeJByteBuffer(jByteBuffer);
+        writeJByteBuffer(wrapByteBuffer(javaByteArray(bytes)));
     }
     
     shared actual void writeBytesAsynchronous(
-            Array<Integer> bytes,
-            Callable<Anything, []> onCompletion,
-            Callable<Anything, [ServerException]>? onError) {
+            Array<Byte> bytes,
+            Anything() onCompletion,
+            Anything(ServerException)? onError) {
 
         applyHeadersToExchange();
-        value jByteBuffer = wrapByteBuffer(toByteArray(bytes));
-        writeJByteBufferAsynchronous(jByteBuffer, IoCallbackWrapper(onCompletion, onError));
+        writeJByteBufferAsynchronous(wrapByteBuffer(javaByteArray(bytes)), 
+            IoCallbackWrapper(onCompletion, onError));
     }
     
     shared actual void writeByteBuffer(ByteBuffer byteBuffer) {
@@ -78,11 +112,12 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
 
     shared actual void writeByteBufferAsynchronous(
             ByteBuffer byteBuffer,
-            Callable<Anything, []> onCompletion,
-            Callable<Anything, [ServerException]>? onError) {
+            Anything() onCompletion,
+            Anything(ServerException)? onError) {
 
         applyHeadersToExchange();
-        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), IoCallbackWrapper(onCompletion, onError));
+        writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), 
+            IoCallbackWrapper(onCompletion, onError));
     }
 
     void writeJByteBuffer(JByteBuffer byteBuffer) {
@@ -96,7 +131,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         }
     }
     
-    void writeJByteBufferAsynchronous(JByteBuffer jByteBuffer, JIoCallback sendCallback) {
+    void writeJByteBufferAsynchronous(JByteBuffer jByteBuffer, 
+        JIoCallback sendCallback) {
         if (jByteBuffer.hasRemaining()) {
             exchange.responseSender.send(jByteBuffer, sendCallback);
         }
@@ -123,12 +159,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         }
     }
     
-    shared actual Integer responseStatus {
-        return exchange.responseCode;
-    }
-    assign responseStatus {
-        exchange.responseCode = responseStatus;
-    }
+    shared actual Integer responseStatus => exchange.responseCode;
+    assign responseStatus => exchange.responseCode = responseStatus;
     
     shared void responseDone() {
         //Retry to apply headers, if there were no writes, headers were not applied.
@@ -139,8 +171,8 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
         if (headersSent) {
             return;
         }
-        for(header in headers){
-            for(val in header.values){
+        for(header in headers) {
+            for(val in header.values) {
                 //TODO log fine print("Applying header [``header.name``] with value [``val``].");
                 exchange.responseHeaders.put(HttpString(header.name), val);
             }
@@ -158,14 +190,13 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     }
 
     Charset parseCharset(Header header) {
-        value headerValue = header.values.first;
-        if (exists headerValue) {
+        if (exists headerValue = header.values.first) {
             value charsetLabel = "charset=";
-            value charsetIndex = headerValue.firstInclusion(charsetLabel);
-            if (exists charsetIndex) {
-                String charsetString = headerValue[charsetIndex + charsetLabel.size..headerValue.size].trimmed;
-                Charset? charset = getCharset(charsetString);
-                if (exists charset) {
+            if (exists charsetIndex = headerValue.firstInclusion(charsetLabel)) {
+                value startIndex = charsetIndex + charsetLabel.size;
+                value endIndex = headerValue.size;
+                String charsetString = headerValue[startIndex..endIndex].trimmed;
+                if (exists charset = getCharset(charsetString)) {
                     return charset;
                 } else {
                     //TODO log
@@ -180,8 +211,7 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     }
 
     JByteBuffer nativeByteBuffer(ByteBuffer byteBuffer) {
-        Object? implementation = byteBuffer.implementation;
-        if (is JByteBuffer implementation ) {
+        if (is JByteBuffer implementation = byteBuffer.implementation) {
             return implementation;
         } else {
             //TODO log warning
@@ -196,9 +226,9 @@ shared class ResponseImpl(HttpServerExchange exchange, Charset defaultCharset)
     }
     
     class Task (
-        Callable<Anything, []> task,
-        Callable<Anything, []> onCompletion,
-        Callable<Anything, [ServerException]>? onError)
+        Anything() task,
+        Anything() onCompletion,
+        Anything(ServerException)? onError)
             satisfies Runnable {
         
         shared actual void run() {

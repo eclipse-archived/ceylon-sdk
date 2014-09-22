@@ -3,9 +3,11 @@ shared abstract class Matcher() {
     shared formal Boolean matches(String path);
     
     "Returns requestPath with truncated matched path.
-     Note that relative path should be used only when using [[startsWith]] matcher without [[and]] condition.\n
-     [[endsWith]] and [[and]] are ignored while constructing relative path. [[endsWith]] and [[and]] returns unmodified requestPath.
-     "
+     Note that relative path should be used only when using 
+     [[startsWith]] matcher without [[and]] condition.
+     [[endsWith]] and [[and]] are ignored while constructing 
+     relative path. [[endsWith]] and [[and]] returns 
+     unmodified requestPath."
     shared formal String relativePath(String requestPath);
     shared Matcher and(Matcher other) => And(this, other);
     shared Matcher or(Matcher other) => Or(this, other);

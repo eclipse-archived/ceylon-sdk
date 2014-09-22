@@ -185,16 +185,17 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
     }
     
     test shared default void testIndexedWithNulls() {
-        assertEquals(createIterableWithNulls({null}).indexed.sequence(), []);
+        assertEquals(createIterableWithNulls({null}).indexed.sequence(), [0->null]);
         
         value iterable = createIterableWithNulls {"a", null, "b", "c", null}; 
         value iterator = iterable.iterator();
-        value nulls = nullIndexes(iterable);
-        value indexes = [0, 1, 2, 3, 4].select((Integer i) => ! i in nulls).iterator();
+        value indexes = [0, 1, 2, 3, 4].iterator();
         assertEquals(iterable.indexed.sequence(), [
-            next<Integer>(indexes) -> next<String>(iterator),
-        next<Integer>(indexes) -> next<String>(iterator),
-        next<Integer>(indexes) -> next<String>(iterator) ]);
+            next<Integer>(indexes) -> next<String?>(iterator),
+            next<Integer>(indexes) -> next<String?>(iterator),
+            next<Integer>(indexes) -> next<String?>(iterator),
+            next<Integer>(indexes) -> next<String?>(iterator),
+            next<Integer>(indexes) -> next<String?>(iterator) ]);
     }
     
     test shared default void testFollowingWithNulls() {
@@ -233,21 +234,15 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
         }
     }
     
-    "This test calls [[testCycleFunctionWithNulls]] with the cycle function.
-     If needed, override that method."
-    test shared void testCycleWithNulls() {
-        testCycleFunctionWithNulls(({String?*} strings) => 
-            compose(({String?*} it)=>it.sequence(), strings.cycle));
-    }
-    
-    "This test calls [[testCycleFunctionWithNulls]] with the repeat function.
+    "This test calls [[testRepeatFunctionWithNulls]] with the repeat function.
      If needed, override that method."
     test shared void testRepeatWithNulls() {
-        testCycleFunctionWithNulls(({String?*} strings) => strings.repeat);
+        testRepeatFunctionWithNulls(({String?*} strings) => 
+            compose(({String?*} it)=>it.sequence(), strings.repeat));
     }
-    
-    "This function is called by [[testCycleWithNulls]] and [[testRepeatWithNulls]]."
-    shared default void testCycleFunctionWithNulls(List<String?>(Integer)({String?*}) cycle) {
+        
+    "This function is called by [[testRepeatWithNulls]]."
+    shared default void testRepeatFunctionWithNulls(List<String?>(Integer)({String?*}) cycle) {
         assertEquals(cycle(createIterableWithNulls {null})(1), [null]);
         assertEquals(cycle(createIterableWithNulls {"a", null, "c"})(3),
             createIterableWithNulls({"a", null, "c", "a", null, "c", "a", null, "c"}));

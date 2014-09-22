@@ -41,3 +41,11 @@ shared class BazWithCustomListener() {
     shared void baz1() {}
     
 }
+
+shared object bazAnonymousTestListener extends BazTestListener() {    
+}
+
+test
+testListeners({`class bazAnonymousTestListener`})
+shared void bazWithAnonymousTestListener() {
+}

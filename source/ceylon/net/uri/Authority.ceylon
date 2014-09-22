@@ -1,8 +1,10 @@
-import ceylon.net.iop { eq }
+import ceylon.net.iop {
+    eq
+}
 
 "Represents a URI Authority part (user, password, host and port)"
 by("Stéphane Épardaud")
-shared class Authority(user = null, password = null, host = null, port = null){
+shared class Authority(user = null, password = null, host = null, port = null) {
     
     "The optional user"
     shared variable String? user;
@@ -37,24 +39,24 @@ shared class Authority(user = null, password = null, host = null, port = null){
 
     "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
     shared String toRepresentation(Boolean human) {
-        if(exists String host = host){
+        if(exists String host = host) {
             StringBuilder b = StringBuilder();
-            if(exists String user = user){
+            if(exists String user = user) {
                 b.append(human then user else percentEncoder.encodeUser(user));
-                if(exists String password = password){
+                if(exists String password = password) {
                     b.appendCharacter(':');
                     b.append(human then password else percentEncoder.encodePassword(password));
                 }
                 b.appendCharacter('@');
             }
-            if(ipLiteral){
+            if(ipLiteral) {
                 b.append("[");
                 b.append(host);
                 b.append("]");
             }else{
                 b.append(human then host else percentEncoder.encodeRegName(host));
             }
-            if(exists Integer port = port){
+            if(exists Integer port = port) {
                 b.appendCharacter(':');
                 b.append(port.string);
             }
@@ -65,8 +67,8 @@ shared class Authority(user = null, password = null, host = null, port = null){
     
     "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
-        if(is Authority that){
-            if(this === that){
+        if(is Authority that) {
+            if(this === that) {
                 return true;
             }
             return eq(user, that.user)

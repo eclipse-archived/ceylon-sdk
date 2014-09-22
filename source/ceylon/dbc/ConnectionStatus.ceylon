@@ -1,7 +1,13 @@
-import java.sql { Connection }
 import javax.sql { DataSource }
-import java.lang { ThreadLocal }
 import ceylon.transaction.tm { TM, getTM }
+import java.lang {
+    ObjectArray,
+    ThreadLocal
+}
+import java.sql {
+    Connection, 
+    SqlArray=Array
+}
 
 class ConnectionStatus(Connection() connectionSource) {
 
@@ -61,5 +67,13 @@ class ConnectionStatus(Connection() connectionSource) {
     shared void rollback() {
         connection().rollback();
         tx = false;
+    }
+    
+    "Forward to Connection.createSqlArray in order to convert a Java array to a java.sql.Array.  
+     The caller must provide the Java array as well as the type name (ex varchar) of the database array.
+     Assert that the connection exists."
+    shared SqlArray createSqlArray(ObjectArray<Object> objectArray,String typeName) {
+        assert (exists existingConn=conn);
+        return existingConn.createArrayOf(typeName, objectArray);
     }
 }

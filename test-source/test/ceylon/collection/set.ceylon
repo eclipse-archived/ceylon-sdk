@@ -96,6 +96,12 @@ shared interface SetTests satisfies IterableTests {
         assertEquals(set, set.clone());
         assertEquals(set.clone().size, 2);
         assertEquals(set.clone().string, "{ foo, bar }");
+        assertEquals([for (s in set.clone()) s], ["foo", "bar"]);
+        value linkedSet = HashSet<String>(linked);
+        linkedSet.add("foo");
+        linkedSet.add("bar");
+        linkedSet.add("baz");
+        assertEquals([for (s in linkedSet.clone()) s], ["foo", "bar", "baz"]);
     }
 
 }

@@ -1,83 +1,88 @@
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.net.http.server.websocket {
+    WebSocketChannel,
+    CloseReason
+}
 
-import ceylon.net.http.server.websocket { WebSocketChannel, FragmentedBinarySender, FragmentedTextSender, CloseReason }
-
-import ceylon.net.http.server.internal { toJavaByteBuffer}
-import io.undertow.websockets.core { 
-    UtWebSocketChannel = WebSocketChannel,
-    WebSockets {
-        wsSendBinary = sendBinary,
-        wsSendBinaryBlocking = sendBinaryBlocking,
-        wsSendText = sendText,
-        wsSendTextBlocking = sendTextBlocking,
-        wsSendClose = sendClose,
-        wsSendCloseBlocking = sendCloseBlocking
-        }, CloseMessage
+import io.undertow.util {
+    Headers {
+        hostStringHeader=HOST_STRING
     }
-import io.undertow.websockets.spi { WebSocketHttpExchange }
-import io.undertow.util { Headers {hostStringHeader = \iHOST_STRING} }
+}
+import io.undertow.websockets.core {
+    UtWebSocketChannel=WebSocketChannel,
+    WebSockets {
+        wsSendBinary=sendBinary,
+        wsSendBinaryBlocking=sendBinaryBlocking,
+        wsSendText=sendText,
+        wsSendTextBlocking=sendTextBlocking,
+        wsSendClose=sendClose,
+        wsSendCloseBlocking=sendCloseBlocking
+    },
+    CloseMessage
+}
+import io.undertow.websockets.spi {
+    WebSocketHttpExchange
+}
 
 by("Matej Lazar")
-shared class DefaultWebSocketChannel(WebSocketHttpExchange exchange, UtWebSocketChannel channel) satisfies WebSocketChannel {
+class DefaultWebSocketChannel(WebSocketHttpExchange exchange, 
+    UtWebSocketChannel channel) 
+        satisfies WebSocketChannel {
 
     shared UtWebSocketChannel underlyingChannel => channel;
 
-    shared actual Boolean closeFrameReceived => channel.closeFrameReceived;
+    closeFrameReceived => channel.closeFrameReceived;
 
-    shared actual Integer idleTimeout => channel.idleTimeout;
+    idleTimeout => channel.idleTimeout;
 
-    shared actual Boolean open() => channel.open;
+    open() => channel.open;
 
-    shared actual String schema => channel.requestScheme;
+    schema => channel.requestScheme;
 
-    shared actual FragmentedTextSender fragmentedTextSender() {
-        return DefaultFragmentedTextSender(this);
-    }
+    fragmentedTextSender() 
+            => DefaultFragmentedTextSender(this);
 
-    shared actual FragmentedBinarySender fragmentedBinarySender() {
-        return DefaultFragmentedBinarySender(this);
-    }
+    fragmentedBinarySender() 
+            => DefaultFragmentedBinarySender(this);
 
-    shared actual void sendBinary(ByteBuffer binary) {
-        wsSendBinaryBlocking(toJavaByteBuffer(binary), channel);
-    }
+    sendBinary(ByteBuffer binary) 
+            //TODO: is this copy really necessary or can
+            //we just send the underlying implementation?
+            => wsSendBinaryBlocking(copyToJavaByteBuffer(binary), channel);
 
-    shared actual void sendBinaryAsynchronous(
+    sendBinaryAsynchronous(
             ByteBuffer binary,
-            Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
+            Anything(WebSocketChannel) onCompletion,
+            Anything(WebSocketChannel,Throwable)? onError)
+            //TODO: is this copy really necessary or can
+            //we just send the underlying implementation?
+            => wsSendBinary(copyToJavaByteBuffer(binary), channel, 
+                wrapCallbackSend(onCompletion, onError, this));
 
-        wsSendBinary(toJavaByteBuffer(binary), channel, wrapCallbackSend(onCompletion, onError, this));
-    }
+    sendText(String text) => wsSendTextBlocking(text, channel);
 
-    shared actual void sendText(String text) {
-        wsSendTextBlocking(text, channel);
-    }
-
-    shared actual void sendTextAsynchronous(
+    sendTextAsynchronous(
             String text,
-            Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
+            Anything(WebSocketChannel) onCompletion,
+            Anything(WebSocketChannel,Throwable)? onError) 
+            => wsSendText(text, channel, wrapCallbackSend(onCompletion, onError, this));
 
-        wsSendText(text, channel, wrapCallbackSend(onCompletion, onError, this));
-    }
+    sendClose(CloseReason reason) 
+            => wsSendCloseBlocking(CloseMessage(reason.code, reason.reason else "").toByteBuffer(), channel);
 
-    shared actual void sendClose(CloseReason reason) {
-        wsSendCloseBlocking(CloseMessage(reason.code, reason.reason else "").toByteBuffer(), channel);
-    }
+    hostname => exchange.getRequestHeader(hostStringHeader);
 
-    shared actual String hostname => exchange.getRequestHeader(hostStringHeader);
+    requestPath => exchange.requestURI;
 
-    shared actual String requestPath => exchange.requestURI;
-
-    shared actual void sendCloseAsynchronous(
+    sendCloseAsynchronous(
             CloseReason reason,
-            Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Throwable]>? onError) {
-
-        wsSendClose(
-            CloseMessage(reason.code, reason.reason else "").toByteBuffer(),
-            channel,
-            wrapCallbackSend(onCompletion, onError, this));
-    }
+            Anything(WebSocketChannel) onCompletion,
+            Anything(WebSocketChannel,Throwable)? onError) 
+            => wsSendClose(
+                CloseMessage(reason.code, reason.reason else "").toByteBuffer(),
+                channel,
+                wrapCallbackSend(onCompletion, onError, this));
 }

@@ -1,31 +1,41 @@
-import ceylon.net.http.server.websocket { FragmentedBinarySender, WebSocketChannel }
-import ceylon.io.buffer { ByteBuffer }
-import ceylon.net.http.server.internal { toJavaByteBuffer }
-import io.undertow.websockets.core { FragmentedMessageChannel,
+import ceylon.io.buffer {
+    ByteBuffer
+}
+import ceylon.net.http.server.websocket {
+    FragmentedBinarySender,
+    WebSocketChannel
+}
+
+import io.undertow.websockets.core {
     WebSockets {
-        wsSendBinary = sendBinary,
-        wsSendBinaryBlocking = sendBinaryBlocking }}
+        wsSendBinary=sendBinary,
+        wsSendBinaryBlocking=sendBinaryBlocking
+    }
+}
 
 by("Matej Lazar")
-shared class DefaultFragmentedBinarySender( DefaultWebSocketChannel channel )
+class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
         satisfies FragmentedBinarySender {
 
-    FragmentedMessageChannel fragmentedChannel = channel.underlyingChannel.sendFragmentedBinary();
+    value fragmentedChannel = channel.underlyingChannel.sendFragmentedBinary();
 
-    shared actual void sendBinary(ByteBuffer binary, Boolean finalFrame) {
-        wsSendBinaryBlocking(toJavaByteBuffer(binary), finalFrame, fragmentedChannel);
-    }
+    sendBinary(ByteBuffer binary, Boolean finalFrame)
+            //TODO: is this copy really necessary or can
+            //we just send the underlying implementation?
+            => wsSendBinaryBlocking(copyToJavaByteBuffer(binary), 
+                finalFrame, fragmentedChannel);
     
-    shared actual void sendBinaryAsynchronous(
+    sendBinaryAsynchronous(
             ByteBuffer binary,
-            Callable<Anything, [WebSocketChannel]> onCompletion,
-            Callable<Anything, [WebSocketChannel, Exception]>? onError,
-            Boolean finalFrame) {
-
-        wsSendBinary(
-            toJavaByteBuffer(binary),
+            Anything(WebSocketChannel) onCompletion,
+            Anything(WebSocketChannel,Exception)? onError,
+            Boolean finalFrame)
+        => wsSendBinary(
+            //TODO: is this copy really necessary or can
+            //we just send the underlying implementation?
+            copyToJavaByteBuffer(binary),
             finalFrame,
             fragmentedChannel,
             wrapFragmentedCallbackSend(onCompletion, onError, channel));
-    }
+    
 }

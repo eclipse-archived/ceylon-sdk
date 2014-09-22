@@ -1,4 +1,6 @@
-import ceylon.net.iop { eq }
+import ceylon.net.iop {
+    eq
+}
 
 "Represents a URI path segment or query parameter"
 by("Stéphane Épardaud")
@@ -7,8 +9,8 @@ shared class Parameter(String initialName, String? initialValue = null) {
     shared variable String? val = initialValue;
     
     "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
-    shared String toRepresentation(Boolean human){
-        if(exists String val = val){
+    shared String toRepresentation(Boolean human) {
+        if(exists String val = val) {
             return human then name + "=" + val
                 else percentEncoder.encodePathSegmentParamName(name) + "=" + percentEncoder.encodePathSegmentParamName(val);
         }else{
@@ -28,8 +30,8 @@ shared class Parameter(String initialName, String? initialValue = null) {
 
     "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
-        if(is Parameter that){
-            if(this === that){
+        if(is Parameter that) {
+            if(this === that) {
                 return true;
             }
             return name == that.name

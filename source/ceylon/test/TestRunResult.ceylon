@@ -25,7 +25,7 @@ shared interface TestRunResult {
     "The time in milliseconds when the test run finished."
     shared formal Integer endTime;
     
-    "The total elapsed time in miliseconds."
+    "The total elapsed time in milliseconds."
     shared formal Integer elapsedTime;
     
     "The detailed results of each test."

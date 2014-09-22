@@ -9,7 +9,7 @@
    [[ceylon.net.uri::parse]].
    
        void getit(String uriAsString) {
-           URI uri = parse(uriAsString);
+           Uri uri = parse(uriAsString);
            Request request = uri.get();
            Response response = request.execute();
            print(response.contents);

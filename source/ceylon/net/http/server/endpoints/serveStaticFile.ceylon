@@ -1,9 +1,25 @@
-import ceylon.file { Path, File, parsePath }
-import ceylon.io { newOpenFile, OpenFile }
-import ceylon.io.buffer { ByteBuffer, newByteBuffer }
-import ceylon.net.http.server { Response, Request, ServerException }
-import ceylon.net.http { contentType, contentLength }
-
+import ceylon.file {
+    Path,
+    File,
+    parsePath
+}
+import ceylon.io {
+    newOpenFile,
+    OpenFile
+}
+import ceylon.io.buffer {
+    ByteBuffer,
+    newByteBuffer
+}
+import ceylon.net.http {
+    contentType,
+    contentLength
+}
+import ceylon.net.http.server {
+    Response,
+    Request,
+    ServerException
+}
 
 "Endpoint for serving static files."
 by("Matej Lazar")
@@ -11,9 +27,9 @@ shared void serveStaticFile(
                 externalPath, 
                 String fileMapper(Request request) => request.path,
                 Options options = Options(),
-                Callable<Anything, [Request]>? onSuccess = null,
-                Callable<Anything, [ServerException,Request]>? onError = null)
-        (Request request, Response response, Callable<Anything, []> complete) {
+                Anything(Request)? onSuccess = null,
+                Anything(ServerException,Request)? onError = null)
+        (Request request, Response response, void complete()) {
     
     "Root directory containing files."
     String externalPath;
@@ -25,7 +41,7 @@ shared void serveStaticFile(
         
         value openFile = newOpenFile(file);
 
-        variable Integer available = file.size;
+        variable value available = file.size;
         response.addHeader(contentLength(available.string));
         if (is String cntType = file.contentType) {
             response.addHeader(contentType(cntType));
@@ -56,15 +72,20 @@ shared void serveStaticFile(
     }
 }
 
-class FileWriter(OpenFile openFile, Response response, Options options, void onSuccess(), void onError(ServerException exception)) {
-    variable Integer available = openFile.size;
-    variable Integer readFailed = 0;
-    Integer bufferSize = options.outputBufferSize < available then options.outputBufferSize else available;
+class FileWriter(
+    OpenFile openFile, 
+    Response response, 
+    Options options, 
+    void onSuccess(), 
+    void onError(ServerException exception)
+) {
+    variable value available = openFile.size;
+    variable value readFailed = 0;
+    value bufferSize = options.outputBufferSize < available 
+            then options.outputBufferSize else available;
     ByteBuffer byteBuffer = newByteBuffer(bufferSize);
 
-    shared void send() {
-        read();
-    }
+    shared void send() => read();
 
     void read() {
         if (available > 0) {

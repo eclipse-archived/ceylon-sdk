@@ -6,6 +6,7 @@ import java.nio.file {
     JPath=Path,
     Files {
         newDirectory=createDirectory,
+        newDirectories=createDirectories,
         newFile=createFile
     }
 }
@@ -13,10 +14,20 @@ import java.nio.file {
 class ConcreteNil(JPath jpath) 
         satisfies Nil {
     
-    createDirectory() =>
-            ConcreteDirectory(newDirectory(jpath));
+    shared actual Directory createDirectory(Boolean includingParentDirectories) {
+        if( includingParentDirectories ) {
+            return ConcreteDirectory(newDirectories(jpath));
+        } else {
+            return ConcreteDirectory(newDirectory(jpath));
+        }
+    }
     
-    createFile() => ConcreteFile(newFile(jpath));
+    shared actual File createFile(Boolean includingParentDirectories) {
+        if( includingParentDirectories ) {
+            newDirectories(jpath.parent);
+        }
+        return ConcreteFile(newFile(jpath));
+    }
     
     path => ConcretePath(jpath); 
     
