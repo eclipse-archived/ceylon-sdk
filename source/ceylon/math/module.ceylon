@@ -10,8 +10,9 @@
    integers.
  
  The types [[Whole|ceylon.math.whole::Whole]] and 
- [[Decimal|ceylon.math.decimal::Decimal]] are first-class numeric 
- types and support all the usual mathematical operations:
+ [[Decimal|ceylon.math.decimal::Decimal]] are first-class 
+ numeric types and support all the usual mathematical 
+ operations:
  
      Whole i = wholeNumber(12P);
      Whole j = wholeNumber(3);
@@ -26,7 +27,7 @@
      Decimal x = decimalNumber(66.0G);
      Decimal y = decimalNumber(100.0T);
      Decimal z = decimalNumber(66.0f);
-     Decimal d = implicitlyRounded(() (x+z)/y/x, round(40, halfUp));
+     Decimal d = implicitlyRounded(() => (x+z)/y/x, round(40, halfUp));
      print(d); //prints 1.000000000000000000000001E-14
  
  Here, the expression `(x+z)/y/x`, which has no terminating 

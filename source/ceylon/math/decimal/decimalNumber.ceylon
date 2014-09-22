@@ -7,7 +7,7 @@ import java.math {
     BigDecimal
 }
 
-"The number `number` converted to a `Decimal`."
+"The given [[number]] converted to a [[Decimal]]."
 // TODO: Document peculiarities of passing a Float or switch 
 //       to using valueOf(double)
 shared Decimal decimalNumber(Whole|Integer|Float number, 

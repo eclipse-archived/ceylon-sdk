@@ -11,10 +11,10 @@ shared class DividedWithRemainder(divided, remainder) {
 "A decimal floating point number. This class provides support 
  for fixed and arbitrary precision numbers. Values are immutable 
  and represented as `unscaled * 10^(-scale)`. Methods without 
- an explicit `Rounding` parameter use `unlimitedPrecision` 
+ an explicit [[Rounding]] parameter use [[unlimitedPrecision]] 
  (unless documented otherwise) except for `plus()`, `minus()`, 
- `times()`, `divided()` and `power()` whose implicit rounding is 
- subject to the rules of `implicitlyRounded()`."
+ `times()`, `divided()` and `power()` whose implicit rounding 
+ is subject to the rounding specified in [[implicitlyRounded]]."
 see(`function implicitlyRounded`)
 see(`class Rounding`)
 see(`value unlimitedPrecision`)
