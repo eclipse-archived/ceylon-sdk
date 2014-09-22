@@ -106,7 +106,7 @@ void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> s
     }
 
     MutableMap<String,Integer> counts = getRowCounts(sqlMap);
-    Integer rows = insertTable(sqlMap.values);
+    Integer rows = insertTable(sqlMap.items);
 
     if (exists transaction) {
         if (commit) {
@@ -194,7 +194,7 @@ void fini() {
 void enlistDummyXAResources() {
     TransactionManager? transactionManager = tm.getTransactionManager();
     assert (is TransactionManager transactionManager);
-    Class<TransactionManager> nbClazz = javaClassFromInstance<TransactionManager>(transactionManager);
+    Class<out Object> nbClazz = javaClassFromInstance(transactionManager);
 
     Transaction txn = transactionManager.transaction;
 

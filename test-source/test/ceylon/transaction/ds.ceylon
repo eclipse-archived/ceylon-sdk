@@ -78,7 +78,7 @@ void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> s
     }
 
     MutableMap<String,Integer> counts = getRowCounts(sqlMap);
-    Integer rows = insertTable(sqlMap.values);
+    Integer rows = insertTable(sqlMap.items);
 
     if (exists transaction) {
         if (commit) {
@@ -149,7 +149,7 @@ void sqlTest3() {
     // run a transaction but have the callable request an abort
     tm.transaction {
         function do() {
-            insertTable(sqlMap.values);
+            insertTable(sqlMap.items);
     
             return false; // abort transaction
         }
@@ -162,7 +162,7 @@ void sqlTest3() {
 
     tm.transaction {
         function do() {
-            insertTable(sqlMap.values);
+            insertTable(sqlMap.items);
     
             nextKey = nextKey - 2;
 
