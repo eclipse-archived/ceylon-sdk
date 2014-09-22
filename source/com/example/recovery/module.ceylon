@@ -23,7 +23,7 @@ module com.example.recovery "1.0.0" {
 
     // ceylon.dbc dependencies
     import ceylon.collection "1.1.0";
-    import ceylon.dbc "1.1.1";
+    import ceylon.dbc "1.1.0";
 
 	import ceylon.interop.java "1.1.0";
     import java.base "7";

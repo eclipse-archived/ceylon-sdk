@@ -69,7 +69,7 @@ module ceylon.transaction "1.0.0" {
     import org.jboss.modules "1.3.3.Final";
 
     // ceylon.dbc dependencies
-    shared import ceylon.dbc "1.1.1";
+    shared import ceylon.dbc "1.1.0";
     shared import ceylon.interop.java "1.1.0";
 
     import ceylon.file "1.1.0";
