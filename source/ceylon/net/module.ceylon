@@ -55,7 +55,7 @@
            server.start(SocketAddress("127.0.0.1",8080));
        }"""
 
-by("Stéphane Épardaud, Matej Lazar")
+by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 module ceylon.net "1.1.0" {
     
