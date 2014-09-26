@@ -612,12 +612,12 @@ shared class LinkedList<Element>(elements = {})
     }
     
     /*
-     The default List implementation of firstIndexWhere + lastIndexWhere
-     uses getFromFirst(index) instead of iterating over the list
+     The default List implementations of firstIndexWhere, lastIndexWhere
+     and collect use getFromFirst(index) instead of iterating over the list
      because for tuples and array sequences that's slightly faster.
      It is of course disastrous for a linked list, where getFromFirst(index)
-     runs in O(index) time, which means that the default firstIndexWhere()
-     and lastIndexWhere() run in O(size^2) time, so we refine it here.
+     runs in O(index) time, which means that the default firstIndexWhere(),
+     lastIndexWhere() and collect() run in O(size^2) time, so we refine it here.
      */
     
     shared actual Integer? firstIndexWhere(
@@ -650,6 +650,11 @@ shared class LinkedList<Element>(elements = {})
         }
         return result;
     }
+    
+    shared actual Result[] collect<Result>(
+            "The transformation applied to the elements."
+            Result collecting(Element element))
+            => [for (element in this) collecting(element)];
 
     first => head?.element;
 
