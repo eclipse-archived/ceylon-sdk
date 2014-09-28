@@ -6,7 +6,7 @@
  - rejected when either of the two promises is rejected."
 by("Julien Viet")
 class Conjunction<out Element, out First, Rest>(first, rest)
-    satisfies Term<Element, Tuple<First|Element, First, Rest>>
+    satisfies Term<Element,Tuple<First|Element,First,Rest>>
         given First satisfies Element
         given Rest satisfies Sequential<Element> {
     
@@ -50,8 +50,8 @@ class Conjunction<out Element, out First, Rest>(first, rest)
             => Conjunction(other, promise);
 
     shared actual Promise<Result> handle<Result>(
-            <Callable<Promise<Result>,Tuple<First|Element,First,Rest>>> onFulfilled,
-            <Promise<Result>(Throwable)> onRejected) 
+            Callable<Promise<Result>,Tuple<First|Element,First,Rest>> onFulfilled,
+            Promise<Result>(Throwable) onRejected) 
             => promise.handle {
                 (Tuple<First|Element,First,Rest> args) 
                         => unflatten(onFulfilled)(args);

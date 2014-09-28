@@ -25,7 +25,8 @@ shared abstract class Promise<out Value>()
         } else {
             value d = Deferred<[]>();
             d.fulfill([]);
-            return conjunction = Conjunction(this, d.promise);
+            return conjunction = 
+                    Conjunction(this, d.promise);
         }
     }
     

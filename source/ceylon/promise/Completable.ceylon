@@ -1,3 +1,5 @@
+shared alias Promisable<out Result> => Result|Promise<Result>;
+
 "Completable provides the base support for promises. This 
  interface satisfies the [[Promised]] interface, to be used 
  when a [[Promise]] is needed."
@@ -26,9 +28,9 @@ shared interface Completable<out Value>
     "Compose and return a [[Promise]]"
     shared Promise<Result> compose<Result>(
         "A function that is called when fulfilled."
-        <Callable<<Result|Promise<Result>>,Value>> onFulfilled,
+        Callable<Promisable<Result>,Value> onFulfilled,
         "A function that is called when rejected."
-        <<Result|Promise<Result>>(Throwable)> onRejected
+        Promisable<Result>(Throwable) onRejected
                 = rethrow)
             => handle {
                 adaptOnFulfilled<Result,Value>(onFulfilled);
@@ -36,7 +38,7 @@ shared interface Completable<out Value>
             };
 
     shared formal Promise<Result> handle<Result>(
-            <Callable<Promise<Result>,Value>> onFulfilled,
-            <Promise<Result>(Throwable)> onRejected);
+            Callable<Promise<Result>,Value> onFulfilled,
+            Promise<Result>(Throwable) onRejected);
 
 }

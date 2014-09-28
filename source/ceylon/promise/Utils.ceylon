@@ -1,5 +1,5 @@
 Promise<Result>(Throwable) adaptOnRejected<Result>(
-    <Result|Promise<Result>>(Throwable) onRejected) {
+    Promisable<Result>(Throwable) onRejected) {
     if (is Promise<Result>(Throwable) onRejected) {
         return onRejected;
     } else {
@@ -9,7 +9,7 @@ Promise<Result>(Throwable) adaptOnRejected<Result>(
 }
 
 Callable<Promise<Result>,Value> adaptOnFulfilled<Result,Value>(
-    Callable<Result|Promise<Result>,Value> onFulfilled)
+    Callable<Promisable<Result>,Value> onFulfilled)
         given Value satisfies Anything[] {
     if (is Callable<Promise<Result>,Value> onFulfilled) {
         return onFulfilled;
@@ -39,8 +39,8 @@ Promise<T> adaptValue<T>(T|Promise<T> val) {
     if (is T val) {
         object adapter extends Promise<T>() {
             shared actual Promise<Result> handle<Result>(
-                <Promise<Result>(T)> onFulfilled,
-                <Promise<Result>(Throwable)> onRejected) {
+                Promise<Result>(T) onFulfilled,
+                Promise<Result>(Throwable) onRejected) {
                 try {
                     return onFulfilled(val);
                 } catch(Throwable e) {
@@ -65,8 +65,8 @@ by("Julien Viet")
 Promise<T> adaptReason<T>(Throwable reason) {
     object adapted extends Promise<T>() {
         shared actual Promise<Result> handle<Result>(
-            <Promise<Result>(T)> onFulfilled,
-            <Promise<Result>(Throwable)> onRejected) {
+            Promise<Result>(T) onFulfilled,
+            Promise<Result>(Throwable) onRejected) {
             try {
                 return onRejected(reason);
             } catch(Throwable e) {

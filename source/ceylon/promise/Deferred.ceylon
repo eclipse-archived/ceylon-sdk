@@ -44,14 +44,13 @@ shared class Deferred<Value>()
             extends Promise<Value>() {
         
         shared actual Promise<Result> handle<Result>(
-                <Promise<Result>(Value)> onFulfilled, 
-                <Promise<Result>(Throwable)> onRejected) {
+                Promise<Result>(Value) onFulfilled, 
+                Promise<Result>(Throwable) onRejected) {
                 
-            Deferred<Result> deferred = Deferred<Result>();
-            void callback<T>(<Promise<Result>(T)> on, T val) {
+            value deferred = Deferred<Result>();
+            void callback<T>(Promise<Result>(T) on, T val) {
                 try {
-                    Promise<Result> result = on(val);
-                    deferred.fulfill(result);
+                    deferred.fulfill(on(val));
                 } catch (Throwable e) {
                     deferred.reject(e);
                 }
@@ -115,7 +114,7 @@ shared class Deferred<Value>()
         }
     }
 
-    fulfill(Value|Promise<Value> val) 
+    fulfill(Promisable<Value> val) 
             => update(adaptValue<Value>(val));
 
     reject(Throwable reason) 
