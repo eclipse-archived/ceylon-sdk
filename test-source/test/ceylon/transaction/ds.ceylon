@@ -1,20 +1,36 @@
-import ceylon.test { ... }
-
-import java.lang { System { setProperty } }
-import ceylon.transaction.tm { TM }
-import ceylon.collection { HashMap, MutableMap, HashSet, MutableSet }
-import ceylon.dbc { Sql, newConnectionFromDataSource }
-
-import javax.transaction {
-    TransactionManager,
-    Transaction,
-    UserTransaction,
-    Status { status_no_transaction = \iSTATUS_NO_TRANSACTION, status_active = \iSTATUS_ACTIVE }
+import ceylon.collection {
+    HashMap,
+    MutableMap,
+    HashSet,
+    MutableSet
+}
+import ceylon.dbc {
+    Sql,
+    newConnectionFromDataSource
+}
+import ceylon.test {
+    ...
+}
+import ceylon.transaction.tm {
+    jndiServer
 }
 
-import org.h2.jdbcx {JdbcDataSource}
+import java.lang {
+    System {
+        setProperty
+    }
+}
 
-import javax.sql { DataSource }
+import javax.sql {
+    DataSource
+}
+import javax.transaction {
+    UserTransaction
+}
+
+import org.h2.jdbcx {
+    JdbcDataSource
+}
 
 variable Integer nextKey = 1;
 String dbloc = "jdbc:h2:ceylondb";
@@ -25,9 +41,9 @@ void init() {
 
     tm.start();
 
-    assertFalse (tm.isTxnActive(), "Old transaction still associated with thread");
-    tm.getJndiServer().registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
-    tm.getJndiServer().registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
+    assertFalse (tm.transactionActive, "Old transaction still associated with thread");
+    jndiServer.registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
+    jndiServer.registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
 }
 
 void fini() {

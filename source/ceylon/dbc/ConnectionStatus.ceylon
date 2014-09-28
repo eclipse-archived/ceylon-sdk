@@ -6,8 +6,7 @@ import java.sql {
     SqlArray=Array
 }
 import ceylon.transaction.tm {
-    TM,
-    getTM
+    transactionManager
 }
 
 class ConnectionStatus(Connection() connectionSource) {
@@ -36,7 +35,8 @@ class ConnectionStatus(Connection() connectionSource) {
     shared void close() {
         if (exists c=conn) {
 			use--;
-            if (!tx && use==0 && !getTM().isTxnActive()) {
+            if (!tx && use==0 && 
+                !transactionManager.transactionActive) {
                 c.close();
             }
         }

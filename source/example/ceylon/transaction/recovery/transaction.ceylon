@@ -1,26 +1,33 @@
-import ceylon.transaction.tm { TM, getTM }
-
-import java.lang { System { setProperty }, Thread { currentThread, threadSleep = sleep }, Class, ClassLoader }
-import ceylon.interop.java { javaClassFromInstance }
-
-import javax.sql { DataSource }
-import ceylon.collection { HashMap, MutableMap, HashSet, MutableSet }
-import ceylon.dbc { Sql, newConnectionFromDataSource }
-
-import javax.transaction {
+import ceylon.collection {
+    HashMap,
+    MutableMap
+}
+import ceylon.dbc {
+    Sql,
+    newConnectionFromDataSource
+}
+import ceylon.transaction.tm {
     TransactionManager,
+    transactionManager,
+    jndiServer
+}
+
+import java.lang {
+    System {
+        setProperty
+    }
+}
+
+import javax.sql {
+    DataSource
+}
+import javax.transaction {
     Transaction,
     UserTransaction,
-    Status { status_no_transaction = \iSTATUS_NO_TRANSACTION, status_active = \iSTATUS_ACTIVE }
+    JavaTransactionManager=TransactionManager
 }
 
-import javax.transaction.xa {
-    XAResource
-}
-
-import org.h2.jdbcx {JdbcDataSource}
-
-TM tm = getTM();
+TransactionManager tm = transactionManager;
 String dbloc = "jdbc:h2:tmp/ceylondb";
 variable Integer nextKey = 5;
 
@@ -45,7 +52,7 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
 }
 
 DataSource? getXADataSource(String binding) {
-    Object? ds = tm.getJndiServer().lookup(binding);
+    Object? ds = jndiServer.lookup(binding);
 
     if (is DataSource ds) {
         return ds;
@@ -169,14 +176,14 @@ void init() {
 
     tm.start(false);
 
-    if (tm.isTxnActive()) {
+    if (tm.transactionActive) {
         print("Old transaction still associated with thread");
         throw;
     }
 
     // programatic method of registering datasources (the alternative is to use a config file
-    tm.getJndiServer().registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
-    tm.getJndiServer().registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
+    jndiServer.registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
+    jndiServer.registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
 
 //    tm.getJndiServer().registerDriverSpec(
 //        "org.postgresql.Driver", "org.jumpmind.symmetric.jdbc.postgresql", "9.2-1002-jdbc4", "org.postgresql.xa.PGXADataSource");
@@ -189,8 +196,8 @@ void fini() {
 }
 
 void enlistDummyXAResources() {
-    TransactionManager? transactionManager = tm.getTransactionManager();
-    assert (is TransactionManager transactionManager);
+    JavaTransactionManager? transactionManager = tm.transactionManager;
+    assert (exists transactionManager);
 
     Transaction txn = transactionManager.transaction;
 

@@ -1,11 +1,19 @@
-import ceylon.transaction.tm {
-    TM, getTM, TransactionServiceFactory, DSHelper { bindDataSources }
-}
-import java.lang {
-    System { setProperty, getProperty }
-}
 import ceylon.file {
-    File, Path, parsePath
+    File,
+    Path,
+    parsePath
+}
+import ceylon.transaction.tm {
+    bindDataSources,
+    transactionManager,
+    recoveryScan
+}
+
+import java.lang {
+    System {
+        setProperty,
+        getProperty
+    }
 }
 
 shared interface RecoveryManager {
@@ -15,15 +23,13 @@ shared interface RecoveryManager {
 }
 
 shared class RecoveryManagerImpl() satisfies RecoveryManager {
-    TM tm = getTM();
-    TransactionServiceFactory transactionServiceFactory = TransactionServiceFactory();
 
     void init() {
         String userDir = getProperty("user.dir", "") + "/tmp";
         setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", userDir);
         setProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", userDir);
 
-        tm.start(true);
+        transactionManager.start(true);
     }
 
     shared actual void start(String? dataSourceConfigPropertyFile) {
@@ -32,14 +38,14 @@ shared class RecoveryManagerImpl() satisfies RecoveryManager {
     }
 
     shared actual void scan() {
-        transactionServiceFactory.recoveryScan();
+        recoveryScan();
     }
 
     shared actual void parseCommandInput() {
         process.write("> ");
         while (exists line = process.readLine()) {
             if (line == "quit") {
-                tm.stop();
+                transactionManager.stop();
                 break;
             } else if (line == "scan") {
                 print("scanning");

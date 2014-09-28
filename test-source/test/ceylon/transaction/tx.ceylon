@@ -1,14 +1,20 @@
-import ceylon.test { ... }
+import ceylon.test {
+    ...
+}
+
 import javax.transaction {
     TransactionManager,
     Transaction,
     UserTransaction,
-    Status { status_no_transaction = \iSTATUS_NO_TRANSACTION, status_active = \iSTATUS_ACTIVE }
+    Status {
+        status_no_transaction=STATUS_NO_TRANSACTION,
+        status_active=STATUS_ACTIVE
+    }
 }
 
 // A callable which is expected to be run inside a transaction
 Boolean txnTestDo() {
-    UserTransaction? transaction = tm.currentTransaction();
+    UserTransaction? transaction = tm.currentTransaction;
 
     assert (is UserTransaction transaction);
     assertEquals (status_active, transaction.status, "Callable called without an active transaction");
@@ -18,7 +24,7 @@ Boolean txnTestDo() {
 
 test
 void txnTest1() {
-    UserTransaction? txn = tm.currentTransaction();
+    UserTransaction? txn = tm.currentTransaction;
 
     assert (! is UserTransaction txn);
 }
@@ -38,7 +44,7 @@ void txnTest3() {
 
     variable Integer status = transaction.status;
 
-    assertTrue(tm.isTxnActive(), "tx status should have been active but was ``status``");
+    assertTrue(tm.transactionActive, "tx status should have been active but was ``status``");
 
     transaction.commit();
     status = transaction.status;
@@ -49,33 +55,33 @@ void txnTest3() {
 test
 void txnTest4() {
     tm.start();
-    TransactionManager? transactionManager = tm.getTransactionManager();
+    TransactionManager? transactionManager = tm.transactionManager;
     assert (is TransactionManager transactionManager);
 
-    UserTransaction?  txn1 = tm.currentTransaction();
+    UserTransaction?  txn1 = tm.currentTransaction;
     assert (! is UserTransaction txn1);
 
     transactionManager.begin();
-    UserTransaction?  txn2 = tm.currentTransaction();
+    UserTransaction?  txn2 = tm.currentTransaction;
     assert (is UserTransaction txn2);
 
     Transaction txn = transactionManager.suspend();
-    UserTransaction?  txn3 = tm.currentTransaction();
+    UserTransaction?  txn3 = tm.currentTransaction;
     assert (! is UserTransaction txn3);
 
     transactionManager.resume(txn);
-    UserTransaction?  txn4 = tm.currentTransaction();
+    UserTransaction?  txn4 = tm.currentTransaction;
     assert (is UserTransaction txn4);
 
     transactionManager.commit();
-    UserTransaction?  txn5 = tm.currentTransaction();
+    UserTransaction?  txn5 = tm.currentTransaction;
     assert (! is UserTransaction txn5);
 }
 
 test
 void txnTest5() {
     tm.start();
-    TransactionManager? transactionManager = tm.getTransactionManager();
+    TransactionManager? transactionManager = tm.transactionManager;
     assert (is TransactionManager transactionManager);
 
     transactionManager.begin();
