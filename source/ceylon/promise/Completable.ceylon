@@ -12,8 +12,7 @@ shared interface Completable<out Value>
         "A function that is called when fulfilled."
         Callable<Anything,Value> onFulfilled, 
         "A function that is called when rejected."
-        Anything(Throwable) onRejected 
-                = rethrow)
+        Anything(Throwable) onRejected = rethrow)
             => compose(onFulfilled, onRejected);
     
     "Compose with a function that accepts either a [[Value]] 
@@ -41,4 +40,3 @@ shared interface Completable<out Value>
             <Promise<Result>(Throwable)> onRejected);
 
 }
-

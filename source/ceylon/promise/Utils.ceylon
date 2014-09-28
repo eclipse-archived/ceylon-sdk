@@ -25,11 +25,10 @@ by("Julien Viet")
 Callable<Promise<Result>,Value> adaptResult<Result,Value>
         (Callable<Result,Value> a) 
         given Value satisfies Anything[] {
-    Result(Value) b = unflatten(a);
-    Promise<Result> c(Value d) {
-        Result r = b(d);
-        Deferred<Result> deferred = Deferred<Result>();
-        deferred.fulfill(r);
+    value b = unflatten(a);
+    function c(Value d) {
+        value deferred = Deferred<Result>();
+        deferred.fulfill(b(d));
         return deferred.promise;	
     }
     return flatten(c);
