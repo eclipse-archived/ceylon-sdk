@@ -1,52 +1,44 @@
-"Completable provides the base support for promise. This interface satisfies the
- [[Promised]] interface, to be used when a promise is needed instead of a [[Completable]]"
+"Completable provides the base support for promises. This 
+ interface satisfies the [[Promised]] interface, to be used 
+ when a [[Promise]] is needed."
 by("Julien Viet")
 shared interface Completable<out Value>
         satisfies Promised<Value>
             given Value satisfies Anything[] {
-
-    M rethrow<M>(Throwable e) {
-        throw e;
-    }
     
-    "When completion happens, the provided function will be invoked."
-    shared void onComplete(Callable<Anything, Value> onFulfilled, Anything(Throwable) onRejected = rethrow<Anything>) {
-        compose(onFulfilled, onRejected);
-    }
-
-	"Compose with a function that accepts either a *Value* or a *Throwable*."
-    shared Promise<Result> always<Result>(Callable<Result, Value|[Throwable]> callback) {
-        return compose(callback, callback);
-    }
+    "When completion happens, the provided function will be 
+     invoked."
+    shared void onComplete(
+        "A function that is called when fulfilled."
+        Callable<Anything,Value> onFulfilled, 
+        "A function that is called when rejected."
+        Anything(Throwable) onRejected 
+                = rethrow)
+            => compose(onFulfilled, onRejected);
+    
+    "Compose with a function that accepts either a [[Value]] 
+     or a [[Throwable]]."
+    shared Promise<Result> always<Result>(
+        "A function that accepts either the promised value
+         or a [[Throwable]]."
+        Callable<Result,Value|[Throwable]> callback) 
+            => compose(callback, callback);
     
     "Compose and return a [[Promise]]"
     shared Promise<Result> compose<Result>(
-        <Callable<<Result|Promise<Result>>, Value>> onFulfilled,
-        <<Result|Promise<Result>>(Throwable)> onRejected = rethrow<Result>) {
-        
-        Callable<Promise<Result>, Value> onFulfilled2;
-        if (is Callable<Promise<Result>, Value> onFulfilled) {
-            onFulfilled2 = onFulfilled;
-        } else if (is Callable<Result, Value> onFulfilled) {
-            onFulfilled2 = adaptResult<Result, Value>(onFulfilled);
-        } else {
-            throw Exception("Does not make sense");
-        }
-        
-        Promise<Result>(Throwable) onRejected2;
-        if (is Promise<Result>(Throwable) onRejected) {
-            onRejected2 = onRejected;
-        } else if (is Result(Throwable) onRejected) {
-            onRejected2 = adaptResult<Result, [Throwable]>(onRejected);
-        } else {
-            throw Exception("Does not make sense");
-        }
-        
-        return handle(onFulfilled2, onRejected2); 
-    }
+        "A function that is called when fulfilled."
+        <Callable<<Result|Promise<Result>>,Value>> onFulfilled,
+        "A function that is called when rejected."
+        <<Result|Promise<Result>>(Throwable)> onRejected
+                = rethrow)
+            => handle {
+                adaptOnFulfilled<Result,Value>(onFulfilled);
+                adaptOnRejected<Result>(onRejected);
+            };
 
     shared formal Promise<Result> handle<Result>(
-            <Callable<Promise<Result>, Value>> onFulfilled,
+            <Callable<Promise<Result>,Value>> onFulfilled,
             <Promise<Result>(Throwable)> onRejected);
 
 }
+

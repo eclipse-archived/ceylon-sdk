@@ -29,6 +29,8 @@ shared interface Term<out Element, out T>
          p1.and(p2, p3)
            .compose((Boolean b, Integer i, String s) 
                      => doSomething(b, i, s));"
-    shared formal Term<Element|Other, Tuple<Element|Other, Other, T>> and<Other>(Promise<Other> other);
+    shared formal 
+    Term<Element|Other,Tuple<Element|Other,Other,T>> 
+            and<Other>(Promise<Other> other);
 
 }
