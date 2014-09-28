@@ -1,0 +1,10 @@
+package ceylon.transaction.rm;
+
+import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
+
+public class CeylonXARecoveryModule extends XARecoveryModule {
+    public CeylonXARecoveryModule() {
+        super();
+    }
+}
+
