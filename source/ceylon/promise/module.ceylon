@@ -20,7 +20,7 @@
  - The [[Future]] class, providing support for clients who
    wish to block which awaiting a `Promise`. 
  
- ## `Promise`
+ ## Promises
  
  A [[Promise]] exists in one of three states:
  
@@ -47,7 +47,7 @@
  the second function is called the `onRejected` callback. 
  The `onRejected` function is always optional. 
  
- ## `Deferred`
+ ## Returning promises
  
  A [[Deferred]] object is a factory that provides an 
  instance of the `Promise` class and manages its lifecycle,
@@ -131,7 +131,7 @@
  - The return type of combined promise is not [[Promise]] 
    but [[Completable]].
  
- ## `always()`
+ ## The `always()` method
  
  The [[always()|Completable.always]] method of a promise 
  allows a single callback to be notified when the promise is 
@@ -164,7 +164,7 @@
      Deferred<String> deferred = Deferred<String>();
      promise.compose((s) => deferred.promise);
  
- ## `Future`
+ ## Futures
  
  Sometimes it is convenient to block until a promise is 
  resolved. For this purpose a promise may be transformed
