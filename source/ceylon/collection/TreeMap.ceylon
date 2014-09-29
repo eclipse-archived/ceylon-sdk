@@ -746,14 +746,12 @@ shared class TreeMap<Key, Item>(compare, entries={})
     shared actual TreeMap<Key,Item> span(Key from, Key to) {
         {<Key->Item>*} entries;
         if (compare(from, to)==larger) {
-            entries = lowerEntries(from)
-                    takeWhile (Key->Item entry)
-                            => compare(entry.key, to)!=smaller;
+            entries = lowerEntries(from).takeWhile((entry) 
+                => compare(entry.key, to)!=smaller);
         }
         else {
-            entries = higherEntries(from)
-                    takeWhile (Key->Item entry)
-                            => compare(entry.key, to)!=larger;
+            entries = higherEntries(from).takeWhile((entry)
+                => compare(entry.key, to)!=larger);
         }
         return TreeMap(compare, entries);
     }
@@ -762,14 +760,15 @@ shared class TreeMap<Key, Item>(compare, entries={})
             => TreeMap(compare, higherEntries(from));
     
     spanTo(Key to)
-            => TreeMap(compare, takeWhile((Key->Item entry)
+            => TreeMap(compare, takeWhile((entry)
                     => compare(entry.key, to)!=larger));
     
 }
 
 "Create a [[TreeMap] with [[comparable|Comparable]]] keys,
  sorted by the natural ordering of the keys."
-shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>({<Key->Item>*} entries)
+shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>
+        ({<Key->Item>*} entries)
         given Key satisfies Comparable<Key>
         given Item satisfies Object
         => TreeMap((Key x, Key y) => x<=>y, entries);

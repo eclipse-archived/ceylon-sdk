@@ -51,7 +51,7 @@ shared sealed class Formats(
     
     String formatDate(String format, ReadableDate date) {
         function interpolateToken(Integer->String token) 
-                => (2 divides token.key) 
+                => 2.divides(token.key)
                     then formatDateToken(token.item, date) 
                     else token.item;
         value tokens = format.split('\''.equals, true, false);
@@ -60,7 +60,7 @@ shared sealed class Formats(
     
     String formatTime(String format, ReadableTime time) {
         function interpolateToken(Integer->String token) 
-                => (2 divides token.key) 
+                => 2.divides(token.key) 
                     then formatTimeToken(token.item, time) 
                     else token.item;
         value tokens = format.split('\''.equals, true, false);
