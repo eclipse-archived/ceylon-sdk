@@ -119,8 +119,9 @@ test void testServer() {
         },
         AsynchronousEndpoint {
             service => serveStaticFile(".");
-            path = (startsWith("/lazy") or startsWith("/blob")) 
-            or endsWith(".txt");
+            path = startsWith("/lazy")
+                    .or(startsWith("/blob")) 
+                    .or(endsWith(".txt"));
         },
         AsynchronousEndpoint {
             service => serveStaticFile("/", fileMapper);
@@ -353,18 +354,20 @@ test void testPathMatcher() {
     value matcher2 = endsWith(".txt");
     assertEquals("/file/myfile.txt", matcher2.relativePath(requestPath));
     
-    value matcher3 = startsWith("/file") and endsWith(".txt");
+    value matcher3 = startsWith("/file").and(endsWith(".txt"));
     assertEquals("/file/myfile.txt", matcher3.relativePath(requestPath));
 
-    value matcher4 = endsWith(".txt") and startsWith("/file");
+    value matcher4 = endsWith(".txt").and(startsWith("/file"));
     assertEquals("/file/myfile.txt", matcher4.relativePath(requestPath));
 
-    value matcher5 = (startsWith("/file") or startsWith("/blob")) 
-                or endsWith(".txt");
+    value matcher5 = startsWith("/file")
+            .or(startsWith("/blob"))
+            .or(endsWith(".txt"));
     assertEquals("/myfile.txt", matcher5.relativePath(requestPath));
 
-    value matcher6 = (startsWith("/blob") or startsWith("/file")) 
-                and endsWith(".txt");
+    value matcher6 = (startsWith("/blob")
+            .or(startsWith("/file")) 
+            .and(endsWith(".txt")));
     assertEquals("/file/myfile.txt", matcher6.relativePath(requestPath));
 }
 
