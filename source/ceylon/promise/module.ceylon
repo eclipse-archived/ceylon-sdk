@@ -184,7 +184,7 @@
  The implementation is thread safe and uses a non blocking 
  algorithm for maintaining the state of a `Deferred` object.
  
- # Relationship to the A+ specification
+ ## Relationship to the A+ specification
  
  This module is loosely based upon the A+ specification,
  with the following differences:
