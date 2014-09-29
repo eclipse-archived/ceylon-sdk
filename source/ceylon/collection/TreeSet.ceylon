@@ -19,7 +19,7 @@ shared class TreeSet<Element>(compare, elements={})
      object present {}
 
      variable value map = TreeMap(compare,
-             elements map (Element e) => e->present);
+             elements.map((e) => e->present));
 
      contains(Object element) => map.defines(element);
      
@@ -94,28 +94,25 @@ shared class TreeSet<Element>(compare, elements={})
 
      higherElements(Element element)
              => map.higherEntries(element)
-                     map (Element->Object entry)
-                             => entry.key;
+                    .map((entry) => entry.key);
 
      lowerElements(Element element)
              => map.lowerEntries(element)
-                     map (Element->Object entry)
-                             =>entry.key;
+                    .map((entry) => entry.key);
 
      measure(Element from, Integer length)
-             => TreeSet(compare, higherElements(from).take(length));
+             => TreeSet(compare, 
+                    higherElements(from).take(length));
 
      shared actual TreeSet<Element> span(Element from, Element to) {
          {Element*} elements;
          if (compare(from, to)==larger) {
-             elements = lowerElements(from)
-                     takeWhile (Element elem)
-                             => compare(elem, to)!=smaller;
+             elements = lowerElements(from).takeWhile((elem)
+                 => compare(elem, to)!=smaller);
          }
          else {
-             elements = higherElements(from)
-                     takeWhile (Element elem)
-                             => compare(elem, to)!=larger;
+             elements = higherElements(from).takeWhile((elem)
+                 => compare(elem, to)!=larger);
          }
          return TreeSet(compare, elements);
      }
@@ -124,7 +121,7 @@ shared class TreeSet<Element>(compare, elements={})
              => TreeSet(compare, higherElements(from));
 
      spanTo(Element to)
-             => TreeSet(compare, takeWhile((Element elem)
+             => TreeSet(compare, takeWhile((elem)
                      => compare(elem, to)!=larger));
 
      equals(Object that) => (super of Set<Element>).equals(that);
