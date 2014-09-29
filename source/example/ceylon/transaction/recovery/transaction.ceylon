@@ -165,7 +165,7 @@ void init() {
         throw;
     }
 
-    // programatic method of registering datasources (the alternative is to use a config file
+    // programatic method of registering datasources (the alternative is to use a config file)
     jndiServer.registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
     jndiServer.registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
 

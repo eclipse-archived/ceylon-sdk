@@ -31,9 +31,14 @@ Running the example against a dummy resource or against other datasources:
 To use other datasources you will need to import the jars containing the java classes for XA. For example,
 to include postgresql create an empty postgresql.properties descriptor file and import the jar (org.jumpmind.symmetric.jdbc.postgresql-9.2-1002-jdbc4.jar):
 
-ceylon import-jar --descriptor=postgresql.properties --out=modules "org.postgresql/9.2-1002" org.jumpmind.symmetric.jdbc.postgresql-9.2-1002-jdbc4.jar --force
+  ceylon import-jar --descriptor=postgresql.properties --out=modules "org.postgresql/9.2-1002" org.jumpmind.symmetric.jdbc.postgresql-9.2-1002-jdbc4.jar --force
 
 Update example/ceylon/transaction/recovery/transaction.ceylon and uncomment the lines that register the driver
 and datasource and make sure the dsBindings variable contains "h2" and "postgresql". Similarly if you want to
 include other databases in the transaction.
+
+An alternate non programatic alternative is to supply a config file which defines your datasources. Pass
+the location of the property file in a process property as follows:
+
+  ceylon run --define=dbc.properties=source/example/ceylon/transaction/recovery/dbc.properties example.ceylon.transaction.recovery
 

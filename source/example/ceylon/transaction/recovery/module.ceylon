@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Red Hat Inc.
+ * Copyright 2014 Red Hat Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,4 @@ module example.ceylon.transaction.recovery "1.1.0" {
 
 	shared import ceylon.interop.java "1.1.0";
     import java.base "7";
-
-    // use vendor specific datasources
-    import org.h2 "1.3.168";
-
-    //import org.postgresql "9.2-1002";
-	//import com.ibm.db2.jcc "9.7";
-    //import org.hsqldb.hsqldb "20140210.123437-60";
-    //import org.hsqldb.hsqldb "2.3.1";
-	//import oracle.jdbc.driver "10.2.0.4";
 }

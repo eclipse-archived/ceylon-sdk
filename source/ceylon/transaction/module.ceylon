@@ -20,7 +20,7 @@
    - The configuration approach is to define the datasources via a properties file whose
      location is set via a process property called `dbc.properties`. The format follows
      [[http://java.sun.com/dtd/properties.dtd]] and an example is provided in the Ceylon 
-     examples directory.
+     examples and test-source/test/ceylon/transaction directories.
    
    - The programatic approach is via calls on the JNDI server to specify details of the
      module that contains the JDBC driver for the datasource together with details of how to 
