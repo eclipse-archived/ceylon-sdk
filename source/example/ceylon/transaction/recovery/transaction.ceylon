@@ -2,10 +2,12 @@ import ceylon.collection {
     HashMap,
     MutableMap
 }
+
 import ceylon.dbc {
     Sql,
     newConnectionFromDataSource
 }
+
 import ceylon.transaction.tm {
     TransactionManager,
     transactionManager,
@@ -21,6 +23,7 @@ import java.lang {
 import javax.sql {
     DataSource
 }
+
 import javax.transaction {
     Transaction,
     UserTransaction,
@@ -31,10 +34,9 @@ TransactionManager tm = transactionManager;
 String dbloc = "jdbc:h2:tmp/ceylondb";
 variable Integer nextKey = 5;
 
-//{String+} dsBindings2 = { "postgresql", "oracle_thin" };
-//{String+} dsBindings2 = { "postgresql", "hsqldb" };
+//{String+} dsBindings2 = { "db2", "postgresql", "oracle_thin", "hsqldb" };
+// a list of datasource (JNDI names) to enlist into a transaction
 {String+} dsBindings = { "h2" };
-{String+} dsBindings2 = { "db2", "postgresql" };
 
 MutableMap<String,Sql> getSqlHelper({String+} bindings) {
     MutableMap<String,Sql> sqlMap = HashMap<String,Sql>();
@@ -78,21 +80,24 @@ Boolean updateTable(Sql sq, String dml, Boolean ignoreErrors) {
 
 void initDb(Sql sql) {
     updateTable(sql, "DROP TABLE CEYLONKV", true);
-    updateTable(sql, "CREATE TABLE CEYLONKV (rkey VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY ( rkey ))", true);
-      sql.Update("DELETE FROM CEYLONKV").execute();
+    updateTable(sql, "CREATE TABLE CEYLONKV (rkey VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY ( rkey ))",
+	    true);
+    sql.Update("DELETE FROM CEYLONKV").execute();
 }
 
 
-// insert two values into each of the requested dbs
+// insert two values into each requested dbs
 Integer insertTable(Collection<Sql> dbs) {
     for (sql in dbs) {
         print("inserting key ``nextKey`` using ds ``sql``");
-        sql.Update("INSERT INTO CEYLONKV(rkey,val) VALUES (?, ?)").execute( "k" + nextKey.string, "v" + nextKey.string);
+        sql.Update("INSERT INTO CEYLONKV(rkey,val) VALUES (?, ?)").
+		    execute( "k" + nextKey.string, "v" + nextKey.string);
     }
     nextKey = nextKey + 1;
     for (sql in dbs) {
         print("inserting key ``nextKey`` using ds ``sql``");
-        sql.Update("INSERT INTO CEYLONKV(rkey,val) VALUES (?, ?)").execute( "k" + nextKey.string, "v" + nextKey.string);
+        sql.Update("INSERT INTO CEYLONKV(rkey,val) VALUES (?, ?)").
+		    execute( "k" + nextKey.string, "v" + nextKey.string);
     }
     nextKey = nextKey + 1;
 
@@ -149,27 +154,6 @@ void checkRowCounts(MutableMap<String,Integer> prev, MutableMap<String,Integer> 
     }
 }
 
-// Test XA transactions with one resource
-void sqlTest1() {
-    MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
-
-    // local commit
-    transactionalWork(false, true, sqlMap);
-    // XA commit
-    transactionalWork(true, true, sqlMap);
-}
-
-// Test XA transactions with multiple resources
-void sqlTest2(Boolean doInTxn) {
-    MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings2);
-
-    // XA abort
-    transactionalWork(doInTxn, false, sqlMap);
-
-    // XA commit
-    transactionalWork(doInTxn, true, sqlMap);
-}
-
 void init() {
     setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", "tmp");
     setProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", "tmp");
@@ -181,13 +165,14 @@ void init() {
         throw;
     }
 
-    // programatic method of registering datasources (the alternative is to use a config file
+    // programatic method of registering datasources (the alternative is to use a config file)
     jndiServer.registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
     jndiServer.registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
 
-//    tm.getJndiServer().registerDriverSpec(
-//        "org.postgresql.Driver", "org.jumpmind.symmetric.jdbc.postgresql", "9.2-1002-jdbc4", "org.postgresql.xa.PGXADataSource");
-//    tm.getJndiServer().registerDSName(
+    // if you have postgresql db then you would register is as follows:
+//    jndiServer.registerDriverSpec(
+//        "org.postgresql.Driver", "org.postgresql", "9.2-1002", "org.postgresql.xa.PGXADataSource");
+//    jndiServer.registerDSName(
 //        "postgresql", "org.postgresql.Driver", "ceylondb", "localhost", 5432, "sa", "sa");
 }
 
