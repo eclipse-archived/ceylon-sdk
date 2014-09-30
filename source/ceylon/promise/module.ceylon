@@ -20,7 +20,7 @@
  - The [[Future]] class, providing support for clients who
    wish to block which awaiting a `Promise`. 
  
- ## `Promise`
+ ## Promises
  
  A [[Promise]] exists in one of three states:
  
@@ -32,7 +32,7 @@
    without producing a value. This situation is represented
    as an [[exception|Throwable]].
  
- The method [[Promise.onComplete]], allows interested 
+ The method [[Promise.onComplete]] allows interested 
  parties to be notified when the promise makes a 
  transition from the _promised_ state to the _fulfilled_ or 
  the _rejected_ state:
@@ -47,7 +47,7 @@
  the second function is called the `onRejected` callback. 
  The `onRejected` function is always optional. 
  
- ## `Deferred`
+ ## Returning promises
  
  A [[Deferred]] object is a factory that provides an 
  instance of the `Promise` class and manages its lifecycle,
@@ -81,7 +81,7 @@
              String val = getValue();
              deferred.fulfill(val);
          }
-         catch(Throwable e) {
+         catch (Throwable e) {
              deferred.reject(e);
          }
      }
@@ -131,7 +131,7 @@
  - The return type of combined promise is not [[Promise]] 
    but [[Completable]].
  
- ## `always()`
+ ## The `always()` method
  
  The [[always()|Completable.always]] method of a promise 
  allows a single callback to be notified when the promise is 
@@ -164,7 +164,7 @@
      Deferred<String> deferred = Deferred<String>();
      promise.compose((s) => deferred.promise);
  
- ## `Future`
+ ## Futures
  
  Sometimes it is convenient to block until a promise is 
  resolved. For this purpose a promise may be transformed
@@ -184,7 +184,7 @@
  The implementation is thread safe and uses a non blocking 
  algorithm for maintaining the state of a `Deferred` object.
  
- # Relationship to the A+ specification
+ ## Relationship to the A+ specification
  
  This module is loosely based upon the A+ specification,
  with the following differences:
@@ -194,8 +194,8 @@
    `onFulfilled` or `onRejected` is called_ is not 
    implemented. Therefore the invocation occurs inside the 
    invocation of `compose()`.
- - The *Promise Resolution Procedure* is implemented for 
-   objects or promises but not for *thenables* since that 
+ - The _Promise Resolution Procedure_ is implemented for 
+   objects or promises but not for _thenables_ since that 
    would require a language with dynamic typing."
 by("Julien Viet")
 license("Apache Software License")
