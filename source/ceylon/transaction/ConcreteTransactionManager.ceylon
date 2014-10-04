@@ -164,16 +164,14 @@ class ConcreteTransactionManager() satisfies TransactionManager {
     
     recoveryScan() => recoveryManager?.scan();
 
-    shared actual UserTransaction? beginTransaction() {
-        if (is UserTransaction ut = userTransaction) {
-            ut.begin();
-            return ut;
-        }
-        return null;
+    shared actual UserTransaction beginTransaction() {
+        assert (exists ut = userTransaction);
+        ut.begin();
+        return ut;
     }
 
     shared actual UserTransaction? currentTransaction {
-        if (is UserTransaction ut = userTransaction) {
+        if (exists ut = userTransaction) {
             if (ut.status != status_no_transaction) {
                 return ut;
             }
@@ -183,27 +181,24 @@ class ConcreteTransactionManager() satisfies TransactionManager {
     
     transactionActive => currentTransaction exists;
 
-    "Execute the passed Callable within a transaction. If any
-     exception is thrown from within the Callable, the transaction will
-     be rolled back; otherwise it is committed."
     shared actual Boolean transaction(Boolean do()) {
         variable value ok = false;
-        if (exists transaction = beginTransaction()) {
+        value transaction = beginTransaction();
+        try {
+            ok = do();
+        }
+        finally {
             try {
-                ok = do();
-            } finally {
-                try {
-                    if (ok) {
-                        transaction.commit();
-                    } else {
-                        transaction.rollback();
-                    }
-                } catch (Exception e) {
-                    ok = false;
+                if (ok) {
+                    transaction.commit();
                 }
+                else {
+                    transaction.rollback();
+                }
+            } catch (Exception e) {
+                ok = false;
             }
         }
-
         return ok;
     }
 }

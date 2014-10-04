@@ -6,7 +6,7 @@ import javax.transaction {
 
 shared interface TransactionManager {
     
-    "Start and initialise an instance of the transaction 
+    "Start and initialize an instance of the transaction 
      manager.
      
      If the [[startRecovery]] is true then an in-process 
@@ -25,14 +25,33 @@ shared interface TransactionManager {
      if any."
     shared formal void stop();
     
-    shared formal UserTransaction? beginTransaction();
+    "Begin a new transaction, returning a 
+     [[javax.transaction::UserTransaction]] for controlling 
+     the new transaction."
+    throws (`class AssertionError`, 
+        "if the transaction manager is not running")
+    shared formal UserTransaction beginTransaction();
     
+    "A [[javax.transaction::UserTransaction]] for 
+     controlling the current transaction, or `null` if there
+     is no current transaction."
     shared formal UserTransaction? currentTransaction;
     
+    "Determine if there is a transaction active."
+    throws (`class AssertionError`, 
+        "if the transaction manager is not running")
     shared formal Boolean transactionActive;
     
-    shared formal Boolean transaction(Boolean do());
+    "Perform the given [[work|do] in a transaction." 
+    throws (`class AssertionError`, 
+        "if the transaction manager is not running")
+    shared formal Boolean transaction(
+            "The work. Return `false` to roll back the
+             transaction."
+            Boolean do());
     
+    "The JTA [[javax.transaction::TransactionManager]], or
+     `null` if the transaction manager is not running."
     shared formal JavaTransactionManager? transactionManager;
     
     "Run a recovery scan using the in-process transaction 
