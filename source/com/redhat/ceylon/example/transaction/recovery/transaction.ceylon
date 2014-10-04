@@ -1,14 +1,16 @@
 import ceylon.collection {
-    HashMap,
-    MutableMap
+    HashMap
 }
 import ceylon.dbc {
     Sql,
     newConnectionFromDataSource
 }
 import ceylon.transaction {
-    TransactionManager,
-    transactionManager
+    tm=transactionManager
+}
+import ceylon.transaction.datasource {
+    registerDataSourceUrl,
+    registerDriver
 }
 
 import java.lang {
@@ -25,26 +27,14 @@ import javax.sql {
 }
 import javax.transaction {
     Transaction,
-    UserTransaction,
-    JavaTransactionManager=TransactionManager
-}
-import ceylon.transaction.datasource {
-    registerDataSourceUrl,
-    registerDriver
+    UserTransaction
 }
 
-TransactionManager tm = transactionManager;
-String dbloc = "jdbc:h2:tmp/ceylondb";
 variable Integer nextKey = 5;
 
-//{String+} dsBindings2 = { "db2", "postgresql", "oracle_thin", "hsqldb" };
-// a list of datasource (JNDI names) to enlist into a transaction
-{String+} dsBindings = { "h2" };
-
-MutableMap<String,Sql> getSqlHelper({String+} bindings) {
-    MutableMap<String,Sql> sqlMap = HashMap<String,Sql>();
-
-    for (dsName in bindings) {
+Map<String,Sql> getSqlHelper({String+} bindings) {
+    HashMap<String,Sql> sqlMap = HashMap<String,Sql>();
+    for (String dsName in bindings) {
         DataSource? ds = getXADataSource(dsName);
         assert (is DataSource ds);
         Sql sql = Sql(newConnectionFromDataSource(ds));
@@ -52,7 +42,6 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
         initDb(sql);
         print("db ``dsName`` registered");
     }
-
     return sqlMap;
 }
 
@@ -67,9 +56,9 @@ DataSource? getXADataSource(String binding) {
 Boolean updateTable(Sql sq, String dml, Boolean ignoreErrors) {
     try {
         sq.Update(dml).execute();
-
         return true;
-    } catch (Exception ex) {
+    }
+    catch (Exception ex) {
         print("``dml`` error: ``ex.message``");
         if (!ignoreErrors) {
             throw ex;
@@ -89,13 +78,13 @@ void initDb(Sql sql) {
 
 // insert two values into each requested dbs
 Integer insertTable(Collection<Sql> dbs) {
-    for (sql in dbs) {
+    for (Sql sql in dbs) {
         print("inserting key ``nextKey`` using ds ``sql``");
         sql.Update("INSERT INTO CEYLONKV(rkey,val) VALUES (?, ?)").
 		    execute( "k" + nextKey.string, "v" + nextKey.string);
     }
     nextKey = nextKey + 1;
-    for (sql in dbs) {
+    for (Sql sql in dbs) {
         print("inserting key ``nextKey`` using ds ``sql``");
         sql.Update("INSERT INTO CEYLONKV(rkey,val) VALUES (?, ?)").
 		    execute( "k" + nextKey.string, "v" + nextKey.string);
@@ -105,9 +94,10 @@ Integer insertTable(Collection<Sql> dbs) {
     return 2;
 }
 
-void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> sqlMap) {
+void transactionalWork(Boolean doInTxn, Boolean commit, 
+    Map<String,Sql> sqlMap) {
+    
     UserTransaction? transaction;
-
     if (doInTxn) {
         transaction = tm.beginTransaction();
         enlistDummyXAResources();
@@ -115,7 +105,7 @@ void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> s
         transaction = null;
     }
 
-    MutableMap<String,Integer> counts = getRowCounts(sqlMap);
+    value counts = getRowCounts(sqlMap);
     Integer rows = insertTable(sqlMap.items);
 
     if (exists transaction) {
@@ -132,24 +122,21 @@ void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> s
     }
 }
 
-MutableMap<String,Integer> getRowCounts(MutableMap<String,Sql> sqlMap) {
-    MutableMap<String,Integer> values = HashMap<String,Integer>();
-
-    for (entry in sqlMap) {
+Map<String,Integer> getRowCounts(Map<String,Sql> sqlMap) {
+    HashMap<String,Integer> values = HashMap<String,Integer>();
+    for (String->Sql entry in sqlMap) {
       Sql sql = entry.item;
-      Integer? count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
-
+      Integer? count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>();
       assert (exists count);
       values.put (entry.key, count);
     }
-
     return values;
 }
 
-void checkRowCounts(MutableMap<String,Integer> prev, MutableMap<String,Integer> curr, Integer delta) {
-    for (entry in prev) {
-        Integer? c = curr[entry.key];
-        if (exists c) {
+void checkRowCounts(Map<String,Integer> prev, 
+    Map<String,Integer> curr, Integer delta) {
+    for (String->Integer entry in prev) {
+        if (exists c = curr[entry.key]) {
             assert(entry.item + delta == c);
         }
     }
@@ -176,7 +163,7 @@ void init() {
     registerDataSourceUrl {
         binding = "h2";
         driver = "org.h2.Driver";
-        databaseUrl = dbloc;
+        databaseUrl = "jdbc:h2:tmp/ceylondb";
         userAndPassword = ["sa", "sa"];
     };
 
@@ -190,18 +177,12 @@ void init() {
 //        ["sa", "sa"]);
 }
 
-void fini() {
-    tm.stop();
-}
+void finish() => tm.stop();
 
 void enlistDummyXAResources() {
-    JavaTransactionManager? transactionManager = tm.transactionManager;
-    assert (exists transactionManager);
-
+    assert (exists transactionManager = tm.transactionManager);
     Transaction txn = transactionManager.transaction;
-
     DummyXAResource dummyResource1 = DummyXAResource();
-
     txn.enlistResource(dummyResource1);
 }
 
@@ -209,11 +190,8 @@ void enlistDummyXAResources() {
 by("Mike Musgrove")
 shared void run() {
     init();
- 
-    MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
-
-    transactionalWork(true, true, sqlMap);
-
-    fini();
+    //{ "db2", "postgresql", "oracle_thin", "hsqldb" }
+    transactionalWork(true, true, getSqlHelper { "h2" });
+    finish();
 }
 

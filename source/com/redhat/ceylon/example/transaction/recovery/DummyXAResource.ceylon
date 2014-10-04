@@ -16,7 +16,7 @@ import javax.transaction.xa {
     Xid
 }
 
-shared class DummyXAResource() 
+class DummyXAResource() 
         satisfies XAResource & Serializable {
     
     variable Integer txnTimeout = 0;
