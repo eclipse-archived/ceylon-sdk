@@ -51,7 +51,7 @@ Integer? getIntegerProperty(Reference ref, String propName, Integer defValue) {
 /**
  * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
  */
-class XADSWrapperObjectFactory() satisfies ObjectFactory {
+shared sealed class XADSWrapperObjectFactory() satisfies ObjectFactory {
     shared actual Object getObjectInstance(Object ref, Name name, 
             Context nameCtx, 
             Hashtable<out Object,out Object> environment) {
