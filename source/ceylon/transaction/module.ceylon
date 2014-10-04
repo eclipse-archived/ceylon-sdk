@@ -162,7 +162,6 @@ module ceylon.transaction "1.1.0" {
     shared import org.jboss.narayana.jta "5.0.0.Final";
 
     shared import java.base "7";
-    shared import java.logging "7";
     shared import javax.naming "7";
     shared import java.jdbc "7";
 
