@@ -11,8 +11,9 @@ import ceylon.dbc {
 import ceylon.test {
     ...
 }
-import ceylon.transaction.tm {
-    jndiServer
+import ceylon.transaction.datasource {
+    registerDSUrl,
+    registerDriverSpec
 }
 
 import java.lang {
@@ -42,8 +43,8 @@ void init() {
     tm.start();
 
     assertFalse (tm.transactionActive, "Old transaction still associated with thread");
-    jndiServer.registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
-    jndiServer.registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
+    registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
+    registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
 }
 
 void fini() {

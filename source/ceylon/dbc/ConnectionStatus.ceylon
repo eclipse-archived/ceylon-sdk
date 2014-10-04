@@ -1,12 +1,13 @@
+import ceylon.transaction {
+    transactionManager
+}
+
 import java.lang {
     ObjectArray
 }
 import java.sql {
-    Connection, 
+    Connection,
     SqlArray=Array
-}
-import ceylon.transaction.tm {
-    transactionManager
 }
 
 class ConnectionStatus(Connection() connectionSource) {

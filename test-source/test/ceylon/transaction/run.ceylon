@@ -2,26 +2,26 @@ import ceylon.test {
     beforeTest,
     afterTest
 }
-import ceylon.transaction.tm {
+import ceylon.transaction {
     TransactionManager,
-    jndiServer,
     transactionManager
 }
 
+import javax.naming {
+    InitialContext
+}
 import javax.sql {
     DataSource
 }
 
-shared TransactionManager tm = transactionManager;
+TransactionManager tm = transactionManager;
 
 //{String+} dsBindings = { "h2", "postgresql" };
 {String+} dsBindings = { "h2" };
 {String+} dsBindings2 = { "h2" };
 
-shared DataSource? getXADataSource(String binding) {
-    Object? ds = jndiServer.lookup(binding);
-
-    if (is DataSource ds) {
+DataSource? getXADataSource(String binding) {
+    if (is DataSource ds = InitialContext().lookup(binding)) {
         return ds;
     } else {
         return null;

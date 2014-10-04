@@ -2,16 +2,13 @@ import ceylon.collection {
     HashMap,
     MutableMap
 }
-
 import ceylon.dbc {
     Sql,
     newConnectionFromDataSource
 }
-
-import ceylon.transaction.tm {
+import ceylon.transaction {
     TransactionManager,
-    transactionManager,
-    jndiServer
+    transactionManager
 }
 
 import java.lang {
@@ -20,14 +17,20 @@ import java.lang {
     }
 }
 
+import javax.naming {
+    InitialContext
+}
 import javax.sql {
     DataSource
 }
-
 import javax.transaction {
     Transaction,
     UserTransaction,
     JavaTransactionManager=TransactionManager
+}
+import ceylon.transaction.datasource {
+    registerDSUrl,
+    registerDriverSpec
 }
 
 TransactionManager tm = transactionManager;
@@ -54,9 +57,7 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
 }
 
 DataSource? getXADataSource(String binding) {
-    Object? ds = jndiServer.lookup(binding);
-
-    if (is DataSource ds) {
+    if (is DataSource ds = InitialContext().lookup(binding)) {
         return ds;
     } else {
         return null;
@@ -166,8 +167,8 @@ void init() {
     }
 
     // programatic method of registering datasources (the alternative is to use a config file)
-    jndiServer.registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
-    jndiServer.registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
+    registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
+    registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
 
     // if you have postgresql db then you would register is as follows:
 //    jndiServer.registerDriverSpec(
