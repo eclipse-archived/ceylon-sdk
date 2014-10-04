@@ -16,7 +16,7 @@
 "Transaction example using two databases"
 by("Mike Musgrove")
 license("http://www.apache.org/licenses/LICENSE-2.0")
-module example.ceylon.transaction.recovery "1.1.0" {
+module com.redhat.ceylon.example.transaction.recovery "1.1.0" {
     shared import ceylon.transaction "1.1.0";
 
     // ceylon.dbc dependencies
