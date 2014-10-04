@@ -2,9 +2,6 @@ import ceylon.interop.java {
     javaClassFromInstance,
     javaClass
 }
-import ceylon.transaction.datasource {
-    getReference
-}
 
 import com.arjuna.ats.jdbc {
     TransactionalDriver

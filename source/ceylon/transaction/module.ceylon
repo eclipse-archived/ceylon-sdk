@@ -159,19 +159,17 @@ by("Mike Musgrove", "Stéphane Épardaud")
 license("Apache Software License 2.0")
 module ceylon.transaction "1.1.0" {
     // transaction manager dependencies
-    shared import org.jboss.narayana.jta "5.0.0.Final";
+    import org.jboss.narayana.jta "5.0.0.Final";
 
-    shared import java.base "7";
-    shared import javax.naming "7";
-    shared import java.jdbc "7";
+    import java.base "7";
+    import javax.naming "7";
+    import java.jdbc "7";
+    shared import javax.transaction.api "1.2";
 
     //import org.jboss.modules "1.1.3.GA"; // this one fails
     import org.jboss.modules "1.3.3.Final";
     import ceylon.runtime "1.1.0";
-
-    // ceylon.dbc dependencies
-    shared import ceylon.dbc "1.1.0";
-    shared import ceylon.interop.java "1.1.0";
-
+    
+    import ceylon.interop.java "1.1.0";
     import ceylon.file "1.1.0";
 }

@@ -3,6 +3,7 @@ module test.ceylon.transaction "1.1.0" {
     import ceylon.transaction "1.1.0";
 
     import java.base "7";
+    import javax.naming "7";
 
     // ceylon.dbc dependencies
     import ceylon.collection "1.1.0";

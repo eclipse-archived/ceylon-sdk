@@ -5,7 +5,7 @@ import ceylon.file {
 import ceylon.transaction {
     transactionManager
 }
-import ceylon.transaction.datasource {
+import ceylon.transaction.internal {
     registerDataSources
 }
 

@@ -1,7 +1,7 @@
 import ceylon.interop.java {
     javaClass
 }
-import ceylon.transaction.datasource {
+import ceylon.transaction.internal {
     registerDataSources
 }
 

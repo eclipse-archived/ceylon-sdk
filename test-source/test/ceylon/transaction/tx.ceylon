@@ -1,6 +1,9 @@
 import ceylon.test {
     ...
 }
+import ceylon.transaction {
+    tm=transactionManager
+}
 
 import javax.transaction {
     TransactionManager,

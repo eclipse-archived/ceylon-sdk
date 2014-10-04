@@ -11,6 +11,9 @@ import ceylon.dbc {
 import ceylon.test {
     ...
 }
+import ceylon.transaction {
+    tm=transactionManager
+}
 import ceylon.transaction.datasource {
     registerDataSourceUrl,
     registerDriver

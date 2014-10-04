@@ -4,6 +4,13 @@ import ceylon.collection {
     HashMap,
     MutableMap
 }
+import ceylon.transaction.datasource {
+    registerDriver,
+    registerDataSourceUrl
+}
+import ceylon.transaction.internal {
+    createXADataSource
+}
 
 import com.arjuna.ats.arjuna.logging {
     \ItsLogger {
@@ -82,7 +89,7 @@ void registerDataSource(String binding,
 
 "Register a JDBC [[javax.sql::DataSource]] with the 
  transaction infrastructure."
-shared void registerDataSourceUrl(
+shared void registerDataSourceUrlInternal(
     "The name under which the datasource will be registered."
     String binding,
     "The class name of a [[registered|registerDriver]] 
@@ -100,7 +107,7 @@ shared void registerDataSourceUrl(
 
 "Register a JDBC [[javax.sql::DataSource]] with the 
  transaction infrastructure."
-shared void registerDataSourceName(
+shared void registerDataSourceNameInternal(
     "The name under which the datasource will be registered."
     String binding,
     "The class name of a [[registered|registerDriver]] 
@@ -167,7 +174,7 @@ shared void registerDataSources(String dbConfigFileName = "dbc.properties") {
 }
 
 "Register a JDBC driver with the transaction infrastructure."
-shared void registerDriver(
+shared void registerDriverInternal(
     "The name of the JDBC driver class."
     String driver, 
     "The module that provides the JDBC driver."

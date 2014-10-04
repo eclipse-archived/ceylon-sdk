@@ -2,10 +2,6 @@ import ceylon.test {
     beforeTest,
     afterTest
 }
-import ceylon.transaction {
-    TransactionManager,
-    transactionManager
-}
 
 import javax.naming {
     InitialContext
@@ -13,8 +9,6 @@ import javax.naming {
 import javax.sql {
     DataSource
 }
-
-TransactionManager tm = transactionManager;
 
 //{String+} dsBindings = { "h2", "postgresql" };
 {String+} dsBindings = { "h2" };
