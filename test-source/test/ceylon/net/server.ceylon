@@ -124,7 +124,7 @@ test void testServer() {
                     .or(endsWith(".txt"));
         },
         AsynchronousEndpoint {
-            service => serveStaticFile("/", fileMapper);
+            service => serveStaticFile("", fileMapper);
             path = startsWith("/filemapper");
         },
         Endpoint { 
