@@ -2,7 +2,7 @@ import ceylon.interop.java {
     javaClass
 }
 import ceylon.transaction.datasource {
-    bindDataSources
+    registerDataSources
 }
 
 import com.arjuna.ats.arjuna.common {
@@ -45,15 +45,15 @@ import java.util {
     Arrays
 }
 
+import javax.naming {
+    InitialContext
+}
 import javax.transaction {
     JavaTransactionManager=TransactionManager,
     UserTransaction,
     Status {
         status_no_transaction=STATUS_NO_TRANSACTION
     }
-}
-import javax.naming {
-    InitialContext
 }
 
 class ConcreteTransactionManager() satisfies TransactionManager {
@@ -73,10 +73,10 @@ class ConcreteTransactionManager() satisfies TransactionManager {
         jndiServer.start();
         if (exists dataSourceConfigPropertyFile 
             = process.propertyValue("dbc.properties")) {
-            bindDataSources(dataSourceConfigPropertyFile);
+            registerDataSources(dataSourceConfigPropertyFile);
         }
         else {
-            bindDataSources();
+            registerDataSources();
         }
 
         if (!initialized) {

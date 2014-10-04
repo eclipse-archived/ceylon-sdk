@@ -14,7 +14,7 @@ import java.util {
 }
 
 by ("Mike Musgrove")
-shared class DatasourceProperties(prefix, binding, 
+class DatasourceProperties(prefix, binding, 
     moduleName, moduleVersion, 
     dataSourceClassName,
     driver, 
@@ -54,10 +54,11 @@ shared class DatasourceProperties(prefix, binding,
 
 }
 
-shared Map<String,DatasourceProperties> createConfig(String? fileName) {
-    Properties props;
-    value dbConfigs = HashMap<String,DatasourceProperties>();
+Map<String,DatasourceProperties> createConfiguration(String? fileName) {
     
+    value configurations = HashMap<String,DatasourceProperties>();
+    
+    Properties props;
     try {
         if (exists fileName) {
             props = loadProperties(fileName);
@@ -72,7 +73,7 @@ shared Map<String,DatasourceProperties> createConfig(String? fileName) {
             "%s (you can set the location via a system property: dbc.properties=<file>%n",
             e.message);
         if (e.message.contains("missing property file")) {
-            return dbConfigs;
+            return configurations;
         }
         throw RuntimeException(e);
     }
@@ -91,18 +92,18 @@ shared Map<String,DatasourceProperties> createConfig(String? fileName) {
             String? name = props.getProperty(trimmed + "_" + "DatabaseName");
             String? host = props.getProperty(trimmed + "_" + "Host");
             String? port = props.getProperty(trimmed + "_" + "Port");
-            dbConfigs.put(binding, 
+            configurations.put(binding, 
                 DatasourceProperties(trimmed, binding,
                     moduleName, moduleVersion, className, driver,
                     url, name, host, port, user, pass));
         }
     }
     else {
-        return dbConfigs;
+        return configurations;
     }
     
     
-    return dbConfigs;
+    return configurations;
 }
 
 Properties loadProperties(String fileName) {

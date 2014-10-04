@@ -14,7 +14,7 @@ import javax.naming.spi {
 }
 
 
-shared Reference getReference(String className, String binding,
+Reference getReference(String className, String binding,
     String driver, String databaseName,
     String? host, Integer? port,
     String userName, String password) {
@@ -51,7 +51,7 @@ Integer? getIntegerProperty(Reference ref, String propName, Integer defValue) {
 /**
  * @author <a href="mailto:mmusgrov@redhat.com">Mike Musgrove</a>
  */
-shared class XADSWrapperObjectFactory() satisfies ObjectFactory {
+class XADSWrapperObjectFactory() satisfies ObjectFactory {
     shared actual Object getObjectInstance(Object ref, Name name, 
             Context nameCtx, 
             Hashtable<out Object,out Object> environment) {

@@ -39,9 +39,9 @@ String dbloc = "jdbc:h2:ceylondb";
 void init() {
     setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", "tmp");
     setProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", "tmp");
-
+    
     tm.start();
-
+    
     assertFalse (tm.transactionActive, "Old transaction still associated with thread");
     registerDriver("org.h2.Driver", ["org.h2", "1.3.168"], "org.h2.jdbcx.JdbcDataSource");
     registerDataSourceUrl("h2", "org.h2.Driver", dbloc, ["sa", "sa"]);

@@ -27,7 +27,51 @@ import org.jboss.modules.filter {
     PathFilters
 }
 
-shared Object createXADataSource(String binding, 
+void setProperties(String driver, 
+    XADSWrapper wrapper, 
+    String databaseNameOrUrl, 
+    [String, String] userAndPassword, 
+    String? host, Integer? port) {
+    if (driver.equals("org.h2.Driver")) {
+        wrapper.setProperty("URL", databaseNameOrUrl);
+    }
+    else if (driver.equals("org.hsqldb.jdbcDriver")) {
+        wrapper.setProperty("Url", databaseNameOrUrl);
+        wrapper.setProperty("User", userAndPassword[0]);
+        wrapper.setProperty("Password", userAndPassword[1]);
+    }
+    else {
+        wrapper.setProperty("databaseName", databaseNameOrUrl);
+        assert (exists host);
+        assert (exists port);
+        wrapper.setProperty("serverName", host);
+        wrapper.setProperty("portNumber", port);
+    }
+    if (driver.equals("oracle.jdbc.driver.OracleDriver")) {
+        wrapper.setProperty("driverType", "thin");
+    }
+    else if( driver.equals("com.microsoft.sqlserver.jdbc.SQLServerDriver")) {
+        wrapper.setProperty("sendStringParametersAsUnicode", false);
+    }
+    else if( driver.equals("com.mysql.jdbc.Driver")) {
+        
+        // Note: MySQL XA only works on InnoDB tables.
+        // set 'default-storage-engine=innodb' in e.g. /etc/my.cnf
+        // so that the 'CREATE TABLE ...' statments behave correctly.
+        // doing this config on a per connection basis instead is
+        // possible but would require lots of code changes :-(
+        
+        wrapper.setProperty("pinGlobalTxToPhysicalConnection", true); // Bad Things happen if you forget this bit.
+    }
+    else if (driver.equals("com.ibm.db2.jcc.DB2Driver")) {
+        wrapper.setProperty("driverType", 4);
+    }
+    else if (driver.equals("org.h2.Driver")) {
+        wrapper.setProperty("URL", databaseNameOrUrl);
+    }
+}
+
+Object createXADataSource(String binding, 
     String driver, 
     String databaseNameOrUrl, 
     String? host, Integer? port, 
@@ -64,46 +108,31 @@ shared Object createXADataSource(String binding,
         
         try {
             moduleLoader.updateModule(narniaModule, dependency);
-        } catch (ModuleLoadException e) {
+        }
+        catch (ModuleLoadException e) {
             throw RuntimeException("Failed to add ceylon.transaction dependency to narnia", e);
         }
     }
     
-    value wrapper = XADSWrapper(binding, driver, databaseNameOrUrl, host, port,
-        driverSpec.dataSourceClassName, moduleClassLoader, userAndPassword[0], userAndPassword[1]);
+    value wrapper = XADSWrapper {
+        binding = binding;
+        driver = driver;
+        databaseName = databaseNameOrUrl;
+        host = host;
+        port = port;
+        dataSourceClassName = driverSpec.dataSourceClassName;
+        classLoader = moduleClassLoader;
+        userAndPassword = userAndPassword;
+    };
     
-    if (driver.equals("org.h2.Driver")) {
-        wrapper.setProperty("URL", databaseNameOrUrl);
-    } else if(driver.equals("org.hsqldb.jdbcDriver")) {
-        wrapper.setProperty("Url", databaseNameOrUrl);
-        wrapper.setProperty("User", userAndPassword[0]);
-        wrapper.setProperty("Password", userAndPassword[1]);
-    } else {
-        wrapper.setProperty("databaseName", databaseNameOrUrl);
-        assert (exists host);
-        assert (exists port);
-        wrapper.setProperty("serverName", host);
-        wrapper.setProperty("portNumber", port);
-    }
-    
-    if (driver.equals("oracle.jdbc.driver.OracleDriver")) {
-        wrapper.setProperty("driverType", "thin");
-    } else if( driver.equals("com.microsoft.sqlserver.jdbc.SQLServerDriver")) {
-        wrapper.setProperty("sendStringParametersAsUnicode", false);
-    } else if( driver.equals("com.mysql.jdbc.Driver")) {
-        
-        // Note: MySQL XA only works on InnoDB tables.
-        // set 'default-storage-engine=innodb' in e.g. /etc/my.cnf
-        // so that the 'CREATE TABLE ...' statments behave correctly.
-        // doing this config on a per connection basis instead is
-        // possible but would require lots of code changes :-(
-        
-        wrapper.setProperty("pinGlobalTxToPhysicalConnection", true); // Bad Things happen if you forget this bit.
-    } else if( driver.equals("com.ibm.db2.jcc.DB2Driver")) {
-        wrapper.setProperty("driverType", 4);
-    } else if( driver.equals("org.h2.Driver")) {
-        wrapper.setProperty("URL", databaseNameOrUrl);
-    }
+    setProperties {
+        driver = driver;
+        wrapper = wrapper;
+        databaseNameOrUrl = databaseNameOrUrl;
+        userAndPassword = userAndPassword;
+        host = host;
+        port = port;
+    };
     
     return wrapper;
 }

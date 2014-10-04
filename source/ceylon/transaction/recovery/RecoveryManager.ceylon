@@ -6,7 +6,7 @@ import ceylon.transaction {
     transactionManager
 }
 import ceylon.transaction.datasource {
-    bindDataSources
+    registerDataSources
 }
 
 import java.lang {
@@ -62,7 +62,7 @@ class RecoveryManager() {
             value path = parsePath(propFile);
             if (is File f = path.resource) {
                 print("configuring datasources via properties file ``propFile``");
-                bindDataSources(propFile);
+                registerDataSources(propFile);
             } else {
                 print("warning: no datasources configured - property file ``propFile`` does not exist");
             }

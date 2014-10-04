@@ -44,11 +44,13 @@ import javax.sql {
 }
 
 by ("Mike Musgrove")
-shared class XADSWrapper(binding, driver, 
+class XADSWrapper(binding, 
+    driver, 
     databaseName, 
     host, port,
-    xaDSClassName, classLoader, 
-    userName, password) 
+    dataSourceClassName, 
+    classLoader, 
+    userAndPassword) 
         satisfies XADataSource & Serializable & Referenceable & DataSource {
 
     TransactionalDriver arjunaJDBC2Driver = TransactionalDriver();
@@ -56,24 +58,23 @@ shared class XADSWrapper(binding, driver,
     String binding;
     String txDriverUrl;
     Properties properties;
-    String xaDSClassName;
+    String dataSourceClassName;
     ClassLoader classLoader;
-    XADataSource xaDataSource;
+    XADataSource dataSource;
     String driver;
     String databaseName;
     String? host;
     Integer? port;
-    String userName;
-    String password;
+    [String,String] userAndPassword;
 
     try {
         assert (is XADataSource ds 
-            = classLoader.loadClass(xaDSClassName).newInstance());
-        xaDataSource = ds;
+            = classLoader.loadClass(dataSourceClassName).newInstance());
+        dataSource = ds;
         txDriverUrl = TransactionalDriver.arjunaDriver + binding;
         properties = Properties();
-        properties.put(TransactionalDriver.userName, userName);
-        properties.put(TransactionalDriver.password, password);
+        properties.put(TransactionalDriver.userName, userAndPassword[0]);
+        properties.put(TransactionalDriver.password, userAndPassword[1]);
         properties.put(TransactionalDriver.createDb, true);
     } catch (Exception e) {
         throw ExceptionInInitializerError(e);
@@ -99,30 +100,31 @@ shared class XADSWrapper(binding, driver,
             javaItem = item;
         }
         String setter = "set" + name[0..0].uppercased + name[1...];
-        javaClassFromInstance(xaDataSource)
+        javaClassFromInstance(dataSource)
                 .getMethod(setter, type)
-                .invoke(xaDataSource, javaItem);
+                .invoke(dataSource, javaItem);
     }
 
     getXAConnection(String? user, String? password) 
-            => xaDataSource.getXAConnection(user, password);
+            => dataSource.getXAConnection(user, password);
     
     xaConnection 
-            => getXAConnection(userName, password);
+            => getXAConnection(userAndPassword[0], 
+                               userAndPassword[1]);
 
     shared actual PrintWriter logWriter 
-            => xaDataSource.logWriter;
+            => dataSource.logWriter;
 
     assign logWriter 
-            => xaDataSource.logWriter = logWriter;
+            => dataSource.logWriter = logWriter;
 
     shared actual Integer loginTimeout 
-            => xaDataSource.loginTimeout;
+            => dataSource.loginTimeout;
     
     assign loginTimeout 
-            => xaDataSource.loginTimeout = loginTimeout;
+            => dataSource.loginTimeout = loginTimeout;
 
-    parentLogger => xaDataSource.parentLogger;
+    parentLogger => dataSource.parentLogger;
 
     // DataSource implementation
     connection => arjunaJDBC2Driver.connect(txDriverUrl, properties);
@@ -142,5 +144,6 @@ shared class XADSWrapper(binding, driver,
 
     shared actual Reference reference 
             => getReference(javaClassFromInstance(this).name,
-                binding, driver, databaseName, host, port, userName, password);
+                binding, driver, databaseName, host, port, 
+                userAndPassword[0], userAndPassword[1]);
 }

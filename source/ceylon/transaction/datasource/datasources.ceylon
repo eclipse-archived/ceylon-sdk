@@ -80,9 +80,6 @@ void registerDataSource(String binding,
     //registerJDBCXARecoveryHelper(binding, userName, password);
 }
 
-shared void bindDataSources(String dbConfigFileName = "dbc.properties")
-        => registerDatasourceJndiBindings(dbConfigFileName);
-
 "Register a JDBC [[javax.sql::DataSource]] with the 
  transaction infrastructure."
 shared void registerDataSourceUrl(
@@ -127,8 +124,8 @@ shared void registerDataSourceName(
 
 MutableSet<String> dsJndiBindings = HashSet<String>();
 
-void registerDatasourceJndiBindings(String dbConfigFileName) {
-    value dbConfigs = createConfig(dbConfigFileName);
+shared void registerDataSources(String dbConfigFileName = "dbc.properties") {
+    value dbConfigs = createConfiguration(dbConfigFileName);
     
     value iter = dbConfigs.values().iterator();
     while (iter.hasNext()) {
