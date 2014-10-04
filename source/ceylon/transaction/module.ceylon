@@ -33,8 +33,7 @@
    - The location of a the properties file is set via a 
      process property named `dbc.properties`. The format 
      follows [[http://java.sun.com/dtd/properties.dtd]] and 
-     an example is provided with the examples and tests for
-     this module.
+     an example is provided with the tests for this module.
    - Alternatively, the information may be provided by first
      calling [[ceylon.transaction.datasource::registerDriver]]
      and then one of [[ceylon.transaction.datasource::registerDataSourceUrl]]
@@ -155,8 +154,7 @@
    any in doubt transaction was using prior to a failure so 
    you need to pass the location of a properties file which 
    defines the datasources via a process property called 
-   `dbc.properties`. There is also an example that 
-   demonstrates recovery in the examples directory."""
+   `dbc.properties`."""
 by("Mike Musgrove", "Stéphane Épardaud")
 license("Apache Software License 2.0")
 module ceylon.transaction "1.1.0" {
