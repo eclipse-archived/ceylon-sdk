@@ -63,7 +63,13 @@ shared class XADSWrapperObjectFactory() satisfies ObjectFactory {
         value port = getIntegerProperty(ref, "port", 0);
         assert (exists user = getStringProperty(ref, "username"));
         assert (exists pass = getStringProperty(ref, "password"));
-        return createXADataSource(binding, driver, database,
-                host, port, user, pass);
+        return createXADataSource {
+            binding = binding;
+            driver = driver;
+            databaseNameOrUrl = database;
+            host = host;
+            port = port;
+            userAndPassword = [user, pass];
+        };
     }
 }

@@ -52,6 +52,9 @@ import javax.transaction {
         status_no_transaction=STATUS_NO_TRANSACTION
     }
 }
+import javax.naming {
+    InitialContext
+}
 
 class ConcreteTransactionManager() satisfies TransactionManager {
 
@@ -85,7 +88,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                         = jdbcEnvironmentBean.jndiProperties.empty;
                 if (replacedJndiProperties) {
                     jdbcEnvironmentBean.jndiProperties 
-                            = initialContext.environment;
+                            = InitialContext().environment;
                 }
                 
                 DriverManager.registerDriver(TransactionalDriver());
@@ -95,7 +98,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                 }
                 throw Exception("No suitable JNDI provider available", e);
             }
-            registerTransactionManagerJndiBindings(initialContext);
+            registerTransactionManagerJndiBindings();
             
             initialized = true;
             

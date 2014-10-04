@@ -2,7 +2,8 @@
  
  Since there must be at most one recovery service per set of 
  transaction logs, the recovery service should run in a 
- separate process whenever multiple processes share the logs.
+ dedicated process whenever multiple processes share the 
+ logs.
  
  From the command line, start the recovery service using:
  
@@ -21,7 +22,10 @@
  For recovery to operate correctly you must specify the
  datasources either by putting a Java properties file named 
  `dbc.properties` on the class path or by defining an 
- alternative file location using `--define=dbc.properties`."
+ alternative file location using `--define=dbc.properties`.
+ 
+ Interactive mode is useful in situations where you want 
+ trigger an immediate scan of the recovery logs."
 by("Mike Musgrove")
 shared void run() {
     for (arg in process.arguments) {

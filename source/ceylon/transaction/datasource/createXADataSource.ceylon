@@ -27,10 +27,11 @@ import org.jboss.modules.filter {
     PathFilters
 }
 
-shared Object createXADataSource(String binding, String driver, 
-    String databaseName, 
+shared Object createXADataSource(String binding, 
+    String driver, 
+    String databaseNameOrUrl, 
     String? host, Integer? port, 
-    String userName, String password) {
+    [String,String] userAndPassword) {
 
     assert (exists driverSpec = jdbcDrivers.get(driver) 
         /*exists ds = driverSpec.dataSource, 
@@ -68,17 +69,17 @@ shared Object createXADataSource(String binding, String driver,
         }
     }
     
-    value wrapper = XADSWrapper(binding, driver, databaseName, host, port,
-        driverSpec.dataSource, moduleClassLoader, userName, password);
+    value wrapper = XADSWrapper(binding, driver, databaseNameOrUrl, host, port,
+        driverSpec.dataSourceClassName, moduleClassLoader, userAndPassword[0], userAndPassword[1]);
     
     if (driver.equals("org.h2.Driver")) {
-        wrapper.setProperty("URL", databaseName);
+        wrapper.setProperty("URL", databaseNameOrUrl);
     } else if(driver.equals("org.hsqldb.jdbcDriver")) {
-        wrapper.setProperty("Url", databaseName);
-        wrapper.setProperty("User", userName);
-        wrapper.setProperty("Password", password);
+        wrapper.setProperty("Url", databaseNameOrUrl);
+        wrapper.setProperty("User", userAndPassword[0]);
+        wrapper.setProperty("Password", userAndPassword[1]);
     } else {
-        wrapper.setProperty("databaseName", databaseName);
+        wrapper.setProperty("databaseName", databaseNameOrUrl);
         assert (exists host);
         assert (exists port);
         wrapper.setProperty("serverName", host);
@@ -101,7 +102,7 @@ shared Object createXADataSource(String binding, String driver,
     } else if( driver.equals("com.ibm.db2.jcc.DB2Driver")) {
         wrapper.setProperty("driverType", 4);
     } else if( driver.equals("org.h2.Driver")) {
-        wrapper.setProperty("URL", databaseName);
+        wrapper.setProperty("URL", databaseNameOrUrl);
     }
     
     return wrapper;

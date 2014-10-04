@@ -1,3 +1,10 @@
+import ceylon.collection {
+    HashSet,
+    MutableSet,
+    HashMap,
+    MutableMap
+}
+
 import com.arjuna.ats.arjuna.logging {
     \ItsLogger {
         logger
@@ -15,22 +22,17 @@ import java.lang {
         properties
     }
 }
-import java.util {
-    HashMap,
-    Map,
-    Set,
-    HashSet
-}
 
 import javax.naming {
     InitialContext
 }
 
 by ("Mike Musgrove")
-shared void registerDataSource(String binding, String driver, 
-                               String databaseName,
-                               String userName, String password, 
-                               String? host=null, Integer? port=null)  {
+void registerDataSource(String binding, 
+    String driver, 
+    String databaseNameOrUrl,
+    [String, String] userAndPassword, 
+    String? host=null, Integer? port=null)  {
     
     if (exists driversProp = properties.getProperty("jdbc.drivers")) {
         properties.setProperty("jdbc.drivers", driversProp + ":" + driver);
@@ -39,63 +41,91 @@ shared void registerDataSource(String binding, String driver,
         properties.setProperty("jdbc.drivers", driver);
     }
     
-    properties.setProperty(userNameProp, userName);
-    properties.setProperty(passwordProp, password);
+    properties.setProperty(userNameProp, userAndPassword[0]);
+    properties.setProperty(passwordProp, userAndPassword[1]);
     
     System.properties = properties;
 
     Object xaDataSourceToBind;
     try {
         xaDataSourceToBind = 
-                createXADataSource(binding, driver, 
-                    databaseName, host, port, 
-                    userName, password);
+                createXADataSource {
+                    binding = binding;
+                    driver = driver;
+                    databaseNameOrUrl = databaseNameOrUrl;
+                    host = host;
+                    port = port;
+                    userAndPassword = userAndPassword;
+                };
     }
     catch (Exception e) {
+        value msg = "Cannot bind ``databaseNameOrUrl `` for driver ``driver``";
         if (logger.infoEnabled) {
-            logger.info("Cannot bind " + 
-                databaseName + " for driver " + driver);
+            logger.info(msg);
         }
-        throw Exception("Cannot bind " + 
-            databaseName + " for driver " + driver, e);
+        throw Exception(msg, e);
     }
 
     try {
         InitialContext().rebind(binding, xaDataSourceToBind);
     } 
     catch (Exception e) {
+        value msg = "Cannot bind ``databaseNameOrUrl `` to ``binding``: ``e.message``";
         if (logger.infoEnabled) {
-            logger.infof(
-                "%s: Cannot bind datasource into JNDI: %s", 
-                binding, e.message);
+            logger.infof(msg);
         }
-        throw Exception(binding + 
-            ": Cannot bind datasource into JNDI", e);
+        throw Exception(msg, e);
     }
 
     //registerJDBCXARecoveryHelper(binding, userName, password);
 }
 
-shared void bindDataSources(String dbConfigFileName="dbc.properties")
+shared void bindDataSources(String dbConfigFileName = "dbc.properties")
         => registerDatasourceJndiBindings(dbConfigFileName);
 
-shared void registerDSUrl(String binding, String driver, 
+"Register a JDBC [[javax.sql::DataSource]] with the 
+ transaction infrastructure."
+shared void registerDataSourceUrl(
+    "The name under which the datasource will be registered."
+    String binding,
+    "The class name of a [[registered|registerDriver]] 
+     JDBC driver."
+    String driver,
+    "The JDBC URL of the database." 
     String databaseUrl,
-    String userName, String password) 
-        => registerDataSource(binding, driver, 
-        databaseUrl, 
-        userName, password);
+    [String, String] userAndPassword) 
+        => registerDataSource {
+            binding = binding;
+            driver = driver;
+            databaseNameOrUrl = databaseUrl;
+            userAndPassword = userAndPassword;
+        };
 
-shared void registerDSName(String binding, String driver, 
+"Register a JDBC [[javax.sql::DataSource]] with the 
+ transaction infrastructure."
+shared void registerDataSourceName(
+    "The name under which the datasource will be registered."
+    String binding,
+    "The class name of a [[registered|registerDriver]] 
+     JDBC driver."
+    String driver,
+    "The name of the database." 
     String databaseName, 
-    String host, Integer port,
-    String userName, String password) 
-        => registerDataSource(binding, driver, 
-        databaseName, 
-        userName, password, 
-        host, port);
+    "The host name of the database."
+    String host, 
+    "The port number of the database."
+    Integer port,
+    [String, String] userAndPassword) 
+        => registerDataSource {
+            binding = binding;
+            driver = driver;
+            databaseNameOrUrl = databaseName;
+            userAndPassword = userAndPassword;
+            host = host;
+            port = port;
+        };
 
-Set<String> dsJndiBindings = HashSet<String>();
+MutableSet<String> dsJndiBindings = HashSet<String>();
 
 void registerDatasourceJndiBindings(String dbConfigFileName) {
     value dbConfigs = createConfig(dbConfigFileName);
@@ -104,44 +134,64 @@ void registerDatasourceJndiBindings(String dbConfigFileName) {
     while (iter.hasNext()) {
         value props = iter.next();
         
-        registerDriverSpec(props.driver, props.moduleName,
-            props.moduleVersion, props.dataSourceClassName);
+        registerDriver {
+            driver = props.driver;
+            moduleAndVersion = [props.moduleName, 
+                                props.moduleVersion];
+            dataSourceClassName = props.dataSourceClassName;
+        };
         
         if (exists url = props.databaseURL) {
-            registerDSUrl(props.binding, props.driver, url,
-                props.databaseUser, props.databasePassword);
+            registerDataSourceUrl {
+                binding = props.binding;
+                driver = props.driver;
+                databaseUrl = url;
+                userAndPassword = [props.databaseUser,
+                                   props.databasePassword];
+            };
         }
         else {
             assert (exists name=props.databaseName, 
-                    exists host=props.host, 
+                    exists host=props.host,
                     exists port=props.port);
-            registerDataSource(props.binding, props.driver, name,
-                props.databaseUser, props.databasePassword, host, port);
+            registerDataSource {
+                binding = props.binding;
+                driver = props.driver;
+                databaseNameOrUrl = name;
+                userAndPassword = [props.databaseUser,
+                                   props.databasePassword];
+                host = host;
+                port = port;
+            };
         }
+        
         dsJndiBindings.add(props.binding);
     }
 }
 
-shared void registerDriverSpec(String driverClassName, 
-    String moduleName, String moduleVersion,
+"Register a JDBC driver with the transaction infrastructure."
+shared void registerDriver(
+    "The name of the JDBC driver class."
+    String driver, 
+    "The module that provides the JDBC driver."
+    [String,String] moduleAndVersion, 
+    "The name of the XA-compliant [[javax.sql::DataSource]]."
     String dataSourceClassName) {
-    if (!driverClassName in supportedDrivers) {
-        System.err.printf("Warning, " + driverClassName + " is an unsupported driver%n");
-        //throw new IllegalArgumentException("Unsupported driver: " + driverClassName);
+    if (!driver in supportedDrivers) {
+        process.writeError("Warning: ``driver`` is an unsupported driver");
     }
-    jdbcDrivers.put(driverClassName, 
-        DriverSpec(moduleName, moduleVersion, 
-            dataSourceClassName));
+    jdbcDrivers.put(driver, 
+        DriverSpec {
+            moduleName = moduleAndVersion[0];
+            moduleVersion = moduleAndVersion[1];
+            dataSourceClassName = dataSourceClassName;
+        });
 }
 
-Map<String,DriverSpec> jdbcDrivers = 
-        HashMap<String, DriverSpec>();
+MutableMap<String,DriverSpec> jdbcDrivers = HashMap<String,DriverSpec>();
 
-class DriverSpec(moduleName, moduleVersion, dataSource) {
+class DriverSpec(moduleName, moduleVersion, dataSourceClassName) {
     shared String moduleName;
     shared String moduleVersion;
-    shared String dataSource;
+    shared String dataSourceClassName;
 }
-
-
-

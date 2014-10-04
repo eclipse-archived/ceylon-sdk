@@ -106,11 +106,11 @@ class NamingServer(bindAddress = "localhost", port = 1099) {
     
 }
 
-InitialContext initialContext = InitialContext();
 
 Set<String> tmJndiBindings = HashSet<String>();
 
-void registerTransactionManagerJndiBindings(InitialContext initialContext) {
+void registerTransactionManagerJndiBindings() {
+    value initialContext = InitialContext();
     try {
         bindJTATransactionManagerImplementation(initialContext);
         tmJndiBindings.add(jtaEnvironmentBean.transactionManagerJNDIContext);
@@ -118,7 +118,8 @@ void registerTransactionManagerJndiBindings(InitialContext initialContext) {
         tmJndiBindings.add(jtaEnvironmentBean.userTransactionJNDIContext);
         bindJTATransactionSynchronizationRegistryImplementation(initialContext);
         tmJndiBindings.add(jtaEnvironmentBean.transactionSynchronizationRegistryJNDIContext);
-    } catch (NamingException e) {
+    }
+    catch (NamingException e) {
         if (logger.infoEnabled) {
             logger.infof("Unable to bind TM into JNDI: %s", e.message);
         }
@@ -128,11 +129,13 @@ void registerTransactionManagerJndiBindings(InitialContext initialContext) {
 
 
 void unregisterTransactionManagerJndiBindings() {
+    value initialContext = InitialContext();
     value bindingIterator = tmJndiBindings.iterator();
     while (bindingIterator.hasNext()) {
         try {
             initialContext.unbind(bindingIterator.next());
-        } catch (NamingException e) {
+        }
+        catch (NamingException e) {
             if (logger.debugEnabled) {
                 logger.debugf("Unable to unregister JNDI binding: %s" + e.message);
             }

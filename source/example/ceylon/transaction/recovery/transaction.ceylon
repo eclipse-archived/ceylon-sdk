@@ -29,8 +29,8 @@ import javax.transaction {
     JavaTransactionManager=TransactionManager
 }
 import ceylon.transaction.datasource {
-    registerDSUrl,
-    registerDriverSpec
+    registerDataSourceUrl,
+    registerDriver
 }
 
 TransactionManager tm = transactionManager;
@@ -166,15 +166,28 @@ void init() {
         throw;
     }
 
-    // programatic method of registering datasources (the alternative is to use a config file)
-    registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
-    registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
+    // programatic method of registering datasources 
+    // (the alternative is to use a config file)
+    registerDriver {
+        driver = "org.h2.Driver";
+        moduleAndVersion = ["org.h2", "1.3.168"];
+        dataSourceClassName = "org.h2.jdbcx.JdbcDataSource";
+    };
+    registerDataSourceUrl {
+        binding = "h2";
+        driver = "org.h2.Driver";
+        databaseUrl = dbloc;
+        userAndPassword = ["sa", "sa"];
+    };
 
-    // if you have postgresql db then you would register is as follows:
+// if you have postgresql db then you would register is as follows:
 //    jndiServer.registerDriverSpec(
-//        "org.postgresql.Driver", "org.postgresql", "9.2-1002", "org.postgresql.xa.PGXADataSource");
+//        "org.postgresql.Driver", ["org.postgresql", "9.2-1002"], 
+//        "org.postgresql.xa.PGXADataSource");
 //    jndiServer.registerDSName(
-//        "postgresql", "org.postgresql.Driver", "ceylondb", "localhost", 5432, "sa", "sa");
+//        "postgresql", "org.postgresql.Driver", 
+//        "ceylondb", "localhost", 5432, 
+//        ["sa", "sa"]);
 }
 
 void fini() {

@@ -12,8 +12,8 @@ import ceylon.test {
     ...
 }
 import ceylon.transaction.datasource {
-    registerDSUrl,
-    registerDriverSpec
+    registerDataSourceUrl,
+    registerDriver
 }
 
 import java.lang {
@@ -43,8 +43,8 @@ void init() {
     tm.start();
 
     assertFalse (tm.transactionActive, "Old transaction still associated with thread");
-    registerDriverSpec("org.h2.Driver", "org.h2", "1.3.168", "org.h2.jdbcx.JdbcDataSource");
-    registerDSUrl("h2", "org.h2.Driver", dbloc, "sa", "sa");
+    registerDriver("org.h2.Driver", ["org.h2", "1.3.168"], "org.h2.jdbcx.JdbcDataSource");
+    registerDataSourceUrl("h2", "org.h2.Driver", dbloc, ["sa", "sa"]);
 }
 
 void fini() {
@@ -54,7 +54,6 @@ void fini() {
 Boolean updateTable(Sql sq, String dml, Boolean ignoreErrors) {
     try {
         sq.Update(dml).execute();
-
         return true;
     } catch (Exception ex) {
         print("``dml`` error: ``ex.message``");
