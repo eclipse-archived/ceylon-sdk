@@ -17,7 +17,8 @@ import javax.sql {
 DataSource? getXADataSource(String binding) {
     if (is DataSource ds = InitialContext().lookup(binding)) {
         return ds;
-    } else {
+    }
+    else {
         return null;
     }
 }

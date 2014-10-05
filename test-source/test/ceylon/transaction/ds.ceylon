@@ -26,10 +26,6 @@ import java.lang {
     }
 }
 
-import javax.sql {
-    DataSource
-}
-
 import org.h2.jdbcx {
     JdbcDataSource
 }
@@ -112,16 +108,13 @@ void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> s
 }
 
 MutableMap<String,Sql> getSqlHelper({String+} bindings) {
-    MutableMap<String,Sql> sqlMap = HashMap<String,Sql>();
-
+    value sqlMap = HashMap<String,Sql>();
     for (dsName in bindings) {
-        DataSource? ds = getXADataSource(dsName);
-        assert (is DataSource ds);
+        assert (exists ds = getXADataSource(dsName));
         Sql sql = Sql(newConnectionFromDataSource(ds));
         sqlMap.put(dsName, sql);
         initDb(sql);
     }
-
     return sqlMap;
 }
 
