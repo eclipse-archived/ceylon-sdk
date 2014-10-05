@@ -1,7 +1,6 @@
 import ceylon.transaction.internal {
-    registerDataSourceUrlInternal,
-    registerDataSourceNameInternal,
-    registerDriverInternal
+    registerDataSource,
+    registerDriverInternal=registerDriver
 }
 
 "Register a JDBC [[javax.sql::DataSource]] with the 
@@ -15,7 +14,12 @@ shared void registerDataSourceUrl(
     "The JDBC URL of the database." 
     String databaseUrl,
     [String, String] userAndPassword)
-        => registerDataSourceUrlInternal(binding, driver, databaseUrl, userAndPassword);
+        => registerDataSource {
+            binding = binding;
+            driver = driver;
+            databaseNameOrUrl = databaseUrl;
+            userAndPassword = userAndPassword;
+        };
 
 "Register a JDBC [[javax.sql::DataSource]] with the 
  transaction infrastructure."
@@ -32,7 +36,14 @@ shared void registerDataSourceName(
     "The port number of the database."
     Integer port,
     [String, String] userAndPassword) 
-        => registerDataSourceNameInternal(binding, driver, databaseName, host, port, userAndPassword);
+        => registerDataSource {
+            binding = binding;
+            driver = driver;
+            databaseNameOrUrl = databaseName;
+            userAndPassword = userAndPassword;
+            host = host;
+            port = port;
+        };
 
 "Register a JDBC driver with the transaction infrastructure."
 shared void registerDriver(
@@ -42,4 +53,8 @@ shared void registerDriver(
     [String,String] moduleAndVersion, 
     "The name of the XA-compliant [[javax.sql::DataSource]]."
     String dataSourceClassName) 
-        => registerDriverInternal(driver, moduleAndVersion, dataSourceClassName);
+        => registerDriverInternal {
+            driver = driver;
+            moduleAndVersion = moduleAndVersion;
+            dataSourceClassName = dataSourceClassName;
+        };
