@@ -3,7 +3,6 @@ import ceylon.test {
 }
 import ceylon.transaction {
     tm=transactionManager,
-    Transaction,
     active,
     Status,
     noTransaction
@@ -20,7 +19,7 @@ Boolean txnTestDo() {
 
 test
 void txnTest1() {
-    Transaction? txn = tm.currentTransaction;
+    value txn = tm.currentTransaction;
     assert (!txn exists);
 }
 
@@ -33,7 +32,7 @@ void txnTest2() {
 test
 void txnTest3() {
     tm.start();
-    Transaction transaction = tm.beginTransaction();
+    value transaction = tm.beginTransaction();
 
     Status status1 = transaction.status;
     assertTrue(tm.transactionActive, 
@@ -49,11 +48,11 @@ void txnTest3() {
 test
 void txnTest4() {
     tm.start();
-    Transaction? txn1 = tm.currentTransaction;
+    value txn1 = tm.currentTransaction;
     assert (!txn1 exists);
 
     tm.beginTransaction();
-    Transaction?  txn2 = tm.currentTransaction;
+    value txn2 = tm.currentTransaction;
     assert (exists txn2);
 //
 //    Transaction txn = transactionManager.suspend();
@@ -65,7 +64,7 @@ void txnTest4() {
 //    assert (is UserTransaction txn4);
 
     txn2.commit();
-    Transaction?  txn5 = tm.currentTransaction;
+    value txn5 = tm.currentTransaction;
     assert (!txn5 exists);
 }
 
@@ -73,7 +72,7 @@ test
 void txnTest5() {
     tm.start();
     
-    Transaction tx = tm.beginTransaction();
+    value tx = tm.beginTransaction();
     tx.markRollbackOnly();
 
     try {
@@ -86,3 +85,46 @@ void txnTest5() {
     assertEquals(noTransaction, status, 
         "Wrong tx status (was ``status``)");
 }
+
+test
+void txnTest6() {
+    tm.start();
+    value tx = tm.beginTransaction();
+    variable Boolean calledBefore = false;
+    tx.callBeforeCompletion(() => calledBefore=true);
+    variable Boolean calledAfter = false;
+    tx.callAfterCompletion((status) => calledAfter=true);
+    tx.commit();
+    assert(calledAfter, calledBefore);
+}
+
+test
+void txnTest7() {
+    tm.start();
+    value tx = tm.beginTransaction();
+    variable Boolean calledBefore = false;
+    tx.callBeforeCompletion(() => calledBefore=true);
+    variable Boolean calledAfter = false;
+    tx.callAfterCompletion((status) => calledAfter=true);
+    tx.rollback();
+    assert(calledAfter, !calledBefore);
+}
+
+
+test
+void txnTest8() {
+    tm.start();
+    value tx = tm.beginTransaction();
+    variable Boolean calledBefore = false;
+    tx.callBeforeCompletion(() => calledBefore=true);
+    variable Boolean calledAfter = false;
+    tx.callAfterCompletion((status) => calledAfter=true);
+    tx.markRollbackOnly();
+    try {
+        tx.commit();
+        assert (false);
+    }
+    catch (ex) {}
+    assert(calledAfter, !calledBefore);
+}
+

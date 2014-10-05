@@ -46,7 +46,8 @@ import javax.naming {
 import javax.transaction {
     JavaTransactionManager=TransactionManager,
     UserTransaction,
-    JavaStatus=Status
+    JavaStatus=Status,
+    Synchronization
 }
 
 class ConcreteTransactionManager() satisfies TransactionManager {
@@ -165,9 +166,8 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             ut.setRollbackOnly();
         }
         
-        shared actual Status status {
-            if (exists status = transactionManager?.status) {
-                switch (status)
+        Status toStatus(Integer status) {
+            switch (status)
                 case (0) {
                     return active;
                 }
@@ -202,6 +202,11 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                     "illegal transaction status"
                     assert (false);
                 }
+        }
+        
+        shared actual Status status {
+            if (exists status = transactionManager?.status) {
+                return toStatus(status);
             }
             else {
                 return noTransaction;
@@ -212,6 +217,29 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             assert (exists ut = userTransaction);
             ut.setTransactionTimeout(timeout);
         }
+        
+        shared actual void callAfterCompletion(void afterCompletionFun(Status status)) {
+            assert(exists tx = transactionManager?.transaction);
+            object synchronization
+                     satisfies Synchronization {
+                shared actual void beforeCompletion() {}
+                shared actual void afterCompletion(Integer int) 
+                        => afterCompletionFun(toStatus(int));
+            }
+            tx.registerSynchronization(synchronization);
+        }
+        
+        shared actual void callBeforeCompletion(void beforeCompletionFun()) {
+            assert(exists tx = transactionManager?.transaction);
+            object synchronization
+                    satisfies Synchronization {
+                shared actual void beforeCompletion()
+                        => beforeCompletionFun();
+                shared actual void afterCompletion(Integer int) {}
+            }
+            tx.registerSynchronization(synchronization);
+        }
+        
         
     }
 

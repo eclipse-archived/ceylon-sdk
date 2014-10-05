@@ -4,6 +4,8 @@ shared interface Transaction {
     shared formal void rollback();
     shared formal Status status;
     shared formal void setTimeout(Integer timeout);
+    shared formal void callBeforeCompletion(void beforeCompletion());
+    shared formal void callAfterCompletion(void afterCompletion(Status status));
 }
 
 shared abstract class Status() of 
