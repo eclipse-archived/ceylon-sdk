@@ -6,11 +6,6 @@ import ceylon.transaction.wrapper {
     createXADataSource
 }
 
-import com.arjuna.ats.arjuna.logging {
-    \ItsLogger {
-        logger
-    }
-}
 import com.arjuna.ats.jdbc {
     TransactionalDriver {
         userNameProp=userName,
@@ -65,9 +60,6 @@ shared void registerDataSource(String binding,
     }
     catch (Exception e) {
         value msg = "Cannot bind ``databaseNameOrUrl `` for driver ``driver``";
-        if (logger.infoEnabled) {
-            logger.info(msg);
-        }
         throw Exception(msg, e);
     }
 
@@ -76,9 +68,6 @@ shared void registerDataSource(String binding,
     } 
     catch (Exception e) {
         value msg = "Cannot bind ``databaseNameOrUrl `` to ``binding``: ``e.message``";
-        if (logger.infoEnabled) {
-            logger.infof(msg);
-        }
         throw Exception(msg, e);
     }
 

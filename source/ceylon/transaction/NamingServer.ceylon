@@ -2,11 +2,6 @@ import ceylon.interop.java {
     javaClassFromInstance
 }
 
-import com.arjuna.ats.arjuna.logging {
-    \ItsLogger {
-        logger
-    }
-}
 import com.arjuna.ats.jta.common {
     \IjtaPropertyManager {
         jtaEnvironmentBean
@@ -120,9 +115,6 @@ void registerTransactionManagerJndiBindings() {
         tmJndiBindings.add(jtaEnvironmentBean.transactionSynchronizationRegistryJNDIContext);
     }
     catch (NamingException e) {
-        if (logger.infoEnabled) {
-            logger.infof("Unable to bind TM into JNDI: %s", e.message);
-        }
         throw Exception("Unable to bind TM into JNDI", e);
     }
 }
@@ -135,11 +127,7 @@ void unregisterTransactionManagerJndiBindings() {
         try {
             initialContext.unbind(bindingIterator.next());
         }
-        catch (NamingException e) {
-            if (logger.debugEnabled) {
-                logger.debugf("Unable to unregister JNDI binding: %s" + e.message);
-            }
-        }
+        catch (NamingException e) {}
         bindingIterator.remove();
     }
 }
