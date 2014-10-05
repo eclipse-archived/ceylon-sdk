@@ -10,11 +10,6 @@ import com.arjuna.ats.arjuna.common {
         recoveryEnvironmentBean
     }
 }
-import com.arjuna.ats.arjuna.logging {
-    \ItsLogger {
-        logger
-    }
-}
 import com.arjuna.ats.arjuna.recovery {
     RecoveryModule,
     RecoveryManager
@@ -51,16 +46,14 @@ import javax.naming {
 import javax.transaction {
     JavaTransactionManager=TransactionManager,
     UserTransaction,
-    Status {
-        status_no_transaction=STATUS_NO_TRANSACTION
-    }
+    JavaStatus=Status
 }
 
 class ConcreteTransactionManager() satisfies TransactionManager {
 
     shared NamingServer jndiServer = NamingServer();
     
-    shared actual variable JavaTransactionManager? transactionManager = null;
+    variable JavaTransactionManager? transactionManager = null;
     
     variable UserTransaction? userTransaction = null;
     
@@ -72,7 +65,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             Boolean startRecoveryService) {
         jndiServer.start();
         if (exists dataSourceConfigPropertyFile 
-            = process.propertyValue("dbc.properties")) {
+                = process.propertyValue("dbc.properties")) {
             registerDataSources(dataSourceConfigPropertyFile);
         }
         else {
@@ -92,10 +85,8 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                 }
                 
                 DriverManager.registerDriver(TransactionalDriver());
-            } catch (Exception e) {
-                if (logger.infoEnabled) {
-                    logger.info("TransactionServiceFactory error:", e);
-                }
+            }
+            catch (Exception e) {
                 throw Exception("No suitable JNDI provider available", e);
             }
             registerTransactionManagerJndiBindings();
@@ -120,16 +111,12 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             
         }
         
-        if (is UserTransaction ut 
-            = jndiServer.lookup("java:/UserTransaction")) {
-            userTransaction = ut;
-        }
-        if (is JavaTransactionManager tm 
-            = jndiServer.lookup("java:/TransactionManager")) {
-            transactionManager = tm;
-        } else {
-            print("java:/TransactionManager lookup failed");
-        }
+        assert (is UserTransaction ut 
+                = jndiServer.lookup("java:/UserTransaction"));
+        userTransaction = ut;
+        assert (is JavaTransactionManager tm 
+                = jndiServer.lookup("java:/TransactionManager"));
+        transactionManager = tm;
     }
 
     "Stop the transaction service. If an in-process recovery 
@@ -145,10 +132,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                 DriverManager.deregisterDriver(TransactionalDriver());
             }
             catch (Exception e) {
-                if (logger.infoEnabled) {
-                    logger.debug("Unable to deregister TransactionalDriver: " 
-                        + e.message, e);
-                }
+                e.printStackTrace();
             }
             
             if (replacedJndiProperties) {
@@ -163,17 +147,84 @@ class ConcreteTransactionManager() satisfies TransactionManager {
     }
     
     recoveryScan() => recoveryManager?.scan();
-
-    shared actual UserTransaction beginTransaction() {
-        assert (exists ut = userTransaction);
-        ut.begin();
-        return ut;
+    
+    class ConcreteTransaction() satisfies Transaction {
+        
+        shared actual void commit() {
+            assert (exists ut = userTransaction);
+            ut.commit();
+        }
+        
+        shared actual void rollback() {
+            assert (exists ut = userTransaction);
+            ut.rollback();
+        }
+        
+        shared actual void markRollbackOnly() {
+            assert (exists ut = userTransaction);
+            ut.setRollbackOnly();
+        }
+        
+        shared actual Status status {
+            if (exists status = transactionManager?.status) {
+                switch (status)
+                case (0) {
+                    return active;
+                }
+                case (1) {
+                    return markedRolledBack;
+                }
+                case (2) {
+                    return prepared;
+                }
+                case (3) {
+                    return committed;
+                }
+                case (4) {
+                    return rolledback;
+                }
+                case (5) {
+                    return unknown;
+                }
+                case (6) {
+                    return noTransaction;
+                }
+                case (7) {
+                    return preparing;
+                }
+                case (8) {
+                    return committing;
+                }
+                case (9) {
+                    return rollingBack;
+                }
+                else {
+                    "illegal transaction status"
+                    assert (false);
+                }
+            }
+            else {
+                return noTransaction;
+            }
+        }
+        
+        shared actual void setTimeout(Integer timeout) {
+            assert (exists ut = userTransaction);
+            ut.setTransactionTimeout(timeout);
+        }
+        
     }
 
-    shared actual UserTransaction? currentTransaction {
+    shared actual Transaction beginTransaction() {
+        assert (exists ut = userTransaction);
+        ut.begin();
+        return ConcreteTransaction();
+    }
+
+    shared actual Transaction? currentTransaction {
         if (exists ut = userTransaction) {
-            if (ut.status != status_no_transaction) {
-                return ut;
+            if (ut.status != JavaStatus.\iSTATUS_NO_TRANSACTION) {
+                return ConcreteTransaction();
             }
         }
         return null;
@@ -187,6 +238,11 @@ class ConcreteTransactionManager() satisfies TransactionManager {
         try {
             ok = do();
         }
+        catch (exception) {
+            ok = false;
+            transaction.markRollbackOnly();
+            throw exception;
+        }
         finally {
             try {
                 if (ok) {
@@ -195,7 +251,8 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                 else {
                     transaction.rollback();
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 ok = false;
             }
         }

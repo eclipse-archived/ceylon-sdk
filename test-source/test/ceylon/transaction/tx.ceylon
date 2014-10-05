@@ -2,34 +2,26 @@ import ceylon.test {
     ...
 }
 import ceylon.transaction {
-    tm=transactionManager
-}
-
-import javax.transaction {
-    TransactionManager,
+    tm=transactionManager,
     Transaction,
-    UserTransaction,
-    Status {
-        status_no_transaction=STATUS_NO_TRANSACTION,
-        status_active=STATUS_ACTIVE
-    }
+    active,
+    Status,
+    noTransaction
 }
 
 // A callable which is expected to be run inside a transaction
 Boolean txnTestDo() {
-    UserTransaction? transaction = tm.currentTransaction;
-
-    assert (is UserTransaction transaction);
-    assertEquals (status_active, transaction.status, "Callable called without an active transaction");
+    assert (exists transaction = tm.currentTransaction);
+    assertEquals (active, transaction.status, 
+        "Callable called without an active transaction");
 
     return true;
 }
 
 test
 void txnTest1() {
-    UserTransaction? txn = tm.currentTransaction;
-
-    assert (! is UserTransaction txn);
+    Transaction? txn = tm.currentTransaction;
+    assert (!txn exists);
 }
 
 test
@@ -41,58 +33,56 @@ void txnTest2() {
 test
 void txnTest3() {
     tm.start();
-    UserTransaction? transaction = tm.beginTransaction();
+    Transaction transaction = tm.beginTransaction();
 
-    assert (is UserTransaction transaction);
-
-    variable Integer status = transaction.status;
-
-    assertTrue(tm.transactionActive, "tx status should have been active but was ``status``");
+    Status status1 = transaction.status;
+    assertTrue(tm.transactionActive, 
+        "tx status should have been active but was ``status1``");
 
     transaction.commit();
-    status = transaction.status;
-
-    assertEquals(status_no_transaction, status, "Wrong tx status (was ``status``)");
+    
+    Status status2 = transaction.status;
+    assertEquals(noTransaction, status2, 
+        "Wrong tx status (was ``status2``)");
 }
 
 test
 void txnTest4() {
     tm.start();
-    TransactionManager? transactionManager = tm.transactionManager;
-    assert (is TransactionManager transactionManager);
+    Transaction? txn1 = tm.currentTransaction;
+    assert (!txn1 exists);
 
-    UserTransaction?  txn1 = tm.currentTransaction;
-    assert (! is UserTransaction txn1);
+    tm.beginTransaction();
+    Transaction?  txn2 = tm.currentTransaction;
+    assert (exists txn2);
+//
+//    Transaction txn = transactionManager.suspend();
+//    UserTransaction?  txn3 = tm.currentTransaction;
+//    assert (! is UserTransaction txn3);
+//
+//    transactionManager.resume(txn);
+//    UserTransaction?  txn4 = tm.currentTransaction;
+//    assert (is UserTransaction txn4);
 
-    transactionManager.begin();
-    UserTransaction?  txn2 = tm.currentTransaction;
-    assert (is UserTransaction txn2);
-
-    Transaction txn = transactionManager.suspend();
-    UserTransaction?  txn3 = tm.currentTransaction;
-    assert (! is UserTransaction txn3);
-
-    transactionManager.resume(txn);
-    UserTransaction?  txn4 = tm.currentTransaction;
-    assert (is UserTransaction txn4);
-
-    transactionManager.commit();
-    UserTransaction?  txn5 = tm.currentTransaction;
-    assert (! is UserTransaction txn5);
+    txn2.commit();
+    Transaction?  txn5 = tm.currentTransaction;
+    assert (!txn5 exists);
 }
 
 test
 void txnTest5() {
     tm.start();
-    TransactionManager? transactionManager = tm.transactionManager;
-    assert (is TransactionManager transactionManager);
-
-    transactionManager.begin();
-    transactionManager.setRollbackOnly();
+    
+    Transaction tx = tm.beginTransaction();
+    tx.markRollbackOnly();
 
     try {
-        transactionManager.commit();
+        tx.commit();
         fail ("committed a rollback only transaction");
     } catch (Exception ex) {
     }
+    
+    Status status = tx.status;
+    assertEquals(noTransaction, status, 
+        "Wrong tx status (was ``status``)");
 }

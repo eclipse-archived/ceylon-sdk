@@ -1,9 +1,4 @@
 
-import javax.transaction {
-    UserTransaction,
-    JavaTransactionManager=TransactionManager
-}
-
 shared interface TransactionManager {
     
     "Start and initialize an instance of the transaction 
@@ -30,12 +25,12 @@ shared interface TransactionManager {
      the new transaction."
     throws (`class AssertionError`, 
         "if the transaction manager is not running")
-    shared formal UserTransaction beginTransaction();
+    shared formal Transaction beginTransaction();
     
     "A [[javax.transaction::UserTransaction]] for 
      controlling the current transaction, or `null` if there
      is no current transaction."
-    shared formal UserTransaction? currentTransaction;
+    shared formal Transaction? currentTransaction;
     
     "Determine if there is a transaction active."
     throws (`class AssertionError`, 
@@ -50,9 +45,9 @@ shared interface TransactionManager {
              transaction."
             Boolean do());
     
-    "The JTA [[javax.transaction::TransactionManager]], or
-     `null` if the transaction manager is not running."
-    shared formal JavaTransactionManager? transactionManager;
+    //"The JTA [[javax.transaction::TransactionManager]], or
+    // `null` if the transaction manager is not running."
+    //shared formal JavaTransactionManager? transactionManager;
     
     "Run a recovery scan using the in-process transaction 
      recovery service, if any."

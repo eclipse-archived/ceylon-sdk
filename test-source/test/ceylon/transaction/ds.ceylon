@@ -12,7 +12,8 @@ import ceylon.test {
     ...
 }
 import ceylon.transaction {
-    tm=transactionManager
+    tm=transactionManager,
+    Transaction
 }
 import ceylon.transaction.datasource {
     registerDataSourceUrl,
@@ -27,9 +28,6 @@ import java.lang {
 
 import javax.sql {
     DataSource
-}
-import javax.transaction {
-    UserTransaction
 }
 
 import org.h2.jdbcx {
@@ -58,12 +56,12 @@ Boolean updateTable(Sql sq, String dml, Boolean ignoreErrors) {
     try {
         sq.Update(dml).execute();
         return true;
-    } catch (Exception ex) {
+    }
+    catch (Exception ex) {
         print("``dml`` error: ``ex.message``");
         if (!ignoreErrors) {
             throw ex;
         }
-
         return false;
     }
 }
@@ -88,7 +86,7 @@ Integer insertTable(Collection<Sql> dbs) {
 }
 
 void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> sqlMap) {
-    UserTransaction? transaction;
+    Transaction? transaction;
 
     if (doInTxn) {
         transaction = tm.beginTransaction();
@@ -130,7 +128,7 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
 // Test XA transactions with one resource
 test
 void sqlTest1() {
-    MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings2);
+    value sqlMap = getSqlHelper(dsBindings2);
 
     // local commit
     transactionalWork(false, true, sqlMap);
@@ -140,7 +138,7 @@ void sqlTest1() {
 
 // Test XA transactions with multiple resources
 void sqlTest2(Boolean doInTxn) {
-    MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
+    value sqlMap = getSqlHelper(dsBindings);
 
     // XA abort
     transactionalWork(doInTxn, false, sqlMap);
@@ -162,8 +160,8 @@ void sqlTest2b() {
 // same as sqlTest2 with a callable
 test
 void sqlTest3() {
-    MutableMap<String,Sql> sqlMap = getSqlHelper(dsBindings);
-    variable MutableMap<String,Integer> counts = getRowCounts(sqlMap);
+    value sqlMap = getSqlHelper(dsBindings);
+    value counts1 = getRowCounts(sqlMap);
 
     // run a transaction but have the callable request an abort
     tm.transaction {
@@ -174,10 +172,10 @@ void sqlTest3() {
         }
     };
 
-    checkRowCounts(counts, getRowCounts(sqlMap), 0);
+    checkRowCounts(counts1, getRowCounts(sqlMap), 0);
 
     // repeat but have the callable commit
-    counts = getRowCounts(sqlMap);
+    value counts2 = getRowCounts(sqlMap);
 
     tm.transaction {
         function do() {
@@ -189,7 +187,7 @@ void sqlTest3() {
         }
     };
 
-    checkRowCounts(counts, getRowCounts(sqlMap), 2);
+    checkRowCounts(counts2, getRowCounts(sqlMap), 2);
 }
 
 test
@@ -206,13 +204,11 @@ void localTxnTest() {
     sqlSet.add(sql);
 
     updateTable(sql, "DROP TABLE CEYLONKV", true);
-    updateTable(sql, "CREATE TABLE CEYLONKV (key VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY ( key ))", true);
+    updateTable(sql, "CREATE TABLE CEYLONKV (key VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY (key))", true);
 
     Integer rows = insertTable(sqlSet);
-	Integer? count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
-    
-
-    if (exists count ) {
+	value count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>();
+    if (exists count) {
         assert (count == rows);
     }
 
@@ -220,12 +216,11 @@ void localTxnTest() {
 }
 
 MutableMap<String,Integer> getRowCounts(MutableMap<String,Sql> sqlMap) {
-    MutableMap<String,Integer> values = HashMap<String,Integer>();
+    value values = HashMap<String,Integer>();
 
     for (entry in sqlMap) {
       Sql sql = entry.item;
-	  Integer? count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
-
+	  value count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>();
       assert (exists count);
       values.put (entry.key, count);
     }
@@ -233,7 +228,8 @@ MutableMap<String,Integer> getRowCounts(MutableMap<String,Sql> sqlMap) {
     return values;
 }
 
-void checkRowCounts(MutableMap<String,Integer> prev, MutableMap<String,Integer> curr, Integer delta) {
+void checkRowCounts(MutableMap<String,Integer> prev, 
+        MutableMap<String,Integer> curr, Integer delta) {
     for (entry in prev) {
         Integer? c = curr[entry.key];
         if (exists c) {

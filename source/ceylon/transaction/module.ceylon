@@ -155,8 +155,8 @@
    you need to pass the location of a properties file which 
    defines the datasources via a process property called 
    `dbc.properties`."""
-by("Mike Musgrove", "Stéphane Épardaud")
-license("Apache Software License 2.0")
+by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
+license ("Apache Software License 2.0")
 module ceylon.transaction "1.1.0" {
     // transaction manager dependencies
     import org.jboss.narayana.jta "5.0.0.Final";
@@ -164,7 +164,7 @@ module ceylon.transaction "1.1.0" {
     import java.base "7";
     import javax.naming "7";
     import java.jdbc "7";
-    shared import javax.transaction.api "1.2";
+    import javax.transaction.api "1.2";
 
     //import org.jboss.modules "1.1.3.GA"; // this one fails
     import org.jboss.modules "1.3.3.Final";
