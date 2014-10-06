@@ -1,3 +1,5 @@
+import ceylon.transaction.datasource { ... }
+
 """This module enables updates to multiple databases within 
    a single transaction. It is integrated with 
    [[module ceylon.dbc]] but you do need to create and pass
@@ -32,12 +34,11 @@
    
    - The location of a the properties file is set via a 
      process property named `dbc.properties`. The format 
-     follows [[http://java.sun.com/dtd/properties.dtd]] and 
-     an example is provided with the tests for this module.
+     follows the [Java properties format][] and an example 
+     is provided with the tests for this module.
    - Alternatively, the information may be provided by first
-     calling [[ceylon.transaction.datasource::registerDriver]]
-     and then one of [[ceylon.transaction.datasource::registerDataSourceUrl]]
-     or [[ceylon.transaction.datasource::registerDataSourceName]].
+     calling [[registerDriver]] and then one of 
+     [[registerDataSourceUrl]] or [[registerDataSourceName]].
      
    For example, to register an h2 datasource programmatically:
      
@@ -154,7 +155,9 @@
    any in doubt transaction was using prior to a failure so 
    you need to pass the location of a properties file which 
    defines the datasources via a process property called 
-   `dbc.properties`."""
+   `dbc.properties`.
+   
+   [Java properties format]: http://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.Reader-"""
 by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
 module ceylon.transaction "1.1.0" {
