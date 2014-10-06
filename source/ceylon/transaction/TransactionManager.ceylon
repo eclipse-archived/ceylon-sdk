@@ -37,7 +37,7 @@ shared interface TransactionManager {
         "if the transaction manager is not running")
     shared formal Boolean transactionActive;
     
-    "Perform the given [[work|do] in a transaction." 
+    "Perform the given [[work|do]] in a transaction." 
     throws (`class AssertionError`, 
         "if the transaction manager is not running")
     shared formal Boolean transaction(
