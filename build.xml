@@ -176,14 +176,14 @@
 
     <target name="test-jvm" depends="compile-test-jvm"
         description="Runs the compiled test modules from the 'test-modules' repository">
-        <ceylon-test>
+        <ceylon-test report="true">
             <reposet refid="reposet.run.test"/>
             <moduleset refid="modules.test.jvm"/>
         </ceylon-test>
     </target>
 
     <target name="test-js" depends="compile-test-js">
-        <ceylon-test-js>
+        <ceylon-test-js report="true">
             <reposet refid="reposet.run.test"/>
             <moduleset refid="modules.test.js"/>
         </ceylon-test-js>
