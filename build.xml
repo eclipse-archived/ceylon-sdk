@@ -24,11 +24,14 @@
         </classpath>
     </taskdef>
 
-    
+    <taskdef resource="aQute/bnd/ant/taskdef.properties"
+          classpath="${basedir}/../ceylon-dist/lib/biz.aQute.bnd-2.3.0.jar"/>
+
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
     
     <path id="ant-tasks">
+        <pathelement location="${basedir}/${dist.repo.dir}/com/redhat/ceylon/common/${module.com.redhat.ceylon.compiler.version}/com.redhat.ceylon.common-${module.com.redhat.ceylon.compiler.version}.jar"/>
         <pathelement location="${ceylon.ant.lib}"/>
     </path>
     
@@ -45,7 +48,7 @@
     </reposet>
     
     <moduleset id="modules.sdk.jvm">
-        <module name="ceylon.collection"/>        
+        <module name="ceylon.collection"/>
         <module name="ceylon.dbc"/>
         <module name="ceylon.transaction"/>
         <module name="ceylon.file"/>
@@ -279,6 +282,29 @@
         
     </target>
     
+
+    <target name="addRequiredOSGIHeaders">
+        <tempfile property="bundleDefinitionFile"/>
+        <echo file="${bundleDefinitionFile}">Bundle-SymbolicName: ${CeylonName}${line.separator}</echo>
+        <echo file="${bundleDefinitionFile}" append="true">Bundle-Version: ${CeylonVersion}${line.separator}</echo>
+        <echo file="${bundleDefinitionFile}" append="true">Export-Package: *${line.separator}</echo>
+        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, *${line.separator}</echo>
+        <bndwrap exceptions="true" force="true"  jars="${currentFile}" output="${currentFile}.bnd.jar" definitions="${bundleDefinitionFile}">
+        </bndwrap>
+        <delete file="${bundleDefinitionFile}"/>
+        <echo message="Adding OSGI headers to ${currentFile}"/>
+        <copy file="${currentFile}" tofile="${currentFile}.original"/>
+        <jar destfile="${currentFile}.result" filesetmanifest="merge">
+            <zipfileset src="${currentFile}.original" includes="**" excludes="META-INF/MANIFEST.MF"/>
+            <zipfileset src="${currentFile}.bnd.jar" includes="META-INF/MANIFEST.MF"/>
+        </jar>
+        <copy file="${currentFile}.result" tofile="${currentFile}" overwrite="true" force="true"/>
+
+        <delete file="${currentFile}.original" failonerror="false" deleteonexit="true"/>
+        <delete file="${currentFile}.bnd.jar" failonerror="false" deleteonexit="true"/>
+        <delete file="${currentFile}.result" failonerror="false" deleteonexit="true"/>
+    </target>
+    
     <target name="copyModuleArchiveForOSGI">
         <loadproperties>
             <zipentry zipfile="${currentFile}" name="META-INF/MANIFEST.MF"/>
@@ -290,25 +316,63 @@
                  <replaceregex pattern="^\s+" replace=""/>
               </filterchain>
         </loadproperties>
+        <basename property="module.jar.name" file="${currentFile}"/>
+        <propertyregex property="CeylonName"
+              input="${module.jar.name}"
+              regexp="(.+)-([^\-]+)\.(j|c)ar"
+              replace="\1">
+        </propertyregex>
+        <propertyregex property="CeylonVersion"
+        input="${module.jar.name}"
+        regexp="(.+)-([^\-]+)\.(j|c)ar"
+        replace="\2">
+        </propertyregex>
         <if>
-            <isset property="Bundle-SymbolicName"/>
+            <or>
+                <not>
+                    <isset property="Bundle-SymbolicName"/>
+                </not>
+                <not>
+                    <equals arg1="${Bundle-SymbolicName}" arg2="${CeylonName}"/>
+                </not>
+            </or>
             <then>
-                <copy file="${currentFile}" 
-                    tofile="${osgi.dist.plugins}/${Bundle-SymbolicName}_${Bundle-Version}.jar" 
-                    overwrite="true"/>
+                <antcall target="addRequiredOSGIHeaders" inheritall="true"/>
+                <property name="CheckedBundleSymbolicName" value="${CeylonName}"/>
+                <property name="CheckedBundleVersion" value="${CeylonVersion}"/>
             </then>
+            <else>
+                <property name="CheckedBundleSymbolicName" value="${Bundle-SymbolicName}"/>
+                <property name="CheckedBundleVersion" value="${Bundle-Version}"/>
+            </else>
         </if>
+        <copy file="${currentFile}" 
+            tofile="${osgi.dist.plugins}/${CheckedBundleSymbolicName}_${CheckedBundleVersion}.jar" 
+            overwrite="true"/>
     </target>
     
-    <target name="osgi-quick">
+    <target name="retrieveDependencies">
+        <ceylon-copy executable="${ceylon.executable}"
+            offline="true"
+            verbose="${ceylon.verbosity}"
+            nodefaultrepositories="true"
+            withdependencies="true"
+            out="${osgi.dist}/tempRepo">
+            <rep url="./modules"/>
+            <sourcemodules/>
+        </ceylon-copy>
+    </target>
+    
+    <target name="osgi-quick" depends="retrieveDependencies">
         <mkdir dir="${osgi.dist.plugins}" />
         <foreach target="copyModuleArchiveForOSGI" param="currentFile">
             <path>
-                <fileset dir="${out.repo}" includes="**/*.car"/>
+                <fileset dir="${osgi.dist}/tempRepo" includes="**/*.?ar"/>
             </path>
         </foreach>
+        <delete dir="${osgi.dist}/tempRepo" failonerror="false" deleteonexit="true"/>
         <makeurl property="rootUrl" file="${osgi.dist}"/>
-        <repoindex name="Ceylon Distribution Bundles"            
+        <repoindex name="Ceylon Distribution Bundles"
             out="${osgi.dist}/repository.xml" 
             compressed="false"
             rooturl="${rootUrl}">
