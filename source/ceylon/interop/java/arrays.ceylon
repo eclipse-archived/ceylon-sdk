@@ -32,6 +32,7 @@ import ceylon.interop.java.internal {
     stringArray=javaStringArray
 }
 
+
 "The [[BooleanArray]], that is, the Java `boolean[]` array, 
  underyling the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
@@ -93,6 +94,7 @@ shared CharArray javaCharArray(Array<Char> array)
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared ObjectArray<Element> javaObjectArray<Element>(Array<Element?> array)
+        given Element satisfies Object
         => objectArray(array);
 
 "The [[string array|ObjectArray]], that is, the Java 
@@ -250,8 +252,9 @@ shared Array<Byte> toByteArray(ByteArrayLike array) {
 "An array whose elements can be represented as an 
  `Array<String?>`."
 shared alias StringArrayLike 
-        => ObjectArray<JavaString?> | ObjectArray<JavaString>
-        |  Array<JavaString?>       | Array<JavaString>;
+        => ObjectArray<JavaString>
+        |  Array<JavaString?>
+        | Array<JavaString>;
 
 "Create a new Ceylon string array, that is, an 
  `Array<String?>` with the same elements as the
@@ -260,16 +263,6 @@ see (`function toJavaStringArray`)
 shared Array<String?> toStringArray(StringArrayLike array) {
     ObjectArray<String> javaArray;
     switch (array)
-    case (is ObjectArray<JavaString?>) {
-        value size = array.size;
-        value result = ObjectArray<String>(size);
-        variable value i=0;
-        while (i<size) {
-            result.set(i, array.get(i)?.string);
-            i++;
-        }
-        javaArray = result;
-    }
     case (is ObjectArray<JavaString>) {
         value size = array.size;
         value result = ObjectArray<String>(size);
@@ -306,8 +299,9 @@ shared Array<String?> toStringArray(StringArrayLike array) {
 "An array whose elements can be represented as an 
  `ObjectArray<JavaString>`."
 shared alias JavaStringArrayLike
-        => ObjectArray<String?> | ObjectArray<String>
-        |  Array<String>        | Array<String?>;
+        => ObjectArray<String>
+        |  Array<String>
+        | Array<String?>;
 
 "Create a new Java [[string array|ObjectArray]], that is,
  a Java `String[]`, with the same elements as the given 
@@ -315,18 +309,6 @@ shared alias JavaStringArrayLike
 see (`function toStringArray`)
 shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
     switch (array)
-    case (is ObjectArray<String?>) {
-        value size = array.size;
-        value result = ObjectArray<JavaString>(size);
-        variable value i=0;
-        while (i<size) {
-            if (exists element = array.get(i)) {
-                result.set(i, javaString(element));
-            }
-            i++;
-        }
-        return result;
-    }
     case (is ObjectArray<String>) {
         value size = array.size;
         value result = ObjectArray<JavaString>(size);
@@ -406,5 +388,5 @@ shared ObjectArray<JavaString> createJavaStringArray({String*} elements)
 "Create a new [[ObjectArray]], that is, a Java `Object[]`
  array, with the given elements."
 shared ObjectArray<T> createJavaObjectArray<T>({T?*} elements)
-        //given T satisfies Object
+        given T satisfies Object
         => javaObjectArray(Array(elements));
