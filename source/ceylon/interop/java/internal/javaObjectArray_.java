@@ -10,6 +10,8 @@ import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
+import com.redhat.ceylon.compiler.java.metadata.TypeParameter;
+import com.redhat.ceylon.compiler.java.metadata.TypeParameters;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
 @Ceylon(major = 7)
@@ -30,6 +32,7 @@ public final class javaObjectArray_ {
      * @see ObjectArray
      */
     @SuppressWarnings("unchecked")
+    @TypeParameters(@TypeParameter(value="T", satisfies="ceylon.language::Object"))
     public static <T> T[] javaObjectArray(@Ignore TypeDescriptor $reifiedT, 
             @TypeInfo("ceylon.language::Array<T|ceylon.language::Null>") 
             @Name("array") Array<T> array){
