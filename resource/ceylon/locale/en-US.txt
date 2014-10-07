@@ -164,6 +164,9 @@ et-EE | et | EE |  | Estonian (Estonia) | Estonian | Estonia |
 el-CY | el | CY |  | Greek (Cyprus) | Greek | Cyprus | 
 hu | hu |  |  | Hungarian | Hungarian |  | 
 fr-FR | fr | FR |  | French (France) | French | France | 
+ur-PK | ur | PK |  | Urdu (Pakistan) | Urdu | Pakistan | 
+ur-IN | ur | IN |  | Urdu (India) | Urdu | India | 
+ur | ur |  |  | Urdu  | Urdu |  | 
 
 TWD | 901 | New Taiwan Dollar | TWD | 2
 BSD | 44 | Bahamian Dollar | BSD | 2

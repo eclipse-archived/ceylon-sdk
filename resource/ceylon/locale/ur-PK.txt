@@ -1,80 +1,80 @@
-en | en |  |  | English | English |  |  | 
-AM | PM
-January | February | March | April | May | June | July | August | September | October | November | December
-Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec
-Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday
-Sun | Mon | Tue | Wed | Thu | Fri | Sat
-M/d/yy | MMM d, yyyy | MMMM d, yyyy
-h:mm a | h:mm:ss a | h:mm:ss a z
-#,##0 | #,##0.### | #,##0% | ¤#,##0.00
+ur-PK | ur | PK |  | Urdu (Pakistan) | Urdu | Pakistan |  | PKR
+صبح | شام
+جنوری | فروری | مارچ | اپریل | مئی | جون | جولائی | اگست | ستمبر | اکتوبر | نومبر | دسمبر
+جنوری | فروری | مارچ | اپریل | مئی | جون | جولائی | اگست | ستمبر | اکتوبر | نومبر | دسمبر
+اتوار | سوموار | منگل | بدھ | جمعرات | جمعہ | ہفتہ
+اتوار | سوموار | منگل | بدھ | جمعرات | جمعہ | ہفتہ
+dd/MM/yy | dd/MM/yyyy | dd MMMM, yyyy
+hh:mm a | hh:mm:ss a | a کے hh بج کر mm منٹ اور ss سیکنڈ z
+#,##0;#,##0- | #,##0.###;#,##0.###- | #,##0% | ¤ #,##0.##;¤ #,##0.##-
 
 ms-MY | ms | MY |  | Malay (Malaysia) | Malay | Malaysia | 
-ar-QA | ar | QA |  | Arabic (Qatar) | Arabic | Qatar | 
+ar-QA | ar | QA |  | عربی (قطر) | عربی | قطر | 
 is-IS | is | IS |  | Icelandic (Iceland) | Icelandic | Iceland | 
 fi-FI | fi | FI |  | Finnish (Finland) | Finnish | Finland | 
 pl | pl |  |  | Polish | Polish |  | 
-en-MT | en | MT |  | English (Malta) | English | Malta | 
+en-MT | en | MT |  | انگریزی (مالٹا) | انگریزی | مالٹا | 
 it-CH | it | CH |  | Italian (Switzerland) | Italian | Switzerland | 
 nl-BE | nl | BE |  | Dutch (Belgium) | Dutch | Belgium | 
-ar-SA | ar | SA |  | Arabic (Saudi Arabia) | Arabic | Saudi Arabia | 
-ar-IQ | ar | IQ |  | Arabic (Iraq) | Arabic | Iraq | 
+ar-SA | ar | SA |  | عربی (سعودی عرب) | عربی | سعودی عرب | 
+ar-IQ | ar | IQ |  | عربی (عراق) | عربی | عراق | 
 es-PR | es | PR |  | Spanish (Puerto Rico) | Spanish | Puerto Rico | 
 es-CL | es | CL |  | Spanish (Chile) | Spanish | Chile | 
 fi | fi |  |  | Finnish | Finnish |  | 
 de-AT | de | AT |  | German (Austria) | German | Austria | 
 da | da |  |  | Danish | Danish |  | 
-en-GB | en | GB |  | English (United Kingdom) | English | United Kingdom | 
+en-GB | en | GB |  | انگریزی (برطانیہ) | انگریزی | برطانیہ | 
 es-PA | es | PA |  | Spanish (Panama) | Spanish | Panama | 
 sr | sr |  |  | Serbian | Serbian |  | 
-ar-YE | ar | YE |  | Arabic (Yemen) | Arabic | Yemen | 
+ar-YE | ar | YE |  | عربی (یمن) | عربی | یمن | 
 mk-MK | mk | MK |  | Macedonian (Macedonia) | Macedonian | Macedonia | 
 mk | mk |  |  | Macedonian | Macedonian |  | 
-en-CA | en | CA |  | English (Canada) | English | Canada | 
+en-CA | en | CA |  | انگریزی (کینیڈا) | انگریزی | کینیڈا | 
 vi-VN | vi | VN |  | Vietnamese (Vietnam) | Vietnamese | Vietnam | 
 nl-NL | nl | NL |  | Dutch (Netherlands) | Dutch | Netherlands | 
 es-US | es | US |  | Spanish (United States) | Spanish | United States | 
 zh-CN | zh | CN |  | Chinese (China) | Chinese | China | 
 es-HN | es | HN |  | Spanish (Honduras) | Spanish | Honduras | 
-en-US | en | US |  | English (United States) | English | United States | 
+en-US | en | US |  | انگریزی (امریکہ) | انگریزی | امریکہ | 
 fr | fr |  |  | French | French |  | 
 th | th |  |  | Thai | Thai |  | 
-ar | ar |  |  | Arabic | Arabic |  | 
-ar-MA | ar | MA |  | Arabic (Morocco) | Arabic | Morocco | 
+ar | ar |  |  | عربی | عربی |  | 
+ar-MA | ar | MA |  | عربی (مراکش) | عربی | مراکش | 
 lv | lv |  |  | Latvian | Latvian |  | 
 de | de |  |  | German | German |  | 
 id-ID | in | ID |  | Indonesian (Indonesia) | Indonesian | Indonesia | 
 hr | hr |  |  | Croatian | Croatian |  | 
-en-ZA | en | ZA |  | English (South Africa) | English | South Africa | 
+en-ZA | en | ZA |  | انگریزی (جنوبی افریقہ) | انگریزی | جنوبی افریقہ | 
 ko-KR | ko | KR |  | Korean (South Korea) | Korean | South Korea | 
-ar-TN | ar | TN |  | Arabic (Tunisia) | Arabic | Tunisia | 
+ar-TN | ar | TN |  | عربی (تونیسیا) | عربی | تونیسیا | 
 id | in |  |  | Indonesian | Indonesian |  | 
 ja | ja |  |  | Japanese | Japanese |  | 
 sr-RS | sr | RS |  | Serbian (Serbia) | Serbian | Serbia | 
 be-BY | be | BY |  | Belarusian (Belarus) | Belarusian | Belarus | 
 zh-TW | zh | TW |  | Chinese (Taiwan) | Chinese | Taiwan | 
-ar-SD | ar | SD |  | Arabic (Sudan) | Arabic | Sudan | 
+ar-SD | ar | SD |  | عربی (سوڈان) | عربی | سوڈان | 
 pt | pt |  |  | Portuguese | Portuguese |  | 
 is | is |  |  | Icelandic | Icelandic |  | 
 ja-JP-u-ca-japanese-x-lvariant-JP | ja | JP | JP | Japanese (Japan,JP) | Japanese | Japan | JP
 es-BO | es | BO |  | Spanish (Bolivia) | Spanish | Bolivia | 
-ar-DZ | ar | DZ |  | Arabic (Algeria) | Arabic | Algeria | 
+ar-DZ | ar | DZ |  | عربی (الجزائر) | عربی | الجزائر | 
 ms | ms |  |  | Malay | Malay |  | 
 es-AR | es | AR |  | Spanish (Argentina) | Spanish | Argentina | 
-ar-AE | ar | AE |  | Arabic (United Arab Emirates) | Arabic | United Arab Emirates | 
+ar-AE | ar | AE |  | عربی (امارات) | عربی | امارات | 
 fr-CA | fr | CA |  | French (Canada) | French | Canada | 
 sl | sl |  |  | Slovenian | Slovenian |  | 
 es | es |  |  | Spanish | Spanish |  | 
 lt-LT | lt | LT |  | Lithuanian (Lithuania) | Lithuanian | Lithuania | 
 sr-Latn-ME | sr | ME |  | Serbian (Latin,Montenegro) | Serbian | Montenegro | 
-ar-SY | ar | SY |  | Arabic (Syria) | Arabic | Syria | 
+ar-SY | ar | SY |  | عربی (شام) | عربی | شام | 
 ru-RU | ru | RU |  | Russian (Russia) | Russian | Russia | 
 fr-BE | fr | BE |  | French (Belgium) | French | Belgium | 
 es-ES | es | ES |  | Spanish (Spain) | Spanish | Spain | 
 bg | bg |  |  | Bulgarian | Bulgarian |  | 
 he-IL | iw | IL |  | Hebrew (Israel) | Hebrew | Israel | 
 sv | sv |  |  | Swedish | Swedish |  | 
-en | en |  |  | English | English |  | 
-he | iw |  |  | Hebrew | Hebrew |  | 
+en | en |  |  | انگریزی | انگریزی |  | 
+he | iw |  |  | عبرانی | عبرانی |  | 
 da-DK | da | DK |  | Danish (Denmark) | Danish | Denmark | 
 es-CR | es | CR |  | Spanish (Costa Rica) | Spanish | Costa Rica | 
 zh-HK | zh | HK |  | Chinese (Hong Kong) | Chinese | Hong Kong | 
@@ -85,8 +85,8 @@ uk-UA | uk | UA |  | Ukrainian (Ukraine) | Ukrainian | Ukraine |
 es-DO | es | DO |  | Spanish (Dominican Republic) | Spanish | Dominican Republic | 
 es-VE | es | VE |  | Spanish (Venezuela) | Spanish | Venezuela | 
 pl-PL | pl | PL |  | Polish (Poland) | Polish | Poland | 
-ar-LY | ar | LY |  | Arabic (Libya) | Arabic | Libya | 
-ar-JO | ar | JO |  | Arabic (Jordan) | Arabic | Jordan | 
+ar-LY | ar | LY |  | عربی (ليبيا) | عربی | ليبيا | 
+ar-JO | ar | JO |  | عربی (اردن) | عربی | اردن | 
 it | it |  |  | Italian | Italian |  | 
 uk | uk |  |  | Ukrainian | Ukrainian |  | 
 hu-HU | hu | HU |  | Hungarian (Hungary) | Hungarian | Hungary | 
@@ -100,7 +100,7 @@ ro-RO | ro | RO |  | Romanian (Romania) | Romanian | Romania |
 fr-LU | fr | LU |  | French (Luxembourg) | French | Luxembourg | 
 no | no |  |  | Norwegian | Norwegian |  | 
 lt | lt |  |  | Lithuanian | Lithuanian |  | 
-en-SG | en | SG |  | English (Singapore) | English | Singapore | 
+en-SG | en | SG |  | انگریزی (سنگاپور) | انگریزی | سنگاپور | 
 es-EC | es | EC |  | Spanish (Ecuador) | Spanish | Ecuador | 
 sr-BA | sr | BA |  | Serbian (Bosnia and Herzegovina) | Serbian | Bosnia and Herzegovina | 
 es-NI | es | NI |  | Spanish (Nicaragua) | Spanish | Nicaragua | 
@@ -118,7 +118,7 @@ ja-JP | ja | JP |  | Japanese (Japan) | Japanese | Japan |
 de-LU | de | LU |  | German (Luxembourg) | German | Luxembourg | 
 fr-CH | fr | CH |  | French (Switzerland) | French | Switzerland | 
 mt-MT | mt | MT |  | Maltese (Malta) | Maltese | Malta | 
-ar-BH | ar | BH |  | Arabic (Bahrain) | Arabic | Bahrain | 
+ar-BH | ar | BH |  | عربی (بحرین) | عربی | بحرین | 
 sq | sq |  |  | Albanian | Albanian |  | 
 vi | vi |  |  | Vietnamese | Vietnamese |  | 
 sr-ME | sr | ME |  | Serbian (Montenegro) | Serbian | Montenegro | 
@@ -127,17 +127,17 @@ no-NO | no | NO |  | Norwegian (Norway) | Norwegian | Norway |
 el | el |  |  | Greek | Greek |  | 
 de-CH | de | CH |  | German (Switzerland) | German | Switzerland | 
 zh-SG | zh | SG |  | Chinese (Singapore) | Chinese | Singapore | 
-ar-KW | ar | KW |  | Arabic (Kuwait) | Arabic | Kuwait | 
-ar-EG | ar | EG |  | Arabic (Egypt) | Arabic | Egypt | 
+ar-KW | ar | KW |  | عربی (کویت) | عربی | کویت | 
+ar-EG | ar | EG |  | عربی (مصر) | عربی | مصر | 
 ga-IE | ga | IE |  | Irish (Ireland) | Irish | Ireland | 
 es-PE | es | PE |  | Spanish (Peru) | Spanish | Peru | 
 cs-CZ | cs | CZ |  | Czech (Czech Republic) | Czech | Czech Republic | 
 tr-TR | tr | TR |  | Turkish (Turkey) | Turkish | Turkey | 
 cs | cs |  |  | Czech | Czech |  | 
 es-UY | es | UY |  | Spanish (Uruguay) | Spanish | Uruguay | 
-en-IE | en | IE |  | English (Ireland) | English | Ireland | 
-en-IN | en | IN |  | English (India) | English | India | 
-ar-OM | ar | OM |  | Arabic (Oman) | Arabic | Oman | 
+en-IE | en | IE |  | انگریزی (Ireland) | انگریزی | Ireland | 
+en-IN | en | IN |  | انگریزی (ہندوستان) | انگریزی | ہندوستان | 
+ar-OM | ar | OM |  | عربی (عمان) | عربی | عمان | 
 sr-CS | sr | CS |  | Serbian (Serbia and Montenegro) | Serbian | Serbia and Montenegro | 
 ca | ca |  |  | Catalan | Catalan |  | 
 be | be |  |  | Belarusian | Belarusian |  | 
@@ -149,24 +149,24 @@ lv-LV | lv | LV |  | Latvian (Latvia) | Latvian | Latvia |
 sr-Latn-RS | sr | RS |  | Serbian (Latin,Serbia) | Serbian | Serbia | 
 sk-SK | sk | SK |  | Slovak (Slovakia) | Slovak | Slovakia | 
 es-MX | es | MX |  | Spanish (Mexico) | Spanish | Mexico | 
-en-AU | en | AU |  | English (Australia) | English | Australia | 
+en-AU | en | AU |  | انگریزی (اسٹریلیا) | انگریزی | اسٹریلیا | 
 nn-NO | no | NO | NY | Norwegian (Norway,Nynorsk) | Norwegian | Norway | Nynorsk
-en-NZ | en | NZ |  | English (New Zealand) | English | New Zealand | 
+en-NZ | en | NZ |  | انگریزی (New Zealand) | انگریزی | New Zealand | 
 sv-SE | sv | SE |  | Swedish (Sweden) | Swedish | Sweden | 
 ro | ro |  |  | Romanian | Romanian |  | 
-ar-LB | ar | LB |  | Arabic (Lebanon) | Arabic | Lebanon | 
+ar-LB | ar | LB |  | عربی (لبنان) | عربی | لبنان | 
 de-DE | de | DE |  | German (Germany) | German | Germany | 
 th-TH-u-nu-thai-x-lvariant-TH | th | TH | TH | Thai (Thailand,TH) | Thai | Thailand | TH
 tr | tr |  |  | Turkish | Turkish |  | 
 es-CO | es | CO |  | Spanish (Colombia) | Spanish | Colombia | 
-en-PH | en | PH |  | English (Philippines) | English | Philippines | 
+en-PH | en | PH |  | انگریزی (فلپین) | انگریزی | فلپین | 
 et-EE | et | EE |  | Estonian (Estonia) | Estonian | Estonia | 
 el-CY | el | CY |  | Greek (Cyprus) | Greek | Cyprus | 
 hu | hu |  |  | Hungarian | Hungarian |  | 
 fr-FR | fr | FR |  | French (France) | French | France | 
-ur-PK | ur | PK |  | Urdu (Pakistan) | Urdu | Pakistan | 
-ur-IN | ur | IN |  | Urdu (India) | Urdu | India | 
-ur | ur |  |  | Urdu  | Urdu |  | 
+ur-PK | ur | PK |  | اردو (پاکستان) | اردو | پاکستان | 
+ur-IN | ur | IN |  | اردو (ہندوستان) | اردو | ہندوستان | 
+ur | ur |  |  | اردو  | اردو |  | 
 
 TWD | 901 | New Taiwan Dollar | TWD | 2
 BSD | 44 | Bahamian Dollar | BSD | 2
@@ -277,7 +277,7 @@ LUF | 442 | Luxembourgian Franc | LUF | 0
 AOA | 973 | Angolan Kwanza | AOA | 2
 XSU | 994 | XSU | XSU | -1
 KES | 404 | Kenyan Shilling | KES | 2
-SAR | 682 | Saudi Riyal | SAR | 2
+SAR | 682 | سعودی ریال | ر.س.‏ | 2
 XAU | 959 | Gold | XAU | -1
 BND | 96 | Brunei Dollar | BND | 2
 XBA | 955 | European Composite Unit | XBA | -1
@@ -312,7 +312,7 @@ DOP | 214 | Dominican Peso | DOP | 2
 MXV | 979 | Mexican Investment Unit | MXV | 2
 TZS | 834 | Tanzanian Shilling | TZS | 2
 PGK | 598 | Papua New Guinean Kina | PGK | 2
-INR | 356 | Indian Rupee | INR | 2
+INR | 356 | ہندوستانی روپیہ | INR | 2
 PHP | 608 | Philippine Peso | PHP | 2
 GIP | 292 | Gibraltar Pound | GIP | 2
 ZAR | 710 | South African Rand | ZAR | 2
@@ -372,7 +372,7 @@ HRK | 191 | Croatian Kuna | HRK | 2
 BAM | 977 | Bosnia-Herzegovina Convertible Mark | BAM | 2
 MTL | 470 | Maltese Lira | MTL | 2
 ITL | 380 | Italian Lira | ITL | 0
-PKR | 586 | Pakistani Rupee | PKR | 2
+PKR | 586 | پاکستانی روپیہ | Rs | 2
 ROL | 946 | Romanian Leu (1952-2006) | ROL | 2
 ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
 ZWD | 716 | Zimbabwean Dollar (1980-2008) | ZWD | 2
