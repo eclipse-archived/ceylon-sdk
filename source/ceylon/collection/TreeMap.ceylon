@@ -765,7 +765,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
     
 }
 
-"Create a [[TreeMap] with [[comparable|Comparable]]] keys,
+"Create a [[TreeMap]] with [[comparable|Comparable]] keys,
  sorted by the natural ordering of the keys."
 shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>
         ({<Key->Item>*} entries)
