@@ -1,7 +1,3 @@
-import ceylon.transaction {
-    transactionManager
-}
-
 import java.lang {
     ObjectArray
 }
@@ -36,8 +32,8 @@ class ConnectionStatus(Connection() connectionSource) {
     shared void close() {
         if (exists c=conn) {
 			use--;
-            if (!tx && use==0 && 
-                !transactionManager.transactionActive) {
+            if (!tx && use==0/* && 
+                !transactionManager.transactionActive*/) {
                 c.close();
             }
         }
