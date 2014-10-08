@@ -111,7 +111,7 @@ shared class XADataSourceWrapper(binding,
         return arjunaJDBC2Driver.connect(txDriverUrl, dbProperties);
     }
 
-    shared actual T unwrap<T>(Class<T> tClass) {
+    shared actual T unwrap<T>(Class<T> tClass) given T satisfies Object {
         throw SQLException("Not a wrapper");
     }
 
