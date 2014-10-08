@@ -56,10 +56,13 @@ import java.net {
     InetSocketAddress
 }
 
+import org.xnio.nio {
+    NioXnioProvider {
+        xnioInstance = instance
+    }
+}
+
 import org.xnio {
-    Xnio {
-        xnioInstance=instance
-    },
     XnioWorker,
     OptionMap {
         omBuilder=builder
@@ -147,7 +150,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
                 .set(xnioReuseAddress, true)
                 .map;
         
-        worker = xnioInstance.createWorker(workerOptions);
+        worker = NioXnioProvider().instance.createWorker(workerOptions);
         
         InetSocketAddress jSocketAddress 
                 = InetSocketAddress(socketAddress.address, socketAddress.port);
