@@ -106,7 +106,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             }
             
             object thread extends Thread() {
-                run() => stop();
+                run() => outer.stop();
             }
             Runtime.runtime.addShutdownHook(thread);
             
