@@ -59,7 +59,7 @@
  exposed to the caller.
 
  The `Promise` of a deferred can be retrieved from its 
- [[promise|Deferred.promise]]] field:
+ [[promise|Deferred.promise]] field:
  
      value deferred = Deferred<String>();
      return deferred.promise;
