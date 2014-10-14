@@ -367,7 +367,7 @@ shared class IdentityMap<Key, Item>
         while (index < store.size) {
             variable value bucket = store[index];
             while (exists cell = bucket) {
-                if (cell.element.key == key) {
+                if (cell.element.key === key) {
                     return true;
                 }
                 bucket = cell.rest;
