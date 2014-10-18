@@ -42,12 +42,22 @@ shared class HashMap<Key, Item>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
     
+    // For Collections, we can efficiently obtain an 
+    // accurate initial capacity. For a generic iterable,
+    // just use the given initialCapacity.
+    value accurateInitialCapacity 
+            = entries is Collection<Anything>;
+    Integer initialCapacity 
+            = accurateInitialCapacity 
+                    then hashtable.initialCapacityForSize(entries.size) 
+                    else hashtable.initialCapacity;
+    
     "Array of linked lists where we store the elements.
      
      Each element is stored in a linked list from this array
      at the index of the hash code of the element, modulo the
      array size."
-    variable value store = entryStore<Key,Item>(hashtable.initialCapacity);
+    variable value store = entryStore<Key,Item>(initialCapacity);
 
     "Number of elements in this map."
     variable Integer length = 0;
@@ -147,7 +157,12 @@ shared class HashMap<Key, Item>
             length++;
         }
     }
-    checkRehash();
+    // After collecting all the initial
+    // values, rebuild the hashtable if
+    // necessary
+    if (!accurateInitialCapacity) {
+        checkRehash();
+    }
     
     // End of initialiser section
     

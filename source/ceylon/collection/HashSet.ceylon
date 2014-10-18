@@ -41,12 +41,22 @@ shared class HashSet<Element>
     "Performance-related settings for the backing array. "
     Hashtable hashtable;
     
+    // For Collections, we can efficiently obtain an 
+    // accurate initial capacity. For a generic iterable,
+    // just use the given initialCapacity.
+    value accurateInitialCapacity 
+            = elements is Collection<Anything>;
+    Integer initialCapacity 
+            = accurateInitialCapacity 
+                    then hashtable.initialCapacityForSize(elements.size) 
+                    else hashtable.initialCapacity;
+    
     "Array of linked lists where we store the elements.
      
      Each element is stored in a linked list from this array
      at the index of the hash code of the element, modulo the
      array size."
-    variable value store = elementStore<Element>(hashtable.initialCapacity);
+    variable value store = elementStore<Element>(initialCapacity);
     
     "Number of elements in this set."
     variable Integer length = 0;
@@ -149,7 +159,12 @@ shared class HashSet<Element>
             length++;
         }        
     }
-    checkRehash();
+    // After collecting all the initial
+    // values, rebuild the hashtable if
+    // necessary
+    if (!accurateInitialCapacity) {
+        checkRehash();
+    }
     
     // End of initialiser section
     

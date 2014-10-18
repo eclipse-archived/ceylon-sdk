@@ -51,4 +51,12 @@ shared class Hashtable(
                 then maxArraySize else grownCapacity;
     }
     
+    shared Integer initialCapacityForSize(Integer size) {
+        value maxArraySize = runtime.maxArraySize;
+        value capacity = 
+                largest(initialCapacity, 
+                        (size/loadFactor+1).integer);
+        return capacity>maxArraySize 
+                then maxArraySize else capacity;
+    }
 }
