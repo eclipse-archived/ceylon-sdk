@@ -61,11 +61,13 @@ shared class HashSet<Element>
     "Number of elements in this set."
     variable Integer length = 0;
     
-    "Head of the traversal linked list if in `linked` mode. Storage is done in
-     [[store]], but traversal is done using an alternative linked list maintained
-     to have a stable iteration order. Note that the cells used are the same as in
-     the [[store]], except for storage we use [[Cell.rest]] for traversal, while
-     for the stable iteration we use the [[LinkedCell.next]]/[[LinkedCell.previous]]
+    "Head of the traversal linked list if in `linked` mode. 
+     Storage is done in [[store]], but traversal is done
+     using an alternative linked list maintained to have a 
+     stable iteration order. Note that the cells used are 
+     the same as in the [[store]], except for storage we use 
+     [[Cell.rest]] for traversal, while for the stable 
+     iteration we use the [[LinkedCell.next]]/[[LinkedCell.previous]]
      attributes of the same cell."
     variable LinkedCell<Element>? head = null;
     
