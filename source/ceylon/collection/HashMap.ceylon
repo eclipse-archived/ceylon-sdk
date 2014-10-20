@@ -171,7 +171,8 @@ shared class HashMap<Key, Item>
     shared actual Item? put(Key key, Item item) {
         Integer index = storeIndex(key, store);
         value entry = key->item;
-        variable value bucket = store[index];
+        value headBucket = store[index];
+        variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element.key == key) {
                 Item oldItem = cell.element.item;
@@ -182,7 +183,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, store[index]));
+        store.set(index, createCell(entry, headBucket));
         length++;
         checkRehash();
         return null;

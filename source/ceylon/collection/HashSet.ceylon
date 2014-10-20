@@ -116,7 +116,8 @@ shared class HashSet<Element>
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element) {
         Integer index = storeIndex(element, store);
-        variable value bucket = store[index];
+        value headBucket = store[index];
+        variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element == element) {
                 // modify an existing entry
@@ -126,7 +127,7 @@ shared class HashSet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(element, store[index]));
+        store.set(index, createCell(element, headBucket));
         return true;
     }
     
