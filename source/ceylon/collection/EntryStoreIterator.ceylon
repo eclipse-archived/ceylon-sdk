@@ -3,13 +3,14 @@ import ceylon.collection {
 }
 
 // FIXME: make this faster with a size check
-class StoreIterator<Element>(Array<Cell<Element>?> store) 
-        satisfies Iterator<Element> {
+class EntryStoreIterator<Key,Element>(Array<EntryCell<Key,Element>?> store) 
+        satisfies Iterator<Key->Element> 
+        given Key satisfies Object {
     
     variable Integer index = 0;
     variable value bucket = store[index];
     
-    shared actual Element|Finished next() {
+    shared actual <Key->Element>|Finished next() {
         // do we need a new bucket?
         if (!bucket exists) {
             // find the next non-empty bucket
@@ -22,7 +23,7 @@ class StoreIterator<Element>(Array<Cell<Element>?> store)
         }
         // do we have a bucket?
         if (exists bucket = bucket) {
-            value car = bucket.element;
+            value car = bucket.entry;
             // advance to the next cell
             this.bucket = bucket.rest;
             return car;
