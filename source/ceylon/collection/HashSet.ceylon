@@ -76,8 +76,14 @@ shared class HashSet<Element>
     
     // Write
     
+    function hashCode(Object key) {
+        value h = key.hash;
+        return h.xor(h.rightLogicalShift(16));
+    }
+    
     Integer storeIndex(Object elem, Array<Cell<Element>?> store)
-            => (elem.hash % store.size).magnitude;
+            => hashCode(elem).and(store.size-1);
+            //=> (elem.hash % store.size).magnitude;
     
     Cell<Element> createCell(Element elem, Cell<Element>? rest) {
         if (stability==linked) {
