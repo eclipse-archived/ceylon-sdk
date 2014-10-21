@@ -77,10 +77,16 @@ shared class HashMap<Key, Item>
     
     // Write
     
+    function hashCode(Object key) {
+        value h = key.hash;
+        return h.xor(h.rightLogicalShift(16));
+    }
+    
     Integer storeIndex(Object key, Array<Cell<Key->Item>?> store)
-            => (key.hash % store.size).magnitude;
+            => hashCode(key).and(store.size-1);
     
     Cell<Key->Item> createCell(Key->Item entry, Cell<Key->Item>? rest) {
+        Cell<Key->Item> result;
         if (stability==linked) {
             value cell = LinkedCell(entry, rest, tip);
             if (exists last = tip) {
@@ -90,11 +96,13 @@ shared class HashMap<Key, Item>
             if (!head exists) {
                 head = cell;
             }
-            return cell;
+            result = cell;
         }
         else {
-            return Cell(entry, rest);
+            result = Cell(entry, rest);
         }
+        //result.hashCode = entry.key.hash;
+        return result;
     }
     
     void deleteCell(Cell<Key->Item> cell) {
@@ -296,14 +304,18 @@ shared class HashMap<Key, Item>
     
     size => length;
     
+    empty => length==0;
+    
     shared actual Item? get(Object key) {
         if (empty) {
             return null;
         }
         Integer index = storeIndex(key, store);
+        //Integer hashCode = key.hash;
         variable value bucket = store[index];
         while (exists cell = bucket) {
-            if (cell.element.key == key) {
+            if (//cell.hashCode==hashCode && 
+                cell.element.key == key) {
                 return cell.element.item;
             }
             bucket = cell.rest;
