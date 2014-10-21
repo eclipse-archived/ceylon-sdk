@@ -44,19 +44,35 @@ shared class Hashtable(
             => length > (capacity * loadFactor).integer &&
                     this.capacity(length)>capacity;
     
-    shared Integer capacity(Integer length) {
-        value maxArraySize = runtime.maxArraySize;
-        value grownCapacity = (length * growthFactor).integer;
-        return grownCapacity>maxArraySize 
-                then maxArraySize else grownCapacity;
+    shared Integer capacity(Integer length) 
+            => powerOf2((length * growthFactor).integer);
+    
+    shared Integer initialCapacityForSize(Integer size) 
+            => powerOf2(largest(initialCapacity, 
+                        (size/loadFactor+1).integer));
+    
+    shared Integer initialCapacityForUnknownSize()
+            => powerOf2(initialCapacity);
+    
+    Integer powerOf2(Integer capacity) {
+        variable value n = capacity-1;
+        n=n.rightLogicalShift(1).or(n);
+        n=n.rightLogicalShift(2).or(n);
+        n=n.rightLogicalShift(4).or(n);
+        n=n.rightLogicalShift(8).or(n);
+        n=n.rightLogicalShift(16).or(n);
+        if (n < 0) { 
+            return 1; 
+        } 
+        else if (n >= maximumCapacity) { 
+            return maximumCapacity;
+        }
+        else {
+            return n + 1;
+        }
     }
     
-    shared Integer initialCapacityForSize(Integer size) {
-        value maxArraySize = runtime.maxArraySize;
-        value capacity = 
-                largest(initialCapacity, 
-                        (size/loadFactor+1).integer);
-        return capacity>maxArraySize 
-                then maxArraySize else capacity;
-    }
 }
+
+Integer maximumCapacity = 1.leftLogicalShift(30);
+

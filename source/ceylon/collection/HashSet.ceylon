@@ -49,7 +49,7 @@ shared class HashSet<Element>
     Integer initialCapacity 
             = accurateInitialCapacity 
                     then hashtable.initialCapacityForSize(elements.size) 
-                    else hashtable.initialCapacity;
+                    else hashtable.initialCapacityForUnknownSize();
     
     "Array of linked lists where we store the elements.
      

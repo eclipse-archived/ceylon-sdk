@@ -50,7 +50,7 @@ shared class HashMap<Key, Item>
     Integer initialCapacity 
             = accurateInitialCapacity 
                     then hashtable.initialCapacityForSize(entries.size) 
-                    else hashtable.initialCapacity;
+                    else hashtable.initialCapacityForUnknownSize();
     
     "Array of linked lists where we store the elements.
      
