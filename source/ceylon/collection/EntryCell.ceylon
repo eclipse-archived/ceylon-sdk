@@ -9,7 +9,7 @@ class EntryCell<Key,Element>(key, element, rest)
     "The next link in the list."
     shared variable EntryCell<Key,Element>? rest;
     
-    shared Key->Element entry => key-> element;
+    shared Key->Element entry => key -> element;
     
     // shallow clone
     shared EntryCell<Key,Element> clone()
@@ -25,7 +25,7 @@ class EntryCellIterator<Key,Element>(iter)
     shared actual <Key->Element>|Finished next() {
         if (exists iter = iter) {
             this.iter = iter.rest;
-            return iter.key->iter.element;
+            return iter.entry;
         }
         return finished;
     }
