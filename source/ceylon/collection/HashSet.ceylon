@@ -122,7 +122,7 @@ shared class HashSet<Element>
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element) {
         Integer index = storeIndex(element, store);
-        value headBucket = store[index];
+        value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element == element) {
@@ -145,7 +145,7 @@ shared class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket = store.getFromFirst(index);
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element, newStore);
@@ -203,14 +203,14 @@ shared class HashSet<Element>
     shared actual Boolean remove(Element element) {
         variable value result = false;
         Integer index = storeIndex(element, store);
-        while (exists head = store[index], 
+        while (exists head = store.getFromFirst(index), 
             head.element == element) {
             store.set(index,head.rest);
             deleteCell(head);
             length--;
             result = true;
         }
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -251,7 +251,7 @@ shared class HashSet<Element>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -268,7 +268,7 @@ shared class HashSet<Element>
         variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -284,7 +284,7 @@ shared class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket = store.getFromFirst(index);
                 while (exists cell = bucket) {
                     if (!that.contains(cell.element)) {
                         return false;
@@ -306,7 +306,7 @@ shared class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                if (exists bucket = store[index]) {
+                if (exists bucket = store.getFromFirst(index)) {
                     clone.store.set(index, bucket.clone());
                 }
                 index++;
@@ -326,7 +326,7 @@ shared class HashSet<Element>
         }
         else {
             Integer index = storeIndex(element, store);
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (cell.element == element) {
                     return true;

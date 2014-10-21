@@ -125,7 +125,7 @@ shared class HashMap<Key, Item>
     
     Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             if (cell.element.key == entry.key) {
                 // modify an existing entry
@@ -135,7 +135,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, store[index]));
+        store.set(index, createCell(entry, store.getFromFirst(index)));
         return true;
     }
     
@@ -147,7 +147,7 @@ shared class HashMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket = store.getFromFirst(index);
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = storeIndex(cell.element.key, newStore);
@@ -179,7 +179,7 @@ shared class HashMap<Key, Item>
     shared actual Item? put(Key key, Item item) {
         Integer index = storeIndex(key, store);
         value entry = key->item;
-        value headBucket = store[index];
+        value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element.key == key) {
@@ -200,7 +200,7 @@ shared class HashMap<Key, Item>
     shared actual Boolean replaceEntry(Key key, 
         Item&Object item, Item newItem) {
         Integer index = storeIndex(key, store);
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             if (cell.element.key == key) {
                 if (exists oldItem = cell.element.item, 
@@ -230,14 +230,14 @@ shared class HashMap<Key, Item>
     
     shared actual Item? remove(Key key) {
         Integer index = storeIndex(key, store);
-        while (exists head = store[index], 
+        while (exists head = store.getFromFirst(index), 
             head.element.key == key) {
             store.set(index,head.rest);
             deleteCell(head);
             length--;
             return head.element.item;
         }
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -256,7 +256,7 @@ shared class HashMap<Key, Item>
     
     shared actual Boolean removeEntry(Key key, Item&Object item) {
         Integer index = storeIndex(key, store);
-        while (exists head = store[index], 
+        while (exists head = store.getFromFirst(index), 
             head.element.key == key) {
             if (exists it = head.element.item, it==item) {
                 store.set(index,head.rest);
@@ -267,7 +267,7 @@ shared class HashMap<Key, Item>
                 return false;
             }
         }
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -312,7 +312,7 @@ shared class HashMap<Key, Item>
         }
         Integer index = storeIndex(key, store);
         //Integer hashCode = key.hash;
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             if (//cell.hashCode==hashCode && 
                 cell.element.key == key) {
@@ -337,7 +337,7 @@ shared class HashMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 ret.add(cell.element.item);
                 bucket = cell.rest;
@@ -352,7 +352,7 @@ shared class HashMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 ret.add(cell.element.key);
                 bucket = cell.rest;
@@ -367,7 +367,7 @@ shared class HashMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (exists keys = ret[cell.element.item]) {
                     keys.add(cell.element.key);
@@ -392,7 +392,7 @@ shared class HashMap<Key, Item>
         variable Integer count = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -409,7 +409,7 @@ shared class HashMap<Key, Item>
         variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -425,7 +425,7 @@ shared class HashMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket = store.getFromFirst(index);
                 while (exists cell = bucket) {
                     value thatItem = that[cell.element.key];
                     if (exists thisItem = cell.element.item) {
@@ -458,7 +458,7 @@ shared class HashMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                if (exists bucket = store[index]) {
+                if (exists bucket = store.getFromFirst(index)) {
                     clone.store.set(index, bucket.clone()); 
                 }
                 index++;
@@ -478,7 +478,7 @@ shared class HashMap<Key, Item>
         }
         else {
             Integer index = storeIndex(key, store);
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (cell.element.key == key) {
                     return true;
@@ -496,7 +496,7 @@ shared class HashMap<Key, Item>
         else if (is Object->Anything entry) {
             value key = entry.key;
             Integer index = storeIndex(key, store);
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (cell.element.key == key) {
                     if (exists item = cell.element.item) {
