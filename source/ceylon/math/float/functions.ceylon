@@ -8,6 +8,7 @@ import java.lang {
  * `exp(+infinity)` is `+infinity`,
  * `exp(undefined)` is `undefined`.
  "
+see (`function expm1`)
 shared Float exp(Float num) {
     return Math.exp(num);
 }
@@ -20,7 +21,7 @@ shared Float exp(Float num) {
  * `log(+infinity)` is `+infinity`,
  * `log(undefined)` is `undefined`.
  "
-see(`function log10`)
+see(`function log10`, `function log1p`)
 shared Float log(Float num) {
     return Math.log(num);
 }
@@ -424,4 +425,16 @@ shared Float product(Float* values) {
  for reasonable values of `n`."
 shared Float scalb(Float x, Integer n) {
     return Math.scalb(x, n);
+}
+
+"A more accurate computation of `log(1.0+x)` for `x` near
+ zero."
+shared Float log1p(Float num) {
+    return Math.log1p(num);
+}
+
+"A more accurate computation of `exp(x)-1.0` for `x` near
+ zero."
+shared Float expm1(Float num) {
+    return Math.expm1(num);
 }
