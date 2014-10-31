@@ -22,7 +22,7 @@
  [[javaClassFromInstance]] allow Ceylon programs to obtain
  an instance of [[java.lang::Class]]."
 by("The Ceylon Team")
-module ceylon.interop.java "1.1.0" {
+module ceylon.interop.java "1.1.1" {
     shared import java.base "7";
-    shared import ceylon.collection "1.1.0";
+    shared import ceylon.collection "1.1.1";
 }

@@ -57,11 +57,11 @@
 
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
-module ceylon.net "1.1.0" {
+module ceylon.net "1.1.1" {
     
-    shared import ceylon.collection "1.1.0";
-    shared import ceylon.io "1.1.0";
-    import ceylon.file "1.1.0";
+    shared import ceylon.collection "1.1.1";
+    shared import ceylon.io "1.1.1";
+    import ceylon.file "1.1.1";
     
     // -- java modules --
     
@@ -71,6 +71,6 @@ module ceylon.net "1.1.0" {
 
     import org.jboss.xnio.api "3.1.0.CR7";
     import org.jboss.xnio.nio "3.1.0.CR7";
-    import ceylon.interop.java "1.1.0";
+    import ceylon.interop.java "1.1.1";
     
 }

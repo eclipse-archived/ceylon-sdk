@@ -199,6 +199,6 @@
    would require a language with dynamic typing."
 by("Julien Viet")
 license("Apache Software License")
-module ceylon.promise "1.1.0" {
+module ceylon.promise "1.1.1" {
   import java.base "7";
 }

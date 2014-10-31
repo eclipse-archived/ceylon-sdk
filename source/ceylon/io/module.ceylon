@@ -9,10 +9,10 @@
  See the `ceylon.io` package for usage examples."
 by("Stéphane Épardaud")
 license("Apache Software License")
-module ceylon.io "1.1.0" {
-    shared import ceylon.file "1.1.0";
-    import ceylon.collection "1.1.0";
+module ceylon.io "1.1.1" {
+    shared import ceylon.file "1.1.1";
+    import ceylon.collection "1.1.1";
     import java.base "7";
     import java.tls "7";
-    import ceylon.interop.java "1.1.0";
+    import ceylon.interop.java "1.1.1";
 }
