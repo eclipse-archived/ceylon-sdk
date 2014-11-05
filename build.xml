@@ -80,6 +80,10 @@
         <!-- workaround due IDE, moved into source-js folder -->
         <!-- module name="com.redhat.ceylon.testjs"/ -->
     </moduleset>
+	
+    <moduleset id="modules.sdk.promise.js">
+        <module name="ceylon.promise"/>
+    </moduleset>
     
     <moduleset id="modules.test.jvm">
         <module name="test.ceylon.test.suite"/>        
@@ -104,6 +108,7 @@
         <module name="test.ceylon.collection"/>
         <module name="test.ceylon.html"/>
         <module name="test.ceylon.json"/>
+        <module name="test.ceylon.promise"/>
         <module name="test.ceylon.time"/>
         <module name="test.ceylon.locale"/>
     </moduleset>
@@ -129,7 +134,21 @@
 
     <target name="compile-js">
         
+        <delete dir="build/source-promise-js"/>
+        <mkdir dir="build/source-promise-js"/>
+        <copy todir="build/source-promise-js/ceylon/promise">
+            <fileset dir="source/ceylon/promise" includes="*.ceylon" excludes="module.ceylon"/>
+            <fileset dir="source-promise-js/ceylon/promise"/>
+        </copy>
         <ceylon-compile-js executable="${ceylon.executable}"
+            src="build/source-promise-js"
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8"
+            out="${out.repo}">
+            <moduleset refid="modules.sdk.promise.js"/>
+        </ceylon-compile-js>
+
+    	  <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
             encoding="UTF-8"
             out="${out.repo}">
@@ -144,7 +163,7 @@
         </ceylon-compile-js>
         
     </target>
-    
+	
     <target name="compile" depends="compile-jvm,compile-js"
             description="Compiles the SDK modules to the 'modules' repository" />
 
@@ -171,7 +190,7 @@
             <moduleset refid="modules.test.js"/>
         </ceylon-compile-js>
     </target>
-            
+	
     <target name="compile-test" depends="compile,compile-test-jvm,compile-test-js"
         description="Compiles the test modules to the 'test-modules' repository" />
 

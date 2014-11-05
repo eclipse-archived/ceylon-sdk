@@ -25,9 +25,9 @@ shared interface Completable<out Value> satisfies Promised<Value>
     "Compose and return a [[Promise]]"
     shared Promise<Result> compose<Result>(
         "A function that is called when fulfilled."
-        Callable<Promisable<Result>,Value> onFulfilled,
+        Callable<Result|Promise<Result>,Value> onFulfilled,
         "A function that is called when rejected."
-        Promisable<Result>(Throwable) onRejected = rethrow)
+        <Result|Promise<Result>>(Throwable) onRejected = rethrow)
             => handle(
                 adaptOnFulfilled<Result,Value>(onFulfilled),
                 adaptOnRejected<Result>(onRejected)

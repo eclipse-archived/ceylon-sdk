@@ -1,3 +1,7 @@
+import ceylon.promise.internal {
+  AtomicRef
+}
+
 "The deferred class is the primary implementation of the 
  [[Promise]] interface.
   
@@ -102,7 +106,7 @@ shared class Deferred<Value>() satisfies Resolver<Value> & Promised<Value> {
         }
     }
 
-    fulfill(Promisable<Value> val)  => update(adaptValue<Value>(val));
+    fulfill(Value|Promise<Value> val)  => update(adaptValue<Value>(val));
 
     reject(Throwable reason) => update(adaptReason<Value>(reason));
     

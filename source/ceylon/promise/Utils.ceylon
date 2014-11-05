@@ -1,5 +1,4 @@
-Promise<Result>(Throwable) adaptOnRejected<Result>(
-    Promisable<Result>(Throwable) onRejected) {
+Promise<Result>(Throwable) adaptOnRejected<Result>(<Result|Promise<Result>>(Throwable) onRejected) {
     if (is Promise<Result>(Throwable) onRejected) {
         return onRejected;
     } else {
@@ -8,8 +7,7 @@ Promise<Result>(Throwable) adaptOnRejected<Result>(
     }
 }
 
-Callable<Promise<Result>,Value> adaptOnFulfilled<Result,Value>(
-    Callable<Promisable<Result>,Value> onFulfilled)
+Callable<Promise<Result>,Value> adaptOnFulfilled<Result,Value>(Callable<Result|Promise<Result>,Value> onFulfilled)
         given Value satisfies Anything[] {
     if (is Callable<Promise<Result>,Value> onFulfilled) {
         return onFulfilled;
@@ -22,8 +20,7 @@ Callable<Promise<Result>,Value> adaptOnFulfilled<Result,Value>(
 "Adapt an instance of `Callable<Result,Value>` to 
  `Callable<Promise<Result>,Value>`"
 by("Julien Viet")
-Callable<Promise<Result>,Value> adaptResult<Result,Value>
-        (Callable<Result,Value> a) 
+Callable<Promise<Result>,Value> adaptResult<Result,Value>(Callable<Result,Value> a) 
         given Value satisfies Anything[] {
     value b = unflatten(a);
     function c(Value d) {
