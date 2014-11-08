@@ -169,15 +169,17 @@ shared class Request(uri,
         } else {
             builder.append(path);
         }
-        variable Boolean queryPrefixAdded = false;
+        variable Boolean queryParamsAdded = false;
         if (exists query = uri.queryPart) {
             builder.append("?")
                 .append(query);
-            queryPrefixAdded = true;
+            queryParamsAdded = true;
         }
         if (!parameters.empty && method == get) {
-            if (!queryPrefixAdded) {
+            if (!queryParamsAdded) {
                 builder.append("?");
+            } else {
+                builder.append("&");
             }
             builder.append(externalisableParameters);
         }
