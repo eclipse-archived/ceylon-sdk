@@ -8,7 +8,7 @@ import ceylon.test {
     assertEquals
 }
 
-class HashSetTest() satisfies MutableSetTests & InsertionOrderIterableTests {
+shared class HashSetTest() satisfies MutableSetTests & InsertionOrderIterableTests {
 
     shared actual MutableSet<String> createSet({String*} strings) => HashSet { elements = strings; };
 
@@ -33,7 +33,7 @@ class HashSetTest() satisfies MutableSetTests & InsertionOrderIterableTests {
     }
 }
 
-class UnlinkedHashSetTest() satisfies MutableSetTests & HashOrderIterableTests {
+shared class UnlinkedHashSetTest() satisfies MutableSetTests & HashOrderIterableTests {
 
     shared actual MutableSet<String> createSet({String*} strings) => HashSet { stability = unlinked; elements = strings; };
 
