@@ -49,10 +49,10 @@ class Conjunction<out Element, out First, Rest>(first, rest)
             and<Other>(Promise<Other> other) 
             => Conjunction(other, promise);
 
-    shared actual Promise<Result> handle<Result>(
+    shared actual Promise<Result> flatMap<Result>(
             Callable<Promise<Result>,Tuple<First|Element,First,Rest>> onFulfilled,
             Promise<Result>(Throwable) onRejected) 
-            => promise.handle {
+            => promise.flatMap {
                 (Tuple<First|Element,First,Rest> args) 
                         => unflatten(onFulfilled)(args);
                 onRejected;

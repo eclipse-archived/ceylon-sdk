@@ -132,7 +132,7 @@ void useCases() {
             return mine.promise;
         }
         Promise<Integer> promise = d.promise;
-        Promise<String> p = promise.compose<String>(f);
+        Promise<String> p = promise.flatMap<String>(f);
         variable String? result = null;
         void g(String s) {
             result = s;

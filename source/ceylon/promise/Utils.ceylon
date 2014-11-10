@@ -35,7 +35,7 @@ by("Julien Viet")
 Promise<T> adaptValue<T>(T|Promise<T> val) {
     if (is T val) {
         object adapter extends Promise<T>() {
-            shared actual Promise<Result> handle<Result>(
+            shared actual Promise<Result> flatMap<Result>(
                 Promise<Result>(T) onFulfilled,
                 Promise<Result>(Throwable) onRejected) {
                 try {
@@ -54,7 +54,7 @@ Promise<T> adaptValue<T>(T|Promise<T> val) {
 by("Julien Viet")
 Promise<T> adaptReason<T>(Throwable reason) {
     object adapted extends Promise<T>() {
-        shared actual Promise<Result> handle<Result>(
+        shared actual Promise<Result> flatMap<Result>(
             Promise<Result>(T) onFulfilled,
             Promise<Result>(Throwable) onRejected) {
             try {

@@ -25,16 +25,19 @@ shared interface Completable<out Value> satisfies Promised<Value>
     "Compose and return a [[Promise]]"
     shared Promise<Result> compose<Result>(
         "A function that is called when fulfilled."
-        Callable<Result|Promise<Result>,Value> onFulfilled,
+        Callable<Result,Value> onFulfilled,
         "A function that is called when rejected."
-        <Result|Promise<Result>>(Throwable) onRejected = rethrow)
-            => handle(
+        <Result>(Throwable) onRejected = rethrow)
+            => flatMap(
                 adaptOnFulfilled<Result,Value>(onFulfilled),
                 adaptOnRejected<Result>(onRejected)
           );
 
-    shared formal Promise<Result> handle<Result>(
+    "Compose and return a [[Promise]]"
+    shared formal Promise<Result> flatMap<Result>(
+            "A function that is called when fulfilled."
             Callable<Promise<Result>,Value> onFulfilled,
-            Promise<Result>(Throwable) onRejected);
+            "A function that is called when rejected."
+            Promise<Result>(Throwable) onRejected = adaptOnRejected<Result>(rethrow));
 
 }

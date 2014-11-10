@@ -41,7 +41,7 @@ shared class Deferred<Value>() satisfies Resolver<Value> & Promised<Value> {
     shared actual object promise 
             extends Promise<Value>() {
         
-        shared actual Promise<Result> handle<Result>(
+        shared actual Promise<Result> flatMap<Result>(
                 Promise<Result>(Value) onFulfilled, 
                 Promise<Result>(Throwable) onRejected) {
                 

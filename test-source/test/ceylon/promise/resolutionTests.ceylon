@@ -29,7 +29,7 @@ test void testOnFulfilledAdoptPromiseThatResolves() {
         return test.d2.promise;
     }
     Promise<Integer> promise = test.d1.promise;
-    promise.handle(f, g).compose(test.d2Values.add, test.d2Reasons.add);
+    promise.flatMap(f, g).compose(test.d2Values.add, test.d2Reasons.add);
     test.check({},{},{},{});
     test.d1.fulfill(3);
     test.check({3},{},{},{});
@@ -48,7 +48,7 @@ test void testOnFulfilledAdoptPromiseThatRejects() {
         return test.d2.promise;
     }
     Promise<Integer> promise = test.d1.promise;
-    promise.handle(f, g).compose(test.d2Values.add, test.d2Reasons.add);
+    promise.flatMap(f, g).compose(test.d2Values.add, test.d2Reasons.add);
     test.check({},{},{},{});
     test.d1.fulfill(3);
     test.check({3},{},{},{});
@@ -68,7 +68,7 @@ test void testOnRejectedAdoptPromiseThatResolves() {
         return test.d2.promise;
     }
     Promise<Integer> promise = test.d1.promise;
-    promise.handle(f, g).compose(test.d2Values.add, test.d2Reasons.add);
+    promise.flatMap(f, g).compose(test.d2Values.add, test.d2Reasons.add);
     test.check({},{},{},{});
     Exception e = Exception();
     test.d1.reject(e);
@@ -88,7 +88,7 @@ test void testOnRejectedAdoptPromiseThatRejects() {
         return test.d2.promise;
     }
     Promise<Integer> promise = test.d1.promise;
-    promise.handle(f, g).compose(test.d2Values.add, test.d2Reasons.add);
+    promise.flatMap(f, g).compose(test.d2Values.add, test.d2Reasons.add);
     test.check({},{},{},{});
     Exception e1 = Exception();
     test.d1.reject(e1);
