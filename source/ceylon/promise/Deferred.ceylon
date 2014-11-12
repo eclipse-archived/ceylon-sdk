@@ -1,7 +1,3 @@
-import java.util.concurrent.atomic {
-    AtomicReference
-}
-
 "The deferred class is the primary implementation of the 
  [[Promise]] interface.
   
@@ -13,10 +9,11 @@ import java.util.concurrent.atomic {
  methods accept an argument or a promise to the argument, 
  allowing the deferred to react on a promise."
 by("Julien Viet")
-shared class Deferred<Value>() 
-        satisfies Resolver<Value> & Promised<Value> {
+shared class Deferred<Value>() satisfies Resolver<Value> & Promised<Value> {
     
     abstract class State() of ListenerState | PromiseState {}
+    
+    class PromiseState(shared Promise<Value> promise)  extends State() {}
     
     class ListenerState(onFulfilled, onRejected,
             ListenerState? previous = null)
@@ -33,11 +30,8 @@ shared class Deferred<Value>()
         }
     }
     
-    class PromiseState(shared Promise<Value> promise) 
-            extends State() {}
-    
     "The current state"
-    value state = AtomicReference<State?>(null);
+    value state = AtomicRef<State?>(null);
     
     "The promise of this deferred."
     shared actual object promise 
@@ -56,34 +50,28 @@ shared class Deferred<Value>()
                 }
             }
             
-            void onFulfilledCallback(Value val) 
-                    => callback(onFulfilled, val);
-            void onRejectedCallback(Throwable reason) 
-                    => callback(onRejected, reason);
+            void onFulfilledCallback(Value val)  => callback(onFulfilled, val);
+            
+            void onRejectedCallback(Throwable reason)  => callback(onRejected, reason);
             
             // 
             while (true) {
                 value current = state.get();
                 switch (current)
                 case (is Null) {
-                    State next = ListenerState(onFulfilledCallback, 
-                        onRejectedCallback);
+                    State next = ListenerState(onFulfilledCallback, onRejectedCallback);
                     if (state.compareAndSet(current, next)) {
                         break;
                     }
                 }
                 case (is ListenerState) {
-                    State next = ListenerState(onFulfilledCallback,
-                        onRejectedCallback, current);
+                    State next = ListenerState(onFulfilledCallback, onRejectedCallback, current);
                     if (state.compareAndSet(current, next)) {
                         break;
                     }
                 }
                 case (is PromiseState) {
-                    current.promise.compose {
-                        onFulfilledCallback;
-                        onRejectedCallback;
-                    };
+                    current.promise.compose(onFulfilledCallback, onRejectedCallback);
                     break;
                 }
             }
@@ -114,10 +102,8 @@ shared class Deferred<Value>()
         }
     }
 
-    fulfill(Promisable<Value> val) 
-            => update(adaptValue<Value>(val));
+    fulfill(Promisable<Value> val)  => update(adaptValue<Value>(val));
 
-    reject(Throwable reason) 
-            => update(adaptReason<Value>(reason));
-
+    reject(Throwable reason) => update(adaptReason<Value>(reason));
+    
 }

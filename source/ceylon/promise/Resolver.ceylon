@@ -10,4 +10,13 @@ shared interface Resolver<in Value> {
     "Rejects the promise with a reason."
     shared formal void reject(Throwable reason);
 
+    "Either fulfill or reject the promise"
+    shared void resolve(Promisable<Value>|Throwable val) {
+      if (is Promisable<Value> val) {
+        fulfill(val);
+      } else {
+        assert(is Throwable val);
+        reject(val);
+      }
+    }
 }

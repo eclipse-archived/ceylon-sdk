@@ -1,11 +1,8 @@
-shared alias Promisable<out Result> => Result|Promise<Result>;
-
 "Completable provides the base support for promises. This 
  interface satisfies the [[Promised]] interface, to be used 
  when a [[Promise]] is needed."
 by("Julien Viet")
-shared interface Completable<out Value>
-        satisfies Promised<Value>
+shared interface Completable<out Value> satisfies Promised<Value>
             given Value satisfies Anything[] {
     
     "When completion happens, the provided function will be 
@@ -30,12 +27,11 @@ shared interface Completable<out Value>
         "A function that is called when fulfilled."
         Callable<Promisable<Result>,Value> onFulfilled,
         "A function that is called when rejected."
-        Promisable<Result>(Throwable) onRejected
-                = rethrow)
-            => handle {
-                adaptOnFulfilled<Result,Value>(onFulfilled);
-                adaptOnRejected<Result>(onRejected);
-            };
+        Promisable<Result>(Throwable) onRejected = rethrow)
+            => handle(
+                adaptOnFulfilled<Result,Value>(onFulfilled),
+                adaptOnRejected<Result>(onRejected)
+          );
 
     shared formal Promise<Result> handle<Result>(
             Callable<Promise<Result>,Value> onFulfilled,
