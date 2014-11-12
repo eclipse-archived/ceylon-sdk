@@ -4,7 +4,7 @@ import ceylon.collection { ... }
 
 String toString(Integer i) => i.string;
 
-test void testFulfilledFulfillmentHandlerReturnsValue() {
+shared test void testFulfilledFulfillmentHandlerReturnsValue() {
     LinkedList<String> done = LinkedList<String>();
     ThrowableCollector failed = ThrowableCollector();
     Deferred<Integer> deferred = Deferred<Integer>();
@@ -16,7 +16,7 @@ test void testFulfilledFulfillmentHandlerReturnsValue() {
     assertEquals { expected = LinkedList {}; actual = failed.collected; };
 }
 
-test void testRejectedRejectionHandlerReturnsAValue() {
+shared test void testRejectedRejectionHandlerReturnsAValue() {
     LinkedList<String> done = LinkedList<String>();
     ThrowableCollector failed = ThrowableCollector();
     Deferred<Integer> deferred = Deferred<Integer>();

@@ -2,7 +2,7 @@ import ceylon.promise { ... }
 import ceylon.test { ... }
 import ceylon.collection { ... }
 
-test void testResolveWithArg() {
+shared test void testResolveWithArg() {
     Deferred<String> d = Deferred<String>();
     LinkedList<String|Throwable> done = LinkedList<String|Throwable>();
     d.promise.always(done.add);
@@ -10,7 +10,7 @@ test void testResolveWithArg() {
     assertEquals(LinkedList {"abc"}, done);
 }
 
-test void testRejectWithArg() {
+shared test void testRejectWithArg() {
     Deferred<String> d = Deferred<String>();
     LinkedList<String|Throwable> done = LinkedList<String|Throwable>();
     d.promise.always(done.add);
@@ -19,7 +19,7 @@ test void testRejectWithArg() {
     assertEquals(LinkedList {e}, done);
 }
 
-test void testResolveWithEmptyArg() {
+shared test void testResolveWithEmptyArg() {
     Deferred<String> d = Deferred<String>();
     LinkedList<String|Throwable> done = LinkedList<String|Throwable>();
     d.promise.always((String|Throwable a) => done.add("done"));
@@ -27,7 +27,7 @@ test void testResolveWithEmptyArg() {
     assertEquals(LinkedList {"done"}, done);
 }
 
-test void testRejectWithEmptyArg() {
+shared test void testRejectWithEmptyArg() {
     Deferred<String> d = Deferred<String>();
     LinkedList<String|Exception> done = LinkedList<String|Exception>();
     d.promise.always((String|Throwable a) => done.add("done"));

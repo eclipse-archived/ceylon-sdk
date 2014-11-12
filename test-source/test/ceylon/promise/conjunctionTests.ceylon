@@ -2,7 +2,7 @@ import ceylon.promise { ... }
 import ceylon.test { ... }
 import ceylon.collection { ... }
 
-test void testResolveConjonction() {
+shared test void testResolveConjonction() {
     value d1 = Deferred<String>();
     value d2 = Deferred<Integer>();
     value d3 = Deferred<Boolean>();
@@ -27,7 +27,7 @@ test void testResolveConjonction() {
     assertEquals { expected = LinkedList {}; actual = b; };
 }
 
-test void testRejectConjonction() {
+shared test void testRejectConjonction() {
     
     class Test() {
         
@@ -65,7 +65,7 @@ test void testRejectConjonction() {
     assertEquals { expected = LinkedList {e}; actual = t3.b; };
 }
 
-test void testNestedConjonctions() {
+shared test void testNestedConjonctions() {
 
     value d1 = Deferred<String>();
     value d2 = Deferred<Integer>();

@@ -18,7 +18,7 @@ class Test() {
     }
 }
 
-test void testOnFulfilledAdoptPromiseThatResolves() {
+shared test void testOnFulfilledAdoptPromiseThatResolves() {
     Test test = Test();
     Promise<String> f(Integer val) {
         test.d1Values.add(val);
@@ -37,7 +37,7 @@ test void testOnFulfilledAdoptPromiseThatResolves() {
     test.check({3},{},{"foo"},{});
 }
 
-test void testOnFulfilledAdoptPromiseThatRejects() {
+shared test void testOnFulfilledAdoptPromiseThatRejects() {
     Test test = Test();
     Promise<String> f(Integer val) {
         test.d1Values.add(val);
@@ -57,7 +57,7 @@ test void testOnFulfilledAdoptPromiseThatRejects() {
     test.check({3},{},{},{e});
 }
 
-test void testOnRejectedAdoptPromiseThatResolves() {
+shared test void testOnRejectedAdoptPromiseThatResolves() {
     Test test = Test();
     Promise<String> f(Integer val) {
         test.d1Values.add(val);
@@ -77,7 +77,7 @@ test void testOnRejectedAdoptPromiseThatResolves() {
     test.check({},{e},{"foo"},{});
 }
 
-test void testOnRejectedAdoptPromiseThatRejects() {
+shared test void testOnRejectedAdoptPromiseThatRejects() {
     Test test = Test();
     Promise<String> f(Integer val) {
         test.d1Values.add(val);
@@ -98,7 +98,7 @@ test void testOnRejectedAdoptPromiseThatRejects() {
     test.check({},{e1},{},{e2});
 }
 
-test void testFulfillAnythingWithNull() {
+shared test void testFulfillAnythingWithNull() {
   Deferred<Anything> deferred = Deferred<Anything>();
   deferred.fulfill(null);
 }

@@ -5,7 +5,7 @@ class Foo() {}
 class Bar() extends Foo() {}
 class Juu() extends Bar() {}
 
-test void testConjunction() {
+shared test void testConjunction() {
     Deferred<Bar> d1 = Deferred<Bar>();
     Deferred<Bar> d2 = Deferred<Bar>();
     Promise<Bar> p1 = d1.promise;
@@ -19,7 +19,7 @@ test void testConjunction() {
     d2.fulfill(Bar());
 }
 
-test void testInheritance() {
+shared test void testInheritance() {
     
     Deferred<Bar> barDeferred = Deferred<Bar>();
     

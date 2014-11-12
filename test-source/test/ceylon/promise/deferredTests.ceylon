@@ -2,7 +2,7 @@ import ceylon.promise { ... }
 import ceylon.test { ... }
 import ceylon.collection { ... }
 
-test void testResolve() {
+shared test void testResolve() {
     
     void perform(<String|Exception>* actions) {
         LinkedList<String> done = LinkedList<String>();
@@ -30,7 +30,7 @@ test void testResolve() {
     perform("value", Exception());
 }
 
-test void testReject() {
+shared test void testReject() {
     Exception reason = Exception();
     
     void perform(<String|Exception>* actions) {
@@ -58,7 +58,7 @@ test void testReject() {
     perform(reason, Exception());
 }
 
-test void testThenAfterResolve() {
+shared test void testThenAfterResolve() {
     LinkedList<String> done = LinkedList<String>();
     ThrowableCollector failed = ThrowableCollector();
     
@@ -71,7 +71,7 @@ test void testThenAfterResolve() {
     assertEquals { expected = LinkedList {}; actual = failed.collected; };
 }
 
-test void testThenAfterReject() {
+shared test void testThenAfterReject() {
     LinkedList<String> done = LinkedList<String>();
     ThrowableCollector failed = ThrowableCollector();
     Exception reason = Exception();
@@ -83,11 +83,4 @@ test void testThenAfterReject() {
     
     assertEquals { expected = LinkedList {}; actual = done; };
     assertEquals { expected = LinkedList {reason}; actual = failed.collected; };
-}
-
-test shared void deferredTests() {
-    testResolve();
-    testReject();
-    testThenAfterResolve();
-    testThenAfterReject();
 }

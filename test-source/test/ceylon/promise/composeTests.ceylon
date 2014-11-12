@@ -11,7 +11,7 @@ class Thrower<E, T>(T fail()) given T satisfies Throwable {
     }
 }
 
-test void testAllRespectiveFulfilledCallbacksMustExecuteInTheOrderOfTheirOriginatingCallsToThen() {
+shared test void testAllRespectiveFulfilledCallbacksMustExecuteInTheOrderOfTheirOriginatingCallsToThen() {
     value calls = LinkedList<Integer>();
     value d = Deferred<String>();	
     Promise<String> promise = d.promise;
@@ -22,7 +22,7 @@ test void testAllRespectiveFulfilledCallbacksMustExecuteInTheOrderOfTheirOrigina
     assertEquals { expected = LinkedList {1,2}; actual = calls; };
 }
 
-test void testAllRespectiveRejectedCallbacksMustExecuteInTheOrderOfTheirOriginatingCallsToThen() {
+shared test void testAllRespectiveRejectedCallbacksMustExecuteInTheOrderOfTheirOriginatingCallsToThen() {
     value calls = LinkedList<Integer>();
     value d = Deferred<String>();	
     Promise<String> promise = d.promise;
@@ -33,7 +33,7 @@ test void testAllRespectiveRejectedCallbacksMustExecuteInTheOrderOfTheirOriginat
     assertEquals { expected = LinkedList {1,2}; actual = calls; };
 }
 
-test void testReturnedPromiseMustBeRejectWithSameReasonWhenOnFulfilledThrowsAnException() {
+shared test void testReturnedPromiseMustBeRejectWithSameReasonWhenOnFulfilledThrowsAnException() {
     value doneThrower = Thrower<Integer, Exception>(() => Exception());
     LinkedList<String> done = LinkedList<String>();
     value failedThrower = Thrower<Throwable, Exception>(() => Exception());
@@ -48,11 +48,11 @@ test void testReturnedPromiseMustBeRejectWithSameReasonWhenOnFulfilledThrowsAnEx
     assertEquals { expected = LinkedList {}; actual = failedThrower.thrown; };
 }
 
-test void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAnException() {
+shared test void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAnException() {
 	testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAThrowable(() => Exception());
 }
 
-test void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAnError() {
+shared test void testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAnError() {
 	testReturnedPromiseMustBeRejectedWithSameReasonWhenOnRejectedThrowsAThrowable(() => AssertionError(""));
 }
 
@@ -82,7 +82,7 @@ void testReturnedPromiseMustBeFulfilledWithSameValueWhenOnFulfilledIsNotAFunctio
 }
 */
 
-test void testReturnedPromiseMustBeRejectedWithSameValueWhenOnRejectedIsNotAFunction() {
+shared test void testReturnedPromiseMustBeRejectedWithSameValueWhenOnRejectedIsNotAFunction() {
     LinkedList<Throwable> a = LinkedList<Throwable>();
     Deferred<String> d = Deferred<String>();
     Promise<String> promise = d.promise;
