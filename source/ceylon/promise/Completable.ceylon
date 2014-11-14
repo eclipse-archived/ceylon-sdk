@@ -29,8 +29,8 @@ shared interface Completable<out Value> satisfies Promised<Value>
         "A function that is called when rejected."
         <Result>(Throwable) onRejected = rethrow)
             => flatMap(
-                adaptOnFulfilled<Result,Value>(onFulfilled),
-                adaptOnRejected<Result>(onRejected)
+                adaptResult<Result,Value>(onFulfilled),
+                adaptResult<Result,[Throwable]>(onRejected)
           );
 
     "Compose and return a [[Promise]]"
@@ -38,6 +38,6 @@ shared interface Completable<out Value> satisfies Promised<Value>
             "A function that is called when fulfilled."
             Callable<Promise<Result>,Value> onFulfilled,
             "A function that is called when rejected."
-            Promise<Result>(Throwable) onRejected = adaptOnRejected<Result>(rethrow));
+            Promise<Result>(Throwable) onRejected = rethrow);
 
 }

@@ -1,22 +1,3 @@
-Promise<Result>(Throwable) adaptOnRejected<Result>(<Result|Promise<Result>>(Throwable) onRejected) {
-    if (is Promise<Result>(Throwable) onRejected) {
-        return onRejected;
-    } else {
-        assert (is Result(Throwable) onRejected);
-        return adaptResult<Result,[Throwable]>(onRejected);
-    }
-}
-
-Callable<Promise<Result>,Value> adaptOnFulfilled<Result,Value>(Callable<Result|Promise<Result>,Value> onFulfilled)
-        given Value satisfies Anything[] {
-    if (is Callable<Promise<Result>,Value> onFulfilled) {
-        return onFulfilled;
-    } else {
-        assert (is Callable<Result,Value> onFulfilled);
-        return adaptResult<Result,Value>(onFulfilled);
-    }
-}
-
 "Adapt an instance of `Callable<Result,Value>` to 
  `Callable<Promise<Result>,Value>`"
 by("Julien Viet")
