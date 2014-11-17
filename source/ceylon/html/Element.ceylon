@@ -34,7 +34,7 @@ shared abstract class StyledElement(String? id, classNames = [], style = null)
         attrs.addAll(super.attributes);
         if (is String[] classNames) {
             attrs.addAttribute("class", " ".join(classNames));
-        } else if (is String classNames) {
+        } else {
             attrs.addAttribute("class", classNames);
         }
         attrs.addAttribute("style", style);

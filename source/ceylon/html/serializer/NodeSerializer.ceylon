@@ -36,8 +36,7 @@ shared class NodeSerializer(
             visit(child);
         } else if (is {Node*} child) {
             visitNodes(child);
-        } else if (is Snippet<Node> child,
-                exists content = child.content) {
+        } else if (exists content = child.content) {
             visitAny(content);
         }
     }

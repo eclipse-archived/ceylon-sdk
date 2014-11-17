@@ -150,7 +150,7 @@ shared class ExceptionAssert(
             if (actualType != typeCondition) {
                 throw AssertionError("assertion failed: expected exception with type ``typeCondition``, but has ``actualType``");
             }
-        } else if (is Boolean(ClassModel<Throwable,Nothing>) typeCondition) {
+        } else {
             if (!typeCondition(type(exception))) {
                 throw AssertionError("assertion failed: expected exception with different type than ``type(exception)``");
             }
