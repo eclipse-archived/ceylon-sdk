@@ -8,7 +8,8 @@ import ceylon.test {
     TestResult,
     success,
     ignored,
-    failure
+    failure,
+    IgnoreAnnotation
 }
 
 "A [[TestListener]] that prints information about test execution to a given logging function,

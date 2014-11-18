@@ -16,9 +16,6 @@ import ceylon.io.readers {
 import ceylon.net.http {
     Header
 }
-import ceylon.interop.java {
-    javaByteArray
-}
 
 "Represents an HTTP Response"
 by("Stéphane Épardaud")

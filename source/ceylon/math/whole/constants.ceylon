@@ -1,7 +1,6 @@
 import java.lang {
     JInt=Integer {
-        maxInt=MAX_VALUE,
-        minInt=MIN_VALUE
+        maxInt=MAX_VALUE
     },
     Long {
         maxLong=MAX_VALUE,
