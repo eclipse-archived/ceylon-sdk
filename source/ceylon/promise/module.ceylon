@@ -17,8 +17,6 @@
    single value, or fails.
  - The [[Deferred]] class, providing support for operations
    which return instances of the `Promise` interface.
- - The [[Future]] class, providing support for clients who
-   wish to block which awaiting a `Promise`. 
  
  ## Promises
  
@@ -163,21 +161,6 @@
  
      Deferred<String> deferred = Deferred<String>();
      promise.compose((s) => deferred.promise);
- 
- ## Futures
- 
- Sometimes it is convenient to block until a promise is 
- resolved. For this purpose a promise may be transformed
- into a [[Future]] via the attribute [[Promise.future]]:
- 
-     Promise<String> promise = getPromise();
-     Future<String> future = promise.future;
-     String|Throwable resolution = future.get(10k); //wait for 10 sec
- 
- Keep in mind that this is not the usual way you should use 
- promises as this defeats the non blocking model. Nevertheless
- there are times when it is useful to block, for instance,
- in unit tests.
  
  ## Thread safety
  
