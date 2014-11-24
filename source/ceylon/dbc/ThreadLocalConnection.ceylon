@@ -7,6 +7,6 @@ import java.sql {
 
 class ThreadLocalConnection(Connection newConnection()) 
         extends ThreadLocal<ConnectionStatus>() {
-    shared ConnectionStatus initialValue()
+    shared actual ConnectionStatus initialValue()
             => ConnectionStatus(newConnection);
 }
