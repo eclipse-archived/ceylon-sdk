@@ -15,7 +15,6 @@ shared interface Resolver<in Value> {
       if (is Value|Promise<Value> val) {
         fulfill(val);
       } else {
-        assert(is Throwable val);
         reject(val);
       }
     }
