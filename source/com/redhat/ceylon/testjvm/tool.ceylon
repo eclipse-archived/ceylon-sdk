@@ -71,7 +71,7 @@ class Runner() {
                 testListeners.add(TapLoggingListener());
             } else {
                 testListeners.add(TestLoggingListener {
-                    colorWhite = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.white");
+                    resetColor = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.reset");
                     colorGreen = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.green");
                     colorRed = process.propertyValue("com.redhat.ceylon.common.tool.terminal.color.red");
                 });

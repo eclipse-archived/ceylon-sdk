@@ -5,9 +5,9 @@ import ceylon.test.core {
     DefaultLoggingListener
 }
 
-shared class TestLoggingListener(colorWhite, colorGreen, colorRed) extends DefaultLoggingListener() {
+shared class TestLoggingListener(resetColor, colorGreen, colorRed) extends DefaultLoggingListener() {
     
-    String? colorWhite;
+    String? resetColor;
     String? colorGreen;
     String? colorRed;
     
@@ -16,8 +16,8 @@ shared class TestLoggingListener(colorWhite, colorGreen, colorRed) extends Defau
             process.write(colorGreen);
         }
         process.write(banner("TESTS SUCCESS"));
-        if (exists colorWhite) {
-            process.write(colorWhite);
+        if (exists resetColor) {
+            process.write(resetColor);
         }
         process.writeLine();
     }
@@ -27,8 +27,8 @@ shared class TestLoggingListener(colorWhite, colorGreen, colorRed) extends Defau
             process.write(colorRed);
         }
         process.write(banner("TESTS FAILED !"));
-        if (exists colorWhite) {
-            process.write(colorWhite);
+        if (exists resetColor) {
+            process.write(resetColor);
         }
         process.writeLine();
     }
