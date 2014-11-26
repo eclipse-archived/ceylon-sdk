@@ -1,7 +1,7 @@
 "A day of week, such as 'tuesday'."
 shared abstract class DayOfWeek(integer)
        of monday | tuesday | wednesday | thursday | friday | saturday | sunday
-       satisfies Ordinal<DayOfWeek> & Comparable<DayOfWeek> {
+       satisfies Ordinal<DayOfWeek> & Comparable<DayOfWeek> & Enumerable<DayOfWeek> {
 
     "Numeric value of the DayOfWeek."
     shared Integer integer;
@@ -18,6 +18,45 @@ shared abstract class DayOfWeek(integer)
 
     "Compare days of week."
     shared actual Comparison compare(DayOfWeek other) => this.integer <=> other.integer;
+    
+    "Iteration of the _day of week_ is always a modular way, 
+     ie [[saturday]] iteration for [[sunday]] 
+     will **not** occur in reverse order. It does follow the rules:
+     
+     \n_From sunday to saturday_
+     * sunday.offset(sunday)    == 0
+     * sunday.offset(monday)    == 1
+     * sunday.offset(tuesday)   == 2
+     * sunday.offset(wednesday) == 3
+     * sunday.offset(thursday)  == 4
+     * sunday.offset(friday)    == 5
+     * sunday.offset(saturday)  == 6
+     \n_From saturday to sunday_
+     * saturday.offset(sunday)    == 6
+     * saturday.offset(monday)    == 5
+     * saturday.offset(tuesday)   == 4
+     * saturday.offset(wednesday) == 3
+     * saturday.offset(thursday)  == 2
+     * saturday.offset(friday)    == 1
+     * saturday.offset(saturday)  == 0
+     "
+    shared actual default Integer offset(DayOfWeek other) {
+        return this >= other
+            then integer - other.integer
+            else other.integer - integer;
+    }
+    
+    "It does follow the rules:
+       
+     \tvalue i = 1;
+     \tassertEquals(sunday.neighbour(0), sunday);
+     \tassertEquals(sunday.neighbour(i+1), sunday.neighbour(i).successor);
+     \tassertEquals(sunday.neighbour(i-1), sunday.neighbour(i).predecessor);
+     
+     "
+    shared actual DayOfWeek neighbour(Integer offset) {
+        return plusDays(offset);
+    }
 
 }
 
