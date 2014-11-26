@@ -17,6 +17,10 @@
    single value, or fails.
  - The [[Deferred]] class, providing support for operations
    which return instances of the `Promise` interface.
+ - The [[Context]] class abstracts the concurrency of the runtime
+   running the promises. The JVM runtime uses a threadpool, 
+   the JavaScript runtime uses the `setTimeout` function. The
+   [[defineGlobalContext]] can be use to change the default context
  
  ## Promises
  
@@ -144,12 +148,12 @@
          };
       };
  
- `always()` is most useful for implementing a finally clause 
+ [[Completable.always]] is most useful for implementing a finally clause 
  in a chain of promises.
  
  ## Feeding with a promise
  
- `Deferred` can be transitioned with a promise instead of a 
+ [[Deferred]] can be transitioned with a promise instead of a 
  value:
  
      Deferred<String> deferred1 = getDeferred1();
@@ -172,11 +176,7 @@
  This module is loosely based upon the A+ specification,
  with the following differences:
  
- - The `then()` method is named `compose()` in Ceylon
- - The requirement that _`then()` must return before 
-   `onFulfilled` or `onRejected` is called_ is not 
-   implemented. Therefore the invocation occurs inside the 
-   invocation of `compose()`.
+ - The `then()` method is splitted between [[Completable.compose]] that returns an object and [[Completable.flatMap]] that can return a Promise
  - The _Promise Resolution Procedure_ is implemented for 
    objects or promises but not for _thenables_ since that 
    would require a language with dynamic typing."

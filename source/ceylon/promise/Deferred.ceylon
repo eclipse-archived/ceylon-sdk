@@ -1,6 +1,4 @@
-import ceylon.promise.internal {
-  AtomicRef
-}
+import ceylon.promise.internal { AtomicRef }
 
 "The deferred class is the primary implementation of the 
  [[Promise]] interface.
@@ -13,7 +11,7 @@ import ceylon.promise.internal {
  methods accept an argument or a promise to the argument, 
  allowing the deferred to react on a promise."
 by("Julien Viet")
-shared class Deferred<Value>() satisfies Resolver<Value> & Promised<Value> {
+shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> & Promised<Value> {
     
     abstract class State() of ListenerState | PromiseState {}
     
@@ -34,6 +32,9 @@ shared class Deferred<Value>() satisfies Resolver<Value> & Promised<Value> {
         }
     }
     
+    "The current context"
+    Context context;
+    
     "The current state"
     value state = AtomicRef<State?>(null);
     
@@ -45,13 +46,15 @@ shared class Deferred<Value>() satisfies Resolver<Value> & Promised<Value> {
                 Promise<Result>(Value) onFulfilled, 
                 Promise<Result>(Throwable) onRejected) {
                 
-            value deferred = Deferred<Result>();
+            value deferred = Deferred<Result>(context);
             void callback<T>(Promise<Result>(T) on, T val) {
-                try {
-                    deferred.fulfill(on(val));
-                } catch (Throwable e) {
-                    deferred.reject(e);
-                }
+                context.run(void () {
+                    try {
+                        deferred.fulfill(on(val));
+                    } catch (Throwable e) {
+                        deferred.reject(e);
+                    }
+                });
             }
             
             void onFulfilledCallback(Value val)  => callback(onFulfilled, val);
