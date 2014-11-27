@@ -3,7 +3,8 @@ import ceylon.time.base {
     Month,
     months,
     DayOfWeek,
-    weekdays
+    weekdays,
+    january
 }
 import ceylon.time.timezone.model {
     AtTime,
@@ -12,16 +13,28 @@ import ceylon.time.timezone.model {
     OnFixedDay,
     OnLastOfMonth,
     DayOfMonth,
-	AtLocalMeanTime,
-	AtUtcTime,
-	AtNauticalTime,
-	AtGmtTime,
-	AtWallClockTime
+    AtLocalMeanTime,
+    AtUtcTime,
+    AtNauticalTime,
+    AtGmtTime,
+    AtWallClockTime,
+    ZoneRule,
+    standardZoneRule,
+    PeriodZoneRule,
+    ZoneFormat,
+    PairAbbreviationZoneFormat,
+    ReplacedZoneFormat,
+    standardZoneFormat,
+    AbbreviationZoneFormat,
+    ZoneUntil,
+    untilPresent
 }
 import ceylon.time {
     Time,
     time,
-    Period
+    Period,
+    Date,
+    date
 }
 "Alias to represent a specific signal:
  * Positive = 1
@@ -104,7 +117,6 @@ shared OnDay parseOnDay(String token) {
 "The rules represent the end of day as 24:00 and our ceylon.time.Time 
  does have another semantic for this."
 Time adjustToEndOfDayIfNecessary(Integer hours, Integer minutes) {
-    //TODO: So, for 24:00 are we going to adjust for 23:59:59.999 ?
     if( hours == 24 && minutes == 0 ) {
         return time(23,59,59,999);
     }
@@ -171,4 +183,71 @@ Period toPeriod([AtTime, Signal] time) {
 
 shared Boolean tokenDelimiter(Character char) {
     return char == ' ' || char == '\t';
+}
+
+shared ZoneRule parseZoneRule(String token) {
+    if(token == "-") {
+        return standardZoneRule;
+    }
+    
+    value indexes = "".indexesWhere(':'.equals).sequence();
+    if(nonempty indexes) {
+        return PeriodZoneRule(toPeriod(parseTime(token)));
+    } else {
+        return standardZoneRule;
+    }
+}
+
+shared ZoneFormat parseZoneFormat(String token) {
+    if(token == "zzz") {
+        return standardZoneFormat;    
+    } else if(exists index = token.firstOccurrence('/')) {
+        value abbreviation = token.spanTo(index-1);
+        value daylightAbbreviation = token.spanFrom(index+1);
+        return PairAbbreviationZoneFormat(abbreviation, daylightAbbreviation);
+    } else if( exists index = token.firstInclusion("%s")) {
+        return ReplacedZoneFormat(token);
+    } else if( !token.empty ) {
+        return AbbreviationZoneFormat(token);
+    }
+    
+    return standardZoneFormat;
+}
+
+shared ZoneUntil parseUntil([String*] token) {
+    variable Date result = date(0, january, 1);
+    if( exists yearText = token[0], yearText != "") {
+        assert(exists year = parseInteger(yearText));
+        result = result.withYear(year);
+    } else {
+        return untilPresent;
+    }
+    
+    if( exists monthText = token[1], monthText != "") {
+        result = result.withMonth(parseMonth(monthText));
+    }
+    
+    if( exists dayText = token[2], dayText != "") {
+        value parsed = parseOnDay(dayText);
+        switch(parsed)
+        case(is OnFixedDay){
+            result = result.withDay(parsed.fixedDate);
+        }
+        case(is OnFirstOfMonth){
+            result = result.withDay(parsed.date(result.year, result.month).day);
+        }
+        case(is OnLastOfMonth){
+            result = result.withDay(parsed.date(result.year, result.month).day);
+        }
+    }
+    
+    AtTime definition;
+    if( exists timeText = token[3], timeText != "") {
+        value timeResult = parseTime(timeText);
+        definition = timeResult[0];
+    } else {
+        definition = AtWallClockTime(time(0,0));
+    }
+    
+    return ZoneUntil(result, definition);
 }
