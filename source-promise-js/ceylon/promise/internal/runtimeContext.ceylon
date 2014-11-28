@@ -1,12 +1,12 @@
 import ceylon.promise {
-  Context
+  ExecutionContext
 }
 
-shared object runtimeContext satisfies Context {
+shared object runtimeContext satisfies ExecutionContext {
   shared actual void run(void task()) {
     dynamic {
       setTimeout(task, 1);
     }
   }
-  shared actual Context childContext() => this;
+  shared actual ExecutionContext childContext() => this;
 }

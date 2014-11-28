@@ -17,10 +17,10 @@
    single value, or fails.
  - The [[Deferred]] class, providing support for operations
    which return instances of the `Promise` interface.
- - The [[Context]] class abstracts the concurrency of the runtime
+ - The [[ExecutionContext]] class abstracts the concurrency of the runtime
    running the promises. The JVM runtime uses a threadpool, 
    the JavaScript runtime uses the `setTimeout` function. The
-   [[defineGlobalContext]] can be use to change the default context
+   [[defineGlobalExecutionContext]] can be use to change the default context
  
  ## Promises
  

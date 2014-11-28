@@ -1,27 +1,23 @@
+"""The execution context"""
 by("Julien Viet")
-shared interface Context {
+shared interface ExecutionContext {
   
-  shared Callable<Promise<Result>,Value> adaptResult<Result,Value>(Callable<Result,Value> a) 
-      given Value satisfies Anything[] {
-    value b = unflatten(a);
-    function c(Value d) {
-      value deferred = Deferred<Result>(this);
-      deferred.fulfill(b(d));
-      return deferred.promise;	
-    }
-    return flatten(c);
+  """Create a new deferred running on this context"""
+  shared Deferred<Value> deferred<Value>() {
+    return Deferred<Value>(this);
   }
   
-  shared Promise<T> adaptValue<T>(T val) {
+  """Create a new fulfilled promise running on this context"""
+  shared Promise<T> fulfilledPromise<T>(T val) {
     object adapter extends Promise<T>() {
 
-      shared actual Context context => outer;
+      shared actual ExecutionContext context => outer;
       
       shared actual Promise<Result> compose<Result>(Result(T) onFulfilled, Result(Throwable) onRejected) {
         try {
-          return adaptValue(onFulfilled(val));
+          return fulfilledPromise(onFulfilled(val));
         } catch(Throwable e) {
-          return adaptReason<Result>(e);
+          return rejectedPromise<Result>(e);
         }
       }
       shared actual Promise<Result> flatMap<Result>(
@@ -30,24 +26,24 @@ shared interface Context {
         try {
           return onFulfilled(val);
         } catch(Throwable e) {
-          return adaptReason<Result>(e);
+          return rejectedPromise<Result>(e);
         }
       }
     }
     return adapter;
   }
   
-  by("Julien Viet")
-  shared Promise<T> adaptReason<T>(Throwable reason) {
+  """Create a new rejected promise running on this context"""
+  shared Promise<T> rejectedPromise<T>(Throwable reason) {
     object adapted extends Promise<T>() {
       
-      shared actual Context context => outer;
+      shared actual ExecutionContext context => outer;
       
       shared actual Promise<Result> compose<Result>(Result(T) onFulfilled, Result(Throwable) onRejected) {
         try {
-          return adaptValue(onRejected(reason));
+          return fulfilledPromise(onRejected(reason));
         } catch(Throwable e) {
-          return adaptReason<Result>(e);
+          return rejectedPromise<Result>(e);
         }
       }
       
@@ -57,7 +53,7 @@ shared interface Context {
         try {
           return onRejected(reason);
         } catch(Throwable e) {
-          return adaptReason<Result>(e);
+          return rejectedPromise<Result>(e);
         }
       }
     }
@@ -66,6 +62,6 @@ shared interface Context {
 
   shared formal void run(void task());
   
-  shared formal Context childContext();
+  shared formal ExecutionContext childContext();
   
 }

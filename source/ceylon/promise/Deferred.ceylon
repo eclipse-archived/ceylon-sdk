@@ -11,7 +11,7 @@ import ceylon.promise.internal { AtomicRef }
  methods accept an argument or a promise to the argument, 
  allowing the deferred to react on a promise."
 by("Julien Viet")
-shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> & Promised<Value> {
+shared class Deferred<Value>(context = globalExecutionContext) satisfies Resolver<Value> & Promised<Value> {
     
     abstract class State() of ListenerState | PromiseState {}
     
@@ -33,7 +33,7 @@ shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> 
     }
     
     "The current context"
-    Context context;
+    ExecutionContext context;
     
     "The current state"
     value state = AtomicRef<State?>(null);
@@ -42,7 +42,7 @@ shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> 
     shared actual object promise 
             extends Promise<Value>() {
         
-        shared actual Context context => outer.context;
+        shared actual ExecutionContext context => outer.context;
 
         shared actual Promise<Result> compose<Result>(
                 Result(Value) onFulfilled,
@@ -152,10 +152,10 @@ shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> 
       if (is Promise<Value> val) {
         update(val);        
       } else {
-        update(context.adaptValue<Value>(val));       
+        update(context.fulfilledPromise<Value>(val));       
       }
     }
 
-    reject(Throwable reason) => update(context.adaptReason<Value>(reason));
+    reject(Throwable reason) => update(context.rejectedPromise<Value>(reason));
     
 }

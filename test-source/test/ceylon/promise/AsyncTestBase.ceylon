@@ -1,5 +1,5 @@
 import ceylon.test { beforeTest, afterTest, assertEquals_=assertEquals, assertTrue_=assertTrue, assertFalse_=assertFalse }
-import ceylon.promise { Context, defineGlobalContext }
+import ceylon.promise { ExecutionContext, defineGlobalExecutionContext }
 import ceylon.collection { LinkedList }
 
 """A base class for running asynchronous tests managing an event loop"""
@@ -8,12 +8,12 @@ shared class AsyncTestBase() {
   variable Boolean completed = false;
   variable Throwable? failed = null;
   
-  object eventLoop satisfies Context {
+  object eventLoop satisfies ExecutionContext {
     shared LinkedList<Anything()> queuedEvents = LinkedList<Anything()>();
     shared actual void run(void event()) {
       queuedEvents.add(event);
     }
-    shared actual Context childContext() => this;
+    shared actual ExecutionContext childContext() => this;
   }
   
   shared void runOnContext(Anything() run) {
@@ -71,7 +71,7 @@ shared class AsyncTestBase() {
     completed = false;
     failed = null;
     eventLoop.queuedEvents.clear();
-    defineGlobalContext(eventLoop);
+    defineGlobalExecutionContext(eventLoop);
   }
   
   shared afterTest void after() {

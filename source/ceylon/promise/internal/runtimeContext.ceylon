@@ -1,10 +1,10 @@
 import ceylon.promise {
-  Context
+  ExecutionContext
 }
 import java.util.concurrent { Executors }
 import java.lang { Runnable }
 
-shared object runtimeContext satisfies Context {
+shared object runtimeContext satisfies ExecutionContext {
   
   value executor = Executors.newCachedThreadPool();
   
@@ -17,6 +17,6 @@ shared object runtimeContext satisfies Context {
     executor.submit(runnable);
   }
   
-  shared actual Context childContext() => this;
+  shared actual ExecutionContext childContext() => this;
   
 }
