@@ -8,4 +8,5 @@ shared object runtimeContext satisfies Context {
       setTimeout(task, 1);
     }
   }
+  shared actual Context childContext() => this;
 }

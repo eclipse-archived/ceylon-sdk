@@ -16,7 +16,8 @@ class Conjunction<out Element, out First, Rest>(first, rest)
     "The second promise."
     Promise<First> first;
 
-    value deferred = Deferred<Tuple<First|Element,First,Rest>>();
+    // We use the context of the first
+    value deferred = Deferred<Tuple<First|Element,First,Rest>>(first.context);
     promise = deferred.promise;
     
     variable First? firstVal = null;
@@ -49,6 +50,13 @@ class Conjunction<out Element, out First, Rest>(first, rest)
             and<Other>(Promise<Other> other) 
             => Conjunction(other, promise);
 
+    shared actual Promise<Result> compose<Result>(Result(*Tuple<First|Element,First,Rest>) onFulfilled, Result(Throwable) onRejected)
+        => promise.compose {
+      (Tuple<First|Element,First,Rest> args) 
+          => unflatten(onFulfilled)(args);
+      onRejected;
+    };
+
     shared actual Promise<Result> flatMap<Result>(
             Callable<Promise<Result>,Tuple<First|Element,First,Rest>> onFulfilled,
             Promise<Result>(Throwable) onRejected) 
@@ -57,5 +65,6 @@ class Conjunction<out Element, out First, Rest>(first, rest)
                         => unflatten(onFulfilled)(args);
                 onRejected;
             };
+    
 
 }

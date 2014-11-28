@@ -6,6 +6,9 @@ by("Julien Viet")
 shared abstract class Promise<out Value>() 
         satisfies Term<Value,[Value]> {
     
+    "The context of this promise"
+    shared formal Context context;
+    
     // todo optimize that and instead implement a Promise
     variable Conjunction<Value,Value,[]>? conjunction = null;
     
@@ -13,10 +16,8 @@ shared abstract class Promise<out Value>()
         if (exists c = conjunction) {
             return c;
         } else {
-            value d = Deferred<[]>();
-            d.fulfill([]);
-            return conjunction = 
-                    Conjunction(this, d.promise);
+            value valuePromise = context.adaptValue([]);
+            return conjunction = Conjunction(this, valuePromise);
         }
     }
     

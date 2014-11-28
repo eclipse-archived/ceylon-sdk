@@ -13,6 +13,7 @@ shared class AsyncTestBase() {
     shared actual void run(void event()) {
       queuedEvents.add(event);
     }
+    shared actual Context childContext() => this;
   }
   
   shared void runOnContext(Anything() run) {

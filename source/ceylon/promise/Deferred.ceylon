@@ -42,48 +42,87 @@ shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> 
     shared actual object promise 
             extends Promise<Value>() {
         
+        shared actual Context context => outer.context;
+
+        shared actual Promise<Result> compose<Result>(
+                Result(Value) onFulfilled,
+                Result(Throwable) onRejected) {
+          
+          value childContext = context.childContext();
+          value deferred = Deferred<Result>(childContext);
+          void callback<T>(Result(T) on, T val) {
+            context.run(void () {
+              Result t;
+              try {
+                t = on(val);
+              } catch (Throwable e) {
+                deferred.reject(e);
+                return;
+              }
+              deferred.fulfill(t);
+            });
+          }
+          
+          foobar {
+            void onFulfilledCallback(Value val)  => callback(onFulfilled, val);
+            void onRejectedCallback(Throwable reason)  => callback(onRejected, reason);
+          };
+          
+          // 
+          return deferred.promise;
+        }
+
         shared actual Promise<Result> flatMap<Result>(
                 Promise<Result>(Value) onFulfilled, 
                 Promise<Result>(Throwable) onRejected) {
-                
-            value deferred = Deferred<Result>(context);
+            
+            value childContext = context.childContext();
+            value deferred = Deferred<Result>(childContext);
             void callback<T>(Promise<Result>(T) on, T val) {
                 context.run(void () {
+                    Promise<Result> t;
                     try {
-                        deferred.fulfill(on(val));
+                        t = on(val);
                     } catch (Throwable e) {
                         deferred.reject(e);
+                        return;
                     }
+                    deferred.fulfill(t);
                 });
             }
             
-            void onFulfilledCallback(Value val)  => callback(onFulfilled, val);
-            
-            void onRejectedCallback(Throwable reason)  => callback(onRejected, reason);
+            foobar {
+              void onFulfilledCallback(Value val)  => callback(onFulfilled, val);
+              void onRejectedCallback(Throwable reason)  => callback(onRejected, reason);
+            };
             
             // 
-            while (true) {
-                value current = state.get();
-                switch (current)
-                case (is Null) {
-                    State next = ListenerState(onFulfilledCallback, onRejectedCallback);
-                    if (state.compareAndSet(current, next)) {
-                        break;
-                    }
-                }
-                case (is ListenerState) {
-                    State next = ListenerState(onFulfilledCallback, onRejectedCallback, current);
-                    if (state.compareAndSet(current, next)) {
-                        break;
-                    }
-                }
-                case (is PromiseState) {
-                    current.promise.compose(onFulfilledCallback, onRejectedCallback);
-                    break;
-                }
-            }
             return deferred.promise;
         }
+
+        void foobar(void onFulfilledCallback(Value val), void onRejectedCallback(Throwable reason)) {
+          while (true) {
+            value current = state.get();
+            switch (current)
+            case (is Null) {
+              State next = ListenerState(onFulfilledCallback, onRejectedCallback);
+              if (state.compareAndSet(current, next)) {
+                break;
+              }
+            }
+            case (is ListenerState) {
+              State next = ListenerState(onFulfilledCallback, onRejectedCallback, current);
+              if (state.compareAndSet(current, next)) {
+                break;
+              }
+            }
+            case (is PromiseState) {
+              current.promise.compose(onFulfilledCallback, onRejectedCallback);
+              break;
+            }
+          }
+        }
+        
     }
         
     void update(Promise<Value> promise) {
@@ -109,8 +148,14 @@ shared class Deferred<Value>(context = globalContext) satisfies Resolver<Value> 
         }
     }
 
-    fulfill(Value|Promise<Value> val)  => update(adaptValue<Value>(val));
+    shared actual void fulfill(Value|Promise<Value> val) {
+      if (is Promise<Value> val) {
+        update(val);        
+      } else {
+        update(context.adaptValue<Value>(val));       
+      }
+    }
 
-    reject(Throwable reason) => update(adaptReason<Value>(reason));
+    reject(Throwable reason) => update(context.adaptReason<Value>(reason));
     
 }
