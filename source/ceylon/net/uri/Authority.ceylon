@@ -4,23 +4,24 @@ import ceylon.net.iop {
 
 "Represents a URI Authority part (user, password, host and port)"
 by("Stéphane Épardaud")
-shared class Authority(user = null, password = null, host = null, port = null) {
-    
+shared class Authority(user = null, password = null, host = null, port = null,
+        ipLiteral = false) {
+
     "The optional user"
-    shared variable String? user;
+    shared String? user;
 
     "The optional password"
-    shared variable String? password;
+    shared String? password;
 
     "The optional host"
-    shared variable String? host;
+    shared String? host;
 
     "True if the host name is an ipLiteral (IPV6 or later) and has to be represented 
      surrounded by [] (square brackets)"
-    shared variable Boolean ipLiteral = false;
+    shared Boolean ipLiteral;
     
     "The optional port number"
-    shared variable Integer? port;
+    shared Integer? port;
     
     "Returns true if the authority part is present (if the host is not null)"
     shared Boolean specified {

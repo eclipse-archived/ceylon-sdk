@@ -14,7 +14,11 @@ throws(`class InvalidUriException`,
     "If the URI is invalid")
 shared Uri parse(String uri) {
     variable String? scheme = null;
-    Authority authority = Authority(null, null, null, null);
+    variable String? authorityUser = null;
+    variable String? authorityPassword = null;
+    variable String? authorityHost = null;
+    variable Integer? authorityPort = null;
+    variable Boolean authorityIPLiteral = false;
     Path path = Path();
     Query query = Query();
     variable String? fragment = null;
@@ -34,22 +38,22 @@ shared Uri parse(String uri) {
     void parseUserInfo(String userInfo) {
         Integer? sep = userInfo.firstOccurrence(':');
         if(exists sep) {
-            authority.user = decodePercentEncoded(userInfo.measure(0, sep));
-            authority.password = decodePercentEncoded(userInfo[sep+1...]);
+            authorityUser = decodePercentEncoded(userInfo.measure(0, sep));
+            authorityPassword = decodePercentEncoded(userInfo[sep+1...]);
         }else{
-            authority.user = decodePercentEncoded(userInfo);
-            authority.password = null;
+            authorityUser = decodePercentEncoded(userInfo);
+            authorityPassword = null;
         }
     }
 
     void parseHostAndPort(String hostAndPort) {
         String? portString;
         if(hostAndPort.startsWith("[")) {
-            authority.ipLiteral = true;
+            authorityIPLiteral = true;
             Integer? end = hostAndPort.firstOccurrence(']');
             if(exists end) {
                 // eat the delimiters
-                authority.host = hostAndPort.measure(1, end-1);
+                authorityHost = hostAndPort.measure(1, end-1);
                 String rest = hostAndPort[end+1...];
                 if(rest.startsWith(":")) {
                     portString = rest[1...];
@@ -60,19 +64,19 @@ shared Uri parse(String uri) {
                 throw InvalidUriException("Invalid IP literal: " + hostAndPort);
             }
         }else{
-            authority.ipLiteral = false;
+            authorityIPLiteral = false;
             Integer? sep = hostAndPort.lastOccurrence(':');
             if(exists sep) {
-                authority.host = decodePercentEncoded(hostAndPort.measure(0, sep));
+                authorityHost = decodePercentEncoded(hostAndPort.measure(0, sep));
                 portString = hostAndPort[sep+1...];
             }else{
-                authority.host = decodePercentEncoded(hostAndPort);
+                authorityHost = decodePercentEncoded(hostAndPort);
                 portString = null;
             }
         }
         if(exists portString) {
-            authority.port = parseInteger(portString);
-            if(exists Integer port = authority.port) {
+            authorityPort = parseInteger(portString);
+            if(exists Integer port = authorityPort) {
                 if(port < 0) {
                     throw InvalidUriException("Invalid port number: "+portString);
                 }
@@ -80,7 +84,7 @@ shared Uri parse(String uri) {
                 throw InvalidUriException("Invalid port number: "+portString);
             }
         }else{
-            authority.port = null;
+            authorityPort = null;
         }
     }
     
@@ -185,5 +189,13 @@ shared Uri parse(String uri) {
     }
 
     parseURI(uri);
+
+    Authority authority = Authority {
+        user = authorityUser;
+        password = authorityPassword;
+        host = authorityHost;
+        port = authorityPort;
+        ipLiteral = authorityIPLiteral;
+    };
     return Uri(scheme, authority, path, query, fragment);
 }
