@@ -1,22 +1,31 @@
 import ceylon.collection {
     LinkedList
 }
-
 "Represents a URI Path segment part"
 by("Stéphane Épardaud")
 shared class PathSegment(
     String initialName, 
-    Parameter* initialParameters) {
+    String|{Parameter*}? initialParameters = null) {
     
     "The path segment name"
-    shared variable String name = initialName;
+    shared String name = initialName;
     
     "The path segment parameters"
-    shared LinkedList<Parameter> parameters 
-            = LinkedList<Parameter>();
-    
-    for(Parameter p in initialParameters) {
-        parameters.add(p);
+    shared Parameter[] parameters;
+
+    switch (initialParameters)
+    case (is Null) { parameters = []; }
+    case (is {Parameter*}) { parameters = initialParameters.sequence(); }
+    case (is String) {
+        if (initialParameters.empty) {
+            parameters = [];
+        } else {
+            value list = LinkedList<Parameter>();
+            for(param in initialParameters.split((Character ch) => ch == ';', true, false)) {
+                list.add(parseParameter(param));
+            }
+            parameters = list.sequence();
+        }
     }
 
     "Returns true if the given object is the same as this object"

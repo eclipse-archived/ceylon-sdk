@@ -22,11 +22,11 @@ shared class Path(String|{PathSegment*}? path = null, Boolean? initialAbsolute =
         }else{
             name = part;
         }
-        PathSegment path = PathSegment(decodePercentEncoded(name));
+        PathSegment path;
         if(exists sep) {
-            for(param in part[sep+1...].split((Character ch) => ch == ';', true, false)) {
-                path.parameters.add(parseParameter(param));
-            }
+            path = PathSegment(decodePercentEncoded(name), part[sep+1...]);
+        }else{
+            path = PathSegment(decodePercentEncoded(name));
         }
         list.add(path);
     }

@@ -143,7 +143,7 @@ test void testDecomposition(){
 test void testComposition(){
     Uri u = Uri("http", 
                 Authority("stef", null, "192.168.1.1", 9000),
-                Path({PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))}, true),
+                Path({PathSegment("a"), PathSegment("b", {Parameter("c"), Parameter("d", "e")})}, true),
                 Query(Parameter("q"), Parameter("r","s")),
                 null);
     testURL{
