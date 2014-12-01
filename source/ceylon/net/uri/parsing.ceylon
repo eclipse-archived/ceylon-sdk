@@ -19,7 +19,8 @@ shared Uri parse(String uri) {
     variable String? authorityHost = null;
     variable Integer? authorityPort = null;
     variable Boolean authorityIPLiteral = false;
-    Path path = Path();
+    variable String pathPart = "";
+
     Query query = Query();
     variable String? fragment = null;
     
@@ -121,7 +122,6 @@ shared Uri parse(String uri) {
 
     String parsePath(String uri) {
         Integer? sep = uri.firstOccurrence('?') else uri.firstOccurrence('#');
-        String pathPart;
         String remains;
         if(exists sep) {
             pathPart = uri.measure(0, sep);
@@ -131,19 +131,6 @@ shared Uri parse(String uri) {
             pathPart = uri;
             remains = "";
         }
-        if(!pathPart.empty) {
-            variable Boolean first = true;
-            for(String part in pathPart.split((Character ch) => ch == '/', true, false)) {
-                if(first && part.empty) {
-                    path.absolute = true;
-                    first = false;
-                    continue;
-                }
-                first = false;
-                path.addRawSegment(part);
-            }
-        }
-        
         return remains;
     }
 
@@ -197,5 +184,8 @@ shared Uri parse(String uri) {
         port = authorityPort;
         ipLiteral = authorityIPLiteral;
     };
+
+    Path path = Path(pathPart);
+
     return Uri(scheme, authority, path, query, fragment);
 }

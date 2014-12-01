@@ -143,7 +143,7 @@ test void testDecomposition(){
 test void testComposition(){
     Uri u = Uri("http", 
                 Authority("stef", null, "192.168.1.1", 9000),
-                Path(true, PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
+                Path({PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))}, true),
                 Query(Parameter("q"), Parameter("r","s")),
                 null);
     testURL{
@@ -189,7 +189,7 @@ test void testDecoding(){
         path = "/segm%2F%3F%3Bent1;par%2F%3F%3B%3Dam1;par%2F%3F%3B%3Dam2=val%2F%3F%3B=%23ue/segment2";
         decomposedPath = Path {
             initialAbsolute = true;
-            initialSegments = [
+            path = [
                 PathSegment {
                     initialName = "segm/?;ent1";
                     initialParameters = [
@@ -225,8 +225,6 @@ test void testDecoding(){
 }
 
 test void testUriBuilding(){
-    Uri uri = parse("http://ceylon-lang.org");
-    uri.path.absolute = true;
-    uri.path.add("blog");
+    Uri uri = parse("http://ceylon-lang.org/blog");
     assertEquals("http://ceylon-lang.org/blog", uri.string);
 }

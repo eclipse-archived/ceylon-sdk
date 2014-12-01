@@ -4,33 +4,17 @@ import ceylon.collection {
 
 "Represents a URI Path part"
 by("Stéphane Épardaud")
-shared class Path(
-    Boolean initialAbsolute = false, 
-    PathSegment* initialSegments) {
+shared class Path(String|{PathSegment*}? path = null, Boolean? initialAbsolute = null) {
     
     "The list of path segments"
-    shared LinkedList<PathSegment> segments 
-            = LinkedList<PathSegment>();
-    
-    "True if this URI is absolute (begins with a `/`)"
-    shared variable Boolean absolute = initialAbsolute;
-    
-    for(s in initialSegments) {
-        segments.add(s);
-    }
+    shared PathSegment[] segments;
 
-    "Adds a path segment"
-    shared void add(String segment, Parameter* parameters) {
-        PathSegment part = PathSegment(segment);
-        for(p in parameters) {
-            part.parameters.add(p);
-        }
-        segments.add(part);
-    }
-    
+    "True if this URI is absolute (begins with a `/`)"
+    shared Boolean absolute;
+
     "Adds a raw (percent-encoded) segment, with optional 
      parameters to be parsed"
-    shared void addRawSegment(String part) {
+    void addRawSegment(String part, LinkedList<PathSegment> list) {
         Integer? sep = part.firstOccurrence(';');
         String name;
         if(exists sep) {
@@ -44,22 +28,36 @@ shared class Path(
                 path.parameters.add(parseParameter(param));
             }
         }
-        segments.add(path);
+        list.add(path);
     }
 
-    "Returns a path segment"    
+    variable Boolean initAbsolute = false;
+    switch (path)
+    case (is Null) { segments = []; }
+    case (is {PathSegment*}) { segments = path.sequence(); }
+    case (is String) {
+        if (path.empty) {
+            segments = [];
+        } else {
+            value list = LinkedList<PathSegment>();
+            variable Boolean first = true;
+            for(String part in path.split((Character ch) => ch == '/', true, false)) {
+                if(first && part.empty) {
+                    initAbsolute = true;
+                    first = false;
+                    continue;
+                }
+                first = false;
+                addRawSegment(part, list);
+            }
+            segments = list.sequence();
+        }
+    }
+    absolute = initialAbsolute else initAbsolute;
+
+    "Returns a path segment"
     shared PathSegment? get(Integer i) {
         return segments[i];
-    }
-
-    "Remove a path segment"
-    shared void remove(Integer i) {
-        segments.delete(i);
-    }
-
-    "Removes every path segment"
-    shared void clear() {
-        segments.clear();
     }
 
     "Returns true if the given object is the same as this 
