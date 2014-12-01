@@ -16,20 +16,20 @@ shared class Uri(scheme = null,
     fragment = null) {
     
     "The optional URI scheme: `http`, `https`, `mailto`…"
-    shared variable String? scheme;
+    shared String? scheme;
     
     "The optional Authority part (contains user, password, 
      host and port)"
-    shared variable Authority authority;
+    shared Authority authority;
     
     "The optional Path part"
-    shared variable Path path;
+    shared Path path;
     
     "The optional query part"
-    shared variable Query query;
+    shared Query query;
     
     "The optional fragment (hash) part"
-    shared variable String? fragment;
+    shared String? fragment;
 
     "Returns true if this is a relative URI"
     shared Boolean relative {
@@ -50,7 +50,7 @@ shared class Uri(scheme = null,
     
     String toRepresentation(Boolean human) {
         StringBuilder b = StringBuilder();
-        if(exists String scheme = scheme) {
+        if(exists scheme) {
             b.append(scheme);
             b.append(":");
         }
@@ -63,7 +63,7 @@ shared class Uri(scheme = null,
             b.append("?");
             b.append(query.toRepresentation(human));
         }
-        if(exists String fragment = fragment) {
+        if(exists fragment) {
             b.append("#");
             b.append(human then fragment else percentEncoder.encodeFragment(fragment));
         }
