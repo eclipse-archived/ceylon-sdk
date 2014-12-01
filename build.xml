@@ -64,10 +64,11 @@
         <module name="ceylon.time"/>
         <module name="ceylon.unicode"/>
         <module name="ceylon.locale"/>
+        <module name="com.redhat.ceylon.war"/>
         <module name="com.redhat.ceylon.test"/>
         <module name="com.redhat.ceylon.testjvm"/>
     </moduleset>
-    
+
     <moduleset id="modules.sdk.js">
         <module name="ceylon.collection"/>
         <module name="ceylon.html"/>
@@ -250,6 +251,7 @@
                 <include name="ceylon/locale/**"/>
                 <include name="ceylon/interop/java/**"/>
                 <include name="ceylon/html/**"/>
+                <include name="com/redhat/ceylon/war/**"/>
             </fileset>
         </copy>
     </target>
