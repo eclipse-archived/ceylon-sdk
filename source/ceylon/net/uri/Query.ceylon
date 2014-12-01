@@ -4,23 +4,25 @@ import ceylon.collection {
 
 "Represents a URI Query part"
 by("Stéphane Épardaud")
-shared class Query(Parameter* initialParameters) {
+shared class Query(String|{Parameter*}? initialParameters = null) {
     
     "The list of query parameters"
-    shared LinkedList<Parameter> parameters 
-            = LinkedList<Parameter>();
-    
-    for(p in initialParameters) {
-        parameters.add(p);
+    shared Parameter[] parameters;
+
+    switch (initialParameters)
+    case (is Null) { parameters = []; }
+    case (is {Parameter*}) { parameters = initialParameters.sequence(); }
+    case (is String) {
+        if (initialParameters.empty) {
+            parameters = [];
+        } else {
+            value list = LinkedList<Parameter>();
+            for(param in initialParameters.split((Character ch) => ch == '&', true, false)) {
+                list.add(parseParameter(param));
+            }
+            parameters = list.sequence();
+        }
     }
-
-    "Adds a query parameter"
-    shared void add(Parameter param)
-            => parameters.add(param);
-
-    "Adds a single raw (percent-encoded) query parameter, where name and value have to be parsed"
-    shared void addRaw(String part)
-            => add(parseParameter(part));
 
     "Returns true if we have any query parameter"
     shared Boolean specified => !parameters.empty;

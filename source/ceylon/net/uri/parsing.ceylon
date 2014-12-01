@@ -20,8 +20,7 @@ shared Uri parse(String uri) {
     variable Integer? authorityPort = null;
     variable Boolean authorityIPLiteral = false;
     variable String pathPart = "";
-
-    Query query = Query();
+    variable String queryPart = "";
     variable String? fragment = null;
     
     String parseScheme(String uri) {
@@ -134,19 +133,13 @@ shared Uri parse(String uri) {
         return remains;
     }
 
-    void parseQueryPart(String queryPart) {
-        for(String part in queryPart.split((Character ch) => ch == '&', true, false)) {
-            query.addRaw(part);
-        }
-    }
-
     String parseQuery(String uri) {
         Character? c = uri[0];
         if(exists c) {
             if(c == '?') {
                 // we have a query part
                 Integer end = uri.firstOccurrence('#') else uri.size;
-                parseQueryPart(uri.measure(1, end-1));
+                queryPart = uri.measure(1, end-1);
                 return uri[end...];
             }
         }
@@ -184,8 +177,8 @@ shared Uri parse(String uri) {
         port = authorityPort;
         ipLiteral = authorityIPLiteral;
     };
-
     Path path = Path(pathPart);
+    Query query = Query(queryPart);
 
     return Uri(scheme, authority, path, query, fragment);
 }
