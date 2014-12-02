@@ -7,6 +7,9 @@ by("Stéphane Épardaud")
 shared class Authority(user = null, password = null, host = null, port = null,
         ipLiteral = false) {
 
+    // FIXME review use of ipLiteral; should this be a settable property, or is
+    // it strictly computable from the host?
+
     "The optional user"
     shared String? user;
 
@@ -65,7 +68,30 @@ shared class Authority(user = null, password = null, host = null, port = null,
         }
         return "";
     }
-    
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `user` with the given value"
+    shared Authority withUser(String? user)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `password` with the given value"
+    shared Authority withPassword(String? password)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `host` and `ipLiteral` with the given values"
+    shared Authority withHost(String? host, Boolean ipLiteral = false)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `port` with the given value"
+    shared Authority withPort(Integer? port)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the specified values"
+    shared Authority with(
+                String? user = this.user, String? password = this.password,
+                String? host = this.host, Integer? port = this.port,
+                Boolean ipLiteral = this.ipLiteral)
+        => Authority(user, password, host, port, ipLiteral);
+
     "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is Authority that) {

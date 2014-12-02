@@ -81,7 +81,35 @@ shared class Uri(scheme = null,
     shared String humanRepresentation {
         return toRepresentation(true);
     }
+
+    "Create a new [[Uri]] based on this [[Uri]], replacing the `scheme` with the given value"
+    shared Uri withScheme(String? scheme)
+        => Uri(scheme, authority, path, query, fragment);
+
+    "Create a new [[Uri]] based on this [[Uri]], replacing the `authority` with the given value"
+    shared Uri withAuthority(Authority authority)
+        => Uri(scheme, authority, path, query, fragment);
     
+    "Create a new [[Uri]] based on this [[Uri]], replacing the `path` with the given value"
+    shared Uri withPath(Path path)
+        => Uri(scheme, authority, path, query, fragment);
+
+    "Create a new [[Uri]] based on this [[Uri]], replacing the `query` with the given value"
+    shared Uri withQuery(Query query)
+        => Uri(scheme, authority, path, query, fragment);
+
+    "Create a new [[Uri]] based on this [[Uri]], replacing the `fragment` with the given value"
+    shared Uri withFragment(String? fragment)
+        => Uri(scheme, authority, path, query, fragment);
+
+    "Create a new [[Uri]] based on this [[Uri]], replacing the specified values"
+    shared Uri with(String? scheme = this.scheme,
+                    Authority authority = this.authority,
+                    Path path = this.path,
+                    Query query = this.query,
+                    String? fragment = this.fragment)
+        => Uri(scheme, authority, path, query, fragment);
+
     "Returns true if the given object is the same as this 
      object"
     shared actual Boolean equals(Object that) {
