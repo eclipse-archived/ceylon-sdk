@@ -1,10 +1,10 @@
 import ceylon.time.base {
-    ReadablePeriod, PeriodBehavior, ReadableDatePeriod, ReadableTimePeriod, 
+    ReadablePeriod, PeriodBehavior, ReadableDatePeriod, ReadableTimePeriod,
     min = minutes, sec = seconds, ms = milliseconds}
 
 "An immutable period consisting of the ISO-8601 _years_, _months_, _days_, _hours_,
  _minutes_, _seconds_ and _milliseconds_, such as '3 Months, 4 Days and 7 Hours'.
- 
+
  A period is a human-scale description of an amount of time.
  "
 shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, milliseconds=0)
@@ -238,10 +238,10 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
 
     "Returns a copy of this period with all amounts normalized to the
      standard ranges for date/time fields.
-     
+
      Two normalizations occur, one for years and months, and one for
      hours, minutes, seconds and milliseconds.
-     
+
      Days are not normalized, as a day may vary in length at daylight savings cutover.
      Neither is days normalized into months, as number of days per month varies from
      month to another and depending on the leap year."
@@ -283,34 +283,23 @@ shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, mi
             return "PT0S";
         }
         else {
-            StringBuilder buf = StringBuilder();
-            buf.append("P");
-            if (years != 0) {
-                buf.append(years.string).append("Y");
+            value dateString = "".join{
+                for (pair in [[years, "Y"], [months, "M"], [days, "D"]])
+                    if (pair[0] != 0) "".join(pair)
+            };
+
+            if (hours.or(minutes).or(seconds).or(milliseconds) != 0) {
+                value timeString = "".join{
+                    for (part in [[hours, 0, "H"], [minutes, 0, "M"], [seconds, milliseconds, "S"]])
+                        if (part[0].or(part[1]) != 0)
+                            part[1] == 0 then part[0].string + part[2]
+                                         else "``part[0]``.``part[1].string.padLeading(3, '0')``" + part[2]
+                };
+                return "P``dateString``T``timeString``";
             }
-            if (months != 0) {
-                buf.append(months.string).append("M");
+            else {
+                return "P``dateString``";
             }
-            if (days != 0) {
-                buf.append(days.string).append("D");
-            }
-            if ( hours != 0 || minutes != 0 || seconds != 0 || milliseconds != 0 ) {
-                buf.append("T");
-                if (hours != 0) {
-                    buf.append(hours.string).append("H");
-                }
-                if (minutes != 0) {
-                    buf.append(minutes.string).append("M");
-                }
-                if (seconds != 0 || milliseconds != 0) {
-                    buf.append(seconds.string);
-                    if (milliseconds != 0) {
-                        buf.append(".``milliseconds.string.padLeading(3, '0')``");
-                    }
-                    buf.append("S");
-                }
-            }
-            return buf.string;
         }
     }
 

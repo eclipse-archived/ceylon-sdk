@@ -37,10 +37,15 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
     shared default actual String string {
-        value builder = StringBuilder();
-        builder.append( offsetMilliseconds >= 0 then "+" else "-" )
-               .append( "``((offsetMilliseconds.magnitude / ms.perHour)).string.padLeading(2, '0')``:``((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute).string.padLeading(2, '0')``" );
-        return builder.string;
+        value offsetHours = ((offsetMilliseconds.magnitude / ms.perHour)).string.padLeading(2, '0');
+        value offsetMinutes = ((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute).string.padLeading(2, '0');
+
+        if (offsetMilliseconds >= 0) {
+            return "+``offsetHours``:``offsetMinutes``";
+        }
+        else {
+            return "-``offsetHours``:``offsetMinutes``";
+        }
     }
 
 }
@@ -61,12 +66,12 @@ shared object timeZone {
         "Returns ISO-8601 formatted String representation of this _time of day_.\n
          https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
         shared actual String string  = "Z";
-	}
+    }
 
     "Parses input string and returns appropriate time zone.
      Currently it accepts only ISO-8601 time zone offset patterns:
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.
- 
+
      In addition, the special code `Z` is recognized as a shorthand for `+00:00`."
     shared TimeZone|ParserError parse(String zone) {
         return parseTimeZone(zone);
@@ -74,11 +79,11 @@ shared object timeZone {
 
     "Represents fixed timeZone created based on given values."
     shared OffsetTimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
-		value offsetMilliseconds = hours * ms.perHour + minutes * ms.perMinute + milliseconds;
-		assert (-12 * ms.perHour <= offsetMilliseconds <= 12 * ms.perHour);
-		if (offsetMilliseconds == 0) {
-			return utc;
-		}
+        value offsetMilliseconds = hours * ms.perHour + minutes * ms.perMinute + milliseconds;
+        assert (-12 * ms.perHour <= offsetMilliseconds <= 12 * ms.perHour);
+        if (offsetMilliseconds == 0) {
+            return utc;
+        }
         return OffsetTimeZone( offsetMilliseconds );
     }
 
