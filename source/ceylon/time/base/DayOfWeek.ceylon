@@ -1,4 +1,23 @@
-"A day of week, such as 'tuesday'."
+"""A day of week, such as 'tuesday'.
+
+   This class satisfies `Enumerable<DayOfWeek>`, which means that you can
+   create ranges of days of week:
+
+   E.g:
+       value week = monday..sunday;
+       value weekend = saturday..sunday;
+
+   Note that ranges created this way are always in _increasing_ order, wrapping
+   once last day of week is reached. This means that when you create a range of `tuesday..monday`,
+   this is equivalent to the following sequence: `[tuesday, wednesday, thursday, friday, saturday, sunday, monday]`
+
+   In order to get the reverse order range, you can use either span operator:
+       value reverseDaysOfWeek = tuesday:-1;
+
+   or explicitly reverse the order of the range like this:
+       calue reverseDaysOfWeek = (monday..tuesday).reverse();
+
+   """
 shared abstract class DayOfWeek(integer)
        of monday | tuesday | wednesday | thursday | friday | saturday | sunday
        satisfies Ordinal<DayOfWeek> & Comparable<DayOfWeek> & Enumerable<DayOfWeek> {
@@ -8,9 +27,14 @@ shared abstract class DayOfWeek(integer)
 
     "Returns a day of week that comes specified number of days after this DayOfWeek."
     shared DayOfWeek plusDays(Integer number){
-        value wd = (7 + integer + number) % 7;
-        assert (exists dow = weekdays[wd]);
-        return dow;
+        if (-7 < number < 7) {
+            value wd = (7 + integer + number) % 7;
+            assert (exists dow = weekdays[wd]);
+            return dow;
+        }
+        else {
+            return plusDays(number % 7);
+        }
     }
 
     "Returns a day of week that comes number of days before this DayOfWeek."
@@ -19,26 +43,12 @@ shared abstract class DayOfWeek(integer)
     "Compare days of week."
     shared actual Comparison compare(DayOfWeek other) => this.integer <=> other.integer;
 
-    "Iteration of the _day of week_ is always a modular way,
-     ie [[saturday]] iteration for [[sunday]]
-     will **not** occur in reverse order. It does follow the rules:
+    "Returns the offset of the other _day of week_ compared to this.
 
-     \n_From sunday to saturday_
-     * sunday.offset(sunday)    == 0
-     * sunday.offset(monday)    == 1
-     * sunday.offset(tuesday)   == 2
-     * sunday.offset(wednesday) == 3
-     * sunday.offset(thursday)  == 4
-     * sunday.offset(friday)    == 5
-     * sunday.offset(saturday)  == 6
-     \n_From saturday to sunday_
-     * saturday.offset(sunday)    == 6
-     * saturday.offset(monday)    == 5
-     * saturday.offset(tuesday)   == 4
-     * saturday.offset(wednesday) == 3
-     * saturday.offset(thursday)  == 2
-     * saturday.offset(friday)    == 1
-     * saturday.offset(saturday)  == 0
+     This will always return positive integer such that given any
+     two days of week `a` and `b`, the following is always true:
+
+         assert(0 <= a.offset(b) <= 6);
      "
     shared actual default Integer offset(DayOfWeek other) {
         switch (this <=> other)
@@ -47,13 +57,13 @@ shared abstract class DayOfWeek(integer)
         case (larger) { return 7 + other.integer - integer; }
     }
 
-    "It does follow the rules:
+    "returns `n`-th neighbour of this _day of week_.
 
-     \tvalue i = 1;
-     \tassertEquals(sunday.neighbour(0), sunday);
-     \tassertEquals(sunday.neighbour(i+1), sunday.neighbour(i).successor);
-     \tassertEquals(sunday.neighbour(i-1), sunday.neighbour(i).predecessor);
+     For example:
 
+         assert(sunday.neighbour(0)  == sunday);
+         assert(sunday.neighbour(1)  == monday);
+         assert(sunday.neighbour(-1) == saturday);
      "
     shared actual DayOfWeek neighbour(Integer offset) {
         return plusDays(offset);
