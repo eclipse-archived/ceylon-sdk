@@ -28,7 +28,7 @@ public final class javaIntArray_ {
      * 
      * @see IntArray
      */
-    public static int[] javaIntArray(@SuppressWarnings("rawtypes") @Name("array") 
+    public static int[] javaIntArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Character>|ceylon.language::Array<java.lang::Integer>") 
     Object array){
         @SuppressWarnings("rawtypes")

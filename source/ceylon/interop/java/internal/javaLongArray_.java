@@ -27,7 +27,7 @@ public final class javaLongArray_ {
      * 
      * @see LongArray
      */
-    public static long[] javaLongArray(@SuppressWarnings("rawtypes") @Name("array")
+    public static long[] javaLongArray(@Name("array")
     @TypeInfo("ceylon.language::Array<ceylon.language::Integer>|ceylon.language::Array<java.lang::Long>") 
     Object array){
         @SuppressWarnings("rawtypes")

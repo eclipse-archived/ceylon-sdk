@@ -27,7 +27,7 @@ public final class javaByteArray_ {
      * 
      * @see ByteArray
      */
-    public static byte[] javaByteArray(@SuppressWarnings("rawtypes") @Name("array") 
+    public static byte[] javaByteArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Byte>|ceylon.language::Array<java.lang::Byte>") 
     Object array){
         @SuppressWarnings("rawtypes")
