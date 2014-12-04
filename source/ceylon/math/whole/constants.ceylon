@@ -1,14 +1,16 @@
 "A `Whole` instance representing zero."
-shared Whole zero = wholeNumber(0);
+shared Whole zero = Whole(zeroSign, {0});
 
 "A `Whole` instance representing one."
-shared Whole one = wholeNumber(1);
-Whole negativeOne = wholeNumber(-1);
+shared Whole one = Whole(positiveSign, {1});
+
+"A `Whole` instance representing negative one."
+Whole negativeOne = Whole(negativeSign, {1});
 
 "A `Whole` instance representing two."
-shared Whole two = wholeNumber(2);
+shared Whole two = Whole(positiveSign, {2});
 
-// These are used for WholeImpl.offset, so integerAddressableSize is irrelevant
+// These are used for Whole.offset, so integerAddressableSize is irrelevant
 Whole integerMax = wholeNumber(runtime.maxIntegerValue);
 Whole integerMin = wholeNumber(runtime.minIntegerValue);
 

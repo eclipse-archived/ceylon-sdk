@@ -1,28 +1,39 @@
 "The given [[number]] converted to a [[Whole]]."
-shared Whole wholeNumber(variable Integer number) {
-    Sign sign;
+throws (`class OverflowException`,
+    "if the number is greater than [[runtime.maxIntegerValue]]
+     or less than [[runtime.minIntegerValue]]")
+shared Whole wholeNumber(variable Integer number)
+    =>   if (number == -1) then negativeOne
+    else if (number == 0)  then zero
+    else if (number == 1)  then one
+    else if (number == 2)  then two
+    else Whole(if (number.negative)
+                  then negativeSign
+                  else positiveSign,
+               normalized(integerToWordsAbs(number)));
 
-    // 0th element is non-zero and most-significant
-    Array<Integer> words;
-
-    if (number == 0) {
-        sign = zeroSign;
-        words = Array<Integer> {};
+Array<Integer> integerToWordsAbs(variable Integer integer) {
+    // * Bitwise operations are not used; JavaScript's min/max Integer range
+    //   is greater than what is supported by runtime.integerAddressableSize
+    //
+    // * The absolute value is not calculated as an initial step; on the JVM,
+    //   runtime.minIntegerValue.magnitude == runtime.minIntegerValue
+    //
+    // * These min/max limits were chosen as sane, justifiable, and
+    //   easily documented values. A 64-bit range would require additional
+    //   constants. Using runtime.integerAddressableSize would seem punitive
+    //   on JavaScript, and would also require new constants.
+    //
+    // * Having no limits at all would allow numbers as large as 1.79E+308,
+    //   and would require a different conversion method.
+    if (! runtime.minIntegerValue <= integer <= runtime.maxIntegerValue) {
+        throw OverflowException();
     }
-    else {
-        if (number < 0) {
-            number = -number;
-            sign = negativeSign;
-        }
-        else {
-            sign = positiveSign;
-        }
-
-        words = arrayOfSize(64/wordSize, 0);
-        for (i in 0..(64/wordSize-1)) {
-            // FIXME avoid shift on JS (but make sure 2^63 works on Java)
-            words.set(64/wordSize - i - 1, number.rightLogicalShift(i*wordSize).and(wordMask));
-        }
+    value words = arrayOfSize(64/wordSize, 0);
+    value numWords = 64/wordSize;
+    for (i in 1:numWords) {
+        words.set(numWords - i, (integer % wordRadix).magnitude);
+        integer /= wordRadix;
     }
-    return Whole(sign, normalized(words));
+    return words;
 }

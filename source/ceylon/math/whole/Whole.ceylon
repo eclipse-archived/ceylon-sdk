@@ -32,7 +32,9 @@ shared class Whole(Sign sign, {Integer*} initialWords)
     value lastNonZeroIndex => computeLastNonZeroIndex();
 
     Integer() computeInteger = memoize(() {
-        // result is the two's complement representation `and` wordMask
+        // result is lower runtime.integerAddressableSize bits of
+        // the two's complement representation
+
         // for negative numbers, flip the bits and add 1
         variable Integer result = 0;
         // result should have up to integerAddressableSize bits (32 or 64)
@@ -53,11 +55,15 @@ shared class Whole(Sign sign, {Integer*} initialWords)
         return result;
     });
 
-
     "The number, represented as an [[Integer]]. If the number is too
      big to fit in an Integer then an Integer corresponding to the
      lower order bits is returned."
     shared Integer integer => computeInteger();
+    // TODO document 32 bit JS limit; nail down justification, including
+    // asymmetry with wholeNumber(). No other amount seems reasonable.
+    // JavaScript _almost_ supports 53 bits (1 negative number short),
+    // but even so, 53 bits is not a convenient chunk to work with, and
+    // is greater than the 32 bits supported for bitwise operations.
 
     shared actual Whole plus(Whole other) {
         return if (zero)
