@@ -24,5 +24,5 @@ shared Whole wholeNumber(variable Integer number) {
             words.set(64/wordSize - i - 1, number.rightLogicalShift(i*wordSize).and(wordMask));
         }
     }
-    return WholeImpl(sign, normalized(words));
+    return Whole(sign, normalized(words));
 }
