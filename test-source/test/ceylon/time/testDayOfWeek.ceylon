@@ -137,9 +137,3 @@ shared test void dayOfWeekNeigbours() => assertEquals {
     actual = [for (i in -7..7) monday.neighbour(i)];
     expected = [monday, tuesday, wednesday, thursday, friday, saturday, sunday, monday, tuesday, wednesday, thursday, friday, saturday, sunday, monday];
 };
-
-shared void run() {
-    print((monday..sunday).size);
-    print([for (dow in monday..sunday) monday.offset(dow)]);
-    print([for (dow in monday..sunday) dow.offset(monday)]);
-}
