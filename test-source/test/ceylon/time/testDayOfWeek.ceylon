@@ -112,13 +112,34 @@ shared test void dayOfWeekRangeWrapsAroundSaturday() => assertEquals {
     expected = [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
 };
 
-// Enimerable tests:
-shared test void dayOfWeekOffsetsAlwaysIncreasing() => assertEquals {
-    actual = [for (dow in monday..sunday) monday.offset(dow)];
+// Enumerable tests:
+shared test void dayOfWeekOffsetsAlwaysIncreasing1() => assertEquals {
+    actual = [for (dow in monday..sunday) dow.offset(monday)];
     expected = [0, 1, 2, 3, 4, 5, 6];
+};
+
+shared test void dayOfWeekOffsetsAlwaysIncreasing2() => assertEquals {
+    actual = [for (dow in monday..sunday) dow.offset(sunday)];
+    expected = [1, 2, 3, 4, 5, 6, 0];
+};
+
+shared test void dayOfWeekOffsetsAlwaysIncreasing3() => assertEquals {
+    actual = [for (dow in monday..sunday) monday.offset(dow)];
+    expected = [0, 6, 5, 4, 3, 2, 1];
+};
+
+shared test void dayOfWeekOffsetsAlwaysIncreasing4() => assertEquals {
+    actual = [for (dow in monday..sunday) sunday.offset(dow)];
+    expected = [6, 5, 4, 3, 2, 1, 0];
 };
 
 shared test void dayOfWeekNeigbours() => assertEquals {
     actual = [for (i in -7..7) monday.neighbour(i)];
     expected = [monday, tuesday, wednesday, thursday, friday, saturday, sunday, monday, tuesday, wednesday, thursday, friday, saturday, sunday, monday];
 };
+
+shared void run() {
+    print((monday..sunday).size);
+    print([for (dow in monday..sunday) monday.offset(dow)]);
+    print([for (dow in monday..sunday) dow.offset(monday)]);
+}
