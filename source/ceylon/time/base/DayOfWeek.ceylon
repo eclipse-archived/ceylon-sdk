@@ -50,10 +50,9 @@ shared abstract class DayOfWeek(integer)
 
          assert(0 <= a.offset(b) <= 6);
      "
-    shared actual default Integer offset(DayOfWeek other) {
-        value diff = integer - other.integer;
-        return diff<0 then diff+7 else diff;
-    }
+    shared actual default Integer offset(DayOfWeek other)
+            => let (diff = integer - other.integer)
+                    diff<0 then diff+7 else diff;
 
     "returns `n`-th neighbour of this _day of week_.
 
@@ -63,9 +62,7 @@ shared abstract class DayOfWeek(integer)
          assert(sunday.neighbour(1)  == monday);
          assert(sunday.neighbour(-1) == saturday);
      "
-    shared actual DayOfWeek neighbour(Integer offset) {
-        return plusDays(offset);
-    }
+    shared actual DayOfWeek neighbour(Integer offset) => plusDays(offset);
 
 }
 
