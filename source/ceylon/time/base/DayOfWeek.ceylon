@@ -51,10 +51,8 @@ shared abstract class DayOfWeek(integer)
          assert(0 <= a.offset(b) <= 6);
      "
     shared actual default Integer offset(DayOfWeek other) {
-        switch (this <=> other)
-        case (equal) { return 0; }
-        case (smaller) { return other.integer - integer; }
-        case (larger) { return 7 + other.integer - integer; }
+        value diff = integer - other.integer;
+        return diff<0 then diff+7 else diff;
     }
 
     "returns `n`-th neighbour of this _day of week_.
