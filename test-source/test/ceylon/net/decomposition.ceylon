@@ -189,10 +189,10 @@ test void testDecoding(){
         path = "/segm%2F%3F%3Bent1;par%2F%3F%3B%3Dam1;par%2F%3F%3B%3Dam2=val%2F%3F%3B=%23ue/segment2";
         decomposedPath = Path {
             absolute = true;
-            initialSegments = [
+            segments = [
                 PathSegment {
                     name = "segm/?;ent1";
-                    initialParameters = [
+                    parameters = [
                         Parameter {
                             name = "par/?;=am1";
                         },
@@ -210,7 +210,7 @@ test void testDecoding(){
 //        query = "par&=#am3&par&=#am4=val&=#ue2";
         query = "par%26%3D%23am3&par%26%3D%23am4=val%26%3D%23ue2";
         decomposedQuery = Query {
-            initialParameters = [
+            parameters = [
             Parameter {
                 name = "par&=#am3";
             },

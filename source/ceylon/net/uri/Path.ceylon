@@ -1,14 +1,20 @@
 "Represents a URI Path part"
 by("Stéphane Épardaud")
-shared class Path(
-    absolute = false,
-    PathSegment* initialSegments) {
-
+shared class Path {
     "The list of path segments"
-    shared PathSegment[] segments = initialSegments.sequence();
+    shared PathSegment[] segments;
 
-    "True if this URI is absolute (begins with a `/`)"
+    "True if this path is absolute (begins with a `/`)"
     shared Boolean absolute;
+
+    shared new Path(
+            "True if this path is absolute (begins with a `/`)"
+            Boolean absolute = false,
+            "The list of path segments"
+            PathSegment* segments) {
+        this.segments = segments.sequence();
+        this.absolute = absolute;
+    }
 
     "Returns true if the given object is the same as this
      object"
