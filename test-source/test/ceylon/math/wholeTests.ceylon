@@ -59,11 +59,13 @@ test void wholeTimesTests() {
 test void wholeDividedTests() {
     assertTrue(wholeNumber(2) == wholeNumber(4).divided(wholeNumber(2)), "4.divided(2)");
     assertTrue(wholeNumber(2) == wholeNumber(4) / wholeNumber(2), "4/2");
+    assertTrue(wholeNumber(1) == wholeNumber(4) / wholeNumber(3), "4/3");
 }
 
 test void wholeRemainderTests() {
     assertEquals(wholeNumber(0), wholeNumber(4).remainder(wholeNumber(2)), "4.remainder(2)");
     assertEquals(wholeNumber(0), wholeNumber(4) % wholeNumber(2), "4%2");
+    assertEquals(wholeNumber(1), wholeNumber(4) / wholeNumber(3), "4%3");
 }
 
 test void wholePowerTests() {

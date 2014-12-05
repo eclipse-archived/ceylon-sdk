@@ -1,5 +1,5 @@
 "An arbitrary precision integer."
-shared class Whole(Sign sign, {Integer*} initialWords)
+shared final class Whole(Sign sign, {Integer*} initialWords)
         satisfies Integral<Whole> &
                   Exponentiable<Whole, Whole> {
 
@@ -358,6 +358,12 @@ shared class Whole(Sign sign, {Integer*} initialWords)
 
     [Array<Integer>, Array<Integer>] divide(
             List<Integer> dividend, List<Integer> divisor) {
+
+        if (divisor.size < 2) {
+            assert (exists first = divisor.first);
+            return divideSimple(dividend, first);
+        }
+
         // Knuth 4.3.1 Algorithm D
         //assert(divisor.size >= 2);
 
@@ -417,6 +423,20 @@ shared class Whole(Sign sign, {Integer*} initialWords)
             }
         }
         return [normalized(q), normalized(u)];
+    }
+    
+    [Array<Integer>, Array<Integer>] divideSimple(List<Integer> u, Integer v) {
+        assert(u.size >= 1, v.and(wordMask) == v);
+        variable value r = 0;
+        value q = arrayOfSize(u.size, 0);
+        for (j in 0..u.size-1) {
+            assert (exists uj = u[j]);
+            q.set(j, (r * wordRadix + uj) / v);
+            r = (r * wordRadix + uj) % v;
+        }
+        return [normalized(q), if (r.zero)
+                               then Array<Integer> {}
+                               else Array<Integer> { r }];
     }
 
     Whole leftLogicalShift(Integer shift) => nothing;
