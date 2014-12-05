@@ -365,7 +365,7 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
         }
 
         // Knuth 4.3.1 Algorithm D
-        //assert(divisor.size >= 2);
+        // assert(divisor.size >= 2);
 
         // D1. Normalize
         // TODO: left shift such that v0 >= radix/2 instead of the times approach
@@ -373,10 +373,11 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
         value m = dividend.size - divisor.size;
         value b = wordRadix;
         value d = [b / ((divisor[0] else 0) + 1)];
-        value tmpU = multiply(dividend, d);
-        Array<Integer> u = tmpU.size == dividend.size // always increase size by 1
-        then Array<Integer> { 0, *tmpU }
-        else tmpU;
+        Array<Integer> u = // always increase size by 1
+            let (x = multiply(dividend, d))
+            if (x.size == dividend.size)
+            then Array<Integer> { 0, *x }
+            else x;
         List<Integer> v = multiply(divisor, d); // will be same length as divisor
         Array<Integer> q = arrayOfSize(m+1, 0); // quotient
         assert(exists v0 = v[0], v0 != 0); // most significant, can't be 0
