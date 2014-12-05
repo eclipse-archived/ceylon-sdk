@@ -7,9 +7,6 @@ by("Stéphane Épardaud")
 shared class Authority(user = null, password = null, host = null, port = null,
         ipLiteral = false) {
 
-    // FIXME review use of ipLiteral; should this be a settable property, or is
-    // it strictly computable from the host?
-
     "The optional user"
     shared String? user;
 
@@ -19,29 +16,29 @@ shared class Authority(user = null, password = null, host = null, port = null,
     "The optional host"
     shared String? host;
 
-    "True if the host name is an ipLiteral (IPV6 or later) and has to be represented 
+    "True if the host name is an ipLiteral (IPV6 or later) and has to be represented
      surrounded by [] (square brackets)"
     shared Boolean ipLiteral;
-    
+
     "The optional port number"
     shared Integer? port;
-    
+
     "Returns true if the authority part is present (if the host is not null)"
     shared Boolean specified {
         return host exists;
     }
-    
-    "Returns an externalisable (percent-encoded) representation of this part"    
+
+    "Returns an externalisable (percent-encoded) representation of this part"
     shared actual String string {
         return toRepresentation(false);
     }
 
-    "Returns a human (non parseable) representation of this part"    
+    "Returns a human (non parseable) representation of this part"
     shared String humanRepresentation {
         return toRepresentation(true);
     }
 
-    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"
     shared String toRepresentation(Boolean human) {
         if(exists String host = host) {
             StringBuilder b = StringBuilder();
@@ -106,7 +103,7 @@ shared class Authority(user = null, password = null, host = null, port = null,
         }
         return false;
     }
-    
+
     shared actual Integer hash {
         variable value hash = 1;
         hash = 31*hash + (user?.hash else 0);

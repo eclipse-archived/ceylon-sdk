@@ -21,14 +21,16 @@ throws(`class InvalidUriException`,
     "If the URI is invalid")
 shared Uri parse(String uri) {
     variable String? scheme = null;
+
     variable String? authorityUser = null;
     variable String? authorityPassword = null;
     variable String? authorityHost = null;
     variable Integer? authorityPort = null;
     variable Boolean authorityIPLiteral = false;
-    variable String? fragment = null;
+
     variable Path path = defaultPath;
     variable Query query = defaultQuery;
+    variable String? fragment = null;
 
     String parseScheme(String uri) {
         Integer? sep = uri.firstInclusion(":");
@@ -231,13 +233,18 @@ shared Uri parse(String uri) {
 
     parseURI(uri);
 
-    Authority authority = Authority {
-        user = authorityUser;
-        password = authorityPassword;
-        host = authorityHost;
-        port = authorityPort;
-        ipLiteral = authorityIPLiteral;
-    };
+    Authority authority =
+        if (authorityUser exists
+                || authorityPassword exists
+                || authorityHost exists
+                || authorityPort exists)
+        then Authority {
+            user = authorityUser;
+            password = authorityPassword;
+            host = authorityHost;
+            port = authorityPort;
+            ipLiteral = authorityIPLiteral; }
+        else defaultAuthority;
 
-    return Uri(scheme, authority, path, query, fragment);
+   return Uri(scheme, authority, path, query, fragment);
 }
