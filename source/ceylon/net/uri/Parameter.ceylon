@@ -4,11 +4,11 @@ import ceylon.net.iop {
 
 "Represents a URI path segment or query parameter"
 by("Stéphane Épardaud")
-shared class Parameter(String initialName, String? initialValue = null) {
-    shared String name = initialName;
-    shared String? val = initialValue;
-    
-    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
+shared class Parameter(name, val = null) {
+    shared String name;
+    shared String? val;
+
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"
     shared String toRepresentation(Boolean human) {
         if(exists String val = val) {
             return human then name + "=" + val
@@ -18,12 +18,12 @@ shared class Parameter(String initialName, String? initialValue = null) {
         }
     }
 
-    "Returns an externalisable (percent-encoded) representation of this part"    
+    "Returns an externalisable (percent-encoded) representation of this part"
     shared actual String string {
         return toRepresentation(false);
     }
 
-    "Returns a human (non parseable) representation of this part"    
+    "Returns a human (non parseable) representation of this part"
     shared String humanRepresentation {
         return toRepresentation(true);
     }
@@ -39,7 +39,7 @@ shared class Parameter(String initialName, String? initialValue = null) {
         }
         return false;
     }
-    
+
     shared actual Integer hash {
         variable value hash = 1;
         hash = 31*hash + name.hash;

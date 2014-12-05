@@ -194,11 +194,11 @@ test void testDecoding(){
                     name = "segm/?;ent1";
                     initialParameters = [
                         Parameter {
-                            initialName = "par/?;=am1";
+                            name = "par/?;=am1";
                         },
                         Parameter {
-                            initialName = "par/?;=am2";
-                            initialValue = "val/?;=#ue";
+                            name = "par/?;=am2";
+                            val = "val/?;=#ue";
                         }
                     ];
                 },
@@ -212,11 +212,11 @@ test void testDecoding(){
         decomposedQuery = Query {
             initialParameters = [
             Parameter {
-                initialName = "par&=#am3";
+                name = "par&=#am3";
             },
             Parameter {
-                initialName = "par&=#am4";
-                initialValue = "val&=#ue2";
+                name = "par&=#am4";
+                val = "val&=#ue2";
             }];
         };
         fragment = "frag&=#ment";
