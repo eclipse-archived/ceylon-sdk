@@ -6,28 +6,28 @@ import ceylon.net.iop {
 }
 
 "The URI class. See [RCF 3986][rfc3986] for specifications.
- 
+
  [rfc3986]: http://tools.ietf.org/html/rfc3986"
 by("Stéphane Épardaud")
-shared class Uri(scheme = null, 
-    authority = Authority(), 
-    path = Path(), 
-    query = Query(), 
+shared class Uri(scheme = null,
+    authority = defaultAuthority,
+    path = defaultPath,
+    query = defaultQuery,
     fragment = null) {
-    
+
     "The optional URI scheme: `http`, `https`, `mailto`…"
     shared String? scheme;
-    
-    "The optional Authority part (contains user, password, 
+
+    "The optional Authority part (contains user, password,
      host and port)"
     shared Authority authority;
-    
+
     "The optional Path part"
     shared Path path;
-    
+
     "The optional query part"
     shared Query query;
-    
+
     "The optional fragment (hash) part"
     shared String? fragment;
 
@@ -36,18 +36,18 @@ shared class Uri(scheme = null,
         return !scheme exists;
     }
 
-    "Returns the path as an externalisable (percent-encoded) 
-     string representation. Can be an empty string." 
+    "Returns the path as an externalisable (percent-encoded)
+     string representation. Can be an empty string."
     shared String pathPart {
         return path.string;
     }
-    
-    "Returns the query as an externalisable (percent-encoded) 
-     string representation. Can be null." 
+
+    "Returns the query as an externalisable (percent-encoded)
+     string representation. Can be null."
     shared String? queryPart {
         return query.specified then query.string;
     }
-    
+
     String toRepresentation(Boolean human) {
         StringBuilder b = StringBuilder();
         if(exists scheme) {
@@ -70,13 +70,13 @@ shared class Uri(scheme = null,
         return b.string;
     }
 
-    "Returns an externalisable (percent-encoded) 
+    "Returns an externalisable (percent-encoded)
      representation of this URI."
     shared actual String string {
         return toRepresentation(false);
     }
-    
-    "Returns a human (not parseable) representation of this 
+
+    "Returns a human (not parseable) representation of this
      URI."
     shared String humanRepresentation {
         return toRepresentation(true);
@@ -89,7 +89,7 @@ shared class Uri(scheme = null,
     "Create a new [[Uri]] based on this [[Uri]], replacing the `authority` with the given value"
     shared Uri withAuthority(Authority authority)
         => Uri(scheme, authority, path, query, fragment);
-    
+
     "Create a new [[Uri]] based on this [[Uri]], replacing the `path` with the given value"
     shared Uri withPath(Path path)
         => Uri(scheme, authority, path, query, fragment);
@@ -110,7 +110,7 @@ shared class Uri(scheme = null,
                     String? fragment = this.fragment)
         => Uri(scheme, authority, path, query, fragment);
 
-    "Returns true if the given object is the same as this 
+    "Returns true if the given object is the same as this
      object"
     shared actual Boolean equals(Object that) {
         if(is Uri that) {
@@ -121,11 +121,11 @@ shared class Uri(scheme = null,
                 && authority == that.authority
                 && path == that.path
                 && query == that.query
-                && eq(fragment, that.fragment); 
+                && eq(fragment, that.fragment);
         }
         return false;
     }
-    
+
     shared actual Integer hash {
         variable value hash = 1;
         hash = 31*hash + (scheme?.hash else 0);
@@ -135,7 +135,7 @@ shared class Uri(scheme = null,
         hash = 31*hash + (fragment?.hash else 0);
         return hash;
     }
-    
+
     "Returns a GET HTTP request"
     shared Request get() {
         return Request(this);

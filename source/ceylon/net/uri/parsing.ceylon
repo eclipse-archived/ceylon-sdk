@@ -1,16 +1,23 @@
+import ceylon.collection {
+    LinkedList
+}
 "Parses a raw percent-encoded path parameter"
 shared Parameter parseParameter(String part) {
     Integer? sep = part.firstOccurrence('=');
     if(exists sep) {
-        return Parameter(decodePercentEncoded(part.initial(sep)), 
+        return Parameter(decodePercentEncoded(part.initial(sep)),
             decodePercentEncoded(part.terminal(part.size - sep - 1)));
     }else{
         return Parameter(decodePercentEncoded(part));
     }
 }
 
+Authority defaultAuthority = Authority();
+Query defaultQuery = Query();
+Path defaultPath = Path();
+
 "Parses a URI"
-throws(`class InvalidUriException`, 
+throws(`class InvalidUriException`,
     "If the URI is invalid")
 shared Uri parse(String uri) {
     variable String? scheme = null;
@@ -19,10 +26,10 @@ shared Uri parse(String uri) {
     variable String? authorityHost = null;
     variable Integer? authorityPort = null;
     variable Boolean authorityIPLiteral = false;
-    variable String pathPart = "";
-    variable String queryPart = "";
     variable String? fragment = null;
-    
+    variable Path path = defaultPath;
+    variable Query query = defaultQuery;
+
     String parseScheme(String uri) {
         Integer? sep = uri.firstInclusion(":");
         if(exists sep) {
@@ -87,14 +94,14 @@ shared Uri parse(String uri) {
             authorityPort = null;
         }
     }
-    
+
     String parseAuthority(String uri) {
         if(!uri.startsWith("//")) {
             return uri;
         }
         // eat the two slashes
         String part = uri[2...];
-        Integer? sep = part.firstOccurrence('/') 
+        Integer? sep = part.firstOccurrence('/')
             else part.firstOccurrence('?')
             else part.firstOccurrence('#');
         String authority;
@@ -111,7 +118,7 @@ shared Uri parse(String uri) {
         String hostAndPort;
         if(exists userInfoSep) {
             parseUserInfo(authority.measure(0, userInfoSep));
-            hostAndPort = authority[userInfoSep+1...]; 
+            hostAndPort = authority[userInfoSep+1...];
         }else{
             hostAndPort = authority;
         }
@@ -119,8 +126,37 @@ shared Uri parse(String uri) {
         return remains;
     }
 
+    {Parameter*} parsePathSegmentParameters(String part) {
+        value list = LinkedList<Parameter>();
+        for(param in part.split((Character ch) => ch == ';', true, false)) {
+            list.add(parseParameter(param));
+        }
+        return list;
+    }
+
+    "Parse a raw (percent-encoded) segment, with optional
+     parameters to be parsed"
+    PathSegment parseRawPathSegment(String part) {
+        Integer? sep = part.firstOccurrence(';');
+        String name;
+        if(exists sep) {
+            name = part[0..sep-1];
+        }else{
+            name = part;
+        }
+        PathSegment path;
+        if(exists sep) {
+            path = PathSegment(decodePercentEncoded(name),
+                               *parsePathSegmentParameters(part[sep+1...]));
+        }else{
+            path = PathSegment(decodePercentEncoded(name));
+        }
+        return path;
+    }
+
     String parsePath(String uri) {
         Integer? sep = uri.firstOccurrence('?') else uri.firstOccurrence('#');
+        String pathPart;
         String remains;
         if(exists sep) {
             pathPart = uri.measure(0, sep);
@@ -130,16 +166,41 @@ shared Uri parse(String uri) {
             pathPart = uri;
             remains = "";
         }
+        LinkedList<PathSegment>? segments;
+        if(!pathPart.empty) { // else, use default `path` already initialized
+            segments = LinkedList<PathSegment>();
+            assert (exists segments);
+            variable Boolean first = true;
+            variable Boolean absolute = false;
+            for(String part in pathPart.split((Character ch) => ch == '/', true, false)) {
+                if(first && part.empty) {
+                    absolute = true;
+                    first = false;
+                    continue;
+                }
+                first = false;
+                segments.add(parseRawPathSegment(part));
+            }
+            path = Path(absolute, *segments);
+        }
         return remains;
+    }
+
+    Query parseQueryPart(String queryPart) {
+        value list = LinkedList<Parameter>();
+        for(param in queryPart.split((Character ch) => ch == '&', true, false)) {
+            list.add(parseParameter(param));
+        }
+        return Query(*list);
     }
 
     String parseQuery(String uri) {
         Character? c = uri[0];
         if(exists c) {
-            if(c == '?') {
+            if(c == '?') { // else, use default `query` already initialized
                 // we have a query part
                 Integer end = uri.firstOccurrence('#') else uri.size;
-                queryPart = uri.measure(1, end-1);
+                query = parseQueryPart(uri.measure(1, end-1));
                 return uri[end...];
             }
         }
@@ -159,7 +220,7 @@ shared Uri parse(String uri) {
         // no query/fragment part
         return uri;
     }
-    
+
     void parseURI(String uri) {
         variable String remains = parseScheme(uri);
         remains = parseAuthority(remains);
@@ -177,8 +238,6 @@ shared Uri parse(String uri) {
         port = authorityPort;
         ipLiteral = authorityIPLiteral;
     };
-    Path path = Path(pathPart);
-    Query query = Query(queryPart);
 
     return Uri(scheme, authority, path, query, fragment);
 }

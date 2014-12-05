@@ -1,7 +1,7 @@
 import ceylon.net.uri { ... }
 import ceylon.test { ... }
 
-void testURL(String url, 
+void testURL(String url,
             String? scheme = null,
             String? user = null,
             String? pass = null,
@@ -23,18 +23,18 @@ void testURL(String url,
     assertEquals(path else "", u.pathPart, "Path "+url);
     if(exists decomposedPath){
         assertEquals(decomposedPath, u.path, "Decomposed Path "+url);
-    } 
+    }
     assertEquals(query, u.queryPart, "Query "+url);
     assertEquals(fragment, u.fragment, "Fragment "+url);
     if(exists decomposedQuery){
         assertEquals(decomposedQuery, u.query, "Decomposed Query "+url);
-    } 
-    
+    }
+
     assertEquals(url, u.string, "String "+url);
 }
 
 test void testDecomposition(){
-    testURL{ 
+    testURL{
         url = "http://user:pass@www.foo.com:80/path/to;param1;param2=foo/file.html?foo=bar&foo=gee&bar#anchor";
         scheme = "http";
         user = "user";
@@ -45,86 +45,86 @@ test void testDecomposition(){
         query = "foo=bar&foo=gee&bar";
         fragment = "anchor";
     };
-    testURL{ 
+    testURL{
         url = "http://host";
         scheme = "http";
         host = "host";
     };
-    testURL{ 
+    testURL{
         url = "http://host/";
         scheme = "http";
         host = "host";
         path = "/";
     };
-    testURL{ 
+    testURL{
         url = "http://host?foo";
         scheme = "http";
         host = "host";
         query = "foo";
     };
-    testURL{ 
+    testURL{
         url = "http://host#foo";
         scheme = "http";
         host = "host";
         fragment = "foo";
     };
-    testURL{ 
+    testURL{
         url = "http://user@host";
         scheme = "http";
         user = "user";
         host = "host";
     };
-    testURL{ 
+    testURL{
         url = "http://host:80";
         scheme = "http";
         host = "host";
         port = 80;
     };
-    testURL{ 
+    testURL{
         url = "file:///no/host";
         scheme = "file";
         host = "";
         path = "/no/host";
     };
-    testURL{ 
+    testURL{
         url = "file:///";
         scheme = "file";
         host = "";
         path = "/";
     };
-    testURL{ 
+    testURL{
         url = "mailto:stef@epardaud.fr";
         scheme = "mailto";
         path = "stef@epardaud.fr";
     };
-    testURL{ 
+    testURL{
         url = "//host/file";
         host = "host";
         path = "/file";
     };
-    testURL{ 
+    testURL{
         url = "/path/somewhere";
         path = "/path/somewhere";
     };
-    testURL{ 
+    testURL{
         url = "someFile";
         path = "someFile";
     };
-    testURL{ 
+    testURL{
         url = "?query";
         query = "query";
     };
-    testURL{ 
+    testURL{
         url = "#anchor";
         fragment = "anchor";
     };
-    testURL{ 
+    testURL{
         url = "http://192.168.1.1:80";
         scheme = "http";
         host = "192.168.1.1";
         port = 80;
     };
-    testURL{ 
+    testURL{
         url = "http://[::1]:80";
         scheme = "http";
         host = "::1";
@@ -141,10 +141,10 @@ test void testDecomposition(){
 }
 
 test void testComposition(){
-    Uri u = Uri("http", 
+    Uri u = Uri("http",
                 Authority("stef", null, "192.168.1.1", 9000),
-                Path({PathSegment("a"), PathSegment("b", {Parameter("c"), Parameter("d", "e")})}, true),
-                Query({Parameter("q"), Parameter("r","s")}),
+                Path(true, PathSegment("a"), PathSegment("b", Parameter("c"), Parameter("d", "e"))),
+                Query(Parameter("q"), Parameter("r","s")),
                 null);
     testURL{
         url = u.string;
@@ -188,10 +188,10 @@ test void testDecoding(){
 //        path = "/segm/?;ent1;par/?;=am1;par/?;=am2=val/?;=#ue/segment2";
         path = "/segm%2F%3F%3Bent1;par%2F%3F%3B%3Dam1;par%2F%3F%3B%3Dam2=val%2F%3F%3B=%23ue/segment2";
         decomposedPath = Path {
-            initialAbsolute = true;
-            path = [
+            absolute = true;
+            initialSegments = [
                 PathSegment {
-                    initialName = "segm/?;ent1";
+                    name = "segm/?;ent1";
                     initialParameters = [
                         Parameter {
                             initialName = "par/?;=am1";
@@ -203,7 +203,7 @@ test void testDecoding(){
                     ];
                 },
                 PathSegment {
-                    initialName = "segment2";
+                    name = "segment2";
                 }
             ];
         };
@@ -221,7 +221,7 @@ test void testDecoding(){
         };
         fragment = "frag&=#ment";
     };
-        
+
 }
 
 test void testUriBuilding(){
