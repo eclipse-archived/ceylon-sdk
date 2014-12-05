@@ -124,9 +124,11 @@ test void wholePredicatesTests() {
 }
 
 test void wholeHashTests() {
-    assertEquals(0, wholeNumber(0).hash, "0.hash");
-    assertEquals(1, wholeNumber(1).hash, "1.hash");
-    assertEquals(2, wholeNumber(2).hash, "2.hash");
+    assertEquals(0.hash, wholeNumber(0).hash, "0.hash");
+    assertEquals(1.hash, wholeNumber(1).hash, "1.hash");
+    assertEquals(2.hash, wholeNumber(2).hash, "2.hash");
+    assertEquals((-1).hash, wholeNumber(-1).hash, "-1.hash");
+    assertEquals((-2).hash, wholeNumber(-2).hash, "-2.hash");
 }
 
 test void wholeSuccessorTests() {

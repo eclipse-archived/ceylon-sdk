@@ -259,7 +259,8 @@ shared class Whole(Sign sign, {Integer*} initialWords)
     see(`function fromImplementation`)
     shared Object? implementation => nothing;  // TODO remove once decimal allows
 
-    shared actual Integer hash => super.hash; // TODO
+    shared actual Integer hash
+        => sign.integer * words.fold(0)((acc, x) => 31*acc + x);
 
     shared actual String string
         =>  if (zero)
