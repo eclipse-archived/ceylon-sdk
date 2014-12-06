@@ -262,10 +262,27 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
     shared actual Integer hash
         => sign.integer * words.fold(0)((acc, x) => 31*acc + x);
 
-    shared actual String string
-        =>  if (zero)
-            then { 0 }.string
-            else (sign.negative then "-" else "") + words.string;
+    shared actual String string {
+        // TODO optimize? & support any radix
+        if (this.zero) {
+            return "0";
+        }
+        else {
+            // Use Integer once other fn's are optimized
+            value toRadix = wholeNumber(10);
+            value sb = StringBuilder();
+            variable value x = this.magnitude;
+            while (!x.zero) {
+                value qr = x.quotientAndRemainder(toRadix);
+                x = qr[0];
+                sb.append (qr[1].integer.string);
+            }
+            if (negative) {
+                sb.append("-");
+            }
+            return sb.string.reversed;
+        }
+    }
 
     shared actual Comparison compare(Whole other) {
         return if (sign != other.sign)
