@@ -232,7 +232,10 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
     "The number, represented as a [[Float]]. If the magnitude of this number
      is too large the result will be `infinity` or `-infinity`. If the result
      is finite, precision may still be lost."
-    shared Float float => nothing;
+    shared Float float {
+        assert (exists f = parseFloat(string));
+        return f;
+    }
 
     // TODO doc
     shared Boolean even => words.last?.even else false;
