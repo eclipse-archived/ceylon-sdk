@@ -399,7 +399,7 @@ shared final class Whole
         value m = dividend.size - divisor.size;
         value b = wordRadix;
         value d = [b / ((divisor[0] else 0) + 1)];
-        Array<Integer> u = // always increase size by 1
+        Array<Integer> u = // always increase size by 1; will hold remainder
             let (x = multiply(dividend, d))
             if (x.size == dividend.size)
             then Array<Integer> { 0, *x }
@@ -438,22 +438,34 @@ shared final class Whole
 
             // D4. Multiply, Subtract
             if (qj != 0) {
-                variable value ujjn = u[j..j+n];
+                // TODO: avoid normalization?
+                variable value ujjn = normalized(u[j..j+n]);
                 value prod = multiply([qj], v);
                 if (compareMagnitude(ujjn, prod) == smaller) {
                     throw Exception("case not handled"); // FIXME
                 } else {
-                    // TODO: subtract returns un-normalized, so this works for now
-                    subtract(ujjn, prod).copyTo(u, 0, j);
+                    ujjn = subtract(ujjn, prod);
+                    // ujjn.copyTo(u, 0, j, n+1); but manually in case
+                    // ujjn has been shortened through normalization
+                    for (i in 0..n) {
+                      u.set(j+n-i, ujjn.getFromLast(i) else 0);
+                    }
                 }
                 q.set(j, qj);
             }
         }
-        return [normalized(q), normalized(u)];
+
+        // D8. Unnormalize Remainder Due to Step D1
+        variable value remainder = normalized(u);
+        if (!remainder.empty) {
+            remainder = divideSimple(remainder,d[0])[0];
+        }
+        return [normalized(q), remainder];
     }
-    
+
     [Array<Integer>, Array<Integer>] divideSimple(List<Integer> u, Integer v) {
-        assert(u.size >= 1, v.and(wordMask) == v);
+        assert(u.size >= 1);
+        assert(v.and(wordMask) == v);
         variable value r = 0;
         value q = arrayOfSize(u.size, 0);
         for (j in 0..u.size-1) {
