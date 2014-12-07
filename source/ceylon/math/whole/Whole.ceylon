@@ -453,8 +453,15 @@ shared final class Whole
         value q = arrayOfSize(u.size, 0);
         for (j in 0..u.size-1) {
             assert (exists uj = u[j]);
-            q.set(j, (r * wordRadix + uj) / v);
-            r = (r * wordRadix + uj) % v;
+            value x = r * wordRadix + uj;
+            if (x >= 0) {
+                q.set(j, x / v);
+                r = x % v;
+            } else {
+                value qr = unsignedDivide(x, v);
+                q.set(j, qr[0]);
+                r = qr[1];
+            }
         }
         return [normalized(q), if (r.zero)
                                then Array<Integer> {}
