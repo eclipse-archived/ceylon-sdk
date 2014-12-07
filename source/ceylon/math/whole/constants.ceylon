@@ -16,8 +16,8 @@ Whole integerMin = wholeNumber(runtime.minIntegerValue);
 
 // Word size is 32 for the Java Runtime, 16 for JavaScript
 // any factor of integerAddressableSize <= iAS / 2 will work
-//Integer wordSize = runtime.integerAddressableSize / 2;
-Integer wordSize = 4; // FIXME, using 4 for testing
+Integer wordSize = runtime.integerAddressableSize / 2;
+//Integer wordSize = 4; // FIXME, using 4 for testing
 Integer wordMask = 2 ^ wordSize - 1;
 Integer wordRadix = 2 ^ wordSize;
 

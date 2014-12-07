@@ -1,5 +1,31 @@
-import ceylon.test { ... }
-import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, two, zero}
+import ceylon.math.whole {
+    Whole,
+    parseWhole,
+    wholeNumber,
+    one,
+    two,
+    zero
+}
+import ceylon.test {
+    ...
+}
+
+import com.vasileff.ceylon.random.api {
+    randomLimits,
+    Random,
+    stream
+}
+import com.vasileff.ceylon.random.sample {
+    LCGRandom
+}
+
+import java.lang {
+    Thread
+}
+
+import java.math {
+    BigInteger
+}
 
 Whole parseWholeOrFail(String str) {
     Whole? result = parseWhole(str);
@@ -175,7 +201,297 @@ test void wholeMiscTests() {
     }
 }
 
+Integer iters = 500;
+{Integer*} bits = (8..128).by(8).follow(4);
+
+test void wholeTortureAddition() {
+    wholeTorture {
+        label = "+";
+        lhsBits = bits;
+        rhsBits = bits;
+        iterations = iters;
+        ceylonOp = Whole.plus;
+        javaOp = BigInteger.add;
+    };
+}
+
+test void wholeTortureSubtraction() {
+    wholeTorture {
+        label = "-";
+        lhsBits = bits;
+        rhsBits = bits;
+        iterations = iters;
+        ceylonOp = Whole.minus;
+        javaOp = BigInteger.subtract;
+    };
+}
+
+test void wholeTortureMultiplication() {
+    wholeTorture {
+        label = "*";
+        lhsBits = bits;
+        rhsBits = bits;
+        iterations = iters;
+        ceylonOp = Whole.times;
+        javaOp = BigInteger.multiply;
+    };
+}
+
+test void wholeTortureDivision() {
+    wholeTorture {
+        label = "÷";
+        lhsBits = bits;
+        rhsBits = bits;
+        iterations = iters;
+        ceylonOp = Whole.divided;
+        javaOp = BigInteger.divide;
+        allowZeroRhs = false;
+    };
+}
+
+test void wholeTortureRemainder() {
+    wholeTorture {
+        label = "%";
+        lhsBits = bits;
+        rhsBits = bits;
+        iterations = iters;
+        ceylonOp = Whole.remainder;
+        javaOp = BigInteger.remainder;
+        allowZeroRhs = false;
+    };
+}
+
+test void wholeTorturePower() {
+    wholeTorture {
+        label = "^";
+        lhsBits = (2..128).by(16);
+        rhsBits = (2..6).by(2);
+        iterations = 100;
+        ceylonOp = Whole.power;
+        javaOp = ((BigInteger x)(BigInteger y) => x.pow(y.intValue()));
+        allowNegativeRhs = false;
+    };
+}
+
+void wholeTorture(String label,
+                  {Integer*} lhsBits,
+                  {Integer*} rhsBits,
+                  Integer iterations,
+                  Whole ceylonOp(Whole v1)(Whole v2),
+                  BigInteger javaOp(BigInteger v1)(BigInteger v2),
+                  Boolean allowZeroRhs = true,
+                  Boolean allowNegativeLhs = true,
+                  Boolean allowNegativeRhs = true) {
+
+    value rng = LCGRandom();
+    function generateWhole(Integer bits,
+                           Boolean allowZero = true,
+                           Boolean allowNegative = true) {
+        while (true) {
+            value result = randomWholeBits(rng, bits);
+            if (allowZero || !result.zero) {
+                if (allowNegative && rng.nextBoolean()) {
+                    return result.negated;
+                } else {
+                    return result;
+                }
+            }
+        }
+    }
+
+    for (lbits in lhsBits) {
+        for (rbits in rhsBits) {
+            for (_ in 0:iterations) {
+                value lhs = generateWhole(lbits, true, allowNegativeLhs);
+                value rhs = generateWhole(rbits, allowZeroRhs, allowNegativeRhs);
+
+                Whole ceylonResult;
+                try {
+                    ceylonResult = ceylonOp(lhs)(rhs);
+                } catch (Exception|AssertionError e) {
+                    print ("Whole exception for ``lhs`` ``label`` ``rhs``");
+                    throw e;
+                }
+
+                BigInteger javaResult;
+                try {
+                    javaResult = javaOp(BigInteger(lhs.string))
+                                       (BigInteger(rhs.string));
+                } catch (Exception e) {
+                    print ("BigInteger exception for ``lhs`` ``label`` ``rhs``");
+                    throw e;
+                }
+
+                assertEquals(ceylonResult.string, javaResult.string,
+                             "``lhs`` ``label`` ``rhs``");
+            }            
+        }
+    }
+}
+
 test void wholeGcdTests() {
     //print("gcd");
     //assertEquals(Whole(6), gcd(Whole(12), Whole(18)), "gcd(12, 18)");
+}
+
+// positive Integer's only
+Integer maxBits = smallest(randomLimits.maxBits, 62);
+shared Whole randomWholeBits(Random random, variable Integer numBits) {
+    variable Whole result = zero;
+    while (numBits > 0) {
+        value x = smallest(numBits, maxBits);
+        result = result.timesInteger(2^x);
+        result = result.plusInteger(random.nextInteger(2^x));
+        numBits -= x;
+    }
+    return result;
+}
+
+shared Iterable<Whole> wholeStream(
+        Random random,
+        Integer numBits,
+        Boolean allowZero = true,
+        Boolean allowNegative = true) {
+    return stream(() {
+        while (true) {
+            value result = randomWholeBits(random, numBits);
+            if (allowZero || !result.zero) {
+                if (allowNegative && random.nextBoolean()) {
+                    return result.negated;
+                } else {
+                    return result;
+                }
+            }
+        }        
+    });
+}
+
+shared void doBenches(
+        String label,
+        {Integer*} lhsBits,
+        {Integer*} rhsBits,
+        Integer iterations,
+        Whole ceylonOp(Whole v1)(Whole v2),
+        BigInteger javaOp(BigInteger v1)(BigInteger v2),
+        Boolean allowZeroRhs = true,
+        Boolean allowNegativeLhs = true,
+        Boolean allowNegativeRhs = true) {
+
+    for (lhsBitCount in lhsBits) {
+        for (rhsBitCount in rhsBits) { 
+            bench1 {
+                label = label;
+                lhsBits = lhsBitCount;
+                rhsBits = rhsBitCount;
+                iterations = iterations;
+                ceylonOp = ceylonOp;
+                javaOp = javaOp;
+                allowZeroRhs = allowZeroRhs;
+                allowNegativeLhs = allowNegativeLhs;
+                allowNegativeRhs = allowNegativeRhs;
+            };
+        }
+    }
+}
+
+shared void bench1(
+        String label,
+        Integer lhsBits,
+        Integer rhsBits,
+        Integer iterations,
+        Whole ceylonOp(Whole v1)(Whole v2),
+        BigInteger javaOp(BigInteger v1)(BigInteger v2),
+        Boolean allowZeroRhs = true,
+        Boolean allowNegativeLhs = true,
+        Boolean allowNegativeRhs = true) { 
+
+    // FIXME: better way to create wholes, quickly
+    value uniqueRandoms = 100;
+
+    value random = LCGRandom();
+
+    value lhsWholes = wholeStream(random, lhsBits, true, allowNegativeLhs);
+    value rhsWholes = wholeStream(random, rhsBits, allowZeroRhs, allowNegativeRhs);
+
+    value wholes = zipPairs(lhsWholes, rhsWholes).take(uniqueRandoms).sequence();
+    value bigIntegers = wholes.collect(([Whole, Whole] pair)
+        => [BigInteger(pair.first.string), BigInteger(pair.last.string)]);
+
+    bench {
+        ["Whole | ``label`` | ``lhsBits`` | ``rhsBits``",
+         function () {
+            variable Integer sum = 0;
+            for (pair in wholes.cycled.take(iterations)) {
+                sum = sum * 31 + ceylonOp(pair.first)(pair.last).integer;
+            }
+            return sum;
+        }],
+        ["BigInteger | ``label`` | ``lhsBits`` | ``rhsBits``",
+         function () {
+             variable Integer sum = 0;
+             for (pair in bigIntegers.cycled.take(iterations)) {
+                 sum = sum * 31 + javaOp(pair.first)(pair.last).longValue();
+             }
+             return sum;
+        }]
+    };
+}
+
+shared void bench({[String, Object()]+} tests) {
+    variable Object expectedResult = 0;
+    for (_ in 1:5) {
+        for (test in tests) {
+            expectedResult = test[1]();
+        }
+    }
+
+    for (test in tests) {
+        Thread.currentThread().sleep(500);
+        Integer start = system.nanoseconds;
+        value actualResult = test[1]();
+        assert(expectedResult == actualResult);
+        value time = (system.nanoseconds - start) / 10^6; 
+        print ("``time`` | ``test[0]``");
+    }
+}
+
+shared void doBench() {
+    value iterations = 500_000;
+    doBenches {
+        label = "+";
+        lhsBits = {64};
+        rhsBits = {64, 64};
+        iterations = iterations;
+        ceylonOp = Whole.plus;
+        javaOp = BigInteger.add;
+        allowNegativeLhs = false;
+        allowNegativeRhs = false;
+    };
+    doBenches {
+        label = "-";
+        lhsBits = {64};
+        rhsBits = {64, 64};
+        iterations = iterations;
+        ceylonOp = Whole.minus;
+        javaOp = BigInteger.subtract;
+        allowNegativeLhs = false;
+        allowNegativeRhs = false;
+    };
+    doBenches {
+        label = "*";
+        lhsBits = {64};
+        rhsBits = {64, 64};
+        iterations = iterations;
+        ceylonOp = Whole.times;
+        javaOp = BigInteger.multiply;
+    };
+    doBenches {
+        label = "/";
+        lhsBits = {64};
+        rhsBits = {64, 64};
+        iterations = iterations;
+        ceylonOp = Whole.divided;
+        javaOp = BigInteger.divide;
+        allowZeroRhs = false;
+    };
 }
