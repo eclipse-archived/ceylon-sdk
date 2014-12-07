@@ -1,102 +1,58 @@
 "An arbitrary precision integer."
-shared final class Whole(Sign sign, {Integer*} initialWords)
+shared final class Whole
         satisfies Integral<Whole> &
                   Exponentiable<Whole, Whole> {
 
-    // TODO skip defensive copy and validation if only used safely internally
-    List<Integer> words = normalized(Array<Integer>(initialWords));
+    shared actual Integer sign;
 
-    // words must fit with word-size bits
-    if (words.any((word) => word != word.and(wordMask))) {
-        throw OverflowException("Invalid word");
-    }
+    List<Integer> words;
 
-    // sign and word count must agree
-    assert ((!sign.zero && !words.empty) || (sign.zero && words.empty));
+    variable Integer? integerMemo = null;
 
-    shared actual Boolean positive = sign.positive;
+    variable Integer? lastNonZeroIndexMemo = null;
 
-    shared actual Boolean negative = sign.negative;
-
-    shared actual Boolean zero = sign.zero;
-
-    function memoize<Result>(Result compute())
-            given Result satisfies Object {
-        variable Result? memo = null;
-        return function() => memo = memo else compute();
-    }
-
-    value computeLastNonZeroIndex = memoize(()
-        => words.lastIndexWhere((element) => element != 0) else -1);
-
-    value lastNonZeroIndex => computeLastNonZeroIndex();
-
-    Integer() computeInteger = memoize(() {
-        // result is lower runtime.integerAddressableSize bits of
-        // the two's complement representation
-
-        // for negative numbers, flip the bits and add 1
-        variable Integer result = 0;
-        // result should have up to integerAddressableSize bits (32 or 64)
-        value count = runtime.integerAddressableSize/wordSize;
-        for (i in (words.size - count):count) {
-            // most significant first
-            variable value x = words[i];
-            if (negative, exists xx = x) {
-                if (i >= lastNonZeroIndex) {
-                    x = xx.negated; // negate the least significant non-zero
-                } else {
-                    x = xx.not; // flip the other non-zeros
-                }
-            }
-            result = result.leftLogicalShift(wordSize);
-            result = result.plus((x else (negative then -1 else 0)).and(wordMask));
+    shared new Internal(Integer sign, List<Integer> words) {
+        // FIXME should be package private when available
+        // words must fit with word-size bits
+        if (words.any((word) => word != word.and(wordMask))) {
+            throw OverflowException("Invalid word");
         }
-        return result;
-    });
 
-    "The number, represented as an [[Integer]]. If the number is too
-     big to fit in an Integer then an Integer corresponding to the
-     lower order bits is returned."
-    shared Integer integer => computeInteger();
-    // TODO document 32 bit JS limit; nail down justification, including
-    // asymmetry with wholeNumber(). No other amount seems reasonable.
-    // JavaScript _almost_ supports 53 bits (1 negative number short),
-    // but even so, 53 bits is not a convenient chunk to work with, and
-    // is greater than the 32 bits supported for bitwise operations.
+        // sign and word count must agree
+        assert (-1 <= sign <= 1);
+        assert ((!sign.zero && !words.empty) || (sign.zero && words.empty));
 
-    shared actual Whole plus(Whole other) {
-        return if (zero)
-        then other
-        else if (other.zero)
-        then this
-        else if (sign == other.sign)
-        then Whole(sign, add(words, other.words))
-        else
-           (switch (compareMagnitude(this.words, other.words))
-            case (equal)
-                package.zero
-            case (larger)
-                Whole(sign, normalized(subtract(words, other.words)))
-            case (smaller)
-                Whole(sign.negated, normalized(subtract(other.words, words))));
+        this.sign = sign;
+        this.words = words;
     }
+
+    shared actual Whole plus(Whole other)
+        =>  if (zero) then
+                other
+            else if (other.zero) then
+                this
+            else if (sign == other.sign) then
+                Internal(sign, add(words, other.words))
+            else
+               (switch (compareMagnitude(this.words, other.words))
+                case (equal)
+                    package.zero
+                case (larger)
+                    Internal(sign, normalized(subtract(words, other.words)))
+                case (smaller)
+                    Internal(sign.negated, normalized(subtract(other.words, words))));
 
     shared actual Whole plusInteger(Integer integer)
-        => plus(wholeNumber(integer));
+        =>  plus(wholeNumber(integer));
 
-    shared actual Whole times(Whole other) {
-        return if (this.zero || other.zero)
-               then package.zero
-               else (let (mag = multiply(words, other.words),
-                          sgn = if (sign == other.sign)
-                                then sign
-                                else sign.negated)
-                     Whole(sgn, mag));
-    }
+    shared actual Whole times(Whole other)
+        =>  if (this.zero || other.zero) then
+                package.zero
+            else
+                Internal(this.sign * other.sign, multiply(words, other.words));
 
     shared actual Whole timesInteger(Integer integer)
-        => times(wholeNumber(integer));
+        =>  times(wholeNumber(integer));
 
     // TODO doc
     shared [Whole, Whole] quotientAndRemainder(Whole other) {
@@ -117,23 +73,20 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
                 [package.zero, this]
             case (larger)
                 (let (resultWords   = divide(this.words, other.words),
-                      quotientSign  = if (this.sign == other.sign)
-                                      then positiveSign
-                                      else negativeSign,
+                      quotientSign  = this.sign * other.sign,
                       remainderSign = if (resultWords[1].empty)
-                                      then zeroSign
-                                      else sign)
-                 [Whole(quotientSign, resultWords[0]),
-                  Whole(remainderSign, resultWords[1])]);
+                                         then 0
+                                         else sign)
+                 [Internal(quotientSign, resultWords[0]),
+                  Internal(remainderSign, resultWords[1])]);
         }
     }
 
     shared actual Whole divided(Whole other)
-        => quotientAndRemainder(other)[0];
+        =>  quotientAndRemainder(other)[0];
 
     shared actual Whole remainder(Whole other)
-        => quotientAndRemainder(other)[1];
-
+        =>  quotientAndRemainder(other)[1];
 
     "The result of raising this number to the given power.
 
@@ -174,38 +127,38 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
             return result;
         }
         else {
-            assert(false);
-            //throw Exception("Negative exponent");
+            throw AssertionError(
+                "``string``^``exponent`` cannot be represented as an Integer");
         }
     }
 
-    shared actual Whole powerOfInteger(Integer integer) {
+    shared actual Whole powerOfInteger(Integer exponent) {
         if (this == package.one) {
             return this;
         }
-        else if (integer == 0) {
+        else if (exponent == 0) {
             return one;
         }
-        else if (this == package.negativeOne && integer.even) {
+        else if (this == package.negativeOne && exponent.even) {
             return package.one;
         }
-        else if (this == package.negativeOne && !integer.even) {
+        else if (this == package.negativeOne && !exponent.even) {
             return this;
         }
-        else if (integer == 1) {
+        else if (exponent == 1) {
             return this;
         }
-        else if (integer > 1) {
+        else if (exponent > 1) {
             // TODO a reasonable implementation
             variable Whole result = this;
-            for (_ in 1..integer-1) {
+            for (_ in 1..exponent-1) {
                 result = result * this;
             }
             return result;
         }
         else {
-            assert(false);
-            //throw Exception("Negative exponent");
+            throw AssertionError(
+                "``string``^``exponent`` cannot be represented as an Integer");
         }
     }
 
@@ -213,32 +166,6 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
     throws(`class Exception`, "If passed a negative modulus")
     shared Whole powerRemainder(Whole exponent,
                                 Whole modulus) => nothing;
-
-    shared actual Whole negated
-        =>  if (sign.zero)
-            then package.zero
-            else if (this == package.one)
-            then package.negativeOne
-            else if (this == package.negativeOne)
-            then package.one
-            else Whole(sign.negated, words);
-
-    shared actual Boolean unit => this == one;
-
-    shared actual Whole wholePart => this;
-
-    shared actual Whole fractionalPart => package.zero;
-
-    "The number, represented as a [[Float]]. If the magnitude of this number
-     is too large the result will be `infinity` or `-infinity`. If the result
-     is finite, precision may still be lost."
-    shared Float float {
-        assert (exists f = parseFloat(string));
-        return f;
-    }
-
-    // TODO doc
-    shared Boolean even => words.last?.even else false;
 
     shared actual Whole neighbour(Integer offset)
         => plusInteger(offset);
@@ -256,6 +183,74 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
         }
     }
 
+    // TODO document 32 bit JS limit; nail down justification, including
+    // asymmetry with wholeNumber(). No other amount seems reasonable.
+    // JavaScript _almost_ supports 53 bits (1 negative number short),
+    // but even so, 53 bits is not a convenient chunk to work with, and
+    // is greater than the 32 bits supported for bitwise operations.
+    "The number, represented as an [[Integer]]. If the number is too
+     big to fit in an Integer then an Integer corresponding to the
+     lower order bits is returned."
+    shared Integer integer {
+        if (exists integerMemo = integerMemo) {
+            return integerMemo;
+        } else {
+            // result is lower runtime.integerAddressableSize bits of
+            // the two's complement representation
+
+            // for negative numbers, flip the bits and add 1
+            variable Integer result = 0;
+            // result should have up to integerAddressableSize bits (32 or 64)
+            value count = runtime.integerAddressableSize/wordSize;
+            for (i in (words.size - count):count) {
+                // most significant first
+                variable value x = words[i];
+                if (negative, exists xx = x) {
+                    if (i >= lastNonZeroIndex) {
+                        x = xx.negated; // negate the least significant non-zero
+                    } else {
+                        x = xx.not; // flip the other non-zeros
+                    }
+                }
+                result = result.leftLogicalShift(wordSize);
+                result = result.plus((x else (negative then -1 else 0)).and(wordMask));
+            }
+            return integerMemo = result;
+        }
+    }
+
+    "The number, represented as a [[Float]]. If the magnitude of this number
+     is too large the result will be `infinity` or `-infinity`. If the result
+     is finite, precision may still be lost."
+    shared Float float {
+        assert (exists f = parseFloat(string));
+        return f;
+    }
+
+    shared actual Whole negated
+        =>  if (zero) then
+                package.zero
+            else if (this == package.one) then
+                package.negativeOne
+            else if (this == package.negativeOne) then
+                package.one
+            else Internal(sign.negated, words);
+
+    shared actual Whole wholePart => this;
+
+    shared actual Whole fractionalPart => package.zero;
+
+    shared actual Boolean positive => sign.positive;
+
+    shared actual Boolean negative => sign.negative;
+
+    shared actual Boolean zero => sign.zero;
+
+    shared actual Boolean unit => this == one;
+
+    // TODO doc
+    shared Boolean even => words.last?.even else false;
+
     "The platform-specific implementation object, if any.
      This is provided for interoperation with the runtime
      platform."
@@ -263,7 +258,7 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
     shared Object? implementation => nothing;  // TODO remove once decimal allows
 
     shared actual Integer hash
-        => sign.integer * words.fold(0)((acc, x) => 31*acc + x);
+        => sign * words.fold(0)((acc, x) => 31*acc + x);
 
     shared actual String string {
         // TODO optimize? & support any radix
@@ -287,22 +282,28 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
         }
     }
 
-    shared actual Comparison compare(Whole other) {
-        return if (sign != other.sign)
-        then sign.compare(other.sign)
-        else (
-            switch (sign)
-            case (zeroSign) equal
-            case (positiveSign) compareMagnitude(this.words, other.words)
-            case (negativeSign) compareMagnitude(other.words, this.words));
-    }
+    shared actual Comparison compare(Whole other)
+        =>  if (sign != other.sign) then
+                sign.compare(other.sign)
+            else if (zero) then
+                equal
+            else if (positive) then
+                compareMagnitude(this.words, other.words)
+            else
+                compareMagnitude(other.words, this.words);
 
     shared actual Boolean equals(Object that)
-        =>  if (is Whole that)
-            then (this === that) ||
-                 (this.sign == that.sign &&
-                  this.words == that.words)
-            else false;
+        =>  if (is Whole that) then
+                (this === that) ||
+                (this.sign == that.sign &&
+                 this.words == that.words)
+            else
+                false;
+
+    Integer lastNonZeroIndex
+            =>  lastNonZeroIndexMemo
+                else (lastNonZeroIndexMemo =
+                      words.lastIndexWhere((word) => word != 0) else -1);
 
     Array<Integer> add(List<Integer> first, List<Integer> second) {
         // Knuth 4.3.1 Algorithm A
@@ -464,12 +465,13 @@ shared final class Whole(Sign sign, {Integer*} initialWords)
 
     Comparison compareMagnitude(List<Integer> first, List<Integer> second)
         // FIXME this assumes args are normalized, but they may not be
-        =>  if (first.size != second.size)
-            then first.size <=> second.size
+        =>  if (first.size != second.size) then
+                first.size <=> second.size
             else if (exists pair = zipPairs(first, second).find((pair) =>
-                     pair.first != pair.last))
-            then pair.first <=> pair.last
-            else equal;
+                     pair.first != pair.last)) then
+                pair.first <=> pair.last
+            else
+                equal;
 
 }
 

@@ -1,14 +1,14 @@
 "A `Whole` instance representing zero."
-shared Whole zero = Whole(zeroSign, {0});
+shared Whole zero = Whole.Internal(0, []);
 
 "A `Whole` instance representing one."
-shared Whole one = Whole(positiveSign, {1});
+shared Whole one = Whole.Internal(1, [1]);
 
 "A `Whole` instance representing negative one."
-Whole negativeOne = Whole(negativeSign, {1});
+Whole negativeOne = Whole.Internal(-1, [1]);
 
 "A `Whole` instance representing two."
-shared Whole two = Whole(positiveSign, {2});
+shared Whole two = Whole.Internal(1, [2]);
 
 // These are used for Whole.offset, so integerAddressableSize is irrelevant
 Whole integerMax = wholeNumber(runtime.maxIntegerValue);
