@@ -9,6 +9,8 @@ shared final class Whole
 
     variable Integer? integerMemo = null;
 
+    variable String? stringMemo = null;
+
     variable Integer? lastNonZeroIndexMemo = null;
 
     shared new Internal(Integer sign, List<Integer> words) {
@@ -262,8 +264,11 @@ shared final class Whole
 
     shared actual String string {
         // TODO optimize? & support any radix
-        if (this.zero) {
-            return "0";
+        if (exists stringMemo = stringMemo) {
+            return stringMemo;
+        }
+        else if (this.zero) {
+            return stringMemo = "0";
         }
         else {
             // Use Integer once other fn's are optimized
@@ -278,7 +283,7 @@ shared final class Whole
             if (negative) {
                 sb.append("-");
             }
-            return sb.string.reversed;
+            return stringMemo = sb.string.reversed;
         }
     }
 
