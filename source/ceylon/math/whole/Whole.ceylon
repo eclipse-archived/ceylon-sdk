@@ -22,11 +22,11 @@ shared final class Whole
             throw OverflowException("Invalid word");
         }
 
-        // sign and word count must agree
+        // sign must not be 0 if magnitude != 0
         assert (-1 <= sign <= 1);
-        assert ((!sign.zero && !words.empty) || (sign.zero && words.empty));
+        assert (!sign.zero || words.empty);
 
-        this.sign = sign;
+        this.sign = words.empty then 0 else sign;
         this.words = words;
     }
 
@@ -83,13 +83,9 @@ shared final class Whole
             case (smaller)
                 [package.zero, this]
             case (larger)
-                (let (resultWords   = divide(this.words, other.words),
-                      quotientSign  = this.sign * other.sign,
-                      remainderSign = if (resultWords[1].empty)
-                                         then 0
-                                         else sign)
-                 [Internal(quotientSign, resultWords[0]),
-                  Internal(remainderSign, resultWords[1])]));
+                (let (resultWords   = divide(this.words, other.words))
+                 [Internal(sign * other.sign, resultWords[0]),
+                  Internal(sign, resultWords[1])]));
     }
 
     shared actual Whole divided(Whole other)

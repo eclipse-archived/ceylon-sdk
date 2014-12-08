@@ -7,7 +7,7 @@ shared Whole wholeNumber(variable Integer number)
     else if (number == 0)  then zero
     else if (number == 1)  then one
     else if (number == 2)  then two
-    else Whole.Internal(number.sign, normalized(integerToWordsAbs(number)));
+    else Whole.Internal(number.sign, integerToWordsAbs(number));
 
 Array<Integer> integerToWordsAbs(variable Integer integer) {
     // * Bitwise operations are not used; JavaScript's min/max Integer range
