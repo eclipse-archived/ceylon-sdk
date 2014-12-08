@@ -50,6 +50,10 @@ shared final class Whole
     shared actual Whole times(Whole other)
         =>  if (this.zero || other.zero) then
                 package.zero
+            else if (this.unit) then
+                other
+            else if (this == negativeOne) then
+                other.negated
             else
                 Internal(this.sign * other.sign, multiply(words, other.words));
 
@@ -61,11 +65,14 @@ shared final class Whole
         if (other.zero) {
             throw Exception("Divide by zero");
         }
-        else if (zero) {
-            return [package.zero, package.zero];
-        }
-        else {
-            return switch (compareMagnitude(this.words, other.words))
+        return if (zero) then
+            [package.zero, package.zero]
+        else if (other.unit) then
+            [this, package.zero]
+        else if (other == package.negativeOne) then
+            [this.negated, package.zero]
+        else (
+            switch (compareMagnitude(this.words, other.words))
             case (equal)
                 [if (sign == other.sign)
                     then package.one
@@ -80,8 +87,7 @@ shared final class Whole
                                          then 0
                                          else sign)
                  [Internal(quotientSign, resultWords[0]),
-                  Internal(remainderSign, resultWords[1])]);
-        }
+                  Internal(remainderSign, resultWords[1])]));
     }
 
     shared actual Whole divided(Whole other)
@@ -232,7 +238,7 @@ shared final class Whole
     shared actual Whole negated
         =>  if (zero) then
                 package.zero
-            else if (this == package.one) then
+            else if (this.unit) then
                 package.negativeOne
             else if (this == package.negativeOne) then
                 package.one

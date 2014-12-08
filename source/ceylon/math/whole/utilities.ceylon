@@ -1,10 +1,11 @@
 Comparison unsignedCompare(Integer first, Integer second)
-    =>  if (first == second)
-        then equal
+    =>  if (first == second) then
+            equal
         else if (first + minAddressableInteger >
-                 second + minAddressableInteger)
-        then larger
-        else smaller;
+                 second + minAddressableInteger) then
+            larger
+        else
+            smaller;
 
 [Integer, Integer] unsignedDivide(Integer n, Integer d) {
     // Calculations like the following are very slow and unsupported:
@@ -41,8 +42,9 @@ Comparison unsignedCompare(Integer first, Integer second)
 
 Array<Integer> normalized(Array<Integer> xs)
     =>  let (firstNonZero = xs.firstIndexWhere((Integer element) => !element.zero))
-        if (!exists firstNonZero)
-        then Array<Integer> {}
-        else if (firstNonZero == 0)
-        then xs
-        else xs[firstNonZero..xs.size-1];
+        if (!exists firstNonZero) then
+            Array<Integer> {}
+        else if (firstNonZero == 0) then
+            xs
+        else
+            xs[firstNonZero..xs.size-1];
