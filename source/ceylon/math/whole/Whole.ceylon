@@ -459,12 +459,19 @@ shared final class Whole
 
         // D1. Normalize
         // TODO: left shift such that v0 >= radix/2 instead of the times approach
-        value n = divisor.size;
         value m = dividend.size - divisor.size;
         value b = wordRadix;
         value d = b / ((divisor[0] else 0) + 1);
-        Array<Integer> u = multiplyWord(dividend, d); // u.size == dividend.size + 1
-        List<Integer> v = multiplyWord(divisor, d, arrayOfSize(divisor.size, 0));
+        Array<Integer> u;
+        List<Integer> v;
+        if (d == 1) {
+            u = Array { 0, *dividend };
+            v = divisor;
+        }
+        else {
+            u = multiplyWord(dividend, d); // u.size == dividend.size + 1
+            v = multiplyWord(divisor, d, arrayOfSize(divisor.size, 0));
+        }
         Array<Integer> q = arrayOfSize(m + 1, 0); // quotient
         assert(exists v0 = v[0], v0 != 0); // most significant, can't be 0
         assert(exists v1 = v[1]); // second most significant must also exist
@@ -510,7 +517,7 @@ shared final class Whole
 
         // D8. Unnormalize Remainder Due to Step D1
         variable List<Integer> remainder = normalized(u);
-        if (!remainder.empty) {
+        if (!remainder.empty && d != 1) {
             remainder = divideWord(remainder, d)[0];
         }
         return [q, remainder];
