@@ -332,15 +332,15 @@ shared final class Whole
         }
 
         value result = arrayOfSize(u.size, 0);
-        value offset = u.size - v.size;
+        value resultSize = result.size;
         variable value carry = 0;
 
         // start from the last element (least-significant)
-        for (j in (u.size - 1)..0) {
-            value uj = u[j] else 0; // never null
-            value vj = v[j - offset] else 0; // null when index < 0
+        for (j in 0:u.size) {
+            value uj = u.getFromLast(j) else 0; // never null
+            value vj = v.getFromLast(j) else 0; // null when index < 0
             value sum = uj + vj + carry;
-            result.set(j, sum.and(wordMask));
+            result.set(resultSize - j - 1, sum.and(wordMask));
             carry = sum.rightLogicalShift(wordSize);
         }
 
@@ -378,20 +378,21 @@ shared final class Whole
     Array<Integer> multiply(List<Integer> u, List<Integer> v) {
         // Knuth 4.3.1 Algorithm M
         value result = arrayOfSize(u.size + v.size, 0);
+        value resultSize = result.size;
 
         variable value carry = 0;
-        for (i in u.size-1..0) {
+        for (i in 0:u.size) {
             carry = 0;
-            for (j in v.size-1..0) {
-                value k = j + i + 1;
-                assert (exists ui = u[i]);
-                assert (exists vj = v[j]);
+            for (j in 0:v.size) {
+                value k = resultSize - j - i - 1;
+                assert (exists ui = u.getFromLast(i));
+                assert (exists vj = v.getFromLast(j));
                 assert (exists wk = result[k]);
                 value product = ui * vj + wk + carry;
                 result.set(k, product.and(wordMask));
                 carry = product.rightLogicalShift(wordSize);
             }
-            result.set(i, carry);
+            result.set(resultSize - v.size - i - 1, carry);
         }
         return result;
     }
