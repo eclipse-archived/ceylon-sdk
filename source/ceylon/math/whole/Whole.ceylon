@@ -425,9 +425,30 @@ shared final class Whole
         return result;
     }
 
+    "`u[j+1..j+vSize] <- u[j+1..j+vSize] - v * q`, returning the absolute value
+     of the final borrow that would normally be subtracted against u[j]."
+    Integer multiplyAndSubtract(Array<Integer> u,
+                                List<Integer> v,
+                                Integer q,
+                                Integer j) {
+        assert(u.size > v.size + j);
+        variable Integer absBorrow = 0;
+        for (i in v.size..1) {
+            assert(exists vi = v[i - 1]);
+            assert(exists ui = u[j + i]);
+
+            // the product is subtracted, so absBorrow adds to it
+            value product = q * vi + absBorrow;
+            value difference = ui - product.and(wordMask);
+            u.set(j + i, difference.and(wordMask));
+            absBorrow = product.rightLogicalShift(wordSize) -
+                        difference.rightArithmeticShift(wordSize);
+        }
+        return absBorrow;
+    }
+
     [List<Integer>, List<Integer>] divide(
             List<Integer> dividend, List<Integer> divisor) {
-
         if (divisor.size < 2) {
             assert (exists first = divisor.first);
             return divideWord(dividend, first);
@@ -447,10 +468,6 @@ shared final class Whole
         Array<Integer> q = arrayOfSize(m + 1, 0); // quotient
         assert(exists v0 = v[0], v0 != 0); // most significant, can't be 0
         assert(exists v1 = v[1]); // second most significant must also exist
-
-        value prod = arrayOfSize(n + 1, 0); // reused in step D4
-        value ujjn1 = arrayOfSize(n + 1, 0); // reused in step D4
-        value ujjn2 = arrayOfSize(n + 1, 0); // reused in step D4
 
         // D2. Initialize j
         for (j in 0..m) {
@@ -481,25 +498,12 @@ shared final class Whole
 
             // D4. Multiply, Subtract
             if (qj != 0) {
-                u.copyTo(ujjn1, j, 0, n + 1); // u[j..j+n] -> ujjn1
-                multiplyWord(v, qj, prod); // v * qj -> prod
-                value cm = compareMagnitude(ujjn1, prod);
-                switch (cm)
-                case (smaller) {
-                    throw Exception("case not handled"); // FIXME
+                value borrow = multiplyAndSubtract(u, v, qj, j);
+                if (borrow != uj0) {
+                    // assert borrow > uj0;
+                    throw Exception("case not handled");
                 }
-                case (equal|larger) {
-                    // subtract, reusing ujjn2
-                    value ujjn = if (cm == equal)
-                                 then empty
-                                 else subtract(ujjn1, prod, ujjn2);
-
-                    // would be ujjn.copyTo(u, 0, j, n+1)
-                    // if ujjn were always of size=n+1
-                    for (i in 0..n) {
-                      u.set(j + n - i, ujjn.getFromLast(i) else 0);
-                    }
-                }
+                u.set(j, 0);
                 q.set(j, qj);
             }
         }
