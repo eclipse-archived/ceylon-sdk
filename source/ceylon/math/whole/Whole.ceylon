@@ -396,12 +396,43 @@ shared final class Whole
         return result;
     }
 
+    Array<Integer> multiplyWord(List<Integer> u, Integer v, Array<Integer>? r = null) {
+        assert(v.and(wordMask) == v);
+
+        value result = r else arrayOfSize(u.size + 1, 0);
+        value resultSize = result.size;
+
+        variable value carry = 0;
+        for (i in 0:u.size) {
+            assert (exists ui = u.getFromLast(i));
+            value product = ui * v + carry;
+            result.set(resultSize - i - 1, product.and(wordMask));
+            carry = product.rightLogicalShift(wordSize);
+        }
+        if (!carry.zero) {
+            // provided array may be _exactly_ the right size
+            result.set(resultSize - u.size - 1, carry);
+        }
+        else if (resultSize >= (u.size + 1)) {
+            // but zero it out if it did have room for a carry word
+            result.set(resultSize - u.size - 1, 0);
+        }
+
+        // zero out the leading portion of the result array
+        // if an oversized array was provided
+        for (i in 0:resultSize - u.size - 1) {
+            result.set(i, 0);
+        }
+
+        return result;
+    }
+
     [List<Integer>, List<Integer>] divide(
             List<Integer> dividend, List<Integer> divisor) {
 
         if (divisor.size < 2) {
             assert (exists first = divisor.first);
-            return divideSimple(dividend, first);
+            return divideWord(dividend, first);
         }
 
         // Knuth 4.3.1 Algorithm D
@@ -412,15 +443,16 @@ shared final class Whole
         value n = divisor.size;
         value m = dividend.size - divisor.size;
         value b = wordRadix;
-        value d = [b / ((divisor[0] else 0) + 1)];
-        Array<Integer> u = multiply(dividend, d); // size 1 larger; will hold remainder
-        List<Integer> v = normalized(multiply(divisor, d)); // size will match divisor's
-        Array<Integer> q = arrayOfSize(m+1, 0); // quotient
+        value d = b / ((divisor[0] else 0) + 1);
+        Array<Integer> u = multiplyWord(dividend, d); // u.size == dividend.size + 1
+        List<Integer> v = multiplyWord(divisor, d, arrayOfSize(divisor.size, 0));
+        Array<Integer> q = arrayOfSize(m + 1, 0); // quotient
         assert(exists v0 = v[0], v0 != 0); // most significant, can't be 0
         assert(exists v1 = v[1]); // second most significant must also exist
 
-        value ujjn1 = arrayOfSize(n + 1, 0); // reused in subtract step
-        value ujjn2 = arrayOfSize(n + 1, 0); // reused in subtract step
+        value prod = arrayOfSize(n + 1, 0); // reused in step D4
+        value ujjn1 = arrayOfSize(n + 1, 0); // reused in step D4
+        value ujjn2 = arrayOfSize(n + 1, 0); // reused in step D4
 
         // D2. Initialize j
         for (j in 0..m) {
@@ -451,8 +483,8 @@ shared final class Whole
 
             // D4. Multiply, Subtract
             if (qj != 0) {
-                u.copyTo(ujjn1, j, 0, n + 1); // u[j..j+n];
-                value prod = multiply([qj], v); // TODO use a better int*int multiply
+                u.copyTo(ujjn1, j, 0, n + 1); // u[j..j+n] -> ujjn1
+                multiplyWord(v, qj, prod); // v * qj -> prod
                 value cm = compareMagnitude(ujjn1, prod);
                 switch (cm)
                 case (smaller) {
@@ -464,9 +496,10 @@ shared final class Whole
                                  then empty
                                  else subtract(ujjn1, prod, ujjn2);
 
-                    // ujjn.copyTo(u, 0, j, n+1), if ujjn were always of size=n+1
+                    // would be ujjn.copyTo(u, 0, j, n+1)
+                    // if ujjn were always of size=n+1
                     for (i in 0..n) {
-                      u.set(j+n-i, ujjn.getFromLast(i) else 0);
+                      u.set(j + n - i, ujjn.getFromLast(i) else 0);
                     }
                 }
                 q.set(j, qj);
@@ -476,12 +509,12 @@ shared final class Whole
         // D8. Unnormalize Remainder Due to Step D1
         variable List<Integer> remainder = normalized(u);
         if (!remainder.empty) {
-            remainder = divideSimple(remainder,d[0])[0];
+            remainder = divideWord(remainder, d)[0];
         }
         return [q, remainder];
     }
 
-    [List<Integer>, List<Integer>] divideSimple(List<Integer> u, Integer v) {
+    [List<Integer>, List<Integer>] divideWord(List<Integer> u, Integer v) {
         assert(u.size >= 1);
         assert(v.and(wordMask) == v);
         variable value r = 0;
