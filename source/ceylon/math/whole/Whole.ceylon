@@ -468,8 +468,8 @@ shared final class Whole
                 rj = uj01 % v0;
             } else {
                 value qrj = unsignedDivide(uj01, v0);
-                qj = qrj[0];
-                rj = qrj[1];
+                qj = qrj.rightLogicalShift(wordSize);
+                rj = qrj.and(wordMask);
             }
 
             while (qj >= b || unsignedCompare(qj * v1, b * rj + uj2) == larger) {
@@ -527,8 +527,8 @@ shared final class Whole
                 r = x % v;
             } else {
                 value qr = unsignedDivide(x, v);
-                q.set(j, qr[0]);
-                r = qr[1];
+                q.set(j, qr.rightLogicalShift(wordSize));
+                r = qr.and(wordMask);
             }
         }
         return [q, if (r.zero)
