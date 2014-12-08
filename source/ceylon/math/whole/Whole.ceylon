@@ -13,12 +13,13 @@ shared final class Whole
 
     variable Integer? lastNonZeroIndexMemo = null;
 
-    shared new Internal(Integer sign, List<Integer> words) {
+    shared new Internal(Integer sign, variable List<Integer> words) {
         // FIXME should be package private when available
         // words must fit with word-size bits
         if (words.any((word) => word != word.and(wordMask))) {
             throw OverflowException("Invalid word");
         }
+        words = normalized(words);
 
         // sign and word count must agree
         assert (-1 <= sign <= 1);
@@ -318,7 +319,7 @@ shared final class Whole
 
     Array<Integer> add(List<Integer> first, List<Integer> second) {
         // Knuth 4.3.1 Algorithm A
-        assert(!first.empty || !second.empty);
+        assert(!first.empty && !second.empty);
 
         List<Integer> u;
         List<Integer> v;
@@ -349,21 +350,28 @@ shared final class Whole
                else result;
     }
 
-    Array<Integer> subtract(List<Integer> u, List<Integer> v) {
+    List<Integer> subtract(List<Integer> u, List<Integer> v, Array<Integer>? r = null) {
         // Knuth 4.3.1 Algorithm S
-        //assert(compareMagnitude(u, v) == larger);
-        value result = arrayOfSize(u.size, 0);
-        value offset = u.size - v.size;
+        // assert(compareMagnitude(u, v) == larger);
+        value result = r else arrayOfSize(u.size, 0);
+        value resultSize = result.size;
         variable value borrow = 0;
 
         // start from the last element (least-significant)
-        for (j in (u.size - 1)..0) {
-            value uj = u[j] else 0; // never null
-            value vj = v[j - offset] else 0; // null when index < 0
+        for (j in 0:u.size) {
+            value uj = u.getFromLast(j) else 0; // never null
+            value vj = v.getFromLast(j) else 0; // null when index < 0
             value difference = uj - vj + borrow;
-            result.set(j, difference.and(wordMask));
+            result.set(resultSize - j - 1, difference.and(wordMask));
             borrow = difference.rightArithmeticShift(wordSize);
         }
+
+        // zero out the leading portion of the result array
+        // if an oversized array was provided
+        for (i in 0:resultSize-u.size) {
+            result.set(i, 0);
+        }
+
         return result;
     }
 
@@ -385,10 +393,10 @@ shared final class Whole
             }
             result.set(i, carry);
         }
-        return normalized(result);
+        return result;
     }
 
-    [Array<Integer>, Array<Integer>] divide(
+    [List<Integer>, List<Integer>] divide(
             List<Integer> dividend, List<Integer> divisor) {
 
         if (divisor.size < 2) {
@@ -405,15 +413,14 @@ shared final class Whole
         value m = dividend.size - divisor.size;
         value b = wordRadix;
         value d = [b / ((divisor[0] else 0) + 1)];
-        Array<Integer> u = // always increase size by 1; will hold remainder
-            let (x = multiply(dividend, d))
-            if (x.size == dividend.size)
-            then Array<Integer> { 0, *x }
-            else x;
-        List<Integer> v = multiply(divisor, d); // will be same length as divisor
+        Array<Integer> u = multiply(dividend, d); // size 1 larger; will hold remainder
+        List<Integer> v = normalized(multiply(divisor, d)); // size will match divisor's
         Array<Integer> q = arrayOfSize(m+1, 0); // quotient
         assert(exists v0 = v[0], v0 != 0); // most significant, can't be 0
         assert(exists v1 = v[1]); // second most significant must also exist
+
+        value ujjn1 = arrayOfSize(n + 1, 0); // reused in subtract step
+        value ujjn2 = arrayOfSize(n + 1, 0); // reused in subtract step
 
         // D2. Initialize j
         for (j in 0..m) {
@@ -444,15 +451,20 @@ shared final class Whole
 
             // D4. Multiply, Subtract
             if (qj != 0) {
-                // TODO: avoid normalization?
-                variable value ujjn = normalized(u[j..j+n]);
-                value prod = multiply([qj], v);
-                if (compareMagnitude(ujjn, prod) == smaller) {
+                u.copyTo(ujjn1, j, 0, n + 1); // u[j..j+n];
+                value prod = multiply([qj], v); // TODO use a better int*int multiply
+                value cm = compareMagnitude(ujjn1, prod);
+                switch (cm)
+                case (smaller) {
                     throw Exception("case not handled"); // FIXME
-                } else {
-                    ujjn = subtract(ujjn, prod);
-                    // ujjn.copyTo(u, 0, j, n+1); but manually in case
-                    // ujjn has been shortened through normalization
+                }
+                case (equal|larger) {
+                    // subtract, reusing ujjn2
+                    value ujjn = if (cm == equal)
+                                 then empty
+                                 else subtract(ujjn1, prod, ujjn2);
+
+                    // ujjn.copyTo(u, 0, j, n+1), if ujjn were always of size=n+1
                     for (i in 0..n) {
                       u.set(j+n-i, ujjn.getFromLast(i) else 0);
                     }
@@ -462,14 +474,14 @@ shared final class Whole
         }
 
         // D8. Unnormalize Remainder Due to Step D1
-        variable value remainder = normalized(u);
+        variable List<Integer> remainder = normalized(u);
         if (!remainder.empty) {
             remainder = divideSimple(remainder,d[0])[0];
         }
-        return [normalized(q), remainder];
+        return [q, remainder];
     }
 
-    [Array<Integer>, Array<Integer>] divideSimple(List<Integer> u, Integer v) {
+    [List<Integer>, List<Integer>] divideSimple(List<Integer> u, Integer v) {
         assert(u.size >= 1);
         assert(v.and(wordMask) == v);
         variable value r = 0;
@@ -486,23 +498,43 @@ shared final class Whole
                 r = qr[1];
             }
         }
-        return [normalized(q), if (r.zero)
-                               then Array<Integer> {}
-                               else Array<Integer> { r }];
+        return [q, if (r.zero)
+                   then empty
+                   else Array<Integer> { r }];
     }
 
     Whole leftLogicalShift(Integer shift) => nothing;
 
-    Comparison compareMagnitude(List<Integer> first, List<Integer> second)
-        // FIXME this assumes args are normalized, but they may not be
-        =>  if (first.size != second.size) then
-                first.size <=> second.size
-            else if (exists pair = zipPairs(first, second).find((pair) =>
-                     pair.first != pair.last)) then
-                pair.first <=> pair.last
-            else
-                equal;
+    Comparison compareMagnitude(List<Integer> x, List<Integer> y) {
+        // leading words are most significant, but may be 0
+        variable Integer xZeros = 0;
+        variable Integer yZeros = 0;
 
+        while (x[xZeros]?.zero else false) {
+            xZeros++;
+        }
+
+        while (y[yZeros]?.zero else false) {
+            yZeros++;
+        }
+
+        value xRealSize = x.size - xZeros;
+        value yRealSize = y.size - yZeros;
+
+        if (xRealSize != yRealSize) {
+            return xRealSize <=> yRealSize;
+        }
+        else {
+            for (i in 0:xRealSize) {
+                assert(exists xi = x[xZeros + i]);
+                assert(exists yi = y[yZeros + i]);
+                if (xi != yi) {
+                    return xi <=> yi;
+                }
+            }
+            return equal;
+        }
+    }
 }
 
 

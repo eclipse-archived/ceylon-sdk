@@ -40,7 +40,7 @@ Comparison unsignedCompare(Integer first, Integer second)
     return [q, r];
 }
 
-Array<Integer> normalized(Array<Integer> xs)
+List<Integer> normalized(List<Integer> xs)
     =>  let (firstNonZero = xs.firstIndexWhere((Integer element) => !element.zero))
         if (!exists firstNonZero) then
             Array<Integer> {}
