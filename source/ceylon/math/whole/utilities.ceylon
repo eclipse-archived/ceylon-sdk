@@ -46,11 +46,15 @@ Integer unsignedDivide(Integer n, Integer d) {
     return quotient * wordRadix + remainder;
 }
 
-List<Integer> normalized(List<Integer> xs)
-    =>  let (firstNonZero = xs.firstIndexWhere((Integer element) => !element.zero))
-        if (!exists firstNonZero) then
-            Array<Integer> {}
-        else if (firstNonZero == 0) then
-            xs
-        else
-            xs[firstNonZero..xs.size-1];
+List<Integer> normalized(List<Integer> xs) {
+    variable value zeros = 0;
+    while (xs[zeros]?.zero else false) {
+        zeros++;
+    }
+    return if (zeros == 0) then
+        xs
+    else if (zeros == xs.size) then
+        empty
+    else
+        xs.spanFrom(zeros);
+}
