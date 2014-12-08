@@ -15,11 +15,12 @@ shared final class Whole
 
     shared new Internal(Integer sign, variable List<Integer> words) {
         // FIXME should be package private when available
+        words = normalized(words);
+
         // words must fit with word-size bits
         if (words.any((word) => word != word.and(wordMask))) {
             throw OverflowException("Invalid word");
         }
-        words = normalized(words);
 
         // sign and word count must agree
         assert (-1 <= sign <= 1);
@@ -41,9 +42,9 @@ shared final class Whole
                 case (equal)
                     package.zero
                 case (larger)
-                    Internal(sign, normalized(subtract(words, other.words)))
+                    Internal(sign, subtract(words, other.words))
                 case (smaller)
-                    Internal(sign.negated, normalized(subtract(other.words, words))));
+                    Internal(sign.negated, subtract(other.words, words)));
 
     shared actual Whole plusInteger(Integer integer)
         =>  plus(wholeNumber(integer));
