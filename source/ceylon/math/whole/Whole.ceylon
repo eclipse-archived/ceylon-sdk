@@ -5,7 +5,7 @@ shared final class Whole
 
     shared actual Integer sign;
 
-    List<Integer> words;
+    Words words;
 
     variable Integer? integerMemo = null;
 
@@ -13,14 +13,14 @@ shared final class Whole
 
     variable Integer? lastNonZeroIndexMemo = null;
 
-    shared new Internal(Integer sign, variable List<Integer> words) {
+    shared new Internal(Integer sign, variable Words words) {
         // FIXME should be package private when available
         words = normalized(words);
 
         // words must fit with word-size bits
-        if (words.any((word) => word != word.and(wordMask))) {
-            throw OverflowException("Invalid word");
-        }
+        //if (words.any((word) => word != word.and(wordMask))) {
+        //    throw OverflowException("Invalid word");
+        //}
 
         // sign must not be 0 if magnitude != 0
         assert (-1 <= sign <= 1);
@@ -210,16 +210,22 @@ shared final class Whole
             value count = runtime.integerAddressableSize/wordSize;
             for (i in (words.size - count):count) {
                 // most significant first
-                variable value x = words[i];
-                if (negative, exists xx = x) {
-                    if (i >= lastNonZeroIndex) {
-                        x = xx.negated; // negate the least significant non-zero
-                    } else {
-                        x = xx.not; // flip the other non-zeros
+                Integer x;
+
+                if (0 <= i < words.size) {
+                    if (negative) {
+                        x = (i >= lastNonZeroIndex)
+                            then words.get(i).negated // negate the least significant non-zero
+                            else words.get(i).not;    // flip the other non-zeros
                     }
+                    else {
+                        x = words.get(i);
+                    }
+                } else {
+                    x = negative then -1 else 0;
                 }
                 result = result.leftLogicalShift(wordSize);
-                result = result.plus((x else (negative then -1 else 0)).and(wordMask));
+                result = result.plus(x.and(wordMask));
             }
             return integerMemo = result;
         }
@@ -255,7 +261,7 @@ shared final class Whole
     shared actual Boolean unit => this == one;
 
     // TODO doc
-    shared Boolean even => words.last?.even else false;
+    shared Boolean even => !words.empty then words.last.even else false;
 
     "The platform-specific implementation object, if any.
      This is provided for interoperation with the runtime
@@ -263,8 +269,13 @@ shared final class Whole
     see(`function fromImplementation`)
     shared Object? implementation => nothing;  // TODO remove once decimal allows
 
-    shared actual Integer hash
-        => sign * words.fold(0)((acc, x) => 31*acc + x);
+    shared actual Integer hash {
+        variable Integer result = 0;
+        for (i in 0:words.size) {
+            result = result * 31 + words.get(i);
+        }
+        return sign * result;
+    }
 
     shared actual String string {
         // TODO optimize? & support any radix
@@ -314,12 +325,12 @@ shared final class Whole
                 else (lastNonZeroIndexMemo =
                       words.lastIndexWhere((word) => word != 0) else -1);
 
-    Array<Integer> add(List<Integer> first, List<Integer> second) {
+    Words add(Words first, Words second) {
         // Knuth 4.3.1 Algorithm A
         assert(!first.empty && !second.empty);
 
-        List<Integer> u;
-        List<Integer> v;
+        Words u;
+        Words v;
         if (first.size >= second.size) {
             u = first;
             v = second;
@@ -328,14 +339,14 @@ shared final class Whole
             v = first;
         }
 
-        value result = arrayOfSize(u.size, 0);
+        value result = Words(u.size, 0);
         value resultSize = result.size;
         variable value carry = 0;
 
         // start from the last element (least-significant)
         for (j in 0:u.size) {
-            value uj = u.getFromLast(j) else 0; // never null
-            value vj = v.getFromLast(j) else 0; // null when index < 0
+            value uj = u.getFromLast(j); // never null
+            value vj = j < v.size then v.getFromLast(j) else 0; // null when index < 0
             value sum = uj + vj + carry;
             result.set(resultSize - j - 1, sum.and(wordMask));
             carry = sum.rightLogicalShift(wordSize);
@@ -343,21 +354,21 @@ shared final class Whole
 
         // remaining carry, if any
         return if (carry != 0)
-               then Array { 1, *result }
+               then result.follow(1)
                else result;
     }
 
-    List<Integer> subtract(List<Integer> u, List<Integer> v, Array<Integer>? r = null) {
+    Words subtract(Words u, Words v, Words? r = null) {
         // Knuth 4.3.1 Algorithm S
         // assert(compareMagnitude(u, v) == larger);
-        value result = r else arrayOfSize(u.size, 0);
+        value result = r else Words(u.size, 0);
         value resultSize = result.size;
         variable value borrow = 0;
 
         // start from the last element (least-significant)
         for (j in 0:u.size) {
-            value uj = u.getFromLast(j) else 0; // never null
-            value vj = v.getFromLast(j) else 0; // null when index < 0
+            value uj = u.getFromLast(j); // never null
+            value vj = j < v.size then v.getFromLast(j) else 0; // null when index < 0
             value difference = uj - vj + borrow;
             result.set(resultSize - j - 1, difference.and(wordMask));
             borrow = difference.rightArithmeticShift(wordSize);
@@ -372,9 +383,9 @@ shared final class Whole
         return result;
     }
 
-    Array<Integer> multiply(List<Integer> u, List<Integer> v) {
+    Words multiply(Words u, Words v) {
         // Knuth 4.3.1 Algorithm M
-        value result = arrayOfSize(u.size + v.size, 0);
+        value result = Words(u.size + v.size, 0);
         value resultSize = result.size;
 
         variable value carry = 0;
@@ -382,9 +393,9 @@ shared final class Whole
             carry = 0;
             for (j in 0:v.size) {
                 value k = resultSize - j - i - 1;
-                assert (exists ui = u.getFromLast(i));
-                assert (exists vj = v.getFromLast(j));
-                assert (exists wk = result[k]);
+                value ui = u.getFromLast(i);
+                value vj = v.getFromLast(j);
+                value wk = result.get(k);
                 value product = ui * vj + wk + carry;
                 result.set(k, product.and(wordMask));
                 carry = product.rightLogicalShift(wordSize);
@@ -394,15 +405,15 @@ shared final class Whole
         return result;
     }
 
-    Array<Integer> multiplyWord(List<Integer> u, Integer v, Array<Integer>? r = null) {
+    Words multiplyWord(Words u, Integer v, Words? r = null) {
         assert(v.and(wordMask) == v);
 
-        value result = r else arrayOfSize(u.size + 1, 0);
+        value result = r else Words(u.size + 1, 0);
         value resultSize = result.size;
 
         variable value carry = 0;
         for (i in 0:u.size) {
-            assert (exists ui = u.getFromLast(i));
+            value ui = u.getFromLast(i);
             value product = ui * v + carry;
             result.set(resultSize - i - 1, product.and(wordMask));
             carry = product.rightLogicalShift(wordSize);
@@ -427,15 +438,15 @@ shared final class Whole
 
     "`u[j+1..j+vSize] <- u[j+1..j+vSize] - v * q`, returning the absolute value
      of the final borrow that would normally be subtracted against u[j]."
-    Integer multiplyAndSubtract(Array<Integer> u,
-                                List<Integer> v,
+    Integer multiplyAndSubtract(Words u,
+                                Words v,
                                 Integer q,
                                 Integer j) {
         assert(u.size > v.size + j);
         variable Integer absBorrow = 0;
         for (i in v.size..1) {
-            assert(exists vi = v[i - 1]);
-            assert(exists ui = u[j + i]);
+            value vi = v.get(i - 1);
+            value ui = u.get(j + i);
 
             // the product is subtracted, so absBorrow adds to it
             value product = q * vi + absBorrow;
@@ -447,10 +458,10 @@ shared final class Whole
         return absBorrow;
     }
 
-    [List<Integer>, List<Integer>] divide(
-            List<Integer> dividend, List<Integer> divisor) {
+    [Words, Words] divide(
+            Words dividend, Words divisor) {
         if (divisor.size < 2) {
-            assert (exists first = divisor.first);
+            value first = divisor.first;
             return divideWord(dividend, first);
         }
 
@@ -461,27 +472,27 @@ shared final class Whole
         // TODO: left shift such that v0 >= radix/2 instead of the times approach
         value m = dividend.size - divisor.size;
         value b = wordRadix;
-        value d = b / ((divisor[0] else 0) + 1);
-        Array<Integer> u;
-        List<Integer> v;
+        value d = b / (divisor.get(0) + 1);
+        Words u;
+        Words v;
         if (d == 1) {
-            u = Array { 0, *dividend };
+            u = words.follow(0);
             v = divisor;
         }
         else {
             u = multiplyWord(dividend, d); // u.size == dividend.size + 1
-            v = multiplyWord(divisor, d, arrayOfSize(divisor.size, 0));
+            v = multiplyWord(divisor, d, Words(divisor.size, 0));
         }
-        Array<Integer> q = arrayOfSize(m + 1, 0); // quotient
-        assert(exists v0 = v[0], v0 != 0); // most significant, can't be 0
-        assert(exists v1 = v[1]); // second most significant must also exist
+        Words q = Words(m + 1, 0); // quotient
+        value v0 = v.get(0); // most significant, can't be 0
+        value v1 = v.get(1); // second most significant must also exist
 
         // D2. Initialize j
         for (j in 0..m) {
             // D3. Compute qj
-            assert(exists uj0 = u[j]);
-            assert(exists uj1 = u[j+1]);
-            assert(exists uj2 = u[j+2]);
+            value uj0 = u.get(j);
+            value uj1 = u.get(j+1);
+            value uj2 = u.get(j+2);
             value uj01 = uj0.leftLogicalShift(wordSize) + uj1;
             variable Integer qj;
             variable Integer rj;
@@ -516,20 +527,20 @@ shared final class Whole
         }
 
         // D8. Unnormalize Remainder Due to Step D1
-        variable List<Integer> remainder = normalized(u);
+        variable Words remainder = normalized(u);
         if (!remainder.empty && d != 1) {
             remainder = divideWord(remainder, d)[0];
         }
         return [q, remainder];
     }
 
-    [List<Integer>, List<Integer>] divideWord(List<Integer> u, Integer v) {
+    [Words, Words] divideWord(Words u, Integer v) {
         assert(u.size >= 1);
         assert(v.and(wordMask) == v);
         variable value r = 0;
-        value q = arrayOfSize(u.size, 0);
+        value q = Words(u.size, 0);
         for (j in 0..u.size-1) {
-            assert (exists uj = u[j]);
+            value uj = u.get(j);
             value x = r * wordRadix + uj;
             if (x >= 0) {
                 q.set(j, x / v);
@@ -541,22 +552,22 @@ shared final class Whole
             }
         }
         return [q, if (r.zero)
-                   then empty
-                   else Array<Integer> { r }];
+                   then Words(0, 0)
+                   else Words.OfOne(r)];
     }
 
     Whole leftLogicalShift(Integer shift) => nothing;
 
-    Comparison compareMagnitude(List<Integer> x, List<Integer> y) {
+    Comparison compareMagnitude(Words x, Words y) {
         // leading words are most significant, but may be 0
         variable Integer xZeros = 0;
         variable Integer yZeros = 0;
 
-        while (x[xZeros]?.zero else false) {
+        while (xZeros < x.size then x.get(xZeros).zero else false) {
             xZeros++;
         }
 
-        while (y[yZeros]?.zero else false) {
+        while (yZeros < y.size then y.get(yZeros).zero else false) {
             yZeros++;
         }
 
@@ -568,8 +579,8 @@ shared final class Whole
         }
         else {
             for (i in 0:xRealSize) {
-                assert(exists xi = x[xZeros + i]);
-                assert(exists yi = y[yZeros + i]);
+                value xi = x.get(xZeros + i);
+                value yi = y.get(yZeros + i);
                 if (xi != yi) {
                     return xi <=> yi;
                 }

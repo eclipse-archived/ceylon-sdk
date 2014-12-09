@@ -1,3 +1,6 @@
+import java.lang.annotation {
+    inherited
+}
 "This module provides four APIs:
  
  - `ceylon.math.decimal`&mdash;an arbitrary-precision decimal
@@ -37,4 +40,5 @@
 by("Tom Bentley")
 module ceylon.math "1.1.1" {
     import java.base "7";
+    import ceylon.interop.java "1.1.1";
 }

@@ -9,7 +9,7 @@ shared Whole wholeNumber(variable Integer number)
     else if (number == 2)  then two
     else Whole.Internal(number.sign, integerToWordsAbs(number));
 
-Array<Integer> integerToWordsAbs(variable Integer integer) {
+Words integerToWordsAbs(variable Integer integer) {
     // * Bitwise operations are not used; JavaScript's min/max Integer range
     //   is greater than what is supported by runtime.integerAddressableSize
     //
@@ -26,7 +26,7 @@ Array<Integer> integerToWordsAbs(variable Integer integer) {
     if (! runtime.minIntegerValue <= integer <= runtime.maxIntegerValue) {
         throw OverflowException();
     }
-    value words = arrayOfSize(64/wordSize, 0);
+    value words = Words(64/wordSize, 0);
     value numWords = 64/wordSize;
     for (i in 1:numWords) {
         words.set(numWords - i, (integer % wordRadix).magnitude);

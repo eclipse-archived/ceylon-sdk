@@ -46,15 +46,15 @@ Integer unsignedDivide(Integer n, Integer d) {
     return quotient * wordRadix + remainder;
 }
 
-List<Integer> normalized(List<Integer> xs) {
+Words normalized(Words xs) {
     variable value zeros = 0;
-    while (xs[zeros]?.zero else false) {
+    while (zeros < xs.size && xs.getFromFirst(zeros).zero) {
         zeros++;
     }
     return if (zeros == 0) then
         xs
     else if (zeros == xs.size) then
-        empty
-    else
-        xs.spanFrom(zeros);
+        Words(0, 0)
+    else // FIXME do an internal offset for this:
+        xs.skip(zeros);
 }
