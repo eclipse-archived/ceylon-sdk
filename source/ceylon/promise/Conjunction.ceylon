@@ -6,7 +6,7 @@
  - rejected when either of the two promises is rejected."
 by("Julien Viet")
 class Conjunction<out Element, out First, Rest>(first, rest)
-    satisfies Term<Element,Tuple<First|Element,First,Rest>>
+        satisfies Term<Element,Tuple<First|Element,First,Rest>>
         given First satisfies Element
         given Rest satisfies Sequential<Element> {
     
@@ -17,7 +17,9 @@ class Conjunction<out Element, out First, Rest>(first, rest)
     Promise<First> first;
 
     // We use the context of the first
-    value deferred = Deferred<Tuple<First|Element,First,Rest>>(first.context);
+    value deferred 
+            = Deferred<Tuple<First|Element,First,Rest>>
+                    (first.context);
     promise = deferred.promise;
     
     variable First? firstVal = null;
@@ -50,21 +52,23 @@ class Conjunction<out Element, out First, Rest>(first, rest)
             and<Other>(Promise<Other> other) 
             => Conjunction(other, promise);
 
-    shared actual Promise<Result> compose<Result>(Result(*Tuple<First|Element,First,Rest>) onFulfilled, Result(Throwable) onRejected)
-        => promise.compose {
-      (Tuple<First|Element,First,Rest> args) 
-          => unflatten(onFulfilled)(args);
-      onRejected;
+    shared actual Promise<Result> compose<Result>(
+            Result(*Tuple<First|Element,First,Rest>) onFulfilled, 
+            Result(Throwable) onRejected)
+            => promise.compose {
+        (Tuple<First|Element,First,Rest> args) 
+                => unflatten(onFulfilled)(args);
+        onRejected;
     };
 
     shared actual Promise<Result> flatMap<Result>(
-            Callable<Promise<Result>,Tuple<First|Element,First,Rest>> onFulfilled,
+            Promise<Result>(*Tuple<First|Element,First,Rest>) onFulfilled,
             Promise<Result>(Throwable) onRejected) 
             => promise.flatMap {
-                (Tuple<First|Element,First,Rest> args) 
-                        => unflatten(onFulfilled)(args);
-                onRejected;
-            };
+        (Tuple<First|Element,First,Rest> args) 
+                => unflatten(onFulfilled)(args);
+        onRejected;
+    };
     
 
 }

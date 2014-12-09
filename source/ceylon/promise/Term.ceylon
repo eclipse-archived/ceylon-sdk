@@ -3,7 +3,7 @@
 by("Julien Viet")
 shared interface Term<out Element, out T>
         satisfies Completable<T>
-            given T satisfies Element[] {
+        given T satisfies Element[] {
     
     "Combine the current term with a provided promise and 
      return a new term object that

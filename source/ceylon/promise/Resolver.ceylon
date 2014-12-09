@@ -12,10 +12,10 @@ shared interface Resolver<in Value> {
 
     "Either fulfill or reject the promise"
     shared void resolve(Value|Promise<Value>|Throwable val) {
-      if (is Value|Promise<Value> val) {
-        fulfill(val);
-      } else {
-        reject(val);
-      }
+        if (is Value|Promise<Value> val) {
+            fulfill(val);
+        } else {
+            reject(val);
+        }
     }
 }
