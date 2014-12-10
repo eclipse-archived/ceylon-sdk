@@ -1,3 +1,7 @@
+import java.lang {
+    LongArray
+}
+
 "An arbitrary precision integer."
 shared final class Whole
         satisfies Integral<Whole> &
@@ -24,9 +28,9 @@ shared final class Whole
 
         // sign must not be 0 if magnitude != 0
         assert (-1 <= sign <= 1);
-        assert (!sign == 0 || words.empty);
+        assert (!sign == 0 || words.size == 0);
 
-        this.sign = if (words.empty) then 0 else sign;
+        this.sign = if (words.size == 0) then 0 else sign;
         this.words = words;
     }
 
@@ -261,7 +265,11 @@ shared final class Whole
     shared actual Boolean unit => this == one;
 
     // TODO doc
-    shared Boolean even => if (!words.empty) then words.last.even else false;
+    shared Boolean even
+        =>  let (wordCount = words.size)
+            if (wordCount > 0)
+            then words.get(wordCount - 1).even
+            else false;
 
     "The platform-specific implementation object, if any.
      This is provided for interoperation with the runtime
@@ -316,7 +324,7 @@ shared final class Whole
         =>  if (is Whole that) then
                 (this === that) ||
                 (this.sign == that.sign &&
-                 this.words == that.words)
+                 wordsEqual(this.words, that.words))
             else
                 false;
 
@@ -324,7 +332,7 @@ shared final class Whole
         =>  if (lastNonZeroIndexMemo != -99)
             then lastNonZeroIndexMemo
             else (lastNonZeroIndexMemo =
-                    words.lastIndexWhere((word) => word != 0)
+                    lastIndexWhere(words, (word) => word != 0)
                     else -1);
 
     Words add(Words first, Words second) {
@@ -342,7 +350,7 @@ shared final class Whole
         }
         value wMask = wordMask;
         value wSize = wordSize;
-        value result = Words(u.size);
+        value result = newWords(u.size);
 
         // start from the last element (least-significant)
         variable value uIndex = u.size - 1;
@@ -371,21 +379,21 @@ shared final class Whole
 
         // remaining carry, if any
         return if (carry != 0)
-               then result.follow(1)
+               then consWord(1, result)
                else result;
     }
 
     Words subtract(Words u, Words v, Words? r = null) {
         // Knuth 4.3.1 Algorithm S
         // assert(compareMagnitude(u, v) == larger);
-        value result = r else Words(u.size);
+        value result = r else newWords(u.size);
         value resultSize = result.size;
         variable value borrow = 0;
 
         // start from the last element (least-significant)
         for (j in 0:u.size) {
-            value uj = u.getFromLast(j); // never null
-            value vj = if (j < v.size) then v.getFromLast(j) else 0; // null when index < 0
+            value uj = u.get(u.size - j - 1); // never null
+            value vj = if (j < v.size) then v.get(v.size - j - 1) else 0; // null when index < 0
             value difference = uj - vj + borrow;
             result.set(resultSize - j - 1, difference.and(wordMask));
             borrow = difference.rightArithmeticShift(wordSize);
@@ -402,7 +410,10 @@ shared final class Whole
 
     Words multiply(Words u, Words v) {
         // Knuth 4.3.1 Algorithm M
-        value result = Words(u.size + v.size);
+        value wMask = wordMask;
+        value wSize = wordSize;
+        
+        value result = newWords(u.size + v.size);
         value resultSize = result.size;
 
         variable value carry = 0;
@@ -410,12 +421,12 @@ shared final class Whole
             carry = 0;
             for (j in 0:v.size) {
                 value k = resultSize - j - i - 1;
-                value ui = u.getFromLast(i);
-                value vj = v.getFromLast(j);
+                value ui = u.get(u.size - i - 1);
+                value vj = v.get(v.size - j - 1);
                 value wk = result.get(k);
                 value product = ui * vj + wk + carry;
-                result.set(k, product.and(wordMask));
-                carry = product.rightLogicalShift(wordSize);
+                result.set(k, product.and(wMask));
+                carry = product.rightLogicalShift(wSize);
             }
             result.set(resultSize - v.size - i - 1, carry);
         }
@@ -425,12 +436,12 @@ shared final class Whole
     Words multiplyWord(Words u, Integer v, Words? r = null) {
         assert(v.and(wordMask) == v);
 
-        value result = r else Words(u.size + 1);
+        value result = r else newWords(u.size + 1);
         value resultSize = result.size;
 
         variable value carry = 0;
         for (i in 0:u.size) {
-            value ui = u.getFromLast(i);
+            value ui = u.get(u.size - i - 1);
             value product = ui * v + carry;
             result.set(resultSize - i - 1, product.and(wordMask));
             carry = product.rightLogicalShift(wordSize);
@@ -478,7 +489,7 @@ shared final class Whole
     [Words, Words] divide(
             Words dividend, Words divisor) {
         if (divisor.size < 2) {
-            value first = divisor.first;
+            value first = divisor.get(0);
             return divideWord(dividend, first);
         }
 
@@ -493,14 +504,14 @@ shared final class Whole
         Words u;
         Words v;
         if (d == 1) {
-            u = words.follow(0);
+            u = consWord(0, words);
             v = divisor;
         }
         else {
             u = multiplyWord(dividend, d); // u.size == dividend.size + 1
-            v = multiplyWord(divisor, d, Words(divisor.size));
+            v = multiplyWord(divisor, d, newWords(divisor.size));
         }
-        Words q = Words(m + 1); // quotient
+        Words q = newWords(m + 1); // quotient
         value v0 = v.get(0); // most significant, can't be 0
         value v1 = v.get(1); // second most significant must also exist
 
@@ -545,7 +556,7 @@ shared final class Whole
 
         // D8. Unnormalize Remainder Due to Step D1
         variable Words remainder = normalized(u);
-        if (!remainder.empty && d != 1) {
+        if (!remainder.size == 0 && d != 1) {
             remainder = divideWord(remainder, d).first;
         }
         return [q, remainder];
@@ -555,7 +566,7 @@ shared final class Whole
         assert(u.size >= 1);
         assert(v.and(wordMask) == v);
         variable value r = 0;
-        value q = Words(u.size);
+        value q = newWords(u.size);
         for (j in 0..u.size-1) {
             value uj = u.get(j);
             value x = r * wordRadix + uj;
@@ -569,8 +580,8 @@ shared final class Whole
             }
         }
         return [q, if (r.zero)
-                   then Words(0)
-                   else Words.OfOne(r)];
+                   then newWords(0)
+                   else wordsOfOne(r)];
     }
 
     Whole leftLogicalShift(Integer shift) => nothing;

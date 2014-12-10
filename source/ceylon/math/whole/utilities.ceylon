@@ -48,13 +48,13 @@ Integer unsignedDivide(Integer n, Integer d) {
 
 Words normalized(Words xs) {
     variable value zeros = 0;
-    while (zeros < xs.size && xs.getFromFirst(zeros) == 0) {
+    while (zeros < xs.size && xs.get(zeros) == 0) {
         zeros++;
     }
     return if (zeros == 0) then
         xs
     else if (zeros == xs.size) then
-        Words(0)
+        newWords(0)
     else // FIXME do an internal offset for this:
-        xs.skip(zeros);
+        skipWords(xs, zeros);
 }
