@@ -126,16 +126,7 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual Iterator<Element> iterator() { 
-        if (is {Element*} a=array) {
-            return a.take(length).iterator();
-        }
-        else {
-            return array.coalesced.iterator();
-        } 
-    }
-    
-    /*shared actual Iterator<Element> iterator() {
+    shared actual Iterator<Element> iterator() {
         object iterator satisfies Iterator<Element> {
             variable value index = 0;
             shared actual Finished|Element next() {
@@ -155,31 +146,8 @@ shared class ArrayList<Element>
             }
         }
         return iterator;
-    }*/
+    }
     
-    /*shared actual Iterator<Element> iterator() {
-        object iterator satisfies Iterator<Element> {
-            variable value index = 0;
-            value arrayIterator = array.iterator();
-            shared actual Finished|Element next() {
-                if (index++<length) {
-                    if (exists next 
-                            = arrayIterator.next()) {
-                        return next;
-                    }
-                    else {
-                        assert (is Element null);
-                        return null;
-                    }
-                }
-                else {
-                    return finished;
-                }
-            }
-        }
-        return iterator;
-    }*/
-
     shared actual void insert(Integer index, Element element) {
         "index may not be negative or greater than the
          length of the list"
