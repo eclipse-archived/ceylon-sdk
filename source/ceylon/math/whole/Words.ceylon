@@ -5,24 +5,30 @@ import ceylon.interop.java {
     javaLongArray
 }
 
-class Words {
+final class Words {
+
     LongArray array;
 
+    shared Integer size;
+
     shared new Words(Integer size, Integer initialValue = 0) {
-        array = javaLongArray(arrayOfSize(size, initialValue));
+        this.array = javaLongArray(arrayOfSize(size, initialValue));
+        this.size = array.size;
     }
 
     shared new OfOne(Integer word) {
-        array = javaLongArray(arrayOfSize(1, word));
+        this.array = javaLongArray(arrayOfSize(1, word));
+        this.size = array.size;
     }
 
     new Internal(LongArray array) {
         this.array = array;
+        this.size = array.size;
     }
 
     shared Words skip(Integer length) {
         assert (length <= size);
-        if (skip == size) {
+        if (length == size) {
             return Words(0);
         }
         else {
@@ -39,10 +45,23 @@ class Words {
         return Internal(newArray);
     }
 
-    shared Integer size => array.size;
+    shared Words clone() {
+        return Internal(array.clone());
+    }
+    
+    shared void copyTo(Words destination,
+                       Integer sourcePosition = 0,
+                       Integer destinationPosition = 0,
+                       Integer length = size - sourcePosition) {
+        array.copyTo(destination.array, sourcePosition, destinationPosition, length);   
+    }
 
     shared void set(Integer index, Integer  element) {
         array.set(index, element);  
+    }
+
+    shared void setFromLast(Integer index, Integer element) {
+        set(size - index - 1, element);
     }
 
     shared Boolean empty => size == 0;

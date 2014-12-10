@@ -11,7 +11,7 @@ shared final class Whole
 
     variable String? stringMemo = null;
 
-    variable Integer? lastNonZeroIndexMemo = null;
+    variable Integer lastNonZeroIndexMemo = -99;
 
     shared new Internal(Integer sign, variable Words words) {
         // FIXME should be package private when available
@@ -24,9 +24,9 @@ shared final class Whole
 
         // sign must not be 0 if magnitude != 0
         assert (-1 <= sign <= 1);
-        assert (!sign.zero || words.empty);
+        assert (!sign == 0 || words.empty);
 
-        this.sign = words.empty then 0 else sign;
+        this.sign = if (words.empty) then 0 else sign;
         this.words = words;
     }
 
@@ -84,15 +84,15 @@ shared final class Whole
                 [package.zero, this]
             case (larger)
                 (let (resultWords   = divide(this.words, other.words))
-                 [Internal(sign * other.sign, resultWords[0]),
-                  Internal(sign, resultWords[1])]));
+                 [Internal(sign * other.sign, resultWords.first),
+                  Internal(sign, resultWords.last)]));
     }
 
     shared actual Whole divided(Whole other)
-        =>  quotientAndRemainder(other)[0];
+        =>  quotientAndRemainder(other).first;
 
     shared actual Whole remainder(Whole other)
-        =>  quotientAndRemainder(other)[1];
+        =>  quotientAndRemainder(other).last;
 
     "The result of raising this number to the given power.
 
@@ -214,7 +214,7 @@ shared final class Whole
 
                 if (0 <= i < words.size) {
                     if (negative) {
-                        x = (i >= lastNonZeroIndex)
+                        x = if (i >= lastNonZeroIndex)
                             then words.get(i).negated // negate the least significant non-zero
                             else words.get(i).not;    // flip the other non-zeros
                     }
@@ -222,7 +222,7 @@ shared final class Whole
                         x = words.get(i);
                     }
                 } else {
-                    x = negative then -1 else 0;
+                    x = if (negative) then -1 else 0;
                 }
                 result = result.leftLogicalShift(wordSize);
                 result = result.plus(x.and(wordMask));
@@ -252,16 +252,16 @@ shared final class Whole
 
     shared actual Whole fractionalPart => package.zero;
 
-    shared actual Boolean positive => sign.positive;
+    shared actual Boolean positive => sign == 1;
 
-    shared actual Boolean negative => sign.negative;
+    shared actual Boolean negative => sign == -1;
 
-    shared actual Boolean zero => sign.zero;
+    shared actual Boolean zero => sign == 0;
 
     shared actual Boolean unit => this == one;
 
     // TODO doc
-    shared Boolean even => !words.empty then words.last.even else false;
+    shared Boolean even => if (!words.empty) then words.last.even else false;
 
     "The platform-specific implementation object, if any.
      This is provided for interoperation with the runtime
@@ -292,8 +292,8 @@ shared final class Whole
             variable value x = this.magnitude;
             while (!x.zero) {
                 value qr = x.quotientAndRemainder(toRadix);
-                x = qr[0];
-                sb.append (qr[1].integer.string);
+                x = qr.first;
+                sb.append (qr.last.integer.string);
             }
             if (negative) {
                 sb.append("-");
@@ -321,13 +321,15 @@ shared final class Whole
                 false;
 
     Integer lastNonZeroIndex
-            =>  lastNonZeroIndexMemo
-                else (lastNonZeroIndexMemo =
-                      words.lastIndexWhere((word) => word != 0) else -1);
+        =>  if (lastNonZeroIndexMemo != -99)
+            then lastNonZeroIndexMemo
+            else (lastNonZeroIndexMemo =
+                    words.lastIndexWhere((word) => word != 0)
+                    else -1);
 
     Words add(Words first, Words second) {
         // Knuth 4.3.1 Algorithm A
-        assert(!first.empty && !second.empty);
+        //assert(!first.empty && !second.empty);
 
         Words u;
         Words v;
@@ -338,18 +340,33 @@ shared final class Whole
             u = second;
             v = first;
         }
-
-        value result = Words(u.size, 0);
-        value resultSize = result.size;
-        variable value carry = 0;
+        value wMask = wordMask;
+        value wSize = wordSize;
+        value result = Words(u.size);
 
         // start from the last element (least-significant)
-        for (j in 0:u.size) {
-            value uj = u.getFromLast(j); // never null
-            value vj = j < v.size then v.getFromLast(j) else 0; // null when index < 0
-            value sum = uj + vj + carry;
-            result.set(resultSize - j - 1, sum.and(wordMask));
-            carry = sum.rightLogicalShift(wordSize);
+        variable value uIndex = u.size - 1;
+        variable value vIndex = v.size - 1;
+        variable value carry = 0;
+
+        while (vIndex >= 0) {
+            value sum = u.get(uIndex) + v.get(vIndex) + carry;
+            result.set(uIndex, sum.and(wMask));
+            carry = sum.rightLogicalShift(wSize);
+            uIndex -= 1;
+            vIndex -= 1;
+        }
+
+        while (uIndex >= 0) {
+            if (carry == 0) {
+                // simply copy the remaining words from u
+                u.copyTo(result, 0, 0, uIndex + 1);
+                break;
+            }
+            value sum = u.get(uIndex) + carry;
+            result.set(uIndex, sum.and(wMask));
+            carry = sum.rightLogicalShift(wSize);
+            uIndex -= 1;
         }
 
         // remaining carry, if any
@@ -361,14 +378,14 @@ shared final class Whole
     Words subtract(Words u, Words v, Words? r = null) {
         // Knuth 4.3.1 Algorithm S
         // assert(compareMagnitude(u, v) == larger);
-        value result = r else Words(u.size, 0);
+        value result = r else Words(u.size);
         value resultSize = result.size;
         variable value borrow = 0;
 
         // start from the last element (least-significant)
         for (j in 0:u.size) {
             value uj = u.getFromLast(j); // never null
-            value vj = j < v.size then v.getFromLast(j) else 0; // null when index < 0
+            value vj = if (j < v.size) then v.getFromLast(j) else 0; // null when index < 0
             value difference = uj - vj + borrow;
             result.set(resultSize - j - 1, difference.and(wordMask));
             borrow = difference.rightArithmeticShift(wordSize);
@@ -385,7 +402,7 @@ shared final class Whole
 
     Words multiply(Words u, Words v) {
         // Knuth 4.3.1 Algorithm M
-        value result = Words(u.size + v.size, 0);
+        value result = Words(u.size + v.size);
         value resultSize = result.size;
 
         variable value carry = 0;
@@ -408,7 +425,7 @@ shared final class Whole
     Words multiplyWord(Words u, Integer v, Words? r = null) {
         assert(v.and(wordMask) == v);
 
-        value result = r else Words(u.size + 1, 0);
+        value result = r else Words(u.size + 1);
         value resultSize = result.size;
 
         variable value carry = 0;
@@ -481,9 +498,9 @@ shared final class Whole
         }
         else {
             u = multiplyWord(dividend, d); // u.size == dividend.size + 1
-            v = multiplyWord(divisor, d, Words(divisor.size, 0));
+            v = multiplyWord(divisor, d, Words(divisor.size));
         }
-        Words q = Words(m + 1, 0); // quotient
+        Words q = Words(m + 1); // quotient
         value v0 = v.get(0); // most significant, can't be 0
         value v1 = v.get(1); // second most significant must also exist
 
@@ -529,7 +546,7 @@ shared final class Whole
         // D8. Unnormalize Remainder Due to Step D1
         variable Words remainder = normalized(u);
         if (!remainder.empty && d != 1) {
-            remainder = divideWord(remainder, d)[0];
+            remainder = divideWord(remainder, d).first;
         }
         return [q, remainder];
     }
@@ -538,7 +555,7 @@ shared final class Whole
         assert(u.size >= 1);
         assert(v.and(wordMask) == v);
         variable value r = 0;
-        value q = Words(u.size, 0);
+        value q = Words(u.size);
         for (j in 0..u.size-1) {
             value uj = u.get(j);
             value x = r * wordRadix + uj;
@@ -552,7 +569,7 @@ shared final class Whole
             }
         }
         return [q, if (r.zero)
-                   then Words(0, 0)
+                   then Words(0)
                    else Words.OfOne(r)];
     }
 

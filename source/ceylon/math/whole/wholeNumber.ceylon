@@ -26,7 +26,7 @@ Words integerToWordsAbs(variable Integer integer) {
     if (! runtime.minIntegerValue <= integer <= runtime.maxIntegerValue) {
         throw OverflowException();
     }
-    value words = Words(64/wordSize, 0);
+    value words = Words(64/wordSize);
     value numWords = 64/wordSize;
     for (i in 1:numWords) {
         words.set(numWords - i, (integer % wordRadix).magnitude);
