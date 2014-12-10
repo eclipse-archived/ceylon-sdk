@@ -48,7 +48,7 @@ Integer unsignedDivide(Integer n, Integer d) {
 
 Words normalized(Words xs) {
     variable value zeros = 0;
-    while (zeros < xs.size && xs.get(zeros) == 0) {
+    while (zeros < size(xs) && get(xs, zeros) == 0) {
         zeros++;
     }
     return if (zeros == 0) then

@@ -1,15 +1,12 @@
-import ceylon.interop.java {
-    javaLongArray
-}
-
-import java.lang {
-    LongArray
-}
-
-alias Words => LongArray;
+alias Words => Array<Object>;
 
 Words newWords(Integer size, Integer initialValue = 0) {
-    return javaLongArray(arrayOfSize(size, initialValue));
+    return arrayOfSize<Object>(size, initialValue);
+    //value array = ArrayList<Integer>(0);
+    //for (i in 0:size) {
+    //    array.add(initialValue);
+    //}
+    //return array;
 }
 
 Words wordsOfOne(Integer word) {
@@ -19,7 +16,7 @@ Words wordsOfOne(Integer word) {
 }
 
 Words consWord(Integer other, Words words) {
-    value result = newWords(words.size + 1);
+    value result = newWords(size(words) + 1);
     result.set(0, other);
     copyWords(words, result, 0, 1);
     return result;
@@ -29,27 +26,32 @@ void copyWords(Words source,
         Words destination,
        Integer sourcePosition = 0,
        Integer destinationPosition = 0,
-       Integer length = source.size - sourcePosition) {
-    source.copyTo(destination, sourcePosition, destinationPosition, length);   
+       Integer length = size(source) - sourcePosition) {
+    
+    for (i in 0:length) {
+        value sp = sourcePosition + i;
+        value dp = destinationPosition + i;
+        destination.set(dp, get(source, sp));
+    }
 }
 
 Words skipWords(Words words, Integer length) {
-    assert (length <= words.size);
+    assert (length <= size(words));
     if (length == words.size) {
         return newWords(0);
     }
     else {
-        value result = newWords(words.size - length);
+        value result = newWords(size(words) - length);
         copyWords(words, result, length);
         return result;
     }
 }
 
 Integer? lastIndexWhere(Words words, Boolean selecting(Integer element)) {
-    variable value index = words.size;
+    variable value index = size(words);
     while (index>0) {
         index--;
-        value element=words.get(index); 
+        value element = get(words, index); 
         if (selecting(element)) {
             return index;
         }
@@ -58,13 +60,26 @@ Integer? lastIndexWhere(Words words, Boolean selecting(Integer element)) {
 }
 
 Boolean wordsEqual(Words first, Words second) {    
-    if (first.size != second.size) {
+    if (size(first) != size(second)) {
         return false;
     }
-    for (i in 0:first.size) {
-        if (first.get(i) != second.get(i)) {
+    for (i in 0:size(first)) {
+        if (get(first, i) != get(second, i)) {
             return false;
         }
     }
     return true;
+}
+
+Integer get(Words words, Integer index) {
+    assert (is Integer result = words.getFromFirst(index));
+    return result;
+}
+
+void set(Words words, Integer index, Integer word) {
+    words.set(index, word);
+}
+
+Integer size(Words words) {
+    return words.size;
 }

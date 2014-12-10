@@ -1,7 +1,3 @@
-import java.lang {
-    LongArray
-}
-
 "An arbitrary precision integer."
 shared final class Whole
         satisfies Integral<Whole> &
@@ -28,9 +24,9 @@ shared final class Whole
 
         // sign must not be 0 if magnitude != 0
         assert (-1 <= sign <= 1);
-        assert (!sign == 0 || words.size == 0);
+        assert (!sign == 0 || size(words) == 0);
 
-        this.sign = if (words.size == 0) then 0 else sign;
+        this.sign = if (size(words) == 0) then 0 else sign;
         this.words = words;
     }
 
@@ -212,18 +208,18 @@ shared final class Whole
             variable Integer result = 0;
             // result should have up to integerAddressableSize bits (32 or 64)
             value count = runtime.integerAddressableSize/wordSize;
-            for (i in (words.size - count):count) {
+            for (i in (size(words) - count):count) {
                 // most significant first
                 Integer x;
 
-                if (0 <= i < words.size) {
+                if (0 <= i < size(words)) {
                     if (negative) {
                         x = if (i >= lastNonZeroIndex)
-                            then words.get(i).negated // negate the least significant non-zero
-                            else words.get(i).not;    // flip the other non-zeros
+                            then get(words, i).negated // negate the least significant non-zero
+                            else get(words, i).not;    // flip the other non-zeros
                     }
                     else {
-                        x = words.get(i);
+                        x = get(words, i);
                     }
                 } else {
                     x = if (negative) then -1 else 0;
@@ -266,9 +262,9 @@ shared final class Whole
 
     // TODO doc
     shared Boolean even
-        =>  let (wordCount = words.size)
+        =>  let (wordCount = size(words))
             if (wordCount > 0)
-            then words.get(wordCount - 1).even
+            then get(words, wordCount - 1).even
             else false;
 
     "The platform-specific implementation object, if any.
@@ -279,8 +275,8 @@ shared final class Whole
 
     shared actual Integer hash {
         variable Integer result = 0;
-        for (i in 0:words.size) {
-            result = result * 31 + words.get(i);
+        for (i in 0:size(words)) {
+            result = result * 31 + get(words, i);
         }
         return sign * result;
     }
@@ -341,7 +337,7 @@ shared final class Whole
 
         Words u;
         Words v;
-        if (first.size >= second.size) {
+        if (size(first) >= size(second)) {
             u = first;
             v = second;
         } else {
@@ -350,15 +346,15 @@ shared final class Whole
         }
         value wMask = wordMask;
         value wSize = wordSize;
-        value result = newWords(u.size);
+        value result = newWords(size(u));
 
         // start from the last element (least-significant)
-        variable value uIndex = u.size - 1;
-        variable value vIndex = v.size - 1;
+        variable value uIndex = size(u) - 1;
+        variable value vIndex = size(v) - 1;
         variable value carry = 0;
 
         while (vIndex >= 0) {
-            value sum = u.get(uIndex) + v.get(vIndex) + carry;
+            value sum = get(u, uIndex) + get(v, vIndex) + carry;
             result.set(uIndex, sum.and(wMask));
             carry = sum.rightLogicalShift(wSize);
             uIndex -= 1;
@@ -368,10 +364,10 @@ shared final class Whole
         while (uIndex >= 0) {
             if (carry == 0) {
                 // simply copy the remaining words from u
-                u.copyTo(result, 0, 0, uIndex + 1);
+                copyWords(u, result, 0, 0, uIndex + 1);
                 break;
             }
-            value sum = u.get(uIndex) + carry;
+            value sum = get(u, uIndex) + carry;
             result.set(uIndex, sum.and(wMask));
             carry = sum.rightLogicalShift(wSize);
             uIndex -= 1;
@@ -386,14 +382,14 @@ shared final class Whole
     Words subtract(Words u, Words v, Words? r = null) {
         // Knuth 4.3.1 Algorithm S
         // assert(compareMagnitude(u, v) == larger);
-        value result = r else newWords(u.size);
-        value resultSize = result.size;
+        value result = r else newWords(size(u));
+        value resultSize = size(result);
         variable value borrow = 0;
 
         // start from the last element (least-significant)
-        for (j in 0:u.size) {
-            value uj = u.get(u.size - j - 1); // never null
-            value vj = if (j < v.size) then v.get(v.size - j - 1) else 0; // null when index < 0
+        for (j in 0:size(u)) {
+            value uj = get(u, size(u) - j - 1); // never null
+            value vj = if (j < size(v)) then get(v, size(v) - j - 1) else 0; // null when index < 0
             value difference = uj - vj + borrow;
             result.set(resultSize - j - 1, difference.and(wordMask));
             borrow = difference.rightArithmeticShift(wordSize);
@@ -401,7 +397,7 @@ shared final class Whole
 
         // zero out the leading portion of the result array
         // if an oversized array was provided
-        for (i in 0:resultSize-u.size) {
+        for (i in 0:resultSize-size(u)) {
             result.set(i, 0);
         }
 
@@ -413,22 +409,22 @@ shared final class Whole
         value wMask = wordMask;
         value wSize = wordSize;
         
-        value result = newWords(u.size + v.size);
-        value resultSize = result.size;
+        value result = newWords(size(u) + size(v));
+        value resultSize = size(result);
 
         variable value carry = 0;
-        for (i in 0:u.size) {
+        for (i in 0:size(u)) {
             carry = 0;
-            for (j in 0:v.size) {
+            for (j in 0:size(v)) {
                 value k = resultSize - j - i - 1;
-                value ui = u.get(u.size - i - 1);
-                value vj = v.get(v.size - j - 1);
-                value wk = result.get(k);
+                value ui = get(u, size(u) - i - 1);
+                value vj = get(v, size(v) - j - 1);
+                value wk = get(result, k);
                 value product = ui * vj + wk + carry;
                 result.set(k, product.and(wMask));
                 carry = product.rightLogicalShift(wSize);
             }
-            result.set(resultSize - v.size - i - 1, carry);
+            result.set(resultSize - size(v) - i - 1, carry);
         }
         return result;
     }
@@ -436,28 +432,28 @@ shared final class Whole
     Words multiplyWord(Words u, Integer v, Words? r = null) {
         assert(v.and(wordMask) == v);
 
-        value result = r else newWords(u.size + 1);
-        value resultSize = result.size;
+        value result = r else newWords(size(u) + 1);
+        value resultSize = size(result);
 
         variable value carry = 0;
-        for (i in 0:u.size) {
-            value ui = u.get(u.size - i - 1);
+        for (i in 0:size(u)) {
+            value ui = get(u, size(u) - i - 1);
             value product = ui * v + carry;
             result.set(resultSize - i - 1, product.and(wordMask));
             carry = product.rightLogicalShift(wordSize);
         }
         if (!carry.zero) {
             // provided array may be _exactly_ the right size
-            result.set(resultSize - u.size - 1, carry);
+            result.set(resultSize - size(u) - 1, carry);
         }
-        else if (resultSize >= (u.size + 1)) {
+        else if (resultSize >= (size(u) + 1)) {
             // but zero it out if it did have room for a carry word
-            result.set(resultSize - u.size - 1, 0);
+            result.set(resultSize - size(u) - 1, 0);
         }
 
         // zero out the leading portion of the result array
         // if an oversized array was provided
-        for (i in 0:resultSize - u.size - 1) {
+        for (i in 0:resultSize - size(u) - 1) {
             result.set(i, 0);
         }
 
@@ -470,11 +466,11 @@ shared final class Whole
                                 Words v,
                                 Integer q,
                                 Integer j) {
-        assert(u.size > v.size + j);
+        assert(size(u) > size(v) + j);
         variable Integer absBorrow = 0;
-        for (i in v.size..1) {
-            value vi = v.get(i - 1);
-            value ui = u.get(j + i);
+        for (i in size(v)..1) {
+            value vi = get(v, i - 1);
+            value ui = get(u, j + i);
 
             // the product is subtracted, so absBorrow adds to it
             value product = q * vi + absBorrow;
@@ -488,19 +484,19 @@ shared final class Whole
 
     [Words, Words] divide(
             Words dividend, Words divisor) {
-        if (divisor.size < 2) {
-            value first = divisor.get(0);
+        if (size(divisor) < 2) {
+            value first = get(divisor, 0);
             return divideWord(dividend, first);
         }
 
         // Knuth 4.3.1 Algorithm D
-        // assert(divisor.size >= 2);
+        // assert(size(divisor) >= 2);
 
         // D1. Normalize
         // TODO: left shift such that v0 >= radix/2 instead of the times approach
-        value m = dividend.size - divisor.size;
+        value m = size(dividend) - size(divisor);
         value b = wordRadix;
-        value d = b / (divisor.get(0) + 1);
+        value d = b / (get(divisor, 0) + 1);
         Words u;
         Words v;
         if (d == 1) {
@@ -508,19 +504,19 @@ shared final class Whole
             v = divisor;
         }
         else {
-            u = multiplyWord(dividend, d); // u.size == dividend.size + 1
-            v = multiplyWord(divisor, d, newWords(divisor.size));
+            u = multiplyWord(dividend, d); // size(u) == size(dividend) + 1
+            v = multiplyWord(divisor, d, newWords(size(divisor)));
         }
         Words q = newWords(m + 1); // quotient
-        value v0 = v.get(0); // most significant, can't be 0
-        value v1 = v.get(1); // second most significant must also exist
+        value v0 = get(v, 0); // most significant, can't be 0
+        value v1 = get(v, 1); // second most significant must also exist
 
         // D2. Initialize j
         for (j in 0..m) {
             // D3. Compute qj
-            value uj0 = u.get(j);
-            value uj1 = u.get(j+1);
-            value uj2 = u.get(j+2);
+            value uj0 = get(u, j);
+            value uj1 = get(u, j+1);
+            value uj2 = get(u, j+2);
             value uj01 = uj0.leftLogicalShift(wordSize) + uj1;
             variable Integer qj;
             variable Integer rj;
@@ -563,12 +559,12 @@ shared final class Whole
     }
 
     [Words, Words] divideWord(Words u, Integer v) {
-        assert(u.size >= 1);
+        assert(size(u) >= 1);
         assert(v.and(wordMask) == v);
         variable value r = 0;
-        value q = newWords(u.size);
-        for (j in 0..u.size-1) {
-            value uj = u.get(j);
+        value q = newWords(size(u));
+        for (j in 0..size(u)-1) {
+            value uj = get(u, j);
             value x = r * wordRadix + uj;
             if (x >= 0) {
                 q.set(j, x / v);
@@ -591,24 +587,24 @@ shared final class Whole
         variable Integer xZeros = 0;
         variable Integer yZeros = 0;
 
-        while (xZeros < x.size then x.get(xZeros).zero else false) {
+        while (xZeros < size(x) then get(x, xZeros).zero else false) {
             xZeros++;
         }
 
-        while (yZeros < y.size then y.get(yZeros).zero else false) {
+        while (yZeros < size(y) then get(y, yZeros).zero else false) {
             yZeros++;
         }
 
-        value xRealSize = x.size - xZeros;
-        value yRealSize = y.size - yZeros;
+        value xRealSize = size(x) - xZeros;
+        value yRealSize = size(y) - yZeros;
 
         if (xRealSize != yRealSize) {
             return xRealSize <=> yRealSize;
         }
         else {
             for (i in 0:xRealSize) {
-                value xi = x.get(xZeros + i);
-                value yi = y.get(yZeros + i);
+                value xi = get(x, xZeros + i);
+                value yi = get(y, yZeros + i);
                 if (xi != yi) {
                     return xi <=> yi;
                 }
