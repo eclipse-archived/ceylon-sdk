@@ -126,7 +126,14 @@ shared class ArrayList<Element>
         }
     }
     
-    iterator() => array.coalesced.iterator();
+    shared actual Iterator<Element> iterator() { 
+        if (is {Element*} a=array) {
+            return a.take(length).iterator();
+        }
+        else {
+            return array.coalesced.iterator();
+        } 
+    }
     
     /*shared actual Iterator<Element> iterator() {
         object iterator satisfies Iterator<Element> {
