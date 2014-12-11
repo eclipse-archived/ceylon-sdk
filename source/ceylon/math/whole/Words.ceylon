@@ -1,7 +1,15 @@
-alias Words => Array<Object>;
+import java.lang {
+    LongArray
+}
+import ceylon.interop.java {
+    javaLongArray
+}
+alias Words => LongArray;
+//alias Words => Array<Object>;
 
 Words newWords(Integer size, Integer initialValue = 0) {
-    return arrayOfSize<Object>(size, initialValue);
+    return javaLongArray(arrayOfSize(size, initialValue));
+    //return arrayOfSize<Object>(size, initialValue);
     //value array = ArrayList<Integer>(0);
     //for (i in 0:size) {
     //    array.add(initialValue);
@@ -72,8 +80,9 @@ Boolean wordsEqual(Words first, Words second) {
 }
 
 Integer get(Words words, Integer index) {
-    assert (is Integer result = words.getFromFirst(index));
-    return result;
+    //assert (is Integer result = words.getFromFirst(index));
+    //return result;
+    return words.get(index);
 }
 
 void set(Words words, Integer index, Integer word) {

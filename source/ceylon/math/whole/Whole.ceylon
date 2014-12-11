@@ -409,22 +409,38 @@ shared final class Whole
         value wMask = wordMask;
         value wSize = wordSize;
         
-        value result = newWords(size(u) + size(v));
-        value resultSize = size(result);
+        value uSize = u.size;
+        value vSize = v.size;
+        value result = newWords(uSize + vSize);
 
         variable value carry = 0;
-        for (i in 0:size(u)) {
+
+        // result is all zeros the first time through
+        variable value j = vSize;
+        while (--j >= 0) {
+            value k = uSize + j;
+            value ui = get(u, uSize - 1);
+            value vj = get(v, j);
+            value product = ui * vj + carry;
+            set(result, k, product.and(wMask));
+            carry = product.rightLogicalShift(wSize);
+        }
+        set(result, uSize - 1, carry);
+
+        variable value i = uSize - 1;
+        while (--i >= 0) {
             carry = 0;
-            for (j in 0:size(v)) {
-                value k = resultSize - j - i - 1;
-                value ui = get(u, size(u) - i - 1);
-                value vj = get(v, size(v) - j - 1);
+            j = vSize;
+            while (--j >= 0) {
+                value k = i + j + 1;
+                value ui = get(u, i);
+                value vj = get(v, j);
                 value wk = get(result, k);
                 value product = ui * vj + wk + carry;
-                result.set(k, product.and(wMask));
+                set(result, k, product.and(wMask));
                 carry = product.rightLogicalShift(wSize);
             }
-            result.set(resultSize - size(v) - i - 1, carry);
+            set(result, i, carry);
         }
         return result;
     }
