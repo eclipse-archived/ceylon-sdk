@@ -417,11 +417,11 @@ shared final class Whole
 
         // result is all zeros the first time through
         variable value j = vSize;
+        value uLow = get(u, uSize - 1);
         while (--j >= 0) {
             value k = uSize + j;
-            value ui = get(u, uSize - 1);
             value vj = get(v, j);
-            value product = ui * vj + carry;
+            value product = uLow * vj + carry;
             set(result, k, product.and(wMask));
             carry = product.rightLogicalShift(wSize);
         }
@@ -431,9 +431,9 @@ shared final class Whole
         while (--i >= 0) {
             carry = 0;
             j = vSize;
+            value ui = get(u, i);
             while (--j >= 0) {
                 value k = i + j + 1;
-                value ui = get(u, i);
                 value vj = get(v, j);
                 value wk = get(result, k);
                 value product = ui * vj + wk + carry;
