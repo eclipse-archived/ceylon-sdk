@@ -409,8 +409,8 @@ shared final class Whole
         value wMask = wordMask;
         value wSize = wordSize;
         
-        value uSize = u.size;
-        value vSize = v.size;
+        value uSize = size(u);
+        value vSize = size(v);
         value result = newWords(uSize + vSize);
 
         variable value carry = 0;

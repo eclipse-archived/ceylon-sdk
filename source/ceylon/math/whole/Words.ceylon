@@ -4,19 +4,67 @@ import java.lang {
 import ceylon.interop.java {
     javaLongArray
 }
-alias Words => LongArray;
-//alias Words => Array<Object>;
-
-Words newWords(Integer size, Integer initialValue = 0) {
-    return javaLongArray(arrayOfSize(size, initialValue));
-    //return arrayOfSize<Object>(size, initialValue);
-    //value array = ArrayList<Integer>(0);
-    //for (i in 0:size) {
-    //    array.add(initialValue);
-    //}
-    //return array;
+import java.util {
+    JArrayList=ArrayList
 }
 
+// LongArray
+//alias Words => LongArray;
+//
+//Words newWords(Integer size, Integer initialValue = 0)
+//    => javaLongArray(arrayOfSize(size, initialValue));
+//
+//Integer get(Words words, Integer index)
+//    => words.get(index);
+//
+//Integer size(Words words)
+//    => words.size;
+
+// Array<Object>
+alias Words => Array<Object>;
+Words newWords(Integer size, Integer initialValue = 0)
+    => arrayOfSize<Object>(size, initialValue);
+
+Integer get(Words words, Integer index) {
+    assert (is Integer result = words.getFromFirst(index));
+    return result;
+}
+
+Integer size(Words words)
+    => words.size;
+
+// Array<Integer>
+//alias Words => Array<Integer>;
+//
+//Words newWords(Integer size, Integer initialValue = 0)
+//    => arrayOfSize<Integer>(size, initialValue);
+//
+//Integer get(Words words, Integer index) {
+//    assert (is Integer result = words.getFromFirst(index));
+//    return result;
+//}
+//
+//Integer size(Words words)
+//    => words.size;
+
+// JArrayList<Integer>
+//alias Words => JArrayList<Integer>;
+//
+//Words newWords(Integer size, Integer initialValue = 0) {
+//    value array = JArrayList<Integer>(size);
+//    for (_ in 0:size) {
+//        array.add(initialValue);
+//    }
+//    return array;
+//}
+//
+//Integer get(Words words, Integer index)
+//    => words.get(index);
+//
+//Integer size(Words words)
+//    => words.size();
+
+// Common
 Words wordsOfOne(Integer word) {
     value result = newWords(1);
     result.set(0, word);
@@ -79,16 +127,6 @@ Boolean wordsEqual(Words first, Words second) {
     return true;
 }
 
-Integer get(Words words, Integer index) {
-    //assert (is Integer result = words.getFromFirst(index));
-    //return result;
-    return words.get(index);
-}
-
 void set(Words words, Integer index, Integer word) {
     words.set(index, word);
-}
-
-Integer size(Words words) {
-    return words.size;
 }
