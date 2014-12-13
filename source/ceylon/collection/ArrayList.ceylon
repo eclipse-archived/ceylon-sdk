@@ -411,11 +411,11 @@ shared class ArrayList<Element>
     shared actual void each(void step(Element element)) {
         if (is Element null) {
             array.take(length)
-                    .each(void (e) => step(e else null));
+                 .each(void (e) => step(e else null));
         }
         else {
             array.take(length)
-                    .each(void (e) { 
+                 .each(void (e) { 
                 assert (exists e);
                 step(e);
             });
