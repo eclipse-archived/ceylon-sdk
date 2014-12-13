@@ -408,7 +408,8 @@ shared class ArrayList<Element>
         });
     }
     
-    shared actual void each(void step(Element element)) {
+    shared actual default
+    void each(void step(Element element)) {
         if (is Element null) {
             array.take(length)
                  .each(void (e) => step(e else null));
@@ -418,6 +419,77 @@ shared class ArrayList<Element>
                  .each(void (e) { 
                 assert (exists e);
                 step(e);
+            });
+        }
+    }
+    
+    shared actual default
+    Integer count(Boolean selecting(Element element)) {
+        if (is Element null) {
+            return array.take(length)
+                    .count((e) => selecting(e else null));
+        }
+        else {
+            return array.take(length)
+                    .count((e) { 
+                assert (exists e);
+                return selecting(e);
+            });
+        }
+    }
+    
+    shared actual default
+    Boolean every(Boolean selecting(Element element)) {
+        if (is Element null) {
+            return array.take(length)
+                    .every((e) => selecting(e else null));
+        }
+        else {
+            return array.take(length)
+                    .every((e) { 
+                assert (exists e);
+                return selecting(e);
+            });
+        }
+    }
+    
+    shared actual default
+    Boolean any(Boolean selecting(Element element)) {
+        if (is Element null) {
+            return array.take(length)
+                    .any((e) => selecting(e else null));
+        }
+        else {
+            return array.take(length)
+                    .any((e) { 
+                assert (exists e);
+                return selecting(e);
+            });
+        }
+    }
+    
+    shared actual default
+    Element? find(Boolean selecting(Element&Object element)) 
+            => array.find(selecting);
+    
+    shared actual default
+    Element? findLast(Boolean selecting(Element&Object element)) 
+            => array.findLast(selecting);
+    
+    shared actual default 
+    Result|Element|Null reduce<Result>(
+        Result accumulating(Result|Element partial, 
+                            Element element)) {
+        if (is Element null) {
+            return array.take(length)
+                    .reduce((Null|Element|Result partial, Element? element) 
+                    => accumulating(partial else null, element else null));
+        }
+        else {
+            return array.take(length)
+                    .reduce((Null|Element|Result partial, Element? element) {
+                assert (exists partial, exists element);
+                return accumulating(partial, element);
             });
         }
     }
