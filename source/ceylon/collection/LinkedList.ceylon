@@ -527,7 +527,72 @@ shared class LinkedList<Element>(elements = {})
             iter = cell.rest;
         }
     }
+    
+    shared actual Element? find(Boolean selecting(Element&Object elem)) {
+        variable value iter = head;
+        while (exists cell = iter) {
+            value element = cell.element;
+            if (exists element, 
+                selecting(element)) {
+                return element;
+            }
+            iter = cell.rest;
+        }
+        return null;
+    }
 
+    shared actual Element? findLast(Boolean selecting(Element&Object elem)) {
+        variable Element? result = null;
+        variable value iter = head;
+        while (exists cell = iter) {
+            value element = cell.element;
+            if (exists element, 
+                selecting(element)) {
+                result = element;
+            }
+            iter = cell.rest;
+        }
+        return result;
+    }
+    
+    shared actual Boolean every(Boolean selecting(Element element)) {
+        variable value iter = head;
+        while (exists cell = iter) {
+            if (!selecting(cell.element)) {
+                return false;
+            }
+            iter = cell.rest;
+        }
+        return true;
+    }
+    
+    shared actual Boolean any(Boolean selecting(Element element)) {
+        variable value iter = head;
+        while (exists cell = iter) {
+            if (selecting(cell.element)) {
+                return true;
+            }
+            iter = cell.rest;
+        }
+        return false;
+    }
+    
+    shared actual Result|Element|Null reduce<Result>
+            (Result accumulating(Result|Element partial, Element element)) {
+        if (exists first = head) {
+            variable Result|Element partial = first.element;
+            variable value iter = first.rest;
+            while (exists cell = iter) {
+                partial = accumulating(partial, cell.element);
+                iter = cell.rest;
+            }
+            return partial;
+        }
+        else {
+            return null;
+        }
+    }
+    
     /*shared actual String string {
         StringBuilder b = StringBuilder();
         b.append("[");
