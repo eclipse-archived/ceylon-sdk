@@ -297,6 +297,16 @@ shared class IdentityMap<Key, Item>
         return count;
     }
     
+    shared actual void each(void step(Key->Item element)) {
+        store.each(void (bucket) {
+            variable value iter = bucket;
+            while (exists cell = iter) {
+                step(cell.element);
+                iter = cell.rest;
+            }
+        });
+    }
+    
     shared actual Integer hash {
         variable Integer index = 0;
         variable Integer hash = 17;

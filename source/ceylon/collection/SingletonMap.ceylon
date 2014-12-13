@@ -27,4 +27,6 @@ shared class SingletonMap<Key, Item>(shared Key->Item entry)
     
     hash => (super of Map<Key, Item>).hash;
     
+    each(void step(Key->Item element)) => step(entry);
+    
 }

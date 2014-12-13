@@ -32,6 +32,8 @@ class UnmodifiableList<out Element>(List<Element> list)
     
     clone() => UnmodifiableList(list.clone());
     
+    each(void step(Element element)) => list.each(step);
+    
 }
 
 "Wrap the given [[List]], preventing attempts to narrow the

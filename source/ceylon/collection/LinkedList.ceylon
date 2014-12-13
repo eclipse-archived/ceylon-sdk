@@ -519,6 +519,14 @@ shared class LinkedList<Element>(elements = {})
         ret.length = size;
         return ret;
     }
+    
+    shared actual void each(void step(Element element)) {
+        variable value iter = head;
+        while (exists cell = iter) {
+            step(cell.element);
+            iter = cell.rest;
+        }
+    }
 
     /*shared actual String string {
         StringBuilder b = StringBuilder();

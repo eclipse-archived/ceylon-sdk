@@ -21,6 +21,8 @@ class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
     
     clone() => UnmodifiableMap(map.clone());
     
+    each(void step(Key->Item element)) => map.each(step);
+    
 }
 
 "Wrap the given [[Map]], preventing attempts to narrow the

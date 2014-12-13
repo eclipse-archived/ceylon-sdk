@@ -51,4 +51,6 @@ shared class SingletonSet<Element>(shared Element element)
     
     hash => (super of Set<Element>).hash;
     
+    each(void step(Element element)) => step(element);
+    
 }
