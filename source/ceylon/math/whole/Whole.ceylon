@@ -516,7 +516,7 @@ shared final class Whole
         Words u;
         Words v;
         if (d == 1) {
-            u = consWord(0, words);
+            u = consWord(0, dividend);
             v = divisor;
         }
         else {
