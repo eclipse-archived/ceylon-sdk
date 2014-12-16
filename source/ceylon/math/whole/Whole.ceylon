@@ -92,6 +92,22 @@ shared final class Whole
     shared actual Whole remainder(Whole other)
         =>  quotientAndRemainder(other).last;
 
+    shared Whole leftLogicalShift(Integer shift)
+        =>  if (shift == 0) then
+                this
+            else if (shift < 0) then
+                Whole.Internal(sign, rightShift(words, -shift, sign))
+            else
+                Whole.Internal(sign, leftShift(words, shift));
+
+    shared Whole rightArithmeticShift(Integer shift)
+        =>  if (shift == 0) then
+                this
+            else if (shift < 0) then
+                Whole.Internal(sign, leftShift(words, -shift))
+            else
+                Whole.Internal(sign, rightShift(words, shift, sign));
+
     "The result of raising this number to the given power.
 
      Special cases:
@@ -670,6 +686,142 @@ shared final class Whole
         return [q, if (r.zero)
                    then newWords(0)
                    else wordsOfOne(r)];
+    }
+
+    Words leftShift(Words u, Integer shift, Boolean alwaysPad = false) {
+        assert (shift > 0);
+
+        value wSize = wordSize;
+        value wMask = wordMask;
+
+        value uSize = size(u);
+        value shiftBits = shift % wSize;
+        value shiftWords = shift / wSize;
+
+        Words r;
+
+        if (shiftBits == 0) {
+            value extraWord = if (alwaysPad) then 1 else 0;
+            r = newWords(uSize + shiftWords + extraWord);
+            copyWords(u, r, 0, extraWord);
+        }
+        else {
+            value shiftBitsRight = wSize - shiftBits;
+            value highWord = get(u, 0).rightLogicalShift(shiftBitsRight);
+            variable value rIndex = 0;
+            if (alwaysPad || highWord != 0) {
+                r = newWords(uSize + shiftWords + 1);
+                set(r, 0, highWord);
+                rIndex += 1;
+            }
+            else {
+                r = newWords(uSize + shiftWords);
+            }
+            variable value prev = get(u, 0);
+            for (i in 1:uSize-1) {
+                value curr = get(u, i);
+                set(r, rIndex, prev.leftLogicalShift(shiftBits)
+                                   .or(curr.rightLogicalShift(shiftBitsRight))
+                                   .and(wMask));
+                prev = curr;
+                rIndex += 1;
+            }
+            set (r, rIndex, get(u, uSize-1)
+                             .leftLogicalShift(shiftBits)
+                             .and(wMask));
+        }
+        return r;
+    }
+
+    function increment(Words w) {
+        value wMask = wordMask;
+        variable value last = 0;
+        variable value uIndex = size(w);
+        while (--uIndex >= 0 && last == 0) {
+            last = (get(w, uIndex) + 1).and(wMask);
+            set(w, uIndex, last);
+        }
+
+        if (last == 0) {
+            value result = newWords(size(w) + 1);
+            set(result, 0, 1);
+            return result;
+        }
+        else {
+            return w;
+        }
+    }
+
+    Boolean nonZeroBitsDropped(Words u,
+                               Integer shiftWords,
+                               Integer shiftBits) {
+        value wMask = wordMask;
+        value uSize = size(u);
+
+        for (i in 1:shiftWords) {
+            if (get(u, uSize - i) != 0) {
+                return true;
+            }
+        }
+
+        return (shiftBits > 0) &&
+                get(u, uSize - shiftWords - 1)
+                .leftLogicalShift(32 - shiftBits)
+                .and(wMask) != 0;
+    }
+
+    Words rightShift(Words u, Integer shift, Integer sign) {
+        assert (shift > 0);
+
+        value wSize = wordSize;
+        value wMask = wordMask;
+
+        value uSize = size(u);
+        value shiftBits = shift % wSize;
+        value shiftWords = shift / wSize;
+
+        Words r;
+
+        if (shiftWords >= uSize) {
+            return if (sign < 0) then wordsOfOne(1) else newWords(0);
+        }
+
+        if (shiftBits == 0) {
+            value rSize = uSize - shiftWords;
+            r = newWords(rSize);
+            copyWords(u, r, 0, 0, rSize);
+        }
+        else {
+            value highWord = get(u, 0).rightLogicalShift(shiftBits);
+            variable value rIndex = 0;
+            if (highWord != 0) {
+                r = newWords(uSize - shiftWords);
+                set(r, 0, highWord);
+                rIndex += 1;
+            }
+            else {
+                r = newWords(uSize - shiftWords - 1);
+            }
+            value shiftBitsLeft = wSize - shiftBits;
+            variable value prev = get(u, 0);
+            for (i in 1:uSize - shiftWords - 1) {
+                value curr = get(u, i);
+                set(r, rIndex, prev.leftLogicalShift(shiftBitsLeft)
+                                   .or(curr.rightLogicalShift(shiftBits))
+                                   .and(wMask));
+                prev = curr;
+                rIndex += 1;
+            }
+        }
+
+        // for negative numbers, if any one bits were lost,
+        // add one to the magnitude to simulate two's
+        // complement arithmetic right shift
+        return
+        if (sign < 0 &&
+            nonZeroBitsDropped(u, shiftWords, shiftBits))
+        then increment(r)
+        else r;
     }
 
     Comparison compareMagnitude(Words x, Words y) {
