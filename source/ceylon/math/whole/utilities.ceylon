@@ -55,6 +55,6 @@ Words normalized(Words xs) {
         xs
     else if (zeros == xs.size) then
         newWords(0)
-    else // FIXME do an internal offset for this:
+    else
         skipWords(xs, zeros);
 }

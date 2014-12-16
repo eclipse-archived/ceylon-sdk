@@ -3,15 +3,13 @@ shared final class Whole
         satisfies Integral<Whole> &
                   Exponentiable<Whole, Whole> {
 
-    shared actual Integer sign;
-
     Words words;
+
+    shared actual Integer sign;
 
     variable Integer? integerMemo = null;
 
     variable String? stringMemo = null;
-
-    variable Integer lastNonZeroIndexMemo = -99;
 
     shared new Internal(Integer sign, variable Words words) {
         // FIXME should be package private when available
@@ -83,7 +81,7 @@ shared final class Whole
             case (smaller)
                 [package.zero, this]
             case (larger)
-                (let (resultWords   = divide(this.words, other.words))
+                (let (resultWords = divide(this.words, other.words))
                  [Internal(sign * other.sign, resultWords.first),
                   Internal(sign, resultWords.last)]));
     }
@@ -202,30 +200,46 @@ shared final class Whole
             return integerMemo;
         } else {
             // result is lower runtime.integerAddressableSize bits of
-            // the two's complement representation
+            // the two's complement representation. For negative numbers,
+            // flip the bits and add 1
 
-            // for negative numbers, flip the bits and add 1
+            value wSize = wordSize;
+            value wMask = wordMask;
+
             variable Integer result = 0;
-            // result should have up to integerAddressableSize bits (32 or 64)
-            value count = runtime.integerAddressableSize/wordSize;
-            for (i in (size(words) - count):count) {
-                // most significant first
-                Integer x;
 
-                if (0 <= i < size(words)) {
+            // result should have up to integerAddressableSize bits (32 or 64)
+            value count = runtime.integerAddressableSize/wSize;
+
+            value numWords = size(words);
+            variable value nonZeroSeen = false;
+
+            for (i in 0:count) {
+                // least significant first
+                Integer index = numWords - i - 1;
+
+                Integer x;
+                if (0 <= index < numWords) {
                     if (negative) {
-                        x = if (i >= lastNonZeroIndex)
-                            then get(words, i).negated // negate the least significant non-zero
-                            else get(words, i).not;    // flip the other non-zeros
+                        if (!nonZeroSeen) {
+                            // negate the least significant non-zero word
+                            x = get(words, index).negated;
+                            nonZeroSeen = x != 0;
+                        }
+                        else {
+                            // flip the rest
+                            x = get(words, index).not;
+                        }
                     }
                     else {
-                        x = get(words, i);
+                        x = get(words, index);
                     }
-                } else {
+                }
+                else {
                     x = if (negative) then -1 else 0;
                 }
-                result = result.leftLogicalShift(wordSize);
-                result = result.plus(x.and(wordMask));
+                value newBits = x.and(wMask).leftLogicalShift(i * wSize);
+                result = result.or(newBits);
             }
             return integerMemo = result;
         }
@@ -271,7 +285,8 @@ shared final class Whole
      This is provided for interoperation with the runtime
      platform."
     see(`function fromImplementation`)
-    shared Object? implementation => nothing;  // TODO remove once decimal allows
+    // TODO remove once decimal allows
+    shared Object? implementation => nothing;
 
     shared actual Integer hash {
         variable Integer result = 0;
@@ -324,16 +339,10 @@ shared final class Whole
             else
                 false;
 
-    Integer lastNonZeroIndex
-        =>  if (lastNonZeroIndexMemo != -99)
-            then lastNonZeroIndexMemo
-            else (lastNonZeroIndexMemo =
-                    lastIndexWhere(words, (word) => word != 0)
-                    else -1);
-
     Words add(Words first, Words second) {
         // Knuth 4.3.1 Algorithm A
-        //assert(!first.empty && !second.empty);
+
+        // assert(!first.empty && !second.empty);
 
         Words u;
         Words v;
@@ -344,9 +353,10 @@ shared final class Whole
             u = second;
             v = first;
         }
+
         value wMask = wordMask;
         value wSize = wordSize;
-        value result = newWords(size(u));
+        value r = newWords(size(u));
 
         // start from the last element (least-significant)
         variable value uIndex = size(u) - 1;
@@ -354,146 +364,180 @@ shared final class Whole
         variable value carry = 0;
 
         while (vIndex >= 0) {
-            value sum = get(u, uIndex) + get(v, vIndex) + carry;
-            result.set(uIndex, sum.and(wMask));
+            value sum =   get(u, uIndex)
+                        + get(v, vIndex)
+                        + carry;
+            set(r, uIndex, sum.and(wMask));
             carry = sum.rightLogicalShift(wSize);
             uIndex -= 1;
             vIndex -= 1;
         }
 
-        while (uIndex >= 0) {
-            if (carry == 0) {
-                // simply copy the remaining words from u
-                copyWords(u, result, 0, 0, uIndex + 1);
-                break;
-            }
-            value sum = get(u, uIndex) + carry;
-            result.set(uIndex, sum.and(wMask));
+        while (carry != 0 && uIndex >= 0) {
+            value sum =   get(u, uIndex)
+                        + carry;
+            set(r, uIndex, sum.and(wMask));
             carry = sum.rightLogicalShift(wSize);
             uIndex -= 1;
         }
 
+        if (uIndex >= 0) {
+            copyWords(u, r, 0, 0, uIndex + 1);
+        }
+
         // remaining carry, if any
         return if (carry != 0)
-               then consWord(1, result)
-               else result;
+               then prependWord(1, r)
+               else r;
     }
 
-    Words subtract(Words u, Words v, Words? r = null) {
+    Words subtract(Words u, Words v) {
         // Knuth 4.3.1 Algorithm S
+
         // assert(compareMagnitude(u, v) == larger);
-        value result = r else newWords(size(u));
-        value resultSize = size(result);
-        variable value borrow = 0;
+
+        value wMask = wordMask;
+        value wSize = wordSize;
+        value r = newWords(size(u));
 
         // start from the last element (least-significant)
-        for (j in 0:size(u)) {
-            value uj = get(u, size(u) - j - 1); // never null
-            value vj = if (j < size(v)) then get(v, size(v) - j - 1) else 0; // null when index < 0
-            value difference = uj - vj + borrow;
-            result.set(resultSize - j - 1, difference.and(wordMask));
-            borrow = difference.rightArithmeticShift(wordSize);
+        variable value uIndex = size(u) - 1;
+        variable value vIndex = size(v) - 1;
+        variable value borrow = 0;
+
+        while (vIndex >= 0) {
+            value difference =   get(u, uIndex)
+                               - get(v, vIndex)
+                               + borrow;
+            set(r, uIndex, difference.and(wMask));
+            borrow = difference.rightArithmeticShift(wSize);
+            uIndex -= 1;
+            vIndex -= 1;
         }
 
-        // zero out the leading portion of the result array
-        // if an oversized array was provided
-        for (i in 0:resultSize-size(u)) {
-            result.set(i, 0);
+        while (borrow != 0 && uIndex >= 0) {
+            value difference =   get(u, uIndex)
+                               + borrow;
+            set(r, uIndex, difference.and(wMask));
+            borrow = difference.rightArithmeticShift(wSize);
+            uIndex -= 1;
         }
 
-        return result;
+        if (uIndex >= 0) {
+            copyWords(u, r, 0, 0, uIndex + 1);
+        }
+
+        return r;
     }
 
     Words multiply(Words u, Words v) {
         // Knuth 4.3.1 Algorithm M
+
         value wMask = wordMask;
         value wSize = wordSize;
         
         value uSize = size(u);
         value vSize = size(v);
-        value result = newWords(uSize + vSize);
-
-        variable value carry = 0;
+        value rSize = uSize + vSize;
+        value r = newWords(rSize);
 
         // result is all zeros the first time through
-        variable value j = vSize;
+        variable value vIndex = vSize - 1;
+        variable value carry = 0;
         value uLow = get(u, uSize - 1);
-        while (--j >= 0) {
-            value k = uSize + j;
-            value vj = get(v, j);
-            value product = uLow * vj + carry;
-            set(result, k, product.and(wMask));
+        while (vIndex >= 0) {
+            value rIndex = uSize + vIndex;
+            value product =   uLow
+                            * get(v, vIndex)
+                            + carry;
+            set(r, rIndex, product.and(wMask));
             carry = product.rightLogicalShift(wSize);
+            vIndex -= 1;
         }
-        set(result, uSize - 1, carry);
+        set(r, uSize + vIndex, carry);
 
-        variable value i = uSize - 1;
-        while (--i >= 0) {
+        variable value uIndex = uSize - 2; // we already did the first one
+        while (uIndex >= 0) {
+            value uValue = get(u, uIndex);
             carry = 0;
-            j = vSize;
-            value ui = get(u, i);
-            while (--j >= 0) {
-                value k = i + j + 1;
-                value vj = get(v, j);
-                value wk = get(result, k);
-                value product = ui * vj + wk + carry;
-                set(result, k, product.and(wMask));
+            vIndex = vSize - 1;
+            while (vIndex >= 0) {
+                value rIndex = uIndex + vIndex + 1;
+                value product =   uValue
+                                * get(v, vIndex)
+                                + get(r, rIndex)
+                                + carry;
+                set(r, rIndex, product.and(wMask));
                 carry = product.rightLogicalShift(wSize);
+                vIndex -= 1;
             }
-            set(result, i, carry);
+            set(r, uIndex + vIndex + 1, carry);
+            uIndex -= 1;
         }
-        return result;
+        return r;
     }
 
-    Words multiplyWord(Words u, Integer v, Words? r = null) {
-        assert(v.and(wordMask) == v);
+    Words multiplyWord(Words u, Integer v, Words r = newWords(size(u) + 1)) {
+        value wMask = wordMask;
+        value wSize = wordSize;
 
-        value result = r else newWords(size(u) + 1);
-        value resultSize = size(result);
+        // assert(v.and(wMask) == v);
 
         variable value carry = 0;
-        for (i in 0:size(u)) {
-            value ui = get(u, size(u) - i - 1);
-            value product = ui * v + carry;
-            result.set(resultSize - i - 1, product.and(wordMask));
-            carry = product.rightLogicalShift(wordSize);
+        variable value uIndex = size(u) - 1;
+        variable value rIndex = size(r) - 1;
+
+        while (uIndex >= 0) {
+            value product =   get(u, uIndex)
+                            * v
+                            + carry;
+            set(r, rIndex, product.and(wMask));
+            carry = product.rightLogicalShift(wSize);
+            uIndex -= 1;
+            rIndex -= 1;
         }
+
         if (!carry.zero) {
-            // provided array may be _exactly_ the right size
-            result.set(resultSize - size(u) - 1, carry);
-        }
-        else if (resultSize >= (size(u) + 1)) {
-            // but zero it out if it did have room for a carry word
-            result.set(resultSize - size(u) - 1, 0);
+            set(r, rIndex, carry);
+            rIndex -= 1;
         }
 
-        // zero out the leading portion of the result array
-        // if an oversized array was provided
-        for (i in 0:resultSize - size(u) - 1) {
-            result.set(i, 0);
+        while (rIndex >= 0) {
+            set(r, rIndex, 0);
+            rIndex -= 1;
         }
 
-        return result;
+        return r;
     }
 
     "`u[j+1..j+vSize] <- u[j+1..j+vSize] - v * q`, returning the absolute value
      of the final borrow that would normally be subtracted against u[j]."
-    Integer multiplyAndSubtract(Words u,
-                                Words v,
-                                Integer q,
-                                Integer j) {
-        assert(size(u) > size(v) + j);
-        variable Integer absBorrow = 0;
-        for (i in size(v)..1) {
-            value vi = get(v, i - 1);
-            value ui = get(u, j + i);
+    Integer multiplyAndSubtract(Words u, Words v, Integer q, Integer j) {
+        // assert(size(u) > size(v) + j);
 
+        value wMask = wordMask;
+        value wSize = wordSize;
+
+        variable value absBorrow = 0;
+        variable value uIndex = size(v) + j;
+        variable value vIndex = size(v) - 1;
+
+        while (vIndex >= 0) {
             // the product is subtracted, so absBorrow adds to it
-            value product = q * vi + absBorrow;
-            value difference = ui - product.and(wordMask);
-            u.set(j + i, difference.and(wordMask));
-            absBorrow = product.rightLogicalShift(wordSize) -
-                        difference.rightArithmeticShift(wordSize);
+            value product =   q
+                            * get(v, vIndex)
+                            + absBorrow;
+
+            value difference =   get(u, uIndex)
+                               - product.and(wMask);
+
+            set(u, uIndex, difference.and(wMask));
+
+            absBorrow =   product.rightLogicalShift(wSize)
+                        - difference.rightArithmeticShift(wSize);
+
+            uIndex -= 1;
+            vIndex -= 1;
         }
         return absBorrow;
     }
@@ -508,6 +552,9 @@ shared final class Whole
         // Knuth 4.3.1 Algorithm D
         // assert(size(divisor) >= 2);
 
+        value wMask = wordMask;
+        value wSize = wordSize;
+
         // D1. Normalize
         // TODO: left shift such that v0 >= radix/2 instead of the times approach
         value m = size(dividend) - size(divisor);
@@ -516,7 +563,7 @@ shared final class Whole
         Words u;
         Words v;
         if (d == 1) {
-            u = consWord(0, dividend);
+            u = prependWord(0, dividend);
             v = divisor;
         }
         else {
@@ -533,7 +580,7 @@ shared final class Whole
             value uj0 = get(u, j);
             value uj1 = get(u, j+1);
             value uj2 = get(u, j+2);
-            value uj01 = uj0.leftLogicalShift(wordSize) + uj1;
+            value uj01 = uj0.leftLogicalShift(wSize) + uj1;
             variable Integer qj;
             variable Integer rj;
             if (uj01 >= 0) {
@@ -541,8 +588,8 @@ shared final class Whole
                 rj = uj01 % v0;
             } else {
                 value qrj = unsignedDivide(uj01, v0);
-                qj = qrj.rightLogicalShift(wordSize);
-                rj = qrj.and(wordMask);
+                qj = qrj.rightLogicalShift(wSize);
+                rj = qrj.and(wMask);
             }
 
             while (qj >= b || unsignedCompare(qj * v1, b * rj + uj2) == larger) {
@@ -561,8 +608,8 @@ shared final class Whole
                     // assert borrow > uj0;
                     throw Exception("case not handled");
                 }
-                u.set(j, 0);
-                q.set(j, qj);
+                set(u, j, 0);
+                set(q, j, qj);
             }
         }
 
@@ -575,20 +622,25 @@ shared final class Whole
     }
 
     [Words, Words] divideWord(Words u, Integer v) {
-        assert(size(u) >= 1);
-        assert(v.and(wordMask) == v);
+        value wMask = wordMask;
+        value wSize = wordSize;
+
+        value uSize = size(u);
+
+        // assert(uSize >= 1);
+        // assert(v.and(wMask) == v);
+
+        value q = newWords(uSize);
         variable value r = 0;
-        value q = newWords(size(u));
-        for (j in 0..size(u)-1) {
-            value uj = get(u, j);
-            value x = r * wordRadix + uj;
+        for (uIndex in 0:uSize) {
+            value x = r.leftLogicalShift(wSize) + get(u, uIndex);
             if (x >= 0) {
-                q.set(j, x / v);
+                set(q, uIndex, x / v);
                 r = x % v;
             } else {
                 value qr = unsignedDivide(x, v);
-                q.set(j, qr.rightLogicalShift(wordSize));
-                r = qr.and(wordMask);
+                set(q, uIndex, qr.rightLogicalShift(wSize));
+                r = qr.and(wMask);
             }
         }
         return [q, if (r.zero)
@@ -596,64 +648,37 @@ shared final class Whole
                    else wordsOfOne(r)];
     }
 
-    Whole leftLogicalShift(Integer shift) => nothing;
-
     Comparison compareMagnitude(Words x, Words y) {
         // leading words are most significant, but may be 0
         variable Integer xZeros = 0;
         variable Integer yZeros = 0;
 
-        while (xZeros < size(x) then get(x, xZeros).zero else false) {
+        value xSize = size(x);
+        value ySize = size(y);
+
+        while (xZeros < xSize && get(x, xZeros) == 0) {
             xZeros++;
         }
 
-        while (yZeros < size(y) then get(y, yZeros).zero else false) {
+        while (yZeros < ySize && get(y, yZeros) == 0) {
             yZeros++;
         }
 
-        value xRealSize = size(x) - xZeros;
-        value yRealSize = size(y) - yZeros;
+        value xRealSize = xSize - xZeros;
+        value yRealSize = ySize - yZeros;
 
         if (xRealSize != yRealSize) {
-            return xRealSize <=> yRealSize;
+            return if (xRealSize < yRealSize) then smaller else larger;
         }
         else {
             for (i in 0:xRealSize) {
                 value xi = get(x, xZeros + i);
                 value yi = get(y, yZeros + i);
                 if (xi != yi) {
-                    return xi <=> yi;
+                    return if (xi < yi) then smaller else larger;
                 }
             }
             return equal;
         }
     }
 }
-
-
-/*
-"The greatest common divisor of the arguments."
-shared Whole gcd(Whole a, Whole b) {
-    // TODO return Whole(a.val.gcd(b.val));
-    throw;
-}
-
-"The least common multiple of the arguments."
-shared Whole lcm(Whole a, Whole b) {
-    return (a*b) / gcd(a, b);
-}
-
-"The factorial of the argument."
-shared Whole factorial(Whole a) {
-    if (a <= Whole(0)) {
-        throw;
-    }
-    variable Whole b = a;
-    variable Whole result = a;
-    while (b >= Whole(2)) {
-        b = b.predecessor;
-        result *= b;
-    }
-    return result;
-}
-*/

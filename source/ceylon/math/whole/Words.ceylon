@@ -67,13 +67,13 @@ Integer size(Words words)
 // Common
 Words wordsOfOne(Integer word) {
     value result = newWords(1);
-    result.set(0, word);
+    set(result, 0, word);
     return result;
 }
 
-Words consWord(Integer other, Words words) {
+Words prependWord(Integer other, Words words) {
     value result = newWords(size(words) + 1);
-    result.set(0, other);
+    set(result, 0, other);
     copyWords(words, result, 0, 1);
     return result;
 }
@@ -87,7 +87,7 @@ void copyWords(Words source,
     for (i in 0:length) {
         value sp = sourcePosition + i;
         value dp = destinationPosition + i;
-        destination.set(dp, get(source, sp));
+        set(destination, dp, get(source, sp));
     }
 }
 
@@ -101,18 +101,6 @@ Words skipWords(Words words, Integer length) {
         copyWords(words, result, length);
         return result;
     }
-}
-
-Integer? lastIndexWhere(Words words, Boolean selecting(Integer element)) {
-    variable value index = size(words);
-    while (index>0) {
-        index--;
-        value element = get(words, index); 
-        if (selecting(element)) {
-            return index;
-        }
-    }
-    return null;
 }
 
 Boolean wordsEqual(Words first, Words second) {    
