@@ -9,39 +9,51 @@ import java.util {
 }
 
 // LongArray
-//alias Words => LongArray;
-//
-//Words newWords(Integer size, Integer initialValue = 0)
-//    => javaLongArray(arrayOfSize(size, initialValue));
-//
-//Integer get(Words words, Integer index)
-//    => words.get(index);
-//
-//Integer size(Words words)
-//    => words.size;
+alias Words => LongArray;
 
-// Array<Object>
-alias Words => Array<Object>;
-Words newWords(Integer size, Integer initialValue = 0)
-    => arrayOfSize<Object>(size, initialValue);
+Words newWords(Integer size)
+    => WholeJava.newLongArray(size);
 
-Integer get(Words words, Integer index) {
-    assert (is Integer result = words.getFromFirst(index));
-    return result;
+Integer get(Words words, Integer index)
+    => WholeJava.get(words, index);
+
+void set(Words words, Integer index, Integer word) {
+    WholeJava.set(words, index, word);
 }
 
 Integer size(Words words)
     => words.size;
 
-// Array<Integer>
-//alias Words => Array<Integer>;
-//
-//Words newWords(Integer size, Integer initialValue = 0)
-//    => arrayOfSize<Integer>(size, initialValue);
+// Array<Object>
+//alias Words => Array<Object>;
+//Words newWords(Integer size)
+//    => arrayOfSize<Object>(size, 0);
 //
 //Integer get(Words words, Integer index) {
 //    assert (is Integer result = words.getFromFirst(index));
 //    return result;
+//}
+//
+//void set(Words words, Integer index, Integer word) {
+//    words.set(index, word);
+//}
+//
+//Integer size(Words words)
+//    => words.size;
+
+// Array<Integer>
+//alias Words => Array<Integer>;
+//
+//Words newWords(Integer size)
+//    => arrayOfSize<Integer>(size, 0);
+//
+//Integer get(Words words, Integer index) {
+//    assert (is Integer result = words.getFromFirst(index));
+//    return result;
+//}
+//
+//void set(Words words, Integer index, Integer word) {
+//    words.set(index, word);
 //}
 //
 //Integer size(Words words)
@@ -50,16 +62,20 @@ Integer size(Words words)
 // JArrayList<Integer>
 //alias Words => JArrayList<Integer>;
 //
-//Words newWords(Integer size, Integer initialValue = 0) {
+//Words newWords(Integer size) {
 //    value array = JArrayList<Integer>(size);
 //    for (_ in 0:size) {
-//        array.add(initialValue);
+//        array.add(0);
 //    }
 //    return array;
 //}
 //
 //Integer get(Words words, Integer index)
 //    => words.get(index);
+//
+//void set(Words words, Integer index, Integer word) {
+//    words.set(index, word);
+//}
 //
 //Integer size(Words words)
 //    => words.size();
@@ -113,8 +129,4 @@ Boolean wordsEqual(Words first, Words second) {
         }
     }
     return true;
-}
-
-void set(Words words, Integer index, Integer word) {
-    words.set(index, word);
 }
