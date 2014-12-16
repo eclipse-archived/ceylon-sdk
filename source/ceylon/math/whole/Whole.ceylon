@@ -7,6 +7,8 @@ shared final class Whole
 
     shared actual Integer sign;
 
+    variable Integer leadingZeroWordCountMemo = -1;
+
     variable Integer? integerMemo = null;
 
     variable String? stringMemo = null;
@@ -439,8 +441,13 @@ shared final class Whole
         return word.and(mask) != 0;
     }
 
-    // TODO: memoize?
-    Integer leadingZeroWordCount {
+    Integer leadingZeroWordCount =>
+            if (leadingZeroWordCountMemo >= 0)
+            then leadingZeroWordCountMemo
+            else (leadingZeroWordCountMemo =
+                   calculateLeadingZeroWordCount());
+
+    Integer calculateLeadingZeroWordCount() {
         variable value result = 0;
         variable value i = sizew(words);
         while (--i >= 0) {
