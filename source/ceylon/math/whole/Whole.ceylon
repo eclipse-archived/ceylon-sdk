@@ -447,13 +447,20 @@ shared final class Whole
     }
 
     Words multiply(Words u, Words v) {
-        // Knuth 4.3.1 Algorithm M
-
-        value wMask = wordMask;
-        value wSize = wordSize;
-        
         value uSize = size(u);
         value vSize = size(v);
+
+        if (uSize == 1) {
+            return multiplyWord(v, get(u, 0));
+        }
+        else if (vSize == 1) {
+            return multiplyWord(u, get(v, 0));
+        }
+
+        // Knuth 4.3.1 Algorithm M
+        value wMask = wordMask;
+        value wSize = wordSize;
+
         value rSize = uSize + vSize;
         value r = newWords(rSize);
 
