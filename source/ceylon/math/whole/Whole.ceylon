@@ -201,10 +201,45 @@ shared final class Whole
         }
     }
 
-    "The result of `(this**exponent) % modulus`."
+    shared Whole mod(Whole modulus) {
+        if (!modulus.positive) {
+            throw AssertionError("modulus must be positive");
+        }
+        return let (result = remainder(modulus))
+               if (result.negative)
+               then result + modulus
+               else result;
+    }
+
+    "The result of `(this**exponent) mod modulus`."
     throws(`class Exception`, "If passed a negative modulus")
-    shared Whole powerRemainder(Whole exponent,
-                                Whole modulus) => nothing;
+    shared Whole modPower(Whole exponent,
+                          Whole modulus) {
+        if (!modulus.positive) {
+            throw AssertionError("modulus must be positive");
+        }
+        else if (modulus.unit) {
+            return package.zero;
+        }
+        else if (this.zero && exponent.positive) {
+            return package.zero;
+        }
+        else if (this.zero && exponent.zero) {
+            return package.one;
+        }
+        else if (exponent.negative) {
+            throw Exception("case not handled");
+        }
+        //assert (modulus > package.zero,
+        //        exponent >= package.zero,
+        //        this != package.zero);
+
+        value base = if (negative || this >= modulus)
+                     then this.mod(modulus)
+                     else this;
+
+        return modPowerPositive(base, exponent, modulus);
+    }
 
     shared actual Whole neighbour(Integer offset)
         => plusInteger(offset);
@@ -905,6 +940,27 @@ shared final class Whole
             nonZeroBitsDropped(u, shiftWords, shiftBits))
         then increment(r)
         else r;
+    }
+
+    Whole modPowerPositive(variable Whole base,
+                           variable Whole exponent,
+                           Whole modulus) {
+        //assert(modulus.positive,
+        //       exponent.positive,
+        //       base.positive);
+
+        // http://en.wikipedia.org/wiki/Modular_exponentiation
+        // based on Applied Cryptography by Bruce Schneier
+        variable value result = package.one;
+        base = base % modulus; // TODO is this redundant?
+        while (exponent > package.zero) {
+            if (exponent % package.two == package.one) {
+                result = (result * base) % modulus;
+            }
+            exponent = exponent.rightArithmeticShift(1);
+            base = (base * base) % modulus;
+        }
+        return result;
     }
 
     Comparison compareMagnitude(Words x, Words y) {
