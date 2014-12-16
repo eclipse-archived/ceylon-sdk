@@ -542,6 +542,26 @@ shared final class Whole
         return absBorrow;
     }
 
+    "`u[j+1..j+vSize] <- u[j+1..j+vSize] + v`, discarding the final carry."
+    void addBack(Words u, Words v, Integer j) {
+        value wMask = wordMask;
+        value wSize = wordSize;
+
+        variable value carry = 0;
+        variable value uIndex = size(v) + j;
+        variable value vIndex = size(v) - 1;
+
+        while (vIndex >= 0) {
+            value sum =   get(u, uIndex)
+                        + get(v, vIndex)
+                        + carry;
+            set(u, uIndex, sum.and(wMask));
+            carry = sum.rightLogicalShift(wSize);
+            vIndex -= 1;
+            uIndex -= 1;
+        }
+    }
+
     [Words, Words] divide(
             Words dividend, Words divisor) {
         if (size(divisor) < 2) {
@@ -601,16 +621,20 @@ shared final class Whole
                 }
             }
 
-            // D4. Multiply, Subtract
+            // D4. Multiply and Subtract
             if (qj != 0) {
                 value borrow = multiplyAndSubtract(u, v, qj, j);
+                // D5. Test Remainder
                 if (borrow != uj0) {
-                    // assert borrow > uj0;
-                    throw Exception("case not handled");
+                    // D6. Add Back
+                    // estimate for qj was too high
+                    qj -= 1;
+                    addBack(u, v, j);
                 }
                 set(u, j, 0);
                 set(q, j, qj);
             }
+            // D7. Loop
         }
 
         // D8. Unnormalize Remainder Due to Step D1
