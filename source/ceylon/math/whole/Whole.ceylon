@@ -578,6 +578,17 @@ shared final class Whole
         }
     }
 
+    Integer highestNonZeroBit(variable Integer x) {
+        // not the fastest method, but compatible with JavaScript
+        // assert (x > 0);
+        variable value result = -1;
+        while (x != 0) {
+            result++;
+            x /= 2;
+        }
+        return result;
+    }
+
     [Words, Words] divide(
             Words dividend, Words divisor) {
         if (size(divisor) < 2) {
@@ -591,20 +602,21 @@ shared final class Whole
         value wMask = wordMask;
         value wSize = wordSize;
 
-        // D1. Normalize
-        // TODO: left shift such that v0 >= radix/2 instead of the times approach
+        // D1. Normalize (v's highest bit must be set)
         value m = size(dividend) - size(divisor);
         value b = wordRadix;
-        value d = b / (get(divisor, 0) + 1);
+        value shift = wSize - 1 - highestNonZeroBit(get(divisor, 0));
         Words u;
         Words v;
-        if (d == 1) {
+        if (shift == 0) {
+            // u must be longer than dividend by one word
             u = prependWord(0, dividend);
             v = divisor;
         }
         else {
-            u = multiplyWord(dividend, d); // size(u) == size(dividend) + 1
-            v = multiplyWord(divisor, d, newWords(size(divisor)));
+            // u must be longer than dividend by one word
+            u = leftShift(dividend, shift, true);
+            v = leftShift(divisor, shift);
         }
         Words q = newWords(m + 1); // quotient
         value v0 = get(v, 0); // most significant, can't be 0
@@ -654,10 +666,10 @@ shared final class Whole
         }
 
         // D8. Unnormalize Remainder Due to Step D1
-        variable Words remainder = normalized(u);
-        if (!remainder.size == 0 && d != 1) {
-            remainder = divideWord(remainder, d).first;
-        }
+        value remainder = if (shift == 0 || size(u) == 0)
+                          then u
+                          else rightShift(u, shift, 1);
+
         return [q, remainder];
     }
 
