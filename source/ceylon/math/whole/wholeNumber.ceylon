@@ -29,7 +29,7 @@ Words integerToWordsAbs(variable Integer integer) {
     value wSize = wordSize;
     value wRadix = wordRadix;
 
-    value words = newWords(64/wSize);
+    value words = wordsOfSize(64/wSize);
     value numWords = 64/wSize;
     for (i in 1:numWords) {
         variable value word = integer % wRadix;
@@ -37,7 +37,7 @@ Words integerToWordsAbs(variable Integer integer) {
             // avoid boxing required by word.magnitude
             word = -word;
         }
-        set(words, numWords - i, word);
+        setw(words, numWords - i, word);
         integer /= wRadix;
     }
     return words;

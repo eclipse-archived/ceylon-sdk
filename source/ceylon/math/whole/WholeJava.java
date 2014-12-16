@@ -2,7 +2,7 @@ package ceylon.math.whole;
 
 public class WholeJava {
 
-    public static long[] newLongArray(long size) {
+    public static long[] longArrayOfSize(long size) {
         // faster than arrayOfSize(...) that initializes each element
         return new long[(int) size];
     }

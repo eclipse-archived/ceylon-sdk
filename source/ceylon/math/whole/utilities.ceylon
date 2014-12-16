@@ -48,13 +48,13 @@ Integer unsignedDivide(Integer n, Integer d) {
 
 Words normalized(Words xs) {
     variable value zeros = 0;
-    while (zeros < size(xs) && get(xs, zeros) == 0) {
+    while (zeros < sizew(xs) && getw(xs, zeros) == 0) {
         zeros++;
     }
     return if (zeros == 0) then
         xs
     else if (zeros == xs.size) then
-        newWords(0)
+        wordsOfSize(0)
     else
         skipWords(xs, zeros);
 }

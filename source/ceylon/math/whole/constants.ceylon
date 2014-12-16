@@ -1,5 +1,5 @@
 "A `Whole` instance representing zero."
-shared Whole zero = Whole.Internal(0, newWords(0));
+shared Whole zero = Whole.Internal(0, wordsOfSize(0));
 
 "A `Whole` instance representing one."
 shared Whole one = Whole.Internal(1, wordsOfOne(1));
