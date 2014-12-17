@@ -218,7 +218,7 @@ shared final class Whole
     shared Whole modPower(Whole exponent,
                           Whole modulus) {
         if (!modulus.positive) {
-            throw AssertionError("modulus must be positive");
+            throw Exception("modulus must be positive");
         }
         else if (modulus.unit) {
             return package.zero;
@@ -229,18 +229,36 @@ shared final class Whole
         else if (this.zero && exponent.zero) {
             return package.one;
         }
-        else if (exponent.negative) {
-            throw Exception("case not handled");
+        //assert (modulus > package.zero, this != package.zero);
+
+        variable value base = this;
+
+        if (exponent.negative) {
+            base = modInverse(modulus);
         }
-        //assert (modulus > package.zero,
-        //        exponent >= package.zero,
-        //        this != package.zero);
+        else if (base.negative || base >= modulus) {
+            base = base.mod(modulus);
+        }
 
-        value base = if (negative || this >= modulus)
-                     then this.mod(modulus)
-                     else this;
+        return modPowerPositive(base, exponent.magnitude, modulus);
+    }
 
-        return modPowerPositive(base, exponent, modulus);
+    shared Whole modInverse(Whole modulus) {
+        if (!modulus.positive) {
+            throw Exception("modulus must be positive");
+        }
+        else if (this.even && modulus.even) {
+            throw Exception("no inverse exists");
+        }
+        else if (modulus.unit) {
+            return package.zero;
+        }
+        //assert (modulus > package.one);
+
+        return let (inverse = modInversePositive(this.magnitude, modulus))
+               if (this.negative)
+               then modulus - inverse
+               else inverse;
     }
 
     shared actual Whole neighbour(Integer offset)
@@ -959,7 +977,7 @@ shared final class Whole
         // http://en.wikipedia.org/wiki/Modular_exponentiation
         // based on Applied Cryptography by Bruce Schneier
         variable value result = package.one;
-        base = base % modulus; // TODO is this redundant?
+        base = base % modulus; // is this redundant?
         while (exponent > package.zero) {
             if (exponent % package.two == package.one) {
                 result = (result * base) % modulus;
@@ -968,6 +986,35 @@ shared final class Whole
             base = (base * base) % modulus;
         }
         return result;
+    }
+
+    Whole modInversePositive("base" Whole u, "modulus" Whole v) {
+        // Knuth 4.5.2 Algorithm X
+        // http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
+
+        variable value u1 = package.one;
+        variable value u3 = u;
+
+        variable value v1 = package.zero;
+        variable value v3 = v;
+
+        while (!v3.zero) {
+            value q = u3 / v3;
+            value t1 = u1 - v1 * q;
+            value t3 = u3 - v3 * q;
+            u1 = v1;
+            u3 = v3;
+            v1 = t1;
+            v3 = t3;
+        }
+
+        if (!u3.unit) {
+            throw Exception("no inverse exists");
+        }
+
+        return if (u1.negative)
+               then v - u1
+               else u1;
     }
 
     Comparison compareMagnitude(Words x, Words y) {
