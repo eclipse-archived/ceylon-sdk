@@ -789,12 +789,83 @@ String herdJson = """
                      """;
 
 shared test void testParse() {
+    assert(is NullInstance nu = parse("null"));
+    assert(is Boolean b1 = parse("true"), b1);
+    assert(is Boolean b2 = parse("false"), !b2);
+    try {
+        parse("null1");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("true1");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("false1");
+        throw;
+    } catch (ParseException p) {
+    }
+    
+    assert(is String s1 = parse("\"hello, world\""));
+    assertEquals("hello, world", s1);
+    try {
+        parse("\"hello, world\"false");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("\"hello, world");
+        throw;
+    } catch (ParseException p) {
+    }
+    
+    assert(is Float n1 = parse("123.0"));
+    assertEquals(123.0, n1);
+    try {
+        parse("\"hello, world\"123.0.0");
+        throw;
+    } catch (ParseException p) {
+    }
+    
     assert(is Object o1 = parse("{}"));
     assertEquals(0, o1.size);
+    try {
+        parse("{}{}");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{}123.0");
+        throw;
+    } catch (ParseException p) {
+    }
     
     assert(is Object o2 = parse("{\"foo\": \"bar\"}"));
     assertEquals(1, o2.size);
     assertEquals("bar", o2["foo"]);
+    
+    try {
+        parse("{\"foo\": }");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{\"foo\":");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{\"foo\"}");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{\"foo\"");
+        throw;
+    } catch (ParseException p) {
+    }
     
     assert(is Object o3 = parse("{\"s\": \"bar\", \"t\": true, \"f\": false, \"n\": null}"));
     assertEquals(4, o3.size);
