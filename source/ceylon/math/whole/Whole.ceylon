@@ -261,6 +261,17 @@ shared final class Whole
                else inverse;
     }
 
+    "The greatest common divisor."
+    shared Whole gcd(Whole other) {
+        if (this.zero) {
+            return other.magnitude;
+        }
+        else if (other.zero) {
+            return this.magnitude;
+        }
+        return gcdPositive(this.magnitude, other.magnitude);
+    }
+
     shared actual Whole neighbour(Integer offset)
         => plusInteger(offset);
 
@@ -350,7 +361,7 @@ shared final class Whole
                 package.negativeOne
             else if (this == package.negativeOne) then
                 package.one
-            else Internal(sign.negated, words);
+            else Internal(sign.negated, words); // TODO pass along memos
 
     shared actual Whole wholePart => this;
 
@@ -1015,6 +1026,81 @@ shared final class Whole
         return if (u1.negative)
                then v - u1
                else u1;
+    }
+
+    Integer leadingZeroBitsInteger(variable Integer x) {
+        // TODO: make faster, but compat with JS
+        assert(x > 0);
+        variable value result = 0;
+        while (x.and(1) == 0) {
+            x = x.rightLogicalShift(1);
+            result++;
+        }
+        return result;
+    }
+
+    Integer leadingZeroBits
+        =>  if (this.zero)
+            then 0
+            else (let (zeroWords = leadingZeroWordCount,
+                       word = getw(words, sizew(words) - zeroWords - 1))
+                  zeroWords * wordSize + leadingZeroBitsInteger(word));
+
+    Whole gcdPositive(variable Whole u, variable Whole v) {
+        // TODO: use inplace shift and subtraction for performance
+        //assert (u.positive, !v.negative);
+
+        // Knuth 4.5.2 Algorithm A
+        // (Euclidean algorithm while u & v are very different in size)
+        while (!v.zero && !(-2 < sizew(u.words) - sizew(v.words) < 2)) {
+            // gcd(u, v) = gcd(v, u - qv)
+            value r = u % v; // r will be >= 0
+            u = v;
+            v = r;
+        }
+
+        if (v.zero) {
+            return u;
+        }
+
+        // Knuth 4.5.2 Algorithm B
+        // (Binary method to find the gcd)
+        value uZeroBits = u.leadingZeroBits;
+        value vZeroBits = v.leadingZeroBits;
+
+        // if u and v are both even, gcd(u, v) = 2 gcd(u/2, v/2)
+        value zeroBits = smallest(uZeroBits, vZeroBits);
+
+        // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
+        u = u.rightArithmeticShift(uZeroBits);
+        v = v.rightArithmeticShift(vZeroBits);
+
+        // make u be the larger one
+        if (u < v) {
+            value tmp = u;
+            u = v;
+            v = tmp;
+        }
+
+        while (!v.zero) {
+            // TODO: optimize when both u and v are single word
+            // u & v are both odd
+            while (true) {
+                // gcd(u, v) = gcd(u - v, v)
+                u = u - v; // u will be even and >= 0
+                // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
+                u = u.rightArithmeticShift(u.leadingZeroBits);
+                if (v > u) {
+                    break;
+                }
+            }
+            // make u the larger one, again
+            value tmp = u;
+            u = v;
+            v = tmp;
+        }
+
+        return u.leftLogicalShift(zeroBits);
     }
 
     Comparison compareMagnitude(Words x, Words y) {
