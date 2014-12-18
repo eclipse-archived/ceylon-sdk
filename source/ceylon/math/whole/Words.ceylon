@@ -24,6 +24,15 @@ void setw(Words words, Integer index, Integer word) {
 Integer sizew(Words words)
     => words.size;
 
+void copyWords(
+        Words source,
+        Words destination,
+        Integer sourcePosition = 0,
+        Integer destinationPosition = 0,
+        Integer length = sizew(source) - sourcePosition) {
+    source.copyTo(destination, sourcePosition, destinationPosition, length);
+}
+
 // Array<Object>
 //alias Words => Array<Object>;
 //Words wordsOfSize(Integer size)
@@ -40,6 +49,15 @@ Integer sizew(Words words)
 //
 //Integer sizew(Words words)
 //    => words.size;
+//
+//void copyWords(
+//        Words source,
+//        Words destination,
+//        Integer sourcePosition = 0,
+//        Integer destinationPosition = 0,
+//        Integer length = sizew(source) - sourcePosition) {
+//    source.copyTo(destination, sourcePosition, destinationPosition, length);
+//}
 
 // Array<Integer>
 //alias Words => Array<Integer>;
@@ -58,6 +76,15 @@ Integer sizew(Words words)
 //
 //Integer sizew(Words words)
 //    => words.size;
+//
+//void copyWords(
+//        Words source,
+//        Words destination,
+//        Integer sourcePosition = 0,
+//        Integer destinationPosition = 0,
+//        Integer length = sizew(source) - sourcePosition) {
+//    source.copyTo(destination, sourcePosition, destinationPosition, length);
+//}
 
 // JArrayList<Integer>
 //alias Words => JArrayList<Integer>;
@@ -79,6 +106,19 @@ Integer sizew(Words words)
 //
 //Integer sizew(Words words)
 //    => words.size();
+//
+//void copyWords(Words source,
+//        Words destination,
+//       Integer sourcePosition = 0,
+//       Integer destinationPosition = 0,
+//       Integer length = sizew(source) - sourcePosition) {
+//
+//    for (i in 0:length) {
+//        value sp = sourcePosition + i;
+//        value dp = destinationPosition + i;
+//        setw(destination, dp, getw(source, sp));
+//    }
+//}
 
 // Common
 Words wordsOfOne(Integer word) {
@@ -92,19 +132,6 @@ Words copyAppend(Integer wordsSize, Words words, Integer other) {
     copyWords(words, result);
     setw(result, wordsSize, other);
     return result;
-}
-
-void copyWords(Words source,
-        Words destination,
-       Integer sourcePosition = 0,
-       Integer destinationPosition = 0,
-       Integer length = sizew(source) - sourcePosition) {
-    
-    for (i in 0:length) {
-        value sp = sourcePosition + i;
-        value dp = destinationPosition + i;
-        setw(destination, dp, getw(source, sp));
-    }
 }
 
 Boolean wordsEqual(Integer firstSize, Words first,
