@@ -52,7 +52,7 @@ shared abstract class DayOfWeek(integer)
      "
     shared actual default Integer offset(DayOfWeek other)
             => let (diff = integer - other.integer)
-                    diff<0 then diff+7 else diff;
+                    if (diff<0) then diff+7 else diff;
 
     "returns `n`-th neighbour of this _day of week_.
 
