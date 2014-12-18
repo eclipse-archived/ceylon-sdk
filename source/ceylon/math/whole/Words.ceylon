@@ -87,10 +87,10 @@ Words wordsOfOne(Integer word) {
     return result;
 }
 
-Words prependWord(Integer other, Words words) {
-    value result = wordsOfSize(sizew(words) + 1);
-    setw(result, 0, other);
-    copyWords(words, result, 0, 1);
+Words copyAppend(Integer wordsSize, Words words, Integer other) {
+    value result = wordsOfSize(wordsSize + 1);
+    copyWords(words, result);
+    setw(result, wordsSize, other);
     return result;
 }
 
@@ -107,23 +107,12 @@ void copyWords(Words source,
     }
 }
 
-Words skipWords(Words words, Integer length) {
-    assert (length <= sizew(words));
-    if (length == words.size) {
-        return wordsOfSize(0);
-    }
-    else {
-        value result = wordsOfSize(sizew(words) - length);
-        copyWords(words, result, length);
-        return result;
-    }
-}
-
-Boolean wordsEqual(Words first, Words second) {    
-    if (sizew(first) != sizew(second)) {
+Boolean wordsEqual(Integer firstSize, Words first,
+                   Integer secondSize, Words second) {
+    if (firstSize != secondSize) {
         return false;
     }
-    for (i in 0:sizew(first)) {
+    for (i in 0:firstSize) {
         if (getw(first, i) != getw(second, i)) {
             return false;
         }

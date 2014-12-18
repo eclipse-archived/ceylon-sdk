@@ -1,3 +1,6 @@
+import ceylon.math.integer {
+    largest
+}
 "An arbitrary precision integer."
 shared final class Whole
         satisfies Integral<Whole> &
@@ -5,28 +8,41 @@ shared final class Whole
 
     Words words;
 
+    Integer wordsSize;
+
     shared actual Integer sign;
 
-    variable Integer leadingZeroWordCountMemo = -1;
+    variable Integer trailingZeroWordsMemo = -1;
 
     variable Integer? integerMemo = null;
 
     variable String? stringMemo = null;
 
-    shared new Internal(Integer sign, variable Words words) {
-        // FIXME should be package private when available
-        words = normalized(words);
+    function realSize(Words words, variable Integer maxSize) {
+        variable value lastIndex =
+                if (maxSize >= 0)
+                then maxSize - 1
+                else sizew(words) - 1;
 
-        // words must fit with word-size bits
-        //if (words.any((word) => word != word.and(wordMask))) {
-        //    throw OverflowException("Invalid word");
-        //}
+        while (lastIndex >= 0, getw(words, lastIndex) == 0) {
+            lastIndex--;
+        }
+        return lastIndex + 1;
+    }
+
+    shared new Internal(Integer sign, variable Words words, Integer maxSize = -1) {
+        // FIXME should be package private when available
+        // TODO shorten length of array if way oversized?
+        // TODO zero out unused portion to avoid info leaks?
+
+        // valid sign range
+        assert (-1 <= sign <= 1);
 
         // sign must not be 0 if magnitude != 0
-        assert (-1 <= sign <= 1);
-        assert (!sign == 0 || sizew(words) == 0);
+        this.wordsSize = realSize(words, maxSize);
+        assert (!sign == 0 || this.wordsSize == 0);
 
-        this.sign = if (sizew(words) == 0) then 0 else sign;
+        this.sign = if (this.wordsSize == 0) then 0 else sign;
         this.words = words;
     }
 
@@ -37,7 +53,7 @@ shared final class Whole
         else if (zero) {
             return false;
         }
-        else if (index > wordSize * sizew(words)) {
+        else if (index > wordBits * wordsSize) {
             // infinite leading ones in two's complement
             return if (negative) then true else false;
         }
@@ -50,20 +66,50 @@ shared final class Whole
     }
 
     shared actual Whole plus(Whole other)
-        =>  if (zero) then
+        =>  if (this.zero) then
                 other
             else if (other.zero) then
                 this
-            else if (sign == other.sign) then
-                Internal(sign, add(words, other.words))
+            else if (this.sign == other.sign) then
+                Internal(this.sign,
+                         add(this.wordsSize, this.words,
+                             other.wordsSize, other.words))
             else
-               (switch (compareMagnitude(this.words, other.words))
+               (switch (compareMagnitude(this.wordsSize, this.words,
+                                         other.wordsSize, other.words))
                 case (equal)
                     package.zero
                 case (larger)
-                    Internal(sign, subtract(words, other.words))
+                    Internal(this.sign,
+                             subtract(this.wordsSize, this.words,
+                                      other.wordsSize, other.words))
                 case (smaller)
-                    Internal(sign.negated, subtract(other.words, words)));
+                    Internal(this.sign.negated,
+                             subtract(other.wordsSize, other.words,
+                                      this.wordsSize, this.words)));
+
+    shared actual Whole minus(Whole other)
+        =>  if (this.zero) then
+                -other
+            else if (other.zero) then
+                this
+            else if (this.sign != other.sign) then
+                Internal(this.sign,
+                         add(this.wordsSize, this.words,
+                             other.wordsSize, other.words))
+            else
+               (switch (compareMagnitude(this.wordsSize, this.words,
+                                         other.wordsSize, other.words))
+                case (equal)
+                    package.zero
+                case (larger)
+                    Internal(this.sign,
+                             subtract(this.wordsSize, this.words,
+                                      other.wordsSize, other.words))
+                case (smaller)
+                    Internal(this.sign.negated,
+                             subtract(other.wordsSize, other.words,
+                                      this.wordsSize, this.words)));
 
     shared actual Whole plusInteger(Integer integer)
         =>  plus(wholeNumber(integer));
@@ -76,12 +122,13 @@ shared final class Whole
             else if (this == negativeOne) then
                 other.negated
             else
-                Internal(this.sign * other.sign, multiply(words, other.words));
+                Internal(this.sign * other.sign,
+                         multiply(this.wordsSize, this.words,
+                                  other.wordsSize, other.words));
 
     shared actual Whole timesInteger(Integer integer)
         =>  times(wholeNumber(integer));
 
-    // TODO doc
     shared [Whole, Whole] quotientAndRemainder(Whole other) {
         if (other.zero) {
             throw Exception("Divide by zero");
@@ -93,7 +140,8 @@ shared final class Whole
         else if (other == package.negativeOne) then
             [this.negated, package.zero]
         else (
-            switch (compareMagnitude(this.words, other.words))
+            switch (compareMagnitude(this.wordsSize, this.words,
+                                     other.wordsSize, other.words))
             case (equal)
                 [if (sign == other.sign)
                     then package.one
@@ -102,7 +150,8 @@ shared final class Whole
             case (smaller)
                 [package.zero, this]
             case (larger)
-                (let (resultWords = divide(this.words, other.words))
+                (let (resultWords = divide(this.wordsSize, this.words,
+                                           other.wordsSize, other.words))
                  [Internal(sign * other.sign, resultWords.first),
                   Internal(sign, resultWords.last)]));
     }
@@ -117,17 +166,17 @@ shared final class Whole
         =>  if (shift == 0) then
                 this
             else if (shift < 0) then
-                Whole.Internal(sign, rightShift(words, -shift, sign))
+                Whole.Internal(sign, rightShift(wordsSize, words, -shift, sign))
             else
-                Whole.Internal(sign, leftShift(words, shift));
+                Whole.Internal(sign, leftShift(wordsSize, words, shift));
 
     shared Whole rightArithmeticShift(Integer shift)
         =>  if (shift == 0) then
                 this
             else if (shift < 0) then
-                Whole.Internal(sign, leftShift(words, -shift))
+                Whole.Internal(sign, leftShift(wordsSize, words, -shift))
             else
-                Whole.Internal(sign, rightShift(words, shift, sign));
+                Whole.Internal(sign, rightShift(wordsSize, words, shift, sign));
 
     "The result of raising this number to the given power.
 
@@ -304,42 +353,39 @@ shared final class Whole
             // the two's complement representation. For negative numbers,
             // flip the bits and add 1
 
-            value wSize = wordSize;
+            value wBits = wordBits;
             value wMask = wordMask;
 
             variable Integer result = 0;
 
             // result should have up to integerAddressableSize bits (32 or 64)
-            value count = runtime.integerAddressableSize/wSize;
+            value count = runtime.integerAddressableSize/wBits;
 
-            value numWords = sizew(words);
             variable value nonZeroSeen = false;
 
+            // least significant first
             for (i in 0:count) {
-                // least significant first
-                Integer index = numWords - i - 1;
-
                 Integer x;
-                if (0 <= index < numWords) {
+                if (i < wordsSize) {
                     if (negative) {
                         if (!nonZeroSeen) {
                             // negate the least significant non-zero word
-                            x = getw(words, index).negated;
+                            x = getw(words, i).negated;
                             nonZeroSeen = x != 0;
                         }
                         else {
                             // flip the rest
-                            x = getw(words, index).not;
+                            x = getw(words, i).not;
                         }
                     }
                     else {
-                        x = getw(words, index);
+                        x = getw(words, i);
                     }
                 }
                 else {
                     x = if (negative) then -1 else 0;
                 }
-                value newBits = x.and(wMask).leftLogicalShift(i * wSize);
+                value newBits = x.and(wMask).leftLogicalShift(i * wBits);
                 result = result.or(newBits);
             }
             return integerMemo = result;
@@ -375,23 +421,17 @@ shared final class Whole
 
     shared actual Boolean unit => this == one;
 
-    // TODO doc
-    shared Boolean even
-        =>  let (wordCount = sizew(words))
-            if (wordCount > 0)
-            then getw(words, wordCount - 1).even
-            else false;
+    shared Boolean even => wordsSize > 0 && getw(words, 0).and(1) == 0;
 
     "The platform-specific implementation object, if any.
      This is provided for interoperation with the runtime
      platform."
     see(`function fromImplementation`)
-    // TODO remove once decimal allows
     shared Object? implementation => nothing;
 
     shared actual Integer hash {
         variable Integer result = 0;
-        for (i in 0:sizew(words)) {
+        for (i in 0:wordsSize) {
             result = result * 31 + getw(words, i);
         }
         return sign * result;
@@ -428,349 +468,362 @@ shared final class Whole
             else if (zero) then
                 equal
             else if (positive) then
-                compareMagnitude(this.words, other.words)
+                compareMagnitude(this.wordsSize, this.words,
+                                 other.wordsSize, other.words)
             else
-                compareMagnitude(other.words, this.words);
+                compareMagnitude(other.wordsSize, other.words,
+                                 this.wordsSize, this.words);
 
     shared actual Boolean equals(Object that)
         =>  if (is Whole that) then
                 (this === that) ||
                 (this.sign == that.sign &&
-                 wordsEqual(this.words, that.words))
+                 wordsEqual(this.wordsSize, this.words,
+                            that.wordsSize, that.words))
             else
                 false;
 
+    Integer trailingZeroWords
+        =>  if (trailingZeroWordsMemo >= 0)
+            then trailingZeroWordsMemo
+            else (trailingZeroWordsMemo =
+                  calculateTrailingZeroWords());
+
+    Integer trailingZeroBits
+        =>  if (this.zero)
+            then 0
+            else (let (zeroWords = trailingZeroWords,
+                       word = getw(words, zeroWords))
+                  zeroWords * wordBits + numberOfTrailingZeros(word));
+
+    Integer calculateTrailingZeroWords() {
+        for (i in 0:wordsSize) {
+            if (getw(words, i) != 0) {
+                return i;
+            }
+        } else {
+            assert(wordsSize == 0);
+            return 0;
+        }
+    }
+
     Boolean getBitPositive(Integer index) {
-        value wSize = wordSize;
-        value word = getw(words, sizew(words) - index / wSize - 1);
-        value mask = 1.leftLogicalShift(index % wSize);
+        value wBits = wordBits;
+        value word = getw(words, index / wBits);
+        value mask = 1.leftLogicalShift(index % wBits);
         return word.and(mask) != 0;
     }
 
     Boolean getBitNegative(Integer index) {
         if (index == 0) {
-            return getw(words, sizew(words) - 1) != 0;
+            return getw(words, 0) != 0;
         }
 
-        value wSize = wordSize;
-        value zeros = leadingZeroWordCount;
-        value wordNum = index / wSize;
+        value wBits = wordBits;
+        value zeros = trailingZeroWords;
+        value wordNum = index / wBits;
 
         if (wordNum < zeros) {
             return false;
         }
 
-        value word = let (rawWord = getw(words, sizew(words) - 1 - wordNum))
-                     if (wordNum == zeros) then
-                        rawWord.negated
-                     else // wordNum > zeros
-                        rawWord.not;
+        value word = let (rawWord = getw(words, wordNum))
+                     if (wordNum == zeros)
+                     then rawWord.negated // first non-zero word
+                     else rawWord.not; // wordNum > zeros
 
-        value mask = 1.leftLogicalShift(index % wSize);
+        value mask = 1.leftLogicalShift(index % wBits);
         return word.and(mask) != 0;
     }
 
-    Integer leadingZeroWordCount =>
-            if (leadingZeroWordCountMemo >= 0)
-            then leadingZeroWordCountMemo
-            else (leadingZeroWordCountMemo =
-                   calculateLeadingZeroWordCount());
+    Words add(Integer firstSize, Words first,
+              Integer secondSize, Words second,
+              Integer rSize = largest(firstSize, secondSize) + 1,
+              Words r = wordsOfSize(rSize)) {
 
-    Integer calculateLeadingZeroWordCount() {
-        variable value result = 0;
-        variable value i = sizew(words);
-        while (--i >= 0) {
-            if (getw(words, i) == 0) {
-                result += 1;
-            }
-            else {
-                break;
-            }
-        }
-        return result;
-    }
-
-    Words add(Words first, Words second) {
         // Knuth 4.3.1 Algorithm A
-
-        // assert(!first.empty && !second.empty);
+        //assert(firstSize > 0 && secondSize > 0);
 
         Words u;
         Words v;
-        if (sizew(first) >= sizew(second)) {
+        Integer uSize;
+        Integer vSize;
+        if (firstSize >= secondSize) {
             u = first;
             v = second;
+            uSize = firstSize;
+            vSize = secondSize;
         } else {
             u = second;
             v = first;
+            uSize = secondSize;
+            vSize = firstSize;
         }
 
         value wMask = wordMask;
-        value wSize = wordSize;
-        value r = wordsOfSize(sizew(u));
+        value wBits = wordBits;
 
-        // start from the last element (least-significant)
-        variable value uIndex = sizew(u) - 1;
-        variable value vIndex = sizew(v) - 1;
+        // start from the first element (least-significant)
+        variable value i = 0;
         variable value carry = 0;
 
-        while (vIndex >= 0) {
-            value sum =   getw(u, uIndex)
-                        + getw(v, vIndex)
+        while (i < vSize) {
+            value sum =   getw(u, i)
+                        + getw(v, i)
                         + carry;
-            setw(r, uIndex, sum.and(wMask));
-            carry = sum.rightLogicalShift(wSize);
-            uIndex -= 1;
-            vIndex -= 1;
+            setw(r, i, sum.and(wMask));
+            carry = sum.rightLogicalShift(wBits);
+            i++;
         }
 
-        while (carry != 0 && uIndex >= 0) {
-            value sum =   getw(u, uIndex)
+        while (i < uSize && carry != 0) {
+            value sum =   getw(u, i)
                         + carry;
-            setw(r, uIndex, sum.and(wMask));
-            carry = sum.rightLogicalShift(wSize);
-            uIndex -= 1;
+            setw(r, i, sum.and(wMask));
+            carry = sum.rightLogicalShift(wBits);
+            i++;
         }
 
-        if (uIndex >= 0) {
-            copyWords(u, r, 0, 0, uIndex + 1);
+        if (i < uSize) {
+            copyWords(u, r, i, i, uSize - i);
+            i = uSize;
         }
 
-        // remaining carry, if any
-        return if (carry != 0)
-               then prependWord(1, r)
-               else r;
-    }
-
-    Words subtract(Words u, Words v) {
-        // Knuth 4.3.1 Algorithm S
-
-        // assert(compareMagnitude(u, v) == larger);
-
-        value wMask = wordMask;
-        value wSize = wordSize;
-        value r = wordsOfSize(sizew(u));
-
-        // start from the last element (least-significant)
-        variable value uIndex = sizew(u) - 1;
-        variable value vIndex = sizew(v) - 1;
-        variable value borrow = 0;
-
-        while (vIndex >= 0) {
-            value difference =   getw(u, uIndex)
-                               - getw(v, vIndex)
-                               + borrow;
-            setw(r, uIndex, difference.and(wMask));
-            borrow = difference.rightArithmeticShift(wSize);
-            uIndex -= 1;
-            vIndex -= 1;
+        if (carry != 0) {
+            setw(r, i++, carry);
         }
 
-        while (borrow != 0 && uIndex >= 0) {
-            value difference =   getw(u, uIndex)
-                               + borrow;
-            setw(r, uIndex, difference.and(wMask));
-            borrow = difference.rightArithmeticShift(wSize);
-            uIndex -= 1;
-        }
-
-        if (uIndex >= 0) {
-            copyWords(u, r, 0, 0, uIndex + 1);
+        // zero out remaining words of provided array
+        while (i < rSize) {
+            setw(r, i++, 0);
         }
 
         return r;
     }
 
-    Words multiply(Words u, Words v) {
-        value uSize = sizew(u);
-        value vSize = sizew(v);
+    Words subtract(Integer uSize, Words u,
+                   Integer vSize, Words v,
+                   Integer rSize = uSize,
+                   Words r = wordsOfSize(rSize)) {
+
+        // Knuth 4.3.1 Algorithm S
+        //assert(compareMagnitude(u, v) == larger);
+
+        value wMask = wordMask;
+        value wBits = wordBits;
+
+        // start from the first element (least-significant)
+        variable value i = 0;
+        variable value borrow = 0;
+
+        while (i < vSize) {
+            value difference =   getw(u, i)
+                               - getw(v, i)
+                               + borrow;
+            setw(r, i, difference.and(wMask));
+            borrow = difference.rightArithmeticShift(wBits);
+            i++;
+        }
+
+        while (i < uSize && borrow != 0) {
+            value difference =   getw(u, i)
+                               + borrow;
+            setw(r, i, difference.and(wMask));
+            borrow = difference.rightArithmeticShift(wBits);
+            i++;
+        }
+
+        if (i < uSize) {
+            copyWords(u, r, i, i, uSize - i);
+            i = uSize;
+        }
+
+        // zero out remaining words of provided array
+        while (i < rSize) {
+            setw(r, i++, 0);
+        }
+
+        return r;
+    }
+
+    Words multiply(Integer uSize, Words u,
+                   Integer vSize, Words v,
+                   Integer rSize = uSize + vSize,
+                   Words r = wordsOfSize(rSize)) {
 
         if (uSize == 1) {
-            return multiplyWord(v, getw(u, 0));
+            return multiplyWord(vSize, v, getw(u, 0), rSize, r);
         }
         else if (vSize == 1) {
-            return multiplyWord(u, getw(v, 0));
+            return multiplyWord(uSize, u, getw(v, 0), rSize, r);
         }
 
         // Knuth 4.3.1 Algorithm M
         value wMask = wordMask;
-        value wSize = wordSize;
-
-        value rSize = uSize + vSize;
-        value r = wordsOfSize(rSize);
+        value wBits = wordBits;
 
         // result is all zeros the first time through
-        variable value vIndex = vSize - 1;
         variable value carry = 0;
-        value uLow = getw(u, uSize - 1);
-        while (vIndex >= 0) {
-            value rIndex = uSize + vIndex;
+        variable value vIndex = 0;
+        value uLow = getw(u, 0);
+        while (vIndex < vSize) {
             value product =   uLow
                             * getw(v, vIndex)
                             + carry;
-            setw(r, rIndex, product.and(wMask));
-            carry = product.rightLogicalShift(wSize);
-            vIndex -= 1;
+            setw(r, vIndex, product.and(wMask));
+            carry = product.rightLogicalShift(wBits);
+            vIndex++;
         }
-        setw(r, uSize + vIndex, carry);
+        setw(r, vSize, carry);
 
-        variable value uIndex = uSize - 2; // we already did the first one
-        while (uIndex >= 0) {
+        // we already did the first one
+        variable value uIndex = 1;
+        while (uIndex < uSize) {
             value uValue = getw(u, uIndex);
             carry = 0;
-            vIndex = vSize - 1;
-            while (vIndex >= 0) {
-                value rIndex = uIndex + vIndex + 1;
+            vIndex = 0;
+            while (vIndex < vSize) {
+                value rIndex = uIndex + vIndex;
                 value product =   uValue
                                 * getw(v, vIndex)
                                 + getw(r, rIndex)
                                 + carry;
                 setw(r, rIndex, product.and(wMask));
-                carry = product.rightLogicalShift(wSize);
-                vIndex -= 1;
+                carry = product.rightLogicalShift(wBits);
+                vIndex++;
             }
-            setw(r, uIndex + vIndex + 1, carry);
-            uIndex -= 1;
+            setw(r, vSize + uIndex, carry);
+            uIndex++;
         }
+
+        // zero out remaining words of provided array
+        for (i in (uSize + vSize):(rSize - uSize - vSize)) {
+            setw(r, i, 0);
+        }
+
         return r;
     }
 
-    Words multiplyWord(Words u, Integer v, Words r = wordsOfSize(sizew(u) + 1)) {
-        value wMask = wordMask;
-        value wSize = wordSize;
+    Words multiplyWord(Integer uSize, Words u, Integer v,
+                       Integer rSize = uSize + 1,
+                       Words r = wordsOfSize(rSize)) {
 
-        // assert(v.and(wMask) == v);
+        value wMask = wordMask;
+        value wBits = wordBits;
+
+        //assert(v.and(wMask) == v);
 
         variable value carry = 0;
-        variable value uIndex = sizew(u) - 1;
-        variable value rIndex = sizew(r) - 1;
-
-        while (uIndex >= 0) {
-            value product =   getw(u, uIndex)
-                            * v
-                            + carry;
-            setw(r, rIndex, product.and(wMask));
-            carry = product.rightLogicalShift(wSize);
-            uIndex -= 1;
-            rIndex -= 1;
+        variable value i = 0;
+        while (i < uSize) {
+            value product = getw(u, i) * v + carry;
+            setw(r, i, product.and(wMask));
+            carry = product.rightLogicalShift(wBits);
+            i++;
         }
 
-        if (!carry.zero) {
-            setw(r, rIndex, carry);
-            rIndex -= 1;
+        if (!carry == 0) {
+            setw(r, i, carry);
+            i++;
         }
 
-        while (rIndex >= 0) {
-            setw(r, rIndex, 0);
-            rIndex -= 1;
+        while (i < rSize) {
+            setw(r, i, 0);
+            i++;
         }
 
         return r;
     }
 
-    "`u[j+1..j+vSize] <- u[j+1..j+vSize] - v * q`, returning the absolute value
+    "`u[j-vsize..j-1] <- u[j-vsize..j-1] - v * q`, returning the absolute value
      of the final borrow that would normally be subtracted against u[j]."
-    Integer multiplyAndSubtract(Words u, Words v, Integer q, Integer j) {
-        // assert(size(u) > size(v) + j);
-
+    Integer multiplyAndSubtract(Words u, Integer vSize, Words v, Integer q, Integer j) {
         value wMask = wordMask;
-        value wSize = wordSize;
+        value wBits = wordBits;
 
-        variable value absBorrow = 0;
-        variable value uIndex = sizew(v) + j;
-        variable value vIndex = sizew(v) - 1;
-
-        while (vIndex >= 0) {
-            // the product is subtracted, so absBorrow adds to it
-            value product =   q
-                            * getw(v, vIndex)
-                            + absBorrow;
-
-            value difference =   getw(u, uIndex)
-                               - product.and(wMask);
-
+        value offset = j - vSize;
+        variable value borrow = 0;
+        variable value vIndex = 0;
+        while (vIndex < vSize) {
+            value uIndex = vIndex + offset;
+            value product = q * getw(v, vIndex);
+            value difference =    getw(u, uIndex)
+                                - product.and(wMask)
+                                - borrow;
             setw(u, uIndex, difference.and(wMask));
-
-            absBorrow =   product.rightLogicalShift(wSize)
-                        - difference.rightArithmeticShift(wSize);
-
-            uIndex -= 1;
-            vIndex -= 1;
+            borrow =   product.rightLogicalShift(wBits)
+                     - difference.rightArithmeticShift(wBits);
+            vIndex++;
         }
-        return absBorrow;
+
+        return borrow;
     }
 
-    "`u[j+1..j+vSize] <- u[j+1..j+vSize] + v`, discarding the final carry."
-    void addBack(Words u, Words v, Integer j) {
+    "`u[j-vSize..j-1] <- u[j-vSize..j-1] + v`, discarding the final carry."
+    void addBack(Words u, Integer vSize, Words v, Integer j) {
         value wMask = wordMask;
-        value wSize = wordSize;
+        value wBits = wordBits;
 
+        value offset = j - vSize;
         variable value carry = 0;
-        variable value uIndex = sizew(v) + j;
-        variable value vIndex = sizew(v) - 1;
-
-        while (vIndex >= 0) {
+        variable value vIndex = 0;
+        while (vIndex < vSize) {
+            value uIndex = vIndex + offset;
             value sum =   getw(u, uIndex)
                         + getw(v, vIndex)
                         + carry;
             setw(u, uIndex, sum.and(wMask));
-            carry = sum.rightLogicalShift(wSize);
-            vIndex -= 1;
-            uIndex -= 1;
+            carry = sum.rightLogicalShift(wBits);
+            vIndex++;
         }
     }
 
-    Integer highestNonZeroBit(variable Integer x) {
-        // not the fastest method, but compatible with JavaScript
-        // assert (x > 0);
-        variable value result = -1;
-        while (x != 0) {
-            result++;
-            x /= 2;
-        }
-        return result;
-    }
-
-    [Words, Words] divide(
-            Words dividend, Words divisor) {
-        if (sizew(divisor) < 2) {
+    [Words, Words] divide(Integer dividendSize, Words dividend,
+                          Integer divisorSize, Words divisor) {
+        if (divisorSize < 2) {
             value first = getw(divisor, 0);
-            return divideWord(dividend, first);
+            return divideWord(dividendSize, dividend, first);
         }
 
         // Knuth 4.3.1 Algorithm D
         // assert(size(divisor) >= 2);
 
         value wMask = wordMask;
-        value wSize = wordSize;
+        value wBits = wordBits;
 
         // D1. Normalize (v's highest bit must be set)
-        value m = sizew(dividend) - sizew(divisor);
+        value m = dividendSize - divisorSize;
         value b = wordRadix;
-        value shift = wSize - 1 - highestNonZeroBit(getw(divisor, 0));
+        value shift = let (highWord = getw(divisor, divisorSize - 1),
+                           highBit = highestNonZeroBit(highWord))
+                      wBits - 1 - highBit;
         Words u;
         Words v;
+        Integer uSize = dividendSize + 1;
+        Integer vSize = divisorSize;
         if (shift == 0) {
             // u must be longer than dividend by one word
-            u = prependWord(0, dividend);
+            u = copyAppend(dividendSize, dividend, 0);
             v = divisor;
         }
         else {
             // u must be longer than dividend by one word
-            u = leftShift(dividend, shift, true);
-            v = leftShift(divisor, shift);
+            u = leftShift(dividendSize, dividend, shift, true);
+            v = leftShift(divisorSize, divisor, shift);
         }
         Words q = wordsOfSize(m + 1); // quotient
-        value v0 = getw(v, 0); // most significant, can't be 0
-        value v1 = getw(v, 1); // second most significant must also exist
+        value v0 = getw(v, vSize - 1); // most significant, can't be 0
+        value v1 = getw(v, vSize - 2); // second most significant must exist
 
         // D2. Initialize j
-        for (j in 0..m) {
+        variable value j = uSize - 1;
+        while (j >= vSize) {
             // D3. Compute qj
             value uj0 = getw(u, j);
-            value uj1 = getw(u, j+1);
-            value uj2 = getw(u, j+2);
-            value uj01 = uj0.leftLogicalShift(wSize) + uj1;
+            value uj1 = getw(u, j-1);
+            value uj2 = getw(u, j-2);
+
+            value uj01 = uj0.leftLogicalShift(wBits) + uj1;
             variable Integer qj;
             variable Integer rj;
             if (uj01 >= 0) {
@@ -778,7 +831,7 @@ shared final class Whole
                 rj = uj01 % v0;
             } else {
                 value qrj = unsignedDivide(uj01, v0);
-                qj = qrj.rightLogicalShift(wSize);
+                qj = qrj.rightLogicalShift(wBits);
                 rj = qrj.and(wMask);
             }
 
@@ -793,112 +846,113 @@ shared final class Whole
 
             // D4. Multiply and Subtract
             if (qj != 0) {
-                value borrow = multiplyAndSubtract(u, v, qj, j);
+                value borrow = multiplyAndSubtract(u, vSize, v, qj, j);
                 // D5. Test Remainder
                 if (borrow != uj0) {
                     // D6. Add Back
                     // estimate for qj was too high
                     qj -= 1;
-                    addBack(u, v, j);
+                    addBack(u, vSize, v, j);
                 }
                 setw(u, j, 0);
-                setw(q, j, qj);
+                setw(q, j - vSize, qj);
             }
             // D7. Loop
+            j--;
         }
 
         // D8. Unnormalize Remainder Due to Step D1
-        value remainder = if (shift == 0 || sizew(u) == 0)
+        value remainder = if (shift == 0 || uSize == 0)
                           then u
-                          else rightShift(u, shift, 1);
+                          else rightShift(uSize, u, shift, 1);
 
         return [q, remainder];
     }
 
-    [Words, Words] divideWord(Words u, Integer v) {
+    [Words, Words] divideWord(Integer uSize, Words u, Integer v) {
         value wMask = wordMask;
-        value wSize = wordSize;
-
-        value uSize = sizew(u);
+        value wBits = wordBits;
 
         // assert(uSize >= 1);
         // assert(v.and(wMask) == v);
 
         value q = wordsOfSize(uSize);
         variable value r = 0;
-        for (uIndex in 0:uSize) {
-            value x = r.leftLogicalShift(wSize) + getw(u, uIndex);
+        variable value uIndex = uSize - 1;
+        while (uIndex >= 0) {
+            value x = r.leftLogicalShift(wBits) + getw(u, uIndex);
             if (x >= 0) {
                 setw(q, uIndex, x / v);
                 r = x % v;
             } else {
                 value qr = unsignedDivide(x, v);
-                setw(q, uIndex, qr.rightLogicalShift(wSize));
+                setw(q, uIndex, qr.rightLogicalShift(wBits));
                 r = qr.and(wMask);
             }
+            uIndex--;
         }
         return [q, if (r.zero)
                    then wordsOfSize(0)
                    else wordsOfOne(r)];
     }
 
-    Words leftShift(Words u, Integer shift, Boolean alwaysPad = false) {
+    Words leftShift(Integer uSize, Words u, Integer shift, Boolean alwaysPad = false) {
         assert (shift > 0);
 
-        value wSize = wordSize;
+        value wBits = wordBits;
         value wMask = wordMask;
 
-        value uSize = sizew(u);
-        value shiftBits = shift % wSize;
-        value shiftWords = shift / wSize;
+        value shiftBits = shift % wBits;
+        value shiftWords = shift / wBits;
 
         Words r;
 
         if (shiftBits == 0) {
             value extraWord = if (alwaysPad) then 1 else 0;
             r = wordsOfSize(uSize + shiftWords + extraWord);
-            copyWords(u, r, 0, extraWord);
+            copyWords(u, r, 0, shiftWords);
         }
         else {
-            value shiftBitsRight = wSize - shiftBits;
-            value highWord = getw(u, 0).rightLogicalShift(shiftBitsRight);
-            variable value rIndex = 0;
-            if (alwaysPad || highWord != 0) {
+            value shiftBitsRight = wBits - shiftBits;
+            value uHighWord = getw(u, uSize - 1);
+            value rHighWord = uHighWord.rightLogicalShift(shiftBitsRight);
+            if (alwaysPad || rHighWord != 0) {
                 r = wordsOfSize(uSize + shiftWords + 1);
-                setw(r, 0, highWord);
-                rIndex += 1;
+                setw(r, uSize + shiftWords, rHighWord);
             }
             else {
                 r = wordsOfSize(uSize + shiftWords);
             }
-            variable value prev = getw(u, 0);
-            for (i in 1:uSize-1) {
-                value curr = getw(u, i);
-                setw(r, rIndex, prev.leftLogicalShift(shiftBits)
-                                   .or(curr.rightLogicalShift(shiftBitsRight))
-                                   .and(wMask));
+            variable value prev = uHighWord;
+            variable value uIndex = uSize - 2;
+            while (uIndex >= 0) {
+                value curr = getw(u, uIndex);
+                value hPart = prev.leftLogicalShift(shiftBits).and(wMask);
+                value lPart = curr.rightLogicalShift(shiftBitsRight);
+                setw(r, uIndex + shiftWords + 1, hPart + lPart);
                 prev = curr;
-                rIndex += 1;
+                uIndex--;
             }
-            setw (r, rIndex, getw(u, uSize-1)
-                             .leftLogicalShift(shiftBits)
-                             .and(wMask));
+            setw (r,
+                  shiftWords,
+                  getw(u, 0).leftLogicalShift(shiftBits).and(wMask));
         }
         return r;
     }
 
-    function increment(Words w) {
+    // it is ok for w[size-1] to be 0
+    function increment(Integer size, Words w) {
         value wMask = wordMask;
-        variable value last = 0;
-        variable value uIndex = sizew(w);
-        while (--uIndex >= 0 && last == 0) {
-            last = (getw(w, uIndex) + 1).and(wMask);
-            setw(w, uIndex, last);
+        variable value previous = 0;
+        variable value i = -1;
+        while (++i < size && previous == 0) {
+            previous = (getw(w, i) + 1).and(wMask);
+            setw(w, i, previous);
         }
 
-        if (last == 0) {
-            value result = wordsOfSize(sizew(w) + 1);
-            setw(result, 0, 1);
+        if (previous == 0) { // w was all ones
+            value result = wordsOfSize(size + 1);
+            setw(result, size, 1);
             return result;
         }
         else {
@@ -909,62 +963,64 @@ shared final class Whole
     Boolean nonZeroBitsDropped(Words u,
                                Integer shiftWords,
                                Integer shiftBits) {
-        value wMask = wordMask;
-        value uSize = sizew(u);
-
-        for (i in 1:shiftWords) {
-            if (getw(u, uSize - i) != 0) {
+        variable value i = 0;
+        while (i < shiftWords) {
+            if (getw(u, i) != 0) {
                 return true;
             }
+            i++;
         }
 
         return (shiftBits > 0) &&
-                getw(u, uSize - shiftWords - 1)
-                .leftLogicalShift(32 - shiftBits)
-                .and(wMask) != 0;
+                getw(u, shiftWords)
+                .leftLogicalShift(wordBits - shiftBits)
+                .and(wordMask) != 0;
     }
 
-    Words rightShift(Words u, Integer shift, Integer sign) {
+    Words rightShift(Integer uSize, Words u, Integer shift, Integer sign) {
         assert (shift > 0);
 
-        value wSize = wordSize;
+        value wBits = wordBits;
         value wMask = wordMask;
 
-        value uSize = sizew(u);
-        value shiftBits = shift % wSize;
-        value shiftWords = shift / wSize;
+        value shiftBits = shift % wBits;
+        value shiftWords = shift / wBits;
 
         Words r;
+        Integer rSize;
 
         if (shiftWords >= uSize) {
             return if (sign < 0) then wordsOfOne(1) else wordsOfSize(0);
         }
 
         if (shiftBits == 0) {
-            value rSize = uSize - shiftWords;
+            rSize = uSize - shiftWords;
             r = wordsOfSize(rSize);
-            copyWords(u, r, 0, 0, rSize);
+            copyWords(u, r, shiftWords, 0, rSize);
         }
         else {
-            value highWord = getw(u, 0).rightLogicalShift(shiftBits);
-            variable value rIndex = 0;
-            if (highWord != 0) {
-                r = wordsOfSize(uSize - shiftWords);
-                setw(r, 0, highWord);
-                rIndex += 1;
+            value uHighWord = getw(u, uSize - 1);
+            value rHighWord = uHighWord.rightLogicalShift(shiftBits);
+            if (rHighWord != 0) {
+                rSize = uSize - shiftWords;
+                r = wordsOfSize(rSize);
+                setw(r, rSize - 1, rHighWord);
             }
             else {
-                r = wordsOfSize(uSize - shiftWords - 1);
+                rSize = uSize - shiftWords - 1;
+                r = wordsOfSize(rSize);
             }
-            value shiftBitsLeft = wSize - shiftBits;
-            variable value prev = getw(u, 0);
-            for (i in 1:uSize - shiftWords - 1) {
-                value curr = getw(u, i);
-                setw(r, rIndex, prev.leftLogicalShift(shiftBitsLeft)
-                                   .or(curr.rightLogicalShift(shiftBits))
-                                   .and(wMask));
+            value shiftBitsLeft = wBits - shiftBits;
+
+            variable value prev = uHighWord;
+            variable value uIndex = uSize - 2;
+            while (uIndex >= shiftWords) {
+                value curr = getw(u, uIndex);
+                value hPart = prev.leftLogicalShift(shiftBitsLeft).and(wMask);
+                value lPart = curr.rightLogicalShift(shiftBits);
+                setw(r, uIndex - shiftWords, hPart + lPart);
                 prev = curr;
-                rIndex += 1;
+                uIndex--;
             }
         }
 
@@ -974,7 +1030,7 @@ shared final class Whole
         return
         if (sign < 0 &&
             nonZeroBitsDropped(u, shiftWords, shiftBits))
-        then increment(r)
+        then increment(rSize, r)
         else r;
     }
 
@@ -1028,31 +1084,13 @@ shared final class Whole
                else u1;
     }
 
-    Integer leadingZeroBitsInteger(variable Integer x) {
-        // TODO: make faster, but compat with JS
-        assert(x > 0);
-        variable value result = 0;
-        while (x.and(1) == 0) {
-            x = x.rightLogicalShift(1);
-            result++;
-        }
-        return result;
-    }
-
-    Integer leadingZeroBits
-        =>  if (this.zero)
-            then 0
-            else (let (zeroWords = leadingZeroWordCount,
-                       word = getw(words, sizew(words) - zeroWords - 1))
-                  zeroWords * wordSize + leadingZeroBitsInteger(word));
-
     Whole gcdPositive(variable Whole u, variable Whole v) {
         // TODO: use inplace shift and subtraction for performance
         //assert (u.positive, !v.negative);
 
         // Knuth 4.5.2 Algorithm A
         // (Euclidean algorithm while u & v are very different in size)
-        while (!v.zero && !(-2 < sizew(u.words) - sizew(v.words) < 2)) {
+        while (!v.zero && !(-2 < u.wordsSize - v.wordsSize < 2)) {
             // gcd(u, v) = gcd(v, u - qv)
             value r = u % v; // r will be >= 0
             u = v;
@@ -1065,8 +1103,8 @@ shared final class Whole
 
         // Knuth 4.5.2 Algorithm B
         // (Binary method to find the gcd)
-        value uZeroBits = u.leadingZeroBits;
-        value vZeroBits = v.leadingZeroBits;
+        value uZeroBits = u.trailingZeroBits;
+        value vZeroBits = v.trailingZeroBits;
 
         // if u and v are both even, gcd(u, v) = 2 gcd(u/2, v/2)
         value zeroBits = smallest(uZeroBits, vZeroBits);
@@ -1089,7 +1127,7 @@ shared final class Whole
                 // gcd(u, v) = gcd(u - v, v)
                 u = u - v; // u will be even and >= 0
                 // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-                u = u.rightArithmeticShift(u.leadingZeroBits);
+                u = u.rightArithmeticShift(u.trailingZeroBits);
                 if (v > u) {
                     break;
                 }
@@ -1103,34 +1141,26 @@ shared final class Whole
         return u.leftLogicalShift(zeroBits);
     }
 
-    Comparison compareMagnitude(Words x, Words y) {
-        // leading words are most significant, but may be 0
-        variable Integer xZeros = 0;
-        variable Integer yZeros = 0;
+    Comparison compareMagnitude(Integer xSize, Words x,
+                                Integer ySize, Words y) {
 
-        value xSize = sizew(x);
-        value ySize = sizew(y);
+        //assert(xSize == 0 || getw(x, xSize - 1) != 0);
+        //assert(ySize == 0 || getw(y, ySize - 1) != 0);
 
-        while (xZeros < xSize && getw(x, xZeros) == 0) {
-            xZeros++;
-        }
-
-        while (yZeros < ySize && getw(y, yZeros) == 0) {
-            yZeros++;
-        }
-
-        value xRealSize = xSize - xZeros;
-        value yRealSize = ySize - yZeros;
-
-        if (xRealSize != yRealSize) {
-            return if (xRealSize < yRealSize) then smaller else larger;
+        if (xSize != ySize) {
+            return if (xSize < ySize)
+            then smaller
+            else larger;
         }
         else {
-            for (i in 0:xRealSize) {
-                value xi = getw(x, xZeros + i);
-                value yi = getw(y, yZeros + i);
+            variable value i = xSize;
+            while (--i >= 0) {
+                value xi = getw(x, i);
+                value yi = getw(y, i);
                 if (xi != yi) {
-                    return if (xi < yi) then smaller else larger;
+                    return if (xi < yi)
+                    then smaller
+                    else larger;
                 }
             }
             return equal;

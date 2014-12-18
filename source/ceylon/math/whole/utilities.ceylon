@@ -46,15 +46,25 @@ Integer unsignedDivide(Integer n, Integer d) {
     return quotient * wordRadix + remainder;
 }
 
-Words normalized(Words xs) {
-    variable value zeros = 0;
-    while (zeros < sizew(xs) && getw(xs, zeros) == 0) {
-        zeros++;
+Integer numberOfTrailingZeros(variable Integer x) {
+    // TODO: make faster, but compat with JS
+    assert(x > 0);
+    variable value result = 0;
+    while (x.and(1) == 0) {
+        x = x.rightLogicalShift(1);
+        result++;
     }
-    return if (zeros == 0) then
-        xs
-    else if (zeros == xs.size) then
-        wordsOfSize(0)
-    else
-        skipWords(xs, zeros);
+    return result;
+}
+
+Integer highestNonZeroBit(variable Integer x) {
+    // more convenient than leadingZeros, since
+    // integerAddressableSize can vary.
+    // assert (x > 0);
+    variable value result = -1;
+    while (x != 0) {
+        result++;
+        x /= 2;
+    }
+    return result;
 }

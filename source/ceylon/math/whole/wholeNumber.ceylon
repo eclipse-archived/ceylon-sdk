@@ -26,18 +26,19 @@ Words integerToWordsAbs(variable Integer integer) {
     if (! runtime.minIntegerValue <= integer <= runtime.maxIntegerValue) {
         throw OverflowException();
     }
-    value wSize = wordSize;
+    value wBits = wordBits;
     value wRadix = wordRadix;
 
-    value words = wordsOfSize(64/wSize);
-    value numWords = 64/wSize;
-    for (i in 1:numWords) {
+    // TODO use fewer words if possible; determine high bit first
+    value wordsSize = 64/wBits;
+    value words = wordsOfSize(wordsSize);
+    for (i in 0:wordsSize) {
         variable value word = integer % wRadix;
         if (word < 0) {
-            // avoid boxing required by word.magnitude
+            // avoid boxing w/word.magnitude
             word = -word;
         }
-        setw(words, numWords - i, word);
+        setw(words, i, word);
         integer /= wRadix;
     }
     return words;
