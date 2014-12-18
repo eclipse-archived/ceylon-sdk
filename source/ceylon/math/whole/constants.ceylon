@@ -10,6 +10,9 @@ Whole negativeOne = Whole.Internal(-1, wordsOfOne(1));
 "A `Whole` instance representing two."
 shared Whole two = Whole.Internal(1, wordsOfOne(2));
 
+"A `Whole` instance representing ten."
+Whole ten = Whole.Internal(1, wordsOfOne(10));
+
 // These are used for Whole.offset, so integerAddressableSize is irrelevant
 Whole integerMax = wholeNumber(runtime.maxIntegerValue);
 Whole integerMin = wholeNumber(runtime.minIntegerValue);

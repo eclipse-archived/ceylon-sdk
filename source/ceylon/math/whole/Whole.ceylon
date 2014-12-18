@@ -447,7 +447,7 @@ shared final class Whole
         }
         else {
             // Use Integer once other fn's are optimized
-            value toRadix = wholeNumber(10);
+            value toRadix = package.ten;
             value sb = StringBuilder();
             variable value x = this.magnitude;
             while (!x.zero) {
