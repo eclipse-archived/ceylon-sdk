@@ -57,10 +57,9 @@ Integer numberOfTrailingZeros(variable Integer x) {
     return result;
 }
 
-Integer highestNonZeroBit(variable Integer x) {
+Integer unisignedHighestNonZeroBit(variable Integer x) {
     // more convenient than leadingZeros, since
     // integerAddressableSize can vary.
-    // assert (x > 0);
     variable value result = -1;
     while (x != 0) {
         result++;

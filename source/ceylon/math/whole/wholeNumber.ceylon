@@ -7,9 +7,10 @@ shared Whole wholeNumber(variable Integer number)
     else if (number == 0)  then zero
     else if (number == 1)  then one
     else if (number == 2)  then two
-    else Whole.Internal(number.sign, integerToWordsAbs(number));
+    else Whole.Internal(number.sign,
+                        wordsUnsignedInteger(number));
 
-Words integerToWordsAbs(variable Integer integer) {
+Words wordsUnsignedInteger(variable Integer integer) {
     // * Bitwise operations are not used; JavaScript's min/max Integer range
     //   is greater than what is supported by runtime.integerAddressableSize
     //
@@ -29,8 +30,8 @@ Words integerToWordsAbs(variable Integer integer) {
     value wBits = wordBits;
     value wRadix = wordRadix;
 
-    // TODO use fewer words if possible; determine high bit first
-    value wordsSize = 64/wBits;
+    value highBit = unisignedHighestNonZeroBit(integer);
+    value wordsSize = (highBit + wBits)/wBits;
     value words = wordsOfSize(wordsSize);
     for (i in 0:wordsSize) {
         variable value word = integer % wRadix;

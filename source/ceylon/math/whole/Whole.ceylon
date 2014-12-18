@@ -795,7 +795,7 @@ shared final class Whole
         value m = dividendSize - divisorSize;
         value b = wordRadix;
         value shift = let (highWord = getw(divisor, divisorSize - 1),
-                           highBit = highestNonZeroBit(highWord))
+                           highBit = unisignedHighestNonZeroBit(highWord))
                       wBits - 1 - highBit;
         Words u;
         Words v;
