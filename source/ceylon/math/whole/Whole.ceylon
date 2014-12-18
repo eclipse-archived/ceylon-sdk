@@ -1,5 +1,6 @@
 import ceylon.math.integer {
-    largest
+    largest,
+    smallest
 }
 "An arbitrary precision integer."
 shared final class Whole

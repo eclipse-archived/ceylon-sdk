@@ -18,39 +18,35 @@ shared Whole? parseWhole(
     
     assert (minRadix <= radix <= maxRadix); 
     value wRadix = wholeNumber(radix);
-    variable value index = 0;
+    Integer start;
     
     // Parse the sign
     Boolean negative;
-    if (exists char = string[index]) {
+    if (exists char = string.first) {
         if (char == '-') {
             negative = true;
-            index++;
+            start = 1;
         }
         else if (char == '+') {
             negative = false;
-            index++;
+            start = 1;
         }
         else {
             negative = false;
+            start = 0;
         }
     }
     else {
         return null;
     }
-    
+
     Integer length = string.size;
     variable Whole result = zero;
     variable Integer digitIndex = 0;
+    variable Integer index = start;
     while (index < length) {
-        Character ch;
-        if (exists char = string[index]) {
-            ch = char;
-        }
-        else {
-            return null;
-        }
-        
+        assert (exists ch = string.getFromFirst(index));
+
         if (index + 1 == length && 
                 radix == 10 && 
                 ch in "kMGTP") {
