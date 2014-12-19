@@ -1,15 +1,12 @@
-import ceylon.math.integer {
-    smallest
-}
-
 "An arbitrary precision integer."
 shared final class Whole
         satisfies Integral<Whole> &
                   Exponentiable<Whole, Whole> {
 
-    Words words;
+    // FIXME should be package private when available
+    shared Words words;
 
-    Integer wordsSize;
+    shared Integer wordsSize;
 
     shared actual Integer sign;
 
@@ -33,6 +30,14 @@ shared final class Whole
 
         this.sign = if (this.wordsSize == 0) then 0 else sign;
         this.words = words;
+    }
+
+    shared new CopyOfMutableWhole(MutableWhole mutableWhole) {
+        this.sign = mutableWhole.sign;
+        this.wordsSize = realSize(mutableWhole.words,
+                                  mutableWhole.wordsSize);
+        this.words = wordsOfSize(this.wordsSize);
+        mutableWhole.words.copyTo(this.words, 0, 0, this.wordsSize);
     }
 
     shared Boolean get(Integer index) {
@@ -348,17 +353,6 @@ shared final class Whole
                else inverse;
     }
 
-    "The greatest common divisor."
-    shared Whole gcd(Whole other) {
-        if (this.zero) {
-            return other.magnitude;
-        }
-        else if (other.zero) {
-            return this.magnitude;
-        }
-        return gcdPositive(this.magnitude, other.magnitude);
-    }
-
     shared actual Whole neighbour(Integer offset)
         => plusInteger(offset);
 
@@ -527,7 +521,7 @@ shared final class Whole
             else (trailingZeroWordsMemo =
                   calculateTrailingZeroWords());
 
-    Integer trailingZeroBits
+    Integer trailingZeros
         =>  if (this.zero)
             then 0
             else (let (zeroWords = trailingZeroWords,
@@ -593,62 +587,5 @@ shared final class Whole
         return if (u1.negative)
                then v - u1
                else u1;
-    }
-
-    Whole gcdPositive(variable Whole u, variable Whole v) {
-        // TODO: use inplace shift and subtraction for performance
-        //assert (u.positive, !v.negative);
-
-        // Knuth 4.5.2 Algorithm A
-        // (Euclidean algorithm while u & v are very different in size)
-        while (!v.zero && !(-2 < u.wordsSize - v.wordsSize < 2)) {
-            // gcd(u, v) = gcd(v, u - qv)
-            value r = u % v; // r will be >= 0
-            u = v;
-            v = r;
-        }
-
-        if (v.zero) {
-            return u;
-        }
-
-        // Knuth 4.5.2 Algorithm B
-        // (Binary method to find the gcd)
-        value uZeroBits = u.trailingZeroBits;
-        value vZeroBits = v.trailingZeroBits;
-
-        // if u and v are both even, gcd(u, v) = 2 gcd(u/2, v/2)
-        value zeroBits = smallest(uZeroBits, vZeroBits);
-
-        // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-        u = u.rightArithmeticShift(uZeroBits);
-        v = v.rightArithmeticShift(vZeroBits);
-
-        // make u be the larger one
-        if (u < v) {
-            value tmp = u;
-            u = v;
-            v = tmp;
-        }
-
-        while (!v.zero) {
-            // TODO: optimize when both u and v are single word
-            // u & v are both odd
-            while (true) {
-                // gcd(u, v) = gcd(u - v, v)
-                u = u - v; // u will be even and >= 0
-                // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-                u = u.rightArithmeticShift(u.trailingZeroBits);
-                if (v > u) {
-                    break;
-                }
-            }
-            // make u the larger one, again
-            value tmp = u;
-            u = v;
-            v = tmp;
-        }
-
-        return u.leftLogicalShift(zeroBits);
     }
 }

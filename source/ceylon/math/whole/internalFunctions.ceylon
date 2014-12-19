@@ -103,7 +103,9 @@ Words add(Integer firstSize, Words first,
     }
 
     if (i < uSize) {
-        copyWords(u, r, i, i, uSize - i);
+        if (!(u === r)) {
+            copyWords(u, r, i, i, uSize - i);
+        }
         i = uSize;
     }
 
@@ -152,7 +154,9 @@ Words subtract(Integer uSize, Words u,
     }
 
     if (i < uSize) {
-        copyWords(u, r, i, i, uSize - i);
+        if (!(u === r)) {
+            copyWords(u, r, i, i, uSize - i);
+        }
         i = uSize;
     }
 
@@ -630,3 +634,4 @@ Comparison compareMagnitude(Integer xSize, Words x,
         return equal;
     }
 }
+

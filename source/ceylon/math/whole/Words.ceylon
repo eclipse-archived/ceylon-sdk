@@ -8,8 +8,12 @@ import java.util {
     JArrayList=ArrayList
 }
 
+// TODO make Words alias un-shared when possible
+// via package level visibility or splitting
+// Whole into an interface and impl
+
 // LongArray
-alias Words => LongArray;
+shared alias Words => LongArray;
 
 Words wordsOfSize(Integer size)
     => WholeJava.longArrayOfSize(size);
@@ -34,7 +38,7 @@ void copyWords(
 }
 
 // Array<Object>
-//alias Words => Array<Object>;
+//shared alias Words => Array<Object>;
 //Words wordsOfSize(Integer size)
 //    => arrayOfSize<Object>(size, 0);
 //
@@ -60,7 +64,7 @@ void copyWords(
 //}
 
 // Array<Integer>
-//alias Words => Array<Integer>;
+//shared alias Words => Array<Integer>;
 //
 //Words wordsOfSize(Integer size)
 //    => arrayOfSize<Integer>(size, 0);
@@ -87,7 +91,7 @@ void copyWords(
 //}
 
 // JArrayList<Integer>
-//alias Words => JArrayList<Integer>;
+//shared alias Words => JArrayList<Integer>;
 //
 //Words wordsOfSize(Integer size) {
 //    value array = JArrayList<Integer>(size);
