@@ -919,9 +919,8 @@ shared final class Whole
             return null;
         }
         else {
-            return if (shift == 0 || uSize == 0)
-                   then u
-                   else rightShift(uSize, u, shift, 1); // TODO inplace
+            rightShiftInplaceUnsigned(uSize, u, shift);
+            return u;
         }
     }
 
@@ -1044,12 +1043,64 @@ shared final class Whole
                 .and(wordMask) != 0;
     }
 
+    void rightShiftUnsigned(Integer uSize, Words u,
+                            Integer rSize, Words r,
+                            Integer shiftWords,
+                            Integer shiftBits) {
+        value wBits = wordBits;
+        value wMask = wordMask;
+
+        if (shiftBits == 0 || uSize == 0) {
+            if (shiftWords < uSize) {
+                copyWords(u, r, shiftWords, 0, uSize - shiftWords);
+            }
+            // clear remaining high words of r
+            variable value rIndex = uSize - shiftWords;
+            while (rIndex < rSize) {
+                setw(r, rIndex++, 0);
+            }
+        }
+        else {
+            value shiftBitsLeft = wBits - shiftBits;
+            variable value rIndex = 0;
+            variable value uIndex = shiftWords;
+            variable value corrWord = getw(u, uIndex);
+            while (++uIndex < uSize) {
+                value higherWord = getw(u, uIndex);
+                value l = corrWord.rightLogicalShift(shiftBits);
+                value h = higherWord.leftLogicalShift(shiftBitsLeft).and(wMask);
+                setw(r, rIndex, l + h);
+                corrWord = higherWord;
+                rIndex++;
+            }
+            // process last word only if non-zero
+            value highWord = corrWord.rightLogicalShift(shiftBits);
+            if (highWord != 0) {
+                setw(r, rIndex, highWord);
+                rIndex++;
+            }
+            // clear remaining high words of r
+            while (rIndex < rSize) {
+                setw(r, rIndex++, 0);
+            }
+        }
+    }
+
+    void rightShiftInplaceUnsigned(Integer uSize, Words u, Integer shift) {
+        value wBits = wordBits;
+        value shiftBits = shift % wBits;
+        value shiftWords = shift / wBits;
+
+        if (uSize != 0 && (shiftBits != 0 || shiftWords != 0)) {
+            value size = realSize(u, uSize);
+            rightShiftUnsigned(size, u, size, u, shiftWords, shiftBits);
+        }
+    }
+
     Words rightShift(Integer uSize, Words u, Integer shift, Integer sign) {
         assert (shift > 0);
 
         value wBits = wordBits;
-        value wMask = wordMask;
-
         value shiftBits = shift % wBits;
         value shiftWords = shift / wBits;
 
@@ -1066,29 +1117,15 @@ shared final class Whole
             copyWords(u, r, shiftWords, 0, rSize);
         }
         else {
-            value uHighWord = getw(u, uSize - 1);
-            value rHighWord = uHighWord.rightLogicalShift(shiftBits);
-            if (rHighWord != 0) {
-                rSize = uSize - shiftWords;
-                r = wordsOfSize(rSize);
-                setw(r, rSize - 1, rHighWord);
-            }
-            else {
-                rSize = uSize - shiftWords - 1;
-                r = wordsOfSize(rSize);
-            }
-            value shiftBitsLeft = wBits - shiftBits;
-
-            variable value prev = uHighWord;
-            variable value uIndex = uSize - 2;
-            while (uIndex >= shiftWords) {
-                value curr = getw(u, uIndex);
-                value hPart = prev.leftLogicalShift(shiftBitsLeft).and(wMask);
-                value lPart = curr.rightLogicalShift(shiftBits);
-                setw(r, uIndex - shiftWords, hPart + lPart);
-                prev = curr;
-                uIndex--;
-            }
+            value highWord = getw(u, uSize - 1)
+                             .rightLogicalShift(shiftBits);
+            value saveWord = if (highWord == 0) then 1 else 0;
+            rSize = uSize - shiftWords - saveWord;
+            r = wordsOfSize(rSize);
+            rightShiftUnsigned(uSize, u,
+                               rSize, r,
+                               shiftWords,
+                               shiftBits);
         }
 
         // for negative numbers, if any one bits were lost,
