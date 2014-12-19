@@ -2,6 +2,7 @@ import ceylon.math.integer {
     largest,
     smallest
 }
+
 "An arbitrary precision integer."
 shared final class Whole
         satisfies Integral<Whole> &
@@ -151,17 +152,66 @@ shared final class Whole
             case (smaller)
                 [package.zero, this]
             case (larger)
-                (let (resultWords = divide(this.wordsSize, this.words,
-                                           other.wordsSize, other.words))
-                 [Internal(sign * other.sign, resultWords.first),
-                  Internal(sign, resultWords.last)]));
+                (let (quotient = wordsOfSize(this.wordsSize),
+                      remainder = divide<Nothing>
+                                        (this.wordsSize, this.words,
+                                         other.wordsSize, other.words,
+                                         quotient))
+                 [Internal(sign * other.sign, quotient),
+                  Internal(sign, remainder)]));
     }
 
-    shared actual Whole divided(Whole other)
-        =>  quotientAndRemainder(other).first;
+    shared actual Whole divided(Whole other) {
+        if (other.zero) {
+            throw Exception("Divide by zero");
+        }
+        return if (zero) then
+            package.zero
+        else if (other.unit) then
+            this
+        else if (other == package.negativeOne) then
+            this.negated
+        else (
+            switch (compareMagnitude(this.wordsSize, this.words,
+                                     other.wordsSize, other.words))
+            case (equal)
+                (if (sign == other.sign)
+                 then package.one
+                 else package.negativeOne)
+            case (smaller)
+                package.zero
+            case (larger)
+                (let (quotient = wordsOfSize(this.wordsSize),
+                      remainder = divide<Null>
+                                        (this.wordsSize, this.words,
+                                         other.wordsSize, other.words,
+                                         quotient))
+                 Internal(sign * other.sign, quotient)));
+    }
 
-    shared actual Whole remainder(Whole other)
-        =>  quotientAndRemainder(other).last;
+    shared actual Whole remainder(Whole other) {
+        if (other.zero) {
+            throw Exception("Divide by zero");
+        }
+        return if (zero) then
+            package.zero
+        else if (other.unit) then
+            package.zero
+        else if (other == package.negativeOne) then
+            package.zero
+        else (
+            switch (compareMagnitude(this.wordsSize, this.words,
+                                     other.wordsSize, other.words))
+            case (equal)
+                package.zero
+            case (smaller)
+                this
+            case (larger)
+                (let (remainder = divide<Nothing>
+                                         (this.wordsSize, this.words,
+                                         other.wordsSize, other.words))
+                 Internal(sign, remainder)));
+    }
 
     shared Whole leftLogicalShift(Integer shift)
         =>  if (shift == 0) then
@@ -779,21 +829,24 @@ shared final class Whole
         }
     }
 
-    [Words, Words] divide(Integer dividendSize, Words dividend,
-                          Integer divisorSize, Words divisor) {
+    "If provided, quotient must be at least dividendSize and zero filled."
+    Words|Absent divide<Absent=Null>(
+                Integer dividendSize, Words dividend,
+                Integer divisorSize, Words divisor,
+                Words? quotient = null)
+                given Absent satisfies Null {
+
         if (divisorSize < 2) {
             value first = getw(divisor, 0);
-            return divideWord(dividendSize, dividend, first);
+            return divideWord<Absent>(dividendSize, dividend, first, quotient);
         }
 
         // Knuth 4.3.1 Algorithm D
         // assert(size(divisor) >= 2);
-
         value wMask = wordMask;
         value wBits = wordBits;
 
         // D1. Normalize (v's highest bit must be set)
-        value m = dividendSize - divisorSize;
         value b = wordRadix;
         value shift = let (highWord = getw(divisor, divisorSize - 1),
                            highBit = unisignedHighestNonZeroBit(highWord))
@@ -803,16 +856,13 @@ shared final class Whole
         Integer uSize = dividendSize + 1;
         Integer vSize = divisorSize;
         if (shift == 0) {
-            // u must be longer than dividend by one word
             u = copyAppend(dividendSize, dividend, 0);
             v = divisor;
         }
         else {
-            // u must be longer than dividend by one word
             u = leftShift(dividendSize, dividend, shift, true);
             v = leftShift(divisorSize, divisor, shift);
         }
-        Words q = wordsOfSize(m + 1); // quotient
         value v0 = getw(v, vSize - 1); // most significant, can't be 0
         value v1 = getw(v, vSize - 2); // second most significant must exist
 
@@ -856,45 +906,61 @@ shared final class Whole
                     addBack(u, vSize, v, j);
                 }
                 setw(u, j, 0);
-                setw(q, j - vSize, qj);
+                if (exists quotient) {
+                    setw(quotient, j - vSize, qj);
+                }
             }
             // D7. Loop
             j--;
         }
 
         // D8. Unnormalize Remainder Due to Step D1
-        value remainder = if (shift == 0 || uSize == 0)
-                          then u
-                          else rightShift(uSize, u, shift, 1);
-
-        return [q, remainder];
+        if (is Absent null) {
+            return null;
+        }
+        else {
+            return if (shift == 0 || uSize == 0)
+                   then u
+                   else rightShift(uSize, u, shift, 1); // TODO inplace
+        }
     }
 
-    [Words, Words] divideWord(Integer uSize, Words u, Integer v) {
+    "If provided, quotient must be at least dividendSize and zero filled."
+    Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
+                                    Integer v, Words? quotient = null)
+                                    given Absent satisfies Null {
         value wMask = wordMask;
         value wBits = wordBits;
 
         // assert(uSize >= 1);
         // assert(v.and(wMask) == v);
 
-        value q = wordsOfSize(uSize);
         variable value r = 0;
         variable value uIndex = uSize - 1;
         while (uIndex >= 0) {
             value x = r.leftLogicalShift(wBits) + getw(u, uIndex);
             if (x >= 0) {
-                setw(q, uIndex, x / v);
                 r = x % v;
+                if (exists quotient) {
+                    setw(quotient, uIndex, x / v);
+                }
             } else {
                 value qr = unsignedDivide(x, v);
-                setw(q, uIndex, qr.rightLogicalShift(wBits));
                 r = qr.and(wMask);
+                if (exists quotient) {
+                    setw(quotient, uIndex, qr.rightLogicalShift(wBits));
+                }
             }
             uIndex--;
         }
-        return [q, if (r.zero)
+        if (is Absent null) {
+            return null;
+        }
+        else {
+            return if (r.zero)
                    then wordsOfSize(0)
-                   else wordsOfOne(r)];
+                   else wordsOfOne(r);
+        }
     }
 
     Words leftShift(Integer uSize, Words u, Integer shift, Boolean alwaysPad = false) {
