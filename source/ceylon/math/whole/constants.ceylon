@@ -27,3 +27,7 @@ Integer wordRadix = 2 ^ wordBits;
 // FIXME, mixing shift & subtraction prob won't work on JS:
 Integer maxAddressableInteger = 1.leftLogicalShift(runtime.integerAddressableSize-1)-1;
 Integer minAddressableInteger = 1.leftLogicalShift(runtime.integerAddressableSize-1);
+
+MutableWhole mutableZero() => MutableWhole.Of(0, wordsOfSize(0));
+MutableWhole mutableOne() => MutableWhole.Of(1, wordsOfOne(1));
+MutableWhole mutableNegativeOne() => MutableWhole.Of(-1, wordsOfOne(1));

@@ -59,6 +59,7 @@ shared final class Whole
         }
     }
 
+    // TODO combine plus() and minus()
     shared actual Whole plus(Whole other)
         =>  if (this.zero) then
                 other
@@ -115,6 +116,7 @@ shared final class Whole
                 other
             else if (this == negativeOne) then
                 other.negated
+            // TODO other.unit & negativeOne
             else
                 Internal(this.sign * other.sign,
                          multiply(this.wordsSize, this.words,
@@ -439,6 +441,7 @@ shared final class Whole
                 package.negativeOne
             else if (this == package.negativeOne) then
                 package.one
+            // FIXME pass wordsSize?
             else Internal(sign.negated, words); // TODO pass along memos
 
     shared actual Whole wholePart => this;
