@@ -395,7 +395,6 @@ shared final class Whole
     }
 
     shared actual String string {
-        // TODO optimize? & support any radix
         if (exists stringMemo = stringMemo) {
             return stringMemo;
         }
