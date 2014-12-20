@@ -33,8 +33,8 @@ shared Whole gcd(Whole first, Whole second) {
         value zeroBits = smallest(uZeroBits, vZeroBits);
 
         // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-        u.inplaceRightLogicalShift(uZeroBits);
-        v.inplaceRightLogicalShift(vZeroBits);
+        u.inplaceRightArithmeticShift(uZeroBits);
+        v.inplaceRightArithmeticShift(vZeroBits);
 
         // make u be the larger one
         if (u < v) {
@@ -50,7 +50,7 @@ shared Whole gcd(Whole first, Whole second) {
                 // gcd(u, v) = gcd(u - v, v)
                 u.inplaceSubtract(v); // u will be even and >= 0
                 // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-                u.inplaceRightLogicalShift(u.trailingZeros);
+                u.inplaceRightArithmeticShift(u.trailingZeros);
                 if (v > u) {
                     break;
                 }

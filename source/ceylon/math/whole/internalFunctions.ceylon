@@ -390,8 +390,7 @@ Words|Absent divide<Absent=Null>(
         return null;
     }
     else {
-        rightShiftInplaceUnsigned(uSize, u, shift);
-        return u;
+        return rightShiftInplace(false, realSize(u, uSize), u, shift);
     }
 }
 
@@ -447,7 +446,11 @@ Words leftShift(Integer uSize, Words u, Integer shift, Boolean alwaysPad = false
     if (shiftBits == 0) {
         value extraWord = if (alwaysPad) then 1 else 0;
         r = wordsOfSize(uSize + shiftWords + extraWord);
-        copyWords(u, r, 0, shiftWords);
+        copyWords(u, r, 0, shiftWords, uSize);
+    }
+    else if (uSize == 0) {
+        value extraWord = if (alwaysPad) then 1 else 0;
+        r = wordsOfSize(extraWord);
     }
     else {
         value shiftBitsRight = wBits - shiftBits;
@@ -478,22 +481,29 @@ Words leftShift(Integer uSize, Words u, Integer shift, Boolean alwaysPad = false
 }
 
 // it is ok for w[size-1] to be 0
-Words increment(Integer size, Words w) { // TODO: rename inplace
+Words incrementInplace(Integer wordsSize, Words words) {
     value wMask = wordMask;
     variable value previous = 0;
     variable value i = -1;
-    while (++i < size && previous == 0) {
-        previous = (getw(w, i) + 1).and(wMask);
-        setw(w, i, previous);
+    while (++i < wordsSize && previous == 0) {
+        previous = (getw(words, i) + 1).and(wMask);
+        setw(words, i, previous);
     }
 
     if (previous == 0) { // w was all ones
-        value result = wordsOfSize(size + 1);
-        setw(result, size, 1);
-        return result;
+        if (sizew(words) > wordsSize) {
+            // avoid copy
+            setw(words, wordsSize, 1);
+            return words;
+        }
+        else {
+            value result = wordsOfSize(wordsSize + 1);
+            setw(result, wordsSize, 1);
+            return result;
+        }
     }
     else {
-        return w;
+        return words;
     }
 }
 
@@ -514,12 +524,60 @@ Boolean nonZeroBitsDropped(Words u,
             .and(wordMask) != 0;
 }
 
-void rightShiftUnsigned(Integer uSize, Words u,
-                        Integer rSize, Words r,
-                        Integer shiftWords,
-                        Integer shiftBits) {
+Words rightShift(Boolean negative, Integer uSize, Words u, Integer shift) {
+    //assert (shift >= 0);
+
+    value wBits = wordBits;
+    value shiftBits = shift % wBits;
+    value shiftWords = shift / wBits;
+
+    Words r;
+    Integer rSize;
+
+    if (shiftWords >= uSize) {
+        return if (negative) then wordsOfOne(1) else wordsOfSize(0);
+    }
+
+    if (shiftBits == 0) {
+        rSize = uSize - shiftWords;
+        r = wordsOfSize(rSize);
+    }
+    else {
+        // anticipate size
+        value highWord = getw(u, uSize - 1)
+                         .rightLogicalShift(shiftBits);
+        value saveWord = if (highWord == 0) then 1 else 0;
+        rSize = uSize - shiftWords - saveWord;
+        r = wordsOfSize(rSize);
+    }
+
+    return rightShiftImpl(negative, uSize, u, rSize, r,
+                  shiftWords, shiftBits);
+}
+
+Words rightShiftInplace(
+            Boolean negative, Integer uSize, Words u, Integer shift)
+    =>  let (wBits = wordBits,
+             shiftBits = shift % wBits,
+             shiftWords = shift / wBits)
+        if (uSize != 0 && (shiftBits != 0 || shiftWords != 0))
+        then rightShiftImpl(
+                    negative, uSize, u, uSize, u,
+                    shiftWords, shiftBits)
+        else u;
+
+Words rightShiftImpl(Boolean negative,
+                     Integer uSize, Words u,
+                     Integer rSize, Words r,
+                     Integer shiftWords,
+                     Integer shiftBits) {
     value wBits = wordBits;
     value wMask = wordMask;
+
+    Boolean nonZerosDropped =
+            negative &&
+            (shiftBits > 0 || shiftWords > 0) &&
+            nonZeroBitsDropped(u, shiftWords, shiftBits);
 
     if (shiftBits == 0 || uSize == 0) {
         if (shiftWords < uSize) {
@@ -555,58 +613,13 @@ void rightShiftUnsigned(Integer uSize, Words u,
             setw(r, rIndex++, 0);
         }
     }
-}
-
-void rightShiftInplaceUnsigned(Integer uSize, Words u, Integer shift) {
-    value wBits = wordBits;
-    value shiftBits = shift % wBits;
-    value shiftWords = shift / wBits;
-
-    if (uSize != 0 && (shiftBits != 0 || shiftWords != 0)) {
-        value size = realSize(u, uSize);
-        rightShiftUnsigned(size, u, size, u, shiftWords, shiftBits);
-    }
-}
-
-Words rightShift(Integer uSize, Words u, Integer shift, Integer sign) {
-    assert (shift > 0);
-
-    value wBits = wordBits;
-    value shiftBits = shift % wBits;
-    value shiftWords = shift / wBits;
-
-    Words r;
-    Integer rSize;
-
-    if (shiftWords >= uSize) {
-        return if (sign < 0) then wordsOfOne(1) else wordsOfSize(0);
-    }
-
-    if (shiftBits == 0) {
-        rSize = uSize - shiftWords;
-        r = wordsOfSize(rSize);
-        copyWords(u, r, shiftWords, 0, rSize);
-    }
-    else {
-        value highWord = getw(u, uSize - 1)
-                         .rightLogicalShift(shiftBits);
-        value saveWord = if (highWord == 0) then 1 else 0;
-        rSize = uSize - shiftWords - saveWord;
-        r = wordsOfSize(rSize);
-        rightShiftUnsigned(uSize, u,
-                           rSize, r,
-                           shiftWords,
-                           shiftBits);
-    }
 
     // for negative numbers, if any one bits were lost,
     // add one to the magnitude to simulate two's
     // complement arithmetic right shift
-    return
-    if (sign < 0 &&
-        nonZeroBitsDropped(u, shiftWords, shiftBits))
-    then increment(rSize, r)
-    else r;
+    return if (nonZerosDropped)
+           then incrementInplace(rSize, r)
+           else r;
 }
 
 Comparison compareMagnitude(Integer xSize, Words x,

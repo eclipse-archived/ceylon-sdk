@@ -128,7 +128,7 @@ final class MutableWhole
             else if (shift < 0) then
                 OfWords(sign, leftShift(wordsSize, words, -shift))
             else
-                OfWords(sign, rightShift(wordsSize, words, shift, sign));
+                OfWords(sign, rightShift(negative, wordsSize, words, shift));
 
     shared actual MutableWhole power(MutableWhole other) => nothing;
 
@@ -215,15 +215,18 @@ final class MutableWhole
                 false;
 
     shared void inplaceLeftLogicalShift(Integer shift) {
-        // TODO actual inplace shift, if room is available
-        words = leftShift(wordsSize, words, shift);
-        wordsSize = realSize(words, -1);
+        inplaceRightArithmeticShift(-shift);
     }
 
-    // FIXME should be signed arithmetic shift now
-    shared void inplaceRightLogicalShift(Integer shift) {
-        rightShiftInplaceUnsigned(wordsSize, words, shift);
-        wordsSize = realSize(words, wordsSize);
+    shared void inplaceRightArithmeticShift(Integer shift) {
+        if (shift < 0) {
+            words = leftShift(wordsSize, words, -shift); // TODO inplace
+            wordsSize = realSize(words, -1);
+        } else if (shift > 0) {
+            words = rightShiftInplace(
+                        negative, wordsSize, words, shift);
+            wordsSize = realSize(words, wordsSize);
+        }
     }
 
     shared void inplaceAdd(MutableWhole other) {

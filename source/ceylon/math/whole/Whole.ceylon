@@ -178,7 +178,7 @@ shared final class Whole
             else if (shift < 0) then
                 Whole.OfWords(sign, leftShift(wordsSize, words, -shift))
             else
-                Whole.OfWords(sign, rightShift(wordsSize, words, shift, sign));
+                Whole.OfWords(sign, rightShift(negative, wordsSize, words, shift));
 
     "The result of raising this number to the given power.
 
