@@ -16,7 +16,7 @@ import java.util {
 shared alias Words => LongArray;
 
 Words wordsOfSize(Integer size)
-    => WholeJava.longArrayOfSize(size);
+    => LongArray(size);
 
 Integer getw(Words words, Integer index)
     => WholeJava.get(words, index);
@@ -36,6 +36,8 @@ void copyWords(
         Integer length = sizew(source) - sourcePosition) {
     source.copyTo(destination, sourcePosition, destinationPosition, length);
 }
+
+Words clonew(Words source) => source.clone();
 
 // Array<Object>
 //shared alias Words => Array<Object>;

@@ -34,10 +34,15 @@ shared final class Whole
 
     shared new CopyOfMutableWhole(MutableWhole mutableWhole) {
         this.sign = mutableWhole.sign;
-        this.wordsSize = realSize(mutableWhole.words,
-                                  mutableWhole.wordsSize);
-        this.words = wordsOfSize(this.wordsSize);
-        mutableWhole.words.copyTo(this.words, 0, 0, this.wordsSize);
+        this.wordsSize = mutableWhole.wordsSize;
+        if (this.wordsSize == sizew(mutableWhole.words)) {
+            this.words = clonew(mutableWhole.words);
+        }
+        else {
+            this.words = wordsOfSize(this.wordsSize);
+            copyWords(mutableWhole.words, this.words,
+                      0, 0, this.wordsSize);
+        }
     }
 
     shared Boolean get(Integer index)

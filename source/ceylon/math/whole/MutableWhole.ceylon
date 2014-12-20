@@ -22,15 +22,13 @@ final class MutableWhole
     shared new CopyOfWords(Integer sign, Words words, Integer size = -1) {
         assert (-1 <= sign <= 1);
         this.wordsSize = realSize(words, size);
-        this.words = wordsOfSize(this.wordsSize);
-        words.copyTo(this.words, 0, 0, this.wordsSize);
+        this.words = clonew(words);
         this.signValue = if (this.wordsSize == 0) then 0 else sign;
     }
 
     shared new CopyOfWhole(Whole whole) {
         this.wordsSize = realSize(whole.words, whole.wordsSize);
-        this.words = wordsOfSize(this.wordsSize);
-        whole.words.copyTo(this.words, 0, 0, this.wordsSize);
+        this.words = clonew(whole.words);
         this.signValue = whole.sign;
     }
 
