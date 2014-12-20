@@ -40,7 +40,8 @@ final class MutableWhole
     shared actual MutableWhole minus(MutableWhole other)
         =>  addSigned(this, other, other.sign.negated);
 
-    shared actual MutableWhole plusInteger(Integer integer) => nothing;
+    shared actual MutableWhole plusInteger(Integer integer)
+        =>  plus(mutableWholeNumber(integer));
 
     shared actual MutableWhole times(MutableWhole other)
         =>  if (this.zero || other.zero) then
@@ -58,7 +59,13 @@ final class MutableWhole
                         multiply(this.wordsSize, this.words,
                                  other.wordsSize, other.words));
 
-    shared actual MutableWhole timesInteger(Integer integer) => nothing;
+    shared actual MutableWhole timesInteger(Integer integer)
+        =>  if (zero || integer == 0) then
+                mutableZero()
+            else if (0 < integer < wordRadix) then
+                OfWords(sign, multiplyWord(wordsSize, words, integer))
+            else
+                times(mutableWholeNumber(integer));
 
     shared actual MutableWhole divided(MutableWhole other) {
         if (other.zero) {
@@ -183,7 +190,8 @@ final class MutableWhole
         return sign * result;
     }
 
-    shared actual String string => Whole.CopyOfMutableWhole(this).string;
+    shared actual String string
+        =>  Whole.CopyOfMutableWhole(this).string;
 
     shared actual Comparison compare(MutableWhole other)
         =>  if (sign != other.sign) then

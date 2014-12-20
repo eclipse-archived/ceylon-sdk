@@ -78,7 +78,12 @@ shared final class Whole
                                  other.wordsSize, other.words));
 
     shared actual Whole timesInteger(Integer integer)
-        =>  times(wholeNumber(integer));
+        =>  if (zero || integer == 0) then
+                package.zero
+            else if (0 < integer < wordRadix) then
+                OfWords(sign, multiplyWord(wordsSize, words, integer))
+            else
+                times(wholeNumber(integer));
 
     shared [Whole, Whole] quotientAndRemainder(Whole other) {
         if (other.zero) {

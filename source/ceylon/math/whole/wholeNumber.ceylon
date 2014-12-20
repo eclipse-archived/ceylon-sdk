@@ -11,6 +11,10 @@ shared Whole wholeNumber(variable Integer number)
     else Whole.OfWords(number.sign,
                         wordsUnsignedInteger(number));
 
+MutableWhole mutableWholeNumber(variable Integer number)
+    =>  MutableWhole.CopyOfWords(number.sign,
+                wordsUnsignedInteger(number));
+
 Words wordsUnsignedInteger(variable Integer integer) {
     // * Bitwise operations are not used; JavaScript's min/max Integer range
     //   is greater than what is supported by runtime.integerAddressableSize
