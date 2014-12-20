@@ -47,14 +47,18 @@ Integer unsignedDivide(Integer n, Integer d) {
 }
 
 Integer numberOfTrailingZeros(variable Integer x) {
-    // TODO: make faster, but compat with JS
-    assert(x > 0);
-    variable value result = 0;
-    while (x.and(1) == 0) {
-        x = x.rightLogicalShift(1);
-        result++;
+    x = x.leftLogicalShift(0); // convert to Int32 on JS
+    if (x == 0) {
+        return runtime.integerAddressableSize;
     }
-    return result;
+    else {
+        variable value result = 0;
+        while (x.and(1) == 0) {
+            x = x.rightLogicalShift(1);
+            result++;
+        }
+        return result;
+    }
 }
 
 Integer unisignedHighestNonZeroBit(variable Integer x) {

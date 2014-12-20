@@ -34,10 +34,8 @@ shared Whole gcd(Whole first, Whole second) {
             while (true) {
                 // gcd(u, v) = gcd(u - v, v)
                 u = u - v; // u will be even and >= 0
-                if (u != 0) { // FIXME this is ugly; make numberOfTrailingZeros work for zeros
-                    // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-                    u = u.rightArithmeticShift(numberOfTrailingZeros(u));
-                }
+                // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
+                u = u.rightArithmeticShift(numberOfTrailingZeros(u));
                 if (v > u) {
                     break;
                 }
