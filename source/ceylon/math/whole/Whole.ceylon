@@ -1,3 +1,6 @@
+import java.math {
+    BigInteger
+}
 "An arbitrary precision integer."
 shared final class Whole
         satisfies Integral<Whole> &
@@ -384,7 +387,14 @@ shared final class Whole
      This is provided for interoperation with the runtime
      platform."
     see(`function fromImplementation`)
-    shared Object? implementation => nothing;
+    shared Object? implementation {
+        if (safelyAddressable) {
+            return BigInteger.valueOf(integer);
+        }
+        else {
+            return BigInteger(string);
+        }
+    }
 
     shared actual Integer hash {
         variable Integer result = 0;

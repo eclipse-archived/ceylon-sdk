@@ -7,7 +7,7 @@ import java.math {
  with the runtime platform."
 //see(Whole.implementation)
 shared Whole fromImplementation(Object implementation) {
-    // FIXME move to Java interop?
     assert (is BigInteger implementation);
-    return nothing;
+    assert (exists whole = parseWhole(implementation.string));
+    return whole;
 }
