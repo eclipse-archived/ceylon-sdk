@@ -65,11 +65,9 @@ shared Whole gcd(Whole first, Whole second) {
         return Whole.CopyOfMutableWhole(u);
     }
 
-    if (first.zero) {
-        return second.magnitude;
-    }
-    else if (second.zero) {
-        return first.magnitude;
-    }
-    return gcdPositive(first.magnitude, second.magnitude);
+    return if (first.zero) then
+        second.magnitude
+    else if (second.zero) then
+        first.magnitude
+    else gcdPositive(first.magnitude, second.magnitude);
 }
