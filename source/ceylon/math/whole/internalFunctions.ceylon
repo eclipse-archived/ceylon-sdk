@@ -721,6 +721,14 @@ Comparison compareMagnitude(Integer xSize, Words x,
 }
 
 Integer integerForWords(Integer wordsSize, Words words, Boolean negative) {
+    // easy cases
+    if (wordsSize == 0) {
+        return 0;
+    } else if (wordsSize == 1) {
+        value magnitude = getw(words, 0);
+        return if (negative) then -magnitude else magnitude;
+    }
+
     // result is lower runtime.integerAddressableSize bits of
     // the two's complement representation. For negative numbers,
     // flip the bits and add 1
