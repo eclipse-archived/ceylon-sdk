@@ -538,4 +538,12 @@ shared final class Whole
                then v - u1
                else u1;
     }
+
+    // TODO package private
+    shared Boolean safelyAddressable
+        // slightly underestimate for performance
+        =>  wordsSize < 2 ||
+            (wordsSize == 2 &&
+             getw(words, 1)
+                 .rightLogicalShift(wordBits-1) == 0);
 }

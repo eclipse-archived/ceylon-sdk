@@ -5,9 +5,8 @@ import ceylon.math.integer {
 "The greatest common divisor."
 shared Whole gcd(Whole first, Whole second) {
 
-    function gcdWords(Integer first, Integer second) {
-        //value wRadix = wordRadix;
-        //assert (0 < first < wRadix && 0 < second < wRadix);
+    function gcdInteger(Integer first, Integer second) {
+        // assert first & second are within runtime.integerAddressableSize
 
         variable value u = first;
         variable value v = second;
@@ -66,8 +65,8 @@ shared Whole gcd(Whole first, Whole second) {
         }
 
         // easy case
-        if (first.wordsSize == 1 && second.wordsSize == 1) {
-            return wholeNumber(gcdWords(first.integer,
+        if (first.safelyAddressable && second.safelyAddressable) {
+            return wholeNumber(gcdInteger(first.integer,
                                         second.integer));
         }
 
@@ -95,9 +94,9 @@ shared Whole gcd(Whole first, Whole second) {
 
         while (!v.zero) {
             // optimize single word case
-            if (u.wordsSize == 1) {
-                //assert (v.wordsSize == 1);
-                return wholeNumber(gcdWords(u.integer, v.integer))
+            if (u.safelyAddressable) {
+                //assert (v.safelyAddressable);
+                return wholeNumber(gcdInteger(u.integer, v.integer))
                             .leftLogicalShift(zeroBits);
             }
 
