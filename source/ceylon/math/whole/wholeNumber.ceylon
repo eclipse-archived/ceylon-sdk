@@ -8,7 +8,7 @@ shared Whole wholeNumber(variable Integer number)
     else if (number == 1)  then one
     else if (number == 2)  then two
     else if (number == 10) then ten
-    else Whole.Internal(number.sign,
+    else Whole.OfWords(number.sign,
                         wordsUnsignedInteger(number));
 
 Words wordsUnsignedInteger(variable Integer integer) {

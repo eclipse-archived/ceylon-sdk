@@ -1,17 +1,17 @@
 "A `Whole` instance representing zero."
-shared Whole zero = Whole.Internal(0, wordsOfSize(0));
+shared Whole zero = Whole.OfWords(0, wordsOfSize(0));
 
 "A `Whole` instance representing one."
-shared Whole one = Whole.Internal(1, wordsOfOne(1));
+shared Whole one = Whole.OfWords(1, wordsOfOne(1));
 
 "A `Whole` instance representing negative one."
-Whole negativeOne = Whole.Internal(-1, wordsOfOne(1));
+Whole negativeOne = Whole.OfWords(-1, wordsOfOne(1));
 
 "A `Whole` instance representing two."
-shared Whole two = Whole.Internal(1, wordsOfOne(2));
+shared Whole two = Whole.OfWords(1, wordsOfOne(2));
 
 "A `Whole` instance representing ten."
-Whole ten = Whole.Internal(1, wordsOfOne(10));
+Whole ten = Whole.OfWords(1, wordsOfOne(10));
 
 // These are used for Whole.offset, so integerAddressableSize is irrelevant
 Whole integerMax = wholeNumber(runtime.maxIntegerValue);
@@ -28,6 +28,6 @@ Integer wordRadix = 2 ^ wordBits;
 Integer maxAddressableInteger = 1.leftLogicalShift(runtime.integerAddressableSize-1)-1;
 Integer minAddressableInteger = 1.leftLogicalShift(runtime.integerAddressableSize-1);
 
-MutableWhole mutableZero() => MutableWhole.Of(0, wordsOfSize(0));
-MutableWhole mutableOne() => MutableWhole.Of(1, wordsOfOne(1));
-MutableWhole mutableNegativeOne() => MutableWhole.Of(-1, wordsOfOne(1));
+MutableWhole mutableZero() => MutableWhole.OfWords(0, wordsOfSize(0));
+MutableWhole mutableOne() => MutableWhole.OfWords(1, wordsOfOne(1));
+MutableWhole mutableNegativeOne() => MutableWhole.OfWords(-1, wordsOfOne(1));

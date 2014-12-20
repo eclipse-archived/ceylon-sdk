@@ -635,3 +635,45 @@ Comparison compareMagnitude(Integer xSize, Words x,
     }
 }
 
+Integer integerForWords(Integer wordsSize, Words words, Boolean negative) {
+    // result is lower runtime.integerAddressableSize bits of
+    // the two's complement representation. For negative numbers,
+    // flip the bits and add 1
+
+    value wBits = wordBits;
+    value wMask = wordMask;
+
+    variable Integer result = 0;
+
+    // result should have up to integerAddressableSize bits (32 or 64)
+    value count = runtime.integerAddressableSize/wBits;
+
+    variable value nonZeroSeen = false;
+
+    // least significant first
+    for (i in 0:count) {
+        Integer x;
+        if (i < wordsSize) {
+            if (negative) {
+                if (!nonZeroSeen) {
+                    // negate the least significant non-zero word
+                    x = getw(words, i).negated;
+                    nonZeroSeen = x != 0;
+                }
+                else {
+                    // flip the rest
+                    x = getw(words, i).not;
+                }
+            }
+            else {
+                x = getw(words, i);
+            }
+        }
+        else {
+            x = if (negative) then -1 else 0;
+        }
+        value newBits = x.and(wMask).leftLogicalShift(i * wBits);
+        result = result.or(newBits);
+    }
+    return result;
+}

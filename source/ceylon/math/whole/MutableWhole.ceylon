@@ -12,17 +12,15 @@ final class MutableWhole
 
     shared variable Integer wordsSize;
 
-    shared new Of(Integer sign, Words words, Integer size = -1) {
+    shared new OfWords(Integer sign, Words words, Integer size = -1) {
         assert (-1 <= sign <= 1);
-
         this.wordsSize = realSize(words, size);
         this.words = words;
         this.signValue = if (this.wordsSize == 0) then 0 else sign;
     }
 
-    shared new CopyOf(Integer sign, Words words, Integer size = -1) {
+    shared new CopyOfWords(Integer sign, Words words, Integer size = -1) {
         assert (-1 <= sign <= 1);
-
         this.wordsSize = realSize(words, size);
         this.words = wordsOfSize(this.wordsSize);
         words.copyTo(this.words, 0, 0, this.wordsSize);
@@ -56,9 +54,11 @@ final class MutableWhole
             else if (other.negativeOne) then
                 this.negated
             else
-                Of(this.sign * other.sign,
-                   multiply(this.wordsSize, this.words,
-                            other.wordsSize, other.words));
+                OfWords(this.sign * other.sign,
+                        multiply(this.wordsSize, this.words,
+                                 other.wordsSize, other.words));
+
+    shared actual MutableWhole timesInteger(Integer integer) => nothing;
 
     shared actual MutableWhole divided(MutableWhole other) {
         if (other.zero) {
@@ -68,10 +68,12 @@ final class MutableWhole
             mutableZero()
         else if (other.unit) then
             copy()
+        else if (other.negativeOne) then
+            negated
         else (
             switch (compareMagnitude(
-                    this.wordsSize, this.words,
-                    other.wordsSize, other.words))
+                        this.wordsSize, this.words,
+                        other.wordsSize, other.words))
             case (equal)
                 (if (sign == other.sign)
                  then mutableOne()
@@ -80,11 +82,11 @@ final class MutableWhole
                 mutableZero()
             case (larger)
                 (let (quotient = wordsOfSize(this.wordsSize),
-                      _ = divide<Null>
-                                (this.wordsSize, this.words,
-                                 other.wordsSize, other.words,
-                                 quotient))
-                 Of(sign * other.sign, quotient)));
+                      remainder = divide<Null>
+                                        (this.wordsSize, this.words,
+                                         other.wordsSize, other.words,
+                                         quotient))
+                 OfWords(sign * other.sign, quotient)));
     }
 
     shared actual MutableWhole remainder(MutableWhole other) {
@@ -105,40 +107,41 @@ final class MutableWhole
                 copy()
             case (larger)
                 (let (remainder = divide<Nothing>
-                        (this.wordsSize, this.words,
-                         other.wordsSize, other.words))
-                 Of(sign, remainder)));
+                                        (this.wordsSize, this.words,
+                                         other.wordsSize, other.words))
+                 OfWords(sign, remainder)));
     }
+
+    shared MutableWhole leftLogicalShift(Integer shift)
+        =>  rightArithmeticShift(-shift);
+
+    shared MutableWhole rightArithmeticShift(Integer shift)
+        =>  if (shift == 0) then
+                copy()
+            else if (shift < 0) then
+                OfWords(sign, leftShift(wordsSize, words, -shift))
+            else
+                OfWords(sign, rightShift(wordsSize, words, shift, sign));
 
     shared actual MutableWhole power(MutableWhole other) => nothing;
 
     shared actual MutableWhole powerOfInteger(Integer integer) => nothing;
 
-    shared actual MutableWhole timesInteger(Integer integer) => nothing;
+    shared actual MutableWhole neighbour(Integer offset)
+        => plusInteger(offset);
 
-    shared actual MutableWhole neighbour(Integer offset) => nothing;
+    shared actual Integer offset(MutableWhole other) {
+        value diff = Whole.CopyOfMutableWhole(this - other);
+        if (integerMin <= diff <= integerMax) {
+            return diff.integer;
+        }
+        else {
+            throw OverflowException();
+        }
+    }
 
-    shared actual Integer offset(MutableWhole other) => nothing;
-
-    shared MutableWhole copy() => CopyOf(sign, words, wordsSize);
-
-    shared actual MutableWhole wholePart => copy();
-
-    shared actual MutableWhole fractionalPart => mutableZero();
-
-    shared Boolean absUnit => wordsSize == 1 && getw(words, 0) == 1;
-
-    shared Boolean negativeOne => negative && absUnit;
-
-    shared actual Boolean unit => positive && absUnit;
-
-    shared actual Integer sign => signValue;
-
-    shared actual Boolean negative => sign == -1;
-
-    shared actual Boolean positive => sign == 1;
-
-    shared actual Boolean zero => sign == 0;
+    shared Integer integer
+        => integerForWords(wordsSize, words, negative);
 
     shared actual MutableWhole negated
         =>  if (zero) then
@@ -148,7 +151,29 @@ final class MutableWhole
             else if (negativeOne) then
                 mutableOne()
             else
-                CopyOf(sign.negated, words, wordsSize);
+                CopyOfWords(sign.negated, words, wordsSize);
+
+    shared MutableWhole copy() => CopyOfWords(sign, words, wordsSize);
+
+    shared actual MutableWhole wholePart => copy();
+
+    shared actual MutableWhole fractionalPart => mutableZero();
+
+    shared actual Boolean positive => sign == 1;
+
+    shared actual Boolean negative => sign == -1;
+
+    shared actual Boolean zero => sign == 0;
+
+    Boolean absUnit => wordsSize == 1 && getw(words, 0) == 1;
+
+    Boolean negativeOne => negative && absUnit;
+
+    shared actual Boolean unit => positive && absUnit;
+
+    shared Boolean even => wordsSize > 0 && getw(words, 0).and(1) == 0;
+
+    shared actual Integer sign => signValue;
 
     shared actual Integer hash {
         variable Integer result = 0;
@@ -229,9 +254,9 @@ final class MutableWhole
             else if (second.zero) then
                 first.copy()
             else if (first.sign == secondSign) then
-                Of(first.sign,
-                   add(first.wordsSize, first.words,
-                       second.wordsSize, second.words))
+                OfWords(first.sign,
+                        add(first.wordsSize, first.words,
+                            second.wordsSize, second.words))
             else
                 (switch (compareMagnitude(
                                 first.wordsSize, first.words,
@@ -239,13 +264,13 @@ final class MutableWhole
                  case (equal)
                     mutableZero()
                  case (larger)
-                    Of(first.sign,
-                       subtract(first.wordsSize, first.words,
-                                second.wordsSize, second.words))
+                    OfWords(first.sign,
+                            subtract(first.wordsSize, first.words,
+                                     second.wordsSize, second.words))
                  case (smaller)
-                    Of(secondSign,
-                       subtract(second.wordsSize, second.words,
-                                first.wordsSize, first.words)));
+                    OfWords(secondSign,
+                            subtract(second.wordsSize, second.words,
+                                     first.wordsSize, first.words)));
 
     void inplaceAddSigned(MutableWhole other, Integer otherSign) {
         if (other.zero) {
@@ -290,9 +315,7 @@ final class MutableWhole
     }
 
     void inplaceAddUnsigned(MutableWhole other) {
-        if (other.zero) {
-            return;
-        }
+        // assert(!other.zero)
 
         Integer rSize =
                 if (this.zero)
@@ -312,5 +335,4 @@ final class MutableWhole
             wordsSize = realSize(words, -1);
         }
     }
-
 }

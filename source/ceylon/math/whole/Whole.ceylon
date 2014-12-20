@@ -16,7 +16,7 @@ shared final class Whole
 
     variable String? stringMemo = null;
 
-    shared new Internal(Integer sign, variable Words words, Integer maxSize = -1) {
+    shared new OfWords(Integer sign, Words words, Integer maxSize = -1) {
         // FIXME should be package private when available
         // TODO shorten length of array if way oversized?
         // TODO zero out unused portion to avoid info leaks?
@@ -40,71 +40,23 @@ shared final class Whole
         mutableWhole.words.copyTo(this.words, 0, 0, this.wordsSize);
     }
 
-    shared Boolean get(Integer index) {
-        if (index < 0) {
-            return false;
-        }
-        else if (zero) {
-            return false;
-        }
-        else if (index > wordBits * wordsSize) {
-            // infinite leading ones in two's complement
-            return if (negative) then true else false;
-        }
-        else if (positive) {
-            return getBitPositive(wordsSize, words, index);
-        }
-        else {
-            return getBitNegative(wordsSize, words, index, trailingZeroWords);
-        }
-    }
-
-    // TODO combine plus() and minus()
-    shared actual Whole plus(Whole other)
-        =>  if (this.zero) then
-                other
-            else if (other.zero) then
-                this
-            else if (this.sign == other.sign) then
-                Internal(this.sign,
-                         add(this.wordsSize, this.words,
-                             other.wordsSize, other.words))
+    shared Boolean get(Integer index)
+        =>  if (index < 0 || zero) then
+                false
+            else if (index > wordBits * wordsSize) then
+                // infinite ones in two's complement
+                negative
+            else if (positive) then
+                getBitPositive(wordsSize, words, index)
             else
-               (switch (compareMagnitude(this.wordsSize, this.words,
-                                         other.wordsSize, other.words))
-                case (equal)
-                    package.zero
-                case (larger)
-                    Internal(this.sign,
-                             subtract(this.wordsSize, this.words,
-                                      other.wordsSize, other.words))
-                case (smaller)
-                    Internal(this.sign.negated,
-                             subtract(other.wordsSize, other.words,
-                                      this.wordsSize, this.words)));
+                getBitNegative(wordsSize, words, index,
+                               trailingZeroWords);
+
+    shared actual Whole plus(Whole other)
+        =>  addSigned(this, other, other.sign);
 
     shared actual Whole minus(Whole other)
-        =>  if (this.zero) then
-                -other
-            else if (other.zero) then
-                this
-            else if (this.sign != other.sign) then
-                Internal(this.sign,
-                         add(this.wordsSize, this.words,
-                             other.wordsSize, other.words))
-            else
-               (switch (compareMagnitude(this.wordsSize, this.words,
-                                         other.wordsSize, other.words))
-                case (equal)
-                    package.zero
-                case (larger)
-                    Internal(this.sign,
-                             subtract(this.wordsSize, this.words,
-                                      other.wordsSize, other.words))
-                case (smaller)
-                    Internal(this.sign.negated,
-                             subtract(other.wordsSize, other.words,
-                                      this.wordsSize, this.words)));
+        =>  addSigned(this, other, other.sign.negated);
 
     shared actual Whole plusInteger(Integer integer)
         =>  plus(wholeNumber(integer));
@@ -114,13 +66,16 @@ shared final class Whole
                 package.zero
             else if (this.unit) then
                 other
-            else if (this == negativeOne) then
+            else if (this.negativeOne) then
                 other.negated
-            // TODO other.unit & negativeOne
+            else if (other.unit) then
+                this
+            else if (other.negativeOne) then
+                this.negated
             else
-                Internal(this.sign * other.sign,
-                         multiply(this.wordsSize, this.words,
-                                  other.wordsSize, other.words));
+                OfWords(this.sign * other.sign,
+                        multiply(this.wordsSize, this.words,
+                                 other.wordsSize, other.words));
 
     shared actual Whole timesInteger(Integer integer)
         =>  times(wholeNumber(integer));
@@ -133,7 +88,7 @@ shared final class Whole
             [package.zero, package.zero]
         else if (other.unit) then
             [this, package.zero]
-        else if (other == package.negativeOne) then
+        else if (other.negativeOne) then
             [this.negated, package.zero]
         else (
             switch (compareMagnitude(this.wordsSize, this.words,
@@ -151,8 +106,8 @@ shared final class Whole
                                         (this.wordsSize, this.words,
                                          other.wordsSize, other.words,
                                          quotient))
-                 [Internal(sign * other.sign, quotient),
-                  Internal(sign, remainder)]));
+                 [OfWords(sign * other.sign, quotient),
+                  OfWords(sign, remainder)]));
     }
 
     shared actual Whole divided(Whole other) {
@@ -163,11 +118,12 @@ shared final class Whole
             package.zero
         else if (other.unit) then
             this
-        else if (other == package.negativeOne) then
+        else if (other.negativeOne) then
             this.negated
         else (
-            switch (compareMagnitude(this.wordsSize, this.words,
-                                     other.wordsSize, other.words))
+            switch (compareMagnitude(
+                        this.wordsSize, this.words,
+                        other.wordsSize, other.words))
             case (equal)
                 (if (sign == other.sign)
                  then package.one
@@ -180,7 +136,7 @@ shared final class Whole
                                         (this.wordsSize, this.words,
                                          other.wordsSize, other.words,
                                          quotient))
-                 Internal(sign * other.sign, quotient)));
+                 OfWords(sign * other.sign, quotient)));
     }
 
     shared actual Whole remainder(Whole other) {
@@ -191,11 +147,12 @@ shared final class Whole
             package.zero
         else if (other.unit) then
             package.zero
-        else if (other == package.negativeOne) then
+        else if (other.absUnit) then
             package.zero
         else (
-            switch (compareMagnitude(this.wordsSize, this.words,
-                                     other.wordsSize, other.words))
+            switch (compareMagnitude(
+                        this.wordsSize, this.words,
+                        other.wordsSize, other.words))
             case (equal)
                 package.zero
             case (smaller)
@@ -204,24 +161,19 @@ shared final class Whole
                 (let (remainder = divide<Nothing>
                                          (this.wordsSize, this.words,
                                          other.wordsSize, other.words))
-                 Internal(sign, remainder)));
+                 OfWords(sign, remainder)));
     }
 
     shared Whole leftLogicalShift(Integer shift)
-        =>  if (shift == 0) then
-                this
-            else if (shift < 0) then
-                Whole.Internal(sign, rightShift(wordsSize, words, -shift, sign))
-            else
-                Whole.Internal(sign, leftShift(wordsSize, words, shift));
+        =>  rightArithmeticShift(-shift);
 
     shared Whole rightArithmeticShift(Integer shift)
         =>  if (shift == 0) then
                 this
             else if (shift < 0) then
-                Whole.Internal(sign, leftShift(wordsSize, words, -shift))
+                Whole.OfWords(sign, leftShift(wordsSize, words, -shift))
             else
-                Whole.Internal(sign, rightShift(wordsSize, words, shift, sign));
+                Whole.OfWords(sign, rightShift(wordsSize, words, shift, sign));
 
     "The result of raising this number to the given power.
 
@@ -244,7 +196,7 @@ shared final class Whole
         else if (exponent == package.zero) {
             return one;
         }
-        else if (this == package.negativeOne && exponent.even) {
+        else if (this.negativeOne && exponent.even) {
             return package.one;
         }
         else if (this == package.negativeOne && !exponent.even) {
@@ -263,7 +215,7 @@ shared final class Whole
         }
         else {
             throw AssertionError(
-                "``string``^``exponent`` cannot be represented as an Integer");
+                "``string``^``exponent`` negative exponents not supported");
         }
     }
 
@@ -274,10 +226,10 @@ shared final class Whole
         else if (exponent == 0) {
             return one;
         }
-        else if (this == package.negativeOne && exponent.even) {
+        else if (this.negativeOne && exponent.even) {
             return package.one;
         }
-        else if (this == package.negativeOne && !exponent.even) {
+        else if (this.negativeOne && !exponent.even) {
             return this;
         }
         else if (exponent == 1) {
@@ -293,7 +245,7 @@ shared final class Whole
         }
         else {
             throw AssertionError(
-                "``string``^``exponent`` cannot be represented as an Integer");
+                "``string``^``exponent`` negative exponents not supported");
         }
     }
 
@@ -379,52 +331,9 @@ shared final class Whole
     "The number, represented as an [[Integer]]. If the number is too
      big to fit in an Integer then an Integer corresponding to the
      lower order bits is returned."
-    shared Integer integer {
-        if (exists integerMemo = integerMemo) {
-            return integerMemo;
-        } else {
-            // result is lower runtime.integerAddressableSize bits of
-            // the two's complement representation. For negative numbers,
-            // flip the bits and add 1
-
-            value wBits = wordBits;
-            value wMask = wordMask;
-
-            variable Integer result = 0;
-
-            // result should have up to integerAddressableSize bits (32 or 64)
-            value count = runtime.integerAddressableSize/wBits;
-
-            variable value nonZeroSeen = false;
-
-            // least significant first
-            for (i in 0:count) {
-                Integer x;
-                if (i < wordsSize) {
-                    if (negative) {
-                        if (!nonZeroSeen) {
-                            // negate the least significant non-zero word
-                            x = getw(words, i).negated;
-                            nonZeroSeen = x != 0;
-                        }
-                        else {
-                            // flip the rest
-                            x = getw(words, i).not;
-                        }
-                    }
-                    else {
-                        x = getw(words, i);
-                    }
-                }
-                else {
-                    x = if (negative) then -1 else 0;
-                }
-                value newBits = x.and(wMask).leftLogicalShift(i * wBits);
-                result = result.or(newBits);
-            }
-            return integerMemo = result;
-        }
-    }
+    shared Integer integer
+        =>  integerMemo else (integerMemo =
+                integerForWords(wordsSize, words, negative));
 
     "The number, represented as a [[Float]]. If the magnitude of this number
      is too large the result will be `infinity` or `-infinity`. If the result
@@ -439,10 +348,9 @@ shared final class Whole
                 package.zero
             else if (this.unit) then
                 package.negativeOne
-            else if (this == package.negativeOne) then
+            else if (this.negativeOne) then
                 package.one
-            // FIXME pass wordsSize?
-            else Internal(sign.negated, words); // TODO pass along memos
+            else OfWords(sign.negated, words, wordsSize);
 
     shared actual Whole wholePart => this;
 
@@ -454,7 +362,11 @@ shared final class Whole
 
     shared actual Boolean zero => sign == 0;
 
-    shared actual Boolean unit => this == one;
+    Boolean absUnit => wordsSize == 1 && getw(words, 0) == 1;
+
+    Boolean negativeOne => negative && absUnit;
+
+    shared actual Boolean unit => positive && absUnit;
 
     shared Boolean even => wordsSize > 0 && getw(words, 0).and(1) == 0;
 
@@ -518,18 +430,18 @@ shared final class Whole
             else
                 false;
 
+    //Integer trailingZeros
+    //    =>  if (this.zero)
+    //        then 0
+    //        else (let (zeroWords = trailingZeroWords,
+    //                   word = getw(words, zeroWords))
+    //              zeroWords * wordBits + numberOfTrailingZeros(word));
+
     Integer trailingZeroWords
         =>  if (trailingZeroWordsMemo >= 0)
             then trailingZeroWordsMemo
             else (trailingZeroWordsMemo =
                   calculateTrailingZeroWords());
-
-    Integer trailingZeros
-        =>  if (this.zero)
-            then 0
-            else (let (zeroWords = trailingZeroWords,
-                       word = getw(words, zeroWords))
-                  zeroWords * wordBits + numberOfTrailingZeros(word));
 
     Integer calculateTrailingZeroWords() {
         for (i in 0:wordsSize) {
@@ -541,6 +453,32 @@ shared final class Whole
             return 0;
         }
     }
+
+    Whole addSigned(Whole first, Whole second, Integer secondSign)
+        =>  if (first.zero) then
+                (if (second.sign == secondSign)
+                 then second
+                 else second.negated)
+            else if (second.zero) then
+                first
+            else if (first.sign == secondSign) then
+                OfWords(first.sign,
+                         add(first.wordsSize, first.words,
+                             second.wordsSize, second.words))
+            else
+               (switch (compareMagnitude(
+                            first.wordsSize, first.words,
+                            second.wordsSize, second.words))
+                case (equal)
+                    package.zero
+                case (larger)
+                    OfWords(first.sign,
+                            subtract(first.wordsSize, first.words,
+                                     second.wordsSize, second.words))
+                case (smaller)
+                    OfWords(secondSign,
+                            subtract(second.wordsSize, second.words,
+                                     first.wordsSize, first.words)));
 
     Whole modPowerPositive(variable Whole base,
                            variable Whole exponent,
