@@ -331,7 +331,7 @@ Words|Absent divide<Absent=Null>(
         v = divisor;
     }
     else {
-        u = leftShift(dividendSize, dividend, shift, true);
+        u = leftShift(dividendSize, dividend, shift, dividendSize + 1);
         v = leftShift(divisorSize, divisor, shift);
     }
     value v0 = getw(v, vSize - 1); // most significant, can't be 0
@@ -430,54 +430,6 @@ Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
                then wordsOfSize(0)
                else wordsOfOne(r);
     }
-}
-
-Words leftShift(Integer uSize, Words u, Integer shift, Boolean alwaysPad = false) {
-    assert (shift > 0);
-
-    value wBits = wordBits;
-    value wMask = wordMask;
-
-    value shiftBits = shift % wBits;
-    value shiftWords = shift / wBits;
-
-    Words r;
-
-    if (shiftBits == 0) {
-        value extraWord = if (alwaysPad) then 1 else 0;
-        r = wordsOfSize(uSize + shiftWords + extraWord);
-        copyWords(u, r, 0, shiftWords, uSize);
-    }
-    else if (uSize == 0) {
-        value extraWord = if (alwaysPad) then 1 else 0;
-        r = wordsOfSize(extraWord);
-    }
-    else {
-        value shiftBitsRight = wBits - shiftBits;
-        value uHighWord = getw(u, uSize - 1);
-        value rHighWord = uHighWord.rightLogicalShift(shiftBitsRight);
-        if (alwaysPad || rHighWord != 0) {
-            r = wordsOfSize(uSize + shiftWords + 1);
-            setw(r, uSize + shiftWords, rHighWord);
-        }
-        else {
-            r = wordsOfSize(uSize + shiftWords);
-        }
-        variable value prev = uHighWord;
-        variable value uIndex = uSize - 2;
-        while (uIndex >= 0) {
-            value curr = getw(u, uIndex);
-            value hPart = prev.leftLogicalShift(shiftBits).and(wMask);
-            value lPart = curr.rightLogicalShift(shiftBitsRight);
-            setw(r, uIndex + shiftWords + 1, hPart + lPart);
-            prev = curr;
-            uIndex--;
-        }
-        setw (r,
-              shiftWords,
-              getw(u, 0).leftLogicalShift(shiftBits).and(wMask));
-    }
-    return r;
 }
 
 // it is ok for w[size-1] to be 0
@@ -621,6 +573,126 @@ Words rightShiftImpl(Boolean negative,
            then incrementInplace(rSize, r)
            else r;
 }
+
+Words leftShift(Integer uSize, Words u,
+                Integer shift, Integer minSize = uSize) {
+    //assert (shift >= 0);
+
+    value wBits = wordBits;
+    value shiftBits = shift % wBits;
+    value shiftWords = shift / wBits;
+
+    Words r;
+    Integer rSize;
+
+    if (uSize == 0) {
+        return wordsOfSize(minSize);
+    }
+
+    if (shiftBits == 0) {
+        rSize = largest(minSize, uSize + shiftWords);
+        r = wordsOfSize(rSize);
+    }
+    else {
+        if (minSize > uSize + shiftWords) {
+            rSize = minSize;
+        }
+        else {
+            rSize = leftShiftAnticipateSize(
+                uSize, u, shiftWords, shiftBits);
+        }
+        r = wordsOfSize(rSize);
+    }
+
+    return leftShiftImpl(uSize, u, rSize, r,
+                         shiftWords, shiftBits);
+}
+
+Words leftShiftInplace(Integer uSize, Words u, Integer shift) {
+    value wBits = wordBits;
+    value shiftBits = shift % wBits;
+    value shiftWords = shift / wBits;
+
+    Words r;
+    Integer rSize;
+    value requiredSize = leftShiftAnticipateSize(
+            uSize, u, shiftWords, shiftBits);
+
+    if (sizew(u) >= requiredSize) {
+        rSize = uSize;
+        r = u;
+    } else {
+        rSize = requiredSize;
+        r = wordsOfSize(rSize);
+    }
+    return leftShiftImpl(uSize, u, rSize, r, shiftWords, shiftBits);
+}
+
+Words leftShiftImpl(Integer uSize, Words u,
+                    Integer rSize, Words r,
+                    Integer shiftWords,
+                    Integer shiftBits) {
+    value wBits = wordBits;
+    value wMask = wordMask;
+
+    if (shiftBits == 0 || uSize == 0) {
+        copyWords(u, r, 0, shiftWords, uSize);
+        // clear low words of r
+        variable value rIndex = 0;
+        while (rIndex < shiftWords && rIndex < rSize) {
+            setw(r, rIndex++, 0);
+        }
+        // clear remaining high words of r
+        rIndex = uSize + shiftWords;
+        while (rIndex < rSize) {
+            setw(r, rIndex++, 0);
+        }
+    }
+    else {
+        value shiftBitsRight = wBits - shiftBits;
+        variable value rIndex = shiftWords;
+        variable value uIndex = 0;
+        variable value lowerWord = 0;
+        while (uIndex < uSize) {
+            value corrWord = getw(u, uIndex);
+            value l = corrWord.leftLogicalShift(shiftBits).and(wMask);
+            value h = lowerWord.rightLogicalShift(shiftBitsRight);
+            setw(r, rIndex, l + h);
+            lowerWord = corrWord;
+            rIndex++;
+            uIndex++;
+        }
+        // process last word only if non-zero
+        value highWord = lowerWord.rightLogicalShift(shiftBitsRight);
+        if (highWord != 0) {
+            setw(r, rIndex, highWord);
+            rIndex++;
+        }
+        // clear remaining high words of r
+        while (rIndex < rSize) {
+            setw(r, rIndex++, 0);
+        }
+        // clear low words of r
+        rIndex = 0;
+        while (rIndex < shiftWords) {
+            setw(r, rIndex++, 0);
+        }
+    }
+    return r;
+}
+
+Integer leftShiftAnticipateSize(
+        Integer uSize, Words u,
+        Integer shiftWords, Integer shiftBits)
+    =>  if (uSize == 0) then
+            0
+        else if (shiftBits == 0) then
+            uSize + shiftWords
+        else
+            let (highWord = getw(u, uSize - 1)
+                    .rightLogicalShift(wordBits - shiftBits),
+                addWord = if (highWord == 0) then 0 else 1)
+            uSize + shiftWords + addWord;
 
 Comparison compareMagnitude(Integer xSize, Words x,
                             Integer ySize, Words y) {

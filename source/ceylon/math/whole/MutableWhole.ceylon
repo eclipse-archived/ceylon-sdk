@@ -220,7 +220,7 @@ final class MutableWhole
 
     shared void inplaceRightArithmeticShift(Integer shift) {
         if (shift < 0) {
-            words = leftShift(wordsSize, words, -shift); // TODO inplace
+            words = leftShiftInplace(wordsSize, words, -shift);
             wordsSize = realSize(words, -1);
         } else if (shift > 0) {
             words = rightShiftInplace(
