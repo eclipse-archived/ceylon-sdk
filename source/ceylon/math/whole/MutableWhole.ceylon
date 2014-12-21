@@ -2,7 +2,7 @@ import ceylon.math.integer {
     largest
 }
 
-final class MutableWhole
+final class MutableWhole extends Object
         satisfies Integral<MutableWhole> &
                   Exponentiable<MutableWhole, MutableWhole> {
 
@@ -12,21 +12,24 @@ final class MutableWhole
 
     shared variable Integer wordsSize;
 
-    shared new OfWords(Integer sign, Words words, Integer size = -1) {
+    shared new OfWords(Integer sign, Words words, Integer size = -1)
+            extends Object() {
         assert (-1 <= sign <= 1);
         this.wordsSize = realSize(words, size);
         this.words = words;
         this.signValue = if (this.wordsSize == 0) then 0 else sign;
     }
 
-    shared new CopyOfWords(Integer sign, Words words, Integer size = -1) {
+    shared new CopyOfWords(Integer sign, Words words, Integer size = -1)
+            extends Object() {
         assert (-1 <= sign <= 1);
         this.wordsSize = realSize(words, size);
         this.words = clonew(words);
         this.signValue = if (this.wordsSize == 0) then 0 else sign;
     }
 
-    shared new CopyOfWhole(Whole whole) {
+    shared new CopyOfWhole(Whole whole)
+            extends Object() {
         this.wordsSize = realSize(whole.words, whole.wordsSize);
         this.words = clonew(whole.words);
         this.signValue = whole.sign;
@@ -205,7 +208,6 @@ final class MutableWhole
 
     shared actual Boolean equals(Object that)
         =>  if (is MutableWhole that) then
-                (this === that) ||
                 (this.sign == that.sign &&
                  wordsEqual(this.wordsSize, this.words,
                             that.wordsSize, that.words))

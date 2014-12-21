@@ -144,11 +144,14 @@ Boolean wordsEqual(Integer firstSize, Words first,
                    Integer secondSize, Words second) {
     if (firstSize != secondSize) {
         return false;
-    }
-    for (i in 0:firstSize) {
-        if (getw(first, i) != getw(second, i)) {
-            return false;
+    } else if (first === second) {
+        return true;
+    } else {
+        for (i in 0:firstSize) {
+            if (getw(first, i) != getw(second, i)) {
+                return false;
+            }
         }
+        return true;
     }
-    return true;
 }

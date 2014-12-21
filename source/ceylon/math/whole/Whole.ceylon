@@ -2,7 +2,7 @@ import java.math {
     BigInteger
 }
 "An arbitrary precision integer."
-shared final class Whole
+shared final class Whole extends Object
         satisfies Integral<Whole> &
                   Exponentiable<Whole, Whole> {
 
@@ -19,7 +19,8 @@ shared final class Whole
 
     variable String? stringMemo = null;
 
-    shared new OfWords(Integer sign, Words words, Integer maxSize = -1) {
+    shared new OfWords(Integer sign, Words words, Integer maxSize = -1)
+            extends Object() {
         // FIXME should be package private when available
         // TODO shorten length of array if way oversized?
         // TODO zero out unused portion to avoid info leaks?
@@ -35,7 +36,8 @@ shared final class Whole
         this.words = words;
     }
 
-    shared new CopyOfMutableWhole(MutableWhole mutableWhole) {
+    shared new CopyOfMutableWhole(MutableWhole mutableWhole)
+            extends Object() {
         this.sign = mutableWhole.sign;
         this.wordsSize = mutableWhole.wordsSize;
         if (this.wordsSize == sizew(mutableWhole.words)) {
@@ -442,7 +444,6 @@ shared final class Whole
 
     shared actual Boolean equals(Object that)
         =>  if (is Whole that) then
-                (this === that) ||
                 (this.sign == that.sign &&
                  wordsEqual(this.wordsSize, this.words,
                             that.wordsSize, that.words))
