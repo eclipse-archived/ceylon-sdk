@@ -60,6 +60,12 @@ import java.lang{
         gcUPPERCASE_LETTER = UPPERCASE_LETTER
     }
 }
+import ceylon.interop.java {
+    javaString
+}
+import java.util {
+    Locale
+}
 
 "The version of the Unicode standard being used, 
  or null if this information was not available."
@@ -76,27 +82,26 @@ shared String? unicodeVersion {
 "Enumerates the *Directionalities* defined in the 
  defined in the Unicode standard."
 shared abstract class Directionality(code)
-        of
-        arabicNumber 
-        | boundaryNeutral
-        | commonNumberSeparator
-        | europeanNumber
-        | europeanNumberSeparator
-        | europeanNumberTerminator
-        | leftToRight
-        | leftToRightEmbedding
-        | leftToRightOverride
-        | nonspacingMark
-        | otherNeutrals
-        | paragraphSeparator
-        | popDirectionalFormat
-        | rightToLeft
-        | rightToLeftArabic
-        | rightToLeftEmbedding
-        | rightToLeftOverride
-        | segmentSeparator
-        | undefined
-        | whitespace {
+        of arabicNumber 
+         | boundaryNeutral
+         | commonNumberSeparator
+         | europeanNumber
+         | europeanNumberSeparator
+         | europeanNumberTerminator
+         | leftToRight
+         | leftToRightEmbedding
+         | leftToRightOverride
+         | nonspacingMark
+         | otherNeutrals
+         | paragraphSeparator
+         | popDirectionalFormat
+         | rightToLeft
+         | rightToLeftArabic
+         | rightToLeftEmbedding
+         | rightToLeftOverride
+         | segmentSeparator
+         | undefined
+         | whitespace {
     "The two character code assigned to this directionality in the Unicode specification."
     shared String code;
     shared actual String string = code;
@@ -127,7 +132,7 @@ shared Directionality directionality(Character character) {
     Byte dir = getDirectionality(character.integer);
     
     // Take a guess about the likelihood of various directionalities
-    if (dir == dirLEFT_TO_RIGHT) { return leftToRight; }
+         if (dir == dirLEFT_TO_RIGHT) { return leftToRight; }
     else if (dir == dirWHITESPACE) { return whitespace; }
     else if (dir == dirPARAGRAPH_SEPARATOR) { return paragraphSeparator; }
     else if (dir == dirEUROPEAN_NUMBER) { return europeanNumber; }
@@ -156,7 +161,7 @@ shared Directionality directionality(Character character) {
  defined in the Unicode standard"
 shared abstract class GeneralCategory(code, description)
         of Letter | Mark | Number | Other 
-            | Punctuation | Separator | Symbol {
+         | Punctuation | Separator | Symbol {
     "The two character code used to refer to this General Category in the 
      Unicode standard, e.g. `Zs` for the 'space separator' general category."
     shared String code;
@@ -164,16 +169,16 @@ shared abstract class GeneralCategory(code, description)
     "A description of this general category."
     shared String description;
     
-    shared actual String string = code;
+    string => code;
 }
 
 "Enumerates the general categories in the *Letter* major class"
 shared abstract class Letter(String code, String description)  
         of letterLowercase
-        | letterModifier
-        | letterOther
-        | letterTitlecase
-        | letterUppercase 
+         | letterModifier
+         | letterOther
+         | letterTitlecase
+         | letterUppercase 
         extends GeneralCategory(code, description){
 }
 "The General category for `Ll`"
@@ -190,8 +195,8 @@ shared object letterUppercase extends Letter("Lu", "Letter, unassigned"){}
 "Enumerates the general categories in the *Mark* major class"
 shared abstract class Mark(String code, String description)
         of markCombiningSpacing
-        | markEnclosing
-        | markNonspacing
+         | markEnclosing
+         | markNonspacing
         extends GeneralCategory(code, description){
 }
 "The General category for `Mc`"
@@ -204,8 +209,8 @@ shared object markNonspacing extends Mark("Mn", "Mark, nonspacing"){}
 "Enumerates the general categories in the *Number* major class"
 shared abstract class Number(String code, String description)
         of numberDecimalDigit
-        | numberLetter
-        | numberOther
+         | numberLetter
+         | numberOther
         extends GeneralCategory(code, description){
 }
 "The General category for `Nd`"
@@ -218,10 +223,10 @@ shared object numberOther extends Number("No", "Number, other"){}
 "Enumerates the general categories in the *Other* major class"
 shared abstract class Other(String code, String description)  
         of otherControl
-        | otherFormat
-        | otherPrivateUse
-        | otherSurrogate
-        | otherUnassigned
+         | otherFormat
+         | otherPrivateUse
+         | otherSurrogate
+         | otherUnassigned
         extends GeneralCategory(code, description) {
 }
 "The General category for `Cc`"
@@ -238,12 +243,12 @@ shared object otherUnassigned extends Other("Cn", "Other, not assigned"){}
 "Enumerates the general categories in the *Punctuation* major class"
 shared abstract class Punctuation(String code, String description)
         of punctuationConnector
-        | punctuationDash
-        | punctuationClose
-        | punctuationFinalQuote
-        | punctuationInitialQuote
-        | punctuationOther
-        | punctuationOpen
+         | punctuationDash
+         | punctuationClose
+         | punctuationFinalQuote
+         | punctuationInitialQuote
+         | punctuationOther
+         | punctuationOpen
         extends GeneralCategory(code, description){
 }
 "The General category for `Pe`"
@@ -264,8 +269,8 @@ shared object punctuationOther extends Punctuation("Po", "Punctuation, other"){}
 "Enumerates the general categories in the *Separator* major class"
 shared abstract class Separator(String code, String description) 
         of separatorLine
-        | separatorParagraph
-        | separatorSpace 
+         | separatorParagraph
+         | separatorSpace 
         extends GeneralCategory(code, description){
 }
 "The General category for `Zl`"
@@ -278,9 +283,9 @@ shared object separatorSpace extends Separator("Zs", "Separator, space"){}
 "Enumerates the general categories in the *Symbol* major class"
 shared abstract class Symbol(String code, String description)
         of symbolCurrency
-        | symbolMath
-        | symbolModifier
-        | symbolOther
+         | symbolMath
+         | symbolModifier
+         | symbolOther
         extends GeneralCategory(code, description){
 }
 "The General category for `Sc`"
@@ -295,7 +300,7 @@ shared object symbolOther extends Symbol("So", "Symbol, other"){}
 "The general category of the given character"
 shared GeneralCategory generalCategory(Character character) {
     Byte gc = getType(character.integer).byte;
-    if (gc == gcCOMBINING_SPACING_MARK) { return markCombiningSpacing; }
+         if (gc == gcCOMBINING_SPACING_MARK) { return markCombiningSpacing; }
     else if (gc == gcCONNECTOR_PUNCTUATION) { return punctuationConnector; }
     else if (gc == gcCONTROL) { return otherControl; }
     else if (gc == gcCURRENCY_SYMBOL) { return symbolCurrency; }
@@ -332,9 +337,39 @@ shared GeneralCategory generalCategory(Character character) {
 shared String characterName(Character character) {
     /* TODO java.lang.Character.getName substitutes a ficticious name if the
        unicode DB doesn't specify one, what should we do about this?' */
-    String? result = getName(character.integer);
-    if (exists result) {
+    if (exists result = getName(character.integer)) {
         return result;
     }
     throw Exception("Invalid codepoint " + character.integer.string);
 }
+
+//shared Character uppercaseCharacter(Character character) 
+//        => JChar.toUpperCase(character.integer).character;
+//
+//shared Character lowercaseCharacter(Character character) 
+//        => JChar.toLowerCase(character.integer).character;
+
+Locale locale(String? tag)
+        => if (exists tag) 
+            then Locale.forLanguageTag(tag) 
+            else Locale.default;
+
+"Convert the given [[string]] to uppercase according to the
+ rules of the locale with the given [[language tag|tag]]."
+shared String uppercase(
+    "The string to convert to uppercase."
+    String string,
+    "The IETF BCP 47 language tag string, or `null` to 
+     perform the conversion according to the default locale." 
+    String? tag=null) 
+        => javaString(string).toUpperCase(locale(tag));
+
+"Convert the given [[string]] to lowercase according to the
+ rules of the locale with the given [[language tag|tag]]."
+shared String lowercase(
+    "The string to convert to lowercase."
+    String string,
+    "The IETF BCP 47 language tag string, or `null` to 
+     perform the conversion according to the default locale." 
+    String? tag=null) 
+        => javaString(string).toLowerCase(locale(tag));
