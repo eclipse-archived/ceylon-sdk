@@ -2,7 +2,8 @@ import ceylon.math.integer {
     largest
 }
 
-final class MutableWhole extends Object
+// FIXME shouldn't be shared
+shared final class MutableWhole extends Object
         satisfies Integral<MutableWhole> &
                   Exponentiable<MutableWhole, MutableWhole> {
 
