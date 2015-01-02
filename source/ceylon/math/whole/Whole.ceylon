@@ -202,31 +202,24 @@ shared final class Whole extends Object
      * Returns one if the power is zero.
      * Otherwise negative powers result in an `Exception`
        being thrown"
-    throws(`class Exception`, "If passed a negative or large
-                               positive exponent")
+    throws(`class Exception`, "If passed a negative exponent")
     shared actual Whole power(Whole exponent) {
-        if (this == package.one) {
+        if (this.unit) {
             return this;
         }
-        else if (exponent == package.zero) {
+        else if (exponent.zero) {
             return one;
         }
-        else if (this.negativeOne && exponent.even) {
-            return package.one;
+        else if (this.negativeOne) {
+            return if (exponent.even)
+            then package.one
+            else this;
         }
-        else if (this == package.negativeOne && !exponent.even) {
+        else if (exponent.unit) {
             return this;
         }
-        else if (exponent == package.one) {
-            return this;
-        }
-        else if (exponent > package.one) {
-            // TODO a reasonable implementation
-            variable Whole result = this;
-            for (_ in package.one..exponent-package.one) {
-                result = result * this;
-            }
-            return result;
+        else if (exponent.positive) {
+            return powerBySquaring(exponent);
         }
         else {
             throw AssertionError(
@@ -235,28 +228,22 @@ shared final class Whole extends Object
     }
 
     shared actual Whole powerOfInteger(Integer exponent) {
-        if (this == package.one) {
+        if (this.unit) {
             return this;
         }
-        else if (exponent == 0) {
+        else if (exponent.zero) {
             return one;
         }
-        else if (this.negativeOne && exponent.even) {
-            return package.one;
+        else if (this.negativeOne) {
+            return if (exponent.even)
+            then package.one
+            else this;
         }
-        else if (this.negativeOne && !exponent.even) {
+        else if (exponent.unit) {
             return this;
         }
-        else if (exponent == 1) {
-            return this;
-        }
-        else if (exponent > 1) {
-            // TODO a reasonable implementation
-            variable Whole result = this;
-            for (_ in 1..exponent-1) {
-                result = result * this;
-            }
-            return result;
+        else if (exponent.positive) {
+            return powerBySquaringInteger(exponent);
         }
         else {
             throw AssertionError(
@@ -499,6 +486,37 @@ shared final class Whole extends Object
                     OfWords(secondSign,
                             subtract(second.wordsSize, second.words,
                                      first.wordsSize, first.words)));
+
+    Whole powerBySquaring(variable Whole exponent) {
+        if (exponent.safelyAddressable) {
+            return powerBySquaringInteger(exponent.integer);
+        }
+        variable Whole result = package.one;
+        variable Whole x = this;
+        while (!exponent.zero) {
+            if (!exponent.even) {
+                result *= x;
+                exponent--;
+            }
+            x *= x;
+            exponent = exponent.rightArithmeticShift(1);
+        }
+        return result;
+    }
+
+    Whole powerBySquaringInteger(variable Integer exponent) {
+        variable Whole result = package.one;
+        variable Whole x = this;
+        while (!exponent.zero) {
+            if (!exponent.even) {
+                result *= x;
+                exponent--;
+            }
+            x *= x;
+            exponent = exponent.rightArithmeticShift(1);
+        }
+        return result;
+    }
 
     Whole modPowerPositive(variable Whole base,
                            variable Whole exponent,
