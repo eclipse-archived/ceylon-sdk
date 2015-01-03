@@ -260,6 +260,44 @@ final class MutableWhole extends Object
         inplaceAddSigned(other, other.sign.negated);
     }
 
+    shared void inplaceDecrement() {
+        if (zero) {
+            signValue = -1;
+            words = incrementInplace(wordsSize, words);
+            wordsSize = 1;
+        }
+        else if (negative) {
+            words = incrementInplace(wordsSize, words);
+            wordsSize = realSize(words, wordsSize + 1);
+        }
+        else {
+            decrementInplace(wordsSize, words);
+            wordsSize = realSize(words, wordsSize);
+            if (wordsSize == 0) {
+                signValue = 0;
+            }
+        }
+    }
+
+    shared void inplaceIncrement() {
+        if (zero) {
+            signValue = 1;
+            words = incrementInplace(wordsSize, words);
+            wordsSize = 1;
+        }
+        else if (negative) {
+            decrementInplace(wordsSize, words);
+            wordsSize = realSize(words, wordsSize);
+            if (wordsSize == 0) {
+                signValue = 0;
+            }
+        }
+        else {
+            words = incrementInplace(wordsSize, words);
+            wordsSize = realSize(words, wordsSize + 1);
+        }
+    }
+
     shared Integer trailingZeroWords {
         for (i in 0:wordsSize) {
             if (getw(words, i) != 0) {
@@ -370,20 +408,21 @@ final class MutableWhole extends Object
         }
     }
 
-    // TODO copy exponent, use inplace operations
-    MutableWhole powerBySquaring(variable MutableWhole exponent) {
+    // TODO test
+    MutableWhole powerBySquaring(MutableWhole exponent) {
         if (exponent.safelyAddressable) {
             return powerBySquaringInteger(exponent.integer);
         }
+        value exp = exponent.copy();
         variable value result = package.mutableOne();
         variable value x = this;
-        while (!exponent.zero) {
-            if (!exponent.even) {
+        while (!exp.zero) {
+            if (!exp.even) {
                 result *= x;
-                exponent--;
+                exp.inplaceDecrement();
             }
             x *= x;
-            exponent = exponent.rightArithmeticShift(1);
+            exp.inplaceRightArithmeticShift(1);
         }
         return result;
     }

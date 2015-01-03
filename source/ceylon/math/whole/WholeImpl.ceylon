@@ -490,20 +490,22 @@ final class WholeImpl satisfies Whole {
                                      first.wordsSize, first.words)));
     }
 
-    // TODO use mutableWhole for exponent, inplace operations
-    Whole powerBySquaring(variable Whole exponent) {
-        if (is WholeImpl e = exponent, e.safelyAddressable) {
+    // TODO test
+    Whole powerBySquaring(Whole exponent) {
+        assert (is WholeImpl exponent);
+        if (exponent.safelyAddressable) {
             return powerBySquaringInteger(exponent.integer);
         }
+        value exp = MutableWhole.CopyOfWhole(exponent);
         variable Whole result = package.one;
         variable Whole x = this;
-        while (!exponent.zero) {
-            if (!exponent.even) {
+        while (!exp.zero) {
+            if (!exp.even) {
                 result *= x;
-                exponent--;
+                exp.inplaceDecrement();
             }
             x *= x;
-            exponent = exponent.rightArithmeticShift(1);
+            exp.inplaceRightArithmeticShift(1);
         }
         return result;
     }

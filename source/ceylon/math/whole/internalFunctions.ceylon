@@ -1,11 +1,12 @@
 import ceylon.math.integer {
-    largest
+    largest,
+    smallest
 }
 
 Integer realSize(Words words, variable Integer maxSize) {
     variable value lastIndex =
             if (maxSize >= 0)
-            then maxSize - 1
+            then smallest(sizew(words), maxSize) - 1
             else sizew(words) - 1;
 
     while (lastIndex >= 0, getw(words, lastIndex) == 0) {
@@ -430,6 +431,22 @@ Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
                then wordsOfSize(0)
                else wordsOfOne(r);
     }
+}
+
+void decrementInplace(Integer wordsSize, Words words) {
+    // asert words > 0
+    value wMask = wordMask;
+    for (i in 0:wordsSize) {
+        value wi = getw(words, i);
+        if (wi == 0) {
+            setw(words, i, wMask);
+        }
+        else {
+            setw(words, i, wi - 1);
+            return;
+        }
+    }
+    assert(false);
 }
 
 // it is ok for w[size-1] to be 0
