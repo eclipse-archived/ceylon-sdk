@@ -26,34 +26,140 @@ Integer calculateTrailingZeroWords(Integer wordsSize, Words words) {
     }
 }
 
-Boolean getBitPositive(Integer wordsSize, Words words, Integer index) {
-    value wBits = wordBits;
-    value word = getw(words, index / wBits);
-    value mask = 1.leftLogicalShift(index % wBits);
-    return word.and(mask) != 0;
+"Minimal length to represent words in two's complement, excluding a sign bit."
+Integer calculateBitLength(Integer wordsSize, Words words, Integer? trailingZeroWords) {
+    if (wordsSize == 0) {
+        return 0;
+    }
+    variable Integer length;
+    value highWord = getw(words, wordsSize - 1);
+    length = (wordsSize - 1) * wordBits;
+    if (exists trailingZeroWords, wordsSize - 1 == trailingZeroWords) {
+        // one bit shorter for negative numbers that are
+        // an exact power of two
+        length += unsignedHighestNonZeroBit(highWord - 1) + 1;
+    }
+    else {
+        length += unsignedHighestNonZeroBit(highWord) + 1;
+    }
+    return length;
 }
+
+Words logicOperation(
+        Integer firstSize, Words firstWords,
+        Integer firstBitLength, Integer? firstTrailingZeroWords,
+        Integer secondSize, Words secondWords,
+        Integer secondBitLength, Integer? secondTrailingZeroWords,
+        Integer(Integer)(Integer) op,
+        Words? rWords = null) {
+
+    // must be large enough for at least 1 sign bit
+    value count = largest(firstBitLength / wordBits + 1,
+                          secondBitLength / wordBits + 1);
+
+    Words result = if (exists rWords, sizew(rWords) >= count)
+                   then rWords
+                   else wordsOfSize(count);
+
+    for (i in 0:sizew(result)) {
+        // iterate all elements of the result in order to fully
+        // extend the sign bit
+        value a = getWordInTwos(firstSize, firstWords, i, firstTrailingZeroWords);
+        value b = getWordInTwos(secondSize, secondWords, i, secondTrailingZeroWords);
+        setw(result, i, op(a)(b));
+    }
+    return result;
+}
+
+"Inputs and outputs are unsigned, operation occurs in two's complement"
+Words setBit(Integer wordsSize, Words words,
+          Integer wordsBitLength, Integer? trailingZeroWords,
+          Integer index, Boolean bit,
+          Words? rWords = null) {
+
+    value newLength = largest(wordsBitLength / wordBits + 1,
+                              (index + 1) / wordBits + 1);
+    value result = if (exists rWords, sizew(rWords) >= newLength)
+                   then rWords
+                   else wordsOfSize(newLength);
+    for (rIndex in 0:sizew(result)) {
+        setw(result, rIndex, getWordInTwos(wordsSize, words, rIndex, trailingZeroWords));
+    }
+    value wordNum = index / wordBits;
+    value bitNum = index % wordBits;
+    setw(result, wordNum, getw(result, wordNum).set(bitNum, bit));
+    return if (exists trailingZeroWords) // if negative
+           then twosToUnsigned(sizew(result), result, result)
+           else result;
+}
+
+"Inputs and outputs are unsigned, operation occurs in two's complement"
+Words flipBit(Integer wordsSize, Words words,
+          Integer wordsBitLength, Integer? trailingZeroWords,
+          Integer index,
+          Words? rWords = null) {
+
+    value newLength = largest(wordsBitLength / wordBits + 1,
+                              (index + 1) / wordBits + 1);
+    value result = if (exists rWords, sizew(rWords) >= newLength)
+                   then rWords
+                   else wordsOfSize(newLength);
+    for (rIndex in 0:sizew(result)) {
+        setw(result, rIndex, getWordInTwos(wordsSize, words, rIndex, trailingZeroWords));
+    }
+    value wordNum = index / wordBits;
+    value bitNum = index % wordBits;
+    setw(result, wordNum, getw(result, wordNum).flip(bitNum));
+    return if (exists trailingZeroWords) // if negative
+           then twosToUnsigned(sizew(result), result, result)
+           else result;
+}
+
+Integer getWordInTwos(Integer wordsSize, Words words,
+                      Integer wordIndex, Integer? trailingZeroWords)
+    =>  if (exists trailingZeroWords)
+        then getWordInTwosNegative(wordsSize, words, wordIndex, trailingZeroWords)
+        else getWordInTwosPositive(wordsSize, words, wordIndex);
+
+// logically extend to infinite length
+Integer getWordInTwosPositive(Integer wordsSize, Words words, Integer wordIndex)
+    =>  if (!(0 <= wordIndex < wordsSize))
+        then 0
+        else getw(words, wordIndex);
+
+// logically extend to infinite length
+Integer getWordInTwosNegative(Integer wordsSize, Words words, Integer wordIndex,
+                              Integer trailingZeroWords)
+    =>  let (wMask = wordMask)
+        if (wordIndex < trailingZeroWords) then
+            0
+        else if (wordIndex >= wordsSize) then
+            wMask
+        else
+           let (rawWord = getw(words, wordIndex))
+           if (wordIndex == trailingZeroWords)
+           then rawWord.negated.and(wMask) // first non-zero word
+           else rawWord.not.and(wMask); // wordNum > zeros
+
+Boolean getBitPositive(Integer wordsSize, Words words, Integer index)
+    =>  let (wBits = wordBits,
+             word = getWordInTwosPositive(wordsSize, words, index / wBits),
+             mask = 1.leftLogicalShift(index % wBits))
+        word.and(mask) != 0;
 
 Boolean getBitNegative(Integer wordsSize, Words words, Integer index,
-                       Integer trailingZeroWords) {
-    if (index == 0) {
-        return getw(words, 0) != 0;
-    }
-
-    value wBits = wordBits;
-    value wordNum = index / wBits;
-
-    if (wordNum < trailingZeroWords) {
-        return false;
-    }
-
-    value word = let (rawWord = getw(words, wordNum))
-                 if (wordNum == trailingZeroWords)
-                 then rawWord.negated // first non-zero word
-                 else rawWord.not; // wordNum > zeros
-
-    value mask = 1.leftLogicalShift(index % wBits);
-    return word.and(mask) != 0;
-}
+                       Integer trailingZeroWords)
+    =>  if (index == 0) then
+            getw(words, 0).get(0)
+        else
+            let (wBits = wordBits,
+                 mask = 1.leftLogicalShift(index % wBits),
+                 word = getWordInTwosNegative(
+                            wordsSize,
+                            words,
+                            index / wBits,
+                            trailingZeroWords))
+            word.and(mask) != 0;
 
 Words add(Integer firstSize, Words first,
           Integer secondSize, Words second,
@@ -321,7 +427,7 @@ Words|Absent divide<Absent=Null>(
     // D1. Normalize (v's highest bit must be set)
     value b = wordRadix;
     value shift = let (highWord = getw(divisor, divisorSize - 1),
-                       highBit = unisignedHighestNonZeroBit(highWord))
+                       highBit = unsignedHighestNonZeroBit(highWord))
                   wBits - 1 - highBit;
     Words u;
     Words v;
@@ -433,24 +539,44 @@ Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
     }
 }
 
-void decrementInplace(Integer wordsSize, Words words) {
+Words predecessorInPlace(Integer wordsSize, Words words)
+    =>  predecessor(wordsSize, words, wordsSize, words);
+
+Words predecessor(Integer wordsSize, Words words,
+                  Integer rSize = wordsSize,
+                  Words r = wordsOfSize(rSize)) {
     // asert words > 0
     value wMask = wordMask;
-    for (i in 0:wordsSize) {
-        value wi = getw(words, i);
+    variable value rIndex = 0;
+    while (rIndex < wordsSize) {
+        value wi = getw(words, rIndex);
         if (wi == 0) {
-            setw(words, i, wMask);
+            setw(r, rIndex, wMask);
         }
         else {
-            setw(words, i, wi - 1);
-            return;
+            setw(r, rIndex, wi - 1);
+            if (!(words === r)) {
+                // copy remaining words
+                rIndex++;
+                while (rIndex < wordsSize) {
+                    setw(r, rIndex, getw(words, rIndex));
+                    rIndex++;
+                }
+                // clear remaining parts of r
+                while (rIndex < rSize) {
+                    setw(r, rIndex, 0);
+                    rIndex++;
+                }
+            }
+            return r;
         }
+        rIndex++;
     }
     assert(false);
 }
 
 // it is ok for w[size-1] to be 0
-Words incrementInplace(Integer wordsSize, Words words) {
+Words successorInPlace(Integer wordsSize, Words words) {
     value wMask = wordMask;
     variable value previous = 0;
     variable value i = -1;
@@ -461,7 +587,7 @@ Words incrementInplace(Integer wordsSize, Words words) {
 
     if (previous == 0) { // w was all ones
         if (sizew(words) > wordsSize) {
-            // avoid copy
+            // there's extra room in 'words', use it
             setw(words, wordsSize, 1);
             return words;
         }
@@ -475,6 +601,10 @@ Words incrementInplace(Integer wordsSize, Words words) {
         return words;
     }
 }
+
+// it is ok for w[size-1] to be 0
+Words successor(Integer wordsSize, Words words)
+    =>  successorInPlace(wordsSize, clonew(words));
 
 Boolean nonZeroBitsDropped(Words u,
                            Integer shiftWords,
@@ -587,7 +717,7 @@ Words rightShiftImpl(Boolean negative,
     // add one to the magnitude to simulate two's
     // complement arithmetic right shift
     return if (nonZerosDropped)
-           then incrementInplace(rSize, r)
+           then successorInPlace(rSize, r)
            else r;
 }
 
@@ -710,6 +840,54 @@ Integer leftShiftAnticipateSize(
                     .rightLogicalShift(wordBits - shiftBits),
                 addWord = if (highWord == 0) then 0 else 1)
             uSize + shiftWords + addWord;
+
+"return magnitude in unsigned notation of the parameter words,
+ provided in two's complement."
+Words twosToUnsigned(Integer wordsSize, Words words,
+                     Words r = wordsOfSize(wordsSize)) {
+    if (!getw(words, wordsSize - 1).get(wordBits - 1)) {
+        // words are positive, we shouldn't have been called...
+        if (!words === r) {
+            copyWords(words, r);
+            // clear potentially oversized 'r'
+            for (i in wordsSize..sizew(r) - 1) {
+                setw(r, i, 0);
+            }
+        }
+        return r;
+    }
+    else {
+        // flip the bits and add one
+        return successorInPlace(wordsSize, twosNot(wordsSize, words, r));
+    }
+}
+
+"not operation, interpreting words in two's complement, despite
+ the usual unsigned representation. The sign bit is extended to
+ cover all words of [[r]]."
+Words twosNot(Integer wordsSize,
+              Words words,
+              Words r = wordsOfSize(wordsSize)) {
+    value wMask = wordMask;
+    variable value rIndex = 0;
+    while (rIndex < wordsSize) {
+        setw(r, rIndex, getw(words, rIndex).not.and(wMask));
+        rIndex++;
+    }
+    value rSize = sizew(r);
+    if (rIndex < rSize) {
+        // extend sign
+        value signWord =
+                if (getw(r, rIndex - 1).get(wordBits - 1))
+                then wMask // negative
+                else 0; // positive or zero
+        while (rIndex < rSize) {
+            setw(r, rIndex, signWord);
+            rIndex++;
+        }
+    }
+    return r;
+}
 
 Comparison compareMagnitude(Integer xSize, Words x,
                             Integer ySize, Words y) {

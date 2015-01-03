@@ -265,15 +265,15 @@ final class MutableWhole extends Object
     shared void inplaceDecrement() {
         if (zero) {
             signValue = -1;
-            words = incrementInplace(wordsSize, words);
+            words = successorInPlace(wordsSize, words);
             wordsSize = 1;
         }
         else if (negative) {
-            words = incrementInplace(wordsSize, words);
+            words = successorInPlace(wordsSize, words);
             wordsSize = realSize(words, wordsSize + 1);
         }
         else {
-            decrementInplace(wordsSize, words);
+            words = predecessorInPlace(wordsSize, words);
             wordsSize = realSize(words, wordsSize);
             if (wordsSize == 0) {
                 signValue = 0;
@@ -284,18 +284,18 @@ final class MutableWhole extends Object
     shared void inplaceIncrement() {
         if (zero) {
             signValue = 1;
-            words = incrementInplace(wordsSize, words);
+            words = successorInPlace(wordsSize, words);
             wordsSize = 1;
         }
         else if (negative) {
-            decrementInplace(wordsSize, words);
+            words = predecessorInPlace(wordsSize, words);
             wordsSize = realSize(words, wordsSize);
             if (wordsSize == 0) {
                 signValue = 0;
             }
         }
         else {
-            words = incrementInplace(wordsSize, words);
+            words = successorInPlace(wordsSize, words);
             wordsSize = realSize(words, wordsSize + 1);
         }
     }

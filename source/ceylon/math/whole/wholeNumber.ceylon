@@ -35,7 +35,7 @@ Words wordsUnsignedInteger(variable Integer integer) {
     value wBits = wordBits;
     value wRadix = wordRadix;
 
-    value highBit = unisignedHighestNonZeroBit(integer);
+    value highBit = unsignedHighestNonZeroBit(integer);
     value wordsSize = (highBit + wBits)/wBits;
     value words = wordsOfSize(wordsSize);
     for (i in 0:wordsSize) {

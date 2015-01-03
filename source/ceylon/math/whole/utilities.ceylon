@@ -61,7 +61,7 @@ Integer numberOfTrailingZeros(variable Integer x) {
     }
 }
 
-Integer unisignedHighestNonZeroBit(variable Integer x) {
+Integer unsignedHighestNonZeroBit(variable Integer x) {
     // more convenient than leadingZeros, since
     // integerAddressableSize can vary.
     variable value result = -1;

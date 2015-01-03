@@ -12,6 +12,8 @@ final class WholeImpl satisfies Whole {
 
     variable Integer trailingZeroWordsMemo = -1;
 
+    variable Integer bitLengthMemo = -1;
+
     variable Integer? integerMemo = null;
 
     variable String? stringMemo = null;
@@ -44,6 +46,33 @@ final class WholeImpl satisfies Whole {
         }
     }
 
+    "Create whole from [[words]] in two's complement notation. This constructor
+     *does not* always make a defensive copy of [[words]], and is designed for
+     internal use only."
+    shared new OfBits(words) {
+        "words in two's complement"
+        variable Words words;
+
+        if (sizew(words) == 0) {
+            this.words = words;
+            this.wordsSize = 0;
+            this.sign = 0;
+        }
+        else {
+            value negative = getw(words, sizew(words) - 1).get(wordBits - 1);
+            if (!negative) {
+                this.words = words;
+                this.wordsSize = realSize(words, -1);
+                this.sign = if (wordsSize == 0) then 0 else 1;
+            }
+            else {
+                this.words = twosToUnsigned(sizew(words), words, words);
+                this.wordsSize = realSize(words, -1);
+                this.sign = -1;
+            }
+        }
+    }
+
     shared actual Boolean get(Integer index)
         =>  if (index < 0 || zero) then
                 false
@@ -55,6 +84,24 @@ final class WholeImpl satisfies Whole {
             else
                 getBitNegative(wordsSize, words, index,
                                trailingZeroWords);
+
+    shared actual Whole set(Integer index, Boolean bit)
+        =>  if (index < 0) then
+                this
+            else
+                OfWords(if(zero) then 1 else sign,
+                        setBit(wordsSize, words, bitLength,
+                               negative then trailingZeroWords,
+                               index, bit));
+
+    shared actual Whole flip(Integer index)
+        =>  if (index < 0) then
+                this
+            else
+                OfWords(if(zero) then 1 else sign,
+                        flipBit(wordsSize, words, bitLength,
+                               negative then trailingZeroWords,
+                               index));
 
     shared actual Whole plus(Whole other)
         =>  addSigned(this, other, other.sign);
@@ -188,6 +235,15 @@ final class WholeImpl satisfies Whole {
                 WholeImpl.OfWords(sign, leftShift(wordsSize, words, -shift))
             else
                 WholeImpl.OfWords(sign, rightShift(negative, wordsSize, words, shift));
+
+    shared actual Whole and(Whole other)
+        =>  logicOperation(this, other, Integer.and);
+
+    shared actual Whole or(Whole other)
+        =>  logicOperation(this, other, Integer.or);
+
+    shared actual Whole xor(Whole other)
+        =>  logicOperation(this, other, Integer.xor);
 
     "The result of raising this number to the given power.
 
@@ -344,6 +400,18 @@ final class WholeImpl satisfies Whole {
         return f;
     }
 
+    shared actual Whole not
+        =>  if (zero) then
+                package.negativeOne
+            else if (negativeOne) then
+                package.zero
+            else if (positive) then
+                // add one, flip sign
+                OfWords(-1, package.successor(wordsSize, words))
+            else
+                // subtract one, flip sign
+                OfWords(1, package.predecessor(wordsSize, words));
+
     shared actual Whole negated
         =>  if (zero) then
                 package.zero
@@ -432,6 +500,13 @@ final class WholeImpl satisfies Whole {
             else (trailingZeroWordsMemo =
                   calculateTrailingZeroWords());
 
+    "Minimal length to represent words in two's complement, excluding a sign bit."
+    Integer bitLength
+        =>  if (bitLengthMemo >= 0)
+            then bitLengthMemo
+            else (bitLengthMemo = calculateBitLength(
+                wordsSize, words, negative then trailingZeroWords));
+
     Integer calculateTrailingZeroWords() {
         for (i in 0:wordsSize) {
             if (getw(words, i) != 0) {
@@ -469,6 +544,17 @@ final class WholeImpl satisfies Whole {
                     OfWords(secondSign,
                             subtract(second.wordsSize, second.words,
                                      first.wordsSize, first.words)));
+    }
+
+    Whole logicOperation(Whole first, Whole second, Integer(Integer)(Integer) op) {
+        assert (is WholeImpl first, is WholeImpl second);
+        value bits = package.logicOperation(
+            first.wordsSize, first.words, first.bitLength,
+            first.negative then first.trailingZeroWords,
+            second.wordsSize, second.words, second.bitLength,
+            second.negative then second.trailingZeroWords,
+            op);
+        return OfBits(bits);
     }
 
     // TODO test
@@ -561,4 +647,5 @@ final class WholeImpl satisfies Whole {
             (wordsSize == 2 &&
              getw(words, 1)
                  .rightLogicalShift(wordBits-1) == 0);
+
 }

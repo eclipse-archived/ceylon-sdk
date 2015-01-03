@@ -49,11 +49,21 @@ shared interface Whole
 
     shared formal Boolean get(Integer index);
 
+    shared formal Whole set(Integer index, Boolean bit = true);
+
+    shared formal Whole flip(Integer index);
+
     shared formal [Whole, Whole] quotientAndRemainder(Whole other);
 
     shared formal Whole leftLogicalShift(Integer shift);
 
     shared formal Whole rightArithmeticShift(Integer shift);
+
+    shared formal Whole and(Whole other);
+
+    shared formal Whole or(Whole other);
+
+    shared formal Whole xor(Whole other);
 
     "Determine if this number is even.
 
@@ -68,5 +78,7 @@ shared interface Whole
     shared formal Whole modInverse(Whole modulus);
 
     shared formal Whole mod(Whole modulus);
+
+    shared formal Whole not;
 
 }
