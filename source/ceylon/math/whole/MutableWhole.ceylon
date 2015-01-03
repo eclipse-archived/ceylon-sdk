@@ -131,7 +131,30 @@ final class MutableWhole extends Object
             else
                 OfWords(sign, rightShift(negative, wordsSize, words, shift));
 
-    shared actual MutableWhole power(MutableWhole other) => nothing;
+    throws(`class Exception`, "If passed a negative exponent")
+    shared actual MutableWhole power(MutableWhole exponent) {
+        if (this.unit) {
+            return copy();
+        }
+        else if (exponent.zero) {
+            return package.mutableOne();
+        }
+        else if (this.negativeOne) {
+            return if (exponent.even)
+            then package.mutableOne()
+            else copy();
+        }
+        else if (exponent.unit) {
+            return copy();
+        }
+        else if (exponent.positive) {
+            return powerBySquaring(exponent);
+        }
+        else {
+            throw AssertionError(
+                "``string``^``exponent`` negative exponents not supported");
+        }
+    }
 
     shared actual MutableWhole powerOfInteger(Integer integer) => nothing;
 
@@ -345,6 +368,38 @@ final class MutableWhole extends Object
                         other.wordsSize, other.words);
             wordsSize = realSize(words, -1);
         }
+    }
+
+    // TODO copy exponent, use inplace operations
+    MutableWhole powerBySquaring(variable MutableWhole exponent) {
+        if (exponent.safelyAddressable) {
+            return powerBySquaringInteger(exponent.integer);
+        }
+        variable value result = package.mutableOne();
+        variable value x = this;
+        while (!exponent.zero) {
+            if (!exponent.even) {
+                result *= x;
+                exponent--;
+            }
+            x *= x;
+            exponent = exponent.rightArithmeticShift(1);
+        }
+        return result;
+    }
+
+    MutableWhole powerBySquaringInteger(variable Integer exponent) {
+        variable value result = package.mutableOne();
+        variable value x = this;
+        while (!exponent.zero) {
+            if (!exponent.even) {
+                result *= x;
+                exponent--;
+            }
+            x *= x;
+            exponent = exponent.rightArithmeticShift(1);
+        }
+        return result;
     }
 
     shared Boolean safelyAddressable

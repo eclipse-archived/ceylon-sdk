@@ -207,7 +207,7 @@ final class WholeImpl satisfies Whole {
             return this;
         }
         else if (exponent.zero) {
-            return one;
+            return package.one;
         }
         else if (this.negativeOne) {
             return if (exponent.even)
@@ -231,7 +231,7 @@ final class WholeImpl satisfies Whole {
             return this;
         }
         else if (exponent.zero) {
-            return one;
+            return package.one;
         }
         else if (this.negativeOne) {
             return if (exponent.even)
@@ -490,6 +490,7 @@ final class WholeImpl satisfies Whole {
                                      first.wordsSize, first.words)));
     }
 
+    // TODO use mutableWhole for exponent, inplace operations
     Whole powerBySquaring(variable Whole exponent) {
         if (is WholeImpl e = exponent, e.safelyAddressable) {
             return powerBySquaringInteger(exponent.integer);
