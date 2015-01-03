@@ -40,6 +40,5 @@ import java.lang.annotation {
 by("Tom Bentley")
 module ceylon.math "1.1.1" {
     import java.base "7";
-    // FIXME unshare when possible
-    shared import ceylon.interop.java "1.1.1";
+    import ceylon.interop.java "1.1.1";
 }

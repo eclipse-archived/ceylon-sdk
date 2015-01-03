@@ -173,7 +173,7 @@ shared interface Decimal
 
     "The number, represented as a `Whole`, after truncation of
      any fractional part."
-    see(`class Whole`)
+    see(`interface Whole`)
     see(`value integer`)
     shared formal Whole whole;
 

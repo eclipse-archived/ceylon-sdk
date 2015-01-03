@@ -2,8 +2,7 @@ import ceylon.math.integer {
     largest
 }
 
-// FIXME shouldn't be shared
-shared final class MutableWhole extends Object
+final class MutableWhole extends Object
         satisfies Integral<MutableWhole> &
                   Exponentiable<MutableWhole, MutableWhole> {
 
@@ -29,7 +28,7 @@ shared final class MutableWhole extends Object
         this.signValue = if (this.wordsSize == 0) then 0 else sign;
     }
 
-    shared new CopyOfWhole(Whole whole)
+    shared new CopyOfWhole(WholeImpl whole)
             extends Object() {
         this.wordsSize = realSize(whole.words, whole.wordsSize);
         this.words = clonew(whole.words);
@@ -140,7 +139,7 @@ shared final class MutableWhole extends Object
         => plusInteger(offset);
 
     shared actual Integer offset(MutableWhole other) {
-        value diff = Whole.CopyOfMutableWhole(this - other);
+        value diff = WholeImpl.CopyOfMutableWhole(this - other);
         if (integerMin <= diff <= integerMax) {
             return diff.integer;
         }
@@ -193,7 +192,7 @@ shared final class MutableWhole extends Object
     }
 
     shared actual String string
-        =>  Whole.CopyOfMutableWhole(this).string;
+        =>  WholeImpl.CopyOfMutableWhole(this).string;
 
     shared actual Comparison compare(MutableWhole other)
         =>  if (sign != other.sign) then
@@ -348,7 +347,6 @@ shared final class MutableWhole extends Object
         }
     }
 
-    // TODO package private
     shared Boolean safelyAddressable
         // slightly underestimate for performance
         =>  wordsSize < 2 ||

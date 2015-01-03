@@ -2,11 +2,8 @@ import java.math {
     BigInteger
 }
 "An arbitrary precision integer."
-shared final class Whole extends Object
-        satisfies Integral<Whole> &
-                  Exponentiable<Whole, Whole> {
+final class WholeImpl satisfies Whole {
 
-    // FIXME should be package private when available
     shared Words words;
 
     shared Integer wordsSize;
@@ -19,9 +16,7 @@ shared final class Whole extends Object
 
     variable String? stringMemo = null;
 
-    shared new OfWords(Integer sign, Words words, Integer maxSize = -1)
-            extends Object() {
-        // FIXME should be package private when available
+    shared new OfWords(Integer sign, Words words, Integer maxSize = -1) {
         // TODO shorten length of array if way oversized?
         // TODO zero out unused portion to avoid info leaks?
 
@@ -36,8 +31,7 @@ shared final class Whole extends Object
         this.words = words;
     }
 
-    shared new CopyOfMutableWhole(MutableWhole mutableWhole)
-            extends Object() {
+    shared new CopyOfMutableWhole(MutableWhole mutableWhole) {
         this.sign = mutableWhole.sign;
         this.wordsSize = mutableWhole.wordsSize;
         if (this.wordsSize == sizew(mutableWhole.words)) {
@@ -50,7 +44,7 @@ shared final class Whole extends Object
         }
     }
 
-    shared Boolean get(Integer index)
+    shared actual Boolean get(Integer index)
         =>  if (index < 0 || zero) then
                 false
             else if (index > wordBits * wordsSize) then
@@ -71,8 +65,9 @@ shared final class Whole extends Object
     shared actual Whole plusInteger(Integer integer)
         =>  plus(wholeNumber(integer));
 
-    shared actual Whole times(Whole other)
-        =>  if (this.zero || other.zero) then
+    shared actual Whole times(Whole other) {
+        assert (is WholeImpl other);
+        return if (this.zero || other.zero) then
                 package.zero
             else if (this.unit) then
                 other
@@ -86,6 +81,7 @@ shared final class Whole extends Object
                 OfWords(this.sign * other.sign,
                         multiply(this.wordsSize, this.words,
                                  other.wordsSize, other.words));
+    }
 
     shared actual Whole timesInteger(Integer integer)
         =>  if (zero || integer == 0) then
@@ -95,7 +91,8 @@ shared final class Whole extends Object
             else
                 times(wholeNumber(integer));
 
-    shared [Whole, Whole] quotientAndRemainder(Whole other) {
+    shared actual [Whole, Whole] quotientAndRemainder(Whole other) {
+        assert(is WholeImpl other);
         if (other.zero) {
             throw Exception("Divide by zero");
         }
@@ -126,6 +123,7 @@ shared final class Whole extends Object
     }
 
     shared actual Whole divided(Whole other) {
+        assert(is WholeImpl other);
         if (other.zero) {
             throw Exception("Divide by zero");
         }
@@ -155,6 +153,7 @@ shared final class Whole extends Object
     }
 
     shared actual Whole remainder(Whole other) {
+        assert(is WholeImpl other);
         if (other.zero) {
             throw Exception("Divide by zero");
         }
@@ -179,16 +178,16 @@ shared final class Whole extends Object
                  OfWords(sign, remainder)));
     }
 
-    shared Whole leftLogicalShift(Integer shift)
+    shared actual Whole leftLogicalShift(Integer shift)
         =>  rightArithmeticShift(-shift);
 
-    shared Whole rightArithmeticShift(Integer shift)
+    shared actual Whole rightArithmeticShift(Integer shift)
         =>  if (shift == 0) then
                 this
             else if (shift < 0) then
-                Whole.OfWords(sign, leftShift(wordsSize, words, -shift))
+                WholeImpl.OfWords(sign, leftShift(wordsSize, words, -shift))
             else
-                Whole.OfWords(sign, rightShift(negative, wordsSize, words, shift));
+                WholeImpl.OfWords(sign, rightShift(negative, wordsSize, words, shift));
 
     "The result of raising this number to the given power.
 
@@ -251,7 +250,7 @@ shared final class Whole extends Object
         }
     }
 
-    shared Whole mod(Whole modulus) {
+    shared actual Whole mod(Whole modulus) {
         if (!modulus.positive) {
             throw AssertionError("modulus must be positive");
         }
@@ -263,7 +262,7 @@ shared final class Whole extends Object
 
     "The result of `(this**exponent) mod modulus`."
     throws(`class Exception`, "If passed a negative modulus")
-    shared Whole modPower(Whole exponent,
+    shared actual Whole modPower(Whole exponent,
                           Whole modulus) {
         if (!modulus.positive) {
             throw Exception("modulus must be positive");
@@ -279,7 +278,7 @@ shared final class Whole extends Object
         }
         //assert (modulus > package.zero, this != package.zero);
 
-        variable value base = this;
+        variable Whole base = this;
 
         if (exponent.negative) {
             base = modInverse(modulus);
@@ -291,7 +290,7 @@ shared final class Whole extends Object
         return modPowerPositive(base, exponent.magnitude, modulus);
     }
 
-    shared Whole modInverse(Whole modulus) {
+    shared actual Whole modInverse(Whole modulus) {
         if (!modulus.positive) {
             throw Exception("modulus must be positive");
         }
@@ -333,14 +332,14 @@ shared final class Whole extends Object
     "The number, represented as an [[Integer]]. If the number is too
      big to fit in an Integer then an Integer corresponding to the
      lower order bits is returned."
-    shared Integer integer
+    shared actual Integer integer
         =>  integerMemo else (integerMemo =
                 integerForWords(wordsSize, words, negative));
 
     "The number, represented as a [[Float]]. If the magnitude of this number
      is too large the result will be `infinity` or `-infinity`. If the result
      is finite, precision may still be lost."
-    shared Float float {
+    shared actual Float float {
         assert (exists f = parseFloat(string));
         return f;
     }
@@ -370,13 +369,13 @@ shared final class Whole extends Object
 
     shared actual Boolean unit => positive && absUnit;
 
-    shared Boolean even => wordsSize > 0 && getw(words, 0).and(1) == 0;
+    shared actual Boolean even => wordsSize > 0 && getw(words, 0).and(1) == 0;
 
     "The platform-specific implementation object, if any.
      This is provided for interoperation with the runtime
      platform."
     see(`function fromImplementation`)
-    shared Object? implementation {
+    shared actual Object? implementation {
         if (safelyAddressable) {
             return BigInteger.valueOf(integer);
         }
@@ -417,8 +416,9 @@ shared final class Whole extends Object
         }
     }
 
-    shared actual Comparison compare(Whole other)
-        =>  if (sign != other.sign) then
+    shared actual Comparison compare(Whole other) {
+        assert (is WholeImpl other);
+        return if (sign != other.sign) then
                 sign.compare(other.sign)
             else if (zero) then
                 equal
@@ -428,9 +428,10 @@ shared final class Whole extends Object
             else
                 compareMagnitude(other.wordsSize, other.words,
                                  this.wordsSize, this.words);
+    }
 
     shared actual Boolean equals(Object that)
-        =>  if (is Whole that) then
+        =>  if (is WholeImpl that) then
                 (this.sign == that.sign &&
                  wordsEqual(this.wordsSize, this.words,
                             that.wordsSize, that.words))
@@ -461,8 +462,9 @@ shared final class Whole extends Object
         }
     }
 
-    Whole addSigned(Whole first, Whole second, Integer secondSign)
-        =>  if (first.zero) then
+    Whole addSigned(Whole first, Whole second, Integer secondSign) {
+        assert (is WholeImpl first, is WholeImpl second);
+        return if (first.zero) then
                 (if (second.sign == secondSign)
                  then second
                  else second.negated)
@@ -486,9 +488,10 @@ shared final class Whole extends Object
                     OfWords(secondSign,
                             subtract(second.wordsSize, second.words,
                                      first.wordsSize, first.words)));
+    }
 
     Whole powerBySquaring(variable Whole exponent) {
-        if (exponent.safelyAddressable) {
+        if (is WholeImpl e = exponent, e.safelyAddressable) {
             return powerBySquaringInteger(exponent.integer);
         }
         variable Whole result = package.one;
@@ -568,7 +571,6 @@ shared final class Whole extends Object
                else u1;
     }
 
-    // TODO package private
     shared Boolean safelyAddressable
         // slightly underestimate for performance
         =>  wordsSize < 2 ||

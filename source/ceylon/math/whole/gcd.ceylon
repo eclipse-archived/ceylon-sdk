@@ -48,14 +48,14 @@ shared Whole gcd(Whole first, Whole second) {
         return u.leftLogicalShift(zeroBits);
     }
 
-    function gcdPositive(variable Whole first, variable Whole second) {
+    function gcdPositive(variable WholeImpl first, variable WholeImpl second) {
         //assert (first.positive, second.positive);
 
         // Knuth 4.5.2 Algorithm A
         // (Euclidean algorithm while u & v are very different in size)
         while (!second.zero && !(-2 < first.wordsSize - second.wordsSize < 2)) {
             // gcd(u, v) = gcd(v, u - qv)
-            value r = first % second; // r will be >= 0
+            assert (is WholeImpl r = first % second); // r will be >= 0
             first = second;
             second = r;
         }
@@ -117,13 +117,19 @@ shared Whole gcd(Whole first, Whole second) {
         }
 
         u.inplaceLeftLogicalShift(zeroBits);
-        return Whole.OfWords(1, u.words, u.wordsSize); // helps a little
+        return WholeImpl.OfWords(1, u.words, u.wordsSize); // helps a little
         //return Whole.CopyOfMutableWhole(u);
     }
 
-    return if (first.zero) then
-        second.magnitude
-    else if (second.zero) then
-        first.magnitude
-    else gcdPositive(first.magnitude, second.magnitude);
+    if (first.zero) {
+        return second.magnitude;
+    }
+    else if (second.zero) {
+        return first.magnitude;
+    }
+    else {
+        assert (is WholeImpl firstMag = first.magnitude);
+        assert (is WholeImpl secondMag = second.magnitude);
+        return gcdPositive(firstMag, secondMag);
+    }
 }

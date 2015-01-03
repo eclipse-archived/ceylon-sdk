@@ -1,19 +1,9 @@
 import java.lang {
     LongArray
 }
-import ceylon.interop.java {
-    javaLongArray
-}
-import java.util {
-    JArrayList=ArrayList
-}
-
-// TODO make Words alias un-shared when possible
-// via package level visibility or splitting
-// Whole into an interface and impl
 
 // LongArray
-shared alias Words => LongArray;
+alias Words => LongArray;
 
 Words wordsOfSize(Integer size)
     => LongArray(size);
