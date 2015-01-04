@@ -389,13 +389,13 @@ shared {String*} graphemes(
         breakIterator.setText(text);
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
-                value end = breakIterator.next();
-                if (end==BreakIterator.\iDONE) {
-                    return finished;
-                }
-                value result = text[start..end-1];
-                start = end;
-                return result;
+            value end = breakIterator.next();
+            if (end==BreakIterator.\iDONE) {
+                return finished;
+            }
+            value result = text[start..end-1];
+            start = end;
+            return result;
         }
     };
 };
