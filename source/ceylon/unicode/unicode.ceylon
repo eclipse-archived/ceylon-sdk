@@ -1,8 +1,8 @@
-import java.lang{
-    JSystem = System { 
+import java.lang {
+    JSystem = System {
         jgetSystemProperty=getProperty 
     },
-    JChar = Character { 
+    JChar = Character {
         getName,
         getType,
         getDirectionality,
@@ -65,6 +65,9 @@ import ceylon.interop.java {
 }
 import java.util {
     Locale
+}
+import java.text {
+    BreakIterator
 }
 
 "The version of the Unicode standard being used, 
@@ -373,3 +376,23 @@ shared String lowercase(
      perform the conversion according to the default locale." 
     String? tag=null) 
         => javaString(string).toLowerCase(locale(tag));
+
+shared {String*} graphemes(String text, String locale=system.locale) 
+        => object satisfies {String*} {
+    value jlocale = Locale.forLanguageTag(locale);
+    iterator() => object satisfies Iterator<String> {
+        value breakIterator = 
+                BreakIterator.getCharacterInstance(jlocale);
+        breakIterator.setText(text);
+        variable value start = breakIterator.first();
+        shared actual String|Finished next() {
+                value end = breakIterator.next();
+                if (end==BreakIterator.\iDONE) {
+                    return finished;
+                }
+                value result = text[start..end-1];
+                start = end;
+                return result;
+        }
+    };
+};
