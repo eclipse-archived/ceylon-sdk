@@ -392,29 +392,10 @@ final class WholeImpl satisfies Whole {
         return sign * result;
     }
 
-    shared actual String string {
-        if (exists stringMemo = stringMemo) {
-            return stringMemo;
-        }
-        else if (this.zero) {
-            return stringMemo = "0";
-        }
-        else {
-            // Use Integer once other fn's are optimized
-            value toRadix = package.ten;
-            value sb = StringBuilder();
-            variable value x = this.magnitude;
-            while (!x.zero) {
-                value qr = x.quotientAndRemainder(toRadix);
-                x = qr.first;
-                sb.append (qr.last.integer.string);
-            }
-            if (negative) {
-                sb.append("-");
-            }
-            return stringMemo = sb.string.reversed;
-        }
-    }
+    shared actual String string
+        =>  if (exists memo = stringMemo)
+            then memo
+            else (stringMemo = formatWhole(this));
 
     shared actual Comparison compare(Whole other) {
         assert (is WholeImpl other);

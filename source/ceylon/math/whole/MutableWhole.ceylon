@@ -186,6 +186,8 @@ final class MutableWhole extends Object
 
     shared MutableWhole copy() => CopyOfWords(sign, words, wordsSize);
 
+    shared Whole whole => WholeImpl.CopyOfMutableWhole(this);
+
     shared actual MutableWhole wholePart => copy();
 
     shared actual MutableWhole fractionalPart => mutableZero();
@@ -215,7 +217,7 @@ final class MutableWhole extends Object
     }
 
     shared actual String string
-        =>  WholeImpl.CopyOfMutableWhole(this).string;
+        =>  whole.string;
 
     shared actual Comparison compare(MutableWhole other)
         =>  if (sign != other.sign) then
