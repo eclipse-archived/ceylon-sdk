@@ -360,8 +360,7 @@ Locale locale(String tag)
 shared String uppercase(
     "The string to convert to uppercase."
     String string,
-    "The IETF BCP 47 language tag string, or `null` to 
-     perform the conversion according to the default locale." 
+    "The IETF BCP 47 language tag string of the locale." 
     String tag = system.locale) 
         => javaString(string).toUpperCase(locale(tag));
 
@@ -370,17 +369,17 @@ shared String uppercase(
 shared String lowercase(
     "The string to convert to lowercase."
     String string,
-    "The IETF BCP 47 language tag string, or `null` to 
-     perform the conversion according to the default locale." 
+    "The IETF BCP 47 language tag string of the locale." 
     String tag = system.locale) 
         => javaString(string).toLowerCase(locale(tag));
 
-"The graphemes contained in the given [[string|text]]."
+"The graphemes contained in the given [[string|text]]. In
+ general, a Unicode `String` contains fewer graphemes than
+ codepoints."
 shared {String*} graphemes(
     "The string"
     String text, 
-    "The IETF BCP 47 language tag string, or `null` to 
-     perform the conversion according to the default locale." 
+    "The IETF BCP 47 language tag string of the locale." 
     String tag = system.locale) 
         => object satisfies {String*} {
     iterator() => object satisfies Iterator<String> {
