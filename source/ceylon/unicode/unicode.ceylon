@@ -352,10 +352,8 @@ shared String characterName(Character character) {
 //shared Character lowercaseCharacter(Character character) 
 //        => JChar.toLowerCase(character.integer).character;
 
-Locale locale(String? tag)
-        => if (exists tag) 
-            then Locale.forLanguageTag(tag) 
-            else Locale.default;
+Locale locale(String tag)
+        => Locale.forLanguageTag(tag);
 
 "Convert the given [[string]] to uppercase according to the
  rules of the locale with the given [[language tag|tag]]."
@@ -364,7 +362,7 @@ shared String uppercase(
     String string,
     "The IETF BCP 47 language tag string, or `null` to 
      perform the conversion according to the default locale." 
-    String? tag=null) 
+    String tag = system.locale) 
         => javaString(string).toUpperCase(locale(tag));
 
 "Convert the given [[string]] to lowercase according to the
@@ -374,15 +372,20 @@ shared String lowercase(
     String string,
     "The IETF BCP 47 language tag string, or `null` to 
      perform the conversion according to the default locale." 
-    String? tag=null) 
+    String tag = system.locale) 
         => javaString(string).toLowerCase(locale(tag));
 
-shared {String*} graphemes(String text, String locale=system.locale) 
+"The graphemes contained in the given [[string|text]]."
+shared {String*} graphemes(
+    "The string"
+    String text, 
+    "The IETF BCP 47 language tag string, or `null` to 
+     perform the conversion according to the default locale." 
+    String tag = system.locale) 
         => object satisfies {String*} {
-    value jlocale = Locale.forLanguageTag(locale);
     iterator() => object satisfies Iterator<String> {
         value breakIterator = 
-                BreakIterator.getCharacterInstance(jlocale);
+                BreakIterator.getCharacterInstance(locale(tag));
         breakIterator.setText(text);
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
