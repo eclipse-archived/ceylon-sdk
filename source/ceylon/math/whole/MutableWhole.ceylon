@@ -132,6 +132,7 @@ final class MutableWhole extends Object
                 OfWords(sign, rightShift(negative, wordsSize, words, shift));
 
     throws(`class Exception`, "If passed a negative exponent")
+    throws(`class OverflowException`, "If passed an exponent > runtime.maxIntegerValue")
     shared actual MutableWhole power(MutableWhole exponent) {
         if (this.unit) {
             return copy();
@@ -147,16 +148,46 @@ final class MutableWhole extends Object
         else if (exponent.unit) {
             return copy();
         }
+        else if (exponent.compareWhole(package.integerMax) == larger) {
+            throw OverflowException(
+                "Exponent ``exponent`` > runtime.maxIntegerValue.");
+        }
         else if (exponent.positive) {
-            return powerBySquaring(exponent);
+            return powerBySquaringInteger(
+                integerForWordsNaive(exponent.wordsSize,
+                                     exponent.words));
         }
         else {
-            throw AssertionError(
+            throw Exception(
                 "``string``^``exponent`` negative exponents not supported");
         }
     }
 
-    shared actual MutableWhole powerOfInteger(Integer integer) => nothing;
+    throws(`class Exception`, "If passed a negative exponent")
+    throws(`class OverflowException`, "If passed an exponent > runtime.maxIntegerValue")
+    shared actual MutableWhole powerOfInteger(Integer exponent) {
+        if (this.unit) {
+            return copy();
+        }
+        else if (exponent.zero) {
+            return package.mutableOne();
+        }
+        else if (this.negativeOne) {
+            return if (exponent.even)
+            then package.mutableOne()
+            else copy();
+        }
+        else if (exponent.unit) {
+            return copy();
+        }
+        else if (exponent.positive) {
+            return powerBySquaringInteger(exponent);
+        }
+        else {
+            throw Exception(
+                "``string``^``exponent`` negative exponents not supported");
+        }
+    }
 
     shared actual MutableWhole neighbour(Integer offset)
         => plusInteger(offset);
@@ -230,6 +261,20 @@ final class MutableWhole extends Object
             else
                 compareMagnitude(other.wordsSize, other.words,
                                  this.wordsSize, this.words);
+
+    shared Comparison compareWhole(Whole other) {
+        assert (is WholeImpl other);
+        return  if (sign != other.sign) then
+                sign.compare(other.sign)
+            else if (zero) then
+                equal
+            else if (positive) then
+                compareMagnitude(this.wordsSize, this.words,
+                                 other.wordsSize, other.words)
+            else
+                compareMagnitude(other.wordsSize, other.words,
+                                 this.wordsSize, this.words);
+    }
 
     shared actual Boolean equals(Object that)
         =>  if (is MutableWhole that) then
@@ -408,25 +453,6 @@ final class MutableWhole extends Object
                         other.wordsSize, other.words);
             wordsSize = realSize(words, -1);
         }
-    }
-
-    // TODO test
-    MutableWhole powerBySquaring(MutableWhole exponent) {
-        if (exponent.safelyAddressable) {
-            return powerBySquaringInteger(exponent.integer);
-        }
-        value exp = exponent.copy();
-        variable value result = package.mutableOne();
-        variable value x = this;
-        while (!exp.zero) {
-            if (!exp.even) {
-                result *= x;
-                exp.inplaceDecrement();
-            }
-            x *= x;
-            exp.inplaceRightArithmeticShift(1);
-        }
-        return result;
     }
 
     MutableWhole powerBySquaringInteger(variable Integer exponent) {

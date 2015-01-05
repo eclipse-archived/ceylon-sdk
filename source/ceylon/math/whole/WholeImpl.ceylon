@@ -258,7 +258,9 @@ final class WholeImpl satisfies Whole {
      * Otherwise negative powers result in an `Exception`
        being thrown"
     throws(`class Exception`, "If passed a negative exponent")
+    throws(`class OverflowException`, "If passed an exponent > runtime.maxIntegerValue")
     shared actual Whole power(Whole exponent) {
+        assert (is WholeImpl exponent);
         if (this.unit) {
             return this;
         }
@@ -273,11 +275,17 @@ final class WholeImpl satisfies Whole {
         else if (exponent.unit) {
             return this;
         }
+        else if (exponent > package.integerMax) {
+            throw OverflowException(
+                "Exponent ``exponent`` > runtime.maxIntegerValue.");
+        }
         else if (exponent.positive) {
-            return powerBySquaring(exponent);
+            return powerBySquaringInteger(
+                integerForWordsNaive(exponent.wordsSize,
+                                     exponent.words));
         }
         else {
-            throw AssertionError(
+            throw Exception(
                 "``string``^``exponent`` negative exponents not supported");
         }
     }
@@ -301,7 +309,7 @@ final class WholeImpl satisfies Whole {
             return powerBySquaringInteger(exponent);
         }
         else {
-            throw AssertionError(
+            throw Exception(
                 "``string``^``exponent`` negative exponents not supported");
         }
     }
@@ -576,26 +584,6 @@ final class WholeImpl satisfies Whole {
             second.negative then second.trailingZeroWords,
             op);
         return OfBits(bits);
-    }
-
-    // TODO test
-    Whole powerBySquaring(Whole exponent) {
-        assert (is WholeImpl exponent);
-        if (exponent.safelyAddressable) {
-            return powerBySquaringInteger(exponent.integer);
-        }
-        value exp = MutableWhole.CopyOfWhole(exponent);
-        variable Whole result = package.one;
-        variable Whole x = this;
-        while (!exp.zero) {
-            if (!exp.even) {
-                result *= x;
-                exp.inplaceDecrement();
-            }
-            x *= x;
-            exp.inplaceRightArithmeticShift(1);
-        }
-        return result;
     }
 
     Whole powerBySquaringInteger(variable Integer exponent) {
