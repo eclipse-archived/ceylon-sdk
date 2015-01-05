@@ -2,9 +2,7 @@ import ceylon.test {
     test,
     assertEquals
 }
-import ceylon.time.timezone.parser {
-    parseZoneLine
-}
+
 import ceylon.time {
     Period,
     date,
@@ -23,6 +21,9 @@ import ceylon.time.base {
     january,
     september,
     october
+}
+import ceylon.time.timezone.parser.iana {
+	parseZoneLine
 }
 
 shared test void testParseZoneLineForAmericaManaus() {

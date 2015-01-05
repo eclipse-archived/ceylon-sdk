@@ -1,19 +1,21 @@
-import ceylon.time.timezone.parser {
+import ceylon.time.timezone.parser.iana {
     parseTime
 }
 import ceylon.time.timezone.model {
     ZoneTimeline
 }
 
-shared [String, ZoneTimeline] parseZoneLine(String line, String? ruleName = null) {
+shared alias ZoneName => String;
+
+shared [ZoneName, ZoneTimeline] parseZoneLine(String line, ZoneName? zoneName = null) {
     value token = line.split(tokenDelimiter).iterator();
     
-    String name;
-    if(exists ruleName) {
-        name = ruleName;
+    ZoneName name;
+    if(exists zoneName) {
+        name = zoneName;
     } else {
         assert(is String zone = token.next(), zone == "Zone");
-        assert(is String nameText = token.next());
+        assert(is ZoneName nameText = token.next());
         name = nameText;
     }
     

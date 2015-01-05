@@ -21,11 +21,11 @@ import ceylon.time.timezone.model {
     AtWallClockTime,
     AtUtcTime
 }
-import ceylon.time.timezone.parser {
-    parseRuleLine
+
+import ceylon.time.timezone.parser.iana {
+	parseRuleLine
 }
 
-//Sample of more simple and correct tests:
 shared test void parseSimpleRuleLine() {
     variable value rule = parseRuleLine("Rule    Brazil    1931    only    -    Oct     3    11:00    1:00    S");
     assertEquals(rule[0], "Brazil");
