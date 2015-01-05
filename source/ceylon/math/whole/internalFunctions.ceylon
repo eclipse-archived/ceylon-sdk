@@ -965,3 +965,23 @@ Integer integerForWords(Integer wordsSize, Words words, Boolean negative) {
     }
     return result;
 }
+
+"Convert words to an Integer, avoiding bitwise operations,
+ and disregarding runtime.integerAddressableSize"
+Integer integerForWordsNaive(Integer wordsSize, Words words) {
+    // easy cases
+    if (wordsSize == 0) {
+        return 0;
+    } else if (wordsSize == 1) {
+        return getw(words, 0);
+    }
+
+    value wRadix = wordRadix;
+    variable value factor = 1;
+    variable value result = 0;
+    for (i in 0:wordsSize) {
+        result += getw(words, i) * factor;
+        factor *= wRadix;
+    }
+    return result;
+}

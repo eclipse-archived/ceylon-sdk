@@ -392,12 +392,27 @@ final class WholeImpl satisfies Whole {
         =>  integerMemo else (integerMemo =
                 integerForWords(wordsSize, words, negative));
 
-    "The number, represented as a [[Float]]. If the magnitude of this number
-     is too large the result will be `infinity` or `-infinity`. If the result
-     is finite, precision may still be lost."
+    "The number, represented as a [[Float]], if such a
+     representation is possible."
+    throws (`class OverflowException`,
+        "if the number cannot be represented as a `Float`
+         without loss of precision")
     shared actual Float float {
-        assert (exists f = parseFloat(string));
-        return f;
+        if (zero) {
+            return 0.0;
+        }
+        else if (wordsSize == 1 ||
+                 bitLengthUnsigned <= 53) {
+            value abs = integerForWordsNaive(wordsSize, words).float;
+            return if (negative)
+                   then -abs
+                   else abs;
+        }
+        else {
+            throw OverflowException(
+                "The value ``string`` cannot be represented " +
+                "as a Float without loss of precision.");
+        }
     }
 
     shared actual Whole not
@@ -500,12 +515,18 @@ final class WholeImpl satisfies Whole {
             else (trailingZeroWordsMemo =
                   calculateTrailingZeroWords());
 
-    "Minimal length to represent words in two's complement, excluding a sign bit."
+    "Minimal length to represent this Whole in two's complement, excluding a sign bit."
     Integer bitLength
         =>  if (bitLengthMemo >= 0)
             then bitLengthMemo
             else (bitLengthMemo = calculateBitLength(
                 wordsSize, words, negative then trailingZeroWords));
+
+    "Minimal length to represent the magnitude of this Whole, excluding a sign bit."
+    Integer bitLengthUnsigned
+        =>  if (negative)
+            then calculateBitLength(wordsSize, words, null)
+            else bitLength;
 
     Integer calculateTrailingZeroWords() {
         for (i in 0:wordsSize) {
