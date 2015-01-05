@@ -1,7 +1,7 @@
 import java.math {
     BigInteger
 }
-"An arbitrary precision integer."
+by("John Vasileff")
 final class WholeImpl satisfies Whole {
 
     shared Words words;
@@ -245,20 +245,6 @@ final class WholeImpl satisfies Whole {
     shared actual Whole xor(Whole other)
         =>  logicOperation(this, other, Integer.xor);
 
-    "The result of raising this number to the given power.
-
-     Special cases:
-
-     * Returns one if `this` is one (or all powers)
-     * Returns one if `this` is minus one and the power
-       is even
-     * Returns minus one if `this` is minus one and the
-       power is odd
-     * Returns one if the power is zero.
-     * Otherwise negative powers result in an `Exception`
-       being thrown"
-    throws(`class Exception`, "If passed a negative exponent")
-    throws(`class OverflowException`, "If passed an exponent > runtime.maxIntegerValue")
     shared actual Whole power(Whole exponent) {
         assert (is WholeImpl exponent);
         if (this.unit) {
@@ -324,8 +310,6 @@ final class WholeImpl satisfies Whole {
                else result;
     }
 
-    "The result of `(this**exponent) mod modulus`."
-    throws(`class Exception`, "If passed a negative modulus")
     shared actual Whole modPower(Whole exponent,
                           Whole modulus) {
         if (!modulus.positive) {
@@ -393,18 +377,10 @@ final class WholeImpl satisfies Whole {
     // JavaScript _almost_ supports 53 bits (1 negative number short),
     // but even so, 53 bits is not a convenient chunk to work with, and
     // is greater than the 32 bits supported for bitwise operations.
-    "The number, represented as an [[Integer]]. If the number is too
-     big to fit in an Integer then an Integer corresponding to the
-     lower order bits is returned."
     shared actual Integer integer
         =>  integerMemo else (integerMemo =
                 integerForWords(wordsSize, words, negative));
 
-    "The number, represented as a [[Float]], if such a
-     representation is possible."
-    throws (`class OverflowException`,
-        "if the number cannot be represented as a `Float`
-         without loss of precision")
     shared actual Float float {
         if (zero) {
             return 0.0;
