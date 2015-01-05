@@ -447,7 +447,7 @@ final class WholeImpl satisfies Whole {
             return BigInteger.valueOf(integer);
         }
         else {
-            return BigInteger(string);
+            return toImplementation(this);
         }
     }
 

@@ -4,7 +4,8 @@ import ceylon.math.whole {
     wholeNumber,
     one,
     two,
-    zero
+    zero,
+    gcd
 }
 import ceylon.test {
     ...
@@ -12,8 +13,7 @@ import ceylon.test {
 
 import com.vasileff.ceylon.random.api {
     randomLimits,
-    Random,
-    stream
+    Random
 }
 import com.vasileff.ceylon.random.sample {
     LCGRandom
@@ -22,7 +22,6 @@ import com.vasileff.ceylon.random.sample {
 import java.lang {
     Thread
 }
-
 import java.math {
     BigInteger
 }
@@ -113,11 +112,11 @@ test void wholePowerTests() {
     try {
         Whole wn = wholeNumber(0) ^ wholeNumber(-1);
         fail("0^-1");
-    } catch (AssertionError e){}
+    } catch (Exception e){}
     try {
         Whole wn = wholeNumber(0) ^ wholeNumber(-2);
         fail("0^-2");
-    } catch (AssertionError e){}
+    } catch (Exception e){}
 
     assertEquals(wholeNumber(-1), wholeNumber(-1) ^ wholeNumber(1), "-1^1");
     assertEquals(wholeNumber(1), wholeNumber(-1) ^ wholeNumber(0), "-1^0");
@@ -129,11 +128,11 @@ test void wholePowerTests() {
     try {
         Whole wn = wholeNumber(-2) ^ wholeNumber(-1);
         fail("-2^-1");
-    } catch (AssertionError e){}
+    } catch (Exception e){}
     try {
         Whole wn = wholeNumber(-2) ^ wholeNumber(-2);
         fail("-2^-2");
-    } catch (AssertionError e){}
+    } catch (Exception e){}
 }
 
 test void wholeComparisonTests() {
@@ -206,14 +205,16 @@ test void wholeMiscTests() {
     }
 }
 
-Integer iters = 500;
-{Integer*} bits = (8..128).by(8).follow(4);
+Integer iters = 10_000;
+Boolean randomizeNumBits = true;
+{Integer*} bits = [ 32, 64, 128, 256 ];
 
 test void wholeTortureAddition() {
     wholeTorture {
         label = "+";
         lhsBits = bits;
         rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
         iterations = iters;
         ceylonOp = Whole.plus;
         javaOp = BigInteger.add;
@@ -225,6 +226,7 @@ test void wholeTortureSubtraction() {
         label = "-";
         lhsBits = bits;
         rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
         iterations = iters;
         ceylonOp = Whole.minus;
         javaOp = BigInteger.subtract;
@@ -236,6 +238,7 @@ test void wholeTortureMultiplication() {
         label = "*";
         lhsBits = bits;
         rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
         iterations = iters;
         ceylonOp = Whole.times;
         javaOp = BigInteger.multiply;
@@ -247,6 +250,7 @@ test void wholeTortureDivision() {
         label = "÷";
         lhsBits = bits;
         rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
         iterations = iters;
         ceylonOp = Whole.divided;
         javaOp = BigInteger.divide;
@@ -259,6 +263,7 @@ test void wholeTortureRemainder() {
         label = "%";
         lhsBits = bits;
         rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
         iterations = iters;
         ceylonOp = Whole.remainder;
         javaOp = BigInteger.remainder;
@@ -266,15 +271,244 @@ test void wholeTortureRemainder() {
     };
 }
 
+test void wholeTortureMod() {
+    wholeTorture {
+        label = "mod";
+        lhsBits = bits;
+        rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = Whole.mod;
+        javaOp = BigInteger.mod;
+        allowZeroRhs = false;
+        allowNegativeRhs = false;
+    };
+}
+
 test void wholeTorturePower() {
     wholeTorture {
         label = "^";
-        lhsBits = (2..128).by(16);
-        rhsBits = (2..6).by(2);
-        iterations = 100;
+        lhsBits = bits.filter((bits) => bits <= 192);
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters / 10;
         ceylonOp = Whole.power;
         javaOp = ((BigInteger x)(BigInteger y) => x.pow(y.intValue()));
         allowNegativeRhs = false;
+    };
+}
+
+test void wholeTorturePowerOfInteger() {
+    wholeTortureIntArg {
+        label = "powerOfInteger";
+        lhsBits = bits.filter((bits) => bits <= 192);
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters / 10;
+        ceylonOp = (whole, rhs) => whole.powerOfInteger(rhs).string;
+        javaOp = (big, rhs) => big.pow(rhs).string;
+        allowNegativeRhs = false;
+    };
+}
+
+test void wholeTortureAnd() {
+    wholeTorture {
+        label = "and";
+        lhsBits = bits;
+        rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = Whole.and;
+        javaOp = BigInteger.and;
+    };
+}
+
+test void wholeTortureOr() {
+    wholeTorture {
+        label = "or";
+        lhsBits = bits;
+        rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = Whole.or;
+        javaOp = BigInteger.or;
+    };
+}
+
+test void wholeTortureXOr() {
+    wholeTorture {
+        label = "xor";
+        lhsBits = bits;
+        rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = Whole.xor;
+        javaOp = BigInteger.xor;
+    };
+}
+
+test void wholeTortureGcd() {
+    wholeTorture {
+        label = "gcd";
+        lhsBits = bits;
+        rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = curry(gcd);
+        javaOp = BigInteger.gcd;
+    };
+}
+
+test void wholeTortureModInverse() {
+    wholeTorture {
+        label = "modInverse";
+        lhsBits = bits;
+        rhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = Whole.modInverse;
+        javaOp = BigInteger.modInverse;
+        allowNegativeRhs = false;
+    };
+}
+
+test void wholeTortureModPower() {
+    wholeTortureThree {
+        label = "modPower";
+        lhsBits = bits.filter((bits) => bits <= 192);
+        rhsBits1 = bits.filter((bits) => bits <= 192);
+        rhsBits2 = bits.filter((bits) => bits <= 192);
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters / 20;
+        ceylonOp = Whole.modPower;
+        javaOp = BigInteger.modPow;
+        allowNegativeRhs2 = false;
+    };
+}
+
+test void wholeTortureRightArithmeticShift() {
+    wholeTortureIntArg {
+        label = ">>";
+        lhsBits = bits;
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole, rhs) => whole.rightArithmeticShift(rhs).string;
+        javaOp = (big, rhs) => big.shiftRight(rhs).string;
+    };
+}
+
+test void wholeTortureLeftLogicalShift() {
+    wholeTortureIntArg {
+        label = "<<";
+        lhsBits = bits;
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole, rhs) => whole.leftLogicalShift(rhs).string;
+        javaOp = (big, rhs) => big.shiftLeft(rhs).string;
+    };
+}
+
+test void wholeTortureGet() {
+    wholeTortureIntArg {
+        label = "get";
+        lhsBits = bits;
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole, rhs) => whole.get(rhs);
+        javaOp = (big, rhs) => big.testBit(rhs);
+        allowNegativeRhs = false;
+    };
+}
+
+test void wholeTortureSetFalse() {
+    wholeTortureIntArg {
+        label = "set-false";
+        lhsBits = bits;
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole, rhs) => whole.set(rhs, false).string;
+        javaOp = (big, rhs) => big.clearBit(rhs).string;
+        allowNegativeRhs = false;
+    };
+}
+
+test void wholeTortureFlip() {
+    wholeTortureIntArg {
+        label = "set-false";
+        lhsBits = bits;
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole, rhs) => whole.flip(rhs).string;
+        javaOp = (big, rhs) => big.flipBit(rhs).string;
+        allowNegativeRhs = false;
+    };
+}
+
+test void wholeTortureSetTrue() {
+    wholeTortureIntArg {
+        label = "set-true";
+        lhsBits = bits;
+        rhsBits = [4, 8];
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole, rhs) => whole.set(rhs, true).string;
+        javaOp = (big, rhs) => big.setBit(rhs).string;
+        allowNegativeRhs = false;
+    };
+}
+
+test void wholeTortureNot() {
+    wholeTortureNoArg {
+        label = "not";
+        lhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole) => whole.not.string;
+        javaOp = (big) => big.not().string;
+    };
+}
+
+test void wholeTortureNegated() {
+    wholeTortureNoArg {
+        label = "negated";
+        lhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole) => whole.negated.string;
+        javaOp = (big) => big.negate().string;
+    };
+}
+
+test void wholeTortureInteger() {
+    wholeTortureNoArg {
+        label = "integer";
+        lhsBits = bits;
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole) => whole.integer;
+        javaOp = (big) => big.longValue();
+    };
+}
+
+test void wholeTortureFloat() {
+    assert (exists boundWhole = parseWhole("9007199254740992"));
+    assert (is BigInteger boundBI = boundWhole.implementation);
+    wholeTortureNoArg {
+        label = "float";
+        lhsBits = (8..56).by(8).follow(4);
+        randomizeNumBits = randomizeNumBits;
+        iterations = iters;
+        ceylonOp = (whole) => if (whole.magnitude < boundWhole)
+                              then whole.float
+                              else 0.0;
+        javaOp = (big) => if (big.abs().compareTo(boundBI) != 1)
+                          then big.doubleValue()
+                          else 0.0;
     };
 }
 
@@ -286,57 +520,194 @@ void wholeTorture(String label,
                   BigInteger javaOp(BigInteger v1)(BigInteger v2),
                   Boolean allowZeroRhs = true,
                   Boolean allowNegativeLhs = true,
-                  Boolean allowNegativeRhs = true) {
+                  Boolean allowNegativeRhs = true,
+                  Boolean randomizeNumBits = false) {
 
     value rng = LCGRandom();
-    function generateWhole(Integer bits,
-                           Boolean allowZero = true,
-                           Boolean allowNegative = true) {
-        while (true) {
-            value result = randomWholeBits(rng, bits);
-            if (allowZero || !result.zero) {
-                if (allowNegative && rng.nextBoolean()) {
-                    return result.negated;
-                } else {
-                    return result;
-                }
-            }
-        }
-    }
 
     for (lbits in lhsBits) {
         for (rbits in rhsBits) {
             for (_ in 0:iterations) {
-                value lhs = generateWhole(lbits, true, allowNegativeLhs);
-                value rhs = generateWhole(rbits, allowZeroRhs, allowNegativeRhs);
+                value lhs = generateWhole(rng, lbits, true, allowNegativeLhs, randomizeNumBits);
+                value rhs = generateWhole(rng, rbits, allowZeroRhs, allowNegativeRhs, randomizeNumBits);
 
-                Whole ceylonResult;
+                variable Whole? ceylonResult = null;
+                variable Exception|AssertionError? ceylonException = null;
                 try {
                     ceylonResult = ceylonOp(lhs)(rhs);
                 } catch (Exception|AssertionError e) {
-                    print ("Whole exception for ``lhs`` ``label`` ``rhs``");
-                    throw e;
+                    ceylonException = e;
                 }
 
-                BigInteger javaResult;
+                variable BigInteger? javaResult = null;
+                variable Exception|AssertionError? javaException = null;
                 try {
-                    javaResult = javaOp(BigInteger(lhs.string))
-                                       (BigInteger(rhs.string));
+                    assert (is BigInteger lhsBI = lhs.implementation);
+                    assert (is BigInteger rhsBI = rhs.implementation);
+                    javaResult = javaOp(lhsBI)(rhsBI);
                 } catch (Exception e) {
-                    print ("BigInteger exception for ``lhs`` ``label`` ``rhs``");
-                    throw e;
+                    javaException = e;
                 }
 
-                assertEquals(ceylonResult.string, javaResult.string,
+                if (exists ce = ceylonException) {
+                    if (javaException exists) {
+                        continue;
+                    }
+                    print("Whole exception for ``lhs`` ``label`` ``rhs``");
+                    throw ce;
+                } else if (exists je = javaException) {
+                    print("BigInteger exception for ``lhs`` ``label`` ``rhs``");
+                    throw je;
+                }
+
+                assert (exists cr = ceylonResult, exists jr = javaResult);
+                assertEquals(cr.string, jr.string,
                              "``lhs`` ``label`` ``rhs``");
             }            
         }
     }
 }
 
-test void wholeGcdTests() {
-    //print("gcd");
-    //assertEquals(Whole(6), gcd(Whole(12), Whole(18)), "gcd(12, 18)");
+void wholeTortureThree(String label,
+                  {Integer*} lhsBits,
+                  {Integer*} rhsBits1,
+                  {Integer*} rhsBits2,
+                  Integer iterations,
+                  Whole ceylonOp(Whole v1)(Whole v2, Whole v3),
+                  BigInteger javaOp(BigInteger v1)(BigInteger v2, BigInteger v3),
+                  Boolean allowZeroRhs = true,
+                  Boolean allowNegativeLhs = true,
+                  Boolean allowNegativeRhs1 = true,
+                  Boolean allowNegativeRhs2 = true,
+                  Boolean randomizeNumBits = false) {
+
+    value rng = LCGRandom();
+
+    for (lbits in lhsBits) {
+        for (rbits1 in rhsBits1) {
+            for (rbits2 in rhsBits2) {
+                for (_ in 0:iterations) {
+                    value lhs = generateWhole(rng, lbits, true, allowNegativeLhs, randomizeNumBits);
+                    value rhs1 = generateWhole(rng, rbits1, allowZeroRhs, allowNegativeRhs1, randomizeNumBits);
+                    value rhs2 = generateWhole(rng, rbits2, allowZeroRhs, allowNegativeRhs2, randomizeNumBits);
+
+                    variable Whole? ceylonResult = null;
+                    variable Exception|AssertionError? ceylonException = null;
+                    try {
+                        ceylonResult = ceylonOp(lhs)(rhs1, rhs2);
+                    } catch (Exception|AssertionError e) {
+                        ceylonException = e;
+                    }
+
+                    variable BigInteger? javaResult = null;
+                    variable Exception|AssertionError? javaException = null;
+                    try {
+                        assert (is BigInteger lhsBI = lhs.implementation);
+                        assert (is BigInteger rhsBI1 = rhs1.implementation);
+                        assert (is BigInteger rhsBI2 = rhs2.implementation);
+                        javaResult = javaOp(lhsBI)(rhsBI1, rhsBI2);
+                    } catch (Exception e) {
+                        javaException = e;
+                    }
+
+                    if (exists ce = ceylonException) {
+                        if (javaException exists) {
+                            continue;
+                        }
+                        print("Whole exception for ``lhs`` ``label`` ``rhs1`` ``rhs2``");
+                        throw ce;
+                    } else if (exists je = javaException) {
+                        print("BigInteger exception for ``lhs`` ``label`` ``rhs1`` ``rhs2``");
+                        throw je;
+                    }
+
+                    assert (exists cr = ceylonResult, exists jr = javaResult);
+                    assertEquals(cr.string, jr.string,
+                                 "``lhs`` ``label`` ``rhs1`` ``rhs2``");
+                }
+            }
+        }
+    }
+}
+
+void wholeTortureIntArg<Result>(String label,
+                  {Integer*} lhsBits,
+                  {Integer*} rhsBits,
+                  Integer iterations,
+                  Result ceylonOp(Whole v1, Integer v2),
+                  Result javaOp(BigInteger v1, Integer v2),
+                  Boolean allowZeroRhs = true,
+                  Boolean allowNegativeLhs = true,
+                  Boolean allowNegativeRhs = true,
+                  Boolean randomizeNumBits = false) {
+
+    value rng = LCGRandom();
+
+    for (lbits in lhsBits) {
+        for (rbits in rhsBits) {
+            for (_ in 0:iterations) {
+                value lhs = generateWhole(rng, lbits, true, allowNegativeLhs, randomizeNumBits);
+                value rhs = generateInteger(rng, rbits, true, allowNegativeRhs, randomizeNumBits);
+                Result ceylonResult;
+                try {
+                    ceylonResult = ceylonOp(lhs, rhs);
+                } catch (Exception|AssertionError e) {
+                    print ("Whole exception for ``lhs`` ``label`` ``rhs``");
+                    throw e;
+                }
+
+                Result javaResult;
+                try {
+                    assert (is BigInteger lhsBI = lhs.implementation);
+                    javaResult = javaOp(lhsBI, rhs);
+                } catch (Exception e) {
+                    print ("BigInteger exception for ``lhs`` ``label`` ``rhs``");
+                    throw e;
+                }
+
+                assertEquals(ceylonResult, javaResult,
+                             "``lhs`` ``label`` ``rhs``");
+            }
+        }
+    }
+}
+
+void wholeTortureNoArg<Result>(String label,
+                  {Integer*} lhsBits,
+                  Integer iterations,
+                  Result ceylonOp(Whole v1),
+                  Result javaOp(BigInteger v1),
+                  Boolean allowZeroRhs = true,
+                  Boolean allowNegativeLhs = true,
+                  Boolean randomizeNumBits = false) {
+
+    value rng = LCGRandom();
+
+    for (lbits in lhsBits) {
+        for (_ in 0:iterations) {
+            value lhs = generateWhole(rng, lbits, true, allowNegativeLhs, randomizeNumBits);
+
+            Result ceylonResult;
+            try {
+                ceylonResult = ceylonOp(lhs);
+            } catch (Exception|AssertionError e) {
+                print ("Whole exception for ``lhs`` ``label``");
+                throw e;
+            }
+
+            Result javaResult;
+            try {
+                assert (is BigInteger lhsBI = lhs.implementation);
+                javaResult = javaOp(lhsBI);
+            } catch (Exception e) {
+                print ("BigInteger exception for ``lhs`` ``label``");
+                throw e;
+            }
+
+            assertEquals(ceylonResult, javaResult,
+                         "``lhs`` ``label``");
+        }
+    }
 }
 
 // positive Integer's only
@@ -345,30 +716,72 @@ shared Whole randomWholeBits(Random random, variable Integer numBits) {
     variable Whole result = zero;
     while (numBits > 0) {
         value x = smallest(numBits, maxBits);
-        result = result.timesInteger(2^x);
+        result = result.leftLogicalShift(x);
         result = result.plusInteger(random.nextInteger(2^x));
         numBits -= x;
     }
     return result;
 }
 
+shared Whole generateWhole(Random random,
+                    Integer numBits,
+                    Boolean allowZero = true,
+                    Boolean allowNegative = true,
+                    Boolean randomizeNumBits = false) {
+    while (true) {
+        value bits = if (!randomizeNumBits)
+                     then numBits
+                     else random.nextInteger(numBits);
+        if (bits == 0) {
+            continue;
+        }
+        value result = randomWholeBits(random, bits);
+        if (allowZero || !result.zero) {
+            // this is slightly wrong; throws off probability of result == zero
+            if (allowNegative && random.nextBoolean()) {
+                return result.negated;
+            } else {
+                return result;
+            }
+        }
+    }
+}
+
+shared Integer generateInteger(Random random,
+                    Integer numBits,
+                    Boolean allowZero = true,
+                    Boolean allowNegative = true,
+                    Boolean randomizeNumBits = false) {
+    assert (numBits <= 63);
+    while (true) {
+        value bits = if (!randomizeNumBits)
+                     then numBits
+                     else random.nextInteger(numBits);
+        if (bits == 0) {
+            continue;
+        }
+        value result = random.nextBits(bits);
+        if (allowZero || !result.zero) {
+            // this is slightly wrong; throws off probability of result == zero
+            if (allowNegative && random.nextBoolean()) {
+                return result.negated;
+            } else {
+                return result;
+            }
+        }
+    }
+}
+
 shared Iterable<Whole> wholeStream(
         Random random,
         Integer numBits,
         Boolean allowZero = true,
-        Boolean allowNegative = true) {
-    return stream(() {
-        while (true) {
-            value result = randomWholeBits(random, numBits);
-            if (allowZero || !result.zero) {
-                if (allowNegative && random.nextBoolean()) {
-                    return result.negated;
-                } else {
-                    return result;
-                }
-            }
-        }        
-    });
+        Boolean allowNegative = true,
+        Boolean randomizeNumBits = false) {
+
+    return { generateWhole(random, numBits,
+                           allowZero, allowNegative,
+                           randomizeNumBits) }.cycled;
 }
 
 shared void doBenches(
@@ -493,10 +906,28 @@ shared void doBench() {
     doBenches {
         label = "/";
         lhsBits = {64};
-        rhsBits = {64, 64};
+        rhsBits = {32, 32};
         iterations = iterations;
         ceylonOp = Whole.divided;
         javaOp = BigInteger.divide;
+        allowZeroRhs = false;
+    };
+    doBenches {
+        label = "%";
+        lhsBits = {64};
+        rhsBits = {32, 32};
+        iterations = iterations;
+        ceylonOp = Whole.remainder;
+        javaOp = BigInteger.remainder;
+        allowZeroRhs = false;
+    };
+    doBenches {
+        label = "gcd";
+        lhsBits = {64};
+        rhsBits = {32, 32};
+        iterations = iterations;
+        ceylonOp = curry(gcd);
+        javaOp = BigInteger.gcd;
         allowZeroRhs = false;
     };
 }
