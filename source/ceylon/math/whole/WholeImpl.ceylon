@@ -311,9 +311,9 @@ final class WholeImpl satisfies Whole {
     }
 
     shared actual Whole modPower(Whole exponent,
-                          Whole modulus) {
+                                 Whole modulus) {
         if (!modulus.positive) {
-            throw Exception("modulus must be positive");
+            throw Exception("Modulus must be positive.");
         }
         else if (modulus.unit) {
             return package.zero;
@@ -340,10 +340,10 @@ final class WholeImpl satisfies Whole {
 
     shared actual Whole modInverse(Whole modulus) {
         if (!modulus.positive) {
-            throw Exception("modulus must be positive");
+            throw Exception("Modulus must be positive.");
         }
         else if (this.even && modulus.even) {
-            throw Exception("no inverse exists");
+            throw Exception("No inverse exists.");
         }
         else if (modulus.unit) {
             return package.zero;
