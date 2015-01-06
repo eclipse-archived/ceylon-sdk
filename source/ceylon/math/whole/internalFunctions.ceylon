@@ -449,27 +449,41 @@ Words|Absent divide<Absent=Null>(
     while (j >= vSize) {
         // D3. Compute qj
         value uj0 = getw(u, j);
-        value uj1 = getw(u, j-1);
-        value uj2 = getw(u, j-2);
 
-        value uj01 = uj0.leftLogicalShift(wBits) + uj1;
         variable Integer qj;
-        variable Integer rj;
-        if (uj01 >= 0) {
-            qj = uj01 / v0;
-            rj = uj01 % v0;
+        if (uj0 == v0) {
+            // most significant divisor word and
+            // most significant dividend word are equal
+            // so, guess the largest possible quotient
+            // (a decimal example would be 100/11)
+            qj = wMask;
         } else {
-            value qrj = unsignedDivide(uj01, v0);
-            qj = qrj.rightLogicalShift(wBits);
-            rj = qrj.and(wMask);
-        }
+            // most significant divisor word is greater than
+            // the most significant dividend word, so the
+            // unsignedDivide below will not overflow
+            // wSize/2 for the quotient.
+            // (a decimal example would be 899/90)
+            variable Integer rj;
+            value uj1 = getw(u, j-1);
+            value uj2 = getw(u, j-2);
+            value uj01 = uj0.leftLogicalShift(wBits) + uj1;
 
-        while (qj >= b || unsignedCompare(qj * v1, b * rj + uj2) == larger) {
-            // qj is too big
-            qj -= 1;
-            rj += v0;
-            if (rj >= b) {
-                break;
+            if (uj01 >= 0) {
+                qj = uj01 / v0;
+                rj = uj01 % v0;
+            } else {
+                value qrj = unsignedDivide(uj01, v0);
+                qj = qrj.rightLogicalShift(wBits);
+                rj = qrj.and(wMask);
+            }
+
+            while (qj >= b || unsignedCompare(qj * v1, b * rj + uj2) == larger) {
+                // qj is too big
+                qj -= 1;
+                rj += v0;
+                if (rj >= b) {
+                    break;
+                }
             }
         }
 
@@ -521,6 +535,8 @@ Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
                 setw(quotient, uIndex, x / v);
             }
         } else {
+            // resultant q will never be larger than one word,
+            // so unsignedDivide here is safe
             value qr = unsignedDivide(x, v);
             r = qr.and(wMask);
             if (exists quotient) {

@@ -8,15 +8,15 @@ Comparison unsignedCompare(Integer first, Integer second)
             smaller;
 
 "The lowest wordsize bits of the return value will contain the remainder,
- the next lowest wordsize bits will contain the quotient."
+ the next lowest wordsize bits will contain the quotient.
+
+ *Warning*: the quotient and remainder must both fit within 32 bits,
+ so the following must hold:
+
+     assert(d > n.rightLogicalShift(wordBits));
+ "
 Integer unsignedDivide(Integer n, Integer d) {
-    // Calculations like the following are very slow and unsupported:
-    //
-    //    divideAndRemainder(-1, $11)); // massive overshoot
-    //
-    // assert (wordRadix/2 <= d < wordRadix);
-    // assert (n == n.and(wordMask.leftLogicalShift(wordSize) + wordMask));
-    assert(d > 1);
+    // assert(d > n.rightLogicalShift(wordBits));
 
     variable Integer quotient;
     variable Integer remainder;

@@ -86,6 +86,11 @@ test void wholeDividedTests() {
     assertTrue(wholeNumber(2) == wholeNumber(4).divided(wholeNumber(2)), "4.divided(2)");
     assertTrue(wholeNumber(2) == wholeNumber(4) / wholeNumber(2), "4/2");
     assertTrue(wholeNumber(1) == wholeNumber(4) / wholeNumber(3), "4/3");
+
+    // high words are equal with leading "1" bit,
+    // setting up potential misuse of unsigned Integer division
+    assertEquals(one.leftLogicalShift(95) / (one.leftLogicalShift(63) + one),
+                 one.leftLogicalShift(32) - one);
 }
 
 test void wholeRemainderTests() {
