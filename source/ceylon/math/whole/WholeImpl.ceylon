@@ -600,7 +600,6 @@ final class WholeImpl satisfies Whole {
     Whole modInversePositive("base" Whole u, "modulus" Whole v) {
         // Knuth 4.5.2 Algorithm X
         // http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
-
         variable value u1 = package.one;
         variable value u3 = u;
 
@@ -608,9 +607,8 @@ final class WholeImpl satisfies Whole {
         variable value v3 = v;
 
         while (!v3.zero) {
-            value q = u3 / v3;
+            value [q, t3] = u3.quotientAndRemainder(v3);
             value t1 = u1 - v1 * q;
-            value t3 = u3 - v3 * q;
             u1 = v1;
             u3 = v3;
             v1 = t1;
@@ -618,7 +616,7 @@ final class WholeImpl satisfies Whole {
         }
 
         if (!u3.unit) {
-            throw Exception("no inverse exists");
+            throw Exception("No inverse exists.");
         }
 
         return if (u1.negative)
