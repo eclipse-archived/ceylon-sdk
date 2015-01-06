@@ -13,10 +13,8 @@ import ceylon.test {
 
 import com.vasileff.ceylon.random.api {
     randomLimits,
+    LCGRandom,
     Random
-}
-import com.vasileff.ceylon.random.sample {
-    LCGRandom
 }
 
 import java.lang {
