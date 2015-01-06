@@ -29,8 +29,8 @@ final class MutableWhole extends Object
         this.signValue = if (this.wordsSize == 0) then 0 else sign;
     }
 
-    shared new CopyOfWhole(WholeImpl whole)
-            extends Object() {
+    shared new CopyOfWhole(Whole whole) extends Object() {
+        assert (is WholeImpl whole);
         this.wordsSize = realSize(whole.words, whole.wordsSize);
         this.words = clonew(whole.words);
         this.signValue = whole.sign;
@@ -297,6 +297,9 @@ final class MutableWhole extends Object
             words = rightShiftInplace(
                         negative, wordsSize, words, shift);
             wordsSize = realSize(words, wordsSize);
+            if (wordsSize == 0) {
+                this.signValue = 0;
+            }
         }
     }
 

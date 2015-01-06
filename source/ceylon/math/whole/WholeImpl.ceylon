@@ -577,7 +577,7 @@ final class WholeImpl satisfies Whole {
     }
 
     Whole modPowerPositive(variable Whole base,
-                           variable Whole exponent,
+                           Whole exponent,
                            Whole modulus) {
         //assert(modulus.positive,
         //       exponent.positive,
@@ -585,13 +585,14 @@ final class WholeImpl satisfies Whole {
 
         // http://en.wikipedia.org/wiki/Modular_exponentiation
         // based on Applied Cryptography by Bruce Schneier
+        value exp = MutableWhole.CopyOfWhole(exponent);
         variable value result = package.one;
         base = base % modulus; // is this redundant?
-        while (exponent > package.zero) {
-            if (exponent % package.two == package.one) {
+        while (!exp.zero) {
+            if (!exp.even) {
                 result = (result * base) % modulus;
             }
-            exponent = exponent.rightArithmeticShift(1);
+            exp.inplaceRightArithmeticShift(1);
             base = (base * base) % modulus;
         }
         return result;
@@ -600,6 +601,9 @@ final class WholeImpl satisfies Whole {
     Whole modInversePositive("base" Whole u, "modulus" Whole v) {
         // Knuth 4.5.2 Algorithm X
         // http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
+
+        // TODO speed things up with MutableWhole, which should be enhanced
+        // to have inPlaceDividedAndRemainder, among others
         variable value u1 = package.one;
         variable value u3 = u;
 
