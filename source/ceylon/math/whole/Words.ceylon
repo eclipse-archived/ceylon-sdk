@@ -125,7 +125,7 @@ Words wordsOfOne(Integer word) {
 
 Words copyAppend(Integer wordsSize, Words words, Integer other) {
     value result = wordsOfSize(wordsSize + 1);
-    copyWords(words, result);
+    copyWords(words, result, 0, 0, wordsSize);
     setw(result, wordsSize, other);
     return result;
 }

@@ -622,7 +622,7 @@ final class WholeImpl satisfies Whole {
         }
 
         return if (u1.negative)
-               then v - u1
+               then u1 + v
                else u1;
     }
 
