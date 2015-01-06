@@ -9,10 +9,10 @@ Words wordsOfSize(Integer size)
     => LongArray(size);
 
 Integer getw(Words words, Integer index)
-    => WholeJava.get(words, index);
+    => WordsUtils.get(words, index);
 
 void setw(Words words, Integer index, Integer word) {
-    WholeJava.set(words, index, word);
+    WordsUtils.set(words, index, word);
 }
 
 Integer sizew(Words words)

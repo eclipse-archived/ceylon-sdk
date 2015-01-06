@@ -1,6 +1,6 @@
 package ceylon.math.whole;
 
-public class WholeJava {
+class WordsUtils {
 
     public static long get(long[] array, long index) {
         // faster than standard routine that performs an overflow check
