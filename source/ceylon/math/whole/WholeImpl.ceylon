@@ -19,9 +19,6 @@ final class WholeImpl satisfies Whole {
     variable String? stringMemo = null;
 
     shared new OfWords(Integer sign, Words words, Integer maxSize = -1) {
-        // TODO shorten length of array if way oversized?
-        // TODO zero out unused portion to avoid info leaks?
-
         // valid sign range
         assert (-1 <= sign <= 1);
 
@@ -30,7 +27,15 @@ final class WholeImpl satisfies Whole {
         assert (!sign == 0 || this.wordsSize == 0);
 
         this.sign = if (this.wordsSize == 0) then 0 else sign;
-        this.words = words;
+
+        if (sizew(words) > wordsSize + 3) {
+            // avoid excessive waste
+            this.words = wordsOfSize(this.wordsSize);
+            copyWords(words, this.words, 0, 0, this.wordsSize);
+        }
+        else {
+            this.words = words;
+        }
     }
 
     shared new CopyOfMutableWhole(MutableWhole mutableWhole) {
