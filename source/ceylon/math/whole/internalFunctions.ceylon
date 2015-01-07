@@ -807,10 +807,9 @@ Words predecessor(Integer wordsSize, Words words,
             if (!(words === r)) {
                 // copy remaining words
                 rIndex++;
-                while (rIndex < wordsSize) {
-                    // TODO use more efficient copyWords
-                    setw(r, rIndex, getw(words, rIndex));
-                    rIndex++;
+                if (rIndex < wordsSize) {
+                    copyWords(words, r, rIndex, rIndex, wordsSize - rIndex);
+                    rIndex = wordsSize;
                 }
                 // clear remaining parts of r
                 while (rIndex < rSize) {
