@@ -3,7 +3,19 @@ import ceylon.math.integer {
     smallest
 }
 
-Integer realSize(Words words, variable Integer maxSize) {
+"Returns the actual number words contained in [[words]], up to [[maxSize]].
+ Given that words are stored in little-endian order, trailing zero words
+ do not contribute to the numeric value of [[words]]. It is presumed that
+ all words at index [[maxSize]] and beyond are zero."
+Integer realSize(words, maxSize) {
+
+    "The words, in unsigned notation."
+    Words words;
+
+    "The maximum size to return; may be greater than size(words),
+     or `-1` to indicate no maximum."
+    variable Integer maxSize;
+
     variable value lastIndex =
             if (maxSize >= 0)
             then smallest(sizew(words), maxSize) - 1
@@ -15,19 +27,24 @@ Integer realSize(Words words, variable Integer maxSize) {
     return lastIndex + 1;
 }
 
-Integer calculateTrailingZeroWords(Integer wordsSize, Words words) {
-    for (i in 0:wordsSize) {
-        if (getw(words, i) != 0) {
-            return i;
-        }
-    } else {
-        assert(wordsSize == 0);
-        return 0;
-    }
-}
+"Minimal length necessary to represent words in two's complement,
+ excluding a sign bit. The passed in value is considered to be
+ positive if [[trailingZeroWords]] is null, and negative otherwise."
+Integer calculateBitLength(wordsSize, words, trailingZeroWords) {
 
-"Minimal length to represent words in two's complement, excluding a sign bit."
-Integer calculateBitLength(Integer wordsSize, Words words, Integer? trailingZeroWords) {
+    "The number of words contained in the cooresponding words argument.
+     If greater than zero, `words[wordsSize-1]` must be non-zero."
+    Integer wordsSize;
+
+    "The words, in unsigned notation, to be converted to two's complement
+     using the sign indicated by [[trailingZeroWords]]."
+    Words words;
+
+    "Indicates that [[words]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? trailingZeroWords;
+
     if (wordsSize == 0) {
         return 0;
     }
@@ -45,13 +62,42 @@ Integer calculateBitLength(Integer wordsSize, Words words, Integer? trailingZero
     return length;
 }
 
+"Perform a bitwise operation, such as AND, on the given [[Words]],
+ returning either [[rWords]] for the result if provided and of
+ sufficient size, or a new [[Words]] object. *Note:* the result
+ will be in two's complement notation."
 Words logicOperation(
         Integer firstSize, Words firstWords,
-        Integer firstBitLength, Integer? firstTrailingZeroWords,
+        firstBitLength, firstTrailingZeroWords,
         Integer secondSize, Words secondWords,
-        Integer secondBitLength, Integer? secondTrailingZeroWords,
-        Integer(Integer)(Integer) op,
-        Words? rWords = null) {
+        secondBitLength, secondTrailingZeroWords,
+        Integer(Integer)(Integer) op, rWords = null) {
+
+    "The pre-calculated number of bits required to represent [[firstWords]]
+     in two's complement, excluding a sign bit, with the sign
+     indicated by [[firstTrailingZeroWords]]."
+    Integer firstBitLength;
+
+    "Indicates that [[firstWords]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? firstTrailingZeroWords;
+
+    "The pre-calculated number of bits required to represent [[secondWords]]
+     in two's complement, excluding a sign bit, with the sign
+     indicated by [[secondTrailingZeroWords]]."
+    Integer secondBitLength;
+
+    "Indicates that [[secondWords]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? secondTrailingZeroWords;
+
+    "Storage for the result, if large enough. It *is* permissible
+     for [[rWords]] to be the same instance as [[firstWords]]
+     or [[secondWords]]. The sign bit will be extended to fill the
+     entirety of [[rWords]]."
+    Words? rWords;
 
     // must be large enough for at least 1 sign bit
     value count = largest(firstBitLength / wordBits + 1,
@@ -71,63 +117,130 @@ Words logicOperation(
     return result;
 }
 
-"Inputs and outputs are unsigned, operation occurs in two's complement"
+"Sets the bit as specified, returning either [[rWords]] for the result
+ if provided and of sufficient size, or a new [[Words]] object. *Note:*
+ the result will be in unsigned notation notation; the caller is responsible
+ for determining the sign of the result based on the input value."
 Words setBit(Integer wordsSize, Words words,
-          Integer wordsBitLength, Integer? trailingZeroWords,
-          Integer index, Boolean bit,
-          Words? rWords = null) {
+          wordsBitLength, trailingZeroWords,
+          Integer index, Boolean bit, rWords = null) {
+
+    "The pre-calculated number of bits required to represent [[words]]
+     in two's complement, excluding a sign bit, with the sign
+     indicated by [[trailingZeroWords]]."
+    Integer wordsBitLength;
+
+    "Indicates that [[words]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? trailingZeroWords;
+
+    "Storage for the result, if large enough. It *is* permissible
+     for [[rWords]] to be the same instance as [[words]].
+     Unused portions of [[rWords]] will be filled with zeros."
+    Words? rWords;
 
     value newLength = largest(wordsBitLength / wordBits + 1,
                               (index + 1) / wordBits + 1);
+
     value result = if (exists rWords, sizew(rWords) >= newLength)
                    then rWords
                    else wordsOfSize(newLength);
+
+    // copy into the result, translating to two's complement
     for (rIndex in 0:sizew(result)) {
         setw(result, rIndex, getWordInTwos(wordsSize, words, rIndex, trailingZeroWords));
     }
+
+    // set the bit
     value wordNum = index / wordBits;
     value bitNum = index % wordBits;
     setw(result, wordNum, getw(result, wordNum).set(bitNum, bit));
+
+    // convert to unsigned and return
     return if (exists trailingZeroWords) // if negative
-           then twosToUnsigned(sizew(result), result, result)
+           then twosToUnsigned(result, result)
            else result;
 }
 
-"Inputs and outputs are unsigned, operation occurs in two's complement"
+"Flips the bit as specified, returning either [[rWords]] for the result
+ if provided and of sufficient size, or a new [[Words]] object. *Note:*
+ the result will be in unsigned notation notation; the caller is responsible
+ for determining the sign of the result based on the input value."
 Words flipBit(Integer wordsSize, Words words,
-          Integer wordsBitLength, Integer? trailingZeroWords,
-          Integer index,
-          Words? rWords = null) {
+          wordsBitLength, trailingZeroWords,
+          Integer index, rWords = null) {
+
+    "The pre-calculated number of bits required to represent [[words]]
+     in two's complement, excluding a sign bit, with the sign
+     indicated by [[trailingZeroWords]]."
+    Integer wordsBitLength;
+
+    "Indicates that [[words]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? trailingZeroWords;
+
+    "Storage for the result, if large enough. It *is* permissible
+     for [[rWords]] to be the same instance as [[words]].
+     Unused portions of [[rWords]] will be filled with zeros."
+    Words? rWords;
 
     value newLength = largest(wordsBitLength / wordBits + 1,
                               (index + 1) / wordBits + 1);
+
     value result = if (exists rWords, sizew(rWords) >= newLength)
                    then rWords
                    else wordsOfSize(newLength);
+
+    // copy into the result, translating to two's complement
     for (rIndex in 0:sizew(result)) {
         setw(result, rIndex, getWordInTwos(wordsSize, words, rIndex, trailingZeroWords));
     }
+
+    // flip the bit
     value wordNum = index / wordBits;
     value bitNum = index % wordBits;
     setw(result, wordNum, getw(result, wordNum).flip(bitNum));
+
+    // convert to unsigned and return
     return if (exists trailingZeroWords) // if negative
-           then twosToUnsigned(sizew(result), result, result)
+           then twosToUnsigned(result, result)
            else result;
 }
 
-Integer getWordInTwos(Integer wordsSize, Words words,
-                      Integer wordIndex, Integer? trailingZeroWords)
+"Return the value of [[words]] at [[wordIndex]], after converting to two's
+ complement notation. [[wordIndex]] may be larger than the last index of
+ [[words]]; the sign bit is used to logically extend the value to
+ infinite length."
+Integer getWordInTwos(
+
+    "The number of words in [[words]]."
+    Integer wordsSize,
+
+    "The words, in unsigned notation, to be converted to two's complement
+     using the sign indicated by [[trailingZeroWords]]."
+    Words words,
+
+    "The index of the desired word."
+    Integer wordIndex,
+
+    "Indicates that [[words]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? trailingZeroWords)
+
     =>  if (exists trailingZeroWords)
         then getWordInTwosNegative(wordsSize, words, wordIndex, trailingZeroWords)
         else getWordInTwosPositive(wordsSize, words, wordIndex);
 
-// logically extend to infinite length
+see(`function getWordInTwos`)
 Integer getWordInTwosPositive(Integer wordsSize, Words words, Integer wordIndex)
     =>  if (!(0 <= wordIndex < wordsSize))
         then 0
         else getw(words, wordIndex);
 
-// logically extend to infinite length
+see(`function getWordInTwos`)
 Integer getWordInTwosNegative(Integer wordsSize, Words words, Integer wordIndex,
                               Integer trailingZeroWords)
     =>  let (wMask = wordMask)
@@ -141,12 +254,39 @@ Integer getWordInTwosNegative(Integer wordsSize, Words words, Integer wordIndex,
            then rawWord.negated.and(wMask) // first non-zero word
            else rawWord.not.and(wMask); // wordNum > zeros
 
+"Return the value of the bit of [[words]] at [[index]], after converting
+ to two's complement notation. [[index]] may be larger than the number of
+ bits contained in [[words]]; the sign bit is used to logically extend the
+ value to infinite length."
+Boolean getBit(
+
+    "The number of words in [[words]]."
+    Integer wordsSize,
+
+    "The words, in unsigned notation, to be converted to two's complement
+     using the sign indicated by [[trailingZeroWords]]."
+    Words words,
+
+    "The index of the desired bit."
+    Integer index,
+
+    "Indicates that [[words]] should be interpreted as a positive
+     number if null; otherwise, the pre-calculated number of trailing
+     (least significant) zero words."
+    Integer? trailingZeroWords)
+
+    =>  if (exists trailingZeroWords)
+        then getBitNegative(wordsSize, words, index, trailingZeroWords)
+        else getBitPositive(wordsSize, words, index);
+
+see(`function getBit`)
 Boolean getBitPositive(Integer wordsSize, Words words, Integer index)
     =>  let (wBits = wordBits,
              word = getWordInTwosPositive(wordsSize, words, index / wBits),
              mask = 1.leftLogicalShift(index % wBits))
         word.and(mask) != 0;
 
+see(`function getBit`)
 Boolean getBitNegative(Integer wordsSize, Words words, Integer index,
                        Integer trailingZeroWords)
     =>  if (index == 0) then
@@ -161,10 +301,23 @@ Boolean getBitNegative(Integer wordsSize, Words words, Integer index,
                             trailingZeroWords))
             word.and(mask) != 0;
 
+"Returns the result of adding [[first]] to [[second]]. All values are unsigned.
+ [[firstSize]] and [[secondSize]] must both be greater then 0, although it may
+ make sense to drop this restriction."
 Words add(Integer firstSize, Words first,
           Integer secondSize, Words second,
-          Integer rSize = largest(firstSize, secondSize) + 1,
-          Words r = wordsOfSize(rSize)) {
+          rSize = largest(firstSize, secondSize) + 1,
+          r = wordsOfSize(rSize)) {
+
+    "The currently occupied size of [[r]], if provided."
+    Integer rSize;
+
+    "The result object, which *may* be the same as [[first]] or [[second]].
+     If provided, this object must be large enough to hold the result;
+     that is, at least `firstSize + secondSize` words, plus an additional word
+     for the carry, if necessary. This method will zero-out unused portions
+     of [[r]] up to the index `rSize - 1`."
+    Words r;
 
     // Knuth 4.3.1 Algorithm A
     //assert(firstSize > 0 && secondSize > 0);
@@ -228,10 +381,22 @@ Words add(Integer firstSize, Words first,
     return r;
 }
 
+"Returns the result of subtracting [[v]] from [[u]]. All values are unsigned.
+ [[u]] *must* be greater than or equal to [[v]], ensuring a non-negative
+ result."
 Words subtract(Integer uSize, Words u,
                Integer vSize, Words v,
-               Integer rSize = uSize,
-               Words r = wordsOfSize(rSize)) {
+               rSize = uSize,
+               r = wordsOfSize(rSize)) {
+
+    "The currently occupied size of [[r]], if provided."
+    Integer rSize;
+
+    "The result object, which *may* be the same as [[u]] or [[v]].
+     If provided, this object must be large enough to hold the result;
+     that is, at least `uSize` words. This method will zero-out unused
+     portions of [[r]] up to the index `rSize - 1`."
+    Words r;
 
     // Knuth 4.3.1 Algorithm S
     //assert(compareMagnitude(u, v) == larger);
@@ -243,6 +408,7 @@ Words subtract(Integer uSize, Words u,
     variable value i = 0;
     variable value borrow = 0;
 
+    // subtract v from u
     while (i < vSize) {
         value difference =   getw(u, i)
                            - getw(v, i)
@@ -252,6 +418,7 @@ Words subtract(Integer uSize, Words u,
         i++;
     }
 
+    // continue unit there is no borrow
     while (i < uSize && borrow != 0) {
         value difference =   getw(u, i)
                            + borrow;
@@ -260,6 +427,7 @@ Words subtract(Integer uSize, Words u,
         i++;
     }
 
+    // simply copy any remaining words from u
     if (i < uSize) {
         if (!(u === r)) {
             copyWords(u, r, i, i, uSize - i);
@@ -275,10 +443,20 @@ Words subtract(Integer uSize, Words u,
     return r;
 }
 
+"Returns the product of [[u]] and [[v]]. All values are unsigned."
 Words multiply(Integer uSize, Words u,
                Integer vSize, Words v,
-               Integer rSize = uSize + vSize,
-               Words r = wordsOfSize(rSize)) {
+               rSize = uSize + vSize,
+               r = wordsOfSize(rSize)) {
+
+    "The currently occupied size of [[r]], if provided."
+    Integer rSize;
+
+    "The result object, which *may not* be the same as [[u]] or [[v]].
+     If provided, this object must be large enough to hold the result;
+     that is, at least `uSize + vSize` words. This method will zero-out
+     unused portions of [[r]] up to the index `rSize - 1`."
+    Words r;
 
     if (uSize == 1) {
         return multiplyWord(vSize, v, getw(u, 0), rSize, r);
@@ -333,9 +511,20 @@ Words multiply(Integer uSize, Words u,
     return r;
 }
 
+"Returns the product of [[u]] and [[v]]. All values are unsigned."
 Words multiplyWord(Integer uSize, Words u, Integer v,
-                   Integer rSize = uSize + 1,
-                   Words r = wordsOfSize(rSize)) {
+                   rSize = uSize + 1,
+                   r = wordsOfSize(rSize)) {
+
+    "The currently occupied size of [[r]], if provided."
+    Integer rSize;
+
+    "The result object, which *may* be the same as [[u]].
+     If provided, this object must be large enough to hold the result;
+     that is, at least `uSize + 1` words, or, as a special case, just
+     `uSize` words if there is no final carry. This method will zero-out
+     unused portions of [[r]] up to the index `rSize - 1`."
+    Words r;
 
     value wMask = wordMask;
     value wBits = wordBits;
@@ -344,6 +533,8 @@ Words multiplyWord(Integer uSize, Words u, Integer v,
 
     variable value carry = 0;
     variable value i = 0;
+
+    // multiply
     while (i < uSize) {
         value product = getw(u, i) * v + carry;
         setw(r, i, product.and(wMask));
@@ -351,11 +542,13 @@ Words multiplyWord(Integer uSize, Words u, Integer v,
         i++;
     }
 
+    // only set the carry if we need to
     if (!carry == 0) {
         setw(r, i, carry);
         i++;
     }
 
+    // zero out remaining words of provided array
     while (i < rSize) {
         setw(r, i, 0);
         i++;
@@ -364,8 +557,12 @@ Words multiplyWord(Integer uSize, Words u, Integer v,
     return r;
 }
 
-"`u[j-vsize..j-1] <- u[j-vsize..j-1] - v * q`, returning the absolute value
- of the final borrow that would normally be subtracted against u[j]."
+"Used for division, this method sets:
+
+     u[j-vsize..j-1] <- u[j-vsize..j-1] - v * q
+
+ and returns the absolute value of the final borrow that would normally
+ be subtracted against `u[j]`."
 Integer multiplyAndSubtract(Words u, Integer vSize, Words v, Integer q, Integer j) {
     value wMask = wordMask;
     value wBits = wordBits;
@@ -388,7 +585,12 @@ Integer multiplyAndSubtract(Words u, Integer vSize, Words v, Integer q, Integer 
     return borrow;
 }
 
-"`u[j-vSize..j-1] <- u[j-vSize..j-1] + v`, discarding the final carry."
+"Used for division when the estimated `q` used in [[multiplyAndSubtract]] was
+ too large, this method sets:
+
+     u[j-vSize..j-1] <- u[j-vSize..j-1] + v
+
+ discarding the final carry."
 void addBack(Words u, Integer vSize, Words v, Integer j) {
     value wMask = wordMask;
     value wBits = wordBits;
@@ -407,12 +609,21 @@ void addBack(Words u, Integer vSize, Words v, Integer j) {
     }
 }
 
-"If provided, quotient must be at least dividendSize and zero filled."
+"Divides [[dividend]] by [[divisor]], possibly returning the remainder, and
+ storing the quotient in [[quotient]], if provided. All values are unsigned.
+
+ The remainder will be returned if [[Absent]] is [[Nothing]]. If a remainder is
+ not desired, [[Absent]] should be [[Null]]."
 Words|Absent divide<Absent=Null>(
             Integer dividendSize, Words dividend,
             Integer divisorSize, Words divisor,
-            Words? quotient = null)
+            quotient = null)
             given Absent satisfies Null {
+
+    "The object to hold the quotient, or null if the quotient is not needed.
+     This *may not* be the same as [[dividend]] or [[divisor]], and *must*
+     be at least [[dividendSize]] and *must* be zero filled."
+    Words? quotient;
 
     if (divisorSize < 2) {
         value first = getw(divisor, 0);
@@ -515,10 +726,20 @@ Words|Absent divide<Absent=Null>(
     }
 }
 
-"If provided, quotient must be at least dividendSize and zero filled."
+"Divides [[u]] by [[v]], possibly returning the remainder, and
+ storing the quotient in [[quotient]], if provided. All values are unsigned.
+
+ The remainder will be returned if [[Absent]] is [[Nothing]]. If a remainder is
+ not desired, [[Absent]] should be [[Null]]."
 Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
-                                Integer v, Words? quotient = null)
+                                Integer v, quotient = null)
                                 given Absent satisfies Null {
+
+    "The object to hold the quotient, or null if the quotient is not needed.
+     This *may not* be the same as [[u]], and *must* be at least [[uSize]]
+     and *must* be zero filled."
+    Words? quotient;
+
     value wMask = wordMask;
     value wBits = wordBits;
 
@@ -555,12 +776,24 @@ Words|Absent divideWord<Absent=Null>(Integer uSize, Words u,
     }
 }
 
+see (`function predecessor`)
 Words predecessorInPlace(Integer wordsSize, Words words)
     =>  predecessor(wordsSize, words, wordsSize, words);
 
+"Return the value of [[words]] decremented by one. [[words]] must not be zero.
+ All values are unsigned.
+
+ The returned value will always be [[r]]."
 Words predecessor(Integer wordsSize, Words words,
                   Integer rSize = wordsSize,
-                  Words r = wordsOfSize(rSize)) {
+                  r = wordsOfSize(rSize)) {
+
+    "The result object, which *may* be the same as [[words]].
+     If provided, this object must be large enough to hold the result;
+     that is, at least `wordsSize` words. This method will zero-out unused
+     portions of [[r]] up to the index `rSize - 1`."
+    Words r;
+
     // asert words > 0
     value wMask = wordMask;
     variable value rIndex = 0;
@@ -575,6 +808,7 @@ Words predecessor(Integer wordsSize, Words words,
                 // copy remaining words
                 rIndex++;
                 while (rIndex < wordsSize) {
+                    // TODO use more efficient copyWords
                     setw(r, rIndex, getw(words, rIndex));
                     rIndex++;
                 }
@@ -588,10 +822,15 @@ Words predecessor(Integer wordsSize, Words words,
         }
         rIndex++;
     }
+    // will only happen if words is zero, which is not allowed
     assert(false);
 }
 
-// it is ok for w[size-1] to be 0
+"Return the value of [[words]] incremented by one. It is explicitly
+ allowed for `words[size-1]` to be zero. All values are unsigned.
+
+ *Note:* the returned value will be the same object as [[words]]
+ if and only if [[words]] is large enough for the result."
 Words successorInPlace(Integer wordsSize, Words words) {
     value wMask = wordMask;
     variable value previous = 0;
@@ -618,10 +857,14 @@ Words successorInPlace(Integer wordsSize, Words words) {
     }
 }
 
-// it is ok for w[size-1] to be 0
+"Return a new [[Words]]s object containing the value of [[words]] incremented
+ by one. It is explicitly allowed for `words[size-1]` to be zero. All values
+ are unsigned."
 Words successor(Integer wordsSize, Words words)
     =>  successorInPlace(wordsSize, clonew(words));
 
+"Used by [[rightShiftImpl]] to help with two's complement concerns. Returns
+ true if any `one` bits are present in the given shift range."
 Boolean nonZeroBitsDropped(Words u,
                            Integer shiftWords,
                            Integer shiftBits) {
@@ -639,6 +882,12 @@ Boolean nonZeroBitsDropped(Words u,
             .and(wordMask) != 0;
 }
 
+"Return a new [[Words]] object holding result of [[u]] shifted right [[shift]]
+ bits. Both [[u]] and the result are unsigned, but the shift is performed in
+ two's complement, using [[negative]] for the conversions as necessary.
+
+ This is, in effect, an arithmetic right shift, so the caller should
+ consider the sign to be preserved."
 Words rightShift(Boolean negative, Integer uSize, Words u, Integer shift) {
     //assert (shift >= 0);
 
@@ -670,6 +919,14 @@ Words rightShift(Boolean negative, Integer uSize, Words u, Integer shift) {
                   shiftWords, shiftBits);
 }
 
+"Return the result of [[u]] shifted right [[shift]] bits. Both [[u]] and
+ the result are unsigned, but the shift is performed in two's complement,
+ using [[negative]] for the conversions as necessary.
+
+ The returned object will always be the same as [[u]].
+
+ This is, in effect, an arithmetic right shift, so the caller should
+ consider the sign to be preserved."
 Words rightShiftInplace(
             Boolean negative, Integer uSize, Words u, Integer shift)
     =>  let (wBits = wordBits,
@@ -681,6 +938,7 @@ Words rightShiftInplace(
                     shiftWords, shiftBits)
         else u;
 
+"Used internally by [[rightShift]] and [[rightShiftInplace]]."
 Words rightShiftImpl(Boolean negative,
                      Integer uSize, Words u,
                      Integer rSize, Words r,
@@ -737,8 +995,16 @@ Words rightShiftImpl(Boolean negative,
            else r;
 }
 
+"Return a new [[Words]] object holding result of [[u]] shifted left [[shift]]
+ bits."
 Words leftShift(Integer uSize, Words u,
-                Integer shift, Integer minSize = uSize) {
+                Integer shift, minSize = uSize) {
+
+    "The minimum size for the new [[Words]] object created to hold the
+     result. This is useful for callers that need room for additional
+     words for subsequent operations."
+    Integer minSize;
+
     //assert (shift >= 0);
 
     value wBits = wordBits;
@@ -771,6 +1037,10 @@ Words leftShift(Integer uSize, Words u,
                          shiftWords, shiftBits);
 }
 
+"Return the result of shifting [[u]] left [[shift]] bits.
+
+ *Note:* the returned value will be the same object as [[u]]
+ if and only if [[u]] is large enough for the result."
 Words leftShiftInplace(Integer uSize, Words u, Integer shift) {
     value wBits = wordBits;
     value shiftBits = shift % wBits;
@@ -791,6 +1061,7 @@ Words leftShiftInplace(Integer uSize, Words u, Integer shift) {
     return leftShiftImpl(uSize, u, rSize, r, shiftWords, shiftBits);
 }
 
+"Used internally by [[leftShift]] and [[leftShiftInplace]]."
 Words leftShiftImpl(Integer uSize, Words u,
                     Integer rSize, Words r,
                     Integer shiftWords,
@@ -844,6 +1115,7 @@ Words leftShiftImpl(Integer uSize, Words u,
     return r;
 }
 
+"Used internally by [[leftShift]] and [[leftShiftInplace]]."
 Integer leftShiftAnticipateSize(
         Integer uSize, Words u,
         Integer shiftWords, Integer shiftBits)
@@ -857,10 +1129,23 @@ Integer leftShiftAnticipateSize(
                 addWord = if (highWord == 0) then 0 else 1)
             uSize + shiftWords + addWord;
 
-"return magnitude in unsigned notation of the parameter words,
- provided in two's complement."
-Words twosToUnsigned(Integer wordsSize, Words words,
-                     Words r = wordsOfSize(wordsSize)) {
+"Return the magnitude, in unsigned notation, of [[words]]
+ which is provided in two's complement.
+
+ *Note:* the returned value will be the same object as [[r]]
+ if and only if [[r]] is large enough for the result.
+
+ *Note:* This method breaks from the normal convention of
+ arguments being provided in unsigned form; [[words]] is
+ interpreted in two's complement."
+Words twosToUnsigned(Words words,
+                     r = wordsOfSize(sizew(words))) {
+
+    "The *proposed* result object, which *may* be the same as [[words]].
+     This method will zero-out unused portions of [[r]]."
+    Words r;
+
+    value wordsSize = sizew(words);
     if (!getw(words, wordsSize - 1).get(wordBits - 1)) {
         // words are positive, we shouldn't have been called...
         if (!words === r) {
@@ -874,18 +1159,32 @@ Words twosToUnsigned(Integer wordsSize, Words words,
     }
     else {
         // flip the bits and add one
-        return successorInPlace(wordsSize, twosNot(wordsSize, words, r));
+        // We don't have to worry about sign extension, since the
+        // returned value will always be positive, and in unsigned
+        // notation. We also don't have to worry about zeroing 'r'
+        // since twosNot will do that for us.
+        return successorInPlace(wordsSize, twosNot(words, r));
     }
 }
 
-"not operation, interpreting words in two's complement, despite
- the usual unsigned representation. The sign bit is extended to
- cover all words of [[r]]."
-Words twosNot(Integer wordsSize,
-              Words words,
-              Words r = wordsOfSize(wordsSize)) {
+"Return the result, in two's complement, of performing the NOT
+ operation on [[words]], which is provided in two's complement.
+
+ The returned value will be the same object as [[r]], which must
+ be large enough to hold the result. The sign bit will be extended
+ to fill the entirety of [[r]].
+
+ *Note:* This method breaks from the normal convention of
+ arguments being provided in unsigned form; [[words]] is
+ interpreted in two's complement.
+
+ *Note:* This method further breaks from convention by returning
+ a value of [[Words]] in two's complement notation."
+Words twosNot(Words words,
+              Words r = wordsOfSize(sizew(words))) {
     value wMask = wordMask;
     variable value rIndex = 0;
+    value wordsSize = sizew(words);
     while (rIndex < wordsSize) {
         setw(r, rIndex, getw(words, rIndex).not.and(wMask));
         rIndex++;
@@ -905,6 +1204,7 @@ Words twosNot(Integer wordsSize,
     return r;
 }
 
+"All values are unsigned."
 Comparison compareMagnitude(Integer xSize, Words x,
                             Integer ySize, Words y) {
 
@@ -931,6 +1231,9 @@ Comparison compareMagnitude(Integer xSize, Words x,
     }
 }
 
+"This is a narrowing operation, returning an [[Integer]] holding only the
+ lower [[runtime.integerAddressableSize]] number of bits of the two's
+ complement representation of [[words]]."
 Integer integerForWords(Integer wordsSize, Words words, Boolean negative) {
     // easy cases
     if (wordsSize == 0) {

@@ -66,7 +66,7 @@ final class WholeImpl satisfies Whole {
                 this.sign = if (wordsSize == 0) then 0 else 1;
             }
             else {
-                this.words = twosToUnsigned(sizew(words), words, words);
+                this.words = twosToUnsigned(words, words);
                 this.wordsSize = realSize(words, -1);
                 this.sign = -1;
             }
@@ -79,11 +79,9 @@ final class WholeImpl satisfies Whole {
             else if (index > wordBits * wordsSize) then
                 // infinite ones in two's complement
                 negative
-            else if (positive) then
-                getBitPositive(wordsSize, words, index)
             else
-                getBitNegative(wordsSize, words, index,
-                               trailingZeroWords);
+                getBit(wordsSize, words, index,
+                       negative then trailingZeroWords);
 
     shared actual Whole set(Integer index, Boolean bit)
         =>  if (index < 0) then
@@ -518,7 +516,7 @@ final class WholeImpl satisfies Whole {
                 return i;
             }
         } else {
-            assert(wordsSize == 0);
+            //assert(wordsSize == 0);
             return 0;
         }
     }
