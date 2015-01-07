@@ -29,34 +29,8 @@ void copyWords(
 
 Words clonew(Words source) => source.clone();
 
-// Array<Object>
-//shared alias Words => Array<Object>;
-//Words wordsOfSize(Integer size)
-//    => arrayOfSize<Object>(size, 0);
-//
-//Integer getw(Words words, Integer index) {
-//    assert (is Integer result = words.getFromFirst(index));
-//    return result;
-//}
-//
-//void setw(Words words, Integer index, Integer word) {
-//    words.set(index, word);
-//}
-//
-//Integer sizew(Words words)
-//    => words.size;
-//
-//void copyWords(
-//        Words source,
-//        Words destination,
-//        Integer sourcePosition = 0,
-//        Integer destinationPosition = 0,
-//        Integer length = sizew(source) - sourcePosition) {
-//    source.copyTo(destination, sourcePosition, destinationPosition, length);
-//}
-
 // Array<Integer>
-//shared alias Words => Array<Integer>;
+//alias Words => Array<Integer>;
 //
 //Words wordsOfSize(Integer size)
 //    => arrayOfSize<Integer>(size, 0);
@@ -81,40 +55,8 @@ Words clonew(Words source) => source.clone();
 //        Integer length = sizew(source) - sourcePosition) {
 //    source.copyTo(destination, sourcePosition, destinationPosition, length);
 //}
-
-// JArrayList<Integer>
-//shared alias Words => JArrayList<Integer>;
 //
-//Words wordsOfSize(Integer size) {
-//    value array = JArrayList<Integer>(size);
-//    for (_ in 0:size) {
-//        array.add(0);
-//    }
-//    return array;
-//}
-//
-//Integer getw(Words words, Integer index)
-//    => words.get(index);
-//
-//void setw(Words words, Integer index, Integer word) {
-//    words.set(index, word);
-//}
-//
-//Integer sizew(Words words)
-//    => words.size();
-//
-//void copyWords(Words source,
-//        Words destination,
-//       Integer sourcePosition = 0,
-//       Integer destinationPosition = 0,
-//       Integer length = sizew(source) - sourcePosition) {
-//
-//    for (i in 0:length) {
-//        value sp = sourcePosition + i;
-//        value dp = destinationPosition + i;
-//        setw(destination, dp, getw(source, sp));
-//    }
-//}
+//Words clonew(Words source) => source.clone();
 
 // Common
 Words wordsOfOne(Integer word) {
