@@ -285,16 +285,16 @@ final class MutableWhole extends Object
             else
                 false;
 
-    shared void inplaceLeftLogicalShift(Integer shift) {
-        inplaceRightArithmeticShift(-shift);
+    shared void inPlaceLeftLogicalShift(Integer shift) {
+        inPlaceRightArithmeticShift(-shift);
     }
 
-    shared void inplaceRightArithmeticShift(Integer shift) {
+    shared void inPlaceRightArithmeticShift(Integer shift) {
         if (shift < 0) {
-            words = leftShiftInplace(wordsSize, words, -shift);
+            words = leftShiftInPlace(wordsSize, words, -shift);
             wordsSize = realSize(words, -1);
         } else if (shift > 0) {
-            words = rightShiftInplace(
+            words = rightShiftInPlace(
                         negative, wordsSize, words, shift);
             wordsSize = realSize(words, wordsSize);
             if (wordsSize == 0) {
@@ -303,15 +303,15 @@ final class MutableWhole extends Object
         }
     }
 
-    shared void inplaceAdd(MutableWhole other) {
-        inplaceAddSigned(other, other.sign);
+    shared void inPlaceAdd(MutableWhole other) {
+        inPlaceAddSigned(other, other.sign);
     }
 
-    shared void inplaceSubtract(MutableWhole other) {
-        inplaceAddSigned(other, other.sign.negated);
+    shared void inPlaceSubtract(MutableWhole other) {
+        inPlaceAddSigned(other, other.sign.negated);
     }
 
-    shared void inplaceDecrement() {
+    shared void inPlaceDecrement() {
         if (zero) {
             signValue = -1;
             words = successorInPlace(wordsSize, words);
@@ -330,7 +330,7 @@ final class MutableWhole extends Object
         }
     }
 
-    shared void inplaceIncrement() {
+    shared void inPlaceIncrement() {
         if (zero) {
             signValue = 1;
             words = successorInPlace(wordsSize, words);
@@ -395,12 +395,12 @@ final class MutableWhole extends Object
                             subtract(second.wordsSize, second.words,
                                      first.wordsSize, first.words)));
 
-    void inplaceAddSigned(MutableWhole other, Integer otherSign) {
+    void inPlaceAddSigned(MutableWhole other, Integer otherSign) {
         if (other.zero) {
             return;
         }
         else if (this.zero || this.sign == otherSign) {
-            inplaceAddUnsigned(other);
+            inPlaceAddUnsigned(other);
             this.signValue = otherSign;
         }
         else { // opposite signs
@@ -421,7 +421,7 @@ final class MutableWhole extends Object
             }
             case (smaller) {
                 if (sizew(words) >= other.wordsSize) {
-                    // inplace can be done
+                    // inPlace can be done
                     subtract(other.wordsSize, other.words,
                              this.wordsSize, this.words,
                              this.wordsSize, this.words);
@@ -437,7 +437,7 @@ final class MutableWhole extends Object
         }
     }
 
-    void inplaceAddUnsigned(MutableWhole other) {
+    void inPlaceAddUnsigned(MutableWhole other) {
         // assert(!other.zero)
 
         Integer rSize =

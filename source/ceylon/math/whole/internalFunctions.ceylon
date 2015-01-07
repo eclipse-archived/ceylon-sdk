@@ -722,7 +722,7 @@ Words|Absent divide<Absent=Null>(
         return null;
     }
     else {
-        return rightShiftInplace(false, realSize(u, uSize), u, shift);
+        return rightShiftInPlace(false, realSize(u, uSize), u, shift);
     }
 }
 
@@ -927,7 +927,7 @@ Words rightShift(Boolean negative, Integer uSize, Words u, Integer shift) {
 
  This is, in effect, an arithmetic right shift, so the caller should
  consider the sign to be preserved."
-Words rightShiftInplace(
+Words rightShiftInPlace(
             Boolean negative, Integer uSize, Words u, Integer shift)
     =>  let (wBits = wordBits,
              shiftBits = shift % wBits,
@@ -938,7 +938,7 @@ Words rightShiftInplace(
                     shiftWords, shiftBits)
         else u;
 
-"Used internally by [[rightShift]] and [[rightShiftInplace]]."
+"Used internally by [[rightShift]] and [[rightShiftInPlace]]."
 Words rightShiftImpl(Boolean negative,
                      Integer uSize, Words u,
                      Integer rSize, Words r,
@@ -1041,7 +1041,7 @@ Words leftShift(Integer uSize, Words u,
 
  *Note:* the returned value will be the same object as [[u]]
  if and only if [[u]] is large enough for the result."
-Words leftShiftInplace(Integer uSize, Words u, Integer shift) {
+Words leftShiftInPlace(Integer uSize, Words u, Integer shift) {
     value wBits = wordBits;
     value shiftBits = shift % wBits;
     value shiftWords = shift / wBits;
@@ -1061,7 +1061,7 @@ Words leftShiftInplace(Integer uSize, Words u, Integer shift) {
     return leftShiftImpl(uSize, u, rSize, r, shiftWords, shiftBits);
 }
 
-"Used internally by [[leftShift]] and [[leftShiftInplace]]."
+"Used internally by [[leftShift]] and [[leftShiftInPlace]]."
 Words leftShiftImpl(Integer uSize, Words u,
                     Integer rSize, Words r,
                     Integer shiftWords,
@@ -1115,7 +1115,7 @@ Words leftShiftImpl(Integer uSize, Words u,
     return r;
 }
 
-"Used internally by [[leftShift]] and [[leftShiftInplace]]."
+"Used internally by [[leftShift]] and [[leftShiftInPlace]]."
 Integer leftShiftAnticipateSize(
         Integer uSize, Words u,
         Integer shiftWords, Integer shiftBits)

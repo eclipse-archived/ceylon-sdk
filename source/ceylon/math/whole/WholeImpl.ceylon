@@ -590,7 +590,7 @@ final class WholeImpl satisfies Whole {
             if (!exp.even) {
                 result = (result * base) % modulus;
             }
-            exp.inplaceRightArithmeticShift(1);
+            exp.inPlaceRightArithmeticShift(1);
             base = (base * base) % modulus;
         }
         return result;

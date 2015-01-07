@@ -82,8 +82,8 @@ shared Whole gcd(Whole first, Whole second) {
         value zeroBits = smallest(uZeroBits, vZeroBits);
 
         // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-        u.inplaceRightArithmeticShift(uZeroBits);
-        v.inplaceRightArithmeticShift(vZeroBits);
+        u.inPlaceRightArithmeticShift(uZeroBits);
+        v.inPlaceRightArithmeticShift(vZeroBits);
 
         // make u be the larger one
         if (u < v) {
@@ -103,9 +103,9 @@ shared Whole gcd(Whole first, Whole second) {
             // u & v are both odd
             while (true) {
                 // gcd(u, v) = gcd(u - v, v)
-                u.inplaceSubtract(v); // u will be even and >= 0
+                u.inPlaceSubtract(v); // u will be even and >= 0
                 // if u is even and v is odd, gcd(u, v) = gcd(u/2, v)
-                u.inplaceRightArithmeticShift(u.trailingZeros);
+                u.inPlaceRightArithmeticShift(u.trailingZeros);
                 if (v > u) {
                     break;
                 }
@@ -116,7 +116,7 @@ shared Whole gcd(Whole first, Whole second) {
             v = tmp;
         }
 
-        u.inplaceLeftLogicalShift(zeroBits);
+        u.inPlaceLeftLogicalShift(zeroBits);
         return WholeImpl.OfWords(1, u.words, u.wordsSize); // helps a little
         //return Whole.CopyOfMutableWhole(u);
     }
