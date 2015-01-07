@@ -2,8 +2,9 @@ import ceylon.test {
     test,
     assertEquals
 }
-import ceylon.time.timezone.parser {
-    parseLinkLine
+
+import ceylon.time.timezone.parser.iana {
+	parseLinkLine
 }
 
 shared test void parseSimpleLinkLine1() => assertEquals {

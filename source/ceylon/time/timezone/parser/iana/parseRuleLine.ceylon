@@ -4,13 +4,16 @@ import ceylon.time.timezone.model {
 }
 "Parse current token using http://www.cstdbill.com/tzdb/tz-how-to.html 
  columns as reference"
-shared [String, Rule] parseRuleLine(String line) {
+
+shared alias RuleName => String;
+
+shared [RuleName, Rule] parseRuleLine(String line) {
     
     value token = line.split(tokenDelimiter).iterator();
     
     assert( is String rule = token.next(), rule == "Rule" );
     
-    assert( is String name = token.next() );
+    assert( is RuleName name = token.next() );
     assert( is String startYearText = token.next() );
     assert( is String endYearText = token.next() );
     assert( is String typeText = token.next() ); //just to discard
@@ -28,7 +31,7 @@ shared [String, Rule] parseRuleLine(String line) {
         toYear = parseYear(endYearText, year);
         inMonth = parseMonth(monthText);
         onDay = parseOnDay(dayRuleText.trimmed);
-        atTime = parseAtTime(timeRuleText.trimmed);
+        atTime = parseTime(timeRuleText.trimmed)[0];
         save = toPeriod(parseTime(savingAmountsText.trimmed));
         letter = letterText.trimmed;
     }

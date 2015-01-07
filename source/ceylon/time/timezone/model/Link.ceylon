@@ -1,4 +1,4 @@
-shared alias RealId => String;
-shared alias AliasId => String;
+shared alias RealName => String;
+shared alias AliasName => String;
 
-shared alias Link => [RealId, AliasId];
+shared alias Link => [RealName, AliasName];

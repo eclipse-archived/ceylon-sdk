@@ -1,6 +1,6 @@
 import ceylon.time.timezone.model {
-    RealId,
-    AliasId,
+    RealName,
+    AliasName,
     Link
 }
 
@@ -9,7 +9,7 @@ shared Link parseLinkLine(String line) {
     
     assert(is String link = token.next(), link == "Link");
     
-    assert (is RealId realId = token.next());
-    assert (is AliasId aliasId = token.next());
+    assert (is RealName realId = token.next());
+    assert (is AliasName aliasId = token.next());
     return [realId, aliasId];
 }
