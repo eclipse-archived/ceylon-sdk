@@ -28,6 +28,12 @@ shared interface Whole
     throws(`class OverflowException`, "If passed an exponent > runtime.maxIntegerValue")
     shared formal actual Whole power(Whole exponent);
 
+    deprecated("Renamed to [[modPower]].")
+    see(`function modPower`)
+    throws(`class Exception`, "If passed a negative modulus")
+    shared Whole powerRemainder(Whole exponent, Whole modulus)
+        => modPower(exponent, modulus);
+
     "The result of `(this**exponent) mod modulus`."
     throws(`class Exception`, "If passed a negative modulus")
     shared formal Whole modPower(Whole exponent,
