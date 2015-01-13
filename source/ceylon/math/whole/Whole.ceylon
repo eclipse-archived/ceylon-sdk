@@ -43,6 +43,11 @@ shared interface Whole
      [[remainder]] in that the returned value will always be positive."
     shared formal Whole mod(Whole modulus);
 
+    "Returns a pair containing the same results as calling
+     `divided()` and `remainder()` with the given
+     argument, except the division is only performed once."
+    shared formal [Whole, Whole] quotientAndRemainder(Whole other);
+
     "The number, represented as an [[Integer]]. If the number is too 
      big to fit in an Integer then an Integer corresponding to the
      lower order bits is returned."

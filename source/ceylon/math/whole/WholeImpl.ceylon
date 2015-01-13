@@ -129,6 +129,15 @@ final class WholeImpl(BigInteger num)
                 .remainder(other.implementation));
     }
 
+    shared actual [WholeImpl, WholeImpl]
+            quotientAndRemainder(Whole other) {
+        assert (is WholeImpl other);
+        value result = implementation
+                .divideAndRemainder(other.implementation);
+        return [WholeImpl(result.get(0)),
+                WholeImpl(result.get(1))];
+    }
+
     shared actual WholeImpl mod(Whole other) {
         assert (is WholeImpl other);
         return WholeImpl(implementation
