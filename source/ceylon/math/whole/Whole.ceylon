@@ -39,6 +39,10 @@ shared interface Whole
     shared formal Whole modPower(Whole exponent, 
                                  Whole modulus);
 
+    "The result of `this mod modulus`. This method differs from
+     [[remainder]] in that the returned value will always be positive."
+    shared formal Whole mod(Whole modulus);
+
     "The number, represented as an [[Integer]]. If the number is too 
      big to fit in an Integer then an Integer corresponding to the
      lower order bits is returned."

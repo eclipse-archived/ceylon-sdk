@@ -129,6 +129,12 @@ final class WholeImpl(BigInteger num)
                 .remainder(other.implementation));
     }
 
+    shared actual WholeImpl mod(Whole other) {
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .mod(other.implementation));
+    }
+
     shared actual Whole power(Whole other) {
         assert (is WholeImpl other);
         if (this == -oneImpl) {
