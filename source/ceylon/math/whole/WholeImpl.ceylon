@@ -151,8 +151,8 @@ final class WholeImpl(BigInteger num)
                 .pow(other.implementation.intValue()));
     }
 
-    shared actual Whole powerRemainder(Whole exponent, 
-                                       Whole modulus) {
+    shared actual Whole modPower(Whole exponent,
+                                 Whole modulus) {
         assert (is WholeImpl exponent, is WholeImpl modulus);
         return WholeImpl(implementation
                 .modPow(exponent.implementation, 
