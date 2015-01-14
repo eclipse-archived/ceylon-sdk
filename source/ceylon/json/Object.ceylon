@@ -14,15 +14,15 @@ shared class Object({<String->Value>*} values = {})
     
     "Returns a serialised JSON representation"
     shared actual String string {
-        StringPrinter p = StringPrinter();
-        p.printObject(this);
+        StringEmitter p = StringEmitter();
+        visit(this, p);
         return p.string;
     }
 
     "Returns a pretty-printed serialised JSON representation"
     shared String pretty {
-        StringPrinter p = StringPrinter(true);
-        p.printObject(this);
+        StringEmitter p = StringEmitter(true);
+        visit(this, p, true);
         return p.string;
     }
     
