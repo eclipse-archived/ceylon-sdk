@@ -1,5 +1,6 @@
 import ceylon.test { ... }
-import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, two, zero}
+import ceylon.math.whole{Whole, parseWhole, wholeNumber, one, two, zero,
+    formatWhole}
 
 test void wholeTests() {
 
@@ -167,6 +168,26 @@ test void wholeTests() {
     //print("gcd");
     //assertEquals(Whole(6), gcd(Whole(12), Whole(18)), "gcd(12, 18)");
 
+}
+
+test void formatWholeTests() {
+    assertEquals("0", formatWhole(zero), "formatWhole(0)");
+    assertEquals("1", formatWhole(one), "formatWhole(1)");
+    assertEquals("-1", formatWhole(-one), "formatWhole(-1)");
+    assertEquals("1234567890", formatWhole(wholeNumber(1234567890)), "formatWhole(1234567890)");
+    assertEquals("-1234567890", formatWhole(wholeNumber(-1234567890)), "formatWhole(-1234567890)");
+    try {
+        formatWhole(zero, 1);
+        fail("formatWhole(0, 1) should throw");
+    } catch (AssertionError ex) {
+        // OK
+    }
+    try {
+        formatWhole(zero, 37);
+        fail("formatWhole(0, 37) should throw");
+    } catch (AssertionError ex) {
+        // OK
+    }
 }
 
 test void parseWholeTests() {
