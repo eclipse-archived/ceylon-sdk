@@ -11,7 +11,7 @@ import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
-@Ceylon(major = 7)
+@Ceylon(major = 8)
 @Method
 @SharedAnnotation$annotation$
 public final class javaByteArray_ {
