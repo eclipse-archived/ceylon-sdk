@@ -1,9 +1,6 @@
 import ceylon.language {
     Obj=Object
 }
-import ceylon.collection {
-    ArrayList
-}
 
 "A JSON Printer"
 by("Stéphane Épardaud")

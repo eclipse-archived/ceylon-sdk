@@ -351,7 +351,7 @@ shared class StringParser(str, visitor) {
                 codePoint <= '9'.integer; 
     }
     shared void parse() {
-        value result = parseValue();
+        parseValue();
         eatSpaces();
         if (hasMore) {
             throw ParseException("Unexpected extra characters", line, column);
