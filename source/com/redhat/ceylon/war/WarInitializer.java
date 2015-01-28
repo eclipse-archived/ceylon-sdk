@@ -85,8 +85,6 @@ public class WarInitializer implements ServletContextListener {
 		this.runner = CeylonToolProvider.getRunner(Backend.Java, options, 
 				properties.getProperty("moduleName"),
 				properties.getProperty("moduleVersion"));
-		
-		this.runner.run();
 	}
 
 	protected File setupRepo(final ServletContext context) {
