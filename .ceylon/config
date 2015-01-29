@@ -9,4 +9,4 @@ encoding=UTF-8
 source=./source
 source=./test-source
 resource=./resource
-suppresswarnings=ceylonNamespace
+suppresswarning=ceylonNamespace
