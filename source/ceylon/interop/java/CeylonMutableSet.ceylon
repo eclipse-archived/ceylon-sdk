@@ -7,8 +7,8 @@ import java.util {
     HashSet
 }
 
-"A Ceylon [[Set]] that wraps a [[java.util::Set]]."
-shared class CeylonSet<Element>(JSet<Element> set) 
+"A Ceylon [[MutableSet]] that wraps a [[java.util::Set]]."
+shared class CeylonMutableSet<Element>(JSet<Element> set) 
         satisfies MutableSet<Element> 
         given Element satisfies Object {
     
@@ -74,7 +74,7 @@ shared class CeylonSet<Element>(JSet<Element> set)
     
     clear() => set.clear();
     
-    clone() => CeylonSet(HashSet(set));
+    clone() => CeylonMutableSet(HashSet(set));
     
     equals(Object that) 
             => (super of Set<Element>).equals(that);

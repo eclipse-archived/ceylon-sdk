@@ -7,8 +7,8 @@ import java.util {
     HashMap
 }
 
-"A Ceylon [[Map]] that wraps a [[java.util::Map]]."
-shared class CeylonMap<Key, Item>(JMap<Key, Item> map) 
+"A Ceylon [[MutableMap]] that wraps a [[java.util::Map]]."
+shared class CeylonMutableMap<Key, Item>(JMap<Key, Item> map) 
         satisfies MutableMap<Key, Item> 
         given Key satisfies Object 
         given Item satisfies Object {
@@ -33,7 +33,7 @@ shared class CeylonMap<Key, Item>(JMap<Key, Item> map)
     
     clear() => map.clear();
     
-    clone() => CeylonMap(HashMap(map));
+    clone() => CeylonMutableMap(HashMap(map));
     
     equals(Object that) 
             => (super of Map<Key,Item>).equals(that);

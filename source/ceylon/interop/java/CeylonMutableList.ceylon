@@ -13,8 +13,8 @@ import java.util {
     }
 }
 
-"A Ceylon [[List]] that wraps a [[java.util::List]]."
-shared class CeylonList<Element>(JList<Element> list) 
+"A Ceylon [[MutableList]] that wraps a [[java.util::List]]."
+shared class CeylonMutableList<Element>(JList<Element> list) 
         satisfies MutableList<Element> 
         given Element satisfies Object {
     
@@ -155,7 +155,7 @@ shared class CeylonList<Element>(JList<Element> list)
         }
     }
     
-    clone() => CeylonList(ArrayList(list));
+    clone() => CeylonMutableList(ArrayList(list));
     
     equals(Object that) 
             => (super of List<Element>).equals(that);
