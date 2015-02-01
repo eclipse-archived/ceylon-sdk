@@ -8,19 +8,11 @@ import java.util {
 }
 
 "A Ceylon [[MutableMap]] that wraps a [[java.util::Map]]."
-shared class CeylonMutableMap<Key, Item>(JMap<Key, Item> map) 
+shared class CeylonMutableMap<Key, Item>(JMap<Key, Item> map)
+        extends CeylonMap<Key, Item>(map)
         satisfies MutableMap<Key, Item> 
         given Key satisfies Object 
         given Item satisfies Object {
-    
-    get(Object key) => map.get(key);
-    
-    defines(Object key) => map.containsKey(key);
-    
-    iterator() 
-            => CeylonIterable(map.entrySet())
-                .map((entry) => entry.key->entry.\ivalue)
-                .iterator();
     
     put(Key key, Item item) => map.put(key, item);
     
@@ -34,10 +26,5 @@ shared class CeylonMutableMap<Key, Item>(JMap<Key, Item> map)
     clear() => map.clear();
     
     clone() => CeylonMutableMap(HashMap(map));
-    
-    equals(Object that) 
-            => (super of Map<Key,Item>).equals(that);
-    
-    hash => (super of Map<Key,Item>).hash;
     
 }

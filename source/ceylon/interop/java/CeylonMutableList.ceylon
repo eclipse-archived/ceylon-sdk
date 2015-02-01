@@ -1,9 +1,6 @@
 import ceylon.collection {
     MutableList
 }
-import ceylon.interop.java {
-    CeylonIterator
-}
 
 import java.util {
     JList=List,
@@ -14,21 +11,11 @@ import java.util {
 }
 
 "A Ceylon [[MutableList]] that wraps a [[java.util::List]]."
-shared class CeylonMutableList<Element>(JList<Element> list) 
+shared class CeylonMutableList<Element>(JList<Element> list)
+        extends CeylonList<Element>(list)
         satisfies MutableList<Element> 
         given Element satisfies Object {
-    
-    getFromFirst(Integer index) => list.get(index);
-    
-    size => list.size();
-    
-    shared actual Integer? lastIndex {
-        value size = this.size;
-        return size>0 then size-1;
-    }
-    
-    iterator() => CeylonIterator(list.iterator());
-    
+
     add(Element element) => list.add(element);
     
     set(Integer index, Element element) 
@@ -156,10 +143,5 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     }
     
     clone() => CeylonMutableList(ArrayList(list));
-    
-    equals(Object that) 
-            => (super of List<Element>).equals(that);
-    
-    hash => (super of List<Element>).hash;
-    
+
 }

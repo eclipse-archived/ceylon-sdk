@@ -18,7 +18,8 @@ shared class CeylonMap<Key, Item>(JMap<out Key, out Item> map)
                 .map((entry) => entry.key->entry.\ivalue)
                 .iterator();
 
-    clone() => CeylonMap(HashMap(map));
+    shared actual default Map<Key, Item> clone()
+            => CeylonMap(HashMap(map));
     
     equals(Object that) 
             => (super of Map<Key,Item>).equals(that);

@@ -23,7 +23,8 @@ shared class CeylonList<Element>(JList<out Element> list)
     
     iterator() => CeylonIterator(list.iterator());
     
-    clone() => CeylonList(ArrayList(list));
+    shared actual default List<Element> clone()
+            => CeylonList(ArrayList(list));
     
     equals(Object that) 
             => (super of List<Element>).equals(that);

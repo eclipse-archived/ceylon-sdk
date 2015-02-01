@@ -64,7 +64,8 @@ shared class CeylonSet<Element>(JSet<out Element> set)
         return CeylonSet(union);
     }
     
-    clone() => CeylonSet(HashSet(set));
+    shared actual default Set<Element> clone()
+            => CeylonSet(HashSet(set));
     
     equals(Object that) 
             => (super of Set<Element>).equals(that);

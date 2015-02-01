@@ -8,66 +8,11 @@ import java.util {
 }
 
 "A Ceylon [[MutableSet]] that wraps a [[java.util::Set]]."
-shared class CeylonMutableSet<Element>(JSet<Element> set) 
+shared class CeylonMutableSet<Element>(JSet<Element> set)
+        extends CeylonSet<Element>(set)
         satisfies MutableSet<Element> 
         given Element satisfies Object {
-    
-    iterator() => CeylonIterator(set.iterator());
-    
-    shared actual Set<Element> 
-            complement<Other>(Set<Other> set)
-            given Other satisfies Object {
-        value complement = HashSet<Element>();
-        for (e in this) {
-            if (!set.contains(e)) {
-                complement.add(e);
-            }
-        }
-        return CeylonSet(complement);
-    }
-    
-    shared actual Set<Element|Other> 
-            exclusiveUnion<Other>(Set<Other> set)
-            given Other satisfies Object {
-        value exclusiveUnion = HashSet<Element|Other>();
-        for (e in this) {
-            if (!set.contains(e)) {
-                exclusiveUnion.add(e);
-            }
-        }
-        for (e in set) {
-            if (!this.set.contains(e)) {
-                exclusiveUnion.add(e);
-            }
-        }
-        return CeylonSet(exclusiveUnion);
-    }
-    
-    shared actual Set<Element&Other> 
-            intersection<Other>(Set<Other> set)
-            given Other satisfies Object {
-        value intersection = HashSet<Element&Other>();
-        for (e in this) {
-            if (is Other e, set.contains(e)) {
-                intersection.add(e);
-            }
-        }
-        return CeylonSet(intersection);
-    }
-    
-    shared actual Set<Element|Other> 
-            union<Other>(Set<Other> set)
-            given Other satisfies Object {
-        value union = HashSet<Element|Other>();
-        for (e in this) {
-            union.add(e);
-        }
-        for (e in set) {
-            union.add(e);
-        }
-        return CeylonSet(union);
-    }
-    
+
     add(Element element) => set.add(element);
     
     remove(Element element) => set.remove(element);
@@ -75,10 +20,5 @@ shared class CeylonMutableSet<Element>(JSet<Element> set)
     clear() => set.clear();
     
     clone() => CeylonMutableSet(HashSet(set));
-    
-    equals(Object that) 
-            => (super of Set<Element>).equals(that);
-    
-    hash => (super of Set<Element>).hash;
     
 }
