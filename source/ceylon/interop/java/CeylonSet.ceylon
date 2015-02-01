@@ -1,15 +1,11 @@
-import ceylon.collection {
-    MutableSet
-}
-
 import java.util {
     JSet=Set,
     HashSet
 }
 
 "A Ceylon [[Set]] that wraps a [[java.util::Set]]."
-shared class CeylonSet<Element>(JSet<Element> set) 
-        satisfies MutableSet<Element> 
+shared class CeylonSet<Element>(JSet<out Element> set) 
+        satisfies Set<Element> 
         given Element satisfies Object {
     
     iterator() => CeylonIterator(set.iterator());
@@ -68,13 +64,8 @@ shared class CeylonSet<Element>(JSet<Element> set)
         return CeylonSet(union);
     }
     
-    add(Element element) => set.add(element);
-    
-    remove(Element element) => set.remove(element);
-    
-    clear() => set.clear();
-    
-    clone() => CeylonSet(HashSet(set));
+    shared actual default Set<Element> clone()
+            => CeylonSet(HashSet(set));
     
     equals(Object that) 
             => (super of Set<Element>).equals(that);
