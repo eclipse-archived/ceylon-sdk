@@ -16,6 +16,8 @@ shared class CeylonList<out Element>(JList<out Element> list)
     
     size => list.size();
     
+    contains(Object element) => list.contains(element);
+
     shared actual Integer? lastIndex {
         value size = this.size;
         return size>0 then size-1;

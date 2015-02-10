@@ -10,6 +10,10 @@ shared class CeylonSet<out Element>(JSet<out Element> set)
     
     iterator() => CeylonIterator(set.iterator());
     
+    contains(Object element) => set.contains(element);
+
+    size => set.size();
+
     shared actual Set<Element> 
             complement<Other>(Set<Other> set)
             given Other satisfies Object {
