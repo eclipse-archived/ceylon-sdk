@@ -8,7 +8,7 @@ import java.util {
 }
 
 "A Ceylon [[List]] that wraps a [[java.util::List]]."
-shared class CeylonList<Element>(JList<out Element> list) 
+shared class CeylonList<out Element>(JList<out Element> list)
         satisfies List<Element> 
         given Element satisfies Object {
     

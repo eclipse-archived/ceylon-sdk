@@ -4,7 +4,7 @@ import java.util {
 }
 
 "A Ceylon [[Map]] that wraps a [[java.util::Map]]."
-shared class CeylonMap<Key, Item>(JMap<out Key, out Item> map) 
+shared class CeylonMap<out Key, out Item>(JMap<out Key, out Item> map)
         satisfies Map<Key, Item> 
         given Key satisfies Object 
         given Item satisfies Object {

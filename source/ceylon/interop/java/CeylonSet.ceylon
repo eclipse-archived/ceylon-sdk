@@ -4,7 +4,7 @@ import java.util {
 }
 
 "A Ceylon [[Set]] that wraps a [[java.util::Set]]."
-shared class CeylonSet<Element>(JSet<out Element> set) 
+shared class CeylonSet<out Element>(JSet<out Element> set)
         satisfies Set<Element> 
         given Element satisfies Object {
     
