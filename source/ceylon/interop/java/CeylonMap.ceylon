@@ -17,6 +17,8 @@ shared class CeylonMap<out Key, out Item>(JMap<out Key, out Item> map)
 
     keys => CeylonSet(map.keySet());
 
+    items => CeylonCollection(map.values());
+
     iterator() 
             => CeylonIterable(map.entrySet())
                 .map((entry) => entry.key->entry.\ivalue)
