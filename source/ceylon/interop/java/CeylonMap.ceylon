@@ -4,7 +4,7 @@ import java.util {
 }
 
 "A Ceylon [[Map]] that wraps a [[java.util::Map]]."
-shared class CeylonMap<Key, Item>(JMap<out Key, out Item> map) 
+shared class CeylonMap<out Key, out Item>(JMap<out Key, out Item> map)
         satisfies Map<Key, Item> 
         given Key satisfies Object 
         given Item satisfies Object {
@@ -13,6 +13,12 @@ shared class CeylonMap<Key, Item>(JMap<out Key, out Item> map)
     
     defines(Object key) => map.containsKey(key);
     
+    size => map.size();
+
+    keys => CeylonSet(map.keySet());
+
+    items => CeylonCollection(map.values());
+
     iterator() 
             => CeylonIterable(map.entrySet())
                 .map((entry) => entry.key->entry.\ivalue)

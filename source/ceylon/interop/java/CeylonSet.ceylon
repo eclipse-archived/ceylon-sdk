@@ -4,12 +4,17 @@ import java.util {
 }
 
 "A Ceylon [[Set]] that wraps a [[java.util::Set]]."
-shared class CeylonSet<Element>(JSet<out Element> set) 
+shared class CeylonSet<out Element>(JSet<out Element> set)
+        extends CeylonCollection<Element>(set)
         satisfies Set<Element> 
         given Element satisfies Object {
     
     iterator() => CeylonIterator(set.iterator());
     
+    contains(Object element) => set.contains(element);
+
+    size => set.size();
+
     shared actual Set<Element> 
             complement<Other>(Set<Other> set)
             given Other satisfies Object {

@@ -8,7 +8,8 @@ import java.util {
 }
 
 "A Ceylon [[List]] that wraps a [[java.util::List]]."
-shared class CeylonList<Element>(JList<out Element> list) 
+shared class CeylonList<out Element>(JList<out Element> list)
+        extends CeylonCollection<Element>(list)
         satisfies List<Element> 
         given Element satisfies Object {
     
@@ -16,6 +17,8 @@ shared class CeylonList<Element>(JList<out Element> list)
     
     size => list.size();
     
+    contains(Object element) => list.contains(element);
+
     shared actual Integer? lastIndex {
         value size = this.size;
         return size>0 then size-1;
