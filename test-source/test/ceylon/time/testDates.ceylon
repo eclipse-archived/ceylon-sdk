@@ -128,6 +128,7 @@ shared test void testDatePlusDays() {
     assertEquals( data_1982_12_13.plusDays( 5 ), date( 1982, december, 18 ) );
     assertEquals( data_1982_12_13.plusDays( 45 ), date( 1983, january, 27 ) );
     assertEquals( data_1982_12_13.plusDays( 10954 ), date( 2012, december, 9 ) );
+    assertEquals( date(2016, february, 29).plusDays( 1461 ), date( 2020, february, 29 ) );
 }
 
 shared test void testDateMinusDays() {
@@ -137,7 +138,7 @@ shared test void testDateMinusDays() {
 }
 
 shared test void testDatePlusMonthsLessDays() {
-    assertEquals( date(1983, february, 28), date(1982,december,31).plusMonths(2));
+    assertEquals( date(1982,december,31).plusMonths(2), date(1983, february, 28));
 }
 
 shared test void testDatePlusMonths() {
@@ -145,7 +146,8 @@ shared test void testDatePlusMonths() {
     assertEquals( data_1982_12_13.plusMonths(1), date( 1983, january, 13) );
     assertEquals( data_1982_12_13.plusMonths(12), date( 1983, december, 13) );
     assertEquals( data_1982_12_13.plusMonths(36), date( 1985, december, 13) );
-
+    assertEquals( date(2016, february, 29).plusMonths(48), date( 2020, february, 29) );
+    
     value data_2000_01_31 = date( 2000, january, 31 );
     assertEquals( data_2000_01_31.plusMonths(14), date( 2001, march, 31) );
 }
@@ -164,10 +166,11 @@ shared test void testDatePlusYears() {
     assertEquals( data_1982_12_13.plusYears(0), data_1982_12_13 );
     assertEquals( data_1982_12_13.plusYears(18), date( 2000, december, 13) );
     assertEquals( data_1982_12_13.plusYears(30), date( 2012, december, 13) );
+    assertEquals( date(2016, february, 29).plusYears(4), date(2020, february, 29));
 }
 
 shared test void testPlusYearsLessDays() {
-    assertEquals( date(2013, february, 28), date(2012, february, 29).plusYears(1));
+    assertEquals( date(2012, february, 29).plusYears(1), date(2013, february, 28));
 }
 
 shared test void testDateMinusYears() {
