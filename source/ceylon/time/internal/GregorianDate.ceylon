@@ -1,5 +1,5 @@
 import ceylon.time { Date, DateTime, Time, Period, DateRange }
-import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, february, months }
+import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, months }
 import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.internal.math { adjustedMod }
 
@@ -94,8 +94,7 @@ shared class GregorianDate( Integer dayOfEra )
         if ( years == 0 ) {
             return this;
         }
-        value newDay = day == 29 && month == february then 28 else day;
-        return GregorianDate(impl.fixedFrom([year + years, month.integer, newDay] ));
+        return plusMonths(years * months.perYear);
     }
 
     "Subtracts number of years from this date returning the resulting the new gregorian date.
