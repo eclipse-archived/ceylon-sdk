@@ -1,6 +1,7 @@
 import ceylon.time { Date, DateTime, Time, Period, DateRange }
 import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, february, months,
-    monday }
+    monday,
+	weekdays }
 import ceylon.time.chronology { impl=gregorian }
 import ceylon.time.internal.math { adjustedMod }
 
@@ -193,12 +194,13 @@ shared class GregorianDate( Integer dayOfEra )
         function normalizeFirstWeek(Integer yearNumber){            
             value jan1 = withDay(1).withMonth(january).withYear(yearNumber);
             value jan1WeekDayMinusMonday = jan1.dayOfWeek.integer - monday.integer;
+            value firstWeekOfYearHasLess4Days = 4;
 
-            return ( jan1WeekDayMinusMonday.smallerThan( 4 ) then jan1.minusDays( jan1WeekDayMinusMonday ) else jan1.minusDays( jan1WeekDayMinusMonday ).plusDays(7));            
+            return ( jan1.minusDays( jan1WeekDayMinusMonday ).plusDays( jan1WeekDayMinusMonday >= firstWeekOfYearHasLess4Days then weekdays.size else 0) );
         }        
         
         function normalizeLastWeek(Integer yearNumber) {
-            return normalizeFirstWeek( yearNumber.plus( 1 ) ).minusDays( 1 );
+            return normalizeFirstWeek( yearNumber + 1 ).minusDays( 1 );
         }
         
         value startFirstWeekOfYear = normalizeFirstWeek( year );  
@@ -206,14 +208,14 @@ shared class GregorianDate( Integer dayOfEra )
         variable value weekNumber=1;
 
         if ( smallerThan( startFirstWeekOfYear ) ){
-            value startFirstWeekOfPriorYear = normalizeFirstWeek( year.minus( 1 ) );
-            value daysSinceStartFirstWeekOfPriorYear = this.offset( startFirstWeekOfPriorYear ).plus( 1 );
-            weekNumber = ( daysSinceStartFirstWeekOfPriorYear.divided( 7 ).plus( daysSinceStartFirstWeekOfPriorYear.remainder( 7 ).largerThan( 0 ) then 1 else 0 ) );
+            value startFirstWeekOfPriorYear = normalizeFirstWeek( year - 1 );
+            value daysSinceStartFirstWeekOfPriorYear = this.offset( startFirstWeekOfPriorYear ) + 1;
+            weekNumber = ( ( daysSinceStartFirstWeekOfPriorYear / weekdays.size ) + ( daysSinceStartFirstWeekOfPriorYear % weekdays.size > 0 then 1 else 0 ) );
         } else {
             value endLastWeekOfYear = normalizeLastWeek( year );            
             if ( notLargerThan(endLastWeekOfYear) ){
-                value daysSinceStartFirstWeekOfYear = this.offset( startFirstWeekOfYear ).plus( 1 );
-                weekNumber = ( daysSinceStartFirstWeekOfYear.divided( 7 ).plus( daysSinceStartFirstWeekOfYear.remainder( 7 ).largerThan( 0 ) then 1 else 0 ) );
+                value daysSinceStartFirstWeekOfYear = this.offset( startFirstWeekOfYear ) + 1;
+                weekNumber = ( ( daysSinceStartFirstWeekOfYear / weekdays.size ) + ( daysSinceStartFirstWeekOfYear % weekdays.size > 0 then 1 else 0 ) );
             }
         }    
         return weekNumber;
