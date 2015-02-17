@@ -150,6 +150,13 @@ shared test void testDatePlusMonths() {
     assertEquals( data_2000_01_31.plusMonths(14), date( 2001, march, 31) );
 }
 
+shared test void february29_plus_48_months() 
+    => assertEquals( date(2016, february, 29).plusMonths(48), date( 2020, february, 29) );
+
+shared test void february29_plus_4_years() 
+    => assertEquals( date(2016, february, 29).plusYears(4), date( 2020, february, 29) );
+
+
 shared test void testDateMinusMonths() {
     assertEquals( data_1982_12_13.minusMonths(0), data_1982_12_13 );
     assertEquals( data_1982_12_13.minusMonths(1), date( 1982, november, 13) );
