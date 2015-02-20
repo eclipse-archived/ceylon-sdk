@@ -356,9 +356,14 @@ Boolean findCandidatesInFullQualifiedName(ArrayList<TestCandidate> candidates, S
 }
 
 Package? findPackage(String pkgName) {
-    Module? mod = modules.list.find((Module m) => pkgName.startsWith(m.name));
-    Package? pgk = mod?.findPackage(pkgName);
-    return pgk;
+    for(m in modules.list) {
+        if( pkgName.startsWith(m.name) ) {
+            if( exists p = m.findPackage(pkgName)) {
+                return p;
+            }
+        }
+    }
+    return null;
 }
 
 A? findAnnotation<out A>(FunctionDeclaration funcDecl, ClassDeclaration? classDecl)
