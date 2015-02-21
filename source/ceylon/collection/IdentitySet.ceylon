@@ -99,13 +99,12 @@ shared class IdentitySet<Element>
     }
     
     shared Boolean remove(Element element) {
-        variable value result = false;
         Integer index = storeIndex(element, store);
-        while (exists head = store[index], 
+        if (exists head = store[index], 
             head.element == element) {
             store.set(index,head.rest);
             length--;
-            result = true;
+            return true;
         }
         variable value bucket = store[index];
         while (exists cell = bucket) {
@@ -114,13 +113,13 @@ shared class IdentitySet<Element>
                 rest.element == element) {
                 cell.rest = rest.rest;
                 length--;
-                result = true;
+                return true;
             }
             else {
                 bucket = rest;
             }
         }
-        return result;
+        return false;
     }
     
     shared Boolean removeAll({Element*} elements) {

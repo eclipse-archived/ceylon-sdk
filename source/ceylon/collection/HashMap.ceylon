@@ -230,7 +230,7 @@ shared class HashMap<Key, Item>
     
     shared actual Item? remove(Key key) {
         Integer index = storeIndex(key, store);
-        while (exists head = store.getFromFirst(index), 
+        if (exists head = store.getFromFirst(index), 
             head.element.key == key) {
             store.set(index,head.rest);
             deleteCell(head);

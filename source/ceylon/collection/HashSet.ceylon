@@ -201,14 +201,13 @@ shared class HashSet<Element>
     }
     
     shared actual Boolean remove(Element element) {
-        variable value result = false;
         Integer index = storeIndex(element, store);
-        while (exists head = store.getFromFirst(index), 
+        if (exists head = store.getFromFirst(index), 
             head.element == element) {
             store.set(index,head.rest);
             deleteCell(head);
             length--;
-            result = true;
+            return true;
         }
         variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
@@ -218,13 +217,13 @@ shared class HashSet<Element>
                 cell.rest = rest.rest;
                 deleteCell(cell);
                 length--;
-                result = true;
+                return true;
             }
             else {
                 bucket = rest;
             }
         }
-        return result;
+        return false;
     }
     
     shared actual void clear() {

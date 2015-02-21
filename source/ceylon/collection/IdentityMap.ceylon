@@ -134,7 +134,7 @@ shared class IdentityMap<Key, Item>
     "Removes a key/value mapping if it exists"
     shared Item? remove(Key key) {
         Integer index = storeIndex(key, store);
-        while (exists head = store[index], 
+        if (exists head = store[index], 
             head.element.key == key) {
             store.set(index,head.rest);
             length--;
