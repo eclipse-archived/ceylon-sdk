@@ -101,7 +101,7 @@ shared class IdentitySet<Element>
     shared Boolean remove(Element element) {
         Integer index = storeIndex(element, store);
         if (exists head = store[index], 
-            head.element == element) {
+            head.element === element) {
             store.set(index,head.rest);
             length--;
             return true;
@@ -110,7 +110,7 @@ shared class IdentitySet<Element>
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
-                rest.element == element) {
+                rest.element === element) {
                 cell.rest = rest.rest;
                 length--;
                 return true;
