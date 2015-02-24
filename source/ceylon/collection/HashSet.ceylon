@@ -215,7 +215,7 @@ shared class HashSet<Element>
             if (exists rest,
                 rest.element == element) {
                 cell.rest = rest.rest;
-                deleteCell(cell);
+                deleteCell(rest);
                 length--;
                 return true;
             }
@@ -244,7 +244,7 @@ shared class HashSet<Element>
     iterator() => stability==linked 
             then LinkedCellIterator(head)
             else StoreIterator(store);
-    
+
     shared actual Integer count(Boolean selecting(Element element)) {
         variable Integer count = 0;
         variable Integer index = 0;
