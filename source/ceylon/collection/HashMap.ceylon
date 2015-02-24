@@ -243,7 +243,7 @@ shared class HashMap<Key, Item>
             if (exists rest,
                 rest.element.key == key) {
                 cell.rest = rest.rest;
-                deleteCell(cell);
+                deleteCell(rest);
                 length--;
                 return rest.element.item;
             }
@@ -274,7 +274,7 @@ shared class HashMap<Key, Item>
                 rest.element.key == key) {
                 if (exists it = rest.element.item, it==item) {
                     cell.rest = rest.rest;
-                    deleteCell(cell);
+                    deleteCell(rest);
                     length--;
                     return true;
                 }
