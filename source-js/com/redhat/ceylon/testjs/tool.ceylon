@@ -23,9 +23,11 @@ shared void run() {
     variable Integer port = -1;
     variable Boolean tap = false;
     variable Boolean report = false;
-    variable String? colorWhite = null;
+    variable String? colorReset = null;
     variable String? colorGreen = null;
     variable String? colorRed = null;
+    
+    
     
     for (String arg in process.arguments) {
         if (prev == "--module") {
@@ -48,8 +50,8 @@ shared void run() {
             assert (exists p = parseInteger(arg[7...]));
             port = p;
         }
-        if (prev == "--com.redhat.ceylon.common.tool.terminal.color.white") {
-            colorWhite = arg;
+        if (prev == "--com.redhat.ceylon.common.tool.terminal.color.reset") {
+            colorReset = arg;
         }
         if (prev == "--com.redhat.ceylon.common.tool.terminal.color.green") {
             colorGreen = arg;
@@ -78,7 +80,7 @@ shared void run() {
     } else if (tap) {
         testListeners.add(TapLoggingListener());
     } else {
-        testListeners.add(TestLoggingListener(colorWhite, colorGreen, colorRed));
+        testListeners.add(TestLoggingListener(colorReset, colorGreen, colorRed));
     }
     
     if (report) {
