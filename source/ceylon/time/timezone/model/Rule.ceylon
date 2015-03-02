@@ -8,6 +8,7 @@ import ceylon.time.base {
 "Alias to represent a specific year."
 shared alias Year => Integer;
 
+"Timezone transition rule."
 shared class Rule(fromYear, toYear, inMonth, onDay, atTime, save, letter) {
     
     shared Year fromYear;
@@ -20,13 +21,13 @@ shared class Rule(fromYear, toYear, inMonth, onDay, atTime, save, letter) {
     
     shared actual Boolean equals(Object other) {
         if(is Rule other) {
-            return        fromYear == other.fromYear
-                    &&    toYear == other.toYear
-                    &&    inMonth == other.inMonth
-                    &&    onDay == other.onDay
-                    &&    atTime == other.atTime
-                    &&    save == other.save
-                    &&    letter == other.letter;
+            return fromYear == other.fromYear
+                && toYear == other.toYear
+                && inMonth == other.inMonth
+                && onDay == other.onDay
+                && atTime == other.atTime
+                && save == other.save
+                && letter == other.letter;
         }
         return false;
     }

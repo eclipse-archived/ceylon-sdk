@@ -13,16 +13,17 @@ import ceylon.time.chronology {
 "Alias to represent a specific day."
 shared alias DayOfMonth => Integer;
 
+"Rule describing the day a rule applieds to."
 shared abstract class OnDay() of OnFixedDay | OnFirstOfMonth | OnLastOfMonth {
     
     shared formal Date date(Year year, Month month);
     
 }
 
-"Represents a fixed day without any other rule, for example:
- * 3
- * 15
- * 30"
+"Represents a fixed day of month.
+ 
+ For example, a value `3` on February, 2004, means exactly _February 3. 2004_.
+ "
 shared class OnFixedDay(fixedDate) extends OnDay() {
     shared DayOfMonth fixedDate;
     
@@ -39,10 +40,12 @@ shared class OnFixedDay(fixedDate) extends OnDay() {
     
 }
 
-"Represents a day equal or higher than a day of week, for example:
- * Sun>=1
- * Sun>=9
- * Sat>=25"
+"Represents a day equal to or higher than a day of week.
+ 
+ For example, given the rule `Sun>=1` it can mean one of the following:
+ either _June 1. 2014_ or _June 7. 2015_ (or anything in between) 
+ depending on the year and month of the overall rule.
+ "
 shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
     
     shared DayOfWeek dayOfWeek;
@@ -72,8 +75,10 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
 }
 
 "Represents the last day of week, for example:
- * lastSun
- * lastSat"
+ * `lastSun`
+ * `lastSat`
+ 
+ For example, `lastSun` of February 2015 is _February 22, 2015_"
 shared class OnLastOfMonth(dayOfWeek) extends OnDay() {
     
     shared DayOfWeek dayOfWeek;

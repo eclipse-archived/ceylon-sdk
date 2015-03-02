@@ -11,8 +11,8 @@ import ceylon.time {
  ‘z’ stands for the nautical time zone Z (a.k.a. “Zulu” which, in turn, stands for ‘Z’). 
  The time can also be suffixed with ‘w’ meaning “wall clock time;” 
  but it usually isn’t because that’s the default."
-shared abstract class AtTime(time, letter) of AtWallClockTime | AtLocalMeanTime
-                           		| AtGmtTime | AtUtcTime | AtNauticalTime {
+shared abstract class AtTime(time, letter) 
+        of AtWallClockTime | AtLocalMeanTime | AtGmtTime | AtUtcTime | AtNauticalTime {
     
     shared Time time;
     shared String letter;
@@ -26,11 +26,23 @@ shared abstract class AtTime(time, letter) of AtWallClockTime | AtLocalMeanTime
     }
     
     string => "time: '``time``', letter: '``letter``'";
-    
 }
 
+"Wall clock time rule.
+ 
+ Offset from GMT varies depending wether the DST is in effect at the moment or not."
 shared class AtWallClockTime(Time time) extends AtTime(time, "u"){}
+
+"Local mean time rule.
+ 
+ This has always a fixed offset from the UTC."
 shared class AtLocalMeanTime(Time time) extends AtTime(time, "s"){}
+
+"GMT time rule."
 shared class AtGmtTime(Time time) extends AtTime(time, "g"){}
+
+"UTC time rule."
 shared class AtUtcTime(Time time) extends AtTime(time, "u"){}
+
+"Nautical time rule."
 shared class AtNauticalTime(Time time) extends AtTime(time, "z"){}
