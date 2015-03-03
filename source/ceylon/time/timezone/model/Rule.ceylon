@@ -9,15 +9,14 @@ import ceylon.time.base {
 shared alias Year => Integer;
 
 "Timezone transition rule."
-shared class Rule(fromYear, toYear, inMonth, onDay, atTime, save, letter) {
-    
-    shared Year fromYear;
-    shared Year toYear;
-    shared Month inMonth;
-    shared OnDay onDay;
-    shared AtTime atTime;
-    shared Period save;
-    shared String letter;
+shared class Rule(
+    shared Year fromYear, 
+    shared Year toYear, 
+    shared Month inMonth, 
+    shared OnDay onDay, 
+    shared AtTime atTime, 
+    shared Period save,
+    shared String letter) {
     
     shared actual Boolean equals(Object other) {
         if(is Rule other) {
