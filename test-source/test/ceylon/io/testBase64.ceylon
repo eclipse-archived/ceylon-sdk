@@ -1,6 +1,7 @@
 import ceylon.io.base64 {
     encode,
-    decode
+    decode,
+    encodeMime
 }
 import ceylon.io.charset {
     utf8,
@@ -99,11 +100,55 @@ test void testBase64WithAscii(){
 }
 
 void assertBase64( String input, String expectedEncode, Charset charset) {
-    assertEquals{
-        expected = expectedEncode; 
-        actual = charset.decode(encode(charset.encode(input)));
-    };
+	assertEquals{
+		expected = expectedEncode; 
+		actual = charset.decode(encode(charset.encode(input)));
+	};
+	
+	value encoded = encode(charset.encode(input));
+	assertEquals(input, charset.decode(decode(encoded)));
+}
 
-    value encoded = encode(charset.encode(input));
-    assertEquals(input, charset.decode(decode(encoded)));
+
+test void testbase64MimeWithAscii(){
+			
+	variable value input = "Man is distinguished, not only by his reason, but by this";
+	variable value expected = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz";
+	
+	assertBase64Mime(input, expected, ascii);
+	
+	input = "Man is distinguished, not only by his reason, but by this singular pass";
+	expected = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3M=";
+	assertBase64Mime(input, expected, ascii);
+	
+	input = "Man is distinguished, not only by his reason, but by this singular ";
+	expected = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIA==";
+	assertBase64Mime(input, expected, ascii);	
+
+	input = "Man is distinguished";
+	expected = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQ=";
+	assertBase64Mime(input, expected, ascii);
+	
+	input = "Man is distinguishe";
+	expected = "TWFuIGlzIGRpc3Rpbmd1aXNoZQ==";
+	assertBase64Mime(input, expected, ascii);
+	
+	input = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of ";
+	expected = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg";
+	assertBase64Mime(input, expected, ascii);
+	
+	input = "\r\n";
+	expected = "DQo=";
+	assertBase64Mime(input, expected, ascii);
+}
+
+
+void assertBase64Mime( String input, String expectedEncode, Charset charset) {
+	assertEquals{
+		expected = expectedEncode; 
+		actual = charset.decode(encodeMime(charset.encode(input)));
+	};
+	
+	value encoded = encodeMime(charset.encode(input));
+	assertEquals(input, charset.decode(decode(encoded)));
 }
