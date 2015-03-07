@@ -18,18 +18,9 @@ shared class NodeSerializer(
 
     variable value indentLevel = 0;
 
-    variable value sizeCount = 0;
-
     value prettyPrint = config.prettyPrint;
 
     shared void serialize(Node root) => visit(root);
-
-    shared Integer contentLength => sizeCount;
-
-    void doPrint(String string) {
-        sizeCount += string.size; // TODO accurate byte size?
-        print(string);
-    }
 
     void visitAny(Node|{Node*}|Snippet<Node> child) {
         if (is Node child) {
@@ -55,7 +46,7 @@ shared class NodeSerializer(
         if (is TextNode node, !node.text.trimmed.empty) {
             linefeed();
             indent();
-            doPrint(node.text);
+            print(node.text);
         }
         if (is ParentNode<Node> node) {
             for (child in node.children) {
@@ -74,7 +65,7 @@ shared class NodeSerializer(
     }
 
     void startHtml(Html html) {
-        doPrint(html.doctype.string);
+        print(html.doctype.string);
         linefeed(true);
         linefeed();
     }
@@ -83,22 +74,22 @@ shared class NodeSerializer(
         printAttributes(node);
     }
 
-    void openTag(Node node) => doPrint("<``node.tag.name``");
+    void openTag(Node node) => print("<``node.tag.name``");
 
     void endOpenTag(Node node) {
         if (node.tag.type == emptyTag) {
-            doPrint(" /");
+            print(" /");
         }
-        doPrint(">");
+        print(">");
     }
 
-    void closeTag(Node node) => doPrint("</``node.tag.name``>");
+    void closeTag(Node node) => print("</``node.tag.name``>");
 
     void printAttributes(Element node) {
         for (attrName->attrValue in node.attributes) {
             value val = attrValue.string.trimmed;
             if (!val.empty) {
-                doPrint(" ``attrName``=\"``attrValue``\"");
+                print(" ``attrName``=\"``attrValue``\"");
             }
         }
     }
@@ -111,13 +102,13 @@ shared class NodeSerializer(
 
     void linefeed(Boolean force = false) {
         if (prettyPrint || force) {
-            doPrint(operatingSystem.newline);
+            print(operatingSystem.newline);
         }
     }
 
     void indent() {
         if (prettyPrint) {
-            doPrint(indentString);
+            print(indentString);
         }
     }
 
