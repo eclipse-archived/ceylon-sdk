@@ -47,7 +47,7 @@ shared class A(text = "", href = "#", target = null, download = null,
      It is purely advisory."
     shared String? type;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("a");
 

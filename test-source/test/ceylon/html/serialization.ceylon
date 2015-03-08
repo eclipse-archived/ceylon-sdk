@@ -16,7 +16,10 @@ import ceylon.html {
     InlineElement,
     I,
     B,
-    Pre
+    Pre,
+    Cite,
+    Strong,
+    P
 }
 import ceylon.html.serializer {
     NodeSerializer,
@@ -323,6 +326,21 @@ void testAscii() {
     testUtf8(t5, "<textarea>汉字</textarea>");
 }
 
+shared test
+void testMixedContent() {
+    function test(Node actual, String expected)
+        =>  runTest(actual, expected, true, false);
+
+    // bug #344
+    test(Div { "Some text", Cite("world"), "!" },
+        "<div>Some text<cite>world</cite>!</div>\n");
+
+    // bug #346
+    test(P { "This is a paragraph containing ",
+            Strong("boldened"), "text!" },
+        "<p>This is a paragraph containing <strong>boldened</strong>text!</p>\n");
+}
+
 void runTest(Node actual, String expected, Boolean prettyPrint, Boolean escapeNonAscii) {
     assertEquals(serializeToString(actual, prettyPrint, escapeNonAscii), expected);
 }
@@ -352,5 +370,5 @@ class Custom(
     Tag tag = Tag(tagName, blockTag);
 
     shared actual
-    {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 }

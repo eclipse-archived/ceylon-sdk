@@ -23,7 +23,7 @@ shared class Abbr(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("abbr");
 
@@ -54,7 +54,7 @@ shared class B(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("b");
 
@@ -84,7 +84,7 @@ shared class Cite(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("cite");
 
@@ -112,7 +112,7 @@ shared class Code(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("code");
     
@@ -142,7 +142,7 @@ shared class Del(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("del");
 
@@ -173,7 +173,7 @@ shared class Dfn(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("dfn");
 
@@ -201,7 +201,7 @@ shared class Em(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("em");
 
@@ -230,7 +230,7 @@ shared class I(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("i");
 
@@ -260,7 +260,7 @@ shared class Ins(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("ins");
 
@@ -289,7 +289,7 @@ shared class Kbd(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("kbd");
 
@@ -318,7 +318,7 @@ shared class Mark(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("mark");
 
@@ -346,7 +346,7 @@ shared class Q(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("q");
     
@@ -374,7 +374,7 @@ shared class S(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("s");
     
@@ -402,7 +402,7 @@ shared class Samp(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("samp");
     
@@ -431,7 +431,7 @@ shared class Small(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("small");
     
@@ -459,7 +459,7 @@ shared class Strong(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("strong");
     
@@ -487,7 +487,7 @@ shared class Sub(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("sub");
     
@@ -515,7 +515,7 @@ shared class Sup(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("sup");
     
@@ -545,7 +545,7 @@ shared class U(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("u");
     
@@ -575,7 +575,7 @@ shared class Var(text = "", String? id = null, CssClass classNames = [],
     
     shared actual String text;
     
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
     
     tag = Tag("var");
     

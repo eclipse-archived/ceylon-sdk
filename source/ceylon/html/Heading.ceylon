@@ -26,7 +26,7 @@ shared abstract class Heading(text = "", String? id = null, CssClass classNames 
 
     shared formal Integer level;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag => Tag("h``level``");
 

@@ -18,14 +18,29 @@ shared class NodeSerializer(
 
     shared void serialize(Node root) => visit(root);
 
-    void visitAny(Node|{Node*}|Snippet<Node> child) {
-        if (is Node child) {
-            visit(child);
-        } else if (is {Node*} child) {
-            visitNodes(child);
-        } else if (exists content = child.content) {
-            visitAny(content);
+    void visitAny(Node|String|{Node|String*}|Snippet<Node> child) {
+        switch (child)
+        case (is String) {
+            visitString(child);
         }
+        case (is Node) {
+            visit(child);
+        }
+        else {
+            switch (child)
+            case (is Snippet<Node>) {
+                if (exists content = child.content) {
+                    visitAny(content);
+                }
+            }
+            else { // is {Node|String*} 
+                visitNodes(child);
+            }
+        }
+    }
+
+    void visitString(String string) {
+        htmlSerializer.text(string);
     }
 
     void visit(Node node) {
@@ -68,9 +83,15 @@ shared class NodeSerializer(
     void closeTag(Node node)
         =>  htmlSerializer.endElement();
 
-    void visitNodes({Node*} nodes) {
+    void visitNodes({Node|String*} nodes) {
         for (node in nodes) {
-            visit(node);
+            switch (node)
+            case (is String) {
+                visitString(node);
+            }
+            case (is Node) {
+                visit(node);
+            }
         }
     }
 }
