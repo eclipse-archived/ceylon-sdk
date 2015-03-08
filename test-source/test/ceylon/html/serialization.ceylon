@@ -15,85 +15,93 @@ import ceylon.test {
     test
 }
 
-
 object testData {
+    shared
+    Html emptyPage = Html();
     
-    shared Html emptyPage = Html();
-    
-    shared Html pageWithContent = Html {
+    shared
+    Html pageWithContent = Html {
         html5;
-        Head {
-            title = "page title";
-        };
-        Body {
-            Div("page content")
-        };
+        Head { title = "page title"; };
+        Body { Div("page content") };
+    };
+}
+
+shared test
+void testPrettyPrintSimple() {
+    runTest {
+        prettyPrint = true;
+        escapeNonAscii = false;
+        actual = testData.emptyPage;
+        expected =
+            """
+               <!DOCTYPE html>
+
+               <html>
+                   <head>
+                       <title>
+                       </title>
+                   </head>
+                   <body>
+                   </body>
+               </html>
+               """;
     };
 
-}
+    runTest {
+        prettyPrint = true;
+        escapeNonAscii = false;
+        actual = testData.pageWithContent;
+        expected =
+            """
+               <!DOCTYPE html>
 
-
-shared test void testPrettyPrintSerialization() {
-    value expectedOutput = {
-        testData.emptyPage ->
-                """
-                   <!DOCTYPE html>
-                   
-                   <html>
-                       <head>
-                           <title>
-                           </title>
-                       </head>
-                       <body>
-                       </body>
-                   </html>
-                   """,
-        testData.pageWithContent ->
-                """
-                   <!DOCTYPE html>
-                   
-                   <html>
-                       <head>
-                           <title>
-                               page title
-                           </title>
-                       </head>
-                       <body>
-                           <div>
-                               page content
-                           </div>
-                       </body>
-                   </html>
-                   """
+               <html>
+                   <head>
+                       <title>
+                           page title
+                       </title>
+                   </head>
+                   <body>
+                       <div>
+                           page content
+                       </div>
+                   </body>
+               </html>
+               """;
     };
-    doTestExpectedOutput(expectedOutput, true);
 }
 
-shared test void testMinifiedSerialization() {
-    value expectedOutput = {
-        testData.emptyPage ->
-                "<!DOCTYPE html>
-                 <html><head><title></title></head><body></body></html>",
-        testData.pageWithContent ->
-                "<!DOCTYPE html>
-                 <html><head><title>page title</title></head>" +
-                "<body><div>page content</div></body></html>"
+shared test
+void testSimple() {
+    runTest {
+        prettyPrint = true;
+        escapeNonAscii = false;
+        actual = testData.emptyPage;
+        expected =
+            "<!DOCTYPE html>
+             <html><head><title></title></head><body></body></html>";
     };
-    doTestExpectedOutput(expectedOutput);
+
+    runTest {
+        prettyPrint = true;
+        escapeNonAscii = false;
+        actual = testData.pageWithContent;
+        expected =
+            "<!DOCTYPE html>
+             <html><head><title>page title</title></head>" +
+            "<body><div>page content</div></body></html>";
+    };
 }
 
-void doTestExpectedOutput(
-        {<Node->String>+} expectedResults,
-        Boolean prettyPrint = false) {
-    for (node->string in expectedResults) {
-        assertEquals(string.trimmed.replace("\n", operatingSystem.newline), serializeToString(node, prettyPrint));
-    }
+void runTest(Node actual, String expected, Boolean prettyPrint, Boolean escapeNonAscii) {
+    assertEquals(serializeToString(actual, prettyPrint, escapeNonAscii), expected);
 }
 
-String serializeToString(Node node, Boolean prettyPrint) {
+String serializeToString(Node node, Boolean prettyPrint, Boolean escapeNonAscii) {
     value builder = StringBuilder();
     value serializer = NodeSerializer(builder.append, 
-            SerializerConfig(prettyPrint));
+            SerializerConfig(prettyPrint, html5, escapeNonAscii));
     serializer.serialize(node);
     return builder.string;
 }
