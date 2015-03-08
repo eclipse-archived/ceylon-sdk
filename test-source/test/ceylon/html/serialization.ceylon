@@ -8,7 +8,15 @@ import ceylon.html {
     Element,
     Tag,
     blockTag,
-    TextNode
+    TextNode,
+    Span,
+    ParentNode,
+    BlockOrInline,
+    Snippet,
+    InlineElement,
+    I,
+    B,
+    Pre
 }
 import ceylon.html.serializer {
     NodeSerializer,
@@ -17,8 +25,7 @@ import ceylon.html.serializer {
 import ceylon.test {
     assertEquals,
     test,
-    assertThatException,
-    ignore
+    assertThatException
 }
 
 object testData {
@@ -33,25 +40,21 @@ object testData {
     };
 }
 
-shared test ignore("pretty print not yet supported")
+shared test
 void testPrettyPrintSimple() {
     runTest {
         prettyPrint = true;
         escapeNonAscii = false;
         actual = testData.emptyPage;
         expected =
-            """
-               <!DOCTYPE html>
+           "<!DOCTYPE html>
 
-               <html>
-                   <head>
-                       <title>
-                       </title>
-                   </head>
-                   <body>
-                   </body>
-               </html>
-               """;
+            <html>
+              <head>
+                <title></title>
+              </head>
+              <body></body>
+            </html>\n";
     };
 
     runTest {
@@ -59,29 +62,23 @@ void testPrettyPrintSimple() {
         escapeNonAscii = false;
         actual = testData.pageWithContent;
         expected =
-            """
-               <!DOCTYPE html>
+           "<!DOCTYPE html>
 
-               <html>
-                   <head>
-                       <title>
-                           page title
-                       </title>
-                   </head>
-                   <body>
-                       <div>
-                           page content
-                       </div>
-                   </body>
-               </html>
-               """;
+            <html>
+              <head>
+                <title>page title</title>
+              </head>
+              <body>
+                <div>page content</div>
+              </body>
+            </html>\n";
     };
 }
 
 shared test
 void testSimple() {
     runTest {
-        prettyPrint = true;
+        prettyPrint = false;
         escapeNonAscii = false;
         actual = testData.emptyPage;
         expected =
@@ -90,7 +87,7 @@ void testSimple() {
     };
 
     runTest {
-        prettyPrint = true;
+        prettyPrint = false;
         escapeNonAscii = false;
         actual = testData.pageWithContent;
         expected =
@@ -98,6 +95,89 @@ void testSimple() {
              <html><head><title>page title</title></head>" +
             "<body><div>page content</div></body></html>";
     };
+}
+
+shared test
+void testPrettyPrint() {
+    function test(Node actual, String expected)
+        =>  runTest(actual, expected, true, false);
+
+    // indent block elements
+    test(Div { Div { Div() } },
+        "<div>
+           <div>
+             <div></div>
+           </div>
+         </div>\n");
+
+    // don't indent inline elements
+    test(Span { Span { Span() } },
+        "<span><span><span></span></span></span>\n");
+
+    // don't indent close tag immediately following open tag
+    test(Div { Div { } },
+        "<div>
+           <div></div>
+         </div>\n");
+
+    // indent block elements inside inline elements and vice-versa
+    test(Span { Custom { "div"; { Span() } } },
+       "<span>
+          <div>
+            <span></span>
+          </div>
+        </span>\n");
+
+    // don't indent inline elements following text
+    test(Span { Custom { "div"; "content"; { Span() } } },
+       "<span>
+          <div>content<span></span>
+          </div>
+        </span>\n");
+
+    // don't indent block elements following text
+    // increase indent depth even if some indents are suppressed
+    test(Div { Div { "content"; { Div { Span { }} } } },
+       "<div>
+          <div>content<div>
+              <span></span>
+            </div>
+          </div>
+        </div>\n");
+
+    // don't indent neighboring inline elements
+    test(Div { B { I { } } },
+       "<div>
+          <b><i></i></b>
+        </div>\n");
+
+    // bug 356
+    test(Span { B("Cey"), I("lon") },
+       "<span><b>Cey</b><i>lon</i></span>\n");
+
+    // bug 356
+    test(Div { B("Cey"), I("lon") },
+       "<div>
+          <b>Cey</b><i>lon</i>
+        </div>\n");
+
+    // bug 356 #2
+    test(Div { Pre("a\nb  \nc") },
+        "<div>
+           <pre>a
+         b  
+         c</pre>
+         </div>\n");
+}
+
+shared test
+void testNonPrettyPrint() {
+    function test(Node actual, String expected)
+        =>  runTest(actual, expected, false, false);
+
+    // bug 356 #3 don't eat whitespace
+    test(Span { Span("a"), Span(" "), Span("b") },
+        "<span><span>a</span><span> </span><span>b</span></span>");
 }
 
 shared test
@@ -263,9 +343,14 @@ class Custom(
         String tagName,
         shared actual String text = "",
         shared actual [<String->Object>*] attributes = [],
-        String? id = null) extends Element(id)
-        satisfies TextNode {
+        String? id = null,
+        children = {})
+        extends Element(id)
+        satisfies TextNode & InlineElement & ParentNode<BlockOrInline> {
 
     shared actual
     Tag tag = Tag(tagName, blockTag);
+
+    shared actual
+    {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 }

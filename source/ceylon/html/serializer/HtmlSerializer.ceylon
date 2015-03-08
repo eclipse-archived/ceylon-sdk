@@ -1,16 +1,24 @@
 import ceylon.collection {
-    Stack,
     LinkedList
 }
 
-class HtmlSerializer(Anything(String) print, Boolean prettyPrint, Boolean escapeNonAscii=false) {
+class HtmlSerializer(
+            Anything(String) print,
+            Boolean prettyPrint,
+            Boolean escapeNonAscii=false) {
 
     variable
     [String, {<String->Object>*}]? cachedStartElement = null;
 
-    Stack<String> elementStack = LinkedList<String>();
+    variable
+    value lastWasStartOrEndTag = true;
 
-    StringBuilder bufferedText = StringBuilder();
+    variable
+    value previousStartOrEndTagWasBlock = false;
+
+    value elementStack = LinkedList<String>();
+
+    value bufferedText = StringBuilder();
 
     function escape(String raw, EscapableType type)
         =>  htmlEscape(raw, type, escapeNonAscii, elementStack.top);
@@ -23,11 +31,13 @@ class HtmlSerializer(Anything(String) print, Boolean prettyPrint, Boolean escape
             value type = typeForElement(current);
             print(escape(bufferedText.string, type));
             bufferedText.clear();
+            lastWasStartOrEndTag = false;
         }
     }
 
     void flushStartElement(Boolean end = false) {
         if (exists [elementName, attributes] = cachedStartElement) {
+            printIndent(elementName, true);
             print("<");
             print(escape(elementName, package.name));
             for (name->val in attributes) {
@@ -47,21 +57,27 @@ class HtmlSerializer(Anything(String) print, Boolean prettyPrint, Boolean escape
                     //http://www.w3.org/TR/html5/syntax.html#start-tags
                     print("></" + escape(elementName, package.name) + ">");
                 }
+                previousStartOrEndTagWasBlock = prettyPrint
+                    && indentElements.contains(elementName.lowercased);
             } else {
                 print(">");
                 elementStack.push(elementName);
             }
+            cachedStartElement = null;
+            lastWasStartOrEndTag = true;
         }
-        cachedStartElement = null;
     }
 
     shared
     void docType(String docType) {
-        // FIXME validate/escape docType
+        // TODO validate/escape docType
         // just ignore if we are in an element
         if (elementStack.top is Null && cachedStartElement is Null) {
             print(docType);
             print("\n");
+            if (prettyPrint) {
+                print("\n");
+            }
         }
     }
 
@@ -86,19 +102,41 @@ class HtmlSerializer(Anything(String) print, Boolean prettyPrint, Boolean escape
         else {
             flushText();
             assert(exists elementName = elementStack.pop());
+            printIndent(elementName, false);
             print("</" + escape(elementName, name) + ">");
+            lastWasStartOrEndTag = true;
+        }
+        if (prettyPrint && elementStack.empty) {
+            print("\n");
         }
     }
 
     shared
     void text(String text) {
-        flushStartElement();
-        bufferedText.append(text);
+        if (!text.empty) {
+            flushStartElement();
+            bufferedText.append(text);
+        }
     }
 
     shared
     void flush() {
         flushText();
         flushStartElement(true);
+    }
+
+    void printIndent(String elementName, Boolean isOpen) {
+        // don't print '\n' before the first element
+        // don't indent after character data
+        // indent only if a block tag, or a child or neighbor of a block tag
+        if (prettyPrint
+                && !(isOpen && elementStack.empty)
+                && lastWasStartOrEndTag
+                && (previousStartOrEndTagWasBlock
+                    || indentElements.contains(elementName.lowercased))) {
+            print("\n" + " ".repeat(elementStack.size * 2));
+        }
+        previousStartOrEndTagWasBlock = prettyPrint
+            && indentElements.contains(elementName.lowercased);
     }
 }

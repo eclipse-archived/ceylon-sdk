@@ -49,3 +49,22 @@ Set<String> rawTextElements = unmodifiableSet(HashSet {
 // http://www.w3.org/TR/html5/syntax.html#elements-0
 Set<String> escapableRawTextElements = unmodifiableSet(HashSet {
         "textarea", "title"});
+
+Set<String> blockElements = unmodifiableSet(HashSet {
+        "address", "article", "aside", "audio", "blockquote", "canvas",
+        "dd", "div", "dl", "fieldset", "figcaption", "figure", "footer",
+        "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup",
+        "hr", "main", "nav", "noscript", "ol", "output", "p", "pre",
+        "section", "table", "tfoot", "ul", "video"});
+
+Set<String> metadataElements = unmodifiableSet(HashSet {
+        "base", "command", "link", "meta", "noscript",
+        "script", "style", "title"});
+
+Set<String> indentElements = (function() {
+    value set = HashSet<String>();
+    set.addAll(blockElements);
+    set.addAll(metadataElements);
+    set.addAll({"html", "head", "body"});
+    return unmodifiableSet(set);
+})();
