@@ -8,35 +8,34 @@ class HtmlSerializer(
             Boolean escapeNonAscii=false) {
 
     variable
-    [String, {<String->Object>*}]? cachedStartElement = null;
-
-    variable
-    value lastWasStartOrEndTag = true;
+    value lastOutputWasStartOrEndTag = true;
 
     variable
     value previousStartOrEndTagWasBlock = false;
 
-    value elementStack = LinkedList<String>();
+    variable
+    [String, {<String->Object>*}]? bufferedStartElement = null;
 
     value bufferedText = StringBuilder();
+
+    value elementStack = LinkedList<String>();
 
     function escape(String raw, EscapableType type)
         =>  htmlEscape(raw, type, escapeNonAscii, elementStack.top);
 
     void flushText() {
-        // we're strict for now;
-        // not allowing text outside of an enclosing element
         if (!bufferedText.empty) {
+            // be strict; don't allow text outside of an enclosing element
             assert(exists current = elementStack.top);
             value type = typeForElement(current);
             print(escape(bufferedText.string, type));
             bufferedText.clear();
-            lastWasStartOrEndTag = false;
+            lastOutputWasStartOrEndTag = false;
         }
     }
 
     void flushStartElement(Boolean end = false) {
-        if (exists [elementName, attributes] = cachedStartElement) {
+        if (exists [elementName, attributes] = bufferedStartElement) {
             printIndent(elementName, true);
             print("<");
             print(escape(elementName, package.name));
@@ -53,8 +52,8 @@ class HtmlSerializer(
                 }
                 else {
                     // only void and foreign elements can be self-closing,
-                    // so we'll output the complete end tag
-                    //http://www.w3.org/TR/html5/syntax.html#start-tags
+                    // so we'll output the end tag separately
+                    // http://www.w3.org/TR/html5/syntax.html#start-tags
                     print("></" + escape(elementName, package.name) + ">");
                 }
                 previousStartOrEndTagWasBlock = prettyPrint
@@ -63,16 +62,24 @@ class HtmlSerializer(
                 print(">");
                 elementStack.push(elementName);
             }
-            cachedStartElement = null;
-            lastWasStartOrEndTag = true;
+            bufferedStartElement = null;
+            lastOutputWasStartOrEndTag = true;
         }
     }
 
+    "[[flush]] is unnecessary if all elements are
+     closed with [[endElement]]."
     shared
-    void docType(String docType) {
+    void flush() {
+        flushText();
+        flushStartElement(true);
+    }
+
+    shared
+    void doctype(String docType) {
         // TODO validate/escape docType
         // just ignore if we are in an element
-        if (elementStack.top is Null && cachedStartElement is Null) {
+        if (elementStack.top is Null && bufferedStartElement is Null) {
             print(docType);
             print("\n");
             if (prettyPrint) {
@@ -85,17 +92,20 @@ class HtmlSerializer(
     void startElement(
             String elementName,
             {<String->Object>*} attributes = {}) {
-        // TODO disallow elements in raw and escapableRaw elements?
+        // TODO disallow child elements in raw and escapableRaw elements?
         // fail fast at the cost of efficiency
         assert(name.isValid(elementName));
         flushText();
         flushStartElement();
-        cachedStartElement = [elementName, attributes];
+        // buffer to simplify close tag if it immediately follows
+        bufferedStartElement = [elementName, attributes];
     }
 
     shared
     void endElement() {
-        if (cachedStartElement exists) {
+        // bufferedStartElement and bufferedText are
+        // mutually exclusive
+        if (bufferedStartElement exists) {
             assert(bufferedText.empty);
             flushStartElement(true);
         }
@@ -104,9 +114,10 @@ class HtmlSerializer(
             assert(exists elementName = elementStack.pop());
             printIndent(elementName, false);
             print("</" + escape(elementName, name) + ">");
-            lastWasStartOrEndTag = true;
+            lastOutputWasStartOrEndTag = true;
         }
         if (prettyPrint && elementStack.empty) {
+            // end document with a newline
             print("\n");
         }
     }
@@ -119,19 +130,14 @@ class HtmlSerializer(
         }
     }
 
-    shared
-    void flush() {
-        flushText();
-        flushStartElement(true);
-    }
-
-    void printIndent(String elementName, Boolean isOpen) {
-        // don't print '\n' before the first element
-        // don't indent after character data
-        // indent only if a block tag, or a child or neighbor of a block tag
+    void printIndent(String elementName, Boolean isOpenTag) {
+        // * don't print '\n' before the first element
+        // * don't indent after character data
+        // * indent only block element tags and non-block element tags
+        //   immediately following a start or end tag of a block element
         if (prettyPrint
-                && !(isOpen && elementStack.empty)
-                && lastWasStartOrEndTag
+                && !(isOpenTag && elementStack.empty)
+                && lastOutputWasStartOrEndTag
                 && (previousStartOrEndTagWasBlock
                     || indentElements.contains(elementName.lowercased))) {
             print("\n" + " ".repeat(elementStack.size * 2));

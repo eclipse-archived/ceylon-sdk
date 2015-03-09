@@ -37,12 +37,10 @@ object attributeValue satisfies EscapableType {
         '&' -> "&amp;"});
 }
 
-// "Normal elements can have text, character references, other elements,
-//      and comments, but the text must not contain the character "<" (U+003C)
-//      or an ambiguous ampersand. Some normal elements also have yet more
-//      restrictions on what content they are allowed to hold, beyond the
-//      restrictions imposed by the content model and those described in this
-//      paragraph. Those restrictions are described below.
+"From <http://www.w3.org/TR/html5/syntax.html#elements-0>
+ > Normal elements can have text, character references, other elements,
+ and comments, but the text must not contain the character \"<\" (U+003C)
+ or an ambiguous ampersand."
 object text satisfies EscapableType {
     shared actual
     Map<Character, String> entities = unmodifiableMap(HashMap {
@@ -50,21 +48,34 @@ object text satisfies EscapableType {
         '&' -> "&amp;"});
 }
 
-// http://www.w3.org/TR/html5/scripting-1.html#restrictions-for-contents-of-script-elements
-// http://www.w3.org/TR/html5/syntax.html#cdata-rcdata-restrictions
-// "Raw text elements can have text, though it has restrictions described below"
+"From <http://www.w3.org/TR/html5/syntax.html#elements-0>
+ > Raw text elements can have text, though it has
+ restrictions described below
+
+ From <http://www.w3.org/TR/html5/syntax.html#cdata-rcdata-restrictions>
+ > The text in raw text and escapable raw text elements must not contain
+ any occurrences of the string \"&lt;/\" (U+003C LESS-THAN SIGN, U+002F SOLIDUS)
+ followed by characters that case-insensitively match the tag name of the element
+ followed by one of \"tab\" (U+0009), \"LF\" (U+000A), \"FF\" (U+000C),
+ \"CR\" (U+000D), U+0020 SPACE, \">\" (U+003E), or \"/\" (U+002F).
+
+ From <http://www.w3.org/TR/html5/scripting-1.html#restrictions-for-contents-of-script-elements>
+ > Note: The easiest and safest way to avoid the rather strange restrictions
+ described in this section is to always escape \"&lt;!--\" as \"&lt;\\!--\",
+ \"<script\" as \"&lt;\\script\", and \"&lt;/script\" as \"&lt;\\/script\"
+ when these sequences appear in literals in scripts..."
 object rawText satisfies EscapableType {
     shared actual
     Map<Character, String> entities = emptyMap;
 }
 
-// http://www.w3.org/TR/html5/syntax.html#cdata-rcdata-restrictions
-// "Escapable raw text elements can have text and character references,
-//      but the text must not contain an ambiguous ampersand. There are
-//      also further restrictions described below"
-// We will treat escapableRawText as text, and escape '<', thereby
-// avoiding the "further restrictions".
-// TODO: <textarea> and <title> actually cannot contain elements; open elements are parsed as text
+"From <http://www.w3.org/TR/html5/syntax.html#elements-0>
+ > Escapable raw text elements can have text and character references, but
+ the text must not contain an ambiguous ampersand. There are also further
+ restrictions described below.
+
+ We will treat escapableRawText as text, and escape '<', thereby
+ avoiding the \"further restrictions\"."
 object escapableRawText satisfies EscapableType {
     shared actual
     Map<Character, String> entities = unmodifiableMap(HashMap {

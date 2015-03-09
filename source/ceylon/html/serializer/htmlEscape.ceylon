@@ -1,6 +1,7 @@
-// TODO cdata http://www.w3.org/TR/html5/syntax.html#cdata-sections
-// should probably have a cdata and comment node types
-String htmlEscape(String raw, EscapableType type, Boolean escapeNonAscii, String? forTag=null) {
+String htmlEscape(
+        String raw, EscapableType type,
+        Boolean escapeNonAscii, String? forTag=null) {
+
     if (is \Iname type) {
         assert(name.isValid(raw));
         if (escapeNonAscii && raw.any((c)
@@ -26,11 +27,12 @@ String htmlEscape(String raw, EscapableType type, Boolean escapeNonAscii, String
         }
         // make sure only ascii chars are present if escapeNonAscii is true
         if (escapeNonAscii && raw.any((c)
-                => !asciiCharacterRange.contains(c) && c != '\r' && c != '\n' && c != '\t')) {
+                => !asciiCharacterRange.contains(c)
+                        && c != '\r' && c != '\n' && c != '\t')) {
             throw Exception(
                 "Unescapable non-ascii character found in rawText content.");
         }
-        // continue with CRLF normalization
+        // don't return yet, continue with CRLF normalization
     }
 
     // CRLF normalization not necessary per

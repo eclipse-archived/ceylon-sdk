@@ -45,7 +45,7 @@ shared class NodeSerializer(
 
     void visit(Node node) {
         if (is Html node) {
-            htmlSerializer.docType(node.doctype.string);
+            htmlSerializer.doctype(node.doctype.string);
         }
         openTag(node);
         if (is TextNode node) {
@@ -62,20 +62,16 @@ shared class NodeSerializer(
     }
 
     void openTag(Node node) {
-        // TODO previous code
-        //      1) trimmed attribute value
-        //      2) omitted attribute if trimmed value was empty
-        // Not sure that was correct; these are not invalid cases
         value attributes =
                 if (is Element node)
                 then node.attributes
                 else {};
 
-        // for now, duplicate bug that drops attributes with empty value
-        // only call "string" once:
-        value nonEmptyAttributes = attributes.map((attribute)
-                => attribute.key->attribute.item.string).filter((attribute)
-                => !attribute.item.empty);
+        // for now, duplicate bug that drops attributes
+        // with empty value
+        value nonEmptyAttributes = attributes
+            .map((attribute) => attribute.key->attribute.item.string)
+            .filter((attribute) => !attribute.item.empty);
 
         htmlSerializer.startElement(node.tag.name, nonEmptyAttributes);
     }
