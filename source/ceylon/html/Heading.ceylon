@@ -45,7 +45,7 @@ shared class H1(String text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
+            {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
@@ -65,7 +65,7 @@ shared class H2(String text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
+            {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
@@ -85,7 +85,7 @@ shared class H3(String text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
+            {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
@@ -105,7 +105,7 @@ shared class H4(String text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
+            {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
@@ -125,7 +125,7 @@ shared class H5(String text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
+            {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data, children) {
@@ -145,7 +145,7 @@ shared class H6(String text = "", String? id = null, CssClass classNames = [],
             Boolean? translate = null, Aria? aria = null,
             NonstandardAttributes nonstandardAttributes = empty,
             DataContainer data = empty,
-            {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
+            {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children = {})
         extends Heading(text, id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data, children) {

@@ -56,7 +56,7 @@ shared class Form(action, method = "", acceptCharset = null,
      that is received after submitting the form."
     shared String? target; // TODO enumerated type? look at A.target
 
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("form");
 

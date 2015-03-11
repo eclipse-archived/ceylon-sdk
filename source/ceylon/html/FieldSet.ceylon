@@ -21,7 +21,7 @@ shared class FieldSet(legend = null, String? id = null, CssClass classNames = []
 
     shared Legend? legend;
 
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("fieldset");
 
