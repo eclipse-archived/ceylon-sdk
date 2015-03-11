@@ -53,8 +53,8 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
     
     shared actual Boolean equals(Object other) {
         if(is OnFirstOfMonth other) {
-            return         onDateOrAfter == other.onDateOrAfter
-                    &&     dayOfWeek == other.dayOfWeek;
+            return onDateOrAfter == other.onDateOrAfter
+                && dayOfWeek == other.dayOfWeek;
         }
         return false;
     }
@@ -68,8 +68,8 @@ shared class OnFirstOfMonth(dayOfWeek, onDateOrAfter) extends OnDay() {
     }
     
     Boolean matchesDayOfWeekAndDay(Date dateTime) {
-        return         dateTime.day >= onDateOrAfter
-                &&     dateTime.dayOfWeek == dayOfWeek;
+        return dateTime.day >= onDateOrAfter
+            && dateTime.dayOfWeek == dayOfWeek;
     }
     
 }
