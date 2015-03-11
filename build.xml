@@ -10,6 +10,7 @@
     <property name="osgi" location="${basedir}/osgi" />
     <property name="osgi.p2" location="${osgi}/p2" />
     <property name="osgi.dist" location="${osgi}/dist" />
+    <property name="osgi.build" location="${osgi}/build" />
     <property name="osgi.dist.plugins" location="${osgi.dist}/plugins" />
     
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
@@ -119,6 +120,7 @@
         <delete dir="${out.repo}"/>
         <delete dir="${test.repo}"/>
         <delete dir="${osgi.dist}"/>
+        <delete dir="${osgi.build}"/>
     </target>
     
     <target name="compile-jvm">
@@ -402,8 +404,17 @@
     <target name="osgi-p2-quick" depends="osgi-quick">
         <makeurl property="destinationRepository" file="${osgi.dist}"/>
         <makeurl property="categoryDefinition" file="${osgi.p2}/category.xml"/>
+        <mkdir dir="${osgi.build}"/>
+        <touch file="${osgi.build}/bundles.info"/>
+        <makeurl property="bundlesInfoUrl" file="${osgi.build}/bundles.info"/>
+        <loadfile srcfile="${basedir}/../ceylon-dist/osgi/p2/bundlesToStart" property="bundlesToStart">
+          <filterchain>
+              <striplinebreaks/>
+          </filterchain>
+        </loadfile>
         <exec dir="${basedir}" executable="eclipse" failonerror="true">
             <arg value="-noSplash"/>
+            <arg value="-clean"/>
             <arg value="-console"/>
             <arg value="-consolelog"/>
             <arg value="--launcher.suppressErrors"/>
@@ -421,9 +432,13 @@
             <arg file="${osgi.dist}"/>
             <arg value="-publishArtifacts"/>
             <arg value="-append"/>
+            <arg value="-vmargs"/>
+            <arg value="-Dorg.eclipse.equinox.simpleconfigurator.configUrl=${bundlesInfoUrl}"/>
+            <arg value="-Dosgi.bundles=${bundlesToStart}"/>
         </exec>
         <exec dir="${basedir}" executable="eclipse">
             <arg value="-noSplash"/>
+            <arg value="-clean"/>
             <arg value="-console"/>
             <arg value="-consolelog"/>
             <arg value="--launcher.suppressErrors"/>
@@ -435,6 +450,9 @@
             <arg value="${categoryDefinition}"/>
             <arg value="-categoryQualifier"/>
             <arg value="ceylon.sdk"/>
+            <arg value="-vmargs"/>
+            <arg value="-Dorg.eclipse.equinox.simpleconfigurator.configUrl=${bundlesInfoUrl}"/>
+            <arg value="-Dosgi.bundles=${bundlesToStart}"/>
         </exec>
     </target>
 
