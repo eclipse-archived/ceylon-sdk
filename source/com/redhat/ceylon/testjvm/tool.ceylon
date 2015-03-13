@@ -81,7 +81,8 @@ class Runner() {
                 testListeners.add(HtmlReportGenerator());
             }
             
-            createTestRunner(testSources.sequence(), testListeners.sequence()).run();
+            value result = createTestRunner(testSources.sequence(), testListeners.sequence()).run();
+            process.exit(result.isSuccess then 0 else 100);
         }
         finally {
             disconnect();

@@ -99,5 +99,6 @@ shared void run() {
         }
     }
     
-    createTestRunner(testSources.sequence(), testListeners.sequence()).run();
+    value result = createTestRunner(testSources.sequence(), testListeners.sequence()).run();
+    process.exit(result.isSuccess then 0 else 100);
 }
