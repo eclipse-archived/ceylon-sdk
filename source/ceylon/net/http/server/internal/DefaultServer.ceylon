@@ -114,7 +114,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         
         value sessionconfig = SessionCookieConfig();
         value sessionHandler 
-                = SessionAttachmentHandler(InMemorySessionManager(), sessionconfig);
+                = SessionAttachmentHandler(InMemorySessionManager(options.sessionId), sessionconfig);
         sessionHandler.setNext(protocolHandshakeHandler);
         
         HttpHandler errPageHandler = SimpleErrorPageHandler(sessionHandler);

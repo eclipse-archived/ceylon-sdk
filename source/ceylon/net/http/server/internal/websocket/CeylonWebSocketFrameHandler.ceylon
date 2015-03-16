@@ -33,6 +33,9 @@ import org.xnio {
         safeClose
     }
 }
+import ceylon.net.http.server.internal {
+    toBytes
+}
 
 by("Matej Lazar")
 class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocketChannel webSocketChannel)
@@ -41,21 +44,29 @@ class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocket
     shared actual void onFullTextMessage(UtWebSocketChannel channel, BufferedTextMessage message) 
             => webSocketEndpoint.onText(webSocketChannel, message.data );
 
-    shared actual void onFullBinaryMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) 
-            => webSocketEndpoint.onBinary(webSocketChannel, 
-                    newByteBufferWithData(*toByteArray(message.toByteArray())));
+    shared actual void onFullBinaryMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) {
+        Object? jByteBufferArray = message.data.resource.iterable;
+        if (is JByteBuffer[] jByteBufferArray) {
+            webSocketEndpoint.onBinary(webSocketChannel, newByteBufferWithData(*toBytes(jByteBufferArray)));
+        } else {
+            //TODO throw class cast ex. 
+        } 
+    }
 
     shared actual void onFullCloseMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) {
-        JByteBuffer buffer = wrapByteBuffer(message.toByteArray());
-
-        if (buffer.remaining() > 2) {
-            Integer code = buffer.short;
-            String reason = UTF8Output(buffer).extract();
-            webSocketEndpoint.onClose(webSocketChannel, CloseReason(code, reason));
+        Object? jByteBufferArray = message.data.resource.iterable;
+        if (is JByteBuffer[] jByteBufferArray) {
+            {Byte*} bytes = toBytes(jByteBufferArray);
+            if (bytes.size > 2) {
+                CloseReasonAdapter closeReasonAdapter = CloseReasonAdapter(bytes);
+                webSocketEndpoint.onClose(webSocketChannel, CloseReason(closeReasonAdapter.code, closeReasonAdapter.reason));
+            } else {
+                webSocketEndpoint.onClose(webSocketChannel, NoReason());
+            }
         } else {
-            webSocketEndpoint.onClose(webSocketChannel, NoReason());
+            //TODO throw class cast ex. 
         }
-        sendCloseBlocking(message.data, channel);
+        //TODO do we need to explicitly send close back ?
     }
 
     shared actual void onError(UtWebSocketChannel channel, Throwable error) {

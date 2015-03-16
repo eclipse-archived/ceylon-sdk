@@ -67,10 +67,10 @@ module ceylon.net "1.1.1" {
     
     import java.base "7";
     
-    import io.undertow.core "1.0.0.Beta20";
+    import io.undertow.core "1.1.0.CR3";
 
-    import org.jboss.xnio.api "3.1.0.CR7";
-    import org.jboss.xnio.nio "3.1.0.CR7";
+    import org.jboss.xnio.api "3.3.0.Beta3";
+    import org.jboss.xnio.nio "3.3.0.Beta3";
     import ceylon.interop.java "1.1.1";
     
 }

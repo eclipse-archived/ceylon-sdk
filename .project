@@ -3,6 +3,7 @@
 	<name>ceylon-sdk</name>
 	<comment></comment>
 	<projects>
+		<project>undertow-core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

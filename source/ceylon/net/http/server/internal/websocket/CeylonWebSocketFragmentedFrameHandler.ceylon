@@ -7,29 +7,23 @@ import ceylon.net.http.server.websocket {
     WebSocketFragmentedEndpoint,
     NoReason
 }
-
 import io.undertow.websockets.core {
     AbstractReceiveListener,
     BufferedTextMessage,
     UtWebSocketChannel=WebSocketChannel,
     BufferedBinaryMessage,
-    WebSockets {
-        sendCloseBlocking
-    },
-    UTF8Output,
     StreamSourceFrameChannel
 }
-
 import java.nio {
-    JByteBuffer=ByteBuffer {
-        wrapByteBuffer=wrap
-    }
+    JByteBuffer=ByteBuffer
 }
-
 import org.xnio {
     IoUtils {
         safeClose
     }
+}
+import ceylon.net.http.server.internal {
+    toBytes
 }
 
 by("Matej Lazar")
@@ -40,7 +34,7 @@ class CeylonWebSocketFragmentedFrameHandler(
 
     shared actual void onText(UtWebSocketChannel channel, 
             StreamSourceFrameChannel messageChannel) {
-        BufferedTextMessage bufferedTextMessage = BufferedTextMessage();
+        BufferedTextMessage bufferedTextMessage = BufferedTextMessage(true);
         bufferedTextMessage.readBlocking(messageChannel);
         webSocketEndpoint.onText(webSocketChannel, 
             bufferedTextMessage.data, messageChannel.finalFragment);
@@ -48,31 +42,40 @@ class CeylonWebSocketFragmentedFrameHandler(
 
     shared actual void onBinary(UtWebSocketChannel channel, 
             StreamSourceFrameChannel messageChannel) {
-        value bufferedBinaryMessage = BufferedBinaryMessage();
+
+        value bufferedBinaryMessage = BufferedBinaryMessage(true);
         bufferedBinaryMessage.readBlocking(messageChannel);
-        webSocketEndpoint.onBinary(
+
+        Object? jByteBufferArray = bufferedBinaryMessage.data.resource.iterable;
+        if (is JByteBuffer[] jByteBufferArray) {
+            webSocketEndpoint.onBinary(
                 webSocketChannel, 
-                newByteBufferWithData(*bufferedBinaryMessage.toByteArray().byteArray),
+                newByteBufferWithData(*toBytes(jByteBufferArray)), 
                 messageChannel.finalFragment);
+        } else {
+            //TODO throw class cast ex. 
+        }
     }
 
-    shared actual void onClose(UtWebSocketChannel channel, 
+    shared actual void onClose(UtWebSocketChannel channel,
             StreamSourceFrameChannel messageChannel) {
-        value bufferedBinaryMessage = BufferedBinaryMessage();
+
+        value bufferedBinaryMessage = BufferedBinaryMessage(true);
         bufferedBinaryMessage.readBlocking(messageChannel);
 
-        JByteBuffer buffer = wrapByteBuffer(bufferedBinaryMessage.toByteArray());
-        
-        if (buffer.remaining() > 2) {
-            Integer code = buffer.short;
-            String reason = UTF8Output(buffer).extract();
-            webSocketEndpoint.onClose(webSocketChannel, 
-                CloseReason(code, reason));
+        Object? jByteBufferArray = bufferedBinaryMessage.data.resource.iterable;
+        if (is JByteBuffer[] jByteBufferArray) {
+            {Byte*} bytes = toBytes(jByteBufferArray);
+            if (bytes.size > 2) {
+                CloseReasonAdapter closeReasonAdapter = CloseReasonAdapter(bytes);
+                webSocketEndpoint.onClose(webSocketChannel, CloseReason(closeReasonAdapter.code, closeReasonAdapter.reason));
+            } else {
+                webSocketEndpoint.onClose(webSocketChannel, NoReason());
+            }
         } else {
-            webSocketEndpoint.onClose(webSocketChannel, 
-                NoReason());
+            //TODO throw class cast ex. 
         }
-        sendCloseBlocking(bufferedBinaryMessage.data, channel);
+        //TODO do we need to explicitly send close back ?
     }
 
     shared actual void onError(UtWebSocketChannel channel, Throwable? error) {

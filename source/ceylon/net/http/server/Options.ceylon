@@ -13,7 +13,8 @@ shared class Options(
         workerTaskMaxThreads = 12,
         connectionLowWatter = 1000000,
         connectionHighWatter = 1000000,
-        defaultCharset = utf8) {
+        defaultCharset = utf8,
+        sessionId = "ceylon-http-server-session") {
     shared variable Integer workerIoThreads;
     shared variable Integer workerTaskCoreThreads;
     shared variable Integer workerTaskMaxThreads;
@@ -23,4 +24,5 @@ shared class Options(
     "Default charset is used to encode string, when there is 
      no charset header in response. Default to [[utf8]]."
     shared variable Charset defaultCharset;
+    shared variable String sessionId;
 }

@@ -14,7 +14,7 @@ import ceylon.net.http.server.websocket {
 import io.undertow.websockets.core {
     UtWebSocketChannel=WebSocketChannel
 }
-import io.undertow.websockets.core.handler {
+import io.undertow.websockets {
     WebSocketConnectionCallback
 }
 import io.undertow.websockets.spi {
