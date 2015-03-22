@@ -40,17 +40,17 @@ test void run() {
     //jdkLogger.info("hello world");
     variable value count = 0;
     addLogWriter {
-        void log(Priority p, Category c, String m, Exception? e) {
+        void log(Priority p, Category c, String m, Throwable? t) {
             value print = p<=info then process.writeLine else process.writeError;
             print("[``system.milliseconds``] ``p.string`` ``m``");
-            if (exists e) {
-                e.printStackTrace();
+            if (exists t) {
+                t.printStackTrace();
             }
         }
     };
-    addLogWriter (void (Priority p, Category c, String m, Exception? e) 
+    addLogWriter (void (Priority p, Category c, String m, Throwable? t)
                 => count++);
-    addLogWriter(void (Priority p, Category c, String m, Exception? e) 
+    addLogWriter(void (Priority p, Category c, String m, Throwable? t)
                 => jdkLogger.log(jdkLevel(p), m));
     myLogger.error("Something bad happened!");
     myLogger.trace("Almost done");
