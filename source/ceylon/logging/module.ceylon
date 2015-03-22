@@ -5,13 +5,13 @@
    [[addLogWriter]].
    
        addLogWriter {
-           void log(Priority p, Category c, String m, Exception? e) {
+           void log(Priority p, Category c, String m, Throwable? t) {
                value print = p<=info 
                        then process.writeLine 
                        else process.writeError;
                print("[``system.milliseconds``] ``p.string`` ``m``");
-               if (exists e) {
-                   printStackTrace(e, print);
+               if (exists t) {
+                   printStackTrace(t, print);
                }
            }
        };
