@@ -1,14 +1,10 @@
-import ceylon.collection {
-    HashMap,
-    MutableMap
-}
 import ceylon.language.meta.declaration {
     Module,
     Package
 }
 
 "A topic to which a log message relates."
-see (`value logger`, `value Logger.category`)
+see (`function logger`, `value Logger.category`)
 shared alias Category => Module|Package;
 
 "An object that sends log messages relating to a particular
@@ -24,7 +20,7 @@ shared alias Category => Module|Package;
      log.priority = warn;
      log.info(\"hello\"); //not sent
      log.error(\"sos\"); //sent"
-see (`value logger`)
+see (`function logger`)
 shared interface Logger {
     
     "A log message, which may be a string or an unevaluated 
@@ -96,42 +92,7 @@ shared interface Logger {
 "Function to obtain a canonical [[Logger]] for the given 
  [[Category]]. For each [[Category]], there is at most one 
  instance of `Logger`.
- 
- Assigning a new function of type `Logger(Category)` to
- `logger` allows the program to specify a custom strategy 
- for `Logger` instantiation."
-shared variable Logger(Category) logger 
-        = (Category category) {
-    if (exists logger = loggers[category.name]) {
-        return logger;
-    }
-    else {
-        value logger = LoggerImpl(category); 
-        loggers.put(category.name, logger);
-        return logger;
-    }
-};
 
-MutableMap<String,Logger> loggers = HashMap<String,Logger>();
-
-class LoggerImpl(shared actual Category category) 
-        satisfies Logger {
-    variable Priority? explicitPriority = null;
-    shared actual Priority priority {
-        return explicitPriority else defaultPriority;
-    }
-    assign priority {
-        explicitPriority = priority;
-    }
-    shared actual void log(Priority priority, 
-            Message message, 
-            Throwable? throwable) {
-        if (enabled(priority)) {
-            for (writeLog in logWriters) {
-                writeLog(priority, category, 
-                        render(message), 
-                        throwable);
-            }
-        } 
-    }
-}
+ This function delegates to [[loggerFactory]]."
+shared Logger logger(Category category)
+    =>  loggerFactory.logger(category);

@@ -58,11 +58,16 @@
        logger(`module hello`).priority = debug;
    
    For integration with other logging libraries, it is
-   possible to completely replace the [[logger]] function
-   with a custom function for producing `Logger`s.
-   
-       logger = (Category category)
-           => JDKLoggerImpl(JDKLogger.getLogger(category.qualifiedName));"""
+   possible to replace the [[loggerFactory]]
+   with a custom factory for producing `Logger`s.
+
+       loggerFactory = object satisfies LoggerFactory {
+            shared actual
+            Logger logger<Wrapper>(Category category,
+                    ClassOrInterface<Wrapper>? wrapper)
+                    given Wrapper satisfies Object
+                =>  JDKLoggerImpl(JDKLogger.getLogger(category.qualifiedName));
+        };"""
 module ceylon.logging "1.1.1" {
     import ceylon.collection "1.1.1";
 }
