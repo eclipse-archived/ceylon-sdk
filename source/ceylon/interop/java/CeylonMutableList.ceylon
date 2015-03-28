@@ -31,12 +31,6 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     
     clear() => list.clear();
     
-    shared actual void addAll({Element*} elements) {
-        for (e in elements) {
-            list.add(e);
-        }
-    }
-    
     shared actual Boolean removeFirst(Element element) 
             => list.remove(element);
     
@@ -48,12 +42,6 @@ shared class CeylonMutableList<Element>(JList<Element> list)
             }
         }
         return false;
-    }
-    
-    shared actual void removeAll({Element*} elements) {
-        for (e in elements) {
-            remove(e);
-        }
     }
     
     shared actual void deleteMeasure(Integer from, Integer length) {

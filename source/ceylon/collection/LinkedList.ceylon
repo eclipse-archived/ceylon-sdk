@@ -61,15 +61,13 @@ shared class LinkedList<Element>(elements = {})
         "index may not be negative or greater than the
          length of the list"
         assert (0<=index<=length);
-        if (index == length){
+        if (index == length) {
             add(element);
         }
         else {
-            if (index == 0){
+            //no need to update the tail in this branch
+            if (index == 0) {
                 head = Cell(element, head);
-                // we only have to update the tail if
-                // _size == 0 but that's not possible
-                // since it has already been checked
                 length++;
             }
             else {
@@ -79,11 +77,42 @@ shared class LinkedList<Element>(elements = {})
                     value rest = cell.rest;
                     if (++i == index) {
                         cell.rest = Cell(element, rest);
-                        // no need to update the tail since
-                        // we never modify the last element,
-                        // we would have taken the other
-                        // branch above instead
                         length++;
+                        return;
+                    }
+                    iter = rest;
+                }
+                assert (false);
+            }
+        }
+    }
+    
+    shared actual void insertAll(Integer index, 
+            {Element*} elements) {
+        "index may not be negative or greater than the
+         length of the list"
+        assert (0<=index<=length);
+        if (index == length) {
+            addAll(elements);
+        }
+        else {
+            value reversed = Array(elements);
+            reversed.reverseInPlace();
+            //no need to update the tail in this branch
+            if (index == 0) {
+                head = reversed.fold(head)
+                    ((rest,element) => Cell(element,rest));
+                length+=reversed.size;
+            }
+            else {
+                variable value iter = head;
+                variable Integer i = 0;
+                while (exists cell = iter) {
+                    value rest = cell.rest;
+                    if (++i == index) {
+                        cell.rest = reversed.fold(rest)
+                            ((rest,element) => Cell(element,rest));
+                        length+=reversed.size;
                         return;
                     }
                     iter = rest;

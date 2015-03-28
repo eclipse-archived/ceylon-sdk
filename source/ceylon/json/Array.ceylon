@@ -63,6 +63,9 @@ shared class Array({Value*} values = {})
     insert(Integer index, Value val) 
             => list.insert(index, val);
     
+    insertAll(Integer index, {Value*} elements)
+            => list.insertAll(index, elements);
+    
     delete(Integer index) => list.delete(index);
     
     deleteMeasure(Integer from, Integer length) 

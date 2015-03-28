@@ -80,6 +80,8 @@ shared class ArrayList<Element>
     }
 
     shared actual void addAll({Element*} elements) {
+        //TODO: should we eagerly materialize the elements 
+        //      into a sequence?
         grow(elements.size);
         for (element in elements) {
             array.set(length++, element);
@@ -158,6 +160,28 @@ shared class ArrayList<Element>
         }
         length++;
         array.set(index, element);
+    }
+    
+    shared actual void insertAll(Integer index, 
+            {Element*} elements) {
+        "index may not be negative or greater than the
+         length of the list"
+        assert (0 <= index <= length);
+        //TODO: should we eagerly materialize the elements 
+        //      into a sequence?
+        value size = elements.size;
+        if (size>0) {
+            grow(size);
+            if (index < length) {
+                array.copyTo(array, index, index+size, 
+                    length-index);
+            }
+            variable value i = index;
+            for (element in elements) {
+                array.set(i++, element);
+            }
+            length+=size;
+        }
     }
 
     shared actual Element? delete(Integer index) {
