@@ -77,22 +77,26 @@ shared interface ListMutator<in Element>
     shared formal Anything delete(Integer index);
 
     "Remove all occurrences of the given [[value|element]]
-     from this list.
+     from this list, returning the number of elements 
+     removed.
 
      To remove just one occurrence of the given value, use
      [[removeFirst]] or [[removeLast]]."
-    shared formal void remove(
+    shared formal Integer remove(
             "The non-null value to remove"
             Element&Object element);
 
     "Remove all occurrences of every one of the given
-     [[values|elements]] from this list."
-    shared default void removeAll(
+     [[values|elements]] from this list, returning the
+     number of elements removed."
+    shared default Integer removeAll(
             "The non-null values to remove"
             {Element&Object*} elements) {
+        variable value result = 0;
         for (element in elements) {
-            remove(element);
+            result+=remove(element);
         }
+        return result;
     }
 
     "Remove the first occurrence of the given

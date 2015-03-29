@@ -24,8 +24,11 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     insert(Integer index, Element element) 
             => list.add(index, element);
     
-    remove(Element element) 
-            => list.removeAll(singleton(element));
+    shared actual Integer remove(Element element) {
+        value size = list.size();
+        list.removeAll(singleton(element));
+        return size-list.size();
+    }
     
     delete(Integer index) => list.remove(index);
     

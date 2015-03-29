@@ -175,7 +175,8 @@ shared class LinkedList<Element>(elements = {})
         }
     }
 
-    shared actual void remove(Element&Object element) {
+    shared actual Integer remove(Element&Object element) {
+        variable value result = 0;
         while (exists cell = head,
             exists elem = cell.element,
             elem==element) {
@@ -186,6 +187,7 @@ shared class LinkedList<Element>(elements = {})
                 head = tail = null;
             }
             length--;
+            result++;
         }
         variable value iter = head;
         while (exists cell = iter) {
@@ -200,14 +202,17 @@ shared class LinkedList<Element>(elements = {})
                     cell.rest = tail = null;
                 }
                 length--;
+                result++;
             }
             else {
                 iter = rest;
             }
         }
+        return result;
     }
 
-    shared actual void removeAll({<Element&Object>*} elements) {
+    shared actual Integer removeAll({<Element&Object>*} elements) {
+        variable value result = 0;
         while (exists cell = head,
             exists elem = cell.element,
             elem in elements) {
@@ -218,6 +223,7 @@ shared class LinkedList<Element>(elements = {})
                 head = tail = null;
             }
             length--;
+            result++;
         }
         variable value iter = head;
         while (exists cell = iter) {
@@ -232,11 +238,13 @@ shared class LinkedList<Element>(elements = {})
                     cell.rest = tail = null;
                 }
                 length--;
+                result++;
             }
             else {
                 iter = rest;
             }
         }
+        return result;
     }
 
     shared actual Boolean removeFirst(Element&Object element) {

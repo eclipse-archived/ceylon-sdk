@@ -197,7 +197,7 @@ shared class ArrayList<Element>
         }
     }
 
-    shared actual void remove(Element&Object element) {
+    shared actual Integer remove(Element&Object element) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
@@ -214,9 +214,10 @@ shared class ArrayList<Element>
         while (j<i) {
             array.set(j++, null);
         }
+        return i-length;
     }
 
-    shared actual void removeAll({<Element&Object>*} elements) {
+    shared actual Integer removeAll({<Element&Object>*} elements) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
@@ -233,6 +234,7 @@ shared class ArrayList<Element>
         while (j<i) {
             array.set(j++, null);
         }
+        return i-length;
     }
 
     shared actual Boolean removeFirst(Element&Object element) {
