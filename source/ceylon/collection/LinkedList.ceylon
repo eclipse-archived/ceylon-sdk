@@ -212,10 +212,11 @@ shared class LinkedList<Element>(elements = {})
     }
 
     shared actual Integer removeAll({<Element&Object>*} elements) {
+        Category set = HashSet { *elements };
         variable value result = 0;
         while (exists cell = head,
             exists elem = cell.element,
-            elem in elements) {
+            elem in set) {
             if (exists rest = cell.rest) {
                 head = rest;
             }
@@ -230,7 +231,7 @@ shared class LinkedList<Element>(elements = {})
             value rest = cell.rest;
             if (exists rest,
                 exists elem = rest.element,
-                elem in elements) {
+                elem in set) {
                 if (exists more = rest.rest) {
                     cell.rest = more;
                 }

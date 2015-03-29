@@ -80,10 +80,9 @@ shared class ArrayList<Element>
     }
 
     shared actual void addAll({Element*} elements) {
-        //TODO: should we eagerly materialize the elements 
-        //      into a sequence?
-        grow(elements.size);
-        for (element in elements) {
+        value sequence = elements.sequence();
+        grow(sequence.size);
+        for (element in sequence) {
             array.set(length++, element);
         }
     }
@@ -167,9 +166,8 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          length of the list"
         assert (0 <= index <= length);
-        //TODO: should we eagerly materialize the elements 
-        //      into a sequence?
-        value size = elements.size;
+        value sequence = elements.sequence();
+        value size = sequence.size;
         if (size>0) {
             grow(size);
             if (index < length) {
@@ -177,7 +175,7 @@ shared class ArrayList<Element>
                     length-index);
             }
             variable value i = index;
-            for (element in elements) {
+            for (element in sequence) {
                 array.set(i++, element);
             }
             length+=size;
@@ -218,11 +216,12 @@ shared class ArrayList<Element>
     }
 
     shared actual Integer removeAll({<Element&Object>*} elements) {
+        Category set = HashSet { *elements };
         variable value i=0;
         variable value j=0;
         while (i<length) {
             if (exists elem = array[i++]) {
-                if (!elem in elements) {
+                if (!elem in set) {
                     array.set(j++,elem);
                 }
             }
