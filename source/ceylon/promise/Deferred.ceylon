@@ -51,10 +51,21 @@ shared class Deferred<Value>(context = globalExecutionContext)
                 Result(Value) onFulfilled,
                 Result(Throwable) onRejected) {
           
+          ExecutionListener[] listeners = currentExecutionListeners.get();
+          Anything(Anything())[] wrappers;
+          if (!listeners.empty) {
+              wrappers = [ *
+                  listeners.map((ExecutionListener listener) => listener())
+              ];
+          } else {
+              wrappers =[];
+          }
+          
           value childContext = context.childContext();
           value deferred = Deferred<Result>(childContext);
           void callback<T>(Result(T) on, T val) {
-              context.run(void () {
+            
+              variable Anything() task = void () {
                   Result t;
                   try {
                       t = on(val);
@@ -63,7 +74,18 @@ shared class Deferred<Value>(context = globalExecutionContext)
                       return;
                   }
                   deferred.fulfill(t);
-              });
+              };
+              
+              if (!listeners.empty) {
+                  for (wrapper in wrappers) {
+                      Anything() f = task;
+                      task = void() {
+                        wrapper(f);
+                      };
+                  }
+              }
+            
+              context.run(task);
           }
           
           foobar {
@@ -81,10 +103,21 @@ shared class Deferred<Value>(context = globalExecutionContext)
                 Promise<Result>(Value) onFulfilled, 
                 Promise<Result>(Throwable) onRejected) {
             
+            ExecutionListener[] listeners = currentExecutionListeners.get();
+            Anything(Anything())[] wrappers;
+            if (!listeners.empty) {
+              wrappers = [ *
+                  listeners.map((ExecutionListener listener) => listener())
+              ];
+            } else {
+              wrappers =[];
+            }
+
             value childContext = context.childContext();
             value deferred = Deferred<Result>(childContext);
             void callback<T>(Promise<Result>(T) on, T val) {
-                context.run(void () {
+              
+                variable Anything() task = void () {
                     Promise<Result> t;
                     try {
                         t = on(val);
@@ -93,7 +126,18 @@ shared class Deferred<Value>(context = globalExecutionContext)
                         return;
                     }
                     deferred.fulfill(t);
-                });
+                };
+              
+                if (!listeners.empty) {
+                    for (wrapper in wrappers) {
+                        Anything() f = task;
+                        task = void() {
+                           wrapper(f);
+                        };
+                    }
+                }
+
+                context.run(task);
             }
             
             foobar {

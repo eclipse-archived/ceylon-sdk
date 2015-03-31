@@ -3,7 +3,9 @@ import ceylon.test {
 }
 import ceylon.promise {
   Deferred,
-  ExecutionContext
+  ExecutionContext,
+  addGlobalExecutionListener,
+  Promise
 }
 
 
@@ -79,5 +81,59 @@ shared class ExecutionContextTest() extends AsyncTestBase() {
       }
     };
     deferred.resolve("hello");
+  }
+  
+  shared test void testExecutionListenerCompose() {
+    variable Integer context = 0;
+    variable Integer current = -1;
+    Anything() remove = addGlobalExecutionListener {
+      Anything(Anything()) onChild() {
+        current = context;
+        return void(void callback()) {
+          context = current;
+          callback();
+        };
+      }
+    };
+    value deferred = Deferred<String>();
+    deferred.promise.compose<String> {
+      String onFulfilled(String s) {
+        assertEquals(context, 0);    
+        remove();
+        testComplete();
+        return s;
+      }
+    };    
+    assertEquals(current, 0);
+    context = -1;
+    deferred.resolve("whatever");
+  }
+
+  shared test void testExecutionListenerFlatMap() {
+    variable Integer context = 0;
+    variable Integer current = -1;
+    Anything() remove = addGlobalExecutionListener {
+      Anything(Anything()) onChild() {
+        current = context;
+        return void(void callback()) {
+          context = current;
+          callback();
+        };
+      }
+    };
+    value deferred = Deferred<String>();
+    deferred.promise.flatMap {
+      Promise<String> onFulfilled(String s) {
+        assertEquals(context, 0);    
+        remove();
+        testComplete();
+        Deferred<String> result = Deferred<String>();
+        result.fulfill(s);
+        return result.promise;
+      }
+    };
+    assertEquals(current, 0);
+    context = -1;
+    deferred.resolve("whatever");
   }
 }
