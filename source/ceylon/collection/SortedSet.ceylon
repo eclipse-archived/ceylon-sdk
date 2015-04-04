@@ -5,12 +5,12 @@ shared interface SortedSet<Element>
                   & Ranged<Element,Element,SortedSet<Element>>
         given Element satisfies Object {
     
-    "The elements larger than the given [[value|element]],
-     sorted in ascending order."
+    "The elements larger than or equal to the given 
+     [[value|element]], sorted in ascending order."
     shared formal {Element*} higherElements(Element element);
     
-    "The elements smaller than the given [[value|element]],
-     sorted _in descending order_."
+    "The elements smaller than or equal to the given 
+     [[value|element]], sorted _in descending order_."
     shared formal {Element*} lowerElements(Element element);
     
 }
