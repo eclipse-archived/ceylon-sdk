@@ -726,22 +726,17 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared actual <Key->Item>? first {
-        if (exists node = root?.leftmostChild) {
-            return node.key->node.item;
-        }
-        return null;
-    }
+    first => if (exists node = root?.leftmostChild) 
+                then node.key->node.item 
+                else null;
     
-    shared actual <Key->Item>? last {
-        if (exists node = root?.rightmostChild) {
-            return node.key->node.item;
-        }
-        return null;
-    }
+    last => if (exists node = root?.rightmostChild) 
+                then node.key->node.item 
+                else null;
     
     measure(Key from, Integer length)
-            => TreeMap(compare, higherEntries(from).take(length));
+            => TreeMap(compare, 
+                    higherEntries(from).take(length));
     
     shared actual TreeMap<Key,Item> span(Key from, Key to) {
         {<Key->Item>*} entries;
