@@ -745,15 +745,18 @@ shared class TreeMap<Key, Item>(compare, entries={})
     
     shared actual TreeMap<Key,Item> span(Key from, Key to) {
         {<Key->Item>*} entries;
+        Comparison(Key,Key) order;
         if (compare(from, to)==larger) {
             entries = lowerEntries(from).takeWhile((entry) 
                 => compare(entry.key, to)!=smaller);
+            order = (Key x, Key y) => compare(y,x);
         }
         else {
             entries = higherEntries(from).takeWhile((entry)
                 => compare(entry.key, to)!=larger);
+            order = compare;
         }
-        return TreeMap(compare, entries);
+        return TreeMap(order, entries);
     }
     
     spanFrom(Key from)

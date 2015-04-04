@@ -106,15 +106,18 @@ shared class TreeSet<Element>(compare, elements={})
 
      shared actual TreeSet<Element> span(Element from, Element to) {
          {Element*} elements;
+         Comparison(Element,Element) order;
          if (compare(from, to)==larger) {
              elements = lowerElements(from).takeWhile((elem)
                  => compare(elem, to)!=smaller);
+             order = (Element x, Element y) => compare(y,x);
          }
          else {
              elements = higherElements(from).takeWhile((elem)
                  => compare(elem, to)!=larger);
+             order = compare;
          }
-         return TreeSet(compare, elements);
+         return TreeSet(order, elements);
      }
 
      spanFrom(Element from)
