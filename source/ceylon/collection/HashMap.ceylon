@@ -28,7 +28,8 @@ import ceylon.collection {
 
 by ("Stéphane Épardaud")
 shared class HashMap<Key, Item>
-        (stability=linked, hashtable = Hashtable(), entries = {})
+        (stability = linked, hashtable = Hashtable(), 
+           entries = {})
         satisfies MutableMap<Key, Item>
         given Key satisfies Object {
     

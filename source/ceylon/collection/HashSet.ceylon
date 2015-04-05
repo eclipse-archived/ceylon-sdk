@@ -27,7 +27,8 @@ import ceylon.collection {
 
 by ("Stéphane Épardaud", "Gavin King")
 shared class HashSet<Element>
-        (stability=linked, hashtable = Hashtable(), elements = {})
+        (stability = linked, hashtable = Hashtable(), 
+          elements = {})
         satisfies MutableSet<Element>
         given Element satisfies Object {
     
