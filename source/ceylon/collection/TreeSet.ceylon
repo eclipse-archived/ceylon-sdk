@@ -10,125 +10,125 @@ shared class TreeSet<Element>(compare, elements={})
                   & Ranged<Element,Element,TreeSet<Element>>
         given Element satisfies Object {
 
-     "A comparator function used to sort the elements."
-     Comparison compare(Element x, Element y);
+    "A comparator function used to sort the elements."
+    Comparison compare(Element x, Element y);
 
-     "The initial elements of the set."
-     {Element*} elements;
+    "The initial elements of the set."
+    {Element*} elements;
 
-     object present {}
+    object present {}
 
-     variable value map = TreeMap(compare,
-             elements.map((e) => e->present));
+    variable value map = 
+            TreeMap(compare, 
+                elements.map((e) => e->present));
 
-     contains(Object element) => map.defines(element);
-     
-     add(Element element) => !map.put(element, present) exists;
+    contains(Object element) => map.defines(element);
+    
+    add(Element element) => !map.put(element, present) exists;
 
-     remove(Element element) => map.remove(element) exists;
+    remove(Element element) => map.remove(element) exists;
 
-     clear() => map.clear();
-     
-     shared actual TreeSet<Element> clone() {
-         value clone = TreeSet(compare);
-         clone.map = map.clone();
-         return clone;
-     }
+    clear() => map.clear();
+    
+    shared actual TreeSet<Element> clone() {
+        value clone = TreeSet(compare);
+        clone.map = map.clone();
+        return clone;
+    }
 
-     shared actual HashSet<Element> complement<Other>
-             (Set<Other> set)
-             given Other satisfies Object {
-         value ret = HashSet<Element>();
-         for (elem in this) {
-             if (!set.contains(elem)) {
-                 ret.add(elem);
-             }
-         }
-         return ret;
-     }
+    shared actual HashSet<Element> complement<Other>
+            (Set<Other> set)
+            given Other satisfies Object {
+        value ret = HashSet<Element>();
+        for (elem in this) {
+            if (!set.contains(elem)) {
+                ret.add(elem);
+            }
+        }
+        return ret;
+    }
 
-     shared actual HashSet<Element|Other> exclusiveUnion<Other>
-             (Set<Other> set)
-             given Other satisfies Object {
-         value ret = HashSet<Element|Other>();
-         for (elem in this) {
-             if (!set.contains(elem)) {
-                 ret.add(elem);
-             }
-         }
-         for (elem in set) {
-             if (!contains(elem)) {
-                 ret.add(elem);
-             }
-         }
-         return ret;
-     }
+    shared actual HashSet<Element|Other> exclusiveUnion<Other>
+            (Set<Other> set)
+            given Other satisfies Object {
+        value ret = HashSet<Element|Other>();
+        for (elem in this) {
+            if (!set.contains(elem)) {
+                ret.add(elem);
+            }
+        }
+        for (elem in set) {
+            if (!contains(elem)) {
+                ret.add(elem);
+            }
+        }
+        return ret;
+    }
 
-     shared actual HashSet<Element&Other> intersection<Other>
-             (Set<Other> set)
-             given Other satisfies Object {
-         value ret = HashSet<Element&Other>();
-         for (elem in this) {
-             if (set.contains(elem), is Other elem) {
-                 ret.add(elem);
-             }
-         }
-         return ret;
-     }
+    shared actual HashSet<Element&Other> intersection<Other>
+            (Set<Other> set)
+            given Other satisfies Object {
+        value ret = HashSet<Element&Other>();
+        for (elem in this) {
+            if (set.contains(elem), is Other elem) {
+                ret.add(elem);
+            }
+        }
+        return ret;
+    }
 
-     shared actual HashSet<Element|Other> union<Other>
-             (Set<Other> set)
-             given Other satisfies Object {
-         value ret = HashSet<Element|Other>();
-         ret.addAll(this);
-         ret.addAll(set);
-         return ret;
-     }
+    shared actual HashSet<Element|Other> union<Other>
+            (Set<Other> set)
+            given Other satisfies Object {
+        value ret = HashSet<Element|Other>();
+        ret.addAll(this);
+        ret.addAll(set);
+        return ret;
+    }
 
-     iterator()
-             => map.map((Element->Object entry) => entry.key)
-                  .iterator();
+    iterator() => map.keys.iterator();
+    
+    first => map.first?.key;
+    last => map.last?.key;
 
-     first => map.first?.key;
-     last => map.last?.key;
+    higherElements(Element element)
+            => map.higherEntries(element).map(Entry.key);
 
-     higherElements(Element element)
-             => map.higherEntries(element)
-                    .map((entry) => entry.key);
+    lowerElements(Element element)
+            => map.lowerEntries(element).map(Entry.key);
 
-     lowerElements(Element element)
-             => map.lowerEntries(element)
-                    .map((entry) => entry.key);
-
-     measure(Element from, Integer length)
-             => TreeSet(compare, 
+    ascendingElements(Element from, Element to) 
+            => higherElements(from).takeWhile((elem)
+                => compare(elem,to)!=larger);
+    
+    descendingElements(Element from, Element to) 
+            => lowerElements(from).takeWhile((elem)
+                => compare(elem,to)!=smaller);
+    
+    measure(Element from, Integer length)
+            => TreeSet(compare, 
                     higherElements(from).take(length));
+    
+    span(Element from, Element to) 
+            => let (reverse = compare(from,to)==larger)
+    TreeSet {
+        compare(Element x, Element y) 
+                => reverse then compare(y,x) 
+                           else compare(x,y); 
+        elements = reverse then descendingElements(from,to)
+                           else ascendingElements(from,to);
+    };
 
-     shared actual TreeSet<Element> span(Element from, Element to) {
-         {Element*} elements;
-         Comparison(Element,Element) order;
-         if (compare(from, to)==larger) {
-             elements = lowerElements(from).takeWhile((elem)
-                 => compare(elem, to)!=smaller);
-             order = (Element x, Element y) => compare(y,x);
-         }
-         else {
-             elements = higherElements(from).takeWhile((elem)
-                 => compare(elem, to)!=larger);
-             order = compare;
-         }
-         return TreeSet(order, elements);
-     }
+    spanFrom(Element from)
+            => TreeSet(compare, higherElements(from));
 
-     spanFrom(Element from)
-             => TreeSet(compare, higherElements(from));
+    spanTo(Element to)
+            => TreeSet(compare, takeWhile((elem)
+                    => compare(elem,to)!=larger));
 
-     spanTo(Element to)
-             => TreeSet(compare, takeWhile((elem)
-                     => compare(elem, to)!=larger));
-
-     equals(Object that) => (super of Set<Element>).equals(that);
-     hash => (super of Set<Element>).hash;
+    equals(Object that) 
+            => (super of Set<Element>).equals(that);
+    hash => (super of Set<Element>).hash;
 
 }
 

@@ -6,12 +6,36 @@ shared interface SortedSet<Element>
         given Element satisfies Object {
     
     "The elements larger than or equal to the given 
-     [[value|element]], sorted in ascending order."
+     [[value|element]], sorted in ascending order. 
+     
+     This is a lazy operation, returning a view of the 
+     underlying sorted set."
     shared formal {Element*} higherElements(Element element);
     
     "The elements smaller than or equal to the given 
-     [[value|element]], sorted _in descending order_."
+     [[value|element]], sorted _in descending order_. 
+     
+     This is a lazy operation, returning a view of the 
+     underlying sorted set."
     shared formal {Element*} lowerElements(Element element);
+    
+    "The elements larger than or equal to the first given 
+     [[value|from]], and smaller than or equal to the second
+     given [[value|to]], sorted in ascending order. 
+     
+     This is a lazy operation, returning a view of the 
+     underlying sorted set."
+    shared formal {Element*} ascendingElements
+            (Element from, Element to);
+    
+    "The elements smaller than or equal to the first given 
+     [[value|from]], and larger than or equal to the second
+     given [[value|to]], sorted _in descending order_. 
+     
+     This is a lazy operation, returning a view of the 
+     underlying sorted set."
+    shared formal {Element*} descendingElements
+            (Element from, Element to);
     
 }
 
