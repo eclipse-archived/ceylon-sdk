@@ -126,9 +126,7 @@ shared class LinkedList<Element>(elements = {})
     }
 
     shared actual 
-    void add(Element element) {
-        addToTail(element);
-    }
+    void add(Element element) => addToTail(element);
 
     shared actual 
     void addAll({Element*} elements) {
@@ -138,7 +136,7 @@ shared class LinkedList<Element>(elements = {})
     }
 
     shared actual 
-    Element? delete(Integer index){
+    Element? delete(Integer index) {
         if (index == 0) {
             if (exists cell = head) {
                 if (exists rest = cell.rest) {
