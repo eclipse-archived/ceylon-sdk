@@ -466,18 +466,15 @@ shared class LinkedList<Element>(elements = {})
     }
 
     shared actual List<Element> span(Integer from, Integer to) {
-        value measure = spanToMeasure(from, to, length);
-        value start = measure[0];
-        value len = measure[1];
-        value reversed = measure[2];
+        value [start, len, reversed] 
+                = spanToMeasure(from, to, length);
         value result = LinkedList(skip(start).take(len));
         return reversed then result.reversed else result;
     }
     
     shared actual void deleteSpan(Integer from, Integer to)  {
-        value measure = spanToMeasure(from, to, length);
-        value start = measure[0];
-        value len = measure[1];
+        value [start, len, _] 
+                = spanToMeasure(from, to, length);
         if (start < length && len > 0) {
             value keepHead = start > 0;
             value lastPreMeasureCell = advanceBy(start-1, head);
