@@ -591,7 +591,8 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
-    shared actual Integer? firstOccurrence(Anything element) {
+    shared actual 
+    Integer? firstOccurrence(Anything element) {
         variable value iter = head;
         variable value index = 0;
         if (exists element) {
@@ -616,7 +617,8 @@ shared class LinkedList<Element>(elements = {})
         return null;
     }
     
-    shared actual Integer? lastOccurrence(Anything element) {
+    shared actual 
+    Integer? lastOccurrence(Anything element) {
         variable value iter = head;
         variable value index = 0;
         variable Integer? result = null;
@@ -642,7 +644,8 @@ shared class LinkedList<Element>(elements = {})
         return result;
     }
     
-    shared actual Boolean occurs(Anything element) {
+    shared actual 
+    Boolean occurs(Anything element) {
         variable value iter = head;
         if (exists element) {
             while (exists cell = iter) {
@@ -664,7 +667,8 @@ shared class LinkedList<Element>(elements = {})
         return false;
     }
     
-    shared actual {Integer*} occurrences(Anything element) 
+    shared actual 
+    {Integer*} occurrences(Anything element) 
             => object satisfies {Integer*} {
         variable value iter = outer.iterator();
         variable value index = -1;
