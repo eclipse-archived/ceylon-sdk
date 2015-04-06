@@ -401,8 +401,6 @@ shared class ArrayList<Element>
 
     hash => (super of List<Element>).hash;
 
-    clone() => ArrayList(size, growthFactor, this);
-
     push(Element element) => add(element);
 
     pop() => deleteLast();
@@ -416,6 +414,10 @@ shared class ArrayList<Element>
     back => last;
 
     front => first;
+    
+    shared actual 
+    ArrayList<Element> clone() 
+            => ArrayList(size, growthFactor, this);
     
     "Sorts the elements in this list according to the 
      order induced by the given 

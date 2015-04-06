@@ -5,8 +5,6 @@ shared class SingletonMap<Key, Item>(shared Key->Item entry)
         satisfies Map<Key, Item>
         given Key satisfies Object {
     
-    clone() => this;
-    
     defines(Object key) => entry.key==key;
     
     shared actual Item? get(Object key) {
@@ -28,5 +26,7 @@ shared class SingletonMap<Key, Item>(shared Key->Item entry)
     hash => (super of Map<Key, Item>).hash;
     
     each(void step(Key->Item element)) => step(entry);
+    
+    shared actual SingletonMap<Key,Item> clone() => this;
     
 }
