@@ -4,7 +4,10 @@ import ceylon.language.meta {
 import ceylon.test {
     test,
     assertEquals,
-    assertNotEquals
+    assertNotEquals,
+    assertNull,
+    assertTrue,
+    assertFalse
 }
 
 shared interface ListTests satisfies RangedTests & CorrespondenceTests & InsertionOrderIterableWithNullsTests {
@@ -53,6 +56,20 @@ shared interface ListTests satisfies RangedTests & CorrespondenceTests & Inserti
         assertEquals(createList({"A", "B", "C"}).firstIndexWhere("B".equals), 1, "firstIndexWhere(\"B\".equals)");
         assertEquals(createList({"A", "B", "C"}).firstIndexWhere("X".equals), null, "firstIndexWhere(\"X\".equals)");
         assertEquals(createList({"a", "b", "C"}).firstIndexWhere(shuffle(String.any)(Character.uppercase)), 2, "shuffle(String.any)(Character.uppercase))");
+    }
+    
+    test shared void testOccurrences() {
+        assertEquals(createList({"A", "B", "C", "B"}).firstOccurrence("B"), 1);
+        assertEquals(createList({"A", "B", "C", "B"}).firstOccurrence("A"), 0);
+        assertNull(createList({"A", "B", "C", "B"}).firstOccurrence("D"));
+        assertEquals(createList({"A", "B", "C", "B"}).lastOccurrence("B"), 3);
+        assertEquals(createList({"A", "B", "C", "B"}).lastOccurrence("A"), 0);
+        assertNull(createList({"A", "B", "C", "B"}).lastOccurrence("D"));
+        assertTrue(createList({"A", "B", "C", "B"}).occurs("B"));
+        assertFalse(createList({"A", "B", "C", "B"}).occurs("D"));
+        assertEquals(createList({"A", "B", "C", "B"}).occurrences("B").sequence(), [1,3]);
+        assertEquals(createList({"A", "B", "C", "B"}).occurrences("A").sequence(), [0]);
+        assertEquals(createList({"A", "B", "C", "B"}).occurrences("D").sequence(), []);
     }
 
 }
