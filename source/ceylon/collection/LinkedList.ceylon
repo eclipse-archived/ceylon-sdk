@@ -591,6 +591,110 @@ shared class LinkedList<Element>(elements = {})
         }
     }
     
+    shared actual Integer? firstOccurrence(Anything element) {
+        variable value iter = head;
+        variable value index = 0;
+        if (exists element) {
+            while (exists cell = iter) {
+                if (exists elem = cell.element, 
+                    elem==element) {
+                    return index;
+                }
+                iter = cell.rest;
+                index++;
+            }
+        }
+        else {
+            while (exists cell = iter) {
+                if (!cell.element exists) {
+                    return index;
+                }
+                iter = cell.rest;
+                index++;
+            }
+        }
+        return null;
+    }
+    
+    shared actual Integer? lastOccurrence(Anything element) {
+        variable value iter = head;
+        variable value index = 0;
+        variable Integer? result = null;
+        if (exists element) {
+            while (exists cell = iter) {
+                if (exists elem = cell.element, 
+                    elem==element) {
+                    result = index;
+                }
+                iter = cell.rest;
+                index++;
+            }
+        }
+        else {
+            while (exists cell = iter) {
+                if (!cell.element exists) {
+                    result = index;
+                }
+                iter = cell.rest;
+                index++;
+            }
+        }
+        return result;
+    }
+    
+    shared actual Boolean occurs(Anything element) {
+        variable value iter = head;
+        if (exists element) {
+            while (exists cell = iter) {
+                if (exists elem = cell.element, 
+                    elem==element) {
+                    return true;
+                }
+                iter = cell.rest;
+            }
+        }
+        else {
+            while (exists cell = iter) {
+                if (!cell.element exists) {
+                    return true;
+                }
+                iter = cell.rest;
+            }
+        }
+        return false;
+    }
+    
+    shared actual {Integer*} occurrences(Anything element) 
+            => object satisfies {Integer*} {
+        variable value iter = outer.iterator();
+        variable value index = -1;
+        shared actual Iterator<Integer> iterator() 
+                => object satisfies Iterator<Integer> {
+            shared actual Integer|Finished next() {
+                if (exists element) {
+                    while (!is Finished current 
+                            = iter.next()) {
+                        index++;
+                        if (exists current, 
+                            current==element) {
+                            return index;
+                        }
+                    }
+                }
+                else {
+                    while (!is Finished current 
+                            = iter.next()) {
+                        index++;
+                        if (!current exists) {
+                            return index;
+                        }
+                    }
+                }
+                return finished;
+            }
+        };
+    };
+    
     shared actual 
     Element? find(Boolean selecting(Element&Object elem)) {
         variable value iter = head;
