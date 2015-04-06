@@ -533,4 +533,20 @@ shared class ArrayList<Element>
         }
     }
     
+    //TODO: are the following really beneficial?
+    
+    firstOccurrence(Anything element) 
+            => if (exists result 
+                        = array.firstOccurrence(element), 
+                   result<length) 
+            then result 
+            else null;
+    
+    lastOccurrence(Anything element) 
+            => if (exists result 
+                        = array.lastOccurrence(element), 
+                   result<length) 
+            then result 
+            else null;
+    
 }
