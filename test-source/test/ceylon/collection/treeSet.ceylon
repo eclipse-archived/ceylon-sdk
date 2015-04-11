@@ -33,7 +33,7 @@ shared class TreeSetTest() satisfies MutableSetTests & NaturalOrderIterableTests
         assertNotEquals(naturalOrderTreeSet{"Z"}, createSet {"A"});
     }
 
-    test shared void treeSetRemoveTest() {
+    test shared void testTreeSetRemove() {
         value intSet = naturalOrderTreeSet { 1, 2, 3, 4, 5, 6, 7 };
         intSet.remove(1);
         assertEquals(intSet, naturalOrderTreeSet { 2, 3, 4, 5, 6, 7 });
@@ -42,6 +42,13 @@ shared class TreeSetTest() satisfies MutableSetTests & NaturalOrderIterableTests
         assertEquals(intSet, naturalOrderTreeSet { 2, 3, 4, 6, 7 });
         assertEquals(intSet.size, 5);
     }
-
+    
+    test shared void testTreeSetSpan() {
+        value ts = naturalOrderTreeSet { 4, 5, 1, 2, 3 };
+        assertEquals(ts[1..3].sequence(),[1,2,3]);
+        assertEquals(ts[2..3].sequence(),[2,3]);
+        assertEquals(ts[3..1].sequence(),[3,2,1]);
+        assertEquals(ts[3..2].sequence(),[3,2]);
+    }
 
 }
