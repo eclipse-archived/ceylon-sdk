@@ -20,7 +20,7 @@ shared class TreeSet<Element>(compare, elements={})
     
     variable value map = 
             TreeMap(compare, 
-                elements.map((e) => e->present));
+                elements.map((element) => element->present));
     
     contains(Object element) => map.defines(element);
     
@@ -42,12 +42,12 @@ shared class TreeSet<Element>(compare, elements={})
             => map.lowerEntries(element).map(Entry.key);
     
     ascendingElements(Element from, Element to) 
-            => higherElements(from).takeWhile((elem)
-                => compare(elem,to)!=larger);
+            => higherElements(from).takeWhile((element)
+                => compare(element,to)!=larger);
     
     descendingElements(Element from, Element to) 
-            => lowerElements(from).takeWhile((elem)
-                => compare(elem,to)!=smaller);
+            => lowerElements(from).takeWhile((element)
+                => compare(element,to)!=smaller);
     
     measure(Element from, Integer length)
             => TreeSet(compare, 
@@ -67,8 +67,8 @@ shared class TreeSet<Element>(compare, elements={})
             => TreeSet(compare, higherElements(from));
     
     spanTo(Element to)
-            => TreeSet(compare, takeWhile((elem)
-                => compare(elem,to)!=larger));
+            => TreeSet(compare, takeWhile((element)
+                => compare(element,to)!=larger));
     
     shared actual TreeSet<Element> clone() {
         value clone = TreeSet(compare);
@@ -79,52 +79,52 @@ shared class TreeSet<Element>(compare, elements={})
     shared actual HashSet<Element> complement<Other>
             (Set<Other> set)
             given Other satisfies Object {
-        value ret = HashSet<Element>();
-        for (elem in this) {
-            if (!(elem in set)) {
-                ret.add(elem);
+        value result = HashSet<Element>();
+        for (element in this) {
+            if (!(element in set)) {
+                result.add(element);
             }
         }
-        return ret;
+        return result;
     }
     
     shared actual HashSet<Element|Other> exclusiveUnion<Other>
             (Set<Other> set)
             given Other satisfies Object {
-        value ret = HashSet<Element|Other>();
-        for (elem in this) {
-            if (!(elem in set)) {
-                ret.add(elem);
+        value result = HashSet<Element|Other>();
+        for (element in this) {
+            if (!(element in set)) {
+                result.add(element);
             }
         }
-        for (elem in set) {
-            if (!(elem in this)) {
-                ret.add(elem);
+        for (element in set) {
+            if (!(element in this)) {
+                result.add(element);
             }
         }
-        return ret;
+        return result;
     }
     
     shared actual HashSet<Element&Other> intersection<Other>
             (Set<Other> set)
             given Other satisfies Object {
-        value ret = HashSet<Element&Other>();
-        for (elem in this) {
-            if (elem in set) {
-                assert (is Other elem);
-                ret.add(elem);
+        value result = HashSet<Element&Other>();
+        for (element in this) {
+            if (element in set) {
+                assert (is Other element);
+                result.add(element);
             }
         }
-        return ret;
+        return result;
     }
     
     shared actual HashSet<Element|Other> union<Other>
             (Set<Other> set)
             given Other satisfies Object {
-        value ret = HashSet<Element|Other>();
-        ret.addAll(this);
-        ret.addAll(set);
-        return ret;
+        value result = HashSet<Element|Other>();
+        result.addAll(this);
+        result.addAll(set);
+        return result;
     }
     
     equals(Object that)
