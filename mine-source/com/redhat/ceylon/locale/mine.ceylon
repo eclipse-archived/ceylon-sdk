@@ -5,11 +5,14 @@ import ceylon.file {
     File
 }
 
+import java.lang {
+    JString=String
+}
 import java.text {
     DateFormat {
-        short=SHORT,
-        medium=MEDIUM,
-        long=LONG,
+        short=\iSHORT,
+        medium=\iMEDIUM,
+        long=\iLONG,
         ...
     },
     SimpleDateFormat,
@@ -33,6 +36,15 @@ String pattern(DateFormat|NumberFormat format) {
     }
     else {
         return "";
+    }
+}
+
+Boolean isLetter(Integer int) {
+    try {
+        value ch = int.character;
+        return ch.letter;
+    } catch (e) {
+        return false;
     }
 }
 
@@ -116,6 +128,19 @@ shared void mine() {
                         };
                     }
                 }
+                writeData {};
+                writeData {
+                    for (ch in (0:#FFFF).filter(isLetter).map(Integer.character)) 
+                    if (exists lc=JString(ch.string).toLowerCase(locale), 
+                        lc!=ch.string.lowercased) 
+                    "``ch``:``lc``"
+                };
+                writeData {
+                    for (ch in (0:#FFFF).filter(isLetter).map(Integer.character)) 
+                    if (exists uc = JString(ch.string).toUpperCase(locale), 
+                        uc!=ch.string.uppercased) 
+                    "``ch``:``uc``"
+                };
             }
         }
     }
