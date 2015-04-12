@@ -69,6 +69,17 @@ shared sealed class Language(tag,
     return [language, currencyCode];
 }
 
+HashMap<Character,String> parseCaseMappings(Iterator<String> lines) {
+    value caseMappings = HashMap<Character,String>();
+    if (!is Finished line = lines.next(), !line.empty) {
+        for (col in columns(line)) {
+            assert (exists col, exists ch=col.first);
+            caseMappings.put(ch, col.spanFrom(2));
+        }
+    }
+    return caseMappings;
+}
+
 HashMap<String,Language> parseLanguages(Iterator<String> lines) {
     value languages = HashMap<String,Language>();
     while (!is Finished langLine = lines.next(), 

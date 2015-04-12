@@ -11,7 +11,9 @@ import ceylon.language.meta.declaration {
  - local representations of other [[languages]] and
    [[currencies]]."
 shared sealed class Locale(language, formats, 
-    languages, currencies, currencyCode=null) {
+    languages, currencies, currencyCode=null,
+    lowercaseMappings = emptyMap, 
+    uppercaseMappings = emptyMap) {
     
     "The language of this locale."
     shared Language language;
@@ -26,17 +28,35 @@ shared sealed class Locale(language, formats,
     "Localized representations of other currencies."
     shared Map<String,Currency> currencies;
     
+    "Localized mappings of uppercase characters to lowercase."
+    Map<Character,String> lowercaseMappings;
+    
+    "Localized mappings of lowercase characters to uppercase."
+    Map<Character,String> uppercaseMappings;
+    
     String? currencyCode;
     
     "The currency of this locale."
-    shared Currency? currency {
-        if (exists currencyCode) {
-            return currencies[currencyCode];
-        }
-        else {
-            return null;
-        }
-    }
+    shared Currency? currency 
+            => if (exists currencyCode) 
+            then currencies[currencyCode] 
+            else null;
+    
+    "A string with the characters of the given string
+     converted to uppercase according to the rules of this
+     locale."
+    shared String uppercase(String string)
+            => uppercaseMappings.fold(string)((str, mapping) 
+            => str.replace(mapping.key.string, mapping.item))
+                .uppercased;
+    
+    "A string with the characters of the given string
+     converted to lowercase according to the rules of this
+     locale."
+    shared String lowercase(String string) 
+            => lowercaseMappings.fold(string)((str, mapping) 
+            => str.replace(mapping.key.string, mapping.item))
+                .lowercased;
     
     string => language.string;
 }
@@ -50,14 +70,17 @@ shared Locale? locale(String tag) {
         value lines = resource.textContent()
                 .lines.iterator();
         
-        value languageAndCurrency = parseLanguage(lines, tag);
+        value [language,currency] 
+                = parseLanguage(lines, tag);
         
         return Locale {
-            language = languageAndCurrency[0];
-            currencyCode = languageAndCurrency[1];
+            language = language;
+            currencyCode = currency;
             formats = parseFormats(lines);
             languages = parseLanguages(lines);
             currencies = parseCurrencies(lines);
+            lowercaseMappings = parseCaseMappings(lines);
+            uppercaseMappings = parseCaseMappings(lines);
         };
     }
     else {
