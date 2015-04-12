@@ -1,4 +1,4 @@
-de-DE | de | DE |  | German (Germany) | German | Germany |  | EUR
+de-GR | de | GR |  | German (Greece) | German | Greece |  | EUR
 AM | PM
 Januar | Februar | März | April | Mai | Juni | Juli | August | September | Oktober | November | Dezember
 Jan | Feb | Mär | Apr | Mai | Jun | Jul | Aug | Sep | Okt | Nov | Dez
@@ -6,7 +6,7 @@ Sonntag | Montag | Dienstag | Mittwoch | Donnerstag | Freitag | Samstag
 So | Mo | Di | Mi | Do | Fr | Sa
 dd.MM.yy | dd.MM.yyyy | d. MMMM yyyy
 HH:mm | HH:mm:ss | HH:mm:ss z
-#,##0 | #,##0.### | #,##0% | #,##0.00 ¤
+#,##0 | #,##0.### | #,##0% | ¤ #,##0.00
 
 und |  |  |  |  |  |  | 
 ar-AE | ar | AE |  | Arabisch (Vereinigte Arabische Emirate) | Arabisch | Vereinigte Arabische Emirate | 
@@ -221,7 +221,7 @@ KYD | 136 | Kaiman-Dollar | KYD | 2
 TTD | 780 | Trinidad- und Tobago-Dollar | TTD | 2
 ALL | 8 | Lek | ALL | 2
 ADP | 20 | Andorranische Pesete | ADP | 0
-GRD | 300 | Griechische Drachme | GRD | 0
+GRD | 300 | Griechische Drachme | δρχ | 0
 STD | 678 | Dobra | STD | 2
 CAD | 124 | Kanadischer Dollar | CAD | 2
 DKK | 208 | Dänische Krone | DKK | 2
@@ -292,7 +292,7 @@ GWP | 624 | Guinea Bissau Peso | GWP | 2
 RON | 946 | Rumänischer Leu | RON | 2
 CZK | 203 | Tschechische Krone | CZK | 2
 SRG | 740 | Suriname Gulden | SRG | 2
-DEM | 276 | Deutsche Mark | DM | 2
+DEM | 276 | Deutsche Mark | DEM | 2
 FKP | 238 | Falkland-Pfund | FKP | 2
 MKD | 807 | Denar | MKD | 2
 BTN | 64 | Ngultrum | BTN | 2

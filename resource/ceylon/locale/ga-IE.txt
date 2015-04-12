@@ -8,378 +8,387 @@ dd/MM/yyyy | d MMM yyyy | d MMMM yyyy
 HH:mm | HH:mm:ss | HH:mm:ss z
 #,##0 | #,##0.### | #,##0% | ¤#,##0.00
 
-ms-MY | ms | MY |  | Malay (An Mhalaeisia) | Malay | An Mhalaeisia | 
-ar-QA | ar | QA |  | Araibis (Catar) | Araibis | Catar | 
-is-IS | is | IS |  | Íoslainnais (An Íoslainn) | Íoslainnais | An Íoslainn | 
-fi-FI | fi | FI |  | Fionnlainnis (An Fhionlainn) | Fionnlainnis | An Fhionlainn | 
-pl | pl |  |  | Polainnis | Polainnis |  | 
-en-MT | en | MT |  | Béarla (Málta) | Béarla | Málta | 
-it-CH | it | CH |  | Iodáilis (An Eilvéis) | Iodáilis | An Eilvéis | 
-nl-BE | nl | BE |  | Ollainnais (An Bheilg) | Ollainnais | An Bheilg | 
-ar-SA | ar | SA |  | Araibis (An Araib Shádach) | Araibis | An Araib Shádach | 
-ar-IQ | ar | IQ |  | Araibis (An Iaráic) | Araibis | An Iaráic | 
+und |  |  |  |  |  |  | 
+ar-AE | ar | AE |  | Araibis (Aontas na nÉimíríochtaí Arabacha) | Araibis | Aontas na nÉimíríochtaí Arabacha | 
+ar-JO | ar | JO |  | Araibis (An Iordáin) | Araibis | An Iordáin | 
+ar-SY | ar | SY |  | Araibis (An tSiria) | Araibis | An tSiria | 
+hr-HR | hr | HR |  | Cróitis (An Chróit) | Cróitis | An Chróit | 
+fr-BE | fr | BE |  | Fraincis (An Bheilg) | Fraincis | An Bheilg | 
+es-PA | es | PA |  | Spáinnis (Panama) | Spáinnis | Panama | 
+mt-MT | mt | MT |  | Maltais (Málta) | Maltais | Málta | 
+es-VE | es | VE |  | Spáinnis (Veiniséala) | Spáinnis | Veiniséala | 
+bg | bg |  |  | Bulgáiris | Bulgáiris |  | 
+zh-TW | zh | TW |  | Sínis (An Téaváin) | Sínis | An Téaváin | 
+it | it |  |  | Iodáilis | Iodáilis |  | 
+ko | ko |  |  | Cóiréis | Cóiréis |  | 
+uk | uk |  |  | Úcráinis | Úcráinis |  | 
+lv | lv |  |  | Laitvis | Laitvis |  | 
+da-DK | da | DK |  | Danmhairgis (An Danmhairg) | Danmhairgis | An Danmhairg | 
 es-PR | es | PR |  | Spáinnis (Portó Ríce) | Spáinnis | Portó Ríce | 
+vi-VN | vi | VN |  | Vítneamais (Vítneam) | Vítneamais | Vítneam | 
+en-US | en | US |  | Béarla (Stáit Aontaithe Mheiriceá) | Béarla | Stáit Aontaithe Mheiriceá | 
+sr-ME | sr | ME |  | Seirbis (Montenegro) | Seirbis | Montenegro | 
+sv-SE | sv | SE |  | Sualainnis (An tSualainn) | Sualainnis | An tSualainn | 
+es-BO | es | BO |  | Spáinnis (An Bholaiv) | Spáinnis | An Bholaiv | 
+en-SG | en | SG |  | Béarla (Singeapór) | Béarla | Singeapór | 
+ar-BH | ar | BH |  | Araibis (Bairéin) | Araibis | Bairéin | 
+pt | pt |  |  | Portaingéilis | Portaingéilis |  | 
+ar-SA | ar | SA |  | Araibis (An Araib Shádach) | Araibis | An Araib Shádach | 
+sk | sk |  |  | Slóvacais | Slóvacais |  | 
+ar-YE | ar | YE |  | Araibis (Éimin) | Araibis | Éimin | 
+hi-IN | hi | IN |  | Hiondúis (An India) | Hiondúis | An India | 
+ga | ga |  |  | Gaeilge | Gaeilge |  | 
+en-MT | en | MT |  | Béarla (Málta) | Béarla | Málta | 
+fi-FI | fi | FI |  | Fionnlainnis (An Fhionlainn) | Fionnlainnis | An Fhionlainn | 
+et | et |  |  | Eastóinis | Eastóinis |  | 
+sv | sv |  |  | Sualainnis | Sualainnis |  | 
+cs | cs |  |  | Seicis | Seicis |  | 
+sr-Latn-BA | sr | BA |  | Seirbis (Latin,An Bhoisnia-Heirseagaivéin) | Seirbis | An Bhoisnia-Heirseagaivéin | 
+el | el |  |  | Gréigis | Gréigis |  | 
+uk-UA | uk | UA |  | Úcráinis (An Úcráin) | Úcráinis | An Úcráin | 
+hu | hu |  |  | Ungáiris | Ungáiris |  | 
+fr-CH | fr | CH |  | Fraincis (An Eilvéis) | Fraincis | An Eilvéis | 
+id | in |  |  | Indinéisis | Indinéisis |  | 
+es-AR | es | AR |  | Spáinnis (An Airgintín) | Spáinnis | An Airgintín | 
+ar-EG | ar | EG |  | Araibis (An Éigipt) | Araibis | An Éigipt | 
+ja-JP-u-ca-japanese-x-lvariant-JP | ja | JP | JP | Seapáinis (An tSeapáin,JP) | Seapáinis | An tSeapáin | JP
+es-SV | es | SV |  | Spáinnis (An tSalvadóir) | Spáinnis | An tSalvadóir | 
+pt-BR | pt | BR |  | Portaingéilis (An Bhrasaíl) | Portaingéilis | An Bhrasaíl | 
+be | be |  |  | Bealarúisis | Bealarúisis |  | 
+is-IS | is | IS |  | Íoslainnais (An Íoslainn) | Íoslainnais | An Íoslainn | 
+cs-CZ | cs | CZ |  | Seicis (Poblacht na Seice) | Seicis | Poblacht na Seice | 
+es | es |  |  | Spáinnis | Spáinnis |  | 
+pl-PL | pl | PL |  | Polainnis (An Pholainn) | Polainnis | An Pholainn | 
+tr | tr |  |  | Tuircis | Tuircis |  | 
+ca-ES | ca | ES |  | Catalóinis (An Spáinn) | Catalóinis | An Spáinn | 
+sr-CS | sr | CS |  | Seirbis (Serbia and Montenegro) | Seirbis | Serbia and Montenegro | 
+ms-MY | ms | MY |  | Malay (An Mhalaeisia) | Malay | An Mhalaeisia | 
+hr | hr |  |  | Cróitis | Cróitis |  | 
+lt | lt |  |  | Liotuáinis | Liotuáinis |  | 
+es-ES | es | ES |  | Spáinnis (An Spáinn) | Spáinnis | An Spáinn | 
+es-CO | es | CO |  | Spáinnis (An Cholóim) | Spáinnis | An Cholóim | 
+bg-BG | bg | BG |  | Bulgáiris (An Bhulgáir) | Bulgáiris | An Bhulgáir | 
+sq | sq |  |  | Albáinis | Albáinis |  | 
+fr | fr |  |  | Fraincis | Fraincis |  | 
+ja | ja |  |  | Seapáinis | Seapáinis |  | 
+sr-BA | sr | BA |  | Seirbis (An Bhoisnia-Heirseagaivéin) | Seirbis | An Bhoisnia-Heirseagaivéin | 
+is | is |  |  | Íoslainnais | Íoslainnais |  | 
+es-PY | es | PY |  | Spáinnis (Paragua) | Spáinnis | Paragua | 
+de | de |  |  | Gearmáinis | Gearmáinis |  | 
+es-EC | es | EC |  | Spáinnis (Eacuadór) | Spáinnis | Eacuadór | 
+es-US | es | US |  | Spáinnis (Stáit Aontaithe Mheiriceá) | Spáinnis | Stáit Aontaithe Mheiriceá | 
+ar-SD | ar | SD |  | Araibis (An tSúdáin) | Araibis | An tSúdáin | 
+en | en |  |  | Béarla | Béarla |  | 
+ro-RO | ro | RO |  | Romáinis (An Rómáin) | Romáinis | An Rómáin | 
+en-PH | en | PH |  | Béarla (Na hOileáin Fhilipíneacha) | Béarla | Na hOileáin Fhilipíneacha | 
+ca | ca |  |  | Catalóinis | Catalóinis |  | 
+ar-TN | ar | TN |  | Araibis (An Túinéis) | Araibis | An Túinéis | 
+sr-Latn-ME | sr | ME |  | Seirbis (Latin,Montenegro) | Seirbis | Montenegro | 
+es-GT | es | GT |  | Spáinnis (Guatamala) | Spáinnis | Guatamala | 
+sl | sl |  |  | Slóvéinis | Slóvéinis |  | 
+ko-KR | ko | KR |  | Cóiréis (An Chóiré Theas) | Cóiréis | An Chóiré Theas | 
+el-CY | el | CY |  | Gréigis (An Chipir) | Gréigis | An Chipir | 
+es-MX | es | MX |  | Spáinnis (Meicsiceo) | Spáinnis | Meicsiceo | 
+ru-RU | ru | RU |  | Rúisis (Cónaidhm na Rúise) | Rúisis | Cónaidhm na Rúise | 
+es-HN | es | HN |  | Spáinnis (Hondúras) | Spáinnis | Hondúras | 
+zh-HK | zh | HK |  | Sínis (Hong Kong) | Sínis | Hong Kong | 
+nn-NO | no | NO | NY | Ioruais (An Iorua,Nynorsk) | Ioruais | An Iorua | Nynorsk
+hu-HU | hu | HU |  | Ungáiris (An Ungáir) | Ungáiris | An Ungáir | 
+th-TH | th | TH |  | Téalainnis (An Téalainn) | Téalainnis | An Téalainn | 
+ar-IQ | ar | IQ |  | Araibis (An Iaráic) | Araibis | An Iaráic | 
 es-CL | es | CL |  | Spáinnis (An tSile) | Spáinnis | An tSile | 
 fi | fi |  |  | Fionnlainnis | Fionnlainnis |  | 
-de-AT | de | AT |  | Gearmáinis (An Ostair) | Gearmáinis | An Ostair | 
-da | da |  |  | Danmhairgis | Danmhairgis |  | 
-en-GB | en | GB |  | Béarla (An Ríocht Aontaithe) | Béarla | An Ríocht Aontaithe | 
-es-PA | es | PA |  | Spáinnis (Panama) | Spáinnis | Panama | 
-sr | sr |  |  | Seirbis | Seirbis |  | 
-ar-YE | ar | YE |  | Araibis (Éimin) | Araibis | Éimin | 
-mk-MK | mk | MK |  | Macadóinis (An Mhacadóin) | Macadóinis | An Mhacadóin | 
-mk | mk |  |  | Macadóinis | Macadóinis |  | 
-en-CA | en | CA |  | Béarla (Ceanada) | Béarla | Ceanada | 
-vi-VN | vi | VN |  | Vítneamais (Vítneam) | Vítneamais | Vítneam | 
-nl-NL | nl | NL |  | Ollainnais (An Ísiltír) | Ollainnais | An Ísiltír | 
-es-US | es | US |  | Spáinnis (Stáit Aontaithe Mheiriceá) | Spáinnis | Stáit Aontaithe Mheiriceá | 
-zh-CN | zh | CN |  | Sínis (An tSín) | Sínis | An tSín | 
-es-HN | es | HN |  | Spáinnis (Hondúras) | Spáinnis | Hondúras | 
-en-US | en | US |  | Béarla (Stáit Aontaithe Mheiriceá) | Béarla | Stáit Aontaithe Mheiriceá | 
-fr | fr |  |  | Fraincis | Fraincis |  | 
-th | th |  |  | Téalainnis | Téalainnis |  | 
-ar | ar |  |  | Araibis | Araibis |  | 
 ar-MA | ar | MA |  | Araibis (Maracó) | Araibis | Maracó | 
-lv | lv |  |  | Laitvis | Laitvis |  | 
-de | de |  |  | Gearmáinis | Gearmáinis |  | 
-id-ID | in | ID |  | Indinéisis (An Indinéis) | Indinéisis | An Indinéis | 
-hr | hr |  |  | Cróitis | Cróitis |  | 
-en-ZA | en | ZA |  | Béarla (An Afraic Theas) | Béarla | An Afraic Theas | 
-ko-KR | ko | KR |  | Cóiréis (An Chóiré Theas) | Cóiréis | An Chóiré Theas | 
-ar-TN | ar | TN |  | Araibis (An Túinéis) | Araibis | An Túinéis | 
-id | in |  |  | Indinéisis | Indinéisis |  | 
-ja | ja |  |  | Seapáinis | Seapáinis |  | 
-sr-RS | sr | RS |  | Seirbis (Serbia) | Seirbis | Serbia | 
-be-BY | be | BY |  | Bealarúisis (An Bhealarúis) | Bealarúisis | An Bhealarúis | 
-zh-TW | zh | TW |  | Sínis (An Téaváin) | Sínis | An Téaváin | 
-ar-SD | ar | SD |  | Araibis (An tSúdáin) | Araibis | An tSúdáin | 
-pt | pt |  |  | Portaingéilis | Portaingéilis |  | 
-is | is |  |  | Íoslainnais | Íoslainnais |  | 
-ja-JP-u-ca-japanese-x-lvariant-JP | ja | JP | JP | Seapáinis (An tSeapáin,JP) | Seapáinis | An tSeapáin | JP
-es-BO | es | BO |  | Spáinnis (An Bholaiv) | Spáinnis | An Bholaiv | 
-ar-DZ | ar | DZ |  | Araibis (An Ailgéir) | Araibis | An Ailgéir | 
-ms | ms |  |  | Malay | Malay |  | 
-es-AR | es | AR |  | Spáinnis (An Airgintín) | Spáinnis | An Airgintín | 
-ar-AE | ar | AE |  | Araibis (Aontas na nÉimíríochtaí Arabacha) | Araibis | Aontas na nÉimíríochtaí Arabacha | 
-fr-CA | fr | CA |  | Fraincis (Ceanada) | Fraincis | Ceanada | 
-sl | sl |  |  | Slóvéinis | Slóvéinis |  | 
-es | es |  |  | Spáinnis | Spáinnis |  | 
-lt-LT | lt | LT |  | Liotuáinis (An Liotuáin) | Liotuáinis | An Liotuáin | 
-sr-Latn-ME | sr | ME |  | Seirbis (Latin,Montenegro) | Seirbis | Montenegro | 
-ar-SY | ar | SY |  | Araibis (An tSiria) | Araibis | An tSiria | 
-ru-RU | ru | RU |  | Rúisis (Cónaidhm na Rúise) | Rúisis | Cónaidhm na Rúise | 
-fr-BE | fr | BE |  | Fraincis (An Bheilg) | Fraincis | An Bheilg | 
-es-ES | es | ES |  | Spáinnis (An Spáinn) | Spáinnis | An Spáinn | 
-bg | bg |  |  | Bulgáiris | Bulgáiris |  | 
-he-IL | iw | IL |  | Eabhrais (Iosrael) | Eabhrais | Iosrael | 
-sv | sv |  |  | Sualainnis | Sualainnis |  | 
-en | en |  |  | Béarla | Béarla |  | 
-he | iw |  |  | Eabhrais | Eabhrais |  | 
-da-DK | da | DK |  | Danmhairgis (An Danmhairg) | Danmhairgis | An Danmhairg | 
-es-CR | es | CR |  | Spáinnis (Cósta Ríce) | Spáinnis | Cósta Ríce | 
-zh-HK | zh | HK |  | Sínis (Hong Kong) | Sínis | Hong Kong | 
-zh | zh |  |  | Sínis | Sínis |  | 
-ca-ES | ca | ES |  | Catalóinis (An Spáinn) | Catalóinis | An Spáinn | 
-th-TH | th | TH |  | Téalainnis (An Téalainn) | Téalainnis | An Téalainn | 
-uk-UA | uk | UA |  | Úcráinis (An Úcráin) | Úcráinis | An Úcráin | 
-es-DO | es | DO |  | Spáinnis (An Phoblacht Dhoiminiceach) | Spáinnis | An Phoblacht Dhoiminiceach | 
-es-VE | es | VE |  | Spáinnis (Veiniséala) | Spáinnis | Veiniséala | 
-pl-PL | pl | PL |  | Polainnis (An Pholainn) | Polainnis | An Pholainn | 
-ar-LY | ar | LY |  | Araibis (An Libia) | Araibis | An Libia | 
-ar-JO | ar | JO |  | Araibis (An Iordáin) | Araibis | An Iordáin | 
-it | it |  |  | Iodáilis | Iodáilis |  | 
-uk | uk |  |  | Úcráinis | Úcráinis |  | 
-hu-HU | hu | HU |  | Ungáiris (An Ungáir) | Ungáiris | An Ungáir | 
-ga | ga |  |  | Gaeilge | Gaeilge |  | 
-es-GT | es | GT |  | Spáinnis (Guatamala) | Spáinnis | Guatamala | 
-es-PY | es | PY |  | Spáinnis (Paragua) | Spáinnis | Paragua | 
-bg-BG | bg | BG |  | Bulgáiris (An Bhulgáir) | Bulgáiris | An Bhulgáir | 
-hr-HR | hr | HR |  | Cróitis (An Chróit) | Cróitis | An Chróit | 
-sr-Latn-BA | sr | BA |  | Seirbis (Latin,An Bhoisnia-Heirseagaivéin) | Seirbis | An Bhoisnia-Heirseagaivéin | 
-ro-RO | ro | RO |  | Romáinis (An Rómáin) | Romáinis | An Rómáin | 
-fr-LU | fr | LU |  | Fraincis (Lucsamburg) | Fraincis | Lucsamburg | 
-no | no |  |  | Ioruais | Ioruais |  | 
-lt | lt |  |  | Liotuáinis | Liotuáinis |  | 
-en-SG | en | SG |  | Béarla (Singeapór) | Béarla | Singeapór | 
-es-EC | es | EC |  | Spáinnis (Eacuadór) | Spáinnis | Eacuadór | 
-sr-BA | sr | BA |  | Seirbis (An Bhoisnia-Heirseagaivéin) | Seirbis | An Bhoisnia-Heirseagaivéin | 
-es-NI | es | NI |  | Spáinnis (Nicearagua) | Spáinnis | Nicearagua | 
-sk | sk |  |  | Slóvacais | Slóvacais |  | 
-ru | ru |  |  | Rúisis | Rúisis |  | 
-mt | mt |  |  | Maltais | Maltais |  | 
-es-SV | es | SV |  | Spáinnis (An tSalvadóir) | Spáinnis | An tSalvadóir | 
-nl | nl |  |  | Ollainnais | Ollainnais |  | 
-hi-IN | hi | IN |  | Hiondúis (An India) | Hiondúis | An India | 
-et | et |  |  | Eastóinis | Eastóinis |  | 
-el-GR | el | GR |  | Gréigis (An Ghréig) | Gréigis | An Ghréig | 
-sl-SI | sl | SI |  | Slóvéinis (An tSlóvéin) | Slóvéinis | An tSlóvéin | 
-it-IT | it | IT |  | Iodáilis (An Iodáil) | Iodáilis | An Iodáil | 
-ja-JP | ja | JP |  | Seapáinis (An tSeapáin) | Seapáinis | An tSeapáin | 
-de-LU | de | LU |  | Gearmáinis (Lucsamburg) | Gearmáinis | Lucsamburg | 
-fr-CH | fr | CH |  | Fraincis (An Eilvéis) | Fraincis | An Eilvéis | 
-mt-MT | mt | MT |  | Maltais (Málta) | Maltais | Málta | 
-ar-BH | ar | BH |  | Araibis (Bairéin) | Araibis | Bairéin | 
-sq | sq |  |  | Albáinis | Albáinis |  | 
-vi | vi |  |  | Vítneamais | Vítneamais |  | 
-sr-ME | sr | ME |  | Seirbis (Montenegro) | Seirbis | Montenegro | 
-pt-BR | pt | BR |  | Portaingéilis (An Bhrasaíl) | Portaingéilis | An Bhrasaíl | 
-no-NO | no | NO |  | Ioruais (An Iorua) | Ioruais | An Iorua | 
-el | el |  |  | Gréigis | Gréigis |  | 
-de-CH | de | CH |  | Gearmáinis (An Eilvéis) | Gearmáinis | An Eilvéis | 
-zh-SG | zh | SG |  | Sínis (Singeapór) | Sínis | Singeapór | 
-ar-KW | ar | KW |  | Araibis (Cuáit) | Araibis | Cuáit | 
-ar-EG | ar | EG |  | Araibis (An Éigipt) | Araibis | An Éigipt | 
 ga-IE | ga | IE |  | Gaeilge (Éire) | Gaeilge | Éire | 
-es-PE | es | PE |  | Spáinnis (Peiriú) | Spáinnis | Peiriú | 
-cs-CZ | cs | CZ |  | Seicis (Poblacht na Seice) | Seicis | Poblacht na Seice | 
+mk | mk |  |  | Macadóinis | Macadóinis |  | 
 tr-TR | tr | TR |  | Tuircis (An Tuirc) | Tuircis | An Tuirc | 
-cs | cs |  |  | Seicis | Seicis |  | 
-es-UY | es | UY |  | Spáinnis (Urugua) | Spáinnis | Urugua | 
-en-IE | en | IE |  | Béarla (Éire) | Béarla | Éire | 
-en-IN | en | IN |  | Béarla (An India) | Béarla | An India | 
-ar-OM | ar | OM |  | Araibis (Oman) | Araibis | Oman | 
-sr-CS | sr | CS |  | Seirbis (Serbia and Montenegro) | Seirbis | Serbia and Montenegro | 
-ca | ca |  |  | Catalóinis | Catalóinis |  | 
-be | be |  |  | Bealarúisis | Bealarúisis |  | 
-sr-Latn | sr |  |  | Seirbis (Latin) | Seirbis |  | 
-ko | ko |  |  | Cóiréis | Cóiréis |  | 
-sq-AL | sq | AL |  | Albáinis (An Albáin) | Albáinis | An Albáin | 
-pt-PT | pt | PT |  | Portaingéilis (An Phortaingéil) | Portaingéilis | An Phortaingéil | 
-lv-LV | lv | LV |  | Laitvis (An Laitvia) | Laitvis | An Laitvia | 
-sr-Latn-RS | sr | RS |  | Seirbis (Latin,Serbia) | Seirbis | Serbia | 
-sk-SK | sk | SK |  | Slóvacais (An tSlóvaic) | Slóvacais | An tSlóvaic | 
-es-MX | es | MX |  | Spáinnis (Meicsiceo) | Spáinnis | Meicsiceo | 
-en-AU | en | AU |  | Béarla (An Astráil) | Béarla | An Astráil | 
-nn-NO | no | NO | NY | Ioruais (An Iorua,Nynorsk) | Ioruais | An Iorua | Nynorsk
-en-NZ | en | NZ |  | Béarla (An Nua-Shéalainn) | Béarla | An Nua-Shéalainn | 
-sv-SE | sv | SE |  | Sualainnis (An tSualainn) | Sualainnis | An tSualainn | 
-ro | ro |  |  | Romáinis | Romáinis |  | 
-ar-LB | ar | LB |  | Araibis (An Liobáin) | Araibis | An Liobáin | 
-de-DE | de | DE |  | Gearmáinis (An Ghearmáin) | Gearmáinis | An Ghearmáin | 
-th-TH-u-nu-thai-x-lvariant-TH | th | TH | TH | Téalainnis (An Téalainn,TH) | Téalainnis | An Téalainn | TH
-tr | tr |  |  | Tuircis | Tuircis |  | 
-es-CO | es | CO |  | Spáinnis (An Cholóim) | Spáinnis | An Cholóim | 
-en-PH | en | PH |  | Béarla (Na hOileáin Fhilipíneacha) | Béarla | Na hOileáin Fhilipíneacha | 
 et-EE | et | EE |  | Eastóinis (An Eastóin) | Eastóinis | An Eastóin | 
-el-CY | el | CY |  | Gréigis (An Chipir) | Gréigis | An Chipir | 
-hu | hu |  |  | Ungáiris | Ungáiris |  | 
+ar-QA | ar | QA |  | Araibis (Catar) | Araibis | Catar | 
+sr-Latn | sr |  |  | Seirbis (Latin) | Seirbis |  | 
+pt-PT | pt | PT |  | Portaingéilis (An Phortaingéil) | Portaingéilis | An Phortaingéil | 
+fr-LU | fr | LU |  | Fraincis (Lucsamburg) | Fraincis | Lucsamburg | 
+ar-OM | ar | OM |  | Araibis (Oman) | Araibis | Oman | 
+th | th |  |  | Téalainnis | Téalainnis |  | 
+sq-AL | sq | AL |  | Albáinis (An Albáin) | Albáinis | An Albáin | 
+es-DO | es | DO |  | Spáinnis (An Phoblacht Dhoiminiceach) | Spáinnis | An Phoblacht Dhoiminiceach | 
+es-CU | es | CU |  | Spáinnis (Cúba) | Spáinnis | Cúba | 
+ar | ar |  |  | Araibis | Araibis |  | 
+ru | ru |  |  | Rúisis | Rúisis |  | 
+en-NZ | en | NZ |  | Béarla (An Nua-Shéalainn) | Béarla | An Nua-Shéalainn | 
+sr-RS | sr | RS |  | Seirbis (Serbia) | Seirbis | Serbia | 
+de-CH | de | CH |  | Gearmáinis (An Eilvéis) | Gearmáinis | An Eilvéis | 
+es-UY | es | UY |  | Spáinnis (Urugua) | Spáinnis | Urugua | 
+ms | ms |  |  | Malay | Malay |  | 
+el-GR | el | GR |  | Gréigis (An Ghréig) | Gréigis | An Ghréig | 
+he-IL | iw | IL |  | Eabhrais (Iosrael) | Eabhrais | Iosrael | 
+en-ZA | en | ZA |  | Béarla (An Afraic Theas) | Béarla | An Afraic Theas | 
+th-TH-u-nu-thai-x-lvariant-TH | th | TH | TH | Téalainnis (An Téalainn,TH) | Téalainnis | An Téalainn | TH
+hi | hi |  |  | Hiondúis | Hiondúis |  | 
 fr-FR | fr | FR |  | Fraincis (An Fhrainc) | Fraincis | An Fhrainc | 
+de-AT | de | AT |  | Gearmáinis (An Ostair) | Gearmáinis | An Ostair | 
+nl | nl |  |  | Ollainnais | Ollainnais |  | 
+no-NO | no | NO |  | Ioruais (An Iorua) | Ioruais | An Iorua | 
+en-AU | en | AU |  | Béarla (An Astráil) | Béarla | An Astráil | 
+vi | vi |  |  | Vítneamais | Vítneamais |  | 
+nl-NL | nl | NL |  | Ollainnais (An Ísiltír) | Ollainnais | An Ísiltír | 
+fr-CA | fr | CA |  | Fraincis (Ceanada) | Fraincis | Ceanada | 
+lv-LV | lv | LV |  | Laitvis (An Laitvia) | Laitvis | An Laitvia | 
+de-LU | de | LU |  | Gearmáinis (Lucsamburg) | Gearmáinis | Lucsamburg | 
+es-CR | es | CR |  | Spáinnis (Cósta Ríce) | Spáinnis | Cósta Ríce | 
+ar-KW | ar | KW |  | Araibis (Cuáit) | Araibis | Cuáit | 
+sr | sr |  |  | Seirbis | Seirbis |  | 
+ar-LY | ar | LY |  | Araibis (An Libia) | Araibis | An Libia | 
+mt | mt |  |  | Maltais | Maltais |  | 
+it-CH | it | CH |  | Iodáilis (An Eilvéis) | Iodáilis | An Eilvéis | 
+da | da |  |  | Danmhairgis | Danmhairgis |  | 
+de-DE | de | DE |  | Gearmáinis (An Ghearmáin) | Gearmáinis | An Ghearmáin | 
+ar-DZ | ar | DZ |  | Araibis (An Ailgéir) | Araibis | An Ailgéir | 
+sk-SK | sk | SK |  | Slóvacais (An tSlóvaic) | Slóvacais | An tSlóvaic | 
+lt-LT | lt | LT |  | Liotuáinis (An Liotuáin) | Liotuáinis | An Liotuáin | 
+it-IT | it | IT |  | Iodáilis (An Iodáil) | Iodáilis | An Iodáil | 
+en-IE | en | IE |  | Béarla (Éire) | Béarla | Éire | 
+zh-SG | zh | SG |  | Sínis (Singeapór) | Sínis | Singeapór | 
+ro | ro |  |  | Romáinis | Romáinis |  | 
+en-CA | en | CA |  | Béarla (Ceanada) | Béarla | Ceanada | 
+nl-BE | nl | BE |  | Ollainnais (An Bheilg) | Ollainnais | An Bheilg | 
+no | no |  |  | Ioruais | Ioruais |  | 
+pl | pl |  |  | Polainnis | Polainnis |  | 
+zh-CN | zh | CN |  | Sínis (An tSín) | Sínis | An tSín | 
+ja-JP | ja | JP |  | Seapáinis (An tSeapáin) | Seapáinis | An tSeapáin | 
+de-GR | de | GR |  | Gearmáinis (An Ghréig) | Gearmáinis | An Ghréig | 
+sr-Latn-RS | sr | RS |  | Seirbis (Latin,Serbia) | Seirbis | Serbia | 
+he | iw |  |  | Eabhrais | Eabhrais |  | 
+en-IN | en | IN |  | Béarla (An India) | Béarla | An India | 
+ar-LB | ar | LB |  | Araibis (An Liobáin) | Araibis | An Liobáin | 
+es-NI | es | NI |  | Spáinnis (Nicearagua) | Spáinnis | Nicearagua | 
+zh | zh |  |  | Sínis | Sínis |  | 
+mk-MK | mk | MK |  | Macadóinis (An Mhacadóin) | Macadóinis | An Mhacadóin | 
+be-BY | be | BY |  | Bealarúisis (An Bhealarúis) | Bealarúisis | An Bhealarúis | 
+sl-SI | sl | SI |  | Slóvéinis (An tSlóvéin) | Slóvéinis | An tSlóvéin | 
+es-PE | es | PE |  | Spáinnis (Peiriú) | Spáinnis | Peiriú | 
+id-ID | in | ID |  | Indinéisis (An Indinéis) | Indinéisis | An Indinéis | 
+en-GB | en | GB |  | Béarla (An Ríocht Aontaithe) | Béarla | An Ríocht Aontaithe | 
 
-TWD | 901 | New Taiwan Dollar | TWD | 2
-BSD | 44 | Bahamian Dollar | BSD | 2
-XOF | 952 | CFA Franc BCEAO | XOF | 0
-CLF | 990 | Chilean Unit of Account (UF) | CLF | 0
-CUP | 192 | Cuban Peso | CUP | 2
-ANG | 532 | Netherlands Antillean Guilder | ANG | 2
-SZL | 748 | Swazi Lilangeni | SZL | 2
-KZT | 398 | Kazakhstani Tenge | KZT | 2
-LKR | 144 | Sri Lankan Rupee | LKR | 2
-AMD | 51 | Armenian Dram | AMD | 2
-VUV | 548 | Vanuatu Vatu | VUV | 0
-ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
-SIT | 705 | Slovenian Tolar | SIT | 2
-UAH | 980 | Ukrainian Hryvnia | UAH | 2
-MYR | 458 | Malaysian Ringgit | MYR | 2
-MGF | 450 | Malagasy Franc | MGF | 0
-LYD | 434 | Libyan Dinar | LYD | 3
-BBD | 52 | Barbadian Dollar | BBD | 2
-GTQ | 320 | Guatemalan Quetzal | GTQ | 2
-IQD | 368 | Iraqi Dinar | IQD | 3
-CAD | 124 | Canadian Dollar | CAD | 2
-UZS | 860 | Uzbekistan Som | UZS | 2
-DKK | 208 | Danish Krone | DKK | 2
-BGN | 975 | Bulgarian Lev | BGN | 2
-AWG | 533 | Aruban Florin | AWG | 2
-SCR | 690 | Seychellois Rupee | SCR | 2
-DEM | 276 | German Mark | DEM | 2
-XBD | 958 | European Unit of Account (XBD) | XBD | -1
-XPD | 964 | Palladium | XPD | -1
-MMK | 104 | Myanma Kyat | MMK | 2
-SGD | 702 | Singapore Dollar | SGD | 2
-HUF | 348 | Hungarian Forint | HUF | 2
-AZN | 944 | Azerbaijani Manat | AZN | 2
-BIF | 108 | Burundian Franc | BIF | 0
-BYR | 974 | Belarusian Ruble | BYR | 0
-RUB | 643 | Russian Ruble | RUB | 2
-KGS | 417 | Kyrgystani Som | KGS | 2
-BYB | 112 | Belarusian New Ruble (1994-1999) | BYB | 0
-SLL | 694 | Sierra Leonean Leone | SLL | 2
-SRG | 740 | Surinamese Guilder | SRG | 2
-LTL | 440 | Lithuanian Litas | LTL | 2
-GHC | 288 | Ghanaian Cedi (1979-2007) | GHC | 2
-AZM | 31 | Azerbaijani Manat (1993-2006) | AZM | 2
-MDL | 498 | Moldovan Leu | MDL | 2
-RON | 946 | Romanian Leu | RON | 2
-MKD | 807 | Macedonian Denar | MKD | 2
-BDT | 50 | Bangladeshi Taka | BDT | 2
-CZK | 203 | Czech Republic Koruna | CZK | 2
-DJF | 262 | Djiboutian Franc | DJF | 0
-NPR | 524 | Nepalese Rupee | NPR | 2
-CUC | 931 | Cuban Convertible Peso | CUC | 2
-SDG | 938 | Sudanese Pound | SDG | 2
-KHR | 116 | Cambodian Riel | KHR | 2
-ADP | 20 | Andorran Peseta | ADP | 0
-XTS | 963 | Testing Currency Code | XTS | -1
-SDD | 736 | Sudanese Dinar (1992-2007) | SDD | 2
-SOS | 706 | Somali Shilling | SOS | 2
-BEF | 56 | Belgian Franc | BEF | 0
-USD | 840 | US Dollar | USD | 2
-MWK | 454 | Malawian Kwacha | MWK | 2
-SKK | 703 | Slovak Koruna | SKK | 2
-USN | 997 | US Dollar (Next day) | USN | 2
-LVL | 428 | Latvian Lats | LVL | 2
-ILS | 376 | Israeli New Sheqel | ILS | 2
-QAR | 634 | Qatari Rial | QAR | 2
-GHS | 936 | Ghanaian Cedi | GHS | 2
-BWP | 72 | Botswanan Pula | BWP | 2
-XDR | 960 | Special Drawing Rights | XDR | -1
-SRD | 968 | Surinamese Dollar | SRD | 2
-AYM | 945 | AYM | AYM | 2
-YUM | 891 | Yugoslavian New Dinar (1994-2002) | YUM | 2
-LBP | 422 | Lebanese Pound | LBP | 2
-CVE | 132 | Cape Verdean Escudo | CVE | 2
-FJD | 242 | Fijian Dollar | FJD | 2
-BHD | 48 | Bahraini Dinar | BHD | 3
-DZD | 12 | Algerian Dinar | DZD | 2
-VND | 704 | Vietnamese Dong | VND | 2
-NOK | 578 | Norwegian Krone | NOK | 2
 MRO | 478 | Mauritanian Ouguiya | MRO | 2
-THB | 764 | Thai Baht | THB | 2
-SVC | 222 | Salvadoran Colón | SVC | 2
-FKP | 238 | Falkland Islands Pound | FKP | 2
-CLP | 152 | Chilean Peso | CLP | 0
-PAB | 590 | Panamanian Balboa | PAB | 2
-XUA | 965 | XUA | XUA | -1
-TRL | 792 | Turkish Lira (1922-2005) | TRL | 0
-NAD | 516 | Namibian Dollar | NAD | 2
-MGA | 969 | Malagasy Ariary | MGA | 2
-XAG | 961 | Silver | XAG | -1
-NGN | 566 | Nigerian Naira | NGN | 2
-TND | 788 | Tunisian Dinar | TND | 3
-AFN | 971 | Afghan Afghani | AFN | 2
-BOV | 984 | Bolivian Mvdol | BOV | 2
-BMD | 60 | Bermudan Dollar | BMD | 2
-NZD | 554 | New Zealand Dollar | NZD | 2
-CHF | 756 | Swiss Franc | CHF | 2
-CYP | 196 | Cypriot Pound | CYP | 2
-WST | 882 | Samoan Tala | WST | 2
-TPE | 626 | Timorese Escudo | TPE | 0
-GYD | 328 | Guyanaese Dollar | GYD | 2
-BRL | 986 | Brazilian Real | BRL | 2
-YER | 886 | Yemeni Rial | YER | 2
-XFO | 0 | French Gold Franc | XFO | -1
-MXN | 484 | Mexican Peso | MXN | 2
-SHP | 654 | Saint Helena Pound | SHP | 2
-LUF | 442 | Luxembourgian Franc | LUF | 0
-AOA | 973 | Angolan Kwanza | AOA | 2
-XSU | 994 | XSU | XSU | -1
-KES | 404 | Kenyan Shilling | KES | 2
-SAR | 682 | Saudi Riyal | SAR | 2
-XAU | 959 | Gold | XAU | -1
-BND | 96 | Brunei Dollar | BND | 2
-XBA | 955 | European Composite Unit | XBA | -1
-JPY | 392 | Japanese Yen | JPY | 0
-ARS | 32 | Argentine Peso | ARS | 2
-AED | 784 | United Arab Emirates Dirham | AED | 2
-ATS | 40 | Austrian Schilling | ATS | 2
-NLG | 528 | Dutch Guilder | NLG | 2
-BTN | 64 | Bhutanese Ngultrum | BTN | 2
-TJS | 972 | Tajikistani Somoni | TJS | 2
-MUR | 480 | Mauritian Rupee | MUR | 2
+UGX | 800 | Ugandan Shilling | UGX | 0
+MVR | 462 | Maldivian Rufiyaa | MVR | 2
 LAK | 418 | Laotian Kip | LAK | 2
-PYG | 600 | Paraguayan Guarani | PYG | 0
-MZN | 943 | Mozambican Metical | MZN | 2
-HNL | 340 | Honduran Lempira | HNL | 2
-PLN | 985 | Polish Zloty | PLN | 2
-VEB | 862 | Venezuelan Bolívar (1871-2008) | VEB | 2
-XBB | 956 | European Monetary Unit | XBB | -1
-MOP | 446 | Macanese Pataca | MOP | 2
-FRF | 250 | French Franc | FRF | 2
-XFU | 0 | French UIC-Franc | XFU | -1
-BOB | 68 | Bolivian Boliviano | BOB | 2
+PGK | 598 | Papua New Guinean Kina | PGK | 2
+GHC | 288 | Ghanaian Cedi (1979-2007) | GHC | 2
+MGA | 969 | Malagasy Ariary | MGA | 2
+BIF | 108 | Burundian Franc | BIF | 0
 EEK | 233 | Estonian Kroon | EEK | 2
-MZM | 508 | Mozambican Metical (1980-2006) | MZM | 2
-CDF | 976 | Congolese Franc | CDF | 2
-BZD | 84 | Belize Dollar | BZD | 2
-ISK | 352 | Icelandic Króna | ISK | 0
+KHR | 116 | Cambodian Riel | KHR | 2
+SEK | 752 | Swedish Krona | SEK | 2
+TWD | 901 | New Taiwan Dollar | TWD | 2
+MOP | 446 | Macanese Pataca | MOP | 2
+CNY | 156 | Chinese Yuan | CNY | 2
+NGN | 566 | Nigerian Naira | NGN | 2
+XBB | 956 | European Monetary Unit | XBB | -1
+RWF | 646 | Rwandan Franc | RWF | 0
+PAB | 590 | Panamanian Balboa | PAB | 2
+PEN | 604 | Peruvian Nuevo Sol | PEN | 2
+SVC | 222 | Salvadoran Colón | SVC | 2
+XDR | 960 | Special Drawing Rights | XDR | -1
+ERN | 232 | Eritrean Nakfa | ERN | 2
+AFN | 971 | Afghan Afghani | AFN | 2
+LYD | 434 | Libyan Dinar | LYD | 3
+ZWD | 716 | Zimbabwean Dollar (1980-2008) | ZWD | 2
+OMR | 512 | Omani Rial | OMR | 3
 XPF | 953 | CFP Franc | XPF | 0
+XOF | 952 | CFA Franc BCEAO | XOF | 0
+TMT | 934 | Turkmenistani Manat | TMT | 2
+SDD | 736 | Sudanese Dinar (1992-2007) | SDD | 2
+CRC | 188 | Costa Rican Colón | CRC | 2
+UYU | 858 | Uruguayan Peso | UYU | 2
+MXN | 484 | Mexican Peso | MXN | 2
+GMD | 270 | Gambian Dalasi | GMD | 2
+SCR | 690 | Seychellois Rupee | SCR | 2
+ARS | 32 | Argentine Peso | ARS | 2
+CHF | 756 | Swiss Franc | CHF | 2
+DZD | 12 | Algerian Dinar | DZD | 2
+XBA | 955 | European Composite Unit | XBA | -1
+VEF | 937 | Venezuelan Bolívar | VEF | 2
+KES | 404 | Kenyan Shilling | KES | 2
+FRF | 250 | French Franc | FRF | 2
+XXX | 999 | Unknown Currency | XXX | -1
+IDR | 360 | Indonesian Rupiah | IDR | 2
+XSU | 994 | Sucre | XSU | -1
+AMD | 51 | Armenian Dram | AMD | 2
+JPY | 392 | Japanese Yen | JPY | 0
+BYR | 974 | Belarusian Ruble | BYR | 0
+KYD | 136 | Cayman Islands Dollar | KYD | 2
+TTD | 780 | Trinidad and Tobago Dollar | TTD | 2
+ALL | 8 | Albanian Lek | ALL | 2
+ADP | 20 | Andorran Peseta | ADP | 0
+GRD | 300 | Greek Drachma | GRD | 0
+STD | 678 | São Tomé and Príncipe Dobra | STD | 2
+CAD | 124 | Canadian Dollar | CAD | 2
+DKK | 208 | Danish Krone | DKK | 2
+GIP | 292 | Gibraltar Pound | GIP | 2
+LSL | 426 | Lesotho Loti | LSL | 2
+HNL | 340 | Honduran Lempira | HNL | 2
 IEP | 372 | Irish Pound | IEP | 2
+THB | 764 | Thai Baht | THB | 2
+XBC | 957 | European Unit of Account (XBC) | XBC | -1
+BHD | 48 | Bahraini Dinar | BHD | 3
+ZMW | 967 | ZMW | ZMW | 2
+ATS | 40 | Austrian Schilling | ATS | 2
+HUF | 348 | Hungarian Forint | HUF | 2
+TOP | 776 | Tongan Paʻanga | TOP | 2
+MDL | 498 | Moldovan Leu | MDL | 2
+BOV | 984 | Bolivian Mvdol | BOV | 2
+RUR | 810 | Russian Ruble (1991-1998) | RUR | 2
+KGS | 417 | Kyrgystani Som | KGS | 2
+FIM | 246 | Finnish Markka | FIM | 2
+BYB | 112 | Belarusian New Ruble (1994-1999) | BYB | 0
+XAF | 950 | CFA Franc BEAC | XAF | 0
+GBP | 826 | British Pound Sterling | GBP | 2
+GTQ | 320 | Guatemalan Quetzal | GTQ | 2
+SDG | 938 | Sudanese Pound | SDG | 2
+TZS | 834 | Tanzanian Shilling | TZS | 2
+JMD | 388 | Jamaican Dollar | JMD | 2
+WST | 882 | Samoan Tala | WST | 2
+SRD | 968 | Surinamese Dollar | SRD | 2
+XFU | 0 | French UIC-Franc | XFU | -1
+BSD | 44 | Bahamian Dollar | BSD | 2
+NIO | 558 | Nicaraguan Córdoba | NIO | 2
+RUB | 643 | Russian Ruble | RUB | 2
+MGF | 450 | Malagasy Franc | MGF | 0
+SOS | 706 | Somali Shilling | SOS | 2
+NZD | 554 | New Zealand Dollar | NZD | 2
+PTE | 620 | Portuguese Escudo | PTE | 0
+LBP | 422 | Lebanese Pound | LBP | 2
+XBD | 958 | European Unit of Account (XBD) | XBD | -1
+MWK | 454 | Malawian Kwacha | MWK | 2
+TND | 788 | Tunisian Dinar | TND | 3
+ROL | 946 | Romanian Leu (1952-2006) | ROL | 2
+GEL | 981 | Georgian Lari | GEL | 2
+IRR | 364 | Iranian Rial | IRR | 2
+LTL | 440 | Lithuanian Litas | LTL | 2
+VND | 704 | Vietnamese Dong | VND | 0
+XPD | 964 | Palladium | XPD | -1
+BBD | 52 | Barbadian Dollar | BBD | 2
+QAR | 634 | Qatari Rial | QAR | 2
+CUC | 931 | Cuban Convertible Peso | CUC | 2
+SYP | 760 | Syrian Pound | SYP | 2
+XTS | 963 | Testing Currency Code | XTS | -1
+CSD | 891 | Serbian Dinar (2002-2006) | CSD | 2
+XCD | 951 | East Caribbean Dollar | XCD | 2
+ILS | 376 | Israeli New Sheqel | ILS | 2
+KMF | 174 | Comorian Franc | KMF | 0
+PHP | 608 | Philippine Peso | PHP | 2
+CLF | 990 | Chilean Unit of Account (UF) | CLF | 0
+SAR | 682 | Saudi Riyal | SAR | 2
+BGL | 100 | Bulgarian Hard Lev | BGL | 2
+IQD | 368 | Iraqi Dinar | IQD | 3
+LRD | 430 | Liberian Dollar | LRD | 2
+LKR | 144 | Sri Lankan Rupee | LKR | 2
+PLN | 985 | Polish Zloty | PLN | 2
+SSP | 728 | South Sudanese Pound | SSP | 2
+ANG | 532 | Netherlands Antillean Guilder | ANG | 2
+AED | 784 | United Arab Emirates Dirham | AED | 2
+GWP | 624 | Guinea-Bissau Peso | GWP | 2
+RON | 946 | Romanian Leu | RON | 2
+CZK | 203 | Czech Republic Koruna | CZK | 2
+SRG | 740 | Surinamese Guilder | SRG | 2
+DEM | 276 | German Mark | DEM | 2
+FKP | 238 | Falkland Islands Pound | FKP | 2
+MKD | 807 | Macedonian Denar | MKD | 2
+BTN | 64 | Bhutanese Ngultrum | BTN | 2
+TRL | 792 | Turkish Lira (1922-2005) | TRL | 0
+AYM | 945 | AYM | AYM | 2
+CYP | 196 | Cypriot Pound | CYP | 2
+MTL | 470 | Maltese Lira | MTL | 2
+NLG | 528 | Dutch Guilder | NLG | 2
+MZN | 943 | Mozambican Metical | MZN | 2
+CLP | 152 | Chilean Peso | CLP | 0
+HRK | 191 | Croatian Kuna | HRK | 2
+UAH | 980 | Ukrainian Hryvnia | UAH | 2
+BWP | 72 | Botswanan Pula | BWP | 2
+ITL | 380 | Italian Lira | ITL | 0
+KPW | 408 | North Korean Won | KPW | 2
+DJF | 262 | Djiboutian Franc | DJF | 0
 HTG | 332 | Haitian Gourde | HTG | 2
 DOP | 214 | Dominican Peso | DOP | 2
-MXV | 979 | Mexican Investment Unit | MXV | 2
-TZS | 834 | Tanzanian Shilling | TZS | 2
-PGK | 598 | Papua New Guinean Kina | PGK | 2
-INR | 356 | Indian Rupee | INR | 2
-PHP | 608 | Philippine Peso | PHP | 2
-GIP | 292 | Gibraltar Pound | GIP | 2
-ZAR | 710 | South African Rand | ZAR | 2
-GRD | 300 | Greek Drachma | GRD | 0
-CSD | 891 | Serbian Dinar (2002-2006) | CSD | 2
-IDR | 360 | Indonesian Rupiah | IDR | 2
-SEK | 752 | Swedish Krona | SEK | 2
-KMF | 174 | Comorian Franc | KMF | 0
-TMT | 934 | Turkmenistani Manat | TMT | 2
-ZWN | 942 | ZWN | ZWN | 2
-JMD | 388 | Jamaican Dollar | JMD | 2
-TTD | 780 | Trinidad and Tobago Dollar | TTD | 2
-GBP | 826 | British Pound Sterling | GBP | 2
-ALL | 8 | Albanian Lek | ALL | 2
-JOD | 400 | Jordanian Dinar | JOD | 3
-BGL | 100 | Bulgarian Hard Lev | BGL | 2
-IRR | 364 | Iranian Rial | IRR | 2
-TOP | 776 | Tongan Paʻanga | TOP | 2
-USS | 998 | US Dollar (Same day) | USS | 2
-HKD | 344 | Hong Kong Dollar | HKD | 2
-XXX | 999 | Unknown Currency | XXX | -1
-VEF | 937 | Venezuelan Bolívar | VEF | 2
-MNT | 496 | Mongolian Tugrik | MNT | 2
-ETB | 230 | Ethiopian Birr | ETB | 2
-XBC | 957 | European Unit of Account (XBC) | XBC | -1
-EUR | 978 | Euro | € | 2
-CRC | 188 | Costa Rican Colón | CRC | 2
-EGP | 818 | Egyptian Pound | EGP | 2
-AUD | 36 | Australian Dollar | AUD | 2
-ESP | 724 | Spanish Peseta | ESP | 0
-UGX | 800 | Ugandan Shilling | UGX | 2
-ERN | 232 | Eritrean Nakfa | ERN | 2
-GNF | 324 | Guinean Franc | GNF | 0
-SBD | 90 | Solomon Islands Dollar | SBD | 2
-LRD | 430 | Liberian Dollar | LRD | 2
-RSD | 941 | Serbian Dinar | RSD | 2
-RUR | 810 | Russian Ruble (1991-1998) | RUR | 2
-GWP | 624 | Guinea-Bissau Peso | GWP | 2
-NIO | 558 | Nicaraguan Córdoba | NIO | 2
-LSL | 426 | Lesotho Loti | LSL | 2
 XPT | 962 | Platinum | XPT | -1
-MAD | 504 | Moroccan Dirham | MAD | 2
-COP | 170 | Colombian Peso | COP | 2
-UYU | 858 | Uruguayan Peso | UYU | 2
-RWF | 646 | Rwandan Franc | RWF | 0
+TJS | 972 | Tajikistani Somoni | TJS | 2
+MYR | 458 | Malaysian Ringgit | MYR | 2
+GNF | 324 | Guinean Franc | GNF | 0
+YER | 886 | Yemeni Rial | YER | 2
+MNT | 496 | Mongolian Tugrik | MNT | 2
+PYG | 600 | Paraguayan Guarani | PYG | 0
+GYD | 328 | Guyanaese Dollar | GYD | 2
+XAU | 959 | Gold | XAU | -1
+ESP | 724 | Spanish Peseta | ESP | 0
 TRY | 949 | Turkish Lira | TRY | 2
-KYD | 136 | Cayman Islands Dollar | KYD | 2
-PEN | 604 | Peruvian Nuevo Sol | PEN | 2
-GMD | 270 | Gambian Dalasi | GMD | 2
-ZMK | 894 | Zambian Kwacha | ZMK | 2
-XAF | 950 | CFA Franc BEAC | XAF | 0
-OMR | 512 | Omani Rial | OMR | 3
-FIM | 246 | Finnish Markka | FIM | 2
-STD | 678 | São Tomé and Príncipe Dobra | STD | 2
-KRW | 410 | South Korean Won | KRW | 0
-HRK | 191 | Croatian Kuna | HRK | 2
-BAM | 977 | Bosnia-Herzegovina Convertible Mark | BAM | 2
-MTL | 470 | Maltese Lira | MTL | 2
-ITL | 380 | Italian Lira | ITL | 0
-PKR | 586 | Pakistani Rupee | PKR | 2
-ROL | 946 | Romanian Leu (1952-2006) | ROL | 2
-ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
-ZWD | 716 | Zimbabwean Dollar (1980-2008) | ZWD | 2
-PTE | 620 | Portuguese Escudo | PTE | 0
-TMM | 795 | Turkmenistani Manat (1993-2009) | TMM | 2
-CNY | 156 | Chinese Yuan | CNY | 2
-KPW | 408 | North Korean Won | KPW | 2
-GEL | 981 | Georgian Lari | GEL | 2
-MVR | 462 | Maldivian Rufiyaa | MVR | 2
+SKK | 703 | Slovak Koruna | SKK | 2
+XUA | 965 | ADB Unit of Account | XUA | -1
 KWD | 414 | Kuwaiti Dinar | KWD | 3
+XAG | 961 | Silver | XAG | -1
+GHS | 936 | Ghanaian Cedi | GHS | 2
+ETB | 230 | Ethiopian Birr | ETB | 2
+SHP | 654 | Saint Helena Pound | SHP | 2
+USD | 840 | US Dollar | USD | 2
+AUD | 36 | Australian Dollar | AUD | 2
+ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
+TPE | 626 | Timorese Escudo | TPE | 0
+BAM | 977 | Bosnia-Herzegovina Convertible Mark | BAM | 2
+SBD | 90 | Solomon Islands Dollar | SBD | 2
+ZAR | 710 | South African Rand | ZAR | 2
+TMM | 795 | Turkmenistani Manat (1993-2009) | TMM | 2
+USN | 997 | US Dollar (Next day) | USN | 2
+ZWN | 942 | ZWN | ZWN | 2
+NAD | 516 | Namibian Dollar | NAD | 2
+MXV | 979 | Mexican Investment Unit | MXV | 2
+RSD | 941 | Serbian Dinar | RSD | 2
+CUP | 192 | Cuban Peso | CUP | 2
+KZT | 398 | Kazakhstani Tenge | KZT | 2
+XFO | 0 | French Gold Franc | XFO | -1
+VEB | 862 | Venezuelan Bolívar (1871-2008) | VEB | 2
+CDF | 976 | Congolese Franc | CDF | 2
+ISK | 352 | Icelandic Króna | ISK | 0
+MAD | 504 | Moroccan Dirham | MAD | 2
+INR | 356 | Indian Rupee | INR | 2
+LUF | 442 | Luxembourgian Franc | LUF | 0
+EUR | 978 | Euro | € | 2
+MZM | 508 | Mozambican Metical (1980-2006) | MZM | 2
+SLL | 694 | Sierra Leonean Leone | SLL | 2
 AFA | 4 | Afghan Afghani (1927-2002) | AFA | 2
-SYP | 760 | Syrian Pound | SYP | 2
-XCD | 951 | East Caribbean Dollar | XCD | 2
+KRW | 410 | South Korean Won | KRW | 0
+SGD | 702 | Singapore Dollar | SGD | 2
+HKD | 344 | Hong Kong Dollar | HKD | 2
+VUV | 548 | Vanuatu Vatu | VUV | 0
+AZN | 944 | Azerbaijani Manat | AZN | 2
+EGP | 818 | Egyptian Pound | EGP | 2
+SZL | 748 | Swazi Lilangeni | SZL | 2
+BND | 96 | Brunei Dollar | BND | 2
+BGN | 975 | Bulgarian Lev | BGN | 2
+BEF | 56 | Belgian Franc | BEF | 0
+MUR | 480 | Mauritian Rupee | MUR | 2
+BDT | 50 | Bangladeshi Taka | BDT | 2
+ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
+COP | 170 | Colombian Peso | COP | 2
+NPR | 524 | Nepalese Rupee | NPR | 2
+PKR | 586 | Pakistani Rupee | PKR | 2
+BRL | 986 | Brazilian Real | BRL | 2
+ZMK | 894 | Zambian Kwacha | ZMK | 2
+BZD | 84 | Belize Dollar | BZD | 2
+AZM | 31 | Azerbaijani Manat (1993-2006) | AZM | 2
+SIT | 705 | Slovenian Tolar | SIT | 2
+AWG | 533 | Aruban Florin | AWG | 2
+BMD | 60 | Bermudan Dollar | BMD | 2
+CVE | 132 | Cape Verdean Escudo | CVE | 2
+FJD | 242 | Fijian Dollar | FJD | 2
+AOA | 973 | Angolan Kwanza | AOA | 2
+JOD | 400 | Jordanian Dinar | JOD | 3
+NOK | 578 | Norwegian Krone | NOK | 2
+UZS | 860 | Uzbekistan Som | UZS | 2
+MMK | 104 | Myanma Kyat | MMK | 2
+YUM | 891 | Yugoslavian New Dinar (1994-2002) | YUM | 2
+USS | 998 | US Dollar (Same day) | USS | 2
+LVL | 428 | Latvian Lats | LVL | 2
+BOB | 68 | Bolivian Boliviano | BOB | 2
+
+
+

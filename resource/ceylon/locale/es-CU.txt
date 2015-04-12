@@ -1,11 +1,11 @@
-es-PA | es | PA |  | Spanish (Panama) | Spanish | Panama |  | PAB
+es-CU | es | CU |  | Spanish (Cuba) | Spanish | Cuba |  | CUP
 AM | PM
 enero | febrero | marzo | abril | mayo | junio | julio | agosto | septiembre | octubre | noviembre | diciembre
 ene | feb | mar | abr | may | jun | jul | ago | sep | oct | nov | dic
 domingo | lunes | martes | miércoles | jueves | viernes | sábado
 dom | lun | mar | mié | jue | vie | sáb
-MM/dd/yy | MM/dd/yyyy | d' de 'MMMM' de 'yyyy
-hh:mm a | hh:mm:ss a | hh:mm:ss a z
+d/MM/yy | dd-MMM-yyyy | d' de 'MMMM' de 'yyyy
+H:mm | H:mm:ss | H:mm:ss z
 #,##0 | #,##0.### | #,##0% | ¤#,##0.00;(¤#,##0.00)
 
 und |  |  |  |  |  |  | 
@@ -186,7 +186,7 @@ CNY | 156 | yuan renminbi chino | CNY | 2
 NGN | 566 | naira nigeriano | NGN | 2
 XBB | 956 | unidad monetaria europea | XBB | -1
 RWF | 646 | franco ruandés | RWF | 0
-PAB | 590 | balboa panameño | B | 2
+PAB | 590 | balboa panameño | PAB | 2
 PEN | 604 | nuevo sol peruano | PEN | 2
 SVC | 222 | colón salvadoreño | SVC | 2
 XDR | 960 | derechos especiales de giro | XDR | -1
@@ -270,7 +270,7 @@ VND | 704 | dong vietnamita | VND | 0
 XPD | 964 | paladio | XPD | -1
 BBD | 52 | dólar de Barbados | BBD | 2
 QAR | 634 | riyal de Qatar | QAR | 2
-CUC | 931 | peso cubano convertible | CUC | 2
+CUC | 931 | peso cubano convertible | CUC$ | 2
 SYP | 760 | libra siria | SYP | 2
 XTS | 963 | código reservado para pruebas | XTS | -1
 CSD | 891 | antiguo dinar serbio | CSD | 2
@@ -342,7 +342,7 @@ ZWN | 942 | ZWN | ZWN | 2
 NAD | 516 | dólar de Namibia | NAD | 2
 MXV | 979 | unidad de inversión (UDI) mexicana | MXV | 2
 RSD | 941 | dinar serbio | RSD | 2
-CUP | 192 | peso cubano | CUP | 2
+CUP | 192 | peso cubano | CU$ | 2
 KZT | 398 | tenge kazako | KZT | 2
 XFO | 0 | franco oro francés | XFO | -1
 VEB | 862 | bolívar venezolano | VEB | 2
