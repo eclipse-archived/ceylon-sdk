@@ -68,13 +68,17 @@ shared sealed class Formats(
     }
     
     String formatDateToken(String token, ReadableDate date) {
-        value weekdayName = weekdayNames[date.dayOfWeek.integer-1] 
+        value weekdayName = 
+                weekdayNames[date.dayOfWeek.integer-1] 
                 else date.dayOfWeek.string;
-        value weekdayAbbr = weekdayAbbreviations[date.dayOfWeek.integer-1] 
+        value weekdayAbbr = 
+                weekdayAbbreviations[date.dayOfWeek.integer-1] 
                 else date.dayOfWeek.string.initial(3);
-        value monthName = monthNames[date.month.integer-1] 
+        value monthName = 
+                monthNames[date.month.integer-1] 
                 else date.month.string;
-        value monthAbbr = monthAbbreviations[date.month.integer-1] 
+        value monthAbbr = 
+                monthAbbreviations[date.month.integer-1] 
                 else date.month.string.initial(3);
         value month = date.month.integer.string;
         value twoDigitMonth = month.padLeading(2,'0');
@@ -190,7 +194,8 @@ Formats parseFormats(Iterator<String> lines) {
     assert (is String percentageFormat = numCols.next());
     assert (is String currencyFormat = numCols.next());
     
-    assert (!is Finished blankLine1 = lines.next(), blankLine1.empty);
+    assert (!is Finished blankLine1 = lines.next(), 
+            blankLine1.empty);
     
     return Formats {
         shortDateFormat = shortDateFormat;

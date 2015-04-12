@@ -67,8 +67,9 @@ shared Locale? locale(String tag) {
     value filePath = tag + ".txt";
     if (exists resource = 
             localeModule.resourceByPath(filePath)) {
-        value lines = resource.textContent()
-                .lines.iterator();
+        value lines = 
+                resource.textContent()
+                        .lines.iterator();
         
         value [language,currency] 
                 = parseLanguage(lines, tag);
