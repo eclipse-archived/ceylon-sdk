@@ -50,7 +50,7 @@ Boolean isLetter(Integer int) {
 
 shared void mine() {
     for (locale in Locale.availableLocales.array) {
-        if (exists locale) {
+        if (exists locale, exists lang=locale.language, !lang.empty) {
             value fileName = "resource/ceylon/locale/" + 
                     locale.toLanguageTag() + ".txt";
             value path = current.childPath(fileName);
@@ -103,7 +103,7 @@ shared void mine() {
                 };
                 writeData {};
                 for (loc in Locale.availableLocales.array) {
-                    if (exists loc) {
+                    if (exists loc, exists lan=loc.language, !lan.empty) {
                         writeData { 
                             loc.toLanguageTag(),
                             loc.language,

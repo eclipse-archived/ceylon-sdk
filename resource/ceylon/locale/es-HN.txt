@@ -8,7 +8,6 @@ MM-dd-yy | MM-dd-yyyy | dd' de 'MMMM' de 'yyyy
 hh:mm a | hh:mm:ss a | hh:mm:ss a z
 #,##0 | #,##0.### | #,##0% | ¤#,##0.00;(¤#,##0.00)
 
-und |  |  |  |  |  |  | 
 ar-AE | ar | AE |  | árabe (Emiratos Árabes Unidos) | árabe | Emiratos Árabes Unidos | 
 ar-JO | ar | JO |  | árabe (Jordania) | árabe | Jordania | 
 ar-SY | ar | SY |  | árabe (Siria) | árabe | Siria | 
@@ -169,226 +168,226 @@ es-PE | es | PE |  | español (Perú) | español | Perú |
 id-ID | in | ID |  | indonesio (Indonesia) | indonesio | Indonesia | 
 en-GB | en | GB |  | inglés (Reino Unido) | inglés | Reino Unido | 
 
-MRO | 478 | ouguiya mauritano | MRO | 2
-UGX | 800 | chelín ugandés | UGX | 0
-MVR | 462 | rufiyaa de Maldivas | MVR | 2
 LAK | 418 | kip laosiano | LAK | 2
-PGK | 598 | kina de Papúa Nueva Guinea | PGK | 2
-GHC | 288 | cedi ghanés (1979-2007) | GHC | 2
-MGA | 969 | ariary malgache | MGA | 2
-BIF | 108 | franco de Burundi | BIF | 0
-EEK | 233 | corona estonia | EEK | 2
-KHR | 116 | riel camboyano | KHR | 2
-SEK | 752 | corona sueca | SEK | 2
-TWD | 901 | nuevo dólar taiwanés | TWD | 2
-MOP | 446 | pataca de Macao | MOP | 2
-CNY | 156 | yuan renminbi chino | CNY | 2
-NGN | 566 | naira nigeriano | NGN | 2
-XBB | 956 | unidad monetaria europea | XBB | -1
-RWF | 646 | franco ruandés | RWF | 0
-PAB | 590 | balboa panameño | PAB | 2
-PEN | 604 | nuevo sol peruano | PEN | 2
-SVC | 222 | colón salvadoreño | SVC | 2
-XDR | 960 | derechos especiales de giro | XDR | -1
-ERN | 232 | nakfa eritreo | ERN | 2
-AFN | 971 | afgani | AFN | 2
-LYD | 434 | dinar libio | LYD | 3
-ZWD | 716 | dólar de Zimbabue | ZWD | 2
-OMR | 512 | rial omaní | OMR | 3
-XPF | 953 | franco CFP | XPF | 0
-XOF | 952 | franco CFA BCEAO | XOF | 0
-TMT | 934 | nuevo manat turcomano | TMT | 2
-SDD | 736 | dinar sudanés | SDD | 2
-CRC | 188 | colón costarricense | CRC | 2
-UYU | 858 | peso uruguayo | UYU | 2
-MXN | 484 | peso mexicano | MXN | 2
-GMD | 270 | dalasi gambiano | GMD | 2
-SCR | 690 | rupia de Seychelles | SCR | 2
-ARS | 32 | peso argentino | ARS | 2
-CHF | 756 | franco suizo | CHF | 2
-DZD | 12 | dinar argelino | DZD | 2
-XBA | 955 | unidad compuesta europea | XBA | -1
-VEF | 937 | bolívar fuerte venezolano | VEF | 2
-KES | 404 | chelín keniata | KES | 2
-FRF | 250 | franco francés | FRF | 2
-XXX | 999 | Sin divisa | XXX | -1
-IDR | 360 | rupia indonesia | IDR | 2
-XSU | 994 | Sucre | XSU | -1
-AMD | 51 | dram armenio | AMD | 2
-JPY | 392 | yen japonés | JPY | 0
-BYR | 974 | rublo bielorruso | BYR | 0
-KYD | 136 | dólar de las Islas Caimán | KYD | 2
-TTD | 780 | dólar de Trinidad y Tobago | TTD | 2
-ALL | 8 | lek albanés | ALL | 2
-ADP | 20 | peseta andorrana | ADP | 0
-GRD | 300 | dracma griego | GRD | 0
 STD | 678 | dobra de Santo Tomé y Príncipe | STD | 2
-CAD | 124 | dólar canadiense | CAD | 2
-DKK | 208 | corona danesa | DKK | 2
-GIP | 292 | libra de Gibraltar | GIP | 2
-LSL | 426 | loti lesothense | LSL | 2
-HNL | 340 | lempira hondureño | L | 2
-IEP | 372 | libra irlandesa | IEP | 2
-THB | 764 | baht tailandés | THB | 2
-XBC | 957 | unidad de cuenta europea (XBC) | XBC | -1
-BHD | 48 | dinar bahreiní | BHD | 3
-ZMW | 967 | ZMW | ZMW | 2
-ATS | 40 | chelín austriaco | ATS | 2
-HUF | 348 | florín húngaro | HUF | 2
-TOP | 776 | paʻanga tongano | TOP | 2
-MDL | 498 | leu moldavo | MDL | 2
-BOV | 984 | MVDOL boliviano | BOV | 2
-RUR | 810 | rublo ruso (1991-1998) | RUR | 2
-KGS | 417 | som kirguís | KGS | 2
-FIM | 246 | marco finlandés | FIM | 2
-BYB | 112 | nuevo rublo bielorruso (1994-1999) | BYB | 0
-XAF | 950 | franco CFA BEAC | XAF | 0
-GBP | 826 | libra esterlina británica | GBP | 2
-GTQ | 320 | quetzal guatemalteco | GTQ | 2
-SDG | 938 | libra sudanesa | SDG | 2
-TZS | 834 | chelín tanzano | TZS | 2
-JMD | 388 | dólar de Jamaica | JMD | 2
-WST | 882 | tala samoano | WST | 2
-SRD | 968 | dólar surinamés | SRD | 2
-XFU | 0 | franco UIC francés | XFU | -1
-BSD | 44 | dólar de las Bahamas | BSD | 2
-NIO | 558 | córdoba oro nicaragüense | NIO | 2
-RUB | 643 | rublo ruso | RUB | 2
-MGF | 450 | franco malgache | MGF | 0
-SOS | 706 | chelín somalí | SOS | 2
-NZD | 554 | dólar neozelandés | NZD | 2
-PTE | 620 | escudo portugués | PTE | 0
-LBP | 422 | libra libanesa | LBP | 2
-XBD | 958 | unidad de cuenta europea (XBD) | XBD | -1
-MWK | 454 | kwacha de Malawi | MWK | 2
-TND | 788 | dinar tunecino | TND | 3
-ROL | 946 | antiguo leu rumano | ROL | 2
-GEL | 981 | lari georgiano | GEL | 2
-IRR | 364 | rial iraní | IRR | 2
-LTL | 440 | litas lituano | LTL | 2
-VND | 704 | dong vietnamita | VND | 0
-XPD | 964 | paladio | XPD | -1
-BBD | 52 | dólar de Barbados | BBD | 2
-QAR | 634 | riyal de Qatar | QAR | 2
-CUC | 931 | peso cubano convertible | CUC | 2
-SYP | 760 | libra siria | SYP | 2
-XTS | 963 | código reservado para pruebas | XTS | -1
-CSD | 891 | antiguo dinar serbio | CSD | 2
-XCD | 951 | dólar del Caribe Oriental | XCD | 2
-ILS | 376 | nuevo sheqel israelí | ILS | 2
-KMF | 174 | franco comorense | KMF | 0
-PHP | 608 | peso filipino | PHP | 2
-CLF | 990 | unidad de fomento chilena | CLF | 0
-SAR | 682 | riyal saudí | SAR | 2
-BGL | 100 | lev fuerte búlgaro | BGL | 2
-IQD | 368 | dinar iraquí | IQD | 3
-LRD | 430 | dólar liberiano | LRD | 2
 LKR | 144 | rupia de Sri Lanka | LKR | 2
-PLN | 985 | zloty polaco | PLN | 2
-SSP | 728 | South Sudanese Pound | SSP | 2
-ANG | 532 | florín de las Antillas Neerlandesas | ANG | 2
-AED | 784 | dírham de los Emiratos Árabes Unidos | AED | 2
-GWP | 624 | peso de Guinea-Bissáu | GWP | 2
-RON | 946 | leu rumano | RON | 2
-CZK | 203 | corona checa | CZK | 2
-SRG | 740 | florín surinamés | SRG | 2
-DEM | 276 | marco alemán | DEM | 2
-FKP | 238 | libra de las Islas Malvinas | FKP | 2
-MKD | 807 | dinar macedonio | MKD | 2
-BTN | 64 | ngultrum butanés | BTN | 2
-TRL | 792 | lira turca antigua | TRL | 0
-AYM | 945 | AYM | AYM | 2
-CYP | 196 | libra chipriota | CYP | 2
-MTL | 470 | lira maltesa | MTL | 2
-NLG | 528 | florín neerlandés | NLG | 2
-MZN | 943 | metical mozambiqueño | MZN | 2
-CLP | 152 | peso chileno | CLP | 0
-HRK | 191 | kuna croata | HRK | 2
-UAH | 980 | grivna ucraniana | UAH | 2
-BWP | 72 | pula botsuano | BWP | 2
-ITL | 380 | lira italiana | ITL | 0
-KPW | 408 | won norcoreano | KPW | 2
-DJF | 262 | franco de Yibuti | DJF | 0
-HTG | 332 | gourde haitiano | HTG | 2
-DOP | 214 | peso dominicano | DOP | 2
-XPT | 962 | platino | XPT | -1
-TJS | 972 | somoni tayiko | TJS | 2
-MYR | 458 | ringgit malasio | MYR | 2
-GNF | 324 | franco guineano | GNF | 0
-YER | 886 | rial yemení | YER | 2
-MNT | 496 | tugrik mongol | MNT | 2
-PYG | 600 | guaraní paraguayo | PYG | 0
-GYD | 328 | dólar guyanés | GYD | 2
-XAU | 959 | oro | XAU | -1
-ESP | 724 | peseta española | ESP | 0
-TRY | 949 | nueva lira turca | TRY | 2
-SKK | 703 | corona eslovaca | SKK | 2
-XUA | 965 | ADB Unit of Account | XUA | -1
-KWD | 414 | dinar kuwaití | KWD | 3
-XAG | 961 | plata | XAG | -1
-GHS | 936 | cedi ghanés | GHS | 2
-ETB | 230 | birr etíope | ETB | 2
-SHP | 654 | libra de Santa Elena | SHP | 2
-USD | 840 | dólar estadounidense | USD | 2
-AUD | 36 | dólar australiano | AUD | 2
-ZWL | 932 | dólar zimbabuense | ZWL | 2
-TPE | 626 | escudo timorense | TPE | 0
-BAM | 977 | marco convertible de Bosnia-Herzegovina | BAM | 2
-SBD | 90 | dólar de las Islas Salomón | SBD | 2
-ZAR | 710 | rand sudafricano | ZAR | 2
-TMM | 795 | manat turcomano | TMM | 2
-USN | 997 | dólar estadounidense (día siguiente) | USN | 2
-ZWN | 942 | ZWN | ZWN | 2
-NAD | 516 | dólar de Namibia | NAD | 2
-MXV | 979 | unidad de inversión (UDI) mexicana | MXV | 2
-RSD | 941 | dinar serbio | RSD | 2
-CUP | 192 | peso cubano | CUP | 2
-KZT | 398 | tenge kazako | KZT | 2
-XFO | 0 | franco oro francés | XFO | -1
-VEB | 862 | bolívar venezolano | VEB | 2
-CDF | 976 | franco congoleño | CDF | 2
-ISK | 352 | corona islandesa | ISK | 0
-MAD | 504 | dirham marroquí | MAD | 2
-INR | 356 | rupia india | INR | 2
-LUF | 442 | franco luxemburgués | LUF | 0
-EUR | 978 | euro | EUR | 2
-MZM | 508 | antiguo metical mozambiqueño | MZM | 2
-SLL | 694 | leone de Sierra Leona | SLL | 2
-AFA | 4 | afgani (1927-2002) | AFA | 2
-KRW | 410 | won surcoreano | KRW | 0
-SGD | 702 | dólar singapurense | SGD | 2
-HKD | 344 | dólar de Hong Kong | HKD | 2
-VUV | 548 | vatu vanuatuense | VUV | 0
-AZN | 944 | manat azerí | AZN | 2
-EGP | 818 | libra egipcia | EGP | 2
-SZL | 748 | lilangeni suazi | SZL | 2
-BND | 96 | dólar de Brunéi | BND | 2
-BGN | 975 | nuevo lev búlgaro | BGN | 2
-BEF | 56 | franco belga | BEF | 0
-MUR | 480 | rupia mauriciana | MUR | 2
-BDT | 50 | taka de Bangladesh | BDT | 2
-ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
-COP | 170 | peso colombiano | COP | 2
-NPR | 524 | rupia nepalesa | NPR | 2
-PKR | 586 | rupia pakistaní | PKR | 2
-BRL | 986 | real brasileño | BRL | 2
-ZMK | 894 | kwacha zambiano | ZMK | 2
-BZD | 84 | dólar de Belice | BZD | 2
+IRR | 364 | rial iraní | IRR | 2
+MVR | 462 | rufiyaa de Maldivas | MVR | 2
 AZM | 31 | manat azerí (1993-2006) | AZM | 2
-SIT | 705 | tólar esloveno | SIT | 2
-AWG | 533 | florín de Aruba | AWG | 2
-BMD | 60 | dólar de Bermudas | BMD | 2
+ZMK | 894 | kwacha zambiano | ZMK | 2
+KPW | 408 | won norcoreano | KPW | 2
+AFN | 971 | afgani | AFN | 2
+ZWL | 932 | dólar zimbabuense | ZWL | 2
+HRK | 191 | kuna croata | HRK | 2
+PGK | 598 | kina de Papúa Nueva Guinea | PGK | 2
+XTS | 963 | código reservado para pruebas | XTS | -1
+SOS | 706 | chelín somalí | SOS | 2
+KZT | 398 | tenge kazako | KZT | 2
+BIF | 108 | franco de Burundi | BIF | 0
+MDL | 498 | leu moldavo | MDL | 2
+SDD | 736 | dinar sudanés | SDD | 2
+NPR | 524 | rupia nepalesa | NPR | 2
+MRO | 478 | ouguiya mauritano | MRO | 2
+MUR | 480 | rupia mauriciana | MUR | 2
+RUB | 643 | rublo ruso | RUB | 2
+TMM | 795 | manat turcomano | TMM | 2
+XUA | 965 | ADB Unit of Account | XUA | -1
+CHF | 756 | franco suizo | CHF | 2
+KGS | 417 | som kirguís | KGS | 2
+XCD | 951 | dólar del Caribe Oriental | XCD | 2
+MOP | 446 | pataca de Macao | MOP | 2
+VEB | 862 | bolívar venezolano | VEB | 2
+USN | 997 | dólar estadounidense (día siguiente) | USN | 2
+SDG | 938 | libra sudanesa | SDG | 2
+GRD | 300 | dracma griego | GRD | 0
+BND | 96 | dólar de Brunéi | BND | 2
+SYP | 760 | libra siria | SYP | 2
+LSL | 426 | loti lesothense | LSL | 2
+CZK | 203 | corona checa | CZK | 2
+PAB | 590 | balboa panameño | PAB | 2
+BGN | 975 | nuevo lev búlgaro | BGN | 2
+CAD | 124 | dólar canadiense | CAD | 2
+RUR | 810 | rublo ruso (1991-1998) | RUR | 2
+THB | 764 | baht tailandés | THB | 2
+HKD | 344 | dólar de Hong Kong | HKD | 2
+AYM | 945 | AYM | AYM | 2
+XBB | 956 | unidad monetaria europea | XBB | -1
+FKP | 238 | libra de las Islas Malvinas | FKP | 2
+XAG | 961 | plata | XAG | -1
+GYD | 328 | dólar guyanés | GYD | 2
+AZN | 944 | manat azerí | AZN | 2
+INR | 356 | rupia india | INR | 2
+SLL | 694 | leone de Sierra Leona | SLL | 2
+TZS | 834 | chelín tanzano | TZS | 2
+BEF | 56 | franco belga | BEF | 0
+RSD | 941 | dinar serbio | RSD | 2
+BBD | 52 | dólar de Barbados | BBD | 2
+BYR | 974 | rublo bielorruso | BYR | 0
 CVE | 132 | escudo de Cabo Verde | CVE | 2
+JPY | 392 | yen japonés | JPY | 0
+EGP | 818 | libra egipcia | EGP | 2
+BOV | 984 | MVDOL boliviano | BOV | 2
+SBD | 90 | dólar de las Islas Salomón | SBD | 2
+SIT | 705 | tólar esloveno | SIT | 2
+AED | 784 | dírham de los Emiratos Árabes Unidos | AED | 2
+TTD | 780 | dólar de Trinidad y Tobago | TTD | 2
+UGX | 800 | chelín ugandés | UGX | 0
 FJD | 242 | dólar de las Islas Fiyi | FJD | 2
-AOA | 973 | kwanza angoleño | AOA | 2
-JOD | 400 | dinar jordano | JOD | 3
+SGD | 702 | dólar singapurense | SGD | 2
+KMF | 174 | franco comorense | KMF | 0
+VND | 704 | dong vietnamita | VND | 0
+GHC | 288 | cedi ghanés (1979-2007) | GHC | 2
+HNL | 340 | lempira hondureño | L | 2
+ATS | 40 | chelín austriaco | ATS | 2
+ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
+VUV | 548 | vatu vanuatuense | VUV | 0
+NLG | 528 | florín neerlandés | NLG | 2
+CRC | 188 | colón costarricense | CRC | 2
+DKK | 208 | corona danesa | DKK | 2
+PEN | 604 | nuevo sol peruano | PEN | 2
+SRD | 968 | dólar surinamés | SRD | 2
+GNF | 324 | franco guineano | GNF | 0
+TND | 788 | dinar tunecino | TND | 3
+QAR | 634 | riyal de Qatar | QAR | 2
+TRL | 792 | lira turca antigua | TRL | 0
+ZWN | 942 | ZWN | ZWN | 2
+ARS | 32 | peso argentino | ARS | 2
+MGA | 969 | ariary malgache | MGA | 2
 NOK | 578 | corona noruega | NOK | 2
-UZS | 860 | sum uzbeko | UZS | 2
-MMK | 104 | kyat de Myanmar | MMK | 2
+CYP | 196 | libra chipriota | CYP | 2
+PYG | 600 | guaraní paraguayo | PYG | 0
+MNT | 496 | tugrik mongol | MNT | 2
+FIM | 246 | marco finlandés | FIM | 2
 YUM | 891 | super dinar yugoslavo | YUM | 2
+ISK | 352 | corona islandesa | ISK | 0
+SKK | 703 | corona eslovaca | SKK | 2
+LRD | 430 | dólar liberiano | LRD | 2
+SEK | 752 | corona sueca | SEK | 2
+FRF | 250 | franco francés | FRF | 2
+CSD | 891 | antiguo dinar serbio | CSD | 2
+GIP | 292 | libra de Gibraltar | GIP | 2
+KES | 404 | chelín keniata | KES | 2
+TJS | 972 | somoni tayiko | TJS | 2
+XOF | 952 | franco CFA BCEAO | XOF | 0
 USS | 998 | dólar estadounidense (mismo día) | USS | 2
-LVL | 428 | lats letón | LVL | 2
+NAD | 516 | dólar de Namibia | NAD | 2
+YER | 886 | rial yemení | YER | 2
+RWF | 646 | franco ruandés | RWF | 0
+XAU | 959 | oro | XAU | -1
 BOB | 68 | boliviano | BOB | 2
+SRG | 740 | florín surinamés | SRG | 2
+GBP | 826 | libra esterlina británica | GBP | 2
+XFU | 0 | franco UIC francés | XFU | -1
+HTG | 332 | gourde haitiano | HTG | 2
+MWK | 454 | kwacha de Malawi | MWK | 2
+WST | 882 | tala samoano | WST | 2
+NZD | 554 | dólar neozelandés | NZD | 2
+VEF | 937 | bolívar fuerte venezolano | VEF | 2
+GHS | 936 | cedi ghanés | GHS | 2
+JOD | 400 | dinar jordano | JOD | 3
+JMD | 388 | dólar de Jamaica | JMD | 2
+MYR | 458 | ringgit malasio | MYR | 2
+RON | 946 | leu rumano | RON | 2
+BGL | 100 | lev fuerte búlgaro | BGL | 2
+NGN | 566 | naira nigeriano | NGN | 2
+BTN | 64 | ngultrum butanés | BTN | 2
+ITL | 380 | lira italiana | ITL | 0
+ZMW | 967 | ZMW | ZMW | 2
+COP | 170 | peso colombiano | COP | 2
+KRW | 410 | won surcoreano | KRW | 0
+AUD | 36 | dólar australiano | AUD | 2
+ZWD | 716 | dólar de Zimbabue | ZWD | 2
+MGF | 450 | franco malgache | MGF | 0
+USD | 840 | dólar estadounidense | USD | 2
+XPD | 964 | paladio | XPD | -1
+ZAR | 710 | rand sudafricano | ZAR | 2
+DEM | 276 | marco alemán | DEM | 2
+EUR | 978 | euro | EUR | 2
+LYD | 434 | dinar libio | LYD | 3
+BHD | 48 | dinar bahreiní | BHD | 3
+ERN | 232 | nakfa eritreo | ERN | 2
+SSP | 728 | South Sudanese Pound | SSP | 2
+XXX | 999 | Sin divisa | XXX | -1
+AWG | 533 | florín de Aruba | AWG | 2
+BYB | 112 | nuevo rublo bielorruso (1994-1999) | BYB | 0
+XPF | 953 | franco CFP | XPF | 0
+HUF | 348 | florín húngaro | HUF | 2
+BWP | 72 | pula botsuano | BWP | 2
+ETB | 230 | birr etíope | ETB | 2
+BZD | 84 | dólar de Belice | BZD | 2
+XAF | 950 | franco CFA BEAC | XAF | 0
+SCR | 690 | rupia de Seychelles | SCR | 2
+LTL | 440 | litas lituano | LTL | 2
+DJF | 262 | franco de Yibuti | DJF | 0
+TOP | 776 | paʻanga tongano | TOP | 2
+KYD | 136 | dólar de las Islas Caimán | KYD | 2
+MZN | 943 | metical mozambiqueño | MZN | 2
+DOP | 214 | peso dominicano | DOP | 2
+ROL | 946 | antiguo leu rumano | ROL | 2
+ADP | 20 | peseta andorrana | ADP | 0
+SHP | 654 | libra de Santa Elena | SHP | 2
+IEP | 372 | libra irlandesa | IEP | 2
+XBA | 955 | unidad compuesta europea | XBA | -1
+ILS | 376 | nuevo sheqel israelí | ILS | 2
+PTE | 620 | escudo portugués | PTE | 0
+CUP | 192 | peso cubano | CUP | 2
+CLP | 152 | peso chileno | CLP | 0
+PKR | 586 | rupia pakistaní | PKR | 2
+SVC | 222 | colón salvadoreño | SVC | 2
+XPT | 962 | platino | XPT | -1
+TWD | 901 | nuevo dólar taiwanés | TWD | 2
+LVL | 428 | lats letón | LVL | 2
+OMR | 512 | rial omaní | OMR | 3
+TRY | 949 | nueva lira turca | TRY | 2
+LUF | 442 | franco luxemburgués | LUF | 0
+MTL | 470 | lira maltesa | MTL | 2
+XDR | 960 | derechos especiales de giro | XDR | -1
+MAD | 504 | dirham marroquí | MAD | 2
+EEK | 233 | corona estonia | EEK | 2
+NIO | 558 | córdoba oro nicaragüense | NIO | 2
+BRL | 986 | real brasileño | BRL | 2
+IQD | 368 | dinar iraquí | IQD | 3
+TPE | 626 | escudo timorense | TPE | 0
+MZM | 508 | antiguo metical mozambiqueño | MZM | 2
+BDT | 50 | taka de Bangladesh | BDT | 2
+GMD | 270 | dalasi gambiano | GMD | 2
+KHR | 116 | riel camboyano | KHR | 2
+GEL | 981 | lari georgiano | GEL | 2
+CLF | 990 | unidad de fomento chilena | CLF | 0
+AFA | 4 | afgani (1927-2002) | AFA | 2
+ESP | 724 | peseta española | ESP | 0
+PLN | 985 | zloty polaco | PLN | 2
+UAH | 980 | grivna ucraniana | UAH | 2
+IDR | 360 | rupia indonesia | IDR | 2
+PHP | 608 | peso filipino | PHP | 2
+DZD | 12 | dinar argelino | DZD | 2
+TMT | 934 | nuevo manat turcomano | TMT | 2
+CDF | 976 | franco congoleño | CDF | 2
+SAR | 682 | riyal saudí | SAR | 2
+AMD | 51 | dram armenio | AMD | 2
+UZS | 860 | sum uzbeko | UZS | 2
+LBP | 422 | libra libanesa | LBP | 2
+XFO | 0 | franco oro francés | XFO | -1
+BMD | 60 | dólar de Bermudas | BMD | 2
+MMK | 104 | kyat de Myanmar | MMK | 2
+MXN | 484 | peso mexicano | MXN | 2
+AOA | 973 | kwanza angoleño | AOA | 2
+XBD | 958 | unidad de cuenta europea (XBD) | XBD | -1
+BAM | 977 | marco convertible de Bosnia-Herzegovina | BAM | 2
+UYU | 858 | peso uruguayo | UYU | 2
+GWP | 624 | peso de Guinea-Bissáu | GWP | 2
+ALL | 8 | lek albanés | ALL | 2
+BSD | 44 | dólar de las Bahamas | BSD | 2
+CNY | 156 | yuan renminbi chino | CNY | 2
+GTQ | 320 | quetzal guatemalteco | GTQ | 2
+MKD | 807 | dinar macedonio | MKD | 2
+SZL | 748 | lilangeni suazi | SZL | 2
+XSU | 994 | Sucre | XSU | -1
+KWD | 414 | dinar kuwaití | KWD | 3
+XBC | 957 | unidad de cuenta europea (XBC) | XBC | -1
+MXV | 979 | unidad de inversión (UDI) mexicana | MXV | 2
+CUC | 931 | peso cubano convertible | CUC | 2
+ANG | 532 | florín de las Antillas Neerlandesas | ANG | 2
 
 
 

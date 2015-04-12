@@ -8,7 +8,6 @@ yy. M. d | yyyy. M. d | yyyy'년' M'월' d'일' '('EE')'
 a h:mm | a h:mm:ss | a h'시' mm'분' ss'초'
 #,##0 | #,##0.### | #,##0% | ¤#,##0
 
-und |  |  |  |  |  |  | 
 ar-AE | ar | AE |  | 아랍어 (아랍에미리트) | 아랍어 | 아랍에미리트 | 
 ar-JO | ar | JO |  | 아랍어 (요르단) | 아랍어 | 요르단 | 
 ar-SY | ar | SY |  | 아랍어 (시리아) | 아랍어 | 시리아 | 
@@ -169,226 +168,226 @@ es-PE | es | PE |  | 스페인어 (페루) | 스페인어 | 페루 |
 id-ID | in | ID |  | 인도네시아어 (인도네시아) | 인도네시아어 | 인도네시아 | 
 en-GB | en | GB |  | 영어 (영국) | 영어 | 영국 | 
 
-MRO | 478 | 모리타니 우기야 | MRO | 2
-UGX | 800 | 우간다 실링 | UGX | 0
-MVR | 462 | 몰디브 제도 루피아 | MVR | 2
 LAK | 418 | 라오스 키프 | LAK | 2
-PGK | 598 | 파푸아뉴기니 키나 | PGK | 2
-GHC | 288 | 가나 시디 (1979-2007) | GHC | 2
-MGA | 969 | 마다가스카르 아리아리 | MGA | 2
-BIF | 108 | 부룬디 프랑 | BIF | 0
-EEK | 233 | 에스토니아 크룬 | EEK | 2
-KHR | 116 | 캄보디아 리얄 | KHR | 2
-SEK | 752 | 스웨덴 크로나 | SEK | 2
-TWD | 901 | 대만 신권 달러 | TWD | 2
-MOP | 446 | 마카오 파타카 | MOP | 2
-CNY | 156 | 중국 위안 인민폐 | CNY | 2
-NGN | 566 | 니제르 나이라 | NGN | 2
-XBB | 956 | 유럽 통화 동맹 | XBB | -1
-RWF | 646 | 르완다 프랑 | RWF | 0
-PAB | 590 | 파나마 발보아 | PAB | 2
-PEN | 604 | 페루 솔 누에보 | PEN | 2
-SVC | 222 | 엘살바도르 콜론 | SVC | 2
-XDR | 960 | 특별인출권 | XDR | -1
-ERN | 232 | 에리트리아 나크파 | ERN | 2
-AFN | 971 | 아프가니 | AFN | 2
-LYD | 434 | 리비아 디나르 | LYD | 3
-ZWD | 716 | 짐바브웨 달러 | ZWD | 2
-OMR | 512 | 오만 리얄 | OMR | 3
-XPF | 953 | CFP 프랑 | XPF | 0
-XOF | 952 | CFA 프랑 BCEAO | XOF | 0
-TMT | 934 | Turkmenistani Manat | TMT | 2
-SDD | 736 | 수단 디나르 | SDD | 2
-CRC | 188 | 코스타리카 콜론 | CRC | 2
-UYU | 858 | 우루과이 페소 우루과요 | UYU | 2
-MXN | 484 | 멕시코 페소 | MXN | 2
-GMD | 270 | 감비아 달라시 | GMD | 2
-SCR | 690 | 세이쉴 루피 | SCR | 2
-ARS | 32 | 아르헨티나 페소 | ARS | 2
-CHF | 756 | 스위스 프랑 | CHF | 2
-DZD | 12 | 알제리 디나르 | DZD | 2
-XBA | 955 | 유르코 (유럽 회계 단위) | XBA | -1
-VEF | 937 | 베네주엘라 볼리바르 푸에르떼 | VEF | 2
-KES | 404 | 케냐 실링 | KES | 2
-FRF | 250 | 프랑스 프랑 | FRF | 2
-XXX | 999 | 알수없거나 유효하지않은 통화단위 | XXX | -1
-IDR | 360 | 인도네시아 루피아 | IDR | 2
-XSU | 994 | Sucre | XSU | -1
-AMD | 51 | 아르메니아 드람 | AMD | 2
-JPY | 392 | 일본 엔화 | JPY | 0
-BYR | 974 | 벨라루스 루블 | BYR | 0
-KYD | 136 | 케이맨 제도 달러 | KYD | 2
-TTD | 780 | 트리니다드 토바고 달러 | TTD | 2
-ALL | 8 | 알바니아 레크 | ALL | 2
-ADP | 20 | 안도라 페세타 | ADP | 0
-GRD | 300 | 그리스 드라크마 | GRD | 0
 STD | 678 | 상투메 프린시페 도브라 | STD | 2
-CAD | 124 | 캐나다 달러 | CAD | 2
-DKK | 208 | 덴마크 크로네 | DKK | 2
-GIP | 292 | 지브롤터 파운드 | GIP | 2
-LSL | 426 | 레소토 로티 | LSL | 2
-HNL | 340 | 온두라스 렘피라 | HNL | 2
-IEP | 372 | 아일랜드 파운드 | IEP | 2
-THB | 764 | 태국 바트 | THB | 2
-XBC | 957 | 유럽 계산 단위 (XBC) | XBC | -1
-BHD | 48 | 바레인 디나르 | BHD | 3
-ZMW | 967 | ZMW | ZMW | 2
-ATS | 40 | 호주 실링 | ATS | 2
-HUF | 348 | 헝가리 포린트 | HUF | 2
-TOP | 776 | 통가 파앙가 | TOP | 2
-MDL | 498 | 몰도바 레이 | MDL | 2
-BOV | 984 | 볼리비아노 Mvdol(기금) | BOV | 2
-RUR | 810 | 러시아 루블 (1991-1998) | RUR | 2
-KGS | 417 | 키르기스스탄 솜 | KGS | 2
-FIM | 246 | 핀란드 마르카 | FIM | 2
-BYB | 112 | 벨라루스 신권 루블 (1994-1999) | BYB | 0
-XAF | 950 | CFA 프랑 BEAC | XAF | 0
-GBP | 826 | 영국령 파운드 스털링 | GBP | 2
-GTQ | 320 | 과테말라 케트살 | GTQ | 2
-SDG | 938 | 수단 파운드 | SDG | 2
-TZS | 834 | 탄자니아 실링 | TZS | 2
-JMD | 388 | 자메이카 달러 | JMD | 2
-WST | 882 | 서 사모아 탈라 | WST | 2
-SRD | 968 | 수리남 달러 | SRD | 2
-XFU | 0 | 프랑스 UIC-프랑 | XFU | -1
-BSD | 44 | 바하마 달러 | BSD | 2
-NIO | 558 | 니카라과 코르도바 오로 | NIO | 2
-RUB | 643 | 러시아 루블 | RUB | 2
-MGF | 450 | 마다가스카르 프랑 | MGF | 0
-SOS | 706 | 소말리아 실링 | SOS | 2
-NZD | 554 | 뉴질랜드 달러 | NZD | 2
-PTE | 620 | 포르투갈 에스쿠도 | PTE | 0
-LBP | 422 | 레바논 파운드 | LBP | 2
-XBD | 958 | 유럽 계산 단위 (XBD) | XBD | -1
-MWK | 454 | 말라위 콰쳐 | MWK | 2
-TND | 788 | 튀니지 디나르 | TND | 3
-ROL | 946 | 루마니아 레이 | ROL | 2
-GEL | 981 | 그루지야 라리 | GEL | 2
-IRR | 364 | 이란 리얄 | IRR | 2
-LTL | 440 | 리투아니아 리타 | LTL | 2
-VND | 704 | 베트남 동 | VND | 0
-XPD | 964 | 팔라듐 | XPD | -1
-BBD | 52 | 바베이도스 달러 | BBD | 2
-QAR | 634 | 카타르 리얄 | QAR | 2
-CUC | 931 | 쿠바 태환 페소 | CUC | 2
-SYP | 760 | 시리아 파운드 | SYP | 2
-XTS | 963 | 테스트 통화 코드 | XTS | -1
-CSD | 891 | 고 세르비아 디나르 | CSD | 2
-XCD | 951 | 동카리브 달러 | XCD | 2
-ILS | 376 | 이스라엘 신권 세켈 | ILS | 2
-KMF | 174 | 코모르 프랑 | KMF | 0
-PHP | 608 | 필리핀 페소 | PHP | 2
-CLF | 990 | 칠레 UF (Unidades de Fomento) | CLF | 0
-SAR | 682 | 사우디아라비아 리얄 | SAR | 2
-BGL | 100 | 불가리아 동전 렛 | BGL | 2
-IQD | 368 | 이라크 디나르 | IQD | 3
-LRD | 430 | 라이베리아 달러 | LRD | 2
 LKR | 144 | 스리랑카 루피 | LKR | 2
-PLN | 985 | 폴란드 즐로티 | PLN | 2
-SSP | 728 | South Sudanese Pound | SSP | 2
-ANG | 532 | 네덜란드령 안틸레스 길더 | ANG | 2
-AED | 784 | 아랍에미리트 디르함 | AED | 2
-GWP | 624 | 기네비쏘 페소 | GWP | 2
-RON | 946 | 루마니아 레우 | RON | 2
-CZK | 203 | 체코 공화국 코루나 | CZK | 2
-SRG | 740 | 수리남 길더 | SRG | 2
-DEM | 276 | 독일 마르크 | DEM | 2
-FKP | 238 | 포클랜드제도 파운드 | FKP | 2
-MKD | 807 | 마케도니아 디나르 | MKD | 2
-BTN | 64 | 부탄 눌투눔 | BTN | 2
-TRL | 792 | 터키 리라 | TRL | 0
-AYM | 945 | AYM | AYM | 2
-CYP | 196 | 싸이프러스 파운드 | CYP | 2
-MTL | 470 | 몰타 리라 | MTL | 2
-NLG | 528 | 네델란드 길더 | NLG | 2
-MZN | 943 | 모잠비크 메티칼 | MZN | 2
-CLP | 152 | 칠레 페소 | CLP | 0
-HRK | 191 | 크로아티아 쿠나 | HRK | 2
-UAH | 980 | 우크라이나 그리브나 | UAH | 2
-BWP | 72 | 보츠와나 폴라 | BWP | 2
-ITL | 380 | 이탈리아 리라 | ITL | 0
-KPW | 408 | 조선 민주주의 인민 공화국 원 | KPW | 2
-DJF | 262 | 지부티 프랑 | DJF | 0
-HTG | 332 | 하이티 구르드 | HTG | 2
-DOP | 214 | 도미니카 페소 | DOP | 2
-XPT | 962 | 백금 | XPT | -1
-TJS | 972 | 타지키스탄 소모니 | TJS | 2
-MYR | 458 | 말레이시아 링깃 | MYR | 2
-GNF | 324 | 기니 프랑 | GNF | 0
-YER | 886 | 예멘 리알 | YER | 2
-MNT | 496 | 몽골 투그릭 | MNT | 2
-PYG | 600 | 파라과이 과라니 | PYG | 0
-GYD | 328 | 가이아나 달러 | GYD | 2
-XAU | 959 | 금 | XAU | -1
-ESP | 724 | 스페인 페세타 | ESP | 0
-TRY | 949 | 신 터키 리라 | TRY | 2
-SKK | 703 | 슬로바키아 코루나 | SKK | 2
-XUA | 965 | ADB Unit of Account | XUA | -1
-KWD | 414 | 쿠웨이트 디나르 | KWD | 3
-XAG | 961 | 은화 | XAG | -1
-GHS | 936 | 가나 시디 | GHS | 2
-ETB | 230 | 이디오피아 비르 | ETB | 2
-SHP | 654 | 세인트헬레나 파운드 | SHP | 2
-USD | 840 | 미국 달러 | USD | 2
-AUD | 36 | 호주 달러 | AUD | 2
-ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
-TPE | 626 | 티모르 에스쿠도 | TPE | 0
-BAM | 977 | 보스니아-헤르체고비나 태환 마르크 | BAM | 2
-SBD | 90 | 솔로몬 제도 달러 | SBD | 2
-ZAR | 710 | 남아프리카 랜드 | ZAR | 2
-TMM | 795 | 투르크메니스탄 마나트 | TMM | 2
-USN | 997 | 미국 달러(다음날) | USN | 2
-ZWN | 942 | ZWN | ZWN | 2
-NAD | 516 | 나미비아 달러 | NAD | 2
-MXV | 979 | 멕시코 UDI(Unidad de Inversion) | MXV | 2
-RSD | 941 | 세르비아 디나르 | RSD | 2
-CUP | 192 | 쿠바 페소 | CUP | 2
-KZT | 398 | 카자흐스탄 텐게 | KZT | 2
-XFO | 0 | 프랑스 Gold 프랑 | XFO | -1
-VEB | 862 | 베네주엘라 볼리바르 | VEB | 2
-CDF | 976 | 콩고 프랑 콩골라스 | CDF | 2
-ISK | 352 | 아이슬란드 크로나 | ISK | 0
-MAD | 504 | 모로코 디렘 | MAD | 2
-INR | 356 | 인도 루피 | INR | 2
-LUF | 442 | 룩셈부르크 프랑 | LUF | 0
-EUR | 978 | 유로화 | EUR | 2
-MZM | 508 | 고 모잠비크 메티칼 | MZM | 2
-SLL | 694 | 시에라리온 리온 | SLL | 2
-AFA | 4 | 아프가니 (1927-2002) | AFA | 2
-KRW | 410 | 대한민국 원 | ￦ | 0
-SGD | 702 | 싱가폴 달러 | SGD | 2
-HKD | 344 | 홍콩 달러 | HKD | 2
-VUV | 548 | 바누아투 바투 | VUV | 0
-AZN | 944 | 아제르바이잔 마나트 | AZN | 2
-EGP | 818 | 이집트 파운드 | EGP | 2
-SZL | 748 | 스와질란드 릴랑게니 | SZL | 2
-BND | 96 | 부루나이 달러 | BND | 2
-BGN | 975 | 불가리아 신권 렛 | BGN | 2
-BEF | 56 | 벨기에 프랑 | BEF | 0
-MUR | 480 | 모리셔스 루피 | MUR | 2
-BDT | 50 | 방글라데시 타카 | BDT | 2
-ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
-COP | 170 | 콜롬비아 페소 | COP | 2
-NPR | 524 | 네팔 루피 | NPR | 2
-PKR | 586 | 파키스탄 루피 | PKR | 2
-BRL | 986 | 브라질 레알 | BRL | 2
-ZMK | 894 | 쟘비아 콰쳐 | ZMK | 2
-BZD | 84 | 벨리즈 달러 | BZD | 2
+IRR | 364 | 이란 리얄 | IRR | 2
+MVR | 462 | 몰디브 제도 루피아 | MVR | 2
 AZM | 31 | 아제르바이젠 마나트(1993-2006) | AZM | 2
-SIT | 705 | 슬로베니아 톨라르 | SIT | 2
-AWG | 533 | 아루바 길더 | AWG | 2
-BMD | 60 | 버뮤다 달러 | BMD | 2
+ZMK | 894 | 쟘비아 콰쳐 | ZMK | 2
+KPW | 408 | 조선 민주주의 인민 공화국 원 | KPW | 2
+AFN | 971 | 아프가니 | AFN | 2
+ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
+HRK | 191 | 크로아티아 쿠나 | HRK | 2
+PGK | 598 | 파푸아뉴기니 키나 | PGK | 2
+XTS | 963 | 테스트 통화 코드 | XTS | -1
+SOS | 706 | 소말리아 실링 | SOS | 2
+KZT | 398 | 카자흐스탄 텐게 | KZT | 2
+BIF | 108 | 부룬디 프랑 | BIF | 0
+MDL | 498 | 몰도바 레이 | MDL | 2
+SDD | 736 | 수단 디나르 | SDD | 2
+NPR | 524 | 네팔 루피 | NPR | 2
+MRO | 478 | 모리타니 우기야 | MRO | 2
+MUR | 480 | 모리셔스 루피 | MUR | 2
+RUB | 643 | 러시아 루블 | RUB | 2
+TMM | 795 | 투르크메니스탄 마나트 | TMM | 2
+XUA | 965 | ADB Unit of Account | XUA | -1
+CHF | 756 | 스위스 프랑 | CHF | 2
+KGS | 417 | 키르기스스탄 솜 | KGS | 2
+XCD | 951 | 동카리브 달러 | XCD | 2
+MOP | 446 | 마카오 파타카 | MOP | 2
+VEB | 862 | 베네주엘라 볼리바르 | VEB | 2
+USN | 997 | 미국 달러(다음날) | USN | 2
+SDG | 938 | 수단 파운드 | SDG | 2
+GRD | 300 | 그리스 드라크마 | GRD | 0
+BND | 96 | 부루나이 달러 | BND | 2
+SYP | 760 | 시리아 파운드 | SYP | 2
+LSL | 426 | 레소토 로티 | LSL | 2
+CZK | 203 | 체코 공화국 코루나 | CZK | 2
+PAB | 590 | 파나마 발보아 | PAB | 2
+BGN | 975 | 불가리아 신권 렛 | BGN | 2
+CAD | 124 | 캐나다 달러 | CAD | 2
+RUR | 810 | 러시아 루블 (1991-1998) | RUR | 2
+THB | 764 | 태국 바트 | THB | 2
+HKD | 344 | 홍콩 달러 | HKD | 2
+AYM | 945 | AYM | AYM | 2
+XBB | 956 | 유럽 통화 동맹 | XBB | -1
+FKP | 238 | 포클랜드제도 파운드 | FKP | 2
+XAG | 961 | 은화 | XAG | -1
+GYD | 328 | 가이아나 달러 | GYD | 2
+AZN | 944 | 아제르바이잔 마나트 | AZN | 2
+INR | 356 | 인도 루피 | INR | 2
+SLL | 694 | 시에라리온 리온 | SLL | 2
+TZS | 834 | 탄자니아 실링 | TZS | 2
+BEF | 56 | 벨기에 프랑 | BEF | 0
+RSD | 941 | 세르비아 디나르 | RSD | 2
+BBD | 52 | 바베이도스 달러 | BBD | 2
+BYR | 974 | 벨라루스 루블 | BYR | 0
 CVE | 132 | 카보베르데 에스쿠도 | CVE | 2
+JPY | 392 | 일본 엔화 | JPY | 0
+EGP | 818 | 이집트 파운드 | EGP | 2
+BOV | 984 | 볼리비아노 Mvdol(기금) | BOV | 2
+SBD | 90 | 솔로몬 제도 달러 | SBD | 2
+SIT | 705 | 슬로베니아 톨라르 | SIT | 2
+AED | 784 | 아랍에미리트 디르함 | AED | 2
+TTD | 780 | 트리니다드 토바고 달러 | TTD | 2
+UGX | 800 | 우간다 실링 | UGX | 0
 FJD | 242 | 피지 달러 | FJD | 2
-AOA | 973 | 앙골라 콴자 | AOA | 2
-JOD | 400 | 요르단 디나르 | JOD | 3
+SGD | 702 | 싱가폴 달러 | SGD | 2
+KMF | 174 | 코모르 프랑 | KMF | 0
+VND | 704 | 베트남 동 | VND | 0
+GHC | 288 | 가나 시디 (1979-2007) | GHC | 2
+HNL | 340 | 온두라스 렘피라 | HNL | 2
+ATS | 40 | 호주 실링 | ATS | 2
+ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
+VUV | 548 | 바누아투 바투 | VUV | 0
+NLG | 528 | 네델란드 길더 | NLG | 2
+CRC | 188 | 코스타리카 콜론 | CRC | 2
+DKK | 208 | 덴마크 크로네 | DKK | 2
+PEN | 604 | 페루 솔 누에보 | PEN | 2
+SRD | 968 | 수리남 달러 | SRD | 2
+GNF | 324 | 기니 프랑 | GNF | 0
+TND | 788 | 튀니지 디나르 | TND | 3
+QAR | 634 | 카타르 리얄 | QAR | 2
+TRL | 792 | 터키 리라 | TRL | 0
+ZWN | 942 | ZWN | ZWN | 2
+ARS | 32 | 아르헨티나 페소 | ARS | 2
+MGA | 969 | 마다가스카르 아리아리 | MGA | 2
 NOK | 578 | 노르웨이 크로네 | NOK | 2
-UZS | 860 | 우즈베키스탄 숨 | UZS | 2
-MMK | 104 | 미얀마 키얏 | MMK | 2
+CYP | 196 | 싸이프러스 파운드 | CYP | 2
+PYG | 600 | 파라과이 과라니 | PYG | 0
+MNT | 496 | 몽골 투그릭 | MNT | 2
+FIM | 246 | 핀란드 마르카 | FIM | 2
 YUM | 891 | 유고슬라비아 노비 디나르 | YUM | 2
+ISK | 352 | 아이슬란드 크로나 | ISK | 0
+SKK | 703 | 슬로바키아 코루나 | SKK | 2
+LRD | 430 | 라이베리아 달러 | LRD | 2
+SEK | 752 | 스웨덴 크로나 | SEK | 2
+FRF | 250 | 프랑스 프랑 | FRF | 2
+CSD | 891 | 고 세르비아 디나르 | CSD | 2
+GIP | 292 | 지브롤터 파운드 | GIP | 2
+KES | 404 | 케냐 실링 | KES | 2
+TJS | 972 | 타지키스탄 소모니 | TJS | 2
+XOF | 952 | CFA 프랑 BCEAO | XOF | 0
 USS | 998 | 미국 달러(당일) | USS | 2
-LVL | 428 | 라트비아 라트 | LVL | 2
+NAD | 516 | 나미비아 달러 | NAD | 2
+YER | 886 | 예멘 리알 | YER | 2
+RWF | 646 | 르완다 프랑 | RWF | 0
+XAU | 959 | 금 | XAU | -1
 BOB | 68 | 볼리비아노 | BOB | 2
+SRG | 740 | 수리남 길더 | SRG | 2
+GBP | 826 | 영국령 파운드 스털링 | GBP | 2
+XFU | 0 | 프랑스 UIC-프랑 | XFU | -1
+HTG | 332 | 하이티 구르드 | HTG | 2
+MWK | 454 | 말라위 콰쳐 | MWK | 2
+WST | 882 | 서 사모아 탈라 | WST | 2
+NZD | 554 | 뉴질랜드 달러 | NZD | 2
+VEF | 937 | 베네주엘라 볼리바르 푸에르떼 | VEF | 2
+GHS | 936 | 가나 시디 | GHS | 2
+JOD | 400 | 요르단 디나르 | JOD | 3
+JMD | 388 | 자메이카 달러 | JMD | 2
+MYR | 458 | 말레이시아 링깃 | MYR | 2
+RON | 946 | 루마니아 레우 | RON | 2
+BGL | 100 | 불가리아 동전 렛 | BGL | 2
+NGN | 566 | 니제르 나이라 | NGN | 2
+BTN | 64 | 부탄 눌투눔 | BTN | 2
+ITL | 380 | 이탈리아 리라 | ITL | 0
+ZMW | 967 | ZMW | ZMW | 2
+COP | 170 | 콜롬비아 페소 | COP | 2
+KRW | 410 | 대한민국 원 | ￦ | 0
+AUD | 36 | 호주 달러 | AUD | 2
+ZWD | 716 | 짐바브웨 달러 | ZWD | 2
+MGF | 450 | 마다가스카르 프랑 | MGF | 0
+USD | 840 | 미국 달러 | USD | 2
+XPD | 964 | 팔라듐 | XPD | -1
+ZAR | 710 | 남아프리카 랜드 | ZAR | 2
+DEM | 276 | 독일 마르크 | DEM | 2
+EUR | 978 | 유로화 | EUR | 2
+LYD | 434 | 리비아 디나르 | LYD | 3
+BHD | 48 | 바레인 디나르 | BHD | 3
+ERN | 232 | 에리트리아 나크파 | ERN | 2
+SSP | 728 | South Sudanese Pound | SSP | 2
+XXX | 999 | 알수없거나 유효하지않은 통화단위 | XXX | -1
+AWG | 533 | 아루바 길더 | AWG | 2
+BYB | 112 | 벨라루스 신권 루블 (1994-1999) | BYB | 0
+XPF | 953 | CFP 프랑 | XPF | 0
+HUF | 348 | 헝가리 포린트 | HUF | 2
+BWP | 72 | 보츠와나 폴라 | BWP | 2
+ETB | 230 | 이디오피아 비르 | ETB | 2
+BZD | 84 | 벨리즈 달러 | BZD | 2
+XAF | 950 | CFA 프랑 BEAC | XAF | 0
+SCR | 690 | 세이쉴 루피 | SCR | 2
+LTL | 440 | 리투아니아 리타 | LTL | 2
+DJF | 262 | 지부티 프랑 | DJF | 0
+TOP | 776 | 통가 파앙가 | TOP | 2
+KYD | 136 | 케이맨 제도 달러 | KYD | 2
+MZN | 943 | 모잠비크 메티칼 | MZN | 2
+DOP | 214 | 도미니카 페소 | DOP | 2
+ROL | 946 | 루마니아 레이 | ROL | 2
+ADP | 20 | 안도라 페세타 | ADP | 0
+SHP | 654 | 세인트헬레나 파운드 | SHP | 2
+IEP | 372 | 아일랜드 파운드 | IEP | 2
+XBA | 955 | 유르코 (유럽 회계 단위) | XBA | -1
+ILS | 376 | 이스라엘 신권 세켈 | ILS | 2
+PTE | 620 | 포르투갈 에스쿠도 | PTE | 0
+CUP | 192 | 쿠바 페소 | CUP | 2
+CLP | 152 | 칠레 페소 | CLP | 0
+PKR | 586 | 파키스탄 루피 | PKR | 2
+SVC | 222 | 엘살바도르 콜론 | SVC | 2
+XPT | 962 | 백금 | XPT | -1
+TWD | 901 | 대만 신권 달러 | TWD | 2
+LVL | 428 | 라트비아 라트 | LVL | 2
+OMR | 512 | 오만 리얄 | OMR | 3
+TRY | 949 | 신 터키 리라 | TRY | 2
+LUF | 442 | 룩셈부르크 프랑 | LUF | 0
+MTL | 470 | 몰타 리라 | MTL | 2
+XDR | 960 | 특별인출권 | XDR | -1
+MAD | 504 | 모로코 디렘 | MAD | 2
+EEK | 233 | 에스토니아 크룬 | EEK | 2
+NIO | 558 | 니카라과 코르도바 오로 | NIO | 2
+BRL | 986 | 브라질 레알 | BRL | 2
+IQD | 368 | 이라크 디나르 | IQD | 3
+TPE | 626 | 티모르 에스쿠도 | TPE | 0
+MZM | 508 | 고 모잠비크 메티칼 | MZM | 2
+BDT | 50 | 방글라데시 타카 | BDT | 2
+GMD | 270 | 감비아 달라시 | GMD | 2
+KHR | 116 | 캄보디아 리얄 | KHR | 2
+GEL | 981 | 그루지야 라리 | GEL | 2
+CLF | 990 | 칠레 UF (Unidades de Fomento) | CLF | 0
+AFA | 4 | 아프가니 (1927-2002) | AFA | 2
+ESP | 724 | 스페인 페세타 | ESP | 0
+PLN | 985 | 폴란드 즐로티 | PLN | 2
+UAH | 980 | 우크라이나 그리브나 | UAH | 2
+IDR | 360 | 인도네시아 루피아 | IDR | 2
+PHP | 608 | 필리핀 페소 | PHP | 2
+DZD | 12 | 알제리 디나르 | DZD | 2
+TMT | 934 | Turkmenistani Manat | TMT | 2
+CDF | 976 | 콩고 프랑 콩골라스 | CDF | 2
+SAR | 682 | 사우디아라비아 리얄 | SAR | 2
+AMD | 51 | 아르메니아 드람 | AMD | 2
+UZS | 860 | 우즈베키스탄 숨 | UZS | 2
+LBP | 422 | 레바논 파운드 | LBP | 2
+XFO | 0 | 프랑스 Gold 프랑 | XFO | -1
+BMD | 60 | 버뮤다 달러 | BMD | 2
+MMK | 104 | 미얀마 키얏 | MMK | 2
+MXN | 484 | 멕시코 페소 | MXN | 2
+AOA | 973 | 앙골라 콴자 | AOA | 2
+XBD | 958 | 유럽 계산 단위 (XBD) | XBD | -1
+BAM | 977 | 보스니아-헤르체고비나 태환 마르크 | BAM | 2
+UYU | 858 | 우루과이 페소 우루과요 | UYU | 2
+GWP | 624 | 기네비쏘 페소 | GWP | 2
+ALL | 8 | 알바니아 레크 | ALL | 2
+BSD | 44 | 바하마 달러 | BSD | 2
+CNY | 156 | 중국 위안 인민폐 | CNY | 2
+GTQ | 320 | 과테말라 케트살 | GTQ | 2
+MKD | 807 | 마케도니아 디나르 | MKD | 2
+SZL | 748 | 스와질란드 릴랑게니 | SZL | 2
+XSU | 994 | Sucre | XSU | -1
+KWD | 414 | 쿠웨이트 디나르 | KWD | 3
+XBC | 957 | 유럽 계산 단위 (XBC) | XBC | -1
+MXV | 979 | 멕시코 UDI(Unidad de Inversion) | MXV | 2
+CUC | 931 | 쿠바 태환 페소 | CUC | 2
+ANG | 532 | 네덜란드령 안틸레스 길더 | ANG | 2
 
 
 
