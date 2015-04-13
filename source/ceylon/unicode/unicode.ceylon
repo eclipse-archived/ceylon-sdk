@@ -300,6 +300,12 @@ shared object symbolModifier extends Symbol("Sk", "Symbol, modifier"){}
 "The General category for `So`"
 shared object symbolOther extends Symbol("So", "Symbol, other"){}
 
+"Determine if the given integer [[code point|codePoint]] is
+ assigned a Unicode character."
+shared Boolean defined(Integer codePoint) 
+        => 0<=codePoint<=#10FFFF &&
+            JChar.isDefined(codePoint);
+
 "The general category of the given character"
 shared GeneralCategory generalCategory(Character character) {
     Byte gc = getType(character.integer).byte;
