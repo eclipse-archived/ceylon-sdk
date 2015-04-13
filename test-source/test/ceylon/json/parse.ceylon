@@ -821,8 +821,14 @@ shared test void testParse() {
     } catch (ParseException p) {
     }
     
+    assert(is Float n0 = parse("1"));
+    assertEquals(1, n0);
+    
     assert(is Float n1 = parse("123.0"));
     assertEquals(123.0, n1);
+    
+    assert(is Float n2 = parse("123.0E1"));
+    assertEquals(123.0E1, n2);
     try {
         parse("\"hello, world\"123.0.0");
         throw;

@@ -109,7 +109,7 @@ shared class StringParser(str, visitor) {
         Boolean negative = check('-');
         Integer wholePart = parseDigits();
         
-        if(check('.')){
+        if(hasMore && check('.')){
             Integer start = index;
             Integer fractionPart = parseDigits();
             Integer digits = index - start;
