@@ -21,6 +21,9 @@ import ceylon.io.charset {
 import java.nio {
     JByteBuffer=ByteBuffer
 }
+import ceylon.language.meta.model {
+    IncompatibleTypeException
+}
 
 by("Matej Lazar")
 class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
@@ -39,7 +42,7 @@ class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
                 wsSendBinaryBlocking(jByteBuffer, wsChannel);
             }
         } else {
-            //TODO shouln't be here; throw ex
+            throw IncompatibleTypeException("Inalid underlying implementation, Java ByteBuffer was expected.");
         }
     }
     
@@ -59,7 +62,7 @@ class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
                 wsSendBinary(jByteBuffer, wsChannel, wrapCallbackSend(onCompletion, onError, channel));
             }
         } else {
-            //TODO shouldn't be here; throw ex
+            throw IncompatibleTypeException("Inalid underlying implementation, Java ByteBuffer was expected.");
         }
     }
 }

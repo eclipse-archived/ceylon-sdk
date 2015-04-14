@@ -25,6 +25,9 @@ import org.xnio {
 import ceylon.net.http.server.internal {
     toBytes
 }
+import ceylon.language.meta.model {
+    IncompatibleTypeException
+}
 
 by("Matej Lazar")
 class CeylonWebSocketFragmentedFrameHandler(
@@ -53,7 +56,7 @@ class CeylonWebSocketFragmentedFrameHandler(
                 newByteBufferWithData(*toBytes(jByteBufferArray)), 
                 messageChannel.finalFragment);
         } else {
-            //TODO throw class cast ex. 
+            throw IncompatibleTypeException("Invalid object type. Java ByteBuffer array was expected.");
         }
     }
 
@@ -73,9 +76,9 @@ class CeylonWebSocketFragmentedFrameHandler(
                 webSocketEndpoint.onClose(webSocketChannel, NoReason());
             }
         } else {
-            //TODO throw class cast ex. 
+            throw IncompatibleTypeException("Invalid object type. Java ByteBuffer array was expected.");
         }
-        //TODO do we need to explicitly send close back ?
+        //close is sent back to the client by Undertow
     }
 
     shared actual void onError(UtWebSocketChannel channel, Throwable? error) {

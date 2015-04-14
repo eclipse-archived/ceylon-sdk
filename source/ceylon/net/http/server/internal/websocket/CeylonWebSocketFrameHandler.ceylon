@@ -1,6 +1,3 @@
-import ceylon.interop.java {
-    toByteArray
-}
 import ceylon.io.buffer {
     newByteBufferWithData
 }
@@ -15,17 +12,11 @@ import io.undertow.websockets.core {
     AbstractReceiveListener,
     BufferedTextMessage,
     UtWebSocketChannel=WebSocketChannel,
-    BufferedBinaryMessage,
-    WebSockets {
-        sendCloseBlocking
-    },
-    UTF8Output
+    BufferedBinaryMessage
 }
 
 import java.nio {
-    JByteBuffer=ByteBuffer {
-        wrapByteBuffer=wrap
-    }
+    JByteBuffer=ByteBuffer
 }
 
 import org.xnio {
@@ -35,6 +26,9 @@ import org.xnio {
 }
 import ceylon.net.http.server.internal {
     toBytes
+}
+import ceylon.language.meta.model {
+    IncompatibleTypeException
 }
 
 by("Matej Lazar")
@@ -49,7 +43,7 @@ class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocket
         if (is JByteBuffer[] jByteBufferArray) {
             webSocketEndpoint.onBinary(webSocketChannel, newByteBufferWithData(*toBytes(jByteBufferArray)));
         } else {
-            //TODO throw class cast ex. 
+            throw IncompatibleTypeException("Invalid object type. Java ByteBuffer array was expected.");
         } 
     }
 
@@ -64,9 +58,9 @@ class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocket
                 webSocketEndpoint.onClose(webSocketChannel, NoReason());
             }
         } else {
-            //TODO throw class cast ex. 
+            throw IncompatibleTypeException("Invalid object type. Java ByteBuffer array was expected.");
         }
-        //TODO do we need to explicitly send close back ?
+        //close is sent back to the client by Undertow
     }
 
     shared actual void onError(UtWebSocketChannel channel, Throwable error) {
