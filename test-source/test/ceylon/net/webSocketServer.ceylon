@@ -14,15 +14,22 @@ test void testWebSocketServer() {
     
     value server = newServer {};
 
+    variable Boolean onOpenCalled = false;
+    variable Boolean onTextCalled = false;
+    variable Boolean onBinnaryCalled = false;
+    variable Boolean onCloseCalled = false;
     variable Integer messagesReceived = 0;
     
+    
     void onOpen(WebSocketChannel channel) {
+        onOpenCalled = true;
         //TODO log
         print("server: Channel opened.");
         assertTrue(channel.open(), "Channel should be open.");
     }
     
     void onClose(WebSocketChannel channel, CloseReason closeReason) {
+        onCloseCalled = true;
         assertEquals(10, messagesReceived, "Invalid number of received messages.");
         
         //TODO log
@@ -39,12 +46,14 @@ test void testWebSocketServer() {
         onClose => onClose;
         onError => onError;
         onText = void (WebSocketChannel channel, String text) {
+            onTextCalled = true;
             print("Server received: ``text``");
             assertEquals("Message #``messagesReceived.string``", text);
             messagesReceived++;
             channel.sendText(text.uppercased);
         };
         onBinary = void (WebSocketChannel channel, ByteBuffer binary) {
+            onBinnaryCalled = true;
             String data = utf8.decode(binary);
             print("Server received binary message: ``data``");
             value encoded = utf8.encode(data.uppercased);
@@ -67,6 +76,11 @@ test void testWebSocketServer() {
                     client.sendClose();
 
                     client.waitForClose();
+
+                    assertTrue(onOpenCalled, "Endpoints methond onOpen was not called");
+                    assertTrue(onTextCalled, "Endpoints methond onText was not called");
+                    assertTrue(onBinnaryCalled, "Endpoints methond onBinnar was not called");
+                    assertTrue(onCloseCalled, "Endpoints methond onClose was not called");
 
                     value client2 = WebSocketClient(URI("ws://localhost:8080/notfoundwebsocket"));
                     variable String exception = "";

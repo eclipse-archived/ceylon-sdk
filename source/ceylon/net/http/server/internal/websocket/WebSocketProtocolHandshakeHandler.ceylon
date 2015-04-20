@@ -84,9 +84,9 @@ shared class WebSocketProtocolHandshakeHandler(
                 shared actual void handleUpgrade(StreamConnection? streamConnection, HttpServerExchange? httpServerExchange) {
                     WebSocketChannel channel = handshaker.createChannel(facade, streamConnection, facade.bufferPool);
                     peerConnections.add(channel);
+                    webSocketHandler.onConnect(facade, channel);
                 }
             }
-            
             exchange.upgradeChannel(httpUpgradeListener);
             handshaker.handshake(facade);
         } else {

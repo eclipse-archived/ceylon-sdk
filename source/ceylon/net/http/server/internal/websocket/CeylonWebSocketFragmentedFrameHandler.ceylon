@@ -1,14 +1,11 @@
 import ceylon.io.buffer {
-    newByteBufferWithData
+    ByteBuffer
 }
 import ceylon.net.http.server.websocket {
     WebSocketChannel,
-    CloseReason,
-    WebSocketFragmentedEndpoint,
-    NoReason
+    WebSocketFragmentedEndpoint
 }
 import io.undertow.websockets.core {
-    AbstractReceiveListener,
     BufferedTextMessage,
     UtWebSocketChannel=WebSocketChannel,
     BufferedBinaryMessage,
@@ -17,23 +14,22 @@ import io.undertow.websockets.core {
 import java.nio {
     JByteBuffer=ByteBuffer
 }
-import org.xnio {
-    IoUtils {
-        safeClose
-    }
-}
 import ceylon.net.http.server.internal {
-    toBytes
+    toCeylonByteBuffer,
+    mergeBuffers
 }
-import ceylon.language.meta.model {
-    IncompatibleTypeException
+import java.lang {
+    ObjectArray
+}
+import org.xnio {
+    Pooled
 }
 
 by("Matej Lazar")
 class CeylonWebSocketFragmentedFrameHandler(
     WebSocketFragmentedEndpoint webSocketEndpoint, 
     WebSocketChannel webSocketChannel)
-        extends AbstractReceiveListener() {
+        extends CeylonWebSocketAbstractFrameHandler(webSocketEndpoint, webSocketChannel) {
 
     shared actual void onText(UtWebSocketChannel channel, 
             StreamSourceFrameChannel messageChannel) {
@@ -49,40 +45,18 @@ class CeylonWebSocketFragmentedFrameHandler(
         value bufferedBinaryMessage = BufferedBinaryMessage(true);
         bufferedBinaryMessage.readBlocking(messageChannel);
 
-        Object? jByteBufferArray = bufferedBinaryMessage.data.resource.iterable;
-        if (is JByteBuffer[] jByteBufferArray) {
-            webSocketEndpoint.onBinary(
-                webSocketChannel, 
-                newByteBufferWithData(*toBytes(jByteBufferArray)), 
-                messageChannel.finalFragment);
-        } else {
-            throw IncompatibleTypeException("Invalid object type. Java ByteBuffer array was expected.");
+        Pooled<ObjectArray<JByteBuffer>> data = bufferedBinaryMessage.data;
+        try {
+            ObjectArray<JByteBuffer> jByteBufferArray = data.resource;
+            {ByteBuffer*} bbArray = jByteBufferArray.iterable
+                    .map((JByteBuffer? element) => toCeylonByteBuffer(element));
+            ByteBuffer binary = mergeBuffers(*bbArray);
+            webSocketEndpoint.onBinary(webSocketChannel, binary, messageChannel.finalFragment);
+        } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+        } finally {
+            data.free();
         }
-    }
-
-    shared actual void onClose(UtWebSocketChannel channel,
-            StreamSourceFrameChannel messageChannel) {
-
-        value bufferedBinaryMessage = BufferedBinaryMessage(true);
-        bufferedBinaryMessage.readBlocking(messageChannel);
-
-        Object? jByteBufferArray = bufferedBinaryMessage.data.resource.iterable;
-        if (is JByteBuffer[] jByteBufferArray) {
-            {Byte*} bytes = toBytes(jByteBufferArray);
-            if (bytes.size > 2) {
-                CloseReasonAdapter closeReasonAdapter = CloseReasonAdapter(bytes);
-                webSocketEndpoint.onClose(webSocketChannel, CloseReason(closeReasonAdapter.code, closeReasonAdapter.reason));
-            } else {
-                webSocketEndpoint.onClose(webSocketChannel, NoReason());
-            }
-        } else {
-            throw IncompatibleTypeException("Invalid object type. Java ByteBuffer array was expected.");
-        }
-        //close is sent back to the client by Undertow
-    }
-
-    shared actual void onError(UtWebSocketChannel channel, Throwable? error) {
-        webSocketEndpoint.onError(webSocketChannel, error);
-        safeClose(channel);
     }
 }
