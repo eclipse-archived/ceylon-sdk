@@ -549,4 +549,42 @@ shared class ArrayList<Element>
             then result 
             else null;
     
+    "Efficiently copy the elements in the segment
+     `sourcePosition:length` of this list to the segment 
+     `destinationPosition:length` of the given 
+     [[destination]] `ArrayList` or `Array`."
+    shared void copyTo(
+        "The list into which to copy the elements."
+        ArrayList<Element>|Array<Element?> destination,
+        "The index of the first element in this array to 
+         copy."
+        Integer sourcePosition = 0,
+        "The index in the given array into which to copy the 
+         first element."
+        Integer destinationPosition = 0,
+        "The number of elements to copy."
+        Integer length 
+                = smallest(size - sourcePosition,
+                    destination.size - destinationPosition)) {
+        
+        "length may not be negative"
+        assert (length>=0);
+        "illegal starting position in source list"
+        assert (0<=sourcePosition<size-length);
+        "illegal starting position in destination list"
+        assert (0<=destinationPosition<destination.size-length);
+        
+        array.copyTo { 
+            length = length; 
+            sourcePosition = sourcePosition; 
+            destinationPosition = destinationPosition; 
+            destination = 
+                    switch (destination)
+                    case (is Array<Element?>)
+                        destination
+                    case (is ArrayList<Element>)
+                        destination.array;
+        }; 
+    }
+    
 }
