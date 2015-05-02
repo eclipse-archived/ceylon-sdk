@@ -50,14 +50,15 @@ see(`function round`)
 see(`value unlimitedPrecision`)
 shared abstract class Rounding(precision, mode) 
         of RoundingImpl {
-    "Precision cannot be negative"
-    assert (precision >= 0);
     
     "The precision to apply when rounding."
     shared Integer precision;
     
     "The kind of rounding to apply."
     shared Mode mode;
+
+    "Precision cannot be negative"
+    assert (precision >= 0);
     
     shared actual String string {
         if (precision == 0) {
