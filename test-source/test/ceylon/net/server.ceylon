@@ -421,8 +421,8 @@ void acceptMethodTest() {
     value responseContent = response.contents;
     response.close();
     //TODO log
-    assertEquals(200, responseStatus);
-    assertEquals(post.string, responseContent);
+    assertEquals(responseStatus, 200);
+    assertEquals(responseContent, post.string);
 
     //accept GET
     value request1 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
@@ -431,9 +431,9 @@ void acceptMethodTest() {
     request1.setParameter(Parameter("foo", "valueFoo"));
     value response1 = request1.execute();
     value response1Status = response1.status;
-    response.close();
+    response1.close();
     //TODO log
-    assertEquals(200, response1Status);
+    assertEquals(response1Status, 200);
 
     //do NOT accept PUT 
     value request2 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
@@ -443,7 +443,7 @@ void acceptMethodTest() {
     value response2Status = response2.status;
     response2.close();
     //TODO log
-    assertEquals(405, response2Status);
+    assertEquals(response2Status, 405);
     if (exists Header allow = response2.headersByName["allow"]) {
         assertEquals(allow.values.get(0), "POST, GET");
     } else {
@@ -459,7 +459,7 @@ void acceptMethodTest() {
     value response3Status = response3.status;
     response3.close();
     //TODO log
-    assertEquals(200, response3Status);
+    assertEquals(response3Status, 200);
 }
 
 void parametersTest(String paramKey, String paramValue) {
