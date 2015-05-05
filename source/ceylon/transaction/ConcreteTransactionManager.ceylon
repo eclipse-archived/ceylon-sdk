@@ -1,27 +1,11 @@
 import ceylon.interop.java {
     javaClass
 }
-import ceylon.transaction.internal {
-    registerDataSources
-}
 
-import com.arjuna.ats.arjuna.common {
-    \IrecoveryPropertyManager {
-        recoveryEnvironmentBean
-    }
-}
-import com.arjuna.ats.arjuna.recovery {
-    RecoveryModule,
-    RecoveryManager
-}
-import com.arjuna.ats.internal.arjuna.recovery {
-    AtomicActionRecoveryModule
-}
-import com.arjuna.ats.internal.jta.recovery.arjunacore {
-    XARecoveryModule
-}
 import com.arjuna.ats.jdbc {
-    TransactionalDriver
+    TransactionalDriver {
+        \iXADS_PROP_NAME=XADataSource
+    }
 }
 import com.arjuna.ats.jdbc.common {
     \IjdbcPropertyManager {
@@ -31,13 +15,15 @@ import com.arjuna.ats.jdbc.common {
 
 import java.lang {
     Runtime,
-    Thread
+    Thread,
+    JavaString = String
 }
 import java.sql {
-    DriverManager
+    DriverManager,
+    Connection
 }
 import java.util {
-    Arrays
+    Properties
 }
 
 import javax.naming {
@@ -49,11 +35,19 @@ import javax.transaction {
     JavaStatus=Status,
     Synchronization
 }
+import javax.transaction.xa {
+    XAResource
+}
+
+import javax.sql {
+    XADataSource
+}
 
 class ConcreteTransactionManager() satisfies TransactionManager {
+    String txDriverUrl = "jdbc:arjuna:";
 
     shared NamingServer jndiServer = NamingServer();
-    
+
     variable JavaTransactionManager? transactionManager = null;
     
     variable UserTransaction? userTransaction = null;
@@ -64,24 +58,18 @@ class ConcreteTransactionManager() satisfies TransactionManager {
     shared actual void start(
             "If `true`, an in-process recovery service is started."
             Boolean startRecoveryService) {
+
         jndiServer.start();
-        if (exists dataSourceConfigPropertyFile 
-                = process.propertyValue("dbc.properties")) {
-            registerDataSources(dataSourceConfigPropertyFile);
-        }
-        else {
-            registerDataSources();
-        }
 
         if (!initialized) {
             try {
-                Thread.currentThread().contextClassLoader 
+                Thread.currentThread().contextClassLoader
                         = javaClass<TransactionManager>().classLoader;
-                
-                replacedJndiProperties 
+
+                replacedJndiProperties
                         = jdbcEnvironmentBean.jndiProperties.empty;
                 if (replacedJndiProperties) {
-                    jdbcEnvironmentBean.jndiProperties 
+                    jdbcEnvironmentBean.jndiProperties
                             = InitialContext().environment;
                 }
                 
@@ -91,17 +79,13 @@ class ConcreteTransactionManager() satisfies TransactionManager {
                 throw Exception("No suitable JNDI provider available", e);
             }
             registerTransactionManagerJndiBindings();
-            
+
             initialized = true;
             
             if (startRecoveryService) {
                 if (!recoveryManager exists) {
-                    recoveryEnvironmentBean.recoveryModules 
-                            = Arrays.asList<RecoveryModule>
-                            (AtomicActionRecoveryModule(), XARecoveryModule());
-                    value rm = RecoveryManager.manager();
-                    rm.initialize();
-                    recoveryManager = rm;
+                    recoveryManager = ConcreteRecoveryManager();
+                    recoveryManager?.start();
                 }
             }
             
@@ -120,11 +104,36 @@ class ConcreteTransactionManager() satisfies TransactionManager {
         transactionManager = tm;
     }
 
+    shared actual Connection newConnectionFromXADataSource(XADataSource dataSource) {
+        Properties dbProperties = Properties();
+
+        dbProperties.put(\iXADS_PROP_NAME, dataSource);
+
+        return DriverManager.getConnection(txDriverUrl, dbProperties);
+    }
+
+    shared actual Connection newConnectionFromXADataSourceWithCredentials
+        (XADataSource dataSource, [String, String] userNameAndPassword) {
+        Properties dbProperties = Properties();
+
+        dbProperties.put(JavaString(TransactionalDriver.userName), JavaString(userNameAndPassword[0]));
+        dbProperties.put(JavaString(TransactionalDriver.password), JavaString(userNameAndPassword[1]));
+
+        dbProperties.put(\iXADS_PROP_NAME, dataSource);
+
+        return DriverManager.getConnection(txDriverUrl, dbProperties);
+    }
+
+    shared actual void setTimeout(Integer timeout) {
+        assert (exists ut = userTransaction);
+        ut.setTransactionTimeout(timeout);
+    }
+        
     "Stop the transaction service. If an in-process recovery 
      manager is running, then it to will be stopped."
     shared actual void stop() {
         if (initialized) {
-            recoveryManager?.terminate();
+            recoveryManager?.stop();
             recoveryManager = null;
             
             unregisterTransactionManagerJndiBindings();
@@ -146,8 +155,6 @@ class ConcreteTransactionManager() satisfies TransactionManager {
         userTransaction = null;
         transactionManager = null;
     }
-    
-    recoveryScan() => recoveryManager?.scan();
     
     class ConcreteTransaction() satisfies Transaction {
         
@@ -213,11 +220,6 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             }
         }
         
-        shared actual void setTimeout(Integer timeout) {
-            assert (exists ut = userTransaction);
-            ut.setTransactionTimeout(timeout);
-        }
-        
         shared actual void callAfterCompletion(void afterCompletionFun(Status status)) {
             assert(exists tx = transactionManager?.transaction);
             object synchronization
@@ -239,8 +241,11 @@ class ConcreteTransactionManager() satisfies TransactionManager {
             }
             tx.registerSynchronization(synchronization);
         }
-        
-        
+    
+        shared actual void enlistResource(XAResource xar) {
+            assert(exists tx = transactionManager?.transaction);
+            tx.enlistResource(xar);
+        }
     }
 
     shared actual Transaction beginTransaction() {
@@ -257,7 +262,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
         }
         return null;
     }
-    
+
     transactionActive => currentTransaction exists;
 
     shared actual Boolean transaction(Boolean do()) {
@@ -288,7 +293,7 @@ class ConcreteTransactionManager() satisfies TransactionManager {
     }
 }
 
-variable RecoveryManager? recoveryManager = null;
+variable TransactionRecoveryManager? recoveryManager = null;
 variable Boolean initialized = false;
 variable Boolean replacedJndiProperties = false;
 
