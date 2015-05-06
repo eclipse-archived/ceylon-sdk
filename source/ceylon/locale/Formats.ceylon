@@ -16,11 +16,11 @@ shared sealed class Formats(
     floatFormat, 
     percentageFormat, 
     currencyFormat,
-    String[] monthNames,
-    String[] monthAbbreviations,
-    String[] weekdayNames,
-    String[] weekdayAbbreviations,
-    [String,String] ampm) {
+    monthNames,
+    monthAbbreviations,
+    weekdayNames,
+    weekdayAbbreviations,
+    ampm) {
     
     shared String shortDateFormat;
     shared String mediumDateFormat;
@@ -34,6 +34,15 @@ shared sealed class Formats(
     shared String floatFormat;
     shared String percentageFormat;
     shared String currencyFormat;
+    
+    [String,String] ampm;
+    shared String am => ampm[0];
+    shared String pm => ampm[1]; 
+    
+    shared String[] weekdayNames;
+    shared String[] weekdayAbbreviations;
+    shared String[] monthNames;
+    shared String[] monthAbbreviations;
     
     shared String shortFormatDate(ReadableDate date) 
             => formatDate(shortDateFormat, date);
