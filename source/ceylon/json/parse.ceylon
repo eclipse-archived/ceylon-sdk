@@ -1,5 +1,6 @@
+
 "Parse true, consuming any initial whitespace"
-Boolean parseTrue(Tokenizer tokenizer){
+shared Boolean parseTrue(Tokenizer tokenizer){
     tokenizer.eatSpacesUntil('t');
     tokenizer.eat('r');
     tokenizer.eat('u');
@@ -7,7 +8,7 @@ Boolean parseTrue(Tokenizer tokenizer){
     return true;
 }
 "Parse false, consuming any initial whitespace"
-Boolean parseFalse(Tokenizer tokenizer){
+shared Boolean parseFalse(Tokenizer tokenizer){
     tokenizer.eatSpacesUntil('f');
     tokenizer.eat('a');
     tokenizer.eat('l');
@@ -16,7 +17,7 @@ Boolean parseFalse(Tokenizer tokenizer){
     return false;
 }
 "Parse null, consuming any initial whitespace"
-Null parseNull(Tokenizer tokenizer){
+shared Null parseNull(Tokenizer tokenizer){
     tokenizer.eatSpacesUntil('n');
     tokenizer.eat('u');
     tokenizer.eat('l');
@@ -24,7 +25,7 @@ Null parseNull(Tokenizer tokenizer){
     return null;
 }
 "Parse a String literal, consuming any initial whitespace"
-String parseKeyOrString(Tokenizer tokenizer){
+shared String parseKeyOrString(Tokenizer tokenizer){
     tokenizer.eatSpacesUntil('"');
     StringBuilder buf = StringBuilder();
     while(!tokenizer.check('"')){
@@ -95,7 +96,7 @@ Integer parseHex(Tokenizer tokenizer){
 }
 
 "Parse a number, consuming any initial whitepsace."
-Integer|Float parseNumber(Tokenizer tokenizer){
+shared Integer|Float parseNumber(Tokenizer tokenizer){
     tokenizer.eatSpaces();
     Boolean negative = tokenizer.check('-');
     Integer wholePart = parseDigits(tokenizer);
@@ -130,7 +131,7 @@ Integer parseDigits(Tokenizer tokenizer){
             tokenizer.line, tokenizer.column);
     }
     variable Integer digits = parseDigit(c);
-    while(tokenizer.hasMore && tokenizer.isDigit(tokenizer.char())){
+    while(tokenizer.hasMore && tokenizer.isDigit(tokenizer.character())){
         digits *= 10;
         digits += parseDigit(tokenizer.eatChar());
     }
@@ -189,7 +190,7 @@ shared class Parser(tokenizer, visitor) {
                 }
                 if(!tokenizer.check(',')){
                     throw ParseException(
-                        "Expected '}' or ',' but got `` tokenizer.char() ``", 
+                        "Expected '}' or ',' but got `` tokenizer.character() ``", 
                         tokenizer.line, tokenizer.column);
                 }
             }
@@ -211,7 +212,7 @@ shared class Parser(tokenizer, visitor) {
                 }
                 if(!tokenizer.check(',')){
                     throw ParseException(
-                        "Expected ']' or ',' but got `` tokenizer.char() ``", 
+                        "Expected ']' or ',' but got `` tokenizer.character() ``", 
                         tokenizer.line, tokenizer.column);
                 }
             }
@@ -223,7 +224,7 @@ shared class Parser(tokenizer, visitor) {
         "If the specified string cannot be parsed")
     shared void parseValue(){
         tokenizer.eatSpaces();
-        Character c = tokenizer.char();
+        Character c = tokenizer.character();
         if(c == '{'){
             parseObject();
             return;
