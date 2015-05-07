@@ -26,12 +26,12 @@
      Process process = createProcess {
          command = \"ls -l\";
          path = home;
-         OverwriteFileOutput output { 
+         output = OverwriteFileOutput{
              path=home.childPath(\"out.txt\");
-         }
-         AppendFileOutput error { 
+         };
+         error = AppendFileOutput{
              path=home.childPath(\"err.txt\");
-         }
+         };
      };
    
  The objects `currentInput`, `currentOutput`, and 
