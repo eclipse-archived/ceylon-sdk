@@ -14,21 +14,18 @@ import java.lang {
 class OutgoingPipe(InputStream stream) 
         satisfies Reader {
     
-    value reader = BufferedReader(InputStreamReader(stream));
+    value reader 
+            = BufferedReader(InputStreamReader(stream));
     
     close() => reader.close();
     
     readLine() => reader.readLine();
     
-    shared actual Byte[] readBytes(Integer max) {
-        value byteArray = ByteArray(max);
-        value size = stream.read(byteArray);
-        if (size==max) {
-            return sequence(byteArray.byteArray) else [];
-        }
-        else {
-            return [ for (b in byteArray.iterable) b ];
-        }
-    }
+    readBytes(Integer max) 
+            => let (byteArray = ByteArray(max),
+                    size = stream.read(byteArray))
+            if (size==max)
+            then (sequence(byteArray.byteArray) else []) 
+            else [ for (b in byteArray.iterable) b ];
     
 }

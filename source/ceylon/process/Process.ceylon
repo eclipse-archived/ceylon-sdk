@@ -91,9 +91,9 @@ shared Process createProcess(
          process. By default the process inherits 
          the environment variables of the current
          virtual machine process."
-        <String->String>* environment) => 
-            ConcreteProcess(command, arguments, path, 
-                    input, output, error, environment);
+        <String->String>* environment) 
+        => ConcreteProcess(command, arguments, path, 
+            input, output, error, environment);
 
 "A source for the standard input stream of a process."
 shared interface Input 
@@ -141,5 +141,5 @@ shared class OverwriteFileOutput(path)
 }
 
 "Environment variables of the current virtual machine process."
-shared Iterable<String->String> currentEnvironment => 
-        environment;
+shared Iterable<String->String> currentEnvironment 
+        => environment;
