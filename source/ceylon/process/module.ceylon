@@ -26,11 +26,11 @@
      Process process = createProcess {
          command = \"ls -l\";
          path = home;
-         output = OverwriteFileOutput{
-             path=home.childPath(\"out.txt\");
+         output = OverwriteFileOutput {
+             path = home.childPath(\"out.txt\");
          };
-         error = AppendFileOutput{
-             path=home.childPath(\"err.txt\");
+         error = AppendFileOutput {
+             path = home.childPath(\"err.txt\");
          };
      };
    
