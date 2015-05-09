@@ -125,7 +125,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
         assertEquals(i, 4);
         return resolving.promise;
       }
-    }.done {
+    }.completed {
       void onFulfilled(String s) {
         assertEquals(count++, 1);
         assertEquals(s, "foo");

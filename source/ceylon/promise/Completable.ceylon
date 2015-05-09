@@ -22,7 +22,7 @@ shared interface Completable<out Value>
     
     "When completion happens, the provided function will be 
      invoked."
-    shared void done(
+    shared void completed(
       "A function that is called when fulfilled."
       Anything(*Value) onFulfilled, 
       "A function that is called when rejected."

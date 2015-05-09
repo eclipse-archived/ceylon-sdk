@@ -34,7 +34,7 @@
    without producing a value. This situation is represented
    as an [[exception|Throwable]].
  
- The method [[Promise.done]] allows interested 
+ The method [[Promise.completed]] allows interested 
  parties to be notified when the promise makes a 
  transition from the _promised_ state to the _fulfilled_ or 
  the _rejected_ state:
@@ -91,7 +91,7 @@
  ## Chaining promises
  
  When composition is needed the method [[Completable.map]]
- should be used instead of the [[Completable.done]]
+ should be used instead of the [[Completable.completed]]
  method. 
  
  When invoking the [[Completable.map]] method the 

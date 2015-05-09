@@ -46,7 +46,7 @@ shared class ExecutionContextTest() extends AsyncTestBase() {
       shared actual ExecutionContext childContext() => this;
     }
     value deferred = Deferred<String>(myExecutionContext);
-    deferred.promise.done {
+    deferred.promise.completed {
       void onFulfilled(String s) {
         assertEquals(count++, 1);
         assertEquals(s, "hello");
@@ -73,7 +73,7 @@ shared class ExecutionContextTest() extends AsyncTestBase() {
         return "bye";
       }
     };
-    promise.done {
+    promise.completed {
       void onFulfilled(String s) {
         assertEquals(onContext, true);
         assertEquals(s, "bye");
