@@ -42,7 +42,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.compose((Integer i) => fail("Was not expecting onFulfilled"), onRejected);
+    promise.map((Integer i) => fail("Was not expecting onFulfilled"), onRejected);
     deferred.reject(reason);
     assertEquals(count, 0);
   }
@@ -57,7 +57,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.compose((Integer i) { throw reason; }, fail).compose((Anything i) => fail("Was not expecting onFufilled"), onRejected);
+    promise.map((Integer i) { throw reason; }, fail).map((Anything i) => fail("Was not expecting onFufilled"), onRejected);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
@@ -80,7 +80,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.compose((Integer i) { throw reason; }).compose(identity, bar).compose(onFulfilled);
+    promise.map((Integer i) { throw reason; }).map(identity, bar).map(onFulfilled);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
@@ -89,7 +89,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
     variable Integer count = 0;    
     Deferred<Integer> di = Deferred<Integer>();
     Promise<Integer> promise = di.promise;
-    Promise<String> p = promise.compose {
+    Promise<String> p = promise.map {
       String onFulfilled(Integer integer) {
         assertEquals(count++, 0);
         assertEquals(integer, 4);
@@ -97,7 +97,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
       }
     };
     Deferred<String> d = Deferred<String>();
-    d.promise.compose {
+    d.promise.map {
       void onFulfilled(String s) {
         assertEquals(count++, 1);
         assertEquals(s, "4");
@@ -125,7 +125,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
         assertEquals(i, 4);
         return resolving.promise;
       }
-    }.onComplete {
+    }.done {
       void onFulfilled(String s) {
         assertEquals(count++, 1);
         assertEquals(s, "foo");

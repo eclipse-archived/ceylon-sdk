@@ -13,7 +13,7 @@ shared class DeferredTest() extends AsyncTestBase() {
     }
     Deferred<String> deferred = Deferred<String>();
     Promise<String> promise = deferred.promise;
-    promise.compose(onFulfilled, fail);
+    promise.map(onFulfilled, fail);
     for (action in actions) {
       switch (action)
       case (is String) {
@@ -47,7 +47,7 @@ shared class DeferredTest() extends AsyncTestBase() {
     }
     Deferred<String> deferred = Deferred<String>();
     Promise<String> promise = deferred.promise;
-    promise.compose((String s) => fail("Was not expecting a fulfill"), onRejected);
+    promise.map((String s) => fail("Was not expecting a fulfill"), onRejected);
     for (action in actions) {
       switch (action)
       case (is String) {
@@ -85,7 +85,7 @@ shared class DeferredTest() extends AsyncTestBase() {
     value deferred = Deferred<String>();
     deferred.fulfill("value");
     Promise<String> promise = deferred.promise;
-    promise.compose(onFulfilled, fail);
+    promise.map(onFulfilled, fail);
     assertEquals(count, 0);
   }
 
@@ -100,7 +100,7 @@ shared class DeferredTest() extends AsyncTestBase() {
     value deferred = Deferred<String>();
     deferred.reject(reason);
     Promise<String> promise = deferred.promise;
-    promise.compose((String s) => fail("Was not expecting a fulfill"), onRejected);
+    promise.map((String s) => fail("Was not expecting a fulfill"), onRejected);
     assertEquals(count, 0);
   }
 }

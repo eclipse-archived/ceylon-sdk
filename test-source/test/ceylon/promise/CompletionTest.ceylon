@@ -2,7 +2,7 @@ import ceylon.promise { ... }
 import ceylon.test { ... }
 import ceylon.collection { ... }
 
-shared class ResolutionTest() extends AsyncTestBase() {
+shared class CompletionTest() extends AsyncTestBase() {
   
   Promise<Result> flatMapFail<Result, Value>(Value v) {
     throw fail("Was not expecting to be called");
@@ -24,7 +24,7 @@ shared class ResolutionTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.flatMap(f, flatMapFail).compose(g, fail);
+    promise.flatMap(f, flatMapFail).map(g, fail);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
@@ -46,7 +46,7 @@ shared class ResolutionTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.flatMap(f, flatMapFail).compose((String s) => fail("Was not expecting onFulfilled"), g);
+    promise.flatMap(f, flatMapFail).map((String s) => fail("Was not expecting onFulfilled"), g);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
@@ -68,7 +68,7 @@ shared class ResolutionTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.flatMap<String>(flatMapFail, f).compose(g, fail);
+    promise.flatMap<String>(flatMapFail, f).map(g, fail);
     deferred.reject(reason);
     assertEquals(count, 0);
   }
@@ -91,7 +91,7 @@ shared class ResolutionTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.flatMap<String>(flatMapFail, f).compose((String s) => fail("Was not expecting onFulfilled"), g);
+    promise.flatMap<String>(flatMapFail, f).map((String s) => fail("Was not expecting onFulfilled"), g);
     deferred.reject(reason1);
     assertEquals(count, 0);
   }

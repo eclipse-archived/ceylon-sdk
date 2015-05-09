@@ -1,7 +1,7 @@
 "Something that can go through a transition and is meant to 
- be be fulfilled or rejected."
+ be be completed, i.e either fulfilled or rejected."
 by("Julien Viet")
-shared interface Resolver<in Value> {
+shared interface Completer<in Value> {
 
     "Fulfills the promise with a value or a promise to the 
      value."
@@ -10,8 +10,8 @@ shared interface Resolver<in Value> {
     "Rejects the promise with a reason."
     shared formal void reject(Throwable reason);
 
-    "Either fulfill or reject the promise"
-    shared void resolve(Value|Promise<Value>|Throwable val) {
+    "Complete the promise: either fulfill or reject it"
+    shared void complete(Value|Promise<Value>|Throwable val) {
         if (is Value|Promise<Value> val) {
             fulfill(val);
         } else {

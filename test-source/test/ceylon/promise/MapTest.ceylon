@@ -2,7 +2,7 @@ import ceylon.promise { ... }
 import ceylon.test { ... }
 import ceylon.collection { ... }
 
-shared class ComposeTest() extends AsyncTestBase() {
+shared class MapTest() extends AsyncTestBase() {
   
   shared test void testAllRespectiveFulfilledCallbacksMustExecuteInTheOrderOfTheirOriginatingCallsToThen() {
     variable Integer status = 0;
@@ -19,8 +19,8 @@ shared class ComposeTest() extends AsyncTestBase() {
     }
     value d = Deferred<String>();	
     Promise<String> promise = d.promise;
-    promise.compose(onFulfilled1);
-    promise.compose(onFulfilled2);
+    promise.map(onFulfilled1);
+    promise.map(onFulfilled2);
     d.fulfill("val");
     assertEquals(status, 0);
   }
@@ -41,8 +41,8 @@ shared class ComposeTest() extends AsyncTestBase() {
     }
     value d = Deferred<String>();	
     Promise<String> promise = d.promise;
-    promise.compose(fail, onRejected1);
-    promise.compose(fail, onRejected2);
+    promise.map(fail, onRejected1);
+    promise.map(fail, onRejected2);
     d.reject(reason);
     assertEquals(status, 0);
   }
@@ -62,7 +62,7 @@ shared class ComposeTest() extends AsyncTestBase() {
       assertEquals(failure, t);
       testComplete();
     }
-    promise.compose(onFulfilled, fail).compose((Anything s) => fail("Was not expecting a call to onFulfilled"), onRejected);
+    promise.map(onFulfilled, fail).map((Anything s) => fail("Was not expecting a call to onFulfilled"), onRejected);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
@@ -89,7 +89,7 @@ shared class ComposeTest() extends AsyncTestBase() {
       assertEquals(count++, 1);
       testComplete();
     }
-    promise.compose((Integer i) => fail("Was not expecting onFulfilled"), onFulfilled).compose((Anything a) => fail("Was not expecting onFulfilled"), onRejected);
+    promise.map((Integer i) => fail("Was not expecting onFulfilled"), onFulfilled).map((Anything a) => fail("Was not expecting onFulfilled"), onRejected);
     deferred.reject(reason);
     assertEquals(count, 0);
   }
@@ -115,7 +115,7 @@ shared class ComposeTest() extends AsyncTestBase() {
     }
     Deferred<String> d = Deferred<String>();
     Promise<String> promise = d.promise;
-    promise.compose((String s) => s).compose((String s) => fail("Was not expecting this"), onRejected);
+    promise.map((String s) => s).map((String s) => fail("Was not expecting this"), onRejected);
     d.reject(reason);
     assertEquals(count, 0);
   }

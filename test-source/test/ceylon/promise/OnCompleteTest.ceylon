@@ -2,7 +2,7 @@ import ceylon.promise { ... }
 import ceylon.test { ... }
 import ceylon.collection { ... }
 
-shared class AlwaysTest() extends AsyncTestBase() {
+shared class OnCompleteTest() extends AsyncTestBase() {
   
   shared test void testResolveWithArg() {
     Deferred<String> d = Deferred<String>();
@@ -12,7 +12,7 @@ shared class AlwaysTest() extends AsyncTestBase() {
       assertEquals(result, "abc");
       testComplete();
     }
-    d.promise.always(done);
+    d.promise.onComplete(done);
     d.fulfill("abc");
     assertEquals(count, 0);
   }
@@ -26,7 +26,7 @@ shared class AlwaysTest() extends AsyncTestBase() {
       assertEquals(result, reason);
       testComplete();
     }
-    d.promise.always(done);
+    d.promise.onComplete(done);
     d.reject(reason);
     assertEquals(count, 0);
   }
