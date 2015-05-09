@@ -28,13 +28,5 @@ shared interface Completable<out Value>
       "A function that is called when rejected."
       Anything(Throwable) onRejected = rethrow)
         => map(onFulfilled, onRejected);
-
-    "Callback when the promise is completed with a function that accepts
-     either a [[Value]] or a [[Throwable]]."
-    shared void onComplete(
-      "A function that accepts either the promised value
-       or a [[Throwable]]."
-      Anything(*Value|[Throwable]) callback) 
-        => map(callback, callback);
     
 }

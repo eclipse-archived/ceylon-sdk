@@ -21,6 +21,14 @@ shared abstract class Promise<out Value>()
         }
     }
     
+    "Callback when the promise is completed with a function that accepts
+     either a [[Value]] or a [[Throwable]]."
+    shared void onComplete(
+      "A function that accepts either the promised value
+       or a [[Throwable]]."
+      Anything(Value|Throwable) callback) 
+        => map(callback, callback);
+
     shared actual 
     Term<Value|Other,Tuple<Value|Other,Other,[Value]>> 
             and<Other>(Promise<Other> other) 
