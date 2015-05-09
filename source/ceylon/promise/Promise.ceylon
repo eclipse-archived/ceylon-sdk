@@ -1,6 +1,6 @@
 "A promise represents a value that may not be available yet. 
  The primary method for interacting with a promise is its 
- [[map]] method. A promise is a [[Completable]] element
+ [[map]] method. A promise is a [[Completion]] element
  restricted to a single value."
 by("Julien Viet")
 shared abstract class Promise<out Value>() 
@@ -21,13 +21,25 @@ shared abstract class Promise<out Value>()
         }
     }
     
+    shared formal actual Promise<Result> map<Result>(
+      Result onFulfilled(Value val),
+      Result onRejected(Throwable reason));
+
+    shared formal actual Promise<Result> flatMap<Result>(
+      Promise<Result> onFulfilled(Value val),
+      Promise<Result> onRejected(Throwable reason));
+
+    shared actual void completed(
+      Anything onFulfilled(Value val), 
+      Anything onRejected(Throwable reason)) => map(onFulfilled, onRejected);
+
     "Callback when the promise is completed with a function that accepts
      either a [[Value]] or a [[Throwable]]."
     shared void onComplete(
       "A function that accepts either the promised value
-       or a [[Throwable]]."
-      Anything(Value|Throwable) callback) 
-        => map(callback, callback);
+       or a [[Throwable]] as completion."
+      void completed(Value|Throwable completion)) 
+        => map(completed, completed);
 
     shared actual 
     Completion<Value|Other,Tuple<Value|Other,Other,[Value]>> 

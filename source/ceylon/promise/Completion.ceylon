@@ -21,7 +21,7 @@ shared interface Completion<out Element, out T>
     
     "When completion happens, the provided function will be 
      invoked."
-    shared void completed(
+    shared default void completed(
       "A function that is called when fulfilled."
       Anything(*T) onFulfilled, 
       "A function that is called when rejected."
