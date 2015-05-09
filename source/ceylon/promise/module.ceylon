@@ -10,7 +10,7 @@
  - The [[Completable]] interface abstracts objects which
    promise one or more values, accommodating the possibility
    of failure.
- - The [[Term]] interface abstracts `Completable`s that may
+ - The [[Completion]] interface abstracts `Completable`s that may
    be combined to form a compound promise that produces 
    multiple values.
  - The [[Promise]] class, a `Completable` that produces a 
@@ -66,13 +66,13 @@
      value deferred = Deferred<String>();
      return deferred.promise;
  
- The `Deferred` object implements the [[Completer]] interface 
+ The `Deferred` object implements the [[Completable]] interface 
  which provides two methods for controlling the state of the 
  promise:
  
- - [[fulfill()|Completer.fulfill]] fulfills the promise with 
+ - [[fulfill()|Completable.fulfill]] fulfills the promise with 
    a _value_, and
- - [[reject()|Completer.reject]] rejects the promise with a
+ - [[reject()|Completable.reject]] rejects the promise with a
    _reason_ of type [[Throwable]].
  
  For example:

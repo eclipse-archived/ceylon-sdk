@@ -4,7 +4,7 @@
  restricted to a single value."
 by("Julien Viet")
 shared abstract class Promise<out Value>() 
-        satisfies Term<Value,[Value]> {
+        satisfies Completion<Value,[Value]> {
     
     "The context of this promise"
     shared formal ExecutionContext context;
@@ -30,7 +30,7 @@ shared abstract class Promise<out Value>()
         => map(callback, callback);
 
     shared actual 
-    Term<Value|Other,Tuple<Value|Other,Other,[Value]>> 
+    Completion<Value|Other,Tuple<Value|Other,Other,[Value]>> 
             and<Other>(Promise<Other> other) 
             => conj().and(other);
     

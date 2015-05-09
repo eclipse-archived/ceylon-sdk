@@ -6,7 +6,7 @@
  - rejected when either of the two promises is rejected."
 by("Julien Viet")
 class Conjunction<out Element, out First, Rest>(first, rest)
-        satisfies Term<Element,Tuple<First|Element,First,Rest>>
+        satisfies Completion<Element,Tuple<First|Element,First,Rest>>
         given First satisfies Element
         given Rest satisfies Sequential<Element> {
     
@@ -48,7 +48,7 @@ class Conjunction<out Element, out First, Rest>(first, rest)
     first.map(onFirstFulfilled, onReject);
 
     shared actual 
-    Term<Element|Other,Tuple<Element|Other,Other,Tuple<First|Element,First,Rest>>> 
+    Completion<Element|Other,Tuple<Element|Other,Other,Tuple<First|Element,First,Rest>>> 
             and<Other>(Promise<Other> other) 
             => Conjunction(other, promise);
 

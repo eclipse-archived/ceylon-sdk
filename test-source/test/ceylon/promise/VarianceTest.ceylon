@@ -30,7 +30,7 @@ shared class VarianceTest() extends AsyncTestBase() {
     juuPromised.promise.map((Foo foo) => testComplete());
     
     // Resolve with a sub class
-    Completer<Juu> juuTransitionnable = barDeferred;
+    Completable<Juu> juuTransitionnable = barDeferred;
     juuTransitionnable.fulfill(Juu());
   }
 }

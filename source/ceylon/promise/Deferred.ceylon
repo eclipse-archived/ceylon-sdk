@@ -7,12 +7,12 @@ import ceylon.promise.internal { AtomicRef }
  the deferred.
   
  The deferred can either be fulfilled or rejected via the 
- [[Completer.fulfill]] or [[Completer.reject]] methods. Both 
+ [[Completable.fulfill]] or [[Completable.reject]] methods. Both 
  methods accept an argument or a promise to the argument, 
  allowing the deferred to react on a promise."
 by("Julien Viet")
 shared class Deferred<Value>(context = globalExecutionContext) 
-        satisfies Completer<Value> 
+        satisfies Completable<Value> 
                 & Promised<Value> {
     
     abstract class State() of ListenerState | PromiseState {}
