@@ -112,11 +112,7 @@ shared class Response(status, reason, major, minor,
             => headersByName.defines(key);
 
     "Returns a [[Reader]] for the entity body."
-    throws(`class Exception`, "If the status is not 200 OK.")
     shared Reader getReader() {
-        if(status != 200) {
-            throw Exception("Status is not OK");
-        }
         if(exists transferEncoding 
             = getSingleHeader("Transfer-Encoding"),
                 transferEncoding == "chunked") {
@@ -171,8 +167,6 @@ shared class Response(status, reason, major, minor,
     }
     
     "Returns the entity body as a [[String]]."
-    throws(`class Exception`, 
-        "If the status code is not 200")
     shared String contents {
         if(exists x = readException) {
             throw x;
@@ -191,20 +185,16 @@ shared class Response(status, reason, major, minor,
     }
     
     String readEntityBody() {
-        // that's a bit of a simplification ;)
-        if(status == 200) {
-            value reader = getReader();
-            ByteBuffer buffer = newByteBuffer(4096);
-            value encoding = getCharset(charset else "ASCII") else ascii;
-            value decoder = encoding.Decoder();
-            while(reader.read(buffer) != -1) {
-                buffer.flip();
-                decoder.decode(buffer);
-                buffer.clear();
-            }
-            return decoder.consume();
+        value reader = getReader();
+        ByteBuffer buffer = newByteBuffer(4096);
+        value encoding = getCharset(charset else "ASCII") else ascii;
+        value decoder = encoding.Decoder();
+        while(reader.read(buffer) != -1) {
+            buffer.flip();
+            decoder.decode(buffer);
+            buffer.clear();
         }
-        throw Exception("Failed to read contents");
+        return decoder.consume();
     }
     
     "Returns the entity `Content-Length`, if known. Returns 
