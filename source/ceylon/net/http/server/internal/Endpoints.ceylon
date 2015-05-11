@@ -12,12 +12,7 @@ shared class Endpoints() {
     shared void add(EndpointBase endpoint) 
             => endpoints.add(endpoint);
 
-    shared EndpointBase? getEndpointMatchingPath(String requestPath) {
-        for (endpoint in endpoints) {
-            if (endpoint.path.matches(requestPath)) {
-                return endpoint;
-            }
-        }
-        return null;
+    shared {EndpointBase*} getEndpointMatchingPath(String requestPath) {
+        return endpoints.filter((endpoint) {return endpoint.path.matches(requestPath);});
     }
 }
