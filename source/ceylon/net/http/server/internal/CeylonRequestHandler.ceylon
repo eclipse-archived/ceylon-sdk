@@ -9,7 +9,8 @@ import ceylon.net.http.server {
     Endpoint,
     Options,
     InternalException,
-    HttpEndpoint
+    HttpEndpoint,
+    EndpointBase
 }
 
 import io.undertow.server {
@@ -20,6 +21,9 @@ import io.undertow.server.handlers.form {
     FormParserFactory {
         formParserFactoryBuilder=builder
     }
+}
+import ceylon.collection {
+    LinkedList
 }
 
 by("Matej Lazar")
@@ -43,20 +47,23 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints)
             try {
                 String requestPath = exc.requestPath;
                 Method method = parseMethod(exc.requestMethod.string.uppercased);
-                value endpoint = endpoints.getEndpointMatchingPath(requestPath);
+                {EndpointBase*} endpointsMatchingPath = endpoints.getEndpointMatchingPath(requestPath);
                 
-                if (is HttpEndpoint e = endpoint) {
-                    if (isMethodSupported(e, method)) {
+                if (endpointsMatchingPath.size > 0) {
+                    {HttpEndpoint*} httpEndpoints = filterHttpEndpoints(endpointsMatchingPath);
+                    {HttpEndpoint*} matchingEndpoints = filterSupportedMethod(httpEndpoints, method);
+                    if (is HttpEndpoint endpoint = matchingEndpoints.first) {
                         RequestImpl request = RequestImpl { 
                             exchange = exc; 
                             formParserFactory = formParserFactory;
-                            endpoint = e;
+                            endpoint = endpoint;
                             path = requestPath;
                             method = method;
                         };
-                        invokeEndpoint(e, request, response, exc);
+                        invokeEndpoint(endpoint, request, response, exc);
                     } else {
-                        response.addHeader(allow(e.acceptMethod));
+                        {Method*} acceptedMethods = getAllAcceptedMethods(httpEndpoints);
+                        response.addHeader(allow(acceptedMethods));
                         endResponse(exc, response, 405);
                     }
                 } else {
@@ -112,12 +119,33 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints)
         }
     }
 
-    Boolean isMethodSupported(HttpEndpoint endpoint, Method method) { 
-        if (endpoint.acceptMethod.size > 0) {
-            return endpoint.acceptMethod.contains(method);
-        } else {
-            return true;
+    """Returns endpoints matching method. If method is not defined on endpoint it accepts all methods."""
+    {HttpEndpoint*} filterSupportedMethod({HttpEndpoint*} endpoints, Method method) {
+        return endpoints.filter((endpoint) {
+            if (endpoint.acceptMethod.size > 0) {
+                return endpoint.acceptMethod.contains(method);
+            } else {
+                return true;
+            }
+        });
+    }
+
+    {HttpEndpoint*} filterHttpEndpoints({EndpointBase*} endpoints) {
+        value httpEndpoints = LinkedList<HttpEndpoint>();
+        for (EndpointBase endoint in endpoints) {
+            if (is HttpEndpoint endoint) {
+                httpEndpoints.add(endoint);
+            }
         }
+        return httpEndpoints;
+    }
+
+    {Method*} getAllAcceptedMethods({HttpEndpoint*} endpoints) {
+        value acceptedMethods = LinkedList<Method>();
+        for (HttpEndpoint endoint in endpoints) {
+            acceptedMethods.addAll(endoint.acceptMethod);
+        }
+        return acceptedMethods;
     }
 
     void endExchange(JHttpServerExchange? httpServerExchange) {

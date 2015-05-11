@@ -85,6 +85,22 @@ test void testServer() {
         Endpoint {
             service => void (Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
+                response.writeString("post");
+            };
+            path = startsWith("/acceptMethodTestSameUrl");
+            acceptMethod = {post};
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString("get");
+            };
+            path = startsWith("/acceptMethodTestSameUrl");
+            acceptMethod = {get};
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.parameter("čšž") else "");
             };
             path = startsWith("/paramTest");
@@ -189,6 +205,8 @@ test void testServer() {
                 concurentFileRequests(numberOfUsers);
                 
                 acceptMethodTest();
+                
+                acceptMethodTestSameUrl();
                 
                 methodTest();
                 
@@ -460,6 +478,34 @@ void acceptMethodTest() {
     response3.close();
     //TODO log
     assertEquals(response3Status, 200);
+}
+
+void acceptMethodTestSameUrl() {
+    //accept POST
+    value request = ClientRequest(parse("http://localhost:8080/acceptMethodTestSameUrl"));
+    request.method = post;
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.setParameter(Parameter("foo", "valueFoo"));
+    value response = request.execute();
+    value responseStatus = response.status;
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    assertEquals(responseStatus, 200);
+    assertEquals(responseContent, post.string);
+
+    //accept GET
+    value request1 = ClientRequest(parse("http://localhost:8080/acceptMethodTestSameUrl"));
+    request1.method = get;
+    request1.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request1.setParameter(Parameter("foo", "valueFoo"));
+    value response1 = request1.execute();
+    value response1Status = response1.status;
+    value response1Content = response1.contents;
+    response1.close();
+    //TODO log
+    assertEquals(response1Status, 200);
+    assertEquals(response1Content, get.string);
 }
 
 void parametersTest(String paramKey, String paramValue) {
