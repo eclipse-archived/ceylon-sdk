@@ -3,9 +3,10 @@ output=./modules
 lookup=./test-deps
 
 [defaults]
-encoding=UTF-16
+encoding=UTF-8
 
 [compiler]
 source=./source
 source=./test-source
 resource=./resource
+suppresswarning=ceylonNamespace

@@ -1,0 +1,4 @@
+<overrides 
+    xmlns="http://www.ceylon-lang.org/xsd/overrides">
+    <set module="org.jboss.logging" version="3.1.4.GA"/>
+</overrides>
