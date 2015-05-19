@@ -83,7 +83,8 @@ import org.xnio {
     },
     ChannelListeners {
         clOpenListenerAdapter=openListenerAdapter
-    }
+    },
+    StreamConnection
 }
 
 by("Matej Lazar")
@@ -155,7 +156,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         InetSocketAddress jSocketAddress 
                 = InetSocketAddress(socketAddress.address, socketAddress.port);
         
-        value acceptListener = clOpenListenerAdapter(openListener);
+        value acceptListener = clOpenListenerAdapter<StreamConnection>(openListener);
         
         if (exists w = worker) {
             w.createStreamConnectionServer(jSocketAddress, 
