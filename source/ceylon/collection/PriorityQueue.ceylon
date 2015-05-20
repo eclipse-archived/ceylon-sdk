@@ -218,7 +218,7 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
     }
     
     shared actual PriorityQueue<Element> clone() {
-        value clone = PriorityQueue<Element> {
+        value clone = PriorityQueue {
             compare = compare;
             initialCapacity = length;
             growthFactor = growthFactor;

@@ -71,7 +71,7 @@ shared class TreeSet<Element>(compare, elements={})
                 => compare(element,to)!=larger));
     
     shared actual TreeSet<Element> clone() {
-        value clone = TreeSet<Element>(compare);
+        value clone = TreeSet(compare);
         clone.map = map.clone();
         return clone;
     }
