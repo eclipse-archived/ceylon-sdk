@@ -50,6 +50,7 @@
  To wait for the child process to terminate, call
  the `waitForExit()` method of `Process`."
 by("Gavin King")
+native("java")
 module ceylon.process "1.1.1" {
     shared import ceylon.file "1.1.1";
     import java.base "7";

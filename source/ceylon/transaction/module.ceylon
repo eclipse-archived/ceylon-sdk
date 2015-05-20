@@ -160,6 +160,7 @@ import ceylon.transaction.datasource { ... }
    [Java properties format]: http://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.Reader-"""
 by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
+native("java")
 module ceylon.transaction "1.1.1" {
     // transaction manager dependencies
     import org.jboss.narayana.jta "5.0.0.Final";

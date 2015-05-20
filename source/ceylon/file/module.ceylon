@@ -112,6 +112,7 @@
      }
  "
 by("Gavin King")
+native("java")
 module ceylon.file "1.1.1" {
     import java.base "7";
     import ceylon.collection "1.1.1";

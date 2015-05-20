@@ -57,6 +57,7 @@
 
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
+native("java")
 module ceylon.net "1.1.1" {
     
     shared import ceylon.collection "1.1.1";
