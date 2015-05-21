@@ -79,8 +79,7 @@
         <module name="ceylon.logging"/>
         <module name="ceylon.locale"/>
         <module name="com.redhat.ceylon.test"/>
-        <!-- workaround due IDE, moved into source-js folder -->
-        <!-- module name="com.redhat.ceylon.testjs"/ -->
+        <module name="com.redhat.ceylon.testjs"/>
     </moduleset>
 	
     <moduleset id="modules.sdk.promise.js">
@@ -156,13 +155,6 @@
             encoding="UTF-8"
             out="${out.repo}">
             <moduleset refid="modules.sdk.js"/>
-        </ceylon-compile-js>
-        <ceylon-compile-js executable="${ceylon.executable}"
-            src="source-js"
-            verbose="${ceylon.verbosity}"
-            encoding="UTF-8"
-            out="${out.repo}">
-            <module name="com.redhat.ceylon.testjs"/>            
         </ceylon-compile-js>
         
     </target>
@@ -279,15 +271,6 @@
         pass="${herd.pass}"
             encoding="UTF-8">
             <moduleset refid="modules.sdk.js"/>
-        </ceylon-compile-js>
-        <ceylon-compile-js executable="${ceylon.executable}"
-            src="source-js"
-            verbose="${ceylon.verbosity}"
-            out="${herd.repo}"
-            user="${herd.user}"
-            pass="${herd.pass}"
-            encoding="UTF-8">
-            <module name="com.redhat.ceylon.testjs"/>
         </ceylon-compile-js>
 
         <ceylon-doc executable="${ceylon.executable}"
