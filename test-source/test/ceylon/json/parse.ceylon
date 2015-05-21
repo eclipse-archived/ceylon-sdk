@@ -789,7 +789,7 @@ String herdJson = """
                      """;
 
 shared test void testParse() {
-    assert(is NullInstance nu = parse("null"));
+    assert(is Null nu = parse("null"));
     assert(is Boolean b1 = parse("true"), b1);
     assert(is Boolean b2 = parse("false"), !b2);
     try {
@@ -820,8 +820,8 @@ shared test void testParse() {
         throw;
     } catch (ParseException p) {
     }
-    
-    assert(is Float n0 = parse("1"));
+
+    assert(is Integer n0 = parse("1"));
     assertEquals(1, n0);
     
     assert(is Float n1 = parse("123.0"));
@@ -878,7 +878,7 @@ shared test void testParse() {
     assertEquals("bar", o3["s"]);
     assertEquals(true, o3["t"]);
     assertEquals(false, o3["f"]);
-    assertEquals(nil, o3["n"]);
+    assertEquals(null, o3["n"]);
     
     assert(is Object o4 = parse("{\"i\": 12, \"f\": 12.34, \"ie\": 12e10, \"fe\": 12.34e10}"));
     assertEquals(4, o4.size);
@@ -947,7 +947,7 @@ shared test void testParse() {
 	assertEquals("https://github.com/ceylon/ceylon-compiler", o12["html_url"]);
     assertEquals(1287859, o12["id"]);
 	assertEquals("Java", o12["language"]);
-    assertEquals(nil, o12["mirror_url"]);
+    assertEquals(null, o12["mirror_url"]);
 	assertEquals("ceylon-compiler", o12["name"]);
     assertEquals(81, o12["open_issues"]);
     if(is Object org = o12["organization"]){

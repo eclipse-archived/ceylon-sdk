@@ -74,25 +74,25 @@ shared class Array({Value*} values = {})
     deleteSpan(Integer from, Integer to) 
             => list.deleteSpan(from, to);
     
-    remove(Value val) => list.remove(val);
+    remove(ObjectValue val) => list.remove(val);
     
-    removeAll({Value*} elements) => list.removeAll(elements);
+    removeAll({ObjectValue*} elements) => list.removeAll(elements);
     
-    removeFirst(Value element) => list.removeFirst(element);
+    removeFirst(ObjectValue element) => list.removeFirst(element);
     
-    removeLast(Value element) => list.removeLast(element);
+    removeLast(ObjectValue element) => list.removeLast(element);
     
     prune() => list.prune();
     
     truncate(Integer size) => list.truncate(size);
     
-    replace(Value val, Value newVal) 
+    replace(ObjectValue val, Value newVal) 
             => list.replace(val, newVal);
     
-    replaceFirst(Value element, Value replacement) 
+    replaceFirst(ObjectValue element, Value replacement) 
             => list.replaceFirst(element, replacement);
     
-    replaceLast(Value element, Value replacement) 
+    replaceLast(ObjectValue element, Value replacement) 
             => list.replaceLast(element, replacement);
     
     infill(Value replacement) => list.infill(replacement);
@@ -111,12 +111,12 @@ shared class Array({Value*} values = {})
     // auto-casting
     
     throws(`class InvalidTypeException`)
-    Object checkObject(LangObject val){
+    Object checkObject(Value val){
         if(is Object val){
             return val;
         }
         throw InvalidTypeException(
-            "Expecting Object but got `` val ``");
+            "Expecting Object but got `` val else "null" ``");
     }
 
     "Returns this array as a sequence of [[Object]] elements."
@@ -126,12 +126,12 @@ shared class Array({Value*} values = {})
             => { for (elem in list) checkObject(elem) };
 
     throws(`class InvalidTypeException`)
-    String checkString(LangObject val){
+    String checkString(Value val){
         if(is String val){
             return val;
         }
         throw InvalidTypeException(
-            "Expecting String but got `` val ``");
+            "Expecting String but got `` val else "null" ``");
     }
 
     "Returns this array as a sequence of [[String]] elements."
@@ -141,12 +141,12 @@ shared class Array({Value*} values = {})
             => { for (elem in list) checkString(elem) };
 
     throws(`class InvalidTypeException`)
-    Integer checkInteger(LangObject val){
+    Integer checkInteger(Value val){
         if(is Integer val){
             return val;
         }
         throw InvalidTypeException(
-            "Expecting Integer but got `` val ``");
+            "Expecting Integer but got `` val else "null" ``");
     }
 
     "Returns this array as a sequence of [[Integer]] elements."
@@ -156,12 +156,12 @@ shared class Array({Value*} values = {})
             => { for (elem in list) checkInteger(elem) };
 
     throws(`class InvalidTypeException`)
-    Float checkFloat(LangObject val){
+    Float checkFloat(Value val){
         if(is Float val){
             return val;
         }
         throw InvalidTypeException(
-            "Expecting Float but got `` val ``");
+            "Expecting Float but got `` val else "null" ``");
     }
 
     "Returns this array as a sequence of [[Float]] elements."
@@ -171,12 +171,12 @@ shared class Array({Value*} values = {})
             => { for (elem in list) checkFloat(elem) };
 
     throws(`class InvalidTypeException`)
-    Boolean checkBoolean(LangObject val){
+    Boolean checkBoolean(Value val){
         if(is Boolean val){
             return val;
         }
         throw InvalidTypeException(
-            "Expecting Boolean but got `` val ``");
+            "Expecting Boolean but got `` val else "null" ``");
     }
 
     "Returns this array as a sequence of [[Boolean]] elements."
@@ -186,12 +186,12 @@ shared class Array({Value*} values = {})
             => { for (elem in list) checkBoolean(elem) };
 
     throws(`class InvalidTypeException`)
-    Array checkArray(LangObject val){
+    Array checkArray(Value val){
         if(is Array val){
             return val;
         }
         throw InvalidTypeException(
-            "Expecting Array but got `` val ``");
+            "Expecting Array but got `` val else "null" ``");
     }
 
     "Returns this array as a sequence of [[Array]] elements."
