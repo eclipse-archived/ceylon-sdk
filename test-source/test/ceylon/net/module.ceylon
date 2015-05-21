@@ -1,3 +1,4 @@
+native("java")
 module test.ceylon.net "1.1.1" {
     import ceylon.test "1.1.1";
     import ceylon.net "1.1.1";

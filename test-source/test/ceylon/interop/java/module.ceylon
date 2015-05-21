@@ -1,3 +1,4 @@
+native("java")
 module test.ceylon.interop.java "1.1.1" {
     import java.base "7";
     import ceylon.interop.java "1.1.1";
