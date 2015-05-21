@@ -1,5 +1,5 @@
 "The `com.redhat.ceylon.testjvm` module contains internal implementation."
-native("java")
+native("jvm")
 module com.redhat.ceylon.testjvm "1.1.1" {
     import com.redhat.ceylon.test "1.1.1";
     import java.base "7";

@@ -182,7 +182,7 @@
    would require a language with dynamic typing."
 by("Julien Viet")
 license("Apache Software License")
-native("java")
+native("jvm")
 module ceylon.promise "1.1.1" {
   import java.base "7";
 }

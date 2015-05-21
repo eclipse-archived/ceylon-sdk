@@ -86,7 +86,7 @@
 
 by ("Enrique Zamudio")
 license ("Apache Software License 2.0")
-native("java")
+native("jvm")
 module ceylon.dbc "1.1.1" {
     import ceylon.collection "1.1.1";
     shared import ceylon.math "1.1.1";

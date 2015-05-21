@@ -35,7 +35,7 @@
  result of each constituent operation rounded down to 40
  decimal digits."
 by("Tom Bentley")
-native("java")
+native("jvm")
 module ceylon.math "1.1.1" {
     import java.base "7";
 }

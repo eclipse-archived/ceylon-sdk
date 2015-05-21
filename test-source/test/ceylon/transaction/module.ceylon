@@ -1,4 +1,4 @@
-native("java")
+native("jvm")
 module test.ceylon.transaction "1.1.1" {
     import ceylon.test "1.1.1";
     import ceylon.transaction "1.1.1";

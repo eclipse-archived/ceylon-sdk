@@ -12,7 +12,7 @@
    Unicode general category and directionality of a 
    `Character`."
 by("Tom Bentley")
-native("java")
+native("jvm")
 module ceylon.unicode "1.1.1" {
     shared import java.base "7";
     import ceylon.interop.java "1.1.1";
