@@ -1,7 +1,6 @@
 import ceylon.time { Date, DateTime, Time, Period, DateRange }
-import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, february, months, monday, weekdays }
+import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, ReadableDatePeriod, months, monday, weekdays }
 import ceylon.time.chronology { impl=gregorian }
-import ceylon.time.internal.math { adjustedMod }
 
 "Default implementation of a gregorian calendar"
 shared class GregorianDate( Integer dayOfEra )
