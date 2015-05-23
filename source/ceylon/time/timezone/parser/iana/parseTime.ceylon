@@ -50,19 +50,19 @@ shared alias Signal => Integer;
 
 AtTime atTimeDefinition(Time time, String token) {
     switch (token)
-    case("s", "S") {
+    case("s" | "S") {
         return AtLocalMeanTime(time);
     }
-    case("u", "U") {
+    case("u" | "U") {
         return AtUtcTime(time);
     }
-    case("z", "Z") {
+    case("z" | "Z") {
         return AtNauticalTime(time);
     }
-    case("g", "G") {
+    case("g" | "G") {
         return AtGmtTime(time);
     }
-    case("w", "W") {
+    case("w" | "W") {
         return AtWallClockTime(time);
     } 
     else {
