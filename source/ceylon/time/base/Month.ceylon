@@ -19,8 +19,8 @@ shared abstract class Month(integer)
     shared default Integer numberOfDays(Boolean leapYear = false) {
         switch(this)
         case (february) { return leapYear then 29 else 28; }
-        case (april,june,september,november) { return 30; } 
-        case (january,march,may,july,august,october,december) { return 31; }
+        case (april | june | september | november) { return 30; } 
+        case (january | march | may | july | august | october | december) { return 31; }
     }
 
     "Returns the _day of year_ value for first of this month."
