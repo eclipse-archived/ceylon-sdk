@@ -7,9 +7,6 @@ import ceylon.test.event {
 import com.redhat.ceylon.test {
     AbstractHtmlReportGenerator
 }
-import ceylon.collection {
-    StringBuilder
-}
 
 class HtmlReportGenerator() extends AbstractHtmlReportGenerator("test-js") satisfies TestListener {
     
