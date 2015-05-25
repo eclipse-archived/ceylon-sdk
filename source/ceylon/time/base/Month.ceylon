@@ -5,7 +5,7 @@ import ceylon.time.internal.math { mod=floorMod, fdiv=floorDiv }
 shared abstract class Month(integer)
        of january | february | march | april | may | june | july 
         | august | september | october | november | december
-       satisfies Ordinal<Month> & Comparable<Month>{
+       satisfies Ordinal<Month> & Comparable<Month> & Enumerable<Month>{
 
         "Ordinal number of the month of year.
          Where:\n
@@ -63,6 +63,28 @@ shared abstract class Month(integer)
         Integer years = fdiv(next, 12);
         return Overflow(month, years); 
     }
+    
+    "Returns the offset of the other _month_ compared to this.
+     
+     This will always return positive integer such that given any
+     two months `a` and `b`, the following is always true:
+     
+        assert(0 <= a.offset(b) <= 11);
+     "
+    shared actual default Integer offset(Month other)
+            => let (diff = integer - other.integer)
+               if (diff<0) then diff + months.all.size else diff;
+    
+    "returns `n`-th neighbour of this _day of week_.
+     
+     For example:
+     
+         assert(january.neighbour(0)  == january);
+         assert(january.neighbour(1)  == february);
+         assert(january.neighbour(-1) == december);
+     "
+    shared actual Month neighbour(Integer offset) => add(offset).month;
+
 }
 
 "Table of _day of year_ values for the first day of each month."

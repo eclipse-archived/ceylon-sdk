@@ -389,7 +389,31 @@ shared test void test_january_plus_11() => assertMonthAdd(january.add(11), [dece
 shared test void test_january_plus_12() => assertMonthAdd(january.add(12), [january, 1]);
 shared test void test_january_plus_13() => assertMonthAdd(january.add(13), [february, 1]);
 
+// Enumerable tests:
+shared test void monthOffsetsAlwaysIncreasing1() => assertEquals {
+    actual = [for (m in february..january) m.offset(february)];
+    expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+};
 
+shared test void monthOffsetsAlwaysIncreasing2() => assertEquals {
+    actual = [for (m in february..january) m.offset(january)];
+    expected = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0];
+};
+
+shared test void monthOffsetsAlwaysIncreasing3() => assertEquals {
+    actual = [for (m in february..january) february.offset(m)];
+    expected = [0, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+};
+
+shared test void monthOffsetsAlwaysIncreasing4() => assertEquals {
+    actual = [for (m in february..january) january.offset(m)];
+    expected = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+};
+
+shared test void monthsNeigbours() => assertEquals {
+    actual = [for (i in -12..12) january.neighbour(i)];
+    expected = [january, february, march, april, may, june, july, august, september, october, november, december, january, february, march, april, may, june, july, august, september, october, november, december, january];
+};
 
 void assertMonthAdd(Month.Overflow actual, [Month, Integer] expected){
     assertEquals(expected, [actual.month, actual.years]);
