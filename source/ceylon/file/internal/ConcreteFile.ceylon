@@ -231,6 +231,11 @@ class ConcreteFile(JPath jpath)
 
 shared Boolean sameFile(File x, File y) =>
         let (xPath = x.path, yPath = y.path)
-        if (is ConcretePath xPath) then (let (jpath = xPath.jpath) isSameFile(jpath, asJPath(yPath, jpath)))
-        else if (is ConcretePath yPath) then (let (jpath = yPath.jpath) isSameFile(asJPath(xPath, jpath), jpath))
-        else isSameFile(newPath(xPath.string), newPath(yPath.string));
+        if (is ConcretePath xPath)
+            then let (jpath = xPath.jpath) 
+                isSameFile(jpath, asJPath(yPath, jpath))
+        else if (is ConcretePath yPath) 
+            then let (jpath = yPath.jpath) 
+                isSameFile(asJPath(xPath, jpath), jpath)
+        else isSameFile(newPath(xPath.string), 
+                        newPath(yPath.string));
