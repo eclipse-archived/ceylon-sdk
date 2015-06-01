@@ -1,4 +1,4 @@
-import ceylon.json { Object, Array, nil }
+import ceylon.json { Object, Array }
 import ceylon.test { assertEquals, test }
 
 shared test void testPrint(){
@@ -11,7 +11,7 @@ shared test void testPrint(){
         "f" -> 12.34,
         "true" -> true,
         "false" ->false,
-        "null" -> nil,
+        "null" -> null,
         "o" -> Object{
             values=["i" -> 2];
         },

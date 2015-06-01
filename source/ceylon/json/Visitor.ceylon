@@ -78,7 +78,7 @@ shared void visit(subject, visitor, sortedKeys=false) {
     case (is Boolean) {
         visitor.onBoolean(subject);
     }
-    case (is NullInstance) {
+    case (is Null) {
         visitor.onNull();
     }
 }

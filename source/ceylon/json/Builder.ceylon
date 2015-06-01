@@ -21,9 +21,8 @@ shared class Builder() satisfies Visitor {
         "The builder has not yet seen enough input to return a fully formed JSON value.")
     shared Value result {
         if (stack.size == 1,
-            ! currentKey exists,
-            exists c=stack.pop()) {
-            return c;
+            ! currentKey exists) {
+            return stack.pop();
         } else {
             throw AssertionError("currenyKey=``currentKey else "null" ``, stack=``stack``");
         }
@@ -97,8 +96,8 @@ shared class Builder() satisfies Visitor {
         push(bool);
     }
     shared actual void onNull() {
-        addToCurrent(nil);
-        push(nil);
+        addToCurrent(null);
+        push(null);
     }
     
     shared actual void onString(String string) {
