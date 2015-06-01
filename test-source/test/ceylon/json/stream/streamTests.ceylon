@@ -159,7 +159,7 @@ shared void testArrayOf1Object() {
     assert(is ArrayStartEvent e1=events.next());
     assert(is ObjectStartEvent e2=events.next());
     assert(is KeyEvent e3=events.next());
-    assert("key" == e3.eventValue);
+    assert("key" == e3.key);
     assert(is String e4=events.next());
     assert("value" == e4);
     assert(is ObjectEndEvent e5=events.next());
@@ -256,7 +256,7 @@ shared void testObject1String() {
     value events = parser(""" { "key" : "value" } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is String e3=events.next());
     assert("value" == e3);
     assert(is ObjectEndEvent e4=events.next());
@@ -268,7 +268,7 @@ shared void testObject1Integer() {
     value events = parser(""" { "key":1 } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Integer e3=events.next());
     assert(1 == e3);
     assert(is ObjectEndEvent e4=events.next());
@@ -280,7 +280,7 @@ shared void testObject1True() {
     value events = parser(""" { "key" :true} """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Boolean e3=events.next());
     assert(true == e3);
     assert(is ObjectEndEvent e4=events.next());
@@ -292,7 +292,7 @@ shared void testObject1False() {
     value events = parser("""{"key" : false } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Boolean e3=events.next());
     assert(false == e3);
     assert(is ObjectEndEvent e4=events.next());
@@ -304,7 +304,7 @@ shared void testObject1Null() {
     value events = parser(""" { "key":null } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Null e3=events.next());
     assert(is ObjectEndEvent e4=events.next());
     assert(is Finished end=events.next());
@@ -315,7 +315,7 @@ shared void testObject1Array() {
     value events = parser(""" { "key":[] } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is ArrayStartEvent e3=events.next());
     assert(is ArrayEndEvent e4=events.next());
     assert(is ObjectEndEvent e5=events.next());
@@ -327,10 +327,10 @@ shared void testObject1Object() {
     value events = parser(""" { "key":{ "key2": null} } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is ObjectStartEvent e3=events.next());
     assert(is KeyEvent e4=events.next());
-    assert("key2" == e4.eventValue);
+    assert("key2" == e4.key);
     assert(is Null e5=events.next());
     assert(is ObjectEndEvent e6=events.next());
     assert(is ObjectEndEvent e7=events.next());
@@ -342,11 +342,11 @@ shared void testObject2String() {
     value events = parser(""" { "key" : "value", "hello": "world" } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is String e3=events.next());
     assert("value" == e3);
     assert(is KeyEvent e4=events.next());
-    assert("hello" == e4.eventValue);
+    assert("hello" == e4.key);
     assert(is String e5=events.next());
     assert("world" == e5);
     assert(is ObjectEndEvent e6=events.next());
@@ -358,11 +358,11 @@ shared void testObject2Integer() {
     value events = parser(""" { "one":1,"two":2 } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("one" == e2.eventValue);
+    assert("one" == e2.key);
     assert(is Integer e3=events.next());
     assert(1 == e3);
     assert(is KeyEvent e4=events.next());
-    assert("two" == e4.eventValue);
+    assert("two" == e4.key);
     assert(is Integer e5=events.next());
     assert(2 == e5);
     assert(is ObjectEndEvent e6=events.next());
@@ -374,11 +374,11 @@ shared void testObject2True() {
     value events = parser(""" { "key" :true, "key": true} """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Boolean e3=events.next());
     assert(true == e3);
     assert(is KeyEvent e4=events.next());
-    assert("key" == e4.eventValue);
+    assert("key" == e4.key);
     assert(is Boolean e5=events.next());
     assert(true == e5);
     assert(is ObjectEndEvent e6=events.next());
@@ -390,11 +390,11 @@ shared void testObject2False() {
     value events = parser("""{"key" : false , "key2" : false } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Boolean e3=events.next());
     assert(false == e3);
     assert(is KeyEvent e4=events.next());
-    assert("key2" == e4.eventValue);
+    assert("key2" == e4.key);
     assert(is Boolean e5=events.next());
     assert(false == e5);
     assert(is ObjectEndEvent e6=events.next());
@@ -406,10 +406,10 @@ shared void testObject2Null() {
     value events = parser(""" { "key":null,"NULL":null } """);
     assert(is ObjectStartEvent e1=events.next());
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     assert(is Null e3=events.next());
     assert(is KeyEvent e4=events.next());
-    assert("NULL" == e4.eventValue);
+    assert("NULL" == e4.key);
     assert(is Null e5=events.next());
     assert(is ObjectEndEvent e6=events.next());
     assert(is Finished end=events.next());
@@ -528,7 +528,7 @@ shared void unterminatedString() {
     events = parser(""" { "k": "}""");
     assert(is ObjectStartEvent e5=events.next());
     assert(is KeyEvent e6=events.next());
-    assert("k"==e6.eventValue);
+    assert("k"==e6.key);
     nextError(events, "Unexpected end of input at 1:11 (line:column)");
 }
 
@@ -557,19 +557,19 @@ shared void unterminatedObject() {
     events = parser("""{"key" """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e2=events.next());
-    assert("key" == e2.eventValue);
+    assert("key" == e2.key);
     nextError(events, "Unexpected end of input at 1:8 (line:column)");
     
     events = parser("""{"key": """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e3=events.next());
-    assert("key" == e3.eventValue);
+    assert("key" == e3.key);
     nextError(events, "Unexpected end of input at 1:9 (line:column)");
     
     events = parser("""{"key":"value" """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e4=events.next());
-    assert("key" == e4.eventValue);
+    assert("key" == e4.key);
     assert(is String e5=events.next());
     assert("value" == e5);
     nextError(events, "Unexpected end of input at 1:16 (line:column)");
@@ -577,7 +577,7 @@ shared void unterminatedObject() {
     events = parser("""{"key":"value", """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e6=events.next());
-    assert("key" == e6.eventValue);
+    assert("key" == e6.key);
     assert(is String e7=events.next());
     assert("value" == e7);
     nextError(events, "Unexpected end of input at 1:17 (line:column)");
@@ -585,31 +585,31 @@ shared void unterminatedObject() {
     events = parser("""{"key":"value", "key2" """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e8=events.next());
-    assert("key" == e8.eventValue);
+    assert("key" == e8.key);
     assert(is String e9=events.next());
     assert("value" == e9);
     assert(is KeyEvent e10=events.next());
-    assert("key2" == e10.eventValue);
+    assert("key2" == e10.key);
     nextError(events, "Unexpected end of input at 1:24 (line:column)");
     
     events = parser("""{"key":"value", "key2": """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e11=events.next());
-    assert("key" == e11.eventValue);
+    assert("key" == e11.key);
     assert(is String e12=events.next());
     assert("value" == e12);
     assert(is KeyEvent e13=events.next());
-    assert("key2" == e13.eventValue);
+    assert("key2" == e13.key);
     nextError(events, "Unexpected end of input at 1:25 (line:column)");
     
     events = parser("""{"key":"value", "key2": "value" """);
     assert(events.next() is ObjectStartEvent);
     assert(is KeyEvent e14=events.next());
-    assert("key" == e14.eventValue);
+    assert("key" == e14.key);
     assert(is String e15=events.next());
     assert("value" == e15);
     assert(is KeyEvent e16=events.next());
-    assert("key2" == e16.eventValue);
+    assert("key2" == e16.key);
     assert(is String e17=events.next());
     assert("value" == e17);
     nextError(events, "Unexpected end of input at 1:33 (line:column)");

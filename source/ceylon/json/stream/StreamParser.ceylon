@@ -8,9 +8,6 @@ import ceylon.json {
     parseKeyOrString,
     Positioned
 }
-import ceylon.collection {
-    HashSet
-}
 
 "Package-private class used by [[StreamParser]] to track state."
 class StreamState(parent, last) {
@@ -18,7 +15,7 @@ class StreamState(parent, last) {
     "The number of events yielded so far"
     shared variable Integer num = 0;
     
-    shared variable BasicEvent? last;
+    shared variable Event? last;
     
     shared StreamState? parent;
     
@@ -26,9 +23,6 @@ class StreamState(parent, last) {
         return "``parent else "<top>"``, ``last else "<null>"``";
     }
 }
-
-shared alias BasicEvent => ObjectStartEvent|ObjectEndEvent|ArrayStartEvent|ArrayEndEvent
-        |KeyEvent|String|Float|Integer|Boolean|Null;
 
 
 """A parser for JSON data as specified by 
@@ -45,7 +39,7 @@ shared alias BasicEvent => ObjectStartEvent|ObjectEndEvent|ArrayStartEvent|Array
    
    By default [[ParseException]]s will propagate out of calls to [[next]] 
    when a error is detected. You can use [[errorReporting]] 
-   to report errors as [[ExceptionEvent]]s within the stream.
+   to report errors as [[Exception]]s within the stream.
    
    ## Example
    
@@ -79,7 +73,7 @@ shared alias BasicEvent => ObjectStartEvent|ObjectEndEvent|ArrayStartEvent|Array
    [1]: https://tools.ietf.org/html/rfc7159
    """
 shared class StreamParser(Tokenizer input) 
-        satisfies Iterator<BasicEvent>&Positioned {
+        satisfies Iterator<Event>&Positioned {
     
     // TODO not yet exception-safe: Should probably return finished once any exception has been thrown
     
@@ -88,7 +82,7 @@ shared class StreamParser(Tokenizer input)
     variable value state = StreamState(null, null);
     
     "Parse any JSON value and return an event"
-    BasicEvent parseValue() {
+    Event parseValue() {
         input.eatSpaces();
         switch(ch = input.character())
         case ('{') {
@@ -140,9 +134,9 @@ shared class StreamParser(Tokenizer input)
     
     "Return the next event from the stream, or finished"
     throws(`class ParseException`)
-    shared actual BasicEvent|Finished next() {
+    shared actual Event|Finished next() {
         input.eatSpaces();
-        BasicEvent|Finished result;
+        Event|Finished result;
         if (input.hasMore) {
             switch (ch=input.character())
             case (']') {
@@ -211,7 +205,7 @@ shared class StreamParser(Tokenizer input)
         return yield(result);
     }
     
-    BasicEvent|Finished yield(BasicEvent|Finished yielding) {
+    Event|Finished yield(Event|Finished yielding) {
         value last = state.last;
         state.num++;
         switch (yielding)
@@ -283,6 +277,7 @@ shared class StreamParser(Tokenizer input)
     }
     
     shared actual String string => input.string;
+    
     shared actual Integer column => input.column;
     
     shared actual Integer line => input.line;
@@ -292,18 +287,18 @@ shared class StreamParser(Tokenizer input)
 }
 
 "Adapts the given stream so that exceptions thrown while evaluating `next()` get 
- reported as ErrorEvents, rather than propagating."
-Iterator<T|ExceptionEvent>&Positioned errorReporting<T>(Iterator<T>&Positioned stream)
-        => object satisfies Iterator<T|ExceptionEvent>&Positioned {
-    variable ExceptionEvent? error = null;
-    shared actual T|ExceptionEvent|Finished next() {
+ returned from the iterator, rather than propagating."
+Iterator<T|Exception>&Positioned errorReporting<T>(Iterator<T>&Positioned stream)
+        => object satisfies Iterator<T|Exception>&Positioned {
+    variable Exception? error = null;
+    shared actual T|Exception|Finished next() {
         if (exists err=error) {
             return err;
         } else {
             try {
                 return stream.next();
             } catch (Exception e) {
-                return error = ExceptionEvent(e);
+                return error = e;
             }
         }
     }
@@ -312,32 +307,29 @@ Iterator<T|ExceptionEvent>&Positioned errorReporting<T>(Iterator<T>&Positioned s
     shared actual Integer line => stream.line;
     
     shared actual Integer position => stream.position;
-    
-    
 };
-
-class StreamState2(StreamState2? parent, BasicEvent? last) extends StreamState(parent, last){
+/*
+class StreamState2(StreamState2? parent, Event? last) extends StreamState(parent, last){
     HashSet<String>? keys = if (last is ObjectStartEvent) then HashSet<String>() else null;
     if (is KeyEvent last) {
         assert (exists parent, exists k=parent.keys);
-        if (!k.add(last.eventValue)) {
+        if (!k.add(last.key)) {
             // TODO location information!
-            throw ParseException("duplicate key ``last.eventValue``", -1, -1);
+            throw ParseException("duplicate key ``last.key``", -1, -1);
         }
     }
 }
 
 "Adapts the given stream so duplicate keys within an object result in a 
  [[ParseException]] being thrown."
-Iterator<T|ExceptionEvent>&Positioned uniqueKeys<T>(Iterator<T>&Positioned stream) 
-        given T satisfies Event
-        => object satisfies Iterator<T|ExceptionEvent>&Positioned {
+Iterator<T|Exception>&Positioned uniqueKeys<T>(Iterator<T>&Positioned stream) 
+        => object satisfies Iterator<T|Exception>&Positioned {
     // TODO I need a stack, just like the StreamIterator does
     // it would be nice if we could abstract the creation of stack elements and their maniplation.
     // => StreamState is probably a default member class
     // except I don't really want clients knowing about it.
     
-    shared actual T|ExceptionEvent|Finished next() {
+    shared actual T|Exception|Finished next() {
         return nothing;
     }
     shared actual Integer column => stream.column;
@@ -345,6 +337,5 @@ Iterator<T|ExceptionEvent>&Positioned uniqueKeys<T>(Iterator<T>&Positioned strea
     shared actual Integer line => stream.line;
     
     shared actual Integer position => stream.position;
-    
-    
 };
+*/

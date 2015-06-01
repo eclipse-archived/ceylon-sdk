@@ -2,21 +2,20 @@ import ceylon.json {
     Visitor,
     JsonValue=Value,
     JsonArray=Array,
-    JsonObject=Object,
-    Positioned
+    JsonObject=Object
 }
 import ceylon.collection {
     ArrayList
 }
 "Calls a visitor according to the events obtained from a stream."
-void streamToVisitor(Iterator<BasicEvent> stream, Visitor visitor) {
+shared void streamToVisitor(Iterator<Event> stream, Visitor visitor) {
     while (!is Finished event=stream.next()) {
         switch(event)
         case (is ObjectStartEvent) {
             visitor.onStartObject();
         }
         case (is KeyEvent) {
-            visitor.onKey(event.eventValue);
+            visitor.onKey(event.key);
         }
         case (is ObjectEndEvent) {
             visitor.onEndObject();
@@ -42,6 +41,7 @@ void streamToVisitor(Iterator<BasicEvent> stream, Visitor visitor) {
     }
 }
 
+"A unit type used internally because we can't use null"
 abstract class None() of none {}
 object none extends None() {}
 
@@ -64,20 +64,17 @@ class PushIterator<out T>(Iterator<T> it) satisfies Iterator<T> {
 }
 
 "Produces a stream of events from the descendents of the given root value."
-class StreamingVisitor(JsonValue root) satisfies Iterator<BasicEvent> {
+shared class StreamingVisitor(JsonValue root) satisfies Iterator<Event> {
     value stack = ArrayList<PushIterator<JsonValue|<String->JsonValue>>>();
     value pi = PushIterator<JsonValue|<String->JsonValue>>(emptyIterator);
     pi.push(root);
     stack.push(pi);
-    shared actual BasicEvent|Finished next() {
+    shared actual Event|Finished next() {
         if (exists p = stack.pop()) {
             value n = p.next();
             switch(n)
-            case (is String|Boolean|Integer|Float) {
+            case (is String|Boolean|Integer|Float|Null) {
                 return n;
-            }
-            case (is Null) { 
-                return null;
             }
             case (is JsonObject) {
                 stack.push(PushIterator(n.iterator()));
@@ -104,5 +101,5 @@ class StreamingVisitor(JsonValue root) satisfies Iterator<BasicEvent> {
         } else {
             return finished;
         }
-    }    
+    }
 }
