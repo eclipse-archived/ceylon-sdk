@@ -144,11 +144,6 @@ final class DecimalImpl(BigDecimal num)
     shared actual Whole whole {
         return wrapBigInteger(implementation.toBigInteger());
     }
-    shared actual Decimal magnitude {
-        return DecimalImpl(implementation
-                .round(MathContext(implementation.scale(), 
-                        JRoundingMode.\iDOWN)));
-    }
     shared actual Decimal minus(Decimal other) {
         assert (is DecimalImpl other);
         if (exists rounding = defaultRounding.get()) {
@@ -175,7 +170,7 @@ final class DecimalImpl(BigDecimal num)
          }
     }
     shared actual Decimal fractionalPart {
-        return minus(this.magnitude);
+        return minus(this.wholePart);
     }
     shared actual Boolean negative {
         return implementation.signum() < 0;
