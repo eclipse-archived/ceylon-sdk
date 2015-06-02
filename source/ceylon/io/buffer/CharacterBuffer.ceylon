@@ -8,6 +8,9 @@ see(`class Buffer`,`function newCharacterBufferWithData`)
 shared sealed class CharacterBuffer(String string) 
         extends Buffer<Character>() {
     
+    value array = Array.OfSize(string.size, '\{NULL}');
+    string.copyTo(array);
+    
     "The size of the given [[string]]."
     shared actual Integer capacity => string.size;
     
@@ -43,7 +46,7 @@ shared sealed class CharacterBuffer(String string)
     "Reads a [[Character]] from this buffer at the current 
      [[position]]. Increases the [[position]] by `1`."
     shared actual Character get() {
-        if(exists c = string[position++]) {
+        if(exists c = array.getFromFirst(position++)) {
             return c;
         }
         // FIXME: type
