@@ -9,7 +9,8 @@ import ceylon.test {
     assertEquals,
     test,
     assertTrue,
-    assertNull
+    assertNull,
+    assertNotNull
 }
 
 import java.lang {
@@ -97,4 +98,22 @@ test void ceylonStringMutableMap() {
 
     csMap.remove("two");
     assertNull(jsMap.get(javaString("two")));
+}
+
+test void bug342() {
+    class OuterClass() {
+        shared class InnerClass() {
+            shared class InnerInnerClass() {}
+        }
+    }
+    object outerObject {}
+    class FunctionClass() {}
+    object functionObject {}
+
+    assertNotNull(javaClass<OuterClass>());
+    assertNotNull(javaClass<OuterClass.InnerClass>());
+    assertNotNull(javaClass<OuterClass.InnerClass.InnerInnerClass>());
+    assertNotNull(javaClass<FunctionClass>());
+    assertNotNull(javaClass<\IouterObject>());
+    assertNotNull(javaClass<\IfunctionObject>());
 }
