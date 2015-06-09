@@ -34,6 +34,13 @@ public final class Util {
             if (klass.getTypeArguments().length > 0)
                 throw new RuntimeException("given type has type arguments");
             return (java.lang.Class<T>) klass.getKlass();
+        } 
+        else if($reifiedT instanceof TypeDescriptor.Member 
+                && ((TypeDescriptor.Member)$reifiedT).getMember() instanceof TypeDescriptor.Class) {
+            TypeDescriptor.Member.Class klass =  (TypeDescriptor.Class)((TypeDescriptor.Member)$reifiedT).getMember();
+            if (klass.getTypeArguments().length > 0)
+                throw new RuntimeException("given type has type arguments");
+            return (java.lang.Class<T>) klass.getKlass();
         }
         throw new RuntimeException("unsupported type");
     }
