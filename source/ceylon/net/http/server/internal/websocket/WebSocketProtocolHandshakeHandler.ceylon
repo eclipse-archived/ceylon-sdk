@@ -8,9 +8,6 @@ import io.undertow.server {
     HttpUpgradeListener
 }
 import io.undertow.util {
-    Headers {
-        headerUpgrade=UPGRADE
-    },
     Methods {
         methodGet = GET
     }

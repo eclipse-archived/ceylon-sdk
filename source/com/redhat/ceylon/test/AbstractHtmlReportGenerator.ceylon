@@ -131,7 +131,7 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
                 fw.write("<td>");
                 fw.write("<i class='icon success'></i>");
             }
-            case(error, failure) {
+            case(error | failure) {
                 fw.write("<tr class='failure``expandableFlag then expandableSnippet else "'>"``");
                 fw.write("<td>");
                 fw.write("<i class='icon failure'></i>");

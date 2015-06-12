@@ -177,7 +177,7 @@ TestCandidate[] findCandidates(TestSource[] sources) {
             findCandidatesInClass(candidates, source.declaration);
         } else if (is FunctionDeclaration source) {
             findCandidatesInFunction(candidates, source);
-        } else if (is FunctionModel source) {
+        } else if (is FunctionModel<> source) {
             findCandidatesInFunction(candidates, source.declaration);
         } else if (is String source) {
             findCandidatesInTypeLiteral(candidates, source);

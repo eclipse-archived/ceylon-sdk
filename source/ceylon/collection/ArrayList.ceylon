@@ -221,7 +221,7 @@ shared class ArrayList<Element>
 
     shared actual 
     Integer removeAll({<Element&Object>*} elements) {
-        Category set = HashSet { *elements };
+        Category<> set = HashSet { *elements };
         variable value i=0;
         variable value j=0;
         while (i<length) {

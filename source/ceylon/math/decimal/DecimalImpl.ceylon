@@ -4,9 +4,7 @@ import ceylon.math.whole {
 }
 
 import java.math {
-    MathContext,
-    BigDecimal,
-    JRoundingMode=RoundingMode
+    BigDecimal
 }
 
 

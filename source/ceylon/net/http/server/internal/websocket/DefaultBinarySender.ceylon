@@ -15,9 +15,6 @@ import io.undertow.websockets.core {
     },
     WebSocketFrameType
 }
-import ceylon.io.charset {
-    utf8
-}
 import java.nio {
     JByteBuffer=ByteBuffer
 }

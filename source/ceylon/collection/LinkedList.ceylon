@@ -218,7 +218,7 @@ shared class LinkedList<Element>(elements = {})
 
     shared actual 
     Integer removeAll({<Element&Object>*} elements) {
-        Category set = HashSet { *elements };
+        Category<> set = HashSet { *elements };
         variable value result = 0;
         while (exists cell = head,
             exists elem = cell.element,
