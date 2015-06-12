@@ -8,7 +8,7 @@ see(`class Buffer`,`function newCharacterBufferWithData`)
 shared sealed class CharacterBuffer(String string) 
         extends Buffer<Character>() {
     
-    value array = Array.OfSize(string.size, '\{NULL}');
+    value array = Array.ofSize(string.size, '\{NULL}');
     string.copyTo(array);
     
     "The size of the given [[string]]."
