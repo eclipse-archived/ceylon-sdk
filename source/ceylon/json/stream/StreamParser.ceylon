@@ -31,11 +31,9 @@ class StreamState(parent, last) {
    source [[input]], so it's possible to start parsing JSON while it's 
    still being received.
    
-   This parser does not enforce the uniqueness of keys within 
+   This parser does not enforce uniqueness of keys within 
    JSON objects. It is usually not onerous for the caller to do so if 
-   they require such enforcement. Alternatively you can use [[uniqueKeys]] to 
-   decorate a StreamParser so it detects duplicate keys in a JSON object and 
-   throws.
+   they require such enforcement.
    
    By default [[ParseException]]s will propagate out of calls to [[next]] 
    when a error is detected. You can use [[errorReporting]] 
@@ -45,31 +43,170 @@ class StreamState(parent, last) {
    
    Suppose we have the domain model:
    
-       class Person(name, address) {
-           shared String name;
-           shared Address address;
+       class Order(address, items) {
+           shared String address;
+           shared Item[] items;
        }
-       class Address(lines) {
-           shared String street;
-           shared String city;
+       class Item(sku, quantity) {
+           shared String sku;
+           shared Integer quantity;
        }
        
     And we want to parse JSON that looks like this:
     
     ```javascript
-    {
-        "name":"Grocer Cat",
-        "address": {
-            "street":"1 Acacia Avenue",
-            "city":"Busytown"
-        }
-    }
+       {
+         "address":"",
+         "items":[
+           {
+             "sku":"123-456-789",
+             "quantity":4
+           },
+           {
+             "sku":"456-789",
+             "quantity":20
+           }
+         ]
+       }
     ```
     
     Then we might write a parser like this:
     
-        TODO
-      
+        class OrderParser() {
+            
+            late variable Peek<Event> stream;
+           
+            String missingKey(String container, String key) {
+                return "``container``: '``key``' missing at line ``stream.line``'";
+            }
+            String duplicateKey(String container, String key) {
+                return "``container``: '``key``' occurs more than once at line ``stream.line``'";
+            }
+            String keyType(String container, String key, String expectedType) {
+                return "``container``: '``key``' key is supposed to be of ``expectedType`` type at line ``stream.line``";
+            }
+            String unexpectedKey(String container, String key) {
+                return "``container``: '``key``' key not supported at line ``stream.line``";
+            }
+            String unexpectedEvent(String container, Event|Finished event) {
+                return "``container``: unexpected event ``event else "null"`` at line ``stream.line``";
+            }
+            
+            "Parses an item from events read from the given parser.
+             Returns the item or an error explanation."
+            Item|String parseItem() {
+                if (!(stream.next() is ObjectStartEvent)) {
+                    return "Item: should be a JSON object";
+                }
+                variable String? sku = null;
+                variable Integer? quantity = null;
+                while(true) {
+                    switch(event=stream.next())
+                    case (is KeyEvent) {
+                        switch(key=event.key) 
+                        case ("sku") {
+                            if (is String s = stream.next()) {
+                                if (sku exists) {
+                                    return duplicateKey("Item", "sku");
+                                }
+                                sku = s;
+                            } else {
+                                return keyType("Item", "sku", "String");
+                            }
+                        }
+                        case ("quantity") {
+                            if (is Integer s = stream.next()) {
+                                if (quantity exists) {
+                                    return duplicateKey("Item", "quantity");
+                                }
+                                quantity = s;
+                            } else {
+                                return keyType("Item", "sku", "Integer");
+                            }
+                        }
+                        else {
+                            return unexpectedKey("Item", key);
+                        }
+                    }
+                    case (is ObjectEndEvent) {
+                        if (exists s=sku) {
+                            if (exists q=quantity) {
+                                return Item(s, q);
+                            }
+                            return missingKey("Item", "quantity");
+                        }
+                        return missingKey("Item", "sku");
+                    }
+                    else {
+                        return unexpectedEvent("Item", event);
+                    }
+                }
+            }
+            
+            "Parses an order from events read from the given parser.
+             Returns the order or an error explanation."
+            Order|String parseOrder() {
+                if (!(stream.next() is ObjectStartEvent)) {
+                    return "Order: should be a JSON object";
+                }
+                variable String? address = null;
+                value items = ArrayList<Item>();
+                while(true) {
+                    switch(event=stream.next())
+                    case (is KeyEvent) {
+                        switch(key=event.key) 
+                        case ("address") {
+                            if (is String s = stream.next()) {
+                                if (address exists) {
+                                    return duplicateKey("Order", "address");
+                                }
+                                address = s;
+                            } else {
+                                return keyType("Order", "address", "String");
+                            }
+                        }
+                        case ("items") {
+                            if (!items.empty) {
+                                return duplicateKey("Order", "items");
+                            }
+                            if (!stream.next() is ArrayStartEvent) {
+                                return keyType("Order", "items", "Array");
+                            }
+                            while (stream.peek() is ObjectStartEvent) {
+                                switch (item=parseItem())
+                                case (is String) {
+                                    return item;
+                                }
+                                case (is Item) {
+                                    items.add(item);
+                                }
+                            }
+                            assert(stream.next() is ArrayEndEvent);
+                        }
+                        else {
+                            return unexpectedKey("Order", key);
+                        }
+                    }
+                    case (is ObjectEndEvent) {
+                        if (exists a=address) {
+                            return Order(a, items.sequence());
+                        }
+                        return missingKey("Order", "address");
+                    }
+                    else {
+                        return unexpectedEvent("Item", event);
+                    }
+                }
+            }
+            
+            shared Order|String parse(String json) {
+                stream = Peek(StreamParser(StringTokenizer(json)));
+                return parseOrder();
+            }
+        }
+   
+   While this is certainly verbose it's extremely readable and regular.
+   
    [1]: https://tools.ietf.org/html/rfc7159
    """
 shared class StreamParser(Tokenizer input) 
@@ -284,6 +421,44 @@ shared class StreamParser(Tokenizer input)
     
     shared actual Integer position => input.position;
     
+}
+
+shared class Peek<T>(Iterator<T>&Positioned stream) satisfies Iterator<T>&Positioned {
+    variable Boolean havePeek = false;
+    variable T|Finished? peeked = null;
+    late variable Integer col;
+    late variable Integer lin;
+    late variable Integer pos;
+    
+    shared T|Finished peek() {
+        if (!havePeek) {
+            havePeek = true;
+            peeked = stream.next();
+        } 
+        assert(is T|Finished p=peeked);
+        return p;
+    }
+    
+    shared actual T|Finished next() {
+        T|Finished result;
+        if (havePeek) {
+            havePeek = false;
+            assert(is T|Finished p=peeked);
+            result = p;
+        } else {
+            result = stream.next();
+        }
+        col = stream.column;
+        lin = stream.line;
+        pos = stream.position;
+        return result;
+    }
+    
+    shared actual Integer column => col;
+    
+    shared actual Integer line => lin;
+    
+    shared actual Integer position => pos;
 }
 
 "Adapts the given stream so that exceptions thrown while evaluating `next()` get 
