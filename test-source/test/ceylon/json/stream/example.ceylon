@@ -5,7 +5,7 @@ import ceylon.json.stream {
     ObjectEndEvent,
     ArrayStartEvent,
     ArrayEndEvent,
-    Peek,
+    LookAhead,
     Event
 }
 import ceylon.json {
@@ -41,7 +41,7 @@ String exampleJson =
 
 class OrderParser() {
     
-    late variable Peek<Event> stream;
+    late variable LookAhead<Event> stream;
 
     String missingKey(String container, String key) {
         return "``container``: '``key``' missing at line ``stream.line``'";
@@ -139,7 +139,7 @@ class OrderParser() {
                     if (!stream.next() is ArrayStartEvent) {
                         return keyType("Order", "items", "Array");
                     }
-                    while (stream.peek() is ObjectStartEvent) {
+                    while (stream.peek(1) is ObjectStartEvent) {
                         switch (item=parseItem())
                         case (is String) {
                             return item;
@@ -167,7 +167,7 @@ class OrderParser() {
     }
     
     shared Order|String parse(String json) {
-        stream = Peek(StreamParser(StringTokenizer(json)));
+        stream = LookAhead(StreamParser(StringTokenizer(json)));
         return parseOrder();
     }
 }

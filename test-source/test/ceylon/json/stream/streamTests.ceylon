@@ -17,7 +17,7 @@ import ceylon.json.stream {
     StreamParser
 }
 
-StreamParser parser(String json) => StreamParser(StringTokenizer(json));
+StreamParser parser(String json, Boolean trackKeys=false) => StreamParser(StringTokenizer(json), trackKeys);
 
 test
 shared void testString() {
@@ -683,4 +683,51 @@ shared void badlyDelimitedElements() {
     nextError(events, "Expected a value but got ] at 1:9 (line:column)");
 }
 
+test
+shared void testDupeKeys() {
+    value events = parser { 
+        json = """ { "key":null,"key":null } """; 
+        trackKeys = true; 
+    };
+    assert(is ObjectStartEvent e1=events.next());
+    assert(is KeyEvent e2=events.next());
+    assert("key" == e2.key);
+    assert(is Null e3=events.next());
+    nextError(events, "Duplicate key: 'key' at 1:20 (line:column)");
+}
+
+test
+shared void testDupeKeys2() {
+    value events = parser { 
+        json = """ { "a": {"a":1,"a":2} """; 
+        trackKeys = true; 
+    };
+    assert(is ObjectStartEvent e1=events.next());
+    assert(is KeyEvent e2=events.next());
+    assert("a" == e2.key);
+    assert(is ObjectStartEvent e3=events.next());
+    assert(is KeyEvent e4=events.next());
+    assert("a" == e4.key);
+    assert(is Integer e5=events.next());
+    nextError(events, "Duplicate key: 'a' at 1:19 (line:column)");
+}
+test
+shared void testDupeKeys3() {
+    value events = parser { 
+        json = """ { "a": {"b":1},"a":2} """; 
+        trackKeys = true; 
+    };
+    assert(is ObjectStartEvent e1=events.next());
+    assert(is KeyEvent e2=events.next());
+    assert("a" == e2.key);
+    assert(is ObjectStartEvent e3=events.next());
+    assert(is KeyEvent e4=events.next());
+    assert("b" == e4.key);
+    assert(is Integer e5=events.next());
+    assert(is ObjectEndEvent e6=events.next());
+    nextError(events, "Duplicate key: 'a' at 1:20 (line:column)");
+}
+
+
 // TODO bad string quoting
+

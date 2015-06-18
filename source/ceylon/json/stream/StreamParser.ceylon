@@ -1,3 +1,7 @@
+import ceylon.collection {
+    ArrayList,
+    HashSet
+}
 import ceylon.json {
     ParseException,
     Tokenizer,
@@ -10,7 +14,7 @@ import ceylon.json {
 }
 
 "Package-private class used by [[StreamParser]] to track state."
-class StreamState(parent, last) {
+class StreamState(parent, last, keys) {
     
     "The number of events yielded so far"
     shared variable Integer num = 0;
@@ -19,9 +23,10 @@ class StreamState(parent, last) {
     
     shared StreamState? parent;
     
-    shared actual String string {
-        return "``parent else "<top>"``, ``last else "<null>"``";
-    }
+    shared HashSet<String>? keys;
+    
+    shared actual String string 
+        => "``parent else "<top>"``, ``last else "<null>"``";
 }
 
 
@@ -209,14 +214,36 @@ class StreamState(parent, last) {
    
    [1]: https://tools.ietf.org/html/rfc7159
    """
-shared class StreamParser(Tokenizer input) 
+shared class StreamParser(input, trackKeys=false) 
         satisfies Iterator<Event>&Positioned {
     
-    // TODO not yet exception-safe: Should probably return finished once any exception has been thrown
+    "The tokenizer to read input from"
+    Tokenizer input;
+    
+    "Whether to validate the uniqueness of keys"
+    Boolean trackKeys;
+    
+    StreamState pushState(StreamState? parent, Event? last) {
+        HashSet<String>? keys;
+        if (trackKeys && last is ObjectStartEvent) {
+            keys= HashSet<String>();
+        } else { 
+            keys = null;
+        }
+        StreamState result = StreamState(parent, last, keys);
+        if (trackKeys, is KeyEvent l=last) {
+            assert (exists p=parent);
+            if (exists k=p.keys, !k.add(l.key)) {
+                throw ParseException("Duplicate key: '``l.key``'", input.line, input.column);
+            }
+        }
+        return result;
+    }
     
     "A stack (singly linked list) of states for all objects and arrays which 
      have been started, but not finished."
-    variable value state = StreamState(null, null);
+    variable value state = pushState(null, null);
+    
     
     "Parse any JSON value and return an event"
     Event parseValue() {
@@ -354,13 +381,13 @@ shared class StreamParser(Tokenizer input)
                     throw input.unexpectedCharacter(input.character());
                 }
             }
-            state = StreamState(state, yielding);
+            state = pushState(state, yielding);
         }
         case (is KeyEvent) {
             if (!is ObjectStartEvent last) {
-                throw ParseException("key not expected", input.line, input.column);
+                throw ParseException("Key not expected", input.line, input.column);
             }
-            state = StreamState(state, yielding);
+            state = pushState(state, yielding);
         }
         case (is ObjectEndEvent) {
             if (is ObjectStartEvent last) {
@@ -370,7 +397,7 @@ shared class StreamParser(Tokenizer input)
                     throw input.unexpectedCharacter(input.character());
                 }
             } else {
-                throw ParseException("Got '`` input.character() ``' but not in object, ``last else "null"``", 
+                throw ParseException("Got '`` yielding ``' but in ``last else "null"`` not in object", 
                     input.line, input.column);
             }
         }
@@ -382,7 +409,7 @@ shared class StreamParser(Tokenizer input)
                     throw input.unexpectedCharacter(input.character());
                 }
             }
-            state = StreamState(state, yielding);
+            state = pushState(state, yielding);
         }
         case (is ArrayEndEvent) {
             if (is ArrayStartEvent last) {
@@ -392,7 +419,7 @@ shared class StreamParser(Tokenizer input)
                     throw input.unexpectedCharacter(input.character());
                 }
             } else {
-                throw ParseException("Got '`` input.character() ``' but not in array, ``last else "null"``", 
+                throw ParseException("Got '`` yielding ``' but in ``last else "null"`` not array", 
                     input.line, input.column);
             }
         }
@@ -423,27 +450,36 @@ shared class StreamParser(Tokenizer input)
     
 }
 
-shared class Peek<T>(Iterator<T>&Positioned stream) satisfies Iterator<T>&Positioned {
-    variable Boolean havePeek = false;
-    variable T|Finished? peeked = null;
+"A look-ahead buffer wrapping a stream"
+shared class LookAhead<T>(Iterator<T>&Positioned stream, lookAhead=1) satisfies Iterator<T>&Positioned {
+    "The maximum number of elements we can look ahead, or null for unbounded lookahead."
+    Integer? lookAhead;
+    "The buffer"
+    ArrayList<T|Finished> peeked = ArrayList<T|Finished>(lookAhead else 2);
+    "The column number of the last element returned from next()"
     late variable Integer col;
+    "The line number of the last element returned from next()"
     late variable Integer lin;
+    "The position of the last element returned from next()"
     late variable Integer pos;
     
-    shared T|Finished peek() {
-        if (!havePeek) {
-            havePeek = true;
-            peeked = stream.next();
+    "Get the *n*th element ahead"
+    shared T|Finished peek(Integer n=1) {
+        assert(n >= 1);
+        if(exists lookAhead, n > lookAhead) {
+            throw AssertionError("lookahead limited to ``lookAhead`` elements");
+        }
+        while (peeked.size < n) {
+            peeked.offer(stream.next());
         } 
-        assert(is T|Finished p=peeked);
+        assert(is T|Finished p=peeked[n-1]);
         return p;
     }
     
     shared actual T|Finished next() {
         T|Finished result;
-        if (havePeek) {
-            havePeek = false;
-            assert(is T|Finished p=peeked);
+        if (peeked.size > 0) {
+            assert(is T|Finished p=peeked.accept());
             result = p;
         } else {
             result = stream.next();
@@ -483,34 +519,3 @@ Iterator<T|Exception>&Positioned errorReporting<T>(Iterator<T>&Positioned stream
     
     shared actual Integer position => stream.position;
 };
-/*
-class StreamState2(StreamState2? parent, Event? last) extends StreamState(parent, last){
-    HashSet<String>? keys = if (last is ObjectStartEvent) then HashSet<String>() else null;
-    if (is KeyEvent last) {
-        assert (exists parent, exists k=parent.keys);
-        if (!k.add(last.key)) {
-            // TODO location information!
-            throw ParseException("duplicate key ``last.key``", -1, -1);
-        }
-    }
-}
-
-"Adapts the given stream so duplicate keys within an object result in a 
- [[ParseException]] being thrown."
-Iterator<T|Exception>&Positioned uniqueKeys<T>(Iterator<T>&Positioned stream) 
-        => object satisfies Iterator<T|Exception>&Positioned {
-    // TODO I need a stack, just like the StreamIterator does
-    // it would be nice if we could abstract the creation of stack elements and their maniplation.
-    // => StreamState is probably a default member class
-    // except I don't really want clients knowing about it.
-    
-    shared actual T|Exception|Finished next() {
-        return nothing;
-    }
-    shared actual Integer column => stream.column;
-    
-    shared actual Integer line => stream.line;
-    
-    shared actual Integer position => stream.position;
-};
-*/
