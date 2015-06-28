@@ -111,16 +111,16 @@ shared sealed class Locale(language, formats,
      For example, suppose the system locale is `en-AU`, and 
      this code occurs in the module `hello.world`:
      
-         value messages = systemLocale.messages(`module`, \"messages\");
+         value messages = systemLocale.messages(`module`, \"Errors\");
          
      Then the returned map `messages` will contain 
      entries from a properties file in the resources of the 
      module `hello.world`. The following files will be 
      searched, in order:
      
-     1. `/hello/world/messages_en_AU.properties`
-     2. `/hello/world/messages_en.properties`
-     3. `/hello/world/messages.properties`
+     1. `/hello/world/Errors_en_AU.properties`
+     2. `/hello/world/Errors_en.properties`
+     3. `/hello/world/Errors.properties`
      
      If no properties file is found, the map with be empty."
     shared Map<String,String> messages(
