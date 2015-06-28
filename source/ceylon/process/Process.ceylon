@@ -46,13 +46,18 @@ shared sealed interface Process {
     
     "The exit code of the terminated process,
      or `null` if the process has not yet 
-     terminated."
+     terminated. Normal termination is 
+     conventionally indicated by the exit
+     code `0`."
     formal shared Integer? exitCode;
     
     "Determine if the process has terminated."
     formal shared Boolean terminated;
     
-    "Wait for the process to terminate."
+    "Wait for the process to terminate, 
+     returning the exit code. Normal 
+     termination is conventionally indicated 
+     by the exit code `0`."
     formal shared Integer waitForExit();
     
     "Force the process to terminate."
