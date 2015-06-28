@@ -99,7 +99,7 @@ shared sealed class Locale(language, formats,
         if (exists resource) {
             for (line in resource.textContent().lines) {
                 if (exists index 
-                        = line.firstOccurrence("=")) {
+                        = line.firstOccurrence('=')) {
                     value [key, definition] 
                             = line.slice(index);
                     map.put(key.trimmed, 
