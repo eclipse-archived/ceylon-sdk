@@ -1,5 +1,9 @@
 import ceylon.language.meta.declaration {
-    Module
+    Module,
+    Package
+}
+import ceylon.collection {
+    HashMap
 }
 
 "Aggregates localized information associated with a certain 
@@ -59,6 +63,52 @@ shared sealed class Locale(language, formats,
                 .lowercased;
     
     string => language.string;
+    
+    function path(Package component, String filename) 
+            => "/" 
+            + component.qualifiedName.replace(".", "/") 
+            + "/" + filename;
+    
+    "Given a [[Module]] or [[Package]] and the name of a 
+     resource bundle belonging to that package or module, 
+     return a map of string keys to string values for this 
+     locale.
+     
+     For example, suppose the system locale is `en-AU`, and 
+     this code occurs in the module `hello.world`:
+     
+         value messages = systemLocale.messages(`module`, \"messages\");
+         
+     Then the [[Map]] `messages` will contain entries from 
+     the file `/hello/world/messages_en_AU.properties` in 
+     the resources of the module `hello.world`."
+    shared Map<String,String> messages(
+        Module|Package component, String name) {
+        String filename 
+                = name + "_" 
+                + language.tag.replace("-", "_") 
+                + ".properties";
+        value resource =
+            switch (component)
+            case (is Module) 
+                component.resourceByPath(filename)
+            case (is Package)
+                component.container
+                    .resourceByPath(path(component, filename));
+        value map = HashMap<String, String>();
+        if (exists resource) {
+            for (line in resource.textContent().lines) {
+                if (exists index 
+                        = line.firstOccurrence("=")) {
+                    value [key, definition] 
+                            = line.slice(index);
+                    map.put(key.trimmed, 
+                        definition.rest.trimmed);
+                }
+            }
+        }
+        return map;
+    }
 }
 
 "Returns a [[Locale]] containing information about the
