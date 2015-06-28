@@ -13,7 +13,10 @@ import ceylon.collection {
  - the local [[currency]],
  - localized date, time, currency, and numeric [[formats]],
  - local representations of other [[languages]] and
-   [[currencies]]."
+   [[currencies]].
+ 
+ The locale also provides access to associated localized 
+ message bundles via [[messages]]."
 shared sealed class Locale(language, formats, 
     languages, currencies, currencyCode=null,
     lowercaseMappings = emptyMap, 
@@ -64,10 +67,44 @@ shared sealed class Locale(language, formats,
     
     string => language.string;
     
-    function path(Package component, String filename) 
-            => "/" 
-            + component.qualifiedName.replace(".", "/") 
-            + "/" + filename;
+    function search(Module mod, String name) {
+        function find(String tag) 
+                => mod.resourceByPath(
+                    name + tag + ".properties");
+        
+        value lang = language.languageCode;
+        value country = language.countryCode;
+        value variant = language.variant;
+        if (exists variant, exists country) {
+            value tag = 
+                    "_" + lang + 
+                    "_" + country + 
+                    "_" + variant;
+            if (exists result = find(tag)) {
+                 return result;
+            }
+        }
+        else if (exists country) {
+            value tag = 
+                    "_" + lang + 
+                    "_" + country;
+            if (exists result = find(tag)) {
+                return result;
+            }
+        }
+        else {
+            value tag = 
+                    "_" + lang;
+            if (exists result = find(tag)) {
+                return result;
+            }
+        }
+        return find("");
+    }
+    
+    function path(Package pack, String name) 
+            => "/" + pack.qualifiedName.replace(".", "/")
+            + "/" + name;
     
     "Given a [[Module]] or [[Package]] and the name of a 
      resource bundle belonging to that package or module, 
@@ -79,30 +116,33 @@ shared sealed class Locale(language, formats,
      
          value messages = systemLocale.messages(`module`, \"messages\");
          
-     Then the [[Map]] `messages` will contain entries from 
-     the file `/hello/world/messages_en_AU.properties` in 
-     the resources of the module `hello.world`."
+     Then the returned map `messages` will contain 
+     entries from a properties file in the resources of the 
+     module `hello.world`. The following files will be 
+     searched, in order:
+     
+     1. `/hello/world/messages_en_AU.properties`
+     2. `/hello/world/messages_en.properties`
+     3. `/hello/world/messages.properties`
+     
+     If no properties file is found, the map with be empty."
     shared Map<String,String> messages(
         Module|Package component, String name) {
-        String filename 
-                = name + "_" 
-                + language.tag.replace("-", "_") 
-                + ".properties";
         value resource =
             switch (component)
-            case (is Module) 
-                component.resourceByPath(filename)
+            case (is Module)
+                search(component, name)
             case (is Package)
                 component.container
-                    .resourceByPath(path(component, filename));
+                    .resourceByPath(path(component, name));
         value map = HashMap<String, String>();
         if (exists resource) {
             for (line in resource.textContent().lines) {
-                if (exists index 
+                if (exists index
                         = line.firstOccurrence('=')) {
-                    value [key, definition] 
+                    value [key, definition]
                             = line.slice(index);
-                    map.put(key.trimmed, 
+                    map.put(key.trimmed,
                         definition.rest.trimmed);
                 }
             }
