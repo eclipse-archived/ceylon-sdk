@@ -75,16 +75,16 @@ shared sealed class Locale(language, formats,
         value lang = language.languageCode;
         value country = language.countryCode;
         value variant = language.variant;
-        if (exists variant, exists country) {
-            value tag = 
-                    "_" + lang + 
-                    "_" + country + 
-                    "_" + variant;
-            if (exists result = find(tag)) {
-                 return result;
+        if (exists country) {
+            if (exists variant) {
+                value tag = 
+                        "_" + lang + 
+                        "_" + country + 
+                        "_" + variant;
+                if (exists result = find(tag)) {
+                     return result;
+                }
             }
-        }
-        else if (exists country) {
             value tag = 
                     "_" + lang + 
                     "_" + country;
@@ -92,12 +92,9 @@ shared sealed class Locale(language, formats,
                 return result;
             }
         }
-        else {
-            value tag = 
-                    "_" + lang;
-            if (exists result = find(tag)) {
-                return result;
-            }
+        value tag = "_" + lang;
+        if (exists result = find(tag)) {
+            return result;
         }
         return find("");
     }
@@ -127,7 +124,11 @@ shared sealed class Locale(language, formats,
      
      If no properties file is found, the map with be empty."
     shared Map<String,String> messages(
-        Module|Package component, String name) {
+        "The module to which the resource bundle belongs."
+        Module|Package component, 
+        "The name of the resource bundle, or `\"Messages\"`
+         by default."
+        String name = "Messages") {
         value resource =
             switch (component)
             case (is Module)
