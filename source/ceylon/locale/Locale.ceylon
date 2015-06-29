@@ -1,9 +1,9 @@
+import ceylon.collection {
+    HashMap
+}
 import ceylon.language.meta.declaration {
     Module,
     Package
-}
-import ceylon.collection {
-    HashMap
 }
 
 "Aggregates localized information associated with a certain 
@@ -103,42 +103,7 @@ shared sealed class Locale(language, formats,
             => "/" + pack.qualifiedName.replace(".", "/")
             + "/" + name;
     
-    void parse(String textContent, 
-            HashMap<String,String> map) {
-        value lines = textContent.lines;
-        value it = lines.iterator();
-        while (!is Finished rawline = it.next()) {
-            value builder = StringBuilder();
-            builder.append(rawline);
-            variable value lastline = rawline;
-            while (lastline.endsWith("\\"),
-                    !is Finished nextline = it.next()) {
-                value trimmed = 
-                        nextline.trimLeading(
-                            Character.whitespace);
-                builder.deleteTerminal(1).append(trimmed);
-                lastline = nextline;
-            }
-            value line = builder.string;
-            if (exists first = line.first, 
-                    !first in "!#",
-                exists index
-                    = line.firstIndexWhere("=:".contains)) {
-                value [key, definition]
-                        = line.slice(index);
-                value text = 
-                        definition.rest
-                            .trimLeading(
-                                Character.whitespace)
-                            //TODO: fix this:
-                            .replace("\\n", "\n")
-                            .replace("\\r", "\r")
-                            .replace("\\t", "\t")
-                            .replace("\\\\", "\\");
-                map.put(key.trimmed, text);
-            }
-        }
-    }
+    
     
     "Given a [[Module]] or [[Package]] and the name of a 
      resource bundle belonging to that package or module, 
@@ -175,9 +140,78 @@ shared sealed class Locale(language, formats,
                     .resourceByPath(path(component, name));
         value map = HashMap<String, String>();
         if (exists resource) {
-            parse(resource.textContent(), map);
+            parsePropertiesFile { 
+                textContent = resource.textContent(); 
+                handleEntry = map.put;
+            };
         }
         return map;
+    }
+}
+
+"Parse a properties file."
+void parsePropertiesFile(String textContent, 
+        void handleEntry(String key, String text)) {
+    value lines = textContent.lines.iterator();
+    while (!is Finished rawline = lines.next()) {
+        value builder = StringBuilder();
+        builder.append(rawline);
+        variable value lastline = rawline;
+        while (lastline.endsWith("\\"), //line continuation
+                !is Finished nextline = lines.next()) {
+            builder.deleteTerminal(1); //remove the \
+            variable value trimming = true;
+            value chars = nextline.iterator();
+            while (!is Finished char = chars.next()) {
+                if (trimming) { //trim leading whitespace
+                    if (char.whitespace) {
+                        continue;
+                    }
+                    else {
+                        trimming = false;
+                    }
+                }
+                builder.appendCharacter(char);
+            }
+            lastline = nextline;
+        }
+        value line = builder.string;
+        if (exists first = line.first, 
+                !first in "!#", //ignore comments
+            exists index //split key/value on = or :
+                = line.firstIndexWhere("=:".contains)) {
+            value [key, definition] = line.slice(index);
+            builder.clear();
+            variable value trimming = true;
+            value chars = definition.iterator();
+            chars.next(); //skip the = or :
+            while (!is Finished char = chars.next()) {
+                if (trimming) { //trim leading whitespace
+                    if (char.whitespace) {
+                        continue;
+                    }
+                    else {
+                        trimming = false;
+                    }
+                }
+                Character c;
+                if (char=='\\', //interpolate \ escape
+                    !is Finished next = chars.next()) {
+                    c = switch (next)
+                        case ('n') '\n'
+                        case ('r') '\r'
+                        case ('t') '\t'
+                        case ('\\') '\\'
+                        //TODO: unicode escapes!
+                        else next;
+                }
+                else {
+                    c = char;
+                }
+                builder.appendCharacter(c);
+            }
+            handleEntry(key.trimmed, builder.string);
+        }
     }
 }
 
