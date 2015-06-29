@@ -103,6 +103,43 @@ shared sealed class Locale(language, formats,
             => "/" + pack.qualifiedName.replace(".", "/")
             + "/" + name;
     
+    void parse(String textContent, 
+            HashMap<String,String> map) {
+        value lines = textContent.lines;
+        value it = lines.iterator();
+        while (!is Finished rawline = it.next()) {
+            value builder = StringBuilder();
+            builder.append(rawline);
+            variable value lastline = rawline;
+            while (lastline.endsWith("\\"),
+                    !is Finished nextline = it.next()) {
+                value trimmed = 
+                        nextline.trimLeading(
+                            Character.whitespace);
+                builder.deleteTerminal(1).append(trimmed);
+                lastline = nextline;
+            }
+            value line = builder.string;
+            if (exists first = line.first, 
+                    !first in "!#",
+                exists index
+                    = line.firstIndexWhere("=:".contains)) {
+                value [key, definition]
+                        = line.slice(index);
+                value text = 
+                        definition.rest
+                            .trimLeading(
+                                Character.whitespace)
+                            //TODO: fix this:
+                            .replace("\\n", "\n")
+                            .replace("\\r", "\r")
+                            .replace("\\t", "\t")
+                            .replace("\\\\", "\\");
+                map.put(key.trimmed, text);
+            }
+        }
+    }
+    
     "Given a [[Module]] or [[Package]] and the name of a 
      resource bundle belonging to that package or module, 
      return a map of string keys to string values for this 
@@ -138,15 +175,7 @@ shared sealed class Locale(language, formats,
                     .resourceByPath(path(component, name));
         value map = HashMap<String, String>();
         if (exists resource) {
-            for (line in resource.textContent().lines) {
-                if (exists index
-                        = line.firstOccurrence('=')) {
-                    value [key, definition]
-                            = line.slice(index);
-                    map.put(key.trimmed,
-                        definition.rest.trimmed);
-                }
-            }
+            parse(resource.textContent(), map);
         }
         return map;
     }
