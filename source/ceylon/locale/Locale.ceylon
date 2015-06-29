@@ -153,9 +153,9 @@ shared sealed class Locale(language, formats,
 void parsePropertiesFile(String textContent, 
         void handleEntry(String key, String text)) {
     value lines = textContent.lines.iterator();
+    value builder = StringBuilder();
     while (!is Finished rawline = lines.next()) {
-        value builder = StringBuilder();
-        builder.append(rawline);
+        builder.clear().append(rawline);
         variable value lastline = rawline;
         while (lastline.endsWith("\\"), //line continuation
                 !is Finished nextline = lines.next()) {
