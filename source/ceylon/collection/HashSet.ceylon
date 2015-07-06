@@ -1,9 +1,3 @@
-import ceylon.collection {
-    Cell,
-    MutableSet,
-    elementStore
-}
-
 "A [[MutableSet]] implemented as a hash set stored in an 
  [[Array]] of singly linked lists. Each element is assigned 
  an index of the array according to its hash code. The hash 

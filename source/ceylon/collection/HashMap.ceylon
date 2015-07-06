@@ -1,9 +1,3 @@
-import ceylon.collection {
-    Cell,
-    entryStore,
-    MutableMap
-}
-
 "A [[MutableMap]] implemented as a hash map stored in an 
  [[Array]] of singly linked lists of 
  [[ceylon.language::Entry]]s. Each entry is assigned an 
