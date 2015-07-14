@@ -19,7 +19,7 @@ shared class Blockquote(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<BlockElement|{BlockElement*}|Snippet<BlockElement>|Null>*} children;
+    shared actual {<String|BlockElement|{String|BlockElement*}|Snippet<BlockElement>|Null>*} children;
 
     tag = Tag("blockquote");
 

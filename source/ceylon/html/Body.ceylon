@@ -16,10 +16,10 @@ shared class Body(String? id = null, CssClass classNames = [],
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies ParentNode<BlockElement|Script> {
+        satisfies ParentNode<BlockOrInline|Script> {
 
-    shared actual {<BlockElement|Null|Script|Snippet<BlockElement>|
-            {BlockElement*}|{Script*}>*} children;
+    shared actual {<String|BlockOrInline|Null|Script|Snippet<BlockOrInline>|
+            {String|BlockOrInline*}|{Script*}>*} children;
 
     tag = Tag("body");
 

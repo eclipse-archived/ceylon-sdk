@@ -128,7 +128,7 @@ shared class Th(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("th");
 
@@ -155,7 +155,7 @@ shared class Td(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("td");
 
