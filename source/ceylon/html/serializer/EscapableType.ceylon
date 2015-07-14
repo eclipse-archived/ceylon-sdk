@@ -4,8 +4,8 @@ import ceylon.collection {
 }
 
 interface EscapableType of
-        name, attributeValue,
-        text, rawText, escapableRawText {
+        name | attributeValue |
+        text | rawText | escapableRawText {
 
     shared formal
     Map<Character, String> entities;
