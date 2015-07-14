@@ -341,6 +341,28 @@ void testMixedContent() {
         "<p>This is a paragraph containing <strong>boldened</strong>text!</p>\n");
 }
 
+shared test
+void testEscapingBug403Utf8() {
+    runTest {
+        prettyPrint = false;
+        escapeNonAscii = false;
+        actual = Div { id="»"; "»" };
+        expected =
+           """<div id="»">»</div>""";
+    };
+}
+
+shared test
+void testEscapingBug403Ascii() {
+    runTest {
+        prettyPrint = false;
+        escapeNonAscii = true;
+        actual = Div { id="»"; "»" };
+        expected =
+           """<div id="&#187;">&#187;</div>""";
+    };
+}
+
 void runTest(Node actual, String expected, Boolean prettyPrint, Boolean escapeNonAscii) {
     assertEquals(serializeToString(actual, prettyPrint, escapeNonAscii), expected);
 }
