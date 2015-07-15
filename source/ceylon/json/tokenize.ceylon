@@ -122,7 +122,7 @@ shared abstract class Tokenizer()
 
 "An implementation of Tokenizer using a String"
 shared class StringTokenizer(String chars) extends Tokenizer() {
-    value array = LangArray.ofSize(chars.size, '\{NULL}');
+    value array = LangArray.ofSize(chars.size, '\0');
     chars.copyTo(array);
     
     "Whether there is another character"
