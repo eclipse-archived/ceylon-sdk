@@ -74,6 +74,7 @@
         <module name="ceylon.collection"/>
         <module name="ceylon.html"/>
         <module name="ceylon.json"/>
+        <module name="ceylon.promise"/>
         <module name="ceylon.test"/>
         <module name="ceylon.time"/>
         <module name="ceylon.logging"/>
@@ -82,10 +83,6 @@
         <module name="com.redhat.ceylon.testjs"/>
     </moduleset>
 	
-    <moduleset id="modules.sdk.promise.js">
-        <module name="ceylon.promise"/>
-    </moduleset>
-    
     <moduleset id="modules.test.jvm">
         <module name="test.ceylon.test.suite"/>        
         <module name="test.ceylon.math"/>
@@ -136,20 +133,6 @@
 
     <target name="compile-js">
         
-        <delete dir="build/source-promise-js"/>
-        <mkdir dir="build/source-promise-js"/>
-        <copy todir="build/source-promise-js/ceylon/promise">
-            <fileset dir="source/ceylon/promise" includes="*.ceylon" excludes="module.ceylon"/>
-            <fileset dir="source-promise-js/ceylon/promise"/>
-        </copy>
-        <ceylon-compile-js executable="${ceylon.executable}"
-            src="build/source-promise-js"
-            verbose="${ceylon.verbosity}"
-            encoding="UTF-8"
-            out="${out.repo}">
-            <moduleset refid="modules.sdk.promise.js"/>
-        </ceylon-compile-js>
-
     	  <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
             encoding="UTF-8"
