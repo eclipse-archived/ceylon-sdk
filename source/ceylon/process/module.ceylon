@@ -4,7 +4,8 @@
  executing immediately.
    
      Process process = createProcess { 
-         command = \"ls -l\";
+         command = \"ls\";
+         arguments = [\"-l\"];
          path = home;
      };
    
@@ -24,7 +25,8 @@
  `createProcess()`.
    
      Process process = createProcess {
-         command = \"ls -l\";
+         command = \"ls\";
+         arguments = [\"-l\"];
          path = home;
          output = OverwriteFileOutput {
              path = home.childPath(\"out.txt\");
@@ -41,7 +43,8 @@
  machine process.
    
      Process process = createProcess {
-         command = \"ls -l\";
+         command = \"ls\";
+         arguments = [\"-l\"];
          path = home;
          output = currentOutput;
          error = currentError;
