@@ -5,19 +5,19 @@ test void testIntSumProduct() {
     print("Integer.sum");
     assertEquals { 
         expected = 0;
-        actual=sum();
+        actual=sum {};
     };
     assertEquals { 
         expected = 6; 
-        actual=sum(1, 2, 3);
+        actual=sum { 1, 2, 3 };
     };
     print("Integer.product");
     assertEquals { 
         expected = 1; 
-        actual=product();
+        actual=product {};
     };
     assertEquals { 
         expected = 6; 
-        actual=product(1, 2, 3);
+        actual=product { 1, 2, 3 };
     };
 }

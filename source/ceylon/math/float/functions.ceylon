@@ -401,9 +401,9 @@ shared Float largest(Float x, Float y) {
     return Math.max(x, y);
 }
 
-"The sum of the given values, or `0.0` if there are no 
- arguments."
-shared Float sum(Float* values) {
+"The sum of the values in the given stream, or 
+ `0.0` if the stream is empty."
+shared Float sum({Float*} values) {
     variable Float sum=0.0;
     for (x in values) {
         sum+=x;
@@ -411,9 +411,9 @@ shared Float sum(Float* values) {
     return sum;
 }
 
-"The product of the given values, or `1.0` if there are 
- no arguments."
-shared Float product(Float* values) {
+"The product of the values in the given stream, or 
+ `1.0` if the stream is empty."
+shared Float product({Float*} values) {
     variable Float sum=1.0;
     for (x in values) {
         sum*=x;
