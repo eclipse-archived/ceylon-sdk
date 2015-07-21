@@ -410,9 +410,7 @@ shared Float|Absent max<Absent>
     if (exists first) {
         variable value max = first;
         for (x in values) {
-            if (x>max) {
-                max = x;
-            }
+            max = Math.max(max, x);
         }
         return max;
     }
@@ -428,9 +426,7 @@ shared Float|Absent min<Absent>
     if (exists first) {
         variable value min = first;
         for (x in values) {
-            if (x<min) {
-                min = x;
-            }
+            min = Math.min(min, x);
         }
         return min;
     }
