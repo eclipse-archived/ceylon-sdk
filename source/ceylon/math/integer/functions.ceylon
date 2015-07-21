@@ -14,8 +14,44 @@ shared Integer largest(Integer x, Integer y) {
     return Math.max(x, y);
 }
 
-"The sum of the values in the given stream, or 
- `0` if the stream is empty."
+"The largest [[Integer]] in the given stream, or `null`
+ if the stream is empty."
+shared Integer|Absent max<Absent>
+        (Iterable<Integer,Absent> values) 
+        given Absent satisfies Null {
+    value first = values.first;
+    if (exists first) {
+        variable value max = first;
+        for (x in values) {
+            if (x>max) {
+                max = x;
+            }
+        }
+        return max;
+    }
+    return first;
+}
+
+"The smallest [[Integer]] in the given stream, or `null`
+ if the stream is empty."
+shared Integer|Absent min<Absent>
+        (Iterable<Integer,Absent> values) 
+        given Absent satisfies Null {
+    value first = values.first;
+    if (exists first) {
+        variable value min = first;
+        for (x in values) {
+            if (x<min) {
+                min = x;
+            }
+        }
+        return min;
+    }
+    return first;
+}
+
+"The sum of the [[Integer]]s in the given stream, or `0` 
+ if the stream is empty."
 shared Integer sum({Integer*} values) {
     variable Integer sum=0;
     for (x in values) {
@@ -24,8 +60,8 @@ shared Integer sum({Integer*} values) {
     return sum;
 }
 
-"The product of the values in the given stream, or 
- `1` if the stream is empty."
+"The product of the [[Integer]]s in the given stream, or `1` 
+ if the stream is empty."
 shared Integer product({Integer*} values) {
     variable Integer sum=1;
     for (x in values) {
