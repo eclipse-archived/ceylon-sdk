@@ -378,12 +378,24 @@
               <striplinebreaks/>
           </filterchain>
         </loadfile>
+        <ceylon-p2 executable="${ceylon.executable}"
+            offline="true"
+            verbose="${ceylon.verbosity}"
+            nodefaultrepositories="true"
+            out="${osgi.dist}"
+            repositoryName="Ceylon SDK Bundles"
+            categoryPrefix="ceylon.sdk"
+            categories="${osgi.p2}/category.xml">
+            <moduleset refid="modules.sdk.jvm"/>
+	    <rep url="modules"/>
+        </ceylon-p2>
+<!--
         <exec dir="${basedir}" executable="eclipse" failonerror="true">
             <arg value="-noSplash"/>
             <arg value="-clean"/>
             <arg value="-console"/>
             <arg value="-consolelog"/>
-            <arg value="--launcher.suppressErrors"/>
+            <arg value="- -launcher.suppressErrors"/>
             <arg value="-application"/>
             <arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
             <arg value="-metadataRepositoryName"/>
@@ -407,7 +419,7 @@
             <arg value="-clean"/>
             <arg value="-console"/>
             <arg value="-consolelog"/>
-            <arg value="--launcher.suppressErrors"/>
+            <arg value="- -launcher.suppressErrors"/>
             <arg value="-application"/>
             <arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
             <arg value="-metadataRepository"/>
@@ -420,6 +432,7 @@
             <arg value="-Dorg.eclipse.equinox.simpleconfigurator.configUrl=${bundlesInfoUrl}"/>
             <arg value="-Dosgi.bundles=${bundlesToStart}"/>
         </exec>
+-->
     </target>
 
     <target name="osgi" depends="compile-jvm,osgi-quick"/>
