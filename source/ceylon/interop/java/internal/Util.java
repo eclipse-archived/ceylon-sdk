@@ -29,20 +29,30 @@ public final class Util {
     @SuppressWarnings("unchecked")
     public <T> java.lang.Class<T> 
     javaClass(@Ignore TypeDescriptor $reifiedT) {
-        if ($reifiedT instanceof TypeDescriptor.Class){
-            TypeDescriptor.Class klass = (TypeDescriptor.Class) $reifiedT;
+        if ($reifiedT instanceof TypeDescriptor.Class) {
+            TypeDescriptor.Class klass = 
+                    (TypeDescriptor.Class) $reifiedT;
             if (klass.getTypeArguments().length > 0)
                 throw new RuntimeException("given type has type arguments");
             return (java.lang.Class<T>) klass.getKlass();
         } 
-        else if($reifiedT instanceof TypeDescriptor.Member 
-                && ((TypeDescriptor.Member)$reifiedT).getMember() instanceof TypeDescriptor.Class) {
-            TypeDescriptor.Member.Class klass =  (TypeDescriptor.Class)((TypeDescriptor.Member)$reifiedT).getMember();
-            if (klass.getTypeArguments().length > 0)
-                throw new RuntimeException("given type has type arguments");
-            return (java.lang.Class<T>) klass.getKlass();
+        else if ($reifiedT instanceof TypeDescriptor.Member) {
+            TypeDescriptor.Member member = 
+                    (TypeDescriptor.Member) $reifiedT;
+            TypeDescriptor m = member.getMember();
+            if (m instanceof TypeDescriptor.Class) {
+                TypeDescriptor.Member.Class klass = 
+                        (TypeDescriptor.Class) m;
+                if (klass.getTypeArguments().length > 0)
+                    throw new RuntimeException("given type has type arguments");
+                return (java.lang.Class<T>) klass.getKlass();
+            }
         }
         throw new RuntimeException("unsupported type");
     }
-
+    
+    public StackTraceElement[] javaStackTrace(Throwable t) {
+        return t.getStackTrace();
+    }
+    
 }
