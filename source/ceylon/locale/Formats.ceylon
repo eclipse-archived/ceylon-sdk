@@ -117,17 +117,10 @@ shared sealed class Formats(
                 .trimmed;
     }
     
-    function twelveHour(Integer hour) {
-        if (hour==0) {
-            return [12,ampm[0]];
-        }
-        else if (hour<=12) {
-            return [hour,ampm[0]];
-        }
-        else {
-            return [hour-12,ampm[1]];
-        }
-    }
+    function twelveHour(Integer hour)
+              => if (hour==0) then [12,ampm[0]]
+            else if (hour<=12) then [hour,ampm[0]]
+            else [hour-12,ampm[1]];
     
     String formatTimeToken(String token, ReadableTime time) {
         value hourAndAmpm = twelveHour(time.hours);
