@@ -346,9 +346,7 @@ shared class GregorianDateTime( date, time )
 
     "Returns ISO-8601 formatted String representation of this _Date and Time of day_.\n
      https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations"
-    shared actual String string {
-        return "``date.string``T``time.string``";
-    }
+    shared actual String string => "``date.string``T``time.string``";
 
     "Returns the period between this and the given [[DateTime]].
 

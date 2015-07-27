@@ -104,7 +104,5 @@ shared interface Range<Element, StepBy>
 
     "Returns ISO-8601 formatted String representation of this Range.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_intervals"
-     shared default actual String string {
-         return "``from``/``to``";
-     }
+     shared default actual String string => "``from``/``to``";
 }

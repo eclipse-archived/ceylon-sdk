@@ -266,9 +266,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
 
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
-    shared actual String string {
-        return "``instant.dateTime(timeZone).string````timeZone.string``";
-    }
+    shared actual String string => "``instant.dateTime(timeZone).string````timeZone.string``";
 
     "Returns _true_ if given value is same type, date and time."
     shared actual Boolean equals( Object other ) {
