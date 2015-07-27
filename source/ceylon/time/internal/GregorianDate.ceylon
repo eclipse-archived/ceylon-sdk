@@ -222,9 +222,7 @@ shared class GregorianDate( Integer dayOfEra )
     }
 
     "Returns new [[DateTime]] value."
-    shared actual DateTime at(Time time) {
-        return GregorianDateTime(this, time);
-    }
+    shared actual DateTime at(Time time) => GregorianDateTime(this, time);
 
     "Returns ISO-8601 formatted String representation of this date.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Dates"
@@ -273,9 +271,7 @@ shared class GregorianDate( Integer dayOfEra )
     shared actual Period periodTo(Date end) => end.periodFrom(this);
 
     "Returns the [[DateRange]] between this and given Date."
-    shared actual DateRange rangeTo( Date other ) {
-        return DateRange(this, other); 
-    }
+    shared actual DateRange rangeTo( Date other ) => DateRange(this, other);
 
     shared actual Date neighbour(Integer offset) => plusDays(offset);
 

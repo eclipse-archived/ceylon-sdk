@@ -196,9 +196,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     shared actual Period periodTo(Time end) => end.periodFrom(this); 
 
     "Returns the [[TimeRange]] between this and given Time."
-    shared actual TimeRange rangeTo( Time other ) {
-        return TimeRange(this, other); 
-    }
+    shared actual TimeRange rangeTo( Time other ) => TimeRange(this, other);
 
     shared actual Time neighbour(Integer offset) => plusMilliseconds(offset);
 
