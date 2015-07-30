@@ -1,6 +1,7 @@
 import ceylon.time.base {
     ReadableDate,
-    ReadableTime
+    ReadableTime,
+    sunday
 }
 
 "Date, time, currency, and numeric formats for a certain
@@ -96,6 +97,10 @@ shared sealed class Formats(
         value fourDigitYear = date.year.string.padLeading(4,'0');
         value twoDigitYear = date.year.string.padLeading(2,'0').terminal(2);
         value weekOfYear = date.weekOfYear.string;
+        value twoDigitWeekOfYear = weekOfYear.padLeading(2,'0');
+        value dayNumberInWeek = 
+                let (dow=date.dayOfWeek) 
+                (dow==sunday then 7 else dow.integer).string;
         return token
                 .replaceFirst("EEEE", weekdayName)
                 .replaceFirst("EEE", weekdayAbbr)
@@ -107,12 +112,14 @@ shared sealed class Formats(
                 .replaceFirst("M", month)
                 .replaceFirst("dd", twoDigitDay)
                 .replaceFirst("d", day)
+                .replaceFirst("u", dayNumberInWeek)
                 .replaceFirst("yyyy", fourDigitYear)
                 .replaceFirst("yyy", fourDigitYear)
                 .replaceFirst("yy", twoDigitYear)
                 .replaceFirst("y", fourDigitYear) //yes, really
                 .replaceFirst("W", "") //TODO: week of month
                 .replaceFirst("F", "") //TODO: day of week in month
+                .replaceFirst("ww", twoDigitWeekOfYear)
                 .replaceFirst("w", weekOfYear)
                 .trimmed;
     }
@@ -133,9 +140,13 @@ shared sealed class Formats(
         value twoDigitHour = hour.padLeading(2, '0');
         value weirdHour = (time.hours+1).string;
         value twoDigitWeirdHour = weirdHour.padLeading(2, '0');
-        value twoDigitMins = time.minutes.string.padLeading(2, '0');
-        value twoDigitSecs = time.seconds.string.padLeading(2, '0');
-        value threeDigitMillis = time.milliseconds.string.padLeading(3,'0');
+        value mins = time.minutes.string;
+        value twoDigitMins = mins.padLeading(2, '0');
+        value secs = time.seconds.string;
+        value twoDigitSecs = secs.padLeading(2, '0');
+        value millis = time.milliseconds.string;
+        value threeDigitMillis = millis.padLeading(3,'0');
+        value twoDigitMillis = millis.padLeading(3,'0');
         return token
                 .replaceFirst("hh", twoDigitTwelvehour)
                 .replaceFirst("h", twelvehour)
@@ -147,12 +158,13 @@ shared sealed class Formats(
                 .replaceFirst("k", weirdHour)
                 .replaceFirst("a", ampm)
                 .replaceFirst("mm", twoDigitMins)
-                .replaceFirst("m", twoDigitMins)
+                .replaceFirst("m", mins)
                 .replaceFirst("ss", twoDigitSecs)
-                .replaceFirst("s", twoDigitMins)
+                .replaceFirst("s", secs)
                 .replaceFirst("SSS", threeDigitMillis)
-                .replaceFirst("SS", threeDigitMillis)
-                .replaceFirst("S", threeDigitMillis)
+                .replaceFirst("SS", twoDigitMillis)
+                .replaceFirst("S", millis)
+                .replaceFirst("X", "") //TODO TimeZone not yet supported
                 .replaceFirst("Z", "") //TODO TimeZone not yet supported
                 .replaceFirst("z", "") //TODO TimeZone not yet supported
                 .replaceFirst("G", "") //TODO: era
