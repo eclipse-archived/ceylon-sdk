@@ -244,11 +244,11 @@ shared sealed class Formats(
             if (exists m = parseInteger(monthBit)) {
                 month = m;
             }
-            else if (exists m = this.monthNames.firstOccurrence(monthBit)) {
-                month = m+1;
+            else if (exists m = monthNames.locate(monthBit.equalsIgnoringCase)) {
+                month = m.key+1;
             }
-            else if (exists m = this.monthAbbreviations.firstOccurrence(monthBit)) {
-                month = m+1;
+            else if (exists m = monthAbbreviations.locate(monthBit.equalsIgnoringCase)) {
+                month = m.key+1;
             }
             else {
                 return null;
@@ -271,25 +271,49 @@ shared sealed class Formats(
             return null;
         }
         
-        return date(year, month, day);
+        return date {
+            year = year;
+            month = month;
+            day = day;
+        };
     }
     
     "Given a [[string|text]] expected to represent a 
-     formatted time, comprising hour and minute fields, 
-     followed by optional second and millisecond fields, and 
-     a list of [[delimiting characters|separators]], return 
-     a [[Time]], or `null` if the string cannot be 
-     interpreted as a time with the given delimiters."
+     formatted time, comprising an hour, followed by 
+     optional minute, second, and millisecond fields, 
+     followed by an optional AM or PM marker, and a list of 
+     [[delimiting characters|separators]], return a [[Time]], 
+     or `null` if the string cannot be interpreted as a time 
+     with the given delimiters."
     shared Time? parseTime(
     "The formatted time."
         String text,
         "The characters to recognize as field separators."
         String separators = ":. ") {
         
-        value bits = 
+        value bitsWithAmPm = 
                 text.split(separators.contains)
                     .map(String.trimmed)
                     .sequence();
+        
+        String[] bits;
+        Boolean adjust;
+        if (nonempty bitsWithAmPm) {
+            value last = bitsWithAmPm.last;
+            value eqPm = pm.equalsIgnoringCase(last);
+            value eqAm = am.equalsIgnoringCase(last);
+            if (eqPm || eqAm) {
+                bits = bitsWithAmPm[0:bitsWithAmPm.size-1];
+                adjust = eqPm;
+            }
+            else {
+                bits = bitsWithAmPm;
+                adjust = false;
+            }
+        }
+        else {
+            return null;
+        }
         
         Integer hour;
         if (exists hourBit = bits[0]) {
@@ -314,7 +338,7 @@ shared sealed class Formats(
             }
         }
         else {
-            return null;
+            minute = 0;
         }
         
         Integer second;
@@ -343,7 +367,12 @@ shared sealed class Formats(
             millis = 0;
         }
         
-        return time(hour, minute, second, millis);
+        return time {
+            hours = adjust then hour+12 else hour;
+            minutes = minute;
+            seconds = second;
+            milliseconds = millis;
+        };
     }
 
 }
