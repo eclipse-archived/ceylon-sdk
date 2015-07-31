@@ -5,7 +5,9 @@ import ceylon.time.base {
 }
 import ceylon.time {
     Date,
-    date
+    date,
+    Time,
+    time
 }
 
 "Date, time, currency, and numeric formats for a certain
@@ -270,6 +272,78 @@ shared sealed class Formats(
         
         return date(year, month, day);
     }
+    
+    "Given a [[string|text]] expected to represent a 
+     formatted time, and a list of
+     [[delimiting characters|separators]], return a [[Time]], 
+     or `null` if the string cannot be interpreted as a time
+     with the given delimiters."
+    shared Time? parseTime(
+    "The formatted time."
+        String text,
+        "The characters to recognize as field separators."
+        String separators = ":. ") {
+        
+        value bits = 
+                text.split(separators.contains)
+                    .map(String.trimmed)
+                    .sequence();
+        
+        Integer hour;
+        if (exists hourBit = bits[0]) {
+            if (exists d = parseInteger(hourBit)) {
+                hour = d;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+        
+        Integer minute;
+        if (exists minuteBit = bits[1]) {
+            if (exists m = parseInteger(minuteBit)) {
+                minute = m;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+        
+        Integer second;
+        if (exists secondBit = bits[2]) {
+            if (exists y = parseInteger(secondBit)) {
+                second = y;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+        
+        Integer millis;
+        if (exists msBit = bits[2]) {
+            if (exists y = parseInteger(msBit)) {
+                millis = y;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            millis = 0;
+        }
+        
+        return time(hour, minute, second, millis);
+    }
+
 }
 
 Formats parseFormats(Iterator<String> lines) {
