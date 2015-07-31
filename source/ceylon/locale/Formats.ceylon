@@ -178,11 +178,12 @@ shared sealed class Formats(
     }
     
     "Given a [[string|text]] expected to represent a 
-     formatted date, the [[order|dateOrder]] of the fields 
-     in the formatted date, and a list of 
-     [[delimiting characters|separators]], return a [[Date]],
-     or `null` if the string cannot be interpreted as a date
-     with the given field order and delimiters.
+     formatted date, comprising day, month, and year fields, 
+     the [[order|dateOrder]] of the fields in the formatted 
+     date, and a list of [[delimiting characters|separators]], 
+     return a [[Date]], or `null` if the string cannot be 
+     interpreted as a date with the given field order and 
+     delimiters.
      
      For example
      
@@ -274,10 +275,11 @@ shared sealed class Formats(
     }
     
     "Given a [[string|text]] expected to represent a 
-     formatted time, and a list of
-     [[delimiting characters|separators]], return a [[Time]], 
-     or `null` if the string cannot be interpreted as a time
-     with the given delimiters."
+     formatted time, comprising hour and minute fields, 
+     followed by optional second and millisecond fields, and 
+     a list of [[delimiting characters|separators]], return 
+     a [[Time]], or `null` if the string cannot be 
+     interpreted as a time with the given delimiters."
     shared Time? parseTime(
     "The formatted time."
         String text,
@@ -325,11 +327,11 @@ shared sealed class Formats(
             }
         }
         else {
-            return null;
+            second = 0;
         }
         
         Integer millis;
-        if (exists msBit = bits[2]) {
+        if (exists msBit = bits[3]) {
             if (exists y = parseInteger(msBit)) {
                 millis = y;
             }
