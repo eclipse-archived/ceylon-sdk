@@ -3,6 +3,10 @@ import ceylon.time.base {
     ReadableTime,
     sunday
 }
+import ceylon.time {
+    Date,
+    date
+}
 
 "Date, time, currency, and numeric formats for a certain
  [[Locale]]."
@@ -169,6 +173,102 @@ shared sealed class Formats(
                 .replaceFirst("z", "") //TODO TimeZone not yet supported
                 .replaceFirst("G", "") //TODO: era
                 .trimmed;
+    }
+    
+    "Given a [[string|text]] expected to represent a 
+     formatted date, the [[order|dateOrder]] of the fields 
+     in the formatted date, and a list of 
+     [[delimiting characters|separators]], return a [[Date]],
+     or `null` if the string cannot be interpreted as a date
+     with the given field order and delimiters.
+     
+     For example
+     
+         au.formats.parseDate(\"3 June 2010\")
+     
+     produces the date `2010-6-03`, if `au` is the `Locale`
+     for `en-AU`. And
+     
+         us.formats.parseDate(\"01/02/2000\", monthDayYear)
+     
+     produces the date `2000-01-02`, if `us` is the `Locale`
+     for `en-US`."
+    throws (`class AssertionError`, 
+            "if the given [[order|dateOrder]] does not 
+             include the day, month, and year")
+    shared Date? parseDate(
+        "The formatted date."
+        String text,
+        "The order of the fields of the fomatted date,
+         usually [[dayMonthYear]], [[yearMonthDay]], or
+         [[monthDayYear]]."
+        DateField.Order dateOrder
+                //TODO: get the default from the locale! 
+                = dayMonthYear,
+        "The characters to recognize as field separators."
+        String separators = "/-., ") {
+        
+        "field order must include day"
+        assert (exists dayIndex = 
+                dateOrder.firstOccurrence(DateField.day));
+        "field order must include month"
+        assert (exists monthIndex = 
+                dateOrder.firstOccurrence(DateField.month));
+        "field order must include year"
+        assert (exists yearIndex = 
+                dateOrder.firstOccurrence(DateField.year));
+        
+        value bits = 
+                text.split(separators.contains)
+                    .map(String.trimmed)
+                    .sequence();
+            
+        Integer day;
+        if (exists dayBit = bits[dayIndex]) {
+            if (exists d = parseInteger(dayBit)) {
+                day = d;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+        
+        Integer month;
+        if (exists monthBit = bits[monthIndex]) {
+            if (exists m = parseInteger(monthBit)) {
+                month = m;
+            }
+            else if (exists m = this.monthNames.firstOccurrence(monthBit)) {
+                month = m+1;
+            }
+            else if (exists m = this.monthAbbreviations.firstOccurrence(monthBit)) {
+                month = m+1;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+        
+        Integer year;
+        if (exists yearBit = bits[yearIndex]) {
+            if (exists y = parseInteger(yearBit)) {
+                year = y;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+        
+        return date(year, month, day);
     }
 }
 
