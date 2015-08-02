@@ -184,20 +184,19 @@ shared sealed class Formats(
      date, and a list of [[delimiting characters|separators]], 
      return a [[Date]], or `null` if the string cannot be 
      interpreted as a date with the given field order and 
-     delimiters. If [[allowTwoDigitYear]] is enabled, then 
-     formatted dates with two-digit years will be 
-     interpreted as dates from within the last 100 years. 
+     delimiters. If [[twoDigitCutoffYear]] is non-null, then 
+     formatted dates may be written with two-digit years.
      
      For example
      
          au.formats.parseDate(\"3 June 2010\")
      
-     produces the date `2010-6-03`, if `au` is the `Locale`
+     produces the date `2010-06-03`, if `au` is the `Locale`
      for `en-AU`. And
      
-         us.formats.parseDate(\"01/02/2000\", monthDayYear)
+         us.formats.parseDate(\"01/02/03\", monthDayYear)
      
-     produces the date `2000-01-02`, if `us` is the `Locale`
+     produces the date `2003-01-02`, if `us` is the `Locale`
      for `en-US`."
     throws (`class AssertionError`, 
             "if the given [[order|dateOrder]] does not 
@@ -211,10 +210,12 @@ shared sealed class Formats(
         DateField.Order dateOrder
                 //TODO: get the default from the locale! 
                 = dayMonthYear,
-        "Should two-digit years be recognized, and 
-         interpreted as dates from within the last 100 
-         years?"
-        Boolean allowTwoDigitYear = true,
+        "The earliest year which can be written in two-digit
+         form, or `null` if two-digit years should be 
+         interpreted literally. Defaults to 80 years before
+         the current year."
+        Integer? twoDigitCutoffYear 
+                = now().date().year-80,
         "The characters to recognize as field separators."
         String separators = "/-., ") {
         
@@ -268,15 +269,12 @@ shared sealed class Formats(
         Integer year;
         if (exists yearBit = bits[yearIndex]) {
             if (exists y = parseInteger(yearBit)) {
-                if (allowTwoDigitYear && y<100) {
-                    value currentYear = now().date().year;
-                    value century = currentYear/100;
-                    if (currentYear%100 < y) {
-                        year = (century-1)*100 + y;
-                    }
-                    else {
-                        year = century*100 + y;
-                    }
+                if (exists twoDigitCutoffYear, y<100) {
+                    year = let (century = twoDigitCutoffYear/100,
+                                cutoff = twoDigitCutoffYear%100)
+                            if (y > cutoff)
+                            then century*100 + y 
+                            else (century+1)*100 + y;
                 }
                 else {
                     year = y;
