@@ -7,7 +7,8 @@ import ceylon.time {
     Date,
     date,
     Time,
-    time
+    time,
+    now
 }
 
 "Date, time, currency, and numeric formats for a certain
@@ -183,7 +184,9 @@ shared sealed class Formats(
      date, and a list of [[delimiting characters|separators]], 
      return a [[Date]], or `null` if the string cannot be 
      interpreted as a date with the given field order and 
-     delimiters.
+     delimiters. If [[allowTwoDigitYear]] is enabled, then 
+     formatted dates with two-digit years will be 
+     interpreted as dates from within the last 100 years. 
      
      For example
      
@@ -208,6 +211,10 @@ shared sealed class Formats(
         DateField.Order dateOrder
                 //TODO: get the default from the locale! 
                 = dayMonthYear,
+        "Should two-digit years be recognized, and 
+         interpreted as dates from within the last 100 
+         years?"
+        Boolean allowTwoDigitYear = true,
         "The characters to recognize as field separators."
         String separators = "/-., ") {
         
@@ -261,7 +268,19 @@ shared sealed class Formats(
         Integer year;
         if (exists yearBit = bits[yearIndex]) {
             if (exists y = parseInteger(yearBit)) {
-                year = y;
+                if (allowTwoDigitYear && y<100) {
+                    value currentYear = now().date().year;
+                    value century = currentYear/100;
+                    if (currentYear%100 < y) {
+                        year = (century-1)*100 + y;
+                    }
+                    else {
+                        year = century*100 + y;
+                    }
+                }
+                else {
+                    year = y;
+                }
             }
             else {
                 return null;
