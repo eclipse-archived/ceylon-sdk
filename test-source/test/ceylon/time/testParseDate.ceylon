@@ -3,17 +3,23 @@ import ceylon.time { ... }
 
 import ceylon.time.parse { ... }
 
-/*
- * Date and time values are ordered from the largest to smallest unit of time: 
- * year, month (or week), day, hour, minute, second, and fraction of second. 
- * 
- * The lexicographical order of the representation thus corresponds to chronological order, 
- * except for date representations involving negative years. This allows dates to be naturally 
- * sorted by, for example, file systems.
- */
-shared test void it_parses_ISO8601_formatted_string() 
-            => assertEquals(date(2014, 12, 29), iso8601.parseDate("20141229"));
+shared class ISO8601ParserTest() {
+    /*
+     * Date and time values are ordered from the largest to smallest unit of time: 
+     * year, month (or week), day, hour, minute, second, and fraction of second. 
+     * 
+     * The lexicographical order of the representation thus corresponds to chronological order, 
+     * except for date representations involving negative years. This allows dates to be naturally 
+     * sorted by, for example, file systems.
+     */
+    
+    shared test void it_parses_ISO8601_formatted_string() 
+                => assertEquals(date(2014, 12, 29), iso8601.parseDate("20141229"));
 
+    shared test void it_parses_ISO8601_formatted_string_with_dashes() 
+                => assertEquals(date(2014, 12, 29), iso8601.parseDate("2014-12-29"));
+
+}
 /*
  * Each date and time value has a fixed number of digits that must be padded with leading zeros.
  */
