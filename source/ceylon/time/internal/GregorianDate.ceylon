@@ -149,6 +149,39 @@ shared class GregorianDate( Integer dayOfEra )
         return GregorianDate( impl.fixedFrom([year, month.integer, day]) );
     }
 
+    "Returns new date with the specified weekOfYear value.
+     
+     **Note:** It should result in a valid gregorian date.
+     "
+    shared actual Date withWeekOfYear(Integer weekOfYear) {
+        value thisWeekOfYear = this.weekOfYear;
+        if (weekOfYear == thisWeekOfYear) {
+            return this;
+        }
+        
+        assert(0 <= weekOfYear <= 53);
+        return plusWeeks(weekOfYear - thisWeekOfYear);
+    }
+    
+    shared actual Date withDayOfWeek(DayOfWeek dayOfWeek) {
+        if (dayOfWeek == this.dayOfWeek) {
+            return this;
+        }
+        
+        return plusDays(dayOfWeek.integer - this.dayOfWeek.integer);
+    }
+    
+    shared actual Date withDayOfYear(Integer dayOfYear) {
+        if (dayOfYear == this.dayOfYear) {
+            return this;
+        }
+        
+        value lastDayOfYear = leapYear then days.perLeapYear else days.perYear;
+        assert(1 <= dayOfYear <= lastDayOfYear);
+        
+        return plusDays(dayOfYear - this.dayOfYear);
+    }
+    
     "Adds specified date period to this date and returns the new [[Date]]."
     shared actual Date plus( ReadableDatePeriod amount ) {
         return addPeriod {
@@ -189,35 +222,38 @@ shared class GregorianDate( Integer dayOfEra )
         return _this;
     }
 
-    " Returns week of year according to ISO-8601 week number calculation rules."
-    shared actual Integer weekOfYear {        
-        function normalizeFirstWeek(Integer yearNumber){            
+    "Returns week of year according to ISO-8601 week number calculation rules."
+    shared actual Integer weekOfYear {
+        function normalizeFirstWeek(Integer yearNumber) {
             value jan1 = withDay(1).withMonth(january).withYear(yearNumber);
             value jan1WeekDayMinusMonday = jan1.dayOfWeek.integer - monday.integer;
-            value firstWeekOfYearHasLess4Days = 4;
-
-            return ( jan1.minusDays( jan1WeekDayMinusMonday ).plusDays( jan1WeekDayMinusMonday >= firstWeekOfYearHasLess4Days then weekdays.size else 0) );
-        }        
-        
-        function normalizeLastWeek(Integer yearNumber) {
-            return normalizeFirstWeek( yearNumber + 1 ).minusDays( 1 );
+            
+            return jan1.minusDays(jan1WeekDayMinusMonday)
+                       .plusDays(if (jan1WeekDayMinusMonday >= 4) then weekdays.size else 0);
         }
         
-        value startFirstWeekOfYear = normalizeFirstWeek( year );  
+        function normalizeLastWeek(Integer yearNumber)
+                => normalizeFirstWeek(yearNumber + 1).minusDays(1);
         
-        variable value weekNumber=1;
-
-        if ( smallerThan( startFirstWeekOfYear ) ){
-            value startFirstWeekOfPriorYear = normalizeFirstWeek( year - 1 );
-            value daysSinceStartFirstWeekOfPriorYear = this.offset( startFirstWeekOfPriorYear ) + 1;
-            weekNumber = ( ( daysSinceStartFirstWeekOfPriorYear / weekdays.size ) + ( daysSinceStartFirstWeekOfPriorYear % weekdays.size > 0 then 1 else 0 ) );
-        } else {
-            value endLastWeekOfYear = normalizeLastWeek( year );            
-            if ( notLargerThan(endLastWeekOfYear) ){
+        value startFirstWeekOfYear = normalizeFirstWeek( year );
+        
+        variable value weekNumber = 1;
+        if (this < startFirstWeekOfYear) {
+            value startFirstWeekOfPriorYear = normalizeFirstWeek(year - 1);
+            value daysSinceStartFirstWeekOfPriorYear = this.offset(startFirstWeekOfPriorYear) + 1;
+            
+            weekNumber = (daysSinceStartFirstWeekOfPriorYear / weekdays.size)
+                       + (daysSinceStartFirstWeekOfPriorYear % weekdays.size > 0 then 1 else 0);
+        }
+        else {
+            value endLastWeekOfYear = normalizeLastWeek(year);
+            if (this <= endLastWeekOfYear) {
                 value daysSinceStartFirstWeekOfYear = this.offset( startFirstWeekOfYear ) + 1;
-                weekNumber = ( ( daysSinceStartFirstWeekOfYear / weekdays.size ) + ( daysSinceStartFirstWeekOfYear % weekdays.size > 0 then 1 else 0 ) );
+                weekNumber = (daysSinceStartFirstWeekOfYear / weekdays.size)
+                           + (daysSinceStartFirstWeekOfYear % weekdays.size > 0 then 1 else 0);
             }
-        }    
+        }
+        
         return weekNumber;
     }
 

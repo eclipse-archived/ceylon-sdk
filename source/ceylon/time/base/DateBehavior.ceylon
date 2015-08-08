@@ -8,9 +8,18 @@ shared interface DateBehavior<Element> of Element
     "Returns a copy of this period with the specified month of year."
     shared formal Element withMonth(Month month);
 
-    "Returns a copy of this period with the specified amount of days."
+    "Returns a copy of this period with the specified day of month."
     shared formal Element withDay(Integer dayOfMonth);
+    
+    "Returns a copy of this period with the specified week of year."
+    shared formal Element withWeekOfYear(Integer weekNumber);
 
+    "Returns a copy of this period with the specified day of week."
+    shared formal Element withDayOfWeek(DayOfWeek dayOfWeek);
+    
+    "Returns a copy of this period with the specified day of year."
+    shared formal Element withDayOfYear(Integer dayOfYear);
+    
     "Returns a copy of this period with the specified number of years added."
     shared formal Element plusYears(Integer years);
 
