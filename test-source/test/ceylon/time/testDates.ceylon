@@ -3,7 +3,8 @@ import ceylon.test {
     assertTrue,
     assertFalse,
     fail,
-    test
+    test,
+    assertThat = assertThatException
 }
 import ceylon.time {
     date,
@@ -52,41 +53,17 @@ shared test void test_tue_feb_29_2000() => assertGregorianDate(2000, february, 2
 shared test void test_sun_dec_31_2000() => assertGregorianDate(2000, december, 31, sunday, leapYear, 366);
 shared test void test_wed_feb_29_2012() => assertGregorianDate(2012, february, 29, wednesday, leapYear, 60);
 
-shared test void test_invalid_date_jan_0() {
-    try {
-        date(2013,january,0);
-        fail("It should throw exception...");
-    } catch ( AssertionError e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }
-}
+shared test void test_invalid_date_jan_0() => assertThat(void() => date(2013,january,0))
+        .hasMessage((String msg) => (msg.contains("Invalid date value")));
 
-shared test void test_invalid_date_feb_29() {
-    try {
-        date(2013,february,29);
-        fail("It should throw exception...");
-    } catch ( AssertionError e ) {
-        assertTrue(e.message.contains("Invalid date"));
-    }
-}
+shared test void test_invalid_date_feb_29() => assertThat(void() => date(2013,february,29))
+        .hasMessage((String msg) => (msg.contains("Invalid date value")));
 
-shared test void test_invalid_date_maximum_year() {
-    try {
-        date(years.maximum+1,february,29);
-        fail("It should throw exception...");
-    } catch ( AssertionError e ) {
-        assertTrue(e.message.contains("Invalid year"));
-    }
-}
+shared test void test_invalid_date_maximum_year() => assertThat(void() => date(years.maximum+1,february,29))
+        .hasMessage((String msg) => (msg.contains("Invalid year")));
 
-shared test void test_invalid_date_minimum_year() {
-    try {
-        date(years.minimum-1,february,29);
-        fail("It should throw exception...");
-    } catch ( AssertionError e ) {
-        assertTrue(e.message.contains("Invalid year"));
-    }
-}
+shared test void test_invalid_date_minimum_year() => assertThat(void() => date(years.minimum-1,february,29))
+        .hasMessage((String msg) => (msg.contains("Invalid year")));
 
 shared test void test_2400_is_leapYear() => assertTrue( date(2400, january, 1 ).leapYear, "2400 is leap year" );
 shared test void test_2200_is_not_leapYear() => assertFalse( date(2200, january, 1 ).leapYear, "2200 is not leap year" );
