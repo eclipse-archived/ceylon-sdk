@@ -66,69 +66,83 @@ shared sealed class Formats(
     shared String longFormatTime(ReadableTime time) 
             => formatTime(longTimeFormat, time);
     
-    String formatDate(String format, ReadableDate date) {
-        function interpolateToken(Integer->String token) 
-                => 2.divides(token.key)
-                    then formatDateToken(token.item, date) 
-                    else token.item;
-        value tokens = format.split('\''.equals, true, false);
-        return String(tokens.indexed.flatMap(interpolateToken));
-    }
+    String formatDate(String format, ReadableDate date) 
+            => applyFormat(format, date, formatDateToken);
     
-    String formatTime(String format, ReadableTime time) {
+    String formatTime(String format, ReadableTime time)
+            => applyFormat(format, time, formatTimeToken);
+    
+    String applyFormat<Value>(String format, Value val,
+            String formatToken(String token, Value val)) {
         function interpolateToken(Integer->String token) 
                 => 2.divides(token.key) 
-                    then formatTimeToken(token.item, time) 
+                    then formatToken(token.item, val) 
                     else token.item;
         value tokens = format.split('\''.equals, true, false);
         return String(tokens.indexed.flatMap(interpolateToken));
     }
     
     String formatDateToken(String token, ReadableDate date) {
-        value weekdayName = 
-                weekdayNames[date.dayOfWeek.integer-1] 
+        
+        value weekdayName 
+                => weekdayNames[date.dayOfWeek.integer-1] 
                 else date.dayOfWeek.string;
-        value weekdayAbbr = 
-                weekdayAbbreviations[date.dayOfWeek.integer-1] 
+        value weekdayAbbr 
+                => weekdayAbbreviations[date.dayOfWeek.integer-1] 
                 else date.dayOfWeek.string.initial(3);
-        value monthName = 
-                monthNames[date.month.integer-1] 
+        value monthName 
+                => monthNames[date.month.integer-1] 
                 else date.month.string;
-        value monthAbbr = 
-                monthAbbreviations[date.month.integer-1] 
+        value monthAbbr 
+                => monthAbbreviations[date.month.integer-1] 
                 else date.month.string.initial(3);
-        value month = date.month.integer.string;
-        value twoDigitMonth = month.padLeading(2,'0');
-        value day = date.day.string;
-        value twoDigitDay = day.padLeading(2,'0');
-        value fourDigitYear = date.year.string.padLeading(4,'0');
-        value twoDigitYear = date.year.string.padLeading(2,'0').terminal(2);
-        value weekOfYear = date.weekOfYear.string;
-        value twoDigitWeekOfYear = weekOfYear.padLeading(2,'0');
-        value dayNumberInWeek = 
-                let (dow=date.dayOfWeek) 
+        value month 
+                => date.month.integer.string;
+        value twoDigitMonth 
+                => month.padLeading(2,'0');
+        value day 
+                => date.day.string;
+        value twoDigitDay 
+                => day.padLeading(2,'0');
+        value fourDigitYear 
+                => date.year.string.padLeading(4,'0');
+        value twoDigitYear 
+                => date.year.string.padLeading(2,'0').terminal(2);
+        value weekOfYear 
+                => date.weekOfYear.string;
+        value twoDigitWeekOfYear 
+                => weekOfYear.padLeading(2,'0');
+        value dayNumberInWeek 
+                => let (dow=date.dayOfWeek) 
                 (dow==sunday then 7 else dow.integer).string;
-        return token
-                .replaceFirst("EEEE", weekdayName)
-                .replaceFirst("EEE", weekdayAbbr)
-                .replaceFirst("EE", weekdayAbbr)
-                .replaceFirst("E", weekdayAbbr)
-                .replaceFirst("MMMM", monthName)
-                .replaceFirst("MMM", monthAbbr)
-                .replaceFirst("MM", twoDigitMonth)
-                .replaceFirst("M", month)
-                .replaceFirst("dd", twoDigitDay)
-                .replaceFirst("d", day)
-                .replaceFirst("u", dayNumberInWeek)
-                .replaceFirst("yyyy", fourDigitYear)
-                .replaceFirst("yyy", fourDigitYear)
-                .replaceFirst("yy", twoDigitYear)
-                .replaceFirst("y", fourDigitYear) //yes, really
-                .replaceFirst("W", "") //TODO: week of month
-                .replaceFirst("F", "") //TODO: day of week in month
-                .replaceFirst("ww", twoDigitWeekOfYear)
-                .replaceFirst("w", weekOfYear)
-                .trimmed;
+        
+        value result = StringBuilder();
+        for (run in runs(token)) {
+            value replacement =
+                    switch (run)
+                    case ("EEEE") weekdayName
+                    case ("EEE") weekdayAbbr
+                    case ("EE") weekdayAbbr
+                    case ("E") weekdayAbbr
+                    case ("MMMM") monthName
+                    case ("MMM") monthAbbr
+                    case ("MM") twoDigitMonth
+                    case ("M") month
+                    case ("dd") twoDigitDay
+                    case ("d") day
+                    case ("u") dayNumberInWeek
+                    case ("yyyy") fourDigitYear
+                    case ("yyy") fourDigitYear
+                    case ("yy") twoDigitYear
+                    case ("y") fourDigitYear //yes)really
+                    case ("W") "" //TODO: week of month
+                    case ("F") "" //TODO: day of week in month
+                    case ("ww") twoDigitWeekOfYear
+                    case ("w") weekOfYear
+                    else run;
+            result.append(replacement);
+        }
+        return result.string;
     }
     
     function twelveHour(Integer hour)
@@ -137,45 +151,67 @@ shared sealed class Formats(
             else [hour-12,ampm[1]];
     
     String formatTimeToken(String token, ReadableTime time) {
-        value hourAndAmpm = twelveHour(time.hours);
-        value twelvehour = hourAndAmpm[0].string;
-        value weirdTwelvehour = (time.hours<12 then time.hours else time.hours-12).string;
-        value twoDigitTwelvehour = hourAndAmpm[0].string.padLeading(2, '0');
-        value twoDigitWeirdTwelvehour = weirdTwelvehour.padLeading(2, '0');
-        value ampm = hourAndAmpm[1];
-        value hour = time.hours.string;
-        value twoDigitHour = hour.padLeading(2, '0');
-        value weirdHour = (time.hours+1).string;
-        value twoDigitWeirdHour = weirdHour.padLeading(2, '0');
-        value mins = time.minutes.string;
-        value twoDigitMins = mins.padLeading(2, '0');
-        value secs = time.seconds.string;
-        value twoDigitSecs = secs.padLeading(2, '0');
-        value millis = time.milliseconds.string;
-        value threeDigitMillis = millis.padLeading(3,'0');
-        value twoDigitMillis = millis.padLeading(3,'0');
-        return token
-                .replaceFirst("hh", twoDigitTwelvehour)
-                .replaceFirst("h", twelvehour)
-                .replaceFirst("KK", twoDigitWeirdTwelvehour)
-                .replaceFirst("K", weirdTwelvehour)
-                .replaceFirst("HH", twoDigitHour)
-                .replaceFirst("H", hour)
-                .replaceFirst("kk", twoDigitWeirdHour)
-                .replaceFirst("k", weirdHour)
-                .replaceFirst("a", ampm)
-                .replaceFirst("mm", twoDigitMins)
-                .replaceFirst("m", mins)
-                .replaceFirst("ss", twoDigitSecs)
-                .replaceFirst("s", secs)
-                .replaceFirst("SSS", threeDigitMillis)
-                .replaceFirst("SS", twoDigitMillis)
-                .replaceFirst("S", millis)
-                .replaceFirst("X", "") //TODO TimeZone not yet supported
-                .replaceFirst("Z", "") //TODO TimeZone not yet supported
-                .replaceFirst("z", "") //TODO TimeZone not yet supported
-                .replaceFirst("G", "") //TODO: era
-                .trimmed;
+        
+        value ampm => twelveHour(time.hours)[1];
+        value twelvehour 
+                => twelveHour(time.hours)[0].string;
+        value weirdTwelvehour 
+                => (time.hours<12 then time.hours else time.hours-12).string;
+        value twoDigitTwelvehour 
+                => twelvehour.padLeading(2, '0');
+        value twoDigitWeirdTwelvehour 
+                => weirdTwelvehour.padLeading(2, '0');
+        value hour 
+                => time.hours.string;
+        value twoDigitHour 
+                => hour.padLeading(2, '0');
+        value weirdHour 
+                => (time.hours+1).string;
+        value twoDigitWeirdHour 
+                => weirdHour.padLeading(2, '0');
+        value mins 
+                => time.minutes.string;
+        value twoDigitMins 
+                => mins.padLeading(2, '0');
+        value secs 
+                => time.seconds.string;
+        value twoDigitSecs 
+                => secs.padLeading(2, '0');
+        value millis 
+                => time.milliseconds.string;
+        value threeDigitMillis 
+                => millis.padLeading(3,'0');
+        value twoDigitMillis 
+                => millis.padLeading(3,'0');
+        
+        value result = StringBuilder();
+        for (run in runs(token)) {
+            value replacement =
+                    switch (run)
+                    case ("hh") twoDigitTwelvehour
+                    case ("h") twelvehour
+                    case ("KK") twoDigitWeirdTwelvehour
+                    case ("K") weirdTwelvehour
+                    case ("HH") twoDigitHour
+                    case ("H") hour
+                    case ("kk") twoDigitWeirdHour
+                    case ("k") weirdHour
+                    case ("a") ampm
+                    case ("mm") twoDigitMins
+                    case ("m") mins
+                    case ("ss") twoDigitSecs
+                    case ("s") secs
+                    case ("SSS") threeDigitMillis
+                    case ("SS") twoDigitMillis
+                    case ("S") millis
+                    case ("X") "" //TODO TimeZone not yet supported
+                    case ("Z") "" //TODO TimeZone not yet supported
+                    case ("z") "" //TODO TimeZone not yet supported
+                    case ("G") "" //TODO: era           
+                    else run;
+            result.append(replacement);
+        }
+        return result.string;
     }
     
     "Given a [[string|text]] expected to represent a 
@@ -451,3 +487,25 @@ Formats parseFormats(Iterator<String> lines) {
         weekdayAbbreviations = dayAbbreviations;
     };
 }
+
+"Splits a string into 'runs' of the same character."
+{String*} runs(String text) 
+        => object satisfies {String*} {
+    iterator() 
+            => object satisfies Iterator<String> {
+        variable value i = 0;
+        shared actual String|Finished next() {
+            value start = i;
+            if (exists ch = text[i++]) {
+                while (exists next = text[i], 
+                        next==ch) {
+                    i++;
+                }
+                return text[start..i-1];
+            }
+            else {
+                return finished;
+            }
+        }
+    };
+};
