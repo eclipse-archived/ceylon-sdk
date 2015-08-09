@@ -8,7 +8,7 @@ import ceylon.time.base {
 """The [[Date]] value of the given [[string representation|String]] 
    of a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format 
    or `null` if the string does not contain valid ISO 8601 formatted 
-   date value.
+   date value or the date is not formatted according to ISO standard.
    
    More specifically, this method parses any input that conforms to any of the 
    following date formats:
@@ -23,6 +23,9 @@ import ceylon.time.base {
    `DD` is a number of a day of month (ranging from `01` to `31`),
    `Www` stands for a single uppercase character `'W'` followed by two digit number of a week (ranging from `01` to `53`)
    and `D` stands for a single digit day of week.
+   
+   **Note:** This function accepts only four digit full year date formats. 
+   There is no support for abbreviated 2 digit format or year values larger than 4 digits.
    """
 shared ReadableDate? parseDate(String input) {
     value dashes = input.indexesWhere(function(c) => c == '-').sequence();
