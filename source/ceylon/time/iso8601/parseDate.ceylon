@@ -27,7 +27,7 @@ import ceylon.time.base {
    **Note:** This function accepts only four digit full year date formats. 
    There is no support for abbreviated 2 digit format or year values larger than 4 digits.
    """
-shared ReadableDate? parseDate(String input) {
+shared Date? parseDate(String input) {
     value dashes = input.indexesWhere(function(c) => c == '-').sequence();
     
     if (input.size == 10) {
