@@ -1,4 +1,4 @@
-"""This package contains parsers implementations for reading [[Date]], [[Time]] and [[DateTime]] values from 
+"""This package contains parsers implementations for reading [[ceylon.time::Date]], [[ceylon.time::Time]] and [[ceylon.time::DateTime]] values from 
    their [ISO 8601][1] formatted string representations.
    
    This package only contains parsers for reading `Date`, `Time`, `DateTime` and `Period` values from their 
