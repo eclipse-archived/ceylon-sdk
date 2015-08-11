@@ -10,6 +10,10 @@ import ceylon.time {
     time,
     now
 }
+import ceylon.time.timezone {
+    TimeZone,
+    OffsetTimeZone
+}
 
 "Date, time, currency, and numeric formats for a certain
  [[Locale]]."
@@ -63,21 +67,36 @@ shared sealed class Formats(
             => formatTime(shortTimeFormat, time);
     shared String mediumFormatTime(ReadableTime time) 
             => formatTime(mediumTimeFormat, time);
-    shared String longFormatTime(ReadableTime time) 
-            => formatTime(longTimeFormat, time);
+    shared String longFormatTime(ReadableTime time, TimeZone timeZone) 
+            => formatTimeWithTZ(longTimeFormat, time, timeZone);
     
     String formatDate(String format, ReadableDate date) 
-            => applyFormat(format, date, formatDateToken);
+            => applyFormat(format, formatDateToken, date);
     
     String formatTime(String format, ReadableTime time)
-            => applyFormat(format, time, formatTimeToken);
+            => applyFormat(format, formatTimeToken, time);
     
-    String applyFormat<Value>(String format, Value val,
-            String formatToken(String token, Value val)) {
+    String formatTimeWithTZ(String format, ReadableTime time, TimeZone timeZone)
+            => applyFormatWithTZ(format, formatTimeToken, time, timeZone);
+    
+    String applyFormat<Value>(String format, 
+        String formatToken(String token, Value val), 
+        Value val) {
         function interpolateToken(Integer->String token) 
                 => 2.divides(token.key) 
                     then formatToken(token.item, val) 
                     else token.item;
+        value tokens = format.split('\''.equals, true, false);
+        return String(tokens.indexed.flatMap(interpolateToken));
+    }
+    
+    String applyFormatWithTZ<Value>(String format, 
+        String formatToken(String token, Value val, TimeZone timeZone), 
+        Value val, TimeZone timeZone) {
+        function interpolateToken(Integer->String token) 
+                => 2.divides(token.key) 
+        then formatToken(token.item, val, timeZone) 
+        else token.item;
         value tokens = format.split('\''.equals, true, false);
         return String(tokens.indexed.flatMap(interpolateToken));
     }
@@ -139,6 +158,7 @@ shared sealed class Formats(
                     case ("F") "" //TODO: day of week in month
                     case ("ww") twoDigitWeekOfYear
                     case ("w") weekOfYear
+                    case ("G") "" //TODO: era           
                     else run;
             result.append(replacement);
         }
@@ -150,7 +170,8 @@ shared sealed class Formats(
             else if (hour<=12) then [hour,ampm[0]]
             else [hour-12,ampm[1]];
     
-    String formatTimeToken(String token, ReadableTime time) {
+    String formatTimeToken(String token, 
+        ReadableTime time, TimeZone? timeZone=null) {
         
         value ampm => twelveHour(time.hours)[1];
         value twelvehour 
@@ -184,6 +205,34 @@ shared sealed class Formats(
         value twoDigitMillis 
                 => millis.padLeading(3,'0');
         
+        value generalTimeZone 
+                => if (exists timeZone) 
+                then "GMT" + timeZone.string
+                else "";
+        
+        value simpleTimeZone
+                => if (exists timeZone) 
+                then timeZone.string
+                else "";
+        
+        value longTimeZone
+                => if (exists timeZone) 
+                then if (is OffsetTimeZone timeZone, 
+                         timeZone.offsetMilliseconds==0)
+                    then "Z" 
+                    else timeZone.string 
+                else "";
+        
+        value mediumTimeZone
+                => longTimeZone.replaceFirst(":", "");
+        
+        value shortTimeZone
+                => let (tz=longTimeZone,
+                        col=tz.firstOccurrence(':')) 
+                    if (exists col) 
+                    then tz[0:col]
+                    else tz;
+        
         value result = StringBuilder();
         for (run in runs(token)) {
             value replacement =
@@ -204,10 +253,11 @@ shared sealed class Formats(
                     case ("SSS") threeDigitMillis
                     case ("SS") twoDigitMillis
                     case ("S") millis
-                    case ("X") "" //TODO TimeZone not yet supported
-                    case ("Z") "" //TODO TimeZone not yet supported
-                    case ("z") "" //TODO TimeZone not yet supported
-                    case ("G") "" //TODO: era           
+                    case ("XXX") longTimeZone
+                    case ("XX") mediumTimeZone
+                    case ("X") shortTimeZone
+                    case ("Z") simpleTimeZone
+                    case ("z") generalTimeZone
                     else run;
             result.append(replacement);
         }
