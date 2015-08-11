@@ -2,6 +2,7 @@ import ceylon.test { ... }
 import ceylon.time { ... }
 
 import ceylon.time.iso8601 { ... }
+import ceylon.time.timezone { ... }
 
 shared class ISO8601ParserTest() {
 
@@ -68,16 +69,34 @@ shared class ISO8601ParserTest() {
     
     /* Parse ISO 8601 date-time */
     
-    shared test void it_parses_YYYYMMDD_hhmmss_datetime()
-            => assertEquals(parseDateTime("20141229T123405"), dateTime(2014, 12, 29, 12, 34, 05));
+    shared test void it_parses_YYYYMMDD_hhmmss_datetime() => assertEquals {
+        actual = parseDateTime("20141229T123405");
+        expected = dateTime(2014, 12, 29, 12, 34, 05);
+    };
     
-    shared test void it_parses_24_hour_midnight_datetime()
-            => assertEquals(parseDateTime("20141229T2400"), dateTime(2014, 12, 30, 00, 00, 00));
+    shared test void it_parses_24_hour_midnight_datetime() => assertEquals {
+        actual = parseDateTime("20141229T2400"); 
+        expected = dateTime(2014, 12, 30, 00, 00, 00);
+    };
     
-    shared test void it_parses_YYYWwwD_hhmmss_datetime()
-            => assertEquals(parseDateTime("2015W011T123405"), dateTime(2014, 12, 29, 12, 34, 05));
+    shared test void it_parses_YYYWwwD_hhmmss_datetime() => assertEquals {
+        actual = parseDateTime("2015W011T123405");
+        expected = dateTime(2014, 12, 29, 12, 34, 05);
+    };
     
-    shared test void it_parses_YYYDDD_hhmmss_datetime()
-            => assertEquals(parseDateTime("2014363T123405"), dateTime(2014, 12, 29, 12, 34, 05));
+    shared test void it_parses_YYYDDD_hhmmss_datetime() => assertEquals {
+        actual = parseDateTime("2014363T123405");
+        expected = dateTime(2014, 12, 29, 12, 34, 05);
+    };
+    
+    shared test void it_parses_zoneDateTime() => assertEquals {
+        actual = parseZoneDateTime("2014363T123405+0530");
+        expected = zoneDateTime(timeZone.offset(5, 30), 2014, 12, 29, 12, 34, 05);
+    };
+    
+    shared test void it_parses_Zulu_zoneDateTime() => assertEquals {
+        actual = parseZoneDateTime("2014363T123405Z");
+        expected = zoneDateTime(timeZone.utc, 2014, 12, 29, 12, 34, 05);
+    };
 }
 
