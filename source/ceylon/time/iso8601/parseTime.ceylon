@@ -3,7 +3,6 @@ import ceylon.time {
     time
 }
 import ceylon.time.base {
-    ReadableTime,
     minutes,
     seconds
 }

@@ -1,35 +1,9 @@
-import ceylon.time.base {
-    october,
-    february,
-    sunday,
-    april,
-    march,
-    september,
-    may
-}
-import ceylon.time {
-    Period,
-    newTime = time,
-    date
-}
-import ceylon.test {
-    test,
-    assertEquals,
-    testSuite,
-    assertThatException
-}
-import ceylon.time.timezone.model {
-    OnLastOfMonth,
-    OnFixedDay,
-    OnFirstOfMonth,
-    Rule,
-    AtWallClockTime,
-    AtUtcTime
-}
+import ceylon.test { ... }
+import ceylon.time.base { ... }
+import ceylon.time { newTime = time, ... }
+import ceylon.time.timezone.model { ... }
 
-import ceylon.time.timezone.parser.iana {
-	parseRuleLine
-}
+import ceylon.time.timezone.parser.iana { parseRuleLine }
 
 testSuite({
     `class ParseBrazil1931OnlyRuleTest`,
