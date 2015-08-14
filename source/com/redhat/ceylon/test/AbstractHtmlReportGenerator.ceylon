@@ -162,7 +162,7 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
             fw.write("<div class='stack-trace' style='display: none;'>");
             fw.write("<span class='stack-trace-arrow'><span class='stack-trace-arrow-inner'></span></span>");
             fw.write("<pre>");
-            printStackTrace(e, void (String s) { fw.write(escapeHtml(s)); });
+            printStackTrace(e, (s) { fw.write(escapeHtml(s)); });
             fw.write("</pre>");
             fw.write("</div>");
         }

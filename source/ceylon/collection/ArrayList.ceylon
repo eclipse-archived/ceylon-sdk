@@ -450,11 +450,13 @@ shared class ArrayList<Element>
     void each(void step(Element element)) {
         if (is Element null) {
             array.take(length)
-                 .each(void (e) => step(e else null));
+                 .each((e) { 
+                step(e else null); 
+            });
         }
         else {
             array.take(length)
-                 .each(void (e) { 
+                 .each((e) { 
                 assert (exists e);
                 step(e);
             });

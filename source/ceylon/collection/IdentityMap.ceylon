@@ -298,7 +298,7 @@ shared class IdentityMap<Key, Item>
     }
     
     shared actual void each(void step(Key->Item element)) {
-        store.each(void (bucket) {
+        store.each((bucket) {
             variable value iter = bucket;
             while (exists cell = iter) {
                 step(cell.element);

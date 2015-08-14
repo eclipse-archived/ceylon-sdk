@@ -65,7 +65,8 @@ shared class Deferred<Value>(context = globalExecutionContext)
           value deferred = Deferred<Result>(childContext);
           void callback<T>(Result(T) on, T val) {
             
-              variable Anything() task = void () {
+              variable Anything() task 
+                    = () {
                   Result t;
                   try {
                       t = on(val);
