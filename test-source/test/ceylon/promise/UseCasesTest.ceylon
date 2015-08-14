@@ -80,7 +80,7 @@ shared class UseCasesTest() extends AsyncTestBase() {
       testComplete();
     }
     Promise<Integer> promise = deferred.promise;
-    promise.map((Integer i) { throw reason; }).map(identity, bar).map(onFulfilled);
+    promise.map(function (i) { throw reason; }).map(identity, bar).map(onFulfilled);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
