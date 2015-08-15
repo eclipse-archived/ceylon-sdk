@@ -1,6 +1,9 @@
 import ceylon.test {
     ...
 }
+import ceylon.test.core {
+    IgnoreException
+}
 
 test
 shared void foo() {
@@ -15,6 +18,11 @@ shared void fooThrowingAssertion() {
 test
 shared void fooThrowingException() {
     throw Exception("unexpected exception");
+}
+
+test
+shared void fooThrowingIgnoreException() {
+    throw IgnoreException("ignore it!");
 }
 
 test

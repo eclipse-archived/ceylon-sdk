@@ -107,6 +107,21 @@ shared void shouldRunTestThrowingException() {
 }
 
 test
+shared void shouldRunTestThrowingIgnoreException() {
+    value result = createTestRunner([`fooThrowingIgnoreException`]).run();
+    assertResultCounts {
+        result;
+        ignoreCount = 1;
+    };
+    assertResultContains {
+        result;
+        state = ignored;
+        source = `fooThrowingIgnoreException`;
+        message = "ignore it!";
+    };
+}
+
+test
 shared void shouldRunTestsInClass() {
     void assertResultTestsBar(TestRunResult runResult) {
         assertResultCounts {
@@ -155,7 +170,7 @@ shared void shouldRunTestsInPackage() {
             successCount = 11;
             failureCount = 1;
             errorCount = 1;
-            ignoreCount = 6;
+            ignoreCount = 7;
         };
     }
     
@@ -178,7 +193,7 @@ shared void shouldRunTestsInModule() {
             successCount = 15;
             failureCount = 1;
             errorCount = 13;
-            ignoreCount = 7;
+            ignoreCount = 8;
         };
     }
     
