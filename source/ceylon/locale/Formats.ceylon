@@ -203,7 +203,7 @@ shared sealed class Formats(
         value threeDigitMillis 
                 => millis.padLeading(3,'0');
         value twoDigitMillis 
-                => millis.padLeading(3,'0');
+                => millis.padLeading(2,'0');
         
         value generalTimeZone 
                 => if (exists timeZone) 
