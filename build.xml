@@ -32,7 +32,6 @@
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
     
     <path id="ant-tasks">
-        <pathelement location="${basedir}/${dist.repo.dir}/com/redhat/ceylon/common/${module.com.redhat.ceylon.compiler.version}/com.redhat.ceylon.common-${module.com.redhat.ceylon.compiler.version}.jar"/>
         <pathelement location="${ceylon.ant.lib}"/>
     </path>
     
