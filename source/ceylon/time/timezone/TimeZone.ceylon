@@ -17,7 +17,9 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "The value that represents this constant offset in milliseconds."
     shared Integer offsetMilliseconds;
 
-    "Always returns a constant offset."
+    "Returns offset in milliseconds of the specified instant according to this time zone.
+     
+     This implementation always returns a constant offset."
     shared actual Integer offset(Instant instant) => offsetMilliseconds;
 
     "Returns _true_ if given value is same type and offset milliseconds."
