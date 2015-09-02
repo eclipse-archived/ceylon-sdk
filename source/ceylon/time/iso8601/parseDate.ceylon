@@ -39,9 +39,9 @@ shared Date? parseDate(String input) {
             return date(year, month, day);
         }
         else if (dashes == [4,8], exists ch = input[5], ch == 'W',
-            exists Integer year = parseInteger(input[0..3]),
-            exists Integer week = parseInteger(input[6..7]),
-            exists Integer day  = parseInteger(input[9..9])) {
+                 exists Integer year = parseInteger(input[0..3]),
+                 exists Integer week = parseInteger(input[6..7]),
+                 exists Integer day  = parseInteger(input[9..9])) {
             
             return date(year, 1, 1).withWeekOfYear(week)
                                    .withDayOfWeek(dayOfWeek(day));
@@ -49,8 +49,9 @@ shared Date? parseDate(String input) {
     }
     else if (input.size == 8) {
         if (nonempty dashes) {
-            if (dashes == [4], exists Integer year      = parseInteger(input[0..3]),
-                               exists Integer dayOfYear = parseInteger(input[5..7])) {
+            if (dashes == [4],
+                exists Integer year      = parseInteger(input[0..3]),
+                exists Integer dayOfYear = parseInteger(input[5..7])) {
                 
                 return date(year, 1, 1).withDayOfYear(dayOfYear);
             }
