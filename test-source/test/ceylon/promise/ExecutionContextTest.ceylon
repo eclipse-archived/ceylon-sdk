@@ -83,9 +83,7 @@ shared class ExecutionContextTest() extends AsyncTestBase() {
     deferred.complete("hello");
   }
   
-  // Disabling test for now because it hangs on JS
-  // See https://github.com/ceylon/ceylon-sdk/issues/407
-  shared /* test */ void testExecutionListenerCompose() {
+  shared test void testExecutionListenerCompose() {
     variable Integer context = 0;
     variable Integer current = -1;
     Anything() remove = addGlobalExecutionListener {
