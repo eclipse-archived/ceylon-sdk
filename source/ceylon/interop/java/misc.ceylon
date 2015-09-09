@@ -8,7 +8,7 @@ import java.lang {
     StackTraceElement
 }
 
-"The [[java.lang::String]] underling the given Ceylon 
+"The [[java.lang::String]] underlying the given Ceylon 
  [[String]]."
 shared JavaString javaString(String string) 
         => util.javaString(string);
