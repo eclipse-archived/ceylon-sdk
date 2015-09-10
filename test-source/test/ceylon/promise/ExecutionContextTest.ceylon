@@ -5,7 +5,8 @@ import ceylon.promise {
   Deferred,
   ExecutionContext,
   addGlobalExecutionListener,
-  Promise
+  Promise,
+  ExecutionListener
 }
 
 
@@ -86,15 +87,16 @@ shared class ExecutionContextTest() extends AsyncTestBase() {
   shared test void testExecutionListenerCompose() {
     variable Integer context = 0;
     variable Integer current = -1;
-    Anything() remove = addGlobalExecutionListener {
-      Anything(Anything()) onChild() {
+    object listener satisfies ExecutionListener {
+      shared actual Anything(Anything()) onChild() {
         current = context;
         return void(void callback()) {
           context = current;
           callback();
         };
       }
-    };
+    }
+    Anything() remove = addGlobalExecutionListener(listener);
     value deferred = Deferred<String>();
     deferred.promise.map<String> {
       String onFulfilled(String s) {
@@ -112,15 +114,16 @@ shared class ExecutionContextTest() extends AsyncTestBase() {
   shared test void testExecutionListenerFlatMap() {
     variable Integer context = 0;
     variable Integer current = -1;
-    Anything() remove = addGlobalExecutionListener {
-      Anything(Anything()) onChild() {
+    object listener satisfies ExecutionListener {
+      shared actual Anything(Anything()) onChild() {
         current = context;
         return void(void callback()) {
           context = current;
           callback();
         };
       }
-    };
+    }
+    Anything() remove = addGlobalExecutionListener(listener);
     value deferred = Deferred<String>();
     deferred.promise.flatMap {
       Promise<String> onFulfilled(String s) {

@@ -10,7 +10,7 @@ AtomicRef<ExecutionListener[]> currentExecutionListeners = AtomicRef<ExecutionLi
    
    This function returns a function that when called removes the global execution listener.
    """
-shared Anything() addGlobalExecutionListener(Anything(Anything()) onChild()) {
+shared Anything() addGlobalExecutionListener(ExecutionListener onChild) {
   while (true) {
     ExecutionListener[] prev = currentExecutionListeners.get();
     ExecutionListener[] next = prev.withTrailing(onChild);

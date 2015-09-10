@@ -55,7 +55,7 @@ shared class Deferred<Value>(context = globalExecutionContext)
           Anything(Anything())[] wrappers;
           if (!listeners.empty) {
               wrappers = [ *
-                  listeners.map((ExecutionListener listener) => listener())
+                  listeners.map((ExecutionListener listener) => listener.onChild())
               ];
           } else {
               wrappers =[];
@@ -108,7 +108,7 @@ shared class Deferred<Value>(context = globalExecutionContext)
             Anything(Anything())[] wrappers;
             if (!listeners.empty) {
               wrappers = [ *
-                  listeners.map((ExecutionListener listener) => listener())
+                  listeners.map((ExecutionListener listener) => listener.onChild())
               ];
             } else {
               wrappers =[];
