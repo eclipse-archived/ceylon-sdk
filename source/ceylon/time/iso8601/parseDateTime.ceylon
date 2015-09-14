@@ -5,9 +5,11 @@ import ceylon.time {
     Time
 }
 
-"""
-   `<date>T<time>`
-   """
+"""The [[DateTime]] value of the given [[string representation|String]] 
+   of a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) datetime format 
+   or `null` if the string does not contain valid ISO 8601 formatted 
+   datetime value or the datetime is not formatted according to ISO standard."""
+see (`function parseDate`, `function parseTime`)
 shared DateTime? parseDateTime(String input) {
     if (exists t = input.firstOccurrence('T')) {
         if (exists date = parseDate(input[0..t-1]),

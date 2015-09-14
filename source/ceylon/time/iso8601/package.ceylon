@@ -1,5 +1,10 @@
-"""This package contains parsers implementations for reading [[ceylon.time::Date]], [[ceylon.time::Time]] and [[ceylon.time::DateTime]] values from 
-   their [ISO 8601][1] formatted string representations.
+"""This package contains parsers implementations for reading [[ceylon.time::Date]], 
+   [[ceylon.time::Time]], [[ceylon.time::DateTime]], [[ceylon.time.timezone::TimeZone]], and
+   [[ceylon.time.timezone::ZoneDateTime]] values from their [ISO 8601][1] formatted string 
+   representations.
+   
+   The parser functions are [[parseDate]], [[parseTime]], [[parseDateTime]], [[parseTimeZone]],
+   and [[parseZoneDateTime]].
    
    This package only contains parsers for reading `Date`, `Time`, `DateTime` and `Period` values from their 
    [[string representation|String]] forms. There are no formatters in this package, as all relevant types return 

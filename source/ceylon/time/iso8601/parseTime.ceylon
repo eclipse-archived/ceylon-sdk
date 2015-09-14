@@ -25,7 +25,7 @@ import ceylon.time.base {
    end of a calendar day)
    
    """
-shared Time?(String) parseTime = compose(convertToTime, parseTimeComponents);
+shared Time? parseTime(String input) => convertToTime(parseTimeComponents(input));
 
 shared Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
     if (exists [hh, mm, ss, sss] = timeComponents) {

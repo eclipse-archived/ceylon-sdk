@@ -6,8 +6,12 @@ import ceylon.time.timezone {
 
 
 
-"Timezone offset parser based on ISO-8601, currently it accepts the following time zone offset patterns:
-   &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`
+"Timezone offset parser based on ISO-8601, currently it accepts the following 
+ time zone offset patterns:
+ 
+ - &plusmn;`[hh]:[mm]`, 
+ - &plusmn;`[hh][mm]`, and 
+ - &plusmn;`[hh]`.
  
  In addition, the special code `Z` is recognized as a shorthand for `+00:00`"
 shared TimeZone|ParserError parseTimeZone( String offset ) {
