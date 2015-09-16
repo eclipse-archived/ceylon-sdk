@@ -89,6 +89,22 @@ shared class ArrayList<Element>
             array.set(length++, element);
         }
     }
+    
+    shared actual default 
+    void swap(Integer i, Integer j) {
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<=i<length, 0<=j<length);
+        array.swap(i, i);
+    }
+    
+    shared actual default 
+    void move(Integer i, Integer j) {
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<=i<length, 0<=j<length);
+        array.move(i, i);
+    }
 
     shared actual
     void clear() {

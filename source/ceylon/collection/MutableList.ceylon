@@ -24,6 +24,28 @@ shared interface MutableList<Element>
     "A new list with the same elements as this list."
     shared actual formal MutableList<Element> clone();
     
+    shared actual default void swap(Integer i, Integer j) {
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<=i<size, 0<=j<size);
+        if (i!=j) {
+            assert (is Element x = getFromFirst(i),
+                    is Element y = getFromFirst(j));
+            set(i, y);
+            set(j, x);
+        }
+    }
+    
+    shared actual default void move(Integer i, Integer j) {
+        "index may not be negative or greater than the
+         last index in the list"
+        assert (0<=i<size, 0<=j<size);
+        if (i!=j) {
+            assert (is Element x = delete(i));
+            insert(j, x);
+        }
+    }
+    
 }
 
 "Protocol for mutation of a [[MutableList]]."
@@ -156,7 +178,37 @@ shared interface ListMutator<in Element>
     shared formal void infill(
             "The replacement value"
             Element replacement);
-
+    
+    "Given two indices within this list, swap the positions 
+     of the elements at these indices. If the two given 
+     indices are identical, no change is made to the list."
+    throws (`class AssertionError`,
+        "if either of the given indices is out of bounds") 
+    shared formal void swap(
+            "The index of the first element."
+            Integer i, 
+            "The index of the second element."
+            Integer j);
+    
+    "Efficiently move the element of this list at the given 
+     [[source index|i]] to the given [[destination index|j]],
+     shifting every element falling between the two given 
+     indices by one position to accommodate the change of
+     position. If the source index is larger than the 
+     destination index, elements are shifted toward the end
+     of the list. If the source index is smaller than the
+     destination index, elements are shifted toward the 
+     start of the list. If the given indices are identical,
+     no change is made to the list."
+    throws (`class AssertionError`,
+        "if either of the given indices is out of bounds") 
+    shared formal void move(
+            "The source index of the element to move."
+            Integer i, 
+            "The destination index to which the element is
+             moved."
+            Integer j);
+    
     "Remove every element from this list, leaving an empty
      list with no elements."
     shared formal void clear();
