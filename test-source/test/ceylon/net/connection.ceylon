@@ -188,7 +188,7 @@ class RequestLocalServerTest() {
         value req = Request {
             parse(localServer.baseUri + "/postparamecho");
             postMethod;
-            initalParameters = {
+            initialParameters = {
                 Parameter("a", "asd"),
                 Parameter("b", "ᚷᛖᚻᚹᛦᛚᚳᚢᛗ")
             };
@@ -203,7 +203,7 @@ class RequestLocalServerTest() {
         value req = Request {
             parse(localServer.baseUri + "/getparamecho");
             getMethod;
-            initalParameters = {
+            initialParameters = {
                 Parameter("a", "asd"),
                 Parameter("b", "ᚷᛖᚻᚹᛦᛚᚳᚢᛗ")
             };
@@ -218,7 +218,7 @@ class RequestLocalServerTest() {
         value req = Request {
             parse(localServer.baseUri + "/getparamecho?c=hello");
             getMethod;
-            initalParameters = {
+            initialParameters = {
                 Parameter("a", "asd"),
                 Parameter("b", "ᚷᛖᚻᚹᛦᛚᚳᚢᛗ")
             };
