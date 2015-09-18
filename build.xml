@@ -35,7 +35,8 @@
         <pathelement location="${ceylon.ant.lib}"/>
     </path>
     
-    <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
+    <target name="ceylondefs">
+        <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
 
     <reposet id="reposet.compile.test">
         <repo url="${out.repo}"/>
@@ -109,6 +110,7 @@
         <module name="test.ceylon.time"/>
         <module name="test.ceylon.locale"/>
     </moduleset>
+    </target>
     
     <target name="clean"
         description="Deletes the test-modules and modules directories">
@@ -118,7 +120,7 @@
         <delete dir="${osgi.build}"/>
     </target>
     
-    <target name="compile-jvm">
+    <target name="compile-jvm" depends="ceylondefs">
         
         <ceylon-compile executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
@@ -130,7 +132,7 @@
         
     </target>
 
-    <target name="compile-js">
+    <target name="compile-js" depends="ceylondefs">
         
     	  <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
@@ -189,7 +191,7 @@
     <target name="test" depends="compile-test,test-jvm,test-js"
         description="Runs the compiled test modules from the 'test-modules' repository" />
 
-    <target name="doc" 
+    <target name="doc" depends="ceylondefs" 
             description="Documents the SDK modules to the 'modules' repository">
         
         <ceylon-doc executable="${ceylon.executable}"
@@ -232,7 +234,7 @@
         </copy>
     </target>
 
-    <target name="publish-herd">
+    <target name="publish-herd" depends="ceylondefs">
     <fail message="Please specify a target Herd upload repo url with -Dherd.repo=..." unless="herd.repo"/>
     <fail message="Please specify a target Herd user name with -Dherd.user=..." unless="herd.user"/>
     <fail message="Please specify a target Herd password with -Dherd.pass=..." unless="herd.pass"/>
@@ -336,7 +338,7 @@
             overwrite="true"/>
     </target>
     
-    <target name="retrieveDependencies">
+    <target name="retrieveDependencies" depends="ceylondefs">
         <ceylon-copy executable="${ceylon.executable}"
             offline="true"
             verbose="${ceylon.verbosity}"
@@ -366,7 +368,7 @@
     </target>
 
     <!-- Rule to setup a plugins directory with required bundles -->
-    <target name="osgi-p2-quick" depends="osgi-quick">
+    <target name="osgi-p2-quick" depends="osgi-quick,ceylondefs">
         <makeurl property="destinationRepository" file="${osgi.dist}"/>
         <makeurl property="categoryDefinition" file="${osgi.p2}/category.xml"/>
         <mkdir dir="${osgi.build}"/>
