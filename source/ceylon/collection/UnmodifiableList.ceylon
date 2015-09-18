@@ -11,11 +11,11 @@ class UnmodifiableList<out Element>(List<Element> list)
     lastIndex => list.lastIndex;
     
     first => list.first;
-    rest => list.rest;
+    rest => UnmodifiableList(list.rest);
     
     iterator() => list.iterator();
     
-    reversed => list.reversed;
+    reversed => UnmodifiableList(list.reversed);
     
     measure(Integer from, Integer length)
             => list.measure(from, length);
@@ -31,6 +31,8 @@ class UnmodifiableList<out Element>(List<Element> list)
     hash => list.hash;
     
     clone() => UnmodifiableList(list.clone());
+    
+    each(void step(Element element)) => list.each(step);
     
 }
 

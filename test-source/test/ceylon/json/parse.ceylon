@@ -789,19 +789,96 @@ String herdJson = """
                      """;
 
 shared test void testParse() {
+    assert(is Null nu = parse("null"));
+    assert(is Boolean b1 = parse("true"), b1);
+    assert(is Boolean b2 = parse("false"), !b2);
+    try {
+        parse("null1");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("true1");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("false1");
+        throw;
+    } catch (ParseException p) {
+    }
+    
+    assert(is String s1 = parse("\"hello, world\""));
+    assertEquals("hello, world", s1);
+    try {
+        parse("\"hello, world\"false");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("\"hello, world");
+        throw;
+    } catch (ParseException p) {
+    }
+
+    assert(is Integer n0 = parse("1"));
+    assertEquals(1, n0);
+    
+    assert(is Float n1 = parse("123.0"));
+    assertEquals(123.0, n1);
+    
+    assert(is Float n2 = parse("123.0E1"));
+    assertEquals(123.0E1, n2);
+    try {
+        parse("\"hello, world\"123.0.0");
+        throw;
+    } catch (ParseException p) {
+    }
+    
     assert(is Object o1 = parse("{}"));
     assertEquals(0, o1.size);
+    try {
+        parse("{}{}");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{}123.0");
+        throw;
+    } catch (ParseException p) {
+    }
     
     assert(is Object o2 = parse("{\"foo\": \"bar\"}"));
     assertEquals(1, o2.size);
     assertEquals("bar", o2["foo"]);
+    
+    try {
+        parse("{\"foo\": }");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{\"foo\":");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{\"foo\"}");
+        throw;
+    } catch (ParseException p) {
+    }
+    try {
+        parse("{\"foo\"");
+        throw;
+    } catch (ParseException p) {
+    }
     
     assert(is Object o3 = parse("{\"s\": \"bar\", \"t\": true, \"f\": false, \"n\": null}"));
     assertEquals(4, o3.size);
     assertEquals("bar", o3["s"]);
     assertEquals(true, o3["t"]);
     assertEquals(false, o3["f"]);
-    assertEquals(nil, o3["n"]);
+    assertEquals(null, o3["n"]);
     
     assert(is Object o4 = parse("{\"i\": 12, \"f\": 12.34, \"ie\": 12e10, \"fe\": 12.34e10}"));
     assertEquals(4, o4.size);
@@ -870,7 +947,7 @@ shared test void testParse() {
 	assertEquals("https://github.com/ceylon/ceylon-compiler", o12["html_url"]);
     assertEquals(1287859, o12["id"]);
 	assertEquals("Java", o12["language"]);
-    assertEquals(nil, o12["mirror_url"]);
+    assertEquals(null, o12["mirror_url"]);
 	assertEquals("ceylon-compiler", o12["name"]);
     assertEquals(81, o12["open_issues"]);
     if(is Object org = o12["organization"]){

@@ -3,10 +3,8 @@ import ceylon.html {
     Html,
     Element,
     TextNode,
-    blockTag,
     ParentNode,
-    Snippet,
-    emptyTag
+    Snippet
 }
 
 shared class NodeSerializer(
@@ -15,117 +13,83 @@ shared class NodeSerializer(
     "Serialization options"
     SerializerConfig config = SerializerConfig()
 ) {
-
-    variable value indentLevel = 0;
-
-    variable value sizeCount = 0;
-
-    value prettyPrint = config.prettyPrint;
+    value htmlSerializer = HtmlSerializer(
+            print, config.prettyPrint, config.escapeNonAscii);
 
     shared void serialize(Node root) => visit(root);
 
-    shared Integer contentLength => sizeCount;
-
-    void doPrint(String string) {
-        sizeCount += string.size; // TODO accurate byte size?
-        print(string);
-    }
-
-    void visitAny(Node|{Node*}|Snippet<Node> child) {
-        if (is Node child) {
+    void visitAny(Node|String|{Node|String*}|Snippet<Node> child) {
+        switch (child)
+        case (is String) {
+            visitString(child);
+        }
+        case (is Node) {
             visit(child);
-        } else if (is {Node*} child) {
-            visitNodes(child);
-        } else if (exists content = child.content) {
-            visitAny(content);
+        }
+        else {
+            switch (child)
+            case (is Snippet<Node>) {
+                if (exists content = child.content) {
+                    visitAny(content);
+                }
+            }
+            else { // is {Node|String*} 
+                visitNodes(child);
+            }
         }
     }
-    
+
+    void visitString(String string) {
+        htmlSerializer.text(string);
+    }
+
     void visit(Node node) {
         if (is Html node) {
-            startHtml(node);
+            htmlSerializer.doctype(node.doctype.string);
         }
-        indent();
         openTag(node);
-        if (is Element node) {
-            visitElement(node);
-        }
-        endOpenTag(node);
-        indentLevel++;
-        if (is TextNode node, !node.text.trimmed.empty) {
-            linefeed();
-            indent();
-            doPrint(node.text);
+        if (is TextNode node) {
+            htmlSerializer.text(node.text);
         }
         if (is ParentNode<Node> node) {
             for (child in node.children) {
                 if (exists child) {
-                    linefeed();
                     visitAny(child);
                 }
             }
         }
-        indentLevel--;
-        if (node.tag.type == blockTag) {
-            linefeed();
-            indent();
-            closeTag(node);
-        }
+        closeTag(node);
     }
 
-    void startHtml(Html html) {
-        doPrint(html.doctype.string);
-        linefeed(true);
-        linefeed();
+    void openTag(Node node) {
+        value attributes =
+                if (is Element node)
+                then node.attributes
+                else {};
+
+        // for now, duplicate bug that drops attributes
+        // with empty value
+        value nonEmptyAttributes = attributes
+            .map((attribute) => attribute.key->attribute.item.string)
+            .filter((attribute) => !attribute.item.empty);
+
+        htmlSerializer.startElement(node.tag.name, nonEmptyAttributes);
     }
 
-    void visitElement(Element node) {
-        printAttributes(node);
-    }
+    void closeTag(Node node)
+        =>  htmlSerializer.endElement();
 
-    void openTag(Node node) => doPrint("<``node.tag.name``");
-
-    void endOpenTag(Node node) {
-        if (node.tag.type == emptyTag) {
-            doPrint(" /");
-        }
-        doPrint(">");
-    }
-
-    void closeTag(Node node) => doPrint("</``node.tag.name``>");
-
-    void printAttributes(Element node) {
-        for (attrName->attrValue in node.attributes) {
-            value val = attrValue.string.trimmed;
-            if (!val.empty) {
-                doPrint(" ``attrName``=\"``attrValue``\"");
+    void visitNodes({Node|String*} nodes) {
+        for (node in nodes) {
+            switch (node)
+            case (is String) {
+                visitString(node);
+            }
+            case (is Node) {
+                visit(node);
             }
         }
     }
-
-    void visitNodes({Node*} nodes) {
-        for (node in nodes) {
-            visit(node);
-        }
-    }
-
-    void linefeed(Boolean force = false) {
-        if (prettyPrint || force) {
-            doPrint(operatingSystem.newline);
-        }
-    }
-
-    void indent() {
-        if (prettyPrint) {
-            doPrint(indentString);
-        }
-    }
-
-    String indentString {
-        value spaces = indentLevel * 4;
-        return spaces > 0 then " ".repeat(spaces) else "";
-    }
-
 }
 
 "A [[NodeSerializer]] implementation that prints content on console."

@@ -1,16 +1,40 @@
-"A day of week, such as 'tuesday'."
+"""A day of week, such as 'tuesday'.
+
+   This class satisfies `Enumerable<DayOfWeek>`, which means that you can
+   create ranges of days of week:
+
+   E.g:
+       value week = monday..sunday;
+       value weekend = saturday..sunday;
+
+   Note that ranges created this way are always in _increasing_ order, wrapping
+   once last day of week is reached. This means that when you create a range of `tuesday..monday`,
+   this is equivalent to the following sequence: `[tuesday, wednesday, thursday, friday, saturday, sunday, monday]`
+
+   In order to get the reverse order range, you can use either span operator:
+       value reverseDaysOfWeek = tuesday:-1;
+
+   or explicitly reverse the order of the range like this:
+       calue reverseDaysOfWeek = (monday..tuesday).reverse();
+
+   """
 shared abstract class DayOfWeek(integer)
        of monday | tuesday | wednesday | thursday | friday | saturday | sunday
-       satisfies Ordinal<DayOfWeek> & Comparable<DayOfWeek> {
+       satisfies Ordinal<DayOfWeek> & Comparable<DayOfWeek> & Enumerable<DayOfWeek> {
 
     "Numeric value of the DayOfWeek."
     shared Integer integer;
 
     "Returns a day of week that comes specified number of days after this DayOfWeek."
     shared DayOfWeek plusDays(Integer number){
-        value wd = (integer + number) % 7;
-        assert (exists dow = weekdays[wd]);
-        return dow;
+        if (-7 < number < 7) {
+            value wd = (7 + integer + number) % 7;
+            assert (exists dow = weekdays[wd]);
+            return dow;
+        }
+        else {
+            return plusDays(number % 7);
+        }
     }
 
     "Returns a day of week that comes number of days before this DayOfWeek."
@@ -18,6 +42,27 @@ shared abstract class DayOfWeek(integer)
 
     "Compare days of week."
     shared actual Comparison compare(DayOfWeek other) => this.integer <=> other.integer;
+
+    "Returns the offset of the other _day of week_ compared to this.
+
+     This will always return positive integer such that given any
+     two days of week `a` and `b`, the following is always true:
+
+         assert(0 <= a.offset(b) <= 6);
+     "
+    shared actual default Integer offset(DayOfWeek other)
+            => let (diff = integer - other.integer)
+                    if (diff<0) then diff+7 else diff;
+
+    "returns `n`-th neighbour of this _day of week_.
+
+     For example:
+
+         assert(sunday.neighbour(0)  == sunday);
+         assert(sunday.neighbour(1)  == monday);
+         assert(sunday.neighbour(-1) == saturday);
+     "
+    shared actual DayOfWeek neighbour(Integer offset) => plusDays(offset);
 
 }
 

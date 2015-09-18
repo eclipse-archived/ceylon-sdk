@@ -177,8 +177,9 @@ TestCandidate[] findCandidates(TestSource[] sources) {
             findCandidatesInClass(candidates, source.declaration);
         } else if (is FunctionDeclaration source) {
             findCandidatesInFunction(candidates, source);
-        } else if (is FunctionModel source) {
-            findCandidatesInFunction(candidates, source.declaration);
+        } else if (is FunctionModel<> source,
+            is FunctionDeclaration d=source.declaration) {
+            findCandidatesInFunction(candidates, d);
         } else if (is String source) {
             findCandidatesInTypeLiteral(candidates, source);
         }
@@ -356,9 +357,14 @@ Boolean findCandidatesInFullQualifiedName(ArrayList<TestCandidate> candidates, S
 }
 
 Package? findPackage(String pkgName) {
-    Module? mod = modules.list.find((Module m) => pkgName.startsWith(m.name));
-    Package? pgk = mod?.findPackage(pkgName);
-    return pgk;
+    for(m in modules.list) {
+        if( pkgName.startsWith(m.name) ) {
+            if( exists p = m.findPackage(pkgName)) {
+                return p;
+            }
+        }
+    }
+    return null;
 }
 
 A? findAnnotation<out A>(FunctionDeclaration funcDecl, ClassDeclaration? classDecl)

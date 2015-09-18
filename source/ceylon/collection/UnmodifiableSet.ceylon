@@ -37,6 +37,8 @@ class UnmodifiableSet<out Element>(Set<Element> set)
     
     clone() => UnmodifiableSet(set.clone());
     
+    each(void step(Element element)) => set.each(step);
+    
 }
 
 "Wrap the given [[Set]], preventing attempts to narrow the

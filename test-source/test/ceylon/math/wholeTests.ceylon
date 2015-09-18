@@ -72,11 +72,11 @@ test void wholeTests() {
     assertEquals(wholeNumber(0), wholeNumber(0) ^ wholeNumber(1), "0^1");
     assertEquals(wholeNumber(1), wholeNumber(0) ^ wholeNumber(0), "0^0");
     try {
-        Whole w = wholeNumber(0) ^ wholeNumber(-1);
+        Whole wn = wholeNumber(0) ^ wholeNumber(-1);
         fail("0^-1");
     } catch (AssertionError e){}
     try {
-        Whole w = wholeNumber(0) ^ wholeNumber(-2);
+        Whole wn = wholeNumber(0) ^ wholeNumber(-2);
         fail("0^-2");
     } catch (AssertionError e){}
 
@@ -88,11 +88,11 @@ test void wholeTests() {
     assertEquals(wholeNumber(-2), wholeNumber(-2) ^ wholeNumber(1), "-2^-1");
     assertEquals(wholeNumber(1), wholeNumber(-2) ^ wholeNumber(0), "-2^0");
     try {
-        Whole w = wholeNumber(-2) ^ wholeNumber(-1);
+        Whole wn = wholeNumber(-2) ^ wholeNumber(-1);
         fail("-2^-1");
     } catch (AssertionError e){}
     try {
-        Whole w = wholeNumber(-2) ^ wholeNumber(-2);
+        Whole wn = wholeNumber(-2) ^ wholeNumber(-2);
         fail("-2^-2");
     } catch (AssertionError e){}
 

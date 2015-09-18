@@ -9,7 +9,7 @@ import ceylon.test.core {
 }
 
 "Alias for program elements from which tests can be run."
-shared alias TestSource => Module|Package|ClassDeclaration|FunctionDeclaration|Class|FunctionModel|String;
+shared alias TestSource => Module|Package|ClassDeclaration|FunctionDeclaration|Class<>|FunctionModel<>|String;
 
 "Alias for functions which filter tests. 
  Should return true if the given test should be run."

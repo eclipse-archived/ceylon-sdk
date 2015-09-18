@@ -45,9 +45,8 @@ shared DateTime dateTime(
         Integer hours = 0, 
         Integer minutes=0, 
         Integer seconds=0, 
-        Integer milliseconds=0){
-    return GregorianDateTime( 
-        createDate( year, month, day), 
-        createTime( hours, minutes, seconds, milliseconds )
-    );
-}
+        Integer milliseconds=0)
+        => GregorianDateTime {
+            date = createDate( year, month, day);
+            time = createTime( hours, minutes, seconds, milliseconds );
+        };

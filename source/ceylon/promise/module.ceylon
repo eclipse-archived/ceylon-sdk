@@ -10,7 +10,7 @@
  - The [[Completable]] interface abstracts objects which
    promise one or more values, accommodating the possibility
    of failure.
- - The [[Term]] interface abstracts `Completable`s that may
+ - The [[Completion]] interface abstracts `Completable`s that may
    be combined to form a compound promise that produces 
    multiple values.
  - The [[Promise]] class, a `Completable` that produces a 
@@ -34,7 +34,7 @@
    without producing a value. This situation is represented
    as an [[exception|Throwable]].
  
- The method [[Promise.onComplete]] allows interested 
+ The method [[Promise.completed]] allows interested 
  parties to be notified when the promise makes a 
  transition from the _promised_ state to the _fulfilled_ or 
  the _rejected_ state:
@@ -66,13 +66,13 @@
      value deferred = Deferred<String>();
      return deferred.promise;
  
- The `Deferred` object implements the [[Resolver]] interface 
+ The `Deferred` object implements the [[Completable]] interface 
  which provides two methods for controlling the state of the 
  promise:
  
- - [[fulfill()|Resolver.fulfill]] fulfills the promise with 
+ - [[fulfill()|Completable.fulfill]] fulfills the promise with 
    a _value_, and
- - [[reject()|Resolver.reject]] rejects the promise with a
+ - [[reject()|Completable.reject]] rejects the promise with a
    _reason_ of type [[Throwable]].
  
  For example:
@@ -90,11 +90,11 @@
  
  ## Chaining promises
  
- When composition is needed the method [[Completable.compose]]
- should be used instead of the [[Completable.onComplete]]
+ When composition is needed the method [[Completable.map]]
+ should be used instead of the [[Completable.completed]]
  method. 
  
- When invoking the [[Completable.compose]] method the 
+ When invoking the [[Completable.map]] method the 
  `onFulfilled` and `onRejected` callbacks can return a value. 
  The `compose()` method returns a new promise that will be 
  fulfilled with the value of the callback. This promise will 
@@ -135,7 +135,7 @@
  
  ## The `always()` method
  
- The [[always()|Completable.always]] method of a promise 
+ The [[always()|Completable.onComplete]] method of a promise 
  allows a single callback to be notified when the promise is 
  fulfilled or rejected.
  
@@ -148,7 +148,7 @@
          };
       };
  
- [[Completable.always]] is most useful for implementing a finally clause 
+ [[Completable.onComplete]] is most useful for implementing a finally clause 
  in a chain of promises.
  
  ## Feeding with a promise
@@ -176,12 +176,12 @@
  This module is loosely based upon the A+ specification,
  with the following differences:
  
- - The `then()` method is splitted between [[Completable.compose]] that returns an object and [[Completable.flatMap]] that can return a Promise
+ - The `then()` method is splitted between [[Completable.map]] that returns an object and [[Completable.flatMap]] that can return a Promise
  - The _Promise Resolution Procedure_ is implemented for 
    objects or promises but not for _thenables_ since that 
    would require a language with dynamic typing."
 by("Julien Viet")
 license("Apache Software License")
 module ceylon.promise "1.1.1" {
-  import java.base "7";
+  native("jvm") import java.base "7";
 }

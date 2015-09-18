@@ -55,12 +55,12 @@ shared Path[] rootPaths {
     return sb.sequence();
 }
 
-JPath asJPath(String|Path path) {
+JPath asJPath(String|Path path, JPath systemPath) {
     if (is ConcretePath path) {
         return path.jpath;
     }
     else {
-        return newPath(path.string);
+        return systemPath.fileSystem.getPath(path.string);
     }
 }
 
@@ -79,10 +79,10 @@ class ConcretePath(jpath)
     }
     
     childPath(String|Path subpath) =>
-            ConcretePath(jpath.resolve(asJPath(subpath)));
+            ConcretePath(jpath.resolve(asJPath(subpath, jpath)));
     
     siblingPath(String|Path subpath) =>
-            ConcretePath(jpath.resolveSibling(asJPath(subpath)));
+            ConcretePath(jpath.resolveSibling(asJPath(subpath, jpath)));
     
     root => jpath.nameCount==0;
     
@@ -92,12 +92,12 @@ class ConcretePath(jpath)
     
     normalizedPath => ConcretePath(jpath.normalize());
     
-    parentOf(Path path) => asJPath(path).startsWith(jpath);
+    parentOf(Path path) => asJPath(path, jpath).startsWith(jpath);
     
-    childOf(Path path) => jpath.startsWith(asJPath(path));
+    childOf(Path path) => jpath.startsWith(asJPath(path, jpath));
     
     relativePath(String|Path path) =>
-            ConcretePath(asJPath(path).relativize(jpath));
+            ConcretePath(asJPath(path, jpath).relativize(jpath));
     
     system => ConcreteSystem(jpath.fileSystem);
     
@@ -123,11 +123,11 @@ class ConcretePath(jpath)
         return sb.sequence();
     }
     
-    compare(Path other) => jpath.compareTo(asJPath(other))<=>0;
+    compare(Path other) => jpath.compareTo(asJPath(other, jpath))<=>0;
     
     shared actual Boolean equals(Object that) {
         if (is Path that) {
-            return asJPath(that)==jpath;
+            return asJPath(that, jpath)==jpath;
         }
         else {
             return false;

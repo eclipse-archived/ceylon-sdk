@@ -1,7 +1,3 @@
-import ceylon.collection {
-    Cell
-}
-
 // FIXME: make this faster with a size check
 class StoreIterator<Element>(Array<Cell<Element>?> store) 
         satisfies Iterator<Element> {

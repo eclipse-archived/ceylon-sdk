@@ -1,6 +1,7 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
+import ceylon.time.iso8601 { parseISOTimeZone = parseTimeZone, ParserError }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -16,7 +17,9 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "The value that represents this constant offset in milliseconds."
     shared Integer offsetMilliseconds;
 
-    "Always returns a constant offset."
+    "Returns offset in milliseconds of the specified instant according to this time zone.
+     
+     This implementation always returns a constant offset."
     shared actual Integer offset(Instant instant) => offsetMilliseconds;
 
     "Returns _true_ if given value is same type and offset milliseconds."
@@ -37,17 +40,24 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
     shared default actual String string {
-        value builder = StringBuilder();
-        builder.append( offsetMilliseconds >= 0 then "+" else "-" )
-               .append( "``((offsetMilliseconds.magnitude / ms.perHour)).string.padLeading(2, '0')``:``((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute).string.padLeading(2, '0')``" );
-        return builder.string;
+        value offsetHours = ((offsetMilliseconds.magnitude / ms.perHour)).string.padLeading(2, '0');
+        value offsetMinutes = ((offsetMilliseconds.magnitude % ms.perHour) / ms.perMinute).string.padLeading(2, '0');
+
+        if (offsetMilliseconds >= 0) {
+            return "+``offsetHours``:``offsetMinutes``";
+        }
+        else {
+            return "-``offsetHours``:``offsetMinutes``";
+        }
     }
 
 }
 
 "This represents offsets based on daylight saving time."
 shared interface RuleBasedTimezone satisfies TimeZone {
+    
     //TODO: Implement complex rule based time zones
+    
 }
 
 "Common utility methods for getting time zone instances."
@@ -61,24 +71,24 @@ shared object timeZone {
         "Returns ISO-8601 formatted String representation of this _time of day_.\n
          https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
         shared actual String string  = "Z";
-	}
+    }
 
     "Parses input string and returns appropriate time zone.
      Currently it accepts only ISO-8601 time zone offset patterns:
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.
- 
+
      In addition, the special code `Z` is recognized as a shorthand for `+00:00`."
     shared TimeZone|ParserError parse(String zone) {
-        return parseTimeZone(zone);
+        return parseISOTimeZone(zone);
     }
 
     "Represents fixed timeZone created based on given values."
     shared OffsetTimeZone offset(Integer hours, Integer minutes = 0, Integer milliseconds = 0) {
-		value offsetMilliseconds = hours * ms.perHour + minutes * ms.perMinute + milliseconds;
-		assert (-12 * ms.perHour <= offsetMilliseconds <= 12 * ms.perHour);
-		if (offsetMilliseconds == 0) {
-			return utc;
-		}
+        value offsetMilliseconds = hours * ms.perHour + minutes * ms.perMinute + milliseconds;
+        assert (-12 * ms.perHour <= offsetMilliseconds <= 12 * ms.perHour);
+        if (offsetMilliseconds == 0) {
+            return utc;
+        }
         return OffsetTimeZone( offsetMilliseconds );
     }
 

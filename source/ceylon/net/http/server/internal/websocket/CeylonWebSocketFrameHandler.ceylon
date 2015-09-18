@@ -1,65 +1,54 @@
-import ceylon.interop.java {
-    toByteArray
-}
 import ceylon.io.buffer {
-    newByteBufferWithData
+    ByteBuffer
 }
 import ceylon.net.http.server.websocket {
     WebSocketChannel,
-    WebSocketEndpoint,
-    CloseReason,
-    NoReason
+    WebSocketEndpoint
 }
 
 import io.undertow.websockets.core {
-    AbstractReceiveListener,
     BufferedTextMessage,
     UtWebSocketChannel=WebSocketChannel,
-    BufferedBinaryMessage,
-    WebSockets {
-        sendCloseBlocking
-    },
-    UTF8Output
+    BufferedBinaryMessage
 }
 
 import java.nio {
-    JByteBuffer=ByteBuffer {
-        wrapByteBuffer=wrap
-    }
+    JByteBuffer=ByteBuffer
+}
+import java.lang {
+    ObjectArray
+}
+import org.xnio {
+    Pooled
+}
+import ceylon.net.http.server.internal {
+    toCeylonByteBuffer,
+    mergeBuffers
 }
 
-import org.xnio {
-    IoUtils {
-        safeClose
-    }
-}
 
 by("Matej Lazar")
 class CeylonWebSocketFrameHandler(WebSocketEndpoint webSocketEndpoint, WebSocketChannel webSocketChannel)
-        extends AbstractReceiveListener() {
+        extends CeylonWebSocketAbstractFrameHandler(webSocketEndpoint, webSocketChannel) {
 
     shared actual void onFullTextMessage(UtWebSocketChannel channel, BufferedTextMessage message) 
             => webSocketEndpoint.onText(webSocketChannel, message.data );
 
-    shared actual void onFullBinaryMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) 
-            => webSocketEndpoint.onBinary(webSocketChannel, 
-                    newByteBufferWithData(*toByteArray(message.toByteArray())));
-
-    shared actual void onFullCloseMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) {
-        JByteBuffer buffer = wrapByteBuffer(message.toByteArray());
-
-        if (buffer.remaining() > 2) {
-            Integer code = buffer.short;
-            String reason = UTF8Output(buffer).extract();
-            webSocketEndpoint.onClose(webSocketChannel, CloseReason(code, reason));
-        } else {
-            webSocketEndpoint.onClose(webSocketChannel, NoReason());
+    shared actual void onFullBinaryMessage(UtWebSocketChannel channel, BufferedBinaryMessage message) {
+        Pooled<ObjectArray<JByteBuffer>> data = message.data;
+        try {
+            ObjectArray<JByteBuffer> jByteBufferArray = data.resource;
+            {ByteBuffer*} bbArray = jByteBufferArray.iterable
+                    .map((JByteBuffer? element) => toCeylonByteBuffer(element));
+            ByteBuffer binary = mergeBuffers(*bbArray);
+            webSocketEndpoint.onBinary(webSocketChannel, binary);
+        } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+        } finally {
+            data.free();
         }
-        sendCloseBlocking(message.data, channel);
     }
+    
 
-    shared actual void onError(UtWebSocketChannel channel, Throwable error) {
-        webSocketEndpoint.onError(webSocketChannel, error);
-        safeClose(channel);
-    }
 }

@@ -1,9 +1,6 @@
 import ceylon.collection {
     ...
 }
-import ceylon.language.meta {
-    type
-}
 import ceylon.test {
     ...
 }
@@ -90,6 +87,16 @@ shared interface MutableListTests satisfies ListTests {
         assertEquals("bar", list[3]);
         assertEquals("empty", list[7]);
         assertEquals("last", list[8]);
+        list.insertAll(2, {"x", "y", "z"});
+        assertEquals("{ first, foo, x, y, z, stef, bar, empty, empty, empty, empty, last }", list.string);
+        assertEquals(12, list.size);
+        list.insertAll(0, {"a", "b"});
+        assertEquals("{ a, b, first, foo, x, y, z, stef, bar, empty, empty, empty, empty, last }", list.string);
+        assertEquals(14, list.size);
+        list.deleteSpan(0,1);
+        list.deleteMeasure(2, 3);
+        assertEquals("{ first, foo, stef, bar, empty, empty, empty, empty, last }", list.string);
+        assertEquals(9, list.size);
         list.delete(0);
         assertEquals("{ foo, stef, bar, empty, empty, empty, empty, last }", list.string);
         assertEquals(8, list.size);

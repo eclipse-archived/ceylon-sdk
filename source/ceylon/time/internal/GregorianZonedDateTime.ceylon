@@ -252,6 +252,15 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
      "
     shared actual ZoneDateTime withYear(Integer year) => adjust( instant.dateTime(timeZone).withYear(year) );
 
+    "Returns new [[ZoneDateTime]] with the _week of year_ value set to the specified value."
+    shared actual ZoneDateTime withWeekOfYear(Integer weekNumber) => adjust( instant.dateTime(timeZone).withWeekOfYear(weekNumber) );
+
+    "Returns new [[ZoneDateTime]] with the _day of week_ value set to the specified value."
+    shared actual ZoneDateTime withDayOfWeek(DayOfWeek dayOfWeek) => adjust( instant.dateTime(timeZone).withDayOfWeek(dayOfWeek) );
+
+    "Returns new [[ZoneDateTime]] with the _day of year_ value set to the specified value."
+    shared actual ZoneDateTime withDayOfYear(Integer dayOfYear) => adjust( instant.dateTime(timeZone).withDayOfYear(dayOfYear) );
+
     "For predecessor its used the lowest unit of time, this way we can benefit
      from maximum precision. In this case the predecessor is the current value minus 1 millisecond.
 
@@ -266,9 +275,7 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
 
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
-    shared actual String string {
-        return "``instant.dateTime(timeZone).string````timeZone.string``";
-    }
+    shared actual String string => "``instant.dateTime(timeZone).string````timeZone.string``";
 
     "Returns _true_ if given value is same type, date and time."
     shared actual Boolean equals( Object other ) {

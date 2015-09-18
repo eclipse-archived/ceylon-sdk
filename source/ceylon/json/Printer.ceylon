@@ -1,7 +1,3 @@
-import ceylon.language {
-    Obj=Object
-}
-
 "A JSON Printer"
 by("Stéphane Épardaud")
 shared abstract class Printer(Boolean pretty = false){
@@ -137,12 +133,12 @@ shared abstract class Printer(Boolean pretty = false){
         case (is Array){
             printArray(val);
         }
-        case (is NullInstance){
+        case (is Null){
             printNull();
         }
     }
     
 }
 
-Comparison compareKeys(String->Obj x, String->Obj y)
+Comparison compareKeys(String->Value x, String->Value y)
         => x.key<=>y.key; 

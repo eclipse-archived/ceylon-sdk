@@ -17,14 +17,14 @@ shared class ConjunctionTest() extends AsyncTestBase() {
       assertEquals("foo", s);
       testComplete();
     }
-    and.compose(onFulfilled, fail);
+    and.map(onFulfilled, fail);
     d2.fulfill(3);
     assertEquals(count, 0);
-    d2.promise.onComplete {
+    d2.promise.completed {
       void onFulfilled(Integer i) {
         d3.fulfill(true);
         assertEquals(count, 0);
-        d3.promise.onComplete {
+        d3.promise.completed {
           void onFulfilled(Boolean b) {
             d1.fulfill("foo");
             assertEquals(count, 0);
@@ -49,7 +49,7 @@ shared class ConjunctionTest() extends AsyncTestBase() {
       assertEquals(t, reason);
       testComplete();
     }
-    and.compose(onFulfilled, onRejected);
+    and.map(onFulfilled, onRejected);
   }
   
   shared test void testRejectConjonction1() {
@@ -83,7 +83,7 @@ shared class ConjunctionTest() extends AsyncTestBase() {
     value s2 = p3.and(p4);
     value s3 = s1.and(s2.promise);
     variable Integer count = 0;
-    s3.onComplete {
+    s3.completed {
       void onFulfilled([Float, Boolean] a1, Integer a2, String a3) {
         assertEquals(count++, 0);
         assertEquals(a1, [0.4, false]);
@@ -92,19 +92,19 @@ shared class ConjunctionTest() extends AsyncTestBase() {
         testComplete();
       }
     };
-    d1.promise.onComplete {
+    d1.promise.completed {
       void onFulfilled(String s) {
         d2.fulfill(4);
         assertEquals(count, 0);
       }
     };
-    d2.promise.onComplete {
+    d2.promise.completed {
       void onFulfilled(Integer i) {
         d3.fulfill(false);
         assertEquals(count, 0);
       }
     };
-    d3.promise.onComplete {
+    d3.promise.completed {
       void onFulfilled(Boolean b) {
         d4.fulfill(0.4);
         assertEquals(count, 0);

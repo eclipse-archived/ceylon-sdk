@@ -21,11 +21,12 @@ class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
     
     clone() => UnmodifiableMap(map.clone());
     
+    each(void step(Key->Item element)) => map.each(step);
+    
 }
 
 "Wrap the given [[Map]], preventing attempts to narrow the
  returned `Map` to [[MutableMap]]."
 shared Map<Key,Item> unmodifiableMap<Key,Item>(Map<Key,Item> map)
         given Key satisfies Object
-        given Item satisfies Object
         => UnmodifiableMap(map);

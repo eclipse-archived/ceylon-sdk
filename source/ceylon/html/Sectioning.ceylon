@@ -20,7 +20,7 @@ shared class Article(String? id = null, CssClass classNames = [],
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement & ParentNode<BlockOrInline> {
 
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("article");
 
@@ -48,7 +48,7 @@ shared class Aside(String? id = null, CssClass classNames = [],
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement & ParentNode<BlockOrInline> {
 
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("aside");
 
@@ -76,7 +76,7 @@ shared class Header(String? id = null, CssClass classNames = [],
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement & ParentNode<BlockOrInline> {
     
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
     
     tag = Tag("header");
     
@@ -104,7 +104,7 @@ shared class Footer(String? id = null, CssClass classNames = [],
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement & ParentNode<BlockOrInline> {
     
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
     
     tag = Tag("footer");
     
@@ -131,7 +131,7 @@ shared class Nav(String? id = null, CssClass classNames = [],
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement & ParentNode<BlockOrInline> {
     
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
     
     tag = Tag("nav");
     
@@ -160,7 +160,7 @@ shared class Section(String? id = null, CssClass classNames = [],
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies BlockElement & ParentNode<BlockOrInline> {
     
-    shared actual {<BlockOrInline|{BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
     
     tag = Tag("section");
     

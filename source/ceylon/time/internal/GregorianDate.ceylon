@@ -1,7 +1,6 @@
 import ceylon.time { Date, DateTime, Time, Period, DateRange }
-import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, sunday, ReadableDatePeriod, february, months }
+import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, january, ReadableDatePeriod, months, monday, weekdays }
 import ceylon.time.chronology { impl=gregorian }
-import ceylon.time.internal.math { adjustedMod }
 
 "Default implementation of a gregorian calendar"
 shared class GregorianDate( Integer dayOfEra )
@@ -68,7 +67,7 @@ shared class GregorianDate( Integer dayOfEra )
         value o = month.add(months);
         value newYear = year + o.years;
 
-        value monthDay = monthOf(o.month.integer).numberOfDays(impl.leapYear(newYear));
+        value monthDay = o.month.numberOfDays(impl.leapYear(newYear));
         return GregorianDate( impl.fixedFrom([newYear, o.month.integer, min([monthDay, day])]) );
     }
 
@@ -94,8 +93,11 @@ shared class GregorianDate( Integer dayOfEra )
         if ( years == 0 ) {
             return this;
         }
-        value newDay = day == 29 && month == february then 28 else day;
-        return GregorianDate(impl.fixedFrom([year + years, month.integer, newDay] ));
+        
+        value newYear = year + years;
+        value monthDay = month.numberOfDays(impl.leapYear(newYear));
+        
+        return GregorianDate(impl.fixedFrom([newYear, month.integer, min{ day, monthDay }] ));
     }
 
     "Subtracts number of years from this date returning the resulting the new gregorian date.
@@ -147,6 +149,39 @@ shared class GregorianDate( Integer dayOfEra )
         return GregorianDate( impl.fixedFrom([year, month.integer, day]) );
     }
 
+    "Returns new date with the specified weekOfYear value.
+     
+     **Note:** It should result in a valid gregorian date.
+     "
+    shared actual Date withWeekOfYear(Integer weekOfYear) {
+        value thisWeekOfYear = this.weekOfYear;
+        if (weekOfYear == thisWeekOfYear) {
+            return this;
+        }
+        
+        assert(0 <= weekOfYear <= 53);
+        return plusWeeks(weekOfYear - thisWeekOfYear);
+    }
+    
+    shared actual Date withDayOfWeek(DayOfWeek dayOfWeek) {
+        if (dayOfWeek == this.dayOfWeek) {
+            return this;
+        }
+        
+        return plusDays(dayOfWeek.integer - this.dayOfWeek.integer);
+    }
+    
+    shared actual Date withDayOfYear(Integer dayOfYear) {
+        if (dayOfYear == this.dayOfYear) {
+            return this;
+        }
+        
+        value lastDayOfYear = leapYear then days.perLeapYear else days.perYear;
+        assert(1 <= dayOfYear <= lastDayOfYear);
+        
+        return plusDays(dayOfYear - this.dayOfYear);
+    }
+    
     "Adds specified date period to this date and returns the new [[Date]]."
     shared actual Date plus( ReadableDatePeriod amount ) {
         return addPeriod {
@@ -189,57 +224,46 @@ shared class GregorianDate( Integer dayOfEra )
 
     "Returns week of year according to ISO-8601 week number calculation rules."
     shared actual Integer weekOfYear {
-        value weekFromYearBefore = 0;
-        value possibleNextYearWeek = 53;
-
-        //TODO: Simplify this method (and move it to gregorian chronology?)
-        function normalizeFirstWeek( Integer weekNumber ) {
-            variable value result = weekNumber;
-            value jan1 = withDay(1).withMonth(january);
-            value jan1WeekDay = jan1.dayOfWeek == sunday then 7 else jan1.dayOfWeek.integer; 
-            if ( ( dayOfYear <= ( 8 - jan1WeekDay ) ) && jan1WeekDay > 4 ) {
-                if ( jan1WeekDay == 5 || (jan1WeekDay == 6 && minusYears(1).leapYear)) {
-                    result = 53;
-                } else {
-                    result = 52;
-                }
+        function normalizeFirstWeek(Integer yearNumber) {
+            value jan1 = withDay(1).withMonth(january).withYear(yearNumber);
+            value jan1WeekDayMinusMonday = jan1.dayOfWeek.integer - monday.integer;
+            
+            return jan1.minusDays(jan1WeekDayMinusMonday)
+                       .plusDays(if (jan1WeekDayMinusMonday >= 4) then weekdays.size else 0);
+        }
+        
+        function normalizeLastWeek(Integer yearNumber)
+                => normalizeFirstWeek(yearNumber + 1).minusDays(1);
+        
+        value startFirstWeekOfYear = normalizeFirstWeek( year );
+        
+        variable value weekNumber = 1;
+        if (this < startFirstWeekOfYear) {
+            value startFirstWeekOfPriorYear = normalizeFirstWeek(year - 1);
+            value daysSinceStartFirstWeekOfPriorYear = this.offset(startFirstWeekOfPriorYear) + 1;
+            
+            weekNumber = (daysSinceStartFirstWeekOfPriorYear / weekdays.size)
+                       + (daysSinceStartFirstWeekOfPriorYear % weekdays.size > 0 then 1 else 0);
+        }
+        else {
+            value endLastWeekOfYear = normalizeLastWeek(year);
+            if (this <= endLastWeekOfYear) {
+                value daysSinceStartFirstWeekOfYear = this.offset( startFirstWeekOfYear ) + 1;
+                weekNumber = (daysSinceStartFirstWeekOfYear / weekdays.size)
+                           + (daysSinceStartFirstWeekOfYear % weekdays.size > 0 then 1 else 0);
             }
-            return result;
         }
-
-        function normalizeLastWeek( Integer weekNumber ) {
-            variable value result = weekNumber;
-            value weekDay = adjustedMod(dayOfWeek.integer, 7); 
-            value totalDaysInYear = leapYear then 366 else 365;
-            if (( totalDaysInYear - dayOfYear) < (4 - weekDay) ) {
-                result = 1;
-            }
-            return result;
-        }
-
-        value dayOfWeekNumber = adjustedMod(dayOfWeek.integer, 7);
-        variable value weekNumber = ( dayOfYear - dayOfWeekNumber + 10 ) / 7;
-
-        if ( weekNumber == weekFromYearBefore ) {
-            weekNumber = normalizeFirstWeek( weekNumber );
-        }
-        else if ( weekNumber == possibleNextYearWeek ) {
-            weekNumber = normalizeLastWeek( weekNumber );
-        }
-
+        
         return weekNumber;
     }
 
     "Returns new [[DateTime]] value."
-    shared actual DateTime at(Time time) {
-        return GregorianDateTime(this, time);
-    }
+    shared actual DateTime at(Time time) => GregorianDateTime(this, time);
 
     "Returns ISO-8601 formatted String representation of this date.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Dates"
-    shared actual String string {
-        return "``year.string.padLeading(4, '0')``-``month.integer.string.padLeading(2, '0')``-``day.string.padLeading(2, '0')``";	
-    }
+    shared actual String string 
+            => "``year.string.padLeading(4, '0')``-``month.integer.string.padLeading(2, '0')``-``day.string.padLeading(2, '0')``";
 
     "Returns the period between this and the given date.
 
@@ -283,9 +307,7 @@ shared class GregorianDate( Integer dayOfEra )
     shared actual Period periodTo(Date end) => end.periodFrom(this);
 
     "Returns the [[DateRange]] between this and given Date."
-    shared actual DateRange rangeTo( Date other ) {
-        return DateRange(this, other); 
-    }
+    shared actual DateRange rangeTo( Date other ) => DateRange(this, other);
 
     shared actual Date neighbour(Integer offset) => plusDays(offset);
 

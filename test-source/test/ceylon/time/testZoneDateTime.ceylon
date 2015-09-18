@@ -7,14 +7,12 @@ import ceylon.time {
     date,
     time,
     Instant,
-    Period,
-    dateTime
+    Period
 }
 import ceylon.time.base {
     milliseconds,
     september,
-    june,
-    may
+    june
 }
 import ceylon.time.timezone {
     timeZone,
@@ -71,26 +69,40 @@ shared class DstZoneDateTimeTest() {
      00:00 and ending with 23:59:59.999 UTC (inclusive)"
     SimpleDstTimeZone dst = SimpleDstTimeZone(june_1, june_2.predecessor, timeZone.offset(2));
 
-    shared test void timezoneOffsetIsUsedAfterDst() =>
-            assertEquals(june_2_12am.zoneDateTime(dst).time, time(14, 00));
+    shared test void timezoneOffsetIsUsedAfterDst() => assertEquals { 
+        actual = june_2_12am.zoneDateTime(dst).time; 
+        expected = time(14, 00);
+    };
 
-    shared test void currentOffsetUsesDaylightOffset() =>
-            assertEquals(june_1_12am.zoneDateTime(dst).currentOffsetMilliseconds, 3 * milliseconds.perHour);
+    shared test void currentOffsetUsesDaylightOffset() => assertEquals {
+        actual = june_1_12am.zoneDateTime(dst).currentOffsetMilliseconds;
+        expected = 3 * milliseconds.perHour;
+    };
 
-    shared test void daylightOffsetIsUsedFromTheStartOfDst() =>
-            assertEquals(june_1.zoneDateTime(dst).time, time(3,00));
+    shared test void daylightOffsetIsUsedFromTheStartOfDst() => assertEquals {
+        actual = june_1.zoneDateTime(dst).time;
+        expected = time(3,00); 
+    };
 
-    shared test void daylightOffsetIsUsedUntilTheEndOfDst() =>
-            assertEquals(dst.end.zoneDateTime(dst).time, time(2, 59, 59, 999));
+    shared test void daylightOffsetIsUsedUntilTheEndOfDst() => assertEquals {
+        actual = dst.end.zoneDateTime(dst).time;
+        expected = time(2, 59, 59, 999);
+    };
 
-    shared test void daylightOffsetCanAffectDate() =>
-            assertEquals(dst.end.zoneDateTime(dst).date, date(2013, june, 2));
+    shared test void daylightOffsetCanAffectDate() => assertEquals {
+        actual = dst.end.zoneDateTime(dst).date;
+        expected = date(2013, june, 2);
+    };
 
-    shared test void addingDayWillShiftIntoDst() =>
-        assertEquals(may_31_12am.zoneDateTime(dst).plusDays(1).time, time(15, 00));
+    shared test void addingDayWillShiftIntoDst() => assertEquals {
+        actual = may_31_12am.zoneDateTime(dst).plusDays(1).time;
+        expected = time(15, 00);
+    };
 
-    shared test void addingDayWillShiftOutOfDst() =>
-        assertEquals(june_1_12am.zoneDateTime(dst).plusDays(1).time, time(14, 00));
+    shared test void addingDayWillShiftOutOfDst() => assertEquals {
+        actual = june_1_12am.zoneDateTime(dst).plusDays(1).time;
+        expected = time(14, 00);
+    };
 }
 
 shared class ZoneDateTimeEnumerableTest() {
@@ -100,8 +112,10 @@ shared class ZoneDateTimeEnumerableTest() {
 
     SimpleDstTimeZone dst = SimpleDstTimeZone(june_1, june_2.predecessor, timeZone.offset(2));
 
-    shared test void enumerateUsesOffset() =>
-            assertEquals(may_31_12am.zoneDateTime(dst).offset(may_31_12am.zoneDateTime(dst)), 0);
+    shared test void enumerateUsesOffset() => assertEquals {
+        actual = may_31_12am.zoneDateTime(dst).offset(may_31_12am.zoneDateTime(dst));
+        expected = 0;
+    };
 
     shared test void predecessor() =>
             assertEquals(june_1.zoneDateTime(dst).predecessor,
@@ -118,7 +132,9 @@ class SimpleDstTimeZone(start, end, timezoneOffset) satisfies RuleBasedTimezone 
     OffsetTimeZone dstOffset = OffsetTimeZone(timezoneOffset.offsetMilliseconds + 1 * milliseconds.perHour);
 
     OffsetTimeZone offsetTimeZone(Instant instant) => 
-            ( start <= instant <= end ) then dstOffset else timezoneOffset;
+            if ( start <= instant <= end ) 
+            then dstOffset 
+            else timezoneOffset;
 
     shared actual Integer offset(Instant instant) =>
             offsetTimeZone(instant).offset(instant);

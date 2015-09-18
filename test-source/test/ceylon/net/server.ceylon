@@ -85,6 +85,22 @@ test void testServer() {
         Endpoint {
             service => void (Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
+                response.writeString("post");
+            };
+            path = startsWith("/acceptMethodTestSameUrl");
+            acceptMethod = {post};
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString("get");
+            };
+            path = startsWith("/acceptMethodTestSameUrl");
+            acceptMethod = {get};
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.parameter("čšž") else "");
             };
             path = startsWith("/paramTest");
@@ -189,6 +205,8 @@ test void testServer() {
                 concurentFileRequests(numberOfUsers);
                 
                 acceptMethodTest();
+                
+                acceptMethodTestSameUrl();
                 
                 methodTest();
                 
@@ -421,8 +439,8 @@ void acceptMethodTest() {
     value responseContent = response.contents;
     response.close();
     //TODO log
-    assertEquals(200, responseStatus);
-    assertEquals(post.string, responseContent);
+    assertEquals(responseStatus, 200);
+    assertEquals(responseContent, post.string);
 
     //accept GET
     value request1 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
@@ -431,9 +449,9 @@ void acceptMethodTest() {
     request1.setParameter(Parameter("foo", "valueFoo"));
     value response1 = request1.execute();
     value response1Status = response1.status;
-    response.close();
+    response1.close();
     //TODO log
-    assertEquals(200, response1Status);
+    assertEquals(response1Status, 200);
 
     //do NOT accept PUT 
     value request2 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
@@ -443,7 +461,7 @@ void acceptMethodTest() {
     value response2Status = response2.status;
     response2.close();
     //TODO log
-    assertEquals(405, response2Status);
+    assertEquals(response2Status, 405);
     if (exists Header allow = response2.headersByName["allow"]) {
         assertEquals(allow.values.get(0), "POST, GET");
     } else {
@@ -459,7 +477,35 @@ void acceptMethodTest() {
     value response3Status = response3.status;
     response3.close();
     //TODO log
-    assertEquals(200, response3Status);
+    assertEquals(response3Status, 200);
+}
+
+void acceptMethodTestSameUrl() {
+    //accept POST
+    value request = ClientRequest(parse("http://localhost:8080/acceptMethodTestSameUrl"));
+    request.method = post;
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.setParameter(Parameter("foo", "valueFoo"));
+    value response = request.execute();
+    value responseStatus = response.status;
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    assertEquals(responseStatus, 200);
+    assertEquals(responseContent, post.string);
+
+    //accept GET
+    value request1 = ClientRequest(parse("http://localhost:8080/acceptMethodTestSameUrl"));
+    request1.method = get;
+    request1.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request1.setParameter(Parameter("foo", "valueFoo"));
+    value response1 = request1.execute();
+    value response1Status = response1.status;
+    value response1Content = response1.contents;
+    response1.close();
+    //TODO log
+    assertEquals(response1Status, 200);
+    assertEquals(response1Content, get.string);
 }
 
 void parametersTest(String paramKey, String paramValue) {

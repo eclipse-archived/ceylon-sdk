@@ -56,40 +56,40 @@ shared interface Logger {
             => this.priority<=priority;
     
     "Send a log [[message]] with the given [[priority]].
-     Optionally, an [[exception]] may be given."
+     Optionally, a [[throwable]] may be given."
     shared formal void log(Priority priority, 
                     Message message, 
-                    Exception? exception=null);
+                    Throwable? throwable=null);
     
     "Send a [[ceylon.logging::fatal]] log message."
     shared void fatal(Message message,
-                    Exception? exception=null) 
-            => log(package.fatal, message, exception);
+                    Throwable? throwable=null) 
+            => log(package.fatal, message, throwable);
     
     "Send an [[ceylon.logging::error]] log message."
     shared void error(Message message,
-                    Exception? exception=null) 
-            => log(package.error, message, exception);
+                    Throwable? throwable=null) 
+            => log(package.error, message, throwable);
     
     "Send a [[ceylon.logging::warn]] log message."
     shared void warn(Message message,
-                    Exception? exception=null) 
-            => log(package.warn, message, exception);
+                    Throwable? throwable=null) 
+            => log(package.warn, message, throwable);
     
     "Send an [[ceylon.logging::info]] log message."
     shared void info(Message message,
-                    Exception? exception=null) 
-            => log(package.info, message, exception);
+                    Throwable? throwable=null) 
+            => log(package.info, message, throwable);
     
     "Send a [[ceylon.logging::debug]] log message."
     shared void debug(Message message,
-                    Exception? exception=null)
-            => log(package.debug, message, exception);
+                    Throwable? throwable=null)
+            => log(package.debug, message, throwable);
     
     "Send a [[ceylon.logging::trace]] log message."
     shared void trace(Message message,
-                    Exception? exception=null)
-            => log(package.trace, message, exception);
+                    Throwable? throwable=null)
+            => log(package.trace, message, throwable);
     
 }
 
@@ -125,12 +125,12 @@ class LoggerImpl(shared actual Category category)
     }
     shared actual void log(Priority priority, 
             Message message, 
-            Exception? exception) {
+            Throwable? throwable) {
         if (enabled(priority)) {
             for (writeLog in logWriters) {
                 writeLog(priority, category, 
                         render(message), 
-                        exception);
+                        throwable);
             }
         } 
     }

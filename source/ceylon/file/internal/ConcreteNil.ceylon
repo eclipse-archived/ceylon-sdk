@@ -23,8 +23,8 @@ class ConcreteNil(JPath jpath)
     }
     
     shared actual File createFile(Boolean includingParentDirectories) {
-        if( includingParentDirectories ) {
-            newDirectories(jpath.parent);
+        if( includingParentDirectories, exists parent = jpath.parent ) {
+            newDirectories(parent);
         }
         return ConcreteFile(newFile(jpath));
     }

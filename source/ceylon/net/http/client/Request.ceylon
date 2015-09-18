@@ -37,17 +37,17 @@ shared class Request(uri,
     data = null,
     dataContentType = "application/octet-stream",
     bodyCharset = utf8,
-    initalParameters = empty,
-    initalHeaders = empty) {
+    initialParameters = empty,
+    initialHeaders = empty) {
     
     // constant
     String crLf = "\r\n";
     
-    "The inital values for [[parameters]]"
-    {Parameter*} initalParameters;
+    "The initial values for [[parameters]]"
+    {Parameter*} initialParameters;
     
-    "The inital values for [[headers]]"
-    {Header*} initalHeaders;
+    "The initial values for [[headers]]"
+    {Header*} initialHeaders;
     
     "This request URI, must be absolute."
     shared Uri uri;
@@ -71,11 +71,11 @@ shared class Request(uri,
      if [[data]] is selected as the body, and it is a [[ByteBuffer]]."
     shared variable Charset bodyCharset;
     
-    "The list of request parameters. Initialised by [[initalParameters]]."
-    shared MutableList<Parameter> parameters = LinkedList<Parameter>(initalParameters);
+    "The list of request parameters. Initialised by [[initialParameters]]."
+    shared MutableList<Parameter> parameters = LinkedList<Parameter>(initialParameters);
     
-    "The list of request headers. Initialised by [[initalHeaders]]."
-    shared MutableList<Header> headers = LinkedList<Header>(initalHeaders);
+    "The list of request headers. Initialised by [[initialHeaders]]."
+    shared MutableList<Header> headers = LinkedList<Header>(initialHeaders);
     
     "The request method, such as `GET`, `POST`…"
     shared variable Method method;

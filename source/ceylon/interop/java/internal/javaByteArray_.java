@@ -11,7 +11,7 @@ import com.redhat.ceylon.compiler.java.metadata.Method;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
-@Ceylon(major = 7)
+@Ceylon(major = 8)
 @Method
 @SharedAnnotation$annotation$
 public final class javaByteArray_ {
@@ -27,7 +27,7 @@ public final class javaByteArray_ {
      * 
      * @see ByteArray
      */
-    public static byte[] javaByteArray(@SuppressWarnings("rawtypes") @Name("array") 
+    public static byte[] javaByteArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Byte>|ceylon.language::Array<java.lang::Byte>") 
     Object array){
         @SuppressWarnings("rawtypes")

@@ -8,7 +8,7 @@ shared class PathSegment {
     "The path segment parameters"
     shared Parameter[] parameters;
 
-    shared new PathSegment(
+    shared new (
             "The path segment name"
             String name,
             "The path segment parameters"

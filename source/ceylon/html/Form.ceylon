@@ -22,7 +22,7 @@ shared class Form(action, method = "", acceptCharset = null,
         extends BaseElement(id, classNames, style, accessKey, contextMenu,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies BlockElement & ParentNode<BlockElement> {
+        satisfies BlockElement & ParentNode<BlockOrInline> {
 
     "Specifies where to send the form-data
      when a form is submitted."
@@ -56,7 +56,7 @@ shared class Form(action, method = "", acceptCharset = null,
      that is received after submitting the form."
     shared String? target; // TODO enumerated type? look at A.target
 
-    shared actual {<BlockElement|{BlockElement*}|Snippet<BlockElement>|Null>*} children;
+    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
 
     tag = Tag("form");
 

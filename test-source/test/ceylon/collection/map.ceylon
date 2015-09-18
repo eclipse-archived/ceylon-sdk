@@ -75,6 +75,14 @@ shared test void testMapEquality() {
     assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
 }
 
+test shared void testTreeMapSpan() {
+    value ts = naturalOrderTreeMap { 4->4, 5->5, 1->1, 2->2, 3->3 };
+    assertEquals(ts[1..3].sequence(),[1->1,2->2,3->3]);
+    assertEquals(ts[2..3].sequence(),[2->2,3->3]);
+    assertEquals(ts[3..1].sequence(),[3->3,2->2,1->1]);
+    assertEquals(ts[3..2].sequence(),[3->3,2->2]);
+}
+
 void doTestMapRemove(MutableMap<String,String> map) {
     assertEquals(map.put("a", "A"), null);
     assertEquals(map.put("b", "B"), null);

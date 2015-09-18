@@ -6,13 +6,11 @@ import ceylon.time.chronology { unixTime }
 
 "Instant of time in a specific time zone."
 shared interface ZoneDateTime
-       satisfies ReadableDateTime
+       satisfies ReadableZoneDateTime
+               & ReadableDateTime & ReadableTimeZone
                & DateTimeBehavior<ZoneDateTime, Date, Time> 
                & Comparable<ZoneDateTime>
                & Ordinal<ZoneDateTime> & Enumerable<ZoneDateTime> {
-
-    "Time zone information of this date and time value."
-    shared formal TimeZone timeZone;
 
     "Instant used as base."
     shared formal Instant instant;

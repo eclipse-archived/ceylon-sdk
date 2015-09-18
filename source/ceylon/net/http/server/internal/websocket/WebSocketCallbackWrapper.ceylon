@@ -7,8 +7,7 @@ import ceylon.net.http.server.websocket {
 
 import io.undertow.websockets.core {
     WebSocketCallback,
-    UtWebSocketChannel=WebSocketChannel,
-    FragmentedMessageChannel
+    UtWebSocketChannel=WebSocketChannel
 }
 
 import java.lang {
@@ -43,41 +42,8 @@ class WebSocketCallbackWrapper(
     }
 }
 
-class WebSocketCallbackFragmentedWrapper(
-    Anything(WebSocketChannel)? onCompletion,
-    Anything(WebSocketChannel,Exception)? onSocketError,
-    WebSocketChannel channel)
-        satisfies WebSocketCallback<FragmentedMessageChannel> {
-
-    shared actual void complete(UtWebSocketChannel? webSocketChannel, 
-            FragmentedMessageChannel ch) {
-        if (exists onCompletion) {
-            onCompletion(channel);
-        }
-    }
-
-    shared actual void onError(UtWebSocketChannel? webSocketChannel, 
-            FragmentedMessageChannel ch, Throwable? throwable) {
-        if (exists onSocketError) {
-            if (exists throwable) {
-                onSocketError(channel, 
-                    HttpException("WebSocket error.", throwable));
-            } else {
-                onSocketError(channel, 
-                    HttpException("WebSocket error, no details available."));
-            }
-        }
-    }
-}
-
 WebSocketCallbackWrapper wrapCallbackSend(
     Anything(WebSocketChannel)? onCompletion,
     Anything(WebSocketChannel,Exception)? onError,
     WebSocketChannel channel)
         => WebSocketCallbackWrapper(onCompletion, onError, channel);
-
-WebSocketCallbackFragmentedWrapper wrapFragmentedCallbackSend(
-    Anything(WebSocketChannel)? onCompletion,
-    Anything(WebSocketChannel,Exception)? onError,
-    WebSocketChannel channel)
-        => WebSocketCallbackFragmentedWrapper(onCompletion, onError, channel);

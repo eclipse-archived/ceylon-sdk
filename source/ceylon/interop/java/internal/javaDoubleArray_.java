@@ -12,7 +12,7 @@ import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
 
-@Ceylon(major = 7)
+@Ceylon(major = 8)
 @Method
 @SharedAnnotation$annotation$
 public final class javaDoubleArray_ {
@@ -28,7 +28,7 @@ public final class javaDoubleArray_ {
      * 
      * @see DoubleArray
      */
-    public static double[] javaDoubleArray(@SuppressWarnings("rawtypes") @Name("array") 
+    public static double[] javaDoubleArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Float>|ceylon.language::Array<java.lang::Double>") 
     Object array){
         @SuppressWarnings("rawtypes")

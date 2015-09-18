@@ -3,12 +3,15 @@ import ceylon.promise.internal {
   AtomicRef
 }
 
-AtomicRef<ExecutionContext> currentExecutionContext = AtomicRef<ExecutionContext>(runtimeContext);
+AtomicRef<ExecutionContext> currentExecutionContext 
+        = AtomicRef<ExecutionContext>(runtimeContext);
 
-"""The global execution context for running promise compositions when no execution context is explicitly used"""
-shared ExecutionContext globalExecutionContext => currentExecutionContext.get();
+"""The global execution context for running promise 
+   compositions when no execution context is explicitly used"""
+shared ExecutionContext globalExecutionContext 
+        => currentExecutionContext.get();
 
-"""Define the global execution context for running deferred compositions"""
-shared void defineGlobalExecutionContext(ExecutionContext context) {
-  currentExecutionContext.set(context);
-}
+"""Define the global execution context for running deferred 
+   compositions"""
+shared void defineGlobalExecutionContext(ExecutionContext context) 
+        => currentExecutionContext.set(context);

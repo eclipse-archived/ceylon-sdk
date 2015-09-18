@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Properties;
 
+import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -20,6 +21,41 @@ import com.redhat.ceylon.compiler.java.runtime.tools.CeylonToolProvider;
 import com.redhat.ceylon.compiler.java.runtime.tools.Runner;
 import com.redhat.ceylon.compiler.java.runtime.tools.RunnerOptions;
 
+/**
+ * A {@link ServletContextListener} that initializes the Ceylon metamodel for
+ * web applications packaged by the {@code ceylon war} tool.
+ * <p>
+ * Note that {@code ServletContextListener}s are not notified of initialization
+ * until after {@link ServletContainerInitializer}s have been called. Therefore,
+ * if the web application includes a {@code ServletContainerInitializer} that is
+ * implemented in Ceylon, it is recommended that the
+ * {@code ServletContainerInitializer} force initialization of the Ceylon
+ * environment prior to performing other initialization tasks. The
+ * {@code WarInitializer} should still be registered with the
+ * {@code ServletContext} to ensure
+ * {@link #contextDestroyed(ServletContextEvent)} is called.
+ * </p>
+ * <p>
+ * The following can be used to configure the Ceylon environment from a
+ * {@code ServletContainerInitializer} implemented in Ceylon, in lieu of the
+ * standard {@code web.xml} configuration:
+ * </p>
+ * <p>
+ *
+ * <pre>
+ * shared class Initializer() satisfies ServletContainerInitializer {
+ *     shared actual void onStartup(
+ *             Set&lt;Class&lt;out Object>>? set,
+ *             ServletContext servletContext) {
+ *
+ *         value warInitializer = WarInitializer();
+ *         warInitializer.initialize(servletContext);
+ *         servletContext.addListener(warInitializer);
+ *     }
+ * }
+ * </pre>
+ * </p>
+ */
 public class WarInitializer implements ServletContextListener {
 
 	@Override
@@ -32,7 +68,13 @@ public class WarInitializer implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
-		final ServletContext context = sce.getServletContext(); 
+		initialize(sce.getServletContext());
+	}
+
+	public void initialize(final ServletContext context) {
+		if (runner != null) {
+			return;
+		}
 		final File repo = setupRepo(context);
 		final Properties properties = moduleProperties(context);
 		final RunnerOptions options = new RunnerOptions();
@@ -43,8 +85,6 @@ public class WarInitializer implements ServletContextListener {
 		this.runner = CeylonToolProvider.getRunner(Backend.Java, options, 
 				properties.getProperty("moduleName"),
 				properties.getProperty("moduleVersion"));
-		
-		this.runner.run();
 	}
 
 	protected File setupRepo(final ServletContext context) {

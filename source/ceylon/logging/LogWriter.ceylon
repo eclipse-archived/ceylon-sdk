@@ -8,7 +8,7 @@ import ceylon.collection {
  [[addLogWriter]]."
 see (`function addLogWriter`)
 shared alias LogWriter 
-        => Anything(Priority,Category,String, Exception?);
+        => Anything(Priority,Category,String, Throwable?);
 
 "Register a new [[log writer function|log]] with the logging
  system. Log messages are directed to all registered 

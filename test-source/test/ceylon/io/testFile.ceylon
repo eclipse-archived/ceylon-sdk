@@ -1,7 +1,9 @@
 import ceylon.file {
     File,
     Path,
-    parsePath
+    parsePath,
+    Nil,
+    createZipFileSystem
 }
 import ceylon.io {
     newOpenFile,
@@ -157,4 +159,29 @@ test void testFileTruncate(){
 	
 	String ret = decoder.consume();
 	assertEquals("Hello", ret);
+}
+
+test void testZipProviderMismatchException(){
+	// create a new zip file and write to it
+	Path path = parsePath("foo.zip");
+	
+	if(is File f = path.resource){
+		// clean it up just in case
+		f.delete();
+	}
+	
+	value zip = path.resource;
+	assert(is Nil zip);
+	value system = createZipFileSystem(zip);
+	try {
+		value root = system.rootPaths.first;
+		assert(exists root);
+		root.childPath("toto");
+	} finally {
+		system.close();
+		if(is File f = path.resource){
+			// clean it up for next time
+			f.delete();
+		}
+	}
 }

@@ -5,7 +5,7 @@ shared class Query {
     "The list of query parameters"
     shared Parameter[] parameters;
 
-    shared new Query(Parameter* parameters) {
+    shared new (Parameter* parameters) {
         this.parameters = parameters.sequence();
     }
 

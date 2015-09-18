@@ -1,10 +1,13 @@
 import ceylon.test {
     ...
 }
+import ceylon.test.core {
+    IgnoreException
+}
 
 test
 shared void foo() {
-    sum(0..1k);
+    await(10);
 }
 
 test
@@ -15,6 +18,11 @@ shared void fooThrowingAssertion() {
 test
 shared void fooThrowingException() {
     throw Exception("unexpected exception");
+}
+
+test
+shared void fooThrowingIgnoreException() {
+    throw IgnoreException("ignore it!");
 }
 
 test
@@ -30,13 +38,13 @@ shared class Bar() {
 
     test
     shared void bar1() {
-        sum(0..1k);
+        await(10);
         barInstance1 = this;
     }
     
     test
     shared void bar2() {
-        sum(0..1k);
+        await(10);
         barInstance2 = this;
     }
 
@@ -92,4 +100,10 @@ shared void bugTestSuiteWithInterface() {
 
 testSuite({`package test.ceylon.test.stubs.empty`})
 shared void bugTestSuiteWithEmptyPackage() {
+}
+
+void await(Integer miliseconds) {
+    value end = system.milliseconds + miliseconds;
+    while(system.milliseconds < end) {
+    }
 }

@@ -5,8 +5,6 @@ shared class SingletonSet<Element>(shared Element element)
         satisfies Set<Element>
         given Element satisfies Object {
     
-    clone() => this;
-    
     contains(Object element) => this.element == element;
     
     shared actual Set<Element> complement<Other>(Set<Other> set)
@@ -50,5 +48,9 @@ shared class SingletonSet<Element>(shared Element element)
             => (super of Set<Element>).equals(that);
     
     hash => (super of Set<Element>).hash;
+    
+    each(void step(Element element)) => step(element);
+    
+    shared actual SingletonSet<Element> clone() => this;
     
 }

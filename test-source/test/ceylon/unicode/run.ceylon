@@ -38,3 +38,11 @@ test void testDirectionality() {
     assertEquals(paragraphSeparator, directionality('\n'));
     assertEquals(arabicNumber, directionality('\{ARABIC-INDIC DIGIT ONE}'));
 }
+
+test void testGraphemes() {
+    String g = "\{DEVANAGARI LETTER DA}\{DEVANAGARI SIGN VIRAMA}\{DEVANAGARI LETTER DHA}";
+    assert (graphemes(g).size==1);
+    assert (exists first = graphemes(g).first);
+    assert (first==g);
+    assert (graphemes("XK̅C𝔻").size==4);
+}

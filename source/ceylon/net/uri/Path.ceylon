@@ -7,7 +7,7 @@ shared class Path {
     "True if this path is absolute (begins with a `/`)"
     shared Boolean absolute;
 
-    shared new Path(
+    shared new (
             "True if this path is absolute (begins with a `/`)"
             Boolean absolute = false,
             "The list of path segments"

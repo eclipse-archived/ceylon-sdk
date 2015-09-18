@@ -1,18 +1,32 @@
+import ceylon.collection {
+    HashMap
+}
 import ceylon.interop.java {
     ...
 }
 import ceylon.test {
     assertFalse,
     assertEquals,
-    test
+    test,
+    assertTrue,
+    assertNull,
+    assertNotNull
 }
 
 import java.lang {
     System {
         getSystemProperty=getProperty
-    }
+    },
+    JString=String
 }
-import java.util { ArrayList, HashSet, LinkedHashSet, TreeSet, LinkedList, Date }
+import java.util {
+    ArrayList,
+    HashSet,
+    LinkedHashSet,
+    TreeSet,
+    LinkedList,
+    Date
+}
 
 test void stringTests() {
     value val = javaString(getSystemProperty("user.home"));
@@ -49,4 +63,57 @@ test void classTests() {
     
     value klass2 = javaClass<String>();
     assertEquals("class ceylon.language.String", klass2.string);
+}
+
+test void ceylonStringMap() {
+    value jsMap = HashMap { javaString("one") -> 1, javaString("two") -> 2 };
+    value csMap = CeylonStringMap(jsMap);
+
+    assertEquals(csMap.get("one"), 1);
+    assertEquals(csMap.get("two"), 2);
+    assertTrue(csMap.defines("one"));
+    assertFalse(csMap.defines(javaString("one")));
+    assertFalse(csMap.defines("ONE"));
+    assertTrue(csMap.keys.contains("two"));
+    assertEquals(csMap.keys.size, 2);
+    assertEquals(CeylonStringMap(emptyMap).size, 0);
+}
+
+test void ceylonStringMutableMap() {
+    value jsMap = HashMap { javaString("one") -> 1 };
+    value csMap = CeylonStringMutableMap(jsMap);
+    csMap.put("two", 2);
+
+    assertEquals(jsMap.get(javaString("two")), 2);
+
+    assertEquals(csMap.get("one"), 1);
+    assertEquals(csMap.get("two"), 2);
+    assertTrue(csMap.defines("one"));
+    assertFalse(csMap.defines(javaString("one")));
+    assertFalse(csMap.defines("ONE"));
+    assertTrue(csMap.keys.contains("two"));
+    assertEquals(csMap.keys.size, 2);
+    assertEquals(CeylonStringMutableMap(
+        HashMap<JString, Object>()).size, 0);
+
+    csMap.remove("two");
+    assertNull(jsMap.get(javaString("two")));
+}
+
+test void bug342() {
+    class OuterClass() {
+        shared class InnerClass() {
+            shared class InnerInnerClass() {}
+        }
+    }
+    object outerObject {}
+    class FunctionClass() {}
+    object functionObject {}
+
+    assertNotNull(javaClass<OuterClass>());
+    assertNotNull(javaClass<OuterClass.InnerClass>());
+    assertNotNull(javaClass<OuterClass.InnerClass.InnerInnerClass>());
+    assertNotNull(javaClass<FunctionClass>());
+    assertNotNull(javaClass<\IouterObject>());
+    assertNotNull(javaClass<\IfunctionObject>());
 }

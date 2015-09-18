@@ -46,13 +46,18 @@ shared sealed interface Process {
     
     "The exit code of the terminated process,
      or `null` if the process has not yet 
-     terminated."
+     terminated. Normal termination is 
+     conventionally indicated by the exit
+     code `0`."
     formal shared Integer? exitCode;
     
     "Determine if the process has terminated."
     formal shared Boolean terminated;
     
-    "Wait for the process to terminate."
+    "Wait for the process to terminate, 
+     returning the exit code. Normal 
+     termination is conventionally indicated 
+     by the exit code `0`."
     formal shared Integer waitForExit();
     
     "Force the process to terminate."
@@ -91,9 +96,9 @@ shared Process createProcess(
          process. By default the process inherits 
          the environment variables of the current
          virtual machine process."
-        <String->String>* environment) => 
-            ConcreteProcess(command, arguments, path, 
-                    input, output, error, environment);
+        <String->String>* environment) 
+        => ConcreteProcess(command, arguments, path, 
+            input, output, error, environment);
 
 "A source for the standard input stream of a process."
 shared interface Input 
@@ -141,5 +146,5 @@ shared class OverwriteFileOutput(path)
 }
 
 "Environment variables of the current virtual machine process."
-shared Iterable<String->String> currentEnvironment => 
-        environment;
+shared Iterable<String->String> currentEnvironment 
+        => environment;

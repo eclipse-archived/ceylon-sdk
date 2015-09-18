@@ -12,7 +12,7 @@ import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 
 
-@Ceylon(major = 7)
+@Ceylon(major = 8)
 @Method
 @SharedAnnotation$annotation$
 public final class javaIntArray_ {
@@ -28,7 +28,7 @@ public final class javaIntArray_ {
      * 
      * @see IntArray
      */
-    public static int[] javaIntArray(@SuppressWarnings("rawtypes") @Name("array") 
+    public static int[] javaIntArray(@Name("array") 
     @TypeInfo("ceylon.language::Array<ceylon.language::Character>|ceylon.language::Array<java.lang::Integer>") 
     Object array){
         @SuppressWarnings("rawtypes")

@@ -147,7 +147,10 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime), instance));
         }
         catch (Throwable e) {
-            if (e is AssertionError) {
+            if (e is IgnoreException) {
+                context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, e)));
+            }
+            else if (e is AssertionError) {
                 context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime), instance));
             } else {
                 context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime), instance));

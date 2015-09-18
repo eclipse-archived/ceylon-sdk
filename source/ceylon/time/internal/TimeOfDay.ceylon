@@ -42,9 +42,8 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
 
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Times"
-    shared actual String string {
-        return "``hours.string.padLeading(2, '0')``:``minutes.string.padLeading(2, '0')``:``seconds.string.padLeading(2, '0')``.``milliseconds.string.padLeading(3, '0')``";
-    }
+    shared actual String string 
+            => "``hours.string.padLeading(2, '0')``:``minutes.string.padLeading(2, '0')``:``seconds.string.padLeading(2, '0')``.``milliseconds.string.padLeading(3, '0')``";
 
     "Adds specified number of hours to this time of day
      and returns the result as new time of day."
@@ -197,9 +196,7 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
     shared actual Period periodTo(Time end) => end.periodFrom(this); 
 
     "Returns the [[TimeRange]] between this and given Time."
-    shared actual TimeRange rangeTo( Time other ) {
-        return TimeRange(this, other); 
-    }
+    shared actual TimeRange rangeTo( Time other ) => TimeRange(this, other);
 
     shared actual Time neighbour(Integer offset) => plusMilliseconds(offset);
 

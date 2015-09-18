@@ -9,6 +9,7 @@
  See the `ceylon.io` package for usage examples."
 by("Stéphane Épardaud")
 license("Apache Software License")
+native("jvm")
 module ceylon.io "1.1.1" {
     shared import ceylon.file "1.1.1";
     import ceylon.collection "1.1.1";

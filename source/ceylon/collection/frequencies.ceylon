@@ -19,7 +19,7 @@ shared Map<Element,Integer> frequencies<Element>
             map.put(element, Counter(1));
         }
     }
-    return map.mapItems((Element e, Counter c) => c.count);
+    return map.mapItems((e, c) => c.count);
 }
 
 class Counter(count) {
