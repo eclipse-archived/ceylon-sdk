@@ -138,7 +138,7 @@ final class WholeImpl(BigInteger num)
                 WholeImpl(result.get(1))];
     }
 
-    shared actual WholeImpl mod(Whole other) {
+    shared actual WholeImpl modulo(Whole other) {
         assert (is WholeImpl other);
         return WholeImpl(implementation
                 .mod(other.implementation));
@@ -166,7 +166,7 @@ final class WholeImpl(BigInteger num)
                 .pow(other.implementation.intValue()));
     }
 
-    shared actual Whole modPower(Whole exponent,
+    shared actual Whole moduloPower(Whole exponent,
                                  Whole modulus) {
         assert (is WholeImpl exponent, is WholeImpl modulus);
         return WholeImpl(implementation

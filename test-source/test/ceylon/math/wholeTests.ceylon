@@ -62,9 +62,9 @@ test void wholeTests() {
     assertEquals(wholeNumber(0), wholeNumber(4) % wholeNumber(2), "4%2");
     assertEquals(wholeNumber(-2), wholeNumber(-5) % wholeNumber(3), "(-5)%3");
 
-    print("Whole.mod");
-    assertEquals(wholeNumber(5).mod(wholeNumber(3)), wholeNumber(2), "5.mod(2)");
-    assertEquals(wholeNumber(-5).mod(wholeNumber(3)), wholeNumber(1), "(-5).mod(2)");
+    print("Whole.modulo");
+    assertEquals(wholeNumber(5).modulo(wholeNumber(3)), wholeNumber(2), "5.modulo(2)");
+    assertEquals(wholeNumber(-5).modulo(wholeNumber(3)), wholeNumber(1), "(-5).modulo(2)");
 
     print("Whole.power");
     assertEquals(wholeNumber(4), wholeNumber(2).power(wholeNumber(2)), "2.power(2)");

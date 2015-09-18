@@ -27,21 +27,21 @@ shared interface Whole
                                positive exponent")
     shared formal actual Whole power(Whole exponent);
 
-    deprecated("Renamed to [[modPower]].")
-    see(`function modPower`)
+    deprecated("Renamed to [[moduloPower]].")
+    see(`function moduloPower`)
     throws(`class Exception`, "If passed a negative modulus")
     shared Whole powerRemainder(Whole exponent, 
                                 Whole modulus)
-        => modPower(exponent, modulus);
+        => moduloPower(exponent, modulus);
 
-    "The result of `(this**exponent) mod modulus`."
+    "The result of `(this^exponent) mod modulus`."
     throws(`class Exception`, "If passed a negative modulus")
-    shared formal Whole modPower(Whole exponent, 
+    shared formal Whole moduloPower(Whole exponent, 
                                  Whole modulus);
 
     "The result of `this mod modulus`. This method differs from
      [[remainder]] in that the returned value will always be positive."
-    shared formal Whole mod(Whole modulus);
+    shared formal Whole modulo(Whole modulus);
 
     "Returns a pair containing the same results as calling
      `divided()` and `remainder()` with the given
