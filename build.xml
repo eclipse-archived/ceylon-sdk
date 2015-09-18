@@ -343,7 +343,7 @@
             nodefaultrepositories="true"
             withdependencies="true"
             out="${osgi.dist}/tempRepo">
-            <rep url="./modules"/>
+            <rep url="${basedir}/modules"/>
             <sourcemodules/>
         </ceylon-copy>
     </target>
@@ -386,7 +386,7 @@
             categoryPrefix="ceylon.sdk"
             categories="${osgi.p2}/category.xml">
             <moduleset refid="modules.sdk.jvm"/>
-	    <rep url="modules"/>
+            <rep url="&{basedir}/modules"/>
         </ceylon-p2>
 <!--
         <exec dir="${basedir}" executable="eclipse" failonerror="true">
