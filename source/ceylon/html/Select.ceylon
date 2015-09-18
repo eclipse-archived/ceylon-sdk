@@ -96,7 +96,7 @@ shared class OptionGroup(text = "",
 
     tag = Tag("optgroup");
 
-    shared actual {<Option|{Option*}|Snippet<Option>|Null>*} children;
+    shared actual {<String|Option|{String|Option*}|Snippet<Option>|Null>*} children;
 
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();

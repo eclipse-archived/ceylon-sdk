@@ -52,7 +52,7 @@ class ConcreteDirectory(JPath jpath)
     
     childResource(Path|String subpath) => path.childPath(subpath).resource;
     
-    move(Nil target) => ConcreteDirectory( movePath(jpath, asJPath(target.path)) );
+    move(Nil target) => ConcreteDirectory( movePath(jpath, asJPath(target.path, jpath)) );
     
     shared actual Nil delete() {
         deletePath(jpath);

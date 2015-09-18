@@ -1,40 +1,21 @@
-"Completable provides the base support for promises. This 
- interface satisfies the [[Promised]] interface, to be used 
- when a [[Promise]] is needed."
+"Something that can go through a transition and is meant to 
+ be be completed, i.e either fulfilled or rejected."
 by("Julien Viet")
-shared interface Completable<out Value> 
-        satisfies Promised<Value>
-        given Value satisfies Anything[] {
+shared interface Completable<in Value> {
+
+    "Fulfills the promise with a value or a promise to the 
+     value."
+    shared formal void fulfill(Value|Promise<Value> val);
     
-    "When completion happens, the provided function will be 
-     invoked."
-    shared void onComplete(
-        "A function that is called when fulfilled."
-        Anything(*Value) onFulfilled, 
-        "A function that is called when rejected."
-        Anything(Throwable) onRejected = rethrow)
-            => compose(onFulfilled, onRejected);
-    
-    "Compose with a function that accepts either a [[Value]] 
-     or a [[Throwable]]."
-    shared Promise<Result> always<Result>(
-        "A function that accepts either the promised value
-         or a [[Throwable]]."
-        Result(*Value|[Throwable]) callback) 
-            => compose(callback, callback);
-    
-    "Compose and return a [[Promise]]"
-    shared formal Promise<Result> compose<Result>(
-        "A function that is called when fulfilled."
-        Result(*Value) onFulfilled,
-        "A function that is called when rejected."
-        <Result>(Throwable) onRejected = rethrow);
-    
-    "Compose and return a [[Promise]]"
-    shared formal Promise<Result> flatMap<Result>(
-        "A function that is called when fulfilled."
-        Promise<Result>(*Value) onFulfilled,
-        "A function that is called when rejected."
-        Promise<Result>(Throwable) onRejected = rethrow);
-    
+    "Rejects the promise with a reason."
+    shared formal void reject(Throwable reason);
+
+    "Complete the promise: either fulfill or reject it"
+    shared void complete(Value|Promise<Value>|Throwable val) {
+        if (is Value|Promise<Value> val) {
+            fulfill(val);
+        } else {
+            reject(val);
+        }
+    }
 }

@@ -41,8 +41,12 @@ class JavaEntry<K,V>(K->V entry)
             return false;
         }
     }
-    
-    shared actual Integer hash => 31*key.hash+\ivalue.hash;
+
+    shared actual Integer hash
+        // Calculate hash per java.util.Map.Entry contract, and
+        // defeat bit shifting described in
+        // https://github.com/ceylon/ceylon-compiler/issues/1334
+        =>  key.hash.xor(\ivalue.hash).and(#ffffffff);
 }
 
 "A Java [[java.util::Map]] that wraps a Ceylon [[Map]]. This 

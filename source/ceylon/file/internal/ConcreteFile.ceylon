@@ -13,6 +13,9 @@ import java.lang {
 }
 import java.nio.file {
     JPath=Path,
+    Paths {
+        newPath=get
+    },
     Files {
         isReadable,
         isWritable,
@@ -62,26 +65,26 @@ class ConcreteFile(JPath jpath)
     }
     
     copy(Nil target, Boolean copyAttributes) =>
-            ConcreteFile( copyPath(jpath, asJPath(target.path),
+            ConcreteFile( copyPath(jpath, asJPath(target.path, jpath),
                     *(copyAttributes then [\iCOPY_ATTRIBUTES] else [])) );
     
     copyOverwriting(File|Nil target, Boolean copyAttributes) =>
-            ConcreteFile( copyPath(jpath, asJPath(target.path),
+            ConcreteFile( copyPath(jpath, asJPath(target.path, jpath),
                     *(copyAttributes then [\iREPLACE_EXISTING, \iCOPY_ATTRIBUTES ]
                                      else [\iREPLACE_EXISTING])) );
     
     move(Nil target) =>
-            ConcreteFile( movePath(jpath, asJPath(target.path)) );
+            ConcreteFile( movePath(jpath, asJPath(target.path, jpath)) );
     
     moveOverwriting(File|Nil target) =>
-            ConcreteFile( movePath(jpath, asJPath(target.path), 
+            ConcreteFile( movePath(jpath, asJPath(target.path, jpath),
                     \iREPLACE_EXISTING) );            
     
     createLink(Nil target) =>
-            ConcreteFile(newLink(asJPath(target.path), jpath));
+            ConcreteFile(newLink(asJPath(target.path, jpath), jpath));
     
     createSymbolicLink(Nil target) =>
-            ConcreteLink(newSymbolicLink(asJPath(target.path), jpath));
+            ConcreteLink(newSymbolicLink(asJPath(target.path, jpath), jpath));
     
     readable => isReadable(jpath);
     
@@ -227,4 +230,12 @@ class ConcreteFile(JPath jpath)
 }
 
 shared Boolean sameFile(File x, File y) =>
-        isSameFile(asJPath(x.path), asJPath(y.path));
+        let (xPath = x.path, yPath = y.path)
+        if (is ConcretePath xPath)
+            then let (jpath = xPath.jpath) 
+                isSameFile(jpath, asJPath(yPath, jpath))
+        else if (is ConcretePath yPath) 
+            then let (jpath = yPath.jpath) 
+                isSameFile(asJPath(xPath, jpath), jpath)
+        else isSameFile(newPath(xPath.string), 
+                        newPath(yPath.string));

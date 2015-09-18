@@ -37,7 +37,7 @@ shared class Span(text = "", String? id = null, CssClass classNames = [],
 
     shared actual String text;
 
-    shared actual {<InlineElement|{InlineElement*}|Snippet<InlineElement>|Null>*} children;
+    shared actual {<String|InlineElement|{String|InlineElement*}|Snippet<InlineElement>|Null>*} children;
 
     tag = Tag("span");
 

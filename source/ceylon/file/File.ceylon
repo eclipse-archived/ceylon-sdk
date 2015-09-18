@@ -153,7 +153,7 @@ shared String[] lines(File file) {
  
  Or:
  
-     forEachLine(file, void (String line) {
+     forEachLine(file, (line) {
          print(line);
      });
  "

@@ -195,3 +195,21 @@ test void scalePrecision() {
     assertEquals(0, decimalNumber(100).scale);
     assertEquals(3, decimalNumber(100).precision);
 }
+
+test void magnitude() {
+    assertEquals(decimalNumber(0).magnitude, decimalNumber(0));
+    assertEquals(decimalNumber(+1).magnitude, decimalNumber(1));
+    assertEquals(decimalNumber(-1).magnitude, decimalNumber(1));
+    assertEquals(decimalNumber(+100).magnitude, decimalNumber(100));
+    assertEquals(decimalNumber(-100).magnitude, decimalNumber(100));
+}
+
+test void fractionalPart() {
+    assertEquals(decimalNumber(0).fractionalPart, decimalNumber(0));
+    assertEquals(decimalNumber(+0.5).fractionalPart, decimalNumber(+0.5));
+    assertEquals(decimalNumber(-0.5).fractionalPart, decimalNumber(-0.5));
+    assertEquals(decimalNumber(+1.5).fractionalPart, decimalNumber(+0.5));
+    assertEquals(decimalNumber(-1.5).fractionalPart, decimalNumber(-0.5));
+    assertEquals(decimalNumber(+100.5).fractionalPart, decimalNumber(+0.5));
+    assertEquals(decimalNumber(-100.5).fractionalPart, decimalNumber(-0.5));
+}

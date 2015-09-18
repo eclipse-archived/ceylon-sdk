@@ -26,11 +26,6 @@ shared class TextArea(text = "", String? name = null,
             dir, draggable, dropZone, inert, hidden, lang, spellcheck,
             tabIndex, title, translate, aria, nonstandardAttributes, data)
         satisfies InlineElement & TextNode {
-    
-    if (exists wrapMode = wrap, wrapMode == hard) {
-        "The number of columns must be specified when wrap mode is `hard`"
-        assert (exists cols);
-    }
 
     shared actual String text;
 
@@ -54,6 +49,11 @@ shared class TextArea(text = "", String? name = null,
     "Specifies how the text in a text area is
      to be wrapped when submitted in a form."
     shared TextAreaWrap? wrap;
+
+    if (exists wrapMode = wrap, wrapMode == hard) {
+        "The number of columns must be specified when wrap mode is `hard`"
+        assert (exists cols);
+    }
 
     tag = Tag("textarea");
     

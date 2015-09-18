@@ -1,46 +1,39 @@
 import ceylon.io.buffer {
-    newByteBufferWithData
+    ByteBuffer
 }
 import ceylon.net.http.server.websocket {
     WebSocketChannel,
-    CloseReason,
-    WebSocketFragmentedEndpoint,
-    NoReason
+    WebSocketFragmentedEndpoint
 }
-
 import io.undertow.websockets.core {
-    AbstractReceiveListener,
     BufferedTextMessage,
     UtWebSocketChannel=WebSocketChannel,
     BufferedBinaryMessage,
-    WebSockets {
-        sendCloseBlocking
-    },
-    UTF8Output,
     StreamSourceFrameChannel
 }
-
 import java.nio {
-    JByteBuffer=ByteBuffer {
-        wrapByteBuffer=wrap
-    }
+    JByteBuffer=ByteBuffer
 }
-
+import ceylon.net.http.server.internal {
+    toCeylonByteBuffer,
+    mergeBuffers
+}
+import java.lang {
+    ObjectArray
+}
 import org.xnio {
-    IoUtils {
-        safeClose
-    }
+    Pooled
 }
 
 by("Matej Lazar")
 class CeylonWebSocketFragmentedFrameHandler(
     WebSocketFragmentedEndpoint webSocketEndpoint, 
     WebSocketChannel webSocketChannel)
-        extends AbstractReceiveListener() {
+        extends CeylonWebSocketAbstractFrameHandler(webSocketEndpoint, webSocketChannel) {
 
     shared actual void onText(UtWebSocketChannel channel, 
             StreamSourceFrameChannel messageChannel) {
-        BufferedTextMessage bufferedTextMessage = BufferedTextMessage();
+        BufferedTextMessage bufferedTextMessage = BufferedTextMessage(true);
         bufferedTextMessage.readBlocking(messageChannel);
         webSocketEndpoint.onText(webSocketChannel, 
             bufferedTextMessage.data, messageChannel.finalFragment);
@@ -48,35 +41,22 @@ class CeylonWebSocketFragmentedFrameHandler(
 
     shared actual void onBinary(UtWebSocketChannel channel, 
             StreamSourceFrameChannel messageChannel) {
-        value bufferedBinaryMessage = BufferedBinaryMessage();
-        bufferedBinaryMessage.readBlocking(messageChannel);
-        webSocketEndpoint.onBinary(
-                webSocketChannel, 
-                newByteBufferWithData(*bufferedBinaryMessage.toByteArray().byteArray),
-                messageChannel.finalFragment);
-    }
 
-    shared actual void onClose(UtWebSocketChannel channel, 
-            StreamSourceFrameChannel messageChannel) {
-        value bufferedBinaryMessage = BufferedBinaryMessage();
+        value bufferedBinaryMessage = BufferedBinaryMessage(true);
         bufferedBinaryMessage.readBlocking(messageChannel);
 
-        JByteBuffer buffer = wrapByteBuffer(bufferedBinaryMessage.toByteArray());
-        
-        if (buffer.remaining() > 2) {
-            Integer code = buffer.short;
-            String reason = UTF8Output(buffer).extract();
-            webSocketEndpoint.onClose(webSocketChannel, 
-                CloseReason(code, reason));
-        } else {
-            webSocketEndpoint.onClose(webSocketChannel, 
-                NoReason());
+        Pooled<ObjectArray<JByteBuffer>> data = bufferedBinaryMessage.data;
+        try {
+            ObjectArray<JByteBuffer> jByteBufferArray = data.resource;
+            {ByteBuffer*} bbArray = jByteBufferArray.iterable
+                    .map((JByteBuffer? element) => toCeylonByteBuffer(element));
+            ByteBuffer binary = mergeBuffers(*bbArray);
+            webSocketEndpoint.onBinary(webSocketChannel, binary, messageChannel.finalFragment);
+        } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+        } finally {
+            data.free();
         }
-        sendCloseBlocking(bufferedBinaryMessage.data, channel);
-    }
-
-    shared actual void onError(UtWebSocketChannel channel, Throwable? error) {
-        webSocketEndpoint.onError(webSocketChannel, error);
-        safeClose(channel);
     }
 }

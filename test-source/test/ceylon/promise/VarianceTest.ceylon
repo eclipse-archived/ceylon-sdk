@@ -14,7 +14,7 @@ shared class VarianceTest() extends AsyncTestBase() {
     Promise<Bar> p2 = d2.promise;
     
     // The tuple is able to contain parent classes
-    p1.and(p2).compose((Foo b1, Bar b2) => testComplete());
+    p1.and(p2).map((Foo b1, Bar b2) => testComplete());
     
     //
     d1.fulfill(Juu());
@@ -27,10 +27,10 @@ shared class VarianceTest() extends AsyncTestBase() {
     
     // Can fulfull with a parent class
     Promised<Foo> juuPromised = barDeferred;
-    juuPromised.promise.compose((Foo foo) => testComplete());
+    juuPromised.promise.map((Foo foo) => testComplete());
     
     // Resolve with a sub class
-    Resolver<Juu> juuTransitionnable = barDeferred;
+    Completable<Juu> juuTransitionnable = barDeferred;
     juuTransitionnable.fulfill(Juu());
   }
 }

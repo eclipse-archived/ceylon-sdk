@@ -65,14 +65,14 @@ String get(String uri) {
 
 test
 void testGet() {
-    value contents = get("http://en.wikipedia.org/wiki/Main_Page");
+    value contents = get("https://en.wikipedia.org/wiki/Main_Page");
     assertTrue(contents.contains("<title>Wikipedia, the free encyclopedia</title>"), "Contains title");
     assertTrue(contents.contains("</html>"), "Contains end </html>");
 }
 
 test
 void testGetUtf8() {
-    value contents = get("http://th.wikipedia.org/wiki/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%82%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%8A%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99");
+    value contents = get("https://th.wikipedia.org/wiki/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%82%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%8A%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99");
     assertTrue(contents.contains("<title>การเข้ารหัสขนส่งเป็นชิ้นส่วน - วิกิพีเดีย</title>"), "Contains title");
     assertTrue(contents.contains("</html>"), "Contains end </html>");
 }
@@ -188,7 +188,7 @@ class RequestLocalServerTest() {
         value req = Request {
             parse(localServer.baseUri + "/postparamecho");
             postMethod;
-            initalParameters = {
+            initialParameters = {
                 Parameter("a", "asd"),
                 Parameter("b", "ᚷᛖᚻᚹᛦᛚᚳᚢᛗ")
             };
@@ -203,7 +203,7 @@ class RequestLocalServerTest() {
         value req = Request {
             parse(localServer.baseUri + "/getparamecho");
             getMethod;
-            initalParameters = {
+            initialParameters = {
                 Parameter("a", "asd"),
                 Parameter("b", "ᚷᛖᚻᚹᛦᛚᚳᚢᛗ")
             };
@@ -218,7 +218,7 @@ class RequestLocalServerTest() {
         value req = Request {
             parse(localServer.baseUri + "/getparamecho?c=hello");
             getMethod;
-            initalParameters = {
+            initialParameters = {
                 Parameter("a", "asd"),
                 Parameter("b", "ᚷᛖᚻᚹᛦᛚᚳᚢᛗ")
             };

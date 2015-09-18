@@ -401,9 +401,41 @@ shared Float largest(Float x, Float y) {
     return Math.max(x, y);
 }
 
-"The sum of the given values, or `0.0` if there are no 
- arguments."
-shared Float sum(Float* values) {
+"The largest [[Float]] in the given stream, or `null`
+ if the stream is empty."
+shared Float|Absent max<Absent>
+        (Iterable<Float,Absent> values) 
+        given Absent satisfies Null {
+    value first = values.first;
+    if (exists first) {
+        variable value max = first;
+        for (x in values) {
+            max = Math.max(max, x);
+        }
+        return max;
+    }
+    return first;
+}
+
+"The smallest [[Float]] in the given stream, or `null`
+ if the stream is empty."
+shared Float|Absent min<Absent>
+        (Iterable<Float,Absent> values) 
+        given Absent satisfies Null {
+    value first = values.first;
+    if (exists first) {
+        variable value min = first;
+        for (x in values) {
+            min = Math.min(min, x);
+        }
+        return min;
+    }
+    return first;
+}
+
+"The sum of the [[Float]]s in the given stream, or `0.0` 
+ if the stream is empty."
+shared Float sum({Float*} values) {
     variable Float sum=0.0;
     for (x in values) {
         sum+=x;
@@ -411,9 +443,9 @@ shared Float sum(Float* values) {
     return sum;
 }
 
-"The product of the given values, or `1.0` if there are 
- no arguments."
-shared Float product(Float* values) {
+"The product of the [[Float]]s in the given stream, or `1.0` 
+ if the stream is empty."
+shared Float product({Float*} values) {
     variable Float sum=1.0;
     for (x in values) {
         sum*=x;

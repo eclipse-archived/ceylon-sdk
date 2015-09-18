@@ -1,6 +1,7 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
+import ceylon.time.iso8601 { parseISOTimeZone = parseTimeZone, ParserError }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -16,7 +17,9 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
     "The value that represents this constant offset in milliseconds."
     shared Integer offsetMilliseconds;
 
-    "Always returns a constant offset."
+    "Returns offset in milliseconds of the specified instant according to this time zone.
+     
+     This implementation always returns a constant offset."
     shared actual Integer offset(Instant instant) => offsetMilliseconds;
 
     "Returns _true_ if given value is same type and offset milliseconds."
@@ -52,7 +55,9 @@ shared class OffsetTimeZone(offsetMilliseconds) satisfies TimeZone {
 
 "This represents offsets based on daylight saving time."
 shared interface RuleBasedTimezone satisfies TimeZone {
+    
     //TODO: Implement complex rule based time zones
+    
 }
 
 "Common utility methods for getting time zone instances."
@@ -74,7 +79,7 @@ shared object timeZone {
 
      In addition, the special code `Z` is recognized as a shorthand for `+00:00`."
     shared TimeZone|ParserError parse(String zone) {
-        return parseTimeZone(zone);
+        return parseISOTimeZone(zone);
     }
 
     "Represents fixed timeZone created based on given values."

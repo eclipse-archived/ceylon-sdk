@@ -4,21 +4,19 @@ import ceylon.collection {
 
 import io.undertow.server {
     HttpHandler,
-    HttpServerExchange
+    HttpServerExchange,
+    HttpUpgradeListener
 }
 import io.undertow.util {
-    Headers {
-        headerUpgrade=UPGRADE
+    Methods {
+        methodGet = GET
     }
 }
-import io.undertow.websockets.core.handler {
+import io.undertow.websockets {
     UtWebSocketProtocolHandshakeHandler=WebSocketProtocolHandshakeHandler
 }
 import io.undertow.websockets.core.protocol {
     Handshake
-}
-import io.undertow.websockets.core.protocol.version00 {
-    Hybi00Handshake
 }
 import io.undertow.websockets.core.protocol.version07 {
     Hybi07Handshake
@@ -32,28 +30,32 @@ import io.undertow.websockets.core.protocol.version13 {
 import io.undertow.websockets.spi {
     AsyncWebSocketHttpServerExchange
 }
+import org.xnio {
+    StreamConnection
+}
+import io.undertow.websockets.core {
+    WebSocketChannel
+}
 
 by ("Matej Lazar")
 shared class WebSocketProtocolHandshakeHandler(
-    CeylonWebSocketHandler webSocketHandler, 
+        CeylonWebSocketHandler webSocketHandler, 
     HttpHandler next)
         extends UtWebSocketProtocolHandshakeHandler(webSocketHandler, next) {
 
     Set<Handshake> handshakes = HashSet {
         Hybi13Handshake(),
         Hybi08Handshake(),
-        Hybi07Handshake(),
-        Hybi00Handshake()
+        Hybi07Handshake()
     };
 
     shared actual void handleRequest(HttpServerExchange exchange) {
-        //if no upgrade header it is not a valid WS handshake
-        if (!exchange.requestHeaders.contains(headerUpgrade)) {
+        if (!exchange.requestMethod.equals(methodGet)) {
+            // Only GET is supported to start the handshake
             next.handleRequest(exchange);
             return;
         }
-    
-        value facade = AsyncWebSocketHttpServerExchange(exchange);
+        value facade = AsyncWebSocketHttpServerExchange(exchange, peerConnections);
         variable Handshake? handshaker = null;
         for (Handshake method in handshakes) {
             if (method.matches(facade)) {
@@ -72,11 +74,20 @@ shared class WebSocketProtocolHandshakeHandler(
     
     void handleWebSocketRequest(HttpServerExchange exchange, 
             AsyncWebSocketHttpServerExchange facade, 
-            Handshake h) {
+            Handshake handshaker) {
         if (webSocketHandler.endpointExists(exchange.requestPath)) {
-            h.handshake(facade, webSocketHandler);
+            
+            object httpUpgradeListener satisfies HttpUpgradeListener {
+                shared actual void handleUpgrade(StreamConnection? streamConnection, HttpServerExchange? httpServerExchange) {
+                    WebSocketChannel channel = handshaker.createChannel(facade, streamConnection, facade.bufferPool);
+                    peerConnections.add(channel);
+                    webSocketHandler.onConnect(facade, channel);
+                }
+            }
+            exchange.upgradeChannel(httpUpgradeListener);
+            handshaker.handshake(facade);
         } else {
-            exchange.responseCode = 404;
+            exchange.setResponseCode(404);
             exchange.endExchange();
             return;
         }

@@ -1,5 +1,6 @@
 import ceylon.net.http.server {
-    ServerException
+    ServerException,
+    EndpointBase
 }
 import ceylon.net.http.server.internal {
     Endpoints
@@ -14,7 +15,7 @@ import ceylon.net.http.server.websocket {
 import io.undertow.websockets.core {
     UtWebSocketChannel=WebSocketChannel
 }
-import io.undertow.websockets.core.handler {
+import io.undertow.websockets {
     WebSocketConnectionCallback
 }
 import io.undertow.websockets.spi {
@@ -37,7 +38,7 @@ shared class CeylonWebSocketHandler()
             => endpoints.add(endpoint);
 
     shared Boolean endpointExists(String requestPath) {
-        if (exists e = endpoints.getEndpointMatchingPath(requestPath)) {
+        if (endpoints.getEndpointMatchingPath(requestPath).size > 0) {
             return true;
         } else {
             return false;
@@ -47,7 +48,7 @@ shared class CeylonWebSocketHandler()
     shared actual void onConnect(WebSocketHttpExchange exchange, 
             UtWebSocketChannel channel) {
         value webSocketChannel = DefaultWebSocketChannel(exchange, channel);
-        value endpoint = endpoints.getEndpointMatchingPath(webSocketChannel.requestPath);
+        EndpointBase? endpoint = endpoints.getEndpointMatchingPath(webSocketChannel.requestPath).first;
         if (is WebSocketBaseEndpoint endpoint) {
             try {
                 endpoint.onOpen(webSocketChannel);

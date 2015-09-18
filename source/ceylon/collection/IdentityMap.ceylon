@@ -134,8 +134,8 @@ shared class IdentityMap<Key, Item>
     "Removes a key/value mapping if it exists"
     shared Item? remove(Key key) {
         Integer index = storeIndex(key, store);
-        while (exists head = store[index], 
-            head.element.key == key) {
+        if (exists head = store[index], 
+            head.element.key === key) {
             store.set(index,head.rest);
             length--;
             return head.element.item;
@@ -144,7 +144,7 @@ shared class IdentityMap<Key, Item>
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
-                rest.element.key == key) {
+                rest.element.key === key) {
                 cell.rest = rest.rest;
                 length--;
                 return rest.element.item;
@@ -167,7 +167,7 @@ shared class IdentityMap<Key, Item>
     shared Boolean removeEntry(Key key, Item&Object item) {
         Integer index = storeIndex(key, store);
         while (exists head = store[index], 
-            head.element.key == key) {
+            head.element.key === key) {
             if (exists it = head.element.item, it==item) {
                 store.set(index,head.rest);
                 length--;
@@ -181,7 +181,7 @@ shared class IdentityMap<Key, Item>
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
-                rest.element.key == key) {
+                rest.element.key === key) {
                 if (exists it = rest.element.item, it==item) {
                     cell.rest = rest.rest;
                     length--;
@@ -298,7 +298,7 @@ shared class IdentityMap<Key, Item>
     }
     
     shared actual void each(void step(Key->Item element)) {
-        store.each(void (bucket) {
+        store.each((bucket) {
             variable value iter = bucket;
             while (exists cell = iter) {
                 step(cell.element);

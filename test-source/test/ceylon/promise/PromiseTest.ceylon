@@ -13,7 +13,7 @@ shared class PromiseTest() extends AsyncTestBase() {
     }
     Deferred<Integer> deferred = Deferred<Integer>();
     Promise<Integer> promise = deferred.promise;
-    promise.compose(Integer.string).compose(done, fail);
+    promise.map(Integer.string).map(done, fail);
     deferred.fulfill(3);
     assertEquals(count, 0);
   }
@@ -27,7 +27,7 @@ shared class PromiseTest() extends AsyncTestBase() {
     }
     Deferred<Integer> deferred = Deferred<Integer>();
     Promise<Integer> promise = deferred.promise;
-    promise.compose(Integer.string, (Throwable e) => "3").compose(done, fail);
+    promise.map(Integer.string, (Throwable e) => "3").map(done, fail);
     deferred.reject(Exception());
     assertEquals(count, 0);
   }

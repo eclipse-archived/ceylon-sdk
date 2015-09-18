@@ -12,7 +12,7 @@ shared interface ExecutionContext {
         
         context => outer;
         
-        shared actual Promise<Result> compose<Result>(
+        shared actual Promise<Result> map<Result>(
             Result(T) onFulfilled, 
             Result(Throwable) onRejected) {
             try {
@@ -38,7 +38,7 @@ shared interface ExecutionContext {
         
         context => outer;
         
-        shared actual Promise<Result> compose<Result>(
+        shared actual Promise<Result> map<Result>(
             Result(T) onFulfilled, 
             Result(Throwable) onRejected) {
             try {

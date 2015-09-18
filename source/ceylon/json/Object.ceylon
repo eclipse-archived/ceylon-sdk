@@ -14,15 +14,15 @@ shared class Object({<String->Value>*} values = {})
     
     "Returns a serialised JSON representation"
     shared actual String string {
-        StringPrinter p = StringPrinter();
-        p.printObject(this);
+        StringEmitter p = StringEmitter();
+        visit(this, p);
         return p.string;
     }
 
     "Returns a pretty-printed serialised JSON representation"
     shared String pretty {
-        StringPrinter p = StringPrinter(true);
-        p.printObject(this);
+        StringEmitter p = StringEmitter(true);
+        visit(this, p, true);
         return p.string;
     }
     
@@ -147,13 +147,13 @@ shared class Object({<String->Value>*} values = {})
      exist, or the value is null."
     throws(`class InvalidTypeException`,
         "If the key points to a type that is neither 
-         [[Integer]] nor [[NullInstance]].")
+         [[Integer]] nor [[Null]].")
     shared Integer? getIntegerOrNull(String key){
         value val = get(key);
         if(is Integer|Null val){
             return val;
         }
-        if(is NullInstance val){
+        if(is Null val){
             return null;
         }
         throw InvalidTypeException(
@@ -165,13 +165,13 @@ shared class Object({<String->Value>*} values = {})
      exist, or the value is null."
     throws(`class InvalidTypeException`,
         "If the key points to a type that is neither 
-         [[Float]] nor [[NullInstance]].")
+         [[Float]] nor [[Null]].")
     shared Float? getFloatOrNull(String key){
         value val = get(key);
         if(is Float|Null val){
             return val;
         }
-        if(is NullInstance val){
+        if(is Null val){
             return null;
         }
         throw InvalidTypeException(
@@ -183,13 +183,13 @@ shared class Object({<String->Value>*} values = {})
      exist, or the value is null."
     throws(`class InvalidTypeException`,
         "If the key points to a type that is neither 
-         [[Boolean]] nor [[NullInstance]].")
+         [[Boolean]] nor [[Null]].")
     shared Boolean? getBooleanOrNull(String key){
         value val = get(key);
         if(is Boolean|Null val){
             return val;
         }
-        if(is NullInstance val){
+        if(is Null val){
             return null;
         }
         throw InvalidTypeException(
@@ -201,13 +201,13 @@ shared class Object({<String->Value>*} values = {})
      exist, or the value is null."
     throws(`class InvalidTypeException`,
         "If the key points to a type that is neither 
-         [[String]] nor [[NullInstance]].")
+         [[String]] nor [[Null]].")
     shared String? getStringOrNull(String key){
         value val = get(key);
         if(is String|Null val){
             return val;
         }
-        if(is NullInstance val){
+        if(is Null val){
             return null;
         }
         throw InvalidTypeException(
@@ -219,13 +219,13 @@ shared class Object({<String->Value>*} values = {})
      exist, or the value is null."
     throws(`class InvalidTypeException`,
         "If the key points to a type that is neither 
-         [[Object]] nor [[NullInstance]].")
+         [[Object]] nor [[Null]].")
     shared Object? getObjectOrNull(String key){
         value val = get(key);
         if(is Object|Null val){
             return val;
         }
-        if(is NullInstance val){
+        if(is Null val){
             return null;
         }
         throw InvalidTypeException(
@@ -237,13 +237,13 @@ shared class Object({<String->Value>*} values = {})
      exist, or the value is null."
     throws(`class InvalidTypeException`,
         "If the key points to a type that is neither 
-         [[Array]] nor [[NullInstance]].")
+         [[Array]] nor [[Null]].")
     shared Array? getArrayOrNull(String key){
         value val = get(key);
         if(is Array|Null val){
             return val;
         }
-        if(is NullInstance val){
+        if(is Null val){
             return null;
         }
         throw InvalidTypeException(

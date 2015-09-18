@@ -6,380 +6,388 @@ Chủ nhật | Thứ hai | Thứ ba | Thứ tư | Thứ năm | Thứ sáu | Th�
 CN | Th 2 | Th 3 | Th 4 | Th 5 | Th 6 | Th 7
 dd/MM/yyyy | dd-MM-yyyy | 'Ngày' dd 'tháng' M 'năm' yyyy
 HH:mm | HH:mm:ss | HH:mm:ss z
-#,##0 | #,##0.### | #,##0% | #,##0.00 ¤
+#,##0 | #,##0.### | #,##0% | #,##0 ¤
 
-ms-MY | ms | MY |  | Tiếng Ma-lay-xi-a (Ma-lay-xi-a) | Tiếng Ma-lay-xi-a | Ma-lay-xi-a | 
-ar-QA | ar | QA |  | Tiếng A-rập (Ca-ta) | Tiếng A-rập | Ca-ta | 
-is-IS | is | IS |  | Tiếng Ai-xơ-len (Ai-xơ-len) | Tiếng Ai-xơ-len | Ai-xơ-len | 
-fi-FI | fi | FI |  | Tiếng Phần Lan (Phần Lan) | Tiếng Phần Lan | Phần Lan | 
-pl | pl |  |  | Tiếng Ba Lan | Tiếng Ba Lan |  | 
-en-MT | en | MT |  | Tiếng Anh (Man-ta) | Tiếng Anh | Man-ta | 
-it-CH | it | CH |  | Tiếng Ý (Thụy Sĩ) | Tiếng Ý | Thụy Sĩ | 
-nl-BE | nl | BE |  | Tiếng Hà Lan (Bỉ) | Tiếng Hà Lan | Bỉ | 
-ar-SA | ar | SA |  | Tiếng A-rập (A-rập Xê-út) | Tiếng A-rập | A-rập Xê-út | 
-ar-IQ | ar | IQ |  | Tiếng A-rập (I-rắc) | Tiếng A-rập | I-rắc | 
+ar-AE | ar | AE |  | Tiếng A-rập (Các Tiểu Vương quốc A-rập Thống nhất) | Tiếng A-rập | Các Tiểu Vương quốc A-rập Thống nhất | 
+ar-JO | ar | JO |  | Tiếng A-rập (Gióc-đa-ni) | Tiếng A-rập | Gióc-đa-ni | 
+ar-SY | ar | SY |  | Tiếng A-rập (Xi-ri) | Tiếng A-rập | Xi-ri | 
+hr-HR | hr | HR |  | Tiếng Crô-a-ti-a (Crô-a-ti-a) | Tiếng Crô-a-ti-a | Crô-a-ti-a | 
+fr-BE | fr | BE |  | Tiếng Pháp (Bỉ) | Tiếng Pháp | Bỉ | 
+es-PA | es | PA |  | Tiếng Tây Ban Nha (Pa-na-ma) | Tiếng Tây Ban Nha | Pa-na-ma | 
+mt-MT | mt | MT |  | Maltese (Man-ta) | Maltese | Man-ta | 
+es-VE | es | VE |  | Tiếng Tây Ban Nha (Vê-nê-zu-ê-la) | Tiếng Tây Ban Nha | Vê-nê-zu-ê-la | 
+bg | bg |  |  | Tiếng Bun-ga-ri | Tiếng Bun-ga-ri |  | 
+zh-TW | zh | TW |  | Tiếng Trung Quốc (Đài Loan) | Tiếng Trung Quốc | Đài Loan | 
+it | it |  |  | Tiếng Ý | Tiếng Ý |  | 
+ko | ko |  |  | Tiếng Hàn Quốc | Tiếng Hàn Quốc |  | 
+uk | uk |  |  | Tiếng U-crai-na | Tiếng U-crai-na |  | 
+lv | lv |  |  | Tiếng Lát-vi-a | Tiếng Lát-vi-a |  | 
+da-DK | da | DK |  | Tiếng Đan Mạch (Đan Mạch) | Tiếng Đan Mạch | Đan Mạch | 
 es-PR | es | PR |  | Tiếng Tây Ban Nha (Puerto Rico) | Tiếng Tây Ban Nha | Puerto Rico | 
+vi-VN | vi | VN |  | Tiếng Việt (Việt Nam) | Tiếng Việt | Việt Nam | 
+en-US | en | US |  | Tiếng Anh (Hoa Kỳ) | Tiếng Anh | Hoa Kỳ | 
+sr-ME | sr | ME |  | Tiếng Séc-bi (Montenegro) | Tiếng Séc-bi | Montenegro | 
+sv-SE | sv | SE |  | Tiếng Thụy Điển (Thụy Điển) | Tiếng Thụy Điển | Thụy Điển | 
+es-BO | es | BO |  | Tiếng Tây Ban Nha (Bô-li-vi-a) | Tiếng Tây Ban Nha | Bô-li-vi-a | 
+en-SG | en | SG |  | Tiếng Anh (Xin-ga-po) | Tiếng Anh | Xin-ga-po | 
+ar-BH | ar | BH |  | Tiếng A-rập (Ba-ren) | Tiếng A-rập | Ba-ren | 
+pt | pt |  |  | Tiếng Bồ Đào Nha | Tiếng Bồ Đào Nha |  | 
+ar-SA | ar | SA |  | Tiếng A-rập (A-rập Xê-út) | Tiếng A-rập | A-rập Xê-út | 
+sk | sk |  |  | Tiếng Xlô-vác | Tiếng Xlô-vác |  | 
+ar-YE | ar | YE |  | Tiếng A-rập (Y-ê-men) | Tiếng A-rập | Y-ê-men | 
+hi-IN | hi | IN |  | Tiếng Hin-đi (Ấn Độ) | Tiếng Hin-đi | Ấn Độ | 
+ga | ga |  |  | Tiếng Ai-len | Tiếng Ai-len |  | 
+en-MT | en | MT |  | Tiếng Anh (Man-ta) | Tiếng Anh | Man-ta | 
+fi-FI | fi | FI |  | Tiếng Phần Lan (Phần Lan) | Tiếng Phần Lan | Phần Lan | 
+et | et |  |  | Tiếng E-xtô-ni-a | Tiếng E-xtô-ni-a |  | 
+sv | sv |  |  | Tiếng Thụy Điển | Tiếng Thụy Điển |  | 
+cs | cs |  |  | Tiếng Séc | Tiếng Séc |  | 
+sr-Latn-BA | sr | BA |  | Tiếng Séc-bi (Latin,Bô-xni-a Héc-xê-gô-vi-na) | Tiếng Séc-bi | Bô-xni-a Héc-xê-gô-vi-na | 
+el | el |  |  | Tiếng Hy Lạp | Tiếng Hy Lạp |  | 
+uk-UA | uk | UA |  | Tiếng U-crai-na (U-crai-na) | Tiếng U-crai-na | U-crai-na | 
+hu | hu |  |  | Tiếng Hung-ga-ri | Tiếng Hung-ga-ri |  | 
+fr-CH | fr | CH |  | Tiếng Pháp (Thụy Sĩ) | Tiếng Pháp | Thụy Sĩ | 
+id | in |  |  | Indonesian | Indonesian |  | 
+es-AR | es | AR |  | Tiếng Tây Ban Nha (Ác-hen-ti-na) | Tiếng Tây Ban Nha | Ác-hen-ti-na | 
+ar-EG | ar | EG |  | Tiếng A-rập (Ai Cập) | Tiếng A-rập | Ai Cập | 
+ja-JP-u-ca-japanese-x-lvariant-JP | ja | JP | JP | Tiếng Nhật (Nhật Bản,JP) | Tiếng Nhật | Nhật Bản | JP
+es-SV | es | SV |  | Tiếng Tây Ban Nha (En-san-va-đo) | Tiếng Tây Ban Nha | En-san-va-đo | 
+pt-BR | pt | BR |  | Tiếng Bồ Đào Nha (Bra-xin) | Tiếng Bồ Đào Nha | Bra-xin | 
+be | be |  |  | Tiếng Bê-la-rút | Tiếng Bê-la-rút |  | 
+is-IS | is | IS |  | Tiếng Ai-xơ-len (Ai-xơ-len) | Tiếng Ai-xơ-len | Ai-xơ-len | 
+cs-CZ | cs | CZ |  | Tiếng Séc (Cộng hòa Séc) | Tiếng Séc | Cộng hòa Séc | 
+es | es |  |  | Tiếng Tây Ban Nha | Tiếng Tây Ban Nha |  | 
+pl-PL | pl | PL |  | Tiếng Ba Lan (Ba Lan) | Tiếng Ba Lan | Ba Lan | 
+tr | tr |  |  | Tiếng Thổ Nhĩ Kỳ | Tiếng Thổ Nhĩ Kỳ |  | 
+ca-ES | ca | ES |  | Tiếng Ca-ta-lăng (Tây Ban Nha) | Tiếng Ca-ta-lăng | Tây Ban Nha | 
+sr-CS | sr | CS |  | Tiếng Séc-bi (Serbia and Montenegro) | Tiếng Séc-bi | Serbia and Montenegro | 
+ms-MY | ms | MY |  | Tiếng Ma-lay-xi-a (Ma-lay-xi-a) | Tiếng Ma-lay-xi-a | Ma-lay-xi-a | 
+hr | hr |  |  | Tiếng Crô-a-ti-a | Tiếng Crô-a-ti-a |  | 
+lt | lt |  |  | Tiếng Lít-va | Tiếng Lít-va |  | 
+es-ES | es | ES |  | Tiếng Tây Ban Nha (Tây Ban Nha) | Tiếng Tây Ban Nha | Tây Ban Nha | 
+es-CO | es | CO |  | Tiếng Tây Ban Nha (Cô-lôm-bi-a) | Tiếng Tây Ban Nha | Cô-lôm-bi-a | 
+bg-BG | bg | BG |  | Tiếng Bun-ga-ri (Bun-ga-ri) | Tiếng Bun-ga-ri | Bun-ga-ri | 
+sq | sq |  |  | Tiếng An-ba-ni | Tiếng An-ba-ni |  | 
+fr | fr |  |  | Tiếng Pháp | Tiếng Pháp |  | 
+ja | ja |  |  | Tiếng Nhật | Tiếng Nhật |  | 
+sr-BA | sr | BA |  | Tiếng Séc-bi (Bô-xni-a Héc-xê-gô-vi-na) | Tiếng Séc-bi | Bô-xni-a Héc-xê-gô-vi-na | 
+is | is |  |  | Tiếng Ai-xơ-len | Tiếng Ai-xơ-len |  | 
+es-PY | es | PY |  | Tiếng Tây Ban Nha (Pa-ra-goay) | Tiếng Tây Ban Nha | Pa-ra-goay | 
+de | de |  |  | Tiếng Đức | Tiếng Đức |  | 
+es-EC | es | EC |  | Tiếng Tây Ban Nha (Ê-cu-a-đo) | Tiếng Tây Ban Nha | Ê-cu-a-đo | 
+es-US | es | US |  | Tiếng Tây Ban Nha (Hoa Kỳ) | Tiếng Tây Ban Nha | Hoa Kỳ | 
+ar-SD | ar | SD |  | Tiếng A-rập (Xu-đăng) | Tiếng A-rập | Xu-đăng | 
+en | en |  |  | Tiếng Anh | Tiếng Anh |  | 
+ro-RO | ro | RO |  | Tiếng Ru-ma-ni (Ru-ma-ni) | Tiếng Ru-ma-ni | Ru-ma-ni | 
+en-PH | en | PH |  | Tiếng Anh (Phi-lip-pin) | Tiếng Anh | Phi-lip-pin | 
+ca | ca |  |  | Tiếng Ca-ta-lăng | Tiếng Ca-ta-lăng |  | 
+ar-TN | ar | TN |  | Tiếng A-rập (Tuy-ni-di) | Tiếng A-rập | Tuy-ni-di | 
+sr-Latn-ME | sr | ME |  | Tiếng Séc-bi (Latin,Montenegro) | Tiếng Séc-bi | Montenegro | 
+es-GT | es | GT |  | Tiếng Tây Ban Nha (Goa-tê-ma-la) | Tiếng Tây Ban Nha | Goa-tê-ma-la | 
+sl | sl |  |  | Tiếng Xlô-ven | Tiếng Xlô-ven |  | 
+ko-KR | ko | KR |  | Tiếng Hàn Quốc (Hàn Quốc) | Tiếng Hàn Quốc | Hàn Quốc | 
+el-CY | el | CY |  | Tiếng Hy Lạp (Síp) | Tiếng Hy Lạp | Síp | 
+es-MX | es | MX |  | Tiếng Tây Ban Nha (Mê-hi-cô) | Tiếng Tây Ban Nha | Mê-hi-cô | 
+ru-RU | ru | RU |  | Tiếng Nga (Nga) | Tiếng Nga | Nga | 
+es-HN | es | HN |  | Tiếng Tây Ban Nha (Hôn-đu-rát) | Tiếng Tây Ban Nha | Hôn-đu-rát | 
+zh-HK | zh | HK |  | Tiếng Trung Quốc (Hong Kong) | Tiếng Trung Quốc | Hong Kong | 
+nn-NO | no | NO | NY | Tiếng Na Uy (Na Uy,Nynorsk) | Tiếng Na Uy | Na Uy | Nynorsk
+hu-HU | hu | HU |  | Tiếng Hung-ga-ri (Hung-ga-ri) | Tiếng Hung-ga-ri | Hung-ga-ri | 
+th-TH | th | TH |  | Tiếng Thái (Thái Lan) | Tiếng Thái | Thái Lan | 
+ar-IQ | ar | IQ |  | Tiếng A-rập (I-rắc) | Tiếng A-rập | I-rắc | 
 es-CL | es | CL |  | Tiếng Tây Ban Nha (Chi-lê) | Tiếng Tây Ban Nha | Chi-lê | 
 fi | fi |  |  | Tiếng Phần Lan | Tiếng Phần Lan |  | 
-de-AT | de | AT |  | Tiếng Đức (Áo) | Tiếng Đức | Áo | 
-da | da |  |  | Tiếng Đan Mạch | Tiếng Đan Mạch |  | 
-en-GB | en | GB |  | Tiếng Anh (Vương quốc Anh) | Tiếng Anh | Vương quốc Anh | 
-es-PA | es | PA |  | Tiếng Tây Ban Nha (Pa-na-ma) | Tiếng Tây Ban Nha | Pa-na-ma | 
-sr | sr |  |  | Tiếng Séc-bi | Tiếng Séc-bi |  | 
-ar-YE | ar | YE |  | Tiếng A-rập (Y-ê-men) | Tiếng A-rập | Y-ê-men | 
-mk-MK | mk | MK |  | Tiếng Ma-xê-đô-ni-a (Ma-xê-đô-ni-a) | Tiếng Ma-xê-đô-ni-a | Ma-xê-đô-ni-a | 
-mk | mk |  |  | Tiếng Ma-xê-đô-ni-a | Tiếng Ma-xê-đô-ni-a |  | 
-en-CA | en | CA |  | Tiếng Anh (Ca-na-đa) | Tiếng Anh | Ca-na-đa | 
-vi-VN | vi | VN |  | Tiếng Việt (Việt Nam) | Tiếng Việt | Việt Nam | 
-nl-NL | nl | NL |  | Tiếng Hà Lan (Hà Lan) | Tiếng Hà Lan | Hà Lan | 
-es-US | es | US |  | Tiếng Tây Ban Nha (Hoa Kỳ) | Tiếng Tây Ban Nha | Hoa Kỳ | 
-zh-CN | zh | CN |  | Tiếng Trung Quốc (Trung Quốc) | Tiếng Trung Quốc | Trung Quốc | 
-es-HN | es | HN |  | Tiếng Tây Ban Nha (Hôn-đu-rát) | Tiếng Tây Ban Nha | Hôn-đu-rát | 
-en-US | en | US |  | Tiếng Anh (Hoa Kỳ) | Tiếng Anh | Hoa Kỳ | 
-fr | fr |  |  | Tiếng Pháp | Tiếng Pháp |  | 
-th | th |  |  | Tiếng Thái | Tiếng Thái |  | 
-ar | ar |  |  | Tiếng A-rập | Tiếng A-rập |  | 
 ar-MA | ar | MA |  | Tiếng A-rập (Ma-rốc) | Tiếng A-rập | Ma-rốc | 
-lv | lv |  |  | Tiếng Lát-vi-a | Tiếng Lát-vi-a |  | 
-de | de |  |  | Tiếng Đức | Tiếng Đức |  | 
-id-ID | in | ID |  | Indonesian (Nam Dương) | Indonesian | Nam Dương | 
-hr | hr |  |  | Tiếng Crô-a-ti-a | Tiếng Crô-a-ti-a |  | 
-en-ZA | en | ZA |  | Tiếng Anh (Nam Phi) | Tiếng Anh | Nam Phi | 
-ko-KR | ko | KR |  | Tiếng Hàn Quốc (Hàn Quốc) | Tiếng Hàn Quốc | Hàn Quốc | 
-ar-TN | ar | TN |  | Tiếng A-rập (Tuy-ni-di) | Tiếng A-rập | Tuy-ni-di | 
-id | in |  |  | Indonesian | Indonesian |  | 
-ja | ja |  |  | Tiếng Nhật | Tiếng Nhật |  | 
-sr-RS | sr | RS |  | Tiếng Séc-bi (Serbia) | Tiếng Séc-bi | Serbia | 
-be-BY | be | BY |  | Tiếng Bê-la-rút (Bê-la-rút) | Tiếng Bê-la-rút | Bê-la-rút | 
-zh-TW | zh | TW |  | Tiếng Trung Quốc (Đài Loan) | Tiếng Trung Quốc | Đài Loan | 
-ar-SD | ar | SD |  | Tiếng A-rập (Xu-đăng) | Tiếng A-rập | Xu-đăng | 
-pt | pt |  |  | Tiếng Bồ Đào Nha | Tiếng Bồ Đào Nha |  | 
-is | is |  |  | Tiếng Ai-xơ-len | Tiếng Ai-xơ-len |  | 
-ja-JP-u-ca-japanese-x-lvariant-JP | ja | JP | JP | Tiếng Nhật (Nhật Bản,JP) | Tiếng Nhật | Nhật Bản | JP
-es-BO | es | BO |  | Tiếng Tây Ban Nha (Bô-li-vi-a) | Tiếng Tây Ban Nha | Bô-li-vi-a | 
-ar-DZ | ar | DZ |  | Tiếng A-rập (An-giê-ri) | Tiếng A-rập | An-giê-ri | 
-ms | ms |  |  | Tiếng Ma-lay-xi-a | Tiếng Ma-lay-xi-a |  | 
-es-AR | es | AR |  | Tiếng Tây Ban Nha (Ác-hen-ti-na) | Tiếng Tây Ban Nha | Ác-hen-ti-na | 
-ar-AE | ar | AE |  | Tiếng A-rập (Các Tiểu Vương quốc A-rập Thống nhất) | Tiếng A-rập | Các Tiểu Vương quốc A-rập Thống nhất | 
-fr-CA | fr | CA |  | Tiếng Pháp (Ca-na-đa) | Tiếng Pháp | Ca-na-đa | 
-sl | sl |  |  | Tiếng Xlô-ven | Tiếng Xlô-ven |  | 
-es | es |  |  | Tiếng Tây Ban Nha | Tiếng Tây Ban Nha |  | 
-lt-LT | lt | LT |  | Tiếng Lít-va (Li-tu-a-ni-a) | Tiếng Lít-va | Li-tu-a-ni-a | 
-sr-Latn-ME | sr | ME |  | Tiếng Séc-bi (Latin,Montenegro) | Tiếng Séc-bi | Montenegro | 
-ar-SY | ar | SY |  | Tiếng A-rập (Xi-ri) | Tiếng A-rập | Xi-ri | 
-ru-RU | ru | RU |  | Tiếng Nga (Nga) | Tiếng Nga | Nga | 
-fr-BE | fr | BE |  | Tiếng Pháp (Bỉ) | Tiếng Pháp | Bỉ | 
-es-ES | es | ES |  | Tiếng Tây Ban Nha (Tây Ban Nha) | Tiếng Tây Ban Nha | Tây Ban Nha | 
-bg | bg |  |  | Tiếng Bun-ga-ri | Tiếng Bun-ga-ri |  | 
-he-IL | iw | IL |  | Hebrew (I-xra-en) | Hebrew | I-xra-en | 
-sv | sv |  |  | Tiếng Thụy Điển | Tiếng Thụy Điển |  | 
-en | en |  |  | Tiếng Anh | Tiếng Anh |  | 
-he | iw |  |  | Hebrew | Hebrew |  | 
-da-DK | da | DK |  | Tiếng Đan Mạch (Đan Mạch) | Tiếng Đan Mạch | Đan Mạch | 
-es-CR | es | CR |  | Tiếng Tây Ban Nha (Cốt-xta Ri-ca) | Tiếng Tây Ban Nha | Cốt-xta Ri-ca | 
-zh-HK | zh | HK |  | Tiếng Trung Quốc (Hong Kong) | Tiếng Trung Quốc | Hong Kong | 
-zh | zh |  |  | Tiếng Trung Quốc | Tiếng Trung Quốc |  | 
-ca-ES | ca | ES |  | Tiếng Ca-ta-lăng (Tây Ban Nha) | Tiếng Ca-ta-lăng | Tây Ban Nha | 
-th-TH | th | TH |  | Tiếng Thái (Thái Lan) | Tiếng Thái | Thái Lan | 
-uk-UA | uk | UA |  | Tiếng U-crai-na (U-crai-na) | Tiếng U-crai-na | U-crai-na | 
-es-DO | es | DO |  | Tiếng Tây Ban Nha (Dominican Republic) | Tiếng Tây Ban Nha | Dominican Republic | 
-es-VE | es | VE |  | Tiếng Tây Ban Nha (Vê-nê-zu-ê-la) | Tiếng Tây Ban Nha | Vê-nê-zu-ê-la | 
-pl-PL | pl | PL |  | Tiếng Ba Lan (Ba Lan) | Tiếng Ba Lan | Ba Lan | 
-ar-LY | ar | LY |  | Tiếng A-rập (Li-bi) | Tiếng A-rập | Li-bi | 
-ar-JO | ar | JO |  | Tiếng A-rập (Gióc-đa-ni) | Tiếng A-rập | Gióc-đa-ni | 
-it | it |  |  | Tiếng Ý | Tiếng Ý |  | 
-uk | uk |  |  | Tiếng U-crai-na | Tiếng U-crai-na |  | 
-hu-HU | hu | HU |  | Tiếng Hung-ga-ri (Hung-ga-ri) | Tiếng Hung-ga-ri | Hung-ga-ri | 
-ga | ga |  |  | Tiếng Ai-len | Tiếng Ai-len |  | 
-es-GT | es | GT |  | Tiếng Tây Ban Nha (Goa-tê-ma-la) | Tiếng Tây Ban Nha | Goa-tê-ma-la | 
-es-PY | es | PY |  | Tiếng Tây Ban Nha (Pa-ra-goay) | Tiếng Tây Ban Nha | Pa-ra-goay | 
-bg-BG | bg | BG |  | Tiếng Bun-ga-ri (Bun-ga-ri) | Tiếng Bun-ga-ri | Bun-ga-ri | 
-hr-HR | hr | HR |  | Tiếng Crô-a-ti-a (Crô-a-ti-a) | Tiếng Crô-a-ti-a | Crô-a-ti-a | 
-sr-Latn-BA | sr | BA |  | Tiếng Séc-bi (Latin,Bô-xni-a Héc-xê-gô-vi-na) | Tiếng Séc-bi | Bô-xni-a Héc-xê-gô-vi-na | 
-ro-RO | ro | RO |  | Tiếng Ru-ma-ni (Ru-ma-ni) | Tiếng Ru-ma-ni | Ru-ma-ni | 
-fr-LU | fr | LU |  | Tiếng Pháp (Lúc-xăm-bua) | Tiếng Pháp | Lúc-xăm-bua | 
-no | no |  |  | Tiếng Na Uy | Tiếng Na Uy |  | 
-lt | lt |  |  | Tiếng Lít-va | Tiếng Lít-va |  | 
-en-SG | en | SG |  | Tiếng Anh (Xin-ga-po) | Tiếng Anh | Xin-ga-po | 
-es-EC | es | EC |  | Tiếng Tây Ban Nha (Ê-cu-a-đo) | Tiếng Tây Ban Nha | Ê-cu-a-đo | 
-sr-BA | sr | BA |  | Tiếng Séc-bi (Bô-xni-a Héc-xê-gô-vi-na) | Tiếng Séc-bi | Bô-xni-a Héc-xê-gô-vi-na | 
-es-NI | es | NI |  | Tiếng Tây Ban Nha (Ni-ca-ra-goa) | Tiếng Tây Ban Nha | Ni-ca-ra-goa | 
-sk | sk |  |  | Tiếng Xlô-vác | Tiếng Xlô-vác |  | 
-ru | ru |  |  | Tiếng Nga | Tiếng Nga |  | 
-mt | mt |  |  | Maltese | Maltese |  | 
-es-SV | es | SV |  | Tiếng Tây Ban Nha (En-san-va-đo) | Tiếng Tây Ban Nha | En-san-va-đo | 
-nl | nl |  |  | Tiếng Hà Lan | Tiếng Hà Lan |  | 
-hi-IN | hi | IN |  | Tiếng Hin-đi (Ấn Độ) | Tiếng Hin-đi | Ấn Độ | 
-et | et |  |  | Tiếng E-xtô-ni-a | Tiếng E-xtô-ni-a |  | 
-el-GR | el | GR |  | Tiếng Hy Lạp (Hy Lạp) | Tiếng Hy Lạp | Hy Lạp | 
-sl-SI | sl | SI |  | Tiếng Xlô-ven (Xlô-ven-ni-a) | Tiếng Xlô-ven | Xlô-ven-ni-a | 
-it-IT | it | IT |  | Tiếng Ý (Ý) | Tiếng Ý | Ý | 
-ja-JP | ja | JP |  | Tiếng Nhật (Nhật Bản) | Tiếng Nhật | Nhật Bản | 
-de-LU | de | LU |  | Tiếng Đức (Lúc-xăm-bua) | Tiếng Đức | Lúc-xăm-bua | 
-fr-CH | fr | CH |  | Tiếng Pháp (Thụy Sĩ) | Tiếng Pháp | Thụy Sĩ | 
-mt-MT | mt | MT |  | Maltese (Man-ta) | Maltese | Man-ta | 
-ar-BH | ar | BH |  | Tiếng A-rập (Ba-ren) | Tiếng A-rập | Ba-ren | 
-sq | sq |  |  | Tiếng An-ba-ni | Tiếng An-ba-ni |  | 
-vi | vi |  |  | Tiếng Việt | Tiếng Việt |  | 
-sr-ME | sr | ME |  | Tiếng Séc-bi (Montenegro) | Tiếng Séc-bi | Montenegro | 
-pt-BR | pt | BR |  | Tiếng Bồ Đào Nha (Bra-xin) | Tiếng Bồ Đào Nha | Bra-xin | 
-no-NO | no | NO |  | Tiếng Na Uy (Na Uy) | Tiếng Na Uy | Na Uy | 
-el | el |  |  | Tiếng Hy Lạp | Tiếng Hy Lạp |  | 
-de-CH | de | CH |  | Tiếng Đức (Thụy Sĩ) | Tiếng Đức | Thụy Sĩ | 
-zh-SG | zh | SG |  | Tiếng Trung Quốc (Xin-ga-po) | Tiếng Trung Quốc | Xin-ga-po | 
-ar-KW | ar | KW |  | Tiếng A-rập (Cô-oét) | Tiếng A-rập | Cô-oét | 
-ar-EG | ar | EG |  | Tiếng A-rập (Ai Cập) | Tiếng A-rập | Ai Cập | 
 ga-IE | ga | IE |  | Tiếng Ai-len (Ai-len) | Tiếng Ai-len | Ai-len | 
-es-PE | es | PE |  | Tiếng Tây Ban Nha (Pê-ru) | Tiếng Tây Ban Nha | Pê-ru | 
-cs-CZ | cs | CZ |  | Tiếng Séc (Cộng hòa Séc) | Tiếng Séc | Cộng hòa Séc | 
+mk | mk |  |  | Tiếng Ma-xê-đô-ni-a | Tiếng Ma-xê-đô-ni-a |  | 
 tr-TR | tr | TR |  | Tiếng Thổ Nhĩ Kỳ (Thổ Nhĩ Kỳ) | Tiếng Thổ Nhĩ Kỳ | Thổ Nhĩ Kỳ | 
-cs | cs |  |  | Tiếng Séc | Tiếng Séc |  | 
-es-UY | es | UY |  | Tiếng Tây Ban Nha (U-ru-goay) | Tiếng Tây Ban Nha | U-ru-goay | 
-en-IE | en | IE |  | Tiếng Anh (Ai-len) | Tiếng Anh | Ai-len | 
-en-IN | en | IN |  | Tiếng Anh (Ấn Độ) | Tiếng Anh | Ấn Độ | 
-ar-OM | ar | OM |  | Tiếng A-rập (Ô-man) | Tiếng A-rập | Ô-man | 
-sr-CS | sr | CS |  | Tiếng Séc-bi (Serbia and Montenegro) | Tiếng Séc-bi | Serbia and Montenegro | 
-ca | ca |  |  | Tiếng Ca-ta-lăng | Tiếng Ca-ta-lăng |  | 
-be | be |  |  | Tiếng Bê-la-rút | Tiếng Bê-la-rút |  | 
-sr-Latn | sr |  |  | Tiếng Séc-bi (Latin) | Tiếng Séc-bi |  | 
-ko | ko |  |  | Tiếng Hàn Quốc | Tiếng Hàn Quốc |  | 
-sq-AL | sq | AL |  | Tiếng An-ba-ni (An-ba-ni) | Tiếng An-ba-ni | An-ba-ni | 
-pt-PT | pt | PT |  | Tiếng Bồ Đào Nha (Bồ Đào Nha) | Tiếng Bồ Đào Nha | Bồ Đào Nha | 
-lv-LV | lv | LV |  | Tiếng Lát-vi-a (Lát-vi-a) | Tiếng Lát-vi-a | Lát-vi-a | 
-sr-Latn-RS | sr | RS |  | Tiếng Séc-bi (Latin,Serbia) | Tiếng Séc-bi | Serbia | 
-sk-SK | sk | SK |  | Tiếng Xlô-vác (Xlô-va-ki-a) | Tiếng Xlô-vác | Xlô-va-ki-a | 
-es-MX | es | MX |  | Tiếng Tây Ban Nha (Mê-hi-cô) | Tiếng Tây Ban Nha | Mê-hi-cô | 
-en-AU | en | AU |  | Tiếng Anh (Úc) | Tiếng Anh | Úc | 
-nn-NO | no | NO | NY | Tiếng Na Uy (Na Uy,Nynorsk) | Tiếng Na Uy | Na Uy | Nynorsk
-en-NZ | en | NZ |  | Tiếng Anh (Niu Di-lân) | Tiếng Anh | Niu Di-lân | 
-sv-SE | sv | SE |  | Tiếng Thụy Điển (Thụy Điển) | Tiếng Thụy Điển | Thụy Điển | 
-ro | ro |  |  | Tiếng Ru-ma-ni | Tiếng Ru-ma-ni |  | 
-ar-LB | ar | LB |  | Tiếng A-rập (Li-băng) | Tiếng A-rập | Li-băng | 
-de-DE | de | DE |  | Tiếng Đức (Đức) | Tiếng Đức | Đức | 
-th-TH-u-nu-thai-x-lvariant-TH | th | TH | TH | Tiếng Thái (Thái Lan,TH) | Tiếng Thái | Thái Lan | TH
-tr | tr |  |  | Tiếng Thổ Nhĩ Kỳ | Tiếng Thổ Nhĩ Kỳ |  | 
-es-CO | es | CO |  | Tiếng Tây Ban Nha (Cô-lôm-bi-a) | Tiếng Tây Ban Nha | Cô-lôm-bi-a | 
-en-PH | en | PH |  | Tiếng Anh (Phi-lip-pin) | Tiếng Anh | Phi-lip-pin | 
 et-EE | et | EE |  | Tiếng E-xtô-ni-a (E-xtô-ni-a) | Tiếng E-xtô-ni-a | E-xtô-ni-a | 
-el-CY | el | CY |  | Tiếng Hy Lạp (Síp) | Tiếng Hy Lạp | Síp | 
-hu | hu |  |  | Tiếng Hung-ga-ri | Tiếng Hung-ga-ri |  | 
+ar-QA | ar | QA |  | Tiếng A-rập (Ca-ta) | Tiếng A-rập | Ca-ta | 
+sr-Latn | sr |  |  | Tiếng Séc-bi (Latin) | Tiếng Séc-bi |  | 
+pt-PT | pt | PT |  | Tiếng Bồ Đào Nha (Bồ Đào Nha) | Tiếng Bồ Đào Nha | Bồ Đào Nha | 
+fr-LU | fr | LU |  | Tiếng Pháp (Lúc-xăm-bua) | Tiếng Pháp | Lúc-xăm-bua | 
+ar-OM | ar | OM |  | Tiếng A-rập (Ô-man) | Tiếng A-rập | Ô-man | 
+th | th |  |  | Tiếng Thái | Tiếng Thái |  | 
+sq-AL | sq | AL |  | Tiếng An-ba-ni (An-ba-ni) | Tiếng An-ba-ni | An-ba-ni | 
+es-DO | es | DO |  | Tiếng Tây Ban Nha (Dominican Republic) | Tiếng Tây Ban Nha | Dominican Republic | 
+es-CU | es | CU |  | Tiếng Tây Ban Nha (Cu Ba) | Tiếng Tây Ban Nha | Cu Ba | 
+ar | ar |  |  | Tiếng A-rập | Tiếng A-rập |  | 
+ru | ru |  |  | Tiếng Nga | Tiếng Nga |  | 
+en-NZ | en | NZ |  | Tiếng Anh (Niu Di-lân) | Tiếng Anh | Niu Di-lân | 
+sr-RS | sr | RS |  | Tiếng Séc-bi (Serbia) | Tiếng Séc-bi | Serbia | 
+de-CH | de | CH |  | Tiếng Đức (Thụy Sĩ) | Tiếng Đức | Thụy Sĩ | 
+es-UY | es | UY |  | Tiếng Tây Ban Nha (U-ru-goay) | Tiếng Tây Ban Nha | U-ru-goay | 
+ms | ms |  |  | Tiếng Ma-lay-xi-a | Tiếng Ma-lay-xi-a |  | 
+el-GR | el | GR |  | Tiếng Hy Lạp (Hy Lạp) | Tiếng Hy Lạp | Hy Lạp | 
+he-IL | iw | IL |  | Hebrew (I-xra-en) | Hebrew | I-xra-en | 
+en-ZA | en | ZA |  | Tiếng Anh (Nam Phi) | Tiếng Anh | Nam Phi | 
+th-TH-u-nu-thai-x-lvariant-TH | th | TH | TH | Tiếng Thái (Thái Lan,TH) | Tiếng Thái | Thái Lan | TH
+hi | hi |  |  | Tiếng Hin-đi | Tiếng Hin-đi |  | 
 fr-FR | fr | FR |  | Tiếng Pháp (Pháp) | Tiếng Pháp | Pháp | 
+de-AT | de | AT |  | Tiếng Đức (Áo) | Tiếng Đức | Áo | 
+nl | nl |  |  | Tiếng Hà Lan | Tiếng Hà Lan |  | 
+no-NO | no | NO |  | Tiếng Na Uy (Na Uy) | Tiếng Na Uy | Na Uy | 
+en-AU | en | AU |  | Tiếng Anh (Úc) | Tiếng Anh | Úc | 
+vi | vi |  |  | Tiếng Việt | Tiếng Việt |  | 
+nl-NL | nl | NL |  | Tiếng Hà Lan (Hà Lan) | Tiếng Hà Lan | Hà Lan | 
+fr-CA | fr | CA |  | Tiếng Pháp (Ca-na-đa) | Tiếng Pháp | Ca-na-đa | 
+lv-LV | lv | LV |  | Tiếng Lát-vi-a (Lát-vi-a) | Tiếng Lát-vi-a | Lát-vi-a | 
+de-LU | de | LU |  | Tiếng Đức (Lúc-xăm-bua) | Tiếng Đức | Lúc-xăm-bua | 
+es-CR | es | CR |  | Tiếng Tây Ban Nha (Cốt-xta Ri-ca) | Tiếng Tây Ban Nha | Cốt-xta Ri-ca | 
+ar-KW | ar | KW |  | Tiếng A-rập (Cô-oét) | Tiếng A-rập | Cô-oét | 
+sr | sr |  |  | Tiếng Séc-bi | Tiếng Séc-bi |  | 
+ar-LY | ar | LY |  | Tiếng A-rập (Li-bi) | Tiếng A-rập | Li-bi | 
+mt | mt |  |  | Maltese | Maltese |  | 
+it-CH | it | CH |  | Tiếng Ý (Thụy Sĩ) | Tiếng Ý | Thụy Sĩ | 
+da | da |  |  | Tiếng Đan Mạch | Tiếng Đan Mạch |  | 
+de-DE | de | DE |  | Tiếng Đức (Đức) | Tiếng Đức | Đức | 
+ar-DZ | ar | DZ |  | Tiếng A-rập (An-giê-ri) | Tiếng A-rập | An-giê-ri | 
+sk-SK | sk | SK |  | Tiếng Xlô-vác (Xlô-va-ki-a) | Tiếng Xlô-vác | Xlô-va-ki-a | 
+lt-LT | lt | LT |  | Tiếng Lít-va (Li-tu-a-ni-a) | Tiếng Lít-va | Li-tu-a-ni-a | 
+it-IT | it | IT |  | Tiếng Ý (Ý) | Tiếng Ý | Ý | 
+en-IE | en | IE |  | Tiếng Anh (Ai-len) | Tiếng Anh | Ai-len | 
+zh-SG | zh | SG |  | Tiếng Trung Quốc (Xin-ga-po) | Tiếng Trung Quốc | Xin-ga-po | 
+ro | ro |  |  | Tiếng Ru-ma-ni | Tiếng Ru-ma-ni |  | 
+en-CA | en | CA |  | Tiếng Anh (Ca-na-đa) | Tiếng Anh | Ca-na-đa | 
+nl-BE | nl | BE |  | Tiếng Hà Lan (Bỉ) | Tiếng Hà Lan | Bỉ | 
+no | no |  |  | Tiếng Na Uy | Tiếng Na Uy |  | 
+pl | pl |  |  | Tiếng Ba Lan | Tiếng Ba Lan |  | 
+zh-CN | zh | CN |  | Tiếng Trung Quốc (Trung Quốc) | Tiếng Trung Quốc | Trung Quốc | 
+ja-JP | ja | JP |  | Tiếng Nhật (Nhật Bản) | Tiếng Nhật | Nhật Bản | 
+de-GR | de | GR |  | Tiếng Đức (Hy Lạp) | Tiếng Đức | Hy Lạp | 
+sr-Latn-RS | sr | RS |  | Tiếng Séc-bi (Latin,Serbia) | Tiếng Séc-bi | Serbia | 
+he | iw |  |  | Hebrew | Hebrew |  | 
+en-IN | en | IN |  | Tiếng Anh (Ấn Độ) | Tiếng Anh | Ấn Độ | 
+ar-LB | ar | LB |  | Tiếng A-rập (Li-băng) | Tiếng A-rập | Li-băng | 
+es-NI | es | NI |  | Tiếng Tây Ban Nha (Ni-ca-ra-goa) | Tiếng Tây Ban Nha | Ni-ca-ra-goa | 
+zh | zh |  |  | Tiếng Trung Quốc | Tiếng Trung Quốc |  | 
+mk-MK | mk | MK |  | Tiếng Ma-xê-đô-ni-a (Ma-xê-đô-ni-a) | Tiếng Ma-xê-đô-ni-a | Ma-xê-đô-ni-a | 
+be-BY | be | BY |  | Tiếng Bê-la-rút (Bê-la-rút) | Tiếng Bê-la-rút | Bê-la-rút | 
+sl-SI | sl | SI |  | Tiếng Xlô-ven (Xlô-ven-ni-a) | Tiếng Xlô-ven | Xlô-ven-ni-a | 
+es-PE | es | PE |  | Tiếng Tây Ban Nha (Pê-ru) | Tiếng Tây Ban Nha | Pê-ru | 
+id-ID | in | ID |  | Indonesian (Nam Dương) | Indonesian | Nam Dương | 
+en-GB | en | GB |  | Tiếng Anh (Vương quốc Anh) | Tiếng Anh | Vương quốc Anh | 
 
-TWD | 901 | New Taiwan Dollar | TWD | 2
-BSD | 44 | Bahamian Dollar | BSD | 2
-XOF | 952 | CFA Franc BCEAO | XOF | 0
-CLF | 990 | Chilean Unit of Account (UF) | CLF | 0
-CUP | 192 | Cuban Peso | CUP | 2
-ANG | 532 | Netherlands Antillean Guilder | ANG | 2
-SZL | 748 | Swazi Lilangeni | SZL | 2
-KZT | 398 | Kazakhstani Tenge | KZT | 2
-LKR | 144 | Sri Lankan Rupee | LKR | 2
-AMD | 51 | Armenian Dram | AMD | 2
-VUV | 548 | Vanuatu Vatu | VUV | 0
-ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
-SIT | 705 | Slovenian Tolar | SIT | 2
-UAH | 980 | Ukrainian Hryvnia | UAH | 2
-MYR | 458 | Malaysian Ringgit | MYR | 2
-MGF | 450 | Malagasy Franc | MGF | 0
-LYD | 434 | Libyan Dinar | LYD | 3
-BBD | 52 | Barbadian Dollar | BBD | 2
-GTQ | 320 | Guatemalan Quetzal | GTQ | 2
-IQD | 368 | Iraqi Dinar | IQD | 3
-CAD | 124 | Canadian Dollar | CAD | 2
-UZS | 860 | Uzbekistan Som | UZS | 2
-DKK | 208 | Danish Krone | DKK | 2
-BGN | 975 | Bulgarian Lev | BGN | 2
-AWG | 533 | Aruban Florin | AWG | 2
-SCR | 690 | Seychellois Rupee | SCR | 2
-DEM | 276 | German Mark | DEM | 2
-XBD | 958 | European Unit of Account (XBD) | XBD | -1
-XPD | 964 | Palladium | XPD | -1
-MMK | 104 | Myanma Kyat | MMK | 2
-SGD | 702 | Singapore Dollar | SGD | 2
-HUF | 348 | Hungarian Forint | HUF | 2
-AZN | 944 | Azerbaijani Manat | AZN | 2
-BIF | 108 | Burundian Franc | BIF | 0
-BYR | 974 | Belarusian Ruble | BYR | 0
-RUB | 643 | Russian Ruble | RUB | 2
-KGS | 417 | Kyrgystani Som | KGS | 2
-BYB | 112 | Belarusian New Ruble (1994-1999) | BYB | 0
-SLL | 694 | Sierra Leonean Leone | SLL | 2
-SRG | 740 | Surinamese Guilder | SRG | 2
-LTL | 440 | Lithuanian Litas | LTL | 2
-GHC | 288 | Ghanaian Cedi (1979-2007) | GHC | 2
-AZM | 31 | Azerbaijani Manat (1993-2006) | AZM | 2
-MDL | 498 | Moldovan Leu | MDL | 2
-RON | 946 | Romanian Leu | RON | 2
-MKD | 807 | Macedonian Denar | MKD | 2
-BDT | 50 | Bangladeshi Taka | BDT | 2
-CZK | 203 | Czech Republic Koruna | CZK | 2
-DJF | 262 | Djiboutian Franc | DJF | 0
-NPR | 524 | Nepalese Rupee | NPR | 2
-CUC | 931 | Cuban Convertible Peso | CUC | 2
-SDG | 938 | Sudanese Pound | SDG | 2
-KHR | 116 | Cambodian Riel | KHR | 2
-ADP | 20 | Andorran Peseta | ADP | 0
-XTS | 963 | Testing Currency Code | XTS | -1
-SDD | 736 | Sudanese Dinar (1992-2007) | SDD | 2
-SOS | 706 | Somali Shilling | SOS | 2
-BEF | 56 | Belgian Franc | BEF | 0
-USD | 840 | US Dollar | USD | 2
-MWK | 454 | Malawian Kwacha | MWK | 2
-SKK | 703 | Slovak Koruna | SKK | 2
-USN | 997 | US Dollar (Next day) | USN | 2
-LVL | 428 | Latvian Lats | LVL | 2
-ILS | 376 | Israeli New Sheqel | ILS | 2
-QAR | 634 | Qatari Rial | QAR | 2
-GHS | 936 | Ghanaian Cedi | GHS | 2
-BWP | 72 | Botswanan Pula | BWP | 2
-XDR | 960 | Special Drawing Rights | XDR | -1
-SRD | 968 | Surinamese Dollar | SRD | 2
-AYM | 945 | AYM | AYM | 2
-YUM | 891 | Yugoslavian New Dinar (1994-2002) | YUM | 2
-LBP | 422 | Lebanese Pound | LBP | 2
-CVE | 132 | Cape Verdean Escudo | CVE | 2
-FJD | 242 | Fijian Dollar | FJD | 2
-BHD | 48 | Bahraini Dinar | BHD | 3
-DZD | 12 | Algerian Dinar | DZD | 2
-VND | 704 | Vietnamese Dong | đ | 2
-NOK | 578 | Norwegian Krone | NOK | 2
-MRO | 478 | Mauritanian Ouguiya | MRO | 2
-THB | 764 | Thai Baht | THB | 2
-SVC | 222 | Salvadoran Colón | SVC | 2
-FKP | 238 | Falkland Islands Pound | FKP | 2
-CLP | 152 | Chilean Peso | CLP | 0
-PAB | 590 | Panamanian Balboa | PAB | 2
-XUA | 965 | XUA | XUA | -1
-TRL | 792 | Turkish Lira (1922-2005) | TRL | 0
-NAD | 516 | Namibian Dollar | NAD | 2
-MGA | 969 | Malagasy Ariary | MGA | 2
-XAG | 961 | Silver | XAG | -1
-NGN | 566 | Nigerian Naira | NGN | 2
-TND | 788 | Tunisian Dinar | TND | 3
-AFN | 971 | Afghan Afghani | AFN | 2
-BOV | 984 | Bolivian Mvdol | BOV | 2
-BMD | 60 | Bermudan Dollar | BMD | 2
-NZD | 554 | New Zealand Dollar | NZD | 2
-CHF | 756 | Swiss Franc | CHF | 2
-CYP | 196 | Cypriot Pound | CYP | 2
-WST | 882 | Samoan Tala | WST | 2
-TPE | 626 | Timorese Escudo | TPE | 0
-GYD | 328 | Guyanaese Dollar | GYD | 2
-BRL | 986 | Brazilian Real | BRL | 2
-YER | 886 | Yemeni Rial | YER | 2
-XFO | 0 | French Gold Franc | XFO | -1
-MXN | 484 | Mexican Peso | MXN | 2
-SHP | 654 | Saint Helena Pound | SHP | 2
-LUF | 442 | Luxembourgian Franc | LUF | 0
-AOA | 973 | Angolan Kwanza | AOA | 2
-XSU | 994 | XSU | XSU | -1
-KES | 404 | Kenyan Shilling | KES | 2
-SAR | 682 | Saudi Riyal | SAR | 2
-XAU | 959 | Gold | XAU | -1
-BND | 96 | Brunei Dollar | BND | 2
-XBA | 955 | European Composite Unit | XBA | -1
-JPY | 392 | Japanese Yen | JPY | 0
-ARS | 32 | Argentine Peso | ARS | 2
-AED | 784 | United Arab Emirates Dirham | AED | 2
-ATS | 40 | Austrian Schilling | ATS | 2
-NLG | 528 | Dutch Guilder | NLG | 2
-BTN | 64 | Bhutanese Ngultrum | BTN | 2
-TJS | 972 | Tajikistani Somoni | TJS | 2
-MUR | 480 | Mauritian Rupee | MUR | 2
 LAK | 418 | Laotian Kip | LAK | 2
-PYG | 600 | Paraguayan Guarani | PYG | 0
-MZN | 943 | Mozambican Metical | MZN | 2
-HNL | 340 | Honduran Lempira | HNL | 2
-PLN | 985 | Polish Zloty | PLN | 2
-VEB | 862 | Venezuelan Bolívar (1871-2008) | VEB | 2
-XBB | 956 | European Monetary Unit | XBB | -1
-MOP | 446 | Macanese Pataca | MOP | 2
-FRF | 250 | French Franc | FRF | 2
-XFU | 0 | French UIC-Franc | XFU | -1
-BOB | 68 | Bolivian Boliviano | BOB | 2
-EEK | 233 | Estonian Kroon | EEK | 2
-MZM | 508 | Mozambican Metical (1980-2006) | MZM | 2
-CDF | 976 | Congolese Franc | CDF | 2
-BZD | 84 | Belize Dollar | BZD | 2
-ISK | 352 | Icelandic Króna | ISK | 0
-XPF | 953 | CFP Franc | XPF | 0
-IEP | 372 | Irish Pound | IEP | 2
-HTG | 332 | Haitian Gourde | HTG | 2
-DOP | 214 | Dominican Peso | DOP | 2
-MXV | 979 | Mexican Investment Unit | MXV | 2
-TZS | 834 | Tanzanian Shilling | TZS | 2
-PGK | 598 | Papua New Guinean Kina | PGK | 2
-INR | 356 | Indian Rupee | INR | 2
-PHP | 608 | Philippine Peso | PHP | 2
-GIP | 292 | Gibraltar Pound | GIP | 2
-ZAR | 710 | South African Rand | ZAR | 2
-GRD | 300 | Greek Drachma | GRD | 0
-CSD | 891 | Serbian Dinar (2002-2006) | CSD | 2
-IDR | 360 | Indonesian Rupiah | IDR | 2
-SEK | 752 | Swedish Krona | SEK | 2
-KMF | 174 | Comorian Franc | KMF | 0
-TMT | 934 | Turkmenistani Manat | TMT | 2
-ZWN | 942 | ZWN | ZWN | 2
-JMD | 388 | Jamaican Dollar | JMD | 2
-TTD | 780 | Trinidad and Tobago Dollar | TTD | 2
-GBP | 826 | British Pound Sterling | GBP | 2
-ALL | 8 | Albanian Lek | ALL | 2
-JOD | 400 | Jordanian Dinar | JOD | 3
-BGL | 100 | Bulgarian Hard Lev | BGL | 2
-IRR | 364 | Iranian Rial | IRR | 2
-TOP | 776 | Tongan Paʻanga | TOP | 2
-USS | 998 | US Dollar (Same day) | USS | 2
-HKD | 344 | Hong Kong Dollar | HKD | 2
-XXX | 999 | Unknown Currency | XXX | -1
-VEF | 937 | Venezuelan Bolívar | VEF | 2
-MNT | 496 | Mongolian Tugrik | MNT | 2
-ETB | 230 | Ethiopian Birr | ETB | 2
-XBC | 957 | European Unit of Account (XBC) | XBC | -1
-EUR | 978 | Euro | EUR | 2
-CRC | 188 | Costa Rican Colón | CRC | 2
-EGP | 818 | Egyptian Pound | EGP | 2
-AUD | 36 | Australian Dollar | AUD | 2
-ESP | 724 | Spanish Peseta | ESP | 0
-UGX | 800 | Ugandan Shilling | UGX | 2
-ERN | 232 | Eritrean Nakfa | ERN | 2
-GNF | 324 | Guinean Franc | GNF | 0
-SBD | 90 | Solomon Islands Dollar | SBD | 2
-LRD | 430 | Liberian Dollar | LRD | 2
-RSD | 941 | Serbian Dinar | RSD | 2
-RUR | 810 | Russian Ruble (1991-1998) | RUR | 2
-GWP | 624 | Guinea-Bissau Peso | GWP | 2
-NIO | 558 | Nicaraguan Córdoba | NIO | 2
-LSL | 426 | Lesotho Loti | LSL | 2
-XPT | 962 | Platinum | XPT | -1
-MAD | 504 | Moroccan Dirham | MAD | 2
-COP | 170 | Colombian Peso | COP | 2
-UYU | 858 | Uruguayan Peso | UYU | 2
-RWF | 646 | Rwandan Franc | RWF | 0
-TRY | 949 | Turkish Lira | TRY | 2
-KYD | 136 | Cayman Islands Dollar | KYD | 2
-PEN | 604 | Peruvian Nuevo Sol | PEN | 2
-GMD | 270 | Gambian Dalasi | GMD | 2
-ZMK | 894 | Zambian Kwacha | ZMK | 2
-XAF | 950 | CFA Franc BEAC | XAF | 0
-OMR | 512 | Omani Rial | OMR | 3
-FIM | 246 | Finnish Markka | FIM | 2
 STD | 678 | São Tomé and Príncipe Dobra | STD | 2
-KRW | 410 | South Korean Won | KRW | 0
-HRK | 191 | Croatian Kuna | HRK | 2
-BAM | 977 | Bosnia-Herzegovina Convertible Mark | BAM | 2
-MTL | 470 | Maltese Lira | MTL | 2
-ITL | 380 | Italian Lira | ITL | 0
-PKR | 586 | Pakistani Rupee | PKR | 2
-ROL | 946 | Romanian Leu (1952-2006) | ROL | 2
-ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
-ZWD | 716 | Zimbabwean Dollar (1980-2008) | ZWD | 2
-PTE | 620 | Portuguese Escudo | PTE | 0
-TMM | 795 | Turkmenistani Manat (1993-2009) | TMM | 2
-CNY | 156 | Chinese Yuan | CNY | 2
-KPW | 408 | North Korean Won | KPW | 2
-GEL | 981 | Georgian Lari | GEL | 2
+LKR | 144 | Sri Lankan Rupee | LKR | 2
+IRR | 364 | Iranian Rial | IRR | 2
 MVR | 462 | Maldivian Rufiyaa | MVR | 2
-KWD | 414 | Kuwaiti Dinar | KWD | 3
-AFA | 4 | Afghan Afghani (1927-2002) | AFA | 2
-SYP | 760 | Syrian Pound | SYP | 2
+AZM | 31 | Azerbaijani Manat (1993-2006) | AZM | 2
+ZMK | 894 | Zambian Kwacha | ZMK | 2
+KPW | 408 | North Korean Won | KPW | 2
+AFN | 971 | Afghan Afghani | AFN | 2
+ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
+HRK | 191 | Croatian Kuna | HRK | 2
+PGK | 598 | Papua New Guinean Kina | PGK | 2
+XTS | 963 | Testing Currency Code | XTS | -1
+SOS | 706 | Somali Shilling | SOS | 2
+KZT | 398 | Kazakhstani Tenge | KZT | 2
+BIF | 108 | Burundian Franc | BIF | 0
+MDL | 498 | Moldovan Leu | MDL | 2
+SDD | 736 | Sudanese Dinar (1992-2007) | SDD | 2
+NPR | 524 | Nepalese Rupee | NPR | 2
+MRO | 478 | Mauritanian Ouguiya | MRO | 2
+MUR | 480 | Mauritian Rupee | MUR | 2
+RUB | 643 | Russian Ruble | RUB | 2
+TMM | 795 | Turkmenistani Manat (1993-2009) | TMM | 2
+XUA | 965 | ADB Unit of Account | XUA | -1
+CHF | 756 | Swiss Franc | CHF | 2
+KGS | 417 | Kyrgystani Som | KGS | 2
 XCD | 951 | East Caribbean Dollar | XCD | 2
+MOP | 446 | Macanese Pataca | MOP | 2
+VEB | 862 | Venezuelan Bolívar (1871-2008) | VEB | 2
+USN | 997 | US Dollar (Next day) | USN | 2
+SDG | 938 | Sudanese Pound | SDG | 2
+GRD | 300 | Greek Drachma | GRD | 0
+BND | 96 | Brunei Dollar | BND | 2
+SYP | 760 | Syrian Pound | SYP | 2
+LSL | 426 | Lesotho Loti | LSL | 2
+CZK | 203 | Czech Republic Koruna | CZK | 2
+PAB | 590 | Panamanian Balboa | PAB | 2
+BGN | 975 | Bulgarian Lev | BGN | 2
+CAD | 124 | Canadian Dollar | CAD | 2
+RUR | 810 | Russian Ruble (1991-1998) | RUR | 2
+THB | 764 | Thai Baht | THB | 2
+HKD | 344 | Hong Kong Dollar | HKD | 2
+AYM | 945 | AYM | AYM | 2
+XBB | 956 | European Monetary Unit | XBB | -1
+FKP | 238 | Falkland Islands Pound | FKP | 2
+XAG | 961 | Silver | XAG | -1
+GYD | 328 | Guyanaese Dollar | GYD | 2
+AZN | 944 | Azerbaijani Manat | AZN | 2
+INR | 356 | Indian Rupee | INR | 2
+SLL | 694 | Sierra Leonean Leone | SLL | 2
+TZS | 834 | Tanzanian Shilling | TZS | 2
+BEF | 56 | Belgian Franc | BEF | 0
+RSD | 941 | Serbian Dinar | RSD | 2
+BBD | 52 | Barbadian Dollar | BBD | 2
+BYR | 974 | Belarusian Ruble | BYR | 0
+CVE | 132 | Cape Verdean Escudo | CVE | 2
+JPY | 392 | Japanese Yen | JPY | 0
+EGP | 818 | Egyptian Pound | EGP | 2
+BOV | 984 | Bolivian Mvdol | BOV | 2
+SBD | 90 | Solomon Islands Dollar | SBD | 2
+SIT | 705 | Slovenian Tolar | SIT | 2
+AED | 784 | United Arab Emirates Dirham | AED | 2
+TTD | 780 | Trinidad and Tobago Dollar | TTD | 2
+UGX | 800 | Ugandan Shilling | UGX | 0
+FJD | 242 | Fijian Dollar | FJD | 2
+SGD | 702 | Singapore Dollar | SGD | 2
+KMF | 174 | Comorian Franc | KMF | 0
+VND | 704 | Vietnamese Dong | đ | 0
+GHC | 288 | Ghanaian Cedi (1979-2007) | GHC | 2
+HNL | 340 | Honduran Lempira | HNL | 2
+ATS | 40 | Austrian Schilling | ATS | 2
+ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
+VUV | 548 | Vanuatu Vatu | VUV | 0
+NLG | 528 | Dutch Guilder | NLG | 2
+CRC | 188 | Costa Rican Colón | CRC | 2
+DKK | 208 | Danish Krone | DKK | 2
+PEN | 604 | Peruvian Nuevo Sol | PEN | 2
+SRD | 968 | Surinamese Dollar | SRD | 2
+GNF | 324 | Guinean Franc | GNF | 0
+TND | 788 | Tunisian Dinar | TND | 3
+QAR | 634 | Qatari Rial | QAR | 2
+TRL | 792 | Turkish Lira (1922-2005) | TRL | 0
+ZWN | 942 | ZWN | ZWN | 2
+ARS | 32 | Argentine Peso | ARS | 2
+MGA | 969 | Malagasy Ariary | MGA | 2
+NOK | 578 | Norwegian Krone | NOK | 2
+CYP | 196 | Cypriot Pound | CYP | 2
+PYG | 600 | Paraguayan Guarani | PYG | 0
+MNT | 496 | Mongolian Tugrik | MNT | 2
+FIM | 246 | Finnish Markka | FIM | 2
+YUM | 891 | Yugoslavian New Dinar (1994-2002) | YUM | 2
+ISK | 352 | Icelandic Króna | ISK | 0
+SKK | 703 | Slovak Koruna | SKK | 2
+LRD | 430 | Liberian Dollar | LRD | 2
+SEK | 752 | Swedish Krona | SEK | 2
+FRF | 250 | French Franc | FRF | 2
+CSD | 891 | Serbian Dinar (2002-2006) | CSD | 2
+GIP | 292 | Gibraltar Pound | GIP | 2
+KES | 404 | Kenyan Shilling | KES | 2
+TJS | 972 | Tajikistani Somoni | TJS | 2
+XOF | 952 | CFA Franc BCEAO | XOF | 0
+USS | 998 | US Dollar (Same day) | USS | 2
+NAD | 516 | Namibian Dollar | NAD | 2
+YER | 886 | Yemeni Rial | YER | 2
+RWF | 646 | Rwandan Franc | RWF | 0
+XAU | 959 | Gold | XAU | -1
+BOB | 68 | Bolivian Boliviano | BOB | 2
+SRG | 740 | Surinamese Guilder | SRG | 2
+GBP | 826 | British Pound Sterling | GBP | 2
+XFU | 0 | French UIC-Franc | XFU | -1
+HTG | 332 | Haitian Gourde | HTG | 2
+MWK | 454 | Malawian Kwacha | MWK | 2
+WST | 882 | Samoan Tala | WST | 2
+NZD | 554 | New Zealand Dollar | NZD | 2
+VEF | 937 | Venezuelan Bolívar | VEF | 2
+GHS | 936 | Ghanaian Cedi | GHS | 2
+JOD | 400 | Jordanian Dinar | JOD | 3
+JMD | 388 | Jamaican Dollar | JMD | 2
+MYR | 458 | Malaysian Ringgit | MYR | 2
+RON | 946 | Romanian Leu | RON | 2
+BGL | 100 | Bulgarian Hard Lev | BGL | 2
+NGN | 566 | Nigerian Naira | NGN | 2
+BTN | 64 | Bhutanese Ngultrum | BTN | 2
+ITL | 380 | Italian Lira | ITL | 0
+ZMW | 967 | ZMW | ZMW | 2
+COP | 170 | Colombian Peso | COP | 2
+KRW | 410 | South Korean Won | KRW | 0
+AUD | 36 | Australian Dollar | AUD | 2
+ZWD | 716 | Zimbabwean Dollar (1980-2008) | ZWD | 2
+MGF | 450 | Malagasy Franc | MGF | 0
+USD | 840 | US Dollar | USD | 2
+XPD | 964 | Palladium | XPD | -1
+ZAR | 710 | South African Rand | ZAR | 2
+DEM | 276 | German Mark | DEM | 2
+EUR | 978 | Euro | EUR | 2
+LYD | 434 | Libyan Dinar | LYD | 3
+BHD | 48 | Bahraini Dinar | BHD | 3
+ERN | 232 | Eritrean Nakfa | ERN | 2
+SSP | 728 | South Sudanese Pound | SSP | 2
+XXX | 999 | Unknown Currency | XXX | -1
+AWG | 533 | Aruban Florin | AWG | 2
+BYB | 112 | Belarusian New Ruble (1994-1999) | BYB | 0
+XPF | 953 | CFP Franc | XPF | 0
+HUF | 348 | Hungarian Forint | HUF | 2
+BWP | 72 | Botswanan Pula | BWP | 2
+ETB | 230 | Ethiopian Birr | ETB | 2
+BZD | 84 | Belize Dollar | BZD | 2
+XAF | 950 | CFA Franc BEAC | XAF | 0
+SCR | 690 | Seychellois Rupee | SCR | 2
+LTL | 440 | Lithuanian Litas | LTL | 2
+DJF | 262 | Djiboutian Franc | DJF | 0
+TOP | 776 | Tongan Paʻanga | TOP | 2
+KYD | 136 | Cayman Islands Dollar | KYD | 2
+MZN | 943 | Mozambican Metical | MZN | 2
+DOP | 214 | Dominican Peso | DOP | 2
+ROL | 946 | Romanian Leu (1952-2006) | ROL | 2
+ADP | 20 | Andorran Peseta | ADP | 0
+SHP | 654 | Saint Helena Pound | SHP | 2
+IEP | 372 | Irish Pound | IEP | 2
+XBA | 955 | European Composite Unit | XBA | -1
+ILS | 376 | Israeli New Sheqel | ILS | 2
+PTE | 620 | Portuguese Escudo | PTE | 0
+CUP | 192 | Cuban Peso | CUP | 2
+CLP | 152 | Chilean Peso | CLP | 0
+PKR | 586 | Pakistani Rupee | PKR | 2
+SVC | 222 | Salvadoran Colón | SVC | 2
+XPT | 962 | Platinum | XPT | -1
+TWD | 901 | New Taiwan Dollar | TWD | 2
+LVL | 428 | Latvian Lats | LVL | 2
+OMR | 512 | Omani Rial | OMR | 3
+TRY | 949 | Turkish Lira | TRY | 2
+LUF | 442 | Luxembourgian Franc | LUF | 0
+MTL | 470 | Maltese Lira | MTL | 2
+XDR | 960 | Special Drawing Rights | XDR | -1
+MAD | 504 | Moroccan Dirham | MAD | 2
+EEK | 233 | Estonian Kroon | EEK | 2
+NIO | 558 | Nicaraguan Córdoba | NIO | 2
+BRL | 986 | Brazilian Real | BRL | 2
+IQD | 368 | Iraqi Dinar | IQD | 3
+TPE | 626 | Timorese Escudo | TPE | 0
+MZM | 508 | Mozambican Metical (1980-2006) | MZM | 2
+BDT | 50 | Bangladeshi Taka | BDT | 2
+GMD | 270 | Gambian Dalasi | GMD | 2
+KHR | 116 | Cambodian Riel | KHR | 2
+GEL | 981 | Georgian Lari | GEL | 2
+CLF | 990 | Chilean Unit of Account (UF) | CLF | 0
+AFA | 4 | Afghan Afghani (1927-2002) | AFA | 2
+ESP | 724 | Spanish Peseta | ESP | 0
+PLN | 985 | Polish Zloty | PLN | 2
+UAH | 980 | Ukrainian Hryvnia | UAH | 2
+IDR | 360 | Indonesian Rupiah | IDR | 2
+PHP | 608 | Philippine Peso | PHP | 2
+DZD | 12 | Algerian Dinar | DZD | 2
+TMT | 934 | Turkmenistani Manat | TMT | 2
+CDF | 976 | Congolese Franc | CDF | 2
+SAR | 682 | Saudi Riyal | SAR | 2
+AMD | 51 | Armenian Dram | AMD | 2
+UZS | 860 | Uzbekistan Som | UZS | 2
+LBP | 422 | Lebanese Pound | LBP | 2
+XFO | 0 | French Gold Franc | XFO | -1
+BMD | 60 | Bermudan Dollar | BMD | 2
+MMK | 104 | Myanma Kyat | MMK | 2
+MXN | 484 | Mexican Peso | MXN | 2
+AOA | 973 | Angolan Kwanza | AOA | 2
+XBD | 958 | European Unit of Account (XBD) | XBD | -1
+BAM | 977 | Bosnia-Herzegovina Convertible Mark | BAM | 2
+UYU | 858 | Uruguayan Peso | UYU | 2
+GWP | 624 | Guinea-Bissau Peso | GWP | 2
+ALL | 8 | Albanian Lek | ALL | 2
+BSD | 44 | Bahamian Dollar | BSD | 2
+CNY | 156 | Chinese Yuan | CNY | 2
+GTQ | 320 | Guatemalan Quetzal | GTQ | 2
+MKD | 807 | Macedonian Denar | MKD | 2
+SZL | 748 | Swazi Lilangeni | SZL | 2
+XSU | 994 | Sucre | XSU | -1
+KWD | 414 | Kuwaiti Dinar | KWD | 3
+XBC | 957 | European Unit of Account (XBC) | XBC | -1
+MXV | 979 | Mexican Investment Unit | MXV | 2
+CUC | 931 | Cuban Convertible Peso | CUC | 2
+ANG | 532 | Netherlands Antillean Guilder | ANG | 2
+
+
+

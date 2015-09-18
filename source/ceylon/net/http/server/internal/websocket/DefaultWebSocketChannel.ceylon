@@ -21,11 +21,14 @@ import io.undertow.websockets.core {
         wsSendClose=sendClose,
         wsSendCloseBlocking=sendCloseBlocking
     },
-    CloseMessage
+    CloseMessage,
+    WebSocketException
 }
 import io.undertow.websockets.spi {
     WebSocketHttpExchange
 }
+
+import java.nio { JByteBuffer = ByteBuffer }
 
 by("Matej Lazar")
 class DefaultWebSocketChannel(WebSocketHttpExchange exchange, 
@@ -48,18 +51,22 @@ class DefaultWebSocketChannel(WebSocketHttpExchange exchange,
     fragmentedBinarySender() 
             => DefaultFragmentedBinarySender(this);
 
-    sendBinary(ByteBuffer binary) 
-            //TODO: is this copy really necessary or can
-            //we just send the underlying implementation?
-            => wsSendBinaryBlocking(copyToJavaByteBuffer(binary), channel);
+    JByteBuffer getUnderlayingImplementation(ByteBuffer binary) {
+        Object? javaByteBuffer = binary.implementation;
+        if (is JByteBuffer javaByteBuffer) {
+            return javaByteBuffer;
+        } else {
+            throw WebSocketException("Underlaying implementation of ByteBuffer must be of type java.nio.ByteBuffer.");
+        }
+    }
+
+    sendBinary(ByteBuffer binary) => wsSendBinaryBlocking(getUnderlayingImplementation(binary), channel);
 
     sendBinaryAsynchronous(
             ByteBuffer binary,
             Anything(WebSocketChannel) onCompletion,
             Anything(WebSocketChannel,Throwable)? onError)
-            //TODO: is this copy really necessary or can
-            //we just send the underlying implementation?
-            => wsSendBinary(copyToJavaByteBuffer(binary), channel, 
+            => wsSendBinary(getUnderlayingImplementation(binary), channel, 
                 wrapCallbackSend(onCompletion, onError, this));
 
     sendText(String text) => wsSendTextBlocking(text, channel);

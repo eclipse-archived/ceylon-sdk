@@ -25,23 +25,15 @@ shared class TreeMap<Key, Item>(compare, entries={})
         shared variable Node? parent=null;
         shared variable Boolean red;
         
-        shared Boolean onLeft {
-            if (exists parentLeft=parent?.left) {
-                return this==parentLeft;
-            }
-            else {
-                return false;
-            }
-        }
+        shared Boolean onLeft 
+                => if (exists parentLeft=parent?.left) 
+                then this==parentLeft 
+                else false;
         
-        shared Boolean onRight {
-            if (exists parentRight=parent?.right) {
-                return this==parentRight;
-            }
-            else {
-                return false;
-            }
-        }
+        shared Boolean onRight 
+                => if (exists parentRight=parent?.right) 
+                then this==parentRight 
+                else false;
         
         shared Node? grandparent => parent?.parent;
         
@@ -126,18 +118,12 @@ shared class TreeMap<Key, Item>(compare, entries={})
         
     }
     
-    Boolean isRed(Node? node) {
-        if (exists node) {
-            return node.red;
-        }
-        else {
-            return false;
-        }
-    }
+    Boolean isRed(Node? node) 
+            => if (exists node) then node.red else false;
     
     variable Node? root=null;
     
-    function lookup(Key key) {
+    Node? lookup(Key key) {
         variable value node = root;
         while (exists n=node) {
             switch (compare(key,n.key))
@@ -154,7 +140,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return node;
     }
     
-    function ceiling(Key key) {
+    Node? ceiling(Key key) {
         variable value node = root;
         while (exists n=node) {
             switch (compare(key,n.key))
@@ -182,7 +168,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
         return node;
     }
     
-    function floor(Key key) {
+    Node? floor(Key key) {
         variable value node = root;
         while (exists n=node) {
             switch (compare(key,n.key))
@@ -380,7 +366,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
             if (!node.red, isRed(child)) {
                 assert(exists child);
                 child.red = false;
-            } else if (!node.red) {
+            }
+            else if (!node.red) {
                 case1(node, node.sibling);
             }
             replaceNode(node, child);
@@ -400,7 +387,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 s.red = false;
                 if (node.onLeft) {
                     rotateLeft(p);
-                } else {
+                }
+                else {
                     rotateRight(p);
                 }
             }
@@ -415,7 +403,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
             if (!s.red, !p.red, !sLeftRed, !sRightRed) {
                 s.red = true;
                 case1(p, p.sibling);
-            } else {
+            }
+            else {
                 case4(node, p, s, sLeftRed, sRightRed);
             }
         }
@@ -424,7 +413,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
             if (!s.red, p.red, !sLeftRed, !sRightRed) {
                 s.red = true;
                 p.red = false;
-            } else {
+            }
+            else {
                 case5(node, p, s, sLeftRed, sRightRed);
             }
         }
@@ -435,7 +425,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 assert (exists sl = s.left);
                 sl.red = false;
                 rotateRight(s);
-            } else if (!s.red, !sLeftRed, sRightRed, node.onRight) {
+            }
+            else if (!s.red, !sLeftRed, sRightRed, node.onRight) {
                 s.red = true;
                 assert (exists sr = s.right);
                 sr.red = false;
@@ -451,7 +442,8 @@ shared class TreeMap<Key, Item>(compare, entries={})
             if (node.onLeft, exists sr = s.right) {
                 sr.red = false;
                 rotateLeft(p);
-            } else if (exists sl = s.left) {
+            }
+            else if (exists sl = s.left) {
                 sl.red = false;
                 rotateRight(p);
             }
@@ -468,12 +460,14 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 node = left.rightmostChild;
                 result.key = node.key;
                 result.item = node.item;
-            } else {
+            }
+            else {
                 node = result;
             }
             removeCases.removeNodeWithAtMostOneChild(node);
             return result.item;
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -489,12 +483,14 @@ shared class TreeMap<Key, Item>(compare, entries={})
                 node = left.rightmostChild;
                 result.key = node.key;
                 result.item = node.item;
-            } else {
+            }
+            else {
                 node = result;
             }
             removeCases.removeNodeWithAtMostOneChild(node);
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -535,33 +531,17 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
         return false;
     }
-    shared actual {<Key->Item>*} higherEntries(Key key) {
-        object iterable satisfies {<Key->Item>*} {
-            iterator() => NodeIterator(floor(key));
-        }
-        return iterable;
-    }
-
-    shared actual {<Key->Item>*} lowerEntries(Key key) {
-        object iterable satisfies {<Key->Item>*} {
-            iterator() => ReverseNodeIterator(ceiling(key));
-        }
-        return iterable;
-    }
-
+    
     class NodeIterator (current = root?.leftmostChild)
             satisfies Iterator<Key->Item> {
         variable Node? current;
         shared actual <Key->Item>|Finished next() {
-            <Key->Item>|Finished entry;
-            if (exists node=current) {
-                entry = node.key->node.item;
-            }
-            else {
-                entry = finished;
-            }
+            value entry 
+                    = if (exists node=current) 
+                    then node.key->node.item 
+                    else finished;
             if (exists node=current,
-            exists right=node.right) {
+                exists right=node.right) {
                 current = right;
                 while (exists left=current?.left) {
                     current = left;
@@ -586,13 +566,10 @@ shared class TreeMap<Key, Item>(compare, entries={})
             satisfies Iterator<Key->Item> {
         variable Node? current;
         shared actual <Key->Item>|Finished next() {
-            <Key->Item>|Finished entry;
-            if (exists node=current) {
-                entry = node.key->node.item;
-            }
-            else {
-                entry = finished;
-            }
+            value entry 
+                    = if (exists node=current) 
+                    then node.key->node.item 
+                    else finished;
             if (exists node=current,
                 exists left=node.left) {
                 current = left;
@@ -615,34 +592,39 @@ shared class TreeMap<Key, Item>(compare, entries={})
         }
     }
     
-    shared actual Iterator<Key->Item> iterator()
-            => NodeIterator();
+    iterator() => NodeIterator();
     
-    shared actual TreeMap<Key,Item> clone() {
-        value clone = TreeMap<Key,Item>(compare);
-        clone.root = root?.clone(clone);
-        return clone;
-    }
+    get(Object key) 
+            => if (is Key key) 
+            then lookup(key)?.item 
+            else null;
     
-    shared actual Item? get(Object key) {
-        if (is Key key) {
-            return lookup(key)?.item;
-        }
-        else {
-            return null;
-        }
-    }
+    defines(Object key) 
+            => if (is Key key) 
+            then lookup(key) exists 
+            else false;
     
-    shared actual Boolean defines(Object key) {
-        if (is Key key) {
-            return lookup(key) exists;
-        }
-        else {
-            return false;
-        }
-    }
+    higherEntries(Key key) 
+            => object satisfies {<Key->Item>*} {
+        iterator() => NodeIterator(floor(key));
+    };
+    
+    lowerEntries(Key key)
+            => object satisfies {<Key->Item>*} {
+        iterator() => ReverseNodeIterator(ceiling(key));
+    };
+    
+    ascendingEntries(Key from, Key to) 
+            => higherEntries(from).takeWhile((entry)
+                => compare(entry.key,to)!=larger);
+    
+    descendingEntries(Key from, Key to) 
+            => lowerEntries(from).takeWhile((entry) 
+                => compare(entry.key,to)!=smaller);
     
     shared actual Boolean contains(Object entry) {
+        //TODO: would it be more efficient to test:
+        //  is Object->Anything entry, is Key key = entry.key
         if (is Key->Item entry,
             exists node = lookup(entry.key)) {
             if (exists item = node.item) {
@@ -666,16 +648,48 @@ shared class TreeMap<Key, Item>(compare, entries={})
     
     size => root?.size else 0;
     
-    shared actual String string {
-        if (exists r=root) {
-            return "{ " + r.string + " }";
-        }
-        else {
-            return "{}";
-        }
+    first => if (exists node = root?.leftmostChild) 
+                then node.key->node.item 
+                else null;
+    
+    last => if (exists node = root?.rightmostChild) 
+                then node.key->node.item 
+                else null;
+    
+    measure(Key from, Integer length)
+            => TreeMap(compare, 
+                    higherEntries(from).take(length));
+    
+    span(Key from, Key to)
+            => let (reverse = compare(from,to)==larger)
+    TreeMap { 
+        compare(Key x, Key y) 
+                => reverse then compare(y,x)
+                           else compare(x,y); 
+        entries = reverse then descendingEntries(from,to) 
+                          else ascendingEntries(from,to);
+    };
+    
+    spanFrom(Key from)
+            => TreeMap(compare, higherEntries(from));
+    
+    spanTo(Key to)
+            => TreeMap(compare, takeWhile((entry)
+                => compare(entry.key,to)!=larger));
+    
+    shared actual TreeMap<Key,Item> clone() {
+        value clone = TreeMap<Key,Item>(compare);
+        clone.root = root?.clone(clone);
+        return clone;
     }
     
-    equals(Object that) => (super of Map<Key,Item>).equals(that);
+    string => if (exists r=root) 
+                then "{ " + r.string + " }" 
+                else "{}";
+    
+    equals(Object that) 
+            => (super of Map<Key,Item>).equals(that);
+    
     hash => (super of Map<Key,Item>).hash;
     
     shared void assertInvariants() {
@@ -725,43 +739,6 @@ shared class TreeMap<Key, Item>(compare, entries={})
             return pathBlackCount;
         }
     }
-    
-    shared actual <Key->Item>? first {
-        if (exists node = root?.leftmostChild) {
-            return node.key->node.item;
-        }
-        return null;
-    }
-    
-    shared actual <Key->Item>? last {
-        if (exists node = root?.rightmostChild) {
-            return node.key->node.item;
-        }
-        return null;
-    }
-    
-    measure(Key from, Integer length)
-            => TreeMap(compare, higherEntries(from).take(length));
-    
-    shared actual TreeMap<Key,Item> span(Key from, Key to) {
-        {<Key->Item>*} entries;
-        if (compare(from, to)==larger) {
-            entries = lowerEntries(from).takeWhile((entry) 
-                => compare(entry.key, to)!=smaller);
-        }
-        else {
-            entries = higherEntries(from).takeWhile((entry)
-                => compare(entry.key, to)!=larger);
-        }
-        return TreeMap(compare, entries);
-    }
-    
-    spanFrom(Key from)
-            => TreeMap(compare, higherEntries(from));
-    
-    spanTo(Key to)
-            => TreeMap(compare, takeWhile((entry)
-                    => compare(entry.key, to)!=larger));
     
 }
 

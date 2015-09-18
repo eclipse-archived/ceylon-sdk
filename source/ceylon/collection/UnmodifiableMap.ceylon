@@ -29,5 +29,4 @@ class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
  returned `Map` to [[MutableMap]]."
 shared Map<Key,Item> unmodifiableMap<Key,Item>(Map<Key,Item> map)
         given Key satisfies Object
-        given Item satisfies Object
         => UnmodifiableMap(map);
