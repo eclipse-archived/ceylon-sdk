@@ -1,3 +1,20 @@
+"The string representation of the given [[whole]] in the 
+ base given by [[radix]]. If the given `Whole` is 
+ [[negative|Integer.negative]], the string representation 
+ will begin with `-`. Digits consist of decimal digits `0` 
+ to `9`, together with and lowercase letters `a` to `z` for 
+ bases greater than 10.
+ 
+ For example:
+ 
+ - `formatWhole(wholeNumber(-46))` is `\"-46\"`
+ - `formatWhole(wholeNumber(9),2)` is `\"1001\"`
+ - `formatWhole(wholeNumber(10),8)` is `\"12\"`
+ - `formatWhole(wholeNumber(511),16)` is `\"1ff\"`
+ - `formatWhole(wholeNumber(512),32)` is `\"g0\"`"
+throws (`class AssertionError`,
+        "if [[radix]] is not between 2 and 36")
+see (`function parseInteger`)
 shared String formatWhole(Whole whole, Integer radix = 10) {
     assert (minRadix <= radix <= maxRadix);
     assert (is WholeImpl whole);

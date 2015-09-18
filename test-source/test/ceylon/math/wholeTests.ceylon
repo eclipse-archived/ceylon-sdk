@@ -176,6 +176,11 @@ test void formatWholeTests() {
     assertEquals("-1", formatWhole(-one), "formatWhole(-1)");
     assertEquals("1234567890", formatWhole(wholeNumber(1234567890)), "formatWhole(1234567890)");
     assertEquals("-1234567890", formatWhole(wholeNumber(-1234567890)), "formatWhole(-1234567890)");
+    assertEquals("-46", formatWhole(wholeNumber(-46)));
+    assertEquals("1001", formatWhole(wholeNumber(9),2));
+    assertEquals("12", formatWhole(wholeNumber(10),8));
+    assertEquals("1ff", formatWhole(wholeNumber(511),16));
+    assertEquals("g0", formatWhole(wholeNumber(512),32));
     try {
         formatWhole(zero, 1);
         fail("formatWhole(0, 1) should throw");

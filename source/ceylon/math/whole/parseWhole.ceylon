@@ -4,8 +4,7 @@ Integer maxRadix = 36;
 "The [[Whole]] represented by the given string, or `null`
  if the given string does not represent a `Whole`."
 throws (`class AssertionError`,
-        "if [[radix]] is not between [[minRadix]] and
-         [[maxRadix]]")
+        "if [[radix]] is not between 2 and 36")
 shared Whole? parseWhole(
             "The string representation to parse."
             String string,
