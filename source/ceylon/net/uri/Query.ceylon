@@ -1,26 +1,8 @@
-import ceylon.collection {
-    LinkedList
-}
-
 "Represents a URI Query part"
 by("Stéphane Épardaud")
-shared class Query(Parameter* initialParameters) {
-    
+shared class Query(
     "The list of query parameters"
-    shared LinkedList<Parameter> parameters 
-            = LinkedList<Parameter>();
-    
-    for(p in initialParameters) {
-        parameters.add(p);
-    }
-
-    "Adds a query parameter"
-    shared void add(Parameter param)
-            => parameters.add(param);
-
-    "Adds a single raw (percent-encoded) query parameter, where name and value have to be parsed"
-    shared void addRaw(String part)
-            => add(parseParameter(part));
+    shared Parameter* parameters) {
 
     "Returns true if we have any query parameter"
     shared Boolean specified => !parameters.empty;
@@ -31,17 +13,17 @@ shared class Query(Parameter* initialParameters) {
             if(this === that) {
                 return true;
             }
-            return parameters == that.parameters; 
+            return parameters == that.parameters;
         }
         return false;
     }
-    
+
     shared actual Integer hash {
         variable value hash = 1;
         hash = 31*hash + parameters.hash;
         return hash;
     }
-    
+
     String serialiseParameter(Parameter param, Boolean human) {
         if(human) {
             return param.toRepresentation(true);
@@ -53,8 +35,8 @@ shared class Query(Parameter* initialParameters) {
         }
     }
 
-    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
-    shared String toRepresentation(Boolean human) { 
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"
+    shared String toRepresentation(Boolean human) {
         if(parameters.empty) {
             return "";
         }
@@ -69,9 +51,9 @@ shared class Query(Parameter* initialParameters) {
         return b.string;
     }
 
-    "Returns an externalisable (percent-encoded) representation of this part"    
+    "Returns an externalisable (percent-encoded) representation of this part"
     shared actual String string => toRepresentation(false);
-    
-    "Returns a human (non parseable) representation of this part"    
+
+    "Returns a human (non parseable) representation of this part"
     shared String humanRepresentation => toRepresentation(true);
 }

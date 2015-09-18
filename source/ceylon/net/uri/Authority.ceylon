@@ -4,40 +4,41 @@ import ceylon.net.iop {
 
 "Represents a URI Authority part (user, password, host and port)"
 by("Stéphane Épardaud")
-shared class Authority(user = null, password = null, host = null, port = null) {
-    
+shared class Authority(user = null, password = null, host = null, port = null,
+        ipLiteral = false) {
+
     "The optional user"
-    shared variable String? user;
+    shared String? user;
 
     "The optional password"
-    shared variable String? password;
+    shared String? password;
 
     "The optional host"
-    shared variable String? host;
+    shared String? host;
 
-    "True if the host name is an ipLiteral (IPV6 or later) and has to be represented 
+    "True if the host name is an ipLiteral (IPV6 or later) and has to be represented
      surrounded by [] (square brackets)"
-    shared variable Boolean ipLiteral = false;
-    
+    shared Boolean ipLiteral;
+
     "The optional port number"
-    shared variable Integer? port;
-    
+    shared Integer? port;
+
     "Returns true if the authority part is present (if the host is not null)"
     shared Boolean specified {
         return host exists;
     }
-    
-    "Returns an externalisable (percent-encoded) representation of this part"    
+
+    "Returns an externalisable (percent-encoded) representation of this part"
     shared actual String string {
         return toRepresentation(false);
     }
 
-    "Returns a human (non parseable) representation of this part"    
+    "Returns a human (non parseable) representation of this part"
     shared String humanRepresentation {
         return toRepresentation(true);
     }
 
-    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"    
+    "Returns either an externalisable (percent-encoded) or human (non parseable) representation of this part"
     shared String toRepresentation(Boolean human) {
         if(exists String host = host) {
             StringBuilder b = StringBuilder();
@@ -64,7 +65,30 @@ shared class Authority(user = null, password = null, host = null, port = null) {
         }
         return "";
     }
-    
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `user` with the given value"
+    shared Authority withUser(String? user)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `password` with the given value"
+    shared Authority withPassword(String? password)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `host` and `ipLiteral` with the given values"
+    shared Authority withHost(String? host, Boolean ipLiteral = false)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the `port` with the given value"
+    shared Authority withPort(Integer? port)
+        => Authority(user, password, host, port, ipLiteral);
+
+    "Create a new [[Authority]] based on this [[Authority]], replacing the specified values"
+    shared Authority with(
+                String? user = this.user, String? password = this.password,
+                String? host = this.host, Integer? port = this.port,
+                Boolean ipLiteral = this.ipLiteral)
+        => Authority(user, password, host, port, ipLiteral);
+
     "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {
         if(is Authority that) {
@@ -79,7 +103,7 @@ shared class Authority(user = null, password = null, host = null, port = null) {
         }
         return false;
     }
-    
+
     shared actual Integer hash {
         variable value hash = 1;
         hash = 31*hash + (user?.hash else 0);
