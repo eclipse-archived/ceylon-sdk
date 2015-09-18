@@ -129,6 +129,21 @@ final class WholeImpl(BigInteger num)
                 .remainder(other.implementation));
     }
 
+    shared actual [WholeImpl, WholeImpl]
+            quotientAndRemainder(Whole other) {
+        assert (is WholeImpl other);
+        value result = implementation
+                .divideAndRemainder(other.implementation);
+        return [WholeImpl(result.get(0)),
+                WholeImpl(result.get(1))];
+    }
+
+    shared actual WholeImpl modulo(Whole other) {
+        assert (is WholeImpl other);
+        return WholeImpl(implementation
+                .mod(other.implementation));
+    }
+
     shared actual Whole power(Whole other) {
         assert (is WholeImpl other);
         if (this == -oneImpl) {
@@ -151,8 +166,8 @@ final class WholeImpl(BigInteger num)
                 .pow(other.implementation.intValue()));
     }
 
-    shared actual Whole powerRemainder(Whole exponent, 
-                                       Whole modulus) {
+    shared actual Whole moduloPower(Whole exponent,
+                                 Whole modulus) {
         assert (is WholeImpl exponent, is WholeImpl modulus);
         return WholeImpl(implementation
                 .modPow(exponent.implementation, 
