@@ -1,21 +1,10 @@
 "Represents a URI Path segment part"
 by("Stéphane Épardaud")
-shared class PathSegment {
-
-    "The path segment name"
-    shared String name;
-
-    "The path segment parameters"
-    shared Parameter[] parameters;
-
-    shared new (
-            "The path segment name"
-            String name,
-            "The path segment parameters"
-            Parameter* parameters) {
-        this.name = name;
-        this.parameters = parameters.sequence();
-    }
+shared class PathSegment(
+        "The path segment name"
+        shared String name,
+        "The path segment parameters"
+        shared Parameter* parameters) {
 
     "Returns true if the given object is the same as this object"
     shared actual Boolean equals(Object that) {

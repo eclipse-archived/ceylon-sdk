@@ -1,13 +1,8 @@
 "Represents a URI Query part"
 by("Stéphane Épardaud")
-shared class Query {
-
+shared class Query(
     "The list of query parameters"
-    shared Parameter[] parameters;
-
-    shared new (Parameter* parameters) {
-        this.parameters = parameters.sequence();
-    }
+    shared Parameter* parameters) {
 
     "Returns true if we have any query parameter"
     shared Boolean specified => !parameters.empty;
