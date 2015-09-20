@@ -553,19 +553,36 @@ shared class ArrayList<Element>
     
     //TODO: are the following really beneficial?
     
-    firstOccurrence(Anything element, Integer from) 
+    firstOccurrence(Anything element, Integer from, Integer length) 
             => if (exists result 
-                        = array.firstOccurrence(element, from), 
-                   result<length)
+                    = array.firstOccurrence {
+                        element = element;
+                        from = from;
+                        length = smallest(from+length, size) - from;
+                    })
             then result 
             else null;
     
-    lastOccurrence(Anything element) 
+    /*lastOccurrence(Anything element) 
             => if (exists result 
-                        = array.lastOccurrence(element), 
+                        = array.lastOccurrence(element, from, length), 
                    result<length) 
             then result 
-            else null;
+            else null;*/
+    
+    occurs(Anything element, Integer from, Integer length) 
+            => array.occurs {
+                element = element;
+                from = from;
+                length = smallest(from+length, size) - from;
+            };
+    
+    countOccurrences(Anything element, Integer from, Integer length)
+            => array.countOccurrences {
+                element = element;
+                from = from;
+                length = smallest(from+length, size) - from;
+            };
     
     "Efficiently copy the elements in the segment
      `sourcePosition:length` of this list to the segment 

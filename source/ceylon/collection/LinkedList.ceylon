@@ -592,11 +592,15 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    Integer? firstOccurrence(Anything element, Integer from) {
+    Integer? firstOccurrence(Anything element, 
+        Integer from, Integer length) {
         variable value iter = head;
         variable value index = 0;
         if (exists element) {
             while (exists cell = iter) {
+                if (index>=from+length) {
+                    return null;
+                }
                 if (index>=from,
                     exists elem = cell.element, 
                     elem==element) {
@@ -608,6 +612,9 @@ shared class LinkedList<Element>(elements = {})
         }
         else {
             while (exists cell = iter) {
+                if (index>=from+length) {
+                    return null;
+                }
                 if (index>=from,
                     !cell.element exists) {
                     return index;
@@ -647,11 +654,15 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    Boolean occurs(Anything element, Integer from) {
+    Boolean occurs(Anything element, 
+            Integer from, Integer length) {
         variable value iter = head;
         variable value index = 0;
         if (exists element) {
             while (exists cell = iter) {
+                if (index>=from+length) {
+                    return false;
+                }
                 if (index>=from,
                     exists elem = cell.element, 
                     elem==element) {
@@ -663,6 +674,9 @@ shared class LinkedList<Element>(elements = {})
         }
         else {
             while (exists cell = iter) {
+                if (index>=from+length) {
+                    return false;
+                }
                 if (index>=from,
                     !cell.element exists) {
                     return true;
@@ -675,12 +689,16 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    Integer countOccurrences(Anything element, Integer from) {
+    Integer countOccurrences(Anything element, 
+        Integer from, Integer length) {
         variable value iter = head;
         variable value index = 0;
         variable value count = 0;
         if (exists element) {
             while (exists cell = iter) {
+                if (index>=from+length) {
+                    return count;
+                }
                 if (index>=from,
                     exists elem = cell.element, 
                     elem==element) {
@@ -692,6 +710,9 @@ shared class LinkedList<Element>(elements = {})
         }
         else {
             while (exists cell = iter) {
+                if (index>=from+length) {
+                    return count;
+                }
                 if (index>=from,
                     !cell.element exists) {
                     count++;
