@@ -592,12 +592,13 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    Integer? firstOccurrence(Anything element) {
+    Integer? firstOccurrence(Anything element, Integer from) {
         variable value iter = head;
         variable value index = 0;
         if (exists element) {
             while (exists cell = iter) {
-                if (exists elem = cell.element, 
+                if (index>=from,
+                    exists elem = cell.element, 
                     elem==element) {
                     return index;
                 }
@@ -607,7 +608,8 @@ shared class LinkedList<Element>(elements = {})
         }
         else {
             while (exists cell = iter) {
-                if (!cell.element exists) {
+                if (index>=from,
+                    !cell.element exists) {
                     return index;
                 }
                 iter = cell.rest;
@@ -645,26 +647,60 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    Boolean occurs(Anything element) {
+    Boolean occurs(Anything element, Integer from) {
         variable value iter = head;
+        variable value index = 0;
         if (exists element) {
             while (exists cell = iter) {
-                if (exists elem = cell.element, 
+                if (index>=from,
+                    exists elem = cell.element, 
                     elem==element) {
                     return true;
                 }
                 iter = cell.rest;
+                index++;
             }
         }
         else {
             while (exists cell = iter) {
-                if (!cell.element exists) {
+                if (index>=from,
+                    !cell.element exists) {
                     return true;
                 }
                 iter = cell.rest;
+                index++;
             }
         }
         return false;
+    }
+    
+    shared actual 
+    Integer countOccurrences(Anything element, Integer from) {
+        variable value iter = head;
+        variable value index = 0;
+        variable value count = 0;
+        if (exists element) {
+            while (exists cell = iter) {
+                if (index>=from,
+                    exists elem = cell.element, 
+                    elem==element) {
+                    count++;
+                }
+                iter = cell.rest;
+                index++;
+            }
+        }
+        else {
+            while (exists cell = iter) {
+                if (index>=from,
+                    !cell.element exists) {
+                    count++;
+                }
+                iter = cell.rest;
+                index++;
+            }
+        }
+        return count;
     }
     
     shared actual 

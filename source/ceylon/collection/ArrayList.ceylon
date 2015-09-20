@@ -553,10 +553,10 @@ shared class ArrayList<Element>
     
     //TODO: are the following really beneficial?
     
-    firstOccurrence(Anything element) 
+    firstOccurrence(Anything element, Integer from) 
             => if (exists result 
-                        = array.firstOccurrence(element), 
-                   result<length) 
+                        = array.firstOccurrence(element, from), 
+                   result<length)
             then result 
             else null;
     
