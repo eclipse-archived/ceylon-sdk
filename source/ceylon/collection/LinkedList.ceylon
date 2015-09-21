@@ -627,16 +627,18 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    Integer? lastOccurrence(Anything element, Integer to) {
+    Integer? lastOccurrence(Anything element, 
+            Integer from, Integer length) {
         variable value iter = head;
         variable value index = 0;
         variable Integer? result = null;
+        value start = size - from - length;
+        value end = size - from;
         if (exists element) {
-            while (exists cell = iter) {
-                if (index>to) {
-                    break;
-                }
-                if (exists elem = cell.element, 
+            while (exists cell = iter, 
+                    index<end) {
+                if (index>=start,
+                    exists elem = cell.element, 
                     elem==element) {
                     result = index;
                 }
@@ -645,8 +647,10 @@ shared class LinkedList<Element>(elements = {})
             }
         }
         else {
-            while (exists cell = iter) {
-                if (!cell.element exists) {
+            while (exists cell = iter, 
+                    index<end) {
+                if (index>=start,
+                    !cell.element exists) {
                     result = index;
                 }
                 iter = cell.rest;

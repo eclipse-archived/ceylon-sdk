@@ -563,11 +563,12 @@ shared class ArrayList<Element>
             then result 
             else null;
     
-    lastOccurrence(Anything element, Integer to) 
+    lastOccurrence(Anything element, Integer from, Integer length) 
             => if (exists result 
                     = array.lastOccurrence{
                         element = element;
-                        to = smallest(to, size-1);
+                        from = largest(from, array.size-size);
+                        length = length;
                     })
             then result 
             else null;
