@@ -728,7 +728,8 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    {Integer*} occurrences(Anything element, Integer from) 
+    {Integer*} occurrences(Anything element, 
+            Integer from, Integer length) 
             => object satisfies {Integer*} {
         variable value iter = outer.iterator();
         variable value index = from-1;
@@ -739,6 +740,9 @@ shared class LinkedList<Element>(elements = {})
                     while (!is Finished current 
                             = iter.next()) {
                         index++;
+                        if (index>=from+length) {
+                            return finished;
+                        }
                         if (exists current, 
                             current==element) {
                             return index;
@@ -749,6 +753,9 @@ shared class LinkedList<Element>(elements = {})
                     while (!is Finished current 
                             = iter.next()) {
                         index++;
+                        if (index>=from+length) {
+                            return finished;
+                        }
                         if (!current exists) {
                             return index;
                         }
