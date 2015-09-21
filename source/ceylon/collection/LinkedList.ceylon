@@ -728,10 +728,10 @@ shared class LinkedList<Element>(elements = {})
     }
     
     shared actual 
-    {Integer*} occurrences(Anything element) 
+    {Integer*} occurrences(Anything element, Integer from) 
             => object satisfies {Integer*} {
         variable value iter = outer.iterator();
-        variable value index = -1;
+        variable value index = from-1;
         shared actual Iterator<Integer> iterator() 
                 => object satisfies Iterator<Integer> {
             shared actual Integer|Finished next() {
