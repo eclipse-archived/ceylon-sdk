@@ -307,13 +307,13 @@ shared sealed class Formats(
         
         "field order must include day"
         assert (exists dayIndex = 
-                dateOrder.firstOccurrence(DateField.day));
+                dateOrder.firstIndexWhere(DateField.day.equals));
         "field order must include month"
         assert (exists monthIndex = 
-                dateOrder.firstOccurrence(DateField.month));
+                dateOrder.firstIndexWhere(DateField.month.equals));
         "field order must include year"
         assert (exists yearIndex = 
-                dateOrder.firstOccurrence(DateField.year));
+                dateOrder.firstIndexWhere(DateField.year.equals));
         
         value bits = 
                 text.split(separators.contains)
