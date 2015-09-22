@@ -39,9 +39,9 @@ shared interface Whole
     shared formal Whole moduloPower(Whole exponent, 
                                  Whole modulus);
 
-    "The result of `this mod modulus`. This method differs from
-     [[remainder]] in that the returned value will always be positive."
-    shared formal Whole modulo(Whole modulus);
+    //"The result of `this mod modulus`. This method differs from
+    // [[remainder]] in that the returned value will always be positive."
+    //shared formal Whole modulo(Whole modulus);
 
     "Returns a pair containing the same results as calling
      `divided()` and `remainder()` with the given
