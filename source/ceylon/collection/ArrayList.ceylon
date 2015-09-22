@@ -18,6 +18,7 @@ shared class ArrayList<Element>
         (initialCapacity = 0, growthFactor=1.5,
                 elements = {})
         satisfies MutableList<Element> &
+                  SearchableList<Element> &
                   Stack<Element> & Queue<Element> {
 
     "The initial size of the backing array."
@@ -553,7 +554,7 @@ shared class ArrayList<Element>
     
     //TODO: are the following really beneficial?
     
-    firstOccurrence(Anything element, Integer from, Integer length) 
+    firstOccurrence(Element element, Integer from, Integer length) 
             => if (exists result 
                     = array.firstOccurrence {
                         element = element;
@@ -563,7 +564,7 @@ shared class ArrayList<Element>
             then result 
             else null;
     
-    lastOccurrence(Anything element, Integer from, Integer length) 
+    lastOccurrence(Element element, Integer from, Integer length) 
             => if (exists result 
                     = array.lastOccurrence{
                         element = element;
@@ -573,14 +574,14 @@ shared class ArrayList<Element>
             then result 
             else null;
     
-    occurs(Anything element, Integer from, Integer length) 
+    occurs(Element element, Integer from, Integer length) 
             => array.occurs {
                 element = element;
                 from = from;
                 length = smallest(from+length, size) - from;
             };
     
-    countOccurrences(Anything element, Integer from, Integer length)
+    countOccurrences(Element element, Integer from, Integer length)
             => array.countOccurrences {
                 element = element;
                 from = from;
