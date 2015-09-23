@@ -176,7 +176,7 @@
  This module is loosely based upon the A+ specification,
  with the following differences:
  
- - The `then()` method is splitted between [[Completable.map]] that returns an object and [[Completable.flatMap]] that can return a Promise
+ - The `then()` method is split between [[Completable.map]] that returns an object and [[Completable.flatMap]] that can return a Promise
  - The _Promise Resolution Procedure_ is implemented for 
    objects or promises but not for _thenables_ since that 
    would require a language with dynamic typing."
