@@ -65,6 +65,7 @@
         <module name="ceylon.time"/>
         <module name="ceylon.unicode"/>
         <module name="ceylon.locale"/>
+        <module name="ceylon.regex"/>
         <module name="com.redhat.ceylon.war"/>
         <module name="com.redhat.ceylon.test"/>
         <module name="com.redhat.ceylon.testjvm"/>
@@ -79,6 +80,7 @@
         <module name="ceylon.time"/>
         <module name="ceylon.logging"/>
         <module name="ceylon.locale"/>
+        <module name="ceylon.regex"/>
         <module name="com.redhat.ceylon.test"/>
         <module name="com.redhat.ceylon.testjs"/>
     </moduleset>
@@ -99,6 +101,7 @@
         <module name="test.ceylon.unicode"/>
         <module name="test.ceylon.html"/>
         <module name="test.ceylon.locale"/>
+        <module name="test.ceylon.regex"/>
     </moduleset>
     
     <moduleset id="modules.test.js">
@@ -109,6 +112,7 @@
         <module name="test.ceylon.promise"/>
         <module name="test.ceylon.time"/>
         <module name="test.ceylon.locale"/>
+        <module name="test.ceylon.regex"/>
     </moduleset>
     </target>
     
