@@ -67,9 +67,14 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     }
     
     shared default void verifyClassParameters(ClassDeclaration classDeclaration) {
-        if (!classDeclaration.parameterDeclarations.empty) {
-            throw Exception("class ``classDeclaration.qualifiedName`` should have no parameters");
+        if (exists pds=classDeclaration.parameterDeclarations) {
+            if (!pds.empty) {
+                throw Exception("class ``classDeclaration.qualifiedName`` should have no parameters");
+            }
+        } else {
+            throw Exception("class ``classDeclaration.qualifiedName`` should either have a parameter list or have a default constructor");
         }
+        
     }
     
     shared default void verifyClassTypeParameters(ClassDeclaration classDeclaration) {
