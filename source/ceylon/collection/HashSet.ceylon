@@ -390,8 +390,7 @@ shared class HashSet<Element>
             given Other satisfies Object {
         value ret = HashSet<Element&Other>();
         for (elem in this) {
-            if (elem in set) {
-                assert (is Other elem);
+            if (elem in set, is Other elem) {
                 ret.add(elem);
             }
         }

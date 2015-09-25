@@ -597,12 +597,12 @@ shared class TreeMap<Key, Item>(compare, entries={})
     get(Object key) 
             => if (is Key key) 
             then lookup(key)?.item 
-            else null;
+            else find((entry) => entry.key==key)?.item;
     
     defines(Object key) 
             => if (is Key key) 
             then lookup(key) exists 
-            else false;
+            else keys.any(key.equals);
     
     higherEntries(Key key) 
             => object satisfies {<Key->Item>*} {

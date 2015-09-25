@@ -110,8 +110,7 @@ shared class TreeSet<Element>(compare, elements={})
             given Other satisfies Object {
         value result = HashSet<Element&Other>();
         for (element in this) {
-            if (element in set) {
-                assert (is Other element);
+            if (element in set, is Other element) {
                 result.add(element);
             }
         }
