@@ -554,6 +554,11 @@ shared class ArrayList<Element>
     
     //TODO: are the following really beneficial?
     
+    occursAt(Integer index, Element element)
+            => if (index<length) 
+            then array.occursAt(index, element) 
+            else false;
+    
     firstOccurrence(Element element, Integer from, Integer length) 
             => if (exists result 
                     = array.firstOccurrence {
@@ -581,8 +586,8 @@ shared class ArrayList<Element>
                 length = smallest(from+length, size) - from;
             };
     
-    countOccurrences(Element element, Integer from, Integer length)
-            => array.countOccurrences {
+    occurrences(Element element, Integer from, Integer length) 
+            => array.occurrences {
                 element = element;
                 from = from;
                 length = smallest(from+length, size) - from;
