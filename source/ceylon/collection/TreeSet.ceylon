@@ -13,10 +13,10 @@ shared class TreeSet<Element>
     "A comparator function used to sort the elements."
     Comparison compare(Element x, Element y);
     
-    object present {}
+    TreeMap<Element,Element> map;
     
-    TreeMap<Element,Basic> map;
-    
+    "Create a new `TreeSet` with the given 
+     [[comparator function|compare]] and [[elements]]."
     shared new (
         "A comparator function used to sort the elements."
         Comparison compare(Element x, Element y), 
@@ -25,10 +25,12 @@ shared class TreeSet<Element>
         this.compare = compare;
         map = TreeMap {
             compare = compare;
-            entries = elements.map((elem) => elem->present);
+            entries = elements.map((elem) => elem->elem);
         };
     }
     
+    "Create a new `TreeMap` with the same comparator 
+     function and elements as the given [[treeSet]]."
     shared new copy(TreeSet<Element> treeSet) {
         compare = treeSet.compare;
         map = treeSet.map.clone();
@@ -36,7 +38,7 @@ shared class TreeSet<Element>
     
     contains(Object element) => map.defines(element);
     
-    add(Element element) => !map.put(element, present) exists;
+    add(Element element) => !map.put(element, element) exists;
     
     remove(Element element) => map.remove(element) exists;
     
@@ -48,22 +50,27 @@ shared class TreeSet<Element>
     last => map.last?.key;
     
     higherElements(Element element)
-            => map.higherEntries(element).map(Entry.key);
+            => map.higherEntries(element)
+                .map(Entry.key);
     
     lowerElements(Element element)
-            => map.lowerEntries(element).map(Entry.key);
+            => map.lowerEntries(element)
+                .map(Entry.key);
     
     ascendingElements(Element from, Element to) 
-            => higherElements(from).takeWhile((element)
-                => compare(element,to)!=larger);
+            => higherElements(from)
+                .takeWhile((element)
+                    => compare(element,to)!=larger);
     
     descendingElements(Element from, Element to) 
-            => lowerElements(from).takeWhile((element)
-                => compare(element,to)!=smaller);
+            => lowerElements(from)
+                .takeWhile((element)
+                    => compare(element,to)!=smaller);
     
     measure(Element from, Integer length)
             => TreeSet(compare, 
-                    higherElements(from).take(length));
+                    higherElements(from)
+                            .take(length));
     
     span(Element from, Element to) 
             => let (reverse = compare(from,to)==larger)
@@ -79,8 +86,9 @@ shared class TreeSet<Element>
             => TreeSet(compare, higherElements(from));
     
     spanTo(Element to)
-            => TreeSet(compare, takeWhile((element)
-                => compare(element,to)!=larger));
+            => TreeSet(compare, 
+                takeWhile((element)
+                    => compare(element,to)!=larger));
     
     shared actual TreeSet<Element> clone() => copy(this);
     
