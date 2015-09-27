@@ -4,7 +4,7 @@
  [[comparator function|compare]]."
 see (`function naturalOrderTreeMap`)
 by ("Gavin King")
-shared class TreeMap<Key, Item>(compare, entries={})
+shared class TreeMap<Key, Item>
         satisfies MutableMap<Key,Item>
                   & SortedMap<Key,Item>
                   & Ranged<Key,Key->Item,TreeMap<Key,Item>>
@@ -13,10 +13,36 @@ shared class TreeMap<Key, Item>(compare, entries={})
     "A comparator function used to sort the entries."
     Comparison compare(Key x, Key y);
     
+    "The root node of the tree."
+    variable Node? root = null;
+    
     "The initial entries in the map."
     {<Key->Item>*} entries;
     
-    class Node(key, item, red) {
+    "Alternatively, a node to clone."
+    Node? nodeToClone;
+    
+    "Create a new `TreeMap` with the given 
+     [[comparator function|compare]] and [[entries]]."
+    shared new (
+        "A comparator function used to sort the entries."
+        Comparison compare(Key x, Key y),
+        "The initial entries in the map."
+        {<Key->Item>*} entries = {}) {
+        this.compare = compare;
+        this.entries = entries;
+        nodeToClone = null;
+    }
+    
+    "Create a new `TreeMap` with the same comparator 
+     function and entries as the given [[treeMap]]."
+    shared new copy(TreeMap<Key,Item> treeMap) {
+        compare = treeMap.compare;
+        entries = {};
+        nodeToClone = treeMap.root;
+    }
+    
+    class Node {
         
         shared variable Key key;
         shared variable Item item;
@@ -24,6 +50,12 @@ shared class TreeMap<Key, Item>(compare, entries={})
         shared variable Node? right=null;
         shared variable Node? parent=null;
         shared variable Boolean red;
+        
+        shared new (Key key, Item item, Boolean red) {
+            this.key = key;
+            this.item = item;
+            this.red = red;
+        }
         
         shared Boolean onLeft 
                 => if (exists parentLeft=parent?.left) 
@@ -90,21 +122,6 @@ shared class TreeMap<Key, Item>(compare, entries={})
             return stringBuilder.string;
         }
         
-        shared Node clone(TreeMap<Key,Item> clonedMap) {
-            value clone = clonedMap.Node(key, item, red);
-            if (exists left = this.left) {
-                value leftClone = left.clone(clonedMap);
-                clone.left = leftClone;
-                leftClone.parent = clone;
-            }
-            if (exists right = this.right) {
-                value rightClone = right.clone(clonedMap);
-                clone.right = rightClone;
-                rightClone.parent = clone;
-            }
-            return clone;
-        }
-        
         shared Integer size {
             variable Integer size = 1;
             if (exists left = this.left) {
@@ -118,10 +135,27 @@ shared class TreeMap<Key, Item>(compare, entries={})
         
     }
     
+    Node copyNode(Node node) {
+        value copy = Node {
+            key = node.key;
+            item = node.item;
+            red = node.red;
+        };
+        if (exists left = node.left) {
+            value leftCopy = copyNode(left);
+            leftCopy.parent = copy;
+            copy.left = leftCopy;
+        }
+        if (exists right = node.right) {
+            value rightCopy = copyNode(right);
+            rightCopy.parent = copy;
+            copy.right = rightCopy;
+        }
+        return copy;
+    }
+    
     Boolean isRed(Node? node) 
             => if (exists node) then node.red else false;
-    
-    variable Node? root=null;
     
     Node? lookup(Key key) {
         variable value node = root;
@@ -142,15 +176,15 @@ shared class TreeMap<Key, Item>(compare, entries={})
     
     Node? ceiling(Key key) {
         variable value node = root;
-        while (exists n=node) {
-            switch (compare(key,n.key))
+        while (exists n = node) {
+            switch (compare(key, n.key))
             case (equal) {
                 return n;
             }
             case (smaller) {
                 if (!n.left exists) {
                     variable value child = n;
-                    while (exists parent=child.parent,
+                    while (exists parent = child.parent,
                         child.onLeft) {
                         child=parent;
                     }
@@ -171,7 +205,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
     Node? floor(Key key) {
         variable value node = root;
         while (exists n=node) {
-            switch (compare(key,n.key))
+            switch (compare(key, n.key))
             case (equal) {
                 return n;
             }
@@ -184,7 +218,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             case (larger) {
                 if (!n.right exists) {
                     variable value child = n;
-                    while (exists parent=child.parent,
+                    while (exists parent = child.parent,
                         child.onRight) {
                         child=parent;
                     }
@@ -197,7 +231,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
     }
     
     void replaceNode(Node old, Node? node) {
-        if (exists parent=old.parent) {
+        if (exists parent = old.parent) {
             if (old.onLeft) {
                 parent.left = node;
             }
@@ -302,10 +336,10 @@ shared class TreeMap<Key, Item>(compare, entries={})
     
     shared actual Item? put(Key key, Item item) {
         value newNode = Node(key, item, true);
-        if (exists root=this.root) {
+        if (exists root = this.root) {
             variable Node node = root;
             while (true) {
-                switch (compare(key,node.key))
+                switch (compare(key, node.key))
                 case (larger) {
                     if (exists nr=node.right) {
                         node = nr;
@@ -338,6 +372,9 @@ shared class TreeMap<Key, Item>(compare, entries={})
         balanceAfterInsert(newNode);
         return null;
     }
+    
+    root = if (exists nodeToClone) 
+           then copyNode(nodeToClone) else null;
 
     for (key->item in entries) {
         put(key, item);
@@ -677,11 +714,7 @@ shared class TreeMap<Key, Item>(compare, entries={})
             => TreeMap(compare, takeWhile((entry)
                 => compare(entry.key,to)!=larger));
     
-    shared actual TreeMap<Key,Item> clone() {
-        value clone = TreeMap<Key,Item>(compare);
-        clone.root = root?.clone(clone);
-        return clone;
-    }
+    shared actual TreeMap<Key,Item> clone() => copy(this);
     
     string => if (exists r=root) 
                 then "{ " + r.string + " }" 

@@ -4,7 +4,7 @@
  [[comparator function|compare]]."
 see (`function naturalOrderTreeSet`)
 by ("Gavin King")
-shared class TreeSet<Element>(compare, elements={})
+shared class TreeSet<Element>
         satisfies MutableSet<Element>
                   & SortedSet<Element>
                   & Ranged<Element,Element,TreeSet<Element>>
@@ -13,14 +13,26 @@ shared class TreeSet<Element>(compare, elements={})
     "A comparator function used to sort the elements."
     Comparison compare(Element x, Element y);
     
-    "The initial elements of the set."
-    {Element*} elements;
-    
     object present {}
     
-    variable value map = 
-            TreeMap(compare, 
-                elements.map((element) => element->present));
+    TreeMap<Element,Basic> map;
+    
+    shared new (
+        "A comparator function used to sort the elements."
+        Comparison compare(Element x, Element y), 
+        "The initial elements of the set."
+        {Element*} elements = {}) {
+        this.compare = compare;
+        map = TreeMap {
+            compare = compare;
+            entries = elements.map((elem) => elem->present);
+        };
+    }
+    
+    shared new copy(TreeSet<Element> treeSet) {
+        compare = treeSet.compare;
+        map = treeSet.map.clone();
+    }
     
     contains(Object element) => map.defines(element);
     
@@ -70,11 +82,7 @@ shared class TreeSet<Element>(compare, elements={})
             => TreeSet(compare, takeWhile((element)
                 => compare(element,to)!=larger));
     
-    shared actual TreeSet<Element> clone() {
-        value clone = TreeSet(compare);
-        clone.map = map.clone();
-        return clone;
-    }
+    shared actual TreeSet<Element> clone() => copy(this);
     
     shared actual HashSet<Element> complement<Other>
             (Set<Other> set)
