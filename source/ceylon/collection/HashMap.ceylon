@@ -92,12 +92,12 @@ shared class HashMap<Key, Item>
         store = entryStore<Key,Item>(initialCapacity);
     }
     
-    "Create a new `HashMap` with the same initial elements
-     as the given [[hashMap]]."
+    "Create a new `HashMap` with the same initial entries as 
+     the given [[hashMap]]."
     shared new copy(
-        "The `HashMao` to copy."
+        "The `HashMap` to copy."
         HashMap<Key,Item> hashMap,
-        "Determines whether this is a linked hash set with a
+        "Determines whether this is a linked hash map with a
          stable iteration order, defaulting to the stability
          of the copied `HashMap`."
         Stability stability = hashMap.stability,
