@@ -62,7 +62,8 @@ shared class HashSet<Element>
     "Create a new `HashSet` with the given initial elements."
     shared new (
         "Determines whether this is a linked hash set with a
-         stable iteration order, defaulting to [[linked]]."
+         stable iteration order, defaulting to [[linked]]
+         (stable)."
         Stability stability = linked,
         "Performance-related settings for the backing array."
         Hashtable hashtable = Hashtable(),
@@ -81,7 +82,7 @@ shared class HashSet<Element>
         // just use the given initialCapacity.
         accurateInitialCapacity
                 = elements is Collection<Anything>;
-        Integer initialCapacity
+        value initialCapacity
                 = accurateInitialCapacity
                 then hashtable.initialCapacityForSize(elements.size)
                 else hashtable.initialCapacityForUnknownSize();
@@ -367,7 +368,7 @@ shared class HashSet<Element>
         return false;
     }
     
-    clone() => copy(this);
+    shared actual HashSet<Element> clone() => copy(this);
     
     shared actual Boolean contains(Object element) {
         if (empty) {

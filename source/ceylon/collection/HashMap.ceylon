@@ -22,8 +22,6 @@
 
 by ("Stéphane Épardaud")
 shared class HashMap<Key, Item>
-        (stability = linked, hashtable = Hashtable(), 
-           entries = {})
         satisfies MutableMap<Key, Item>
         given Key satisfies Object {
     
@@ -37,26 +35,17 @@ shared class HashMap<Key, Item>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
     
-    // For Collections, we can efficiently obtain an 
-    // accurate initial capacity. For a generic iterable,
-    // just use the given initialCapacity.
-    value accurateInitialCapacity 
-            = entries is Collection<Anything>;
-    Integer initialCapacity 
-            = accurateInitialCapacity 
-                    then hashtable.initialCapacityForSize(entries.size) 
-                    else hashtable.initialCapacityForUnknownSize();
+    Boolean accurateInitialCapacity;
     
     "Array of linked lists where we store the elements.
      
      Each element is stored in a linked list from this array
-     at the index of the hash code of the element, modulo the
-     array size."
-    variable Array<Cell<Key->Item>?> store 
-            = entryStore<Key,Item>(initialCapacity);
+     at the index of the hash code of the element, modulo 
+     the array size."
+    variable Array<Cell<Key->Item>?> store;
 
     "Number of elements in this map."
-    variable Integer length = 0;
+    variable Integer length;
     
     "Head of the traversal linked list if in `linked` mode. 
      Storage is done in [[store]], but traversal is done 
@@ -64,12 +53,82 @@ shared class HashMap<Key, Item>
      stable iteration order. Note that the cells used are 
      the same as in the [[store]], except for storage we use 
      [[Cell.rest]] for traversal, while for the stable 
-     iteration we use the [[LinkedCell.next]]/[[LinkedCell.previous]]
-     attributes of the same cell."
+     iteration we use the 
+     [[LinkedCell.next]]/[[LinkedCell.previous]] attributes 
+     of the same cell."
     variable LinkedCell<Key->Item>? head = null;
     
     "Tip of the traversal linked list if in `linked` mode."
     variable LinkedCell<Key->Item>? tip = null;
+    
+    "Create a new `HashMap` with the given initial entries."
+    shared new (
+        "Determines whether this is a linked hash map with a
+         stable iteration order, defaulting to [[linked]]
+         (stable)."
+        Stability stability = linked, 
+        "Performance-related settings for the backing array."
+        Hashtable hashtable = Hashtable(), 
+        "The initial entries in the map, defaulting to no
+         initial entries."
+        {<Key->Item>*} entries = {}) {
+        
+        this.stability = stability;
+        this.hashtable = hashtable;
+        this.entries = entries;
+        
+        length = 0;
+        
+        // For Collections, we can efficiently obtain an 
+        // accurate initial capacity. For a generic iterable,
+        // just use the given initialCapacity.
+        accurateInitialCapacity 
+                = entries is Collection<Anything>;
+        value initialCapacity 
+                = accurateInitialCapacity 
+                then hashtable.initialCapacityForSize(entries.size) 
+                else hashtable.initialCapacityForUnknownSize();
+        
+        store = entryStore<Key,Item>(initialCapacity);
+    }
+    
+    "Create a new `HashMap` with the same initial elements
+     as the given [[hashMap]]."
+    shared new copy(
+        "The `HashSet` to copy."
+        HashMap<Key,Item> hashMap,
+        "Determines whether this is a linked hash set with a
+         stable iteration order, defaulting to the stability
+         of the copied `HashSet`."
+        Stability stability = hashMap.stability,
+        "Performance-related settings for the backing array."
+        Hashtable hashtable = Hashtable()) {
+        
+        this.stability = stability;
+        this.hashtable = hashtable;
+        
+        accurateInitialCapacity = true;
+        store = entryStore<Key,Item>(hashMap.store.size);
+        
+        if (stability == unlinked) {
+            entries = {};
+            length = hashMap.length;
+            variable Integer index = 0;
+            // walk every bucket
+            while (index < hashMap.store.size) {
+                if (exists bucket
+                    = hashMap.store.getFromFirst(index)) {
+                    store.set(index, bucket.clone());
+                }
+                index++;
+            }
+        } 
+        else {
+            //TODO!!!!
+            length = 0;
+            entries = hashMap;
+        }
+    }
     
     // Write
     
@@ -469,28 +528,7 @@ shared class HashMap<Key, Item>
         return false;
     }
     
-    shared actual HashMap<Key,Item> clone() {
-        value clone = HashMap<Key,Item>(stability);
-        if (stability==unlinked) {
-            clone.length = length;
-            clone.store = entryStore<Key,Item>(store.size);
-            variable Integer index = 0;
-            // walk every bucket
-            while (index < store.size) {
-                if (exists bucket 
-                        = store.getFromFirst(index)) {
-                    clone.store.set(index, bucket.clone()); 
-                }
-                index++;
-            }
-        }
-        else {
-            for (entry in this) {
-                clone.put(entry.key, entry.item);
-            }
-        }
-        return clone;
-    }
+    shared actual HashMap<Key,Item> clone() => copy(this);
     
     shared actual Boolean defines(Object key) {
         if (empty) {
