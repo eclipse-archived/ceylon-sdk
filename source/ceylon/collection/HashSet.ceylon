@@ -125,7 +125,6 @@ shared class HashSet<Element>
             length = 0;
             elements = hashSet;
         }
-
     }
     
     // Write
