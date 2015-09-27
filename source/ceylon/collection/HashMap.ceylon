@@ -95,11 +95,11 @@ shared class HashMap<Key, Item>
     "Create a new `HashMap` with the same initial elements
      as the given [[hashMap]]."
     shared new copy(
-        "The `HashSet` to copy."
+        "The `HashMao` to copy."
         HashMap<Key,Item> hashMap,
         "Determines whether this is a linked hash set with a
          stable iteration order, defaulting to the stability
-         of the copied `HashSet`."
+         of the copied `HashMap`."
         Stability stability = hashMap.stability,
         "Performance-related settings for the backing array."
         Hashtable hashtable = Hashtable()) {
