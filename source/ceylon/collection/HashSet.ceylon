@@ -59,9 +59,10 @@ shared class HashSet<Element>
     
     Boolean accurateInitialCapacity;
     
+    "Create a new `HashSet` with the given initial elements."
     shared new (
         "Determines whether this is a linked hash set with a
-         stable iteration order."
+         stable iteration order, defaulting to [[linked]]."
         Stability stability = linked,
         "Performance-related settings for the backing array."
         Hashtable hashtable = Hashtable(),
@@ -88,8 +89,16 @@ shared class HashSet<Element>
         store = elementStore<Element>(initialCapacity);
     }
     
-    shared new copy(HashSet<Element> hashSet,
+    "Create a new `HashSet` with the same initial elements
+     as the given [[hashSet]]."
+    shared new copy(
+        "The `HashSet` to copy."
+        HashSet<Element> hashSet,
+        "Determines whether this is a linked hash set with a
+         stable iteration order, defaulting to the stability
+         of the copied `HashSet`."
         Stability stability = hashSet.stability,
+        "Performance-related settings for the backing array."
         Hashtable hashtable = Hashtable()) {
         
         this.stability = stability;
