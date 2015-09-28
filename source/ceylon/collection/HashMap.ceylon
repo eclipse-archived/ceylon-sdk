@@ -391,6 +391,25 @@ shared class HashMap<Key, Item>
         return null;
     }
     
+    shared actual Item|Default getOrDefault<Default>
+            (Object key, Default default) {
+        if (empty) {
+            return default;
+        }
+        Integer index = storeIndex(key, store);
+        //Integer hashCode = key.hash;
+        variable value bucket 
+                = store.getFromFirst(index);
+        while (exists cell = bucket) {
+            if (//cell.hashCode==hashCode && 
+                cell.element.key == key) {
+                return cell.element.item;
+            }
+            bucket = cell.rest;
+        }
+        return default;
+    }
+    
     first => if (stability==linked) 
                 then head?.element 
                 else store[0]?.element;

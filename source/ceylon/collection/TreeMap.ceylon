@@ -641,6 +641,20 @@ shared class TreeMap<Key, Item>
             then lookup(key) exists 
             else keys.any(key.equals);
     
+    shared actual Item|Default getOrDefault<Default>
+            (Object key, Default default) {
+        if (is Key key) {
+            return 
+                if (exists node = lookup(key))
+                then node.item else default;
+        } 
+        else {
+            return 
+                if (exists node = find(forKey(key.equals)))
+                then node.item else default;
+        }
+    }
+    
     higherEntries(Key key) 
             => object satisfies {<Key->Item>*} {
         iterator() => NodeIterator(floor(key));
