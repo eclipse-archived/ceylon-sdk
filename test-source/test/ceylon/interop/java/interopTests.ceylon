@@ -46,6 +46,18 @@ test void collectionTests() {
     for (Integer i in CeylonIterable(lst)) {
         assertEquals(val++, i);
     }
+    
+    assertEquals(CeylonList(lst)[0], 1);
+    assertEquals(CeylonList(lst).getFromFirst(0), 1);
+
+    assertEquals(CeylonList(lst)[2], 3);
+    assertEquals(CeylonList(lst).getFromFirst(2), 3);
+
+    assertNull(CeylonList(lst)[-1]);
+    assertNull(CeylonList(lst).getFromFirst(-1));
+
+    assertNull(CeylonList(lst)[3]);
+    assertNull(CeylonList(lst).getFromFirst(3));
 }
 
 test void bug264() {
