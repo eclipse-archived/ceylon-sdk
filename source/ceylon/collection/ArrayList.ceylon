@@ -44,7 +44,7 @@ shared class ArrayList<Element>
         array = Array<Element?>(elements);
     }
     
-    "Create a new `ArrayList` with the same initial entries 
+    "Create a new `ArrayList` with the same initial elements 
      as the given [[arrayList]]."
     shared new copy(
         "The `ArrayList` to copy."

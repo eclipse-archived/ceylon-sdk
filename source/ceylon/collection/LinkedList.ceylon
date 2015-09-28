@@ -7,19 +7,14 @@
    element of the list and the back of the queue is the
    last element of the list."
 by("Stéphane Épardaud")
-shared class LinkedList<Element>(elements = {})
+shared class LinkedList<Element>
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
-
-    "The initial elements of the list."
-    {Element*} elements;
 
     variable Cell<Element>? head = null;
     variable Cell<Element>? tail = null;
     variable Integer length = 0;
-
-    // initialiser section
-
+    
     void addToTail(Element element) {
         value newTail = Cell(element, null);
         if (exists tail = tail) {
@@ -32,12 +27,29 @@ shared class LinkedList<Element>(elements = {})
         }
         length++;
     }
-
-    // add initial values
-    for (element in elements) {
-        addToTail(element);
+    
+    "Create a new `LinkedList` with the given initial 
+     [[elements]]."
+    shared new (
+        "The initial elements of the list."
+        {Element*} elements = {}) {
+        for (element in elements) {
+            addToTail(element);
+        }
     }
-
+    
+    "Create a new `LinkedList` with the same initial 
+     elements as the given [[linkedList]]."
+    shared new copy(
+        "The `LinkedList` to copy."
+        LinkedList<Element> linkedList) {
+        variable value iter = linkedList.head;
+        while (exists cell = iter) {
+            addToTail(cell.element);
+            iter = cell.rest;
+        }
+    }
+    
     // End of initialiser section
 
     // Write
@@ -574,13 +586,7 @@ shared class LinkedList<Element>(elements = {})
     iterator() => CellIterator(head);
 
     shared actual 
-    LinkedList<Element> clone() {
-        value ret = LinkedList<Element>();
-        ret.head = head?.clone();
-        ret.tail = tail?.clone();
-        ret.length = size;
-        return ret;
-    }
+    LinkedList<Element> clone() => copy(this);
     
     shared actual 
     void each(void step(Element element)) {
