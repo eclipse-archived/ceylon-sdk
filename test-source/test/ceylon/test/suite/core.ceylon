@@ -384,10 +384,10 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
             else if( is ClassDeclaration source ) {
                 assert(exists d = r.description.classDeclaration, d == source);
             }
-            else if( is FunctionModel source ) {
+            else if( is FunctionModel<> source ) {
                 assert(exists d = r.description.functionDeclaration, d == source.declaration);
             }
-            else if( is ClassModel source ) {
+            else if( is ClassModel<> source ) {
                 assert(exists d = r.description.classDeclaration, d == source.declaration);
             }
         }
