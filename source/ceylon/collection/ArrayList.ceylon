@@ -15,8 +15,6 @@
  given [[growthFactor]]."
 by ("Gavin King")
 shared class ArrayList<Element>
-        (initialCapacity = 0, growthFactor=1.5,
-                elements = {})
         satisfies MutableList<Element> &
                   SearchableList<Element> &
                   Stack<Element> & Queue<Element> {
@@ -28,9 +26,41 @@ shared class ArrayList<Element>
      backing array when a new backing array is allocated."
     Float growthFactor;
 
-    "The initial elements of the list."
-    {Element*} elements;
-
+    "The underlying array."
+    variable Array<Element?> array;
+    
+    "Create a new `ArrayList` with the given initial 
+     [[elements]]."
+    shared new (
+        "The initial size of the backing array."
+        Integer initialCapacity = 0, 
+        "The factor used to determine the new size of the
+         backing array when a new backing array is allocated."
+        Float growthFactor = 1.5, 
+        "The initial elements of the list."
+        {Element*} elements = {}) {
+        this.initialCapacity = initialCapacity;
+        this.growthFactor = growthFactor;
+        array = Array<Element?>(elements);
+    }
+    
+    "Create a new `ArrayList` with the same initial entries 
+     as the given [[arrayList]]."
+    shared new copy(
+        "The `ArrayList` to copy."
+        ArrayList<Element> arrayList,
+        "The factor used to determine the new size of the
+         backing array when a new backing array is allocated."
+        Float growthFactor = 1.5) {
+        this.initialCapacity = arrayList.size;
+        this.growthFactor = growthFactor;
+        array = arrayList.array.clone();
+    }
+    
+    "The number of slots of the backing array that actually 
+     hold elements of this list."
+    variable Integer length = array.size;
+    
     "initial capacity cannot be negative"
     assert (initialCapacity >= 0);
 
@@ -42,11 +72,6 @@ shared class ArrayList<Element>
 
     Array<Element?> store(Integer capacity)
             => arrayOfSize<Element?>(capacity, null);
-
-    variable Array<Element?> array 
-            = Array<Element?>(elements);
-
-    variable Integer length = array.size;
 
     size => length;
 
@@ -433,8 +458,7 @@ shared class ArrayList<Element>
     front => first;
     
     shared actual 
-    ArrayList<Element> clone() 
-            => ArrayList(size, growthFactor, this);
+    ArrayList<Element> clone() => ArrayList.copy(this);
     
     "Sorts the elements in this list according to the 
      order induced by the given 
