@@ -35,85 +35,87 @@
         <pathelement location="${ceylon.ant.lib}"/>
     </path>
     
-    <target name="ceylondefs">
+    <target name="ceylondefs" unless="ceylondefined">
+        <property name="ceylondefined" value="true" />
+
         <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
 
-    <reposet id="reposet.compile.test">
-        <repo url="${out.repo}"/>
-        <repo url="${deps.repo}"/><!-- Needed for h2.jar dep of test.ceylon.dbc -->
-    </reposet>
+        <reposet id="reposet.compile.test">
+            <repo url="${out.repo}"/>
+            <repo url="${deps.repo}"/><!-- Needed for h2.jar dep of test.ceylon.dbc -->
+        </reposet>
     
-    <reposet id="reposet.run.test">
-        <reposet refid="reposet.compile.test"/>
-        <repo url="${test.repo}"/>
-    </reposet>
+        <reposet id="reposet.run.test">
+            <reposet refid="reposet.compile.test"/>
+            <repo url="${test.repo}"/>
+        </reposet>
     
-    <moduleset id="modules.sdk.jvm">
-        <module name="ceylon.collection"/>
-        <module name="ceylon.dbc"/>
-        <module name="ceylon.file"/>
-        <module name="ceylon.html"/>
-        <module name="ceylon.interop.java"/>
-        <module name="ceylon.io"/>
-        <module name="ceylon.json"/>
-        <module name="ceylon.logging"/>
-        <module name="ceylon.math"/>
-        <module name="ceylon.net"/>
-        <module name="ceylon.process"/>
-        <module name="ceylon.promise"/>
-        <module name="ceylon.test"/>
-        <module name="ceylon.time"/>
-        <module name="ceylon.unicode"/>
-        <module name="ceylon.locale"/>
-        <module name="ceylon.regex"/>
-        <module name="com.redhat.ceylon.war"/>
-        <module name="com.redhat.ceylon.test"/>
-        <module name="com.redhat.ceylon.testjvm"/>
-    </moduleset>
+        <moduleset id="modules.sdk.jvm">
+            <module name="ceylon.collection"/>
+            <module name="ceylon.dbc"/>
+            <module name="ceylon.file"/>
+            <module name="ceylon.html"/>
+            <module name="ceylon.interop.java"/>
+            <module name="ceylon.io"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.logging"/>
+            <module name="ceylon.math"/>
+            <module name="ceylon.net"/>
+            <module name="ceylon.process"/>
+            <module name="ceylon.promise"/>
+            <module name="ceylon.test"/>
+            <module name="ceylon.time"/>
+            <module name="ceylon.unicode"/>
+            <module name="ceylon.locale"/>
+            <module name="ceylon.regex"/>
+            <module name="com.redhat.ceylon.war"/>
+            <module name="com.redhat.ceylon.test"/>
+            <module name="com.redhat.ceylon.testjvm"/>
+        </moduleset>
 
-    <moduleset id="modules.sdk.js">
-        <module name="ceylon.collection"/>
-        <module name="ceylon.html"/>
-        <module name="ceylon.json"/>
-        <module name="ceylon.promise"/>
-        <module name="ceylon.test"/>
-        <module name="ceylon.time"/>
-        <module name="ceylon.logging"/>
-        <module name="ceylon.locale"/>
-        <module name="ceylon.regex"/>
-        <module name="com.redhat.ceylon.test"/>
-        <module name="com.redhat.ceylon.testjs"/>
-    </moduleset>
+        <moduleset id="modules.sdk.js">
+            <module name="ceylon.collection"/>
+            <module name="ceylon.html"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.promise"/>
+            <module name="ceylon.test"/>
+            <module name="ceylon.time"/>
+            <module name="ceylon.logging"/>
+            <module name="ceylon.locale"/>
+            <module name="ceylon.regex"/>
+            <module name="com.redhat.ceylon.test"/>
+            <module name="com.redhat.ceylon.testjs"/>
+        </moduleset>
 	
-    <moduleset id="modules.test.jvm">
-        <module name="test.ceylon.test.suite"/>        
-        <module name="test.ceylon.math"/>
-        <module name="test.ceylon.collection"/>
-        <module name="test.ceylon.file"/>
-        <module name="test.ceylon.io"/>
-        <module name="test.ceylon.json"/>
-        <module name="test.ceylon.net"/>
-        <module name="test.ceylon.process"/>
-        <module name="test.ceylon.promise"/>
-        <module name="test.ceylon.time"/>
-        <module name="test.ceylon.dbc"/>
-        <module name="test.ceylon.interop.java"/>
-        <module name="test.ceylon.unicode"/>
-        <module name="test.ceylon.html"/>
-        <module name="test.ceylon.locale"/>
-        <module name="test.ceylon.regex"/>
-    </moduleset>
+        <moduleset id="modules.test.jvm">
+            <module name="test.ceylon.test.suite"/>        
+            <module name="test.ceylon.math"/>
+            <module name="test.ceylon.collection"/>
+            <module name="test.ceylon.file"/>
+            <module name="test.ceylon.io"/>
+            <module name="test.ceylon.json"/>
+            <module name="test.ceylon.net"/>
+            <module name="test.ceylon.process"/>
+            <module name="test.ceylon.promise"/>
+            <module name="test.ceylon.time"/>
+            <module name="test.ceylon.dbc"/>
+            <module name="test.ceylon.interop.java"/>
+            <module name="test.ceylon.unicode"/>
+            <module name="test.ceylon.html"/>
+            <module name="test.ceylon.locale"/>
+            <module name="test.ceylon.regex"/>
+        </moduleset>
     
-    <moduleset id="modules.test.js">
-        <module name="test.ceylon.test.suite"/>
-        <module name="test.ceylon.collection"/>
-        <module name="test.ceylon.html"/>
-        <module name="test.ceylon.json"/>
-        <module name="test.ceylon.promise"/>
-        <module name="test.ceylon.time"/>
-        <module name="test.ceylon.locale"/>
-        <module name="test.ceylon.regex"/>
-    </moduleset>
+        <moduleset id="modules.test.js">
+            <module name="test.ceylon.test.suite"/>
+            <module name="test.ceylon.collection"/>
+            <module name="test.ceylon.html"/>
+            <module name="test.ceylon.json"/>
+            <module name="test.ceylon.promise"/>
+            <module name="test.ceylon.time"/>
+            <module name="test.ceylon.locale"/>
+            <module name="test.ceylon.regex"/>
+        </moduleset>
     </target>
     
     <target name="clean"
