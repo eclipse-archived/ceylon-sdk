@@ -90,11 +90,11 @@
  
  ## Chaining promises
  
- When composition is needed the method [[Completable.map]]
- should be used instead of the [[Completable.completed]]
+ When composition is needed the method [[Completion.map]]
+ should be used instead of the [[Completion.completed]]
  method. 
  
- When invoking the [[Completable.map]] method the 
+ When invoking the [[Completion.map]] method the 
  `onFulfilled` and `onRejected` callbacks can return a value. 
  The `compose()` method returns a new promise that will be 
  fulfilled with the value of the callback. This promise will 
@@ -135,7 +135,7 @@
  
  ## The `always()` method
  
- The [[always()|Completable.onComplete]] method of a promise 
+ The [[onComplete()|Promise.onComplete]] method of a promise 
  allows a single callback to be notified when the promise is 
  fulfilled or rejected.
  
@@ -148,7 +148,7 @@
          };
       };
  
- [[Completable.onComplete]] is most useful for implementing a finally clause 
+ [[Promise.onComplete]] is most useful for implementing a finally clause 
  in a chain of promises.
  
  ## Feeding with a promise
@@ -176,7 +176,7 @@
  This module is loosely based upon the A+ specification,
  with the following differences:
  
- - The `then()` method is split between [[Completable.map]] that returns an object and [[Completable.flatMap]] that can return a Promise
+ - The `then()` method is split between [[Completion.map]] that returns an object and [[Completion.flatMap]] that can return a Promise
  - The _Promise Resolution Procedure_ is implemented for 
    objects or promises but not for _thenables_ since that 
    would require a language with dynamic typing."
