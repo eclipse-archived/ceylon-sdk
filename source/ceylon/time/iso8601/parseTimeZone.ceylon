@@ -1,200 +1,66 @@
-import ceylon.time.base { ms = milliseconds }
 import ceylon.time.timezone {
-    timeZone,
-    TimeZone
+    TimeZone,
+    OffsetTimeZone
 }
-
-
+import ceylon.time.base {
+    milliseconds
+}
 
 "Timezone offset parser based on ISO-8601, currently it accepts the following 
  time zone offset patterns:
  
- - &plusmn;`[hh]:[mm]`, 
+ - &plusmn;`[hh]:[mm]`,
  - &plusmn;`[hh][mm]`, and 
  - &plusmn;`[hh]`.
  
  In addition, the special code `Z` is recognized as a shorthand for `+00:00`"
-shared TimeZone|ParserError parseTimeZone( String offset ) {
-    variable TzState state = TzInitial();
-    for( character in offset ) {
-        state = state.next( Chunk( character ) );
+shared TimeZone? parseTimeZone( String offset ) {
+    value signal = offset.startsWith("+") || offset.equalsIgnoringCase("Z")
+            then 1 
+            else (offset.startsWith("-") 
+                then -1
+                else null);
+    value offsetWithoutSignal = offset.spanFrom(1);
+    Integer? hours;
+    Integer? minutes;
+    if( exists signal, exists index = offsetWithoutSignal.firstIndexWhere(':'.equals), offsetWithoutSignal.size == 5 ) {
+        value composed = offsetWithoutSignal.split{
+            ':'.equals;
+            discardSeparators = true;
+        }.sequence();
+        
+        hours = parseInteger(composed[0] else "");
+        minutes = parseInteger(composed[1] else "");
     }
-    state = state.next( eof );
-    if ( is TzFinal final = state ) {
-        value result = final.evaluate();
-        if ( result == 0 && offset.contains('-') ) {
-            return ParserError("Pattern not allowed by ISO-8601: '``offset``'!");
-        }
-        return timeZone.offset{ hours=0; milliseconds=result; };
+    else if( exists signal, !offsetWithoutSignal.firstIndexWhere(':'.equals) exists, offsetWithoutSignal.size == 4 ) {
+        hours = parseInteger(offsetWithoutSignal.spanTo(1));
+        minutes = parseInteger(offsetWithoutSignal.spanFrom(2));
     }
-
-    assert ( is TzError error = state );
-    return ParserError(error.message);
-}
-
-
-"Represents each element or the end of the parser"
-abstract class Input() of Chunk | EOF {}
-
-"Represents each character"
-class Chunk( character ) extends Input() {
-    shared Character character;
-    shared actual Boolean equals( Object other ) {
-        if ( is Character other ) {
-            return this.character == other;
-        }
-        return false;
+    else if( exists signal, offsetWithoutSignal.size == 2 ) {
+        hours = parseInteger(offsetWithoutSignal.string);
+        minutes = 0;
     }
-
-    shared actual Integer hash {
-        return character.hash;
+    else if( offset.equalsIgnoringCase("Z") ) {
+        hours = 0;
+        minutes = 0;
     }
-}
-
-"Represents the end of the parser"
-abstract class EOF() of eof extends Input() {}
-
-"Singleton implementation to represent the end of the parser"
-object eof extends EOF() {}
-
-"All states available for the parser"
-abstract class TzState() of TzInitial | TzZulu | TzSign | TzHours | TzMinutes | TzFinal | TzError | TzColon {
-
-    "Each state is responsible to check if the next state is valid and call it"
-    shared formal TzState next( Input input );
-
-}
-
-"Represents the init of the parser"
-class TzInitial() extends TzState() {
-    shared actual TzState next( Input input ) {
-        switch( input )
-        case ( is Chunk ) {
-            if ( input == 'Z' ) {
-                return TzZulu();
-            }
-            if ( input == '+' ) {
-                return TzSign( +1 );
-            }
-            if ( input == '-' ) {
-                return TzSign( -1 );
-            }
-            return TzError( "Unexpected character! Got '``input.character``' but expected: 'Z', '+' or '-'" );
-        }
-        case( is EOF ) {
-            return TzError( "Unexpected end of input! Empty time zone." );
-        }
-    }
-}
-
-"Represents the UTC"
-class TzZulu() extends TzState() {
-    shared actual TzState next( Input input ) {
-        switch( input )
-        case ( is Chunk ) { return TzError( "Unexpected character! Got '``input.character``' but expected end of input after 'Z'" ); }
-        case ( is EOF ) { return TzFinal(); }
-    }
-}
-
-"Represents +1 case the time is ahead of UTC, otherwise its -1"
-class TzSign( Integer sign ) extends TzState() {
-    shared actual TzState next( Input input ) {
-        switch( input )
-        case ( is Chunk ) {
-            return input.character.digit 
-                   then TzHours( sign, characterToInteger( input.character ) )
-                   else TzError( "Unexpected character! Got '``input.character``' but expected a digit [0..9] after '``sign > 0 then "+" else "-"``'" ); 
-        }
-        case ( is EOF ) {
-            return TzError( "Unexpected end of input! Expecting a digit [0..9] after '``sign > 0 then "+" else "-"``'" );
-        }
-    }
-}
-
-"Represents the hours, the accepted pattern is two digit hours"
-class TzHours( Integer sign, hours, digits = 1 ) extends TzState() {
-    Integer digits;
-    Integer hours;
-    shared actual TzState next( Input input ) {
-        switch( input )
-        case ( is Chunk ) {
-            if( input.character.digit ) {
-                return digits == 2 
-                       then TzMinutes( sign, hours, characterToInteger(input.character) )	 
-                       else TzHours( sign, hours * 10 + characterToInteger(input.character), 2 );
-            }
-            else if ( input == ':' ) {
-                return TzColon( sign, hours );
-            }
-            else {
-                return TzError( "Unexpected character! Got '``input.character``' but expected a digit [0..9]" ); 
-            }
-        }
-        case( is EOF ) {
-            return digits == 2 
-                   then TzFinal( sign, hours ) 
-                   else TzError( "Unexpected end of input! Expected at two digits for hours but got one." );
-        }
+    else {
+        hours = null;
+        minutes = null;
     }
     
-}
-
-"Represents the minutes, the accepted pattern is two digit minutes"
-class TzMinutes( Integer sign, Integer hours, minutes, digits = 1 ) extends TzState() {
-    Integer digits;
-    Integer minutes;
-    shared actual TzState next( Input input ) {
-        switch( input )
-        case ( is Chunk ) {
-            if( input.character.digit ) {
-                return digits == 2 
-                        then TzError( "Unexpected character! Got '``input.character``' but expected end of input" )	
-                        else TzMinutes( sign, hours, minutes * 10 + characterToInteger(input.character), 2 );
-            }
-            else {
-                return digits == 2 
-                        then TzError( "Unexpected character! Got '``input.character``' but expected end of input" )
-                        else TzError( "Unexpected character! Got '``input.character``' but expected a digit [0..9]" ); 
-            }
+    if( exists signal, exists hours, exists minutes ) {
+        if( signal == -1 && hours == 0 && minutes == 0) {
+            return null;
         }
-        case ( is EOF ) {
-            return digits == 2 
-                       then TzFinal( sign, hours, minutes ) 
-                       else TzError( "Unexpected end of input! Expected two digits for minutes but got one." );
+        else {
+            return OffsetTimeZone(
+                signal * 
+                        (hours * milliseconds.perHour
+                    + minutes * milliseconds.perMinute)
+            );
         }
-    }
-
-}
-
-"Represents the colon as some patterns accepts for example 'hh:mm'"
-class TzColon( Integer sign, Integer hours ) extends TzState() {
-    shared actual TzState next( Input input ) {
-        switch( input )
-        case ( is Chunk ) {
-            return input.character.digit 
-                   then TzMinutes( sign, hours, characterToInteger( input.character ) )
-                   else TzError( "Unexpected character! Got '``input.character``' but expected a digit [0..9] after ':'" ); 
-        }
-        case ( is EOF ) {
-            return TzError( "Unexpected end of input! Expecting a digit [0..9] after ':'" );
-        }
-    }
-}
-
-"Represents the parser successfully finished"
-class TzFinal( Integer sign = 1, Integer hours = 0, Integer minutes = 0 ) extends TzState() {
-    shared actual TzState next(Input character) => this;
-    shared Integer evaluate() {
-        return sign * ( hours * ms.perHour + minutes * ms.perMinute );
-    }
-}
-
-"Represents the parser unsuccessfully finished and hold the error message"
-class TzError( message ) extends TzState() {
-    shared String message;
-    shared actual TzState next( Input character ) => this;
-}
-
-Integer characterToInteger( Character digit ) {
-    return digit.integer - '0'.integer; 
+    }        
+    
+    return null;
 }

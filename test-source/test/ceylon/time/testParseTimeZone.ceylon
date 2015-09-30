@@ -1,13 +1,12 @@
-import ceylon.test { assertEquals, test }
+import ceylon.test { assertEquals, test, assertNull }
 import ceylon.time.base { ms=milliseconds }
-import ceylon.time.iso8601 { ParserError, parseTimeZone }
+import ceylon.time.iso8601 { parseTimeZone }
 import ceylon.time.timezone { OffsetTimeZone }
 
 
 shared class ISO8601TimeZoneParserTest() {
     
-    shared test void parsesZulu() 
-            => assertEquals( parseTimeZone( "Z" ), OffsetTimeZone( 0 ) );
+    shared test void parsesZulu() => assertEquals( parseTimeZone( "Z" ), OffsetTimeZone( 0 ) );
     
     shared test void parsesZero() {
         assertEquals( parseTimeZone( "+00:00" ), OffsetTimeZone( 0 ) );
@@ -39,67 +38,60 @@ shared class ISO8601TimeZoneParserTest() {
     }
 }
 
-shared class ISO8601ParserErrorMessagesTest() {
+shared class ISO8601ParserErrorTest() {
     
     //Negative 0
     shared test void negativeZeroIsNotAllowed() {
-        assertEquals( parseTimeZone( "-00:00" ), ParserError("Pattern not allowed by ISO-8601: '-00:00'!") );
-        assertEquals( parseTimeZone( "-0000"  ), ParserError("Pattern not allowed by ISO-8601: '-0000'!") );
-        assertEquals( parseTimeZone( "-00"    ), ParserError("Pattern not allowed by ISO-8601: '-00'!") );
+        assertNull( parseTimeZone( "-00:00" ));
+        assertNull( parseTimeZone( "-0000"  ));
+        assertNull( parseTimeZone( "-00"    ));
     }
 
     //Initial
     shared test void emptyTimeZoneIsNotAllowed() =>
-        assertEquals( parseTimeZone( "" ),       ParserError("Unexpected end of input! Empty time zone.") );
+            assertNull( parseTimeZone( "" ) );
 
     
     shared test void unrecognixedInitialCharacter() =>
-        assertEquals( parseTimeZone( "X0101" ),  ParserError("Unexpected character! Got 'X' but expected: 'Z', '+' or '-'") );
+            assertNull( parseTimeZone( "X0101" ) );
 
 
     shared test void unrecognizedCharacterAfterZulu() =>
-        assertEquals( parseTimeZone( "Za" ),     ParserError("Unexpected character! Got 'a' but expected end of input after 'Z'") );
+            assertNull( parseTimeZone( "Za" ) );
 
 
     //Signal
     shared test void unexpectedEndOfInputAfterSignal() {
-        assertEquals( parseTimeZone( "+" ),      ParserError("Unexpected end of input! Expecting a digit [0..9] after '+'") );
-        assertEquals( parseTimeZone( "-" ),      ParserError("Unexpected end of input! Expecting a digit [0..9] after '-'") );
+        assertNull( parseTimeZone( "+" ) );
+        assertNull( parseTimeZone( "-" ) );
     }
     
     shared test void unexpectedCharacterAfterSignal() {
-        assertEquals( parseTimeZone( "+a" ),    ParserError("Unexpected character! Got 'a' but expected a digit [0..9] after '+'") );
-        assertEquals( parseTimeZone( "-a" ),    ParserError("Unexpected character! Got 'a' but expected a digit [0..9] after '-'") );
+        assertNull( parseTimeZone( "+a" ) );
+        assertNull( parseTimeZone( "-a" ) );
     }
 
     //Hour
-    shared test void unexpectedEndOfInputInHour() =>
-        assertEquals( parseTimeZone( "+0" ),    ParserError("Unexpected end of input! Expected at two digits for hours but got one.") );
-    
-    shared test void unexpectedCharacterInHour() {
-        assertEquals( parseTimeZone( "+0a" ),   ParserError("Unexpected character! Got 'a' but expected a digit [0..9]") );
-    }
+    shared test void unexpectedEndOfInputInHour() => assertNull( parseTimeZone( "+0" ) );
+    shared test void unexpectedCharacterInHour() => assertNull( parseTimeZone( "+0a" ) );
 
     //Colon
-    shared test void unexpectedEndOfInputAfterColon() =>
-        assertEquals( parseTimeZone( "+01:" ),  ParserError("Unexpected end of input! Expecting a digit [0..9] after ':'") );
-    
-    shared test void unexpectedCharacterAfterColon() =>
-        assertEquals( parseTimeZone( "+01:a" ), ParserError("Unexpected character! Got 'a' but expected a digit [0..9] after ':'") );
+    shared test void unexpectedEndOfInputAfterColon() => assertNull( parseTimeZone( "+01:" ) );
+    shared test void unexpectedCharacterAfterColon() => assertNull( parseTimeZone( "+01:a" ) );
 
     //Minutes
     shared test void unexpectedEndOfInputInMinutes() {
-        assertEquals( parseTimeZone( "+010"  ), ParserError("Unexpected end of input! Expected two digits for minutes but got one.") );
-        assertEquals( parseTimeZone( "+01:0" ), ParserError("Unexpected end of input! Expected two digits for minutes but got one.") );
+        assertNull( parseTimeZone( "+010"  ) );
+        assertNull( parseTimeZone( "+01:0" ) );
     }
     
     shared test void unexpectedCharacterInMinutes() {
-        assertEquals( parseTimeZone( "+010a"  ), ParserError("Unexpected character! Got 'a' but expected a digit [0..9]") );
-        assertEquals( parseTimeZone( "+01:0a" ), ParserError("Unexpected character! Got 'a' but expected a digit [0..9]") );
+        assertNull( parseTimeZone( "+010a"  ) );
+        assertNull( parseTimeZone( "+01:0a" ) );
     }
     
     shared test void unexpectedCharacterAfterZone() {
-        assertEquals( parseTimeZone( "+01:00a" ), ParserError("Unexpected character! Got 'a' but expected end of input") );
-        assertEquals( parseTimeZone( "+01:001" ), ParserError("Unexpected character! Got '1' but expected end of input") );
+        assertNull( parseTimeZone( "+01:00a" ) );
+        assertNull( parseTimeZone( "+01:001" ) );
     }
 }

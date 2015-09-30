@@ -1,7 +1,7 @@
 import ceylon.language { sys = system }
 import ceylon.time { Instant }
 import ceylon.time.base { ms = milliseconds }
-import ceylon.time.iso8601 { parseISOTimeZone = parseTimeZone, ParserError }
+import ceylon.time.iso8601 { parseTimeZone }
 
 "The interface representing a timezone."
 shared interface TimeZone of OffsetTimeZone | RuleBasedTimezone {
@@ -78,8 +78,8 @@ shared object timeZone {
      &plusmn;`[hh]:[mm]`, &plusmn;`[hh][mm]`, and &plusmn;`[hh]`.
 
      In addition, the special code `Z` is recognized as a shorthand for `+00:00`."
-    shared TimeZone|ParserError parse(String zone) {
-        return parseISOTimeZone(zone);
+    shared TimeZone? parse(String zone) {
+        return parseTimeZone(zone);
     }
 
     "Represents fixed timeZone created based on given values."
