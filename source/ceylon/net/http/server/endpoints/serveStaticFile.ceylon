@@ -24,15 +24,13 @@ import ceylon.net.http.server {
 "Endpoint for serving static files."
 by("Matej Lazar")
 shared void serveStaticFile(
-                externalPath, 
+                "Root directory containing files."
+                String externalPath, 
                 String fileMapper(Request request) => request.path,
                 Options options = Options(),
                 Anything(Request)? onSuccess = null,
                 Anything(ServerException,Request)? onError = null)
         (Request request, Response response, void complete()) {
-    
-    "Root directory containing files."
-    String externalPath;
     
     Path filePath = parsePath(externalPath + fileMapper(request));
     if (is File file = filePath.resource) {
