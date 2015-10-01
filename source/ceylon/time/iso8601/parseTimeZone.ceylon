@@ -41,7 +41,7 @@ shared TimeZone? parseTimeZone( String offset ) {
             minutes = parseInteger(offsetWithoutSignal.spanFrom(2));
         }
         case(2) {
-            hours = parseInteger(offsetWithoutSignal.string);
+            hours = parseInteger(offsetWithoutSignal);
             minutes = 0;
         }
         else {
