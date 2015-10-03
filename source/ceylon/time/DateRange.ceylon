@@ -78,11 +78,12 @@ shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate
          [9..3] overlap [6..1] = [3,6]"
     shared actual DateRange|Empty overlap(Range<Date, UnitOfDate> other) {
         value response = _overlap([from,to], [other.from, other.to]);
-        if ( is [Date,Date] response) {
+        if (is [Date,Date] response) {
             return DateRange(response[0], response[1]);
         }
-        assert( is Empty response);
-        return response;
+        else {
+            return response;
+        }
     }
 
     "Returns empty or a new Range:

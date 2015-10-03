@@ -77,11 +77,12 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
          [9..3] overlap [6..1] = [3,6]"
     shared actual DateTimeRange|Empty overlap(Range<DateTime, UnitOfDate|UnitOfTime> other) {
         value response = _overlap([from,to], [other.from, other.to]);
-        if ( is [DateTime,DateTime] response) {
+        if (is [DateTime,DateTime] response) {
             return DateTimeRange(*response);
         }
-        assert( is Empty response);
-        return response;
+        else {
+            return response;
+        }
     }
 
     "Returns empty or a new Range:

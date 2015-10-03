@@ -77,11 +77,12 @@ shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, Un
          [9..3] overlap [6..1] = [3,6]"
     shared actual TimeRange|Empty overlap(Range<Time, UnitOfTime> other) {
         value response = _overlap([from,to], [other.from, other.to]);
-        if ( is [Time,Time] response) {
+        if (is [Time,Time] response) {
             return TimeRange(response[0], response[1]);
         }
-        assert( is Empty response);
-        return response;
+        else {
+            return response;
+        }
     }
 
     "Returns empty or a new Range:
