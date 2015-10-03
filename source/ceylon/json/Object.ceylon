@@ -150,15 +150,13 @@ shared class Object({<String->Value>*} values = {})
          [[Integer]] nor [[Null]].")
     shared Integer? getIntegerOrNull(String key){
         value val = get(key);
-        if(is Integer|Null val){
+        if(is Integer? val){
             return val;
         }
-        if(is Null val){
-            return null;
+        else {
+            throw InvalidTypeException(
+                "Expecting an Integer but got: ``val``");
         }
-        throw InvalidTypeException(
-            "Expecting an Integer but got: `` 
-            val else "null" ``");
     }
 
     "Returns an [[Float]] value, unless the key does not 
@@ -168,15 +166,13 @@ shared class Object({<String->Value>*} values = {})
          [[Float]] nor [[Null]].")
     shared Float? getFloatOrNull(String key){
         value val = get(key);
-        if(is Float|Null val){
+        if(is Float? val){
             return val;
         }
-        if(is Null val){
-            return null;
+        else {
+            throw InvalidTypeException(
+                "Expecting a Float but got: ``val``");
         }
-        throw InvalidTypeException(
-            "Expecting a Float but got: `` 
-            val else "null" ``");
     }
 
     "Returns an [[Boolean]] value, unless the key does not 
@@ -186,15 +182,13 @@ shared class Object({<String->Value>*} values = {})
          [[Boolean]] nor [[Null]].")
     shared Boolean? getBooleanOrNull(String key){
         value val = get(key);
-        if(is Boolean|Null val){
+        if(is Boolean? val){
             return val;
         }
-        if(is Null val){
-            return null;
+        else {
+            throw InvalidTypeException(
+                "Expecting a Boolean but got: ``val``");
         }
-        throw InvalidTypeException(
-            "Expecting a Boolean but got: `` 
-            val else "null" ``");
     }
 
     "Returns an [[String]] value, unless the key does not 
@@ -207,12 +201,10 @@ shared class Object({<String->Value>*} values = {})
         if(is String|Null val){
             return val;
         }
-        if(is Null val){
-            return null;
+        else {
+            throw InvalidTypeException(
+                "Expecting a String but got: ``val``");
         }
-        throw InvalidTypeException(
-            "Expecting a String but got: `` 
-            val else "null" ``");
     }
 
     "Returns an [[Object]] value, unless the key does not 
@@ -222,15 +214,13 @@ shared class Object({<String->Value>*} values = {})
          [[Object]] nor [[Null]].")
     shared Object? getObjectOrNull(String key){
         value val = get(key);
-        if(is Object|Null val){
+        if(is Object? val){
             return val;
         }
-        if(is Null val){
-            return null;
+        else {
+            throw InvalidTypeException(
+                "Expecting an Object but got: ``val``");
         }
-        throw InvalidTypeException(
-            "Expecting an Object but got: `` 
-            val else "null" ``");
     }
     
     "Returns an [[Array]] value, unless the key does not 
@@ -240,14 +230,12 @@ shared class Object({<String->Value>*} values = {})
          [[Array]] nor [[Null]].")
     shared Array? getArrayOrNull(String key){
         value val = get(key);
-        if(is Array|Null val){
+        if(is Array? val){
             return val;
         }
-        if(is Null val){
-            return null;
+        else {
+            throw InvalidTypeException(
+                "Expecting an Array but got: ``val``");
         }
-        throw InvalidTypeException(
-            "Expecting an Array but got: `` 
-            val else "null" ``");
     }
 }
