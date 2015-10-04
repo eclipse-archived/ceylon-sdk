@@ -144,14 +144,13 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
             case( is UnitOfMonth ) { return from.plusMonths(jump); }
             case( is UnitOfDay )   { return from.plusDays(jump); }
         }
-        if ( is UnitOfTime step ) {
+        else {
             switch( step )
             case( is UnitOfHour )  { return from.plusHours(jump); }
             case( is UnitOfMinute ) { return from.plusMinutes(jump); }
             case( is UnitOfSecond )   { return from.plusSeconds(jump); }
             case( is UnitOfMillisecond )   { return from.plusMilliseconds(jump); }
         }
-        throw;
     }
 
     "The iteration for each element should always start from same point,
@@ -163,14 +162,13 @@ shared class DateTimeRange( from, to, step = milliseconds ) satisfies Range<Date
             case( is UnitOfMonth ) { return from.minusMonths(jump); }
             case( is UnitOfDay )   { return from.minusDays(jump); }
         }
-        if ( is UnitOfTime step ) {
+        else {
             switch( step )
             case( is UnitOfHour )  { return from.minusHours(jump); }
             case( is UnitOfMinute ) { return from.minusMinutes(jump); }
             case( is UnitOfSecond )   { return from.minusSeconds(jump); }
             case( is UnitOfMillisecond )   { return from.minusMilliseconds(jump); }
         }
-        throw;
     }
 
 }
