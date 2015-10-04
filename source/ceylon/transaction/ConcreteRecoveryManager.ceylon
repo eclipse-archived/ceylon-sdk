@@ -93,12 +93,11 @@ class ConcreteRecoveryManager()
     shared void parseCommandInput() {
         process.write("> ");
         while (exists line = process.readLine()) {
-            switch (line)
-            case ("quit") {
+            if (line=="quit") {
                 rm?.terminate();
                 break;
             }
-            case ("scan") {
+            else if (line=="scan") {
                 print("scanning");
                 recoveryScan();
                 print("finished scan");
