@@ -2,7 +2,7 @@ import ceylon.test {
     ...
 }
 import ceylon.transaction {
-    tm=transactionManager,
+    transactionManager,
     active,
     Status,
     noTransaction
@@ -10,7 +10,7 @@ import ceylon.transaction {
 
 // A callable which is expected to be run inside a transaction
 Boolean txnTestDo() {
-    assert (exists transaction = tm.currentTransaction);
+    assert (exists transaction = transactionManager.currentTransaction);
     assertEquals (active, transaction.status, 
         "Callable called without an active transaction");
 
@@ -19,23 +19,23 @@ Boolean txnTestDo() {
 
 test
 void txnTest1() {
-    value txn = tm.currentTransaction;
+    value txn = transactionManager.currentTransaction;
     assert (!txn exists);
 }
 
 test
 void txnTest2() {
-    tm.start();
-    tm.transaction(txnTestDo);
+    transactionManager.start();
+    transactionManager.transaction(txnTestDo);
 }
 
 test
 void txnTest3() {
-    tm.start();
-    value transaction = tm.beginTransaction();
+    transactionManager.start();
+    value transaction = transactionManager.beginTransaction();
 
     Status status1 = transaction.status;
-    assertTrue(tm.transactionActive, 
+    assertTrue(transactionManager.transactionActive, 
         "tx status should have been active but was ``status1``");
 
     transaction.commit();
@@ -47,32 +47,32 @@ void txnTest3() {
 
 test
 void txnTest4() {
-    tm.start();
-    value txn1 = tm.currentTransaction;
+    transactionManager.start();
+    value txn1 = transactionManager.currentTransaction;
     assert (!txn1 exists);
 
-    tm.beginTransaction();
-    value txn2 = tm.currentTransaction;
+    transactionManager.beginTransaction();
+    value txn2 = transactionManager.currentTransaction;
     assert (exists txn2);
 //
 //    Transaction txn = transactionManager.suspend();
-//    UserTransaction?  txn3 = tm.currentTransaction;
+//    UserTransaction?  txn3 = transactionManager.currentTransaction;
 //    assert (! is UserTransaction txn3);
 //
 //    transactionManager.resume(txn);
-//    UserTransaction?  txn4 = tm.currentTransaction;
+//    UserTransaction?  txn4 = transactionManager.currentTransaction;
 //    assert (is UserTransaction txn4);
 
     txn2.commit();
-    value txn5 = tm.currentTransaction;
+    value txn5 = transactionManager.currentTransaction;
     assert (!txn5 exists);
 }
 
 test
 void txnTest5() {
-    tm.start();
+    transactionManager.start();
     
-    value tx = tm.beginTransaction();
+    value tx = transactionManager.beginTransaction();
     tx.markRollbackOnly();
 
     try {
@@ -88,8 +88,8 @@ void txnTest5() {
 
 test
 void txnTest6() {
-    tm.start();
-    value tx = tm.beginTransaction();
+    transactionManager.start();
+    value tx = transactionManager.beginTransaction();
     variable Boolean calledBefore = false;
     tx.callBeforeCompletion(() => calledBefore=true);
     variable Boolean calledAfter = false;
@@ -100,8 +100,8 @@ void txnTest6() {
 
 test
 void txnTest7() {
-    tm.start();
-    value tx = tm.beginTransaction();
+    transactionManager.start();
+    value tx = transactionManager.beginTransaction();
     variable Boolean calledBefore = false;
     tx.callBeforeCompletion(() => calledBefore=true);
     variable Boolean calledAfter = false;
@@ -113,8 +113,8 @@ void txnTest7() {
 
 test
 void txnTest8() {
-    tm.start();
-    value tx = tm.beginTransaction();
+    transactionManager.start();
+    value tx = transactionManager.beginTransaction();
     variable Boolean calledBefore = false;
     tx.callBeforeCompletion(() => calledBefore=true);
     variable Boolean calledAfter = false;

@@ -1,4 +1,5 @@
 import ceylon.collection {
+    ArrayList,
     HashMap,
     MutableMap,
     HashSet,
@@ -6,18 +7,19 @@ import ceylon.collection {
 }
 import ceylon.dbc {
     Sql,
-    newConnectionFromDataSource
+    newConnectionFromDataSource,
+    newConnectionFromXADataSourceWithCredentials
 }
 import ceylon.test {
     ...
 }
 import ceylon.transaction {
-    tm=transactionManager,
+    transactionManager,
     Transaction
 }
-import ceylon.transaction.datasource {
-    registerDataSourceUrl,
-    registerDriver
+
+import javax.sql {
+    XADataSource
 }
 
 import java.lang {
@@ -30,6 +32,10 @@ import org.h2.jdbcx {
     JdbcDataSource
 }
 
+shared Integer tx_NONE = 0;
+shared Integer tx_COMMIT = 1;
+shared Integer tx_ROLLBACK = 2;
+
 variable Integer nextKey = 1;
 String dbloc = "jdbc:h2:ceylondb";
 
@@ -37,15 +43,19 @@ void init() {
     setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", "tmp");
     setProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", "tmp");
     
-    tm.start();
+    transactionManager.start(false);
     
-    assertFalse (tm.transactionActive, "Old transaction still associated with thread");
-    registerDriver("org.h2.Driver", ["org.h2", "1.3.168"], "org.h2.jdbcx.JdbcDataSource");
-    registerDataSourceUrl("h2", "org.h2.Driver", dbloc, ["sa", "sa"]);
+    assertFalse (transactionManager.transactionActive, "Old transaction still associated with thread");
 }
 
 void fini() {
-    tm.stop();
+    transactionManager.stop();
+}
+
+XADataSource createDataSource(String url) {
+    value ds = JdbcDataSource();
+    ds.url=url;
+    return ds;
 }
 
 Boolean updateTable(Sql sq, String dml, Boolean ignoreErrors) {
@@ -81,37 +91,82 @@ Integer insertTable(Collection<Sql> dbs) {
     return 2;
 }
 
-void transactionalWork(Boolean doInTxn, Boolean commit, MutableMap<String,Sql> sqlMap) {
+MutableMap<String,Integer> countRows(MutableMap<String,Sql> sqlMap) {
+    value values = HashMap<String,Integer>();
+
+    for (entry in sqlMap) {
+      Sql sql = entry.item;
+      value count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>();
+      assert (exists count);
+      values.put (entry.key, count);
+    }
+
+    return values;
+}
+
+Integer runTxn(Integer how, Boolean enlistDummyResource, MutableMap<String,Sql> sqlMap, variable Integer nextKV) {
     Transaction? transaction;
 
-    if (doInTxn) {
-        transaction = tm.beginTransaction();
+    if (how != tx_NONE) {
+        transaction = transactionManager.beginTransaction();
+        if (enlistDummyResource) {
+            enlistDummyXAResources(transaction);
+        }
     } else {
         transaction = null;
     }
 
-    MutableMap<String,Integer> counts = getRowCounts(sqlMap);
-    Integer rows = insertTable(sqlMap.items);
+    // list to hold the number of rows before the txn
+    value list = ArrayList<Integer> { initialCapacity = 2; growthFactor = 1.5; };
 
-    if (exists transaction) {
-        if (commit) {
-            transaction.commit();
-            checkRowCounts(counts, getRowCounts(sqlMap), rows);
-        } else {
-            transaction.rollback();
-            checkRowCounts(counts, getRowCounts(sqlMap), 0);
-            nextKey = nextKey - 2;
+    for (sql in sqlMap.items) {
+        Integer? rowCnt = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
+        sql.Update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)").
+                    execute( "k" + nextKV.string, "v" + nextKV.string);
+        assert (exists rowCnt);
+
+        if (how != tx_ROLLBACK) {
+            list.add(rowCnt + 1);
         }
-    } else {
-        checkRowCounts(counts, getRowCounts(sqlMap), rows);
     }
+
+    if (how == tx_COMMIT) {
+        assert (exists transaction );
+        transaction.commit();
+        nextKV = nextKV + 1;
+    } else if (how == tx_ROLLBACK) {
+        assert (exists transaction );
+        transaction.rollback();
+    } else {
+        nextKV = nextKV + 1;
+    }
+
+    Iterator<Integer> iterator = list.iterator();
+    for (sql in sqlMap.items) {
+        Integer? rowCnt = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer>();
+        Integer|Finished c = iterator.next();
+
+        assert (exists rowCnt);
+
+        if (!c is Finished) {
+          assert(rowCnt == c);
+        }
+    }
+
+    return nextKV;
+}
+
+void enlistDummyXAResources(Transaction? tx) {
+    assert (exists tx);
+    DummyXAResource dummyResource = DummyXAResource();
+
+    tx.enlistResource(dummyResource);
 }
 
 MutableMap<String,Sql> getSqlHelper({String+} bindings) {
     value sqlMap = HashMap<String,Sql>();
     for (dsName in bindings) {
-        assert (exists ds = getXADataSource(dsName));
-        Sql sql = Sql(newConnectionFromDataSource(ds));
+        Sql sql = Sql(newConnectionFromXADataSourceWithCredentials(createDataSource(dbloc), "sa", "sa"));
         sqlMap.put(dsName, sql);
         initDb(sql);
     }
@@ -124,63 +179,79 @@ void sqlTest1() {
     value sqlMap = getSqlHelper(dsBindings2);
 
     // local commit
-    transactionalWork(false, true, sqlMap);
+    nextKey = runTxn(tx_NONE, false, sqlMap, nextKey);
     // XA commit
-    transactionalWork(true, true, sqlMap);
+    nextKey = runTxn(tx_COMMIT, false, sqlMap, nextKey);
+}
+
+// Test XA transactions with one resource
+test
+void sqlTest2a() {
+    value sqlMap = getSqlHelper(dsBindings);
+
+    nextKey = runTxn(tx_ROLLBACK, false, sqlMap, nextKey);
+    nextKey = runTxn(tx_COMMIT, false, sqlMap, nextKey);
 }
 
 // Test XA transactions with multiple resources
-void sqlTest2(Boolean doInTxn) {
-    value sqlMap = getSqlHelper(dsBindings);
-
-    // XA abort
-    transactionalWork(doInTxn, false, sqlMap);
-
-    // XA commit
-    transactionalWork(doInTxn, true, sqlMap);
-}
-
-test
-void sqlTest2a() {
-    sqlTest2(false);
-}
-
 test
 void sqlTest2b() {
-    sqlTest2(true);
+    value sqlMap = getSqlHelper(dsBindings);
+
+    nextKey = runTxn(tx_ROLLBACK, true, sqlMap, nextKey);
+    nextKey = runTxn(tx_COMMIT, true, sqlMap, nextKey);
 }
 
-// same as sqlTest2 with a callable
+// same as sqlTest2b but with a callable
 test
 void sqlTest3() {
     value sqlMap = getSqlHelper(dsBindings);
-    value counts1 = getRowCounts(sqlMap);
+    value counts1 = countRows(sqlMap);
 
     // run a transaction but have the callable request an abort
-    tm.transaction {
+    transactionManager.transaction {
         function do() {
-            insertTable(sqlMap.items);
-    
+            for (sql in sqlMap.items) {
+                sql.Update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)").
+                            execute( "k" + nextKey.string, "v" + nextKey.string);
+            }
+
+            enlistDummyXAResources(transactionManager.currentTransaction);
+
             return false; // abort transaction
         }
     };
 
-    checkRowCounts(counts1, getRowCounts(sqlMap), 0);
+    // check that the number of rows has not changed
+    value counts2 = countRows(sqlMap);
+
+    for (entry in counts1) {
+        assert (exists c = counts2[entry.key]);
+        assert(entry.item == c);
+    }
 
     // repeat but have the callable commit
-    value counts2 = getRowCounts(sqlMap);
-
-    tm.transaction {
+    transactionManager.transaction {
         function do() {
-            insertTable(sqlMap.items);
-    
-            nextKey = nextKey - 2;
+            for (sql in sqlMap.items) {
+                sql.Update("INSERT INTO CEYLONKV(key,val) VALUES (?, ?)").
+                            execute( "k" + nextKey.string, "v" + nextKey.string);
+            }
+            
+            enlistDummyXAResources(transactionManager.currentTransaction);
 
             return true; // commit transaction
         }
     };
 
-    checkRowCounts(counts2, getRowCounts(sqlMap), 2);
+    // check that the number of rows have changed
+    value counts3 = countRows(sqlMap);
+    for (entry in counts1) {
+        assert (exists c = counts3[entry.key]);
+        assert(entry.item + 1 == c);
+    }
+
+    nextKey = nextKey + 1;
 }
 
 test
@@ -200,34 +271,10 @@ void localTxnTest() {
     updateTable(sql, "CREATE TABLE CEYLONKV (key VARCHAR(255) not NULL, val VARCHAR(255), PRIMARY KEY (key))", true);
 
     Integer rows = insertTable(sqlSet);
-	value count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>();
-    if (exists count) {
+
+    if (exists count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>()) {
         assert (count == rows);
     }
 
     updateTable(sql, "DROP TABLE CEYLONKV", true);
 }
-
-MutableMap<String,Integer> getRowCounts(MutableMap<String,Sql> sqlMap) {
-    value values = HashMap<String,Integer>();
-
-    for (entry in sqlMap) {
-      Sql sql = entry.item;
-	  value count = sql.Select("SELECT COUNT(*) FROM CEYLONKV").singleValue<Integer?>();
-      assert (exists count);
-      values.put (entry.key, count);
-    }
-
-    return values;
-}
-
-void checkRowCounts(MutableMap<String,Integer> prev, 
-        MutableMap<String,Integer> curr, Integer delta) {
-    for (entry in prev) {
-        Integer? c = curr[entry.key];
-        if (exists c) {
-            assert(entry.item + delta == c);
-        } 
-    }
-}
-

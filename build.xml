@@ -68,6 +68,7 @@
             <module name="ceylon.unicode"/>
             <module name="ceylon.locale"/>
             <module name="ceylon.regex"/>
+            <module name="ceylon.transaction"/>
             <module name="com.redhat.ceylon.war"/>
             <module name="com.redhat.ceylon.test"/>
             <module name="com.redhat.ceylon.testjvm"/>
@@ -104,8 +105,9 @@
             <module name="test.ceylon.html"/>
             <module name="test.ceylon.locale"/>
             <module name="test.ceylon.regex"/>
+            <module name="test.ceylon.transaction"/>
         </moduleset>
-    
+
         <moduleset id="modules.test.js">
             <module name="test.ceylon.test.suite"/>
             <module name="test.ceylon.collection"/>
@@ -231,6 +233,7 @@
                 <include name="ceylon/promise/**"/>
                 <include name="ceylon/time/**"/>
                 <include name="ceylon/dbc/**"/>
+                <include name="ceylon/transaction/**"/>
                 <include name="ceylon/unicode/**"/>
                 <include name="ceylon/locale/**"/>
                 <include name="ceylon/interop/java/**"/>

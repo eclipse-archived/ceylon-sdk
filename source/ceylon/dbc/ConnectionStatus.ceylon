@@ -8,7 +8,6 @@ import java.sql {
 
 class ConnectionStatus(Connection() connectionSource) {
 
-    variable value tx=false;
     variable Connection? conn=null;
     variable value use=0;
 
@@ -32,8 +31,7 @@ class ConnectionStatus(Connection() connectionSource) {
     shared void close() {
         if (exists c=conn) {
 			use--;
-            if (!tx && use==0/* && 
-                !transactionManager.transactionActive*/) {
+            if (use==0) { 
                 c.close();
             }
         }
@@ -42,7 +40,6 @@ class ConnectionStatus(Connection() connectionSource) {
     "Begins a transaction in the current connection."
     shared void beginTransaction() {
         connection().autoCommit=false;
-        tx = true;
     }
 
     "Commits the current transaction, clearing the 
@@ -55,8 +52,6 @@ class ConnectionStatus(Connection() connectionSource) {
         } catch (Exception ex) {
             connection().rollback();
             throw ex;
-        } finally {
-            tx = false;
         }
     }
 
@@ -64,7 +59,6 @@ class ConnectionStatus(Connection() connectionSource) {
      transaction flag."
     shared void rollback() {
         connection().rollback();
-        tx = false;
     }
     
     "Forward to Connection.createSqlArray in order to convert a Java array to a java.sql.Array.  

@@ -94,4 +94,5 @@ module ceylon.dbc "1.1.1" {
     import ceylon.interop.java "1.1.1";
     shared import java.jdbc "7";
     import ceylon.time "1.1.1";
+    import ceylon.transaction "1.1.1";
 }

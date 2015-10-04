@@ -3,7 +3,7 @@ import ceylon.interop.java {
 }
 
 import com.arjuna.ats.jta.common {
-    \IjtaPropertyManager {
+    jtaPropertyManager {
         jtaEnvironmentBean
     }
 }
