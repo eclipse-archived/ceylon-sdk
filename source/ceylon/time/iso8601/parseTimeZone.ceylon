@@ -16,7 +16,7 @@ import ceylon.time.base {
  
  In addition, the special code `Z` is recognized as a shorthand for `+00:00`"
 shared TimeZone? parseTimeZone( String offset ) {
-    if(offset.equalsIgnoringCase("Z")) {
+    if(offset == "Z") {
         return timeZone.utc;
     }
     

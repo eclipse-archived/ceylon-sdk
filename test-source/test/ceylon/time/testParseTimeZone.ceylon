@@ -7,6 +7,7 @@ import ceylon.time.timezone { OffsetTimeZone }
 shared class ISO8601TimeZoneParserTest() {
     
     shared test void parsesZulu() => assertEquals( parseTimeZone( "Z" ), OffsetTimeZone( 0 ) );
+    shared test void parsesZuluNotAllowed() => assertNull( parseTimeZone( "z" ) );
     
     shared test void parsesZero() {
         assertEquals( parseTimeZone( "+00:00" ), OffsetTimeZone( 0 ) );
