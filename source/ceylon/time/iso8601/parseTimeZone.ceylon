@@ -20,11 +20,11 @@ shared TimeZone? parseTimeZone( String offset ) {
         return timeZone.utc;
     }
     
-    value signal = offset.startsWith("+")
-            then 1 
-            else (offset.startsWith("-") 
-                then -1
-                else null);
+    value signal =
+            switch(offset[0])
+            case ('+')  1
+            case ('-') -1
+            else null;
 
     value offsetWithoutSignal = offset.spanFrom(1);
     Integer? hours;
