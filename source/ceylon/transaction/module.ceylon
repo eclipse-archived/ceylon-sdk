@@ -128,4 +128,5 @@ module ceylon.transaction "1.1.1" {
     
     import ceylon.interop.java "1.1.1";
     import ceylon.file "1.1.1";
+    import org.jboss.jnpserver "5.0.3.GA";
 }
