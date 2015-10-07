@@ -116,17 +116,14 @@ by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
 native("jvm")
 module ceylon.transaction "1.1.1" {
-    shared import org.jboss.narayana.jta "5.1.1.Final";
+    shared import java.jdbc "7";
+    
+    shared import javax.transaction.api "1.2";
+    import org.jboss.narayana.jta "5.1.1.Final";
+
+    import javax.naming "7";
+    import org.jboss.jnpserver "5.0.3.GA";
 
     import java.base "7";
-    shared import java.logging "7";
-    import javax.naming "7";
-    shared import java.jdbc "7";
-    import javax.transaction.api "1.2";
-
-    import ceylon.runtime "1.1.1";
-    
     import ceylon.interop.java "1.1.1";
-    import ceylon.file "1.1.1";
-    import org.jboss.jnpserver "5.0.3.GA";
 }
