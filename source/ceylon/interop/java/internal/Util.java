@@ -4,7 +4,10 @@ import com.redhat.ceylon.compiler.java.metadata.Ceylon;
 import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
+import com.redhat.ceylon.compiler.java.runtime.metamodel.FreeClassOrInterface;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
+
+import ceylon.language.meta.declaration.ClassOrInterfaceDeclaration;
 
 @Ceylon(major = 8) 
 @com.redhat.ceylon.compiler.java.metadata.Class
@@ -50,7 +53,14 @@ public final class Util {
         }
         throw new RuntimeException("unsupported type");
     }
-    
+
+    public java.lang.Class<? extends java.lang.Object> javaClassForDeclaration(ClassOrInterfaceDeclaration decl) {
+    	if(decl instanceof FreeClassOrInterface){
+    		return ((FreeClassOrInterface)decl).getJavaClass();
+    	}
+        throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
+    }
+
     public StackTraceElement[] javaStackTrace(Throwable t) {
         return t.getStackTrace();
     }

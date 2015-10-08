@@ -7,6 +7,9 @@ import java.lang {
     Class,
     StackTraceElement
 }
+import ceylon.language.meta.declaration {
+    ClassOrInterfaceDeclaration
+}
 
 "The [[java.lang::String]] underlying the given Ceylon 
  [[String]]."
@@ -24,6 +27,10 @@ shared Class<Type> javaClass<Type>()
 shared Class<out Type> javaClassFromInstance<Type>(Type instance) 
         given Type satisfies Object
         => util.javaClassFromInstance(instance);
+
+"A Java [[java.lang::Class]] object representing the given [[ClassOrInterfaceDeclaration]]."
+shared Class<out Object> javaClassFromDeclaration(ClassOrInterfaceDeclaration declaration) 
+        => util.javaClassForDeclaration(declaration);
 
 "The stack trace information for the given [[Throwable]] as 
  a sequence of Java [[StackTraceElement]]s, or the empty
