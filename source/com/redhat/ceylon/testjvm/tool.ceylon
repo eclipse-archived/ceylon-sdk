@@ -46,7 +46,6 @@ class Runner() {
     variable PrintWriter? writer = null;
     variable Boolean tap = false;
     variable Boolean report = false;
-    variable Integer exitCode = 0;
     
     shared void run() {
         try {
@@ -83,12 +82,12 @@ class Runner() {
             }
             
             value result = createTestRunner(testSources.sequence(), testListeners.sequence()).run();
-            exitCode = result.isSuccess then 0 else 100;
+            "Tests failed"
+            assert(result.isSuccess);
         }
         finally {
             disconnect();
         }
-        process.exit(exitCode);
     }
     
     void init() {
