@@ -75,6 +75,12 @@ test void classTests() {
     
     value klass2 = javaClass<String>();
     assertEquals("class ceylon.language.String", klass2.string);
+    
+    value klass3 = javaClassFromDeclaration(`class Integer`);
+    assertEquals("class ceylon.language.Integer", klass3.string);
+
+    value klass4 = javaClassFromDeclaration(`interface Numeric`);
+    assertEquals("interface ceylon.language.Numeric", klass4.string);
 }
 
 test void ceylonStringMap() {
