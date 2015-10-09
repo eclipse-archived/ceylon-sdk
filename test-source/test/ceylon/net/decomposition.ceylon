@@ -228,3 +228,25 @@ test void testUriBuilding(){
     Uri uri = parse("http://ceylon-lang.org/blog");
     assertEquals("http://ceylon-lang.org/blog", uri.string);
 }
+
+test void testBug46(){
+    Path path = Path(false, PathSegment("blog"));
+    
+    Uri uri = parse("http://ceylon-lang.org");
+    Uri withPath = uri.withPath(path);
+    assertEquals("http://ceylon-lang.org/blog", withPath.string);
+    Uri withPath2 = uri.with{path = path;};
+    assertEquals("http://ceylon-lang.org/blog", withPath2.string);
+
+    Uri uri2 = parse("file://");
+    Uri withPath3 = uri2.withPath(path);
+    assertEquals("file:///blog", withPath3.string);
+    Uri withPath4 = uri2.with{path = path;};
+    assertEquals("file:///blog", withPath4.string);
+
+    Path emptyPath = Path(false);
+    Uri withPath5 = uri.withPath(emptyPath);
+    assertEquals("http://ceylon-lang.org", withPath5.string);
+    Uri withPath6 = uri.with{path = emptyPath;};
+    assertEquals("http://ceylon-lang.org", withPath6.string);
+}
