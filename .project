@@ -19,8 +19,8 @@
 			<name>com.redhat.ceylon.eclipse.ui.ceylonBuilder</name>
 			<arguments>
 				<dictionary>
-					<key>compileJava</key>
-					<value>false</value>
+					<key>compileJs</key>
+					<value>true</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
