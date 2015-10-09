@@ -90,9 +90,18 @@ shared class Uri(scheme = null,
     shared Uri withAuthority(Authority authority)
         => Uri(scheme, authority, path, query, fragment);
 
+    Path makePathAbsoluteIfRequired(Authority authority, Path path){
+        if(!path.absolute && authority.specified){
+            return Path(true, *path.segments);
+        }else{
+            return path;
+        }
+    }
+
     "Create a new [[Uri]] based on this [[Uri]], replacing the `path` with the given value"
-    shared Uri withPath(Path path)
-        => Uri(scheme, authority, path, query, fragment);
+    shared Uri withPath(Path path){
+        return Uri(scheme, authority, makePathAbsoluteIfRequired(authority, path), query, fragment);
+    }
 
     "Create a new [[Uri]] based on this [[Uri]], replacing the `query` with the given value"
     shared Uri withQuery(Query query)
@@ -108,7 +117,7 @@ shared class Uri(scheme = null,
                     Path path = this.path,
                     Query query = this.query,
                     String? fragment = this.fragment)
-        => Uri(scheme, authority, path, query, fragment);
+        => Uri(scheme, authority, makePathAbsoluteIfRequired(authority, path), query, fragment);
 
     "Returns true if the given object is the same as this
      object"
