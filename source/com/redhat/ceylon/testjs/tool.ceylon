@@ -67,6 +67,7 @@ shared void run() {
         dynamic {
             dynamic net = require("net");
             dynamic socket = net.connect(port);
+            socket.setNoDelay(true);
             
             void publishEvent(String json) {
                 dynamic {
@@ -100,5 +101,8 @@ shared void run() {
     }
     
     value result = createTestRunner(testSources.sequence(), testListeners.sequence()).run();
-    process.exit(result.isSuccess then 0 else 100);
+    
+    if (port == -1) {
+        process.exit(result.isSuccess then 0 else 100);
+    }
 }
