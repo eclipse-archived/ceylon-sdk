@@ -16,7 +16,7 @@ import com.redhat.ceylon.test {
 }
 import java.io {
     IOException,
-    PrintWriter
+    OutputStreamWriter
 }
 import java.lang {
     Thread,
@@ -43,7 +43,7 @@ class Runner() {
     value testListeners = ArrayList<TestListener>();
     variable Integer port = -1;
     variable Socket? socket = null;
-    variable PrintWriter? writer = null;
+    variable OutputStreamWriter? writer = null;
     variable Boolean tap = false;
     variable Boolean report = false;
     
@@ -136,7 +136,7 @@ class Runner() {
                 try {
                     String? host = null;
                     socket = Socket(host, port);
-                    writer = PrintWriter(socket?.outputStream);
+                    writer = OutputStreamWriter(socket?.outputStream, "UTF-8");
                     return;
                 } catch (IOException e) {
                     lastException = e;
