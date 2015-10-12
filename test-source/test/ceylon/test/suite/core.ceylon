@@ -166,8 +166,8 @@ shared void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 13;
-            successCount = 11;
+            runCount = 14;
+            successCount = 12;
             failureCount = 1;
             errorCount = 1;
             ignoreCount = 7;
@@ -189,8 +189,8 @@ shared void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 17;
-            successCount = 15;
+            runCount = 18;
+            successCount = 16;
             failureCount = 1;
             errorCount = 13;
             ignoreCount = 8;
@@ -294,6 +294,28 @@ shared void shouldRunTestsFromAnonymousClasses() {
     
     value result7 = createTestRunner([`function bar.bar1`]).run();
     assertResultTestBar(result7);
+}
+
+test
+shared void shouldRunTestsInClassWithDefaultConstructor() {
+    value result = createTestRunner([`class Qux`]).run();
+
+    assertResultCounts {
+        result;
+        successCount = 1;
+    };
+    assertResultContains {
+        result;
+        index = 0;
+        state = success;
+        source = `Qux.qux1`;
+    };
+    assertResultContains {
+        result;
+        index = 1;
+        state = success;
+        source = `class Qux`;
+    };
 }
 
 test

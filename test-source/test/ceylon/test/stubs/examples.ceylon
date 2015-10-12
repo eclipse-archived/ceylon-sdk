@@ -82,6 +82,15 @@ shared object bar {
     
 }
 
+shared class Qux {
+
+    shared new () {}
+
+    test
+    shared void qux1() {}
+
+}
+
 testSuite({`function foo`, `class Bar`})
 shared void bazSuite() {}
 
