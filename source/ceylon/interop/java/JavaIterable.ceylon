@@ -8,4 +8,5 @@ shared class JavaIterable<T>(Iterable<T> iter)
 
     iterator() => JavaIterator(iter.iterator());
 
+    string => iter.string;
 }
