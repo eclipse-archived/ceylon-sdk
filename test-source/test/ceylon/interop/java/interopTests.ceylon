@@ -58,6 +58,9 @@ test void collectionTests() {
 
     assertNull(CeylonList(lst)[3]);
     assertNull(CeylonList(lst).getFromFirst(3));
+    
+    assertEquals(JavaIterable([]).string, "[]");
+    assertEquals(JavaIterable([1]).string, "[1]");
 }
 
 test void bug264() {
