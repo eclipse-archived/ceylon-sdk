@@ -1,8 +1,3 @@
-import com.arjuna.ats.jta.recovery {
-    XAResourceRecovery,
-    XAResourceRecoveryHelper
-}
-
 import java.lang {
     ObjectArray
 }
@@ -16,7 +11,7 @@ import javax.sql {
 import javax.transaction.xa {
     XAResource
 }
-shared class RecoveryHelper satisfies XAResourceRecoveryHelper & XAResourceRecovery {
+shared class RecoveryHelper satisfies XAResourceRecoveryHelper {
     
     variable String _binding;
     variable String _user;
