@@ -82,8 +82,9 @@ class Runner() {
             }
             
             value result = createTestRunner(testSources.sequence(), testListeners.sequence()).run();
-            "Tests failed"
-            assert(result.isSuccess);
+            if( !result.isSuccess ) {
+                throw TestFailureException();
+            }
         }
         finally {
             disconnect();
@@ -170,4 +171,7 @@ class Runner() {
             // noop
         }
     }
+}
+
+shared class TestFailureException() extends Exception() {
 }
