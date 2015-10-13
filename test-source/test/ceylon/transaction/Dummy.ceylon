@@ -1,26 +1,27 @@
-import javax.transaction.xa {
-    XAException,
-    XAResource,
-    Xid
-}
 import java.lang {
     ObjectArray,
     Runtime
 }
 
-class FaultType of halt|ex|none {
-    shared actual String string;
-    shared new halt { string = "HALT"; }
-    shared new ex { string = "EX"; }
-    shared new none { string = "NONE"; }
+import javax.transaction.xa {
+    XAException,
+    XAResource,
+    Xid
 }
+
+abstract class FaultType
+    (shared actual String string) 
+        of halt | ex | none {}
+object halt extends FaultType("HALT") {}
+object ex extends FaultType("EX") {}
+object none extends FaultType("NONE") {}
 
 shared class DummyXAResource() satisfies XAResource {
     
     suppressWarnings("unusedDeclaration")
     Integer serialVersionUID = 1;
     
-    variable FaultType fault = FaultType.none;
+    variable FaultType fault = none;
     
     variable Integer commitRequests = 0;
     variable ObjectArray<Xid> recoveryXids = ObjectArray<Xid>(0);
@@ -33,22 +34,22 @@ shared class DummyXAResource() satisfies XAResource {
     shared variable Boolean forgetCalled = false;
     shared variable Boolean recoverCalled = false;
     
-    this.fault = FaultType.none;
+    this.fault = none;
     
     shared actual void commit(Xid xid, Boolean b) {
         print("DummyXAResource commit() called, fault: ``fault`` xid: ``xid``");
         commitCalled = true;
         commitRequests += 1;
-        //if (exists fault) {
-        if (fault==FaultType.ex) {
+        switch (fault)
+        case (ex) {
             throw XAException(XAException.\iXA_RBTRANSIENT);
         }
-        else if (fault==FaultType.halt) {
+        case (halt) {
             recoveryXids = ObjectArray<Xid>(1);
             recoveryXids.set(0, xid);
             Runtime.runtime.halt(1);
         }
-        //}
+        case (none) {}
     }
     
     end(Xid xid, Integer i) => endCalled = true;
