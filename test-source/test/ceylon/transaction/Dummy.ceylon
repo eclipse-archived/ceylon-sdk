@@ -8,18 +8,19 @@ import java.lang {
     Runtime
 }
 
+class FaultType of halt|ex|none {
+    shared actual String string;
+    shared new halt { string = "HALT"; }
+    shared new ex { string = "EX"; }
+    shared new none { string = "NONE"; }
+}
+
 shared class DummyXAResource() satisfies XAResource {
     
     suppressWarnings("unusedDeclaration")
     Integer serialVersionUID = 1;
     
-    shared class FaultType {
-        shared actual String string;
-        shared new _HALT { string = "HALT"; }
-        shared new _EX { string = "EX"; }
-        shared new _NONE { string = "NONE"; }
-    }
-    variable FaultType fault = FaultType._NONE;
+    variable FaultType fault = FaultType.none;
     
     variable Integer commitRequests = 0;
     variable ObjectArray<Xid> recoveryXids = ObjectArray<Xid>(0);
@@ -32,17 +33,17 @@ shared class DummyXAResource() satisfies XAResource {
     shared variable Boolean forgetCalled = false;
     shared variable Boolean recoverCalled = false;
     
-    this.fault = FaultType._NONE;
+    this.fault = FaultType.none;
     
     shared actual void commit(Xid xid, Boolean b) {
         print("DummyXAResource commit() called, fault: ``fault`` xid: ``xid``");
         commitCalled = true;
         commitRequests += 1;
         //if (exists fault) {
-        if (fault==FaultType._EX) {
+        if (fault==FaultType.ex) {
             throw XAException(XAException.\iXA_RBTRANSIENT);
         }
-        else if (fault==FaultType._HALT) {
+        else if (fault==FaultType.halt) {
             recoveryXids = ObjectArray<Xid>(1);
             recoveryXids.set(0, xid);
             Runtime.runtime.halt(1);
