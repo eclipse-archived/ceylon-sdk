@@ -118,8 +118,8 @@ native("jvm")
 module ceylon.transaction "1.1.1" {
     shared import java.jdbc "7";
     
-    shared import javax.transaction.api "1.2";
-    import org.jboss.narayana.jta "5.1.1.Final";
+    //shared import javax.transaction.api "1.2";
+    shared import org.jboss.narayana.jta "5.1.1.Final";
 
     import javax.naming "7";
     import org.jboss.jnpserver "5.0.3.GA";
