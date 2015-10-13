@@ -122,7 +122,6 @@ module ceylon.transaction "1.1.1" {
     shared import org.jboss.narayana.jta "5.1.1.Final";
 
     import javax.naming "7";
-    import org.jboss.jnpserver "5.0.3.GA";
 
     import java.base "7";
     import ceylon.interop.java "1.1.1";
