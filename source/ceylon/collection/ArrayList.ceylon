@@ -112,7 +112,7 @@ shared class ArrayList<Element>
             value newCapacity 
                     = grownCapacity < neededCapacity || 
                       grownCapacity > maxArraySize
-                        then maxArraySize 
+                        then neededCapacity 
                         else grownCapacity;
             value grown = store(newCapacity);
             array.copyTo(grown);
