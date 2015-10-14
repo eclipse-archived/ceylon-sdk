@@ -113,7 +113,7 @@
  "
 by("Gavin King")
 native("jvm")
-module ceylon.file "1.1.1" {
+module ceylon.file "1.2.0" {
     import java.base "7";
-    import ceylon.collection "1.1.1";
+    import ceylon.collection "1.2.0";
 }

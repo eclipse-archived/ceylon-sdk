@@ -46,5 +46,5 @@
 
 by("Stéphane Épardaud")
 license("Apache Software License")
-module ceylon.collection "1.1.1" {
+module ceylon.collection "1.2.0" {
 }

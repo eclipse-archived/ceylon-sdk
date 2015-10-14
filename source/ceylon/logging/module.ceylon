@@ -63,6 +63,6 @@
    
        logger = (Category category)
            => JDKLoggerImpl(JDKLogger.getLogger(category.qualifiedName));"""
-module ceylon.logging "1.1.1" {
-    import ceylon.collection "1.1.1";
+module ceylon.logging "1.2.0" {
+    import ceylon.collection "1.2.0";
 }
