@@ -57,6 +57,25 @@ shared class ArrayList<Element>
         array = arrayList.array.clone();
     }
     
+    "Create a new `ArrayList` of the given [[size]], 
+     populating every index with the given [[element]]. If 
+     `size<=0`, the new list will have no elements."
+    shared new ofSize(
+        "The size of the resulting list. If the size is 
+         non-positive, an empty list will be created."
+        Integer size,
+        "The element value with which to populate the list. 
+         All elements of the resulting list will have the 
+         same value."
+        Element element,
+        "The factor used to determine the new size of the
+         backing array when a new backing array is allocated."
+        Float growthFactor = 1.5) {
+        this.initialCapacity = size<0 then 0 else size;
+        this.growthFactor = growthFactor;
+        array = Array<Element?>.ofSize(size, element);
+    }
+    
     "The number of slots of the backing array that actually 
      hold elements of this list."
     variable Integer length = array.size;
