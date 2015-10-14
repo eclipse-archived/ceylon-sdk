@@ -452,7 +452,10 @@
     <target name="ide-quick" depends="osgi-p2-quick">
         <foreach target="updateIdeProxyProject" param="archivePath">
             <path>
-                <fileset dir="${out.repo}" includes="**/*.car"/>
+                <fileset dir="${out.repo}" includes="ceylon/collection/**/*.car"/>
+                <fileset dir="${out.repo}" includes="ceylon/file/**/*.car"/>
+                <fileset dir="${out.repo}" includes="ceylon/interop/java/**/*.car"/>
+                <fileset dir="${out.repo}" includes="ceylon/collection/**/*.car"/>
             </path>
         </foreach>
     </target>
