@@ -57,5 +57,12 @@ shared class ArrayListTest() satisfies MutableListTests {
         assertEquals(list.reversed, []);
         assertEquals(list, []);
     }
+    
+    test shared void testConstructors() {
+        value list = ArrayList.ofSize(2, false);
+        assertEquals(list, Array {false, false});
+        value copy = ArrayList.copy(list);
+        assertEquals(copy, Array {false, false});
+    }
 
 }
