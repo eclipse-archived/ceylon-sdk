@@ -104,6 +104,7 @@
             <module name="test.ceylon.unicode"/>
             <module name="test.ceylon.html"/>
             <module name="test.ceylon.locale"/>
+            <module name="test.ceylon.logging"/>
             <module name="test.ceylon.regex"/>
             <module name="test.ceylon.transaction"/>
         </moduleset>
