@@ -90,7 +90,7 @@ shared class ArrayList<Element>
     assert (growthFactor >= 1.0);
 
     Array<Element?> store(Integer capacity)
-            => arrayOfSize<Element?>(capacity, null);
+            => Array<Element?>.ofSize(capacity, null);
 
     size => length;
 

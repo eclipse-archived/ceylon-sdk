@@ -29,7 +29,7 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
     "The initial elements of the queue."
     {Element*} elements;
     
-    function store(Integer capacity) => arrayOfSize<Element?>(capacity, null);
+    function store(Integer capacity) => Array<Element?>.ofSize(capacity, null);
     
     function haveKnownSize({Element*} elements) => elements is Collection<Element>|[Element*];
     
