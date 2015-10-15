@@ -30,7 +30,7 @@ shared object debug extends Priority("DEBUG",60) {}
 
 "An event that is only interesting when the programmer is
  pulling out hair while debugging the program."
-shared object trace extends Priority("FINE",50) {}
+shared object trace extends Priority("TRACE",50) {}
 
 "The default [[Priority]] for newly created [[Logger]]s. 
  This priority is inherited by all other loggers which do 
