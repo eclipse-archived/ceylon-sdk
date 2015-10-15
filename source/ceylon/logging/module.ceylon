@@ -71,7 +71,7 @@
            void log(Priority p, Category c, String m, Throwable? t) {
                value print 
                        = p <= info 
-                       then process.writeLine 
+                       then process.write
                        else process.writeError;
                value instant = now();
                value formats = systemLocale.formats;
@@ -80,6 +80,7 @@
                value time = 
                        formats.mediumFormatTime(instant.time());
                print("[``date`` at ``time``] ``p.string``: ``m``");
+               print(operatingSystem.newline);
                if (exists t) {
                    printStackTrace(t, print);
                }
@@ -104,10 +105,9 @@
        addLogWriter {
            void log(Priority p, Category c, String m, Throwable? t) {
                try (appender = file.Appender()) {
-                   value print = appender.write;
-                   print("[``system.milliseconds``] ``p.string``: ``m``");
+                   appender.writeLine("[``system.milliseconds``] ``p.string``: ``m``");
                    if (exists t) {
-                       printStackTrace(t, print);
+                       printStackTrace(t, appender.write);
                    }
                }
            }

@@ -22,9 +22,8 @@ MutableList<LogWriter> logWriters
 "A trivial [[log writer function|LogWriter]] that prints
  messages with priority:
  
- - [[info]] or lower to [[standard out|process.writeLine]], 
-   and 
- - [[warn]] or higher to [[standard error|process.writeLine]].
+ - [[info]] or lower to [[standard out|process.write]], and 
+ - [[warn]] or higher to [[standard error|process.writeError]].
  
  The format of the message is:
  
@@ -39,9 +38,10 @@ shared void writeSimpleLog(
     String message, Throwable? throwable) {
     value print 
             = priority <= info 
-            then process.writeLine 
+            then process.write
             else process.writeError;
     print("[``system.milliseconds``] ``priority.string`` ``message``");
+    print(operatingSystem.newline);
     if (exists throwable) {
         printStackTrace(throwable, print);
     }
