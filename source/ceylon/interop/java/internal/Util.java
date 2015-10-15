@@ -4,7 +4,7 @@ import com.redhat.ceylon.compiler.java.metadata.Ceylon;
 import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
-import com.redhat.ceylon.compiler.java.runtime.metamodel.FreeClassOrInterface;
+import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDeclarationImpl;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
 import ceylon.language.meta.declaration.ClassOrInterfaceDeclaration;
@@ -55,8 +55,8 @@ public final class Util {
     }
 
     public java.lang.Class<? extends java.lang.Object> javaClassForDeclaration(ClassOrInterfaceDeclaration decl) {
-    	if(decl instanceof FreeClassOrInterface){
-    		return ((FreeClassOrInterface)decl).getJavaClass();
+    	if(decl instanceof ClassOrInterfaceDeclarationImpl){
+    		return ((ClassOrInterfaceDeclarationImpl)decl).getJavaClass();
     	}
         throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
     }
