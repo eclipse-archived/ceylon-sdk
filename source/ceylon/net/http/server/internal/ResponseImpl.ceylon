@@ -2,6 +2,9 @@ import ceylon.collection {
     MutableList,
     LinkedList
 }
+import ceylon.interop.java {
+    javaByteArray
+}
 import ceylon.io.buffer {
     ByteBuffer
 }
@@ -31,8 +34,7 @@ import java.io {
     JIOException=IOException
 }
 import java.lang {
-    ByteArray,
-    Runnable
+    ByteArray
 }
 import java.nio {
     JByteBuffer=ByteBuffer {
@@ -42,9 +44,6 @@ import java.nio {
 
 import org.xnio.channels {
     StreamSinkChannel
-}
-import ceylon.interop.java {
-    javaByteArray
 }
 
 by("Matej Lazar")
@@ -62,32 +61,19 @@ class ResponseImpl(HttpServerExchange exchange,
     //TODO comment encodings and defaults
     shared actual void writeString(String string) {
         applyHeadersToExchange();
-
-        value charset = findCharset();
-        ByteBuffer buffer = charset.encode(string);
+        value buffer = findCharset().encode(string);
         writeJByteBuffer(nativeByteBuffer(buffer));
     }
 
     shared actual void writeStringAsynchronous(
             String string,
-            Anything onCompletion(),
-            Anything onError(ServerException e)) {
-
-        void task() {
-            applyHeadersToExchange();
-            value charset = findCharset();
-            ByteBuffer byteBuffer = charset.encode(string);
-            writeByteBufferAsynchronous(byteBuffer, 
-                onCompletion, onError);
-        }
-
-        exchange.dispatch(
-            Task { 
-                task => task;
-                onCompletion => onCompletion;
-                onError => onError;
-            }
-        );
+            void onCompletion(),
+            void onError(ServerException e)) {
+        applyHeadersToExchange();
+        value byteBuffer = findCharset().encode(string);
+        writeJByteBufferAsynchronous(
+            nativeByteBuffer(byteBuffer), 
+            IoCallbackWrapper(onCompletion, onError));
     }
 
     shared actual void writeBytes(Array<Byte> bytes) {
@@ -97,8 +83,8 @@ class ResponseImpl(HttpServerExchange exchange,
     
     shared actual void writeBytesAsynchronous(
             Array<Byte> bytes,
-            Anything onCompletion(),
-            Anything onError(ServerException e)) {
+            void onCompletion(),
+            void onError(ServerException e)) {
 
         applyHeadersToExchange();
         writeJByteBufferAsynchronous(wrapByteBuffer(javaByteArray(bytes)), 
@@ -112,8 +98,8 @@ class ResponseImpl(HttpServerExchange exchange,
 
     shared actual void writeByteBufferAsynchronous(
             ByteBuffer byteBuffer,
-            Anything onCompletion(),
-            Anything onError(ServerException e)) {
+            void onCompletion(),
+            void onError(ServerException e)) {
 
         applyHeadersToExchange();
         writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), 
@@ -216,23 +202,12 @@ class ResponseImpl(HttpServerExchange exchange,
         } else {
             //TODO log warning
             print("Cannot access native implementation of ByteBuffer. Copying values ...");
-            ByteArray bytes = ByteArray(byteBuffer.available);
+            value bytes = ByteArray(byteBuffer.available);
             variable Integer i = 0;
             while(byteBuffer.hasAvailable) {
                 bytes.set(i++, byteBuffer.get());
             }
             return wrapByteBuffer(bytes);
-        }
-    }
-    
-    class Task (
-        Anything() task,
-        Anything() onCompletion,
-        Anything(ServerException)? onError)
-            satisfies Runnable {
-        
-        shared actual void run() {
-            task();
         }
     }
     
