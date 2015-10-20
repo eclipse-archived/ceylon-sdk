@@ -8,7 +8,6 @@ import ceylon.io {
     OpenFile
 }
 import ceylon.io.buffer {
-    ByteBuffer,
     newByteBuffer
 }
 import ceylon.net.http {
@@ -28,8 +27,8 @@ shared void serveStaticFile(
                 String externalPath, 
                 String fileMapper(Request request) => request.path,
                 Options options = Options(),
-                Anything(Request)? onSuccess = null,
-                Anything(ServerException,Request)? onError = null)
+                void onSuccess(Request r) => noop(r),
+                void onError(ServerException e, Request r) => noop(e,r))
         (Request request, Response response, void complete()) {
     
     Path filePath = parsePath(externalPath + fileMapper(request));
@@ -38,39 +37,35 @@ shared void serveStaticFile(
         //print("Serving file: ``filePath.absolutePath.string``");
         
         value openFile = newOpenFile(file);
-
-        variable value available = file.size;
-        response.addHeader(contentLength(available.string));
-        if (is String cntType = file.contentType) {
-            response.addHeader(contentType(cntType));
+        response.addHeader(contentLength(file.size.string));
+        if (exists type = file.contentType) {
+            response.addHeader(contentType(type));
         }
-
-        void _onSuccess() {
-            openFile.close();
-            if (exists onSuccess) {
+        
+        sendFile {
+            openFile = openFile;
+            response = response;
+            options = options;
+            void onSuccess() {
+                openFile.close();
                 onSuccess(request);
+                complete();
             }
-            complete();
-        }
-
-        void _onError(ServerException exception) {
-            openFile.close();
-            if (exists onError) {
+            void onError(ServerException exception) {
+                openFile.close();
                 onError(exception,request);
+                complete();
             }
-            complete();
-        }
-
-        FileWriter(openFile, response, options, _onSuccess, _onError).send();
-
+        };
+        
     } else {
-        response.responseStatus=404;
+        response.responseStatus = 404;
         //TODO log
         print("File ``filePath.absolutePath.string`` does not exist.");
     }
 }
 
-class FileWriter(
+void sendFile(
     OpenFile openFile, 
     Response response, 
     Options options, 
@@ -79,30 +74,36 @@ class FileWriter(
 ) {
     variable value available = openFile.size;
     variable value readFailed = 0;
-    value bufferSize = options.outputBufferSize < available 
+    value bufferSize =
+            options.outputBufferSize < available 
             then options.outputBufferSize else available;
-    ByteBuffer byteBuffer = newByteBuffer(bufferSize);
-
-    shared void send() => read();
+    value byteBuffer = newByteBuffer(bufferSize);
 
     void read() {
         if (available > 0) {
             try {
-                value read = openFile.read(byteBuffer);
-                if (read == -1) {
+                byteBuffer.clear();
+                value bytesRead = openFile.read(byteBuffer);
+                if (bytesRead<0) {
                     available = 0;
-                } else if (read == 0) {
+                    onSuccess();
+                } else if (bytesRead == 0) {
                     readFailed ++;
                     if (readFailed > options.readAttempts) {
                         onError(ServerException("Error reading file ``openFile.resource.path``."));
-                        return;
+                    }
+                    else {
                     }
                 } else {
-                    available -= read;
+                    available -= bytesRead;
                     readFailed = 0;
+                    byteBuffer.flip();
+                    response.writeByteBufferAsynchronous {
+                        byteBuffer = byteBuffer;
+                        onError = onError;
+                        onCompletion = read;
+                    };
                 }
-                byteBuffer.flip();
-                write(onError);
             } catch (ServerException e) {
                 onError(e);
             }
@@ -111,11 +112,5 @@ class FileWriter(
         }
     }
     
-    void write(void onError(ServerException exception)) {
-        void onCompletion() {
-            byteBuffer.clear();
-            read();
-        }
-        response.writeByteBufferAsynchronous(byteBuffer, onCompletion, onError);
-    }
+    read();
 }
