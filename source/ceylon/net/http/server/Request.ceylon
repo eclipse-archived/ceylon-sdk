@@ -1,5 +1,9 @@
-import ceylon.io { SocketAddress }
-import ceylon.net.http { Method }
+import ceylon.io {
+    SocketAddress
+}
+import ceylon.net.http {
+    Method
+}
 
 "Defines an object to provide client request information 
  to a web endpoint."
@@ -47,6 +51,8 @@ shared sealed interface Request {
      request path."
     shared formal String path;
     
+    "Read the contents of the request as text."
+    shared formal String read();
 
     "Return path relative to endpoint mapping path.
      Relative path is a substring of path without 

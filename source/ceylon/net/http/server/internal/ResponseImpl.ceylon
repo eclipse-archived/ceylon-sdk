@@ -70,8 +70,8 @@ class ResponseImpl(HttpServerExchange exchange,
 
     shared actual void writeStringAsynchronous(
             String string,
-            Anything() onCompletion,
-            Anything(ServerException)? onError) {
+            Anything onCompletion(),
+            Anything onError(ServerException e)) {
 
         void task() {
             applyHeadersToExchange();
@@ -97,8 +97,8 @@ class ResponseImpl(HttpServerExchange exchange,
     
     shared actual void writeBytesAsynchronous(
             Array<Byte> bytes,
-            Anything() onCompletion,
-            Anything(ServerException)? onError) {
+            Anything onCompletion(),
+            Anything onError(ServerException e)) {
 
         applyHeadersToExchange();
         writeJByteBufferAsynchronous(wrapByteBuffer(javaByteArray(bytes)), 
@@ -112,8 +112,8 @@ class ResponseImpl(HttpServerExchange exchange,
 
     shared actual void writeByteBufferAsynchronous(
             ByteBuffer byteBuffer,
-            Anything() onCompletion,
-            Anything(ServerException)? onError) {
+            Anything onCompletion(),
+            Anything onError(ServerException e)) {
 
         applyHeadersToExchange();
         writeJByteBufferAsynchronous(nativeByteBuffer(byteBuffer), 

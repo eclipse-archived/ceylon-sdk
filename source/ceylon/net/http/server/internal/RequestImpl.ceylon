@@ -35,18 +35,22 @@ import io.undertow.server.handlers.form {
 }
 import io.undertow.server.session {
     SessionManager {
-        smAttachmentKey=ATTACHMENT_KEY
+        smAttachmentKey=\iATTACHMENT_KEY
     },
     UtSession=Session,
     SessionCookieConfig
 }
 import io.undertow.util {
     Headers {
-        headerConntentType=CONTENT_TYPE
+        headerConntentType=\iCONTENT_TYPE
     },
     HttpString
 }
 
+import java.io {
+    BufferedReader,
+    InputStreamReader
+}
 import java.lang {
     JString=String
 }
@@ -61,7 +65,25 @@ class RequestImpl(HttpServerExchange exchange,
     shared actual String path;
 
     shared actual Method method;
-
+    
+    shared actual String read() {
+        value inputStream = exchange.inputStream;
+        try {
+            value inputStreamReader = 
+                    InputStreamReader(inputStream, 
+                        exchange.requestCharset);
+            value reader = BufferedReader(inputStreamReader);
+            value builder = StringBuilder();
+            while (exists line = reader.readLine()) {
+                builder.append(line).appendNewline();
+            }
+            return builder.string;
+        }
+        finally {
+            inputStream.close();
+        }
+    }
+    
     UtFormData getUtFormData() {
         if (exists fdp = formParserFactory.createParser(exchange)) {
             return fdp.parseBlocking();

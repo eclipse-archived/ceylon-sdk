@@ -14,24 +14,24 @@ shared sealed interface Response {
 
     shared formal void writeStringAsynchronous(
         String string, 
-        Anything() onCompletion,
-        Anything(ServerException)? onError = null);
+        void onCompletion() => noop(),
+        void onError(ServerException e) => noop(e));
 
     "Writes bytes to the response."
     shared formal void writeBytes(Array<Byte> bytes);
 
     shared formal void writeBytesAsynchronous(
         Array<Byte> bytes,
-        Anything() onCompletion,
-        Anything(ServerException)? onError = null);
+        void onCompletion() => noop(),
+        void onError(ServerException e) => noop(e));
 
     "Writes ByteBuffer to the response."
     shared formal void writeByteBuffer(ByteBuffer buffer);
 
     shared formal void writeByteBufferAsynchronous(
         ByteBuffer byteBuffer,
-        Anything() onCompletion,
-        Anything(ServerException)? onError = null);
+        void onCompletion() => noop(),
+        void onError(ServerException e) => noop(e));
 
     "Add a header to response. Multiple headers can have the same name.
      Throws Exception if headers have been already sent to client."
