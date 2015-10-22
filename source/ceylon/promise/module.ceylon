@@ -121,7 +121,7 @@
  
      Promise<String> promiseOfInteger = promiseOfString();
      Promise<Integer> promiseOfString = promiseOfInteger();
-     (promiseOfInteger and promiseOfString).onCompletion {
+     (promiseOfInteger.and(promiseOfString)).completed {
          (i, s) => print(\"All fulfilled\");
          (e) => print(\"One failed\");
      };
@@ -133,18 +133,18 @@
  - The return type of combined promise is not [[Promise]] 
    but [[Completable]].
  
- ## The `always()` method
+ ## The `onComplete()` method
  
  The [[onComplete()|Promise.onComplete]] method of a promise 
  allows a single callback to be notified when the promise is 
  fulfilled or rejected.
  
      Promise<Document> promise = queryDocumentById(id);
-     promise.always {
+     promise.onComplete {
          void (Document|Throwable result) {
              switch (result)
-             case (Document) { print(\"Fulfilled\"); }
-             case (Throwable) { print(\"Rejected\"); }
+             case (is Document) { print(\"Fulfilled\"); }
+             case (is Throwable) { print(\"Rejected\"); }
          };
       };
  
