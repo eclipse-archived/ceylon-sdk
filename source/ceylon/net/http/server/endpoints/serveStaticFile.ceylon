@@ -48,11 +48,15 @@ shared void serveStaticFile(
             options = options;
             void onSuccess() {
                 openFile.close();
+                response.flush();
+                response.close();
                 onSuccess(request);
                 complete();
             }
             void onError(ServerException exception) {
                 openFile.close();
+                response.flush();
+                response.close();
                 onError(exception,request);
                 complete();
             }
@@ -62,6 +66,8 @@ shared void serveStaticFile(
         response.responseStatus = 404;
         //TODO log
         print("File ``filePath.absolutePath.string`` does not exist.");
+        response.flush();
+        response.close();
     }
 }
 

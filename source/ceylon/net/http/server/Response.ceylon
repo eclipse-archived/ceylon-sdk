@@ -40,4 +40,6 @@ shared sealed interface Response {
     "The HTTP status code of the response."
     shared formal variable Integer responseStatus;
 
+    shared formal void flush();
+    shared formal void close();
 }
