@@ -105,7 +105,10 @@ void sendFile(
                     response.writeByteBufferAsynchronous {
                         byteBuffer = byteBuffer;
                         onError = onError;
-                        onCompletion = read;
+                        void onCompletion() {
+                            print("Just read ``bytesRead`` bytes, available: ``available``, remaining in buffer: ``byteBuffer.available``");
+                            read();
+                        }
                     };
                 }
             } catch (ServerException e) {
