@@ -35,6 +35,8 @@ shared sealed interface OpenFile
     // the size will not change unless we also write there 
     shared formal void truncate(Integer size);
 
+    "The platform-specific implementation object, if any."
+    shared formal Object? implementation;
 }
 
 

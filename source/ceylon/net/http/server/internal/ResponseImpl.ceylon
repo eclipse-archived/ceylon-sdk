@@ -8,6 +8,9 @@ import ceylon.interop.java {
 import ceylon.io.buffer {
     ByteBuffer
 }
+import ceylon.io {
+    OpenFile
+}
 import ceylon.io.charset {
     Charset,
     getCharset
@@ -44,6 +47,9 @@ import java.nio {
 
 import org.xnio.channels {
     StreamSinkChannel
+}
+import java.nio.channels {
+    FileChannel
 }
 
 by("Matej Lazar")
@@ -106,6 +112,24 @@ class ResponseImpl(HttpServerExchange exchange,
             IoCallbackWrapper(onCompletion, onError));
     }
 
+    shared actual void transferFile(OpenFile openFile) {
+        
+        applyHeadersToExchange();
+        assert(is FileChannel fileChannel = openFile.implementation);
+        transferFileChannel(fileChannel);
+    }
+
+    shared actual void transferFileAsynchronous(
+        OpenFile openFile,
+        void onCompletion(),
+        void onError(ServerException e)) {
+        
+        applyHeadersToExchange();
+        assert(is FileChannel fileChannel = openFile.implementation);
+        transferFileChannelAsynchronous(fileChannel, 
+            IoCallbackWrapper(onCompletion, onError));
+    }
+
     void writeJByteBuffer(JByteBuffer byteBuffer) {
         while(byteBuffer.hasRemaining()) {
             response.write(byteBuffer);
@@ -122,6 +146,23 @@ class ResponseImpl(HttpServerExchange exchange,
         if (jByteBuffer.hasRemaining()) {
             exchange.responseSender.send(jByteBuffer, sendCallback);
         }
+    }
+
+    void transferFileChannel(FileChannel fileChannel) {
+        value size = fileChannel.size();
+        variable value written = 0;
+        while(written < size){
+            written += response.transferFrom(fileChannel, written, size - written);
+            try {
+                response.awaitWritable();
+            } catch(JIOException e) {
+                throw ServerException("Cannot write response.", e);
+            }
+        }
+    }
+
+    void transferFileChannelAsynchronous(FileChannel fileChannel, JIoCallback ioCallback) {
+        exchange.responseSender.transferFrom(fileChannel, ioCallback);
     }
     
     //TODO test adding header with same name

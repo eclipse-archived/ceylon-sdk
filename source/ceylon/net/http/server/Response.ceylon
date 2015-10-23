@@ -4,6 +4,9 @@ import ceylon.io.buffer {
 import ceylon.net.http {
     Header
 }
+import ceylon.io {
+    OpenFile
+}
 
 "An object to assist sending response to the client."
 by("Matej Lazar")
@@ -36,6 +39,12 @@ shared sealed interface Response {
     "Add a header to response. Multiple headers can have the same name.
      Throws Exception if headers have been already sent to client."
     shared formal void addHeader(Header header);
+
+    shared formal void transferFile(OpenFile openFile);
+    shared formal void transferFileAsynchronous(
+        OpenFile openFile,
+        void onCompletion(),
+        void onError(ServerException e));
 
     "The HTTP status code of the response."
     shared formal variable Integer responseStatus;

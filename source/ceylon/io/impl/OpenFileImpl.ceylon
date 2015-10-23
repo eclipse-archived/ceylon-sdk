@@ -55,4 +55,5 @@ shared class OpenFileImpl(resource)
         return channel.write(buffer.underlyingBuffer);
     }
 
+    shared actual Object implementation => channel;
 }

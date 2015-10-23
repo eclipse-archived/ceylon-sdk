@@ -7,9 +7,6 @@ import ceylon.io {
     newOpenFile,
     OpenFile
 }
-import ceylon.io.buffer {
-    newByteBuffer
-}
 import ceylon.net.http {
     contentType,
     contentLength
@@ -76,48 +73,5 @@ void sendFile(
     void onSuccess(), 
     void onError(ServerException exception)
 ) {
-    variable value available = openFile.size;
-    variable value readFailed = 0;
-    value bufferSize =
-            options.outputBufferSize < available 
-            then options.outputBufferSize else available;
-    value byteBuffer = newByteBuffer(bufferSize);
-
-    void read() {
-        if (available > 0) {
-            try {
-                byteBuffer.clear();
-                value bytesRead = openFile.read(byteBuffer);
-                if (bytesRead<0) {
-                    available = 0;
-                    onSuccess();
-                } else if (bytesRead == 0) {
-                    readFailed ++;
-                    if (readFailed > options.readAttempts) {
-                        onError(ServerException("Error reading file ``openFile.resource.path``."));
-                    }
-                    else {
-                    }
-                } else {
-                    available -= bytesRead;
-                    readFailed = 0;
-                    byteBuffer.flip();
-                    response.writeByteBufferAsynchronous {
-                        byteBuffer = byteBuffer;
-                        onError = onError;
-                        void onCompletion() {
-                            print("Just read ``bytesRead`` bytes, available: ``available``, remaining in buffer: ``byteBuffer.available``");
-                            read();
-                        }
-                    };
-                }
-            } catch (ServerException e) {
-                onError(e);
-            }
-        } else {
-            onSuccess();
-        }
-    }
-    
-    read();
+    response.transferFileAsynchronous(openFile, onSuccess, onError);
 }
