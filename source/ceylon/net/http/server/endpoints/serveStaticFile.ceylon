@@ -17,7 +17,25 @@ import ceylon.net.http.server {
     ServerException
 }
 
-"Endpoint for serving static files."
+"Endpoint for serving static files. _Must_ be attached to an
+ [[ceylon.net.http.server::AsynchronousEndpoint]].
+ 
+ For example:
+ 
+     shared void run() 
+            => newServer {
+        AsynchronousEndpoint {
+            path = startsWith(\"/ceylon-ide\");
+            acceptMethod = { get };
+            service = serveStaticFile {
+                externalPath = \"web-content\";
+                fileMapper(Request request)
+                        => request.path.replace(\"/ceylon-ide\", \"\");
+            };
+        }
+    };
+
+ "
 by("Matej Lazar")
 shared void serveStaticFile(
                 "Root directory containing files."
