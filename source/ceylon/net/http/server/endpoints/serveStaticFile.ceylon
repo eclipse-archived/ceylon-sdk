@@ -49,14 +49,12 @@ shared void serveStaticFile(
             void onSuccess() {
                 openFile.close();
                 response.flush();
-                response.close();
                 onSuccess(request);
                 complete();
             }
             void onError(ServerException exception) {
                 openFile.close();
                 response.flush();
-                response.close();
                 onError(exception,request);
                 complete();
             }
