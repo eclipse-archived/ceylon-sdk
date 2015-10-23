@@ -67,6 +67,7 @@ class RequestImpl(HttpServerExchange exchange,
     shared actual Method method;
     
     shared actual String read() {
+        exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
             value inputStreamReader = 
