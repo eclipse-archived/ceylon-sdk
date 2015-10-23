@@ -212,9 +212,8 @@ class ResponseImpl(HttpServerExchange exchange,
     }
     
     shared actual void flush(){
-        response.flush();
+        exchange.endExchange();
     }
     shared actual void close(){
-        response.close();
     }
 }
