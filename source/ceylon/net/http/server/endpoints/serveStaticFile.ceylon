@@ -33,9 +33,7 @@ import ceylon.net.http.server {
                         => request.path.replace(\"/ceylon-ide\", \"\");
             };
         }
-    };
-
- "
+     };"
 by("Matej Lazar")
 shared void serveStaticFile(
                 "Root directory containing files."
