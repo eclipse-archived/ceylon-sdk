@@ -19,9 +19,18 @@ import ceylon.net.http {
             service = redirect(\"/index.html\");
         }
      };"
-shared void redirect(String url)
+shared void redirect(String url, 
+        RedirectType type=RedirectType.seeOther)
         (Request request, Response response, void complete()) {
-    response.responseStatus = 301;
+    response.responseStatus = type.statusCode;
     response.addHeader(Header("Location", url));
     complete();
+}
+
+shared class RedirectType {
+    shared Integer statusCode;
+    shared new movedPermanently { statusCode=301; }
+    shared new seeOther { statusCode=303; }
+    shared new temporaryRedirect { statusCode=307; }
+    string => statusCode.string;
 }
