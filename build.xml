@@ -217,31 +217,11 @@
 
     <target name="publish" depends="compile"
             description="Copies the SDK modules to the user's repository">
-        <copy todir="${ceylon.repo.dir}" overwrite="true">
-            <fileset dir="${out.repo}">
-                <include name="ceylon/test/**"/>
-                <include name="com/redhat/ceylon/test/**"/>
-                <include name="com/redhat/ceylon/testjs/**"/>
-                <include name="com/redhat/ceylon/testjvm/**"/>
-                <include name="ceylon/math/**"/>
-                <include name="ceylon/collection/**"/>
-                <include name="ceylon/file/**"/>
-                <include name="ceylon/io/**"/>
-                <include name="ceylon/json/**"/>
-                <include name="ceylon/logging/**"/>
-                <include name="ceylon/net/**"/>
-                <include name="ceylon/process/**"/>
-                <include name="ceylon/promise/**"/>
-                <include name="ceylon/time/**"/>
-                <include name="ceylon/dbc/**"/>
-                <include name="ceylon/transaction/**"/>
-                <include name="ceylon/unicode/**"/>
-                <include name="ceylon/locale/**"/>
-                <include name="ceylon/interop/java/**"/>
-                <include name="ceylon/html/**"/>
-                <include name="com/redhat/ceylon/war/**"/>
-            </fileset>
-        </copy>
+        <ceylon-copy out="${ceylon.repo.dir}">
+            <moduleset>
+                <sourcemodules/>
+            </moduleset>
+        </ceylon-copy>
     </target>
 
     <target name="publish-herd" depends="ceylondefs">
