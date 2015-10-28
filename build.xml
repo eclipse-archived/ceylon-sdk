@@ -209,7 +209,7 @@
             encoding="UTF-8">
             <moduleset refid="modules.sdk.jvm"/>
             <linkset>
-                <link pattern="ceylon" url="http://modules.ceylon-lang.org/test/"/>
+                <link pattern="ceylon" url="http://modules.ceylon-lang.org/repo/1/"/>
             </linkset>
         </ceylon-doc>
         
@@ -255,6 +255,9 @@
         pass="${herd.pass}"
             encoding="UTF-8">
             <moduleset refid="modules.sdk.jvm"/>
+            <linkset>
+                <link pattern="ceylon" url="http://modules.ceylon-lang.org/repo/1/"/>
+            </linkset>
         </ceylon-doc>
         
     </target>
