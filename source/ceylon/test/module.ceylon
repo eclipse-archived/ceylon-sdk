@@ -87,6 +87,6 @@
    """
 by ("Tom Bentley", "Tomáš Hradec")
 license ("Apache Software License")
-module ceylon.test "1.2.0" {
-    import ceylon.collection "1.2.0";
+module ceylon.test "1.2.1" {
+    import ceylon.collection "1.2.1";
 }

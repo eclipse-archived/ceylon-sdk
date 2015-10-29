@@ -115,7 +115,7 @@
 by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
 native("jvm")
-module ceylon.transaction "1.2.0" {
+module ceylon.transaction "1.2.1" {
     shared import java.jdbc "7";
     
     //shared import javax.transaction.api "1.2";
@@ -124,5 +124,5 @@ module ceylon.transaction "1.2.0" {
     import javax.naming "7";
 
     import java.base "7";
-    import ceylon.interop.java "1.2.0";
+    import ceylon.interop.java "1.2.1";
 }
