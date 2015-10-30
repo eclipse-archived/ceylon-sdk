@@ -1,6 +1,0 @@
-10-20 16:26:03 jdbc[2]: exception
-org.h2.jdbc.JdbcSQLException: Table "CEYLONKV" not found; SQL statement:
-DROP TABLE CEYLONKV [42102-168]
-10-20 16:26:04 jdbc[2]: exception
-org.h2.jdbc.JdbcSQLException: Table "CEYLONKV" not found; SQL statement:
-DROP TABLE CEYLONKV [42102-168]
