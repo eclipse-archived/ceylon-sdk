@@ -4,11 +4,13 @@ import ceylon.io {
     Selector,
     SocketConnector,
     SslSocketConnector,
-    SslSocket
+    SslSocket,
+    SocketTimeoutException
 }
 
 import java.net {
-    InetSocketAddress
+    InetSocketAddress,
+    JavaSocketTimeoutException=SocketTimeoutException
 }
 import java.nio.channels {
     SocketChannel {
@@ -23,9 +25,13 @@ shared class SocketConnectorImpl(SocketAddress address)
     
     shared SocketChannel channel = openSocket();
     
-    shared default actual Socket connect() {
-        channel.connect(InetSocketAddress(address.address, 
-            address.port));
+    shared default actual Socket connect(Integer connectTimeout, Integer readTimeout) {
+        try {
+            channel.socket().soTimeout = readTimeout;
+            channel.socket().connect(InetSocketAddress(address.address, address.port), connectTimeout);
+        } catch (JavaSocketTimeoutException e) {
+            throw SocketTimeoutException();
+        }
         return createSocket();
     }
     
@@ -53,9 +59,13 @@ shared class SslSocketConnectorImpl(SocketAddress address)
         extends SocketConnectorImpl(address)
     satisfies SslSocketConnector {
 
-    shared actual SslSocket connect() {
-        channel.connect(InetSocketAddress(address.address, 
-            address.port));
+    shared actual SslSocket connect(Integer connectTimeout, Integer readTimeout) {
+        try {
+            channel.socket().soTimeout = readTimeout;
+            channel.socket().connect(InetSocketAddress(address.address, address.port), connectTimeout);
+        } catch (JavaSocketTimeoutException e) {
+            throw SocketTimeoutException();
+        }
         return createSocket();
     }
     

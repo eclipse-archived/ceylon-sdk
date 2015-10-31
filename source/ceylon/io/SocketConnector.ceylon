@@ -16,7 +16,7 @@ shared sealed interface SocketConnector{
     
     "Block the current thread until a connected [[Socket]] 
      is returned."
-    shared formal Socket connect();
+    shared formal Socket connect(Integer connectTimeout = 0, Integer readTimeout = 0);
 
     "Registers a [[connection listener|connect]] on the 
      specified [[selector]] that will be called when the 
@@ -39,7 +39,7 @@ shared sealed interface SocketConnector{
 see(`function newSslSocketConnector`)
 shared sealed interface SslSocketConnector 
         satisfies SocketConnector {
-    shared formal actual SslSocket connect();
+    shared formal actual SslSocket connect(Integer connectTimeout, Integer readTimeout);
 }
 
 "Creates a new [[SocketConnector]] to connect to the given

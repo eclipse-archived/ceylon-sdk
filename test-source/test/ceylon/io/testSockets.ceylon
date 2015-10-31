@@ -4,7 +4,9 @@ import ceylon.io {
     newSelector,
     SocketConnector,
     SocketAddress,
-    newSslSocketConnector
+    newSslSocketConnector,
+    newSocketConnector,
+    SocketTimeoutException
 }
 import ceylon.io.buffer {
     ...
@@ -14,6 +16,10 @@ import ceylon.io.charset {
 }
 import ceylon.net.uri {
     parse
+}
+import ceylon.test {
+    test,
+    assertThatException
 }
 
 void readResponse(Socket socket) {
@@ -114,7 +120,6 @@ void connectReadAndWriteAsync(String request, SocketConnector connector){
     print("Done connect/read/write");
 }
 
-
 void testGrrr(){
     // /wiki/Chunked_transfer_encoding in thai
     //value uri = parse("http://th.wikipedia.org/wiki/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%82%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%8A%E0%B8%B4%E0%B9%89%E0%B8%99%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99");
@@ -141,4 +146,30 @@ void testGrrr(){
     //readAndWriteAsync(request, socket);
 
     socket.close();
+}
+
+test
+void connectTimeout() {
+    value connector = newSocketConnector(SocketAddress("8.8.8.8", 52496));
+    assertThatException(() => connector.connect(1)).hasType(`SocketTimeoutException`);
+}
+test
+void sslConnectTimeout() {
+    value connector = newSslSocketConnector(SocketAddress("8.8.8.8", 52496));
+    assertThatException(() => connector.connect(1)).hasType(`SocketTimeoutException`);
+}
+
+test
+void readTimeout() {
+    ByteBuffer buf = newByteBuffer(1);
+    value connector = newSocketConnector(SocketAddress("example.com", 80));
+    value socket = connector.connect(5000, 1);
+    assertThatException(() => socket.read(buf)).hasType(`SocketTimeoutException`);
+}
+test
+void sslReadTimeout() {
+    ByteBuffer buf = newByteBuffer(1);
+    value connector = newSslSocketConnector(SocketAddress("example.com", 443));
+    value socket = connector.connect(5000, 1);
+    assertThatException(() => socket.read(buf)).hasType(`SocketTimeoutException`);
 }

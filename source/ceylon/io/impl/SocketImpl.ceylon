@@ -1,5 +1,6 @@
 import ceylon.io {
-    Socket
+    Socket,
+    SocketTimeoutException
 }
 import ceylon.io.buffer {
     ByteBuffer
@@ -11,19 +12,33 @@ import ceylon.io.buffer.impl {
 import java.nio.channels {
     SocketChannel,
     SelectionKey,
-    Selector
+    Selector,
+    ReadableByteChannel,
+    Channels
+}
+import java.net {
+    JavaSocketTimeoutException=SocketTimeoutException
 }
 
 class SocketImpl(channel) 
         satisfies Socket {
     
     shared SocketChannel channel;
+    shared ReadableByteChannel wrappedChannel = Channels.newChannel(channel.socket().inputStream);
     
     close() => channel.close();
     
     shared default actual Integer read(ByteBuffer buffer) {
         assert(is ByteBufferImpl buffer);
-        return channel.read(buffer.underlyingBuffer);
+        if (blocking) {
+            try {
+                return wrappedChannel.read(buffer.underlyingBuffer);
+            } catch (JavaSocketTimeoutException e) {
+                throw SocketTimeoutException();
+            }
+        } else {
+            return channel.read(buffer.underlyingBuffer);
+        }
     }
     shared default actual Integer write(ByteBuffer buffer) {
         assert(is ByteBufferImpl buffer);

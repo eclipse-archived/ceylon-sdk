@@ -1,5 +1,6 @@
 import ceylon.io {
-    SslSocket
+    SslSocket,
+    SocketTimeoutException
 }
 import ceylon.io.buffer {
     ByteBuffer
@@ -31,6 +32,9 @@ import javax.net.ssl {
     SSLEngine,
     TrustManager,
     SSLEngineResult
+}
+import java.net {
+    JavaSocketTimeoutException=SocketTimeoutException
 }
 
 object dummyTrustManager satisfies X509TrustManager {
@@ -235,7 +239,16 @@ class SslSocketImpl(SocketChannel socket)
         //READ:
         while(true) {
             if(!hasReadNetData || needMoreData) {
-                Integer read = socket.read(readNetBuf);
+                Integer read;
+                if (blocking) {
+                    try {
+                        read = wrappedChannel.read(readNetBuf);
+                    } catch (JavaSocketTimeoutException e) {
+                        throw SocketTimeoutException();
+                    }
+                } else {
+                    read = socket.read(readNetBuf);
+                }
                 debug("Read ``read`` bytes");
                 if(read == -1) {
                     sslEngine.closeInbound();
