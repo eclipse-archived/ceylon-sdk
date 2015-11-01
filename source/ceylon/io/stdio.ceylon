@@ -11,7 +11,7 @@ import java.lang {
     }
 }
 
-"A [[ReadableFileDescriptor]] for the virtual machine's standard input"
+"A [[ReadableFileDescriptor]] for the virtual machine's standard input stream."
 ReadableFileDescriptor stdin = InputStreamAdapter(javaIn);
 
 "A [[WritableFileDescriptor]] for the virtual machine's standard output stream."
