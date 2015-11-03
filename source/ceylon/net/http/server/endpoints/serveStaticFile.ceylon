@@ -9,7 +9,8 @@ import ceylon.io {
 }
 import ceylon.net.http {
     contentType,
-    contentLength
+    contentLength,
+    Header
 }
 import ceylon.net.http.server {
     Response,
@@ -41,7 +42,8 @@ shared void serveStaticFile(
                 String fileMapper(Request request) => request.path,
                 Options options = Options(),
                 void onSuccess(Request r) => noop(r),
-                void onError(ServerException e, Request r) => noop(e,r))
+                void onError(ServerException e, Request r) => noop(e,r),
+                {Header*} headers(File file) => {})
         (Request request, Response response, void complete()) {
     
     Path filePath = parsePath(externalPath + fileMapper(request));
@@ -55,23 +57,36 @@ shared void serveStaticFile(
             response.addHeader(contentType(type));
         }
         
-        sendFile {
-            openFile = openFile;
-            response = response;
-            options = options;
-            void onSuccess() {
-                openFile.close();
-                response.flush();
-                onSuccess(request);
-                complete();
-            }
-            void onError(ServerException exception) {
-                openFile.close();
-                response.flush();
-                onError(exception,request);
-                complete();
-            }
-        };
+        response.addHeader(Header("ETag", 
+            file.lastModifiedMilliseconds.string));
+        
+        for (header in headers(file)) {
+            response.addHeader(header);
+        }
+        
+        if (exists etag = request.header("If-None-Match"), 
+            etag == file.lastModifiedMilliseconds.string) {
+            response.responseStatus = 304;
+        }
+        else {
+            sendFile {
+                openFile = openFile;
+                response = response;
+                options = options;
+                void onSuccess() {
+                    openFile.close();
+                    response.flush();
+                    onSuccess(request);
+                    complete();
+                }
+                void onError(ServerException exception) {
+                    openFile.close();
+                    response.flush();
+                    onError(exception,request);
+                    complete();
+                }
+            };
+        }
         
     } else {
         response.responseStatus = 404;
