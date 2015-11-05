@@ -2,15 +2,15 @@ import ceylon.io.buffer {
     ByteBuffer
 }
 
-"Represents anything that you can read/write to, much like 
- the UNIX notion of file descriptor.
- 
- This supports synchronous and asynchronous reading."
-see(`interface Socket`,
-    `interface SelectableFileDescriptor`)
-by("Stéphane Épardaud")
-shared sealed interface FileDescriptor {
+shared sealed interface Closeable {
+    "Closes this file descriptor."
+    shared formal void close();
+}
 
+"Represents anything that you can read from, much like
+ the UNIX notion of file descriptor."
+by("Stéphane Épardaud")
+shared sealed interface ReadableFileDescriptor satisfies Closeable {
     "Reads everything we can from this file descriptor into 
      the specified buffer.
      
@@ -32,7 +32,7 @@ shared sealed interface FileDescriptor {
      This method makes no sense if the file descriptor is in
      `non-blocking` mode."
     shared void readFully(void consume(ByteBuffer buffer), 
-            ByteBuffer buffer = newBuffer()) {
+        ByteBuffer buffer = newBuffer()) {
         // FIXME: should we allocate the buffer ourselves?
         // FIXME: should we clear the buffer passed?
         // I guess not, because there might be something left 
@@ -53,7 +53,12 @@ shared sealed interface FileDescriptor {
             buffer.clear();
         }
     }
-    
+}
+
+"Represents anything that you can write to, much like
+ the UNIX notion of file descriptor."
+by("Stéphane Épardaud")
+shared sealed interface WritableFileDescriptor satisfies Closeable {
     "Writes everything we can from the specified buffer to 
      this file descriptor.
      
@@ -69,7 +74,7 @@ shared sealed interface FileDescriptor {
      In both cases, it returns the number of bytes written, 
      or `-1` when the end of file is reached."
     shared formal Integer write(ByteBuffer buffer);
-
+    
     "Writes the given buffer to this file descriptor 
      entirely, until either the buffer has been entirely 
      written, or until end of file. This method makes no 
@@ -86,7 +91,7 @@ shared sealed interface FileDescriptor {
      it only has to stop adding data to the buffer. This
      method makes no sense in `non-blocking` mode."
     shared void writeFrom(void producer(ByteBuffer buffer), 
-            ByteBuffer buffer = newBuffer()) {
+        ByteBuffer buffer = newBuffer()) {
         // refill
         while(true) {
             // fill our buffer
@@ -101,7 +106,15 @@ shared sealed interface FileDescriptor {
             buffer.clear();
         }
     }
-    
-    "Closes this file descriptor."
-    shared formal void close();
+}
+
+"Represents anything that you can read/write to, much like 
+ the UNIX notion of file descriptor.
+ 
+ This supports synchronous and asynchronous reading."
+see (`interface Socket`,
+    `interface SelectableFileDescriptor`)
+by ("Stéphane Épardaud")
+shared sealed interface FileDescriptor
+        satisfies ReadableFileDescriptor & WritableFileDescriptor {
 }
