@@ -85,6 +85,15 @@ import org.xnio {
         clOpenListenerAdapter=openListenerAdapter
     }
 }
+import io.undertow.server.handlers.encoding {
+	ContentEncodingRepository,
+	EncodingHandler,
+	DeflateEncodingProvider,
+	GzipEncodingProvider
+}
+import io.undertow.predicate {
+	Predicate
+}
 
 by("Matej Lazar")
 shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
@@ -117,7 +126,15 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
                 = SessionAttachmentHandler(InMemorySessionManager(options.sessionId), sessionconfig);
         sessionHandler.setNext(protocolHandshakeHandler);
         
-        HttpHandler errPageHandler = SimpleErrorPageHandler(sessionHandler);
+        value errPageHandler = SimpleErrorPageHandler(sessionHandler);
+
+        value contentEncodingRepository = ContentEncodingRepository();
+        contentEncodingRepository.addEncodingHandler("gzip", GzipEncodingProvider(), 50);
+        contentEncodingRepository.addEncodingHandler("deflate", DeflateEncodingProvider(), 10);
+        EncodingHandler encodingHandler = EncodingHandler(contentEncodingRepository);
+        encodingHandler.setNext(next);
+
+        errPageHandler.setNext(sessionHandler);
         
         return errPageHandler;
     }
