@@ -15,7 +15,15 @@ import java.net {
 import java.nio.channels {
     SocketChannel {
         openSocket=open
-    }
+    },
+    SelectionKey
+}
+
+shared class ConnectionInProgress(channel, socketCreator) {
+    SocketChannel channel;
+    Socket socketCreator(SocketChannel channel);
+    
+    shared Socket finish() => socketCreator(channel);
 }
 
 shared class SocketConnectorImpl(address, connectTimeout, readTimeout)
@@ -31,38 +39,37 @@ shared class SocketConnectorImpl(address, connectTimeout, readTimeout)
     shared actual default SocketConnector withReadTimeout(Integer readTimeout)
             => SocketConnectorImpl(address, connectTimeout, readTimeout);
     
-    shared default actual Socket connect() {
+    shared SocketChannel connnectChannelBlocking() {
         SocketChannel channel = openSocket();
         try {
             channel.socket().soTimeout = readTimeout;
-            channel.socket().connect(InetSocketAddress(address.address, address.port), connectTimeout);
+            channel.socket().connect(
+                InetSocketAddress(address.address, address.port),
+                connectTimeout
+            );
         } catch (JavaSocketTimeoutException e) {
-            throw SocketTimeoutException();
+            throw SocketTimeoutException("Connect timeout of ``connectTimeout`` ms exeeded");
         }
-        return SocketImpl(channel);
+        return channel;
     }
+    
+    shared default Socket socketCreator(SocketChannel channel)
+            => SocketImpl(channel);
+    shared default actual Socket connect()
+            => socketCreator(connnectChannelBlocking());
     
     shared actual void connectAsync(Selector selector,
         void connect(Socket socket)) {
         SocketChannel channel = openSocket();
         channel.configureBlocking(false);
-        channel.connect(InetSocketAddress(address.address,
-                address.port));
-        selector.addConnectListener(this, connect);
+        channel.connect(InetSocketAddress(address.address, address.port));
+        selector.addConnectListener {
+            ConnectionInProgress(channel, socketCreator);
+            connect;
+        };
+        // Do not return ConnectionInProgress to avoid exposing the channel
+        // Selectors can only have one connect listener anyway
     }
-    
-    /*
-    shared default Socket createSocket() => SocketImpl(channel);
-     
-    shared actual void close() => channel.close();
-    
-    shared default SelectionKey register(JavaSelector selector, 
-        Integer ops, Object attachment)
-            => channel.register(selector, ops, attachment);
-    
-    shared default void interestOps(SelectionKey key, Integer ops) 
-            => key.interestOps(ops);
-    */
 }
 
 shared class SslSocketConnectorImpl(address, connectTimeout, readTimeout)
@@ -79,14 +86,11 @@ shared class SslSocketConnectorImpl(address, connectTimeout, readTimeout)
     shared default actual SslSocketConnector withReadTimeout(Integer readTimeout)
             => SslSocketConnectorImpl(address, connectTimeout, readTimeout);
     
-    shared actual SslSocket connect() {
-        SocketChannel channel = openSocket();
-        try {
-            channel.socket().soTimeout = readTimeout;
-            channel.socket().connect(InetSocketAddress(address.address, address.port), connectTimeout);
-        } catch (JavaSocketTimeoutException e) {
-            throw SocketTimeoutException();
-        }
-        return SslSocketImpl(channel);
-    }
+    shared actual SslSocket socketCreator(SocketChannel channel)
+            => SslSocketImpl(channel);
+    
+    shared actual SslSocket connect()
+            => socketCreator(connnectChannelBlocking());
+    
+    // Can't refine connectAsync to SslSocket because of callable type limitations
 }

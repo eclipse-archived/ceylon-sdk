@@ -21,7 +21,8 @@ import java.nio.channels {
         javaWriteOp=OP_WRITE,
         javaConnectOp=OP_CONNECT,
         javaAcceptOp=OP_ACCEPT
-    }
+    },
+    SocketChannel
 }
 
 class Key(socket = null, onRead = null, onWrite = null, 
@@ -82,19 +83,17 @@ shared class SelectorImpl()
 
     shared actual void addConnectListener(SocketConnector connector, 
         void callback(Socket s)) {
-        assert(is SocketConnectorImpl connector);
-        if(exists javaKey = connector.channel.keyFor(javaSelector)) {
+        SocketChannel channel = nothing; // TODO
+        if(exists javaKey = channel.keyFor(javaSelector)) {
             assert(exists key = map[javaKey]);
             // update our key
             key.onConnect = callback;
             key.connector = connector;
-            connector.interestOps(javaKey, 
-                javaKey.interestOps().or(javaConnectOp));
+            javaKey.interestOps(javaKey.interestOps().or(javaConnectOp));
         }else{
             // new key
             value key = Key { onConnect = callback; connector = connector; };
-            value newJavaKey = 
-                    connector.register(javaSelector, javaConnectOp, key);
+            value newJavaKey = channel.register(javaSelector, javaConnectOp, key);
             map.put(newJavaKey, key);
         }
     }
@@ -190,15 +189,16 @@ shared class SelectorImpl()
             assert(exists connector = key.connector,
                    exists callback = key.onConnect);
             // FIXME: check
-            connector.channel.finishConnect();
+            SocketChannel channel = nothing; // TODO
+            channel.finishConnect();
             // create a new socket
-            value socket = connector.createSocket();
+            Socket socket = connector.createSocket();
             callback(socket);
             // did we just register for read/write events?
             if(key.onRead exists || key.onWrite exists) {
                 // drop the connect bits
                 debug("Dropping connect interest");
-                connector.interestOps(selectedKey, selectedKey.interestOps().xor(javaConnectOp));
+                selectedKey.interestOps(selectedKey.interestOps().xor(javaConnectOp));
                 key.onConnect = null;
                 key.connector = null;
             }else{
