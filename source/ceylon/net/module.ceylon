@@ -58,7 +58,7 @@
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 native("jvm")
-module ceylon.net "1.2.0" {
+module ceylon.net "1.2.0-1" {
     
     shared import ceylon.collection "1.2.0";
     shared import ceylon.io "1.2.0";
