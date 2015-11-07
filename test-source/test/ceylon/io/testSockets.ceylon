@@ -6,7 +6,9 @@ import ceylon.io {
     SocketAddress,
     newSslSocketConnector,
     newSocketConnector,
-    SocketTimeoutException
+    SocketTimeoutException,
+    newServerSocket,
+    ServerSocket
 }
 import ceylon.io.buffer {
     ...
@@ -19,7 +21,8 @@ import ceylon.net.uri {
 }
 import ceylon.test {
     test,
-    assertThatException
+    assertThatException,
+    assertEquals
 }
 
 void readResponse(Socket socket) {
@@ -146,6 +149,49 @@ void testGrrr(){
     //readAndWriteAsync(request, socket);
 
     socket.close();
+}
+
+shared class SimulatedServerTests() {
+    Byte[] expected = [2.byte, 3.byte, 5.byte, 7.byte, 11.byte];
+    
+    test
+    shared void basicAsync() {
+        Selector selector = newSelector();
+        value address = SocketAddress("localhost", 48973);
+        
+        ServerSocket serverSocket = newServerSocket(address);
+        Boolean serve(Socket socket) {
+            print("start serve");
+            socket.writeAsync(selector, void(ByteBuffer buffer) {
+                print("start write");
+                for (b in expected) {
+                    buffer.put(b);
+                }
+                print("end write");
+            });
+            socket.close();
+            print("end serve");
+            return false;
+        }
+        serverSocket.acceptAsync(selector, serve);
+        
+        SocketConnector socket = newSocketConnector(address);
+        void receive(Socket socket) {
+            print("start receive");
+            socket.readAsync(selector, void(ByteBuffer buffer) {
+                print("start read");
+                assertEquals(buffer.sequence(), expected);
+                print("end read");
+            });
+            socket.close();
+            print("end receive");
+        }
+        socket.connectAsync(selector, receive);
+        
+        print("start select");
+        selector.process();
+        print("end select");
+    }
 }
 
 test
