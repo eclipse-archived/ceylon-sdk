@@ -85,7 +85,7 @@ shared sealed interface Selector {
      [[socketConnector]] can be connected without blocking.
      
      The callback function will only be invoked at most once."
-    shared formal void addConnectListener(SocketConnector socketConnector, 
+    shared formal void addConnectListener(ConnectionInProgress socketConnector,
         void connect(Socket s));
 
     "Registers an `accept` listener on the given 

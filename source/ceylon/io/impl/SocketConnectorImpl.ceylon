@@ -5,7 +5,8 @@ import ceylon.io {
     SocketConnector,
     SslSocketConnector,
     SslSocket,
-    SocketTimeoutException
+    SocketTimeoutException,
+    ConnectionInProgress
 }
 
 import java.net {
@@ -15,15 +16,14 @@ import java.net {
 import java.nio.channels {
     SocketChannel {
         openSocket=open
-    },
-    SelectionKey
+    }
 }
 
-shared class ConnectionInProgress(channel, socketCreator) {
-    SocketChannel channel;
+shared class ConnectionInProgressImpl(channel, socketCreator) satisfies ConnectionInProgress {
+    shared actual SocketChannel channel;
     Socket socketCreator(SocketChannel channel);
     
-    shared Socket finish() => socketCreator(channel);
+    shared actual Socket finish() => socketCreator(channel);
 }
 
 shared class SocketConnectorImpl(address, connectTimeout, readTimeout)
@@ -64,7 +64,7 @@ shared class SocketConnectorImpl(address, connectTimeout, readTimeout)
         channel.configureBlocking(false);
         channel.connect(InetSocketAddress(address.address, address.port));
         selector.addConnectListener {
-            ConnectionInProgress(channel, socketCreator);
+            ConnectionInProgressImpl(channel, socketCreator);
             connect;
         };
         // Do not return ConnectionInProgress to avoid exposing the channel

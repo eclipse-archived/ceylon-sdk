@@ -3,6 +3,12 @@ import ceylon.io.impl {
     SslSocketConnectorImpl
 }
 
+"Holds information during an asynchronous connect"
+shared sealed interface ConnectionInProgress {
+    shared formal Object? channel;
+    shared formal Socket finish();
+}
+
 "An object that connects to a remote host, returning a [[Socket]], either
  synchronously or asynchronously:
  

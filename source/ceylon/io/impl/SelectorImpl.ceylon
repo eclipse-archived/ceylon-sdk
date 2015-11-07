@@ -10,8 +10,8 @@ import ceylon.io {
     Selector,
     Socket,
     FileDescriptor,
-    SocketConnector,
-    ServerSocket
+    ServerSocket,
+    ConnectionInProgress
 }
 
 import java.nio.channels {
@@ -21,8 +21,7 @@ import java.nio.channels {
         javaWriteOp=OP_WRITE,
         javaConnectOp=OP_CONNECT,
         javaAcceptOp=OP_ACCEPT
-    },
-    SocketChannel
+    }
 }
 
 class Key(socket = null, onRead = null, onWrite = null, 
@@ -33,7 +32,7 @@ class Key(socket = null, onRead = null, onWrite = null,
     shared variable FileDescriptor? socket;
     
     shared variable Callable<Anything, [Socket]>? onConnect;
-    shared variable SocketConnectorImpl? connector;
+    shared variable ConnectionInProgressImpl? connector;
     
     shared variable Callable<Boolean, [Socket]>? onAccept;
     shared variable ServerSocketImpl? acceptor;
@@ -81,10 +80,10 @@ shared class SelectorImpl()
         }
     }
 
-    shared actual void addConnectListener(SocketConnector connector, 
+    shared actual void addConnectListener(ConnectionInProgress connector, 
         void callback(Socket s)) {
-        SocketChannel channel = nothing; // TODO
-        if(exists javaKey = channel.keyFor(javaSelector)) {
+        assert (is ConnectionInProgressImpl connector);
+        if(exists javaKey = connector.channel.keyFor(javaSelector)) {
             assert(exists key = map[javaKey]);
             // update our key
             key.onConnect = callback;
@@ -93,7 +92,7 @@ shared class SelectorImpl()
         }else{
             // new key
             value key = Key { onConnect = callback; connector = connector; };
-            value newJavaKey = channel.register(javaSelector, javaConnectOp, key);
+            value newJavaKey = connector.channel.register(javaSelector, javaConnectOp, key);
             map.put(newJavaKey, key);
         }
     }
@@ -189,10 +188,9 @@ shared class SelectorImpl()
             assert(exists connector = key.connector,
                    exists callback = key.onConnect);
             // FIXME: check
-            SocketChannel channel = nothing; // TODO
-            channel.finishConnect();
+            connector.channel.finishConnect();
             // create a new socket
-            Socket socket = connector.createSocket();
+            Socket socket = connector.finish();
             callback(socket);
             // did we just register for read/write events?
             if(key.onRead exists || key.onWrite exists) {
