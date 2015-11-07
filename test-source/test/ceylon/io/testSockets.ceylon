@@ -19,10 +19,20 @@ import ceylon.io.charset {
 import ceylon.net.uri {
     parse
 }
+import ceylon.promise {
+    globalExecutionContext
+}
 import ceylon.test {
     test,
     assertThatException,
-    assertEquals
+    assertEquals,
+    assertTrue
+}
+
+import java.util.concurrent {
+    Semaphore,
+    TimeUnit
+}
 }
 
 void readResponse(Socket socket) {
@@ -151,13 +161,55 @@ void testGrrr(){
     socket.close();
 }
 
-shared class SimulatedServerTests() {
+shared class SocketTests() {
     Byte[] expected = [2.byte, 3.byte, 5.byte, 7.byte, 11.byte];
+    value address = SocketAddress("localhost", 48973);
+    
+    test
+    shared void basicRead() {
+        Semaphore serverComplete = Semaphore(0);
+        globalExecutionContext.run(
+            void() {
+                try {
+                    ServerSocket serverSocket = newServerSocket(address);
+                    Socket socket = serverSocket.accept();
+                    try {
+                        socket.write(newByteBufferWithData(*expected));
+                    } finally {
+                        socket.close();
+                        serverSocket.close();
+                    }
+                } finally {
+                    serverComplete.release();
+                }
+            }
+        );
+        ByteBuffer recvBuf = newByteBuffer(expected.size * 2);
+        Semaphore clientComplete = Semaphore(0);
+        globalExecutionContext.run(
+            void() {
+                try {
+                    SocketConnector socketConnector = newSocketConnector(address);
+                    Socket socket = socketConnector.connect();
+                    try {
+                        socket.read(recvBuf);
+                    } finally {
+                        socket.close();
+                    }
+                } finally {
+                    clientComplete.release();
+                }
+            }
+        );
+        assertTrue(serverComplete.tryAcquire(1, TimeUnit.\iSECONDS));
+        assertTrue(clientComplete.tryAcquire(1, TimeUnit.\iSECONDS));
+        recvBuf.flip();
+        assertEquals(recvBuf.sequence(), expected);
+    }
     
     test
     shared void basicAsync() {
         Selector selector = newSelector();
-        value address = SocketAddress("localhost", 48973);
         
         ServerSocket serverSocket = newServerSocket(address);
         Boolean serve(Socket socket) {
