@@ -6,5 +6,5 @@ module com.redhat.ceylon.testjvm "1.2.1" {
     import org.jboss.modules "1.3.3.Final";
     import ceylon.collection "1.2.1";
     import ceylon.file "1.2.1";
-    import ceylon.runtime "1.2.0";
+    import ceylon.runtime "1.2.1";
 }
