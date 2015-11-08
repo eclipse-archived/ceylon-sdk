@@ -6,7 +6,7 @@ import ceylon.promise {
 
 "Schedules the [[job]] for concurrent execution in [[context]], and immediately
  returns a [[Future]] for tracking its fate."
-Future<Value> submit<Value>(job, context = globalExecutionContext) {
+shared Future<Value> submit<Value>(job, context = globalExecutionContext) {
     "Callable returning [[Value]] to create a [[Future]] for."
     Value() job;
     "The context to execute the jobs in."
@@ -16,7 +16,7 @@ Future<Value> submit<Value>(job, context = globalExecutionContext) {
     
     context.run(
         void() {
-            variable Value val;
+            Value val;
             try {
                 val = job();
             } catch (Throwable e) {
@@ -32,7 +32,7 @@ Future<Value> submit<Value>(job, context = globalExecutionContext) {
 
 "Eagerly [[submit]]s all of the [[jobs]], and returns an [[Iterator]] to
  lazily obtain the results."
-{Value*} map<Value>(jobs, timeout = 0, context = globalExecutionContext) {
+shared {Value*} jobMap<Value>(jobs, timeout = 0, context = globalExecutionContext) {
     "Jobs to get the [[Future.result]]s of."
     {Value()*} jobs;
     "The maximum milliseconds to allow for the retrieval of each job before

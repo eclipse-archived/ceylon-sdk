@@ -36,6 +36,20 @@ shared class Future<Value>(delegate)
      */
     
     value completion = CountDownLatch(1);
+    // CountDownLatch's timeout doesn't interpret values < 1 as infinite
+    void await(Integer timeout, String description) {
+        if (timeout > 0) {
+            if (completion.await(timeout, TimeUnit.\iMILLISECONDS)) {
+                return;
+            } else {
+                throw FutureTimeoutException {
+                    "``description`` timeout of ``timeout`` ms exeeded";
+                };
+            }
+        } else {
+            completion.await();
+        }
+    }
     
     variable Boolean _done = false;
     "[[true]] if the [[delegate]] is completed."
@@ -68,16 +82,13 @@ shared class Future<Value>(delegate)
          [[FutureTimeoutException]]. Must be at least 1 to have effect."
         Integer timeout;
         
-        if (completion.await(timeout, TimeUnit.\iMILLISECONDS)) {
-            if (exists e = resultException) {
-                throw e;
-            } else {
-                // Don't use `exists v` since Value could include Null
-                assert (is Value v = resultValue);
-                return v;
-            }
+        await(timeout, "result()");
+        if (exists e = resultException) {
+            throw e;
         } else {
-            throw FutureTimeoutException("result() timeout of ``timeout`` ms exeeded");
+            // Don't use `exists v` since Value could include Null
+            assert (is Value v = resultValue);
+            return v;
         }
     }
     
@@ -90,11 +101,8 @@ shared class Future<Value>(delegate)
          [[FutureTimeoutException]]. Must be at least 1 to have effect."
         Integer timeout;
         
-        if (completion.await(timeout, TimeUnit.\iMILLISECONDS)) {
-            return resultException;
-        } else {
-            throw FutureTimeoutException("exception() timeout of ``timeout`` ms exeeded");
-        }
+        await(timeout, "exception()");
+        return resultException;
     }
 }
 
