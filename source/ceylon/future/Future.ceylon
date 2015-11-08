@@ -1,3 +1,6 @@
+import ceylon.future.util {
+    TimeoutException
+}
 import ceylon.promise {
     Promise,
     ExecutionContext
@@ -109,7 +112,7 @@ shared class Future<Value>(delegate)
 "Thrown if a blocking call to [[Future]] did not complete before a defined
  timeout period elapsed."
 shared class FutureTimeoutException(description = null, cause = null)
-        extends Exception(description, cause) {
+        extends TimeoutException(description, cause) {
     "A description of the problem."
     String? description;
     "The underlying cause of this exception."
