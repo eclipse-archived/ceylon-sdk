@@ -1,7 +1,9 @@
 import ceylon.future {
     submit,
-    FutureTimeoutException,
     jobMap
+}
+import ceylon.future.util {
+    AcquireTimeoutException
 }
 import ceylon.language.meta {
     type
@@ -39,7 +41,7 @@ shared class SubmitTests() {
     test
     shared void resultTimeout() {
         value future = submit(() => Thread.sleep(10));
-        assertThatException(() => future.result(1)).hasType(`FutureTimeoutException`);
+        assertThatException(() => future.result(1)).hasType(`AcquireTimeoutException`);
     }
     
     test
@@ -59,7 +61,7 @@ shared class SubmitTests() {
     test
     shared void exceptionTimeout() {
         value future = submit(() => Thread.sleep(10));
-        assertThatException(() => future.exception(1)).hasType(`FutureTimeoutException`);
+        assertThatException(() => future.exception(1)).hasType(`AcquireTimeoutException`);
     }
 }
 
@@ -83,6 +85,6 @@ shared class MapTests() {
     shared void timeout() {
         value iter = jobMap({ () => 123, () { Thread.sleep(10); } }, 1);
         assertEquals(iter.first, 123);
-        assertThatException(() => iter.last).hasType(`FutureTimeoutException`);
+        assertThatException(() => iter.last).hasType(`AcquireTimeoutException`);
     }
 }

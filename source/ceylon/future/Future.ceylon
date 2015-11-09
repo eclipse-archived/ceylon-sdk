@@ -1,14 +1,10 @@
 import ceylon.future.util {
-    TimeoutException
+    Latch,
+    AcquireTimeoutException
 }
 import ceylon.promise {
     Promise,
     ExecutionContext
-}
-
-import java.util.concurrent {
-    CountDownLatch,
-    TimeUnit
 }
 
 "Wraps a [[Promise]] that will be completed by another thread."
@@ -38,21 +34,7 @@ shared class Future<Value>(delegate)
      * New functionality
      */
     
-    value completion = CountDownLatch(1);
-    // CountDownLatch's timeout doesn't interpret values < 1 as infinite
-    void await(Integer timeout, String description) {
-        if (timeout > 0) {
-            if (completion.await(timeout, TimeUnit.\iMILLISECONDS)) {
-                return;
-            } else {
-                throw FutureTimeoutException {
-                    "``description`` timeout of ``timeout`` ms exeeded";
-                };
-            }
-        } else {
-            completion.await();
-        }
-    }
+    value completion = Latch();
     
     variable Boolean _done = false;
     "[[true]] if the [[delegate]] is completed."
@@ -65,27 +47,27 @@ shared class Future<Value>(delegate)
         void onFulfilled(Value val) {
             resultValue = val;
             _done = true;
-            completion.countDown();
+            completion.ratchet();
         }
         void onRejected(Throwable reason) {
             resultException = reason;
             _done = true;
-            completion.countDown();
+            completion.ratchet();
         }
     };
     
     "Get the fulfilled value of the [[delegate]]. Blocks until the [[delegate]]
      is completed."
-    throws (`class FutureTimeoutException`,
+    throws (`class AcquireTimeoutException`,
         "If [[timeout]] elapses before the [[delegate]] is completed")
     throws (`class Throwable`,
         "From the [[delegate]] if it is rejected")
     shared Value result(timeout = 0) {
         "The maximum milliseconds to allow before throwing a
-         [[FutureTimeoutException]]. Must be at least 1 to have effect."
+         [[AcquireTimeoutException]]. Must be at least 1 to have effect."
         Integer timeout;
         
-        await(timeout, "result()");
+        completion.wait(timeout);
         if (exists e = resultException) {
             throw e;
         } else {
@@ -97,24 +79,14 @@ shared class Future<Value>(delegate)
     
     "Get the rejected value of the [[delegate]], or [[null]] if not rejected.
      Blocks until the [[delegate]] is completed."
-    throws (`class FutureTimeoutException`,
+    throws (`class AcquireTimeoutException`,
         "If [[timeout]] elapses before the [[delegate]] is completed")
     shared Throwable? exception(timeout = 0) {
         "The maximum milliseconds to allow before throwing a
-         [[FutureTimeoutException]]. Must be at least 1 to have effect."
+         [[AcquireTimeoutException]]. Must be at least 1 to have effect."
         Integer timeout;
         
-        await(timeout, "exception()");
+        completion.wait(timeout);
         return resultException;
     }
-}
-
-"Thrown if a blocking call to [[Future]] did not complete before a defined
- timeout period elapsed."
-shared class FutureTimeoutException(description = null, cause = null)
-        extends TimeoutException(description, cause) {
-    "A description of the problem."
-    String? description;
-    "The underlying cause of this exception."
-    Throwable? cause;
 }
