@@ -16,17 +16,25 @@ shared class Latch(initalCount = 1) {
     shared Integer initalCount;
     assert (initalCount > 0);
     
-    variable Integer waiting = 0;
+    // Begin counters, counterMutex must be held!
     variable Integer count = initalCount;
+    "Adding reset exposes us to some rare issues with intereaved waits and
+     `count = 0` releases. To prevent this, track the waiters in cohorts. We
+     only need to keep track of the latest, the waiters will hold a reference
+     to their cohort throughout their wait call."
+    class Cohort() {
+        shared variable Integer waiting = 0;
+        shared Semaphore zeroSync = Semaphore(0);
+    }
+    variable Cohort currentCohort = Cohort();
+    // End counters
     
     value counterMutex = Semaphore(1);
-    value zeroSync = Semaphore(0);
     
     "Restore the internal [[ratchet]] counter to [[initalCount]]."
     shared void reset() {
         try (counterMutex) {
             count = initalCount;
-            // Do not change waiting
         }
     }
     
@@ -41,18 +49,8 @@ shared class Latch(initalCount = 1) {
                 count--;
             }
             if (count == 0) {
-                zeroSync.drop(waiting);
-                waiting = 0;
-            }
-        }
-    }
-    
-    void removeWaiting() {
-        try (counterMutex) {
-            // ratchet may have already reset waiting, but could also be here
-            // due to a timeout.
-            if (waiting > 0) {
-                waiting--;
+                currentCohort.zeroSync.drop(currentCohort.waiting);
+                currentCohort = Cohort();
             }
         }
     }
@@ -68,17 +66,21 @@ shared class Latch(initalCount = 1) {
         "If equal to 0, block until the internal counter is `0`. Otherwise wait
          for at most [[timeout]] milliseconds before throwing an exception."
         Integer timeout;
+        Cohort myCohort;
         try (counterMutex) {
+            myCohort = currentCohort;
             if (count == 0) {
                 return;
             } else {
-                waiting++;
+                myCohort.waiting++;
             }
         }
         try {
-            zeroSync.acquire(1, timeout);
+            myCohort.zeroSync.acquire(1, timeout);
         } finally {
-            removeWaiting();
+            try (counterMutex) {
+                myCohort.waiting--;
+            }
         }
     }
     
@@ -95,17 +97,21 @@ shared class Latch(initalCount = 1) {
          - return [[true]] if the counter became `0`.
          - return [[false]] if the counter did not become `0`"
         Integer timeout;
+        Cohort myCohort;
         try (counterMutex) {
+            myCohort = currentCohort;
             if (count == 0) {
                 return true;
             } else {
-                waiting++;
+                myCohort.waiting++;
             }
         }
         try {
-            return zeroSync.tryAcquire(1, timeout);
+            return myCohort.zeroSync.tryAcquire(1, timeout);
         } finally {
-            removeWaiting();
+            try (counterMutex) {
+                myCohort.waiting--;
+            }
         }
     }
 }
