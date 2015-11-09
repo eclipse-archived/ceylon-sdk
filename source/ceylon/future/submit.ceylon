@@ -1,3 +1,6 @@
+import ceylon.future.util {
+    AcquireTimeoutException
+}
 import ceylon.promise {
     ExecutionContext,
     globalExecutionContext,
@@ -32,11 +35,13 @@ shared Future<Value> submit<Value>(job, context = globalExecutionContext) {
 
 "Eagerly [[submit]]s all of the [[jobs]], and returns an [[Iterator]] to
  lazily obtain the results."
+throws (`class AcquireTimeoutException`,
+    "From the iterator if [[timeout]] elapses before the a job is completed")
 shared {Value*} jobMap<Value>(jobs, timeout = 0, context = globalExecutionContext) {
     "Jobs to get the [[Future.result]]s of."
     {Value()*} jobs;
     "The maximum milliseconds to allow for the retrieval of each job before
-     throwing a [[FutureTimeoutException]]. Must be at least 1 to have effect."
+     throwing a [[AcquireTimeoutException]]. Must be at least 1 to have effect."
     Integer timeout;
     "The context to execute the jobs in."
     ExecutionContext context;

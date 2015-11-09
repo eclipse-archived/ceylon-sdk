@@ -1,3 +1,14 @@
+"Allows one or more threads to be held as waiters until a [[certain number of
+ calls|initalCount]] to [[ratchet]] have been made. Once the internal counter
+ becomes zero, all waiters are released and any new waiters will not block.
+ 
+ The latch is resettable, which will cause (after the [[reset]] call returns)
+ all new threads to wait again, until [[the same number of calls|initalCount]]
+ to [[ratchet]] have been made again.
+ 
+ Supports multiple waiting styles, aligned with [[Semaphore]]'s acquisition
+ styles."
+aliased ("Event")
 shared class Latch(initalCount = 1) {
     "The number of times [[ratchet]] has to be called before all calls to
      [[wait]]/[[tryWait]] cease to block. Calling [[reset]] will restore the
