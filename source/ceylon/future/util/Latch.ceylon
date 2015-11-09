@@ -47,10 +47,10 @@ shared class Latch(initalCount = 1) {
         try (counterMutex) {
             if (count > 0) {
                 count--;
-            }
-            if (count == 0) {
-                currentCohort.zeroSync.drop(currentCohort.waiting);
-                currentCohort = Cohort();
+                if (count == 0) {
+                    currentCohort.zeroSync.drop(currentCohort.waiting);
+                    currentCohort = Cohort();
+                }
             }
         }
     }
@@ -68,10 +68,10 @@ shared class Latch(initalCount = 1) {
         Integer timeout;
         Cohort myCohort;
         try (counterMutex) {
-            myCohort = currentCohort;
             if (count == 0) {
                 return;
             } else {
+                myCohort = currentCohort;
                 myCohort.waiting++;
             }
         }
@@ -99,10 +99,10 @@ shared class Latch(initalCount = 1) {
         Integer timeout;
         Cohort myCohort;
         try (counterMutex) {
-            myCohort = currentCohort;
             if (count == 0) {
                 return true;
             } else {
+                myCohort = currentCohort;
                 myCohort.waiting++;
             }
         }
