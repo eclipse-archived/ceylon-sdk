@@ -1,5 +1,6 @@
 import java.lang {
-    JavaInterruptedException=InterruptedException
+    JavaInterruptedException=InterruptedException,
+    Thread
 }
 import java.util.concurrent {
     JavaSemaphore=Semaphore,
@@ -57,6 +58,7 @@ shared class Semaphore(permits, fair = false, defaultTimeout = 0)
                 }
             }
         } catch (JavaInterruptedException e) {
+            Thread.currentThread().interrupt();
             throw InterruptedException("Interrupted during acquire", e);
         }
     }
@@ -86,6 +88,7 @@ shared class Semaphore(permits, fair = false, defaultTimeout = 0)
             try {
                 return provider.tryAcquire(permits, timeout, ms);
             } catch (JavaInterruptedException e) {
+                Thread.currentThread().interrupt();
                 throw InterruptedException("Interrupted during tryAcquire", e);
             }
         }

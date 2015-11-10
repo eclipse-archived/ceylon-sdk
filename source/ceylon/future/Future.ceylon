@@ -7,7 +7,8 @@ import ceylon.promise {
     ExecutionContext
 }
 
-"Wraps a [[Promise]] that will be completed by another thread."
+"Extend a [[Promise]] to provide a blocking API for obtaining the resolvable
+ value."
 see (`function submit`)
 shared class Future<Value>(delegate)
         extends Promise<Value>() {

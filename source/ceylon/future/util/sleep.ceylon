@@ -13,6 +13,7 @@ shared void sleep(time) {
     try {
         Thread.sleep(time);
     } catch (JavaInterruptedException e) {
+        Thread.currentThread().interrupt();
         throw InterruptedException("Interrupted during ``time`` ms sleep", e);
     }
 }
