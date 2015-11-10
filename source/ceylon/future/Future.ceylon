@@ -1,6 +1,7 @@
 import ceylon.future.util {
     Latch,
-    AcquireTimeoutException
+    AcquireTimeoutException,
+    AtomicReference
 }
 import ceylon.promise {
     Promise,
@@ -37,9 +38,9 @@ shared class Future<Value>(delegate)
     
     value completion = Latch();
     
-    variable Boolean _done = false;
+    variable value _done = AtomicReference<Boolean>(false);
     "[[true]] if the [[delegate]] is completed."
-    shared Boolean done => _done;
+    shared Boolean done => _done.current;
     
     variable Value? resultValue = null;
     variable Throwable? resultException = null;
@@ -47,12 +48,12 @@ shared class Future<Value>(delegate)
     delegate.completed {
         void onFulfilled(Value val) {
             resultValue = val;
-            _done = true;
+            _done.current = true;
             completion.ratchet();
         }
         void onRejected(Throwable reason) {
             resultException = reason;
-            _done = true;
+            _done.current = true;
             completion.ratchet();
         }
     };
