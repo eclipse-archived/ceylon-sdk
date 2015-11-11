@@ -1,4 +1,4 @@
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer
 }
 import ceylon.net.http.server {

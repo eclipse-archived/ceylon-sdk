@@ -2,7 +2,7 @@
 import java.nio {
     JByteBuffer=ByteBuffer
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     newByteBuffer,
     ByteBuffer,
     newByteBufferWithData

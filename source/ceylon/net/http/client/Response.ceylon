@@ -1,16 +1,18 @@
 import ceylon.io {
     FileDescriptor
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer,
     newByteBuffer
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ascii,
     getCharset
 }
+import ceylon.buffer.readers {
+    Reader
+}
 import ceylon.io.readers {
-    Reader,
     FileDescriptorReader
 }
 import ceylon.net.http {

@@ -33,7 +33,7 @@ import ceylon.net.http {
     postMethod=post,
     contentType
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     utf8
 }
 

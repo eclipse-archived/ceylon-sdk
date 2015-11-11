@@ -1,6 +1,6 @@
 import ceylon.file { Path, File, parsePath }
 import ceylon.io { OpenFile, newOpenFile }
-import ceylon.io.charset { stringToByteProducer, utf8 }
+import ceylon.buffer.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { Status, 
@@ -24,8 +24,7 @@ import ceylon.html {
 import ceylon.html.serializer {
     NodeSerializer
 }
-import ceylon.io.buffer { newByteBuffer, ByteBuffer,
-    newByteBufferWithData }
+import ceylon.buffer { newByteBuffer, ByteBuffer }
 import test.ceylon.net.multipartclient {
     MultipartRequest,
     FilePart

@@ -5,13 +5,13 @@ import ceylon.collection {
 import ceylon.interop.java {
     javaByteArray
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer
 }
 import ceylon.io {
     OpenFile
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     Charset,
     getCharset
 }

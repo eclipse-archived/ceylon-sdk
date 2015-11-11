@@ -6,11 +6,11 @@ import ceylon.collection {
 import ceylon.io {
     FileDescriptor
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     newByteBuffer,
     ByteBuffer
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ascii
 }
 import ceylon.io.readers {

@@ -15,7 +15,7 @@ import io.undertow.websockets.core {
 import java.nio {
     JByteBuffer=ByteBuffer
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     utf8
 }
 import ceylon.language.meta.model {

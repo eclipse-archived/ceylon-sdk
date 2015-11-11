@@ -7,7 +7,7 @@ import ceylon.io {
     SocketAddress,
     newSslSocketConnector
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ascii,
     Charset,
     utf8
@@ -25,7 +25,7 @@ import ceylon.net.uri {
     Uri,
     Parameter
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer,
     newByteBuffer
 }
