@@ -1,7 +1,7 @@
-import ceylon.io.buffer {
-    newByteBuffer,
+import ceylon.buffer {
     ByteBuffer,
-    CharacterBuffer
+    CharacterBuffer,
+    newByteBuffer
 }
 
 "Represents a UTF-8 character set as defined by

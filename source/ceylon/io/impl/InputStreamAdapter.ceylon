@@ -1,8 +1,8 @@
+import ceylon.buffer {
+    ByteBuffer
+}
 import ceylon.io {
     ReadableFileDescriptor
-}
-import ceylon.io.buffer {
-    ByteBuffer
 }
 
 import java.io {

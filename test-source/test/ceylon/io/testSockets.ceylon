@@ -6,10 +6,10 @@ import ceylon.io {
     SocketAddress,
     newSslSocketConnector
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     ...
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ...
 }
 import ceylon.net.uri {

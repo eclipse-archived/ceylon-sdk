@@ -1,6 +1,6 @@
-import ceylon.io.buffer {
-    ByteBuffer,
-    newByteBuffer
+import ceylon.buffer {
+    newByteBuffer,
+    ByteBuffer
 }
 
 "Encode the given [[input]] using the Basic type base64 

@@ -1,6 +1,12 @@
 import ceylon.test { assertEquals, test }
 
-import ceylon.io.buffer { newByteBuffer, ByteBuffer, Buffer, newCharacterBufferWithData, CharacterBuffer }
+import ceylon.buffer {
+    newByteBuffer,
+    ByteBuffer,
+    newCharacterBufferWithData,
+    CharacterBuffer,
+    Buffer
+}
 
 void testBuffer<T>(Buffer<T> buffer, T[] values) given T satisfies Object {
     // check initial state

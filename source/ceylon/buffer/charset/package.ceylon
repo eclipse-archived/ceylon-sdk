@@ -21,4 +21,4 @@
      }
  "
 by("Stéphane Épardaud")
-shared package ceylon.io.charset;
+shared package ceylon.buffer.charset;

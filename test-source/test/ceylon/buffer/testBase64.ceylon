@@ -1,8 +1,8 @@
-import ceylon.io.base64 {
+import ceylon.buffer.base64 {
     encode,
     decode
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     utf8,
     Charset,
     ascii,

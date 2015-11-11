@@ -1,8 +1,8 @@
-import ceylon.io.buffer {
-    ByteBuffer,
-    newByteBuffer
+import ceylon.buffer {
+    newByteBuffer,
+    ByteBuffer
 }
-import ceylon.io.buffer.impl {
+import ceylon.buffer.impl {
     readArray=readByteArray
 }
 

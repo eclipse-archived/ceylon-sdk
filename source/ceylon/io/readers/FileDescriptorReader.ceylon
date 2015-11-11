@@ -1,8 +1,11 @@
+import ceylon.buffer {
+    ByteBuffer
+}
+import ceylon.buffer.readers {
+    Reader
+}
 import ceylon.io {
     FileDescriptor
-}
-import ceylon.io.buffer {
-    ByteBuffer
 }
 
 "Reader that can read from a [[FileDescriptor]].

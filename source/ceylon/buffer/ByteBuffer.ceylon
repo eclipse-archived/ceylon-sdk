@@ -1,4 +1,4 @@
-import ceylon.io.buffer.impl {
+import ceylon.buffer.impl {
     ByteBufferImpl
 }
 

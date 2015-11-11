@@ -1,11 +1,8 @@
-import ceylon.io {
-    SslSocket
-}
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer
 }
-import ceylon.io.buffer.impl {
-    ByteBufferImpl
+import ceylon.io {
+    SslSocket
 }
 
 import java.lang {
@@ -98,7 +95,7 @@ class SslSocketImpl(SocketChannel socket)
     writeNetBuf = allocateJavaByteBuffer(packetBufferSize);
     
     shared actual Integer write(ByteBuffer contents) {
-        assert(is ByteBufferImpl contents);
+        assert(is JavaByteBuffer impl = contents.implementation);
         // nothing to write
         if(!contents.hasAvailable) {
             return 0;
@@ -109,7 +106,7 @@ class SslSocketImpl(SocketChannel socket)
         }
         
         while(contents.hasAvailable) {
-            SSLEngineResult result = sslEngine.wrap(contents.underlyingBuffer, writeNetBuf);
+            SSLEngineResult result = sslEngine.wrap(impl, writeNetBuf);
             value status = result.status;
             if(status == SSLEngineResult.Status.\iBUFFER_OVERFLOW) {
                 // not enough space in the net buffer
@@ -203,7 +200,7 @@ class SslSocketImpl(SocketChannel socket)
     shared DataNeeds readForHandshake() => checkForHandshake();
 
     shared actual Integer read(ByteBuffer contents) {
-        assert(is ByteBufferImpl contents);
+        assert(is JavaByteBuffer impl = contents.implementation);
         
         // no place left?
         if(!contents.hasAvailable) {
@@ -289,10 +286,11 @@ class SslSocketImpl(SocketChannel socket)
         }
     }
 
-    Integer putAppData(ByteBufferImpl contents) {
+    Integer putAppData(ByteBuffer contents) {
+        assert(is JavaByteBuffer impl = contents.implementation);
         Integer transfer = min{contents.available, readAppBuf.remaining()};
         debug("Transferring ``transfer`` bytes to user buffer from app buffer position ``readAppBuf.position()``");
-        contents.underlyingBuffer.put(readAppBuf.array(), readAppBuf.position(), transfer);
+        impl.put(readAppBuf.array(), readAppBuf.position(), transfer);
         // advance the app buf by as much
         readAppBuf.position(readAppBuf.position()+transfer);
         debug("New app buffer position: ``readAppBuf.position()``");

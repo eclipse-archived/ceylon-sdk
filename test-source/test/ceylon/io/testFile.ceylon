@@ -9,10 +9,10 @@ import ceylon.io {
     newOpenFile,
     OpenFile
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     utf8,
     stringToByteProducer
 }

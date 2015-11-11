@@ -1,7 +1,7 @@
-import ceylon.io.buffer {
-    newByteBuffer,
+import ceylon.buffer {
     ByteBuffer,
     CharacterBuffer,
+    newByteBuffer,
     newCharacterBufferWithData
 }
 

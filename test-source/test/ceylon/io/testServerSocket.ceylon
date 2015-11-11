@@ -1,7 +1,7 @@
 import ceylon.io {
     newServerSocket
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     byteConsumerToStringConsumer,
     stringToByteProducer,
     ascii

@@ -1,8 +1,4 @@
-import ceylon.io.buffer {
-    newCharacterBufferWithData,
-    newByteBuffer
-}
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ascii,
     Charset,
     iso_8859_1,
@@ -12,6 +8,10 @@ import ceylon.io.charset {
 import ceylon.test {
     assertEquals,
     test
+}
+import ceylon.buffer {
+    newByteBuffer,
+    newCharacterBufferWithData
 }
 
 test void testASCIIEncoder(){

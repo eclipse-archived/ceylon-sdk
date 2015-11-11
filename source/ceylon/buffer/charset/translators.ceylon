@@ -1,9 +1,9 @@
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer,
-    newCharacterBufferWithData,
-    CharacterBuffer
+    CharacterBuffer,
+    newCharacterBufferWithData
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     Charset
 }
 

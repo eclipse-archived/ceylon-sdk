@@ -11,6 +11,7 @@ by("Stéphane Épardaud")
 license("Apache Software License")
 native("jvm")
 module ceylon.io "1.2.1" {
+    shared import ceylon.buffer "1.2.1";
     shared import ceylon.file "1.2.1";
     import ceylon.collection "1.2.1";
     import java.base "7";

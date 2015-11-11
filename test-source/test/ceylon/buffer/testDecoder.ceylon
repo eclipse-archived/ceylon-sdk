@@ -1,6 +1,10 @@
 import ceylon.test { assertEquals, test }
-import ceylon.io.buffer { newByteBuffer, newByteBufferWithData }
-import ceylon.io.charset { Charset, utf8, utf16, iso_8859_1 }
+
+import ceylon.buffer.charset { Charset, utf8, utf16, iso_8859_1 }
+import ceylon.buffer {
+    newByteBuffer,
+    newByteBufferWithData
+}
 
 void testDecoder(Charset charset, String expected, Integer* bytes){
     // we put it in a buffer of 2 so we can test multiple calls to decode
