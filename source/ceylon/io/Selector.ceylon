@@ -82,11 +82,13 @@ shared sealed interface Selector {
     "Registers a `connect` listener on the given 
      [[SocketConnector]]. The given [[callback function|connect]] 
      will be invoked by [[process]] as soon as the given 
-     [[socketConnector]] can be connected without blocking.
+     [[socketConnector]] can be connected without blocking. 
+     If [[callback function|failureCallback]] is given, it 
+     is called if the connection attempt fails.
      
-     The callback function will only be invoked at most once."
-    shared formal void addConnectListener(SocketConnector socketConnector, 
-        void connect(Socket s));
+     Only either callback function will be invoked, exactly once."
+    shared formal void addConnectListener(SocketConnector socketConnector,
+        void connect(Socket s), Anything(Exception)? failureCallback = null);
 
     "Registers an `accept` listener on the given 
      [[ServerSocket]]. The given [[callback function|accept]] 
