@@ -41,8 +41,8 @@ test void testASCIIEncoder(){
 void testEncoder(Charset charset, String string, Integer* bytes) {
     value encoded = charset.encode(string);
     value sequence = { for (i in bytes) i.byte }.sequence();
-    assertEquals(0, encoded.position, "Position not zero for encoding of ``string``");
-    assertEquals(sequence, encoded.sequence(), "Encoding of ``string``");
+    assertEquals(encoded.position, 0, "Position not zero for encoding of ``string``");
+    assertEquals(encoded.sequence(), sequence, "Encoding of ``string``");
 }
 
 test void testFullASCIIEncoder(){
