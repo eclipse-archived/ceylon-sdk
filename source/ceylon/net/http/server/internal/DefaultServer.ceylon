@@ -1,89 +1,37 @@
 import ceylon.collection {
-    MutableList,
-    LinkedList
+	MutableList,
+	LinkedList
 }
 import ceylon.io {
-    SocketAddress
+	SocketAddress
 }
 import ceylon.net.http.server {
-    Server,
-    Options,
-    Status,
-    starting,
-    started,
-    stopping,
-    stopped,
-    InternalException,
-    HttpEndpoint
+	Server,
+	Options,
+	Status,
+	starting,
+	started,
+	stopping,
+	stopped,
+	InternalException,
+	HttpEndpoint
 }
 import ceylon.net.http.server.internal.websocket {
-    CeylonWebSocketHandler,
-    WebSocketProtocolHandshakeHandler
+	CeylonWebSocketHandler,
+	WebSocketProtocolHandshakeHandler
 }
 import ceylon.net.http.server.websocket {
-    WebSocketBaseEndpoint
+	WebSocketBaseEndpoint
 }
 
 import io.undertow {
-    UndertowOptions {
-        utBufferPipelinedData=BUFFER_PIPELINED_DATA
-    }
+	UndertowOptions {
+		utBufferPipelinedData=\iBUFFER_PIPELINED_DATA
+	}
 }
 import io.undertow.server {
-    HttpHandler
-}
-import io.undertow.server.handlers.error {
-    SimpleErrorPageHandler
-}
-import io.undertow.server.protocol.http {
-    HttpOpenListener
-}
-import io.undertow.server.session {
-    InMemorySessionManager,
-    SessionAttachmentHandler,
-    SessionCookieConfig
-}
-
-import java.lang {
-    JInt=Integer,
-    Runtime {
-        jRuntime=runtime
-    },
-    JThread=Thread,
-    JRunnable=Runnable
-}
-import java.net {
-    InetSocketAddress
-}
-
-import org.xnio.nio {
-    NioXnioProvider {
-        xnioInstance = instance
-    }
-}
-
-import org.xnio {
-    XnioWorker,
-    OptionMap {
-        omBuilder=builder
-    },
-    XnioOptions=Options {
-        xnioWorkerIoThreads=WORKER_IO_THREADS,
-        xnioConnectionLowWatter=CONNECTION_LOW_WATER,
-        xnioConnectionHighWatter=CONNECTION_HIGH_WATER,
-        xnioWorkerTaskCoreThreads=WORKER_TASK_CORE_THREADS,
-        xnioWorkerTaskMaxThreads=WORKER_TASK_MAX_THREADS,
-        xnioTcpNoDelay=TCP_NODELAY,
-        xnioReuseAddress=REUSE_ADDRESSES,
-        xnioCork=CORK
-    },
-    ByteBufferSlicePool,
-    BufferAllocator {
-        directByteBufferAllocator=DIRECT_BYTE_BUFFER_ALLOCATOR
-    },
-    ChannelListeners {
-        clOpenListenerAdapter=openListenerAdapter
-    }
+	HttpHandler,
+	XnioByteBufferPool
 }
 import io.undertow.server.handlers.encoding {
 	ContentEncodingRepository,
@@ -91,8 +39,58 @@ import io.undertow.server.handlers.encoding {
 	DeflateEncodingProvider,
 	GzipEncodingProvider
 }
-import io.undertow.predicate {
-	Predicate
+import io.undertow.server.handlers.error {
+	SimpleErrorPageHandler
+}
+import io.undertow.server.protocol.http {
+	HttpOpenListener
+}
+import io.undertow.server.session {
+	InMemorySessionManager,
+	SessionAttachmentHandler,
+	SessionCookieConfig
+}
+
+import java.lang {
+	JInt=Integer,
+	Runtime {
+		jRuntime=runtime
+	},
+	JThread=Thread,
+	JRunnable=Runnable
+}
+import java.net {
+	InetSocketAddress
+}
+
+import org.xnio {
+	XnioWorker,
+	OptionMap {
+		omBuilder=builder
+	},
+	XnioOptions=Options {
+		xnioWorkerIoThreads=\iWORKER_IO_THREADS,
+		xnioConnectionLowWatter=\iCONNECTION_LOW_WATER,
+		xnioConnectionHighWatter=\iCONNECTION_HIGH_WATER,
+		xnioWorkerTaskCoreThreads=\iWORKER_TASK_CORE_THREADS,
+		xnioWorkerTaskMaxThreads=\iWORKER_TASK_MAX_THREADS,
+		xnioTcpNoDelay=\iTCP_NODELAY,
+		xnioReuseAddress=\iREUSE_ADDRESSES,
+		xnioCork=\iCORK
+	},
+	ByteBufferSlicePool,
+	BufferAllocator {
+		directByteBufferAllocator=\iDIRECT_BYTE_BUFFER_ALLOCATOR
+	},
+	ChannelListeners {
+		clOpenListenerAdapter=openListenerAdapter
+	}
+}
+import org.xnio.nio {
+	NioXnioProvider
+}
+import io.undertow.connector {
+	ByteBufferPool
 }
 
 by("Matej Lazar")
@@ -143,14 +141,14 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         notifyListeners(starting);
         //TODO log
         print("Starting on ``socketAddress.address``:``socketAddress.port``");
-        value ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
-
-        HttpOpenListener openListener = HttpOpenListener(
-            ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 
-            omBuilder().set(utBufferPipelinedData,false).map,
-            8192);
+        HttpOpenListener openListener 
+                = HttpOpenListener(
+            		XnioByteBufferPool(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192)), 
+            		omBuilder().set(utBufferPipelinedData,false).map);
         
-        openListener.rootHandler = getHandlers(options, ceylonRequestHandler);
+        openListener.rootHandler 
+                = getHandlers(options, 
+            			CeylonRequestHandler(options, httpEndpoints));
         
         OptionMap workerOptions = omBuilder()
                 .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))
