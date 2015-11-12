@@ -29,6 +29,44 @@ shared native class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer()
     shared actual native void resize(Integer newSize, Boolean growLimit);
 }
 
+void resizeByteBuffer(newSize, growLimit, current, intoNew) {
+    Integer newSize;
+    Boolean growLimit;
+    ByteBuffer current;
+    Anything() intoNew;
+    
+    if (newSize == current.capacity) {
+        return;
+    }
+    if (newSize < 0) {
+        // FIXME: type
+        throw;
+    }
+    // save our position and limit
+    value position = smallest(current.position, newSize);
+    Integer limit;
+    if (newSize < current.capacity) {
+        // shrink the limit
+        limit = smallest(current.limit, newSize);
+    } else if (growLimit && current.limit==current.capacity) {
+        // grow the limit if it was the max and we want that
+        limit = newSize;
+    } else {
+        // keep it if it was less than max
+        limit = current.limit;
+    }
+    // copy everything unless we shrink
+    value copyUntil = smallest(current.capacity, newSize);
+    // prepare our limits for copying
+    current.position = 0;
+    current.limit = copyUntil;
+    // copy and change buffer implementation
+    intoNew();
+    // now restore positions
+    current.limit = limit;
+    current.position = position;
+}
+
 shared native ("js") class ByteBufferImpl(Integer initialCapacity) extends ByteBuffer() {
     variable Array<Byte> buf = Array.ofSize(initialCapacity, 0.byte);
     
@@ -83,41 +121,18 @@ shared native ("js") class ByteBufferImpl(Integer initialCapacity) extends ByteB
     }
     
     shared actual native ("js") void resize(Integer newSize, Boolean growLimit) {
-        if (newSize == capacity) {
-            return;
-        }
-        if (newSize < 0) {
-            // FIXME: type
-            throw;
-        }
-        value dest = Array.ofSize(newSize, 0.byte);
-        // save our position and limit
-        value position = smallest(this.position, newSize);
-        Integer limit;
-        if (newSize < capacity) {
-            // shrink the limit
-            limit = smallest(this.limit, newSize);
-        } else if (growLimit && this.limit==capacity) {
-            // grow the limit if it was the max and we want that
-            limit = newSize;
-        } else {
-            // keep it if it was less than max
-            limit = this.limit;
-        }
-        // copy everything unless we shrink
-        value copyUntil = smallest(this.capacity, newSize);
-        // prepare our limits for copying
-        this.position = 0;
-        this.limit = copyUntil;
-        // copy
-        while (this.hasAvailable) {
-            dest.set(this.position, this.get());
-        }
-        // change buffer
-        buf = dest;
-        // now restore positions
-        this.limit = limit;
-        this.position = position;
+        resizeByteBuffer {
+            newSize = newSize;
+            growLimit = growLimit;
+            current = this;
+            intoNew = () {
+                // copy
+                value dest = Array.ofSize(newSize, 0.byte);
+                buf.copyTo(dest, 0, 0, this.available);
+                // change buffer
+                buf = dest;
+            };
+        };
     }
     
     shared actual native ("js") Object? implementation => buf;
@@ -127,7 +142,6 @@ shared native ("jvm") class ByteBufferImpl(Integer initialCapacity)
         extends ByteBuffer() {
     
     variable JavaByteBuffer buf = allocateJavaByteBuffer(initialCapacity);
-    JavaByteBuffer underlyingBuffer => buf;
     
     shared actual native ("jvm") Integer capacity => buf.capacity();
     
@@ -147,39 +161,18 @@ shared native ("jvm") class ByteBufferImpl(Integer initialCapacity)
     shared actual native ("jvm") void flip() => buf.flip();
     
     shared actual native ("jvm") void resize(Integer newSize, Boolean growLimit) {
-        if (newSize == capacity) {
-            return;
-        }
-        if (newSize < 0) {
-            // FIXME: type
-            throw;
-        }
-        JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
-        // save our position and limit
-        value position = smallest(this.position, newSize);
-        Integer limit;
-        if (newSize < capacity) {
-            // shrink the limit
-            limit = smallest(this.limit, newSize);
-        } else if (growLimit && this.limit==capacity) {
-            // grow the limit if it was the max and we want that
-            limit = newSize;
-        } else {
-            // keep it if it was less than max
-            limit = this.limit;
-        }
-        // copy everything unless we shrink
-        value copyUntil = smallest(this.capacity, newSize);
-        // prepare our limits for copying
-        buf.position(0);
-        buf.limit(copyUntil);
-        // copy
-        dest.put(buf);
-        // change buffer
-        buf = dest;
-        // now restore positions
-        buf.limit(limit);
-        buf.position(position);
+        resizeByteBuffer {
+            newSize = newSize;
+            growLimit = growLimit;
+            current = this;
+            intoNew = () {
+                // copy
+                JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
+                dest.put(buf);
+                // change buffer
+                buf = dest;
+            };
+        };
     }
     
     //shared actual Array<Byte> bytes() {
@@ -189,7 +182,7 @@ shared native ("jvm") class ByteBufferImpl(Integer initialCapacity)
     //    return toByteArray(buf.array());
     //}
     
-    shared actual native ("jvm") Object? implementation => underlyingBuffer;
+    shared actual native ("jvm") Object? implementation => buf;
 }
 shared native Integer readByteArray(Array<Byte> array, Reader reader);
 shared native ("js") Integer readByteArray(Array<Byte> array, Reader reader) {
