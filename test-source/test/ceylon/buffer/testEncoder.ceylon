@@ -38,15 +38,11 @@ test void testASCIIEncoder(){
     assertEquals('d'.integer.byte, output.get());
 }
 
-void testEncoder(Charset charset, String string, Integer* bytes){
+void testEncoder(Charset charset, String string, Integer* bytes) {
     value encoded = charset.encode(string);
-    value sequence = bytes.sequence();
-    assertEquals(0, encoded.position);
-    assertEquals(sequence.size, encoded.limit);
-    for(Integer byte in sequence){
-        assertEquals(byte.byte, encoded.get());
-    }
-    print("Encoded ``string`` OK");
+    value sequence = { for (i in bytes) i.byte }.sequence();
+    assertEquals(0, encoded.position, "Position not zero for encoding of ``string``");
+    assertEquals(sequence, encoded.sequence(), "Encoding of ``string``");
 }
 
 test void testFullASCIIEncoder(){
