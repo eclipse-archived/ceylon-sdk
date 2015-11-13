@@ -96,13 +96,15 @@ class ConcreteFile(JPath jpath)
             => getAttribute(jpath, attributeName(attribute));
     
     writeAttribute(Attribute attribute, Object attributeValue)
-            => setAttribute(jpath, attributeName(attribute), attributeValue);
+            => setAttribute(jpath, attributeName(attribute), 
+                                   attributeValue);
     
     shared actual Integer lastModifiedMilliseconds {
         return getLastModifiedTime(jpath).toMillis();
     }
     assign lastModifiedMilliseconds {
-        setLastModifiedTime(jpath, fromMillis(lastModifiedMilliseconds));
+        value fileTime = fromMillis(lastModifiedMilliseconds);
+        setLastModifiedTime(jpath, fileTime);
     }
     
     name => jpath.fileName.string;
@@ -139,14 +141,18 @@ class ConcreteFile(JPath jpath)
         setOwner(jpath, jprincipal(jpath,owner));
     }
     
-    shared actual class Reader(String? encoding) 
-            extends super.Reader(encoding) {
+    shared actual class Reader(String? encoding,
+            Integer bufferSize) 
+            extends super.Reader(encoding, bufferSize) {
         value charset = parseCharset(encoding);
         
         value stream = newInputStream(jpath); 
         
-        value reader = BufferedReader(InputStreamReader(stream, 
-            charset.newDecoder()));
+        value reader = 
+                BufferedReader(
+                    InputStreamReader(stream, 
+                        charset.newDecoder()), 
+                    bufferSize);
         
         close() => reader.close();
         
@@ -155,24 +161,28 @@ class ConcreteFile(JPath jpath)
         shared actual Byte[] readBytes(Integer max) {
             value byteArray = ByteArray(max);
             value size = stream.read(byteArray);
-            if (size==max) {
-                return sequence(byteArray.byteArray) else [];
-            }
-            else {
-                return [ for (b in byteArray.iterable) b ];
-            }
+            return 
+                if (size==max) 
+                then (sequence(byteArray.byteArray) else []) 
+                else [ for (b in byteArray.iterable) b ];
         }
         
     }
     
-    shared actual class Overwriter(String? encoding) 
-            extends super.Overwriter(encoding) {
+    shared actual class Overwriter(String? encoding, 
+            Integer bufferSize) 
+            extends super.Overwriter(encoding, bufferSize) {
         value charset = parseCharset(encoding);
         
-        value stream = newOutputStream(jpath, \iWRITE, \iTRUNCATE_EXISTING);
+        value stream = 
+                newOutputStream(jpath, \iWRITE, 
+                    \iTRUNCATE_EXISTING);
         
-        value writer = BufferedWriter(OutputStreamWriter(stream, 
-            charset.newEncoder()));
+        value writer = 
+                BufferedWriter(
+                    OutputStreamWriter(stream, 
+                        charset.newEncoder()),
+                    bufferSize);
         
         close() => writer.close();
         
@@ -196,14 +206,19 @@ class ConcreteFile(JPath jpath)
                 
     }
     
-    shared actual class Appender(String? encoding) 
-            extends super.Appender(encoding) {
+    shared actual class Appender(String? encoding, 
+            Integer bufferSize) 
+            extends super.Appender(encoding, bufferSize) {
         value charset = parseCharset(encoding);
         
-        value stream = newOutputStream(jpath, \iWRITE, \iAPPEND);
+        value stream = 
+                newOutputStream(jpath, \iWRITE, \iAPPEND);
         
-        value writer = BufferedWriter(OutputStreamWriter(stream, 
-            charset.newEncoder()));
+        value writer = 
+                BufferedWriter(
+                    OutputStreamWriter(stream, 
+                        charset.newEncoder()),
+                    bufferSize);
         
         close() => writer.close();
         
