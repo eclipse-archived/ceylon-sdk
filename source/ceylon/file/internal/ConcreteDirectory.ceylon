@@ -22,7 +22,7 @@ import java.nio.file {
 class ConcreteDirectory(JPath jpath)
         satisfies Directory {
     
-    shared actual Iterable<Path> childPaths(String filter) {
+    shared actual {Path*} childPaths(String filter) {
         //TODO: efficient impl
         value sb = ArrayList<Path>();
         value stream = newDirectoryStream(jpath, filter);
@@ -34,7 +34,7 @@ class ConcreteDirectory(JPath jpath)
         return sb.sequence();
     }
     
-    path =>  ConcretePath(jpath); 
+    path => ConcretePath(jpath); 
     
     linkedResource => this;
     
@@ -67,12 +67,9 @@ class ConcreteDirectory(JPath jpath)
     
     string => jpath.string;
     
-    shared actual String owner {
-        return getOwner(jpath).name;
-    }
-    assign owner {
-        setOwner(jpath, jprincipal(jpath, owner));
-    }
+    shared actual String owner => getOwner(jpath).name;
+    
+    assign owner => setOwner(jpath, jprincipal(jpath, owner));
     
 }
 
