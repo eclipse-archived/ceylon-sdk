@@ -9,7 +9,9 @@ shared sealed class CharacterBuffer(String string)
         extends Buffer<Character>() {
     
     value array = Array.ofSize(string.size, '\{NULL}');
-    string.copyTo(array);
+    for (i->c in string.indexed) {
+        array.set(i, c);
+    }
     
     "The size of the given [[string]]."
     shared actual Integer capacity => string.size;
