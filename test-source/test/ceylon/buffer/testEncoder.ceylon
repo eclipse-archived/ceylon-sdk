@@ -61,6 +61,11 @@ test void testUTF8Encoder(){
     testEncoder(utf8, "한국어", #ED, #95, #9C, #EA, #B5, #AD, #EC, #96, #B4);
     testEncoder(utf8, "日本語", #E6, #97, #A5, #E6, #9C, #AC, #E8, #AA, #9E);
     testEncoder(utf8, "𣎴", #F0, #A3, #8E, #B4);
+    testEncoder(utf8, "𐀀", #f0, #90, #80, #80);
+    testEncoder(utf8, "𝄞", #f0, #9d, #84, #9e);
+    testEncoder(utf8, "􏿽", #f4, #8f, #bf, #bd);
+    testEncoder(utf8, "𐀀z􏿽", #f0, #90, #80, #80, #7a, #f4, #8f, #bf, #bd);
+    testEncoder(utf8, "𐀀􏿽􏿽", #f0, #90, #80, #80, #f4, #8f, #bf, #bd, #f4, #8f, #bf, #bd);
     testEncoder(utf8, "z水𐀀𝄞􏿽", #7a, #e6, #b0, #b4, #f0, #90, #80, #80, #f0, #9d, #84, #9e, #f4, #8f, #bf, #bd);
 }
 
