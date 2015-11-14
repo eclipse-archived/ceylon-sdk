@@ -2,9 +2,9 @@
  which represent open streams, such as files, sockets, or 
  pipes. You can read and write bytes from and to those 
  streams in synchronous or asynchronous mode, using 
- [[Buffer|ceylon.io.buffer::Buffer]] objects, and you can 
+ [[Buffer|ceylon.buffer::Buffer]] objects, and you can 
  convert bytes to [[String]] objects using 
- [[Charset|ceylon.io.charset::Charset]] objects.
+ [[Charset|ceylon.buffer.charset::Charset]] objects.
  
  Here's how you can get a [[Socket]] to a remote host in a 
  blocking way:
