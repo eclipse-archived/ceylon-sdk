@@ -2,7 +2,7 @@
 
     <property file="build.properties" />
     <property name="ceylon.verbosity" value="false"/>
-    <property name="ceylon.executable" value="${basedir}/../ceylon-dist/dist/bin/ceylon"/>
+    <property name="ceylon.executable" value="${basedir}/../ceylon/dist/dist/bin/ceylon"/>
     <property name="out.repo" location="${basedir}/modules"/>
     <property name="deps.repo" location="${basedir}/test-deps"/>
     <property name="test.repo" location="${basedir}/modules"/>
@@ -15,18 +15,18 @@
     
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${basedir}/../ceylon-dist/lib/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${basedir}/../ceylon/dist/lib/ant-contrib-1.0b3.jar"/>
         </classpath>
     </taskdef>
 
     <taskdef resource="taskdef.properties">
         <classpath>
-            <pathelement path="${basedir}/../ceylon-dist/osgi/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+            <pathelement path="${basedir}/../ceylon/dist/osgi/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
         </classpath>
     </taskdef>
 
     <taskdef resource="aQute/bnd/ant/taskdef.properties"
-          classpath="${basedir}/../ceylon-dist/lib/biz.aQute.bnd-2.3.0.jar"/>
+          classpath="${basedir}/../ceylon/dist/lib/biz.aQute.bnd-2.3.0.jar"/>
 
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
@@ -367,7 +367,7 @@
         <mkdir dir="${osgi.build}"/>
         <touch file="${osgi.build}/bundles.info"/>
         <makeurl property="bundlesInfoUrl" file="${osgi.build}/bundles.info"/>
-        <loadfile srcfile="${basedir}/../ceylon-dist/osgi/p2/bundlesToStart" property="bundlesToStart">
+        <loadfile srcfile="${basedir}/../ceylon/dist/osgi/p2/bundlesToStart" property="bundlesToStart">
           <filterchain>
               <striplinebreaks/>
           </filterchain>
