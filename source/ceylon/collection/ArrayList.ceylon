@@ -674,4 +674,14 @@ shared class ArrayList<Element>
         }; 
     }
     
+    "Reduce the capacity of the list to its current [[size]],
+     by allocating a new backing array."
+    shared void shrink() {
+        if (array.size>length) {
+            value newArray = store(length);
+            array.copyTo(newArray, 0, 0, length);
+            array = newArray;
+        }
+    }
+    
 }
