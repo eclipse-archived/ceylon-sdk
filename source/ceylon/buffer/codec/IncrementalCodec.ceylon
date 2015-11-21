@@ -1,73 +1,41 @@
 import ceylon.buffer {
     ByteBuffer,
     CharacterBuffer,
-    newByteBuffer
+    newByteBuffer,
+    Buffer
 }
 
-//shared class Accumulator<From, To>(chunkConverter, error = strict)
-//        given From of String | ByteBuffer
-//        given To of String | ByteBuffer {
-//    To(From) chunkConverter;
-//    ErrorStrategy error;
-//    
-//    shared formal void reset();
-//    
-//    shared formal void more(From chunk);
-//    
-//    shared formal To last(From? chunk = null);
-//}
-
-shared interface IncrementalCodec<EncodeForm, DecodeForm> {
-    //        given EncodeForm of CharacterBuffer | ByteBuffer
-    //        given DecodeForm of CharacterBuffer | ByteBuffer {
+shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
+    FromMutable, FromImmutable, FromSingle>
+        satisfies StatelessCodec<ToImmutable,ToSingle,FromImmutable,FromSingle>
+        given ToMutable satisfies Buffer<ToSingle>
+        given ToImmutable satisfies {ToSingle*}
+        given FromMutable satisfies Buffer<FromSingle>
+        given FromImmutable satisfies {FromSingle*} {
     
-    // TODO need somthing that allows passing in e.g. an existing ByteBuffer for reuse
-    //shared formal EncodeForm chunkEncoder(DecodeForm chunk);
-    //shared formal DecodeForm chunkDecoder(EncodeForm chunk);
+    // TODO return Integer?
+    shared formal void encodeInto(ToMutable into, {FromSingle*} input,
+        ErrorStrategy error = strict, Boolean grow = false);
     
-    shared formal void encodeInto(EncodeForm into, DecodeForm chunk);
-    shared formal void decodeInto(EncodeForm into, DecodeForm chunk);
+    // TODO return Integer?
+    shared formal void decodeInto(FromMutable into, {ToSingle*} input,
+        ErrorStrategy error = strict, Boolean grow = false);
     
-    shared formal Integer encodeBid(DecodeForm sample);
-    shared formal Integer decodeBid(EncodeForm sample);
-    
-    //shared formal EncodeForm encode(DecodeForm input, ErrorStrategy error)
-    //        => encoder(error).last(input);
-    //shared formal DecodeForm decode(EncodeForm input, ErrorStrategy error)
-    //        => decoder(error).last(input);
-    
-    //shared Accumulator<DecodeForm,EncodeForm> encoder(ErrorStrategy error = strict)
-    //        => Accumulator(encodeInto, error);
-    //shared Accumulator<EncodeForm,DecodeForm> decoder(ErrorStrategy error = strict)
-    //        => Accumulator((EncodeForm x) => decode(x, error));
+    shared formal Integer encodeBid({FromSingle*} sample);
+    shared formal Integer decodeBid({ToSingle*} sample);
 }
-
-
-// TODO forget about Stateless/IncrementalCodec interfaces for now, try to develop these three seperately then extract common later if possible
 
 // ex: compressors (gzip, etc.), ascii binary conversions (base64, base16, etc.)
-shared interface ByteToByte satisfies Codec {
-    shared Array<Byte> encode({Byte*} input, ErrorStrategy error = strict) {
-        return nothing;
-    }
-    
-    shared void encodeInto(ByteBuffer into, {Byte*} input, ErrorStrategy error = strict, Boolean grow = false) {
-    }
-    
-    shared Array<Byte> decode({Byte*} input, ErrorStrategy error = strict) {
-        return nothing;
-    }
-    
-    shared void decodeInto(ByteBuffer into, {Byte*} input, ErrorStrategy error = strict, Boolean grow = false) {
-    }
+shared interface ByteToByteCodec
+        satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,ByteBuffer,Array<Byte>,Byte> {
 }
 
 // this is also CharacterToByte
 // ex: charsets (utf8, etc.), ascii string representations (base64, base16, etc.)
-shared interface ByteToCharacter satisfies Codec {
-    //satisfies IncrementalCodec<ByteBuffer,CharacterBuffer> & // or String or StringBuilder?
-    //        StatelessCodec<ByteBuffer,String> {
-    shared Array<Byte> encode({Character*} input, ErrorStrategy error = strict) {
+shared interface ByteToCharacterCodec
+        satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,CharacterBuffer,String,Character> {
+    
+    shared actual Array<Byte> encode({Character*} input, ErrorStrategy error) {
         // TODO can we simplify ByteBuffer/ByteBufferImpl, so we don't need newByteBuffer?
         value buffer = newByteBuffer(input.size * averageForwardRatio);
         encodeInto {
@@ -75,23 +43,24 @@ shared interface ByteToCharacter satisfies Codec {
             input = input;
             grow = true;
         };
-        // TODO need to add array output to ByteBuffer
+        // TODO need to add array output to ByteBuffer, copy on write for efficency?
         return buffer.array;
     }
     
-    // TODO return how many bytes (or characters??) were able to be added to into?
-    shared void encodeInto(ByteBuffer into, {Character*} input, ErrorStrategy error = strict, Boolean grow = false) {
-        if (grow || input.size<=into.available) {
-            input.each(
-                void(Character character) {
-                }
-            );
-        } else {
-            // TODO have to stop early, so use for loop instead
-        }
-    }
+    // TODO leave encodeInto/decodeInto as formal (is that the smallest unit of functionality subtypes can implement)?
     
-    shared String decode({Byte*} input, ErrorStrategy error = strict) {
+    //shared actual void encodeInto(ByteBuffer into, {Character*} input, ErrorStrategy error, Boolean grow) {
+    //    if (grow || input.size<=into.available) {
+    //        input.each(
+    //            void(Character character) {
+    //            }
+    //        );
+    //    } else {
+    //        // TODO have to stop early, so use for loop instead
+    //    }
+    //}
+    
+    shared actual String decode({Byte*} input, ErrorStrategy error) {
         // TODO need to rewrite CharacterBuffer
         value buffer = CharacterBuffer(input.size / averageForwardRatio);
         decodeInto {
@@ -102,43 +71,19 @@ shared interface ByteToCharacter satisfies Codec {
         return buffer.string;
     }
     
-    shared void decodeInto(CharacterBuffer into, {Byte*} input, ErrorStrategy error = strict, Boolean grow = false) {
-        if (grow || input.size<=into.available) {
-            input.each(
-                void(Byte byte) {
-                }
-            );
-        } else {
-            // TODO have to stop early, so use for loop instead
-        }
-    }
-}
-
-void asd() {
-    ByteToCharacter c = nothing;
-    ByteBuffer bb = nothing;
-    CharacterBuffer cb = nothing;
-    c.encode(cb);
-    c.encode("");
-    c.decode(bb);
-    c.decode(Array { 1.byte });
+    //shared actual void decodeInto(CharacterBuffer into, {Byte*} input, ErrorStrategy error, Boolean grow) {
+    //    if (grow || input.size<=into.available) {
+    //        input.each(
+    //            void(Byte byte) {
+    //            }
+    //        );
+    //    } else {
+    //        // TODO have to stop early, so use for loop instead
+    //    }
+    //}
 }
 
 // ex: rot13
-shared interface CharacterToCharacter satisfies Codec {
-//        satisfies IncrementalCodec<CharacterBuffer,CharacterBuffer> &
-//                StatelessCodec<String,String> {
-    shared Array<Byte> encode({Character*} input, ErrorStrategy error = strict) {
-        return nothing;
-    }
-    
-    shared void encodeInto(CharacterBuffer into, {Character*} input, ErrorStrategy error = strict, Boolean grow = false) {
-    }
-    
-    shared Array<Byte> decode({Character*} input, ErrorStrategy error = strict) {
-        return nothing;
-    }
-    
-    shared void decodeInto(CharacterBuffer into, {Character*} input, ErrorStrategy error = strict, Boolean grow = false) {
-    }
+shared interface CharacterToCharacterCodec
+        satisfies IncrementalCodec<CharacterBuffer,String,Character,CharacterBuffer,String,Character> {
 }

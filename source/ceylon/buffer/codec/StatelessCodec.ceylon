@@ -1,16 +1,12 @@
-import ceylon.buffer {
-    ByteBuffer
-}
-
 shared abstract class ErrorStrategy() of strict | ignore {}
 shared object strict extends ErrorStrategy() {}
 shared object ignore extends ErrorStrategy() {}
 
-shared interface StatelessCodec<EncodeForm, DecodeForm>
-        satisfies Codec {
-//        given EncodeForm of String | ByteBuffer
-//        given DecodeForm of String | ByteBuffer {
+shared interface StatelessCodec<ToImmutable, ToSingle, FromImmutable, FromSingle>
+        satisfies Codec
+        given ToImmutable satisfies {ToSingle*}
+        given FromImmutable satisfies {FromSingle*} {
     
-    shared formal EncodeForm encode(DecodeForm input, ErrorStrategy error = strict);
-    shared formal DecodeForm decode(EncodeForm input, ErrorStrategy error = strict);
+    shared formal ToImmutable encode({FromSingle*} input, ErrorStrategy error = strict);
+    shared formal FromImmutable decode({ToSingle*} input, ErrorStrategy error = strict);
 }
