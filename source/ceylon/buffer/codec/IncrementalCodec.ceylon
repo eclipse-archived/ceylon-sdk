@@ -8,6 +8,22 @@ import ceylon.collection {
     LinkedList
 }
 
+shared class ConvertException(description = null, cause = null)
+        extends Exception(description, cause) {
+    String? description;
+    Throwable? cause;
+}
+shared class EncodeException(description = null, cause = null)
+        extends ConvertException(description, cause) {
+    String? description;
+    Throwable? cause;
+}
+shared class DecodeException(description = null, cause = null)
+        extends ConvertException(description, cause) {
+    String? description;
+    Throwable? cause;
+}
+
 shared interface PieceConvert<ToSingle, FromSingle> {
     shared formal {ToSingle*} more(FromSingle input);
 }
@@ -146,7 +162,7 @@ shared interface ByteToCharacterCodec
 shared interface CharacterToCharacterCodec
         satisfies IncrementalCodec<CharacterBuffer,String,Character,CharacterBuffer,String,Character> {
     shared actual default String encode({Character*} input, ErrorStrategy error) {
-        value buffer = CharacterBuffer(input.size / averageForwardRatio);
+        value buffer = CharacterBuffer(input.size * averageForwardRatio);
         encodeInto(buffer, input);
         return buffer.string;
     }
