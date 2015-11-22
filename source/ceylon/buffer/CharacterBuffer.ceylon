@@ -103,4 +103,8 @@ shared class CharacterBuffer extends Buffer<Character> {
     
     shared actual Array<Character> array => buf;
     shared actual Object? implementation => buf;
+    
+    "The concatenation of the [[Character]]s from [[position]] to [[limit]], by
+     repeatedly calling [[get]]."
+    shared actual String string => "".join(this);
 }
