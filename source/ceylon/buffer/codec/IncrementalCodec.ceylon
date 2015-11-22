@@ -5,6 +5,18 @@ import ceylon.buffer {
     Buffer
 }
 
+shared class UncompletedPiecewiseException(description = null, cause = null)
+        extends Exception(description, cause) {
+    String? description;
+    Throwable? cause;
+}
+
+shared interface Piecewise<ToSingle, FromSingle> satisfies Destroyable {
+    throws (`class UncompletedPiecewiseException`)
+    shared formal void checkComplete();
+    shared formal {ToSingle*} more(FromSingle input);
+}
+
 shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
     FromMutable, FromImmutable, FromSingle>
         satisfies StatelessCodec<ToImmutable,ToSingle,FromImmutable,FromSingle>
@@ -13,12 +25,13 @@ shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
         given FromMutable satisfies Buffer<FromSingle>
         given FromImmutable satisfies {FromSingle*} {
     
-    // TODO return Integer?
-    shared formal void encodeInto(ToMutable into, {FromSingle*} input,
+    shared formal Piecewise<ToSingle,FromSingle> encoder();
+    shared formal Piecewise<FromSingle,ToSingle> decoder();
+    
+    shared formal Integer encodeInto(ToMutable into, {FromSingle*} input,
         ErrorStrategy error = strict, Boolean grow = false);
     
-    // TODO return Integer?
-    shared formal void decodeInto(FromMutable into, {ToSingle*} input,
+    shared formal Integer decodeInto(FromMutable into, {ToSingle*} input,
         ErrorStrategy error = strict, Boolean grow = false);
     
     shared formal Integer encodeBid({FromSingle*} sample);
@@ -35,7 +48,7 @@ shared interface ByteToByteCodec
 shared interface ByteToCharacterCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,CharacterBuffer,String,Character> {
     
-    shared actual Array<Byte> encode({Character*} input, ErrorStrategy error) {
+    shared actual default Array<Byte> encode({Character*} input, ErrorStrategy error) {
         // TODO can we simplify ByteBuffer/ByteBufferImpl, so we don't need newByteBuffer?
         value buffer = newByteBuffer(input.size * averageForwardRatio);
         encodeInto {
@@ -47,20 +60,43 @@ shared interface ByteToCharacterCodec
         return buffer.array;
     }
     
-    // TODO leave encodeInto/decodeInto as formal (is that the smallest unit of functionality subtypes can implement)?
+    shared actual Integer encodeInto(into, input, error, grow) {
+        ByteBuffer into;
+        {Character*} input;
+        ErrorStrategy error;
+        Boolean grow;
+        
+        Piecewise<Byte,Character> piecewise = encoder();
+        variable Integer readCount = 0;
+        void process(Character character) {
+            value bytes = piecewise.more(character);
+            bytes.each(
+                void(Byte byte) {
+                    readCount++;
+                    if (!into.hasAvailable) {
+                        into.resize(input.size * maximumForwardRatio, true);
+                    }
+                    into.put(byte);
+                }
+            );
+        }
+        
+        if (grow || into.available >= input.size*maximumForwardRatio) {
+            // There is room to process all of input, so use each()
+            input.each(process);
+        } else {
+            // Don't use each() as we might need to stop before all of input is read
+            value iter = input.iterator();
+            while (into.hasAvailable, is Character character = iter.next()) {
+                process(character);
+            }
+        }
+        // TODO is throwing the correct thing to do? might need something that persists the buffer?
+        piecewise.checkComplete();
+        return readCount;
+    }
     
-    //shared actual void encodeInto(ByteBuffer into, {Character*} input, ErrorStrategy error, Boolean grow) {
-    //    if (grow || input.size<=into.available) {
-    //        input.each(
-    //            void(Character character) {
-    //            }
-    //        );
-    //    } else {
-    //        // TODO have to stop early, so use for loop instead
-    //    }
-    //}
-    
-    shared actual String decode({Byte*} input, ErrorStrategy error) {
+    shared actual default String decode({Byte*} input, ErrorStrategy error) {
         // TODO need to rewrite CharacterBuffer
         value buffer = CharacterBuffer(input.size / averageForwardRatio);
         decodeInto {
@@ -71,16 +107,21 @@ shared interface ByteToCharacterCodec
         return buffer.string;
     }
     
-    //shared actual void decodeInto(CharacterBuffer into, {Byte*} input, ErrorStrategy error, Boolean grow) {
-    //    if (grow || input.size<=into.available) {
-    //        input.each(
-    //            void(Byte byte) {
-    //            }
-    //        );
-    //    } else {
-    //        // TODO have to stop early, so use for loop instead
-    //    }
-    //}
+    shared actual Integer decodeInto(CharacterBuffer into, {Byte*} input, ErrorStrategy error, Boolean grow) {
+        Piecewise<Character,Byte> piecewise = decoder();
+        variable Integer readCount = 0;
+        if (grow || into.available >= input.size*maximumForwardRatio) {
+            input.each(
+                void(Byte byte) {
+                }
+            );
+        } else {
+            // TODO have to stop early, so use for loop instead
+        }
+        // TODO maybe return the unused bytes instead?
+        piecewise.checkComplete();
+        return readCount;
+    }
 }
 
 // ex: rot13
