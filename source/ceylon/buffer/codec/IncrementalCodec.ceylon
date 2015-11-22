@@ -7,22 +7,6 @@ import ceylon.collection {
     LinkedList
 }
 
-shared class ConvertException(description = null, cause = null)
-        extends Exception(description, cause) {
-    String? description;
-    Throwable? cause;
-}
-shared class EncodeException(description = null, cause = null)
-        extends ConvertException(description, cause) {
-    String? description;
-    Throwable? cause;
-}
-shared class DecodeException(description = null, cause = null)
-        extends ConvertException(description, cause) {
-    String? description;
-    Throwable? cause;
-}
-
 shared interface PieceConvert<ToSingle, FromSingle> {
     shared formal {ToSingle*} more(FromSingle input);
 }
