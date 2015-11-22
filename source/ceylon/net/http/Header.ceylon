@@ -49,3 +49,6 @@ shared Header allow({Method*} methods = empty)
 
 shared String contentTypeFormUrlEncoded 
         = "application/x-www-form-urlencoded";
+
+shared String contentTypeMultipartFormData 
+        = "multipart/form-data";

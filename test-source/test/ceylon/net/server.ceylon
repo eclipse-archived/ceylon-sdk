@@ -24,6 +24,10 @@ import ceylon.html.serializer {
     NodeSerializer
 }
 import ceylon.io.buffer { newByteBuffer, ByteBuffer }
+import test.ceylon.net.multipartclient {
+	MultipartRequest,
+	FilePart
+}
 
 by("Matej Lazar")
 String fileContent = "The quick brown fox jumps over the lazy dog.\n";
@@ -32,6 +36,12 @@ String fileContent = "The quick brown fox jumps over the lazy dog.\n";
 Integer fileLines = 200;
 
 String fileName = "lazydog.txt";
+
+Parameter param1 = Parameter("foo", "valueFoo");
+Parameter param2 = Parameter("latin", "Abc-ČŠŽĆĐ_čšžćđ.");
+FilePart filePart1 = FilePart("file1", "file1.txt", fileContent);
+FilePart filePart2 = FilePart("file2", "file2.txt", produceFileContent());
+
 
 "Number of concurent requests"
 Integer numberOfUsers=10;
@@ -187,7 +197,38 @@ test void testServer() {
                 print("Returned in ``system.milliseconds - startTime``ms.");
                 asyncServiceStatus = "returning";
             }
-        }
+        },
+        Endpoint { 
+            path = startsWith("/multipartPost"); 
+            service = (Request request, Response response) {
+                variable String responseString = "";
+                if(exists uploadedFile = request.file("file1")) {
+                    print("Server got file: ``uploadedFile.file``");
+                    value openfile = newOpenFile(uploadedFile.file.resource);
+                    openfile.readFully(void (ByteBuffer buffer) {
+                        responseString += utf8.decode(buffer);
+                    });
+                }
+                
+                if(exists uploadedFile = request.file("file2")) {
+                    print("Server got file: ``uploadedFile.file``");
+                    value openfile = newOpenFile(uploadedFile.file.resource);
+                    openfile.readFully(void (ByteBuffer buffer) {
+                        responseString += utf8.decode(buffer);
+                    });
+                }
+                
+                responseString += Parameter(param1.name, request.parameter(param1.name)).humanRepresentation;
+                responseString += "\n";
+                responseString += Parameter(param2.name, request.parameter(param2.name)).humanRepresentation;
+                responseString += "\n";
+                
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(responseString);
+                return null;
+            }; 
+            acceptMethod = {post};
+        }        
     };
 
 
@@ -196,6 +237,7 @@ test void testServer() {
     void onStartedExecuteTest(Status status) {
         if (status.equals(started)) {
             try {
+                if (false) {
                 headerTest();
                 
                 executeEchoTest("Ceylon");
@@ -221,8 +263,8 @@ test void testServer() {
                 
                 //TODO enable async "streaming" test
                 //testAsyncStream();
-                
-                //TODO multipart post
+            	}
+                testMultipartPost();
                 
             } finally {
                 cleanUpFile();
@@ -612,6 +654,27 @@ void testAsyncStream() {
     assertTrue(responseContent.contains("Hello"), "Response does not contain Hello.");
     response.close();
     assertEquals(asyncServiceStatus, "completing");
+}
+
+void testMultipartPost() {
+
+    value parameters = {param1,param2};
+
+    value files = {filePart1, filePart2};
+
+    value request = MultipartRequest(parse("http://localhost:8080/multipartPost"), parameters, files);
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent.initial(100));
+
+    assertTrue(responseContent.contains(param1.humanRepresentation), "Response does not containg ``param1.humanRepresentation``.");
+    assertTrue(responseContent.contains(param2.humanRepresentation), "Response does not containg ``param2.humanRepresentation``.");
+
+    assertTrue(responseContent.contains(filePart1.data), "Response does not containg ``filePart1.data``.");
+    assertTrue(responseContent.contains(filePart2.data), "Response does not containg ``filePart2.data``.");
 }
 
 Semaphore mutex = Semaphore(0);

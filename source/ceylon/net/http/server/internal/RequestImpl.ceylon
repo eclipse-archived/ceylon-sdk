@@ -9,7 +9,10 @@ import ceylon.io {
     SocketAddress
 }
 import ceylon.net.http {
-    Method
+    Method,
+	contentTypeFormUrlEncoded,
+	contentType,
+	contentTypeMultipartFormData
 }
 import ceylon.net.http.server {
     Request,
@@ -65,6 +68,13 @@ class RequestImpl(HttpServerExchange exchange,
     shared actual String path;
 
     shared actual Method method;
+
+    String? getHeader(String name) 
+            => exchange.requestHeaders.getFirst(HttpString(name));
+
+    contentType => getHeader(headerConntentType.string);
+
+    header(String name) => getHeader(name);
     
     shared actual String read() {
         exchange.startBlocking();
@@ -96,6 +106,14 @@ class RequestImpl(HttpServerExchange exchange,
     }
 
     FormData buildFormData() {
+        // multipart/form-data parsing requires blocking mode
+        String? contentType = exchange.requestHeaders.getFirst(HttpString(headerConntentType.string));
+        if (is String contentType) {
+            if (contentType.startsWith(contentTypeMultipartFormData)) {
+                exchange.startBlocking();
+            }
+        }
+        
         value formDataBuilder = FormDataBuilder();
         
         value utFormData = getUtFormData();
@@ -215,13 +233,6 @@ class RequestImpl(HttpServerExchange exchange,
 
     scheme => exchange.requestScheme;
 
-    contentType => getHeader(headerConntentType.string);
-    
-    header(String name) => getHeader(name);
-    
-    String? getHeader(String name) 
-            => exchange.requestHeaders.getFirst(HttpString(name));
-    
     shared actual SocketAddress sourceAddress {
         value address = exchange.sourceAddress;
         return SocketAddress(address.hostString, address.port);
