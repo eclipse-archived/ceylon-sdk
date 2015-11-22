@@ -1,7 +1,6 @@
 import ceylon.buffer {
     ByteBuffer,
     CharacterBuffer,
-    newByteBuffer,
     Buffer
 }
 import ceylon.collection {
@@ -127,12 +126,12 @@ shared interface ByteToByteCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,ByteBuffer,Array<Byte>,Byte> {
     
     shared actual default Array<Byte> encode({Byte*} input, ErrorStrategy error) {
-        value buffer = newByteBuffer(input.size * averageForwardRatio);
+        value buffer = ByteBuffer.ofSize(input.size * averageForwardRatio);
         encodeInto(buffer, input);
         return buffer.array;
     }
     shared actual default Array<Byte> decode({Byte*} input, ErrorStrategy error) {
-        value buffer = newByteBuffer(input.size / averageForwardRatio);
+        value buffer = ByteBuffer.ofSize(input.size / averageForwardRatio);
         decodeInto(buffer, input);
         return buffer.array;
     }
@@ -144,15 +143,12 @@ shared interface ByteToCharacterCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,CharacterBuffer,String,Character> {
     
     shared actual default Array<Byte> encode({Character*} input, ErrorStrategy error) {
-        // TODO can we simplify ByteBuffer/ByteBufferImpl, so we don't need newByteBuffer?
-        value buffer = newByteBuffer(input.size * averageForwardRatio);
+        value buffer = ByteBuffer.ofSize(input.size * averageForwardRatio);
         encodeInto(buffer, input);
-        // TODO need to add array output to ByteBuffer, copy on write for efficency?
         return buffer.array;
     }
     shared actual default String decode({Byte*} input, ErrorStrategy error) {
-        // TODO need to rewrite CharacterBuffer
-        value buffer = CharacterBuffer(input.size / averageForwardRatio);
+        value buffer = CharacterBuffer.ofSize(input.size / averageForwardRatio);
         decodeInto(buffer, input);
         return buffer.string;
     }
@@ -162,12 +158,12 @@ shared interface ByteToCharacterCodec
 shared interface CharacterToCharacterCodec
         satisfies IncrementalCodec<CharacterBuffer,String,Character,CharacterBuffer,String,Character> {
     shared actual default String encode({Character*} input, ErrorStrategy error) {
-        value buffer = CharacterBuffer(input.size * averageForwardRatio);
+        value buffer = CharacterBuffer.ofSize(input.size * averageForwardRatio);
         encodeInto(buffer, input);
         return buffer.string;
     }
     shared actual default String decode({Character*} input, ErrorStrategy error) {
-        value buffer = CharacterBuffer(input.size / averageForwardRatio);
+        value buffer = CharacterBuffer.ofSize(input.size / averageForwardRatio);
         decodeInto(buffer, input);
         return buffer.string;
     }

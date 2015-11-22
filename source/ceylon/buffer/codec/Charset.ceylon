@@ -1,6 +1,5 @@
 import ceylon.buffer {
-    ByteBuffer,
-    newByteBuffer
+    ByteBuffer
 }
 
 // TODO probably should move to the charset sibling package, once ready
@@ -21,7 +20,7 @@ shared object utf8 satisfies Charset {
     
     shared actual PieceConvert<Byte,Character> pieceEncoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,Character> {
-        ByteBuffer output = newByteBuffer(maximumForwardRatio);
+        ByteBuffer output = ByteBuffer.ofSize(maximumForwardRatio);
         
         shared actual {Byte*} more(Character input) {
             output.clear();
@@ -71,7 +70,7 @@ shared object utf8 satisfies Charset {
     shared actual PieceConvert<Character,Byte> pieceDecoder(ErrorStrategy error)
             => object satisfies PieceConvert<Character,Byte> {
         variable Boolean initalOutput = true;
-        ByteBuffer intermediate = newByteBuffer(maximumForwardRatio);
+        ByteBuffer intermediate = ByteBuffer.ofSize(maximumForwardRatio);
         
         void reset() {
             intermediate.clear();
