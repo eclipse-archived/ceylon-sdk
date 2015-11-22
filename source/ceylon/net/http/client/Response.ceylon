@@ -2,8 +2,7 @@ import ceylon.io {
     FileDescriptor
 }
 import ceylon.buffer {
-    ByteBuffer,
-    newByteBuffer
+    ByteBuffer
 }
 import ceylon.buffer.charset {
     ascii,
@@ -188,7 +187,7 @@ shared class Response(status, reason, major, minor,
     
     String readEntityBody() {
         value reader = getReader();
-        ByteBuffer buffer = newByteBuffer(4096);
+        ByteBuffer buffer = ByteBuffer.ofSize(4096);
         value encoding = getCharset(charset else "ASCII") else ascii;
         value decoder = encoding.Decoder();
         while(reader.read(buffer) != -1) {

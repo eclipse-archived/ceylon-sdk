@@ -24,7 +24,7 @@ import ceylon.html {
 import ceylon.html.serializer {
     NodeSerializer
 }
-import ceylon.buffer { newByteBuffer, ByteBuffer }
+import ceylon.buffer { ByteBuffer }
 import test.ceylon.net.multipartclient {
     MultipartRequest,
     FilePart
@@ -771,7 +771,7 @@ void testAsyncStream() {
 
     value responseReader = response.getReader();
     value buffSize = 100;
-    value buffer = newByteBuffer(buffSize);
+    value buffer = ByteBuffer.ofSize(buffSize);
     MutableList<Byte> content = LinkedList<Byte>();
     variable Integer remaining = parseInteger(response.getSingleHeader("content-length") else "0") else 0;
     print("cointent-size: ``remaining``");
@@ -796,9 +796,9 @@ void testAsyncStream() {
     }
     print("Read in ``system.milliseconds - startTime``ms.");
     
-    ByteBuffer contentBuff = newByteBuffer(content.size);
+    ByteBuffer contentBuff = ByteBuffer.ofSize(content.size);
     for (b in content) {
-        contentBuff.putByte(b);
+        contentBuff.put(b);
     }
     contentBuff.flip();
     value responseContent = utf8.decode(contentBuff);

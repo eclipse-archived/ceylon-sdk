@@ -61,9 +61,9 @@ void writeRequest(String request, Socket socket) {
 
 void writeRequestInPipeline(String request, Socket socket) {
     // encode it and send it by chunks
-    value requestBuffer = newByteBuffer(200);
+    value requestBuffer = ByteBuffer.ofSize(200);
     value encoder = ascii.Encoder();
-    value input = newCharacterBufferWithData(request);
+    value input = CharacterBuffer(request);
     while(input.hasAvailable){
         encoder.encode(input, requestBuffer);
         // flip and flush the request buffer
@@ -76,7 +76,7 @@ void writeRequestInPipeline(String request, Socket socket) {
 
 void writeRequestFromCallback(String request, Socket socket) {
     // encode it and send it by chunks
-    value requestBuffer = newByteBuffer(200);
+    value requestBuffer = ByteBuffer.ofSize(200);
     socket.writeFrom(stringToByteProducer(ascii, request), requestBuffer);
 }
 

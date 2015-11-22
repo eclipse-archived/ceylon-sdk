@@ -1,6 +1,5 @@
 import ceylon.buffer {
-    newByteBuffer,
     ByteBuffer
 }
 
-ByteBuffer newBuffer() => newByteBuffer(4096);
+ByteBuffer newBuffer() => ByteBuffer.ofSize(4096);

@@ -26,8 +26,7 @@ import ceylon.net.uri {
     Parameter
 }
 import ceylon.buffer {
-    ByteBuffer,
-    newByteBuffer
+    ByteBuffer
 }
 
 "Represents an HTTP Request"
@@ -230,7 +229,7 @@ shared class Request(uri,
             requestBodyBuffer = b;
             contentType = dataContentType;
         } else {
-            requestBodyBuffer = newByteBuffer(0);
+            requestBodyBuffer = ByteBuffer.ofSize(0);
             contentType = null;
         }
         
