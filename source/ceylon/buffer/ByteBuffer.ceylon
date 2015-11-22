@@ -1,53 +1,215 @@
-import ceylon.buffer.impl {
-    ByteBufferImpl
+import ceylon.interop.java {
+    toByteArray,
+    javaByteArray
 }
 
-"Represents a buffer of bytes (from 0 to 255 inclusive,
- unsigned).
- 
- You can create new instances with [[newByteBuffer]] (empty)
- and [[newByteBufferWithData]] (filled with your data)."
-by ("Stéphane Épardaud")
-see (`class Buffer`,
-    `function newByteBuffer`,
-    `function newByteBufferWithData`)
-shared sealed abstract class ByteBuffer()
-        extends Buffer<Byte>() {
-    
-    //shared formal Array<Byte> bytes();
-    
-    shared formal Byte getByte();
-    
-    shared formal void putByte(Byte byte);
-    
-    "The platform-specific implementation object, if any."
-    shared formal Object? implementation;
-}
-
-"Allocates a new empty [[ByteBuffer]] of the given
- [[capacity]]."
-by ("Stéphane Épardaud")
-see (`class ByteBuffer`,
-    `function newByteBufferWithData`,
-    `class Buffer`)
-shared ByteBuffer newByteBuffer(Integer capacity)
-        => ByteBufferImpl(capacity);
-
-"Allocates a new [[ByteBuffer]] filled with the [[bytes]]
- given as parameter. The capacity of the new buffer will be
- the number of bytes given. The returned buffer will be
- ready to be `read`, with its `position` set to `0` and its
- limit set to the buffer `capacity`."
-by ("Stéphane Épardaud")
-see (`class ByteBuffer`,
-    `function newByteBuffer`,
-    `class Buffer`)
-shared ByteBuffer newByteBufferWithData(Byte* bytes) {
-    value seq = bytes.sequence();
-    value buf = newByteBuffer(seq.size);
-    for (byte in seq) {
-        buf.putByte(byte);
+import java.nio {
+    JavaByteBuffer=ByteBuffer {
+        wrapJavaByteBuffer=wrap,
+        allocateJavaByteBuffer=allocate
     }
-    buf.flip();
-    return buf;
+}
+
+"Represents a buffer of [[Byte]]s (from 0 to 255 inclusive, unsigned)."
+by ("Stéphane Épardaud", "Alex Szczuczko")
+shared native class ByteBuffer extends Buffer<Byte> {
+    "Allocates a new [[ByteBuffer]] filled with the given [[initialData]]. The
+     capacity of the new buffer will be the number of bytes given. The returned
+     buffer will be ready to be `read`, with its `position` set to `0` and its
+     limit set to the buffer `capacity`."
+    shared native new ({Byte*} initialData) extends Buffer<Byte>() {}
+    
+    "Creates a [[ByteBuffer]] initally backed by the given [[initialArray]].
+     The capacity of the new buffer will be the size of the array. The returned
+     buffer will be ready to be `read`, with its `position` set to `0` and its
+     limit set to the buffer `capacity`."
+    shared native new ofArray(Array<Byte> initialArray) extends Buffer<Byte>() {}
+    
+    "Allocates a new zeroed [[ByteBuffer]] of the given [[initialCapacity]]."
+    shared native new ofSize(Integer initialCapacity) extends Buffer<Byte>() {}
+    
+    shared actual native Integer capacity;
+    shared actual native void clear();
+    shared actual native void flip();
+    shared actual native Byte get();
+    shared actual native Object? implementation;
+    shared actual native variable Integer limit;
+    shared actual native variable Integer position;
+    shared actual native void put(Byte element);
+    shared actual native void resize(Integer newSize, Boolean growLimit);
+    shared actual native Array<Byte> array => nothing;
+}
+
+shared native ("js") class ByteBuffer extends Buffer<Byte> {
+    variable Array<Byte> buf;
+    
+    shared native ("js") new ({Byte*} initialData) extends Buffer<Byte>() {
+        buf = Array(initialData);
+    }
+    
+    shared native ("js") new ofArray(Array<Byte> initialArray) extends Buffer<Byte>() {
+        buf = initialArray;
+    }
+    
+    shared native ("js") new ofSize(Integer initialCapacity) extends Buffer<Byte>() {
+        buf = Array.ofSize(initialCapacity, 0.byte);
+    }
+    
+    shared actual native ("js") Integer capacity => buf.size;
+    
+    variable Integer _position = 0;
+    shared actual native ("js") Integer position => _position;
+    // Have to define assign for position after limit due to circular dependency
+    
+    variable Integer _limit = buf.size;
+    shared actual native ("js") Integer limit => _limit;
+    native ("js") assign limit {
+        // Limit must be non-negative and no larger than capacity
+        if (limit < 0) {
+            throw BufferPreconditionException("Limit ``limit`` is not positive");
+        }
+        if (limit > capacity) {
+            throw BufferPreconditionException("Limit ``limit`` exceeds capacity ``capacity``");
+        }
+        // Position must be be no larger than the limit
+        if (position > limit) {
+            position = limit;
+        }
+        _limit = limit;
+    }
+    
+    native ("js") assign position {
+        // Position must be non-negative and no larger than limit
+        if (position < 0) {
+            throw BufferPreconditionException("Position ``position`` is not positive");
+        }
+        if (position > limit) {
+            throw BufferPreconditionException("Position ``position`` exceeds limit ``limit``");
+        }
+        assert (position >= 0);
+        assert (position <= limit);
+        _position = position;
+    }
+    
+    shared actual native ("js") Byte get() {
+        value byte = buf.get(position);
+        if (exists byte) {
+            position++;
+            return byte;
+        } else {
+            throw BufferUnderflowException("No byte at position ``position``");
+        }
+    }
+    shared actual native ("js") void put(Byte element) {
+        if (position > limit) {
+            throw BufferOverflowException("No space at position ``position``");
+        }
+        buf.set(position, element);
+        position++;
+    }
+    
+    shared actual native ("js") void clear() {
+        position = 0;
+        limit = capacity;
+    }
+    
+    shared actual native ("js") void flip() {
+        limit = position;
+        position = 0;
+    }
+    
+    shared actual native ("js") void resize(Integer newSize, Boolean growLimit) {
+        resizeBuffer {
+            newSize = newSize;
+            growLimit = growLimit;
+            current = this;
+            intoNew = () {
+                // copy
+                value dest = Array.ofSize(newSize, 0.byte);
+                buf.copyTo(dest, 0, 0, this.available);
+                // change buffer
+                buf = dest;
+            };
+        };
+    }
+    
+    shared actual native ("js") Array<Byte> array => buf;
+    shared actual native ("js") Object? implementation => buf;
+}
+
+shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
+    variable JavaByteBuffer buf;
+    
+    shared native ("jvm") new ({Byte*} initialData) extends Buffer<Byte>() {
+        buf = allocateJavaByteBuffer(initialData.size);
+        initialData.each(void(byte) => buf.put(byte));
+    }
+    
+    shared native ("jvm") new ofArray(Array<Byte> initialArray) extends Buffer<Byte>() {
+        buf = wrapJavaByteBuffer(javaByteArray(initialArray));
+    }
+    
+    shared native ("jvm") new ofSize(Integer initialCapacity) extends Buffer<Byte>() {
+        buf = allocateJavaByteBuffer(initialCapacity);
+    }
+    
+    shared actual native ("jvm") Integer capacity => buf.capacity();
+    
+    shared actual native ("jvm") Integer limit => buf.limit();
+    native ("jvm") assign limit {
+        // Limit must be non-negative and no larger than capacity
+        if (limit < 0) {
+            throw BufferPreconditionException("Limit ``limit`` is not positive");
+        }
+        if (limit > capacity) {
+            throw BufferPreconditionException("Limit ``limit`` exceeds capacity ``capacity``");
+        }
+        buf.limit(limit);
+    }
+    
+    shared actual native ("jvm") Integer position => buf.position();
+    native ("jvm") assign position {
+        // Position must be non-negative and no larger than limit
+        if (position < 0) {
+            throw BufferPreconditionException("Position ``position`` is not positive");
+        }
+        if (position > limit) {
+            throw BufferPreconditionException("Position ``position`` exceeds limit ``limit``");
+        }
+        buf.position(position);
+    }
+    
+    shared actual native ("jvm") Byte get() {
+        if (position > limit) {
+            throw BufferUnderflowException("No byte at position ``position``");
+        }
+        return buf.get();
+    }
+    shared actual native ("jvm") void put(Byte element) {
+        if (position > limit) {
+            throw BufferOverflowException("No space at position ``position``");
+        }
+        buf.put(element);
+    }
+    
+    shared actual native ("jvm") void clear() => buf.clear();
+    shared actual native ("jvm") void flip() => buf.flip();
+    
+    shared actual native ("jvm") void resize(Integer newSize, Boolean growLimit) {
+        resizeBuffer {
+            newSize = newSize;
+            growLimit = growLimit;
+            current = this;
+            intoNew = () {
+                // copy
+                JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
+                dest.put(buf);
+                // change buffer
+                buf = dest;
+            };
+        };
+    }
+    
+    shared actual native ("jvm") Array<Byte> array => toByteArray(buf.array());
+    shared actual native ("jvm") Object? implementation => buf;
 }

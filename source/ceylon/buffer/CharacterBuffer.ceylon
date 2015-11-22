@@ -1,77 +1,106 @@
-"Represents a read-only [[Character]] [[Buffer]] whose
- underlying data is read from the given [[string]]. This
- buffer starts ready to be read, with the [[position]] set
- to `0` and the [[limit]] set to size of the given [[string]]."
-by ("Stéphane Épardaud")
-see (`class Buffer`, `function newCharacterBufferWithData`)
-shared sealed class CharacterBuffer(String string)
-        extends Buffer<Character>() {
+"Represents a buffer of [[Character]]s."
+by ("Stéphane Épardaud", "Alex Szczuczko")
+shared class CharacterBuffer extends Buffer<Character> {
+    variable Array<Character> buf;
     
-    value array = Array.ofSize(string.size, '\{NULL}');
-    for (i->c in string.indexed) {
-        array.set(i, c);
+    "Allocates a new [[CharacterBuffer]] filled with the given [[initialData]].
+     The capacity of the new buffer will be the number of bytes given. The
+     returned buffer will be ready to be `read`, with its `position` set to `0`
+     and its limit set to the buffer `capacity`."
+    shared new ({Character*} initialData) extends Buffer<Character>() {
+        buf = Array(initialData);
     }
     
-    "The size of the given [[string]]."
-    shared actual Integer capacity => string.size;
+    "Creates a [[CharacterBuffer]] initally backed by the given
+     [[initialArray]]. The capacity of the new buffer will be the size of the
+     array. The returned buffer will be ready to be `read`, with its `position`
+     set to `0` and its limit set to the buffer `capacity`."
+    shared new ofArray(Array<Character> initialArray) extends Buffer<Character>() {
+        buf = initialArray;
+    }
     
-    "Initially set to the [[string]] size."
-    shared variable actual Integer limit = string.size;
+    "Allocates a new zeroed [[CharacterBuffer]] of the given
+     [[initialCapacity]]."
+    shared new ofSize(Integer initialCapacity) extends Buffer<Character>() {
+        buf = Array.ofSize(initialCapacity, 0.character);
+    }
     
-    "The current position index within this buffer. Starts
-     at `0` and grows with each [[get]] or [[put]] operation,
-     until it reaches the [[limit]]."
-    shared variable actual Integer position = 0;
+    shared actual Integer capacity => buf.size;
     
-    "Returns false. This buffer is read-only."
-    shared actual Boolean writable = false;
+    variable Integer _position = 0;
+    shared actual Integer position => _position;
+    // Have to define assign for position after limit due to circular dependency
     
-    "Resets the [[position]] to `0` and the [[limit]] to the
-     [[capacity]]. Use this after reading to start reading
-     the whole buffer again."
+    variable Integer _limit = buf.size;
+    shared actual Integer limit => _limit;
+    assign limit {
+        // Limit must be non-negative and no larger than capacity
+        if (limit < 0) {
+            throw BufferPreconditionException("Limit ``limit`` is not positive");
+        }
+        if (limit > capacity) {
+            throw BufferPreconditionException("Limit ``limit`` exceeds capacity ``capacity``");
+        }
+        // Position must be be no larger than the limit
+        if (position > limit) {
+            position = limit;
+        }
+        _limit = limit;
+    }
+    
+    assign position {
+        // Position must be non-negative and no larger than limit
+        if (position < 0) {
+            throw BufferPreconditionException("Position ``position`` is not positive");
+        }
+        if (position > limit) {
+            throw BufferPreconditionException("Position ``position`` exceeds limit ``limit``");
+        }
+        _position = position;
+    }
+    
+    shared actual Character get() {
+        value char = buf.get(position);
+        if (exists char) {
+            position++;
+            return char;
+        } else {
+            throw BufferUnderflowException("No Character at position ``position``");
+        }
+    }
+    shared actual void put(Character element) {
+        if (position > limit) {
+            throw BufferOverflowException("No space at position ``position``");
+        }
+        buf.set(position, element);
+        position++;
+    }
+    
     shared actual void clear() {
         position = 0;
         limit = capacity;
     }
     
-    "This will and set its [[limit]] to the current
-     [[position]], and reset its [[position]] to `0`. This
-     essentially means that you will be able to read from
-     the beginning of the buffer until the last object you
-     read with [[get]] while reading."
     shared actual void flip() {
         limit = position;
         position = 0;
     }
     
-    "Reads a [[Character]] from this buffer at the current
-     [[position]]. Increases the [[position]] by `1`."
-    shared actual Character get() {
-        if (exists c = array.getFromFirst(position++)) {
-            return c;
-        }
-        // FIXME: type
-        throw Exception("Buffer depleted");
-    }
-    
-    "Not supported"
-    throws (`class Exception`, "Always")
-    shared actual void put(Character element) {
-        // FIXME: type
-        throw Exception("Buffer is read-only");
-    }
-    
-    "Not supported"
-    throws (`class Exception`, "Always")
     shared actual void resize(Integer newSize, Boolean growLimit) {
-        // FIXME: type
-        throw Exception("Buffer is read-only");
+        resizeBuffer {
+            newSize = newSize;
+            growLimit = growLimit;
+            current = this;
+            intoNew = () {
+                // copy
+                value dest = Array.ofSize(newSize, 0.character);
+                buf.copyTo(dest, 0, 0, this.available);
+                // change buffer
+                buf = dest;
+            };
+        };
     }
+    
+    shared actual Array<Character> array => buf;
+    shared actual Object? implementation => buf;
 }
-
-"Allocates a new [[CharacterBuffer]] with the underlying
- [[data]]."
-by ("Stéphane Épardaud")
-see (`class CharacterBuffer`)
-shared CharacterBuffer newCharacterBufferWithData(String data)
-        => CharacterBuffer(data);

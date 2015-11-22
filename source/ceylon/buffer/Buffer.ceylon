@@ -27,16 +27,15 @@
  cause an underlying array reallocation and copy."
 by ("Stéphane Épardaud")
 see (`class ByteBuffer`,
-    `function newByteBuffer`,
-    `function newByteBufferWithData`,
-    `class CharacterBuffer`,
-    `function newCharacterBufferWithData`)
-shared sealed abstract class Buffer<T>()
-        satisfies Iterable<T> {
+    `class CharacterBuffer`)
+shared sealed abstract class Buffer<Value>()
+        satisfies Iterable<Value> {
     
     "The current position index within this buffer. Starts
      at `0` and grows with each [[get]] or [[put]] operation,
      until it reaches the [[limit]]."
+    throws (`class BufferPreconditionException`,
+        "On assignment if the new value would be invalid")
     shared formal variable Integer position;
     
     "The underlying array maximum capacity. Both the
@@ -47,6 +46,8 @@ shared sealed abstract class Buffer<T>()
     "The limit at which to stop reading and writing. The
      limit will always be greater or equal to the
      [[position]] and smaller or equal to the [[capacity]]."
+    throws (`class BufferPreconditionException`,
+        "On assignment if the new value would be invalid")
     shared formal variable Integer limit;
     
     "Resizes the underlying array, by growing or shrinking
@@ -86,11 +87,15 @@ shared sealed abstract class Buffer<T>()
     
     "Reads an object from this buffer at the current
      [[position]]. Increases the [[position]] by `1`."
-    shared formal T get();
+    throws (`class BufferUnderflowException`,
+        "If [[position]] >= [[limit]]")
+    shared formal Value get();
     
     "Writes an object to this buffer at the current
      [[position]]. Increases the [[position]] by `1`."
-    shared formal void put(T element);
+    throws (`class BufferOverflowException`,
+        "If [[position]] >= [[limit]]")
+    shared formal void put(Value element);
     
     "Resets the [[position]] to `0` and the [[limit]] to the
      [[capacity]]. Use this after reading to start writing
@@ -111,9 +116,9 @@ shared sealed abstract class Buffer<T>()
      [[position]] until the [[limit]]. This iterator modifies
      the buffer directly, so you will need to [[clear]] or
      [[flip]] it afterwards if you wish to iterate it again."
-    shared actual Iterator<T> iterator() {
-        object it satisfies Iterator<T> {
-            shared actual T|Finished next() {
+    shared actual Iterator<Value> iterator() {
+        object it satisfies Iterator<Value> {
+            shared actual Value|Finished next() {
                 if (hasAvailable) {
                     return get();
                 }
@@ -122,6 +127,18 @@ shared sealed abstract class Buffer<T>()
         }
         return it;
     }
+    
+    "The current underlying Array of the buffer. Any changes
+     made to the buffer will be reflected in this array, and
+     vice versa.
+     
+     Reallocations caused by a call to [[resize]] will cause any
+     prior references obtained though this attribute to become
+     stale."
+    shared formal Array<Value> array;
+    
+    "The platform-specific implementation object, if any."
+    shared formal Object? implementation;
     
     size => available;
 }
