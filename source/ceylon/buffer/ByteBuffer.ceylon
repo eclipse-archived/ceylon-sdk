@@ -2,16 +2,16 @@ import ceylon.buffer.impl {
     ByteBufferImpl
 }
 
-"Represents a buffer of bytes (from 0 to 255 inclusive, 
+"Represents a buffer of bytes (from 0 to 255 inclusive,
  unsigned).
  
- You can create new instances with [[newByteBuffer]] (empty) 
+ You can create new instances with [[newByteBuffer]] (empty)
  and [[newByteBufferWithData]] (filled with your data)."
-by("Stéphane Épardaud")
-see(`class Buffer`,
+by ("Stéphane Épardaud")
+see (`class Buffer`,
     `function newByteBuffer`,
     `function newByteBufferWithData`)
-shared sealed abstract class ByteBuffer() 
+shared sealed abstract class ByteBuffer()
         extends Buffer<Byte>() {
     
     //shared formal Array<Byte> bytes();
@@ -22,31 +22,30 @@ shared sealed abstract class ByteBuffer()
     
     "The platform-specific implementation object, if any."
     shared formal Object? implementation;
-    
 }
 
-"Allocates a new empty [[ByteBuffer]] of the given 
+"Allocates a new empty [[ByteBuffer]] of the given
  [[capacity]]."
-by("Stéphane Épardaud")
-see(`class ByteBuffer`,
+by ("Stéphane Épardaud")
+see (`class ByteBuffer`,
     `function newByteBufferWithData`,
     `class Buffer`)
 shared ByteBuffer newByteBuffer(Integer capacity)
         => ByteBufferImpl(capacity);
 
-"Allocates a new [[ByteBuffer]] filled with the [[bytes]] 
- given as parameter. The capacity of the new buffer will be 
- the number of bytes given. The returned buffer will be 
- ready to be `read`, with its `position` set to `0` and its 
+"Allocates a new [[ByteBuffer]] filled with the [[bytes]]
+ given as parameter. The capacity of the new buffer will be
+ the number of bytes given. The returned buffer will be
+ ready to be `read`, with its `position` set to `0` and its
  limit set to the buffer `capacity`."
-by("Stéphane Épardaud")
-see(`class ByteBuffer`,
+by ("Stéphane Épardaud")
+see (`class ByteBuffer`,
     `function newByteBuffer`,
     `class Buffer`)
 shared ByteBuffer newByteBufferWithData(Byte* bytes) {
     value seq = bytes.sequence();
     value buf = newByteBuffer(seq.size);
-    for(byte in seq) {
+    for (byte in seq) {
         buf.putByte(byte);
     }
     buf.flip();
