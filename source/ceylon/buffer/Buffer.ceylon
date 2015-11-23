@@ -28,8 +28,8 @@
 by ("Stéphane Épardaud")
 see (`class ByteBuffer`,
     `class CharacterBuffer`)
-shared sealed abstract class Buffer<Value>()
-        satisfies Iterable<Value> {
+shared sealed abstract class Buffer<Element>()
+        satisfies Iterable<Element> {
     
     "The current position index within this buffer. Starts
      at `0` and grows with each [[get]] or [[put]] operation,
@@ -89,13 +89,13 @@ shared sealed abstract class Buffer<Value>()
      [[position]]. Increases the [[position]] by `1`."
     throws (`class BufferUnderflowException`,
         "If [[position]] >= [[limit]]")
-    shared formal Value get();
+    shared formal Element get();
     
     "Writes an object to this buffer at the current
      [[position]]. Increases the [[position]] by `1`."
     throws (`class BufferOverflowException`,
         "If [[position]] >= [[limit]]")
-    shared formal void put(Value element);
+    shared formal void put(Element element);
     
     "Resets the [[position]] to `0` and the [[limit]] to the
      [[capacity]]. Use this after reading to start writing
@@ -116,9 +116,9 @@ shared sealed abstract class Buffer<Value>()
      [[position]] until the [[limit]]. This iterator modifies
      the buffer directly, so you will need to [[clear]] or
      [[flip]] it afterwards if you wish to iterate it again."
-    shared actual Iterator<Value> iterator() {
-        object it satisfies Iterator<Value> {
-            shared actual Value|Finished next() {
+    shared actual Iterator<Element> iterator() {
+        object it satisfies Iterator<Element> {
+            shared actual Element|Finished next() {
                 if (hasAvailable) {
                     return get();
                 }
@@ -135,7 +135,7 @@ shared sealed abstract class Buffer<Value>()
      Reallocations caused by a call to [[resize]] will cause any
      prior references obtained though this attribute to become
      stale."
-    shared formal Array<Value> array;
+    shared formal Array<Element> array;
     
     "The platform-specific implementation object, if any."
     shared formal Object? implementation;
