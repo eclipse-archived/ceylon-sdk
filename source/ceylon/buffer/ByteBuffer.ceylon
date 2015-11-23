@@ -143,6 +143,7 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
     shared native ("jvm") new ({Byte*} initialData) extends Buffer<Byte>() {
         buf = allocateJavaByteBuffer(initialData.size);
         initialData.each(void(byte) => buf.put(byte));
+        buf.clear();
     }
     
     shared native ("jvm") new ofArray(Array<Byte> initialArray) extends Buffer<Byte>() {
@@ -150,6 +151,7 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
         //buf = wrapJavaByteBuffer(javaByteArray(initialArray));
         buf = allocateJavaByteBuffer(initialArray.size);
         initialArray.each(void(byte) => buf.put(byte));
+        buf.clear();
     }
     
     shared native ("jvm") new ofSize(Integer initialCapacity) extends Buffer<Byte>() {
