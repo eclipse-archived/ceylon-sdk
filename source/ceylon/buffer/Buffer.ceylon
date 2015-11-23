@@ -137,4 +137,30 @@ shared sealed abstract class Buffer<Element>()
     shared formal Object? implementation;
     
     size => available;
+    
+    shared actual default Boolean equals(Object that) {
+        if (is Buffer<Element> that) {
+            value thisPosition = this.position;
+            value thatPosition = that.position;
+            value thisNumVisible = this.limit - thisPosition;
+            value thatNumVisible = that.limit - thatPosition;
+            if (thisNumVisible != thatNumVisible) {
+                return false;
+            }
+            value numVisible = thisNumVisible;
+            value thisArray = this.array;
+            value thatArray = that.array;
+            for (offset in 0:numVisible) {
+                value thisElement = thisArray.get(thisPosition + offset);
+                value thatElement = thatArray.get(thatPosition + offset);
+                assert (exists thisElement, exists thatElement);
+                if (thisElement != thatElement) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
