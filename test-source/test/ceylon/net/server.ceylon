@@ -237,7 +237,6 @@ test void testServer() {
     void onStartedExecuteTest(Status status) {
         if (status.equals(started)) {
             try {
-                if (false) {
                 headerTest();
                 
                 executeEchoTest("Ceylon");
@@ -263,7 +262,7 @@ test void testServer() {
                 
                 //TODO enable async "streaming" test
                 //testAsyncStream();
-            	}
+
                 testMultipartPost();
                 
             } finally {
