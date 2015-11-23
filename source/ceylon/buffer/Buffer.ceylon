@@ -72,10 +72,6 @@ shared sealed abstract class Buffer<Element>()
     shared formal void resize(Integer newSize,
         Boolean growLimit = false);
     
-    "Returns `true` if this buffer is writable, or `false`
-     if it is read-only."
-    shared default Boolean writable = true;
-    
     "Returns `true` if the current [[position]] is smaller
      than the [[limit]]."
     shared Boolean hasAvailable => available > 0;
