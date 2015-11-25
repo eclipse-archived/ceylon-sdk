@@ -30,13 +30,13 @@ class Runner() {
     
     shared void run() {
         try {
-//            initializeTestedModules();
-//            value testSources = getTestSources();
+            initializeTestedModules();
+            value testSources = getTestSources();
             value testListeners = getTestListeners();
-            value result = createTestRunner([], testListeners).run();
-//            handleResult(result);
+            value result = createTestRunner(testSources, testListeners).run();
+            handleResult(result);
         } finally {
-//            socket?.close();
+            socket?.close();
         }
     }
     
