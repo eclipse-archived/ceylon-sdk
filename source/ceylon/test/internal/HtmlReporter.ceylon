@@ -12,10 +12,27 @@ import ceylon.test {
     ignored,
     TestResult,
     TestRunResult,
-    TestDescription
+    TestDescription,
+    TestListener
+}
+import java.text {
+    NumberFormat
+}
+import ceylon.test.event {
+    TestRunFinishEvent
+}
+import ceylon.file {
+    Nil,
+    ExistingResource,
+    current,
+    File
 }
 
-shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
+shared class HtmlReporter(String reportSubdir) satisfies TestListener {
+    
+    shared actual void testRunFinish(TestRunFinishEvent event) {
+        generate(event.runner.description, event.result);
+    }
     
     shared void generate(TestDescription root, TestRunResult result) {
         value testedModules = findTestedModules(result);
@@ -51,7 +68,7 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
     }
     
     void generateCss(FileWriter fw) {
-        value resultsCss = `module com.redhat.ceylon.test`.resourceByPath("results.css");
+        value resultsCss = `module`.resourceByPath("results.css");
         assert(exists resultsCss);
         
         fw.write("<style type='text/css'>");
@@ -200,9 +217,11 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
         return testedModules;
     }
     
-    shared formal String formatTime(Integer timeInMilliseconds);
+    native
+    shared String formatTime(Integer timeInMilliseconds);
     
-    shared formal FileWriter createFile(String filePath);
+    native
+    shared FileWriter createFile(String filePath);
     
     shared interface FileWriter {
         
@@ -210,6 +229,87 @@ shared abstract class AbstractHtmlReportGenerator(String reportSubdir) {
         
         shared formal void close();
         
+    }
+    
+    native("js")
+    shared String formatTime(Integer timeInMilliseconds) {
+        dynamic {
+            dynamic t = timeInMilliseconds/1000.0;
+            return t.toFixed(3);
+        }
+    }
+    
+    native("jvm")
+    shared String formatTime(Integer timeInMilliseconds) {
+        NumberFormat timeFormat = NumberFormat.numberInstance;
+        timeFormat.groupingUsed = true;
+        timeFormat.minimumFractionDigits = 3;
+        timeFormat.maximumFractionDigits = 3;
+        timeFormat.minimumIntegerDigits = 1;
+        
+        return timeFormat.format(timeInMilliseconds/1000.0);
+    }
+    
+    native("js")
+    shared FileWriter createFile(String filePath) {
+        object fileWriter satisfies FileWriter {
+            
+            dynamic stream;
+            dynamic {
+                dynamic pathApi = require("path");
+                dynamic fsApi = require("fs");
+                
+                value pathBuilder = StringBuilder();
+                value pathSegments = filePath.split((Character c) => c.string == pathApi.sep).sequence();
+                for(pathSegment in pathSegments[0..pathSegments.size-2] ) {
+                    pathBuilder.append(pathSegment);
+                    if( !fsApi.existsSync(pathBuilder.string) ) {
+                        fsApi.mkdirSync(pathBuilder.string);
+                    }
+                    pathBuilder.append(pathApi.sep);
+                }
+                assert(exists pathLastSegment = pathSegments.last);
+                pathBuilder.append(pathLastSegment);
+                
+                stream = fsApi.createWriteStream(pathBuilder.string);
+            }
+            
+            shared actual void write(String content) {
+                dynamic {
+                    stream.write(content);
+                }
+            }
+            
+            shared actual void close() {
+                dynamic {
+                    stream.end();
+                }
+            }
+            
+        }
+        return fileWriter;
+    }
+    
+    native("jvm")
+    shared FileWriter createFile(String filePath) {
+        object fileWriter satisfies FileWriter {
+            File.Overwriter fw;
+            
+            value res = current.childPath(filePath).resource;
+            switch(res)
+            case(is Nil) {
+                fw = res.createFile(true).Overwriter();
+            }
+            case(is ExistingResource) {
+                fw = res.delete().createFile(true).Overwriter();
+            }
+            
+            write(String content) => fw.write(content);
+            
+            close() => fw.close();
+            
+        }
+        return fileWriter;
     }
     
 }

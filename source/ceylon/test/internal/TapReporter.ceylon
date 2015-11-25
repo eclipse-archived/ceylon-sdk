@@ -108,7 +108,7 @@ import ceylon.test {
          at com.redhat.ceylon.launcher.Launcher.main(Launcher.java:21)
    ...
  ~~~"
-shared class TapLoggingListener(write = print) satisfies TestListener {
+shared class TapReporter(write = print) satisfies TestListener {
     
     "A function that logs the given line, for example [[print]]."
     void write(String line);

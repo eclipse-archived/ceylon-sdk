@@ -70,8 +70,6 @@
             <module name="ceylon.regex"/>
             <module name="ceylon.transaction"/>
             <module name="com.redhat.ceylon.war"/>
-            <module name="com.redhat.ceylon.test"/>
-            <module name="com.redhat.ceylon.testjvm"/>
         </moduleset>
 
         <moduleset id="modules.sdk.js">
@@ -84,8 +82,6 @@
             <module name="ceylon.logging"/>
             <module name="ceylon.locale"/>
             <module name="ceylon.regex"/>
-            <module name="com.redhat.ceylon.test"/>
-            <module name="com.redhat.ceylon.testjs"/>
         </moduleset>
 	
         <moduleset id="modules.test.jvm">
