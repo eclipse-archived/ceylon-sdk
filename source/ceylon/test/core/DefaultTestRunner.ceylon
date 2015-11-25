@@ -251,7 +251,7 @@ void findCandidatesInTypeLiteral(ArrayList<TestCandidate> candidates, String typ
             return;
         }
     }
-    candidates.add(ErrorTestExecutor(TestDescription(typeLiteral), Exception("invalid type literal: ``typeLiteral`` (allowed syntax is prefix function, class, package or module followed with qualified name of declaration)")));
+    candidates.add(ErrorTestExecutor(TestDescription(typeLiteral), Exception("missing type or invalid type literal: ``typeLiteral`` (allowed syntax is prefix function, class, package or module followed with qualified name of declaration)")));
 }
 
 Boolean findCandidatesInModuleLiteral(ArrayList<TestCandidate> candidates, String modName) {
