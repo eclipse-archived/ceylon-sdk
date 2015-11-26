@@ -9,6 +9,7 @@ import ceylon.collection {
 
 shared interface PieceConvert<ToSingle, FromSingle> {
     shared formal {ToSingle*} more(FromSingle input);
+    shared default {ToSingle*} done() => empty;
 }
 
 shared class ChunkConvert<ToMutable, FromImmutable, ToSingle, FromSingle>(pieceConverter)
@@ -74,34 +75,30 @@ shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
     }
     
     shared void encodeInto(ToMutable into, {FromSingle*} input, ErrorStrategy error = strict) {
+        void add(ToSingle element) {
+            if (!into.hasAvailable) {
+                into.resize(maximumEncodeSize(input.size), true);
+            }
+            into.put(element);
+        }
         value pieceConverter = pieceEncoder(error);
         input.each(
-            (FromSingle inputElement) {
-                pieceConverter.more(inputElement).each(
-                    (ToSingle byte) {
-                        if (!into.hasAvailable) {
-                            into.resize(input.size * maximumForwardRatio, true);
-                        }
-                        into.put(byte);
-                    }
-                );
-            }
+            (FromSingle inputElement) => pieceConverter.more(inputElement).each(add)
         );
+        pieceConverter.done().each(add);
     }
     shared void decodeInto(FromMutable into, {ToSingle*} input, ErrorStrategy error = strict) {
+        void add(FromSingle element) {
+            if (!into.hasAvailable) {
+                into.resize(maximumEncodeSize(input.size), true);
+            }
+            into.put(element);
+        }
         value pieceConverter = pieceDecoder(error);
         input.each(
-            (ToSingle inputElement) {
-                pieceConverter.more(inputElement).each(
-                    (FromSingle byte) {
-                        if (!into.hasAvailable) {
-                            into.resize(input.size / maximumForwardRatio, true);
-                        }
-                        into.put(byte);
-                    }
-                );
-            }
+            (ToSingle inputElement) => pieceConverter.more(inputElement).each(add)
         );
+        pieceConverter.done().each(add);
     }
 }
 
@@ -110,44 +107,60 @@ shared interface ByteToByteCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,ByteBuffer,Array<Byte>,Byte> {
     
     shared actual default Array<Byte> encode({Byte*} input, ErrorStrategy error) {
-        value buffer = ByteBuffer.ofSize(input.size * averageForwardRatio);
+        value buffer = ByteBuffer.ofSize(averageEncodeSize(input.size));
         encodeInto(buffer, input);
         return buffer.array;
     }
     shared actual default Array<Byte> decode({Byte*} input, ErrorStrategy error) {
-        value buffer = ByteBuffer.ofSize(input.size / averageForwardRatio);
+        value buffer = ByteBuffer.ofSize(averageDecodeSize(input.size));
         decodeInto(buffer, input);
         return buffer.array;
     }
 }
 
-// this is also CharacterToByte
-// ex: charsets (utf8, etc.), ascii string representations (base64, base16, etc.)
+// ex: charsets (utf8, etc.)
 shared interface ByteToCharacterCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,CharacterBuffer,String,Character> {
     
     shared actual default Array<Byte> encode({Character*} input, ErrorStrategy error) {
-        value buffer = ByteBuffer.ofSize(input.size * averageForwardRatio);
+        value buffer = ByteBuffer.ofSize(averageEncodeSize(input.size));
         encodeInto(buffer, input);
         return buffer.array;
     }
     shared actual default String decode({Byte*} input, ErrorStrategy error) {
-        value buffer = CharacterBuffer.ofSize(input.size / averageForwardRatio);
+        value buffer = CharacterBuffer.ofSize(averageDecodeSize(input.size));
         decodeInto(buffer, input);
         return buffer.string;
     }
 }
+
+// ascii string representations (base64, base16, etc.)
+shared interface CharacterToByteCodec
+        satisfies IncrementalCodec<CharacterBuffer,String,Character,ByteBuffer,Array<Byte>,Byte> {
+    
+    shared actual default String encode({Byte*} input, ErrorStrategy error) {
+        value buffer = CharacterBuffer.ofSize(averageEncodeSize(input.size));
+        encodeInto(buffer, input);
+        return buffer.string;
+    }
+    shared actual default Array<Byte> decode({Character*} input, ErrorStrategy error) {
+        value buffer = ByteBuffer.ofSize(averageDecodeSize(input.size));
+        decodeInto(buffer, input);
+        return buffer.array;
+    }
+}
+
 
 // ex: rot13
 shared interface CharacterToCharacterCodec
         satisfies IncrementalCodec<CharacterBuffer,String,Character,CharacterBuffer,String,Character> {
     shared actual default String encode({Character*} input, ErrorStrategy error) {
-        value buffer = CharacterBuffer.ofSize(input.size * averageForwardRatio);
+        value buffer = CharacterBuffer.ofSize(averageEncodeSize(input.size));
         encodeInto(buffer, input);
         return buffer.string;
     }
     shared actual default String decode({Character*} input, ErrorStrategy error) {
-        value buffer = CharacterBuffer.ofSize(input.size / averageForwardRatio);
+        value buffer = CharacterBuffer.ofSize(averageDecodeSize(input.size));
         decodeInto(buffer, input);
         return buffer.string;
     }

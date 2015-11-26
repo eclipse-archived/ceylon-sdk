@@ -6,9 +6,9 @@ import ceylon.buffer.codec {
     ErrorStrategy,
     PieceConvert,
     CharacterToByteCodec,
-    EncodeException,
     strict,
-    ignore
+    ignore,
+    DecodeException
 }
 
 shared abstract class Base64Byte()
@@ -18,18 +18,21 @@ shared abstract class Base64Byte()
     shared formal [Byte+] table;
 }
 
+Map<Character,Integer> toReverseTable([Character+] table) {
+    return map { for (i->c in table.indexed) c->i };
+}
+
 shared abstract class Base64String()
         satisfies CharacterToByteCodec {
     "The character table of this base64 variant."
     shared formal [Character+] table;
     
+    shared formal Map<Character,Integer> reverseTable;
+    
     "The padding character, used where required to terminate discrete blocks of
      encoded data so they may be concatenated without making the seperation
      point ambiguous."
     shared Character pad = '=';
-    
-    "Index of the ignored character."
-    Integer ignoreCharIndex = 64;
     
     shared actual Integer averageEncodeSize(Integer inputSize)
             => (2 + inputSize - ((inputSize + 2) % 3)) * 4 / 3;
@@ -51,9 +54,6 @@ shared abstract class Base64String()
     
     shared actual PieceConvert<Character,Byte> pieceEncoder(ErrorStrategy error)
             => object satisfies PieceConvert<Character,Byte> {
-        //ByteBuffer intermediate = ByteBuffer.ofSize(2);
-        //variable Integer group = 0;
-        
         variable Boolean middle = true;
         variable Byte? remainder = null;
         
@@ -62,19 +62,13 @@ shared abstract class Base64String()
             remainder = null;
         }
         
-        Character? byteToChar(Byte byte) {
-            if (exists char = table[byte.signed]) {
-                return char;
-            } else {
-                switch (error)
-                case (strict) {
-                    throw EncodeException("Invalid base64 codepoint ``byte.signed``");
-                }
-                case (ignore) {
-                    reset();
-                    return null;
-                }
-            }
+        Character byteToChar(Byte byte) {
+            // Not using ErrorStrategy / EncodeException here since if this
+            // doesn't succeed the implementation is wrong. All input bytes are
+            // valid.
+            "Base64 implementation invalid. Internal error."
+            assert (exists char = table[byte.signed]);
+            return char;
         }
         
         shared actual {Character*} more(Byte input) {
@@ -86,33 +80,20 @@ shared abstract class Base64String()
                     value byte = input.rightLogicalShift(4).or(rem.leftLogicalShift(6));
                     remainder = input.and($1111.byte);
                     middle = false;
-                    if (exists char = byteToChar(byte)) {
-                        return { char };
-                    } else {
-                        return empty;
-                    }
+                    return { byteToChar(byte) };
                 } else {
                     // End of quantum
                     // [rem 4567][in 01234567] -> [char [rem 4567]01][char 234567]
                     value byte1 = input.rightLogicalShift(6).or(rem.leftLogicalShift(2));
                     value byte2 = input.and($111111.byte);
                     reset();
-                    if (exists char1 = byteToChar(byte1),
-                        exists char2 = byteToChar(byte2)) {
-                        return { char1, char2 };
-                    } else {
-                        return empty;
-                    }
+                    return { byteToChar(byte1), byteToChar(byte2) };
                 }
             } else {
                 // Start of quantum
                 // [in 01234567] -> [char 012345][rem 67]
                 remainder = input.and($11.byte);
-                if (exists char = byteToChar(input.rightLogicalShift(2))) {
-                    return { char };
-                } else {
-                    return empty;
-                }
+                return { byteToChar(input.rightLogicalShift(2)) };
             }
         }
         
@@ -122,20 +103,14 @@ shared abstract class Base64String()
                     // Middle of quantum (1/4 chars already written)
                     // [rem 67] -> [char [rem 67][pad 0000]] pad pad
                     value byte = rem.leftLogicalShift(6);
-                    if (exists char = byteToChar(byte)) {
-                        return {char, pad, pad};
-                    } else {
-                        return empty;
-                    }
+                    reset();
+                    return { byteToChar(byte), pad, pad };
                 } else {
                     // End of quantum (2/4 chars already written)
                     // [rem 4567] -> [char [rem 4567][pad 00]] pad
                     value byte = rem.leftLogicalShift(2);
-                    if (exists char = byteToChar(byte)) {
-                        return {char, pad};
-                    } else {
-                        return empty;
-                    }
+                    reset();
+                    return { byteToChar(byte), pad };
                 }
             } else {
                 // Start of quantum (no chars to write)
@@ -145,6 +120,25 @@ shared abstract class Base64String()
     };
     shared actual PieceConvert<Byte,Character> pieceDecoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,Character> {
+        
+        Byte? charToByte(Character char) {
+            if (exists byte = reverseTable.get(char)) {
+                
+                return byte;
+            } else if (char == pad) {
+                // Should only be valid for end
+                return null;
+            } else {
+                switch (error)
+                case (strict) {
+                    throw DecodeException("``char`` is not a base64 Character");
+                }
+                case (ignore) {
+                    return null;
+                }
+            }
+        }
+        
         shared actual {Byte*} more(Character input) {
             return nothing;
         }

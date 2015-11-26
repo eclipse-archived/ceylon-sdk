@@ -11,16 +11,17 @@ shared interface Charset satisfies ByteToCharacterCodec {
 shared object utf8 satisfies Charset {
     shared actual [String+] aliases => ["utf-8", "utf8", "utf_8"];
     
-    shared actual Integer minimumForwardRatio => 1;
-    shared actual Integer maximumForwardRatio => 4;
-    shared actual Integer averageForwardRatio => 2;
+    shared actual Integer averageEncodeSize(Integer inputSize) => inputSize * 2;
+    shared actual Integer maximumEncodeSize(Integer inputSize) => inputSize * 4;
+    shared actual Integer averageDecodeSize(Integer inputSize) => inputSize / 2;
+    shared actual Integer maximumDecodeSize(Integer inputSize) => inputSize / 4;
     
     shared actual Integer decodeBid({Byte*} sample) => nothing;
     shared actual Integer encodeBid({Character*} sample) => nothing;
     
     shared actual PieceConvert<Byte,Character> pieceEncoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,Character> {
-        ByteBuffer output = ByteBuffer.ofSize(maximumForwardRatio);
+        ByteBuffer output = ByteBuffer.ofSize(4);
         
         shared actual {Byte*} more(Character input) {
             output.clear();
@@ -70,7 +71,7 @@ shared object utf8 satisfies Charset {
     shared actual PieceConvert<Character,Byte> pieceDecoder(ErrorStrategy error)
             => object satisfies PieceConvert<Character,Byte> {
         variable Boolean initalOutput = true;
-        ByteBuffer intermediate = ByteBuffer.ofSize(maximumForwardRatio);
+        ByteBuffer intermediate = ByteBuffer.ofSize(4);
         
         void reset() {
             intermediate.clear();
