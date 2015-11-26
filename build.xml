@@ -131,7 +131,8 @@
             verbose="${ceylon.verbosity}"
             encoding="UTF-8"
             pack200="true"
-            out="${out.repo}">
+            out="${out.repo}"
+            fork="true">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
         
@@ -142,7 +143,8 @@
     	  <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
             encoding="UTF-8"
-            out="${out.repo}">
+            out="${out.repo}"
+            fork="true">
             <moduleset refid="modules.sdk.js"/>
         </ceylon-compile-js>
         
@@ -156,7 +158,8 @@
             src="test-source"
             out="${test.repo}"
             verbose="${ceylon.verbosity}"
-            encoding="UTF-8">
+            encoding="UTF-8"
+            fork="true">
             <reposet refid="reposet.compile.test"/> 
             <module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.jvm"/>
@@ -168,7 +171,8 @@
             src="test-source"
             out="${test.repo}"
             verbose="${ceylon.verbosity}"
-            encoding="UTF-8">
+            encoding="UTF-8"
+            fork="true">
             <reposet refid="reposet.compile.test"/>
             <module name="test.ceylon.test.stubs"/>
             <moduleset refid="modules.test.js"/>
@@ -180,14 +184,18 @@
 
     <target name="test-jvm" depends="compile-test-jvm"
         description="Runs the compiled test modules from the 'test-modules' repository">
-        <ceylon-test report="true">
+        <ceylon-test
+            report="true"
+            fork="true">
             <reposet refid="reposet.run.test"/>
             <moduleset refid="modules.test.jvm"/>
         </ceylon-test>
     </target>
 
     <target name="test-js" depends="compile-test-js">
-        <ceylon-test-js report="true">
+        <ceylon-test-js
+            report="true"
+            fork="true">
             <reposet refid="reposet.run.test"/>
             <moduleset refid="modules.test.js"/>
         </ceylon-test-js>
@@ -202,7 +210,8 @@
         <ceylon-doc executable="${ceylon.executable}"
             includesourcecode="true"
             nomtimecheck="true"
-            encoding="UTF-8">
+            encoding="UTF-8"
+            fork="true">
             <moduleset refid="modules.sdk.jvm"/>
             <linkset>
                 <link pattern="ceylon" url="http://modules.ceylon-lang.org/repo/1/"/>
@@ -213,7 +222,9 @@
 
     <target name="publish" depends="compile"
             description="Copies the SDK modules to the user's repository">
-        <ceylon-copy out="${ceylon.repo.dir}">
+        <ceylon-copy
+            out="${ceylon.repo.dir}"
+            fork="true">
             <moduleset>
                 <sourcemodules/>
             </moduleset>
@@ -225,31 +236,35 @@
     <fail message="Please specify a target Herd user name with -Dherd.user=..." unless="herd.user"/>
     <fail message="Please specify a target Herd password with -Dherd.pass=..." unless="herd.pass"/>
         
-        <ceylon-compile executable="${ceylon.executable}"
+        <ceylon-compile
+            executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
-        out="${herd.repo}"
-        user="${herd.user}"
-        pass="${herd.pass}"
-            encoding="UTF-8">
+            out="${herd.repo}"
+            user="${herd.user}"
+            pass="${herd.pass}"
+            encoding="UTF-8"
+            fork="true">
             <moduleset refid="modules.sdk.jvm"/>
         </ceylon-compile>
         
         <ceylon-compile-js executable="${ceylon.executable}"
             verbose="${ceylon.verbosity}"
-        out="${herd.repo}"
-        user="${herd.user}"
-        pass="${herd.pass}"
-            encoding="UTF-8">
+            out="${herd.repo}"
+            user="${herd.user}"
+            pass="${herd.pass}"
+            encoding="UTF-8"
+            fork="true">
             <moduleset refid="modules.sdk.js"/>
         </ceylon-compile-js>
 
         <ceylon-doc executable="${ceylon.executable}"
             includesourcecode="true"
             nomtimecheck="true"
-        out="${herd.repo}"
-        user="${herd.user}"
-        pass="${herd.pass}"
-            encoding="UTF-8">
+            out="${herd.repo}"
+            user="${herd.user}"
+            pass="${herd.pass}"
+            encoding="UTF-8"
+            fork="true">
             <moduleset refid="modules.sdk.jvm"/>
             <linkset>
                 <link pattern="ceylon" url="http://modules.ceylon-lang.org/repo/1/"/>
@@ -328,12 +343,14 @@
     </target>
     
     <target name="retrieveDependencies" depends="ceylondefs">
-        <ceylon-copy executable="${ceylon.executable}"
+        <ceylon-copy
+            executable="${ceylon.executable}"
             offline="true"
             verbose="${ceylon.verbosity}"
             nodefaultrepositories="true"
             withdependencies="true"
-            out="${osgi.dist}/tempRepo">
+            out="${osgi.dist}/tempRepo"
+            fork="true">
             <rep url="${basedir}/modules"/>
             <sourcemodules/>
         </ceylon-copy>
@@ -375,7 +392,8 @@
             out="${osgi.dist}"
             repositoryName="Ceylon SDK Bundles"
             categoryPrefix="ceylon.sdk"
-            categories="${osgi.p2}/category.xml">
+            categories="${osgi.p2}/category.xml"
+            fork="true">
             <moduleset refid="modules.sdk.jvm"/>
             <rep url="${basedir}/modules"/>
         </ceylon-p2>
