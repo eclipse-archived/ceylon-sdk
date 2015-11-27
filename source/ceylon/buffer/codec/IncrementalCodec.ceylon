@@ -185,7 +185,6 @@ shared interface CharacterToByteCodec
     }
 }
 
-
 "Common interface for Codecs that convert between characters and characters.
  Examples: rot13."
 shared interface CharacterToCharacterCodec

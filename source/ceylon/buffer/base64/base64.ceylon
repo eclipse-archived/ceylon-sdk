@@ -20,7 +20,7 @@ object second extends PieceDecoderIntraQuantum() {}
 object third extends PieceDecoderIntraQuantum() {}
 object fourth extends PieceDecoderIntraQuantum() {}
 
-shared abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
+shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
         satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
         given ToImmutable satisfies {ToSingle*}
