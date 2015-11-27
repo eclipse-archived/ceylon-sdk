@@ -75,7 +75,7 @@ shared object utf8 satisfies Charset {
     
     shared actual PieceConvert<Character,Byte> pieceDecoder(ErrorStrategy error)
             => object satisfies PieceConvert<Character,Byte> {
-        variable Boolean initalOutput = true;
+        variable Boolean initialOutput = true;
         ByteBuffer intermediate = ByteBuffer.ofSize(4);
         
         void reset() {
@@ -85,6 +85,7 @@ shared object utf8 satisfies Charset {
         reset();
         
         shared actual {Character*} more(Byte input) {
+            // UTF-8 is max 4-byte variable length
             value unsigned = input.unsigned;
             if (intermediate.limit == 0) {
                 // 0b0000 0000 <= byte < 0b1000 0000
@@ -175,14 +176,30 @@ shared object utf8 satisfies Charset {
             
             {Character*} output;
             // 0xFEFF is the Byte Order Mark in UTF8
-            if (initalOutput && char==#FEFF) {
+            if (initialOutput && char==#FEFF) {
                 output = empty;
             } else {
                 output = { char.character };
             }
-            initalOutput = false;
+            initialOutput = false;
             reset();
             return output;
+        }
+        
+        shared actual {Character*} done() {
+            if (intermediate.limit != 0) {
+                switch (error)
+                case (strict) {
+                    throw DecodeException {
+                        "Invalid UTF-8 sequence: missing `` intermediate.available + 1 `` bytes";
+                    };
+                }
+                case (ignore) {
+                    return empty;
+                }
+            } else {
+                return empty;
+            }
         }
     };
 }
