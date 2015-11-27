@@ -1,3 +1,6 @@
+import ceylon.interop.java {
+    javaString
+}
 import ceylon.net.http.server {
     Session
 }
@@ -16,7 +19,7 @@ class DefaultSession(UtSession utSession)
             => utSession.getAttribute(key);
     
     defines(String key)
-            => utSession.attributeNames.contains(key.string);
+            => utSession.attributeNames.contains(javaString(key));
     
     put(String key, Object item) 
             => utSession.setAttribute(key, item);
