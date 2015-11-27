@@ -18,9 +18,6 @@ shared Map<String,CodecOrLower> buildCodecLookup<CodecOrLower>({CodecOrLower*} c
 }
 
 //shared Map<String,Codec> codecsByAlias = buildCodecLookup(nothing);
-shared Map<String,Charset> charsetsByAlias = buildCodecLookup {
-    utf8
-};
 shared Map<String,Base64String> base64StringByAlias = buildCodecLookup {
     base64StringStandard,
     base64StringUrl
