@@ -31,7 +31,11 @@ shared interface StatelessCodec<ToImmutable, ToSingle, FromImmutable, FromSingle
         given FromImmutable satisfies {FromSingle*} {
     
     "Encode all of [[input]], returning all of the output."
+    throws (`class EncodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared formal ToImmutable encode({FromSingle*} input, ErrorStrategy error = strict);
     "Decode all of [[input]], returning all of the output."
+    throws (`class DecodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared formal FromImmutable decode({ToSingle*} input, ErrorStrategy error = strict);
 }

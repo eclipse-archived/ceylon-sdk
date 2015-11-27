@@ -81,20 +81,28 @@ shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
     "Encodes one input piece to zero or more output pieces. This is mostly
      intended for refinement by subtypes. Higher level encode methods are
      provided for general use."
+    throws (`class EncodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared formal PieceConvert<ToSingle,FromSingle> pieceEncoder(ErrorStrategy error = strict);
     "Decodes one output piece to zero or more input pieces. This is mostly
      intended for refinement by subtypes. Higher level decode methods are
      provided for general use."
+    throws (`class DecodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared formal PieceConvert<FromSingle,ToSingle> pieceDecoder(ErrorStrategy error = strict);
     
     "Encodes in portions dictated by the size of the output buffer, which will
      not be resized."
+    throws (`class EncodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared ChunkConvert<ToMutable,{FromSingle*},ToSingle,FromSingle> chunkEncoder(error = strict) {
         ErrorStrategy error;
         return ChunkConvert<ToMutable,{FromSingle*},ToSingle,FromSingle>(pieceEncoder(error));
     }
     "Decodes in portions dictated by the size of the output buffer, which will
      not be resized."
+    throws (`class DecodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared ChunkConvert<FromMutable,{ToSingle*},FromSingle,ToSingle> chunkDecoder(error = strict) {
         ErrorStrategy error;
         return ChunkConvert<FromMutable,{ToSingle*},FromSingle,ToSingle>(pieceDecoder(error));
@@ -103,6 +111,8 @@ shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
     "Encode all of [[input]], writing the result into [[the provided
      buffer|into]]. The buffer will be resized if its too small to receive all
      of the output."
+    throws (`class EncodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared void encodeInto(ToMutable into, {FromSingle*} input, ErrorStrategy error = strict) {
         void add(ToSingle element) {
             if (!into.hasAvailable) {
@@ -119,6 +129,8 @@ shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
     "Decode all of [[input]], writing the result into [[the provided
      buffer|into]]. The buffer will be resized if its too small to receive all
      of the output."
+    throws (`class DecodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
     shared void decodeInto(FromMutable into, {ToSingle*} input, ErrorStrategy error = strict) {
         void add(FromSingle element) {
             if (!into.hasAvailable) {

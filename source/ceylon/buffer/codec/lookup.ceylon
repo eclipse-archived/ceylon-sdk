@@ -38,7 +38,7 @@ buildAuction<ToMutable, ToImmutable, ToSingle, FromMutable, FromImmutable, FromS
     value bids = map<Integer,
         IncrementalCodec<ToMutable,ToImmutable,ToSingle,FromMutable,FromImmutable,FromSingle>>
         { for (bidder in bidders) bidder.encodeBid(lot) -> bidder };
-    return bids.sort(increasingKey)*.item;
+    return bids.filterKeys((k) => k > 0).sort(increasingKey)*.item;
 }
 
 shared [IncrementalCodec<ByteBuffer,Array<Byte>,Byte,
@@ -50,7 +50,7 @@ shared [IncrementalCodec<ByteBuffer,Array<Byte>,Byte,
 void asd() {
     value bytes = [0.byte];
     value results = auctionByteToByteEncode(bytes);
-    assert(nonempty results);
+    assert (nonempty results);
     results.first.encode(bytes);
 }
 
