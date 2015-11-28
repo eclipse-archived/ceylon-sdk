@@ -1,6 +1,6 @@
 import ceylon.buffer.base64 {
-    encode,
-    decode
+    encode=base64Encode,
+    decode=base64Decode
 }
 import ceylon.buffer.charset {
     utf8,
