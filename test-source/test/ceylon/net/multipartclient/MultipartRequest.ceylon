@@ -7,16 +7,15 @@ import ceylon.net.http {
     Header,
     contentType
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     utf8,
     Charset
 }
 import ceylon.collection {
 	HashSet
 }
-import ceylon.io.buffer {
-	ByteBuffer,
-	newByteBuffer
+import ceylon.buffer {
+	ByteBuffer
 }
 import ceylon.net.http.client {
 	Request,
@@ -89,7 +88,7 @@ shared class MultipartRequest(uri, parameters, files, headers = empty, charset =
     }
 
     ByteBuffer multipartDataProvider() {
-        ByteBuffer byteBuffer = newByteBuffer(1024);
+        ByteBuffer byteBuffer = ByteBuffer.ofSize(1024);
         value bufferWriter = ByteBufferWriter(byteBuffer, charset);
         
         parameters.each((Parameter parameter) => writeParameter(parameter, bufferWriter));
