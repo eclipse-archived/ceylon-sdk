@@ -56,7 +56,7 @@ test void testWebSocketServer() {
             onBinnaryCalled = true;
             String data = utf8.decode(binary);
             print("Server received binary message: ``data``");
-            value encoded = utf8.encode(data.uppercased);
+            value encoded = utf8.encodeBuffer(data.uppercased);
             channel.sendBinary(encoded);
         };}
     );

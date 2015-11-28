@@ -18,11 +18,11 @@ import ceylon.net.uri {
 
 void readResponse(Socket socket) {
     // blocking read
-    value decoder = utf8.Decoder();
+    value decoder = utf8.cumulativeDecoder();
     // read,decode it all, blocking
-    socket.readFully((ByteBuffer buffer) => decoder.decode(buffer));
+    socket.readFully((ByteBuffer buffer) => decoder.more(buffer));
     // print it all
-    print(decoder.consume());
+    print(decoder.done().string);
 }
 
 void readAsyncResponse2(Socket socket){
@@ -36,13 +36,13 @@ void readAsyncResponse2(Socket socket){
 
 void readAsyncResponse(Socket socket){
     Selector select = newSelector();
-    value decoder = utf8.Decoder();
+    value decoder = utf8.cumulativeDecoder();
     // read, decode it all as we get data
-    socket.readAsync(select, (ByteBuffer buffer) => decoder.decode(buffer));
+    socket.readAsync(select, (ByteBuffer buffer) => decoder.more(buffer));
     // run the event loop
     select.process();
     // print it all
-    print(decoder.consume());
+    print(decoder.done().string);
 }
 
 T notNull<T>(T? o) given T satisfies Object{
@@ -54,7 +54,7 @@ T notNull<T>(T? o) given T satisfies Object{
 
 void writeRequest(String request, Socket socket) {
     // encode it in one go
-    value requestBuffer = ascii.encode(request);
+    value requestBuffer = ascii.encodeBuffer(request);
     // write it all, blocking
     socket.writeFully(requestBuffer);
 }
@@ -62,10 +62,10 @@ void writeRequest(String request, Socket socket) {
 void writeRequestInPipeline(String request, Socket socket) {
     // encode it and send it by chunks
     value requestBuffer = ByteBuffer.ofSize(200);
-    value encoder = ascii.Encoder();
+    value encoder = ascii.chunkEncoder();
     value input = CharacterBuffer(request);
-    while(input.hasAvailable){
-        encoder.encode(input, requestBuffer);
+    while(input.hasAvailable || !encoder.done){
+        encoder.convert(requestBuffer, input);
         // flip and flush the request buffer
         requestBuffer.flip();
         // write it all, blocking
