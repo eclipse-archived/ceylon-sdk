@@ -15,15 +15,15 @@ import ceylon.buffer.codec {
 by ("Stéphane Épardaud")
 shared object ascii satisfies Charset {
     shared actual [String+] aliases = [
-        "us-ascii",
-        "ansi_X3.4-1968",
+        "US-ASCII",
+        "ANSI_X3.4-1968",
         "iso-ir-6",
-        "ansi_X3.4-1986",
-        "iso_646.irv:1991",
-        "iso646-US",
-        "ascii",
+        "ANSI_X3.4-1986",
+        "ISO_646.irv:1991",
+        "ISO646-US",
+        "ASCII",
         "us",
-        "ibm367",
+        "IBM367",
         "cp367"
     ];
     

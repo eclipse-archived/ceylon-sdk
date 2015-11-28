@@ -14,7 +14,7 @@ import ceylon.buffer.codec {
  [http://tools.ietf.org/html/rfc3629]."
 by ("Stéphane Épardaud")
 shared object utf8 satisfies Charset {
-    shared actual [String+] aliases = ["utf-8", "utf8", "utf_8"];
+    shared actual [String+] aliases = ["UTF-8", "UTF8", "UTF_8"];
     
     shared actual Integer averageEncodeSize(Integer inputSize) => inputSize * 2;
     shared actual Integer maximumEncodeSize(Integer inputSize) => inputSize * 4;

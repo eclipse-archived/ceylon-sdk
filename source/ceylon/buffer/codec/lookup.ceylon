@@ -9,11 +9,30 @@ import ceylon.buffer.base64 {
 import ceylon.buffer {
     ByteBuffer
 }
+import ceylon.collection {
+    HashSet
+}
+
+Set<String> capitalizations(String base) {
+    value permutations = HashSet<String>();
+    if (exists head = base.first) {
+        for (tail in capitalizations(base.spanFrom(1))) {
+            permutations.add(head.uppercased.string + tail);
+            permutations.add(head.lowercased.string + tail);
+        }
+    } else {
+        // base is the empty string
+        permutations.add(base);
+    }
+    return permutations;
+}
 
 shared Map<String,CodecOrLower> buildCodecLookup<CodecOrLower>({CodecOrLower*} codecs)
         given CodecOrLower satisfies Codec {
     return map<String,CodecOrLower> {
-        for (codec in codecs) for (codecAlias in codec.aliases) codecAlias->codec
+        for (codec in codecs)
+            for (codecAlias in codec.aliases)
+                for (p in capitalizations(codecAlias)) p->codec
     };
 }
 

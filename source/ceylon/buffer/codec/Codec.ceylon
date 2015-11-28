@@ -1,5 +1,5 @@
 shared interface Codec {
-    "A list of lowercase common names. The first alias is [[name]]."
+    "A list of common names. The first alias is [[name]]."
     shared formal [String+] aliases;
     "The alias most commonly used for this codec, or otherwise specified by a
      standard."

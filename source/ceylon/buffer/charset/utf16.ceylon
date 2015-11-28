@@ -19,7 +19,7 @@ import ceylon.buffer.codec {
  big-endian UTF-16 with no `BOM` markers."
 by ("Stéphane Épardaud")
 shared object utf16 satisfies Charset {
-    shared actual [String+] aliases = ["utf-16", "utf16", "utf_16"];
+    shared actual [String+] aliases = ["UTF-16", "UTF16", "UTF_16"];
     
     shared actual Integer averageEncodeSize(Integer inputSize) => inputSize * 2;
     shared actual Integer maximumEncodeSize(Integer inputSize) => inputSize * 4;

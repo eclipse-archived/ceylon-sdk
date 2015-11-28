@@ -14,10 +14,10 @@ import ceylon.buffer.codec {
 by ("Stéphane Épardaud")
 shared object iso_8859_1 satisfies Charset {
     shared actual [String+] aliases = [
-        "iso-8859-1",
-        "iso_8859-1:1987", // official name
+        "ISO-8859-1",
+        "ISO_8859-1:1987", // official name
         "iso-ir-100",
-        "iso_8859-1",
+        "ISO_8859-1",
         "latin1",
         "l1",
         "IBM819",
