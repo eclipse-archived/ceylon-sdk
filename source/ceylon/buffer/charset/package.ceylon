@@ -9,18 +9,10 @@
    
        String string = ascii.decode(bytes);
        
-   Similarly, for a [[ceylon.buffer::ByteBuffer]] that's ok to resize:
+   Similarly, for a [[ceylon.buffer::ByteBuffer]]:
    
-       ByteBuffer bytes = ByteBuffer.ofSize(0);
-       utf8.encodeInto(bytes, "Clear Air Turbulence");
-       CharacterBuffer chars = CharacterBuffer.ofSize(0);
-       utf8.decodeInto(chars, bytes);
-       
-   Or for one that must stay a fixed size:
-   
-       ByteBuffer bytes = ByteBuffer.ofSize(1M);
-       value encoder = utf8.chunkEncoder();
-       encoder.convert(bytes, "No More Mr Nice Guy");
+       ByteBuffer bytes = utf8.encodeBuffer("Clear Air Turbulence");
+       CharacterBuffer chars = utf8.decodeBuffer(bytes);
    
    If you only know the name of a charset you can get its Charset with:
    
