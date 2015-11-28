@@ -1,3 +1,7 @@
+import ceylon.buffer {
+    Buffer
+}
+
 "Thrown by failed conversion operations"
 shared class ConvertException(description = null, cause = null)
         extends Exception(description, cause) {
@@ -25,9 +29,12 @@ shared object strict extends ErrorStrategy() {}
 shared object ignore extends ErrorStrategy() {}
 
 "Codecs that can take an input all at once, and return the output all at once."
-shared interface StatelessCodec<ToImmutable, ToSingle, FromImmutable, FromSingle>
+shared interface StatelessCodec<ToMutable, ToImmutable, ToSingle,
+    FromMutable, FromImmutable, FromSingle>
         satisfies Codec
+        given ToMutable satisfies Buffer<ToSingle>
         given ToImmutable satisfies {ToSingle*}
+        given FromMutable satisfies Buffer<FromSingle>
         given FromImmutable satisfies {FromSingle*} {
     
     "Encode all of [[input]], returning all of the output."
@@ -38,4 +45,14 @@ shared interface StatelessCodec<ToImmutable, ToSingle, FromImmutable, FromSingle
     throws (`class DecodeException`,
         "When an error is encountered and [[error]] == [[strict]]")
     shared formal FromImmutable decode({ToSingle*} input, ErrorStrategy error = strict);
+    
+    "Encode all of [[input]] into a new buffer and return it."
+    throws (`class EncodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
+    shared formal ToMutable encodeBuffer({FromSingle*} input, ErrorStrategy error = strict);
+    
+    "Decode all of [[input]] into a new buffer and return it."
+    throws (`class DecodeException`,
+        "When an error is encountered and [[error]] == [[strict]]")
+    shared formal FromMutable decodeBuffer({ToSingle*} input, ErrorStrategy error = strict);
 }
