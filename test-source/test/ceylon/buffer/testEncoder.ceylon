@@ -1,3 +1,4 @@
+/*
 import ceylon.buffer.charset {
     ascii,
     Charset,
@@ -77,3 +78,4 @@ test void testUTF16Encoder(){
                                     #D8, #34, #DD, #1E,
                                     #DB, #FF, #DF, #FD);
 }
+*/

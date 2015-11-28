@@ -1,3 +1,4 @@
+/*
 import ceylon.test { assertEquals, test }
 
 import ceylon.buffer.charset { Charset, utf8, utf16, iso_8859_1 }
@@ -75,3 +76,4 @@ test void testUTF8EncoderDecoder() {
     String decoded = utf8.decode(encoded);
     assertEquals(original, decoded);
 }
+*/

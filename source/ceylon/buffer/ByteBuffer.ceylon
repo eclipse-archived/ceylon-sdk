@@ -140,10 +140,10 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
     
     shared native ("jvm") new ofArray(Array<Byte> initialArray) extends Buffer<Byte>() {
         // TODO work around apparently broken interop javaByteArray
-        //buf = wrapJavaByteBuffer(javaByteArray(initialArray));
-        buf = allocateJavaByteBuffer(initialArray.size);
-        initialArray.each(void(byte) => buf.put(byte));
-        buf.clear();
+        buf = wrapJavaByteBuffer(javaByteArray(initialArray));
+        //buf = allocateJavaByteBuffer(initialArray.size);
+        //initialArray.each(void(byte) => buf.put(byte));
+        //buf.clear();
     }
     
     shared native ("jvm") new ofSize(Integer initialCapacity) extends Buffer<Byte>() {
