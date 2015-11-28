@@ -13,7 +13,7 @@ import ceylon.io {
 }
 import ceylon.buffer.charset {
     Charset,
-    getCharset
+    charsetsByAlias
 }
 import ceylon.net.http {
     Header
@@ -67,7 +67,7 @@ class ResponseImpl(HttpServerExchange exchange,
     //TODO comment encodings and defaults
     shared actual void writeString(String string) {
         applyHeadersToExchange();
-        value buffer = findCharset().encode(string);
+        value buffer = findCharset().encodeBuffer(string);
         writeJByteBuffer(nativeByteBuffer(buffer));
     }
 
@@ -76,7 +76,7 @@ class ResponseImpl(HttpServerExchange exchange,
             void onCompletion(),
             void onError(ServerException e)) {
         applyHeadersToExchange();
-        value byteBuffer = findCharset().encode(string);
+        value byteBuffer = findCharset().encodeBuffer(string);
         writeJByteBufferAsynchronous(
             nativeByteBuffer(byteBuffer), 
             IoCallbackWrapper(onCompletion, onError));
@@ -223,7 +223,7 @@ class ResponseImpl(HttpServerExchange exchange,
                 value startIndex = charsetIndex + charsetLabel.size;
                 value endIndex = headerValue.size;
                 String charsetString = headerValue[startIndex..endIndex].trimmed;
-                if (exists charset = getCharset(charsetString)) {
+                if (exists charset = charsetsByAlias[charsetString]) {
                     return charset;
                 } else {
                     //TODO log

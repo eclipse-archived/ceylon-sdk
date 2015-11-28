@@ -6,7 +6,7 @@ import ceylon.buffer {
 }
 import ceylon.buffer.charset {
     ascii,
-    getCharset
+    charsetsByAlias
 }
 import ceylon.buffer.readers {
     Reader
@@ -188,14 +188,14 @@ shared class Response(status, reason, major, minor,
     String readEntityBody() {
         value reader = getReader();
         ByteBuffer buffer = ByteBuffer.ofSize(4096);
-        value encoding = getCharset(charset else "ASCII") else ascii;
-        value decoder = encoding.Decoder();
+        value encoding = charsetsByAlias[charset else "ASCII"] else ascii;
+        value body = encoding.cumulativeDecoder(contentLength);
         while(reader.read(buffer) != -1) {
             buffer.flip();
-            decoder.decode(buffer);
+            body.more(buffer);
             buffer.clear();
         }
-        return decoder.consume();
+        return body.done().string;
     }
     
     "Returns the entity `Content-Length`, if known. Returns 

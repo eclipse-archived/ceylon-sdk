@@ -26,7 +26,7 @@ shared class Parser(FileDescriptor socket) {
     variable Integer byte = 0;
     value buffer = ByteBuffer.ofSize(1024);
     value reader = FileDescriptorReader(socket);
-    value decoder = ascii.Decoder();
+    value charset = ascii;
     
     variable Integer? status = null;
     variable String? reason = null;
@@ -124,8 +124,7 @@ shared class Parser(FileDescriptor socket) {
     "Gets the contents of the buffer as ASCII"
     String getString() {
         buffer.flip();
-        decoder.decode(buffer);
-        return decoder.consume();
+        return charset.decode(buffer);
     }
     
     "Throws an exception about an unexpected input read"

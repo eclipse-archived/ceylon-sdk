@@ -31,7 +31,7 @@ class DefaultFragmentedTextSender(DefaultWebSocketChannel channel)
     shared actual void sendText(String text, Boolean finalFrame) {
         value wsChannel = fragmentedChannel.webSocketChannel;
         if (finalFrame) {
-            Object? jByteBuffer = utf8.encode(text).implementation;
+            Object? jByteBuffer = utf8.encodeBuffer(text).implementation;
             if (is JByteBuffer jByteBuffer) {
                 wsSendCloseBlocking(jByteBuffer , wsChannel);
             } else {
@@ -50,7 +50,7 @@ class DefaultFragmentedTextSender(DefaultWebSocketChannel channel)
         value wsChannel = fragmentedChannel.webSocketChannel;
         
         if (finalFrame) {
-            Object? jByteBuffer = utf8.encode(text).implementation;
+            Object? jByteBuffer = utf8.encodeBuffer(text).implementation;
             if (is JByteBuffer jByteBuffer) {
                 wsSendClose(jByteBuffer , wsChannel, wrapCallbackSend(onCompletion, onError, channel));
             } else {
