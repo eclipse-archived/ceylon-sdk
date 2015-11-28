@@ -12,5 +12,8 @@ import ceylon.buffer.codec {
  - UTF-16
  "
 shared Map<String,Charset> charsetsByAlias = buildCodecLookup {
-    utf8
+    utf8,
+    utf16,
+    iso_8859_1,
+    ascii
 };
