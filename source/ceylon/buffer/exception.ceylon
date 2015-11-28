@@ -15,9 +15,3 @@ shared class BufferOverflowException(description = null, cause = null)
     String? description;
     Throwable? cause;
 }
-
-shared class BufferPreconditionException(description = null, cause = null)
-        extends BufferException(description, cause) {
-    String? description;
-    Throwable? cause;
-}

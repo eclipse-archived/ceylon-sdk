@@ -34,7 +34,7 @@ shared sealed abstract class Buffer<Element>()
     "The current position index within this buffer. Starts
      at `0` and grows with each [[get]] or [[put]] operation,
      until it reaches the [[limit]]."
-    throws (`class BufferPreconditionException`,
+    throws (`class AssertionError`,
         "On assignment if the new value would be invalid")
     shared formal variable Integer position;
     
@@ -46,7 +46,7 @@ shared sealed abstract class Buffer<Element>()
     "The limit at which to stop reading and writing. The
      limit will always be greater or equal to the
      [[position]] and smaller or equal to the [[capacity]]."
-    throws (`class BufferPreconditionException`,
+    throws (`class AssertionError`,
         "On assignment if the new value would be invalid")
     shared formal variable Integer limit;
     

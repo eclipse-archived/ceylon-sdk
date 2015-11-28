@@ -64,13 +64,10 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
     variable Integer _limit = buf.size;
     shared actual native ("js") Integer limit => _limit;
     native ("js") assign limit {
-        // Limit must be non-negative and no larger than capacity
-        if (limit < 0) {
-            throw BufferPreconditionException("Limit ``limit`` is not positive");
-        }
-        if (limit > capacity) {
-            throw BufferPreconditionException("Limit ``limit`` exceeds capacity ``capacity``");
-        }
+        "Limit must be non-negative"
+        assert(limit >= 0);
+        "Limit must be no larger than capacity"
+        assert (limit <= capacity);
         // Position must be be no larger than the limit
         if (position > limit) {
             position = limit;
@@ -79,14 +76,9 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
     }
     
     native ("js") assign position {
-        // Position must be non-negative and no larger than limit
-        if (position < 0) {
-            throw BufferPreconditionException("Position ``position`` is not positive");
-        }
-        if (position > limit) {
-            throw BufferPreconditionException("Position ``position`` exceeds limit ``limit``");
-        }
+        "Position must be non-negative"
         assert (position >= 0);
+        "Position must be no larger than limit"
         assert (position <= limit);
         _position = position;
     }
@@ -162,25 +154,19 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
     
     shared actual native ("jvm") Integer limit => buf.limit();
     native ("jvm") assign limit {
-        // Limit must be non-negative and no larger than capacity
-        if (limit < 0) {
-            throw BufferPreconditionException("Limit ``limit`` is not positive");
-        }
-        if (limit > capacity) {
-            throw BufferPreconditionException("Limit ``limit`` exceeds capacity ``capacity``");
-        }
+        "Limit must be non-negative"
+        assert(limit >= 0);
+        "Limit must be no larger than capacity"
+        assert (limit <= capacity);
         buf.limit(limit);
     }
     
     shared actual native ("jvm") Integer position => buf.position();
     native ("jvm") assign position {
-        // Position must be non-negative and no larger than limit
-        if (position < 0) {
-            throw BufferPreconditionException("Position ``position`` is not positive");
-        }
-        if (position > limit) {
-            throw BufferPreconditionException("Position ``position`` exceeds limit ``limit``");
-        }
+        "Position must be non-negative"
+        assert (position >= 0);
+        "Position must be no larger than limit"
+        assert (position <= limit);
         buf.position(position);
     }
     

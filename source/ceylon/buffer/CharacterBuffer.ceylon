@@ -34,13 +34,10 @@ shared class CharacterBuffer extends Buffer<Character> {
     variable Integer _limit = buf.size;
     shared actual Integer limit => _limit;
     assign limit {
-        // Limit must be non-negative and no larger than capacity
-        if (limit < 0) {
-            throw BufferPreconditionException("Limit ``limit`` is not positive");
-        }
-        if (limit > capacity) {
-            throw BufferPreconditionException("Limit ``limit`` exceeds capacity ``capacity``");
-        }
+        "Limit must be non-negative"
+        assert(limit >= 0);
+        "Limit must be no larger than capacity"
+        assert (limit <= capacity);
         // Position must be be no larger than the limit
         if (position > limit) {
             position = limit;
@@ -49,13 +46,10 @@ shared class CharacterBuffer extends Buffer<Character> {
     }
     
     assign position {
-        // Position must be non-negative and no larger than limit
-        if (position < 0) {
-            throw BufferPreconditionException("Position ``position`` is not positive");
-        }
-        if (position > limit) {
-            throw BufferPreconditionException("Position ``position`` exceeds limit ``limit``");
-        }
+        "Position must be non-negative"
+        assert (position >= 0);
+        "Position must be no larger than limit"
+        assert (position <= limit);
         _position = position;
     }
     
