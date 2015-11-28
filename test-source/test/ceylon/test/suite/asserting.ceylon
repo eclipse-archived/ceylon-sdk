@@ -4,6 +4,9 @@ import ceylon.language.meta.model {
 import ceylon.test {
     ...
 }
+import ceylon.test.core {
+    ...
+}
 
 test
 shared void testFail() {
@@ -207,4 +210,37 @@ shared void testAssertThatException() {
     catch(AssertionError e) {
         assert(e.message == "assertion failed: expected exception will be thrown");
     }
+}
+
+test
+shared void testAssertAll() {
+    try {
+        assertAll([
+            () => assertTrue(false),
+            () => assertFalse(true)]);
+        assert(false);
+    }
+    catch(MultipleFailureException e) {
+        assert(e.message.startsWith("assertions failed (2 of 2)"));
+        assert(e.exceptions.size == 2);
+        assert(exists e1 = e.exceptions[0], e1.message == "assertion failed: expected true");
+        assert(exists e2 = e.exceptions[1], e2.message == "assertion failed: expected false");
+    }
+}
+
+test
+shared void testAssertAllPropagateException() {
+    void throwOverflowException() {
+        throw OverflowException();
+    }
+    try {
+        assertAll([
+            () => assertTrue(false),
+            () => throwOverflowException()]);
+        assert(false);
+    }
+    catch (OverflowException e) {
+        // noop
+    }
+    
 }

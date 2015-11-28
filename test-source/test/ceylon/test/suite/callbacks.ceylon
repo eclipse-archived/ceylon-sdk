@@ -238,7 +238,6 @@ shared void shouldHandleExceptionsInCallbacks() {
             runResult;
             state = error;
             source = `FooWithCallbacks.foo`;
-            message = "There were 3 exceptions";
         };
     }
     finally {

@@ -11,14 +11,16 @@ shared class IgnoreException(reason) extends Exception(reason) {
 }
 
 "Thrown when multiple exceptions occurs."
-shared class MultipleFailureException(exceptions) extends Exception() {
+shared class MultipleFailureException(exceptions, description = "multiple failures occurred (``exceptions.size``) :") extends Exception() {
     
     "The collected exceptions."
     shared Throwable[] exceptions;
     
+    String description;
+    
     shared actual String message {
         value message = StringBuilder();
-        message.append("There were ``exceptions.size`` exceptions:");
+        message.append(description);
         for (e in exceptions) {
             message.appendNewline();
             message.append("    ");

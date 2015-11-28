@@ -5,6 +5,12 @@ import ceylon.language.meta.model {
     Class,
     ClassModel
 }
+import ceylon.collection {
+    ArrayList
+}
+import ceylon.test.core {
+    MultipleFailureException
+}
 
 "Thrown to indicate that two values which should have been \"the 
  same\" (according to some comparison function) were in fact 
@@ -114,6 +120,35 @@ shared void assertNotEquals(
         value actualText = nullSafeString(actual);
         value exceptionMessage = "`` message else "assertion failed" ``: expected not equals <``actualText``>";
         throw AssertionError(exceptionMessage);
+    }
+}
+
+"Verify all given assertions and any failures will be reported together.
+ 
+ Example:
+ 
+     assertAll([
+         () => assertEquals(agent.id, \"007\"),
+         () => assertEquals(agent.firstName, \"James\"),
+         () => assertEquals(agent.lastName, \"Bond\")]);
+ 
+"
+shared void assertAll(
+    "The group of assertions."
+    Anything()[] assertions,
+    "The message describing the problem."
+    String? message = null) {
+    value failures = ArrayList<AssertionError>();
+    for (assertion in assertions) {
+        try {
+            assertion();
+        } catch (AssertionError failure) {
+            failures.add(failure);
+        }
+    }
+    if (!failures.empty) {
+        value description = message else "assertions failed (``failures.size`` of ``assertions.size``) :";
+        throw MultipleFailureException(failures.sequence(), description);
     }
 }
 
