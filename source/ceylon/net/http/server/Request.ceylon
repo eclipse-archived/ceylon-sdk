@@ -8,7 +8,7 @@ import ceylon.net.http {
 "Defines an object to provide client request information 
  to a web endpoint."
 by("Matej Lazar")
-shared sealed interface Request {
+shared interface Request {
     
     "Returns a single parameters with given name. If there 
      are more, the first one is returned. If 

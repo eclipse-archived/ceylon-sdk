@@ -10,7 +10,7 @@ import ceylon.io {
 
 "An object to assist sending response to the client."
 by("Matej Lazar")
-shared sealed interface Response {
+shared interface Response {
 
     "Writes string to the response."
     shared formal void writeString(String string);
