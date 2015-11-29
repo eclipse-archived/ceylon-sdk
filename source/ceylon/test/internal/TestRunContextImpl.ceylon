@@ -45,6 +45,9 @@ shared class TestRunContextImpl(runner, result) satisfies TestRunContext {
     shared actual void fireTestIgnore(TestIgnoreEvent event)
             => fire(event.result.description, (TestListener l) => l.testIgnore(event));
     
+    shared actual void fireTestAborted(TestAbortedEvent event)
+            => fire(event.result.description, (TestListener l) => l.testAborted(event));
+    
     shared actual void fireTestExclude(TestExcludeEvent event)
             => fire(null, (TestListener l) => l.testExclude(event));
     

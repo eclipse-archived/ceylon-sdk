@@ -13,7 +13,8 @@ import ceylon.test {
     TestResult,
     TestRunResult,
     TestDescription,
-    TestListener
+    TestListener,
+    aborted
 }
 import java.text {
     NumberFormat
@@ -94,6 +95,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                               <td class='value failures'>``result.failureCount``</td>
                               <td class='value errors'>``result.errorCount``</td>
                               <td class='value ignored'>``result.ignoreCount``</td>
+                              <td class='value aborted'>``result.abortedCount``</td>
                               <td class='value time'>``escapeHtml(formatTime(result.elapsedTime))``<span class='label'>sec</span></td>
                           </tr>
                           <tr>
@@ -102,6 +104,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                               <td class='label'>Failures</td>
                               <td class='label'>Errors</td>
                               <td class='label'>Ignored</td>
+                              <td class='label'>Aborted</td>
                               <td class='label'>Time</td>
                           </tr>
                       </tbody>
@@ -157,6 +160,11 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                 fw.write("<tr class='ignored``expandableFlag then expandableSnippet else "'>"``");
                 fw.write("<td>");
                 fw.write("<i class='icon ignored'></i>");
+            }
+            case(aborted) {
+                fw.write("<tr class='aborted``expandableFlag then expandableSnippet else "'>"``");
+                fw.write("<td>");
+                fw.write("<i class='icon aborted'></i>");
             }
 
         String name;

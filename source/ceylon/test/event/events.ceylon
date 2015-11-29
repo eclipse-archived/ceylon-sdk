@@ -62,6 +62,15 @@ shared class TestIgnoreEvent(result) {
     shared actual String string => toString(this, result);
 }
 
+"Event fired by [[TestListener.testAborted]]."
+shared class TestAbortedEvent(result) {
+    
+    "The result of the test."
+    shared TestResult result;
+    
+    shared actual String string => toString(this, result);
+}
+
 "Event fired by [[TestListener.testError]]."
 shared class TestErrorEvent(result) {
     

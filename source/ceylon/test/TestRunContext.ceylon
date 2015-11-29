@@ -46,6 +46,11 @@ shared interface TestRunContext {
         "The event object."
         TestIgnoreEvent event);
     
+    "Fire [[TestListener.testAborted]] event."
+    shared formal void fireTestAborted(
+        "The event object."
+        TestAbortedEvent event);
+    
     "Fire [[TestListener.testError]] event."
     shared formal void fireTestError(
         "The event object."

@@ -10,6 +10,14 @@ shared class IgnoreException(reason) extends Exception(reason) {
     
 }
 
+"Thrown when the test assumption is not met, cause aborting of test execution."
+shared class TestAbortedException(assumption) extends Exception(assumption) {
+    
+    "The message describing the assumption, which wasn't met."
+    shared String? assumption;
+    
+}
+
 "Thrown when multiple exceptions occurs."
 shared class MultipleFailureException(exceptions, description = "multiple failures occurred (``exceptions.size``) :") extends Exception() {
     

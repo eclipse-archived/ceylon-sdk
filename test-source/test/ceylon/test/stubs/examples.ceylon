@@ -29,6 +29,11 @@ test
 ignore("ignore function foo")
 shared void fooWithIgnore() {}
 
+test
+shared void fooWithAssumption() {
+    assumeTrue(false);
+}
+
 shared void fooWithoutTestAnnotation() {}
 
 shared variable Bar? barInstance1 = null;

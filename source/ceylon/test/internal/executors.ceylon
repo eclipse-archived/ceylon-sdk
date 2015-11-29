@@ -20,6 +20,7 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
             shared actual void testFinish(TestFinishEvent event) => updateWorstState(event.result.state);
             shared actual void testError(TestErrorEvent event) => updateWorstState(event.result.state);
             shared actual void testIgnore(TestIgnoreEvent event) => updateWorstState(ignored);
+            shared actual void testAborted(TestAbortedEvent event) => updateWorstState(aborted);
         }
         
         context.addTestListener(updateWorstStateListener);
@@ -38,7 +39,9 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
     Comparison compareStates(TestState state1, TestState state2) {
         if (state1 == state2) {
             return equal;
-        } else if (state1 == ignored && (state2 == success || state2 == failure || state2 == error)) {
+        } else if (state1 == ignored && (state2 == success || state2 == failure || state2 == error || state2 == aborted)) {
+            return smaller;
+        } else if (state1 == aborted && (state2 == success || state2 == failure || state2 == error)) {
             return smaller;
         } else if (state1 == success && (state2 == failure || state2 == error)) {
             return smaller;

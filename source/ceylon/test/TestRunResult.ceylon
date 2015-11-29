@@ -19,6 +19,9 @@ shared interface TestRunResult {
     "The number of [[ignored]] tests during the test run."
     shared formal Integer ignoreCount;
     
+    "The number of [[aborted]] tests during the test run."
+    shared formal Integer abortedCount;
+    
     "The time in milliseconds when the test run started."
     shared formal Integer startTime;
     

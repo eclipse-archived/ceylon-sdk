@@ -64,6 +64,10 @@ body {
 	color: rgb(119, 119, 119);
 }
 
+.summary .aborted {
+	color: rgb(119, 119, 119);
+}
+
 .summary .time {
 	color: rgb(51, 51, 51);
 }
@@ -99,6 +103,10 @@ body {
 }
 
 .results .ignored {
+	color: rgb(119, 119, 119);
+}
+
+.results .aborted {
 	color: rgb(119, 119, 119);
 }
 
@@ -169,6 +177,19 @@ body {
 	border-bottom: 10px solid rgb(245, 245, 245);
 }
 
+.aborted .stack-trace {
+	background-color: rgb(245, 245, 245);
+	border-top: 1px solid rgb(240, 240, 240);
+}
+
+.aborted .stack-trace-arrow {
+	border-bottom: 10px solid rgb(240, 240, 240);
+}
+
+.aborted .stack-trace-arrow-inner {
+	border-bottom: 10px solid rgb(245, 245, 245);
+}
+
 .icon {
 	font-weight: normal;
 	font-style: normal;
@@ -188,6 +209,11 @@ body {
 }
 
 .icon.ignored:BEFORE {
+	content: '\2753';
+	color: rgb(119, 119, 119);
+}
+
+.icon.aborted:BEFORE {
 	content: '\2753';
 	color: rgb(119, 119, 119);
 }

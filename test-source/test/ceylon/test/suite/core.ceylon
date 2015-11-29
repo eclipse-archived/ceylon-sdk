@@ -122,6 +122,20 @@ shared void shouldRunTestThrowingIgnoreException() {
 }
 
 test
+shared void shouldRunTestWithAssumption() {
+    value result = createTestRunner([`fooWithAssumption`]).run();
+    assertResultCounts {
+        result;
+        abortedCount = 1;
+    };
+    assertResultContains {
+        result;
+        state = aborted;
+        source = `fooWithAssumption`;
+    };
+}
+
+test
 shared void shouldRunTestsInClass() {
     void assertResultTestsBar(TestRunResult runResult) {
         assertResultCounts {
@@ -171,6 +185,7 @@ shared void shouldRunTestsInPackage() {
             failureCount = 1;
             errorCount = 1;
             ignoreCount = 7;
+            abortedCount = 1;
         };
     }
     
@@ -194,6 +209,7 @@ shared void shouldRunTestsInModule() {
             failureCount = 1;
             errorCount = 13;
             ignoreCount = 8;
+            abortedCount = 1;
         };
     }
     
@@ -370,12 +386,13 @@ shared void shouldRunTestWithCustomExecutor() {
     };
 }
 
-void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer ignoreCount = 0, Integer runCount = -1) {
+void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer ignoreCount = 0, Integer abortedCount = 0, Integer runCount = -1) {
     try {
         assert(runResult.successCount == successCount, 
-        runResult.errorCount == errorCount, 
-        runResult.failureCount == failureCount, 
-        runResult.ignoreCount == ignoreCount);
+               runResult.errorCount == errorCount, 
+               runResult.failureCount == failureCount, 
+               runResult.ignoreCount == ignoreCount,
+               runResult.abortedCount == abortedCount);
         
         if( runCount == -1 ) {
             assert(runResult.runCount == successCount + errorCount + failureCount);

@@ -9,7 +9,8 @@ import ceylon.test {
     success,
     ignored,
     failure,
-    IgnoreAnnotation
+    IgnoreAnnotation,
+    aborted
 }
 
 "A [[TestListener]] that prints information about test execution to a given logging function,
@@ -124,9 +125,11 @@ shared class TapReporter(write = print) satisfies TestListener {
     
     shared actual void testIgnore(TestIgnoreEvent event) => writeProtocol(event);
     
+    shared actual void testAborted(TestAbortedEvent event) => writeProtocol(event);
+    
     shared actual void testError(TestErrorEvent event) => writeProtocol(event);
     
-    void writeProtocol(TestFinishEvent|TestIgnoreEvent|TestErrorEvent event) {
+    void writeProtocol(TestFinishEvent|TestIgnoreEvent|TestAbortedEvent|TestErrorEvent event) {
         TestResult result;
         Throwable? exception;
         Integer? elapsed;
@@ -145,6 +148,12 @@ shared class TapReporter(write = print) satisfies TestListener {
             exception = null;
             elapsed = null;
         }
+        case (is TestAbortedEvent) {
+            result = event.result;
+            ignoreReason = result.exception?.message;
+            exception = null;
+            elapsed = null;
+        }
         case (is TestErrorEvent) {
             result = event.result;
             exception = event.result.exception;
@@ -152,9 +161,9 @@ shared class TapReporter(write = print) satisfies TestListener {
             ignoreReason = null;
         }
         
-        String okOrNotOk = result.state == success then "ok" else "not ok";
-        String directive = result.state == ignored then "# SKIP ignored" else "";
-        String? severity = result.state == failure then "failure" else (result.state == error then "error");
+        String okOrNotOk = (result.state == success) then "ok" else "not ok";
+        String directive = (result.state == ignored || result.state == aborted) then "# SKIP ignored" else "";
+        String? severity = (result.state == failure) then "failure" else (result.state == error then "error");
         
         write("``okOrNotOk`` ``count`` - ``result.description.name`` ``directive``");
         

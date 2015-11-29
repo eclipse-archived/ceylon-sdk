@@ -11,12 +11,12 @@ import ceylon.test.event {
 test
 shared void shouldFireEvents() {
     createTestRunner(
-        [`foo`, `fooThrowingAssertion`, `fooThrowingException`, `fooWithoutTestAnnotation`, `Bar.bar1`], 
+        [`foo`, `fooThrowingAssertion`, `fooThrowingException`, `fooWithoutTestAnnotation`, `fooWithAssumption`, `Bar.bar1`], 
         [recordingListener]).run();
     
     value lines = recordingListener.result.lines.sequence();
     value sep = runtime.name == "jvm" then "." else "::";
-    assertEquals(lines.size, 13);
+    assertEquals(lines.size, 15);
     assertEquals(lines[0], "TestRunStartEvent");
     assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::Bar]");
     assertEquals(lines[2], "TestStartEvent[test.ceylon.test.stubs::Bar.bar1]");
@@ -28,8 +28,10 @@ shared void shouldFireEvents() {
     assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language``sep``AssertionError \"assertion failed\")]");
     assertEquals(lines[9], "TestStartEvent[test.ceylon.test.stubs::fooThrowingException]");
     assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")]");
-    assertEquals(lines[11], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language``sep``Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
-    assertEquals(lines[12], "TestRunFinishEvent");
+    assertEquals(lines[11], "TestStartEvent[test.ceylon.test.stubs::fooWithAssumption]");
+    assertEquals(lines[12], "TestAbortedEvent[test.ceylon.test.stubs::fooWithAssumption - aborted (ceylon.test.core.TestAbortedException \"assumption failed: expected true\")]");
+    assertEquals(lines[13], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language``sep``Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
+    assertEquals(lines[14], "TestRunFinishEvent");
 }
 
 test
@@ -316,7 +318,9 @@ shared object recordingListener satisfies TestListener {
     
     shared actual void testFinish(TestFinishEvent event) => log(event); 
     
-    shared actual void testIgnore(TestIgnoreEvent event) => log(event); 
+    shared actual void testIgnore(TestIgnoreEvent event) => log(event);
+    
+    shared actual void testAborted(TestAbortedEvent event) => log(event); 
     
     shared actual void testError(TestErrorEvent event) => log(event);
     

@@ -37,6 +37,11 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
         publishEvent(json);
     }
     
+    shared actual void testAborted(TestAbortedEvent e) {
+        value json = "{\"event\":\"testAborted\", \"element\":``convertTestResult(e.result)``}";
+        publishEvent(json);
+    }
+    
     StringBuilder convertTestDescription(TestDescription description, StringBuilder json = StringBuilder()) {
         json.append("{");
         json.append("\"name\":\"``escape(description.name)``\", ");

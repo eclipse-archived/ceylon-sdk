@@ -17,6 +17,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     variable Integer errorCounter = 0;
     variable Integer failureCounter = 0;
     variable Integer ignoreCounter = 0;
+    variable Integer abortedCounter = 0;
     variable Integer startTimeMilliseconds = 0;
     variable Integer endTimeMilliseconds = 0;
     
@@ -25,6 +26,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     shared actual Integer errorCount => errorCounter;
     shared actual Integer failureCount => failureCounter;
     shared actual Integer ignoreCount => ignoreCounter;
+    shared actual Integer abortedCount => abortedCounter;
     
     shared actual Boolean isSuccess => successCount != 0 && errorCount == 0 && failureCount == 0;
     
@@ -45,6 +47,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
             b.append("failure: ``failureCount``").appendNewline();
             b.append("error:   ``errorCount``").appendNewline();
             b.append("ignored: ``ignoreCount``").appendNewline();
+            b.append("aborted: ``abortedCount``").appendNewline();
             b.append("time:    `` elapsedTime / 1000 ``s").appendNewline();
             b.appendNewline();
             if (isSuccess) {
@@ -74,6 +77,8 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         
         shared actual void testIgnore(TestIgnoreEvent event) => handleResult(event.result, false);
         
+        shared actual void testAborted(TestAbortedEvent event) => handleResult(event.result, false);
+        
         void handleResult(TestResult result, Boolean wasRun) {
             resultsList.add(result);
             if (result.state == success && result.description.children.empty) {
@@ -87,6 +92,8 @@ shared class TestRunResultImpl() satisfies TestRunResult {
                 runCounter += wasRun then 1 else 0;
             } else if (result.state == ignored && result.exception exists) {
                 ignoreCounter++;
+            } else if (result.state == aborted && result.exception exists) {
+                abortedCounter++;
             }
         }
     }
