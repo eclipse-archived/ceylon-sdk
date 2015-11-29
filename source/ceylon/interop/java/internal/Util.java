@@ -51,12 +51,34 @@ public final class Util {
                 return (java.lang.Class<T>) klass.getKlass();
             }
         }
-        throw new RuntimeException("unsupported type");
+        throw new ceylon.language.AssertionError("unsupported type");
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T> Class<? extends java.lang.annotation.Annotation>
+    javaAnnotationClass(@Ignore TypeDescriptor $reifiedT) {
+        if ($reifiedT instanceof TypeDescriptor.Class) {
+            TypeDescriptor.Class klass = 
+                    (TypeDescriptor.Class) $reifiedT;
+            if (klass.getTypeArguments().length > 0)
+                throw new RuntimeException("given type has type arguments");
+            try {
+                Class<?> c = klass.getKlass();
+                String name = c.getName() + "$annotation$";
+                return (Class<? extends java.lang.annotation.Annotation>) 
+                        Class.forName(name, true, c.getClassLoader());
+            }
+            catch (ClassNotFoundException e) {}
+        } 
+        throw new ceylon.language.AssertionError("unsupported type");
     }
 
-    public java.lang.Class<? extends java.lang.Object> javaClassForDeclaration(ClassOrInterfaceDeclaration decl) {
+    public java.lang.Class<? extends java.lang.Object> 
+    javaClassForDeclaration(ClassOrInterfaceDeclaration decl) {
     	if(decl instanceof ClassOrInterfaceDeclarationImpl){
-    		return ((ClassOrInterfaceDeclarationImpl)decl).getJavaClass();
+    		ClassOrInterfaceDeclarationImpl ci = 
+    		        (ClassOrInterfaceDeclarationImpl) decl;
+            return ci.getJavaClass();
     	}
         throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
     }
