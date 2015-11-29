@@ -21,7 +21,7 @@ shared void shouldVerifyToplevelNonTestMethod() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `bugFunctionWithoutTestAnnotation`;
         message = "function test.ceylon.test.stubs.bugs::bugFunctionWithoutTestAnnotation should be annotated with test or testSuite";
     };
@@ -37,7 +37,7 @@ shared void shouldVerifyToplevelNonVoidMethod() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `bugFunctionWithReturnType`;
         message = "function test.ceylon.test.stubs.bugs::bugFunctionWithReturnType should be void";
     };
@@ -55,14 +55,14 @@ shared void shouldVerifyToplevelMethodWithParameters() {
     assertResultContains {
         runResult;
         index = 0; 
-        state = error;
+        state = TestState.error;
         source = `bugFunctionWithParameter`;
         message = "function test.ceylon.test.stubs.bugs::bugFunctionWithParameter should have no parameters";
     };
     assertResultContains {
         runResult;
         index = 1; 
-        state = error;
+        state = TestState.error;
         source = `bugFunctionWithParameters`;
         message = "function test.ceylon.test.stubs.bugs::bugFunctionWithParameters should have no parameters";
     };
@@ -79,7 +79,7 @@ shared void shouldVerifyToplevelMethodWithTypeParameters() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `function bugFunctionWithTypeParameter`;
         message = "function test.ceylon.test.stubs.bugs::bugFunctionWithTypeParameter should have no type parameters";
     };
@@ -96,7 +96,7 @@ shared void shouldVerifyMethodFromInterface() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `function BugInterface.f`;
         message = "function test.ceylon.test.stubs::BugInterface.f should be toplevel function or class method";
     };
@@ -113,7 +113,7 @@ shared void shouldVerifyAbstractClass() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugAbstractClass.f`;
         message = "class test.ceylon.test.stubs.bugs::BugAbstractClass should not be abstract";
     };
@@ -130,7 +130,7 @@ shared void shouldVerifyToplevelClass() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugClassOuter.BugClassInner.f`;
         message = "class test.ceylon.test.stubs.bugs::BugClassOuter.BugClassInner should be toplevel";
     };
@@ -147,7 +147,7 @@ shared void shouldVerifyClassWithParameter() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugClassWithParameter.f`;
         message = "class test.ceylon.test.stubs.bugs::BugClassWithParameter should have no parameters";
     };
@@ -164,7 +164,7 @@ shared void shouldVerifyClassWithTypeParameter() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `function BugClassWithTypeParameter.f`;
         message = "class test.ceylon.test.stubs.bugs::BugClassWithTypeParameter should have no type parameters";
     };
@@ -181,7 +181,7 @@ shared void shouldVerifyInvalidTypeLiteral1() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         message = "invalid type literal: function foo.bar::baz";
     };
 }
@@ -197,7 +197,7 @@ shared void shouldVerifyInvalidTypeLiteral2() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         message = "invalid type literal: class foo.bar::Baz";
     };
 }
@@ -213,7 +213,7 @@ shared void shouldVerifyInvalidTestSuite1() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         name = `interface BugInterface`.qualifiedName;
         message = "declaration test.ceylon.test.stubs::BugInterface is invalid test suite source";
     };
@@ -230,7 +230,7 @@ shared void shouldVerifyInvalidTestSuite2() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         message = "test suite test.ceylon.test.stubs::bugTestSuiteWithEmptyPackage does not contains any tests";
     };
 }

@@ -72,7 +72,7 @@ shared class TestRunContextImpl(runner, result) satisfies TestRunContext {
                         value errorEvent = TestErrorEvent {
                             result = TestResult {
                                 description = TestDescription("test mechanism");
-                                state = error;
+                                state = TestState.error;
                                 exception = e;
                             };
                         };

@@ -32,7 +32,7 @@ shared class DefaultLoggingListener(
     }
     
     shared actual void testFinish(TestFinishEvent event) {
-        if (event.result.state == error || event.result.state == failure) {
+        if (event.result.state == TestState.error || event.result.state == TestState.failure) {
             if (exists e = event.result.exception) {
                 e.printStackTrace();
             }
@@ -40,7 +40,7 @@ shared class DefaultLoggingListener(
     }
     
     shared actual void testError(TestErrorEvent event) {
-        if (event.result.state == error || event.result.state == failure) {
+        if (event.result.state == TestState.error || event.result.state == TestState.failure) {
             if (exists e = event.result.exception) {
                 e.printStackTrace();
             }
@@ -78,7 +78,7 @@ shared class DefaultLoggingListener(
     
     shared default void writeFailures(TestRunResult result) {
         for (r in result.results) {
-            if ((r.state == failure || r.state == error) && r.description.children.empty) {
+            if ((r.state == TestState.failure || r.state == TestState.error) && r.description.children.empty) {
                 write(r.string);
             }
         }

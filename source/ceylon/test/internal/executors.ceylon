@@ -10,7 +10,7 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
     shared actual TestDescription description;
     
     shared actual void execute(TestRunContext context) {
-        variable TestState worstState = ignored;
+        variable TestState worstState = TestState.ignored;
         void updateWorstState(TestState state) {
             if (compareStates(worstState, state) == smaller) {
                 worstState = state;
@@ -19,8 +19,8 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
         object updateWorstStateListener satisfies TestListener {
             shared actual void testFinish(TestFinishEvent event) => updateWorstState(event.result.state);
             shared actual void testError(TestErrorEvent event) => updateWorstState(event.result.state);
-            shared actual void testIgnore(TestIgnoreEvent event) => updateWorstState(ignored);
-            shared actual void testAborted(TestAbortedEvent event) => updateWorstState(aborted);
+            shared actual void testIgnore(TestIgnoreEvent event) => updateWorstState(TestState.ignored);
+            shared actual void testAborted(TestAbortedEvent event) => updateWorstState(TestState.aborted);
         }
         
         context.addTestListener(updateWorstStateListener);
@@ -39,13 +39,13 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
     Comparison compareStates(TestState state1, TestState state2) {
         if (state1 == state2) {
             return equal;
-        } else if (state1 == ignored && (state2 == success || state2 == failure || state2 == error || state2 == aborted)) {
+        } else if (state1 == TestState.ignored && (state2 == TestState.success || state2 == TestState.failure || state2 == TestState.error || state2 == TestState.aborted)) {
             return smaller;
-        } else if (state1 == aborted && (state2 == success || state2 == failure || state2 == error)) {
+        } else if (state1 == TestState.aborted && (state2 == TestState.success || state2 == TestState.failure || state2 == TestState.error)) {
             return smaller;
-        } else if (state1 == success && (state2 == failure || state2 == error)) {
+        } else if (state1 == TestState.success && (state2 == TestState.failure || state2 == TestState.error)) {
             return smaller;
-        } else if (state1 == failure && state2 == error) {
+        } else if (state1 == TestState.failure && state2 == TestState.error) {
             return smaller;
         } else {
             return larger;
@@ -59,7 +59,7 @@ shared class ErrorTestExecutor(description, Throwable exception) satisfies TestE
     shared actual TestDescription description;
     
     shared actual void execute(TestRunContext context) {
-        context.fireTestError(TestErrorEvent(TestResult(description, error, exception)));
+        context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, exception)));
     }
     
 }

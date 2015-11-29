@@ -18,7 +18,7 @@ shared void shouldDetectIgnoreOnFunction() {
     };
     assertResultContains {
         result;
-        state = ignored;
+        state = TestState.ignored;
         source = `fooWithIgnore`;
         message = "ignore function foo";
     };
@@ -35,19 +35,19 @@ shared void shouldDetectIgnoreOnClass() {
     assertResultContains {
         result;
         index = 0;
-        state = ignored;
+        state = TestState.ignored;
         source = `BarWithIgnore.bar1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = ignored;
+        state = TestState.ignored;
         source = `BarWithIgnore.bar2`;
     };
     assertResultContains {
         result;
         index = 2;
-        state = ignored;
+        state = TestState.ignored;
         source = `BarWithIgnore`;
     };
 }
@@ -62,7 +62,7 @@ shared void shouldDetectIgnoreOnPackage() {
     };
     assertResultContains {
         result;
-        state = ignored;
+        state = TestState.ignored;
         source = `bazInIgnoredPackage`;
         message = "ignore whole package";
     };
@@ -79,7 +79,7 @@ shared void shouldDetectInheritedIgnore() {
     assertResultContains {
         result;
         index = 0;
-        state = ignored;
+        state = TestState.ignored;
         source = `BarWithInheritedIgnore.bar3`;
     };
 }

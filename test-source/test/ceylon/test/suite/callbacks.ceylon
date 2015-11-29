@@ -109,7 +109,7 @@ shared void shouldHandleExceptionInBeforeToplevelCallback() {
         };
         assertResultContains {
             runResult;
-            state = error;
+            state = TestState.error;
             source = `FooWithCallbacks.foo`;
             message = "fooToplevelBeforeException";
         };
@@ -140,7 +140,7 @@ shared void shouldHandleExceptionInBeforeMemberCallback() {
         };
         assertResultContains {
             runResult;
-            state = error;
+            state = TestState.error;
             source = `FooWithCallbacks.foo`;
             message = "fooMemberBeforeException";
         };
@@ -172,7 +172,7 @@ shared void shouldHandleExceptionInAfterToplevelCallback() {
         };
         assertResultContains {
             runResult;
-            state = error;
+            state = TestState.error;
             source = `FooWithCallbacks.foo`;
             message = "fooToplevelAfterException";
         };
@@ -204,7 +204,7 @@ shared void shouldHandleExceptionInAfterMemberCallback() {
         };
         assertResultContains {
             runResult;
-            state = error;
+            state = TestState.error;
             source = `FooWithCallbacks.foo`;
             message = "fooMemberAfterException";
         };
@@ -236,7 +236,7 @@ shared void shouldHandleExceptionsInCallbacks() {
         };
         assertResultContains {
             runResult;
-            state = error;
+            state = TestState.error;
             source = `FooWithCallbacks.foo`;
         };
     }
@@ -257,7 +257,7 @@ shared void shouldVerifyBeforeNonVoid() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugBeforeNonVoid.f`;
         message = "before callback test.ceylon.test.stubs.beforeafter.bugs::BugBeforeNonVoid.before should be void";
     };
@@ -273,7 +273,7 @@ shared void shouldVerifyBeforeWithParameters() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugBeforeWithParameters.f`;
         message = "before callback test.ceylon.test.stubs.beforeafter.bugs::BugBeforeWithParameters.before should have no parameters";
     };
@@ -289,7 +289,7 @@ shared void shouldVerifyBeforeWithTypeParameters() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugBeforeWithTypeParameters.f`;
         message = "before callback test.ceylon.test.stubs.beforeafter.bugs::BugBeforeWithTypeParameters.before should have no type parameters";
     };
@@ -305,7 +305,7 @@ shared void shouldVerifyAfterNonVoid() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugAfterNonVoid.f`;
         message = "after callback test.ceylon.test.stubs.beforeafter.bugs::BugAfterNonVoid.after should be void";
     };
@@ -321,7 +321,7 @@ shared void shouldVerifyAfterWithParameters() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugAfterWithParameters.f`;
         message = "after callback test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithParameters.after should have no parameters";
     };
@@ -337,7 +337,7 @@ shared void shouldVerifyAfterWithTypeParameters() {
     };
     assertResultContains {
         runResult;
-        state = error;
+        state = TestState.error;
         source = `BugAfterWithTypeParameters.f`;
         message = "after callback test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithTypeParameters.after should have no type parameters";
     };

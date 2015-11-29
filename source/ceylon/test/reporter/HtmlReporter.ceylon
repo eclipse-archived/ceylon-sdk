@@ -2,31 +2,28 @@ import ceylon.collection {
     ArrayList,
     HashMap
 }
+import ceylon.file {
+    current,
+    Nil,
+    File,
+    ExistingResource
+}
 import ceylon.language.meta.declaration {
     Module
 }
 import ceylon.test {
-    success,
-    error,
-    failure,
-    ignored,
     TestResult,
     TestRunResult,
     TestDescription,
     TestListener,
-    aborted
-}
-import java.text {
-    NumberFormat
+    TestState
 }
 import ceylon.test.event {
     TestRunFinishEvent
 }
-import ceylon.file {
-    Nil,
-    ExistingResource,
-    current,
-    File
+
+import java.text {
+    NumberFormat
 }
 
 shared class HtmlReporter(String reportSubdir) satisfies TestListener {
@@ -146,22 +143,22 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
         value expandableSnippet = " expandable' onclick='toggleStackTrace(event)' title='Show/Hide more details'>";
         
         switch(result.state)
-            case (success) {
+            case (TestState.success) {
                 fw.write("<tr class='success'>");
                 fw.write("<td>");
                 fw.write("<i class='icon success'></i>");
             }
-            case(error | failure) {
+            case(TestState.error | TestState.failure) {
                 fw.write("<tr class='failure``expandableFlag then expandableSnippet else "'>"``");
                 fw.write("<td>");
                 fw.write("<i class='icon failure'></i>");
             }
-            case(ignored) {
+            case(TestState.ignored) {
                 fw.write("<tr class='ignored``expandableFlag then expandableSnippet else "'>"``");
                 fw.write("<td>");
                 fw.write("<i class='icon ignored'></i>");
             }
-            case(aborted) {
+            case(TestState.aborted) {
                 fw.write("<tr class='aborted``expandableFlag then expandableSnippet else "'>"``");
                 fw.write("<td>");
                 fw.write("<i class='icon aborted'></i>");

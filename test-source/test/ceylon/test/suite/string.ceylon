@@ -7,10 +7,11 @@ import test.ceylon.test.stubs {
 
 test
 shared void testStateString() {
-    assert(success.string == "success");
-    assert(failure.string == "failure");
-    assert(error.string == "error");
-    assert(ignored.string == "ignored");
+    assert(TestState.success.string == "success");
+    assert(TestState.failure.string == "failure");
+    assert(TestState.error.string == "error");
+    assert(TestState.ignored.string == "ignored");
+    assert(TestState.aborted.string == "aborted");
 }
 
 test
@@ -52,6 +53,7 @@ shared void testRunResultString2() {
                         failure: 0
                         error:   0
                         ignored: 0
+                        aborted: 0
                         """;
     
     assert(runResult.string.contains(expected), 
@@ -68,6 +70,7 @@ shared void testRunResultString3() {
                         failure: 0
                         error:   1
                         ignored: 1
+                        aborted: 0
                         """;
     
     value sep = runtime.name == "jvm" then "." else "::";

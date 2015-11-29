@@ -24,7 +24,7 @@ shared void shouldRunTest1() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `foo`;
         };
     }
@@ -52,13 +52,13 @@ shared void shouldRunTest2() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `Bar.bar1`;
         };
         assertResultContains {
             runResult;
             index = 1;
-            state = success;
+            state = TestState.success;
             source = `Bar`;
         };
     }
@@ -85,7 +85,7 @@ shared void shouldRunTestThrowingAssertion() {
     };
     assertResultContains {
         result;
-        state = failure;
+        state = TestState.failure;
         source = `fooThrowingAssertion`;
         message = "assertion failed";
     };
@@ -100,7 +100,7 @@ shared void shouldRunTestThrowingException() {
     };
     assertResultContains {
         result;
-        state = error;
+        state = TestState.error;
         source = `fooThrowingException`;
         message = "unexpected exception";
     };
@@ -115,7 +115,7 @@ shared void shouldRunTestThrowingIgnoreException() {
     };
     assertResultContains {
         result;
-        state = ignored;
+        state = TestState.ignored;
         source = `fooThrowingIgnoreException`;
         message = "ignore it!";
     };
@@ -130,7 +130,7 @@ shared void shouldRunTestWithAssumption() {
     };
     assertResultContains {
         result;
-        state = aborted;
+        state = TestState.aborted;
         source = `fooWithAssumption`;
     };
 }
@@ -145,19 +145,19 @@ shared void shouldRunTestsInClass() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `Bar.bar1`;
         };
         assertResultContains {
             runResult;
             index = 1;
-            state = success;
+            state = TestState.success;
             source = `Bar.bar2`;
         };
         assertResultContains {
             runResult;
             index = 2;
-            state = success;
+            state = TestState.success;
             source = `Bar`;
         };
     }
@@ -230,28 +230,28 @@ shared void shouldRunTestsFromAncestor() {
     assertResultContains {
         runResult;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar1`;
         name = "test.ceylon.test.stubs::BarExtended.bar1";
     };
     assertResultContains {
         runResult;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar2`;
         name = "test.ceylon.test.stubs::BarExtended.bar2";
     };
     assertResultContains {
         runResult;
         index = 2;
-        state = success;
+        state = TestState.success;
         source = `BarExtended.bar3`;
         name = "test.ceylon.test.stubs::BarExtended.bar3";
     };
     assertResultContains {
         runResult;
         index = 3;
-        state = success;
+        state = TestState.success;
         source = `BarExtended`;
         name = "test.ceylon.test.stubs::BarExtended";
     };
@@ -279,13 +279,13 @@ shared void shouldRunTestsFromAnonymousClasses() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `\Ibar.bar1`;
         };
         assertResultContains {
             runResult;
             index = 1;
-            state = success;
+            state = TestState.success;
             source = `class bar`;
         };
     }
@@ -323,13 +323,13 @@ shared void shouldRunTestsInClassWithDefaultConstructor() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Qux.qux1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `class Qux`;
     };
 }
@@ -381,7 +381,7 @@ shared void shouldRunTestWithCustomExecutor() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `bazWithCustomExecutor`;
     };
 }
@@ -411,7 +411,7 @@ void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integ
     }
 }
 
-void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = success, TestSource? source = null, String? name = null, String? message = null) {
+void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = TestState.success, TestSource? source = null, String? name = null, String? message = null) {
     try {
         assert(exists r = runResult.results[index], 
         r.state == state);
@@ -436,7 +436,7 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
         if( exists message ) {
             assert(exists e = r.exception, e.message.contains(message));
         }
-        if( state == success ) {
+        if( state == TestState.success ) {
             assert(!r.exception exists);
         }
     }

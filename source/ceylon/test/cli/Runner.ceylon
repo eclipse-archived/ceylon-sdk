@@ -12,9 +12,11 @@ import ceylon.test {
 }
 import ceylon.test.internal {
     TestEventPublisher,
-    TapReporter,
-    TestLoggingListener,
-    HtmlReporter
+    TestLoggingListener
+}
+import ceylon.test.reporter {
+    HtmlReporter,
+    TapReporter
 }
 
 "Run method used by `ceylon test` and `ceylon test-js` tools, 

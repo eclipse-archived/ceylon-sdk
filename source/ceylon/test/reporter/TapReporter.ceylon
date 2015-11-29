@@ -1,16 +1,8 @@
-import ceylon.test.event {
+import ceylon.test {
     ...
 }
-import ceylon.test {
-    error,
-    AssertionComparisonError,
-    TestListener,
-    TestResult,
-    success,
-    ignored,
-    failure,
-    IgnoreAnnotation,
-    aborted
+import ceylon.test.event {
+    ...
 }
 
 "A [[TestListener]] that prints information about test execution to a given logging function,
@@ -161,9 +153,9 @@ shared class TapReporter(write = print) satisfies TestListener {
             ignoreReason = null;
         }
         
-        String okOrNotOk = (result.state == success) then "ok" else "not ok";
-        String directive = (result.state == ignored || result.state == aborted) then "# SKIP ignored" else "";
-        String? severity = (result.state == failure) then "failure" else (result.state == error then "error");
+        String okOrNotOk = (result.state == TestState.success) then "ok" else "not ok";
+        String directive = (result.state == TestState.ignored || result.state == TestState.aborted) then "# SKIP ignored" else "";
+        String? severity = (result.state == TestState.failure) then "failure" else (result.state == TestState.error then "error");
         
         write("``okOrNotOk`` ``count`` - ``result.description.name`` ``directive``");
         

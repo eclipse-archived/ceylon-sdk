@@ -34,31 +34,31 @@ shared void shouldRunTestSuite2() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar2`;
     };
     assertResultContains {
         result;
         index = 2;
-        state = success;
+        state = TestState.success;
         source = `Bar`;
     };
     assertResultContains {
         result;
         index = 3;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         result;
         index = 4;
-        state = success;
+        state = TestState.success;
         source = `bazSuite`;
     };
 }
@@ -91,37 +91,37 @@ shared void shouldRunTestSuiteNested2() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar2`;
     };
     assertResultContains {
         result;
         index = 2;
-        state = success;
+        state = TestState.success;
         source = `Bar`;
     };
     assertResultContains {
         result;
         index = 3;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         result;
         index = 4;
-        state = success;
+        state = TestState.success;
         source = `bazSuite`;
     };
     assertResultContains {
         result;
         index = 5;
-        state = success;
+        state = TestState.success;
         source = `bazSuiteNested`;
     };
 }

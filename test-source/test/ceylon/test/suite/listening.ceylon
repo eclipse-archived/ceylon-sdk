@@ -124,13 +124,13 @@ shared void shouldHandleExceptionOnTestRunStart() {
     assertResultContains {
         runResult;
         index = 0;
-        state = error;
+        state = TestState.error;
         message = "testRunStart";
     };
     assertResultContains {
         runResult;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
 }
@@ -147,13 +147,13 @@ shared void shouldHandleExceptionOnTestRunFinish() {
     assertResultContains {
         runResult;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         runResult;
         index = 1;
-        state = error;
+        state = TestState.error;
         message = "testRunFinish";
     };
 }
@@ -170,13 +170,13 @@ shared void shouldHandleExceptionOnTestFinish() {
     assertResultContains {
         runResult;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         runResult;
         index = 1;
-        state = error;
+        state = TestState.error;
         message = "testFinish";
     };
 }
@@ -193,19 +193,19 @@ shared void shouldHandleExceptionDuringHandlingException() {
     assertResultContains {
         runResult;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         runResult;
         index = 1;
-        state = error;
+        state = TestState.error;
         message = "testRunFinish";
     };
     assertResultContains {
         runResult;
         index = 2;
-        state = error;
+        state = TestState.error;
         message = "testError";
     };
 }
@@ -222,7 +222,7 @@ shared void shouldPropagateExceptionOnTestStart() {
         runResult;
         index = 0;
         source = `foo`;
-        state = error;
+        state = TestState.error;
         message = "testStart";
     };
 }
@@ -247,7 +247,7 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `bazWithCustomListener`;
     };
 }
@@ -299,7 +299,7 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `bazWithAnonymousTestListener`;
     };
 }

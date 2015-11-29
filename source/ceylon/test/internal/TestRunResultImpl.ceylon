@@ -54,7 +54,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
                 b.append("TESTS SUCCESS").appendNewline();
             } else {
                 for (result in results) {
-                    if ((result.state == failure || result.state == error) && result.description.children.empty) {
+                    if ((result.state == TestState.failure || result.state == TestState.error) && result.description.children.empty) {
                         b.append(result.string).appendNewline();
                     }
                 }
@@ -81,18 +81,18 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         
         void handleResult(TestResult result, Boolean wasRun) {
             resultsList.add(result);
-            if (result.state == success && result.description.children.empty) {
+            if (result.state == TestState.success && result.description.children.empty) {
                 successCounter++;
                 runCounter += wasRun then 1 else 0;
-            } else if (result.state == failure && result.exception exists) {
+            } else if (result.state == TestState.failure && result.exception exists) {
                 failureCounter++;
                 runCounter += wasRun then 1 else 0;
-            } else if (result.state == error && result.exception exists) {
+            } else if (result.state == TestState.error && result.exception exists) {
                 errorCounter++;
                 runCounter += wasRun then 1 else 0;
-            } else if (result.state == ignored && result.exception exists) {
+            } else if (result.state == TestState.ignored && result.exception exists) {
                 ignoreCounter++;
-            } else if (result.state == aborted && result.exception exists) {
+            } else if (result.state == TestState.aborted && result.exception exists) {
                 abortedCounter++;
             }
         }

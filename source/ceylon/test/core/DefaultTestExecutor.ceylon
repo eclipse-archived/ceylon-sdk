@@ -52,7 +52,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             return true;
         }
         catch (Exception e) {
-            context.fireTestError(TestErrorEvent(TestResult(description, error, e)));
+            context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, e)));
             return false;
         }
     }
@@ -137,7 +137,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared default Boolean handleIgnored(TestRunContext context) {
         value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(functionDeclaration, classDeclaration);
         if (exists ignoreAnnotation) {
-            context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, IgnoreException(ignoreAnnotation.reason))));
+            context.fireTestIgnore(TestIgnoreEvent(TestResult(description, TestState.ignored, IgnoreException(ignoreAnnotation.reason))));
             return true;
         }
         return false;
@@ -150,17 +150,17 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         try {
             context.fireTestStart(TestStartEvent(description, instance));
             execute();
-            context.fireTestFinish(TestFinishEvent(TestResult(description, success, null, elapsedTime), instance));
+            context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.success, null, elapsedTime), instance));
         }
         catch (Throwable e) {
             if (e is IgnoreException) {
-                context.fireTestIgnore(TestIgnoreEvent(TestResult(description, ignored, e)));
+                context.fireTestIgnore(TestIgnoreEvent(TestResult(description, TestState.ignored, e)));
             } else if (e is TestAbortedException) {
-                context.fireTestAborted(TestAbortedEvent(TestResult(description, aborted, e)));
+                context.fireTestAborted(TestAbortedEvent(TestResult(description, TestState.aborted, e)));
             } else if (e is AssertionError) {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, failure, e, elapsedTime), instance));
+                context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.failure, e, elapsedTime), instance));
             } else {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, error, e, elapsedTime), instance));
+                context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.error, e, elapsedTime), instance));
             }
         }
     }
