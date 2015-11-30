@@ -229,7 +229,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     native
     FileWriter createFile(String filePath);
     
-    shared interface FileWriter {
+    interface FileWriter {
         
         shared formal void write(String content);
         

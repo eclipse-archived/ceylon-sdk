@@ -153,7 +153,13 @@ shared void assertAll(
     }
 }
 
-"Fails the test if expected exception isn't thrown."
+"Fails the test if expected exception isn't thrown.
+ 
+ Example:
+ 
+     assertThatException(() => gandalf.castLightnings()).hasType(\`NotEnoughMagicPowerException\`);
+ 
+"
 throws (`class AssertionError`, "When _exceptionSource()_ doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
     "The checked exception or callback which should throw exception."
