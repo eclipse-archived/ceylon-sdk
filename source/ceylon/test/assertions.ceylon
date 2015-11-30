@@ -106,7 +106,7 @@ shared void assertEquals(
 }
 
 "Fails the test if the given values are equal according to the given compare function."
-throws (`class AssertionComparisonError`, "When _actual_ == _unexpected_.")
+throws (`class AssertionError`, "When _actual_ == _unexpected_.")
 shared void assertNotEquals(
     "The actual value to be checked."
     Anything actual,
@@ -133,6 +133,7 @@ shared void assertNotEquals(
          () => assertEquals(agent.lastName, \"Bond\")]);
  
 "
+throws (`class MultipleFailureException`, "When any assertiones fails.")
 shared void assertAll(
     "The group of assertions."
     Anything()[] assertions,

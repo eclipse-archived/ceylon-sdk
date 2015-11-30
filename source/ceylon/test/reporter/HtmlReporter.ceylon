@@ -26,13 +26,14 @@ import java.text {
     NumberFormat
 }
 
+"A [[TestListener]] that generate simple HTML report about test execution."
 shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     
     shared actual void testRunFinish(TestRunFinishEvent event) {
         generate(event.runner.description, event.result);
     }
     
-    shared void generate(TestDescription root, TestRunResult result) {
+    void generate(TestDescription root, TestRunResult result) {
         value testedModules = findTestedModules(result);
         
         FileWriter fw;
@@ -223,10 +224,10 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     }
     
     native
-    shared String formatTime(Integer timeInMilliseconds);
+    String formatTime(Integer timeInMilliseconds);
     
     native
-    shared FileWriter createFile(String filePath);
+    FileWriter createFile(String filePath);
     
     shared interface FileWriter {
         
@@ -237,7 +238,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     }
     
     native("js")
-    shared String formatTime(Integer timeInMilliseconds) {
+    String formatTime(Integer timeInMilliseconds) {
         dynamic {
             dynamic t = timeInMilliseconds/1000.0;
             return t.toFixed(3);
@@ -245,7 +246,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     }
     
     native("jvm")
-    shared String formatTime(Integer timeInMilliseconds) {
+    String formatTime(Integer timeInMilliseconds) {
         NumberFormat timeFormat = NumberFormat.numberInstance;
         timeFormat.groupingUsed = true;
         timeFormat.minimumFractionDigits = 3;
@@ -256,7 +257,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     }
     
     native("js")
-    shared FileWriter createFile(String filePath) {
+    FileWriter createFile(String filePath) {
         object fileWriter satisfies FileWriter {
             
             dynamic stream;
@@ -296,7 +297,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     }
     
     native("jvm")
-    shared FileWriter createFile(String filePath) {
+    FileWriter createFile(String filePath) {
         object fileWriter satisfies FileWriter {
             File.Overwriter fw;
             

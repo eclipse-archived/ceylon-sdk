@@ -32,10 +32,10 @@
    [[AssertionError]] directly.
    
    A test function which completes without propagating an exception is 
-   classified as a [[success]]. A test function which propagates 
-   an [[AssertionError]] is classified as a [[failure]]. A test 
+   classified as a [[success|TestState.success]]. A test function which propagates 
+   an [[AssertionError]] is classified as a [[failure|TestState.failure]]. A test 
    function which propagates any other type of `Exception` is classified as 
-   an [[error]].
+   an [[error|TestState.error]].
    
    Test functions can be grouped together inside a class.
    ```
