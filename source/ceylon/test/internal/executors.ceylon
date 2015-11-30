@@ -12,7 +12,7 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
     shared actual void execute(TestRunContext context) {
         variable TestState worstState = TestState.ignored;
         void updateWorstState(TestState state) {
-            if (compareStates(worstState, state) == smaller) {
+            if( worstState < state ) {
                 worstState = state;
             }
         }
@@ -33,22 +33,6 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
         }
         finally {
             context.removeTestListener(updateWorstStateListener);
-        }
-    }
-    
-    Comparison compareStates(TestState state1, TestState state2) {
-        if (state1 == state2) {
-            return equal;
-        } else if (state1 == TestState.ignored && (state2 == TestState.success || state2 == TestState.failure || state2 == TestState.error || state2 == TestState.aborted)) {
-            return smaller;
-        } else if (state1 == TestState.aborted && (state2 == TestState.success || state2 == TestState.failure || state2 == TestState.error)) {
-            return smaller;
-        } else if (state1 == TestState.success && (state2 == TestState.failure || state2 == TestState.error)) {
-            return smaller;
-        } else if (state1 == TestState.failure && state2 == TestState.error) {
-            return smaller;
-        } else {
-            return larger;
         }
     }
     

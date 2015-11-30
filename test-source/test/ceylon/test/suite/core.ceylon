@@ -386,6 +386,13 @@ shared void shouldRunTestWithCustomExecutor() {
     };
 }
 
+test
+shared void shouldCompareTestState() {
+    assert(TestState.error > TestState.failure,
+           TestState.failure > TestState.success,
+           TestState.aborted > TestState.ignored);
+}
+
 void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer ignoreCount = 0, Integer abortedCount = 0, Integer runCount = -1) {
     try {
         assert(runResult.successCount == successCount, 
