@@ -99,10 +99,11 @@ shared abstract class Printer(Boolean pretty = false){
         }
         print("\"");
     }
-
+    
     "Prints an `Integer|Float`"
-    shared default void printNumber(Integer|Float n)
-            => print(n.string);
+    shared default void printNumber(Integer|Float n) {
+        print(formatNumber(n));
+    }
 
     "Prints a `Boolean`"
     shared default void printBoolean(Boolean v)
@@ -138,6 +139,21 @@ shared abstract class Printer(Boolean pretty = false){
         }
     }
     
+}
+
+"Formats a `Number`, handling infinity and undefined Floats."
+String formatNumber(Integer|Float n) {
+    String s;
+    if (is Float n) {
+        if (n.infinite || n.undefined) {
+            s = "null";
+        } else {
+            s = n.string;
+        }
+    } else {
+        s = n.string;
+    }
+    return s;
 }
 
 Comparison compareKeys(String->Value x, String->Value y)

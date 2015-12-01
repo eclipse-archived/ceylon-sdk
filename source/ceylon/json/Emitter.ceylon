@@ -122,7 +122,7 @@ shared abstract class Emitter(Boolean pretty) satisfies Visitor {
     
     shared actual void onNumber(Integer|Float n) {
         emitValue();
-        print(n.string);
+        print(formatNumber(n));
     }
     
     shared actual void onBoolean(Boolean v) {

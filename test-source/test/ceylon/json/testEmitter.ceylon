@@ -68,3 +68,14 @@ shared void testEmitter() {
                     }""", emitter.string);
     
 }
+
+test
+shared void testEmitTrickyFloats() {
+    variable value emitter = StringEmitter(false);
+    emitter.onStartArray();
+    emitter.onNumber(1.0/0.0);
+    emitter.onNumber(-1.0/0.0);
+    emitter.onNumber(0.0/0.0);
+    emitter.onEndArray();
+    assertEquals("[null,null,null]", emitter.string);
+}
