@@ -4,7 +4,7 @@
  
  Technical details about this element can be found on the
  [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-img-element)"
-shared class Img(src, alt = "", useMap = null,
+shared class Img(src, alt = null, useMap = null,
             isMap = null, width = null, height = null,
             String? id = null, CssClass classNames = [],
             String? style = null, String? accessKey = null,
@@ -26,7 +26,7 @@ shared class Img(src, alt = "", useMap = null,
 
     "Provides equivalent content for those who cannot process
      images or who have image loading disabled"
-    shared String alt;
+    shared String? alt;
     
     //crossorigin TODO understand this attribute better (enumerable?)
 
