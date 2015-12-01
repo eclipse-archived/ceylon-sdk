@@ -2,16 +2,16 @@ import ceylon.language.meta {
     type
 }
 
-"Thrown when test is ignored."
-shared class IgnoreException(reason) extends Exception(reason) {
+"Thrown when test is skipped."
+shared class TestSkippedException(reason = null) extends Exception(reason) {
     
-    "Reason why the test is ignored."
-    shared String reason;
+    "Reason why the test is skipped."
+    shared String? reason;
     
 }
 
 "Thrown when the test assumption is not met, cause aborting of test execution."
-shared class TestAbortedException(assumption) extends Exception(assumption) {
+shared class TestAbortedException(assumption = null) extends Exception(assumption) {
     
     "The message describing the assumption, which wasn't met."
     shared String? assumption;

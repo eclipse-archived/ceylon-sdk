@@ -60,7 +60,7 @@ body {
 	color: rgb(169, 68, 66);
 }
 
-.summary .ignored {
+.summary .skipped {
 	color: rgb(119, 119, 119);
 }
 
@@ -102,7 +102,7 @@ body {
 	color: rgb(169, 68, 66);
 }
 
-.results .ignored {
+.results .skipped {
 	color: rgb(119, 119, 119);
 }
 
@@ -164,16 +164,16 @@ body {
 	border-bottom: 10px solid rgb(242, 222, 222);
 }
 
-.ignored .stack-trace {
+.skipped .stack-trace {
 	background-color: rgb(245, 245, 245);
 	border-top: 1px solid rgb(240, 240, 240);
 }
 
-.ignored .stack-trace-arrow {
+.skipped .stack-trace-arrow {
 	border-bottom: 10px solid rgb(240, 240, 240);
 }
 
-.ignored .stack-trace-arrow-inner {
+.skipped .stack-trace-arrow-inner {
 	border-bottom: 10px solid rgb(245, 245, 245);
 }
 
@@ -208,7 +208,7 @@ body {
 	color: rgb(169, 68, 66);
 }
 
-.icon.ignored:BEFORE {
+.icon.skipped:BEFORE {
 	content: '\2753';
 	color: rgb(119, 119, 119);
 }

@@ -30,7 +30,7 @@ shared class DefaultTestRunner(
     function filterExecutor(TestExecutor e) {
         value result = filter(e.description);
         if (!result) {
-            listeners*.testExclude(TestExcludeEvent(e.description));
+            listeners*.testExcluded(TestExcludedEvent(e.description));
         }
         return result;
     }
@@ -56,9 +56,9 @@ shared class DefaultTestRunner(
             value context = TestRunContextImpl(this, result);
             
             context.addTestListener(result.listener, *listeners);
-            context.fireTestRunStart(TestRunStartEvent(this, description));
+            context.fireTestRunStarted(TestRunStartedEvent(this, description));
             executors*.execute(context);
-            context.fireTestRunFinish(TestRunFinishEvent(this, result));
+            context.fireTestRunFinished(TestRunFinishedEvent(this, result));
             context.removeTestListener(result.listener, *listeners);
             
             return result;
@@ -66,7 +66,6 @@ shared class DefaultTestRunner(
         finally {
             runningRunners.remove(this);
         }
-        
     }
     
     void verifyCycle() {

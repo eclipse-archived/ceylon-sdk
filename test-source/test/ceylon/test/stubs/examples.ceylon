@@ -2,7 +2,7 @@ import ceylon.test {
     ...
 }
 import ceylon.test.core {
-    IgnoreException
+    TestSkippedException
 }
 
 test
@@ -22,7 +22,7 @@ shared void fooThrowingException() {
 
 test
 shared void fooThrowingIgnoreException() {
-    throw IgnoreException("ignore it!");
+    throw TestSkippedException("ignore it!");
 }
 
 test

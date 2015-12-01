@@ -18,9 +18,9 @@ shared class BazTestExecutor(FunctionDeclaration f, ClassDeclaration? c) satisfi
     shared actual TestDescription description => TestDescription(f.qualifiedName, f);
 
     shared actual void execute(TestRunContext context) {
-        context.fireTestStart(TestStartEvent(description));
+        context.fireTestStarted(TestStartedEvent(description));
         f.invoke();
-        context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.success)));
+        context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.success)));
     }
 
 }

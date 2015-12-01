@@ -24,29 +24,29 @@ import ceylon.test.event {
 shared interface TestListener {
     
     "Called before any tests have been run."
-    shared default void testRunStart(
+    shared default void testRunStarted(
         "The event object."
-        TestRunStartEvent event) {}
+        TestRunStartedEvent event) {}
     
     "Called after all tests have finished."
-    shared default void testRunFinish(
+    shared default void testRunFinished(
         "The event object."
-        TestRunFinishEvent event) {}
+        TestRunFinishedEvent event) {}
     
     "Called when a test is about to be started."
-    shared default void testStart(
+    shared default void testStarted(
         "The event object."
-        TestStartEvent event) {}
+        TestStartedEvent event) {}
     
     "Called when a test has finished, whether the test succeeds or not."
-    shared default void testFinish(
+    shared default void testFinished(
         "The event object."
-        TestFinishEvent event) {}
+        TestFinishedEvent event) {}
     
     "Called when a test will *not* be run, because it is marked with [[ignore]] annotation."
-    shared default void testIgnore(
+    shared default void testSkipped(
         "The event object."
-        TestIgnoreEvent event) {}
+        TestSkippedEvent event) {}
     
     "Called when a test has been aborted, because its assumption wasn't met."
     shared default void testAborted(
@@ -60,7 +60,7 @@ shared interface TestListener {
         TestErrorEvent event) {}
     
     "Called when a test is excluded from the test run due [[TestFilter]]"
-    shared default void testExclude(
+    shared default void testExcluded(
         "The event object."
-        TestExcludeEvent event) {}
+        TestExcludedEvent event) {}
 }

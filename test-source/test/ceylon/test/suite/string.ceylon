@@ -10,7 +10,7 @@ shared void testStateString() {
     assert(TestState.success.string == "success");
     assert(TestState.failure.string == "failure");
     assert(TestState.error.string == "error");
-    assert(TestState.ignored.string == "ignored");
+    assert(TestState.skipped.string == "skipped");
     assert(TestState.aborted.string == "aborted");
 }
 
@@ -29,7 +29,7 @@ shared void testResultString() {
     value runResult = createTestRunner([`foo`, `fooThrowingException`, `fooWithIgnore`]).run();
     assert(runResult.results[0]?.string?.equals("test.ceylon.test.stubs::foo - success") else false);
     assert(runResult.results[1]?.string?.equals("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")") else false);
-    assert(runResult.results[2]?.string?.equals("test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core``sep``IgnoreException \"ignore function foo\")") else false);  
+    assert(runResult.results[2]?.string?.equals("test.ceylon.test.stubs::fooWithIgnore - skipped (ceylon.test.core``sep``TestSkippedException \"ignore function foo\")") else false);  
 }
 
 test
@@ -52,7 +52,7 @@ shared void testRunResultString2() {
                         success: 3
                         failure: 0
                         error:   0
-                        ignored: 0
+                        skipped: 0
                         aborted: 0
                         """;
     
@@ -69,7 +69,7 @@ shared void testRunResultString3() {
                         success: 1
                         failure: 0
                         error:   1
-                        ignored: 1
+                        skipped: 1
                         aborted: 0
                         """;
     

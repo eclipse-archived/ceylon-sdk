@@ -16,7 +16,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     variable Integer successCounter = 0;
     variable Integer errorCounter = 0;
     variable Integer failureCounter = 0;
-    variable Integer ignoreCounter = 0;
+    variable Integer skippedCounter = 0;
     variable Integer abortedCounter = 0;
     variable Integer startTimeMilliseconds = 0;
     variable Integer endTimeMilliseconds = 0;
@@ -25,7 +25,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     shared actual Integer successCount => successCounter;
     shared actual Integer errorCount => errorCounter;
     shared actual Integer failureCount => failureCounter;
-    shared actual Integer ignoreCount => ignoreCounter;
+    shared actual Integer skippedCount => skippedCounter;
     shared actual Integer abortedCount => abortedCounter;
     
     shared actual Boolean isSuccess => successCount != 0 && errorCount == 0 && failureCount == 0;
@@ -46,7 +46,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
             b.append("success: ``successCount``").appendNewline();
             b.append("failure: ``failureCount``").appendNewline();
             b.append("error:   ``errorCount``").appendNewline();
-            b.append("ignored: ``ignoreCount``").appendNewline();
+            b.append("skipped: ``skippedCount``").appendNewline();
             b.append("aborted: ``abortedCount``").appendNewline();
             b.append("time:    `` elapsedTime / 1000 ``s").appendNewline();
             b.appendNewline();
@@ -67,15 +67,15 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     
     shared object listener satisfies TestListener {
         
-        shared actual void testRunStart(TestRunStartEvent event) => startTimeMilliseconds = system.milliseconds;
+        shared actual void testRunStarted(TestRunStartedEvent event) => startTimeMilliseconds = system.milliseconds;
         
-        shared actual void testRunFinish(TestRunFinishEvent event) => endTimeMilliseconds = system.milliseconds;
+        shared actual void testRunFinished(TestRunFinishedEvent event) => endTimeMilliseconds = system.milliseconds;
         
-        shared actual void testFinish(TestFinishEvent event) => handleResult(event.result, true);
+        shared actual void testFinished(TestFinishedEvent event) => handleResult(event.result, true);
         
         shared actual void testError(TestErrorEvent event) => handleResult(event.result, false);
         
-        shared actual void testIgnore(TestIgnoreEvent event) => handleResult(event.result, false);
+        shared actual void testSkipped(TestSkippedEvent event) => handleResult(event.result, false);
         
         shared actual void testAborted(TestAbortedEvent event) => handleResult(event.result, false);
         
@@ -90,8 +90,8 @@ shared class TestRunResultImpl() satisfies TestRunResult {
             } else if (result.state == TestState.error && result.exception exists) {
                 errorCounter++;
                 runCounter += wasRun then 1 else 0;
-            } else if (result.state == TestState.ignored && result.exception exists) {
-                ignoreCounter++;
+            } else if (result.state == TestState.skipped && result.exception exists) {
+                skippedCounter++;
             } else if (result.state == TestState.aborted && result.exception exists) {
                 abortedCounter++;
             }

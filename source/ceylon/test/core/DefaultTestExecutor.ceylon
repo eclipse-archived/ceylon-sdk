@@ -137,7 +137,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared default Boolean handleIgnored(TestRunContext context) {
         value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(functionDeclaration, classDeclaration);
         if (exists ignoreAnnotation) {
-            context.fireTestIgnore(TestIgnoreEvent(TestResult(description, TestState.ignored, IgnoreException(ignoreAnnotation.reason))));
+            context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, TestSkippedException(ignoreAnnotation.reason))));
             return true;
         }
         return false;
@@ -148,19 +148,19 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         value elapsedTime => system.milliseconds - startTime;
         
         try {
-            context.fireTestStart(TestStartEvent(description, instance));
+            context.fireTestStarted(TestStartedEvent(description, instance));
             execute();
-            context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.success, null, elapsedTime), instance));
+            context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.success, null, elapsedTime), instance));
         }
         catch (Throwable e) {
-            if (e is IgnoreException) {
-                context.fireTestIgnore(TestIgnoreEvent(TestResult(description, TestState.ignored, e)));
+            if (e is TestSkippedException) {
+                context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, e)));
             } else if (e is TestAbortedException) {
                 context.fireTestAborted(TestAbortedEvent(TestResult(description, TestState.aborted, e)));
             } else if (e is AssertionError) {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.failure, e, elapsedTime), instance));
+                context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.failure, e, elapsedTime), instance));
             } else {
-                context.fireTestFinish(TestFinishEvent(TestResult(description, TestState.error, e, elapsedTime), instance));
+                context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.error, e, elapsedTime), instance));
             }
         }
     }

@@ -46,7 +46,7 @@ test
 shared void shouldFilterTestsAndFireExcludeEvent() {
     value excludedList = ArrayList<TestDescription>();
     object excludedListener satisfies TestListener {
-        shared actual void testExclude(TestExcludeEvent event) => excludedList.add(event.description);
+        shared actual void testExcluded(TestExcludedEvent event) => excludedList.add(event.description);
     }
 
     createTestRunner{

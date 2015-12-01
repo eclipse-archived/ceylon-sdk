@@ -2,7 +2,7 @@ import ceylon.test.core {
     TestAbortedException
 }
 
-"Skip test execution if the assumption _condition_ is false.
+"Abort test execution if the assumption _condition_ is false.
  
  Example:
  
@@ -24,7 +24,7 @@ shared void assumeTrue(
     }
 }
 
-"Skip test execution if the assumption _condition_ is true.
+"Abort test execution if the assumption _condition_ is true.
  
  Example:
  

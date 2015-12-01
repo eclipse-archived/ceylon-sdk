@@ -10,7 +10,7 @@ import ceylon.test.event {
  
  ### YAML keys used
  
- * `elapsed` for the [[elapsed time|TestResult.elapsedTime]], in milliseconds (not for ignored tests)
+ * `elapsed` for the [[elapsed time|TestResult.elapsedTime]], in milliseconds (not for skipped tests)
  * `reason` for the [[ignore reason|IgnoreAnnotation.reason]], if present
  * `severity` for the [[state|TestResult.state]], one of `failure` or `error` (omitted for successful tests)
  * `actual`, `expected` if the [[exception|TestResult.exception]] is an [[AssertionComparisonError]]
@@ -40,7 +40,7 @@ import ceylon.test.event {
      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
      sed diam voluptua.
    ...
- not ok 3 - test.my.module::testProposedFeature # SKIP ignored
+ not ok 3 - test.my.module::testProposedFeature # SKIP skipped
    ---
    reason: not yet implemented
    ...
@@ -108,41 +108,41 @@ shared class TapReporter(write = print) satisfies TestListener {
     
     variable Integer count = 1;
     
-    shared actual void testRunStart(TestRunStartEvent event) {
+    shared actual void testRunStarted(TestRunStartedEvent event) {
         write("TAP version 13");
         write("1..``event.description.children.size``");
     }
     
-    shared actual void testFinish(TestFinishEvent event) => writeProtocol(event);
+    shared actual void testFinished(TestFinishedEvent event) => writeProtocol(event);
     
-    shared actual void testIgnore(TestIgnoreEvent event) => writeProtocol(event);
+    shared actual void testSkipped(TestSkippedEvent event) => writeProtocol(event);
     
     shared actual void testAborted(TestAbortedEvent event) => writeProtocol(event);
     
     shared actual void testError(TestErrorEvent event) => writeProtocol(event);
     
-    void writeProtocol(TestFinishEvent|TestIgnoreEvent|TestAbortedEvent|TestErrorEvent event) {
+    void writeProtocol(TestFinishedEvent|TestSkippedEvent|TestAbortedEvent|TestErrorEvent event) {
         TestResult result;
         Throwable? exception;
         Integer? elapsed;
-        String? ignoreReason;
+        String? reason;
         
         switch (event)
-        case (is TestFinishEvent) {
+        case (is TestFinishedEvent) {
             result = event.result;
             exception = event.result.exception;
             elapsed = event.result.elapsedTime;
-            ignoreReason = null;
+            reason = null;
         }
-        case (is TestIgnoreEvent) {
+        case (is TestSkippedEvent) {
             result = event.result;
-            ignoreReason = result.exception?.message;
+            reason = result.exception?.message;
             exception = null;
             elapsed = null;
         }
         case (is TestAbortedEvent) {
             result = event.result;
-            ignoreReason = result.exception?.message;
+            reason = result.exception?.message;
             exception = null;
             elapsed = null;
         }
@@ -150,22 +150,22 @@ shared class TapReporter(write = print) satisfies TestListener {
             result = event.result;
             exception = event.result.exception;
             elapsed = null;
-            ignoreReason = null;
+            reason = null;
         }
         
         String okOrNotOk = (result.state == TestState.success) then "ok" else "not ok";
-        String directive = (result.state == TestState.ignored || result.state == TestState.aborted) then "# SKIP ignored" else "";
+        String directive = (result.state == TestState.skipped || result.state == TestState.aborted) then "# SKIP skipped" else "";
         String? severity = (result.state == TestState.failure) then "failure" else (result.state == TestState.error then "error");
         
         write("``okOrNotOk`` ``count`` - ``result.description.name`` ``directive``");
         
-        if (elapsed exists || ignoreReason exists || exception exists) {
+        if (elapsed exists || reason exists || exception exists) {
             write("  ---");
             if (exists elapsed) {
                 write("  elapsed: ``elapsed``");
             }
-            if (exists ignoreReason) {
-                write("  reason: ``ignoreReason``");
+            if (exists reason) {
+                write("  reason: ``reason``");
             }
             if (exists severity) {
                 write("  severity: ``severity``");

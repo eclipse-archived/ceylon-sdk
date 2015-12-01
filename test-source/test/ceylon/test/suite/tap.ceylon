@@ -29,7 +29,7 @@ test
 shared void shouldWriteTapWhenIgnored() {
     assertTap([`fooWithIgnore`], """TAP version 13
                                     1..1
-                                    not ok 1 - test.ceylon.test.stubs::fooWithIgnore # SKIP ignored
+                                    not ok 1 - test.ceylon.test.stubs::fooWithIgnore # SKIP skipped
                                       ---
                                       reason: ignore function foo
                                       ...

@@ -7,23 +7,23 @@ import ceylon.test.event {
 
 shared class TestEventPublisher(void publishEvent(String json)) satisfies TestListener {
     
-    shared actual void testRunStart(TestRunStartEvent e) {
-        value json = "{\"event\":\"testRunStart\", \"element\":``convertTestDescription(e.description)``}";
+    shared actual void testRunStarted(TestRunStartedEvent e) {
+        value json = "{\"event\":\"testRunStarted\", \"element\":``convertTestDescription(e.description)``}";
         publishEvent(json);
     }
     
-    shared actual void testRunFinish(TestRunFinishEvent e) {
-        value json = "{\"event\":\"testRunFinish\"}";
+    shared actual void testRunFinished(TestRunFinishedEvent e) {
+        value json = "{\"event\":\"testRunFinished\"}";
         publishEvent(json);
     }
     
-    shared actual void testStart(TestStartEvent e) {
-        value json = "{\"event\":\"testStart\", \"element\":{\"name\":\"``e.description.name``\", \"state\":\"running\"}}";
+    shared actual void testStarted(TestStartedEvent e) {
+        value json = "{\"event\":\"testStarted\", \"element\":{\"name\":\"``e.description.name``\", \"state\":\"running\"}}";
         publishEvent(json);
     }
     
-    shared actual void testFinish(TestFinishEvent e) {
-        value json = "{\"event\":\"testFinish\", \"element\":``convertTestResult(e.result)``}";
+    shared actual void testFinished(TestFinishedEvent e) {
+        value json = "{\"event\":\"testFinished\", \"element\":``convertTestResult(e.result)``}";
         publishEvent(json);
     }
     
@@ -32,8 +32,8 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
         publishEvent(json);
     }
     
-    shared actual void testIgnore(TestIgnoreEvent e) {
-        value json = "{\"event\":\"testIgnore\", \"element\":``convertTestResult(e.result)``}";
+    shared actual void testSkipped(TestSkippedEvent e) {
+        value json = "{\"event\":\"testSkipped\", \"element\":``convertTestResult(e.result)``}";
         publishEvent(json);
     }
     

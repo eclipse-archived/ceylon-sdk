@@ -78,7 +78,7 @@ shared annotation BeforeTestAnnotation beforeTest() => BeforeTestAnnotation();
  "
 shared annotation AfterTestAnnotation afterTest() => AfterTestAnnotation();
 
-"Marks a test or group of tests which should not be executed.
+"Marks a test or group of tests which should not be executed, which will be skipped during test run.
  
  It can be set on several places: on concrete test, on class which contains tests, on whole package or even module.
  

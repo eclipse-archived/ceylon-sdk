@@ -8,14 +8,14 @@ import ceylon.test.core {
     DefaultTestRunner
 }
 
-"Alias for program elements from which tests can be run."
+"Alias for program elements which can be used as a source for discovering tests."
 shared alias TestSource => Module|Package|ClassDeclaration|FunctionDeclaration|Class<>|FunctionModel<>|String;
 
 "Alias for functions which filter tests. 
- Should return true if the given test should be run."
+ Should return true if the given test should be run, or false if it should be excluded."
 shared alias TestFilter => Boolean(TestDescription);
 
-"Alias for functions which compare two tests."
+"Alias for functions which compare two tests, used for sorting tests in test plan."
 shared alias TestComparator => Comparison(TestDescription, TestDescription);
 
 "Represents a facade for running tests.

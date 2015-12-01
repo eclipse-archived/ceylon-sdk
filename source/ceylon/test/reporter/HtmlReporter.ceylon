@@ -19,7 +19,7 @@ import ceylon.test {
     TestState
 }
 import ceylon.test.event {
-    TestRunFinishEvent
+    TestRunFinishedEvent
 }
 
 import java.text {
@@ -29,7 +29,7 @@ import java.text {
 "A [[TestListener]] that generate simple HTML report about test execution."
 shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     
-    shared actual void testRunFinish(TestRunFinishEvent event) {
+    shared actual void testRunFinished(TestRunFinishedEvent event) {
         generate(event.runner.description, event.result);
     }
     
@@ -92,7 +92,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                               <td class='value succeeded'>``result.successCount``</td>
                               <td class='value failures'>``result.failureCount``</td>
                               <td class='value errors'>``result.errorCount``</td>
-                              <td class='value ignored'>``result.ignoreCount``</td>
+                              <td class='value skipped'>``result.skippedCount``</td>
                               <td class='value aborted'>``result.abortedCount``</td>
                               <td class='value time'>``escapeHtml(formatTime(result.elapsedTime))``<span class='label'>sec</span></td>
                           </tr>
@@ -101,7 +101,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                               <td class='label'>Succeeded</td>
                               <td class='label'>Failures</td>
                               <td class='label'>Errors</td>
-                              <td class='label'>Ignored</td>
+                              <td class='label'>Skipped</td>
                               <td class='label'>Aborted</td>
                               <td class='label'>Time</td>
                           </tr>
@@ -154,10 +154,10 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                 fw.write("<td>");
                 fw.write("<i class='icon failure'></i>");
             }
-            case(TestState.ignored) {
-                fw.write("<tr class='ignored``expandableFlag then expandableSnippet else "'>"``");
+            case(TestState.skipped) {
+                fw.write("<tr class='skipped``expandableFlag then expandableSnippet else "'>"``");
                 fw.write("<td>");
-                fw.write("<i class='icon ignored'></i>");
+                fw.write("<i class='icon skipped'></i>");
             }
             case(TestState.aborted) {
                 fw.write("<tr class='aborted``expandableFlag then expandableSnippet else "'>"``");

@@ -21,30 +21,30 @@ shared interface TestRunContext {
         "The listeners for removing."
         TestListener* listeners);
     
-    "Fire [[TestListener.testRunStart]] event."
-    shared formal void fireTestRunStart(
+    "Fire [[TestListener.testRunStarted]] event."
+    shared formal void fireTestRunStarted(
         "The event object."
-        TestRunStartEvent event);
+        TestRunStartedEvent event);
     
-    "Fire [[TestListener.testRunFinish]] event."
-    shared formal void fireTestRunFinish(
+    "Fire [[TestListener.testRunFinished]] event."
+    shared formal void fireTestRunFinished(
         "The event object."
-        TestRunFinishEvent event);
+        TestRunFinishedEvent event);
     
-    "Fire [[TestListener.testStart]] event."
-    shared formal void fireTestStart(
+    "Fire [[TestListener.testStarted]] event."
+    shared formal void fireTestStarted(
         "The event object."
-        TestStartEvent event);
+        TestStartedEvent event);
     
-    "Fire [[TestListener.testFinish]] event."
-    shared formal void fireTestFinish(
+    "Fire [[TestListener.testFinished]] event."
+    shared formal void fireTestFinished(
         "The event object."
-        TestFinishEvent event);
+        TestFinishedEvent event);
     
-    "Fire [[TestListener.testIgnore]] event."
-    shared formal void fireTestIgnore(
+    "Fire [[TestListener.testSkipped]] event."
+    shared formal void fireTestSkipped(
         "The event object."
-        TestIgnoreEvent event);
+        TestSkippedEvent event);
     
     "Fire [[TestListener.testAborted]] event."
     shared formal void fireTestAborted(
@@ -56,8 +56,8 @@ shared interface TestRunContext {
         "The event object."
         TestErrorEvent event);
     
-    "Fire [[TestListener.testExclude]] event."
-    shared formal void fireTestExclude(
+    "Fire [[TestListener.testExcluded]] event."
+    shared formal void fireTestExcluded(
         "The event object."
-        TestExcludeEvent event);
+        TestExcludedEvent event);
 }

@@ -17,21 +17,21 @@ shared void shouldFireEvents() {
     value lines = recordingListener.result.lines.sequence();
     value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 15);
-    assertEquals(lines[0], "TestRunStartEvent");
-    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::Bar]");
-    assertEquals(lines[2], "TestStartEvent[test.ceylon.test.stubs::Bar.bar1]");
-    assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::Bar.bar1 - success]");
-    assertEquals(lines[4], "TestFinishEvent[test.ceylon.test.stubs::Bar - success]");
-    assertEquals(lines[5], "TestStartEvent[test.ceylon.test.stubs::foo]");
-    assertEquals(lines[6], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
-    assertEquals(lines[7], "TestStartEvent[test.ceylon.test.stubs::fooThrowingAssertion]");
-    assertEquals(lines[8], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language``sep``AssertionError \"assertion failed\")]");
-    assertEquals(lines[9], "TestStartEvent[test.ceylon.test.stubs::fooThrowingException]");
-    assertEquals(lines[10], "TestFinishEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")]");
-    assertEquals(lines[11], "TestStartEvent[test.ceylon.test.stubs::fooWithAssumption]");
-    assertEquals(lines[12], "TestAbortedEvent[test.ceylon.test.stubs::fooWithAssumption - aborted (ceylon.test.core.TestAbortedException \"assumption failed: expected true\")]");
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::Bar]");
+    assertEquals(lines[2], "TestStartedEvent[test.ceylon.test.stubs::Bar.bar1]");
+    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::Bar.bar1 - success]");
+    assertEquals(lines[4], "TestFinishedEvent[test.ceylon.test.stubs::Bar - success]");
+    assertEquals(lines[5], "TestStartedEvent[test.ceylon.test.stubs::foo]");
+    assertEquals(lines[6], "TestFinishedEvent[test.ceylon.test.stubs::foo - success]");
+    assertEquals(lines[7], "TestStartedEvent[test.ceylon.test.stubs::fooThrowingAssertion]");
+    assertEquals(lines[8], "TestFinishedEvent[test.ceylon.test.stubs::fooThrowingAssertion - failure (ceylon.language``sep``AssertionError \"assertion failed\")]");
+    assertEquals(lines[9], "TestStartedEvent[test.ceylon.test.stubs::fooThrowingException]");
+    assertEquals(lines[10], "TestFinishedEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")]");
+    assertEquals(lines[11], "TestStartedEvent[test.ceylon.test.stubs::fooWithAssumption]");
+    assertEquals(lines[12], "TestAbortedEvent[test.ceylon.test.stubs::fooWithAssumption - aborted (ceylon.test.core``sep``TestAbortedException \"assumption failed: expected true\")]");
     assertEquals(lines[13], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language``sep``Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
-    assertEquals(lines[14], "TestRunFinishEvent");
+    assertEquals(lines[14], "TestRunFinishedEvent");
 }
 
 test
@@ -43,12 +43,12 @@ shared void shouldFireEventsForIgnored() {
     value lines = recordingListener.result.lines.sequence();
     value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 6);
-    assertEquals(lines[0], "TestRunStartEvent");
-    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BarWithIgnore]");
-    assertEquals(lines[2], "TestIgnoreEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - ignored (ceylon.test.core``sep``IgnoreException \"\")]");
-    assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::BarWithIgnore - ignored]");
-    assertEquals(lines[4], "TestIgnoreEvent[test.ceylon.test.stubs::fooWithIgnore - ignored (ceylon.test.core``sep``IgnoreException \"ignore function foo\")]");
-    assertEquals(lines[5], "TestRunFinishEvent");
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BarWithIgnore]");
+    assertEquals(lines[2], "TestSkippedEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - skipped (ceylon.test.core``sep``TestSkippedException \"\")]");
+    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BarWithIgnore - skipped]");
+    assertEquals(lines[4], "TestSkippedEvent[test.ceylon.test.stubs::fooWithIgnore - skipped (ceylon.test.core``sep``TestSkippedException \"ignore function foo\")]");
+    assertEquals(lines[5], "TestRunFinishedEvent");
 }
 
 test
@@ -57,8 +57,8 @@ shared void shouldFireEventsWithoutInstanceForToplevelTest() {
     variable Boolean isNullInFinish = false;
     
     object instanceChecker satisfies TestListener {
-        shared actual void testStart(TestStartEvent event) => isNullInStart = !(event.instance exists);
-        shared actual void testFinish(TestFinishEvent event) => isNullInFinish = !(event.instance exists);
+        shared actual void testStarted(TestStartedEvent event) => isNullInStart = !(event.instance exists);
+        shared actual void testFinished(TestFinishedEvent event) => isNullInFinish = !(event.instance exists);
     }
     
     createTestRunner([`foo`], [instanceChecker]).run();
@@ -74,12 +74,12 @@ shared void shouldFireEventsWithInstanceForMemberTest() {
     variable Object? instanceInFinish = null; 
     
     object instanceCatcher satisfies TestListener {
-        shared actual void testStart(TestStartEvent event) {
+        shared actual void testStarted(TestStartedEvent event) {
             if( event.description.name == `function Bar.bar1`.qualifiedName ) {
                 instanceInStart = event.instance;
             }
         }
-        shared actual void testFinish(TestFinishEvent event) {
+        shared actual void testFinished(TestFinishedEvent event) {
             if( event.result.description.name == `function Bar.bar1`.qualifiedName ) {
                 instanceInFinish = event.instance;
             }
@@ -99,22 +99,22 @@ test
 shared void shouldHandleMultipleExceptions() {
     createTestRunner(
         [`foo`], 
-        [throwExceptionOnTestFinishListener, throwExceptionOnTestErrorListener, recordingListener]).run();
+        [throwExceptionOnTestFinishedListener, throwExceptionOnTestErrorListener, recordingListener]).run();
     
     value lines = recordingListener.result.lines.sequence();
     value sep = runtime.name == "jvm" then "." else "::";
     assertEquals(lines.size, 6);
-    assertEquals(lines[0], "TestRunStartEvent");
-    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::foo]");
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::foo]");
     assertEquals(lines[2], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testError\")]");
-    assertEquals(lines[3], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testFinish\")]");
-    assertEquals(lines[4], "TestFinishEvent[test.ceylon.test.stubs::foo - success]");
-    assertEquals(lines[5], "TestRunFinishEvent");
+    assertEquals(lines[3], "TestErrorEvent[test mechanism - error (ceylon.language``sep``Exception \"testFinished\")]");
+    assertEquals(lines[4], "TestFinishedEvent[test.ceylon.test.stubs::foo - success]");
+    assertEquals(lines[5], "TestRunFinishedEvent");
 }
 
 test
-shared void shouldHandleExceptionOnTestRunStart() {
-    value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunStartListener]).run();
+shared void shouldHandleExceptionOnTestRunStarted() {
+    value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunStartedListener]).run();
     assertResultCounts {
         runResult;
         runCount = 1;
@@ -125,7 +125,7 @@ shared void shouldHandleExceptionOnTestRunStart() {
         runResult;
         index = 0;
         state = TestState.error;
-        message = "testRunStart";
+        message = "testRunStarted";
     };
     assertResultContains {
         runResult;
@@ -136,31 +136,8 @@ shared void shouldHandleExceptionOnTestRunStart() {
 }
 
 test
-shared void shouldHandleExceptionOnTestRunFinish() {
-    value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunFinishListener]).run();
-    assertResultCounts {
-        runResult;
-        runCount = 1;
-        errorCount = 1;
-        successCount = 1;
-    };
-    assertResultContains {
-        runResult;
-        index = 0;
-        state = TestState.success;
-        source = `foo`;
-    };
-    assertResultContains {
-        runResult;
-        index = 1;
-        state = TestState.error;
-        message = "testRunFinish";
-    };
-}
-
-test
-shared void shouldHandleExceptionOnTestFinish() {
-    value runResult = createTestRunner([`foo`], [throwExceptionOnTestFinishListener]).run();
+shared void shouldHandleExceptionOnTestRunFinished() {
+    value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunFinishedListener]).run();
     assertResultCounts {
         runResult;
         runCount = 1;
@@ -177,13 +154,36 @@ shared void shouldHandleExceptionOnTestFinish() {
         runResult;
         index = 1;
         state = TestState.error;
-        message = "testFinish";
+        message = "testRunFinished";
+    };
+}
+
+test
+shared void shouldHandleExceptionOnTestFinished() {
+    value runResult = createTestRunner([`foo`], [throwExceptionOnTestFinishedListener]).run();
+    assertResultCounts {
+        runResult;
+        runCount = 1;
+        errorCount = 1;
+        successCount = 1;
+    };
+    assertResultContains {
+        runResult;
+        index = 0;
+        state = TestState.success;
+        source = `foo`;
+    };
+    assertResultContains {
+        runResult;
+        index = 1;
+        state = TestState.error;
+        message = "testFinished";
     };
 }
 
 test
 shared void shouldHandleExceptionDuringHandlingException() {
-    value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunFinishListener, throwExceptionOnTestErrorListener]).run();
+    value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunFinishedListener, throwExceptionOnTestErrorListener]).run();
     assertResultCounts {
         runResult;
         runCount = 1;
@@ -200,7 +200,7 @@ shared void shouldHandleExceptionDuringHandlingException() {
         runResult;
         index = 1;
         state = TestState.error;
-        message = "testRunFinish";
+        message = "testRunFinished";
     };
     assertResultContains {
         runResult;
@@ -211,8 +211,8 @@ shared void shouldHandleExceptionDuringHandlingException() {
 }
 
 test
-shared void shouldPropagateExceptionOnTestStart() {
-    value runResult = createTestRunner([`foo`], [throwExceptionOnTestStartListener]).run();
+shared void shouldPropagateExceptionOnTestStarted() {
+    value runResult = createTestRunner([`foo`], [throwExceptionOnTestStartedListener]).run();
     assertResultCounts {
         runResult;
         runCount = 1;
@@ -223,7 +223,7 @@ shared void shouldPropagateExceptionOnTestStart() {
         index = 0;
         source = `foo`;
         state = TestState.error;
-        message = "testStart";
+        message = "testStarted";
     };
 }
 
@@ -235,10 +235,10 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 4);
-    assertEquals(lines[0], "TestRunStartEvent");
-    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::bazWithCustomListener]");
-    assertEquals(lines[2], "TestFinishEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
-    assertEquals(lines[3], "TestRunFinishEvent");
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::bazWithCustomListener]");
+    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
+    assertEquals(lines[3], "TestRunFinishedEvent");
     
     assertResultCounts {
         result;
@@ -260,12 +260,12 @@ void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 6);
-    assertEquals(lines[0], "TestRunStartEvent");
-    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::BazWithCustomListener]");
-    assertEquals(lines[2], "TestStartEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
-    assertEquals(lines[3], "TestFinishEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
-    assertEquals(lines[4], "TestFinishEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
-    assertEquals(lines[5], "TestRunFinishEvent");
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener]");
+    assertEquals(lines[2], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
+    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
+    assertEquals(lines[4], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
+    assertEquals(lines[5], "TestRunFinishedEvent");
 }
 
 test
@@ -287,10 +287,10 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
     assertEquals(lines.size, 4);
-    assertEquals(lines[0], "TestRunStartEvent");
-    assertEquals(lines[1], "TestStartEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
-    assertEquals(lines[2], "TestFinishEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
-    assertEquals(lines[3], "TestRunFinishEvent");
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
+    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
+    assertEquals(lines[3], "TestRunFinishedEvent");
     
     assertResultCounts {
         result;
@@ -310,15 +310,15 @@ shared object recordingListener satisfies TestListener {
     
     shared String result => buffer.string.trimmed;
     
-    shared actual void testRunStart(TestRunStartEvent event) { buffer.clear(); log(event); } 
+    shared actual void testRunStarted(TestRunStartedEvent event) { buffer.clear(); log(event); } 
     
-    shared actual void testRunFinish(TestRunFinishEvent event) => log(event); 
+    shared actual void testRunFinished(TestRunFinishedEvent event) => log(event); 
     
-    shared actual void testStart(TestStartEvent event) => log(event); 
+    shared actual void testStarted(TestStartedEvent event) => log(event); 
     
-    shared actual void testFinish(TestFinishEvent event) => log(event); 
+    shared actual void testFinished(TestFinishedEvent event) => log(event); 
     
-    shared actual void testIgnore(TestIgnoreEvent event) => log(event);
+    shared actual void testSkipped(TestSkippedEvent event) => log(event);
     
     shared actual void testAborted(TestAbortedEvent event) => log(event); 
     
@@ -328,27 +328,27 @@ shared object recordingListener satisfies TestListener {
     
 }
 
-object throwExceptionOnTestRunStartListener satisfies TestListener {
-    shared actual void testRunStart(TestRunStartEvent event) {
-        throw Exception("testRunStart");
+object throwExceptionOnTestRunStartedListener satisfies TestListener {
+    shared actual void testRunStarted(TestRunStartedEvent event) {
+        throw Exception("testRunStarted");
     }
 }
 
-object throwExceptionOnTestRunFinishListener satisfies TestListener {
-    shared actual void testRunFinish(TestRunFinishEvent event) {
-        throw Exception("testRunFinish");
+object throwExceptionOnTestRunFinishedListener satisfies TestListener {
+    shared actual void testRunFinished(TestRunFinishedEvent event) {
+        throw Exception("testRunFinished");
     }
 }
 
-object throwExceptionOnTestStartListener satisfies TestListener {
-    shared actual void testStart(TestStartEvent event) {
-        throw Exception("testStart");
+object throwExceptionOnTestStartedListener satisfies TestListener {
+    shared actual void testStarted(TestStartedEvent event) {
+        throw Exception("testStarted");
     }
 }
 
-object throwExceptionOnTestFinishListener satisfies TestListener {
-    shared actual void testFinish(TestFinishEvent event) {
-        throw Exception("testFinish");
+object throwExceptionOnTestFinishedListener satisfies TestListener {
+    shared actual void testFinished(TestFinishedEvent event) {
+        throw Exception("testFinished");
     }
 }
 

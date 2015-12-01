@@ -10,11 +10,11 @@ shared class DefaultLoggingListener(
     "A function that log the given line."
     void write(String line) => print(line)) satisfies TestListener {
     
-    shared actual void testRunStart(TestRunStartEvent event) {
+    shared actual void testRunStarted(TestRunStartedEvent event) {
         writeBannerStart();
     }
     
-    shared actual void testRunFinish(TestRunFinishEvent event) {
+    shared actual void testRunFinished(TestRunFinishedEvent event) {
         writeBannerResults(event.result);
         if (event.result.results nonempty) {
             writeSummary(event.result);
@@ -27,11 +27,11 @@ shared class DefaultLoggingListener(
         }
     }
     
-    shared actual void testStart(TestStartEvent event) {
+    shared actual void testStarted(TestStartedEvent event) {
         write("running: ``event.description.name``");
     }
     
-    shared actual void testFinish(TestFinishEvent event) {
+    shared actual void testFinished(TestFinishedEvent event) {
         if (event.result.state == TestState.error || event.result.state == TestState.failure) {
             if (exists e = event.result.exception) {
                 e.printStackTrace();
@@ -71,7 +71,8 @@ shared class DefaultLoggingListener(
         write("success: ``result.successCount``");
         write("failure: ``result.failureCount``");
         write("error:   ``result.errorCount``");
-        write("ignored: ``result.ignoreCount``");
+        write("skipped: ``result.skippedCount``");
+        write("aborted: ``result.abortedCount``");
         write("time:    `` result.elapsedTime / 1000 ``s");
         write("");
     }

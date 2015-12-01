@@ -1,6 +1,6 @@
 "The result state of test execution."
 shared class TestState 
-        of success | failure | error | ignored | aborted 
+        of success | failure | error | skipped | aborted 
         satisfies Comparable<TestState> {
     
     String name;
@@ -24,9 +24,9 @@ shared class TestState
         priority = 50;
     }
     
-    "A test state is _ignored_, if it is marked with [[ignore]] annotation."
-    shared new ignored {
-        name = "ignored";
+    "A test state is _skipped_, if it is marked with [[ignore]] annotation."
+    shared new skipped {
+        name = "skipped";
         priority = 10;
     }
 

@@ -12,15 +12,15 @@ shared class BazTestListener() satisfies TestListener {
     
     bazTestListenerCounter++;
 
-    shared actual void testRunStart(TestRunStartEvent event) => log(event);
+    shared actual void testRunStarted(TestRunStartedEvent event) => log(event);
 
-    shared actual void testRunFinish(TestRunFinishEvent event) => log(event);
+    shared actual void testRunFinished(TestRunFinishedEvent event) => log(event);
 
-    shared actual void testStart(TestStartEvent event) => log(event);
+    shared actual void testStarted(TestStartedEvent event) => log(event);
 
-    shared actual void testFinish(TestFinishEvent event) => log(event);
+    shared actual void testFinished(TestFinishedEvent event) => log(event);
 
-    shared actual void testIgnore(TestIgnoreEvent event) => log(event);
+    shared actual void testSkipped(TestSkippedEvent event) => log(event);
 
     shared actual void testError(TestErrorEvent event) => log(event);
 

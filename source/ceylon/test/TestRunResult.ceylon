@@ -10,16 +10,16 @@ shared interface TestRunResult {
     "The number of tests that finished [[successfully|TestState.success]]."
     shared formal Integer successCount;
     
-    "The number of tests that finished with [[TestState.failure]]."
+    "The number of tests that finished with [[failure|TestState.failure]]."
     shared formal Integer failureCount;
     
-    "The number of tests that finished with [[TestState.error]]."
+    "The number of tests that finished with [[error|TestState.error]]."
     shared formal Integer errorCount;
     
-    "The number of [[TestState.ignored]] tests during the test run."
-    shared formal Integer ignoreCount;
+    "The number of [[skipped|TestState.skipped]] tests during the test run."
+    shared formal Integer skippedCount;
     
-    "The number of [[TestState.aborted]] tests during the test run."
+    "The number of [[aborted|TestState.aborted]] tests during the test run."
     shared formal Integer abortedCount;
     
     "The time in milliseconds when the test run started."

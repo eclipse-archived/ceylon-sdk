@@ -111,11 +111,11 @@ shared void shouldRunTestThrowingIgnoreException() {
     value result = createTestRunner([`fooThrowingIgnoreException`]).run();
     assertResultCounts {
         result;
-        ignoreCount = 1;
+        skippedCount = 1;
     };
     assertResultContains {
         result;
-        state = TestState.ignored;
+        state = TestState.skipped;
         source = `fooThrowingIgnoreException`;
         message = "ignore it!";
     };
@@ -184,7 +184,7 @@ shared void shouldRunTestsInPackage() {
             successCount = 12;
             failureCount = 1;
             errorCount = 1;
-            ignoreCount = 7;
+            skippedCount = 7;
             abortedCount = 1;
         };
     }
@@ -208,7 +208,7 @@ shared void shouldRunTestsInModule() {
             successCount = 16;
             failureCount = 1;
             errorCount = 13;
-            ignoreCount = 8;
+            skippedCount = 8;
             abortedCount = 1;
         };
     }
@@ -390,15 +390,15 @@ test
 shared void shouldCompareTestState() {
     assert(TestState.error > TestState.failure,
            TestState.failure > TestState.success,
-           TestState.aborted > TestState.ignored);
+           TestState.aborted > TestState.skipped);
 }
 
-void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer ignoreCount = 0, Integer abortedCount = 0, Integer runCount = -1) {
+void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer skippedCount = 0, Integer abortedCount = 0, Integer runCount = -1) {
     try {
         assert(runResult.successCount == successCount, 
                runResult.errorCount == errorCount, 
                runResult.failureCount == failureCount, 
-               runResult.ignoreCount == ignoreCount,
+               runResult.skippedCount == skippedCount,
                runResult.abortedCount == abortedCount);
         
         if( runCount == -1 ) {

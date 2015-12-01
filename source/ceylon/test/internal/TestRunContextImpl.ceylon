@@ -27,29 +27,29 @@ shared class TestRunContextImpl(runner, result) satisfies TestRunContext {
     shared actual void removeTestListener(TestListener* listeners)
             => listenersList.removeAll(listeners);
     
-    shared actual void fireTestRunStart(TestRunStartEvent event)
-            => fire(event.runner.description, (TestListener l) => l.testRunStart(event));
+    shared actual void fireTestRunStarted(TestRunStartedEvent event)
+            => fire(event.runner.description, (TestListener l) => l.testRunStarted(event));
     
-    shared actual void fireTestRunFinish(TestRunFinishEvent event)
-            => fire(event.runner.description, (TestListener l) => l.testRunFinish(event));
+    shared actual void fireTestRunFinished(TestRunFinishedEvent event)
+            => fire(event.runner.description, (TestListener l) => l.testRunFinished(event));
     
-    shared actual void fireTestStart(TestStartEvent event)
-            => fire(event.description, (TestListener l) => l.testStart(event), true);
+    shared actual void fireTestStarted(TestStartedEvent event)
+            => fire(event.description, (TestListener l) => l.testStarted(event), true);
     
-    shared actual void fireTestFinish(TestFinishEvent event)
-            => fire(event.result.description, (TestListener l) => l.testFinish(event));
+    shared actual void fireTestFinished(TestFinishedEvent event)
+            => fire(event.result.description, (TestListener l) => l.testFinished(event));
     
     shared actual void fireTestError(TestErrorEvent event)
             => fire(event.result.description, (TestListener l) => l.testError(event));
     
-    shared actual void fireTestIgnore(TestIgnoreEvent event)
-            => fire(event.result.description, (TestListener l) => l.testIgnore(event));
+    shared actual void fireTestSkipped(TestSkippedEvent event)
+            => fire(event.result.description, (TestListener l) => l.testSkipped(event));
     
     shared actual void fireTestAborted(TestAbortedEvent event)
             => fire(event.result.description, (TestListener l) => l.testAborted(event));
     
-    shared actual void fireTestExclude(TestExcludeEvent event)
-            => fire(null, (TestListener l) => l.testExclude(event));
+    shared actual void fireTestExcluded(TestExcludedEvent event)
+            => fire(null, (TestListener l) => l.testExcluded(event));
     
     void fire(TestDescription? description, Anything(TestListener) handler, Boolean propagateException = false) {
         value listeners = ArrayList<TestListener>();
