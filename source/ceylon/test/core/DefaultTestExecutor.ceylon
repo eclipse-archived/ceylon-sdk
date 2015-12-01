@@ -23,7 +23,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
-        if (verify(context) && !handleIgnored(context)) {
+        if (verify(context) && evaluateTestConditions(context)) {
             Object? instance = getInstance();
             Anything() executor = handleTestExecution(context, instance,
                     handleAfterCallbacks(context, instance,
@@ -134,15 +134,24 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default Boolean handleIgnored(TestRunContext context) {
-        value ignoreAnnotation = findAnnotation<IgnoreAnnotation>(functionDeclaration, classDeclaration);
-        if (exists ignoreAnnotation) {
-            context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, TestSkippedException(ignoreAnnotation.reason))));
-            return true;
+    shared default Boolean evaluateTestConditions(TestRunContext context) {
+        value conditions = findAnnotations<Annotation&TestCondition>(functionDeclaration, classDeclaration);
+        for(condition in conditions) {
+            try {
+                value result = condition.evaluate(description);
+                if (!result.successful) {
+                    context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, TestSkippedException(result.reason))));
+                    return false;
+                }
+            }
+            catch (Throwable e) {
+                context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, e)));
+                return false;
+            }
         }
-        return false;
+        return true;
     }
-    
+        
     shared default void handleTestExecution(TestRunContext context, Object? instance, void execute())() {
         value startTime = system.milliseconds;
         value elapsedTime => system.milliseconds - startTime;

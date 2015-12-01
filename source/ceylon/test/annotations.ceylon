@@ -131,4 +131,8 @@ shared final annotation class AfterTestAnnotation()
 shared final annotation class IgnoreAnnotation(
     "Reason why the test is ignored."
     shared String reason)
-        satisfies OptionalAnnotation<IgnoreAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
+        satisfies OptionalAnnotation<IgnoreAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> & TestCondition {
+    
+    shared actual Result evaluate(TestDescription description) => Result(false, reason);
+    
+}
