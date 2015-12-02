@@ -24,7 +24,7 @@ shared class TestState
         priority = 50;
     }
     
-    "A test state is _skipped_, if it is marked with [[ignore]] annotation."
+    "A test state is _skipped_, if its condition is not fullfiled, see [[TestCondition]] or e.g [[ignore]] annotation."
     shared new skipped {
         name = "skipped";
         priority = 10;

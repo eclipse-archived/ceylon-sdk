@@ -43,7 +43,7 @@ shared interface TestListener {
         "The event object."
         TestFinishedEvent event) {}
     
-    "Called when a test will *not* be run, because it is marked with [[ignore]] annotation."
+    "Called when a test has been skipped, because its condition wasn't fullfiled."
     shared default void testSkipped(
         "The event object."
         TestSkippedEvent event) {}
