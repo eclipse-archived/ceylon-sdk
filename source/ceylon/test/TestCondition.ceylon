@@ -37,6 +37,10 @@ shared interface TestCondition {
         shared String? reason;
         
         /*
+         
+        WORKAROUND Can't invoke ctor of nested class #5785
+        https://github.com/ceylon/ceylon/issues/5785
+         
         new init(Boolean successful, String? reason) {
             successful = successful; 
             reason = reason2;
@@ -45,7 +49,8 @@ shared interface TestCondition {
         shared new success(String reason) extends init(true, reason) {}
         
         shared new failed(String reason) extends init(false, reason) {}
-         */
+         
+        */
         
     }
     
