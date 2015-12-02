@@ -17,7 +17,7 @@ shared class BaseLayout(title, body = Div()) satisfies Layout {
     shared String title;
 
     "The page meta description."
-    shared default String description = "";
+    shared default String? description = null;
 
     shared default {Script*} headScripts = {};
 
@@ -39,7 +39,7 @@ shared class BaseLayout(title, body = Div()) satisfies Layout {
             headChildren = concatenate(
                 {
                     CharsetMeta(),
-                    Meta("description", description)
+                    Meta("description", null)
                 },
                 //stylesheets,
                 headScripts
