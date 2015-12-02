@@ -3,7 +3,10 @@ import ceylon.collection{ ArrayList }
 "Represents a directory in a hierarchical file system."
 shared sealed interface Directory 
         satisfies ExistingResource {
-    
+
+    "The name of this directory."
+    shared formal String name;
+
     "The files and subdirectories that directly belong
      to this directory."
     shared formal {ExistingResource*} children(

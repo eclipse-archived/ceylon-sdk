@@ -37,7 +37,9 @@ class ConcreteDirectory(JPath jpath)
     path => ConcretePath(jpath); 
     
     linkedResource => this;
-    
+
+    name => jpath.fileName.string;
+
     children(String filter) =>
            {for (p in childPaths(filter)) 
                  if (is ExistingResource r=p.resource) r};
