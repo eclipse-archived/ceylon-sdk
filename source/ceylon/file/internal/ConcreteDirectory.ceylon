@@ -73,6 +73,7 @@ class ConcreteDirectory(JPath jpath)
     
     assign owner => setOwner(jpath, jprincipal(jpath, owner));
     
+    deleteOnExit() => jpath.toFile().deleteOnExit();
 }
 
 

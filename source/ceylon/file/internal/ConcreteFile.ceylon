@@ -137,7 +137,9 @@ class ConcreteFile(JPath jpath)
     shared actual String owner => getOwner(jpath).name;
     
     assign owner => setOwner(jpath, jprincipal(jpath,owner));
-    
+
+    deleteOnExit() => jpath.toFile().deleteOnExit();
+
     shared actual class Reader(String? encoding,
             Integer bufferSize) 
             extends super.Reader(encoding, bufferSize) {

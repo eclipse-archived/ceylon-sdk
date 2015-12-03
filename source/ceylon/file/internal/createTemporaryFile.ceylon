@@ -14,18 +14,13 @@ import java.nio.file {
 shared File createTemporaryFile(
         String? prefix = null,
         String? suffix = null,
-        Directory? parentDirectory = null,
-        Boolean deleteOnExit = false) {
+        Directory? parentDirectory = null) {
 
     value jpath
         =   if (exists parentDirectory)
             then JFiles.createTempFile(
                 toJpath(parentDirectory.path), prefix, suffix)
             else JFiles.createTempFile(prefix, suffix);
-
-    if (deleteOnExit) {
-        jpath.toFile().deleteOnExit();
-    }
 
     return ConcreteFile(jpath);
 }

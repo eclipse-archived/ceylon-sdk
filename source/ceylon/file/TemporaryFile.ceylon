@@ -29,16 +29,11 @@ shared class TemporaryFile(
         String? suffix = null,
         "The parent directory for the new temporary file, or `null`
          for the system default temporary directory."
-        Directory? parentDirectory = null,
-        "If true, attempt to delete the temporary file upon
-         termination of the current process if supported by
-         the underlying virtual machine."
-        Boolean deleteOnExit = false)
+        Directory? parentDirectory = null)
         satisfies Destroyable & File {
 
     File delegate
-        =   createTemporaryFileInternal(
-                prefix, suffix, parentDirectory, deleteOnExit);
+        =   createTemporaryFileInternal(prefix, suffix, parentDirectory);
 
     contentType => delegate.contentType;
 
@@ -95,6 +90,8 @@ shared class TemporaryFile(
 
     writeAttribute(Attribute attribute, Object attributeValue)
         =>  delegate.writeAttribute(attribute, attributeValue);
+
+    deleteOnExit() => delegate.deleteOnExit();
 
     shared actual class Appender(String? encoding, Integer bufferSize)
             extends super.Appender(encoding, bufferSize) {

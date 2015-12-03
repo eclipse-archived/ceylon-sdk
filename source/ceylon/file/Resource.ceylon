@@ -5,7 +5,7 @@ shared interface Resource
         of ExistingResource|Nil {
     
     "The path of the file, link, or directory."
-	shared formal Path path;
+    shared formal Path path;
     
     "If this resource is a link, resolve the link."
     shared formal File|Directory|Nil linkedResource;
@@ -34,9 +34,14 @@ shared interface ExistingResource
     shared formal void writeAttribute(Attribute attribute, 
                             Object attributeValue);
     
+    "Request that this resource be deleted when the process terminates.
+
+     Invoking [[deleteOnExit()]] does not guarantee that the resource will
+     be deleted, and may have no effect on some [[System]]s or platforms.
+     For filesystem resources on the JVM, `deleteOnExit()` delegates to
+     `java.io.File.deleteOnExit()`."
+    shared formal void deleteOnExit();
 }
-
-
 
 "Thrown if there is no principal with the specified name."
 shared class NoSuchPrincipalException(name, Exception cause) 

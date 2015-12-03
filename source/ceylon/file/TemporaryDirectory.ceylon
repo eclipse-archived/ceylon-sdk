@@ -27,16 +27,11 @@ shared class TemporaryDirectory(
         String? prefix = null,
         "The parent directory for the new temporary directory, or `null`
          for the system default temporary directory."
-        Directory? parentDirectory = null,
-        "If true, attempt to delete the temporary directory upon
-         termination of the current process if supported by the
-         underlying virtual machine."
-        Boolean deleteOnExit = false)
+        Directory? parentDirectory = null)
         satisfies Destroyable & Directory {
 
     Directory delegate
-        =   createTemporaryDirectoryInternal(
-                prefix, parentDirectory, deleteOnExit);
+        =   createTemporaryDirectoryInternal(prefix, parentDirectory);
 
     name => delegate.name;
 
@@ -68,6 +63,8 @@ shared class TemporaryDirectory(
 
     writeAttribute(Attribute attribute, Object attributeValue)
         =>  delegate.writeAttribute(attribute, attributeValue);
+
+    deleteOnExit() => delegate.deleteOnExit();
 
     "Attempt to delete this temporary directory. No action will
      be taken if the directory is not empty or no longer exists."
