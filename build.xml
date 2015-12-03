@@ -15,18 +15,18 @@
     
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${basedir}/../ceylon/dist/lib/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${basedir}/../ceylon/lib/ant-contrib-1.0b3.jar"/>
         </classpath>
     </taskdef>
 
     <taskdef resource="taskdef.properties">
         <classpath>
-            <pathelement path="${basedir}/../ceylon/dist/osgi/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+            <pathelement path="${basedir}/../ceylon/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
         </classpath>
     </taskdef>
 
     <taskdef resource="aQute/bnd/ant/taskdef.properties"
-          classpath="${basedir}/../ceylon/dist/lib/biz.aQute.bnd-2.3.0.jar"/>
+          classpath="${basedir}/../ceylon/lib/biz.aQute.bnd-2.3.0.jar"/>
 
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
