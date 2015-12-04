@@ -13,6 +13,9 @@ import ceylon.language.meta.model {
 import ceylon.test {
     ...
 }
+import ceylon.test.annotation {
+    ...
+}
 import ceylon.test.event {
     ...
 }

@@ -7,6 +7,9 @@ import ceylon.language.meta.declaration {
 import ceylon.test {
     ...
 }
+import ceylon.test.annotation {
+    ...
+}
 import ceylon.test.event {
     ...
 }
