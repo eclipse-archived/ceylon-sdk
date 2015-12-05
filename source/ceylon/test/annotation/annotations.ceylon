@@ -61,5 +61,5 @@ shared final annotation class IgnoreAnnotation(
 "Annotation class for [[ceylon.test::tag]]."
 shared final annotation class TagAnnotation(
     "One or more tags associated with the test."
-    shared {String+} tags)
-        satisfies OptionalAnnotation<TagAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
+    shared String+ tags)
+        satisfies SequencedAnnotation<TagAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}

@@ -136,4 +136,4 @@ shared annotation IgnoreAnnotation ignore(
  "
 shared annotation TagAnnotation tag(
     "One or more tags associated with the test."
-    {String+} tags) => TagAnnotation(tags);
+    String+ tags) => TagAnnotation(*tags);
