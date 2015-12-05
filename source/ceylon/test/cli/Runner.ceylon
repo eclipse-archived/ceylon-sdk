@@ -8,7 +8,9 @@ import ceylon.test {
     createTestRunner,
     TestListener,
     TestSource,
-    TestRunResult
+    TestRunResult,
+    TestFilter,
+    defaultTestFilter
 }
 import ceylon.test.internal {
     TestEventPublisher,
@@ -17,6 +19,9 @@ import ceylon.test.internal {
 import ceylon.test.reporter {
     HtmlReporter,
     TapReporter
+}
+import ceylon.test.core {
+    TagFilter
 }
 
 "Run method used by `ceylon test` and `ceylon test-js` tools, 
@@ -35,7 +40,8 @@ class Runner() {
             initializeTestedModules();
             value testSources = getTestSources();
             value testListeners = getTestListeners();
-            value result = createTestRunner(testSources, testListeners).run();
+            value testFilter = getTestFilter();
+            value result = createTestRunner(testSources, testListeners, testFilter).run();
             handleResult(result);
         } finally {
             socket?.close();
@@ -72,6 +78,14 @@ class Runner() {
         }
         
         return testListeners.sequence();
+    }
+    
+    TestFilter getTestFilter() {
+        if( options.tags.empty ) {
+            return defaultTestFilter;
+        } else {
+            return TagFilter(options.tags).filterTest;
+        }
     }
     
     [String, String] parseModuleNameAndVersion(String mod) {

@@ -56,3 +56,10 @@ shared final annotation class IgnoreAnnotation(
     shared actual Result evaluate(TestDescription description) => Result(false, reason);
     
 }
+
+
+"Annotation class for [[ceylon.test::tag]]."
+shared final annotation class TagAnnotation(
+    "One or more tags associated with the test."
+    shared {String+} tags)
+        satisfies OptionalAnnotation<TagAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}

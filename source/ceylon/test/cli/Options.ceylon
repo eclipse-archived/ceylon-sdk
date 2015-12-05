@@ -6,6 +6,7 @@ class Options {
     
     shared String[] modules;
     shared String[] tests;
+    shared String[] tags;
     shared Boolean tap;
     shared Boolean report;
     shared Integer? port;
@@ -17,6 +18,7 @@ class Options {
     shared new parse() {
         value moduleArgs = ArrayList<String>();
         value testArgs = ArrayList<String>();
+        value tagArgs = ArrayList<String>();
         variable value prev = "";
         variable value tapArg = false;
         variable value reportArg = false;
@@ -31,6 +33,9 @@ class Options {
             }
             if (prev == "--test") {
                 testArgs.add(arg);
+            }
+            if (prev == "--tag") {
+                tagArgs.add(arg);
             }
             if (prev == "--``colorKeyPrefix``.reset") {
                 colorResetArg = arg;
@@ -57,6 +62,7 @@ class Options {
         
         modules = moduleArgs.sequence();
         tests = testArgs.sequence();
+        tags = tagArgs.sequence();
         tap = tapArg;
         report = reportArg;
         port = portArg;

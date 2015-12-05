@@ -9,7 +9,8 @@ import ceylon.test.annotation {
     TestSuiteAnnotation,
     TestExecutorAnnotation,
     TestListenersAnnotation,
-    IgnoreAnnotation
+    IgnoreAnnotation,
+    TagAnnotation
 }
 
 
@@ -107,3 +108,32 @@ shared annotation AfterTestAnnotation afterTest() => AfterTestAnnotation();
 shared annotation IgnoreAnnotation ignore(
     "Reason why the test is ignored."
     String reason = "") => IgnoreAnnotation(reason);
+
+
+"Marks a test or group of tests with one or more tags, 
+ tags can be used for filtering, which tests will be executed.
+ 
+ For example test, which is failing often, but from unknow reasons, 
+ can be marked as _unstable_ ...
+ 
+ ~~~~
+ test
+ tag(\"unstable\")
+ shared void shouldSucceedWithLittleLuck() { ... }
+ ~~~~
+     
+ ... and then excluded from test execution
+ 
+ ~~~~plain
+ $ceylon test --tag=!unstable com.acme.mymodule
+ ~~~~
+ 
+ ... or visa versa, we can execute only tests with this tag
+ 
+ ~~~~plain
+ $ceylon test --tag=unstable com.acme.mymodule
+ ~~~~
+ "
+shared annotation TagAnnotation tag(
+    "One or more tags associated with the test."
+    {String+} tags) => TagAnnotation(tags);
