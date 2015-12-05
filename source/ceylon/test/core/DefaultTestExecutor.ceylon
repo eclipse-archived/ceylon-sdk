@@ -19,6 +19,9 @@ import ceylon.test.annotation {
 import ceylon.test.event {
     ...
 }
+import ceylon.test.internal {
+    ...
+}
 
 "Default implementation of [[TestExecutor]]."
 shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassDeclaration? classDeclaration) satisfies TestExecutor {
