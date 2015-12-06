@@ -18,6 +18,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     variable Integer failureCounter = 0;
     variable Integer skippedCounter = 0;
     variable Integer abortedCounter = 0;
+    variable Integer excludedCounter = 0;
     variable Integer startTimeMilliseconds = 0;
     variable Integer endTimeMilliseconds = 0;
     
@@ -27,6 +28,7 @@ shared class TestRunResultImpl() satisfies TestRunResult {
     shared actual Integer failureCount => failureCounter;
     shared actual Integer skippedCount => skippedCounter;
     shared actual Integer abortedCount => abortedCounter;
+    shared actual Integer excludedCount => excludedCounter;
     
     shared actual Boolean isSuccess => successCount != 0 && errorCount == 0 && failureCount == 0;
     
@@ -42,13 +44,14 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         if (results.empty) {
             b.append("There were no tests!").appendNewline();
         } else {
-            b.append("run:     ``runCount``").appendNewline();
-            b.append("success: ``successCount``").appendNewline();
-            b.append("failure: ``failureCount``").appendNewline();
-            b.append("error:   ``errorCount``").appendNewline();
-            b.append("skipped: ``skippedCount``").appendNewline();
-            b.append("aborted: ``abortedCount``").appendNewline();
-            b.append("time:    `` elapsedTime / 1000 ``s").appendNewline();
+            b.append("run:      ``runCount``").appendNewline();
+            b.append("success:  ``successCount``").appendNewline();
+            b.append("failure:  ``failureCount``").appendNewline();
+            b.append("error:    ``errorCount``").appendNewline();
+            b.append("skipped:  ``skippedCount``").appendNewline();
+            b.append("aborted:  ``abortedCount``").appendNewline();
+            b.append("excluded: ``excludedCount``").appendNewline();
+            b.append("time:     `` elapsedTime / 1000 ``s").appendNewline();
             b.appendNewline();
             if (isSuccess) {
                 b.append("TESTS SUCCESS").appendNewline();
@@ -78,6 +81,8 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         shared actual void testSkipped(TestSkippedEvent event) => handleResult(event.result, false);
         
         shared actual void testAborted(TestAbortedEvent event) => handleResult(event.result, false);
+        
+        shared actual void testExcluded(TestExcludedEvent event) => excludedCounter++;
         
         void handleResult(TestResult result, Boolean wasRun) {
             resultsList.add(result);

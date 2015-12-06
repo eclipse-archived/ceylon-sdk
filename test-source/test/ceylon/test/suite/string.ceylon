@@ -48,12 +48,13 @@ shared void testRunResultString2() {
     value runResult = createTestRunner([`foo`, `Bar`]).run();
     
     value expected = """TEST RESULTS
-                        run:     3
-                        success: 3
-                        failure: 0
-                        error:   0
-                        skipped: 0
-                        aborted: 0
+                        run:      3
+                        success:  3
+                        failure:  0
+                        error:    0
+                        skipped:  0
+                        aborted:  0
+                        excluded: 0
                         """;
     
     assert(runResult.string.contains(expected), 
@@ -65,12 +66,13 @@ shared void testRunResultString3() {
     value runResult = createTestRunner([`foo`, `fooThrowingException`, `fooWithIgnore`]).run();
     
     value expected = """TEST RESULTS
-                        run:     2
-                        success: 1
-                        failure: 0
-                        error:   1
-                        skipped: 1
-                        aborted: 0
+                        run:      2
+                        success:  1
+                        failure:  0
+                        error:    1
+                        skipped:  1
+                        aborted:  0
+                        excluded: 0
                         """;
     
     value sep = runtime.name == "jvm" then "." else "::";

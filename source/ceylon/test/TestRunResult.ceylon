@@ -22,6 +22,9 @@ shared interface TestRunResult {
     "The number of [[aborted|TestState.aborted]] tests during the test run."
     shared formal Integer abortedCount;
     
+    "The number of excluded tests from the test run."
+    shared formal Integer excludedCount;
+    
     "The time in milliseconds when the test run started."
     shared formal Integer startTime;
     
