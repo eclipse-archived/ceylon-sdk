@@ -189,13 +189,17 @@ shared void shouldRunTestsInPackage() {
         };
     }
     
-    value result1 = createTestRunner([`package test.ceylon.test.stubs`]).run();
+    function filter(TestDescription d) {
+        return !d.name.contains("parameterized");
+    }
+    
+    value result1 = createTestRunner([`package test.ceylon.test.stubs`], [], filter).run();
     assertResult(result1);
     
-    value result2 = createTestRunner(["package test.ceylon.test.stubs"]).run();
+    value result2 = createTestRunner(["package test.ceylon.test.stubs"], [], filter).run();
     assertResult(result2);
     
-    value result3 = createTestRunner(["test.ceylon.test.stubs"]).run();
+    value result3 = createTestRunner(["test.ceylon.test.stubs"], [], filter).run();
     assertResult(result3);
 }
 
@@ -207,16 +211,20 @@ shared void shouldRunTestsInModule() {
             runCount = 19;
             successCount = 17;
             failureCount = 1;
-            errorCount = 13;
+            errorCount = 11;
             skippedCount = 8;
             abortedCount = 1;
         };
     }
     
-    value result1 = createTestRunner([`module test.ceylon.test.stubs`]).run();
+    function filter(TestDescription d) {
+        return !d.name.contains("parameterized");
+    }
+    
+    value result1 = createTestRunner([`module test.ceylon.test.stubs`], [], filter).run();
     assertResult(result1);
     
-    value result2 = createTestRunner(["module test.ceylon.test.stubs"]).run();
+    value result2 = createTestRunner(["module test.ceylon.test.stubs"], [], filter).run();
     assertResult(result2);
 }
 
@@ -412,13 +420,13 @@ void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integ
             assert(runResult.isSuccess);
         }
     }
-    catch(Exception e) {
+    catch(Throwable e) {
         print(runResult);
         throw e;
     }
 }
 
-void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = TestState.success, TestSource? source = null, String? name = null, String? message = null) {
+void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = TestState.success, TestSource? source = null, String? name = null, String? message = null, String? variant = null) {
     try {
         assert(exists r = runResult.results[index], 
         r.state == state);
@@ -442,6 +450,9 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
         }
         if( exists message ) {
             assert(exists e = r.exception, e.message.contains(message));
+        }
+        if( exists variant ) {
+            assert(exists v = r.description.variant, v == variant);
         }
         if( state == TestState.success ) {
             assert(!r.exception exists);

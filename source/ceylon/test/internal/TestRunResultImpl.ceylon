@@ -86,20 +86,28 @@ shared class TestRunResultImpl() satisfies TestRunResult {
         
         void handleResult(TestResult result, Boolean wasRun) {
             resultsList.add(result);
-            if (result.state == TestState.success && result.description.children.empty) {
-                successCounter++;
-                runCounter += wasRun then 1 else 0;
-            } else if (result.state == TestState.failure && result.exception exists) {
-                failureCounter++;
-                runCounter += wasRun then 1 else 0;
-            } else if (result.state == TestState.error && result.exception exists) {
-                errorCounter++;
-                runCounter += wasRun then 1 else 0;
-            } else if (result.state == TestState.skipped && result.exception exists) {
-                skippedCounter++;
-            } else if (result.state == TestState.aborted && result.exception exists) {
-                abortedCounter++;
+            if( !result.combined ) {
+                switch(result.state)
+                case (TestState.success) {
+                    successCounter++;
+                    runCounter += wasRun then 1 else 0;
+                }
+                case (TestState.failure) {
+                    failureCounter++;
+                    runCounter += wasRun then 1 else 0;
+                }
+                case (TestState.error) {
+                    errorCounter++;
+                    runCounter += wasRun then 1 else 0;
+                }
+                case (TestState.skipped) {
+                    skippedCounter++;
+                }
+                case (TestState.aborted) {
+                    abortedCounter++;
+                }
             }
         }
     }
+    
 }

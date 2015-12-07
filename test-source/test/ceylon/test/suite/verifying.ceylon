@@ -42,31 +42,6 @@ shared void shouldVerifyToplevelNonVoidMethod() {
         message = "function test.ceylon.test.stubs.bugs::bugFunctionWithReturnType should be void";
     };
 }
-
-test
-shared void shouldVerifyToplevelMethodWithParameters() {
-    TestRunResult runResult = createTestRunner([`function bugFunctionWithParameter`, `function bugFunctionWithParameters`]).run();
-    
-    assertResultCounts {
-        runResult;
-        runCount = 0;
-        errorCount = 2;
-    };
-    assertResultContains {
-        runResult;
-        index = 0; 
-        state = TestState.error;
-        source = `bugFunctionWithParameter`;
-        message = "function test.ceylon.test.stubs.bugs::bugFunctionWithParameter should have no parameters";
-    };
-    assertResultContains {
-        runResult;
-        index = 1; 
-        state = TestState.error;
-        source = `bugFunctionWithParameters`;
-        message = "function test.ceylon.test.stubs.bugs::bugFunctionWithParameters should have no parameters";
-    };
-}
     
 test
 shared void shouldVerifyToplevelMethodWithTypeParameters() {

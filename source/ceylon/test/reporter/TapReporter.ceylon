@@ -4,6 +4,10 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.test.annotation {
+    ...
+}
+
 
 "A [[TestListener]] that prints information about test execution to a given logging function,
  in [Test Anything Protocol v13](http://testanything.org/tap-version-13-specification.html) format.
@@ -153,11 +157,12 @@ shared class TapReporter(write = print) satisfies TestListener {
             reason = null;
         }
         
+        String name = "``result.description.name````result.description.variant else ""``";
         String okOrNotOk = (result.state == TestState.success) then "ok" else "not ok";
         String directive = (result.state == TestState.skipped || result.state == TestState.aborted) then "# SKIP skipped" else "";
         String? severity = (result.state == TestState.failure) then "failure" else (result.state == TestState.error then "error");
         
-        write("``okOrNotOk`` ``count`` - ``result.description.name`` ``directive``");
+        write("``okOrNotOk`` ``count`` - ``name`` ``directive``");
         
         if (elapsed exists || reason exists || exception exists) {
             write("  ---");

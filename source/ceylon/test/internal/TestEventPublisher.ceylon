@@ -62,7 +62,14 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
     StringBuilder convertTestResult(TestResult result, StringBuilder json = StringBuilder()) {
         json.append("{");
         json.append("\"name\":\"``escape(result.description.name)``\", ");
+        if( exists variant = result.description.variant ) {
+            json.append("\"variant\":\"``escape(variant)``\", ");
+        }
+        if( exists variantIndex = result.description.variantIndex ) {
+            json.append("\"variantIndex\":\"``variantIndex``\", ");
+        }
         json.append("\"state\":\"``escape(result.state.string)``\", ");
+        json.append("\"combined\":``result.combined``, ");
         json.append("\"elapsedTime\":``result.elapsedTime``, ");
         if (exists e = result.exception) {
             json.append("\"exception\":\"");

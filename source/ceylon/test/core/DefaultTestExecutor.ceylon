@@ -23,44 +23,83 @@ import ceylon.test.internal {
     ...
 }
 
+
 "Default implementation of [[TestExecutor]]."
 shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassDeclaration? classDeclaration) satisfies TestExecutor {
         
     shared actual default TestDescription description => TestDescription(getName(), functionDeclaration, classDeclaration);
     
     shared actual default void execute(TestRunContext context) {
-        if (verify(context) && evaluateTestConditions(context)) {
-            Object? instance = getInstance();
-            Anything() executor = handleTestExecution(context, instance,
-                    handleAfterCallbacks(context, instance,
-                        handleBeforeCallbacks(context, instance,
-                            handleTestInvocation(context, instance))));
-            executor();
+        try {
+            verify(context);
+            evaluateTestConditions(context);
+            
+            value argsVariants = DefaultArgumentsResolver().resolve(description);
+            
+            if( argsVariants.size == 0 ) {
+                if( !functionDeclaration.parameterDeclarations.empty ) {
+                    throw Exception("parameterized test failed, argument provider probably doesn't return any values");
+                }
+                executeVariant(context, description, []);
+            }
+            else if( argsVariants.size == 1, exists args = argsVariants.first ) {
+                executeVariant(context, description, args);
+            } else {
+                executeVariants(context, argsVariants);
+            }
+        }
+        catch(TestSkippedException e) {
+            context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, false, e)));
+        }
+        catch(Throwable e) {
+            context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, false, e)));
         }
     }
     
-    "Verifies that the test context does not contain any errors.
-     
-     Returns true if the context is ok, false if any errors were fired."
-    shared default Boolean verify(TestRunContext context) {
+    void executeVariants(TestRunContext context, {Anything[]*} argsVariants) {
+        value worstStateListener = WorstStateListener();
+        context.addTestListener(worstStateListener);
         try {
-            if (exists classDeclaration) {
-                verifyClassAttributes(classDeclaration);
-                verifyClassParameters(classDeclaration);
-                verifyClassTypeParameters(classDeclaration);
+            context.fireTestStarted(TestStartedEvent(description));
+            value startTime = system.milliseconds;
+            
+            variable value index = 1;
+            for(args in argsVariants) {
+                value v = args.string.replaceFirst("[", "(").replaceLast("]", ")");
+                value d = description.forVariant(v, index);
+                executeVariant(context, d, args);
+                index++;
             }
-            verifyFunctionAnnotations();
-            verifyFunctionParameters();
-            verifyFunctionTypeParameters();
-            verifyFunctionReturnType();
-            verifyBeforeCallbacks();
-            verifyAfterCallbacks();
-            return true;
+            
+            value endTime = system.milliseconds;
+            context.fireTestFinished(TestFinishedEvent(TestResult(description, worstStateListener.result, true, null, endTime - startTime)));
         }
-        catch (Exception e) {
-            context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, e)));
-            return false;
+        finally {
+            context.removeTestListener(worstStateListener);
         }
+    }
+    
+    void executeVariant(TestRunContext context, TestDescription d, {Anything*} args) {
+        Object? instance = getInstance();
+        Anything() executor = handleTestExecution(context, d, instance,
+            handleAfterCallbacks(context, instance,
+                handleBeforeCallbacks(context, instance,
+                    handleTestInvocation(context, instance, args.sequence()))));
+        executor();
+    }
+    
+    "Verifies that the test context does not contain any errors."
+    shared default void verify(TestRunContext context) {
+        if (exists classDeclaration) {
+            verifyClassAttributes(classDeclaration);
+            verifyClassParameters(classDeclaration);
+            verifyClassTypeParameters(classDeclaration);
+        }
+        verifyFunctionAnnotations();
+        verifyFunctionTypeParameters();
+        verifyFunctionReturnType();
+        verifyBeforeCallbacks();
+        verifyAfterCallbacks();
     }
     
     shared default void verifyClassAttributes(ClassDeclaration classDeclaration) {
@@ -93,12 +132,6 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared default void verifyFunctionAnnotations() {
         if (functionDeclaration.annotations<TestAnnotation>().empty) {
             throw Exception("function ``functionDeclaration.qualifiedName`` should be annotated with test");
-        }
-    }
-    
-    shared default void verifyFunctionParameters() {
-        if (!functionDeclaration.parameterDeclarations.empty) {
-            throw Exception("function ``functionDeclaration.qualifiedName`` should have no parameters");
         }
     }
     
@@ -140,42 +173,34 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default Boolean evaluateTestConditions(TestRunContext context) {
+    shared default void evaluateTestConditions(TestRunContext context) {
         value conditions = findAnnotations<Annotation&TestCondition>(functionDeclaration, classDeclaration);
         for(condition in conditions) {
-            try {
-                value result = condition.evaluate(description);
-                if (!result.successful) {
-                    context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, TestSkippedException(result.reason))));
-                    return false;
-                }
-            }
-            catch (Throwable e) {
-                context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, e)));
-                return false;
+            value result = condition.evaluate(description);
+            if (!result.successful) {
+                throw TestSkippedException(result.reason);
             }
         }
-        return true;
     }
         
-    shared default void handleTestExecution(TestRunContext context, Object? instance, void execute())() {
+    shared default void handleTestExecution(TestRunContext context, TestDescription d, Object? instance, void execute())() {
         value startTime = system.milliseconds;
         value elapsedTime => system.milliseconds - startTime;
         
         try {
-            context.fireTestStarted(TestStartedEvent(description, instance));
+            context.fireTestStarted(TestStartedEvent(d, instance));
             execute();
-            context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.success, null, elapsedTime), instance));
+            context.fireTestFinished(TestFinishedEvent(TestResult(d, TestState.success, false, null, elapsedTime), instance));
         }
         catch (Throwable e) {
             if (e is TestSkippedException) {
-                context.fireTestSkipped(TestSkippedEvent(TestResult(description, TestState.skipped, e)));
+                context.fireTestSkipped(TestSkippedEvent(TestResult(d, TestState.skipped, false, e)));
             } else if (e is TestAbortedException) {
-                context.fireTestAborted(TestAbortedEvent(TestResult(description, TestState.aborted, e)));
+                context.fireTestAborted(TestAbortedEvent(TestResult(d, TestState.aborted, false, e)));
             } else if (e is AssertionError) {
-                context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.failure, e, elapsedTime), instance));
+                context.fireTestFinished(TestFinishedEvent(TestResult(d, TestState.failure, false, e, elapsedTime), instance));
             } else {
-                context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.error, e, elapsedTime), instance));
+                context.fireTestFinished(TestFinishedEvent(TestResult(d, TestState.error, false, e, elapsedTime), instance));
             }
         }
     }
@@ -183,12 +208,11 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared default void handleBeforeCallbacks(TestRunContext context, Object? instance, void execute())() {
         value callbacks = findCallbacks<BeforeTestAnnotation>().reversed;
         for (callback in callbacks) {
-            invokeFunction(callback, instance);
+            invokeFunction(callback, instance, []);
         }
         execute();
     }
     
-
     shared default void handleAfterCallbacks(TestRunContext context, Object? instance, void execute())() {
         value exceptions = ArrayList<Throwable>();
         try {
@@ -201,7 +225,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             value callbacks = findCallbacks<AfterTestAnnotation>();
             for (callback in callbacks) {
                 try {
-                    invokeFunction(callback, instance);
+                    invokeFunction(callback, instance, []);
                 }
                 catch (Throwable e) {
                     exceptions.add(e);
@@ -217,8 +241,12 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default void handleTestInvocation(TestRunContext context, Object? instance)() {
-        invokeFunction(functionDeclaration, instance);
+    shared default void handleTestInvocation(TestRunContext context, Object? instance, Anything[] args)() {
+        try {
+            invokeFunction(functionDeclaration, instance, args);
+        } catch (IncompatibleTypeException|InvocationException e) {
+            throw Exception("parameterized test failed, argument provider probably returned incompatible values", e);
+        }
     }
     
     shared default String getName() {
@@ -248,16 +276,17 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         return callbackCache.get(classDeclaration else functionDeclaration.containingPackage, typeLiteral<CallbackType>());
     }
     
-    void invokeFunction(FunctionDeclaration f, Object? instance) {
+    void invokeFunction(FunctionDeclaration f, Object? instance, Anything[] args) {
         if (f.toplevel) {
-            f.invoke();
+            f.invoke([], *args);
         } else {
             assert(exists i = instance);
-            f.memberInvoke(i);
+            f.memberInvoke(i, [], *args);
         }
     }
     
 }
+
 
 FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDeclaration declaration, Type<CallbackType> type)
         given CallbackType satisfies Annotation {
@@ -291,6 +320,7 @@ FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDecl
     }
 }
 
+
 object callbackCache {
     
     value cache = HashMap<String, FunctionDeclaration[]>();
@@ -308,4 +338,3 @@ object callbackCache {
     }
     
 }
-

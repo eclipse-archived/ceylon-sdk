@@ -1,6 +1,7 @@
 import ceylon.language.meta.declaration {
     Declaration,
-    ClassDeclaration
+    ClassDeclaration,
+    FunctionOrValueDeclaration
 }
 import ceylon.test.annotation {
     AfterTestAnnotation,
@@ -10,12 +11,12 @@ import ceylon.test.annotation {
     TestExecutorAnnotation,
     TestListenersAnnotation,
     IgnoreAnnotation,
-    TagAnnotation
+    TagAnnotation,
+    ParametersAnnotation
 }
 
 
 "Marks a function as being a test.
- Only nullary functions should be annotated with `test`.
  
  Example of simplest test:
  
@@ -137,3 +138,29 @@ shared annotation IgnoreAnnotation ignore(
 shared annotation TagAnnotation tag(
     "One or more tags associated with the test."
     String+ tags) => TagAnnotation(*tags);
+
+
+"Annotations to specify source of argument values for parameterized tests, 
+ can be used for whole function or individually for each parameter.
+ As a source, can be used toplevel value or function, 
+ which type is compatible with parameters of test function.
+ 
+ A test function may have multiple parameters, each with own value source.
+ The test engine will execute it for each combination of provided values. 
+ For example, a function with one parameter whose argument provider yields two values, 
+ and second parameter whose argument provider yields three values, will be executed six times.
+ 
+ Example: 
+ 
+     shared {[Integer, Integer]*} fibonnaciNumbers => {[1, 1], [2, 1], [3, 2], [4, 3], [5, 5], [6, 8] ...};
+ 
+     test
+     parameters(`value fibonnaciNumbers`)
+     shared void shouldCalculateFibonacciNumber(Integer input, Integer result) {
+         assert(fibonacciNumber(input) == result);
+     }
+ 
+"
+shared annotation ParametersAnnotation parameters(
+    "The source function or value declaration."
+    FunctionOrValueDeclaration source) => ParametersAnnotation(source);

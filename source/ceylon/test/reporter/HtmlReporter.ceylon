@@ -172,6 +172,8 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
             name = result.description.name;
         }
         
+        // TODO variant/variantIndex
+        
         if( depth > 0 ) {
             for(i in 1..depth ) {
                 fw.write("<span class='indent'></span>");

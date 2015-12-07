@@ -28,7 +28,7 @@ shared class DefaultLoggingListener(
     }
     
     shared actual void testStarted(TestStartedEvent event) {
-        write("running: ``event.description.name``");
+        write("running: ``event.description.name````event.description.variant else ""``");
     }
     
     shared actual void testFinished(TestFinishedEvent event) {
