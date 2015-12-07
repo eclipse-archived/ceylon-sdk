@@ -1,4 +1,4 @@
-import ceylon.language{LangArray=Array}
+
 
 "Contract for stateful iterators, tokenizers etc which have the concept of a 'current position'."
 shared interface Positioned {
@@ -122,19 +122,27 @@ shared abstract class Tokenizer()
 
 "An implementation of Tokenizer using a String"
 shared class StringTokenizer(String chars) extends Tokenizer() {
-    value array = LangArray(chars);
+    variable value count = -1;
+    value size = chars.size;
+    value it = chars.iterator();
+    variable Character|Finished? char = null;
     
     "Whether there is another character"
-    shared actual Boolean hasMore => position < array.size;
+    shared actual Boolean hasMore => position < size;
     
     "The character at the current index, or throw"
-    shared actual Character character(){
-        if(exists c = array.getFromFirst(position)){
-            return c;
+    shared actual Character character() {
+        while(count < position) {
+            value c = it.next();
+            if(is Finished c){
+                throw unexpectedEnd;
+            }
+            count++;
+            char = c;
         }
-        else {
-            throw unexpectedEnd;
-        }
+        
+        assert(is Character last = char);
+        return last;
     }
 }
 
