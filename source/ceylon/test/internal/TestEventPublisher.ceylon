@@ -18,7 +18,7 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
     }
     
     shared actual void testStarted(TestStartedEvent e) {
-        value json = "{\"event\":\"testStarted\", \"element\":{\"name\":\"``e.description.name``\", \"state\":\"running\"}}";
+        value json = "{\"event\":\"testStarted\", \"element\":``convertTestDescription(e.description, false, "running")``}";
         publishEvent(json);
     }
     
@@ -42,17 +42,25 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
         publishEvent(json);
     }
     
-    StringBuilder convertTestDescription(TestDescription description, StringBuilder json = StringBuilder()) {
+    StringBuilder convertTestDescription(TestDescription description, Boolean includeChildren = true, String state = "undefined", StringBuilder json = StringBuilder()) {
         json.append("{");
         json.append("\"name\":\"``escape(description.name)``\", ");
-        json.append("\"state\":\"undefined\", ");
+        json.append("\"state\":\"``state``\", ");
+        if( exists variant = description.variant ) {
+            json.append("\"variant\":\"``escape(variant)``\", ");
+        }
+        if( exists variantIndex = description.variantIndex ) {
+            json.append("\"variantIndex\":``variantIndex``, ");
+        }
         json.append("\"children\":[");
-        if (!description.children.empty) {
-            for (child in description.children) {
-                convertTestDescription(child, json);
-                json.append(", ");
+        if(includeChildren) {
+            if (!description.children.empty) {
+                for (child in description.children) {
+                    convertTestDescription(child, includeChildren, state, json);
+                    json.append(", ");
+                }
+                json.deleteTerminal(2);
             }
-            json.deleteTerminal(2);
         }
         json.append("]");
         json.append("}");
@@ -62,7 +70,14 @@ shared class TestEventPublisher(void publishEvent(String json)) satisfies TestLi
     StringBuilder convertTestResult(TestResult result, StringBuilder json = StringBuilder()) {
         json.append("{");
         json.append("\"name\":\"``escape(result.description.name)``\", ");
+        if( exists variant = result.description.variant ) {
+            json.append("\"variant\":\"``escape(variant)``\", ");
+        }
+        if( exists variantIndex = result.description.variantIndex ) {
+            json.append("\"variantIndex\":``variantIndex``, ");
+        }
         json.append("\"state\":\"``escape(result.state.string)``\", ");
+        json.append("\"combined\":``result.combined``, ");
         json.append("\"elapsedTime\":``result.elapsedTime``, ");
         if (exists e = result.exception) {
             json.append("\"exception\":\"");

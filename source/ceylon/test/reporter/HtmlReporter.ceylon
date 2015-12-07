@@ -126,7 +126,17 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
                 value r = result.results.find((TestResult r) => r.description == child);
                 if( exists r ) {
                     generateResultRow(fw, d, r, depth);
+                    
+                    if( r.description.children.empty ) {
+                        result.results
+                                .select((v) => v.description.children.empty &&
+                                               v.description.name == r.description.name &&
+                                               v.description.variant exists &&
+                                               v.description.variantIndex exists)
+                                .each((v) => generateResultRow(fw, r.description, v, depth+1));
+                    }
                 }
+                
                 traverseTests(child, depth+1);
             }
         }
@@ -166,9 +176,14 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
             }
 
         String name;
-        if( result.description.name.startsWith(parent.name) ) {
+        if( exists variant = result.description.variant,
+            exists variantIndex = result.description.variantIndex) {
+            name = "#``variantIndex`` ``variant``";
+        }
+        else if( result.description.name.startsWith(parent.name) ) {
             name = result.description.name.replaceFirst(parent.name+".", "");
-        } else {
+        }
+        else {
             name = result.description.name;
         }
         

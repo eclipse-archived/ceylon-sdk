@@ -3,14 +3,6 @@ import ceylon.test {
 }
 
 test 
-shared void bugFunctionWithParameter(Integer n) {
-}
-
-test 
-shared void bugFunctionWithParameters(Integer n)(String s) {
-}
-
-test 
 shared void bugFunctionWithTypeParameter<T>() { 
     assert(0 is T); 
 }

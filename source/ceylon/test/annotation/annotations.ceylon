@@ -1,13 +1,11 @@
 import ceylon.language.meta.declaration {
-    ClassDeclaration,
-    Package,
-    Declaration,
-    Module,
-    FunctionDeclaration
+    ...
 }
 import ceylon.test {
-    TestDescription,
-    TestCondition
+    ...
+}
+import ceylon.test.core {
+    ...
 }
 
 
@@ -63,3 +61,31 @@ shared final annotation class TagAnnotation(
     "One or more tags associated with the test."
     shared String+ tags)
         satisfies SequencedAnnotation<TagAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
+
+
+"Annotation class for [[ceylon.test::parameters]]."
+shared final annotation class ParametersAnnotation(
+    "The source function or value declaration."
+    shared FunctionOrValueDeclaration source)
+        satisfies OptionalAnnotation<ParametersAnnotation,FunctionOrValueDeclaration> & ArgumentListProvider & ArgumentProvider {
+    
+    shared actual {Anything*} arguments(ArgumentProviderContext context) {
+        switch (source)
+        case (is FunctionDeclaration) {
+            return source.apply<{Anything*},[]>()();
+        }
+        case (is ValueDeclaration) {
+            return source.apply<{Anything*}>().get();
+        }
+    }
+    
+    shared actual {Anything[]*} argumentLists(ArgumentProviderContext context) {
+        value val = arguments(context);
+        if( is Iterable<Anything[], Null> val) {
+            return val;
+        } else {
+            return val.map((Anything e) => [e]); 
+        }
+    }
+    
+}

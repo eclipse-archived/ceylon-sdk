@@ -10,29 +10,17 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
     shared actual TestDescription description;
     
     shared actual void execute(TestRunContext context) {
-        variable TestState worstState = TestState.skipped;
-        void updateWorstState(TestState state) {
-            if( worstState < state ) {
-                worstState = state;
-            }
-        }
-        object updateWorstStateListener satisfies TestListener {
-            shared actual void testFinished(TestFinishedEvent event) => updateWorstState(event.result.state);
-            shared actual void testError(TestErrorEvent event) => updateWorstState(event.result.state);
-            shared actual void testSkipped(TestSkippedEvent event) => updateWorstState(TestState.skipped);
-            shared actual void testAborted(TestAbortedEvent event) => updateWorstState(TestState.aborted);
-        }
-        
-        context.addTestListener(updateWorstStateListener);
+        value worstStateListener = WorstStateListener();
+        context.addTestListener(worstStateListener);
         try {
             context.fireTestStarted(TestStartedEvent(description));
             value startTime = system.milliseconds;
             children*.execute(context);
             value endTime = system.milliseconds;
-            context.fireTestFinished(TestFinishedEvent(TestResult(description, worstState, null, endTime - startTime)));
+            context.fireTestFinished(TestFinishedEvent(TestResult(description, worstStateListener.result, true, null, endTime - startTime)));
         }
         finally {
-            context.removeTestListener(updateWorstStateListener);
+            context.removeTestListener(worstStateListener);
         }
     }
     
@@ -43,7 +31,29 @@ shared class ErrorTestExecutor(description, Throwable exception) satisfies TestE
     shared actual TestDescription description;
     
     shared actual void execute(TestRunContext context) {
-        context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, exception)));
+        context.fireTestError(TestErrorEvent(TestResult(description, TestState.error, false, exception)));
     }
+    
+}
+
+shared class WorstStateListener() satisfies TestListener {
+    
+    variable TestState worstState = TestState.skipped;
+    
+    shared TestState result => worstState;
+    
+    void updateWorstState(TestState state) {
+        if( worstState < state ) {
+            worstState = state;
+        }
+    }
+    
+    testFinished(TestFinishedEvent event) => updateWorstState(event.result.state);
+    
+    testError(TestErrorEvent event) => updateWorstState(event.result.state);
+    
+    testSkipped(TestSkippedEvent event) => updateWorstState(TestState.skipped);
+    
+    testAborted(TestAbortedEvent event) => updateWorstState(TestState.aborted);
     
 }

@@ -268,14 +268,14 @@ shared void shouldVerifyBeforeWithParameters() {
     value runResult = createTestRunner([`BugBeforeWithParameters`]).run();
     assertResultCounts {
         runResult;
-        runCount = 0;
+        runCount = 1;
         errorCount = 1;
     };
     assertResultContains {
         runResult;
         state = TestState.error;
         source = `BugBeforeWithParameters.f`;
-        message = "before callback test.ceylon.test.stubs.beforeafter.bugs::BugBeforeWithParameters.before should have no parameters";
+        message = "function test.ceylon.test.stubs.beforeafter.bugs::BugBeforeWithParameters.before has parameter s without specified ArgumentProvider";
     };
 }
 
@@ -316,14 +316,13 @@ shared void shouldVerifyAfterWithParameters() {
     value runResult = createTestRunner([`BugAfterWithParameters`]).run();
     assertResultCounts {
         runResult;
-        runCount = 0;
         errorCount = 1;
     };
     assertResultContains {
         runResult;
         state = TestState.error;
         source = `BugAfterWithParameters.f`;
-        message = "after callback test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithParameters.after should have no parameters";
+        message = "function test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithParameters.after has parameter s without specified ArgumentProvider";
     };
 }
 
