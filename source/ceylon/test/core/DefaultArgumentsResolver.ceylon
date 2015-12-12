@@ -23,7 +23,7 @@ shared class DefaultArgumentsResolver() satisfies ArgumentsResolver {
         if( argProviders.size == 0 ) {
             return valuesFromParametersArgProviders(description);
         }
-        else if( argProviders.size == 2 ) {
+        else if( argProviders.size > 1 ) {
             errorFunctionHasMultipleArgProviders(f, argProviders);
         }
         
@@ -75,7 +75,7 @@ shared class DefaultArgumentsResolver() satisfies ArgumentsResolver {
         value argProviders = p.annotations<Annotation>().narrow<ArgumentsProvider>();
         if (argProviders.size == 0) {
             errorParameterHasNoArgProvider(f, p);
-        } else if (argProviders.size == 2) {
+        } else if (argProviders.size > 1) {
             errorParameterHasMultipleArgProviders(f, p, argProviders);
         }
         assert (exists argProvider = argProviders.first);
