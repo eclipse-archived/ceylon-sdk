@@ -7,8 +7,9 @@ import ceylon.test {
     ignore
 }
 import ceylon.test.core {
-    ArgumentsProvider,
-    ArgumentsProviderContext
+    ArgumentProvider,
+    ArgumentProviderContext,
+    ArgumentListProvider
 }
 import ceylon.collection {
     ArrayList
@@ -113,13 +114,20 @@ shared variable Anything customArgumentProviderValue = null;
 shared annotation CustomArgumentProviderAnnotation customArgumentProvider() => CustomArgumentProviderAnnotation();
 
 shared final annotation class CustomArgumentProviderAnnotation()
-        satisfies OptionalAnnotation<CustomArgumentProviderAnnotation,FunctionOrValueDeclaration> & ArgumentsProvider {
+        satisfies OptionalAnnotation<CustomArgumentProviderAnnotation,FunctionOrValueDeclaration> & ArgumentProvider & ArgumentListProvider {
     
-    shared actual Anything values(ArgumentsProviderContext context) {
+    shared actual {Anything*} arguments(ArgumentProviderContext context) {
         if( is Exception e = customArgumentProviderValue ) {
             throw e;
+        } else if (is Iterable<Anything, Null> v = customArgumentProviderValue) {
+            return v;
+        } else {
+            return {customArgumentProviderValue};
         }
-        return customArgumentProviderValue;
+    }
+    
+    shared actual {Anything[]*} argumentLists(ArgumentProviderContext context) {
+        return {};
     }
     
 }

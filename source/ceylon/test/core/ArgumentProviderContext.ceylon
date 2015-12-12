@@ -5,8 +5,9 @@ import ceylon.language.meta.declaration {
     FunctionOrValueDeclaration
 }
 
-"Represents a context given to [[ArgumentsProvider]] when arguments values are collected."
-shared class ArgumentsProviderContext(description, parameter) {
+"Represents a context given to [[ArgumentProvider]] or [[ArgumentListProvider]] 
+ when arguments values are collected."
+shared class ArgumentProviderContext(description, parameter = null) {
 
     "The description of parametrized test."
     shared TestDescription description;

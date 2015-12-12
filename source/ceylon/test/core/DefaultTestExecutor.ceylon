@@ -34,7 +34,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             verify(context);
             evaluateTestConditions(context);
             
-            value argsVariants = DefaultArgumentsResolver().resolve(description);
+            value argsVariants = DefaultArgumentListResolver().resolve(description);
             
             if( argsVariants.size == 0 ) {
                 if( !functionDeclaration.parameterDeclarations.empty ) {

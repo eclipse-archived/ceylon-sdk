@@ -317,7 +317,7 @@ shared void shouldVerifyParameterizedWithoutArgumentProvider() {
         index = 0;
         state = TestState.error;
         source = `parameterizedButNoArgumentProvider`;
-        message = "function test.ceylon.test.stubs::parameterizedButNoArgumentProvider has parameter s without specified argument provider";
+        message = "function test.ceylon.test.stubs::parameterizedButNoArgumentProvider has parameter s without specified ArgumentProvider";
     };
 }
 
@@ -335,7 +335,7 @@ shared void shouldVerifyParameterizedWithMultipleArgumentProvider1() {
         index = 0;
         state = TestState.error;
         source = `parameterizedButSeveralArgumentProviders1`;
-        message = "function test.ceylon.test.stubs::parameterizedButSeveralArgumentProviders1 has parameter s with multiple argument providers: { ParametersAnnotation, CustomArgumentProviderAnnotation }";
+        message = "function test.ceylon.test.stubs::parameterizedButSeveralArgumentProviders1 has parameter s with multiple ArgumentProviders: { ParametersAnnotation, CustomArgumentProviderAnnotation }";
     };
 }
 
@@ -353,7 +353,7 @@ shared void shouldVerifyParameterizedWithMultipleArgumentProvider2() {
         index = 0;
         state = TestState.error;
         source = `parameterizedButSeveralArgumentProviders2`;
-        message = "function test.ceylon.test.stubs::parameterizedButSeveralArgumentProviders2 has multiple argument providers: { ParametersAnnotation, CustomArgumentProviderAnnotation }";
+        message = "function test.ceylon.test.stubs::parameterizedButSeveralArgumentProviders2 has multiple ArgumentListProviders: { ParametersAnnotation, CustomArgumentProviderAnnotation }";
     };
 }
 
@@ -362,13 +362,14 @@ shared void shouldVerifyParameterizedWithSourceVoid() {
     void assertResult(TestRunResult result) {
         assertResultCounts {
             result;
+            runCount = 0;
             errorCount = 1;
         };
         assertResultContains {
             result;
             index = 0;
             state = TestState.error;
-            message = "parameterized test failed, argument provider probably returned incompatible values";
+            message = "actual type of applied declaration is Function<Anything,[]> is not compatible with expected type";
         };
         
     }

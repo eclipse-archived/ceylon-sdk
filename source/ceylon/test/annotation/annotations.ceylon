@@ -67,15 +67,24 @@ shared final annotation class TagAnnotation(
 shared final annotation class ParametersAnnotation(
     "The source function or value declaration."
     shared FunctionOrValueDeclaration source)
-        satisfies OptionalAnnotation<ParametersAnnotation,FunctionOrValueDeclaration> & ArgumentsProvider {
+        satisfies OptionalAnnotation<ParametersAnnotation,FunctionOrValueDeclaration> & ArgumentListProvider & ArgumentProvider {
     
-    shared actual Anything values(ArgumentsProviderContext context) {
+    shared actual {Anything*} arguments(ArgumentProviderContext context) {
         switch (source)
         case (is FunctionDeclaration) {
-            return source.apply<Anything,[]>()();
+            return source.apply<{Anything*},[]>()();
         }
         case (is ValueDeclaration) {
-            return source.apply<Anything>().get();
+            return source.apply<{Anything*}>().get();
+        }
+    }
+    
+    shared actual {Anything[]*} argumentLists(ArgumentProviderContext context) {
+        value val = arguments(context);
+        if( is Iterable<Anything[], Null> val) {
+            return val;
+        } else {
+            return val.map((Anything e) => [e]); 
         }
     }
     
