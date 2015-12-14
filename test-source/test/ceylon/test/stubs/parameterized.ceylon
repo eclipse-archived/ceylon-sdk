@@ -4,7 +4,9 @@ import ceylon.language.meta.declaration {
 import ceylon.test {
     test,
     parameters,
-    ignore
+    ignore,
+    beforeTest,
+    afterTest
 }
 import ceylon.test.core {
     ArgumentProvider,
@@ -135,4 +137,23 @@ shared final annotation class CustomArgumentProviderAnnotation()
 test
 shared void parameterizedCustomArgumentProvider(customArgumentProvider Object o) {
     paramCollector.add(o);
+}
+
+shared object parameterizedTests {
+    
+    beforeTest
+    shared void parameterizedBeforeCallback(customArgumentProvider Integer n) {
+        paramCollector.add("before_"+n.string);        
+    }
+    
+    test
+    shared void parameterizedTest(parameters(`function paramSourceIntegers`) Integer n) {
+        paramCollector.add(n);
+    }
+    
+    afterTest
+    shared void parameterizedAfterCallback(customArgumentProvider Integer n) {
+        paramCollector.add("after_"+n.string);
+    }
+    
 }

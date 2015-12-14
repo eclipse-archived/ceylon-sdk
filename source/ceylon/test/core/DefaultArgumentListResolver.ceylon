@@ -16,42 +16,25 @@ import ceylon.test {
 "Default implementation of [[ArgumentListResolver]]."
 shared class DefaultArgumentListResolver() satisfies ArgumentListResolver {
     
-    shared actual {Anything[]*} resolve(TestDescription description) {
-        assert(exists f = description.functionDeclaration);
-        
-        value argListProviders = f.annotations<Annotation>().narrow<ArgumentListProvider>();
+    shared actual {Anything[]*} resolve(TestDescription description, FunctionDeclaration functionDeclaration) {
+        value argListProviders = functionDeclaration.annotations<Annotation>().narrow<ArgumentListProvider>();
         if( argListProviders.size == 0 ) {
-            return resolveArgProviders(description);
+            return resolveArgProviders(description, functionDeclaration);
         }
         else if( argListProviders.size > 1 ) {
-            errorFunctionHasMultipleArgListProviders(f, argListProviders);
+            errorFunctionHasMultipleArgListProviders(functionDeclaration, argListProviders);
         }
         
         assert(exists argListProvider = argListProviders.first);
-        return argListProvider.argumentLists(ArgumentProviderContext(description));
+        return argListProvider.argumentLists(ArgumentProviderContext(description, functionDeclaration));
     }
     
-    {Anything[]*} resolveArgProviders(TestDescription description) {
-        assert(exists f = description.functionDeclaration);
-        value argProviders = f.parameterDeclarations.map((p) => [p, resolveArgProvider(f, p)]);
-        return calculateArgVariants(description, argProviders);
-    }
-    
-    ArgumentProvider resolveArgProvider(FunctionDeclaration f, FunctionOrValueDeclaration p) {
-        value argProviders = p.annotations<Annotation>().narrow<ArgumentProvider>();
-        if (argProviders.size == 0) {
-            errorParameterHasNoArgProvider(f, p);
-        } else if (argProviders.size > 1) {
-            errorParameterHasMultipleArgProviders(f, p, argProviders);
-        }
-        assert (exists argProvider = argProviders.first);
-        return argProvider;
-    }
-    
-    {Anything[]*} calculateArgVariants(TestDescription description, {[FunctionOrValueDeclaration, ArgumentProvider]*} argProviders) {
+    {Anything[]*} resolveArgProviders(TestDescription description, FunctionDeclaration f) {
         variable LinkedList<ArgumentsList> argVariants = LinkedList({ ArgumentsList() });
-        for (argProvider in argProviders) {
-            value values = argProvider[1].arguments(ArgumentProviderContext(description, argProvider[0]));
+        
+        for(p in f.parameterDeclarations) {
+            value argProvider = findArgProvider(f, p);
+            value values = argProvider.arguments(ArgumentProviderContext(description, f, p));
             value newArgVariants = LinkedList<ArgumentsList>();
             for (argVariant in argVariants) {
                 for (val in values) {
@@ -60,7 +43,19 @@ shared class DefaultArgumentListResolver() satisfies ArgumentListResolver {
             }
             argVariants = newArgVariants;
         }
+        
         return argVariants.map((e) => e.sequence());
+    }
+    
+    ArgumentProvider findArgProvider(FunctionDeclaration f, FunctionOrValueDeclaration p) {
+        value argProviders = p.annotations<Annotation>().narrow<ArgumentProvider>();
+        if (argProviders.size == 0) {
+            errorParameterHasNoArgProvider(f, p);
+        } else if (argProviders.size > 1) {
+            errorParameterHasMultipleArgProviders(f, p, argProviders);
+        }
+        assert (exists argProvider = argProviders.first);
+        return argProvider;
     }
     
     void errorFunctionHasMultipleArgListProviders(FunctionDeclaration f, {ArgumentListProvider*} argListProviders) {

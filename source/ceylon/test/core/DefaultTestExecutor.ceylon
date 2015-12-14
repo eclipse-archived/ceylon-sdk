@@ -34,18 +34,18 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             verify(context);
             evaluateTestConditions(context);
             
-            value argsVariants = DefaultArgumentListResolver().resolve(description);
+            value argLists = DefaultArgumentListResolver().resolve(description, functionDeclaration);
             
-            if( argsVariants.size == 0 ) {
+            if( argLists.size == 0 ) {
                 if( !functionDeclaration.parameterDeclarations.empty ) {
-                    throw Exception("parameterized test failed, argument provider probably doesn't return any values");
+                    throw Exception("parameterized test failed, argument provider didn't return any argument list");
                 }
                 executeVariant(context, description, []);
             }
-            else if( argsVariants.size == 1, exists args = argsVariants.first ) {
+            else if( argLists.size == 1, exists args = argLists.first ) {
                 executeVariant(context, description, args);
             } else {
-                executeVariants(context, argsVariants);
+                executeVariants(context, argLists);
             }
         }
         catch(TestSkippedException e) {
@@ -162,9 +162,6 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     }
     
     shared default void verifyCallback(FunctionDeclaration callbackDeclaration, String callbackName) {
-        if (!callbackDeclaration.parameterDeclarations.empty) {
-            throw Exception("``callbackName`` should have no parameters");
-        }
         if (!callbackDeclaration.typeParameterDeclarations.empty) {
             throw Exception("``callbackName`` should have no type parameters");
         }
@@ -208,7 +205,8 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared default void handleBeforeCallbacks(TestRunContext context, Object? instance, void execute())() {
         value callbacks = findCallbacks<BeforeTestAnnotation>().reversed;
         for (callback in callbacks) {
-            invokeFunction(callback, instance, []);
+            value args = resolveCallbackArgumentList(callback);
+            invokeFunction(callback, instance, args);
         }
         execute();
     }
@@ -225,7 +223,8 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             value callbacks = findCallbacks<AfterTestAnnotation>();
             for (callback in callbacks) {
                 try {
-                    invokeFunction(callback, instance, []);
+                    value args = resolveCallbackArgumentList(callback);
+                    invokeFunction(callback, instance, args);
                 }
                 catch (Throwable e) {
                     exceptions.add(e);
@@ -247,6 +246,22 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         } catch (IncompatibleTypeException|InvocationException e) {
             throw Exception("parameterized test failed, argument provider probably returned incompatible values", e);
         }
+    }
+    
+    shared Anything[] resolveCallbackArgumentList(FunctionDeclaration callback) {
+        if( callback.parameterDeclarations.empty ) {
+            return [];
+        }
+        
+        value argLists = DefaultArgumentListResolver().resolve(description, callback);
+        if( argLists.size == 0 ) {
+            throw Exception("parameterized callback ``callback.qualifiedName`` failed, argument provider didn't return any argument list");
+        } else if( argLists.size > 1) {
+            throw Exception("parameterized callback ``callback.qualifiedName`` failed, argument provider returned multiple argument lists");
+        }
+        
+        assert(exists args = argLists.first);
+        return args; 
     }
     
     shared default String getName() {

@@ -208,7 +208,7 @@ shared void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 19;
+            runCount = 21;
             successCount = 17;
             failureCount = 1;
             errorCount = 11;
@@ -458,7 +458,7 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
             assert(!r.exception exists);
         }
     }
-    catch(Exception e) {
+    catch(Throwable e) {
         print(runResult);
         throw e;
     }

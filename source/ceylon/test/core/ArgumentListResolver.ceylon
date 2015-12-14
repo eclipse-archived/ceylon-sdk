@@ -1,6 +1,9 @@
 import ceylon.test {
     TestDescription
 }
+import ceylon.language.meta.declaration {
+    FunctionDeclaration
+}
 
 "Represents a strategy how to resolve argument lists for parameterized test.
  Its responsibility is discover annotation, which satisfy [[ArgumentListProvider]] or 
@@ -8,6 +11,6 @@ import ceylon.test {
 shared interface ArgumentListResolver {
     
     "Resolve all combination of argument lists for given parametrized test."
-    shared formal {Anything[]*} resolve(TestDescription description);
+    shared formal {Anything[]*} resolve(TestDescription description, FunctionDeclaration functionDeclaration);
     
 }

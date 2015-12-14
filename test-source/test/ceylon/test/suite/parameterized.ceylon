@@ -14,6 +14,7 @@ import test.ceylon.test.stubs {
     parameterized5,
     parameterized6,
     parameterizedIgnored,
+    parameterizedTests,
     parameterizedCustomArgumentProvider,
     parameterizedButNoArgumentProvider,
     parameterizedButSeveralArgumentProviders1,
@@ -304,6 +305,23 @@ shared void shouldRunParameterizedWithParameterizedDefaultedSource() {
 }
 
 test
+shared void shouldRunParameterizedCallback() {
+    paramCollector.clear();
+    customArgumentProviderValue = 0;
+    
+    value result = createTestRunner([`class parameterizedTests`]).run();
+
+    assertResultCounts {
+        result;
+        successCount = 2;
+    };
+    
+    assert(paramCollector.sequence() == 
+        ["before_0", 1, "after_0", 
+         "before_0", 2, "after_0"]);
+}
+
+test
 shared void shouldVerifyParameterizedWithoutArgumentProvider() {
     value result = createTestRunner([`parameterizedButNoArgumentProvider`]).run();
     
@@ -393,7 +411,7 @@ shared void shouldVerifyParameterizedWithSourceEmpty() {
             result;
             index = 0;
             state = TestState.error;
-            message = "parameterized test failed, argument provider probably doesn't return any values";
+            message = "parameterized test failed, argument provider didn't return any argument list";
         };
     }
     
@@ -402,4 +420,29 @@ shared void shouldVerifyParameterizedWithSourceEmpty() {
     
     value result2 = createTestRunner([`parameterizedButSourceEmpty2`]).run();
     assertResult(result2);
+}
+
+test
+shared void shouldVerifyParameterizedCallbackWithMultipleArgLists() {
+    paramCollector.clear();
+    customArgumentProviderValue = {0, 1, 2};
+    
+    value result = createTestRunner([`class parameterizedTests`]).run();
+    
+    assertResultCounts {
+        result;
+        errorCount = 2;
+    };
+    assertResultContains {
+        result;
+        index = 0;
+        state = TestState.error;
+        message = "parameterized callback test.ceylon.test.stubs::parameterizedTests.parameterizedBeforeCallback failed, argument provider returned multiple argument lists";
+    };
+    assertResultContains {
+        result;
+        index = 1;
+        state = TestState.error;
+        message = "parameterized callback test.ceylon.test.stubs::parameterizedTests.parameterizedAfterCallback failed, argument provider returned multiple argument lists";
+    };
 }
