@@ -409,11 +409,6 @@ class WholeImpl satisfies Whole {
         =>  integerMemo else (integerMemo =
                 integerForWords(wordsSize, words, negative));
 
-    // FIXME REMOVE?
-    //shared actual
-    //Long long
-    //    =>  longNumberFromWhole(this);
-
     shared actual
     Float float {
         if (zero) {

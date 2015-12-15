@@ -36,13 +36,6 @@ interface Whole
     shared formal
     Whole moduloPower(Whole exponent, Whole modulus);
 
-    // FIXME REMOVE?
-    //"The number, as an [[Long]] composed of the
-    // 64 least significant bits of the two's complement
-    // representation of this Whole."
-    //shared formal
-    //Long long;
-
     "The number, as an [[Integer]] composed of the
      [[runtime.integerAddressableSize]] number of least significant
      bits of the two's complement representation of this Whole.
