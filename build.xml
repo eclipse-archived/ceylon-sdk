@@ -60,7 +60,6 @@
             <module name="ceylon.json"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
-            <module name="ceylon.numeric"/>
             <module name="ceylon.net"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
@@ -69,8 +68,10 @@
             <module name="ceylon.time"/>
             <module name="ceylon.unicode"/>
             <module name="ceylon.locale"/>
+            <module name="ceylon.numeric"/>
             <module name="ceylon.regex"/>
             <module name="ceylon.transaction"/>
+            <module name="ceylon.whole"/>
             <module name="com.redhat.ceylon.war"/>
         </moduleset>
 
@@ -86,6 +87,7 @@
             <module name="ceylon.regex"/>
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
+            <module name="ceylon.whole"/>
             <module name="ceylon.interop.browser"/>
         </moduleset>
 	
@@ -110,6 +112,8 @@
             <module name="test.ceylon.logging"/>
             <module name="test.ceylon.regex"/>
             <module name="test.ceylon.transaction"/>
+            <module name="test.ceylon.whole.common"/>
+            <module name="test.ceylon.whole.jvm"/>
         </moduleset>
 
         <moduleset id="modules.test.js">
@@ -123,6 +127,7 @@
             <module name="test.ceylon.time"/>
             <module name="test.ceylon.locale"/>
             <module name="test.ceylon.regex"/>
+            <module name="test.ceylon.whole.common"/>
         </moduleset>
     </target>
     
