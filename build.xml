@@ -76,12 +76,12 @@
             <module name="ceylon.collection"/>
             <module name="ceylon.html"/>
             <module name="ceylon.json"/>
+            <module name="ceylon.locale"/>
+            <module name="ceylon.logging"/>
             <module name="ceylon.promise"/>
+            <module name="ceylon.regex"/>
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
-            <module name="ceylon.logging"/>
-            <module name="ceylon.locale"/>
-            <module name="ceylon.regex"/>
         </moduleset>
 	
         <moduleset id="modules.test.jvm">
