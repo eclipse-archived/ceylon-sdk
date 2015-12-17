@@ -60,6 +60,7 @@
             <module name="ceylon.json"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
+            <module name="ceylon.numeric"/>
             <module name="ceylon.net"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
@@ -78,6 +79,7 @@
             <module name="ceylon.json"/>
             <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
+            <module name="ceylon.numeric"/>
             <module name="ceylon.promise"/>
             <module name="ceylon.regex"/>
             <module name="ceylon.test"/>
