@@ -7,14 +7,7 @@ import java.nio.file {
 }
 
 shared Directory createTemporaryDirectory(
-        String? prefix = null,
-        Directory? parentDirectory = null) {
-
-    value jpath
-        =   if (exists parentDirectory)
-            then JFiles.createTempDirectory(
-                toJpath(parentDirectory.path), prefix)
-            else JFiles.createTempDirectory(prefix);
-
-    return ConcreteDirectory(jpath);
-}
+        String? prefix,
+        Directory parentDirectory)
+    =>  ConcreteDirectory(JFiles.createTempDirectory(
+            toJpath(parentDirectory.path), prefix));

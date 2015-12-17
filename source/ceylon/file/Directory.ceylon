@@ -1,4 +1,9 @@
-import ceylon.collection{ ArrayList }
+import ceylon.collection {
+    ArrayList
+}
+import ceylon.file.internal {
+    temporaryDirectoryInternal=temporaryDirectory
+}
 
 "Represents a directory in a hierarchical file system."
 shared sealed interface Directory 
@@ -39,7 +44,49 @@ shared sealed interface Directory
     
     "Move this directory to the given location."
     shared formal Directory move(Nil target);
-        
+
+    "A new temporary [[Directory]]. `TemporaryDirectory`s may be used within resource
+     expressions:
+
+     try (tempDirectory = temporaryDirectory.TemporaryDirectory()) {
+         // ...
+     }
+
+     If possible, a `TemporaryDirectory` will be deleted upon invocation of its
+     [[destroy()]] method."
+    throws (`class Exception`,
+        "If the prefix cannot be used to generate a directory name,
+         an I/O error occurs, or the parent directory is not
+         specified and a suitable temporary directory cannot be
+         determined.")
+    shared formal class TemporaryDirectory(
+        "The leading part of the temporary directory name to use,
+         or `null` for the system default."
+        String? prefix)
+        satisfies Directory & Destroyable {}
+
+    "A new temporary [[File]]. `TemporaryFile`s may be used within resource
+     expressions:
+
+         try (tempFile = temporaryDirectory.TemporaryFile()) {
+             // ...
+         }
+
+     If possible, a `TemporaryFile` will be deleted upon invocation of its
+     [[destroy()]] method."
+    throws (`class Exception`,
+        "If the prefix or suffix cannot be used to generate a file
+         name, an I/O error occurs, or a parent directory is not
+         specified and a suitable temporary directory cannot be
+         determined.")
+    shared formal class TemporaryFile(
+            "The leading part of the temporary file name to use, or
+             `null` for the system default."
+            String? prefix,
+            "The trailing part of the temporary file name to use, or
+             `null` for the system default."
+            String? suffix)
+            satisfies Destroyable & File {}
 }
 
 "The `Directory`s representing the root directories of
@@ -54,3 +101,6 @@ shared Directory[] rootDirectories {
     }
     return sb.sequence();
 }
+
+"The system default temporary directory."
+shared Directory temporaryDirectory = temporaryDirectoryInternal();
