@@ -1,4 +1,4 @@
-package ceylon.test.cli;
+package ceylon.test.engine.internal;
 
 import org.jboss.modules.Module;
 import org.jboss.modules.ModuleLoadException;

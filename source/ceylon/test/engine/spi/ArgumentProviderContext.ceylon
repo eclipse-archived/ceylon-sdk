@@ -1,9 +1,9 @@
-import ceylon.test {
-    TestDescription
-}
 import ceylon.language.meta.declaration {
     FunctionOrValueDeclaration,
     FunctionDeclaration
+}
+import ceylon.test {
+    TestDescription
 }
 
 "Represents a context given to [[ArgumentProvider]] or [[ArgumentListProvider]] 

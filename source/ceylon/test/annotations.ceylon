@@ -9,9 +9,9 @@ import ceylon.test.annotation {
     TestAnnotation,
     TestSuiteAnnotation,
     TestExecutorAnnotation,
-    TestListenersAnnotation,
-    IgnoreAnnotation,
+    TestExtensionAnnotation,
     TagAnnotation,
+    IgnoreAnnotation,
     ParametersAnnotation
 }
 
@@ -23,10 +23,12 @@ import ceylon.test.annotation {
      test
      shared void shouldAlwaysSucceed() {}
 "
-shared annotation TestAnnotation test() => TestAnnotation();
+shared annotation TestAnnotation test()
+        => TestAnnotation();
 
 
-"Annotation to specify test suite, which allow combine several tests or test suites and run them together.
+"Annotation to specify test suite, which allow combine several
+ tests or test suites and run them together.
  
      testSuite({`class YodaTest`,
                 `class DarthVaderTest`,
@@ -35,38 +37,41 @@ shared annotation TestAnnotation test() => TestAnnotation();
 "
 shared annotation TestSuiteAnnotation testSuite(
     "The program elements from which tests will be executed."
-    {Declaration+} sources) => TestSuiteAnnotation(sources);
+    {Declaration+} sources)
+        => TestSuiteAnnotation(sources);
 
 
-"Annotation to specify custom [[TestExecutor]] implementation, which will be used for running test.
- 
- It can be set on several places: on concrete test, on class which contains tests, on whole package or even module.
- If multiple occurrences will be found, the most closest will be used.
+"Annotation to specify custom [[ceylon.test.engine.spi::TestExecutor]] 
+ implementation, which will be used for running test. It can be set on 
+ several places: on concrete test, on class which contains tests, on whole 
+ package or even module. If multiple occurrences will be found, the most 
+ closest will be used.
  
       testExecutor(`class ArquillianTestExecutor`)
       package com.acme;
 "
 shared annotation TestExecutorAnnotation testExecutor(
-    "The class declaration of [[TestExecutor]]."
-    ClassDeclaration executor) => TestExecutorAnnotation(executor);
+    "The class declaration of [[ceylon.test.engine.spi::TestExecutor]]."
+    ClassDeclaration executor)
+        => TestExecutorAnnotation(executor);
 
 
-"Annotation to specify custom [[TestListener]]s, which will be used during running test.
+"Annotation to specify various [[ceylon.test.engine.spi::TestExtension]] 
+ implementation, which will be used during running test. It can be set on 
+ several places: on concrete test, on class which contains tests, on whole 
+ package or even module.
  
- It can be set on several places: on concrete test, on class which contains tests, on whole package or even module.
- If multiple occurrences will be found, all listeners will be used.
- 
-     testListeners({`class DependencyInjectionTestListener`,
-                    `class TransactionalTestListener`})
+     testExtension(`class DependencyInjectionInstancePostProcessor`,
+                   `class TransactionTestListener`)
      package com.acme;
 "
-shared annotation TestListenersAnnotation testListeners(
-    "The class declarations of [[TestListener]]s"
-    {ClassDeclaration+} listeners) => TestListenersAnnotation(listeners);
+shared annotation TestExtensionAnnotation testExtension(
+    "The class declarations of [[ceylon.test.engine.spi::TestExtension]]."
+    ClassDeclaration+ extensions)
+        => TestExtensionAnnotation(extensions);
 
 
 "Marks a function which will be run before each test in its scope.
- 
  It allow to place common initialization logic into separate place.
  Only nullary functions should be annotated with `beforeTest`.
  
@@ -78,11 +83,11 @@ shared annotation TestListenersAnnotation testListeners(
          afterTest 
          void dispose() => starship.shutdownSystems();
 "
-shared annotation BeforeTestAnnotation beforeTest() => BeforeTestAnnotation();
+shared annotation BeforeTestAnnotation beforeTest()
+        => BeforeTestAnnotation();
 
 
 "Marks a function which will be run after each test in its scope.
- 
  It allow to place common initialization logic into separate place.
  Only nullary functions should be annotated with `afterTest`.
  
@@ -94,12 +99,14 @@ shared annotation BeforeTestAnnotation beforeTest() => BeforeTestAnnotation();
          afterTest 
          void dispose() => starship.shutdownSystems();
  "
-shared annotation AfterTestAnnotation afterTest() => AfterTestAnnotation();
+shared annotation AfterTestAnnotation afterTest()
+        => AfterTestAnnotation();
 
 
-"Marks a test or group of tests which should not be executed, which will be skipped during test run.
- 
- It can be set on several places: on concrete test, on class which contains tests, on whole package or even module.
+"Marks a test or group of tests which should not be executed,
+ which will be skipped during test run. It can be set on several 
+ places: on concrete test, on class which contains tests, on whole 
+ package or even module.
  
      test
      ignore(\"still not implemented\")
@@ -108,7 +115,8 @@ shared annotation AfterTestAnnotation afterTest() => AfterTestAnnotation();
 "
 shared annotation IgnoreAnnotation ignore(
     "Reason why the test is ignored."
-    String reason = "") => IgnoreAnnotation(reason);
+    String reason = "")
+        => IgnoreAnnotation(reason);
 
 
 "Marks a test or group of tests with one or more tags, 
@@ -137,7 +145,8 @@ shared annotation IgnoreAnnotation ignore(
  "
 shared annotation TagAnnotation tag(
     "One or more tags associated with the test."
-    String+ tags) => TagAnnotation(*tags);
+    String+ tags)
+        => TagAnnotation(*tags);
 
 
 "Annotations to specify source of argument values for parameterized tests, 
@@ -163,4 +172,5 @@ shared annotation TagAnnotation tag(
 "
 shared annotation ParametersAnnotation parameters(
     "The source function or value declaration."
-    FunctionOrValueDeclaration source) => ParametersAnnotation(source);
+    FunctionOrValueDeclaration source)
+        => ParametersAnnotation(source);

@@ -1,7 +1,12 @@
+import ceylon.test {
+    TestDescription
+}
+
+
 "Represent a strategy how to run test.
- During test execution notifies test mechanism about significant events via given [[TestRunContext]].
+ During test execution notifies test mechanism about significant events via given [[TestExecutionContext]].
  
- Custom implementation can be specify via [[testExecutor]] annotation. It should accept two parameters:
+ Custom implementation can be specify via [[ceylon.test::testExecutor]] annotation. It should accept two parameters:
  
     - the first parameter is own test function, 
       represented like [[FunctionDeclaration|ceylon.language.meta.declaration::FunctionDeclaration]]
@@ -17,5 +22,6 @@ shared interface TestExecutor {
     "Run the test."
     shared formal void execute(
         "The context of this test."
-        TestRunContext context);
+        TestExecutionContext context);
+    
 }

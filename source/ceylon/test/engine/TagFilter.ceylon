@@ -7,7 +7,8 @@ import ceylon.collection {
 import ceylon.test.annotation {
     TagAnnotation
 }
-import ceylon.test.internal {
+
+import ceylon.test.engine.internal {
     findAnnotations
 }
 

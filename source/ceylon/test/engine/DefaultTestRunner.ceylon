@@ -7,21 +7,26 @@ import ceylon.language.meta.declaration {
 import ceylon.language.meta.model {
     ...
 }
-import ceylon.test {
-    ...
-}
+
 import ceylon.test.annotation {
     ...
 }
 import ceylon.test.event {
     ...
 }
-import ceylon.test.internal {
+import ceylon.test {
     ...
 }
 import ceylon.collection {
     ...
 }
+import ceylon.test.engine.spi {
+    ...
+}
+import ceylon.test.engine.internal {
+    ...
+}
+
 
 "Default implementation of [[TestRunner]]."
 shared class DefaultTestRunner(
@@ -55,14 +60,16 @@ shared class DefaultTestRunner(
         try {
             runningRunners.add(this);
             
-            value result = TestRunResultImpl();
-            value context = TestRunContextImpl(this, result);
+            value result = DefaultTestRunResult();
+            value context = TestExecutionContext.root(this, result);
             
-            context.addTestListener(result.listener, *listeners);
-            context.fireTestRunStarted(TestRunStartedEvent(this, description));
+            context.registerExtension(DefaultTestInstanceProvider());
+            context.registerExtension(DefaultArgumentListResolver());
+            context.registerExtension(result.listener, *listeners);
+            
+            context.fire().testRunStarted(TestRunStartedEvent(this, description));
             executors*.execute(context);
-            context.fireTestRunFinished(TestRunFinishedEvent(this, result));
-            context.removeTestListener(result.listener, *listeners);
+            context.fire().testRunFinished(TestRunFinishedEvent(this, result));
             
             return result;
         }
@@ -123,7 +130,7 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
         }
     }
     
-    for (executorsWithClass in executorsWithClasses.sequence()) {
+    for (executorsWithClass in executorsWithClasses) {
         value sorted = executorsWithClass[1].sequence().sort(comparator);
         executors.add(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, null, executorsWithClass[0], sorted*.description), sorted));
     }

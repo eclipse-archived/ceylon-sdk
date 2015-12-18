@@ -4,8 +4,11 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.test.engine {
+    AssertionComparisonError
+}
 
-shared class TestEventPublisher(void publishEvent(String json)) satisfies TestListener {
+class TestEventPublisher(void publishEvent(String json)) satisfies TestListener {
     
     shared actual void testRunStarted(TestRunStartedEvent e) {
         value json = "{\"event\":\"testRunStarted\", \"element\":``convertTestDescription(e.description)``}";

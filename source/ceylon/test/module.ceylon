@@ -79,7 +79,7 @@
    ```
    
    The most convenient way how to run tests is to use IDE integration
-   or via command line tool `ceylon test`.
+   or via command line tool `ceylon test` and `ceylon test-js`.
    
    Tests can be also run programmatically, via interface [[TestRunner]] and its factory method [[createTestRunner]], 
    but this API is usually not necessary to use directly. 

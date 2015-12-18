@@ -1,6 +1,7 @@
-import ceylon.test.core {
+import ceylon.test.engine {
     TestAbortedException
 }
+
 
 "Abort test execution if the assumption _condition_ is false.
  
@@ -23,6 +24,7 @@ shared void assumeTrue(
         throw TestAbortedException(message else "assumption failed: expected true");
     }
 }
+
 
 "Abort test execution if the assumption _condition_ is true.
  

@@ -4,7 +4,8 @@ import ceylon.test {
     assertThatException,
     test
 }
-import ceylon.test.core {
+
+import ceylon.test.engine {
     TestAbortedException
 }
 

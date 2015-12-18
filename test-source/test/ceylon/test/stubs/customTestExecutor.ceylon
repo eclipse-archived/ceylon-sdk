@@ -7,6 +7,10 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import ceylon.test.engine.spi {
+    TestExecutor,
+    TestExecutionContext
+}
 
 shared variable Integer bazTestExecutorCounter = 0;
 shared variable Integer bazTestInvocationCounter = 0;
@@ -17,10 +21,10 @@ shared class BazTestExecutor(FunctionDeclaration f, ClassDeclaration? c) satisfi
 
     shared actual TestDescription description => TestDescription(f.qualifiedName, f);
 
-    shared actual void execute(TestRunContext context) {
-        context.fireTestStarted(TestStartedEvent(description));
+    shared actual void execute(TestExecutionContext context) {
+        context.fire().testStarted(TestStartedEvent(description));
         f.invoke();
-        context.fireTestFinished(TestFinishedEvent(TestResult(description, TestState.success)));
+        context.fire().testFinished(TestFinishedEvent(TestResult(description, TestState.success)));
     }
 
 }

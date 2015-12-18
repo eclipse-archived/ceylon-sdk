@@ -11,22 +11,29 @@ import ceylon.language.meta.declaration {
 import ceylon.test {
     TestDescription
 }
+import ceylon.test.engine.spi {
+    ArgumentListProvider,
+    ArgumentListResolver,
+    ArgumentProvider,
+    ArgumentProviderContext,
+    TestExecutionContext
+}
 
 
 "Default implementation of [[ArgumentListResolver]]."
 shared class DefaultArgumentListResolver() satisfies ArgumentListResolver {
     
-    shared actual {Anything[]*} resolve(TestDescription description, FunctionDeclaration functionDeclaration) {
+    shared actual {Anything[]*} resolve(TestExecutionContext context, FunctionDeclaration functionDeclaration) {
         value argListProviders = functionDeclaration.annotations<Annotation>().narrow<ArgumentListProvider>();
         if( argListProviders.size == 0 ) {
-            return resolveArgProviders(description, functionDeclaration);
+            return resolveArgProviders(context.description, functionDeclaration);
         }
         else if( argListProviders.size > 1 ) {
             errorFunctionHasMultipleArgListProviders(functionDeclaration, argListProviders);
         }
         
         assert(exists argListProvider = argListProviders.first);
-        return argListProvider.argumentLists(ArgumentProviderContext(description, functionDeclaration));
+        return argListProvider.argumentLists(ArgumentProviderContext(context.description, functionDeclaration));
     }
     
     {Anything[]*} resolveArgProviders(TestDescription description, FunctionDeclaration f) {

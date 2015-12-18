@@ -1,11 +1,18 @@
 import ceylon.language.meta.declaration {
-    ...
+    FunctionDeclaration,
+    Declaration,
+    ClassDeclaration,
+    Package,
+    Module,
+    FunctionOrValueDeclaration,
+    ValueDeclaration
 }
-import ceylon.test {
-    ...
-}
-import ceylon.test.core {
-    ...
+import ceylon.test.engine.spi {
+    TestCondition,
+    ArgumentListProvider,
+    ArgumentProvider,
+    ArgumentProviderContext,
+    TestExecutionContext
 }
 
 
@@ -23,16 +30,16 @@ shared final annotation class TestSuiteAnnotation(
 
 "Annotation class for [[ceylon.test::testExecutor]]."
 shared final annotation class TestExecutorAnnotation(
-    "The class declaration of [[ceylon.test::TestExecutor]]."
+    "The class declaration of [[ceylon.test.engine.spi::TestExecutor]]."
     shared ClassDeclaration executor)
         satisfies OptionalAnnotation<TestExecutorAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
 
 
-"Annotation class for [[ceylon.test::testListeners]]."
-shared final annotation class TestListenersAnnotation(
-    "The class declarations of [[ceylon.test::TestListener]]s"
-    shared {ClassDeclaration+} listeners)
-        satisfies OptionalAnnotation<TestListenersAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
+"Annotation class for [[ceylon.test::testExtension]]."
+shared final annotation class TestExtensionAnnotation(
+    "The class declarations of [[ceylon.test.engine.spi::TestExtension]]."
+    shared {ClassDeclaration+} extensions)
+        satisfies SequencedAnnotation<TestExtensionAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
 
 
 "Annotation class for [[ceylon.test::beforeTest]]."
@@ -51,7 +58,7 @@ shared final annotation class IgnoreAnnotation(
     shared String reason)
         satisfies OptionalAnnotation<IgnoreAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> & TestCondition {
     
-    shared actual Result evaluate(TestDescription description) => Result(false, reason);
+    shared actual Result evaluate(TestExecutionContext context) => Result(false, reason);
     
 }
 

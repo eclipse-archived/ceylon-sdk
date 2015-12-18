@@ -2,9 +2,11 @@ import ceylon.language.meta.declaration {
     FunctionDeclaration
 }
 import ceylon.test {
-    TestCondition,
-    TestDescription,
     test
+}
+import ceylon.test.engine.spi {
+    TestCondition,
+    TestExecutionContext
 }
 
 shared variable Integer bazTestConditionCounter = 0;
@@ -13,7 +15,7 @@ shared variable Boolean? bazTestConditionResult = true;
 shared final annotation class BazTestCondition() 
         satisfies OptionalAnnotation<BazTestCondition, FunctionDeclaration> & TestCondition {
     
-    shared actual TestCondition.Result evaluate(TestDescription description) {
+    shared actual TestCondition.Result evaluate(TestExecutionContext context) {
         bazTestConditionCounter++;
         if( exists r = bazTestConditionResult ) {
             return Result(r, "BazTestCondition");

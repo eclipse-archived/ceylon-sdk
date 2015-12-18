@@ -1,6 +1,6 @@
 "Represents a contract for annotation, which serves as condition, that has to be 
- fullfiled to execute test, in other case the test execution is [[skipped|TestState.skipped]].
- The [[ignore]] annotation is one simple implementation of this mechanism.
+ fullfiled to execute test, in other case the test execution is [[ceylon.test::TestState.skipped]].
+ The [[ceylon.test::ignore]] annotation is one simple implementation of this mechanism.
  
  The example below shows `bug` annotation, which allow to skip test, 
  until the reported issue is resolved. 
@@ -25,7 +25,7 @@
 shared interface TestCondition {
     
     "Evaluate the condition for the given test."
-    shared formal Result evaluate(TestDescription description);
+    shared formal Result evaluate(TestExecutionContext context);
     
     "The result of evaluating."
     shared class Result(successful, reason = null) {

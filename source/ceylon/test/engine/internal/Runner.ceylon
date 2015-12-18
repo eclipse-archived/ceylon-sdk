@@ -12,25 +12,18 @@ import ceylon.test {
     TestFilter,
     defaultTestFilter
 }
-import ceylon.test.internal {
-    TestEventPublisher,
-    TestLoggingListener
-}
+
 import ceylon.test.reporter {
     HtmlReporter,
     TapReporter
 }
-import ceylon.test.core {
+
+import ceylon.test.engine {
     TagFilter
 }
 
-"Run method used by `ceylon test` and `ceylon test-js` tools, 
- it is not supposed to be call directly from your code."
-shared void run() {
-    Runner().run();
-}
 
-class Runner() {
+shared class Runner() {
     
     value options = Options.parse();
     value socket = connectSocket(options.port);

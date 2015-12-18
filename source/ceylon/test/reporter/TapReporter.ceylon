@@ -7,6 +7,9 @@ import ceylon.test.event {
 import ceylon.test.annotation {
     ...
 }
+import ceylon.test.engine {
+    AssertionComparisonError
+}
 
 
 "A [[TestListener]] that prints information about test execution to a given logging function,

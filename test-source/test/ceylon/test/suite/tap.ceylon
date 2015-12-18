@@ -7,6 +7,9 @@ import test.ceylon.test.stubs {
 import ceylon.test.reporter {
     TapReporter
 }
+import ceylon.test.engine {
+    AssertionComparisonError
+}
 
 test
 shared void shouldWriteTapWhenSuccess() {

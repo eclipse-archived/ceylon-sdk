@@ -4,8 +4,9 @@ import ceylon.language.meta.model {
 import ceylon.test {
     ...
 }
-import ceylon.test.core {
-    ...
+import ceylon.test.engine {
+    MultipleFailureException,
+    AssertionComparisonError
 }
 
 test

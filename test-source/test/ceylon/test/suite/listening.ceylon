@@ -29,7 +29,7 @@ shared void shouldFireEvents() {
     assertEquals(lines[9], "TestStartedEvent[test.ceylon.test.stubs::fooThrowingException]");
     assertEquals(lines[10], "TestFinishedEvent[test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")]");
     assertEquals(lines[11], "TestStartedEvent[test.ceylon.test.stubs::fooWithAssumption]");
-    assertEquals(lines[12], "TestAbortedEvent[test.ceylon.test.stubs::fooWithAssumption - aborted (ceylon.test.core``sep``TestAbortedException \"assumption failed: expected true\")]");
+    assertEquals(lines[12], "TestAbortedEvent[test.ceylon.test.stubs::fooWithAssumption - aborted (ceylon.test.engine``sep``TestAbortedException \"assumption failed: expected true\")]");
     assertEquals(lines[13], "TestErrorEvent[test.ceylon.test.stubs::fooWithoutTestAnnotation - error (ceylon.language``sep``Exception \"function test.ceylon.test.stubs::fooWithoutTestAnnotation should be annotated with test or testSuite\")]");
     assertEquals(lines[14], "TestRunFinishedEvent");
 }
@@ -45,9 +45,9 @@ shared void shouldFireEventsForIgnored() {
     assertEquals(lines.size, 6);
     assertEquals(lines[0], "TestRunStartedEvent");
     assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BarWithIgnore]");
-    assertEquals(lines[2], "TestSkippedEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - skipped (ceylon.test.core``sep``TestSkippedException \"\")]");
+    assertEquals(lines[2], "TestSkippedEvent[test.ceylon.test.stubs::BarWithIgnore.bar1 - skipped (ceylon.test.engine``sep``TestSkippedException \"\")]");
     assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BarWithIgnore - skipped]");
-    assertEquals(lines[4], "TestSkippedEvent[test.ceylon.test.stubs::fooWithIgnore - skipped (ceylon.test.core``sep``TestSkippedException \"ignore function foo\")]");
+    assertEquals(lines[4], "TestSkippedEvent[test.ceylon.test.stubs::fooWithIgnore - skipped (ceylon.test.engine``sep``TestSkippedException \"ignore function foo\")]");
     assertEquals(lines[5], "TestRunFinishedEvent");
 }
 
@@ -228,17 +228,15 @@ shared void shouldPropagateExceptionOnTestStarted() {
 }
 
 test
-void shouldNotifyListenerSpecifiedViaAnnotation() {
+shared void shouldNotifyListenerSpecifiedViaAnnotation() {
     bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithCustomListener`]).run();
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 4);
-    assertEquals(lines[0], "TestRunStartedEvent");
-    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::bazWithCustomListener]");
-    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
-    assertEquals(lines[3], "TestRunFinishedEvent");
+    assertEquals(lines.size, 2);
+    assertEquals(lines[0], "TestStartedEvent[test.ceylon.test.stubs::bazWithCustomListener]");
+    assertEquals(lines[1], "TestFinishedEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
     
     assertResultCounts {
         result;
@@ -253,44 +251,36 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
 }
 
 test
-void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
+shared void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
     bazTestListenerLog.clear();
     
     createTestRunner([`BazWithCustomListener`]).run();
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 6);
-    assertEquals(lines[0], "TestRunStartedEvent");
-    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener]");
-    assertEquals(lines[2], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
-    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
-    assertEquals(lines[4], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
-    assertEquals(lines[5], "TestRunFinishedEvent");
+    assertEquals(lines.size, 4);
+    assertEquals(lines[0], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener]");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
+    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
+    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
 }
 
 test
-void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun() {
+shared void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun() {
     bazTestListenerCounter = 0;
-    
-    createTestRunner([`bazWithCustomListener`]).run();
-    assert(bazTestListenerCounter == 1);
-    
     createTestRunner([`bazWithCustomListener`, `BazWithCustomListener`]).run();
-    assert(bazTestListenerCounter == 2);
+    assert(bazTestListenerCounter == 1);
 }
 
 test
-void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
+shared void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
     bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithAnonymousTestListener`]).run();
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 4);
-    assertEquals(lines[0], "TestRunStartedEvent");
-    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
-    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
-    assertEquals(lines[3], "TestRunFinishedEvent");
+    assertEquals(lines.size, 2);
+    assertEquals(lines[0], "TestStartedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
+    assertEquals(lines[1], "TestFinishedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
     
     assertResultCounts {
         result;
@@ -302,6 +292,26 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
         state = TestState.success;
         source = `bazWithAnonymousTestListener`;
     };
+}
+
+test
+shared void shouldNotifyListenersWithSpecifiedOrder() {
+    void assertLog(String name) {
+        value lines = bazTestListenerLog.string.trimmed.lines.sequence();
+        assertEquals(lines.size, 4);
+        assertEquals(lines[0], "TestStartedEvent[``name``]");
+        assertEquals(lines[1], "!! TestStartedEvent[``name``]");
+        assertEquals(lines[2], "TestFinishedEvent[``name`` - success]");
+        assertEquals(lines[3], "!! TestFinishedEvent[``name`` - success]");
+    }
+    
+    bazTestListenerLog.clear();
+    createTestRunner([`bazWithCustomOrderedListeners1`]).run();
+    assertLog(`bazWithCustomOrderedListeners1`.declaration.qualifiedName);
+    
+    bazTestListenerLog.clear();
+    createTestRunner([`bazWithCustomOrderedListeners2`]).run();
+    assertLog(`bazWithCustomOrderedListeners2`.declaration.qualifiedName);
 }
 
 shared object recordingListener satisfies TestListener {

@@ -1,11 +1,11 @@
 import ceylon.test {
     ...
 }
-import ceylon.test.core {
+import ceylon.test.engine {
     DefaultLoggingListener
 }
 
-shared class TestLoggingListener(resetColor, colorGreen, colorRed) extends DefaultLoggingListener() {
+class TestLoggingListener(resetColor, colorGreen, colorRed) extends DefaultLoggingListener() {
     
     String? resetColor;
     String? colorGreen;
@@ -37,4 +37,5 @@ shared class TestLoggingListener(resetColor, colorGreen, colorRed) extends Defau
         }
         process.writeLine();
     }
+    
 }

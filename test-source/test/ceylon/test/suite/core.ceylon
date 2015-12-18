@@ -180,8 +180,8 @@ shared void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 15;
-            successCount = 13;
+            runCount = 19;
+            successCount = 17;
             failureCount = 1;
             errorCount = 1;
             skippedCount = 7;
@@ -208,8 +208,8 @@ shared void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 21;
-            successCount = 17;
+            runCount = 25;
+            successCount = 21;
             failureCount = 1;
             errorCount = 11;
             skippedCount = 8;
@@ -399,6 +399,25 @@ shared void shouldCompareTestState() {
     assert(TestState.error > TestState.failure,
            TestState.failure > TestState.success,
            TestState.aborted > TestState.skipped);
+}
+
+test
+shared void shouldUseCustomInstanceProviderAndPostProcessors() {
+    bazWithInstanceProvider.log.clear();
+    
+    value result = createTestRunner([`BazWithInstanceProvider`]).run();
+    assertResultCounts {
+        result;
+        successCount = 2;
+    };
+    
+    value lines = bazWithInstanceProvider.log.string.trimmed.lines.sequence();
+    assertEquals(lines.size, 5);
+    assertEquals(lines[0], "BazInstancePostProcessor1");
+    assertEquals(lines[1], "BazWithInstanceProvider.m1");
+    assertEquals(lines[2], "BazInstancePostProcessor1");
+    assertEquals(lines[3], "BazInstancePostProcessor2");
+    assertEquals(lines[4], "BazWithInstanceProvider.m2");
 }
 
 void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer skippedCount = 0, Integer abortedCount = 0, Integer runCount = -1) {

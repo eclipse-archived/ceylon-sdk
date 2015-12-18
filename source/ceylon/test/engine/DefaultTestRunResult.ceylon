@@ -8,7 +8,9 @@ import ceylon.collection {
     ArrayList
 }
 
-shared class TestRunResultImpl() satisfies TestRunResult {
+
+"Default implementation of [[TestRunResult]]."
+shared class DefaultTestRunResult() satisfies TestRunResult {
     
     value resultsList = ArrayList<TestResult>();
     

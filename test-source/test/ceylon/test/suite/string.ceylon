@@ -29,7 +29,7 @@ shared void testResultString() {
     value runResult = createTestRunner([`foo`, `fooThrowingException`, `fooWithIgnore`]).run();
     assert(runResult.results[0]?.string?.equals("test.ceylon.test.stubs::foo - success") else false);
     assert(runResult.results[1]?.string?.equals("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")") else false);
-    assert(runResult.results[2]?.string?.equals("test.ceylon.test.stubs::fooWithIgnore - skipped (ceylon.test.core``sep``TestSkippedException \"ignore function foo\")") else false);  
+    assert(runResult.results[2]?.string?.equals("test.ceylon.test.stubs::fooWithIgnore - skipped (ceylon.test.engine``sep``TestSkippedException \"ignore function foo\")") else false);  
 }
 
 test

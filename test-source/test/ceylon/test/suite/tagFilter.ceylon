@@ -2,7 +2,8 @@ import ceylon.test {
     test,
     assertEquals
 }
-import ceylon.test.core {
+
+import ceylon.test.engine {
     TagFilter
 }
 

@@ -1,7 +1,8 @@
 import ceylon.test {
     ...
 }
-import ceylon.test.core {
+
+import ceylon.test.engine {
     TestSkippedException
 }
 

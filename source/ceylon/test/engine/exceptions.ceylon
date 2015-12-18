@@ -1,6 +1,30 @@
 import ceylon.language.meta {
     type
 }
+import ceylon.test {
+    assertEquals,
+    assertNotEquals
+}
+
+
+"Thrown to indicate that two values which should have been \"the 
+ same\" (according to some comparison function) were in fact 
+ different."
+see (`function assertEquals`, `function assertNotEquals`)
+shared class AssertionComparisonError(
+    "The message describing the problem."
+    String message,
+    actualValue,
+    expectedValue)
+        extends AssertionError(message) {
+    
+    "The actual string value."
+    shared String actualValue;
+    
+    "The expected string value."
+    shared String expectedValue;
+}
+
 
 "Thrown when test is skipped."
 shared class TestSkippedException(reason = null) extends Exception(reason) {
@@ -10,6 +34,7 @@ shared class TestSkippedException(reason = null) extends Exception(reason) {
     
 }
 
+
 "Thrown when the test assumption is not met, cause aborting of test execution."
 shared class TestAbortedException(assumption = null) extends Exception(assumption) {
     
@@ -17,6 +42,7 @@ shared class TestAbortedException(assumption = null) extends Exception(assumptio
     shared String? assumption;
     
 }
+
 
 "Thrown when multiple exceptions occurs."
 shared class MultipleFailureException(exceptions, description = "multiple failures occurred (``exceptions.size``) :") extends Exception() {

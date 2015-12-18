@@ -8,13 +8,13 @@ import ceylon.test {
     beforeTest,
     afterTest
 }
-import ceylon.test.core {
+import ceylon.collection {
+    ArrayList
+}
+import ceylon.test.engine.spi {
     ArgumentProvider,
     ArgumentProviderContext,
     ArgumentListProvider
-}
-import ceylon.collection {
-    ArrayList
 }
 
 shared {String*} paramSourceEmpty() => {};
