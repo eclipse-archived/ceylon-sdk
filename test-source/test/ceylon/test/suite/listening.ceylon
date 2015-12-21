@@ -9,7 +9,7 @@ import ceylon.test.event {
 }
 
 test
-shared void shouldFireEvents() {
+void shouldFireEvents() {
     createTestRunner(
         [`foo`, `fooThrowingAssertion`, `fooThrowingException`, `fooWithoutTestAnnotation`, `fooWithAssumption`, `Bar.bar1`], 
         [recordingListener]).run();
@@ -35,7 +35,7 @@ shared void shouldFireEvents() {
 }
 
 test
-shared void shouldFireEventsForIgnored() {
+void shouldFireEventsForIgnored() {
     createTestRunner(
         [`fooWithIgnore`, `BarWithIgnore.bar1`], 
         [recordingListener]).run();
@@ -52,7 +52,7 @@ shared void shouldFireEventsForIgnored() {
 }
 
 test
-shared void shouldFireEventsWithoutInstanceForToplevelTest() {
+void shouldFireEventsWithoutInstanceForToplevelTest() {
     variable Boolean isNullInStart = false;
     variable Boolean isNullInFinish = false;
     
@@ -68,7 +68,7 @@ shared void shouldFireEventsWithoutInstanceForToplevelTest() {
 }
 
 test
-shared void shouldFireEventsWithInstanceForMemberTest() {
+void shouldFireEventsWithInstanceForMemberTest() {
     barInstance1 = null;
     variable Object? instanceInStart = null;
     variable Object? instanceInFinish = null; 
@@ -96,7 +96,7 @@ shared void shouldFireEventsWithInstanceForMemberTest() {
 }
 
 test
-shared void shouldHandleMultipleExceptions() {
+void shouldHandleMultipleExceptions() {
     createTestRunner(
         [`foo`], 
         [throwExceptionOnTestFinishedListener, throwExceptionOnTestErrorListener, recordingListener]).run();
@@ -113,7 +113,7 @@ shared void shouldHandleMultipleExceptions() {
 }
 
 test
-shared void shouldHandleExceptionOnTestRunStarted() {
+void shouldHandleExceptionOnTestRunStarted() {
     value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunStartedListener]).run();
     assertResultCounts {
         runResult;
@@ -136,7 +136,7 @@ shared void shouldHandleExceptionOnTestRunStarted() {
 }
 
 test
-shared void shouldHandleExceptionOnTestRunFinished() {
+void shouldHandleExceptionOnTestRunFinished() {
     value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunFinishedListener]).run();
     assertResultCounts {
         runResult;
@@ -159,7 +159,7 @@ shared void shouldHandleExceptionOnTestRunFinished() {
 }
 
 test
-shared void shouldHandleExceptionOnTestFinished() {
+void shouldHandleExceptionOnTestFinished() {
     value runResult = createTestRunner([`foo`], [throwExceptionOnTestFinishedListener]).run();
     assertResultCounts {
         runResult;
@@ -182,7 +182,7 @@ shared void shouldHandleExceptionOnTestFinished() {
 }
 
 test
-shared void shouldHandleExceptionDuringHandlingException() {
+void shouldHandleExceptionDuringHandlingException() {
     value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunFinishedListener, throwExceptionOnTestErrorListener]).run();
     assertResultCounts {
         runResult;
@@ -211,7 +211,7 @@ shared void shouldHandleExceptionDuringHandlingException() {
 }
 
 test
-shared void shouldPropagateExceptionOnTestStarted() {
+void shouldPropagateExceptionOnTestStarted() {
     value runResult = createTestRunner([`foo`], [throwExceptionOnTestStartedListener]).run();
     assertResultCounts {
         runResult;
@@ -228,7 +228,7 @@ shared void shouldPropagateExceptionOnTestStarted() {
 }
 
 test
-shared void shouldNotifyListenerSpecifiedViaAnnotation() {
+void shouldNotifyListenerSpecifiedViaAnnotation() {
     bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithCustomListener`]).run();
@@ -251,7 +251,7 @@ shared void shouldNotifyListenerSpecifiedViaAnnotation() {
 }
 
 test
-shared void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
+void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
     bazTestListenerLog.clear();
     
     createTestRunner([`BazWithCustomListener`]).run();
@@ -265,14 +265,14 @@ shared void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTi
 }
 
 test
-shared void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun() {
+void shouldNotifyListenerSpecifiedViaAnnotationWithUsageOfSingleInstancePerRun() {
     bazTestListenerCounter = 0;
     createTestRunner([`bazWithCustomListener`, `BazWithCustomListener`]).run();
     assert(bazTestListenerCounter == 1);
 }
 
 test
-shared void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
+void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
     bazTestListenerLog.clear();
     
     value result = createTestRunner([`bazWithAnonymousTestListener`]).run();
@@ -295,7 +295,7 @@ shared void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener(
 }
 
 test
-shared void shouldNotifyListenersWithSpecifiedOrder() {
+void shouldNotifyListenersWithSpecifiedOrder() {
     void assertLog(String name) {
         value lines = bazTestListenerLog.string.trimmed.lines.sequence();
         assertEquals(lines.size, 4);

@@ -29,7 +29,7 @@ import test.ceylon.test.stubs {
 }
 
 test
-shared void shouldRunParameterizedTest() {
+void shouldRunParameterizedTest() {
     void assertResult(TestRunResult runResult, TestSource testSource) {
         assertResultCounts {
             runResult;
@@ -75,7 +75,7 @@ shared void shouldRunParameterizedTest() {
 }
 
 test
-shared void shouldRunParameterizedTestAllCombination1() {
+void shouldRunParameterizedTestAllCombination1() {
     paramCollector.clear();
     
     value result = createTestRunner([`parameterized3`]).run();
@@ -103,7 +103,7 @@ shared void shouldRunParameterizedTestAllCombination1() {
 }
 
 test
-shared void shouldRunParameterizedTestAllCombination2() {
+void shouldRunParameterizedTestAllCombination2() {
     paramCollector.clear();
     
     value result = createTestRunner([`parameterized4`]).run();
@@ -134,7 +134,7 @@ shared void shouldRunParameterizedTestAllCombination2() {
 }
 
 test
-shared void shouldRunParameterizedTestAllCombination3() {
+void shouldRunParameterizedTestAllCombination3() {
     paramCollector.clear();
     
     value result = createTestRunner([`parameterized5`]).run();
@@ -168,7 +168,7 @@ shared void shouldRunParameterizedTestAllCombination3() {
 }
 
 test
-shared void shouldRunParameterizedTestWithTuple() {
+void shouldRunParameterizedTestWithTuple() {
     paramCollector.clear();
     
     value result = createTestRunner([`parameterized6`]).run();
@@ -196,7 +196,7 @@ shared void shouldRunParameterizedTestWithTuple() {
 }
 
 test
-shared void shouldRunParameterizedTestWithCustomArgumentProvider1() {
+void shouldRunParameterizedTestWithCustomArgumentProvider1() {
     paramCollector.clear();
     customArgumentProviderValue = 'a';
     
@@ -217,7 +217,7 @@ shared void shouldRunParameterizedTestWithCustomArgumentProvider1() {
 }
 
 test
-shared void shouldRunParameterizedTestWithCustomArgumentProvider2() {
+void shouldRunParameterizedTestWithCustomArgumentProvider2() {
     paramCollector.clear();
     customArgumentProviderValue = { 1, 0.9, "a" };
     
@@ -232,7 +232,7 @@ shared void shouldRunParameterizedTestWithCustomArgumentProvider2() {
 }
 
 test
-shared void shouldRunParameterizedTestWithCustomArgumentProvider3() {
+void shouldRunParameterizedTestWithCustomArgumentProvider3() {
     try {
         customArgumentProviderValue = Exception("ops!");
         
@@ -256,7 +256,7 @@ shared void shouldRunParameterizedTestWithCustomArgumentProvider3() {
 }
 
 test
-shared void shouldRunParameterizedTestVsEvents() {
+void shouldRunParameterizedTestVsEvents() {
     createTestRunner([`parameterized1`], [recordingListener]).run();
     
     value lines = recordingListener.result.lines.sequence();
@@ -274,7 +274,7 @@ shared void shouldRunParameterizedTestVsEvents() {
 }
 
 test
-shared void shouldRunParameterizedTestVsIgnore() {
+void shouldRunParameterizedTestVsIgnore() {
     value result = createTestRunner([`parameterizedIgnored`]).run();
     
     assertResultCounts {
@@ -291,7 +291,7 @@ shared void shouldRunParameterizedTestVsIgnore() {
 }
 
 test
-shared void shouldRunParameterizedWithParameterizedDefaultedSource() {
+void shouldRunParameterizedWithParameterizedDefaultedSource() {
     paramCollector.clear();
     
     value result = createTestRunner([`parameterizedWithParameterizedDefaultedSource`]).run();
@@ -305,7 +305,7 @@ shared void shouldRunParameterizedWithParameterizedDefaultedSource() {
 }
 
 test
-shared void shouldRunParameterizedCallback() {
+void shouldRunParameterizedCallback() {
     paramCollector.clear();
     customArgumentProviderValue = 0;
     
@@ -322,7 +322,7 @@ shared void shouldRunParameterizedCallback() {
 }
 
 test
-shared void shouldVerifyParameterizedWithoutArgumentProvider() {
+void shouldVerifyParameterizedWithoutArgumentProvider() {
     value result = createTestRunner([`parameterizedButNoArgumentProvider`]).run();
     
     assertResultCounts {
@@ -340,7 +340,7 @@ shared void shouldVerifyParameterizedWithoutArgumentProvider() {
 }
 
 test
-shared void shouldVerifyParameterizedWithMultipleArgumentProvider1() {
+void shouldVerifyParameterizedWithMultipleArgumentProvider1() {
     value result = createTestRunner([`parameterizedButSeveralArgumentProviders1`]).run();
     
     assertResultCounts {
@@ -358,7 +358,7 @@ shared void shouldVerifyParameterizedWithMultipleArgumentProvider1() {
 }
 
 test
-shared void shouldVerifyParameterizedWithMultipleArgumentProvider2() {
+void shouldVerifyParameterizedWithMultipleArgumentProvider2() {
     value result = createTestRunner([`parameterizedButSeveralArgumentProviders2`]).run();
     
     assertResultCounts {
@@ -376,7 +376,7 @@ shared void shouldVerifyParameterizedWithMultipleArgumentProvider2() {
 }
 
 test
-shared void shouldVerifyParameterizedWithSourceVoid() {
+void shouldVerifyParameterizedWithSourceVoid() {
     void assertResult(TestRunResult result) {
         assertResultCounts {
             result;
@@ -400,7 +400,7 @@ shared void shouldVerifyParameterizedWithSourceVoid() {
 }
 
 test
-shared void shouldVerifyParameterizedWithSourceEmpty() {
+void shouldVerifyParameterizedWithSourceEmpty() {
     void assertResult(TestRunResult result) {
         assertResultCounts {
             result;
@@ -423,7 +423,7 @@ shared void shouldVerifyParameterizedWithSourceEmpty() {
 }
 
 test
-shared void shouldVerifyParameterizedCallbackWithMultipleArgLists() {
+void shouldVerifyParameterizedCallbackWithMultipleArgLists() {
     paramCollector.clear();
     customArgumentProviderValue = {0, 1, 2};
     

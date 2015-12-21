@@ -9,7 +9,7 @@ import test.ceylon.test.stubs.ignored {
 }
 
 test
-shared void shouldDetectIgnoreOnFunction() {
+void shouldDetectIgnoreOnFunction() {
     value result = createTestRunner([`fooWithIgnore`]).run();
     assertResultCounts {
         result;
@@ -25,7 +25,7 @@ shared void shouldDetectIgnoreOnFunction() {
 }
 
 test
-shared void shouldDetectIgnoreOnClass() {
+void shouldDetectIgnoreOnClass() {
     value result = createTestRunner([`BarWithIgnore`]).run();
     assertResultCounts {
         result;
@@ -53,7 +53,7 @@ shared void shouldDetectIgnoreOnClass() {
 }
 
 test
-shared void shouldDetectIgnoreOnPackage() {
+void shouldDetectIgnoreOnPackage() {
     value result = createTestRunner([`bazInIgnoredPackage`]).run();
     assertResultCounts {
         result;
@@ -69,7 +69,7 @@ shared void shouldDetectIgnoreOnPackage() {
 }
 
 test
-shared void shouldDetectInheritedIgnore() {
+void shouldDetectInheritedIgnore() {
     value result = createTestRunner([`BarWithInheritedIgnore.bar3`]).run();
     assertResultCounts {
         result;

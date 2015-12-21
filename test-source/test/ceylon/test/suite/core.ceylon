@@ -15,7 +15,7 @@ import test.ceylon.test.stubs.ignored {
 }
 
 test
-shared void shouldRunTest1() {
+void shouldRunTest1() {
     void assertResultTestFoo(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -43,7 +43,7 @@ shared void shouldRunTest1() {
 }
 
 test
-shared void shouldRunTest2() {
+void shouldRunTest2() {
     void assertResultTestBar(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -77,7 +77,7 @@ shared void shouldRunTest2() {
 }
 
 test
-shared void shouldRunTestThrowingAssertion() {
+void shouldRunTestThrowingAssertion() {
     value result = createTestRunner([`fooThrowingAssertion`]).run();
     assertResultCounts {
         result;
@@ -92,7 +92,7 @@ shared void shouldRunTestThrowingAssertion() {
 }
 
 test
-shared void shouldRunTestThrowingException() {
+void shouldRunTestThrowingException() {
     value result = createTestRunner([`fooThrowingException`]).run();
     assertResultCounts {
         result;
@@ -107,7 +107,7 @@ shared void shouldRunTestThrowingException() {
 }
 
 test
-shared void shouldRunTestThrowingIgnoreException() {
+void shouldRunTestThrowingIgnoreException() {
     value result = createTestRunner([`fooThrowingIgnoreException`]).run();
     assertResultCounts {
         result;
@@ -122,7 +122,7 @@ shared void shouldRunTestThrowingIgnoreException() {
 }
 
 test
-shared void shouldRunTestWithAssumption() {
+void shouldRunTestWithAssumption() {
     value result = createTestRunner([`fooWithAssumption`]).run();
     assertResultCounts {
         result;
@@ -136,7 +136,7 @@ shared void shouldRunTestWithAssumption() {
 }
 
 test
-shared void shouldRunTestsInClass() {
+void shouldRunTestsInClass() {
     void assertResultTestsBar(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -176,7 +176,7 @@ shared void shouldRunTestsInClass() {
 }
 
 test
-shared void shouldRunTestsInPackage() {
+void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -204,7 +204,7 @@ shared void shouldRunTestsInPackage() {
 }
 
 test
-shared void shouldRunTestsInModule() {
+void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -229,7 +229,7 @@ shared void shouldRunTestsInModule() {
 }
 
 test
-shared void shouldRunTestsFromAncestor() {
+void shouldRunTestsFromAncestor() {
     value runResult = createTestRunner([`BarExtended`]).run();
     assertResultCounts {
         runResult;
@@ -266,7 +266,7 @@ shared void shouldRunTestsFromAncestor() {
 }
 
 test
-shared void shouldRunTestsFromAncestorOnExtendedInstance() {
+void shouldRunTestsFromAncestorOnExtendedInstance() {
     barInstance1 = null;
     barInstance2 = null;
     
@@ -278,7 +278,7 @@ shared void shouldRunTestsFromAncestorOnExtendedInstance() {
 }
 
 test
-shared void shouldRunTestsFromAnonymousClasses() {
+void shouldRunTestsFromAnonymousClasses() {
     void assertResultTestBar(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -321,7 +321,7 @@ shared void shouldRunTestsFromAnonymousClasses() {
 }
 
 test
-shared void shouldRunTestsInClassWithDefaultConstructor() {
+void shouldRunTestsInClassWithDefaultConstructor() {
     value result = createTestRunner([`class Qux`]).run();
 
     assertResultCounts {
@@ -343,7 +343,7 @@ shared void shouldRunTestsInClassWithDefaultConstructor() {
 }
 
 test
-shared void shouldRunTestsAndMeasureTime() {
+void shouldRunTestsAndMeasureTime() {
     value startTime = system.milliseconds;
     value runResult = createTestRunner([`foo`, `Bar.bar1`, `fooWithIgnore`, `fooWithoutTestAnnotation`]).run();
     value endTime = system.milliseconds;
@@ -361,7 +361,7 @@ shared void shouldRunTestsAndMeasureTime() {
 }
 
 test
-shared void shouldRunTestsWithUniqueInstances() {
+void shouldRunTestsWithUniqueInstances() {
     barInstance1 = null;
     barInstance2 = null;
     
@@ -373,7 +373,7 @@ shared void shouldRunTestsWithUniqueInstances() {
 }
 
 test
-shared void shouldRunTestWithCustomExecutor() {
+void shouldRunTestWithCustomExecutor() {
     bazTestExecutorCounter = 0;
     bazTestInvocationCounter = 0;
     
@@ -395,14 +395,14 @@ shared void shouldRunTestWithCustomExecutor() {
 }
 
 test
-shared void shouldCompareTestState() {
+void shouldCompareTestState() {
     assert(TestState.error > TestState.failure,
            TestState.failure > TestState.success,
            TestState.aborted > TestState.skipped);
 }
 
 test
-shared void shouldUseCustomInstanceProviderAndPostProcessors() {
+void shouldUseCustomInstanceProviderAndPostProcessors() {
     bazWithInstanceProvider.log.clear();
     
     value result = createTestRunner([`BazWithInstanceProvider`]).run();

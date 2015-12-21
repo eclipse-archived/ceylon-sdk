@@ -12,7 +12,7 @@ import test.ceylon.test.stubs.bugs {
 }
 
 test
-shared void shouldVerifyToplevelNonTestMethod() {
+void shouldVerifyToplevelNonTestMethod() {
     TestRunResult runResult = createTestRunner([`bugFunctionWithoutTestAnnotation`]).run();
     assertResultCounts {
         runResult;
@@ -28,7 +28,7 @@ shared void shouldVerifyToplevelNonTestMethod() {
 }
 
 test
-shared void shouldVerifyToplevelNonVoidMethod() {
+void shouldVerifyToplevelNonVoidMethod() {
     TestRunResult runResult = createTestRunner([`bugFunctionWithReturnType`]).run();
     assertResultCounts {
         runResult;
@@ -44,7 +44,7 @@ shared void shouldVerifyToplevelNonVoidMethod() {
 }
     
 test
-shared void shouldVerifyToplevelMethodWithTypeParameters() {
+void shouldVerifyToplevelMethodWithTypeParameters() {
     TestRunResult runResult = createTestRunner([`function bugFunctionWithTypeParameter`]).run();
     
     assertResultCounts {
@@ -61,7 +61,7 @@ shared void shouldVerifyToplevelMethodWithTypeParameters() {
 }
 
 test
-shared void shouldVerifyMethodFromInterface() {
+void shouldVerifyMethodFromInterface() {
     TestRunResult runResult = createTestRunner([`function BugInterface.f`]).run();
     
     assertResultCounts {
@@ -78,7 +78,7 @@ shared void shouldVerifyMethodFromInterface() {
 }
 
 test
-shared void shouldVerifyAbstractClass() {
+void shouldVerifyAbstractClass() {
     TestRunResult runResult = createTestRunner([`BugAbstractClass.f`]).run();
     
     assertResultCounts {
@@ -95,7 +95,7 @@ shared void shouldVerifyAbstractClass() {
 }
 
 test
-shared void shouldVerifyToplevelClass() {
+void shouldVerifyToplevelClass() {
     TestRunResult runResult = createTestRunner([`function BugClassOuter.BugClassInner.f`]).run();
     
     assertResultCounts {
@@ -112,7 +112,7 @@ shared void shouldVerifyToplevelClass() {
 }
 
 test
-shared void shouldVerifyClassWithParameter() {
+void shouldVerifyClassWithParameter() {
     TestRunResult runResult = createTestRunner([`class BugClassWithParameter`]).run();
     
     assertResultCounts {
@@ -129,7 +129,7 @@ shared void shouldVerifyClassWithParameter() {
 }
 
 test
-shared void shouldVerifyClassWithTypeParameter() {
+void shouldVerifyClassWithTypeParameter() {
     TestRunResult runResult = createTestRunner([`class BugClassWithTypeParameter`]).run();
     
     assertResultCounts {
@@ -146,7 +146,7 @@ shared void shouldVerifyClassWithTypeParameter() {
 }
 
 test
-shared void shouldVerifyInvalidTypeLiteral1() {
+void shouldVerifyInvalidTypeLiteral1() {
     TestRunResult runResult = createTestRunner(["function foo.bar::baz"]).run();
     
     assertResultCounts {
@@ -162,7 +162,7 @@ shared void shouldVerifyInvalidTypeLiteral1() {
 }
 
 test
-shared void shouldVerifyInvalidTypeLiteral2() {
+void shouldVerifyInvalidTypeLiteral2() {
     TestRunResult runResult = createTestRunner(["class foo.bar::Baz"]).run();
     
     assertResultCounts {
@@ -178,7 +178,7 @@ shared void shouldVerifyInvalidTypeLiteral2() {
 }
 
 test
-shared void shouldVerifyInvalidTestSuite1() {
+void shouldVerifyInvalidTestSuite1() {
     TestRunResult runResult = createTestRunner([`bugTestSuiteWithInterface`]).run();
     
     assertResultCounts {
@@ -195,7 +195,7 @@ shared void shouldVerifyInvalidTestSuite1() {
 }
 
 test
-shared void shouldVerifyInvalidTestSuite2() {
+void shouldVerifyInvalidTestSuite2() {
     TestRunResult runResult = createTestRunner([`bugTestSuiteWithEmptyPackage`]).run();
     
     assertResultCounts {

@@ -6,7 +6,7 @@ import test.ceylon.test.stubs {
 }
 
 test
-shared void testStateString() {
+void testStateString() {
     assert(TestState.success.string == "success");
     assert(TestState.failure.string == "failure");
     assert(TestState.error.string == "error");
@@ -15,7 +15,7 @@ shared void testStateString() {
 }
 
 test
-shared void testDescriptionString() {
+void testDescriptionString() {
     value root = createTestRunner([`foo`, `Bar.bar1`]).description;
     assert(root.string == "root");
     assert((root.children[0]?.string else "") == "test.ceylon.test.stubs::Bar");
@@ -24,7 +24,7 @@ shared void testDescriptionString() {
 }
 
 test
-shared void testResultString() {
+void testResultString() {
     value sep = runtime.name == "jvm" then "." else "::";
     value runResult = createTestRunner([`foo`, `fooThrowingException`, `fooWithIgnore`]).run();
     assert(runResult.results[0]?.string?.equals("test.ceylon.test.stubs::foo - success") else false);
@@ -33,7 +33,7 @@ shared void testResultString() {
 }
 
 test
-shared void testRunResultString1() {
+void testRunResultString1() {
     value runResult = createTestRunner([]).run();
     
     value expected = """TEST RESULTS
@@ -44,7 +44,7 @@ shared void testRunResultString1() {
 }
 
 test
-shared void testRunResultString2() {
+void testRunResultString2() {
     value runResult = createTestRunner([`foo`, `Bar`]).run();
     
     value expected = """TEST RESULTS
@@ -62,7 +62,7 @@ shared void testRunResultString2() {
 }
 
 test
-shared void testRunResultString3() {
+void testRunResultString3() {
     value runResult = createTestRunner([`foo`, `fooThrowingException`, `fooWithIgnore`]).run();
     
     value expected = """TEST RESULTS

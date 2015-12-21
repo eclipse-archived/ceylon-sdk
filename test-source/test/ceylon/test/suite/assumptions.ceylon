@@ -10,7 +10,7 @@ import ceylon.test.engine {
 }
 
 test
-shared void testAssumeTrue() {
+void testAssumeTrue() {
     assumeTrue(true);
     assumeTrue(true, "");
     
@@ -24,7 +24,7 @@ shared void testAssumeTrue() {
 }
 
 test
-shared void testAssumeFalse() {
+void testAssumeFalse() {
     assumeFalse(false);
     assumeFalse(false, "");
     

@@ -8,7 +8,7 @@ import ceylon.test.engine {
 }
 
 test
-shared void shouldFilterByTags() {
+void shouldFilterByTags() {
     void assertTagFilter(String[] filters, String[] tags, Boolean result) {
         assertEquals(TagFilter(filters).filterTestTags(tags), result);
     }
