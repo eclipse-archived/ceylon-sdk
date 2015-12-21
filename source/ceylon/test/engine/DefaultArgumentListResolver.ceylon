@@ -6,7 +6,9 @@ import ceylon.language.meta {
 }
 import ceylon.language.meta.declaration {
     FunctionDeclaration,
-    FunctionOrValueDeclaration
+    FunctionOrValueDeclaration,
+    ValueDeclaration,
+    OpenClassOrInterfaceType
 }
 import ceylon.test {
     TestDescription
@@ -57,12 +59,24 @@ shared class DefaultArgumentListResolver() satisfies ArgumentListResolver {
     ArgumentProvider findArgProvider(FunctionDeclaration f, FunctionOrValueDeclaration p) {
         value argProviders = p.annotations<Annotation>().narrow<ArgumentProvider>();
         if (argProviders.size == 0) {
+            if( isTestDescription(p) ) {
+                return testDescriptionArgumentProvider;
+            }
             errorParameterHasNoArgProvider(f, p);
         } else if (argProviders.size > 1) {
             errorParameterHasMultipleArgProviders(f, p, argProviders);
         }
         assert (exists argProvider = argProviders.first);
         return argProvider;
+    }
+    
+    Boolean isTestDescription(FunctionOrValueDeclaration p) {
+        if( is ValueDeclaration v = p, 
+            is OpenClassOrInterfaceType t = p.openType,
+            t.declaration == `class TestDescription`) {
+            return true;
+        }
+        return false;
     }
     
     void errorFunctionHasMultipleArgListProviders(FunctionDeclaration f, {ArgumentListProvider*} argListProviders) {
@@ -101,5 +115,12 @@ class ArgumentsList(ArgumentsList? head = null, Anything tail = null) extends Ob
             return null;
         }
     }
+    
+}
+
+object testDescriptionArgumentProvider satisfies ArgumentProvider {
+    
+    shared actual {Anything*} arguments(ArgumentProviderContext context)
+            => {context.description};
     
 }

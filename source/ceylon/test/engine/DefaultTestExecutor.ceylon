@@ -77,7 +77,8 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             // TODO use TestVariantNameStragety extension
             value v = args.string.replaceFirst("[", "(").replaceLast("]", ")");
             value d = description.forVariant(v, index);
-            executeVariant(context, d, args);
+            value contextForVariant = context.childContext(d);
+            executeVariant(contextForVariant, d, args);
             index++;
         }
         

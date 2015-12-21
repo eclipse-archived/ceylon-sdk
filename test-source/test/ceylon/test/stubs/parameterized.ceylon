@@ -6,7 +6,8 @@ import ceylon.test {
     parameters,
     ignore,
     beforeTest,
-    afterTest
+    afterTest,
+    TestDescription
 }
 import ceylon.collection {
     ArrayList
@@ -144,6 +145,11 @@ shared object parameterizedTests {
     beforeTest
     shared void parameterizedBeforeCallback(customArgumentProvider Integer n) {
         paramCollector.add("before_"+n.string);        
+    }
+    
+    beforeTest
+    shared void parameterizedBeforeCallbackWithTestDescription(TestDescription d) {
+        paramCollector.add("before_"+d.string);
     }
     
     test
