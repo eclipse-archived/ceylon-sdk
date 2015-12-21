@@ -51,6 +51,10 @@ shared interface Request {
      request path."
     shared formal String path;
     
+    shared formal String? matchedTemplate;
+    
+    shared formal String? pathParameter(String name);
+    
     "Read the contents of the request as text."
     shared formal String read();
 

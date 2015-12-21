@@ -30,7 +30,8 @@ import io.undertow {
     }
 }
 import io.undertow.server {
-    HttpHandler
+    HttpHandler,
+	XnioByteBufferPool
 }
 import io.undertow.server.handlers.error {
     SimpleErrorPageHandler
@@ -94,6 +95,9 @@ import io.undertow.server.handlers.encoding {
 import io.undertow.predicate {
 	Predicate
 }
+import io.undertow.server.handlers {
+	PathTemplateHandler
+}
 
 by("Matej Lazar")
 shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
@@ -145,12 +149,17 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         print("Starting on ``socketAddress.address``:``socketAddress.port``");
         value ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
 
-        HttpOpenListener openListener = HttpOpenListener(
-            ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192), 
-            omBuilder().set(utBufferPipelinedData,false).map,
-            8192);
+        HttpOpenListener openListener 
+                = HttpOpenListener(
+            XnioByteBufferPool(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192)), 
+            omBuilder().set(utBufferPipelinedData,false).map);
         
-        openListener.rootHandler = getHandlers(options, ceylonRequestHandler);
+        PathTemplateHandler pathTemplateHandler = PathTemplateHandler(CeylonRequestHandler(options, httpEndpoints));
+        for (endpoint in httpEndpoints.templateEndpoints) {
+            pathTemplateHandler.add(endpoint.pathTemplate, TemplateCeylonRequestHandler(options, endpoint));
+        }
+        
+        openListener.rootHandler = getHandlers(options, pathTemplateHandler);
         
         OptionMap workerOptions = omBuilder()
                 .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))
