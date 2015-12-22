@@ -40,21 +40,21 @@ void shouldRunParameterizedTest() {
             index = 0;
             state = TestState.success;
             source = testSource;
-            variant = "(a)";
+            variant = "(\"a\")";
         };
         assertResultContains {
             runResult;
             index = 1;
             state = TestState.success;
             source = testSource;
-            variant = "(b)";
+            variant = "(\"b\")";
         };
         assertResultContains {
             runResult;
             index = 2;
             state = TestState.success;
             source = testSource;
-            variant = "(c)";
+            variant = "(\"c\")";
         };
         assertResultContains {
             runResult;
@@ -89,14 +89,14 @@ void shouldRunParameterizedTestAllCombination1() {
         index = 0;
         state = TestState.success;
         source = `parameterized3`;
-        variant = "(a, 1)";
+        variant = "(\"a\", 1)";
     };
     assertResultContains {
         result;
         index = 1;
         state = TestState.success;
         source = `parameterized3`;
-        variant = "(a, 2)";
+        variant = "(\"a\", 2)";
     };
     
     assert (paramCollector.sequence() == [["a", 1], ["a", 2], ["b", 1], ["b", 2], ["c", 1], ["c", 2]]);
@@ -117,14 +117,14 @@ void shouldRunParameterizedTestAllCombination2() {
         index = 0;
         state = TestState.success;
         source = `parameterized4`;
-        variant = "(a, 1, true)";
+        variant = "(\"a\", 1, true)";
     };
     assertResultContains {
         result;
         index = 1;
         state = TestState.success;
         source = `parameterized4`;
-        variant = "(a, 1, false)";
+        variant = "(\"a\", 1, false)";
     };
     
     assert (paramCollector.sequence() == 
@@ -148,14 +148,14 @@ void shouldRunParameterizedTestAllCombination3() {
         index = 0;
         state = TestState.success;
         source = `parameterized5`;
-        variant = "(a, 1, true, 0.999)";
+        variant = "(\"a\", 1, true, 0.999)";
     };
     assertResultContains {
         result;
         index = 1;
         state = TestState.success;
         source = `parameterized5`;
-        variant = "(a, 1, true, 0.888)";
+        variant = "(\"a\", 1, true, 0.888)";
     };
     
     assert (paramCollector.sequence() == 
@@ -263,12 +263,12 @@ void shouldRunParameterizedTestVsEvents() {
     assertEquals(lines.size, 10);
     assertEquals(lines[0], "TestRunStartedEvent");
     assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::parameterized1]");
-    assertEquals(lines[2], "TestStartedEvent[test.ceylon.test.stubs::parameterized1(a)]");
-    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1(a) - success]");
-    assertEquals(lines[4], "TestStartedEvent[test.ceylon.test.stubs::parameterized1(b)]");
-    assertEquals(lines[5], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1(b) - success]");
-    assertEquals(lines[6], "TestStartedEvent[test.ceylon.test.stubs::parameterized1(c)]");
-    assertEquals(lines[7], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1(c) - success]");
+    assertEquals(lines[2], "TestStartedEvent[test.ceylon.test.stubs::parameterized1(\"a\")]");
+    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1(\"a\") - success]");
+    assertEquals(lines[4], "TestStartedEvent[test.ceylon.test.stubs::parameterized1(\"b\")]");
+    assertEquals(lines[5], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1(\"b\") - success]");
+    assertEquals(lines[6], "TestStartedEvent[test.ceylon.test.stubs::parameterized1(\"c\")]");
+    assertEquals(lines[7], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1(\"c\") - success]");
     assertEquals(lines[8], "TestFinishedEvent[test.ceylon.test.stubs::parameterized1 - success]");
     assertEquals(lines[9], "TestRunFinishedEvent");
 }

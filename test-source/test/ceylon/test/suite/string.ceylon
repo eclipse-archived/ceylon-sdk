@@ -4,6 +4,9 @@ import ceylon.test {
 import test.ceylon.test.stubs {
     ...
 }
+import ceylon.test.engine {
+    DefaultTestVariantProvider
+}
 
 test
 void testStateString() {
@@ -79,4 +82,24 @@ void testRunResultString3() {
     assert(runResult.string.contains(expected), 
     runResult.string.contains("test.ceylon.test.stubs::fooThrowingException - error (ceylon.language``sep``Exception \"unexpected exception\")"),
     runResult.string.contains("TESTS FAILED !"));
+}
+
+test
+void testVariantProvider() {
+    value description = TestDescription("test");
+    value variantProvider = DefaultTestVariantProvider();
+    void assertVariant(Anything[] args, String expected) {
+        assertEquals(variantProvider.variant(description, 0, args), expected);
+    }
+    
+    assertAll([
+        () => assertVariant([], "()"),
+        () => assertVariant([1], "(1)"),
+        () => assertVariant([123, 0.987], "(123, 0.987)"),
+        () => assertVariant([""], "(\"\")"),
+        () => assertVariant(["abc"], "(\"abc\")"),
+        () => assertVariant(['x'], "('x')"),
+        () => assertVariant([null], "(<null>)"), 
+        () => assertVariant([true, false], "(true, false)")
+    ]);
 }

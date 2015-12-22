@@ -10,7 +10,7 @@ import ceylon.test.engine.spi {
 
 shared class BazInstanceProvider() satisfies TestInstanceProvider {
     
-    getInstance(TestExecutionContext context) => bazWithInstanceProvider;
+    instance(TestExecutionContext context) => bazWithInstanceProvider;
 }
 
 shared class BazInstancePostProcessor1() satisfies TestInstancePostProcessor {

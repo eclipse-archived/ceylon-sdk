@@ -9,7 +9,7 @@ import ceylon.test.engine.spi {
 "Default implementation of [[TestInstanceProvider]]."
 shared class DefaultTestInstanceProvider() satisfies TestInstanceProvider {
     
-    shared actual Object getInstance(TestExecutionContext context) {
+    shared actual Object instance(TestExecutionContext context) {
         assert (exists c = context.description.classDeclaration);
         if (c.anonymous) {
             assert (exists objectInstance = c.objectValue?.get());

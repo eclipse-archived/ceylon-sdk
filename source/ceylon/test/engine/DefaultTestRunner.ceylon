@@ -63,8 +63,9 @@ shared class DefaultTestRunner(
             value result = DefaultTestRunResult();
             value context = TestExecutionContext.root(this, result);
             
-            context.registerExtension(DefaultTestInstanceProvider());
             context.registerExtension(DefaultArgumentListResolver());
+            context.registerExtension(DefaultTestInstanceProvider());
+            context.registerExtension(DefaultTestVariantProvider());
             context.registerExtension(result.listener, *listeners);
             
             context.fire().testRunStarted(TestRunStartedEvent(this, description));

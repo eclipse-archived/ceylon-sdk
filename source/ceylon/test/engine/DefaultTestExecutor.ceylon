@@ -25,7 +25,8 @@ import ceylon.test.engine.spi {
     TestExecutionContext,
     TestExecutor,
     TestInstancePostProcessor,
-    TestInstanceProvider
+    TestInstanceProvider,
+    TestVariantProvider
 }
 import ceylon.test.engine.internal {
     GroupTestListener,
@@ -74,8 +75,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         
         variable value index = 1;
         for(args in argsVariants) {
-            // TODO use TestVariantNameStragety extension
-            value v = args.string.replaceFirst("[", "(").replaceLast("]", ")");
+            value v = context.extension<TestVariantProvider>().variant(description, index, args);
             value d = description.forVariant(v, index);
             value contextForVariant = context.childContext(d);
             executeVariant(contextForVariant, d, args);
@@ -284,7 +284,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             return null;
         }
         
-        value instance = context.extension<TestInstanceProvider>().getInstance(context);
+        value instance = context.extension<TestInstanceProvider>().instance(context);
         for(instancePostProcessor in context.extensions<TestInstancePostProcessor>()) {
             instancePostProcessor.postProcessInstance(context, instance);
         }

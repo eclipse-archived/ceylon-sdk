@@ -2,6 +2,6 @@
 shared interface TestInstanceProvider satisfies TestExtension {
     
     "Returns new instance of test class."
-    shared formal Object getInstance(TestExecutionContext context);
+    shared formal Object instance(TestExecutionContext context);
     
 }
