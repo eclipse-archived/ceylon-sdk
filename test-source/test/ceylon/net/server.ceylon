@@ -235,10 +235,12 @@ test void testServer() {
             service = (Request request, Response response) {
                 String? val = request.pathParameter("val");
                 String? other = request.pathParameter("other");
+                String? template = request.matchedTemplate;
                 assert (exists val);
                 assert (exists other);
+                assert (exists template);
                 response.addHeader(contentType("text/plain", utf8));
-                response.writeString("val=``val``, other=``other``");
+                response.writeString("val=``val``, other=``other``, matched=``template``");
             };
             acceptMethod = {get};
         }
@@ -599,7 +601,7 @@ void templateTest() {
     response.close();
     //TODO log
     print("Response content: " + responseContent);
-    assertTrue(responseContent.equals("val=xyzzy, other=veramocor"), "Response does not equals 'val=xyzzy, other=veramocor'.");
+    assertTrue(responseContent.equals("val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}"), "Response does not equals 'val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}'.");
 }
 
 void sessionTest() {
