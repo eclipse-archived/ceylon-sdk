@@ -51,10 +51,10 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
                 if( !functionDeclaration.parameterDeclarations.empty ) {
                     throw Exception("parameterized test failed, argument provider didn't return any argument list");
                 }
-                executeVariant(context, description, []);
+                executeVariant(context, []);
             }
             else if( argLists.size == 1, exists args = argLists.first ) {
-                executeVariant(context, description, args);
+                executeVariant(context, args);
             } else {
                 executeVariants(context, argLists);
             }
@@ -78,16 +78,16 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             value v = context.extension<TestVariantProvider>().variant(description, index, args);
             value d = description.forVariant(v, index);
             value contextForVariant = context.childContext(d);
-            executeVariant(contextForVariant, d, args);
+            executeVariant(contextForVariant, args);
             index++;
         }
         
         context.fire().testFinished(TestFinishedEvent(TestResult(description, groupTestListener.worstState, true, null, groupTestListener.elapsedTime)));
     }
     
-    void executeVariant(TestExecutionContext context, TestDescription d, {Anything*} args) {
-        Object? instance = getInstance(context, d);
-        Anything() executor = handleTestExecution(context, d, instance,
+    void executeVariant(TestExecutionContext context, {Anything*} args) {
+        Object? instance = getInstance(context);
+        Anything() executor = handleTestExecution(context, instance,
             handleAfterCallbacks(context, instance,
                 handleBeforeCallbacks(context, instance,
                     handleTestInvocation(context, instance, args.sequence()))));
@@ -186,24 +186,24 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
         
-    shared default void handleTestExecution(TestExecutionContext context, TestDescription d, Object? instance, void execute())() {
+    shared default void handleTestExecution(TestExecutionContext context, Object? instance, void execute())() {
         value startTime = system.milliseconds;
         value elapsedTime => system.milliseconds - startTime;
         
         try {
-            context.fire().testStarted(TestStartedEvent(d, instance));
+            context.fire().testStarted(TestStartedEvent(context.description, instance));
             execute();
-            context.fire().testFinished(TestFinishedEvent(TestResult(d, TestState.success, false, null, elapsedTime), instance));
+            context.fire().testFinished(TestFinishedEvent(TestResult(context.description, TestState.success, false, null, elapsedTime), instance));
         }
         catch (Throwable e) {
             if (e is TestSkippedException) {
-                context.fire().testSkipped(TestSkippedEvent(TestResult(d, TestState.skipped, false, e)));
+                context.fire().testSkipped(TestSkippedEvent(TestResult(context.description, TestState.skipped, false, e)));
             } else if (e is TestAbortedException) {
-                context.fire().testAborted(TestAbortedEvent(TestResult(d, TestState.aborted, false, e)));
+                context.fire().testAborted(TestAbortedEvent(TestResult(context.description, TestState.aborted, false, e)));
             } else if (e is AssertionError) {
-                context.fire().testFinished(TestFinishedEvent(TestResult(d, TestState.failure, false, e, elapsedTime), instance));
+                context.fire().testFinished(TestFinishedEvent(TestResult(context.description, TestState.failure, false, e, elapsedTime), instance));
             } else {
-                context.fire().testFinished(TestFinishedEvent(TestResult(d, TestState.error, false, e, elapsedTime), instance));
+                context.fire().testFinished(TestFinishedEvent(TestResult(context.description, TestState.error, false, e, elapsedTime), instance));
             }
         }
     }
@@ -279,7 +279,7 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
         }
     }
     
-    shared default Object? getInstance(TestExecutionContext context, TestDescription d) {
+    shared default Object? getInstance(TestExecutionContext context) {
         if( functionDeclaration.toplevel ) {
             return null;
         }
