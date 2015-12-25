@@ -84,6 +84,7 @@
             <module name="ceylon.regex"/>
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
+            <module name="ceylon.interop.browser"/>
         </moduleset>
 	
         <moduleset id="modules.test.jvm">
