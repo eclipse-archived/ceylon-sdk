@@ -389,7 +389,7 @@ void shouldVerifyParameterizedWithSourceVoid() {
             result;
             index = 0;
             state = TestState.error;
-            message = "actual type of applied declaration is Function<Anything,[]> is not compatible with expected type";
+            message = "actual type of applied declaration is";
         };
         
     }
