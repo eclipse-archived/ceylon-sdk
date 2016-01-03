@@ -5,21 +5,19 @@ import ceylon.language.meta {
     modules
 }
 import ceylon.test {
-    createTestRunner,
     TestListener,
     TestSource,
-    TestRunResult,
     TestFilter,
-    defaultTestFilter
+    defaultTestFilter,
+    defaultTestComparator
 }
-
 import ceylon.test.reporter {
     HtmlReporter,
     TapReporter
 }
-
 import ceylon.test.engine {
-    TagFilter
+    TagFilter,
+    DefaultTestRunner
 }
 
 
@@ -29,16 +27,12 @@ shared class Runner() {
     value socket = connectSocket(options.port);
     
     shared void run() {
-        try {
-            initializeTestedModules();
-            value testSources = getTestSources();
-            value testListeners = getTestListeners();
-            value testFilter = getTestFilter();
-            value result = createTestRunner(testSources, testListeners, testFilter).run();
-            handleResult(result);
-        } finally {
-            socket?.close();
-        }
+        initializeTestedModules();
+        value testSources = getTestSources();
+        value testListeners = getTestListeners();
+        value testFilter = getTestFilter();
+        value testRunner = DefaultTestRunner(testSources, testListeners, testFilter, defaultTestComparator);
+        runTests(testRunner);
     }
     
     TestSource[] getTestSources() {
@@ -90,19 +84,29 @@ shared class Runner() {
     }
     
     native
-    void handleResult(TestRunResult result);
+    void runTests(DefaultTestRunner runner);
     
     native("jvm")
-    void handleResult(TestRunResult result) {
-        if (!result.isSuccess) {
-            throw TestFailureException();
+    void runTests(DefaultTestRunner runner) {
+        try {
+            value result = runner.run();
+            if (!result.isSuccess) {
+                throw TestFailureException();
+            }
+        } finally {
+            socket?.close();
         }
     }
     
     native("js")
     suppressWarnings("expressionTypeNothing")
-    void handleResult(TestRunResult result) {
-        if (!socket exists) {
+    void runTests(DefaultTestRunner runner) {
+        if( exists socket ) {
+            runner.runAsync((result) {
+                socket.close();                
+            });
+        } else {
+            value result = runner.run();
             process.exit(result.isSuccess then 0 else 100);
         }
     }

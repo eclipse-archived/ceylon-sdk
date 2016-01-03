@@ -56,27 +56,34 @@ shared class DefaultTestRunner(
     shared actual TestDescription description => TestDescription("root", null, null, executors*.description);
     
     shared actual TestRunResult run() {
+        return runInternal(false, noop);
+    }
+    
+    shared void runAsync(void done(TestRunResult result)) {
+        runInternal(true, done);
+    }
+    
+    TestRunResult runInternal(Boolean async, void done(TestRunResult result)) {
         verifyCycle();
-        try {
-            runningRunners.add(this);
-            
-            value result = DefaultTestRunResult();
-            value context = TestExecutionContext.root(this, result);
-            
-            context.registerExtension(DefaultArgumentListResolver());
-            context.registerExtension(DefaultTestInstanceProvider());
-            context.registerExtension(DefaultTestVariantProvider());
-            context.registerExtension(result.listener, *listeners);
-            
-            context.fire().testRunStarted(TestRunStartedEvent(this, description));
-            executors*.execute(context);
-            context.fire().testRunFinished(TestRunFinishedEvent(this, result));
-            
-            return result;
-        }
-        finally {
-            runningRunners.remove(this);
-        }
+        
+        value result = DefaultTestRunResult();
+        value context = TestExecutionContext.root(this, result, async);
+        
+        context.registerExtension(DefaultArgumentListResolver());
+        context.registerExtension(DefaultTestInstanceProvider());
+        context.registerExtension(DefaultTestVariantProvider());
+        context.registerExtension(result.listener, *listeners);
+        
+        context.execute(
+            () => runningRunners.add(this),
+            () => context.fire().testRunStarted(TestRunStartedEvent(this, description)),
+            {for(e in executors) () => e.execute(context)},
+            () => context.fire().testRunFinished(TestRunFinishedEvent(this, result)),
+            () => runningRunners.remove(this),
+            () => done(result)
+        );       
+        
+        return result;  
     }
     
     void verifyCycle() {

@@ -316,8 +316,6 @@ void shouldRunParameterizedCallback() {
         successCount = 2;
     };
     
-    print(paramCollector);
-    
     assert(paramCollector.sequence() == 
         ["before_test.ceylon.test.stubs::parameterizedTests.parameterizedTest(1)", "before_0", 1, "after_0", 
          "before_test.ceylon.test.stubs::parameterizedTests.parameterizedTest(2)", "before_0", 2, "after_0"]);

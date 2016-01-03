@@ -13,6 +13,9 @@ import test.ceylon.test.stubs {
 import test.ceylon.test.stubs.ignored {
     ...
 }
+import ceylon.test.engine {
+    DefaultTestRunner
+}
 
 test
 void shouldRunTest1() {
@@ -418,6 +421,18 @@ void shouldUseCustomInstanceProviderAndPostProcessors() {
     assertEquals(lines[2], "BazInstancePostProcessor1");
     assertEquals(lines[3], "BazInstancePostProcessor2");
     assertEquals(lines[4], "BazWithInstanceProvider.m2");
+}
+
+test
+void shouldRunTestAsync() {
+    void done(TestRunResult result) {
+        // this won't cause test failure, 
+        // becasue we don't have support for async testing yet, 
+        // but at least it will print something to console
+        assert(result.isSuccess);
+    }
+    
+    DefaultTestRunner([`foo`, `Bar`], [], defaultTestFilter, defaultTestComparator).runAsync(done);
 }
 
 void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer skippedCount = 0, Integer abortedCount = 0, Integer runCount = -1) {
