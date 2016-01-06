@@ -25,7 +25,7 @@ import ceylon.test.event {
  
      TestRunner runner = createTestRunner{
          sources = [`module com.acme`];
-         listeners = [RingingListener()];};
+         extensions = [RingingListener()];};
  
  ... or better declaratively with usage of [[testExtension]] annotation
  

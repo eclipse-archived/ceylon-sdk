@@ -31,14 +31,14 @@ import ceylon.test.engine.internal {
 "Default implementation of [[TestRunner]]."
 shared class DefaultTestRunner(
     TestSource[] sources,
-    TestListener[] listeners,
+    TestExtension[] extensions,
     TestFilter filter,
     TestComparator comparator) satisfies TestRunner {
     
     function filterExecutor(TestExecutor e) {
         value result = filter(e.description);
         if (!result) {
-            listeners*.testExcluded(TestExcludedEvent(e.description));
+            extensions.narrow<TestListener>()*.testExcluded(TestExcludedEvent(e.description));
         }
         return result;
     }
@@ -72,7 +72,8 @@ shared class DefaultTestRunner(
         context.registerExtension(DefaultArgumentListResolver());
         context.registerExtension(DefaultTestInstanceProvider());
         context.registerExtension(DefaultTestVariantProvider());
-        context.registerExtension(result.listener, *listeners);
+        context.registerExtension(result.listener);
+        context.registerExtension(*extensions);
         
         context.execute(
             () => runningRunners.add(this),

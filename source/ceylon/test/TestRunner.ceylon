@@ -8,6 +8,9 @@ import ceylon.language.meta.model {
 import ceylon.test.engine {
     DefaultTestRunner
 }
+import ceylon.test.engine.spi {
+    TestExtension
+}
 
 
 "Alias for program elements which can be used as a source for discovering tests."
@@ -47,8 +50,8 @@ shared interface TestRunner {
 shared TestRunner createTestRunner(
     "The program elements from which tests will be executed."
     TestSource[] sources,
-    "The listeners which will be notified about events during the test run."
-    TestListener[] listeners = [],
+    "The extensions which will be used during the test run."
+    TestExtension[] extensions = [],
     "A filter function for determining which tests should be run.
      Returns true if the test should be run. 
      The default filter always returns true."
@@ -56,7 +59,7 @@ shared TestRunner createTestRunner(
     "A comparator used to sort the tests, used tests in certain order.
      The default comparator runs the tests in alphabetical order."
     TestComparator comparator = defaultTestComparator)
-        => DefaultTestRunner(sources, listeners, filter, comparator);
+        => DefaultTestRunner(sources, extensions, filter, comparator);
 
 
 "Default test filter, always return true."
