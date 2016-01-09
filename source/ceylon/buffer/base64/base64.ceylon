@@ -69,6 +69,10 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
             // Not using ErrorStrategy / EncodeException here since if this
             // doesn't succeed the implementation is wrong. All input bytes are
             // valid.
+            "6 bit split is too large. Internal error."
+            assert (byte.signed < 64);
+            "6 bit split is negative. Internal error."
+            assert (byte.signed >= 0);
             "Base64 table is invalid. Internal error."
             assert (exists char = table[byte.signed]);
             return char;
@@ -81,7 +85,7 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                 if (middle) {
                     // Middle of quantum
                     // [rem 67][in 01234567] -> [char [rem 67]0123][rem 4567]
-                    value byte = input.rightLogicalShift(4).or(rem.leftLogicalShift(6));
+                    value byte = input.rightLogicalShift(4).or(rem.leftLogicalShift(4));
                     remainder = input.and($1111.byte);
                     middle = false;
                     output.put(byteToChar(byte));
@@ -115,7 +119,7 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                 if (middle) {
                     // Middle of quantum (1/4 chars already written)
                     // [rem 67] -> [char [rem 67][pad 0000]] pad pad
-                    value byte = rem.leftLogicalShift(6);
+                    value byte = rem.leftLogicalShift(4);
                     reset();
                     output.put(byteToChar(byte));
                     output.put(pad);
@@ -224,6 +228,7 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                         output.put(outputByte);
                     }
                     intraQuantum = fourth;
+                    output.flip();
                     return output;
                 }
                 case (fourth) {

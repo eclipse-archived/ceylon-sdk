@@ -2,7 +2,8 @@ import ceylon.buffer.base64 {
     base64ByteStandard {
         encode=encode,
         decode=decode
-    }
+    },
+    base64StringStandard
 }
 import ceylon.buffer.charset {
     utf8,
@@ -100,12 +101,26 @@ test void testBase64WithAscii(){
     assertBase64(input, expected, ascii);
 }
 
-void assertBase64( String input, String expectedEncode, Charset charset) {
-    assertEquals{
-        expected = expectedEncode; 
+void assertBase64(String input, String expectedEncode, Charset charset) {
+    assertEquals {
+        expected = expectedEncode;
         actual = charset.decode(base64ByteStandard.encode(charset.encode(input)));
     };
-
-    value encoded = base64ByteStandard.encode(charset.encode(input));
-    assertEquals(input, charset.decode(base64ByteStandard.decode(encoded)));
+    assertEquals {
+        expected = charset.encode(input);
+        actual = base64ByteStandard.decode {
+            base64ByteStandard.encode(charset.encode(input));
+        };
+    };
+    
+    assertEquals {
+        expected = expectedEncode;
+        actual = base64StringStandard.encode(charset.encode(input));
+    };
+    assertEquals {
+        expected = charset.encode(input);
+        actual = base64StringStandard.decode {
+            base64StringStandard.encode(charset.encode(input));
+        };
+    };
 }
