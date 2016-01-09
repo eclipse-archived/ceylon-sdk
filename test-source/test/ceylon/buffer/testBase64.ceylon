@@ -103,9 +103,9 @@ test void testBase64WithAscii(){
 void assertBase64( String input, String expectedEncode, Charset charset) {
     assertEquals{
         expected = expectedEncode; 
-        actual = charset.decode(encode(charset.encode(input)));
+        actual = charset.decode(base64ByteStandard.encode(charset.encode(input)));
     };
 
-    value encoded = encode(charset.encode(input));
-    assertEquals(input, charset.decode(decode(encoded)));
+    value encoded = base64ByteStandard.encode(charset.encode(input));
+    assertEquals(input, charset.decode(base64ByteStandard.decode(encoded)));
 }
