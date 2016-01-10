@@ -133,6 +133,12 @@ shared sealed abstract class Buffer<Element>()
      stale."
     shared formal Array<Element> array;
     
+    "A copy of the underlying Array of the buffer, bounded by
+     [[position]] and [[limit]]. The size of the returned
+     Array will equal [[available]]."
+    shared default Array<Element> visibleArray
+            => array.measure(position, available);
+    
     "The platform-specific implementation object, if any."
     shared formal Object? implementation;
     

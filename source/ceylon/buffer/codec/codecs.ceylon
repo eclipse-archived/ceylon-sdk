@@ -34,9 +34,9 @@ shared interface ByteToByteCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,ByteBuffer,Array<Byte>,Byte> {
     
     shared actual Array<Byte> encode({Byte*} input, ErrorStrategy error)
-            => encodeBuffer(input, error).array;
+            => encodeBuffer(input, error).visibleArray;
     shared actual Array<Byte> decode({Byte*} input, ErrorStrategy error)
-            => decodeBuffer(input, error).array;
+            => decodeBuffer(input, error).visibleArray;
     
     shared actual ByteBuffer encodeBuffer({Byte*} input, ErrorStrategy error)
             => convertBuffer(input, error, pieceEncoder, ByteBuffer.ofSize,
@@ -73,7 +73,7 @@ shared interface ByteToCharacterCodec
         satisfies IncrementalCodec<ByteBuffer,Array<Byte>,Byte,CharacterBuffer,String,Character> {
     
     shared actual Array<Byte> encode({Character*} input, ErrorStrategy error)
-            => encodeBuffer(input, error).array;
+            => encodeBuffer(input, error).visibleArray;
     shared actual String decode({Byte*} input, ErrorStrategy error)
             => decodeBuffer(input, error).string;
     
@@ -114,7 +114,7 @@ shared interface CharacterToByteCodec
     shared actual String encode({Byte*} input, ErrorStrategy error)
             => encodeBuffer(input, error).string;
     shared actual Array<Byte> decode({Character*} input, ErrorStrategy error)
-            => decodeBuffer(input, error).array;
+            => decodeBuffer(input, error).visibleArray;
     
     shared actual CharacterBuffer encodeBuffer({Byte*} input, ErrorStrategy error)
             => convertBuffer(input, error, pieceEncoder, CharacterBuffer.ofSize,

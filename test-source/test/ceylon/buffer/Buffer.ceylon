@@ -132,4 +132,61 @@ shared abstract class BufferTests<Element>() {
         buffer.clear();
         assertSizedInitial(buffer, 1);
     }
+    
+    test
+    shared void visibleArrayZero() {
+        value buffer = bufferOfSize(0);
+        assertEquals(buffer.visibleArray.size, 0);
+        buffer.flip();
+        assertEquals(buffer.visibleArray.size, 0);
+    }
+    
+    test
+    shared void visibleArrayOne() {
+        value buffer = bufferOfSize(1);
+        assertEquals(buffer.visibleArray.size, 1);
+        buffer.flip();
+        assertEquals(buffer.visibleArray.size, 0);
+        buffer.clear();
+        for (data in oneSizeSample) {
+            buffer.put(data);
+        }
+        buffer.flip();
+        assertEquals(buffer.visibleArray, oneSizeSample);
+    }
+    
+    test
+    shared void visibleArrayTwo() {
+        value buffer = bufferOfSize(2);
+        assertEquals(buffer.visibleArray.size, 2);
+        buffer.flip();
+        assertEquals(buffer.visibleArray.size, 0);
+        buffer.clear();
+        for (data in oneSizeSample) {
+            buffer.put(data);
+        }
+        buffer.flip();
+        assertEquals(buffer.visibleArray, oneSizeSample);
+        buffer.clear();
+        for (data in twoSizeSample) {
+            buffer.put(data);
+        }
+        buffer.flip();
+        assertEquals(buffer.visibleArray, twoSizeSample);
+    }
+    
+    test
+    shared void visibleArrayThree() {
+        value buffer = bufferOfSize(3);
+        assertEquals(buffer.visibleArray.size, 3);
+        buffer.flip();
+        assertEquals(buffer.visibleArray.size, 0);
+        buffer.clear();
+        for (data in threeSizeSample) {
+            buffer.put(data);
+        }
+        buffer.flip();
+        buffer.get();
+        assertEquals(buffer.visibleArray, Array(threeSizeSample.skip(1)));
+    }
 }
