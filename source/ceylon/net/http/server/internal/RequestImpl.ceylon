@@ -5,14 +5,16 @@ import ceylon.collection {
 import ceylon.file {
     parsePath
 }
+import ceylon.interop.java {
+    javaByteArray,
+    toByteArray
+}
 import ceylon.io {
     SocketAddress
 }
 import ceylon.net.http {
     Method,
-	contentTypeFormUrlEncoded,
-	contentType,
-	contentTypeMultipartFormData
+    contentTypeMultipartFormData
 }
 import ceylon.net.http.server {
     Request,
@@ -52,14 +54,15 @@ import io.undertow.util {
 
 import java.io {
     BufferedReader,
-    InputStreamReader
+    InputStreamReader,
+    ByteArrayOutputStream
 }
 import java.lang {
     JString=String
 }
 
 by("Matej Lazar")
-class RequestImpl(HttpServerExchange exchange, 
+class RequestImpl(HttpServerExchange exchange,
     FormParserFactory formParserFactory, endpoint, path, method)
         satisfies Request {
 
@@ -69,19 +72,19 @@ class RequestImpl(HttpServerExchange exchange,
 
     shared actual Method method;
 
-    String? getHeader(String name) 
+    String? getHeader(String name)
             => exchange.requestHeaders.getFirst(HttpString(name));
 
     contentType => getHeader(headerConntentType.string);
 
     header(String name) => getHeader(name);
-    
+
     shared actual String read() {
         exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
-            value inputStreamReader = 
-                    InputStreamReader(inputStream, 
+            value inputStreamReader =
+                    InputStreamReader(inputStream,
                         exchange.requestCharset);
             value reader = BufferedReader(inputStreamReader);
             value builder = StringBuilder();
@@ -94,7 +97,26 @@ class RequestImpl(HttpServerExchange exchange,
             inputStream.close();
         }
     }
-    
+
+    shared actual Byte[] readBinary() {
+        exchange.startBlocking();
+        value inputStream = exchange.inputStream;
+        try {
+            value buf = javaByteArray(Array<Byte>.ofSize(4096, Byte(0)));
+            value byteArrayOutputStream = ByteArrayOutputStream();
+            variable Integer n;
+            while ((n = inputStream.read(buf)) >= 0) {
+                byteArrayOutputStream.write(buf, 0, n);
+            }
+            value x = byteArrayOutputStream.toByteArray();
+            // FIXME not good: this copies the final content a second time!
+            return toByteArray(x).sequence();
+        }
+        finally {
+            inputStream.close();
+        }
+    }
+
     UtFormData getUtFormData() {
         if (exists fdp = formParserFactory.createParser(exchange)) {
             return fdp.parseBlocking();
@@ -113,44 +135,44 @@ class RequestImpl(HttpServerExchange exchange,
                 exchange.startBlocking();
             }
         }
-        
+
         value formDataBuilder = FormDataBuilder();
-        
+
         value utFormData = getUtFormData();
-        
+
         value formDataIt = utFormData.iterator();
         while (formDataIt.hasNext()) {
-            JString key = formDataIt.next(); 
+            JString key = formDataIt.next();
             value valuesIt = utFormData.get(key.string).iterator();
             while (valuesIt.hasNext()) {
                 value parameterValue = valuesIt.next();
                 if (paramIsFile(parameterValue)) {
-                    value uploadedFile = UploadedFile { 
+                    value uploadedFile = UploadedFile {
                         file = parsePath(paramFile(parameterValue).absolutePath);
                         fileName = parameterValue.fileName;
                     };
                     formDataBuilder.addFile(key.string, uploadedFile);
                 } else {
-                    formDataBuilder.addParameter(key.string, 
+                    formDataBuilder.addParameter(key.string,
                         paramValue(parameterValue));
                 }
             }
         }
         return formDataBuilder.build();
     }
-    
+
     Map<String, String[]> readQueryParameters() {
         value queryParameters = HashMap<String, String[]>();
         value utQueryParameters = exchange.queryParameters;
-        
+
         value it = utQueryParameters.keySet().iterator();
         while (it.hasNext()) {
             JString key = it.next();
-            value values = utQueryParameters.get(key); 
+            value values = utQueryParameters.get(key);
             value valuesIt = values.iterator();
             value sequenceBuilder = ArrayList<String>();
             while (valuesIt.hasNext()) {
-                value paramValue = valuesIt.next(); 
+                value paramValue = valuesIt.next();
                 sequenceBuilder.add(paramValue.string);
             }
             queryParameters.put(key.string, sequenceBuilder.sequence());
@@ -159,33 +181,46 @@ class RequestImpl(HttpServerExchange exchange,
     }
 
     variable Map<String, String[]>? lazyQueryParameters = null;
-    value queryParameters => lazyQueryParameters 
+    value queryParameters => lazyQueryParameters
             else (lazyQueryParameters = readQueryParameters());
 
     variable FormData? lazyFormData = null;
-    value formData => lazyFormData 
+    value formData => lazyFormData
             else (lazyFormData = buildFormData()) ;
+
+    shared actual String[]? formParameters(String name) {
+        return formData.parameters[name];
+    }
+
+    shared actual String? formParameter(String name) {
+        if (nonempty x = formData.parameters[name]) {
+            return x.first;
+        }
+        else {
+            return null;
+        }
+    }
 
     shared actual String[] headers(String name) {
         value headers = exchange.requestHeaders.get(HttpString(name));
         value sequenceBuilder = ArrayList<String>();
-        
+
         value it = headers.iterator();
         while (it.hasNext()) {
             value header = it.next();
             sequenceBuilder.add(header.string);
         }
-        
+
         return sequenceBuilder.sequence();
     }
 
-    shared actual String[] parameters(String name, 
-            Boolean forseFormParse) {
+    shared actual String[] parameters(String name,
+            Boolean forceFormParse) {
 
         value mergedParams = ArrayList<String>();
         if (queryParameters.keys.contains(name)) {
             if (exists params = queryParameters[name]) {
-                if (forseFormParse || initialized(lazyFormData)) {
+                if (forceFormParse || initialized(lazyFormData)) {
                     mergedParams.addAll(params);
                 } else {
                     return params;
@@ -199,7 +234,7 @@ class RequestImpl(HttpServerExchange exchange,
         return mergedParams.sequence();
     }
 
-    shared actual String? parameter(String name, 
+    shared actual String? parameter(String name,
             Boolean forceFormParsing) {
         value params = parameters(name);
         if (nonempty params) {
@@ -242,15 +277,15 @@ class RequestImpl(HttpServerExchange exchange,
         value address = exchange.destinationAddress;
         return SocketAddress(address.hostString, address.port);
     }
-    
+
     shared actual Session session {
-        SessionManager sessionManager 
+        SessionManager sessionManager
                 = exchange.getAttachment(smAttachmentKey);
 
         //TODO configurable session cookie
         value sessionCookieConfig = SessionCookieConfig();
 
-        variable UtSession? utSession = 
+        variable UtSession? utSession =
                 sessionManager.getSession(exchange, sessionCookieConfig);
 
         if (!utSession exists) {
@@ -264,7 +299,7 @@ class RequestImpl(HttpServerExchange exchange,
         }
     }
 
-    Boolean initialized(Object? obj) { 
+    Boolean initialized(Object? obj) {
         if (exists obj) {
             return true;
         }
