@@ -207,9 +207,7 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                     value outputByte = rem.leftLogicalShift(2).or(inputByte.rightLogicalShift(4));
                     remainder = inputByte.and($1111.byte);
                     output.put(outputByte);
-                    output.flip();
                     intraQuantum = third;
-                    return output;
                 }
                 case (third) {
                     // Third 6 bits, or pad
@@ -217,9 +215,10 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                         // If we see pad for the third, the fourth must also be pad
                         padSeen = true;
                         // [rem 2345][pad 000000] -> [out [rem 2345][pad 0000]][rem 0000]
-                        value outputByte = rem.leftLogicalShift(4);
                         remainder = 0.byte;
-                        output.put(outputByte);
+                        if (rem != 0.byte) {
+                            output.put(rem.leftLogicalShift(4));
+                        }
                     } else {
                         // [rem 2345][in 012345] -> [out [rem 2345][in 0123]][rem 45]
                         value outputByte = rem.leftLogicalShift(4)
@@ -228,15 +227,11 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                         output.put(outputByte);
                     }
                     intraQuantum = fourth;
-                    output.flip();
-                    return output;
                 }
                 case (fourth) {
                     // Fourth 6 bits, or pad
                     if (inputByte == padCharIndex) {
-                        if (padSeen) {
-                            reset();
-                            return empty;
+                        if (padSeen || rem == 0.byte) {
                         } else {
                             // [rem 45][pad 000000] -> [out [rem 45][pad 0000]]
                             value outputByte = rem.leftLogicalShift(6);
@@ -251,8 +246,6 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                                 };
                             }
                             case (ignore) {
-                                reset();
-                                return empty;
                             }
                         } else {
                             // [rem 45][in 012345] -> [out [rem 45][in 012345]]
@@ -260,16 +253,15 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                             output.put(outputByte);
                         }
                     }
-                    output.flip();
                     reset();
-                    return output;
                 }
             } else {
                 // First 6 bits
                 // Don't have enough to construct 8 bits yet, put entire input into remainder
                 remainder = inputByte;
-                return empty;
             }
+            output.flip();
+            return output;
         }
         
         shared actual {Byte*} done() {
