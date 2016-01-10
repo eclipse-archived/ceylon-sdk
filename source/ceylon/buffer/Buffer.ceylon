@@ -28,7 +28,7 @@
 by ("Stéphane Épardaud")
 see (`class ByteBuffer`,
     `class CharacterBuffer`)
-shared sealed abstract class Buffer<Element>()
+shared abstract class Buffer<Element>()
         satisfies Iterable<Element> {
     
     "The current position index within this buffer. Starts
