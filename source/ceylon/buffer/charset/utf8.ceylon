@@ -19,7 +19,7 @@ shared object utf8 satisfies Charset {
     shared actual Integer averageEncodeSize(Integer inputSize) => inputSize * 2;
     shared actual Integer maximumEncodeSize(Integer inputSize) => inputSize * 4;
     shared actual Integer averageDecodeSize(Integer inputSize) => inputSize / 2;
-    shared actual Integer maximumDecodeSize(Integer inputSize) => inputSize / 4;
+    shared actual Integer maximumDecodeSize(Integer inputSize) => inputSize;
     
     shared actual Integer decodeBid({Byte*} sample) => nothing;
     shared actual Integer encodeBid({Character*} sample) => nothing;
