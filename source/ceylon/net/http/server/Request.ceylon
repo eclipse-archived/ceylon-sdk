@@ -35,29 +35,38 @@ shared interface Request {
     
     "Returns all headers with given name."
     shared formal String[] headers(String name);
-    
-    "Get the HTTP request method. 
+
+    "Returns a single form parameter with the given name from the request body. Content-Type must be application/x-www-form-urlencoded."
+    shared formal String? formParameter(String name);
+
+    "Returns all form parameters with the given name from the request body. Content-Type must be application/x-www-form-urlencoded."
+    shared formal String[]? formParameters(String name);
+
+    "Get the HTTP request method.
      {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
     shared formal Method method;
     
     "Get the request URI scheme. {http, https}"
     shared formal String scheme;
     
-    "Gets the request URI, including hostname, protocol 
+    "Gets the request URI, including hostname, protocol
      etc if specified by the client."
     shared formal String uri;
     
-    "Get the request URI path.  This is the whole original 
+    "Get the request URI path.  This is the whole original
      request path."
     shared formal String path;
     
     "Read the contents of the request as text."
     shared formal String read();
 
+    "Read the contents of the request as binary byte array."
+    shared formal Byte[] readBinary();
+
     "Return path relative to endpoint mapping path.
-     Relative path is a substring of path without 
+     Relative path is a substring of path without
      [[startsWith]] mappings.
-     
+    
      Note that endpoints mapped with [[And]] and [[endsWith]] 
      will return complete path instead of relative. See 
      [[Matcher.relativePath]] for details."
