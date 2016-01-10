@@ -16,89 +16,101 @@ import ceylon.test {
     test
 }
 
-test void testBase64WithIso88591(){
-    //Some texts from wikipedia
-    variable value input = "any carnal pleasure.";
-    variable value expected = "YW55IGNhcm5hbCBwbGVhc3VyZS4=";
-    assertBase64(input, expected, iso_8859_1);
-
-    input = "any carnal pleasure";
-    expected = "YW55IGNhcm5hbCBwbGVhc3VyZQ==";
-    assertBase64(input, expected, iso_8859_1);
-
-    input = "any carnal pleasur";
-    expected = "YW55IGNhcm5hbCBwbGVhc3Vy";
-    assertBase64(input, expected, iso_8859_1);
-
-    input = "any carnal pleasu";
-    expected = "YW55IGNhcm5hbCBwbGVhc3U=";
-    assertBase64(input, expected, iso_8859_1);
-
-    input = "any carnal pleas";
-    expected = "YW55IGNhcm5hbCBwbGVhcw==";
-    assertBase64(input, expected, iso_8859_1);
-}
-
-test void testBase64WithUtf8(){
-    //Some texts from wikipedia
-    variable value input = "any carnal pleasure.";
-    variable value expected = "YW55IGNhcm5hbCBwbGVhc3VyZS4=";
-    assertBase64(input, expected, utf8);
-
-    input = "any carnal pleasure";
-    expected = "YW55IGNhcm5hbCBwbGVhc3VyZQ==";
-    assertBase64(input, expected, utf8);
-
-    input = "any carnal pleasur";
-    expected = "YW55IGNhcm5hbCBwbGVhc3Vy";
-    assertBase64(input, expected, utf8);
-
-    input = "any carnal pleasu";
-    expected = "YW55IGNhcm5hbCBwbGVhc3U=";
-    assertBase64(input, expected, utf8);
-
-    input = "any carnal pleas";
-    expected = "YW55IGNhcm5hbCBwbGVhcw==";
-    assertBase64(input, expected, utf8);
-
-    input = "A≢Α.";
-    expected = "QeKJos6RLg==";
-    assertBase64(input, expected, utf8);
-
-    input = "한국어";
-    expected = "7ZWc6rWt7Ja0";
-    assertBase64(input, expected, utf8);
-
-    input = "日本語";
-    expected = "5pel5pys6Kqe";
-    assertBase64(input, expected, utf8);
+"Should work for any charset that degrades to ASCII"
+shared abstract class TestBase64WithCharset(charset) {
+    shared Charset charset;
     
-    input = "𣎴";
-    expected = "8KOOtA==";
-    assertBase64(input, expected, utf8);
+    test
+    shared void onePad() {
+        assertBase64 {
+            "any carnal pleasure.";
+            "YW55IGNhcm5hbCBwbGVhc3VyZS4=";
+            charset;
+        };
+    }
+    
+    test
+    shared void twoPad() {
+        assertBase64 {
+            "any carnal pleasure";
+            "YW55IGNhcm5hbCBwbGVhc3VyZQ==";
+            charset;
+        };
+    }
+    
+    test
+    shared void zeroPad() {
+        assertBase64 {
+            "any carnal pleasur";
+            "YW55IGNhcm5hbCBwbGVhc3Vy";
+            charset;
+        };
+    }
+    
+    test
+    shared void onePadShort() {
+        assertBase64 {
+            "any carnal pleasu";
+            "YW55IGNhcm5hbCBwbGVhc3U=";
+            charset;
+        };
+    }
+    
+    test
+    shared void twoPadShort() {
+        assertBase64 {
+            "any carnal pleas";
+            "YW55IGNhcm5hbCBwbGVhcw==";
+            charset;
+        };
+    }
 }
 
-test void testBase64WithAscii(){
-    //Some texts from wikipedia
-    variable value input = "any carnal pleasure.";
-    variable value expected = "YW55IGNhcm5hbCBwbGVhc3VyZS4=";
-    assertBase64(input, expected, ascii);
+shared class TestBase64WithAscii()
+        extends TestBase64WithCharset(ascii) {
+}
 
-    input = "any carnal pleasure";
-    expected = "YW55IGNhcm5hbCBwbGVhc3VyZQ==";
-    assertBase64(input, expected, ascii);
+shared class TestBase64WithIso88591()
+        extends TestBase64WithCharset(iso_8859_1) {
+}
 
-    input = "any carnal pleasur";
-    expected = "YW55IGNhcm5hbCBwbGVhc3Vy";
-    assertBase64(input, expected, ascii);
-
-    input = "any carnal pleasu";
-    expected = "YW55IGNhcm5hbCBwbGVhc3U=";
-    assertBase64(input, expected, ascii);
-
-    input = "any carnal pleas";
-    expected = "YW55IGNhcm5hbCBwbGVhcw==";
-    assertBase64(input, expected, ascii);
+shared class TestBase64WithUtf8()
+        extends TestBase64WithCharset(utf8) {
+    test
+    shared void unicodeOne() {
+        assertBase64 {
+            "A≢Α.";
+            "QeKJos6RLg==";
+            charset;
+        };
+    }
+    
+    test
+    shared void unicodeTwo() {
+        assertBase64 {
+            "한국어";
+            "7ZWc6rWt7Ja0";
+            charset;
+        };
+    }
+    
+    test
+    shared void unicodeThree() {
+        assertBase64 {
+            "日本語";
+            "5pel5pys6Kqe";
+            charset;
+        };
+    }
+    
+    test
+    shared void unicodeFour() {
+        assertBase64 {
+            "𣎴";
+            "8KOOtA==";
+            charset;
+        };
+    }
 }
 
 void assertBase64(String input, String expectedEncode, Charset charset) {
