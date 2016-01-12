@@ -37,7 +37,7 @@ shared native class ByteBuffer extends Buffer<Byte> {
     shared actual native variable Integer position;
     shared actual native void put(Byte element);
     shared actual native void resize(Integer newSize, Boolean growLimit);
-    shared actual native Array<Byte> array => nothing;
+    shared actual native Array<Byte> array;
 }
 
 shared native ("js") class ByteBuffer extends Buffer<Byte> {
