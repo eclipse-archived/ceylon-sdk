@@ -32,8 +32,26 @@ shared object ascii satisfies Charset {
     shared actual Integer averageDecodeSize(Integer inputSize) => inputSize;
     shared actual Integer maximumDecodeSize(Integer inputSize) => inputSize;
     
-    shared actual Integer decodeBid({Byte*} sample) => nothing;
-    shared actual Integer encodeBid({Character*} sample) => nothing;
+    shared actual Integer encodeBid({Character*} sample) {
+        return if (sample.every((char) => char.integer <= 127)) then 1 else 0;
+    }
+    shared actual Integer decodeBid({Byte*} sample) {
+        variable Integer printable = 1;
+        Integer readable;
+        for (byte in sample) {
+            value signed = byte.signed;
+            if (signed < 0) {
+                readable = 0;
+                break;
+            }
+            if (!(#20 <= signed <= #7E)) {
+                printable = 0;
+            }
+        } else {
+            readable = 1;
+        }
+        return readable + printable;
+    }
     
     shared actual PieceConvert<Byte,Character> pieceEncoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,Character> {
