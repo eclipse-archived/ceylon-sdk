@@ -156,7 +156,7 @@
     <target name="compile" depends="compile-jvm,compile-js"
             description="Compiles the SDK modules to the 'modules' repository" />
 
-    <target name="compile-test-jvm" depends="compile-jvm">
+    <target name="compile-test-jvm" depends="ceylondefs">
         <ceylon-compile executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -169,7 +169,7 @@
         </ceylon-compile>
     </target>
 
-    <target name="compile-test-js" depends="compile-js">
+    <target name="compile-test-js" depends="ceylondefs">
         <ceylon-compile-js executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -182,7 +182,7 @@
         </ceylon-compile-js>
     </target>
 	
-    <target name="compile-test" depends="compile,compile-test-jvm,compile-test-js"
+    <target name="compile-test" depends="compile-test-jvm,compile-test-js"
         description="Compiles the test modules to the 'test-modules' repository" />
 
     <target name="test-jvm" depends="compile-test-jvm"
@@ -204,8 +204,10 @@
         </ceylon-test-js>
     </target>
 
-    <target name="test" depends="compile-test,test-jvm,test-js"
+    <target name="test" depends="compile,compile-test,test-jvm,test-js"
         description="Runs the compiled test modules from the 'test-modules' repository" />
+
+    <target name="test-quick" depends="compile-test,test-jvm,test-js" />
 
     <target name="doc" depends="ceylondefs" 
             description="Documents the SDK modules to the 'modules' repository">
