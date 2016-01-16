@@ -283,13 +283,17 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                 }
                 case (third) {
                     // [rem 2345][pad 000000] -> [out [rem 2345][pad 0000]]
-                    value outputByte = rem.leftLogicalShift(4);
-                    output.put(outputByte);
+                    if (rem != 0.byte) {
+                        value outputByte = rem.leftLogicalShift(4);
+                        output.put(outputByte);
+                    }
                 }
                 case (fourth) {
                     // [rem 45][pad 000000] -> [out [rem 45][pad 0000]]
-                    value outputByte = rem.leftLogicalShift(6);
-                    output.put(outputByte);
+                    if (rem != 0.byte) {
+                        value outputByte = rem.leftLogicalShift(6);
+                        output.put(outputByte);
+                    }
                 }
             } else {
                 // Nothing to do. Finished before at an inter-quantum boundary.
