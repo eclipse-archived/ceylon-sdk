@@ -15,6 +15,10 @@
  - [[CeylonIterable]] and [[JavaIterable]] which adapt 
    between Java's [[java.lang::Iterable]] interface and 
    Ceylon's [[Iterable]] interface,
+ - [[CeylonStringIterable]], [[CeylonIntegerIterable]],
+   [[CeylonFloatIterable]], [[CeylonByteIterable]], and
+   [[CeylonBooleanIterable]], which adapt Java 
+   [[java.lang::Iterable]]s of primitive types, and
  - [[JavaCloseable]] and [[CeylonDestroyable]] which adapt
    between [[java.lang::AutoCloseable]] and [[Destroyable]].
    
