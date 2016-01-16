@@ -18,7 +18,10 @@
  - [[CeylonStringIterable]], [[CeylonIntegerIterable]],
    [[CeylonFloatIterable]], [[CeylonByteIterable]], and
    [[CeylonBooleanIterable]], which adapt Java 
-   [[java.lang::Iterable]]s of primitive types, and
+   [[java.lang::Iterable]]s of primitive types, 
+ - [[JavaRunnable]] and [[JavaThread]] which adapt Ceylon
+   functions to Java's [[java.lang::Runnable]] and 
+   [[java.lang::Thread]], and
  - [[JavaCloseable]] and [[CeylonDestroyable]] which adapt
    between [[java.lang::AutoCloseable]] and [[Destroyable]].
    
