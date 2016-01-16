@@ -21,8 +21,18 @@ shared object utf8 satisfies Charset {
     shared actual Integer averageDecodeSize(Integer inputSize) => inputSize / 2;
     shared actual Integer maximumDecodeSize(Integer inputSize) => inputSize;
     
-    shared actual Integer decodeBid({Byte*} sample) => nothing;
-    shared actual Integer encodeBid({Character*} sample) => nothing;
+    shared actual Integer encodeBid({Character*} sample) => 15;
+    shared actual Integer decodeBid({Byte*} sample) {
+        // There might be a more efficient way to check validity
+        value decoder = pieceDecoder();
+        try {
+            sample.each((byte) { decoder.more(byte); });
+            decoder.done();
+            return 15;
+        } catch (DecodeException e) {
+            return 0;
+        }
+    }
     
     shared actual PieceConvert<Byte,Character> pieceEncoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,Character> {
