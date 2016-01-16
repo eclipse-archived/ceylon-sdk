@@ -13,13 +13,54 @@ import ceylon.buffer.codec {
 import ceylon.test {
     assertEquals,
     test,
-    assertThatException
+    assertThatException,
+    assertNotEquals,
+    assertTrue
 }
 
 shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     Charset charset;
     Base64Byte base64Byte;
     Base64String base64String;
+    
+    test
+    shared void encodeEstimateCompare() {
+        for (i in 0..16) {
+            assertTrue {
+                base64Byte.averageEncodeSize(i) <= base64Byte.maximumEncodeSize(i);
+                "Average larger than max for ``i`` (Byte)";
+            };
+            assertTrue {
+                base64String.averageEncodeSize(i) <= base64String.maximumEncodeSize(i);
+                "Average larger than max for ``i`` (String)";
+            };
+        }
+    }
+    
+    test
+    shared void decodeEstimateCompare() {
+        for (i in 0..16) {
+            assertTrue {
+                base64Byte.averageDecodeSize(i) <= base64Byte.maximumDecodeSize(i);
+                "Average larger than max for ``i`` (Byte)";
+            };
+            assertTrue {
+                base64String.averageDecodeSize(i) <= base64String.maximumDecodeSize(i);
+                "Average larger than max for ``i`` (String)";
+            };
+        }
+    }
+    
+    test
+    shared void decodeBidZero() {
+        assertEquals(base64Byte.decodeBid({ 0.byte }), 0);
+        assertEquals(base64String.decodeBid("\{NULL}"), 0);
+    }
+    
+    test
+    shared void decodeBidNonZero() {
+        assertNotEquals(base64String.decodeBid("YW55IGNhcm5hbCBwbGVhc3VyZS4="), 0);
+    }
     
     shared void assertBase64(input, expectedEncode) {
         String input;
@@ -121,8 +162,8 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     test
     shared void decodeErrorPadHere() {
         assertThatException(() => base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZw=w"))
-                .hasType(`DecodeException`)
-                .hasMessage((String msg) => msg == "Non-pad character w is not allowed here");
+            .hasType(`DecodeException`)
+            .hasMessage((String msg) => msg == "Non-pad character w is not allowed here");
     }
     
     test
@@ -152,8 +193,8 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     test
     shared void decodeTruncatedByThreeError() {
         assertThatException(() => base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZ"))
-                .hasType(`DecodeException`)
-                .hasMessage((String msg) => msg == "Missing one input piece");
+            .hasType(`DecodeException`)
+            .hasMessage((String msg) => msg == "Missing one input piece");
     }
     
     test
@@ -167,8 +208,8 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     test
     shared void decodeErrorPadExtra() {
         assertThatException(() => base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZw==="))
-                .hasType(`DecodeException`)
-                .hasMessage((String msg) => msg == "Pad character = is not allowed here");
+            .hasType(`DecodeException`)
+            .hasMessage((String msg) => msg == "Pad character = is not allowed here");
     }
     
     test
