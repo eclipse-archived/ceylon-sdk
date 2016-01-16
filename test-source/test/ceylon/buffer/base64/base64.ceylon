@@ -163,4 +163,19 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
             ascii.encode("It's Character Formin");
         };
     }
+    
+    test
+    shared void decodeErrorPadExtra() {
+        assertThatException(() => base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZw==="))
+                .hasType(`DecodeException`)
+                .hasMessage((String msg) => msg == "Pad character = is not allowed here");
+    }
+    
+    test
+    shared void decodeErrorIgnorePadExtra() {
+        assertEquals {
+            base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZw===", ignore);
+            ascii.encode("It's Character Forming");
+        };
+    }
 }
