@@ -17,7 +17,8 @@ import java.lang {
     System {
         getSystemProperty=getProperty
     },
-    JString=String
+    JString=String,
+    JThread=Thread
 }
 import java.util {
     ArrayList,
@@ -137,4 +138,16 @@ test void bug342() {
     assertNotNull(javaClass<FunctionClass>());
     assertNotNull(javaClass<\IouterObject>());
     assertNotNull(javaClass<\IfunctionObject>());
+}
+
+test void ceylonRunnableThread() {
+    variable Integer i = 0;
+    value t1 = JThread(JavaRunnable(() => i++));
+    t1.start();
+    t1.join();
+    assertEquals { expected = 1; actual = i; };
+    value t2 = JavaThread(() => i++);
+    t2.start();
+    t2.join();
+    assertEquals { expected = 2; actual = i; };
 }
