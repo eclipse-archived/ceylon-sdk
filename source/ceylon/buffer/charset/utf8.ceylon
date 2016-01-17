@@ -99,7 +99,7 @@ shared object utf8 satisfies Charset {
             value unsigned = input.unsigned;
             if (intermediate.limit == 0) {
                 // 0b0000 0000 <= byte < 0b1000 0000
-                if (unsigned < #80) {
+                if (unsigned < $10000000) {
                     // one byte
                     return { unsigned.character };
                 }
@@ -138,6 +138,7 @@ shared object utf8 satisfies Charset {
                 }
                 // keep this byte in any case
                 intermediate.put(input);
+                return empty;
             }
             // if we got this far, we must have a second byte at least
             if (unsigned<$10000000 || unsigned>=$11000000) {
@@ -152,7 +153,7 @@ shared object utf8 satisfies Charset {
                     return empty;
                 }
             }
-            if (intermediate.available > 0) {
+            if (intermediate.available > 1) {
                 // not enough bytes
                 intermediate.put(input);
                 return empty;
