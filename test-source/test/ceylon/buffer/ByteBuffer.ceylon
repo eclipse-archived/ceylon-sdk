@@ -4,7 +4,6 @@ import ceylon.buffer {
 }
 import ceylon.test {
     test,
-    assertNotEquals,
     assertEquals
 }
 

@@ -2,10 +2,6 @@ import ceylon.buffer {
     ByteBuffer
 }
 import ceylon.buffer.base64 {
-    Base64String,
-    Base64Byte,
-    base64StringStandard,
-    base64StringUrl,
     base64ByteStandard,
     base64ByteUrl
 }
