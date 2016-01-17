@@ -36,16 +36,6 @@ shared Map<String,CodecOrLower> buildCodecLookup<CodecOrLower>({CodecOrLower*} c
     };
 }
 
-//shared Map<String,Codec> codecsByAlias = buildCodecLookup(nothing);
-shared Map<String,Base64String> base64StringByAlias = buildCodecLookup {
-    base64StringStandard,
-    base64StringUrl
-};
-shared Map<String,Base64Byte> base64ByteByAlias = buildCodecLookup {
-    base64ByteStandard,
-    base64ByteUrl
-};
-
 shared [IncrementalCodec<ToMutable,ToImmutable,ToSingle,FromMutable,FromImmutable,FromSingle>*]
 buildAuction<ToMutable, ToImmutable, ToSingle, FromMutable, FromImmutable, FromSingle>
         ({IncrementalCodec<ToMutable,ToImmutable,ToSingle,
