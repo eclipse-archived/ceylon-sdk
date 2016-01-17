@@ -1,11 +1,9 @@
 import ceylon.interop.java {
-    toByteArray,
-    javaByteArray
+    toByteArray
 }
 
 import java.nio {
     JavaByteBuffer=ByteBuffer {
-        wrapJavaByteBuffer=wrap,
         allocateJavaByteBuffer=allocate
     }
 }
@@ -65,7 +63,7 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
     shared actual native ("js") Integer limit => _limit;
     native ("js") assign limit {
         "Limit must be non-negative"
-        assert(limit >= 0);
+        assert (limit >= 0);
         "Limit must be no larger than capacity"
         assert (limit <= capacity);
         // Position must be be no larger than the limit
@@ -153,7 +151,7 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
     shared actual native ("jvm") Integer limit => buf.limit();
     native ("jvm") assign limit {
         "Limit must be non-negative"
-        assert(limit >= 0);
+        assert (limit >= 0);
         "Limit must be no larger than capacity"
         assert (limit <= capacity);
         buf.limit(limit);

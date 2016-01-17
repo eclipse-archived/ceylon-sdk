@@ -35,7 +35,7 @@ shared class CharacterBuffer extends Buffer<Character> {
     shared actual Integer limit => _limit;
     assign limit {
         "Limit must be non-negative"
-        assert(limit >= 0);
+        assert (limit >= 0);
         "Limit must be no larger than capacity"
         assert (limit <= capacity);
         // Position must be be no larger than the limit

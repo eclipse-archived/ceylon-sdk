@@ -1,6 +1,5 @@
 import ceylon.buffer {
-    ByteBuffer,
-    CharacterBuffer
+    ByteBuffer
 }
 import ceylon.buffer.codec {
     ErrorStrategy,
