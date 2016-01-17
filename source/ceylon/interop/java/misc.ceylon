@@ -13,6 +13,9 @@ import java.lang {
     Class,
     StackTraceElement
 }
+import ceylon.language.meta.model {
+    ClassOrInterface
+}
 
 "The [[java.lang::String]] underlying the given Ceylon 
  [[String]]."
@@ -37,6 +40,13 @@ shared Class<out Type> javaClassFromInstance<Type>
 shared Class<out Object> javaClassFromDeclaration
         (ClassOrInterfaceDeclaration declaration) 
         => util.javaClassForDeclaration(declaration);
+
+"A Java [[java.lang::Class]] object representing the given 
+ [[ClassOrInterface]]."
+shared Class<out Type> javaClassFromModel<Type>
+        (ClassOrInterface<Type> model)
+        given Type satisfies Object
+        => util.javaClassForModel(model);
 
 "A Java [[java.lang::Class]] object representing the Java
  annotation type corresponding to the given Ceylon
