@@ -5,7 +5,6 @@ import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDeclarationImpl;
-import com.redhat.ceylon.compiler.java.runtime.metamodel.meta.ClassOrInterfaceImpl;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
 import ceylon.language.meta.declaration.ClassOrInterfaceDeclaration;
@@ -89,17 +88,13 @@ public final class Util {
 	public <T> java.lang.Class<? extends T> 
     javaClassForModel(@Ignore TypeDescriptor $reifiedT,
     		ClassOrInterface<? extends T> model) {
-    	if (model instanceof ClassOrInterfaceImpl) {
-    		ClassOrInterfaceImpl<? extends T> impl = 
-    				(ClassOrInterfaceImpl<? extends T>) model;
-			ClassOrInterfaceDeclaration decl = impl.getDeclaration();
-    		if(decl instanceof ClassOrInterfaceDeclarationImpl){
-    			ClassOrInterfaceDeclarationImpl ci = 
-    					(ClassOrInterfaceDeclarationImpl) decl;
-    			return (Class<? extends T>) ci.getJavaClass();
-    		}
+    	ClassOrInterfaceDeclaration decl = model.getDeclaration();
+    	if(decl instanceof ClassOrInterfaceDeclarationImpl){
+    		ClassOrInterfaceDeclarationImpl ci = 
+    				(ClassOrInterfaceDeclarationImpl) decl;
+    		return (Class<? extends T>) ci.getJavaClass();
     	}
-        throw new ceylon.language.AssertionError("Unsupported model type: "+model);
+    	throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
     }
 
     public StackTraceElement[] javaStackTrace(Throwable t) {
