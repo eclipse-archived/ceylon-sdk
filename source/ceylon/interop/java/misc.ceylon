@@ -51,7 +51,7 @@ shared Class<out Type> javaClassFromModel<Type>
 "A Java [[java.lang::Class]] object representing the Java
  annotation type corresponding to the given Ceylon
  [[annotation class|Type]]."
-shared Class<out Annotation> javaAnnotationClass<Type>() 
+shared Class<out Type> javaAnnotationClass<Type>() 
         given Type satisfies Annotation 
         => util.javaAnnotationClass<Type>();
 

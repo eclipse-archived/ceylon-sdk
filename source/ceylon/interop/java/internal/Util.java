@@ -56,7 +56,7 @@ public final class Util {
     }
     
     @SuppressWarnings("unchecked")
-    public <T> Class<? extends java.lang.annotation.Annotation>
+    public <T extends java.lang.annotation.Annotation> Class<T>
     javaAnnotationClass(@Ignore TypeDescriptor $reifiedT) {
         if ($reifiedT instanceof TypeDescriptor.Class) {
             TypeDescriptor.Class klass = 
@@ -66,7 +66,7 @@ public final class Util {
             try {
                 Class<?> c = klass.getKlass();
                 String name = c.getName() + "$annotation$";
-                return (Class<? extends java.lang.annotation.Annotation>) 
+                return (Class<T>) 
                         Class.forName(name, true, c.getClassLoader());
             }
             catch (ClassNotFoundException e) {}
