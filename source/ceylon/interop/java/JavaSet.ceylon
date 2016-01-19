@@ -53,7 +53,7 @@ shared class JavaSet<E>(Set<E> set)
     shared actual Boolean removeAll(Collection<out Object> collection) {
         if (is MutableSet<E> set) {
             variable Boolean result = false;
-            for (e in CeylonIterable(collection)) {
+            for (e in collection) {
                 if (is E e, set.remove(e)) {
                     result = true;
                 }

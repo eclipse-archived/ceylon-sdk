@@ -73,7 +73,7 @@ shared class JavaList<E>(List<E> list)
     shared actual Boolean removeAll(Collection<out Object> collection) {
         if (is MutableList<E> list) {
             variable Boolean result = false;
-            for (e in CeylonIterable(collection)) {
+            for (e in collection) {
                 if (is E e, list.removeFirst(e)) {
                     result = true;
                 }
