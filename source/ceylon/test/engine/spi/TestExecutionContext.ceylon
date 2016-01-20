@@ -22,6 +22,12 @@ import ceylon.collection {
     MutableMap,
     MutableList
 }
+import java.util.concurrent {
+    Executors
+}
+import java.lang {
+    Runnable
+}
 
 "Represents a context in which a test is executed, it's used by [[TestExecutor]]."
 shared class TestExecutionContext {
@@ -40,15 +46,17 @@ shared class TestExecutionContext {
     
     MutableList<TestExtension> extensionList;
     MutableMap<ClassDeclaration, TestExtension> extensionCache;
+    TaskExecutor taskExecutor;
     
     "Constructor for root context."
-    shared new root(TestRunner runner, TestRunResult result) {
+    shared new root(TestRunner runner, TestRunResult result, Boolean async = false) {
         this.runner = runner;
         this.result = result;
         this.description = runner.description;
         this.parent = null;
         this.extensionList = ArrayList<TestExtension>();
         this.extensionCache = HashMap<ClassDeclaration,TestExtension>();
+        this.taskExecutor = async then AsyncTaskExecutor() else TaskExecutor();
     }
     
     "Constructor for child context."
@@ -59,11 +67,16 @@ shared class TestExecutionContext {
         this.description = description;
         this.extensionCache = parent.extensionCache;
         this.extensionList = findExtensions(description, parent.extensions<TestExtension>(), extensionCache);
+        this.taskExecutor = parent.taskExecutor;
     }
     
     "Create child context for given test."
     shared TestExecutionContext childContext(TestDescription description)
             => child(this, description);
+    
+    "Schedule test tasks for execution."
+    shared void execute(<Anything()|{Anything()*}>* tasks)
+            => taskExecutor.execute(*tasks);
     
     "Returns implementation of test listener, which is firing registered listeners."
     shared TestListener fire()
@@ -136,4 +149,98 @@ MutableList<TestExtension> findExtensions(TestDescription description, {TestExte
     }
     
     return extensions;
-}    
+}
+
+
+class TaskExecutor() {
+    
+    shared ArrayList<Anything()> taskStack = ArrayList<Anything()>();
+    
+    shared void execute(<Anything()|{Anything()*}>* tasks) {
+        value startExecutionLoop = taskStack.empty;
+        for (task in tasks.sequence().reversed) {
+            if (is Anything() task) {
+                taskStack.add(task);
+            }
+            if (is {Anything()*} task) {
+                taskStack.addAll(task.sequence().reversed);
+            }
+        }
+        if (startExecutionLoop) {
+            executionLoop();
+        }
+    }
+    
+    shared default void executionLoop() {
+        while(exists task = taskStack.pop()) {
+            task();
+        }
+    }
+    
+}
+
+native
+class AsyncTaskExecutor() extends TaskExecutor() {
+    
+    shared actual void executionLoop() {
+        if (exists task = taskStack.pop()) {
+            executeTask(() {
+                try {
+                    task();
+                } finally {
+                    executionLoop();
+                }
+            });
+        } else {
+            shutdown();
+        }
+    }
+    
+    native
+    void executeTask(Anything() task);
+    
+    native
+    void shutdown();
+
+}
+
+
+native("jvm")
+class AsyncTaskExecutor() extends TaskExecutor() {
+    
+    value jexecutor = Executors.newSingleThreadExecutor();
+    
+    native("jvm")
+    void executeTask(Anything() task) {
+        object jrunnable satisfies Runnable {
+            shared actual void run() {
+                task();
+            }
+        }
+        jexecutor.submit(jrunnable);
+    }
+    
+    native("jvm")
+    void shutdown() {
+        jexecutor.shutdown();
+    }
+    
+}
+
+
+native("js")
+class AsyncTaskExecutor() extends TaskExecutor() {
+    
+    native("js")
+    void executeTask(Anything() task) {
+        dynamic {
+            setTimeout(task, 1);
+        }
+    }
+    
+    native("js")
+    void shutdown() {
+        // noop
+    }
+    
+}

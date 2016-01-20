@@ -2,7 +2,7 @@
 
     <property file="build.properties" />
     <property name="ceylon.verbosity" value="false"/>
-    <property name="ceylon.executable" value="${basedir}/../ceylon/dist/dist/bin/ceylon"/>
+    <property name="ceylon.executable" value="${ceylon.main.dir}/dist/dist/bin/ceylon"/>
     <property name="out.repo" location="${basedir}/modules"/>
     <property name="deps.repo" location="${basedir}/test-deps"/>
     <property name="test.repo" location="${basedir}/modules"/>
@@ -15,18 +15,18 @@
     
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${basedir}/../ceylon/lib/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${ceylon.main.dir}/lib/ant-contrib-1.0b3.jar"/>
         </classpath>
     </taskdef>
 
     <taskdef resource="taskdef.properties">
         <classpath>
-            <pathelement path="${basedir}/../ceylon/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+            <pathelement path="${ceylon.main.dir}/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
         </classpath>
     </taskdef>
 
     <taskdef resource="aQute/bnd/ant/taskdef.properties"
-          classpath="${basedir}/../ceylon/lib/biz.aQute.bnd-2.3.0.jar"/>
+          classpath="${ceylon.main.dir}/lib/biz.aQute.bnd-2.3.0.jar"/>
 
     <!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
@@ -156,7 +156,7 @@
     <target name="compile" depends="compile-jvm,compile-js"
             description="Compiles the SDK modules to the 'modules' repository" />
 
-    <target name="compile-test-jvm" depends="compile-jvm">
+    <target name="compile-test-jvm" depends="ceylondefs">
         <ceylon-compile executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -169,7 +169,7 @@
         </ceylon-compile>
     </target>
 
-    <target name="compile-test-js" depends="compile-js">
+    <target name="compile-test-js" depends="ceylondefs">
         <ceylon-compile-js executable="${ceylon.executable}"
             src="test-source"
             out="${test.repo}"
@@ -182,7 +182,7 @@
         </ceylon-compile-js>
     </target>
 	
-    <target name="compile-test" depends="compile,compile-test-jvm,compile-test-js"
+    <target name="compile-test" depends="compile-test-jvm,compile-test-js"
         description="Compiles the test modules to the 'test-modules' repository" />
 
     <target name="test-jvm" depends="compile-test-jvm"
@@ -204,8 +204,10 @@
         </ceylon-test-js>
     </target>
 
-    <target name="test" depends="compile-test,test-jvm,test-js"
+    <target name="test" depends="compile,compile-test,test-jvm,test-js"
         description="Runs the compiled test modules from the 'test-modules' repository" />
+
+    <target name="test-quick" depends="compile-test,test-jvm,test-js" />
 
     <target name="doc" depends="ceylondefs" 
             description="Documents the SDK modules to the 'modules' repository">
@@ -383,7 +385,7 @@
         <mkdir dir="${osgi.build}"/>
         <touch file="${osgi.build}/bundles.info"/>
         <makeurl property="bundlesInfoUrl" file="${osgi.build}/bundles.info"/>
-        <loadfile srcfile="${basedir}/../ceylon/dist/osgi/p2/bundlesToStart" property="bundlesToStart">
+        <loadfile srcfile="${ceylon.main.dir}/dist/osgi/p2/bundlesToStart" property="bundlesToStart">
           <filterchain>
               <striplinebreaks/>
           </filterchain>

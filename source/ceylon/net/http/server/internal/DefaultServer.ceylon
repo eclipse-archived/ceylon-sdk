@@ -125,16 +125,15 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         sessionHandler.setNext(protocolHandshakeHandler);
         
         value errPageHandler = SimpleErrorPageHandler(sessionHandler);
+        errPageHandler.setNext(sessionHandler);
 
         value contentEncodingRepository = ContentEncodingRepository();
         contentEncodingRepository.addEncodingHandler("gzip", GzipEncodingProvider(), 50);
         contentEncodingRepository.addEncodingHandler("deflate", DeflateEncodingProvider(), 10);
         EncodingHandler encodingHandler = EncodingHandler(contentEncodingRepository);
-        encodingHandler.setNext(next);
+        encodingHandler.setNext(errPageHandler);
 
-        errPageHandler.setNext(sessionHandler);
-        
-        return errPageHandler;
+        return encodingHandler;
     }
     
     shared actual void start(SocketAddress socketAddress, Options options) {

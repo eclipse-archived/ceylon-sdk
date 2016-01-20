@@ -31,14 +31,14 @@ import ceylon.test.engine.internal {
 "Default implementation of [[TestRunner]]."
 shared class DefaultTestRunner(
     TestSource[] sources,
-    TestListener[] listeners,
+    TestExtension[] extensions,
     TestFilter filter,
     TestComparator comparator) satisfies TestRunner {
     
     function filterExecutor(TestExecutor e) {
         value result = filter(e.description);
         if (!result) {
-            listeners*.testExcluded(TestExcludedEvent(e.description));
+            extensions.narrow<TestListener>()*.testExcluded(TestExcludedEvent(e.description));
         }
         return result;
     }
@@ -56,27 +56,35 @@ shared class DefaultTestRunner(
     shared actual TestDescription description => TestDescription("root", null, null, executors*.description);
     
     shared actual TestRunResult run() {
+        return runInternal(false, noop);
+    }
+    
+    shared void runAsync(void done(TestRunResult result)) {
+        runInternal(true, done);
+    }
+    
+    TestRunResult runInternal(Boolean async, void done(TestRunResult result)) {
         verifyCycle();
-        try {
-            runningRunners.add(this);
-            
-            value result = DefaultTestRunResult();
-            value context = TestExecutionContext.root(this, result);
-            
-            context.registerExtension(DefaultArgumentListResolver());
-            context.registerExtension(DefaultTestInstanceProvider());
-            context.registerExtension(DefaultTestVariantProvider());
-            context.registerExtension(result.listener, *listeners);
-            
-            context.fire().testRunStarted(TestRunStartedEvent(this, description));
-            executors*.execute(context);
-            context.fire().testRunFinished(TestRunFinishedEvent(this, result));
-            
-            return result;
-        }
-        finally {
-            runningRunners.remove(this);
-        }
+        
+        value result = DefaultTestRunResult();
+        value context = TestExecutionContext.root(this, result, async);
+        
+        context.registerExtension(DefaultArgumentListResolver());
+        context.registerExtension(DefaultTestInstanceProvider());
+        context.registerExtension(DefaultTestVariantProvider());
+        context.registerExtension(result.listener);
+        context.registerExtension(*extensions);
+        
+        context.execute(
+            () => runningRunners.add(this),
+            () => context.fire().testRunStarted(TestRunStartedEvent(this, description)),
+            {for(e in executors) () => e.execute(context)},
+            () => context.fire().testRunFinished(TestRunFinishedEvent(this, result)),
+            () => runningRunners.remove(this),
+            () => done(result)
+        );       
+        
+        return result;  
     }
     
     void verifyCycle() {

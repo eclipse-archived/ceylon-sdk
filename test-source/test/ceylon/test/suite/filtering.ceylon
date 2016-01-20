@@ -51,7 +51,7 @@ void shouldFilterTestsAndFireExcludeEvent() {
 
     createTestRunner{
         sources = [`foo`, `fooThrowingAssertion`];
-        listeners = [excludedListener];
+        extensions = [excludedListener];
         filter = (TestDescription d)=>!d.name.contains("Throwing");
     };
     

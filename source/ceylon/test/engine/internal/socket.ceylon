@@ -39,14 +39,14 @@ class SocketFacadeJvm satisfies SocketFacade {
     
     shared new connect(Integer port) {
         String? host = null;
-        variable Socket? socketVar;
-        variable OutputStreamWriter? writerVar;
-        variable Exception? lastException;
+        variable Exception? lastException = null;
         
         for (value i in 0..10) {
             try {
-                socketVar = Socket(host, port);
-                writerVar = OutputStreamWriter(socketVar?.outputStream, "UTF-8");
+                value s = Socket(host, port);
+                value w = OutputStreamWriter(s.outputStream, "UTF-8");
+                socket = s;
+                writer = w;
                 break;
             } catch (IOException e) {
                 lastException = e;
@@ -57,13 +57,10 @@ class SocketFacadeJvm satisfies SocketFacade {
                 // noop
             }
         }
-        
-        if (exists s = socketVar, exists w = writerVar) {
-            socket = s;
-            writer = w;
-        } else {
+        else {
             throw Exception("failed connect to port ``port``", lastException);
         }
+        
     }
     
     shared actual void write(String data) {

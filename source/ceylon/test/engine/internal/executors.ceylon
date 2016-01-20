@@ -29,9 +29,11 @@ shared class GroupTestExecutor(description, TestExecutor[] children) satisfies T
         value groupTestListener = GroupTestListener();
         
         context.registerExtension(groupTestListener);
-        context.fire().testStarted(TestStartedEvent(description));
-        children*.execute(context);
-        context.fire().testFinished(TestFinishedEvent(TestResult(description, groupTestListener.worstState, true, null, groupTestListener.elapsedTime)));
+        context.execute(
+            () => context.fire().testStarted(TestStartedEvent(description)),
+            {for(e in children) () => e.execute(context)},
+            () => context.fire().testFinished(TestFinishedEvent(TestResult(description, groupTestListener.worstState, true, null, groupTestListener.elapsedTime)))
+        );
     }
     
 }
