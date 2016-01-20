@@ -22,6 +22,12 @@ Byte[] base16DecodeTable = { 255 }.repeat(48) // invalid range
     .chain(10..15) // a..f
     *.byte.sequence(); // anything beyond f is invalid
 
+// ceylon.math is JVM only...
+Integer ceiling(Integer x, Float y) {
+    value xf = x.float;
+    return ((xf + y - 1) / y).integer;
+}
+
 shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
         satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
@@ -29,8 +35,8 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>(toMutableO
         given ToSingle satisfies Object {
     ToMutable(Integer) toMutableOfSize;
     
-    shared actual Integer averageDecodeSize(Integer inputSize) => inputSize / 2;
-    shared actual Integer maximumDecodeSize(Integer inputSize) => inputSize / 2;
+    shared actual Integer averageDecodeSize(Integer inputSize) => ceiling(inputSize, 2.0);
+    shared actual Integer maximumDecodeSize(Integer inputSize) => ceiling(inputSize, 2.0);
     shared actual Integer averageEncodeSize(Integer inputSize) => inputSize * 2;
     shared actual Integer maximumEncodeSize(Integer inputSize) => inputSize * 2;
     
