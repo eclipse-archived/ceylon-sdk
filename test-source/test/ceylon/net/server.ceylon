@@ -7,7 +7,8 @@ import ceylon.net.http.server { Status,
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
                                   startsWith, endsWith, Options, stopped, newServer }
-import ceylon.net.http.server.endpoints { serveStaticFile }
+import ceylon.net.http.server.endpoints { serveStaticFile,
+    RepositoryEndpoint }
 import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList, MutableList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
@@ -228,7 +229,10 @@ test void testServer() {
                 return null;
             }; 
             acceptMethod = {post};
-        }        
+        },
+        RepositoryEndpoint {
+            root = "/modules";
+        }
     };
 
 
@@ -264,6 +268,8 @@ test void testServer() {
                 //testAsyncStream();
 
                 testMultipartPost();
+                
+                moduleTest();
                 
             } finally {
                 cleanUpFile();
@@ -345,6 +351,18 @@ void fileMapperTest() {
     //TODO log trace
     print("Filemapper: ``fileCnt.initial(100)``" + (fileCnt.size > 100 then " ..." else ""));
     assertEquals(produceFileContent(), fileCnt);
+}
+
+void moduleTest() {
+    value v = language.version;
+    value url = "http://localhost:8080/modules/ceylon/language/" + v + "/ceylon.language-" + v + ".js";
+    value fileRequest = ClientRequest(parse(url));
+    value fileResponse = fileRequest.execute();
+    value fileCnt = fileResponse.contents;
+    fileResponse.close();
+    //TODO log trace
+    print("RepositoryEndpoint: read module ceylon.language/" + v);
+    assertTrue(fileCnt.size > 100000); // It's big so it's probably/hopefully the correct file
 }
 
 void concurentFileRequests(Integer concurentRequests) {
