@@ -6,16 +6,15 @@ import ceylon.net.http.server {
 
 import com.redhat.ceylon.cmr.api {
     RepositoryManager,
-    ArtifactContext
+    ArtifactContext {
+        getSuffixFromFilename
+    }
 }
 import ceylon.net.http {
     Header
 }
 import ceylon.file {
     File
-}
-import ceylon.interop.java {
-    javaString
 }
 
 """Service function for sending Ceylon modules to the client. _Must_ be attached
@@ -56,53 +55,61 @@ shared void serveModule(
     // Make sure the root path ends with a slash
     value root = if (contextRoot.endsWith("/")) then contextRoot else contextRoot + "/";
     
+    // req.path == "/modules/ceylon.language-1.2.0.js" or
     // req.path == "/modules/ceylon/language/1.2.0/ceylon.language-1.2.0.js"
     // first we strip the context root and the leading slash
     value path = req.path.spanFrom(root.size);
     
-    // path == "ceylon/language/1.2.0/ceylon.language-1.2.0.js"
-    value parts = path.split('/'.equals).sequence();
-    
-    // parts == [ceylon, language, 1.2.0, ceylon.language-1.2.0.js]
-    value name = if (parts.size >= 3)
-                 then ".".join(parts[0..parts.size-3])
-                 else null;
- 
-    void notFound() {
+    ArtifactContext? ac = getArtifactContext(path);
+    if (req.path.startsWith(root),
+            exists ac,
+            exists file = findArtifactPath(manager, ac)) {
+        serveStaticFile("", (req) => file, options, onSuccess, onError, headers)
+            (req, resp, complete);
+    } else {
         resp.responseStatus = 404;
         resp.writeString("404 - Not found");
     }
-    
-    // name == "ceylon.language"
-    if (req.path.startsWith(contextRoot),
-            exists name,
-            exists version = parts[parts.size - 2],
-            exists fileName = parts.last) {
-        value suffix = fileName.spanFrom(name.size + version.size + 1);
-        if (fileName == name + "-" + version + suffix,
-                exists file = findArtifactPath(manager, name, version, suffix)) {
-            serveStaticFile("", (req) => file, options, onSuccess, onError, headers)
-                (req, resp, complete);
-        } else {
-            notFound();
+}
+
+ArtifactContext? getArtifactContext(String path) {
+    try {
+        // path == "ceylon.language-1.2.0.js" or
+        // path == "ceylon/language/1.2.0/ceylon.language-1.2.0.js"
+        value parts = path.split('/'.equals).sequence();
+        
+        value fileName = parts.last else "";
+        
+        if (parts.size == 1) {
+            // parts == [ceylon.language-1.2.0.js]
+            value suffix = getSuffixFromFilename(fileName);
+            value p = fileName.firstInclusion("-");
+            if (exists p) {
+                value name = fileName[0..p-1];
+                value version = fileName[p+1..fileName.size-suffix.size-1];
+                return ArtifactContext(name, version, suffix);
+            }
+        } else if (parts.size >= 3) {
+            // parts == [ceylon, language, 1.2.0, ceylon.language-1.2.0.js]
+            value name = ".".join(parts[0..parts.size-3]);
+            // name == "ceylon.language"
+            value version = parts[parts.size - 2] else "";
+            value suffix = getSuffixFromFilename(parts.last);
+            if (fileName == name + "-" + version + suffix) {
+                return ArtifactContext(name, version, suffix);
+            }
         }
-    } else {
-        notFound();
-    }
+    } catch (Exception ex) { }
+    return null;
 }
 
 String? findArtifactPath(RepositoryManager manager,
-        String name,
-        String version,
-        String suffix) {
+    ArtifactContext context) {
     
-    if (ArtifactContext.allSuffixes().array.contains(javaString(suffix))) {
-        value context = ArtifactContext(name, version, suffix);
-        if (exists artifact = manager.getArtifact(context),
-                artifact.\iexists(),
-                artifact.file) {
-            return artifact.absolutePath;
-        }
+    if (exists artifact = manager.getArtifact(context),
+            artifact.\iexists(),
+            artifact.file) {
+        return artifact.absolutePath;
     }
     
     return null;
