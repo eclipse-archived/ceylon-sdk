@@ -355,13 +355,18 @@ void fileMapperTest() {
 
 void moduleTest() {
     value v = language.version;
-    value url = "http://localhost:8080/modules/ceylon/language/" + v + "/ceylon.language-" + v + ".js";
+    _moduleTest("ceylon/language/" + v + "/ceylon.language-" + v + ".js");
+    _moduleTest("ceylon.language-" + v + ".js");
+}
+
+void _moduleTest(String modurl) {
+    value url = "http://localhost:8080/modules/" + modurl;
     value fileRequest = ClientRequest(parse(url));
     value fileResponse = fileRequest.execute();
     value fileCnt = fileResponse.contents;
     fileResponse.close();
     //TODO log trace
-    print("RepositoryEndpoint: read module ceylon.language/" + v);
+    print("RepositoryEndpoint: read module " + modurl);
     assertTrue(fileCnt.size > 100000); // It's big so it's probably/hopefully the correct file
 }
 
