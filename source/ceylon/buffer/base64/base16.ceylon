@@ -14,12 +14,20 @@ import ceylon.buffer.codec {
     DecodeException
 }
 
-Byte[] base16DecodeTable = { 255 }.repeat(48) // invalid range
+Byte[] base16DecodeTableRight = { 255 }.repeat(48) // invalid range
     .chain(0..9) // 0..9
     .chain({ 255 }.repeat(7)) // invalid range
     .chain(10..15) // A..F
     .chain({ 255 }.repeat(26)) // invalid range
     .chain(10..15) // a..f
+    *.byte.sequence(); // anything beyond f is invalid
+
+Byte[] base16DecodeTableLeft = { 255 }.repeat(48) // invalid range
+    .chain((0..9)*.leftLogicalShift(4)) // 0..9
+    .chain({ 255 }.repeat(7)) // invalid range
+    .chain((10..15)*.leftLogicalShift(4)) // A..F
+    .chain({ 255 }.repeat(26)) // invalid range
+    .chain((10..15)*.leftLogicalShift(4)) // a..f
     *.byte.sequence(); // anything beyond f is invalid
 
 // ceylon.math is JVM only...
@@ -57,25 +65,28 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>(toMutableO
                 variable Byte? leftwardNibble = null;
                 
                 shared actual {Byte*} more(ToSingle input) {
-                    value r = base16DecodeTable[decodeToIndex(input)];
-                    if (exists r, r != 255) {
-                        if (exists left = leftwardNibble) {
+                    if (exists left = leftwardNibble) {
+                        value right = base16DecodeTableRight[decodeToIndex(input)];
+                        if (exists right) {
                             leftwardNibble = null;
-                            return { left.and(r) };
-                        } else {
-                            leftwardNibble = r.leftLogicalShift(4);
+                            return { left.or(right) };
                         }
                     } else {
-                        switch (error)
-                        case (strict) {
-                            throw DecodeException {
-                                "Input element ``input`` is not valid ASCII hex";
-                            };
-                        }
-                        case (ignore) {
+                        value left = base16DecodeTableLeft[decodeToIndex(input)];
+                        if (exists left) {
+                            leftwardNibble = left;
+                            return empty;
                         }
                     }
-                    return empty;
+                    switch (error)
+                    case (strict) {
+                        throw DecodeException {
+                            "Input element ``input`` is not valid ASCII hex";
+                        };
+                    }
+                    case (ignore) {
+                        return empty;
+                    }
                 }
                 
                 shared actual {Byte*} done() {
