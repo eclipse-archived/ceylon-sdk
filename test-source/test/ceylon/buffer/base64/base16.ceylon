@@ -1,14 +1,15 @@
 import ceylon.buffer.base64 {
-    base16String
+    base16String,
+    base16Byte
+}
+import ceylon.buffer.codec {
+    ignore,
+    DecodeException
 }
 import ceylon.test {
     test,
     assertEquals,
     assertThatException
-}
-import ceylon.buffer.codec {
-    ignore,
-    DecodeException
 }
 
 shared class Base16Tests() {
@@ -41,6 +42,38 @@ shared class Base16Tests() {
         assertEquals {
             base16String.encode({ #11, #ff, #a9 }*.byte);
             "11ffa9";
+        };
+    }
+    
+    test
+    shared void encodeStringEverything() {
+        assertEquals {
+            base16String.encode({ #01, #23, #45, #67, #89, #ab, #cd, #ef, #ab, #cd, #ef }*.byte);
+            "0123456789abcdefabcdef";
+        };
+    }
+    
+    test
+    shared void decodeStringEverything() {
+        assertEquals {
+            base16String.decode("0123456789ABCDEFabcdef");
+            Array({ #01, #23, #45, #67, #89, #ab, #cd, #ef, #ab, #cd, #ef }*.byte);
+        };
+    }
+    
+    test
+    shared void encodeByteEverything() {
+        assertEquals {
+            base16Byte.encode({ #01, #23, #45, #67, #89, #ab, #cd, #ef, #ab, #cd, #ef }*.byte);
+            Array("0123456789abcdefabcdef"*.integer*.byte);
+        };
+    }
+    
+    test
+    shared void decodeByteEverything() {
+        assertEquals {
+            base16Byte.decode(Array("0123456789ABCDEFabcdef"*.integer*.byte));
+            Array({ #01, #23, #45, #67, #89, #ab, #cd, #ef, #ab, #cd, #ef }*.byte);
         };
     }
     
@@ -96,6 +129,14 @@ shared class Base16Tests() {
         assertEquals {
             base16String.decode("az", ignore);
             Array { #a0.byte };
+        };
+    }
+    
+    test
+    shared void decodeStringErrorIgnoreContinue() {
+        assertEquals {
+            base16String.decode("azf0d", ignore);
+            Array { #af.byte, #0d.byte };
         };
     }
 }
