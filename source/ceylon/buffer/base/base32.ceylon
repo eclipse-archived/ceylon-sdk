@@ -213,7 +213,6 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                 
                 shared actual {Byte*} more(ToSingle input) {
                     output.clear();
-                    
                     void handleState(state, handleInputByte, handlePad = null) {
                         Base32PieceDecoderState state;
                         Anything(Byte) handleInputByte;
@@ -221,7 +220,10 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         Integer inputIndex = decodeToIndex(input);
                         if (inputIndex == padCharIndex) {
                             if (exists handlePad) {
-                                handlePad();
+                                padSeen = true;
+                                if (exists rem = remainder, rem != 0.byte) {
+                                    handlePad();
+                                }
                             } else {
                                 switch (error)
                                 case (strict) {
@@ -256,8 +258,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                             }
                         }
                     }
-                    
-                    // 8 character repeating quantum, producing 5 bytes
+                    // 8 character (of 5-bits each) repeating quantum, producing 5 bytes
                     switch (state)
                     case (b32DecodeFirst) {
                         handleState {
@@ -271,12 +272,17 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         assert (exists rem = remainder);
                         handleState {
                             state = state;
-                            // [rem 01234][in 01234] -> [out [rem 01234][in 012]][rem 345]
+                            // [rem 01234][in 01234] -> [out [rem 01234][in 012]][rem 34]
                             handleInputByte = (b) {
-                                remainder = b.and($111.byte);
+                                remainder = b.and($11.byte);
                                 output.put {
                                     rem.leftLogicalShift(3).or(b.rightLogicalShift(2));
                                 };
+                            };
+                            handlePad = () {
+                                // [rem 01234][pad 000] -> [out [[rem 01234][pad 000]]
+                                remainder = 0.byte;
+                                output.put(rem.leftLogicalShift(3));
                             };
                         };
                         state = b32DecodeThird;
@@ -285,32 +291,33 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         assert (exists rem = remainder);
                         handleState {
                             state = state;
-                            // [rem 345][in 01234] -> [out [rem 345][in 01234]]
+                            // [rem 34][in 01234] -> [rem [rem 34][in 01234]] (insufficent)
                             handleInputByte = (b) {
-                                remainder = null;
-                                output.put {
-                                    rem.leftLogicalShift(5).or(b);
-                                };
+                                remainder = rem.leftLogicalShift(5).or(b);
                             };
                             handlePad = () {
-                                // TODO
-                                padSeen = true;
-                                // [rem 2345][pad 000000] -> [out [rem 2345][pad 0000]][rem 0000]
+                                // [rem 34][pad 000000] -> [out [rem 34][pad 000000]]
                                 remainder = 0.byte;
-                                if (rem != 0.byte) {
-                                    output.put(rem.leftLogicalShift(4));
-                                }
+                                output.put(rem.leftLogicalShift(6));
                             };
                         };
                         state = b32DecodeFourth;
                     }
                     case (b32DecodeFourth) {
+                        assert (exists rem = remainder);
                         handleState {
                             state = state;
-                            // [rem 01234] (insufficent to make a byte)
-                            handleInputByte = (b) => remainder = b;
+                            // [rem 3401234][in 01234] -> [out [rem 3401234][in 0]][rem 1234]
+                            handleInputByte = (b) {
+                                remainder = b.and($1111.byte);
+                                output.put {
+                                    rem.leftLogicalShift(1).or(b.rightLogicalShift(4));
+                                };
+                            };
                             handlePad = () {
-                                // TODO
+                                // [rem 3401234][pad 0] -> [out [rem 3401234][pad 0]]
+                                remainder = 0.byte;
+                                output.put(rem.leftLogicalShift(1));
                             };
                         };
                         state = b32DecodeFifth;
@@ -319,11 +326,17 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         assert (exists rem = remainder);
                         handleState {
                             state = state;
+                            // [rem 1234][in 01234] -> [out [rem 1234][in 0123]][rem 4]
                             handleInputByte = (b) {
-                                // TODO
+                                remainder = b.and($1.byte);
+                                output.put {
+                                    rem.leftLogicalShift(4).or(b.rightLogicalShift(1));
+                                };
                             };
                             handlePad = () {
-                                // TODO
+                                // [rem 1234][pad 0000] -> [out [rem 1234][pad 0000]]
+                                remainder = 0.byte;
+                                output.put(rem.leftLogicalShift(4));
                             };
                         };
                         state = b32DecodeSixth;
@@ -332,11 +345,14 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         assert (exists rem = remainder);
                         handleState {
                             state = state;
+                            // [rem 4][in 01234] -> [rem [rem 4][in 01234]] (insufficent)
                             handleInputByte = (b) {
-                                // TODO
+                                remainder = rem.leftLogicalShift(5).or(b);
                             };
                             handlePad = () {
-                                // TODO
+                                // [rem 4][pad 0000000] -> [rem [rem 4][pad 0000000]]
+                                remainder = 0.byte;
+                                output.put(rem.leftLogicalShift(7));
                             };
                         };
                         state = b32DecodeSeventh;
@@ -345,11 +361,17 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         assert (exists rem = remainder);
                         handleState {
                             state = state;
+                            // [rem 401234][in 01234] -> [out [rem 401234][in 01]][rem 234]
                             handleInputByte = (b) {
-                                // TODO
+                                remainder = b.and($111.byte);
+                                output.put {
+                                    rem.leftLogicalShift(2).or(b.rightLogicalShift(3));
+                                };
                             };
                             handlePad = () {
-                                // TODO
+                                // [rem 401234][pad 00] -> [out [rem 401234][pad 00]]
+                                remainder = 0.byte;
+                                output.put(rem.leftLogicalShift(2));
                             };
                         };
                         state = b32DecodeEighth;
@@ -358,11 +380,17 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         assert (exists rem = remainder);
                         handleState {
                             state = state;
+                            // [rem 234][in 01234] -> [out [rem 234][in 01234]]
                             handleInputByte = (b) {
-                                // TODO
+                                remainder = b.and($111.byte);
+                                output.put {
+                                    rem.leftLogicalShift(5).or(b);
+                                };
                             };
                             handlePad = () {
-                                // TODO
+                                // [rem 234][pad 00000] -> [out [rem 234][pad 00000]]
+                                remainder = 0.byte;
+                                output.put(rem.leftLogicalShift(5));
                             };
                         };
                         reset();
@@ -373,30 +401,47 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                 
                 shared actual {Byte*} done() {
                     output.clear();
-                    switch (state)
-                    case (b32DecodeFirst) {
-                        // At quantum boundary, nothing to return
-                    }
-                    case (b32DecodeSecond) {
-                        assert (exists rem = remainder);
-                    }
-                    case (b32DecodeThird) {
-                        assert (exists rem = remainder);
-                    }
-                    case (b32DecodeFourth) {
-                        assert (exists rem = remainder);
-                    }
-                    case (b32DecodeFifth) {
-                        assert (exists rem = remainder);
-                    }
-                    case (b32DecodeSixth) {
-                        assert (exists rem = remainder);
-                    }
-                    case (b32DecodeSeventh) {
-                        assert (exists rem = remainder);
-                    }
-                    case (b32DecodeEighth) {
-                        assert (exists rem = remainder);
+                    // Pad termination is optional
+                    if (!padSeen) {
+                        switch (state)
+                        case (b32DecodeFirst) {
+                            // At quantum boundary, nothing to return
+                        }
+                        case (b32DecodeSecond) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(3));
+                            }
+                        }
+                        case (b32DecodeThird) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(6));
+                            }
+                        }
+                        case (b32DecodeFourth) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(1));
+                            }
+                        }
+                        case (b32DecodeFifth) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(4));
+                            }
+                        }
+                        case (b32DecodeSixth) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(7));
+                            }
+                        }
+                        case (b32DecodeSeventh) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(2));
+                            }
+                        }
+                        case (b32DecodeEighth) {
+                            if (exists rem = remainder, rem != 0) {
+                                output.put(rem.leftLogicalShift(5));
+                            }
+                        }
                     }
                     reset();
                     output.flip();
