@@ -202,90 +202,169 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                 ByteBuffer output = ByteBuffer.ofSize(1);
                 
                 variable Base32PieceDecoderState state = b32DecodeFirst;
+                variable Boolean padSeen = false;
                 variable Byte? remainder = null;
                 
                 void reset() {
                     state = b32DecodeFirst;
+                    padSeen = false;
                     remainder = null;
                 }
                 
                 shared actual {Byte*} more(ToSingle input) {
                     output.clear();
+                    
+                    void handleState(state, handleInputByte, handlePad = null) {
+                        Base32PieceDecoderState state;
+                        Anything(Byte) handleInputByte;
+                        Anything()? handlePad;
+                        Integer inputIndex = decodeToIndex(input);
+                        if (inputIndex == padCharIndex) {
+                            if (exists handlePad) {
+                                handlePad();
+                            } else {
+                                switch (error)
+                                case (strict) {
+                                    throw DecodeException {
+                                        "Pad element ``input`` is not allowed here";
+                                    };
+                                }
+                                case (ignore) {
+                                    reset();
+                                }
+                            }
+                        } else if (padSeen) {
+                            switch (error)
+                            case (strict) {
+                                throw DecodeException {
+                                    "Non-pad character ``input`` is not allowed here";
+                                };
+                            }
+                            case (ignore) {
+                            }
+                        } else {
+                            if (exists inputByte = decodeTable[inputIndex], inputByte != 255) {
+                                handleInputByte(inputByte);
+                            } else {
+                                switch (error)
+                                case (strict) {
+                                    throw DecodeException("``input`` is not a base32 character");
+                                }
+                                case (ignore) {
+                                    reset();
+                                }
+                            }
+                        }
+                    }
+                    
                     // 8 character repeating quantum, producing 5 bytes
                     switch (state)
                     case (b32DecodeFirst) {
-                        Integer inputIndex = decodeToIndex(input);
-                        if (inputIndex == padCharIndex) {
-                            switch (error)
-                            case (strict) {
-                                throw DecodeException("Pad element ``input`` is not allowed here");
-                            }
-                            case (ignore) {
-                                reset();
-                            }
-                        }
-                        if (exists inputByte = decodeTable[inputIndex]) {
-                            remainder = inputByte;
-                        } else {
-                            switch (error)
-                            case (strict) {
-                                throw DecodeException("``input`` is not a base32 character");
-                            }
-                            case (ignore) {
-                                reset();
-                            }
-                        }
+                        handleState {
+                            state = state;
+                            // [rem 01234] (insufficent to make a byte)
+                            handleInputByte = (b) => remainder = b;
+                        };
                         state = b32DecodeSecond;
                     }
                     case (b32DecodeSecond) {
                         assert (exists rem = remainder);
-                        Integer inputIndex = decodeToIndex(input);
-                        if (inputIndex == padCharIndex) {
-                            switch (error)
-                            case (strict) {
-                                throw DecodeException("Pad element ``input`` is not allowed here");
-                            }
-                            case (ignore) {
-                                reset();
-                            }
-                        }
-                        if (exists inputByte = decodeTable[inputIndex]) {
-                            remainder = inputByte.and($1111.byte);
-                            value outputByte = rem.leftLogicalShift(2).or(inputByte.rightLogicalShift(4));
-                            output.put();
-                        } else {
-                            switch (error)
-                            case (strict) {
-                                throw DecodeException("``input`` is not a base32 character");
-                            }
-                            case (ignore) {
-                                reset();
-                            }
-                        }
+                        handleState {
+                            state = state;
+                            // [rem 01234][in 01234] -> [out [rem 01234][in 012]][rem 345]
+                            handleInputByte = (b) {
+                                remainder = b.and($111.byte);
+                                output.put {
+                                    rem.leftLogicalShift(3).or(b.rightLogicalShift(2));
+                                };
+                            };
+                        };
                         state = b32DecodeThird;
                     }
                     case (b32DecodeThird) {
                         assert (exists rem = remainder);
+                        handleState {
+                            state = state;
+                            // [rem 345][in 01234] -> [out [rem 345][in 01234]]
+                            handleInputByte = (b) {
+                                remainder = null;
+                                output.put {
+                                    rem.leftLogicalShift(5).or(b);
+                                };
+                            };
+                            handlePad = () {
+                                // TODO
+                                padSeen = true;
+                                // [rem 2345][pad 000000] -> [out [rem 2345][pad 0000]][rem 0000]
+                                remainder = 0.byte;
+                                if (rem != 0.byte) {
+                                    output.put(rem.leftLogicalShift(4));
+                                }
+                            };
+                        };
                         state = b32DecodeFourth;
                     }
                     case (b32DecodeFourth) {
-                        assert (exists rem = remainder);
+                        handleState {
+                            state = state;
+                            // [rem 01234] (insufficent to make a byte)
+                            handleInputByte = (b) => remainder = b;
+                            handlePad = () {
+                                // TODO
+                            };
+                        };
                         state = b32DecodeFifth;
                     }
                     case (b32DecodeFifth) {
                         assert (exists rem = remainder);
+                        handleState {
+                            state = state;
+                            handleInputByte = (b) {
+                                // TODO
+                            };
+                            handlePad = () {
+                                // TODO
+                            };
+                        };
                         state = b32DecodeSixth;
                     }
                     case (b32DecodeSixth) {
                         assert (exists rem = remainder);
+                        handleState {
+                            state = state;
+                            handleInputByte = (b) {
+                                // TODO
+                            };
+                            handlePad = () {
+                                // TODO
+                            };
+                        };
                         state = b32DecodeSeventh;
                     }
                     case (b32DecodeSeventh) {
                         assert (exists rem = remainder);
+                        handleState {
+                            state = state;
+                            handleInputByte = (b) {
+                                // TODO
+                            };
+                            handlePad = () {
+                                // TODO
+                            };
+                        };
                         state = b32DecodeEighth;
                     }
                     case (b32DecodeEighth) {
                         assert (exists rem = remainder);
+                        handleState {
+                            state = state;
+                            handleInputByte = (b) {
+                                // TODO
+                            };
+                            handlePad = () {
+                                // TODO
+                            };
+                        };
                         reset();
                     }
                     output.flip();
