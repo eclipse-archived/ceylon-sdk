@@ -46,4 +46,4 @@
    [rfc4648]: http://tools.ietf.org/html/rfc4648
 """
 by ("Stéphane Épardaud", "Alex Szczuczko")
-shared package ceylon.buffer.base64;
+shared package ceylon.buffer.base;

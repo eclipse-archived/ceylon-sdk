@@ -1,7 +1,7 @@
 import ceylon.buffer {
     ByteBuffer
 }
-import ceylon.buffer.base64 {
+import ceylon.buffer.base {
     base64ByteStandard,
     base64ByteUrl
 }

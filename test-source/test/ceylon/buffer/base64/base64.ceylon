@@ -1,4 +1,4 @@
-import ceylon.buffer.base64 {
+import ceylon.buffer.base {
     Base64Byte,
     Base64String
 }

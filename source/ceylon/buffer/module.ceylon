@@ -28,8 +28,8 @@
    There are two currently implemented codec families:
    [[charsets|package ceylon.buffer.charset]]
    ([[UTF-8|ceylon.buffer.charset::utf8]] for example), and
-   [[base encodings|package ceylon.buffer.base64]] (like
-   [[base64|ceylon.buffer.base64::base64ByteStandard]]). See those packages for
+   [[base encodings|package ceylon.buffer.base]] (like
+   [[base64|ceylon.buffer.base::base64ByteStandard]]). See those packages for
    further documentation and examples of use.
 """
 by ("Stéphane Épardaud", "Alex Szczuczko")
