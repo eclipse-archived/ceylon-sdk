@@ -4,7 +4,7 @@ import ceylon.buffer.codec {
 
 "A mapping of all supported character sets.
  
- Currently this lists contains:
+ Currently this contains:
  
  - ASCII
  - ISO 8859 1

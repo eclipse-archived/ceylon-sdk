@@ -6,7 +6,7 @@ import ceylon.buffer.codec {
 
 "A mapping of all supported String base variants.
  
- Currently this lists contains:
+ Currently this contains:
  
  - Base64 Standard
  - Base64 URL Safe
@@ -20,7 +20,7 @@ shared Map<String,CharacterToByteCodec> baseStringByAlias = buildCodecLookup {
 
 "A mapping of all supported Byte base variants.
  
- Currently this lists contains:
+ Currently this contains:
  
  - Base64 Standard
  - Base64 URL Safe
