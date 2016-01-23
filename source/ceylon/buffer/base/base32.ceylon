@@ -32,7 +32,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
     ToMutable(Integer) toMutableOfSize;
     
     shared formal ToSingle[] encodeTable;
-    shared formal Byte[] decodeTable;
+    shared Byte[] decodeTable = [];
     shared formal Integer decodeToIndex(ToSingle input);
     
     "The padding character, used where required to terminate discrete blocks of
@@ -41,8 +41,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
     shared formal ToSingle pad;
     shared Byte padCharIndex = 32.byte;
     
-    shared actual Integer averageEncodeSize(Integer inputSize)
-            => (2 + inputSize - ((inputSize + 2) % 3)) * 8 / 5;
+    shared actual Integer averageEncodeSize(Integer inputSize) => ceiling(inputSize, 5.0) * 8;
     shared actual Integer maximumEncodeSize(Integer inputSize) => averageEncodeSize(inputSize);
     shared actual Integer averageDecodeSize(Integer inputSize) => inputSize * 5 / 8;
     shared actual Integer maximumDecodeSize(Integer inputSize) => averageDecodeSize(inputSize);
@@ -137,7 +136,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         // At quantum boundary, nothing to return
                     }
                     case (b32EncodeSecond) {
-                        // [rem 567] -> [char [rem 567][pad 00]] pad pad pad pad pad pad
+                        // [rem 567] -> [char [rem 567][pad 00]][char [pad 00000]] pad*5
                         assert (exists rem = remainder);
                         output.put(byteToChar(rem.leftLogicalShift(2)));
                         output.put(pad);
@@ -148,22 +147,27 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         output.put(pad);
                     }
                     case (b32EncodeThird) {
-                        // [rem 7] -> [char [rem 7][pad 0000]] pad pad pad pad pad
+                        // [rem 7] -> [char [rem 7][pad 0000]] pad pad pad pad
                         assert (exists rem = remainder);
                         output.put(byteToChar(rem.leftLogicalShift(4)));
                         output.put(pad);
                         output.put(pad);
                         output.put(pad);
                         output.put(pad);
-                        output.put(pad);
                     }
                     case (b32EncodeFourth) {
-                        // [rem 4567] -> [char [rem 4567][pad 0] pad pad pad pad
+                        // [rem 4567] -> [char [rem 4567][pad 0]][char [pad 00000]] pad pad
                         assert (exists rem = remainder);
                         output.put(byteToChar(rem.leftLogicalShift(1)));
+                        output.put(pad);
+                        output.put(pad);
+                        output.put(pad);
                     }
                     case (b32EncodeFifth) {
                         assert (exists rem = remainder);
+                        // [rem 67] -> [char [rem 67][pad 000]][char [pad 00000]]
+                        output.put(byteToChar(rem.leftLogicalShift(3)));
+                        output.put(pad);
                     }
                     reset();
                     output.flip();
@@ -207,12 +211,14 @@ shared object base32StringStandard extends Base32String() {
     shared actual Character[] encodeTable = standardBase32CharTable;
     shared actual [String+] aliases = ["base32", "base-32", "base_32"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
+    shared actual Integer decodeToIndex(Character input) => input.integer;
 }
 Byte[] standardBase32ByteTable = standardBase32CharTable*.integer*.byte.sequence();
 shared object base32ByteStandard extends Base32Byte() {
     shared actual Byte[] encodeTable = standardBase32ByteTable;
     shared actual [String+] aliases = ["base32", "base-32", "base-32"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
+    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
 }
 
 Character[] hexBase32CharTable = [
@@ -224,10 +230,12 @@ shared object base32StringHex extends Base32String() {
     shared actual Character[] encodeTable = hexBase32CharTable;
     shared actual [String+] aliases = ["base32hex", "base-32-hex", "base_32_hex"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
+    shared actual Integer decodeToIndex(Character input) => input.integer;
 }
 Byte[] hexBase32ByteTable = hexBase32CharTable*.integer*.byte.sequence();
 shared object base32ByteHex extends Base32Byte() {
     shared actual Byte[] encodeTable = hexBase32ByteTable;
     shared actual [String+] aliases = ["base32hex", "base-32-hex", "base_32_hex"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
+    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
 }
