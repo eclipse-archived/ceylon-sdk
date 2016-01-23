@@ -61,11 +61,10 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
      encoded data so they may be concatenated without making the seperation
      point ambiguous."
     shared formal ToSingle pad;
-    shared Integer padCharIndex = 32;
     
     shared actual Integer averageEncodeSize(Integer inputSize) => ceiling(inputSize, 5.0) * 8;
     shared actual Integer maximumEncodeSize(Integer inputSize) => averageEncodeSize(inputSize);
-    shared actual Integer averageDecodeSize(Integer inputSize) => inputSize * 5 / 8;
+    shared actual Integer averageDecodeSize(Integer inputSize) => ceiling(inputSize * 5, 8.0);
     shared actual Integer maximumDecodeSize(Integer inputSize) => averageDecodeSize(inputSize);
     
     shared actual PieceConvert<ToSingle,Byte> pieceEncoder(ErrorStrategy error)
@@ -217,8 +216,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                         Base32PieceDecoderState state;
                         Anything(Byte) handleInputByte;
                         Anything()? handlePad;
-                        Integer inputIndex = decodeToIndex(input);
-                        if (inputIndex == padCharIndex) {
+                        if (input == pad) {
                             if (exists handlePad) {
                                 padSeen = true;
                                 if (exists rem = remainder, rem != 0.byte) {
@@ -245,6 +243,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                             case (ignore) {
                             }
                         } else {
+                            Integer inputIndex = decodeToIndex(input);
                             if (exists inputByte = decodeTable[inputIndex], inputByte != 255) {
                                 handleInputByte(inputByte);
                             } else {
@@ -408,37 +407,37 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                             // At quantum boundary, nothing to return
                         }
                         case (b32DecodeSecond) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(3));
                             }
                         }
                         case (b32DecodeThird) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(6));
                             }
                         }
                         case (b32DecodeFourth) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(1));
                             }
                         }
                         case (b32DecodeFifth) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(4));
                             }
                         }
                         case (b32DecodeSixth) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(7));
                             }
                         }
                         case (b32DecodeSeventh) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(2));
                             }
                         }
                         case (b32DecodeEighth) {
-                            if (exists rem = remainder, rem != 0) {
+                            if (exists rem = remainder, rem != 0.byte) {
                                 output.put(rem.leftLogicalShift(5));
                             }
                         }
