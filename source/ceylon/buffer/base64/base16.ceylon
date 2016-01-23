@@ -36,12 +36,11 @@ Integer ceiling(Integer x, Float y) {
     return ((xf + y - 1) / y).integer;
 }
 
-shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
+shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
         satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
         given ToImmutable satisfies {ToSingle*}
         given ToSingle satisfies Object {
-    ToMutable(Integer) toMutableOfSize;
     
     shared actual Integer averageDecodeSize(Integer inputSize) => ceiling(inputSize, 2.0);
     shared actual Integer maximumDecodeSize(Integer inputSize) => ceiling(inputSize, 2.0);
@@ -91,6 +90,7 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>(toMutableO
                 
                 shared actual {Byte*} done() {
                     if (exists left = leftwardNibble) {
+                        leftwardNibble = null;
                         return { left };
                     } else {
                         return empty;
@@ -105,7 +105,7 @@ Character[][] base16StringEncodeTable = {
         for (b in hexDigits) { a, b }.sequence()
 }.sequence();
 shared abstract class Base16String()
-        extends Base16<CharacterBuffer,String,Character>(CharacterBuffer.ofSize)
+        extends Base16<CharacterBuffer,String,Character>()
         satisfies CharacterToByteCodec {
     shared actual Character[][] encodeTable = base16StringEncodeTable;
     
@@ -126,7 +126,7 @@ Byte[][] base16ByteEncodeTable = {
         for (b in hexDigitsByte) { a, b }.sequence()
 }.sequence();
 shared abstract class Base16Byte()
-        extends Base16<ByteBuffer,Array<Byte>,Byte>(ByteBuffer.ofSize)
+        extends Base16<ByteBuffer,Array<Byte>,Byte>()
         satisfies ByteToByteCodec {
     shared actual Byte[][] encodeTable = base16ByteEncodeTable;
     
