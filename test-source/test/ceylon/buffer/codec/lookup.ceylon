@@ -3,8 +3,8 @@ import ceylon.buffer.base {
     base64ByteStandard,
     base64ByteUrl,
     base64StringUrl,
-    base64StringByAlias,
-    base64ByteByAlias
+    baseStringByAlias,
+    baseByteByAlias
 }
 import ceylon.buffer.charset {
     charsetsByAlias,
@@ -21,10 +21,10 @@ import ceylon.test {
 shared class Base64LookupTests() {
     test
     shared void primary() {
-        assertEquals(base64StringByAlias["base64"], base64StringStandard);
-        assertEquals(base64ByteByAlias["base64"], base64ByteStandard);
-        assertEquals(base64StringByAlias["base64url"], base64StringUrl);
-        assertEquals(base64ByteByAlias["base64url"], base64ByteUrl);
+        assertEquals(baseStringByAlias["base64"], base64StringStandard);
+        assertEquals(baseByteByAlias["base64"], base64ByteStandard);
+        assertEquals(baseStringByAlias["base64url"], base64StringUrl);
+        assertEquals(baseByteByAlias["base64url"], base64ByteUrl);
     }
 }
 

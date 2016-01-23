@@ -1,27 +1,33 @@
 import ceylon.buffer.codec {
-    buildCodecLookup
+    buildCodecLookup,
+    CharacterToByteCodec,
+    ByteToByteCodec
 }
 
-"A mapping of all supported String base64 variants.
+"A mapping of all supported String base variants.
  
  Currently this lists contains:
  
- - Standard
- - URL Safe
+ - Base64 Standard
+ - Base64 URL Safe
+ - Base16
  "
-shared Map<String,Base64String> base64StringByAlias = buildCodecLookup {
+shared Map<String,CharacterToByteCodec> baseStringByAlias = buildCodecLookup {
     base64StringStandard,
-    base64StringUrl
+    base64StringUrl,
+    base16String
 };
 
-"A mapping of all supported Byte base64 variants.
+"A mapping of all supported Byte base variants.
  
  Currently this lists contains:
  
- - Standard
- - URL Safe
+ - Base64 Standard
+ - Base64 URL Safe
+ - Base16
  "
-shared Map<String,Base64Byte> base64ByteByAlias = buildCodecLookup {
+shared Map<String,ByteToByteCodec> baseByteByAlias = buildCodecLookup {
     base64ByteStandard,
-    base64ByteUrl
+    base64ByteUrl,
+    base16Byte
 };
