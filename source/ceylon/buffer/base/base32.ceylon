@@ -8,7 +8,10 @@ import ceylon.buffer.codec {
     ByteToByteCodec,
     CharacterToByteCodec,
     ErrorStrategy,
-    PieceConvert
+    PieceConvert,
+    strict,
+    DecodeException,
+    ignore
 }
 
 abstract class Base32PieceEncoderState()
@@ -24,6 +27,25 @@ object b32EncodeThird extends Base32PieceEncoderState() {}
 object b32EncodeFourth extends Base32PieceEncoderState() {}
 object b32EncodeFifth extends Base32PieceEncoderState() {}
 
+abstract class Base32PieceDecoderState()
+        of
+    b32DecodeFirst |
+    b32DecodeSecond |
+    b32DecodeThird |
+    b32DecodeFourth |
+    b32DecodeFifth |
+    b32DecodeSixth |
+    b32DecodeSeventh |
+    b32DecodeEighth {}
+object b32DecodeFirst extends Base32PieceDecoderState() {}
+object b32DecodeSecond extends Base32PieceDecoderState() {}
+object b32DecodeThird extends Base32PieceDecoderState() {}
+object b32DecodeFourth extends Base32PieceDecoderState() {}
+object b32DecodeFifth extends Base32PieceDecoderState() {}
+object b32DecodeSixth extends Base32PieceDecoderState() {}
+object b32DecodeSeventh extends Base32PieceDecoderState() {}
+object b32DecodeEighth extends Base32PieceDecoderState() {}
+
 shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
         satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
@@ -32,14 +54,14 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
     ToMutable(Integer) toMutableOfSize;
     
     shared formal ToSingle[] encodeTable;
-    shared Byte[] decodeTable = [];
     shared formal Integer decodeToIndex(ToSingle input);
+    shared formal Byte[] decodeTable;
     
     "The padding character, used where required to terminate discrete blocks of
      encoded data so they may be concatenated without making the seperation
      point ambiguous."
     shared formal ToSingle pad;
-    shared Byte padCharIndex = 32.byte;
+    shared Integer padCharIndex = 32;
     
     shared actual Integer averageEncodeSize(Integer inputSize) => ceiling(inputSize, 5.0) * 8;
     shared actual Integer maximumEncodeSize(Integer inputSize) => averageEncodeSize(inputSize);
@@ -177,8 +199,130 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
     
     shared actual PieceConvert<Byte,ToSingle> pieceDecoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,ToSingle> {
-                shared actual {Byte*} more(ToSingle input) => nothing;
-                shared actual {Byte*} done() => nothing;
+                ByteBuffer output = ByteBuffer.ofSize(1);
+                
+                variable Base32PieceDecoderState state = b32DecodeFirst;
+                variable Byte? remainder = null;
+                
+                void reset() {
+                    state = b32DecodeFirst;
+                    remainder = null;
+                }
+                
+                shared actual {Byte*} more(ToSingle input) {
+                    output.clear();
+                    // 8 character repeating quantum, producing 5 bytes
+                    switch (state)
+                    case (b32DecodeFirst) {
+                        Integer inputIndex = decodeToIndex(input);
+                        if (inputIndex == padCharIndex) {
+                            switch (error)
+                            case (strict) {
+                                throw DecodeException("Pad element ``input`` is not allowed here");
+                            }
+                            case (ignore) {
+                                reset();
+                            }
+                        }
+                        if (exists inputByte = decodeTable[inputIndex]) {
+                            remainder = inputByte;
+                        } else {
+                            switch (error)
+                            case (strict) {
+                                throw DecodeException("``input`` is not a base32 character");
+                            }
+                            case (ignore) {
+                                reset();
+                            }
+                        }
+                        state = b32DecodeSecond;
+                    }
+                    case (b32DecodeSecond) {
+                        assert (exists rem = remainder);
+                        Integer inputIndex = decodeToIndex(input);
+                        if (inputIndex == padCharIndex) {
+                            switch (error)
+                            case (strict) {
+                                throw DecodeException("Pad element ``input`` is not allowed here");
+                            }
+                            case (ignore) {
+                                reset();
+                            }
+                        }
+                        if (exists inputByte = decodeTable[inputIndex]) {
+                            remainder = inputByte.and($1111.byte);
+                            value outputByte = rem.leftLogicalShift(2).or(inputByte.rightLogicalShift(4));
+                            output.put();
+                        } else {
+                            switch (error)
+                            case (strict) {
+                                throw DecodeException("``input`` is not a base32 character");
+                            }
+                            case (ignore) {
+                                reset();
+                            }
+                        }
+                        state = b32DecodeThird;
+                    }
+                    case (b32DecodeThird) {
+                        assert (exists rem = remainder);
+                        state = b32DecodeFourth;
+                    }
+                    case (b32DecodeFourth) {
+                        assert (exists rem = remainder);
+                        state = b32DecodeFifth;
+                    }
+                    case (b32DecodeFifth) {
+                        assert (exists rem = remainder);
+                        state = b32DecodeSixth;
+                    }
+                    case (b32DecodeSixth) {
+                        assert (exists rem = remainder);
+                        state = b32DecodeSeventh;
+                    }
+                    case (b32DecodeSeventh) {
+                        assert (exists rem = remainder);
+                        state = b32DecodeEighth;
+                    }
+                    case (b32DecodeEighth) {
+                        assert (exists rem = remainder);
+                        reset();
+                    }
+                    output.flip();
+                    return output;
+                }
+                
+                shared actual {Byte*} done() {
+                    output.clear();
+                    switch (state)
+                    case (b32DecodeFirst) {
+                        // At quantum boundary, nothing to return
+                    }
+                    case (b32DecodeSecond) {
+                        assert (exists rem = remainder);
+                    }
+                    case (b32DecodeThird) {
+                        assert (exists rem = remainder);
+                    }
+                    case (b32DecodeFourth) {
+                        assert (exists rem = remainder);
+                    }
+                    case (b32DecodeFifth) {
+                        assert (exists rem = remainder);
+                    }
+                    case (b32DecodeSixth) {
+                        assert (exists rem = remainder);
+                    }
+                    case (b32DecodeSeventh) {
+                        assert (exists rem = remainder);
+                    }
+                    case (b32DecodeEighth) {
+                        assert (exists rem = remainder);
+                    }
+                    reset();
+                    output.flip();
+                    return output;
+                }
             };
     
     shared actual Integer decodeBid({ToSingle*} sample) {
@@ -209,16 +353,18 @@ Character[] standardBase32CharTable = [
 ];
 shared object base32StringStandard extends Base32String() {
     shared actual Character[] encodeTable = standardBase32CharTable;
+    shared actual Integer decodeToIndex(Character input) => input.integer;
+    shared actual Byte[] decodeTable = toDecodeTable(encodeTable, decodeToIndex);
     shared actual [String+] aliases = ["base32", "base-32", "base_32"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
-    shared actual Integer decodeToIndex(Character input) => input.integer;
 }
 Byte[] standardBase32ByteTable = standardBase32CharTable*.integer*.byte.sequence();
 shared object base32ByteStandard extends Base32Byte() {
     shared actual Byte[] encodeTable = standardBase32ByteTable;
+    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
+    shared actual Byte[] decodeTable = toDecodeTable(encodeTable, decodeToIndex);
     shared actual [String+] aliases = ["base32", "base-32", "base-32"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
-    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
 }
 
 Character[] hexBase32CharTable = [
@@ -228,14 +374,16 @@ Character[] hexBase32CharTable = [
 ];
 shared object base32StringHex extends Base32String() {
     shared actual Character[] encodeTable = hexBase32CharTable;
+    shared actual Integer decodeToIndex(Character input) => input.integer;
+    shared actual Byte[] decodeTable = toDecodeTable(encodeTable, decodeToIndex);
     shared actual [String+] aliases = ["base32hex", "base-32-hex", "base_32_hex"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
-    shared actual Integer decodeToIndex(Character input) => input.integer;
 }
 Byte[] hexBase32ByteTable = hexBase32CharTable*.integer*.byte.sequence();
 shared object base32ByteHex extends Base32Byte() {
     shared actual Byte[] encodeTable = hexBase32ByteTable;
+    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
+    shared actual Byte[] decodeTable = toDecodeTable(encodeTable, decodeToIndex);
     shared actual [String+] aliases = ["base32hex", "base-32-hex", "base_32_hex"];
     shared actual Integer encodeBid({Byte*} sample) => 10;
-    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
 }

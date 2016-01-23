@@ -14,26 +14,38 @@ import ceylon.buffer.codec {
     DecodeException
 }
 
-Byte[] base16DecodeTableRight = { 255 }.repeat(48) // invalid range
-    .chain(0..9) // 0..9
-    .chain({ 255 }.repeat(7)) // invalid range
-    .chain(10..15) // A..F
-    .chain({ 255 }.repeat(26)) // invalid range
-    .chain(10..15) // a..f
-    *.byte.sequence(); // anything beyond f is invalid
-
-Byte[] base16DecodeTableLeft = { 255 }.repeat(48) // invalid range
-    .chain((0..9)*.leftLogicalShift(4)) // 0..9
-    .chain({ 255 }.repeat(7)) // invalid range
-    .chain((10..15)*.leftLogicalShift(4)) // A..F
-    .chain({ 255 }.repeat(26)) // invalid range
-    .chain((10..15)*.leftLogicalShift(4)) // a..f
-    *.byte.sequence(); // anything beyond f is invalid
-
-// ceylon.math is JVM only...
+"ceylon.math is JVM only..."
 Integer ceiling(Integer x, Float y) {
     value xf = x.float;
     return ((xf + y - 1) / y).integer;
+}
+
+"The ASCII value of encoded Character or Byte is easily computable, so it makes
+ a nice common hash code. Construct a table of a size that fits the minimal
+ window from zero to the max ASCII value of the encode table elements.
+ 
+ If the user provides an index that doesn't match anything in the encode table,
+ they will either get null (out of range) or 255 returned to them (in range but
+ not in the encode table).
+ 
+ If the given ASCII value does correspond to an element of the encode table,
+ then they will get the index of the element in the encode table. Thus, the
+ encode table is efficently reversed."
+Byte[] toDecodeTable<ToSingle>(
+    {ToSingle*} encodeTable,
+    Integer(ToSingle) decodeToIndex,
+    Byte(Byte) fiddle = (Byte b) => b,
+    {ToSingle+}(ToSingle) split = (ToSingle e) => { e }) {
+    value ascii_map = map {
+        for (i->e in encodeTable.indexed)
+            for (s in split(e))
+                decodeToIndex(s) -> fiddle(i.byte)
+    };
+    assert (exists max_ascii = max(ascii_map.keys));
+    return [
+        for (i in 0..max_ascii)
+            if (exists encodeTableIndex = ascii_map[i]) then encodeTableIndex else 255.byte
+    ];
 }
 
 shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
@@ -59,19 +71,23 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
             };
     
     shared formal Integer decodeToIndex(ToSingle input);
+    "The decode table with a precomputed bitwise shift"
+    shared formal Byte[] decodeTableLeft;
+    "The plain decode table"
+    shared formal Byte[] decodeTableRight;
     shared actual PieceConvert<Byte,ToSingle> pieceDecoder(ErrorStrategy error)
             => object satisfies PieceConvert<Byte,ToSingle> {
                 variable Byte? leftwardNibble = null;
                 
                 shared actual {Byte*} more(ToSingle input) {
                     if (exists left = leftwardNibble) {
-                        value right = base16DecodeTableRight[decodeToIndex(input)];
+                        value right = decodeTableRight[decodeToIndex(input)];
                         if (exists right, right != 255) {
                             leftwardNibble = null;
                             return { left.or(right) };
                         }
                     } else {
-                        value left = base16DecodeTableLeft[decodeToIndex(input)];
+                        value left = decodeTableLeft[decodeToIndex(input)];
                         if (exists left, left != 255) {
                             leftwardNibble = left;
                             return empty;
@@ -109,6 +125,21 @@ shared abstract class Base16String()
         satisfies CharacterToByteCodec {
     shared actual Character[][] encodeTable = base16StringEncodeTable;
     
+    shared actual Integer decodeToIndex(Character input) => input.integer;
+    shared actual Byte[] decodeTableLeft
+            = toDecodeTable {
+                encodeTable = hexDigits;
+                decodeToIndex = decodeToIndex;
+                fiddle = (b) => b.leftLogicalShift(4);
+                split = (Character s) => { s, s.uppercased };
+            };
+    shared actual Byte[] decodeTableRight
+            = toDecodeTable {
+                encodeTable = hexDigits;
+                decodeToIndex = decodeToIndex;
+                split = (Character s) => { s, s.uppercased };
+            };
+    
     shared actual Integer decodeBid({Character*} sample) {
         if (sample.every((s) => s in hexDigits)) {
             return 10;
@@ -116,8 +147,6 @@ shared abstract class Base16String()
             return 0;
         }
     }
-    
-    shared actual Integer decodeToIndex(Character input) => input.integer;
 }
 
 {Byte+} hexDigitsByte = hexDigits*.integer*.byte;
@@ -130,6 +159,21 @@ shared abstract class Base16Byte()
         satisfies ByteToByteCodec {
     shared actual Byte[][] encodeTable = base16ByteEncodeTable;
     
+    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
+    shared actual Byte[] decodeTableLeft
+            = toDecodeTable {
+                encodeTable = hexDigitsByte;
+                decodeToIndex = decodeToIndex;
+                fiddle = (b) => b.leftLogicalShift(4);
+                split = (Byte s) => { s, s.unsigned.character.uppercased.integer.byte };
+            };
+    shared actual Byte[] decodeTableRight
+            = toDecodeTable {
+                encodeTable = hexDigitsByte;
+                decodeToIndex = decodeToIndex;
+                split = (Byte s) => { s, s.unsigned.character.uppercased.integer.byte };
+            };
+    
     shared actual Integer decodeBid({Byte*} sample) {
         if (sample.every((s) => s in hexDigitsByte)) {
             return 10;
@@ -137,8 +181,6 @@ shared abstract class Base16Byte()
             return 0;
         }
     }
-    
-    shared actual Integer decodeToIndex(Byte input) => input.unsigned;
 }
 
 shared object base16String extends Base16String() {
