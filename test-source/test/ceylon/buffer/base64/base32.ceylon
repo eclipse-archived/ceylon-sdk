@@ -3,9 +3,15 @@ import ceylon.buffer.base {
     base32StringHex,
     base32ByteHex
 }
+import ceylon.buffer.codec {
+    DecodeException,
+    ignore,
+    reset
+}
 import ceylon.test {
     assertEquals,
-    test
+    test,
+    assertThatException
 }
 
 shared class Base32StandardTests() {
@@ -190,6 +196,51 @@ shared class Base32StandardTests() {
         assertEquals {
             base32StringStandard.decode("MZXW6YTBO");
             Array({ #66, #6f, #6f, #62, #61, #70 }*.byte);
+        };
+    }
+    
+    test
+    shared void decodeErrorNotAChar() {
+        assertThatException(() => base32StringStandard.decode("AA^"))
+            .hasType(`DecodeException`)
+            .hasMessage("^ is not a base32 character");
+    }
+    
+    test
+    shared void decodeErrorPadNotAllowedHere() {
+        assertThatException(() => base32StringStandard.decode("=A"))
+                .hasType(`DecodeException`)
+                .hasMessage("Pad element = is not allowed here");
+    }
+    
+    test
+    shared void decodeErrorNonPadNotAllowedHere() {
+        assertThatException(() => base32StringStandard.decode("A=B"))
+                .hasType(`DecodeException`)
+                .hasMessage("Non-pad character B is not allowed here");
+    }
+    
+    test
+    shared void decodeErrorIgnore() {
+        assertEquals {
+            base32StringStandard.decode("AA^", ignore);
+            Array { #00.byte };
+        };
+    }
+    
+    test
+    shared void decodeErrorIgnoreContinue() {
+        assertEquals {
+            base32StringStandard.decode("AA^AA", ignore);
+            Array { #00.byte, #00.byte, #00.byte };
+        };
+    }
+    
+    test
+    shared void decodeErrorResetContinue() {
+        assertEquals {
+            base32StringStandard.decode("AA^AA", reset);
+            Array { #00.byte, #00.byte };
         };
     }
 }
