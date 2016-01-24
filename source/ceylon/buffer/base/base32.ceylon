@@ -244,8 +244,8 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                             }
                         } else {
                             Integer inputIndex = decodeToIndex(input);
-                            if (exists inputByte = decodeTable[inputIndex], inputByte != 255) {
-                                handleInputByte(inputByte);
+                            if (exists inByte = decodeTable[inputIndex], inByte != 255.byte) {
+                                handleInputByte(inByte);
                             } else {
                                 switch (error)
                                 case (strict) {

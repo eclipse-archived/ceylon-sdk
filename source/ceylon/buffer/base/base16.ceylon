@@ -82,13 +82,13 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
                 shared actual {Byte*} more(ToSingle input) {
                     if (exists left = leftwardNibble) {
                         value right = decodeTableRight[decodeToIndex(input)];
-                        if (exists right, right != 255) {
+                        if (exists right, right != 255.byte) {
                             leftwardNibble = null;
                             return { left.or(right) };
                         }
                     } else {
                         value left = decodeTableLeft[decodeToIndex(input)];
-                        if (exists left, left != 255) {
+                        if (exists left, left != 255.byte) {
                             leftwardNibble = left;
                             return empty;
                         }
