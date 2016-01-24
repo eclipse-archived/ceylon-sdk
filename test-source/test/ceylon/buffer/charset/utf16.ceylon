@@ -65,7 +65,7 @@ shared class Utf16Tests() {
                 }*.byte,
                 ignore
             );
-            "묖켖ꨖ븖";
+            "묖";
         };
     }
     
