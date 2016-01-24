@@ -7,7 +7,8 @@ import ceylon.buffer.codec {
     EncodeException,
     ErrorStrategy,
     DecodeException,
-    PieceConvert
+    PieceConvert,
+    resetStrategy=reset
 }
 
 "The UTF-8 character set, as defined by (its specification)
@@ -75,7 +76,8 @@ shared object utf8 satisfies Charset {
                     throw EncodeException("Invalid unicode code point ``cp``");
                 }
                 case (ignore) {
-                    output.clear();
+                }
+                case (resetStrategy) {
                 }
             }
             output.flip();
@@ -110,9 +112,11 @@ shared object utf8 satisfies Charset {
                         throw DecodeException("Invalid UTF-8 byte value: ``input``");
                     }
                     case (ignore) {
-                        reset();
-                        return empty;
                     }
+                    case (resetStrategy) {
+                        reset();
+                    }
+                    return empty;
                 }
                 // invalid range
                 if (unsigned >= $11111000) {
@@ -121,9 +125,11 @@ shared object utf8 satisfies Charset {
                         throw DecodeException("Invalid UTF-8 first byte value: ``input``");
                     }
                     case (ignore) {
-                        reset();
-                        return empty;
                     }
+                    case (resetStrategy) {
+                        reset();
+                    }
+                    return empty;
                 }
                 
                 if (unsigned < $11100000) {
@@ -149,9 +155,11 @@ shared object utf8 satisfies Charset {
                     };
                 }
                 case (ignore) {
-                    reset();
-                    return empty;
                 }
+                case (resetStrategy) {
+                    reset();
+                }
+                return empty;
             }
             if (intermediate.available > 1) {
                 // not enough bytes
@@ -206,8 +214,11 @@ shared object utf8 satisfies Charset {
                     };
                 }
                 case (ignore) {
-                    return empty;
                 }
+                case (resetStrategy) {
+                    reset();
+                }
+                return empty;
             } else {
                 return empty;
             }

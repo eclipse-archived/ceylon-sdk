@@ -22,11 +22,13 @@ shared class DecodeException(description = null, cause = null)
 }
 
 "Action to take when an error is encountered during encoding or decoding."
-shared abstract class ErrorStrategy() of strict | ignore {}
+shared abstract class ErrorStrategy() of strict | ignore | reset {}
 "Throw a [[ConvertException]]"
 shared object strict extends ErrorStrategy() {}
-"Attempt to continue without throwing an exception"
+"Continue without throwing an exception"
 shared object ignore extends ErrorStrategy() {}
+"Reset the internal state, then continue without throwing an exception"
+shared object reset extends ErrorStrategy() {}
 
 "Codecs that can take an input all at once, and return the output all at once."
 shared interface StatelessCodec<ToMutable, ToImmutable, ToSingle,

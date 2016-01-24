@@ -11,7 +11,8 @@ import ceylon.buffer.codec {
     PieceConvert,
     strict,
     DecodeException,
-    ignore
+    ignore,
+    resetStrategy=reset
 }
 
 abstract class Base32PieceEncoderState()
@@ -230,6 +231,8 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                                     };
                                 }
                                 case (ignore) {
+                                }
+                                case (resetStrategy) {
                                     reset();
                                 }
                             }
@@ -242,6 +245,9 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                             }
                             case (ignore) {
                             }
+                            case (resetStrategy) {
+                                reset();
+                            }
                         } else {
                             Integer inputIndex = decodeToIndex(input);
                             if (exists inByte = decodeTable[inputIndex], inByte != 255.byte) {
@@ -252,6 +258,8 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                                     throw DecodeException("``input`` is not a base32 character");
                                 }
                                 case (ignore) {
+                                }
+                                case (resetStrategy) {
                                     reset();
                                 }
                             }

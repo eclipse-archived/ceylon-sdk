@@ -11,7 +11,8 @@ import ceylon.buffer.codec {
     PieceConvert,
     strict,
     ignore,
-    DecodeException
+    DecodeException,
+    reset
 }
 
 "ceylon.math is JVM only..."
@@ -100,8 +101,11 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
                         };
                     }
                     case (ignore) {
-                        return empty;
                     }
+                    case (reset) {
+                        leftwardNibble = null;
+                    }
+                    return empty;
                 }
                 
                 shared actual {Byte*} done() {

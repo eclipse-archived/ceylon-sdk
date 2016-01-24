@@ -7,7 +7,8 @@ import ceylon.buffer.codec {
     ignore,
     strict,
     EncodeException,
-    DecodeException
+    DecodeException,
+    resetStrategy=reset
 }
 
 "The UTF-16 character set, as defined by (its specification)
@@ -75,7 +76,8 @@ shared object utf16 satisfies Charset {
                     throw EncodeException("Invalid unicode code point ``cp``");
                 }
                 case (ignore) {
-                    output.clear();
+                }
+                case (resetStrategy) {
                 }
             }
             output.flip();
@@ -114,9 +116,11 @@ shared object utf16 satisfies Charset {
                             };
                         }
                         case (ignore) {
-                            reset();
-                            return empty;
                         }
+                        case (resetStrategy) {
+                            reset();
+                        }
+                        return empty;
                     }
                     // now assemble them
                     Integer part1 = highSurrogate.and($1111111111).leftLogicalShift(10);
@@ -136,9 +140,11 @@ shared object utf16 satisfies Charset {
                             };
                         }
                         case (ignore) {
-                            reset();
-                            return empty;
                         }
+                        case (resetStrategy) {
+                            reset();
+                        }
+                        return empty;
                     } else {
                         // Need a low surrogate
                         firstWord = word;
@@ -174,8 +180,11 @@ shared object utf16 satisfies Charset {
                     };
                 }
                 case (ignore) {
-                    return empty;
                 }
+                case (resetStrategy) {
+                    reset();
+                }
+                return empty;
             } else {
                 return empty;
             }

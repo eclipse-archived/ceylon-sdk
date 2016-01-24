@@ -11,7 +11,8 @@ import ceylon.buffer.codec {
     strict,
     ignore,
     DecodeException,
-    IncrementalCodec
+    IncrementalCodec,
+    resetStrategy=reset
 }
 
 abstract class PieceDecoderIntraQuantum()
@@ -170,8 +171,11 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                         throw DecodeException("Pad character ``char`` is not allowed here");
                     }
                     case (ignore) {
-                        return null;
                     }
+                    case (resetStrategy) {
+                        reset();
+                    }
+                    return null;
                 }
             } else {
                 switch (error)
@@ -179,8 +183,11 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                     throw DecodeException("``char`` is not a base64 Character");
                 }
                 case (ignore) {
-                    return null;
                 }
+                case (resetStrategy) {
+                    reset();
+                }
+                return null;
             }
         }
         
@@ -247,6 +254,9 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                             }
                             case (ignore) {
                             }
+                            case (resetStrategy) {
+                                reset();
+                            }
                         } else {
                             // [rem 45][in 012345] -> [out [rem 45][in 012345]]
                             value outputByte = rem.leftLogicalShift(6).or(inputByte);
@@ -277,9 +287,11 @@ shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableO
                         throw DecodeException("Missing one input piece");
                     }
                     case (ignore) {
-                        reset();
-                        return empty;
                     }
+                    case (resetStrategy) {
+                        reset();
+                    }
+                    return empty;
                 }
                 case (third) {
                     // [rem 2345][pad 000000] -> [out [rem 2345][pad 0000]]
