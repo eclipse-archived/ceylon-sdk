@@ -25,11 +25,13 @@
    plus encoding the characters with the [[ASCII|ceylon.buffer.charset::ascii]]
    charset.
    
-   There are two currently implemented codec families:
+   There are three currently implemented codec families:
    [[charsets|package ceylon.buffer.charset]]
-   ([[UTF-8|ceylon.buffer.charset::utf8]] for example), and
+   ([[UTF-8|ceylon.buffer.charset::utf8]] for example),
    [[base encodings|package ceylon.buffer.base]] (like
-   [[base64|ceylon.buffer.base::base64ByteStandard]]). See those packages for
+   [[base64|ceylon.buffer.base::base64ByteStandard]]), and
+   [[text ciphers|package ceylon.buffer.text]]
+   ([[rot13|ceylon.buffer.text::rot13]] for example). See those packages for
    further documentation and examples of use.
 """
 by ("Stéphane Épardaud", "Alex Szczuczko")
