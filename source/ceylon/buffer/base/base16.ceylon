@@ -109,12 +109,14 @@ shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
                 }
                 
                 shared actual {Byte*} done() {
+                    {Byte*} ret;
                     if (exists left = leftwardNibble) {
-                        leftwardNibble = null;
-                        return { left };
+                        ret = { left };
                     } else {
-                        return empty;
+                        ret = empty;
                     }
+                    leftwardNibble = null;
+                    return ret;
                 }
             };
 }

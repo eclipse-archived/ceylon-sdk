@@ -216,12 +216,10 @@ shared object utf8 satisfies Charset {
                 case (ignore) {
                 }
                 case (resetStrategy) {
-                    reset();
                 }
-                return empty;
-            } else {
-                return empty;
             }
+            reset();
+            return empty;
         }
     };
 }
