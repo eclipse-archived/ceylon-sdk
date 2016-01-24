@@ -51,6 +51,7 @@
         </reposet>
     
         <moduleset id="modules.sdk.jvm">
+            <module name="ceylon.buffer"/>
             <module name="ceylon.collection"/>
             <module name="ceylon.dbc"/>
             <module name="ceylon.decimal"/>
@@ -77,6 +78,7 @@
         </moduleset>
 
         <moduleset id="modules.sdk.js">
+            <module name="ceylon.buffer"/>
             <module name="ceylon.collection"/>
             <module name="ceylon.html"/>
             <module name="ceylon.interop.browser"/>
@@ -120,6 +122,7 @@
         </moduleset>
 
         <moduleset id="modules.test.jvm">
+            <module name="test.ceylon.buffer"/>
             <module name="test.ceylon.test.suite"/>        
             <module name="test.ceylon.math"/>
             <module name="test.ceylon.collection"/>
@@ -146,6 +149,7 @@
         </moduleset>
 
         <moduleset id="modules.test.js">
+            <module name="test.ceylon.buffer"/>
             <module name="test.ceylon.test.suite"/>
             <module name="test.ceylon.collection"/>
             <module name="test.ceylon.html"/>
