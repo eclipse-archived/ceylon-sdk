@@ -37,7 +37,7 @@ void testAverageAndVarianceOfIntegers
         (Random random, Float stdDevs) {
     void test(Integer bound) {
         testAverageAndVariance(
-                bound.nearestFloat - 1,
+                (bound - 1).nearestFloat,
                 random.integers(bound)
                       .map(Integer.nearestFloat)
                       .take(1k),
