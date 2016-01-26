@@ -1,6 +1,10 @@
-"A [Linear Congruential Generator](http://en.wikipedia.org/wiki/Linear_congruential_generator)
- (LCG) pseudorandom number generator,
- defined by the recurrence relation:
+"A pseudorandom number generator.
+
+ The algorithm used by this class to generate pseudorandom numbers may be platform
+ specific and is subject to change in future versions of this module.
+
+ Currently, A [Linear Congruential Generator](http://en.wikipedia.org/wiki/Linear_congruential_generator)
+ (LCG) pseudorandom number generator is used, as defined by the recurrence relation:
 
      Xₙ₊₁ ≡ (a Xₙ + c) (mod m)
 
