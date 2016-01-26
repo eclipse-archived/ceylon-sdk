@@ -133,7 +133,7 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     shared void decodeErrorNotAChar() {
         assertThatException(() => base64Byte.decode({ 0.byte }))
             .hasType(`DecodeException`)
-            .hasMessage((String msg) => msg.endsWith("is not a base64 Character"));
+            .hasMessage((String msg) => msg.endsWith("is not a base64 character"));
     }
     
     test
@@ -148,7 +148,7 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     shared void decodeErrorNoPadHere() {
         assertThatException(() => base64String.decode("U3RlZWx5IEdsaW50="))
             .hasType(`DecodeException`)
-            .hasMessage((String msg) => msg == "Pad character = is not allowed here");
+            .hasMessage((String msg) => msg == "Pad element = is not allowed here");
     }
     
     test
@@ -191,17 +191,10 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     }
     
     test
-    shared void decodeTruncatedByThreeError() {
-        assertThatException(() => base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZ"))
-            .hasType(`DecodeException`)
-            .hasMessage((String msg) => msg == "Missing one input piece");
-    }
-    
-    test
-    shared void decodeTruncatedByThreeIgnoreError() {
+    shared void decodeTruncatedByThreeOk() {
         assertEquals {
-            base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZ", ignore);
-            ascii.encode("It's Character Formin");
+            base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZ");
+            ascii.encode("It's Character Formind");
         };
     }
     
@@ -209,7 +202,7 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
     shared void decodeErrorPadExtra() {
         assertThatException(() => base64String.decode("SXQncyBDaGFyYWN0ZXIgRm9ybWluZw==="))
             .hasType(`DecodeException`)
-            .hasMessage((String msg) => msg == "Pad character = is not allowed here");
+            .hasMessage((String msg) => msg == "Pad element = is not allowed here");
     }
     
     test
