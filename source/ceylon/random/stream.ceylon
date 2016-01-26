@@ -5,8 +5,6 @@
 
      { next() }.cycled
  "
-shared deprecated("experimental; use [[Iterable.cycled]] instead.")
-suppressWarnings("deprecation")
 InfiniteStream<Element> stream<Element>(
         "The function that produces the next element of the stream."
         Element next()) {
@@ -28,8 +26,6 @@ InfiniteStream<Element> stream<Element>(
     return it;
 }
 
-shared deprecated("experimental")
-suppressWarnings("deprecation")
 interface InfiniteStream<Element>
         satisfies {Element+} {
 
@@ -40,7 +36,6 @@ interface InfiniteStream<Element>
     InfiniteIterator<Element> iterator();
 }
 
-shared deprecated("experimental")
 interface InfiniteIterator<Element>
         satisfies Iterator<Element> {
 

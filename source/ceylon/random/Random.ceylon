@@ -2,7 +2,6 @@
  [[nextBits]], which is used by the default implementaitons of the methods of this
  interface."
 by("John Vasileff")
-suppressWarnings("deprecation")
 shared interface Random {
 
     "Generates an Integer holding `bits` pseudorandom bits.
