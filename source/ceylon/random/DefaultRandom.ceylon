@@ -19,7 +19,7 @@
      output bits = 16..30
 
  See <http://en.wikipedia.org/wiki/Linear_congruential_generator>"
-shared final class LCGRandom (
+shared final class DefaultRandom (
         "The seed. The value is processed by [[reseed]] prior to use."
         Integer seed = system.nanoseconds + system.milliseconds)
         satisfies Random {
