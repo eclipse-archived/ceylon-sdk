@@ -1,6 +1,6 @@
 shared
 void run() {
-    LCGRandomTests().runTests();
+    DefaultRandomTests().runTests();
 }
 
 void executeTests({<String -> Anything()>*} tests) {

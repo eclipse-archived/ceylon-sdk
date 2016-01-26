@@ -1,6 +1,6 @@
 "Shuffle the given elements. This operation modifies the `Array`."
 shared void randomizeInPlace<Element>(
-        Array<Element> elements, Random random = LCGRandom()) {
+        Array<Element> elements, Random random = DefaultRandom()) {
     // Fisher-Yates Shuffle
     value size = elements.size;
     for (i in 0:size - 1) {
