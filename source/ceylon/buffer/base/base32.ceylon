@@ -386,7 +386,7 @@ shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableO
                             nextState = b32DecodeFirst;
                             // [rem 234][in 01234] -> [out [rem 234][in 01234]]
                             handleInputByte = (b) {
-                                remainder = b.and($111.byte);
+                                remainder = 0.byte;
                                 output.put {
                                     rem.leftLogicalShift(5).or(b);
                                 };
