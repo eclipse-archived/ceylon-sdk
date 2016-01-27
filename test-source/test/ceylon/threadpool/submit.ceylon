@@ -1,8 +1,8 @@
-import ceylon.future {
+import ceylon.threadpool {
     submit,
     jobMap
 }
-import ceylon.future.util {
+import ceylon.threadpool.util {
     AcquireTimeoutException
 }
 import ceylon.language.meta {

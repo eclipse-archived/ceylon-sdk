@@ -1,4 +1,4 @@
-import ceylon.future.util {
+import ceylon.threadpool.util {
     Latch,
     AcquireTimeoutException,
     AtomicReference

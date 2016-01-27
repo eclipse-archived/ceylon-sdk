@@ -11,7 +11,7 @@
  Basic synchronization classes and a sleep function are also provided."
 by ("Alex Szczuczko")
 license ("Apache Software License")
-native ("jvm") module ceylon.future "1.2.1" {
+native ("jvm") module ceylon.threadpool "1.2.1" {
     import java.base "7";
     shared import ceylon.promise "1.2.1";
 }
