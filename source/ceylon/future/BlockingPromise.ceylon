@@ -9,9 +9,10 @@ import ceylon.promise {
 }
 
 "Extend a [[Promise]] to provide a blocking API for obtaining the resolvable
- value."
+ value. This is sometimes called a `Future` in other languages, however this
+ class only relates to threaded `Future`s (the term is often overloaded)."
 see (`function submit`)
-shared class Future<Value>(delegate)
+shared class BlockingPromise<Value>(delegate)
         extends Promise<Value>() {
     "The concurrently completed [[Promise]]."
     Promise<Value> delegate;

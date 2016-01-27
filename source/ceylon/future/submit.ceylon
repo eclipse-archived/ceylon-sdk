@@ -8,9 +8,9 @@ import ceylon.promise {
 }
 
 "Schedules the [[job]] for concurrent execution in [[context]], and immediately
- returns a [[Future]] for tracking its fate."
-shared Future<Value> submit<Value>(job, context = globalExecutionContext) {
-    "Callable returning [[Value]] to create a [[Future]] for."
+ returns a [[BlockingPromise]] for tracking its fate."
+shared BlockingPromise<Value> submit<Value>(job, context = globalExecutionContext) {
+    "Callable returning [[Value]] to create a [[BlockingPromise]] for."
     Value() job;
     "The context to execute the jobs in."
     ExecutionContext context;
@@ -30,7 +30,7 @@ shared Future<Value> submit<Value>(job, context = globalExecutionContext) {
         }
     );
     
-    return Future(deferred.promise);
+    return BlockingPromise(deferred.promise);
 }
 
 "Eagerly [[submit]]s all of the [[jobs]], and returns an [[Iterator]] to
@@ -38,7 +38,7 @@ shared Future<Value> submit<Value>(job, context = globalExecutionContext) {
 throws (`class AcquireTimeoutException`,
     "From the iterator if [[timeout]] elapses before the a job is completed")
 shared {Value*} jobMap<Value>(jobs, timeout = 0, context = globalExecutionContext) {
-    "Jobs to get the [[Future.result]]s of."
+    "Jobs to get the [[BlockingPromise.result]]s of."
     {Value()*} jobs;
     "The maximum milliseconds to allow for the retrieval of each job before
      throwing a [[AcquireTimeoutException]]. Must be at least 1 to have effect."
@@ -47,7 +47,7 @@ shared {Value*} jobMap<Value>(jobs, timeout = 0, context = globalExecutionContex
     ExecutionContext context;
     
     // Eager submit
-    Future<Value>[] futures = jobs.map((job) => submit(job, context)).sequence();
+    BlockingPromise<Value>[] futures = jobs.map((job) => submit(job, context)).sequence();
     
     // Lazy result
     return futures.map((future) => future.result(timeout));
