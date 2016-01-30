@@ -8,7 +8,7 @@
  you do with [[put]] until you reach the [[limit]].
  
  Then if you want to read the data you just put in the
- buffer, you [[flip]] the buffer, which will and set its
+ buffer, you [[flip]] the buffer, which will set its
  [[limit]] to the current [[position]], and reset its
  [[position]] to `0`. This essentially means that you will
  be able to read from the beginning of the buffer until the
@@ -17,7 +17,7 @@
  You can then start calling [[get]] to read objects from
  this buffer until you reach its [[limit]].
  
- Once you are done reading from the buffer, you will
+ Once you are done reading from the buffer, you can
  [[clear]] the buffer to start writing to it again. That
  will reset the [[position]] to `0` and the [[limit]] to the
  [[capacity]], allowing you to write to the full underlying
