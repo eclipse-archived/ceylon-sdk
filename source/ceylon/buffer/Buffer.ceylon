@@ -151,6 +151,9 @@ shared abstract class Buffer<Element>()
     
     shared actual default Boolean equals(Object that) {
         if (is Buffer<Element> that) {
+            if (this === that) {
+                return true;
+            }
             value thisPosition = this.position;
             value thatPosition = that.position;
             value thisNumVisible = this.limit - thisPosition;
