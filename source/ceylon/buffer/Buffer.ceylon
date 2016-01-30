@@ -133,11 +133,16 @@ shared abstract class Buffer<Element>()
      stale."
     shared formal Array<Element> array;
     
-    "A copy of the underlying Array of the buffer, bounded by
-     [[position]] and [[limit]]. The size of the returned
-     Array will equal [[available]]."
-    shared default Array<Element> visibleArray
-            => array.measure(position, available);
+    "A sublist view of [[array]] bounded by the current values
+     of [[position]] and [[limit]]. The size of the returned
+     List will equal [[available]].
+     
+     Changes made to [[position]]
+     or [[limit]] after creation of the view will not be
+     synchronized. Also, reallocations caused by a call to
+     [[resize]] will cause any existing views to become stale."
+    shared default List<Element> visible
+            => if (hasAvailable) then array.sublist(position, limit-1) else [];
     
     "The platform-specific implementation object, if any."
     shared formal Object? implementation;

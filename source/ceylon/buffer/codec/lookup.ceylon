@@ -43,8 +43,8 @@ buildAuction<ToMutable, ToImmutable, ToSingle, FromMutable, FromImmutable, FromS
     return bids.filterKeys((k) => k > 0).sort(increasingKey)*.item;
 }
 
-shared [IncrementalCodec<ByteBuffer,Array<Byte>,Byte,
-    ByteBuffer,Array<Byte>,Byte>*]({Byte*}) auctionByteToByteEncode = buildAuction {
+shared [IncrementalCodec<ByteBuffer,List<Byte>,Byte,
+    ByteBuffer,List<Byte>,Byte>*]({Byte*}) auctionByteToByteEncode = buildAuction {
     base64ByteStandard,
     base64ByteUrl
 };

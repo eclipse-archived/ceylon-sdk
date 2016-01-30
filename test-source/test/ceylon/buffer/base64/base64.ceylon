@@ -66,9 +66,9 @@ shared abstract class TestBase64WithCharset(charset, base64Byte, base64String) {
         String input;
         String expectedEncode;
         
-        Array<Byte> encodedInput = charset.encode(input);
+        List<Byte> encodedInput = charset.encode(input);
         
-        Array<Byte> bytesEncoded = base64Byte.encode(charset.encode(input));
+        List<Byte> bytesEncoded = base64Byte.encode(charset.encode(input));
         assertEquals {
             expected = expectedEncode;
             actual = charset.decode(bytesEncoded);

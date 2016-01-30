@@ -48,7 +48,7 @@ object b32DecodeSeventh extends Base32PieceDecoderState() {}
 object b32DecodeEighth extends Base32PieceDecoderState() {}
 
 shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
-        satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
+        satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,List<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
         given ToImmutable satisfies {ToSingle*}
         given ToSingle satisfies Object {
@@ -469,7 +469,7 @@ shared abstract class Base32String()
 }
 
 shared abstract class Base32Byte()
-        extends Base32<ByteBuffer,Array<Byte>,Byte>(ByteBuffer.ofSize)
+        extends Base32<ByteBuffer,List<Byte>,Byte>(ByteBuffer.ofSize)
         satisfies ByteToByteCodec {
     shared actual Byte pad = '='.integer.byte;
 }

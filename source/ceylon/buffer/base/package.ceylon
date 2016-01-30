@@ -28,7 +28,7 @@
    
    Now, if you want to decode it back:
    
-       Array<Byte> bytes = base64StringStandard.decode(string);
+       List<Byte> bytes = base64StringStandard.decode(string);
        
    Similarly, for a [[ceylon.buffer::Buffer]]:
    

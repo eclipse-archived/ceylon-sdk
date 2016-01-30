@@ -50,7 +50,7 @@ Byte[] toDecodeTable<ToSingle>(
 }
 
 shared sealed abstract class Base16<ToMutable, ToImmutable, ToSingle>()
-        satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
+        satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,List<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
         given ToImmutable satisfies {ToSingle*}
         given ToSingle satisfies Object {
@@ -161,7 +161,7 @@ Byte[][] base16ByteEncodeTable = {
         for (b in hexDigitsByte) { a, b }.sequence()
 }.sequence();
 shared abstract class Base16Byte()
-        extends Base16<ByteBuffer,Array<Byte>,Byte>()
+        extends Base16<ByteBuffer,List<Byte>,Byte>()
         satisfies ByteToByteCodec {
     shared actual Byte[][] encodeTable = base16ByteEncodeTable;
     

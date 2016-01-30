@@ -35,7 +35,7 @@ object b64DecodeThird extends Base64PieceDecoderState() {}
 object b64DecodeFourth extends Base64PieceDecoderState() {}
 
 shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
-        satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,Array<Byte>,Byte>
+        satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,List<Byte>,Byte>
         given ToMutable satisfies Buffer<ToSingle>
         given ToImmutable satisfies {ToSingle*}
         given ToSingle satisfies Object {
@@ -325,7 +325,7 @@ shared abstract class Base64String()
 }
 
 shared abstract class Base64Byte()
-        extends Base64<ByteBuffer,Array<Byte>,Byte>(ByteBuffer.ofSize)
+        extends Base64<ByteBuffer,List<Byte>,Byte>(ByteBuffer.ofSize)
         satisfies ByteToByteCodec {
     shared actual Byte pad = '='.integer.byte;
 }

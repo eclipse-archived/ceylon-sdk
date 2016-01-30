@@ -10,9 +10,9 @@
    [[ceylon.buffer.codec::DecodeException]] when decoding [[Byte]]s into
    [[Character]]s, as the valid binary format for each is strictly defined.
    
-   To convert a [[String]] to an ASCII byte [[ceylon.language::Array]]:
+   To convert a [[String]] to an ASCII byte [[List]]:
    
-       Array<Byte> bytes = ascii.encode("Hello, World!");
+       List<Byte> bytes = ascii.encode("Hello, World!");
    
    Now, if you want to decode it back:
    
