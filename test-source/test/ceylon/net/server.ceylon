@@ -120,9 +120,23 @@ test void testServer() {
         Endpoint {
             service => void (Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
-                response.writeString(request.formParameters("aKey")?.string else "");
+                response.writeString(request.formParameters("aKey").string);
             };
             path = startsWith("/formParamsTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.queryParameter("aKey")?.string else "");
+            };
+            path = startsWith("/queryParamTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.queryParameters("aKey").string);
+            };
+            path = startsWith("/queryParamsTest");
         },
         Endpoint {
             service => void (Request request, Response response) {
@@ -283,6 +297,9 @@ test void testServer() {
                 formParametersTest("aKey", "aValue", "val2");
 
                 formParameterTest("aKey", "aValue", "val2");
+                
+                queryParametersTest("aKey", "aValue");
+                queryParameterTest("aKey", "aValue");
 
                 writeStringsTest();
 
@@ -647,7 +664,47 @@ void formParameterTest(String paramKey, String+ paramValues) {
     response.close();
     //TODO log
     print("Response content: " + responseContent);
-    assertEquals(responseContent, paramValues.first.string);
+    assertEquals(responseContent, paramValues.first);
+}
+
+void queryParametersTest(String paramKey, String+ paramValues) {
+	variable String query = "``paramKey``=``paramValues.first``";
+	for (String val in paramValues.rest) {
+		query = query + "&\`\`paramKey\`\`=\`\`paramValues.first\`\`";
+	}
+	print(query);
+	value request = ClientRequest(parse("http://localhost:8080/queryParamsTest?``query``"), post);
+	
+	request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	request.setParameter(Parameter("foo", "valueFoo"));
+	request.setParameter(Parameter(paramKey, "valueBar"));
+	
+	value response = request.execute();
+	value responseContent = response.contents;
+	response.close();
+	//TODO log
+	print("Response content: " + responseContent);
+	assertEquals(responseContent, paramValues.string);
+}
+
+void queryParameterTest(String paramKey, String+ paramValues) {
+	variable String query = "``paramKey``=``paramValues.first``";
+	for (String val in paramValues.rest) {
+		query = query + "&\`\`paramKey\`\`=\`\`paramValues.first\`\`";
+	}
+	print(query);
+	value request = ClientRequest(parse("http://localhost:8080/queryParamTest?``query``"), post);
+	
+	request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	request.setParameter(Parameter("foo", "valueFoo"));
+	request.setParameter(Parameter(paramKey, "valueBar"));
+	
+	value response = request.execute();
+	value responseContent = response.contents;
+	response.close();
+	//TODO log
+	print("Response content: " + responseContent);
+	assertEquals(responseContent, paramValues.first);
 }
 
 void readBinaryTest(Byte* bytes) {
