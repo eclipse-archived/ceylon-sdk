@@ -30,7 +30,7 @@ native shared Float expm1(Float num);
 native("jvm") shared Float expm1(Float num)
     =>  JVMMath.expm1(num);
 
-native("js", "dart") shared Float expm1(Float num)
+native("js") shared Float expm1(Float num)
     =>  exp(num) - 1.0;
 
 "The natural logarithm (base \{#0001D452}) of the
@@ -65,7 +65,7 @@ native("jvm") shared
 Float log1p(Float num)
     =>  JVMMath.log1p(num);
 
-native("js", "dart") shared
+native("js") shared
 Float log1p(Float num)
     =>  log(num + 1.0);
 
@@ -189,7 +189,7 @@ shared native("jvm")
 Float sinh(Float num)
     =>  JVMMath.sinh(num);
 
-shared native("js", "dart")
+shared native("js")
 Float sinh(Float num)
     =>  if (!num.finite || num.fractionalPart == 0.0)
         then num
@@ -210,7 +210,7 @@ shared native("jvm")
 Float cosh(Float num)
     =>  JVMMath.cosh(num);
 
-shared native("js", "dart")
+shared native("js")
 Float cosh(Float num)
     =>  (exp(num) + exp(-num)) / 2;
 
@@ -230,7 +230,7 @@ shared native("jvm")
 Float tanh(Float num)
     =>  JVMMath.tanh(num);
 
-shared native("js", "dart")
+shared native("js")
 Float tanh(Float num) {
     if (num.infinite) {
         return num.sign.float;
@@ -475,7 +475,7 @@ shared native("jvm")
 Float hypot(Float x, Float y)
     =>  JVMMath.hypot(x, y);
 
-shared native("js", "dart")
+shared native("js")
 Float hypot(Float x, Float y) {
     if (x.infinite || y.infinite) {
         return infinity;
@@ -531,7 +531,7 @@ shared native("jvm")
 Float cbrt(Float num)
     =>  JVMMath.cbrt(num);
 
-shared native("js", "dart")
+shared native("js")
 Float cbrt(Float num)
     =>  if (num.negative) then
             -(num.negated ^ (1.0/3.0))
@@ -735,7 +735,7 @@ shared native("jvm")
 Float scalb(Float x, Integer n)
     =>  JVMMath.scalb(x, n);
 
-shared native("js", "dart")
+shared native("js")
 Float scalb(Float x, Integer n)
     // faster than other options per
     // http://jsperf.com/scale-pow2/5
