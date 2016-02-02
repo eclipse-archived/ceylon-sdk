@@ -1,51 +1,25 @@
-import java.lang {
-    JMath=Math
-}
-
 "The smaller of the two arguments."
-see(`function largest`)
-shared native Integer smallest(Integer x, Integer y);
+shared see(`function largest`)
+Integer smallest(Integer x, Integer y)
+    =>  if (x < y) then x else y;
 
 "The larger of the two arguments."
-see(`function smallest`)
-shared native Integer largest(Integer x, Integer y);
-
-"The smaller of the two arguments."
-see(`function largest`)
-shared native("jvm") Integer smallest(Integer x, Integer y) 
-        => JMath.min(x, y);
-
-"The larger of the two arguments."
-see(`function smallest`)
-shared native("jvm") Integer largest(Integer x, Integer y) 
-        => JMath.max(x, y);
-
-"The smaller of the two arguments."
-see(`function largest`)
-shared native("js") Integer smallest(Integer x, Integer y) {
-    dynamic {
-        return Math.min(x, y);
-    }
-}
-
-"The larger of the two arguments."
-see(`function smallest`)
-shared native("js") Integer largest(Integer x, Integer y) {
-    dynamic {
-        return Math.max(x, y);
-    }
-}
+shared see(`function smallest`)
+Integer largest(Integer x, Integer y)
+    =>  if (x > y) then x else y;
 
 "The largest [[Integer]] in the given stream, or `null`
  if the stream is empty."
 shared Integer|Absent max<Absent>
-        (Iterable<Integer,Absent> values) 
+        (Iterable<Integer,Absent> values)
         given Absent satisfies Null {
     value first = values.first;
     if (exists first) {
         variable value max = first;
         for (x in values) {
-            max = largest(max, x);
+            if (x>max) {
+                max = x;
+            }
         }
         return max;
     }
@@ -55,22 +29,25 @@ shared Integer|Absent max<Absent>
 "The smallest [[Integer]] in the given stream, or `null`
  if the stream is empty."
 shared Integer|Absent min<Absent>
-        (Iterable<Integer,Absent> values) 
+        (Iterable<Integer,Absent> values)
         given Absent satisfies Null {
     value first = values.first;
     if (exists first) {
         variable value min = first;
         for (x in values) {
-            min = smallest(min, x);
+            if (x<min) {
+                min = x;
+            }
         }
         return min;
     }
     return first;
 }
 
-"The sum of the [[Integer]]s in the given stream, or `0` 
- if the stream is empty."
-shared Integer sum({Integer*} values) {
+"The sum of the values in the given stream, or
+ `0` if the stream is empty."
+shared
+Integer sum({Integer*} values) {
     variable Integer sum=0;
     for (x in values) {
         sum+=x;
@@ -78,12 +55,13 @@ shared Integer sum({Integer*} values) {
     return sum;
 }
 
-"The product of the [[Integer]]s in the given stream, or `1` 
- if the stream is empty."
-shared Integer product({Integer*} values) {
-    variable Integer sum=1;
+"The product of the values in the given stream, or
+ `1` if the stream is empty."
+shared
+Integer product({Integer*} values) {
+    variable Integer product=1;
     for (x in values) {
-        sum*=x;
+        product*=x;
     }
-    return sum;
+    return product;
 }
