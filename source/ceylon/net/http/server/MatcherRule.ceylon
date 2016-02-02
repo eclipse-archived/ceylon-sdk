@@ -8,6 +8,7 @@ shared abstract class Matcher() {
      [[endsWith]] and [[and]] are ignored while constructing 
      relative path. [[endsWith]] and [[and]] returns 
      unmodified requestPath."
+    deprecated
     shared default String relativePath(String requestPath)
             => requestPath;
     shared Matcher and(Matcher other) 
@@ -26,6 +27,10 @@ shared class TemplateMatcher(shared String template)
         extends Matcher() {
 	// Don't use it as a conventional matcher!
 	matches(String path) => false;
+	
+	String relativePath(String requestPath) {
+		throw Exception("not supported on TemplateMatcher");
+	}
 }
 
 class StartsWith(String substring) 
