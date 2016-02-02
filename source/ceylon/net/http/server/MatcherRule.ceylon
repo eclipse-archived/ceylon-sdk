@@ -16,6 +16,18 @@ shared abstract class Matcher() {
             => Or(this, other);
 }
 
+"Matcher to leverage Undertow's template mechanism for path templates and path parameters.
+ It should be given to an Endpoint without combining it with other matchers.
+ 
+ Matches a path with path parameters. The parameters are indicated
+ by curly braces in the template, for example /a/{b}/c/{d} Their values can be obtained from
+ the Request via the Request.pathParameter() method."
+shared class TemplateMatcher(shared String template)
+        extends Matcher() {
+	// Don't use it as a conventional matcher!
+	matches(String path) => false;
+}
+
 class StartsWith(String substring) 
         extends Matcher() {
     matches(String path) 
@@ -73,3 +85,5 @@ shared Matcher endsWith(String suffix) => EndsWith(suffix);
 
 "Rule matching / (root)."
 shared Matcher isRoot() => IsRoot();
+
+shared TemplateMatcher template(String template) => TemplateMatcher(template);

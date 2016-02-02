@@ -14,7 +14,9 @@ import ceylon.net.http.server {
     stopping,
     stopped,
     InternalException,
-    HttpEndpoint
+    HttpEndpoint,
+	TemplateMatcher,
+	Endpoint
 }
 import ceylon.net.http.server.internal.websocket {
     CeylonWebSocketHandler,
@@ -155,8 +157,11 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
             omBuilder().set(utBufferPipelinedData,false).map);
         
         PathTemplateHandler pathTemplateHandler = PathTemplateHandler(CeylonRequestHandler(options, httpEndpoints));
-        for (endpoint in httpEndpoints.templateEndpoints) {
-            pathTemplateHandler.add(endpoint.pathTemplate, TemplateCeylonRequestHandler(options, endpoint));
+        for (endpoint in httpEndpoints.endpoints) {
+            if (is TemplateMatcher matcher = endpoint.path) {
+                assert (is Endpoint endpoint);
+                pathTemplateHandler.add(matcher.template, TemplateCeylonRequestHandler(options, endpoint));
+            }
         }
         
         openListener.rootHandler = getHandlers(options, pathTemplateHandler);

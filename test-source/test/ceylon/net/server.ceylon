@@ -7,7 +7,7 @@ import ceylon.net.http.server { Status,
                                   started, AsynchronousEndpoint,
                                   Endpoint, Response, Request,
                                   startsWith, endsWith, Options, stopped, newServer,
-    TemplateEndpoint }
+	template }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList, MutableList }
@@ -230,8 +230,8 @@ test void testServer() {
             };
             acceptMethod = {post};
         },
-        TemplateEndpoint {
-            pathTemplate = "/template/{val}/x/{other}";
+        Endpoint {
+            path = template("/template/{val}/x/{other}");
             service = (Request request, Response response) {
                 String? val = request.pathParameter("val");
                 String? other = request.pathParameter("other");

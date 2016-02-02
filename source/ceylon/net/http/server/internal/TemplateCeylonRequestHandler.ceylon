@@ -7,10 +7,10 @@ import ceylon.net.http {
 }
 import ceylon.net.http.server {
 	Options,
-	TemplateEndpoint,
 	InternalException,
 	Request,
-	Endpoint
+	Endpoint,
+	TemplateMatcher
 }
 
 import io.undertow.server {
@@ -33,9 +33,11 @@ import java.util {
 	JMap=Map
 }
 
-class TemplateCeylonRequestHandler(Options options, TemplateEndpoint endpoint)
+class TemplateCeylonRequestHandler(Options options, Endpoint endpoint)
          satisfies HttpHandler {
 
+	assert (is TemplateMatcher templateMatcher = endpoint.path);
+	
     value formParserFactory 
             = formParserFactoryBuilder().build();
 
@@ -88,7 +90,7 @@ class TemplateCeylonRequestHandler(Options options, TemplateEndpoint endpoint)
         
     }
 
-    void invokeEndpoint(TemplateEndpoint endpoint, 
+    void invokeEndpoint(Endpoint endpoint, 
         Request request, ResponseImpl response, 
         JHttpServerExchange exchange ) {
 
