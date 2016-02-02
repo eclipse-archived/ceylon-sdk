@@ -97,6 +97,7 @@
             <module name="test.ceylon.io"/>
             <module name="test.ceylon.json"/>
             <module name="test.ceylon.net"/>
+            <module name="test.ceylon.numeric"/>
             <module name="test.ceylon.process"/>
             <module name="test.ceylon.promise"/>
             <module name="test.ceylon.random"/>
@@ -116,6 +117,7 @@
             <module name="test.ceylon.collection"/>
             <module name="test.ceylon.html"/>
             <module name="test.ceylon.json"/>
+            <module name="test.ceylon.numeric"/>
             <module name="test.ceylon.promise"/>
             <module name="test.ceylon.random"/>
             <module name="test.ceylon.time"/>
