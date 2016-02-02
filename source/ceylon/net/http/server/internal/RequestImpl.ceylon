@@ -181,25 +181,20 @@ class RequestImpl(HttpServerExchange exchange,
     }
 
     variable Map<String, String[]>? lazyQueryParameters = null;
-    value queryParameters => lazyQueryParameters 
+    value queryParametersMap => lazyQueryParameters 
             else (lazyQueryParameters = readQueryParameters());
 
     variable FormData? lazyFormData = null;
     value formData => lazyFormData 
             else (lazyFormData = buildFormData()) ;
 
-    shared actual String[]? formParameters(String name) {
-        return formData.parameters[name];
-    }
+    shared actual String[] formParameters(String name)
+        => if (exists params = formData.parameters[name])
+            then params else [];
 
-    shared actual String? formParameter(String name) {
-        if (nonempty x = formData.parameters[name]) {
-            return x.first;
-        }
-        else {
-            return null;
-        }
-    }
+    shared actual String? formParameter(String name)
+        => if (nonempty params = formData.parameters[name])
+            then params.first else null;
 
     shared actual String[] headers(String name) {
         value headers = exchange.requestHeaders.get(HttpString(name));
@@ -214,12 +209,15 @@ class RequestImpl(HttpServerExchange exchange,
         return sequenceBuilder.sequence();
     }
 
+	deprecated("Not specifying if the parameter's values should come from the query part
+	            in the URL or from the request body is discouraged at this level.
+	            Please use either [[queryParametersMap]] or [[formParameters]].")
     shared actual String[] parameters(String name, 
             Boolean forceFormParse) {
 
         value mergedParams = ArrayList<String>();
-        if (queryParameters.keys.contains(name)) {
-            if (exists params = queryParameters[name]) {
+        if (queryParametersMap.keys.contains(name)) {
+            if (exists params = queryParametersMap[name]) {
                 if (forceFormParse || initialized(lazyFormData)) {
                     mergedParams.addAll(params);
                 } else {
@@ -234,6 +232,9 @@ class RequestImpl(HttpServerExchange exchange,
         return mergedParams.sequence();
     }
 
+    deprecated("Not specifying if the parameter's values should come from the query part
+                in the URL or from the request body is discouraged at this level.
+                Please use either [[queryParameters]] or [[formParameters]].")
     shared actual String? parameter(String name, 
             Boolean forceFormParsing) {
         value params = parameters(name);
@@ -243,6 +244,14 @@ class RequestImpl(HttpServerExchange exchange,
             return null;
         }
     }
+    
+    shared  actual String[] queryParameters(String name)
+        => if (exists params = queryParametersMap[name])
+        	then params else [];
+    
+    shared  actual String? queryParameter(String name)
+        => if (nonempty params = queryParametersMap[name])
+             then params.first else null;
 
     shared actual UploadedFile[] files(String name) {
         if (exists files = formData.files[name]) {

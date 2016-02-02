@@ -15,6 +15,9 @@ shared interface Request {
      [[forceFormParsing]] is false (default) and parameter 
      with the same name exists in a query string, posted 
      data is not parsed."
+    deprecated("Not specifying if the parameter's value should come from the query part
+                in the URL or from the request body is discouraged at this level.
+                Please use either [[queryParameter]] or [[formParameter]].")
     shared formal String? parameter(String name, 
         Boolean forceFormParsing = false);
     
@@ -23,6 +26,9 @@ shared interface Request {
      with the same name exists in a query string, posted 
      data is not parsed. It is returned, only if it is 
      already parsed."
+    deprecated("Not specifying if the parameter's values should come from the query part
+                in the URL or from the request body is discouraged at this level.
+                Please use either [[queryParameters]] or [[formParameters]].")
     shared formal String[] parameters(String name, 
         Boolean forceFormParsing = false);
 
@@ -36,11 +42,17 @@ shared interface Request {
     "Returns all headers with given name."
     shared formal String[] headers(String name);
 
+	"Returns a single query parameter with the given name (from the query part of the request URL)."
+    shared formal String? queryParameter(String name);
+
+	"Returns all single query parameter with the given name (from the query part of the request URL)."
+    shared formal String[] queryParameters(String name);
+
     "Returns a single form parameter with the given name from the request body. Content-Type must be application/x-www-form-urlencoded."
     shared formal String? formParameter(String name);
 
     "Returns all form parameters with the given name from the request body. Content-Type must be application/x-www-form-urlencoded."
-    shared formal String[]? formParameters(String name);
+    shared formal String[] formParameters(String name);
 
     "Get the HTTP request method.
      {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
