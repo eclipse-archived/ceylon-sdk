@@ -13,9 +13,19 @@ class StandardTests(
          underlying random number generator."
         Integer baseBitLength,
         "Allowable number of standard devations from expected
-         value for each iteration of each test; with 3.89 std
-         deviations, expected failure rate is 1 in 10k."
-        Float stdDevs = 3.890592) {
+         value for each iteration of each test. Common values
+         and expected failure rates are:
+
+            - 3.890592, 1 in 10,000
+            - 4.417173, 1 in 100,000
+            - 4.891638, 1 in 1,000,000
+            - 5.326724, 1 in 10,000,000
+
+         Note that many individual tests are executed for each [[StandardTests]] run.
+         Also note that failure rates may be slightly higher then expected for some
+         psuedorandom number generators due to the algorithms used. This is particularly
+         true for the chi squared tests."
+        Float stdDevs = 5.326724) {
 
     function factory() => RangeCheckingRandom(random());
 
