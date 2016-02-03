@@ -25,7 +25,7 @@
  See <http://en.wikipedia.org/wiki/Linear_congruential_generator>"
 shared final class DefaultRandom (
         "The seed. The value is processed by [[reseed]] prior to use."
-        Integer seed = system.nanoseconds + system.milliseconds)
+        Integer seed = nextUniqueSeed)
         satisfies Random {
 
     Integer a;
@@ -54,7 +54,18 @@ shared final class DefaultRandom (
     value highBitM = 2^highUsableBit;
 
     // initialized later by reseed(seed)
-    late variable Integer xn;
+    variable Integer xn = 0;
+
+    Integer next() {
+        if (realInts) {
+            return xn = (a * xn + c).and(mask);
+        } else {
+            // x % 2^n == x & (2^n - 1) for x >= 0
+            value step1 = a * xn + c;
+            assert(!step1.negative);
+            return xn = step1 % m;
+        }
+    }
 
     "Reseed this random number generator. For the Java runtime, the seed value is
      processed using `newSeed.xor(a).and(m - 1)` prior to use, and for the JavaScript
@@ -65,6 +76,7 @@ shared final class DefaultRandom (
         } else {
             xn = newSeed.magnitude % m;
         }
+        next();
     }
 
     reseed(seed);
@@ -103,17 +115,15 @@ shared final class DefaultRandom (
         }
     }
 
-    Integer next() {
-        if (realInts) {
-            return xn = (a * xn + c).and(mask);
-        } else {
-            // x % 2^n == x & (2^n - 1) for x >= 0
-            value step1 = a * xn + c;
-            assert(!step1.negative);
-            return xn = step1 % m;
-        }
-    }
 }
 
 // true for Java (64 bit bitwise operations supported)
 Boolean realInts = runtime.integerAddressableSize == 64;
+
+variable
+Integer uniqueSeedComponent = 0;
+
+Integer nextUniqueSeed
+    // or(0) to truncate to 32 bits on JavaScript
+    =>  (uniqueSeedComponent = uniqueSeedComponent.or(0) + 1)
+            + system.nanoseconds.or(0) + system.milliseconds.or(0);
