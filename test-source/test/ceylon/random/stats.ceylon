@@ -48,24 +48,24 @@ shared
 
 shared
 Float chiSquared(
-        Integer|Float max,
-        "Number of buckets. For [[Integer]] samples, `max + 1` should be evenly
-         divisible by `buckets` to ensure an even distribution of samples."
+        "The maximum possible sample value, inclusive. The minimum must be 0."
+        Integer max,
+        "Number of buckets. `max + 1` must be evenly divisible by `buckets` to ensure an
+         even distribution of samples."
         Integer buckets,
         "`samples.count` should be greater than or equal to `5 * buckets`."
-        {<Integer|Float>*} samples) {
+        {<Integer>*} samples) {
 
-    value maxFloat = nearestFloat(max);
-    value floats = samples.map(nearestFloat);
+    "max + 1 must be evenly divisible by the number of buckets."
+    assert ((max + 1) % buckets == 0);
+
     value counts = Array.ofSize(buckets, 0);
-    value lastIndex = buckets - 1;
+    // (max + 1) may be negative if max == maxInteger
+    value bucketSize = ((max + 1) / buckets).magnitude;
     variable value sampleCount = 0;
-    for (x in floats) {
-        // use `smallest to protect against miniscule
-        // chance of IOOBE due to float imprecision
-        value bucket = smallest(lastIndex,
-            (x / maxFloat * lastIndex + 0.5).integer);
-        counts.set(bucket, (counts[bucket] else 0) + 1);
+    for (sample in samples) {
+        value bucketIndex = sample / bucketSize;
+        counts.set(bucketIndex, (counts[bucketIndex] else 0) + 1);
         sampleCount++;
     }
     value expected = sampleCount.float / buckets;
@@ -75,9 +75,9 @@ Float chiSquared(
 
 shared
 Float chiSquaredDeviations(
-        Integer|Float max,
+        Integer max,
         Integer buckets,
-        {<Integer|Float>*} samples)
+        {<Integer>*} samples)
     // approximately correct for large # of buckets
     =>  let (mean = buckets - 1,
              variance = mean * 2,
