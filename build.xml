@@ -225,10 +225,14 @@
         
     </target>
 
-    <target name="publish" depends="compile"
+    <target name="publish" depends="compile,publish-quick"
             description="Copies the SDK modules to the user's repository">
+    </target>
+
+    <target name="publish-quick" depends="ceylondefs">
         <ceylon-copy
             out="${ceylon.repo.dir}"
+            all="true"
             fork="true">
             <moduleset>
                 <sourcemodules/>
