@@ -7,10 +7,11 @@ import ceylon.net.http.server {
 
 shared class Endpoints() {
 
-    value endpoints = LinkedList<EndpointBase>();
+    value _endpoints = LinkedList<EndpointBase>();
+    shared {EndpointBase*} endpoints => _endpoints;
 
-    shared void add(EndpointBase endpoint) 
-            => endpoints.add(endpoint);
+    shared void add(EndpointBase endpoint)
+        => _endpoints.add(endpoint);
 
     shared {EndpointBase*} getEndpointMatchingPath(String requestPath) {
         return endpoints.filter((endpoint) {return endpoint.path.matches(requestPath);});
