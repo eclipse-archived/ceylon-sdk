@@ -1,1 +1,1 @@
-package test.ceylon.numeric;
+shared package test.ceylon.numeric;
