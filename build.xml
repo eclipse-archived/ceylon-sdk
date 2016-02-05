@@ -53,6 +53,7 @@
         <moduleset id="modules.sdk.jvm">
             <module name="ceylon.collection"/>
             <module name="ceylon.dbc"/>
+            <module name="ceylon.decimal"/>
             <module name="ceylon.file"/>
             <module name="ceylon.html"/>
             <module name="ceylon.interop.java"/>
@@ -105,6 +106,7 @@
             <module name="test.ceylon.random"/>
             <module name="test.ceylon.time"/>
             <module name="test.ceylon.dbc"/>
+            <module name="test.ceylon.decimal"/>
             <module name="test.ceylon.interop.java"/>
             <module name="test.ceylon.unicode"/>
             <module name="test.ceylon.html"/>
