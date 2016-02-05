@@ -1,8 +1,3 @@
-import ceylon.numeric.integer {
-    largest,
-    smallest
-}
-
 "Returns the actual number words contained in [[words]], up to [[maxSize]].
  Given that words are stored in little-endian order, trailing zero words
  do not contribute to the numeric value of [[words]]. It is presumed that
@@ -1302,3 +1297,9 @@ Integer integerForWordsNaive(Integer wordsSize, Words words) {
     }
     return result;
 }
+
+Integer smallest(Integer x, Integer y)
+    =>  if (x < y) then x else y;
+
+Integer largest(Integer x, Integer y)
+    =>  if (x > y) then x else y;

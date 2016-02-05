@@ -1,7 +1,3 @@
-import ceylon.numeric.integer {
-    smallest
-}
-
 "The greatest common divisor."
 shared
 Whole gcd(Whole first, Whole second) {
