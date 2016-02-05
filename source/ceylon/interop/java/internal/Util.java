@@ -38,7 +38,8 @@ public final class Util {
                     (TypeDescriptor.Class) $reifiedT;
             if (klass.getTypeArguments().length > 0)
                 throw new RuntimeException("given type has type arguments");
-            return (java.lang.Class<T>) klass.getKlass();
+            // this is already erased
+            return (java.lang.Class<T>) klass.getArrayElementClass();
         } 
         else if ($reifiedT instanceof TypeDescriptor.Member) {
             TypeDescriptor.Member member = 
@@ -79,7 +80,7 @@ public final class Util {
     	if(decl instanceof ClassOrInterfaceDeclarationImpl){
     		ClassOrInterfaceDeclarationImpl ci = 
     		        (ClassOrInterfaceDeclarationImpl) decl;
-            return ci.getJavaClass();
+            return erase(ci.getJavaClass());
     	}
         throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
     }
@@ -92,9 +93,15 @@ public final class Util {
     	if(decl instanceof ClassOrInterfaceDeclarationImpl){
     		ClassOrInterfaceDeclarationImpl ci = 
     				(ClassOrInterfaceDeclarationImpl) decl;
-    		return (Class<? extends T>) ci.getJavaClass();
+    		return (Class<? extends T>) erase(ci.getJavaClass());
     	}
     	throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
+    }
+
+    private <T> java.lang.Class<? extends T>
+    erase(java.lang.Class<? extends T> klass){
+      // dirty but keeps the logic in one place
+      return (Class<? extends T>)TypeDescriptor.klass(klass).getArrayElementClass();
     }
 
     public StackTraceElement[] javaStackTrace(Throwable t) {

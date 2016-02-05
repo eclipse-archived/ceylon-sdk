@@ -85,6 +85,24 @@ test void classTests() {
 
     value klass4 = javaClassFromDeclaration(`interface Numeric`);
     assertEquals("interface ceylon.language.Numeric", klass4.string);
+
+    assertEquals("class java.lang.Object", javaClass<Object>().string);
+    assertEquals("class java.lang.Object", javaClassFromDeclaration(`class Object`).string);
+    assertEquals("class java.lang.Object", javaClassFromModel(`Object`).string);
+
+    assertEquals("class java.lang.Throwable", javaClass<Throwable>().string);
+    assertEquals("class java.lang.Throwable", javaClassFromDeclaration(`class Throwable`).string);
+    assertEquals("class java.lang.Throwable", javaClassFromModel(`Throwable`).string);
+
+    assertEquals("class java.lang.Exception", javaClass<Exception>().string);
+    assertEquals("class java.lang.Exception", javaClassFromDeclaration(`class Exception`).string);
+    assertEquals("class java.lang.Exception", javaClassFromModel(`Exception`).string);
+    // this one is fine since the instance type actually exists
+    assertEquals("class ceylon.language.Exception", javaClassFromInstance(Exception()).string);
+
+    assertEquals("interface java.lang.annotation.Annotation", javaClass<Annotation>().string);
+    assertEquals("interface java.lang.annotation.Annotation", javaClassFromDeclaration(`interface Annotation`).string);
+    assertEquals("interface java.lang.annotation.Annotation", javaClassFromModel(`Annotation`).string);
 }
 
 test void ceylonStringMap() {
