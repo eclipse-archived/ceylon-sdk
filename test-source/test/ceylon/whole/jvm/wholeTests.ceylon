@@ -3,8 +3,8 @@ import ceylon.test {
     test
 }
 
-import com.vasileff.ceylon.random.api {
-    LCGRandom,
+import ceylon.random {
+    DefaultRandom,
     Random
 }
 import ceylon.whole {
@@ -318,7 +318,7 @@ test shared void wholeTortureFloat() {
     };
 }
 
-Random random = LCGRandom();
+Random random = DefaultRandom();
 
 Whole randomWholeBits(variable Integer bits) {
     variable Whole result = zero;
