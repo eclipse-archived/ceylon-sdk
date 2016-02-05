@@ -1,7 +1,3 @@
-import ceylon.numeric.integer {
-    largest
-}
-
 by("John Vasileff")
 final
 class MutableWhole extends Object

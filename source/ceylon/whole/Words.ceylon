@@ -1,6 +1,3 @@
-import ceylon.numeric.integer {
-    smallest
-}
 import java.lang {
     LongArray
 }
