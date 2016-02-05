@@ -50,7 +50,4 @@
 """
 by("John Vasileff")
 license("Apache Software License")
-module ceylon.random "1.2.1" {
-    native("jvm")
-    import java.base "7";
-}
+module ceylon.random "1.2.1" {}
