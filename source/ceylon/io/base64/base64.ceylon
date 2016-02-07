@@ -31,6 +31,12 @@ shared ByteBuffer encodeUrl(ByteBuffer url)
 shared ByteBuffer decodeUrl(ByteBuffer url) 
         => base64Url.decode(url);
 
+
+shared ByteBuffer encodeMime(ByteBuffer input)
+		=> base64Mime.encode(input);
+
+
+
 abstract class AbstractBase64() {
  
     "Returns characters table"
@@ -54,9 +60,10 @@ abstract class AbstractBase64() {
 
     "Transforms a sequence of 3 bytes into 4 characters 
      based on base64 table"
-    void encodeBytesToChars(ByteBuffer input, ByteBuffer encoded) {
+    default shared void encodeBytesToChars(ByteBuffer input, ByteBuffer encoded) {
         value available = input.available;
         value codePoint1 = input.get();
+        
         assert(exists char1 
             = table[codePoint1.rightLogicalShift(2).signed]);
 
@@ -169,4 +176,26 @@ object base64Url
              'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
              'w', 'x', 'y', 'z', '0', '1', '2', '3',
              '4', '5', '6', '7', '8', '9', '-', '_'];
+}
+
+
+object base64Mime
+	extends AbstractBase64() {
+	table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+	'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+	'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+	'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+	'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+	'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+	'w', 'x', 'y', 'z', '0', '1', '2', '3',
+	'4', '5', '6', '7', '8', '9', '+', '/'];
+		
+	void encodeBytesToChars(ByteBuffer input, ByteBuffer encoded){
+			super.encodeBytesToChars(input, encoded);
+			if (((input.size - input.available) % 57) == 0){
+				encoded.putByte('\r'.integer.byte);
+				encoded.putByte('\n'.integer.byte);
+			}
+	}
+	
 }
