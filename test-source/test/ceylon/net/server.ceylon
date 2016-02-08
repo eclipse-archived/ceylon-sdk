@@ -3,10 +3,11 @@ import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
-import ceylon.net.http.server { Status, 
-                                  started, AsynchronousEndpoint, 
-                                  Endpoint, Response, Request, 
-                                  startsWith, endsWith, Options, stopped, newServer }
+import ceylon.net.http.server { Status,
+                                  started, AsynchronousEndpoint,
+                                  Endpoint, Response, Request,
+                                  startsWith, endsWith, Options, stopped, newServer,
+	template }
 import ceylon.net.http.server.endpoints { serveStaticFile }
 import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList, MutableList }
@@ -53,7 +54,7 @@ variable String asyncServiceStatus = "";
 test void testServer() {
 
     function name(Request request) => request.parameter("name") else "world";
-    
+
     void serviceImpl(Request request, Response response) {
         response.addHeader(contentType { contentType = "text/html"; charset = utf8; });
         response.writeString("Hello ``name(request)``!");
@@ -61,7 +62,7 @@ test void testServer() {
 
     //add fileEndpoint
     value testFile = creteTestFile();
-    
+
     String fileMapper(Request request) {
         return testFile.string;
     }
@@ -183,20 +184,20 @@ test void testServer() {
         AsynchronousEndpoint {
             service => serveStaticFile(".");
             path = startsWith("/lazy")
-                    .or(startsWith("/blob")) 
+                    .or(startsWith("/blob"))
                     .or(endsWith(".txt"));
         },
         AsynchronousEndpoint {
             service => serveStaticFile("", fileMapper);
             path = startsWith("/filemapper");
         },
-        Endpoint { 
-            path = startsWith("/serializer"); 
+        Endpoint {
+            path = startsWith("/serializer");
             void service(Request request, Response response) {
                 NodeSerializer(response.writeString).serialize(
                     Html {
-                        doctype = html5; 
-                        Head { title = "Hello"; }; 
+                        doctype = html5;
+                        Head { title = "Hello"; };
                         Body {
                             P("Hello!")
                         };
@@ -204,10 +205,10 @@ test void testServer() {
                 );
             }
         },
-        AsynchronousEndpoint { 
-            
-            path = startsWith("/async"); 
-            
+        AsynchronousEndpoint {
+
+            path = startsWith("/async");
+
             void service (Request request, Response response, void complete()) {
                 value startTime = system.milliseconds;
                 String source = request.sourceAddress.address;
@@ -220,23 +221,23 @@ test void testServer() {
                 }
                 String responseString = sb.string;
                 response.addHeader(contentLength(responseString.size.string));
-                
-                response.writeStringAsynchronous { 
+
+                response.writeStringAsynchronous {
                     string => responseString;
                     void onCompletion () {
                         asyncServiceStatus = "completing";
                         //TODO log
                         print("Completed in ``system.milliseconds - startTime``ms.");
                         complete();
-                    } 
+                    }
                 };
                 //TODO log
                 print("Returned in ``system.milliseconds - startTime``ms.");
                 asyncServiceStatus = "returning";
             }
         },
-        Endpoint { 
-            path = startsWith("/multipartPost"); 
+        Endpoint {
+            path = startsWith("/multipartPost");
             service = (Request request, Response response) {
                 variable String responseString = "";
                 if(exists uploadedFile = request.file("file1")) {
@@ -246,7 +247,7 @@ test void testServer() {
                         responseString += utf8.decode(buffer);
                     });
                 }
-                
+
                 if(exists uploadedFile = request.file("file2")) {
                     print("Server got file: ``uploadedFile.file``");
                     value openfile = newOpenFile(uploadedFile.file.resource);
@@ -254,18 +255,32 @@ test void testServer() {
                         responseString += utf8.decode(buffer);
                     });
                 }
-                
+
                 responseString += Parameter(param1.name, request.parameter(param1.name)).humanRepresentation;
                 responseString += "\n";
                 responseString += Parameter(param2.name, request.parameter(param2.name)).humanRepresentation;
                 responseString += "\n";
-                
+
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(responseString);
                 return null;
-            }; 
+            };
             acceptMethod = {post};
-        }        
+        },
+        Endpoint {
+            path = template("/template/{val}/x/{other}");
+            service = (Request request, Response response) {
+                String? val = request.pathParameter("val");
+                String? other = request.pathParameter("other");
+                String? template = request.matchedTemplate;
+                assert (exists val);
+                assert (exists other);
+                assert (exists template);
+                response.addHeader(contentType("text/plain", utf8));
+                response.writeString("val=``val``, other=``other``, matched=``template``");
+            };
+            acceptMethod = {get};
+        }
     };
 
 
@@ -276,19 +291,19 @@ test void testServer() {
             try {
                 if (true) {
                 headerTest();
-                
+
                 executeEchoTest("Ceylon");
-                
+
                 fileMapperTest();
-                
+
                 concurentFileRequests(numberOfUsers);
-                
+
                 acceptMethodTest();
-                
+
                 acceptMethodTestSameUrl();
-                
+
                 methodTest();
-                
+
                 parametersTest("čšž", "ČŠŽ ĐŽ");
 
                 formParametersTest("aKey", "aValue", "val2");
@@ -304,14 +319,16 @@ test void testServer() {
 
                 //TODO enable session test when client suports it
                 //sessionTest();
-                
+
                 testSerializer();
-                
+
                 //TODO enable async "streaming" test
                 //testAsyncStream();
-               }
+
+                templateTest();
+            	}
                 testMultipartPost();
-                
+
             } finally {
                 cleanUpFile();
                 server.stop();
@@ -337,7 +354,7 @@ test void testServer() {
 void executeEchoTest(String name) {
     //TODO log debug
     print("Making request to Ceylon server...");
-    
+
     value expecting = "Hello ``name``!";
 
     value request = ClientRequest(parse("http://localhost:8080/echo?name=" + name));
@@ -352,16 +369,16 @@ void executeEchoTest(String name) {
 
 void headerTest() {
     String contentType = "application/x-www-form-urlencoded";
-    
+
     value request = ClientRequest(parse("http://localhost:8080/headerTest"));
     request.setHeader("Content-Type", contentType);
-    
+
     value response = request.execute();
 
     value echoMsg = response.contents;
     //TODO log debug
     print("Received contents: ``echoMsg``");
-    
+
     value contentTypeHeader = response.getSingleHeader("Content-Type");
     response.close();
 
@@ -396,13 +413,13 @@ void fileMapperTest() {
 
 void concurentFileRequests(Integer concurentRequests) {
     variable Integer requestNumber = 0;
-    
+
     object user satisfies Runnable {
         shared actual void run() {
             executeTestStaticFile(requestsPerUser);
         }
     }
-    
+
     value users = LinkedList<Thread>();
 
     print ("Running ``concurentRequests `` concurrent requests.");    
@@ -412,7 +429,7 @@ void concurentFileRequests(Integer concurentRequests) {
         userThread.start();
         requestNumber++;
     }
-    
+
     //wait for users to complete requests
     for (userThread in users) {
         userThread.join();
@@ -447,7 +464,7 @@ void cleanUpFile() {
 
 test void testPathMatcher() {
     String requestPath = "/file/myfile.txt";
-    
+
     value matcherStarts = startsWith("/file");
     assertTrue(matcherStarts.matches(requestPath));
 
@@ -456,10 +473,10 @@ test void testPathMatcher() {
 
     value matcher = startsWith("/file");
     assertEquals("/myfile.txt", matcher.relativePath(requestPath));
-    
+
     value matcher2 = endsWith(".txt");
     assertEquals("/file/myfile.txt", matcher2.relativePath(requestPath));
-    
+
     value matcher3 = startsWith("/file").and(endsWith(".txt"));
     assertEquals("/file/myfile.txt", matcher3.relativePath(requestPath));
 
@@ -472,7 +489,7 @@ test void testPathMatcher() {
     assertEquals("/myfile.txt", matcher5.relativePath(requestPath));
 
     value matcher6 = (startsWith("/blob")
-            .or(startsWith("/file")) 
+            .or(startsWith("/file"))
             .and(endsWith(".txt")));
     assertEquals("/file/myfile.txt", matcher6.relativePath(requestPath));
 }
@@ -541,7 +558,7 @@ void acceptMethodTest() {
     //TODO log
     assertEquals(response1Status, 200);
 
-    //do NOT accept PUT 
+    //do NOT accept PUT
     value request2 = ClientRequest(parse("http://localhost:8080/acceptMethodTest"));
     request2.method = put;
     request2.setParameter(Parameter("foo", "valueFoo"));
@@ -708,6 +725,17 @@ void writeStringsTest() {
     assertTrue(responseContent.contains("foo 10"), "Response does not containg 'foo 10'.");
 }
 
+void templateTest() {
+    value request = ClientRequest(parse("http://localhost:8080/template/xyzzy/x/veramocor"), get);
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertTrue(responseContent.equals("val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}"), "Response does not equals 'val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}'.");
+}
+
 void sessionTest() {
     value request = ClientRequest(parse("http://localhost:8080/session"), get);
 
@@ -728,7 +756,7 @@ void sessionTest() {
 
 void testSerializer() {
     value request = ClientRequest(parse("http://localhost:8080/serializer"), get);
-    
+
     value response = request.execute();
     value responseContent = response.contents;
     //TODO log
@@ -774,7 +802,7 @@ void testAsyncStream() {
         process.write("``read``.");
     }
     print("Read in ``system.milliseconds - startTime``ms.");
-    
+
     ByteBuffer contentBuff = newByteBuffer(content.size);
     for (b in content) {
         contentBuff.putByte(b);
