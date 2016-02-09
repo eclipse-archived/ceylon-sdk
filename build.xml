@@ -59,19 +59,19 @@
             <module name="ceylon.interop.java"/>
             <module name="ceylon.io"/>
             <module name="ceylon.json"/>
+            <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
             <module name="ceylon.net"/>
+            <module name="ceylon.numeric"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
             <module name="ceylon.random"/>
+            <module name="ceylon.regex"/>
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
-            <module name="ceylon.unicode"/>
-            <module name="ceylon.locale"/>
-            <module name="ceylon.numeric"/>
-            <module name="ceylon.regex"/>
             <module name="ceylon.transaction"/>
+            <module name="ceylon.unicode"/>
             <module name="ceylon.whole"/>
             <module name="com.redhat.ceylon.war"/>
         </moduleset>
@@ -79,6 +79,7 @@
         <moduleset id="modules.sdk.js">
             <module name="ceylon.collection"/>
             <module name="ceylon.html"/>
+            <module name="ceylon.interop.browser"/>
             <module name="ceylon.json"/>
             <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
@@ -89,7 +90,6 @@
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
             <module name="ceylon.whole"/>
-            <module name="ceylon.interop.browser"/>
         </moduleset>
 	
         <moduleset id="modules.test.jvm">
