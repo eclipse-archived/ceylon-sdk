@@ -1,6 +1,3 @@
-import ceylon.threadpool.util {
-    AcquireTimeoutException
-}
 import ceylon.promise {
     ExecutionContext,
     globalExecutionContext,

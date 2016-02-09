@@ -1,6 +1,4 @@
-import ceylon.threadpool.util {
-    Latch,
-    AcquireTimeoutException,
+import ceylon.concurrency.atomic {
     AtomicReference
 }
 import ceylon.promise {

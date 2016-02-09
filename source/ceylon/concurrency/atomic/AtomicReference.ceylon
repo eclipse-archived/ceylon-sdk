@@ -2,8 +2,7 @@ import java.util.concurrent.atomic {
     JavaAtomicReference=AtomicReference
 }
 
-"Provides atomic/optimistic access to an [[object|current]], when
- [[full locking|Semaphore]] is not desired."
+"Provides atomic/optimistic access to an [[object|current]]."
 shared class AtomicReference<Value>(initial) {
     Value initial;
     
