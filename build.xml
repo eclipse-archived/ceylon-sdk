@@ -265,6 +265,9 @@
         
     </target>
 
+    <target name="dist" depends="compile,doc">
+    </target>
+
     <target name="publish" depends="compile,publish-quick"
             description="Copies the SDK modules to the user's repository">
     </target>
@@ -280,46 +283,27 @@
         </ceylon-copy>
     </target>
 
-    <target name="publish-herd" depends="ceylondefs">
-    <fail message="Please specify a target Herd upload repo url with -Dherd.repo=..." unless="herd.repo"/>
-    <fail message="Please specify a target Herd user name with -Dherd.user=..." unless="herd.user"/>
-    <fail message="Please specify a target Herd password with -Dherd.pass=..." unless="herd.pass"/>
+    <target name="copy-herd" depends="ceylondefs">
+        <fail message="Please specify a target Herd upload repo url with -Dherd.repo=..." unless="herd.repo"/>
+        <fail message="Please specify a target Herd user name with -Dherd.user=..." unless="herd.user"/>
+        <fail message="Please specify a target Herd password with -Dherd.pass=..." unless="herd.pass"/>
         
-        <ceylon-compile
-            executable="${ceylon.executable}"
-            verbose="${ceylon.verbosity}"
+        <ceylon-copy
+            nodefaultrepositories="true"
+            withdependencies="false"
             out="${herd.repo}"
             user="${herd.user}"
             pass="${herd.pass}"
-            encoding="UTF-8"
+            all="true"
+            verbose="files"
             fork="true">
-            <moduleset refid="modules.sdk.jvm"/>
-        </ceylon-compile>
-        
-        <ceylon-compile-js executable="${ceylon.executable}"
-            verbose="${ceylon.verbosity}"
-            out="${herd.repo}"
-            user="${herd.user}"
-            pass="${herd.pass}"
-            encoding="UTF-8"
-            fork="true">
-            <moduleset refid="modules.sdk.js"/>
-        </ceylon-compile-js>
-
-        <ceylon-doc executable="${ceylon.executable}"
-            includesourcecode="true"
-            nomtimecheck="true"
-            out="${herd.repo}"
-            user="${herd.user}"
-            pass="${herd.pass}"
-            encoding="UTF-8"
-            fork="true">
-            <moduleset refid="modules.sdk.jvm"/>
-            <linkset>
-                <link pattern="ceylon" url="http://modules.ceylon-lang.org/repo/1/"/>
-            </linkset>
-        </ceylon-doc>
-        
+            <reposet>
+                <repo url="${out.repo}"/>
+            </reposet>
+            <moduleset>
+                <sourcemodules/>
+            </moduleset>
+        </ceylon-copy>
     </target>
     
 
