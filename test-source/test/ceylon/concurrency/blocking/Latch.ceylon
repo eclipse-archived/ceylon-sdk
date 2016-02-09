@@ -1,4 +1,4 @@
-import ceylon.threadpool.util {
+import ceylon.concurrency.blocking {
     Latch,
     AcquireTimeoutException
 }

@@ -1,8 +1,6 @@
-import ceylon.threadpool {
+import ceylon.concurrency.blocking {
     submit,
-    jobMap
-}
-import ceylon.threadpool.util {
+    jobMap,
     AcquireTimeoutException
 }
 import ceylon.language.meta {
