@@ -44,7 +44,7 @@ Boolean exact(Anything expect, Anything got) {
     return !got exists;
 }
 
-test void testExp() {
+shared test void testExp() {
     assertEquals{
         expected=1.0;
         actual=exp(0.0);
@@ -70,7 +70,7 @@ test void testExp() {
     };
 }
 
-test void testExpm1() {
+shared test void testExpm1() {
     assertEquals{
         expected=0.0;
         actual=expm1(0.0);
@@ -96,7 +96,7 @@ test void testExpm1() {
     };
 }
 
-test void testLog() {
+shared test void testLog() {
     assertEquals{
         expected=undefined;
         actual=log(-1.0);
@@ -129,7 +129,7 @@ test void testLog() {
     };
 }
 
-test void testLog1p() {
+shared test void testLog1p() {
     assertEquals{
         expected=undefined;
         actual=log1p(-2.0);
@@ -157,7 +157,7 @@ test void testLog1p() {
     };
 }
 
-test void testLog10() {
+shared test void testLog10() {
     assertEquals{
         expected=undefined;
         actual=log10(-1.0);
@@ -190,7 +190,7 @@ test void testLog10() {
     };
 }
 
-test void testSin() {
+shared test void testSin() {
     assertEquals{
         expected=undefined;
         actual=sin(-infinity);
@@ -238,7 +238,7 @@ test void testSin() {
     };
 }
 
-test void testSinh() {
+shared test void testSinh() {
     assertEquals{
         expected=-infinity;
         actual=sinh(-infinity);
@@ -271,7 +271,7 @@ test void testSinh() {
     };
 }
 
-test void testCosh() {
+shared test void testCosh() {
     assertEquals{
         expected=+infinity;
         actual=cosh(-infinity);
@@ -304,7 +304,7 @@ test void testCosh() {
     };
 }
 
-test void testTanh() {
+shared test void testTanh() {
     assertEquals{
         expected=-1.0;
         actual=tanh(-infinity);
@@ -337,7 +337,7 @@ test void testTanh() {
     };
 }
 
-test void testCos() {
+shared test void testCos() {
     assertEquals{
         expected=undefined;
         actual=cos(-infinity);
@@ -380,7 +380,7 @@ test void testCos() {
     };
 }
 
-test void testTan() {
+shared test void testTan() {
     assertEquals{
         expected=undefined;
         actual=tan(-infinity);
@@ -423,7 +423,7 @@ test void testTan() {
     };
 }
 
-test void testAsin() {
+shared test void testAsin() {
     assertEquals{
         expected=undefined;
         actual=asin(-infinity);
@@ -461,7 +461,7 @@ test void testAsin() {
     };
 }
 
-test void testAcos() {
+shared test void testAcos() {
     assertEquals{
         expected=undefined;
         actual=acos(-infinity);
@@ -494,7 +494,7 @@ test void testAcos() {
     };
 }
 
-test void testAtan() {
+shared test void testAtan() {
     assertEquals{
         expected=-0.0;
         actual=atan(-0.0);
@@ -512,7 +512,7 @@ test void testAtan() {
     };
 }
 
-test void testAtan2() {
+shared test void testAtan2() {
     assertEquals{
         expected=undefined;
         actual=atan2(undefined, 0.0);
@@ -626,7 +626,7 @@ test void testAtan2() {
     };
 }
 
-test void testHypot() {
+shared test void testHypot() {
     assertEquals{
         expected=0.0;
         actual=hypot(0.0, 0.0);
@@ -686,7 +686,7 @@ test void testHypot() {
     };
 }
 
-test void testSqrt() {
+shared test void testSqrt() {
     assertEquals{
         expected=undefined;
         actual=sqrt(-infinity);
@@ -729,7 +729,7 @@ test void testSqrt() {
     };
 }
 
-test void testCbrt() {
+shared test void testCbrt() {
     assertEquals{
         expected=-infinity;
         actual=cbrt(-infinity);
@@ -772,7 +772,7 @@ test void testCbrt() {
     };
 }
 
-test void testRandom() {
+shared test void testRandom() {
     for (Integer ii in 0..1000) {
         Float r = random();
         assertTrue(r >= +0.0, "random() returned ``r`` (must be >= +0)");
@@ -780,7 +780,7 @@ test void testRandom() {
     }
 }
 
-test void testFloor() {
+shared test void testFloor() {
     assertEquals{
         expected=-infinity;
         actual=floor(-infinity);
@@ -856,7 +856,7 @@ test void testFloor() {
     };
 }
 
-test void testCeiling() {
+shared test void testCeiling() {
     assertEquals{
         expected=-infinity;
         actual=ceiling(-infinity);
@@ -937,7 +937,7 @@ test void testCeiling() {
     };
 }
 
-test void testHalfEven() {
+shared test void testHalfEven() {
     assertEquals{
         expected=-infinity;
         actual=halfEven(-infinity);
@@ -1018,7 +1018,7 @@ test void testHalfEven() {
     };
 }
 
-test void testSumProduct() {
+shared test void testSumProduct() {
     assertEquals {
         expected = 0.0;
         actual=sum {};
@@ -1041,7 +1041,7 @@ test void testSumProduct() {
     };
 }
 
-test void testScalb() {
+shared test void testScalb() {
     // TODO scalb(-0.0, x) is -0.0 on JVM, +0.0 on JS
     assertEquals {
         expected = 0.0;
@@ -1100,7 +1100,7 @@ test void testScalb() {
     };
 }
 
-test void testRemainder() {
+shared test void testRemainder() {
     assertEquals {
         expected = 1.0;
         actual=remainder(5.5, 1.5);
@@ -1307,6 +1307,6 @@ test void testRemainder() {
     };
 }
 
-test void floatTests() {
+shared test void floatTests() {
     assertFalse(exact(0.0, -0.0), "Oops! Test is broken because we can't distinguish 0.0 and -0.0");
 }

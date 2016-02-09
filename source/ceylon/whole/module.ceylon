@@ -1,5 +1,4 @@
-"This module provides `ceylon.math.whole`&mdash;an arbitrary-precision integer
- numeric type.
+"This module provides an arbitrary-precision integer numeric type.
 
  The type [[Whole|ceylon.whole::Whole]] is a first-class numeric type and
  support all the usual mathematical operations:
