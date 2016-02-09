@@ -92,6 +92,33 @@
             <module name="ceylon.whole"/>
         </moduleset>
 	
+        <moduleset id="modules.sdk.doc">
+            <module name="ceylon.collection"/>
+            <module name="ceylon.dbc"/>
+            <module name="ceylon.decimal"/>
+            <module name="ceylon.file"/>
+            <module name="ceylon.html"/>
+            <module name="ceylon.interop.browser"/>
+            <module name="ceylon.interop.java"/>
+            <module name="ceylon.io"/>
+            <module name="ceylon.json"/>
+            <module name="ceylon.locale"/>
+            <module name="ceylon.logging"/>
+            <module name="ceylon.math"/>
+            <module name="ceylon.net"/>
+            <module name="ceylon.numeric"/>
+            <module name="ceylon.process"/>
+            <module name="ceylon.promise"/>
+            <module name="ceylon.regex"/>
+            <module name="ceylon.random"/>
+            <module name="ceylon.test"/>
+            <module name="ceylon.time"/>
+            <module name="ceylon.transaction"/>
+            <module name="ceylon.unicode"/>
+            <module name="ceylon.whole"/>
+            <module name="com.redhat.ceylon.war"/>
+        </moduleset>
+
         <moduleset id="modules.test.jvm">
             <module name="test.ceylon.test.suite"/>        
             <module name="test.ceylon.math"/>
@@ -230,7 +257,7 @@
             nomtimecheck="true"
             encoding="UTF-8"
             fork="true">
-            <moduleset refid="modules.sdk.jvm"/>
+            <moduleset refid="modules.sdk.doc"/>
             <linkset>
                 <link pattern="ceylon" url="http://modules.ceylon-lang.org/repo/1/"/>
             </linkset>
