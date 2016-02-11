@@ -35,4 +35,16 @@ shared class Utf8Tests()
             );
         };
     }
+    
+    test
+    shared void lowRangeEncodeDecode() {
+        assertEquals {
+            utf8.encode("Español");
+            { 69, 115, 112, 97, 195, 177, 111, 108 }*.byte;
+        };
+        assertEquals {
+            utf8.decode({ 69, 115, 112, 97, 195, 177, 111, 108 }*.byte);
+            "Español";
+        };
+    }
 }

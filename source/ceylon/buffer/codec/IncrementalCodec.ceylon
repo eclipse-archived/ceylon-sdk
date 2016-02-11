@@ -82,7 +82,6 @@ shared class CumulativeConvert<ToMutable, FromImmutable, ToSingle, FromSingle>(c
     }
     
     shared void more(FromImmutable input) {
-        value pieceConverter = converter(error);
         input.each((inputElement) => pieceConverter.more(inputElement).each(add));
     }
     

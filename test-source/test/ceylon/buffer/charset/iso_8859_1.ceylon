@@ -27,4 +27,19 @@ shared class Iso_8859_1Tests()
             Array { 'A'.integer.byte };
         };
     }
+    
+    test
+    shared void lowRangeEncodeDecode() {
+        assertEquals {
+            iso_8859_1.decode({
+                    97, 108, 105, 116, 233, 115, 60, 47, 97, 62,
+                    32, 60, 97, 32, 99, 108
+                }*.byte);
+            "alités</a> <a cl";
+        };
+        assertEquals {
+            iso_8859_1.encode("alités</a> <a cl");
+            { 97, 108, 105, 116, 233, 115, 60, 47, 97, 62, 32, 60, 97, 32, 99, 108 }*.byte;
+        };
+    }
 }

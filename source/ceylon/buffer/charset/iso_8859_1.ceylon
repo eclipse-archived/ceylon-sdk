@@ -81,7 +81,7 @@ shared object iso_8859_1 satisfies Charset {
         CharacterBuffer output = CharacterBuffer.ofSize(1);
         shared actual {Character*} more(Byte input) {
             output.clear();
-            output.put(input.signed.character);
+            output.put(input.unsigned.character);
             output.flip();
             return output;
         }

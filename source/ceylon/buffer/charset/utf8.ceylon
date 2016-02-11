@@ -105,21 +105,27 @@ shared object utf8 satisfies Charset {
                     // one byte
                     return { unsigned.character };
                 }
-                // invalid range
+                // Select multi-byte limit
                 if (unsigned < $11000000) {
+                    // invalid range
                     switch (error)
                     case (strict) {
-                        throw DecodeException("Invalid UTF-8 byte value: ``input``");
+                        throw DecodeException("Invalid UTF-8 first byte value: ``input``");
                     }
                     case (ignore) {
                     }
                     case (resetStrategy) {
                         reset();
                     }
-                    return empty;
-                }
-                // invalid range
-                if (unsigned >= $11111000) {
+                } else if (unsigned < $11100000) {
+                    intermediate.limit = 1; // 0 more before final (2 total)
+                } else if (unsigned < $11110000) {
+                    intermediate.limit = 2; // 1 more before final (3 total)
+                } else if (unsigned < $11111000) {
+                    // 0b1111 0000 <= byte < 0b1111 1000
+                    intermediate.limit = 3; // 2 more before final (4 total)
+                } else {
+                    // invalid range
                     switch (error)
                     case (strict) {
                         throw DecodeException("Invalid UTF-8 first byte value: ``input``");
@@ -130,17 +136,6 @@ shared object utf8 satisfies Charset {
                         reset();
                     }
                     return empty;
-                }
-                
-                if (unsigned < $11100000) {
-                    intermediate.limit = 1; // 0 more before final (2 total)
-                }
-                if (unsigned < $11110000) {
-                    intermediate.limit = 2; // 1 more before final (3 total)
-                }
-                // 0b1111 0000 <= byte < 0b1111 1000
-                if (unsigned < $11111000) {
-                    intermediate.limit = 3; // 2 more before final (4 total)
                 }
                 // keep this byte in any case
                 intermediate.put(input);
@@ -161,7 +156,7 @@ shared object utf8 satisfies Charset {
                 }
                 return empty;
             }
-            if (intermediate.available > 1) {
+            if (intermediate.available > 0) {
                 // not enough bytes
                 intermediate.put(input);
                 return empty;
