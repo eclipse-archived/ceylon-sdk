@@ -94,12 +94,6 @@ import org.xnio.nio {
 import io.undertow.connector {
 	ByteBufferPool
 }
-import io.undertow.server.handlers.encoding {
-	ContentEncodingRepository,
-	EncodingHandler,
-	DeflateEncodingProvider,
-	GzipEncodingProvider
-}
 import io.undertow.predicate {
 	Predicate
 }
