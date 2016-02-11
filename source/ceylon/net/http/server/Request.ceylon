@@ -5,7 +5,7 @@ import ceylon.net.http {
     Method
 }
 
-"Defines an object to provide client request information
+"Defines an object to provide client request information 
  to a web endpoint."
 by("Matej Lazar")
 shared interface Request {
@@ -20,11 +20,11 @@ shared interface Request {
                 Please use either [[queryParameter]] or [[formParameter]].")
     shared formal String? parameter(String name, 
         Boolean forceFormParsing = false);
-
-    "Returns all parameters with given name. If
-     [[forceFormParsing]] is false (default) and parameter
-     with the same name exists in a query string, posted
-     data is not parsed. It is returned, only if it is
+    
+    "Returns all parameters with given name. If 
+     [[forceFormParsing]] is false (default) and parameter 
+     with the same name exists in a query string, posted 
+     data is not parsed. It is returned, only if it is 
      already parsed."
     deprecated("Not specifying if the parameter's values should come from the query part
                 in the URL or from the request body is discouraged at this level.
@@ -35,10 +35,10 @@ shared interface Request {
     shared formal UploadedFile? file(String name);
 
     shared formal UploadedFile[] files(String name);
-
+    
     "Returns a single header with given name."
     shared formal String? header(String name);
-
+    
     "Returns all headers with given name."
     shared formal String[] headers(String name);
 
@@ -57,7 +57,7 @@ shared interface Request {
     "Get the HTTP request method.
      {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
     shared formal Method method;
-
+    
     "Get the request URI scheme. {http, https}"
     shared formal String scheme;
     
@@ -90,19 +90,19 @@ shared interface Request {
      will return complete path instead of relative. See 
      [[Matcher.relativePath]] for details."
     shared formal String relativePath;
-
+    
     shared formal String queryString;
-
+    
     "Get the source address of the HTTP request."
     shared formal SocketAddress sourceAddress;
-
+    
     "Get the destination address of the HTTP request."
     shared formal SocketAddress destinationAddress;
-
+    
     "Returns request content type, read from header."
     shared formal String? contentType;
-
-    "Returns users http session. If session doesn't exists,
+    
+    "Returns users http session. If session doesn't exists, 
      a new is created."
     shared formal Session session;
 
