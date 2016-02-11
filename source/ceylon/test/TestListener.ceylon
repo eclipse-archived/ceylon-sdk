@@ -1,6 +1,17 @@
-import ceylon.test.event {
-    ...
+import ceylon.test.engine.spi {
+    TestExtension
 }
+import ceylon.test.event {
+    TestRunStartedEvent,
+    TestRunFinishedEvent,
+    TestStartedEvent,
+    TestFinishedEvent,
+    TestSkippedEvent,
+    TestAbortedEvent,
+    TestErrorEvent,
+    TestExcludedEvent
+}
+
 
 "Represents a listener which will be notified about events that occur during a test run.
  
@@ -14,39 +25,44 @@ import ceylon.test.event {
  
      TestRunner runner = createTestRunner{
          sources = [`module com.acme`];
-         listeners = [RingingListener()];};
+         extensions = [RingingListener()];};
  
- ... or better declaratively with usage of [[testListeners]] annotation
+ ... or better declaratively with usage of [[testExtension]] annotation
  
-     testListeners({`class RingingListener`})
+     testExtension(`class RingingListener`)
      module com.acme;
 "
-shared interface TestListener {
+shared interface TestListener satisfies TestExtension {
     
     "Called before any tests have been run."
-    shared default void testRunStart(
+    shared default void testRunStarted(
         "The event object."
-        TestRunStartEvent event) {}
+        TestRunStartedEvent event) {}
     
     "Called after all tests have finished."
-    shared default void testRunFinish(
+    shared default void testRunFinished(
         "The event object."
-        TestRunFinishEvent event) {}
+        TestRunFinishedEvent event) {}
     
     "Called when a test is about to be started."
-    shared default void testStart(
+    shared default void testStarted(
         "The event object."
-        TestStartEvent event) {}
+        TestStartedEvent event) {}
     
     "Called when a test has finished, whether the test succeeds or not."
-    shared default void testFinish(
+    shared default void testFinished(
         "The event object."
-        TestFinishEvent event) {}
+        TestFinishedEvent event) {}
     
-    "Called when a test will *not* be run, because it is marked with [[ignore]] annotation."
-    shared default void testIgnore(
+    "Called when a test has been skipped, because its condition wasn't fullfiled."
+    shared default void testSkipped(
         "The event object."
-        TestIgnoreEvent event) {}
+        TestSkippedEvent event) {}
+    
+    "Called when a test has been aborted, because its assumption wasn't met."
+    shared default void testAborted(
+        "The event object."
+        TestAbortedEvent event) {}
     
     "Called when a test will not be run, because some error has occurred.
      For example a invalid test function signature."
@@ -55,7 +71,8 @@ shared interface TestListener {
         TestErrorEvent event) {}
     
     "Called when a test is excluded from the test run due [[TestFilter]]"
-    shared default void testExclude(
+    shared default void testExcluded(
         "The event object."
-        TestExcludeEvent event) {}
+        TestExcludedEvent event) {}
+    
 }

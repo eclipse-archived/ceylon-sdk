@@ -8,44 +8,67 @@ import ceylon.test.event {
 shared StringBuilder bazTestListenerLog = StringBuilder();
 shared variable Integer bazTestListenerCounter = 0;
 
-shared class BazTestListener() satisfies TestListener {
+shared abstract class BazTestListenerAbstract() satisfies TestListener {
+    
+    shared actual void testRunStarted(TestRunStartedEvent event) => log(event);
+    
+    shared actual void testRunFinished(TestRunFinishedEvent event) => log(event);
+    
+    shared actual void testStarted(TestStartedEvent event) => log(event);
+    
+    shared actual void testFinished(TestFinishedEvent event) => log(event);
+    
+    shared actual void testSkipped(TestSkippedEvent event) => log(event);
+    
+    shared actual void testError(TestErrorEvent event) => log(event);
+    
+    shared default void log(Object event) => bazTestListenerLog.append(event.string).appendNewline();
+    
+}
+
+shared class BazTestListener() extends BazTestListenerAbstract() {
     
     bazTestListenerCounter++;
 
-    shared actual void testRunStart(TestRunStartEvent event) => log(event);
-
-    shared actual void testRunFinish(TestRunFinishEvent event) => log(event);
-
-    shared actual void testStart(TestStartEvent event) => log(event);
-
-    shared actual void testFinish(TestFinishEvent event) => log(event);
-
-    shared actual void testIgnore(TestIgnoreEvent event) => log(event);
-
-    shared actual void testError(TestErrorEvent event) => log(event);
-
-    void log(Object event) => bazTestListenerLog.append(event.string).appendNewline();
-
 }
 
+shared class BazTestListenerWithOrder() extends BazTestListenerAbstract() {
+    
+    order = 100;
+    
+    log(Object event) => super.log("!! ``event``");
+    
+}
+
+
 test
-testListeners({`class BazTestListener`})
+testExtension(`class BazTestListener`)
 shared void bazWithCustomListener() {
 }
 
-testListeners({`class BazTestListener`})
+testExtension(`class BazTestListener`)
 shared class BazWithCustomListener() {
     
     test
-    testListeners({`class BazTestListener`})
+    testExtension(`class BazTestListener`)
     shared void baz1() {}
     
 }
 
-shared object bazAnonymousTestListener extends BazTestListener() {    
+shared object bazAnonymousTestListener extends BazTestListenerAbstract() {    
 }
 
 test
-testListeners({`class bazAnonymousTestListener`})
+testExtension(`class bazAnonymousTestListener`)
 shared void bazWithAnonymousTestListener() {
+}
+
+test
+testExtension(`class BazTestListener`, `class BazTestListenerWithOrder`)
+shared void bazWithCustomOrderedListeners1() {
+}
+
+test
+testExtension(`class BazTestListenerWithOrder`, `class BazTestListener`)
+shared void bazWithCustomOrderedListeners2() {
 }

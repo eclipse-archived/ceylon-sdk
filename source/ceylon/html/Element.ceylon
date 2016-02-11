@@ -32,9 +32,13 @@ shared abstract class StyledElement(String? id, classNames = [], style = null)
     shared actual default [<String->Object>*] attributes {
         value attrs = AttributeSequenceBuilder();
         attrs.addAll(super.attributes);
-        if (is String[] classNames) {
-            attrs.addAttribute("class", " ".join(classNames));
-        } else {
+        switch (classNames)
+        case (is String[]) {
+            if (!classNames.empty) {
+                attrs.addAttribute("class", " ".join(classNames));
+            }
+        }
+        case (is String) {
             attrs.addAttribute("class", classNames);
         }
         attrs.addAttribute("style", style);

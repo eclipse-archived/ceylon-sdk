@@ -3,12 +3,13 @@ import ceylon.io { OpenFile, newOpenFile }
 import ceylon.io.charset { stringToByteProducer, utf8 }
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
-import ceylon.net.http.server { Status,
-                                  started, AsynchronousEndpoint,
-                                  Endpoint, Response, Request,
+import ceylon.net.http.server { Status, 
+                                  started, AsynchronousEndpoint, 
+                                  Endpoint, Response, Request, 
                                   startsWith, endsWith, Options, stopped, newServer,
-	template }
-import ceylon.net.http.server.endpoints { serveStaticFile }
+                                  template }
+import ceylon.net.http.server.endpoints { serveStaticFile,
+    RepositoryEndpoint }
 import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList, MutableList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
@@ -236,8 +237,8 @@ test void testServer() {
                 asyncServiceStatus = "returning";
             }
         },
-        Endpoint {
-            path = startsWith("/multipartPost");
+        Endpoint { 
+            path = startsWith("/multipartPost"); 
             service = (Request request, Response response) {
                 variable String responseString = "";
                 if(exists uploadedFile = request.file("file1")) {
@@ -247,7 +248,7 @@ test void testServer() {
                         responseString += utf8.decode(buffer);
                     });
                 }
-
+                
                 if(exists uploadedFile = request.file("file2")) {
                     print("Server got file: ``uploadedFile.file``");
                     value openfile = newOpenFile(uploadedFile.file.resource);
@@ -255,16 +256,16 @@ test void testServer() {
                         responseString += utf8.decode(buffer);
                     });
                 }
-
+                
                 responseString += Parameter(param1.name, request.parameter(param1.name)).humanRepresentation;
                 responseString += "\n";
                 responseString += Parameter(param2.name, request.parameter(param2.name)).humanRepresentation;
                 responseString += "\n";
-
+                
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(responseString);
                 return null;
-            };
+            }; 
             acceptMethod = {post};
         },
         Endpoint {
@@ -280,6 +281,9 @@ test void testServer() {
                 response.writeString("val=``val``, other=``other``, matched=``template``");
             };
             acceptMethod = {get};
+        },
+        RepositoryEndpoint {
+            root = "/modules";
         }
     };
 
@@ -329,6 +333,8 @@ test void testServer() {
             	}
                 testMultipartPost();
 
+                moduleTest();
+                
             } finally {
                 cleanUpFile();
                 server.stop();
@@ -409,6 +415,23 @@ void fileMapperTest() {
     //TODO log trace
     print("Filemapper: ``fileCnt.initial(100)``" + (fileCnt.size > 100 then " ..." else ""));
     assertEquals(produceFileContent(), fileCnt);
+}
+
+void moduleTest() {
+    value v = language.version;
+    _moduleTest("ceylon/language/" + v + "/ceylon.language-" + v + ".js");
+    _moduleTest("ceylon.language-" + v + ".js");
+}
+
+void _moduleTest(String modurl) {
+    value url = "http://localhost:8080/modules/" + modurl;
+    value fileRequest = ClientRequest(parse(url));
+    value fileResponse = fileRequest.execute();
+    value fileCnt = fileResponse.contents;
+    fileResponse.close();
+    //TODO log trace
+    print("RepositoryEndpoint: read module " + modurl);
+    assertTrue(fileCnt.size > 100000); // It's big so it's probably/hopefully the correct file
 }
 
 void concurentFileRequests(Integer concurentRequests) {

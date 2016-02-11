@@ -36,11 +36,8 @@ class ConcreteLink(JPath jpath)
         return ConcreteNil(jpath);
     }
     
-    shared actual String owner {
-        return getOwner(jpath).name;
-    }
-    assign owner {
-        setOwner(jpath, jprincipal(jpath,owner));
-    }
+    shared actual String owner => getOwner(jpath).name;
+        
+    assign owner => setOwner(jpath, jprincipal(jpath,owner));
     
 }

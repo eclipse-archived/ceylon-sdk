@@ -4,8 +4,9 @@
  WAR when it is created - you should never need to import
  this module directly."
 native("jvm")
-module com.redhat.ceylon.war "1.2.0" {
+module com.redhat.ceylon.war "1.2.1" {
     import java.base "7";
-    import com.redhat.ceylon.common "1.2.0";
+    import com.redhat.ceylon.common "1.2.1";
+    import com.redhat.ceylon.tool.provider "1.2.1";
     import javax.servlet "3.1.0";
 }

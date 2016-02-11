@@ -13,9 +13,12 @@ import test.ceylon.test.stubs {
 import test.ceylon.test.stubs.ignored {
     ...
 }
+import ceylon.test.engine {
+    DefaultTestRunner
+}
 
 test
-shared void shouldRunTest1() {
+void shouldRunTest1() {
     void assertResultTestFoo(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -24,7 +27,7 @@ shared void shouldRunTest1() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `foo`;
         };
     }
@@ -43,7 +46,7 @@ shared void shouldRunTest1() {
 }
 
 test
-shared void shouldRunTest2() {
+void shouldRunTest2() {
     void assertResultTestBar(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -52,13 +55,13 @@ shared void shouldRunTest2() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `Bar.bar1`;
         };
         assertResultContains {
             runResult;
             index = 1;
-            state = success;
+            state = TestState.success;
             source = `Bar`;
         };
     }
@@ -77,7 +80,7 @@ shared void shouldRunTest2() {
 }
 
 test
-shared void shouldRunTestThrowingAssertion() {
+void shouldRunTestThrowingAssertion() {
     value result = createTestRunner([`fooThrowingAssertion`]).run();
     assertResultCounts {
         result;
@@ -85,14 +88,14 @@ shared void shouldRunTestThrowingAssertion() {
     };
     assertResultContains {
         result;
-        state = failure;
+        state = TestState.failure;
         source = `fooThrowingAssertion`;
         message = "assertion failed";
     };
 }
 
 test
-shared void shouldRunTestThrowingException() {
+void shouldRunTestThrowingException() {
     value result = createTestRunner([`fooThrowingException`]).run();
     assertResultCounts {
         result;
@@ -100,29 +103,43 @@ shared void shouldRunTestThrowingException() {
     };
     assertResultContains {
         result;
-        state = error;
+        state = TestState.error;
         source = `fooThrowingException`;
         message = "unexpected exception";
     };
 }
 
 test
-shared void shouldRunTestThrowingIgnoreException() {
+void shouldRunTestThrowingIgnoreException() {
     value result = createTestRunner([`fooThrowingIgnoreException`]).run();
     assertResultCounts {
         result;
-        ignoreCount = 1;
+        skippedCount = 1;
     };
     assertResultContains {
         result;
-        state = ignored;
+        state = TestState.skipped;
         source = `fooThrowingIgnoreException`;
         message = "ignore it!";
     };
 }
 
 test
-shared void shouldRunTestsInClass() {
+void shouldRunTestWithAssumption() {
+    value result = createTestRunner([`fooWithAssumption`]).run();
+    assertResultCounts {
+        result;
+        abortedCount = 1;
+    };
+    assertResultContains {
+        result;
+        state = TestState.aborted;
+        source = `fooWithAssumption`;
+    };
+}
+
+test
+void shouldRunTestsInClass() {
     void assertResultTestsBar(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -131,19 +148,19 @@ shared void shouldRunTestsInClass() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `Bar.bar1`;
         };
         assertResultContains {
             runResult;
             index = 1;
-            state = success;
+            state = TestState.success;
             source = `Bar.bar2`;
         };
         assertResultContains {
             runResult;
             index = 2;
-            state = success;
+            state = TestState.success;
             source = `Bar`;
         };
     }
@@ -162,50 +179,60 @@ shared void shouldRunTestsInClass() {
 }
 
 test
-shared void shouldRunTestsInPackage() {
+void shouldRunTestsInPackage() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 14;
-            successCount = 12;
+            runCount = 19;
+            successCount = 17;
             failureCount = 1;
             errorCount = 1;
-            ignoreCount = 7;
+            skippedCount = 7;
+            abortedCount = 1;
         };
     }
     
-    value result1 = createTestRunner([`package test.ceylon.test.stubs`]).run();
+    function filter(TestDescription d) {
+        return !d.name.contains("parameterized");
+    }
+    
+    value result1 = createTestRunner([`package test.ceylon.test.stubs`], [], filter).run();
     assertResult(result1);
     
-    value result2 = createTestRunner(["package test.ceylon.test.stubs"]).run();
+    value result2 = createTestRunner(["package test.ceylon.test.stubs"], [], filter).run();
     assertResult(result2);
     
-    value result3 = createTestRunner(["test.ceylon.test.stubs"]).run();
+    value result3 = createTestRunner(["test.ceylon.test.stubs"], [], filter).run();
     assertResult(result3);
 }
 
 test
-shared void shouldRunTestsInModule() {
+void shouldRunTestsInModule() {
     void assertResult(TestRunResult runResult) {
         assertResultCounts {
             runResult;
-            runCount = 18;
-            successCount = 16;
+            runCount = 25;
+            successCount = 21;
             failureCount = 1;
-            errorCount = 13;
-            ignoreCount = 8;
+            errorCount = 11;
+            skippedCount = 8;
+            abortedCount = 1;
         };
     }
     
-    value result1 = createTestRunner([`module test.ceylon.test.stubs`]).run();
+    function filter(TestDescription d) {
+        return !d.name.contains("parameterized");
+    }
+    
+    value result1 = createTestRunner([`module test.ceylon.test.stubs`], [], filter).run();
     assertResult(result1);
     
-    value result2 = createTestRunner(["module test.ceylon.test.stubs"]).run();
+    value result2 = createTestRunner(["module test.ceylon.test.stubs"], [], filter).run();
     assertResult(result2);
 }
 
 test
-shared void shouldRunTestsFromAncestor() {
+void shouldRunTestsFromAncestor() {
     value runResult = createTestRunner([`BarExtended`]).run();
     assertResultCounts {
         runResult;
@@ -214,35 +241,35 @@ shared void shouldRunTestsFromAncestor() {
     assertResultContains {
         runResult;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar1`;
         name = "test.ceylon.test.stubs::BarExtended.bar1";
     };
     assertResultContains {
         runResult;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar2`;
         name = "test.ceylon.test.stubs::BarExtended.bar2";
     };
     assertResultContains {
         runResult;
         index = 2;
-        state = success;
+        state = TestState.success;
         source = `BarExtended.bar3`;
         name = "test.ceylon.test.stubs::BarExtended.bar3";
     };
     assertResultContains {
         runResult;
         index = 3;
-        state = success;
+        state = TestState.success;
         source = `BarExtended`;
         name = "test.ceylon.test.stubs::BarExtended";
     };
 }
 
 test
-shared void shouldRunTestsFromAncestorOnExtendedInstance() {
+void shouldRunTestsFromAncestorOnExtendedInstance() {
     barInstance1 = null;
     barInstance2 = null;
     
@@ -254,7 +281,7 @@ shared void shouldRunTestsFromAncestorOnExtendedInstance() {
 }
 
 test
-shared void shouldRunTestsFromAnonymousClasses() {
+void shouldRunTestsFromAnonymousClasses() {
     void assertResultTestBar(TestRunResult runResult) {
         assertResultCounts {
             runResult;
@@ -263,13 +290,13 @@ shared void shouldRunTestsFromAnonymousClasses() {
         assertResultContains {
             runResult;
             index = 0;
-            state = success;
+            state = TestState.success;
             source = `\Ibar.bar1`;
         };
         assertResultContains {
             runResult;
             index = 1;
-            state = success;
+            state = TestState.success;
             source = `class bar`;
         };
     }
@@ -297,7 +324,7 @@ shared void shouldRunTestsFromAnonymousClasses() {
 }
 
 test
-shared void shouldRunTestsInClassWithDefaultConstructor() {
+void shouldRunTestsInClassWithDefaultConstructor() {
     value result = createTestRunner([`class Qux`]).run();
 
     assertResultCounts {
@@ -307,19 +334,19 @@ shared void shouldRunTestsInClassWithDefaultConstructor() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Qux.qux1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `class Qux`;
     };
 }
 
 test
-shared void shouldRunTestsAndMeasureTime() {
+void shouldRunTestsAndMeasureTime() {
     value startTime = system.milliseconds;
     value runResult = createTestRunner([`foo`, `Bar.bar1`, `fooWithIgnore`, `fooWithoutTestAnnotation`]).run();
     value endTime = system.milliseconds;
@@ -337,7 +364,7 @@ shared void shouldRunTestsAndMeasureTime() {
 }
 
 test
-shared void shouldRunTestsWithUniqueInstances() {
+void shouldRunTestsWithUniqueInstances() {
     barInstance1 = null;
     barInstance2 = null;
     
@@ -349,7 +376,7 @@ shared void shouldRunTestsWithUniqueInstances() {
 }
 
 test
-shared void shouldRunTestWithCustomExecutor() {
+void shouldRunTestWithCustomExecutor() {
     bazTestExecutorCounter = 0;
     bazTestInvocationCounter = 0;
     
@@ -365,17 +392,56 @@ shared void shouldRunTestWithCustomExecutor() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `bazWithCustomExecutor`;
     };
 }
 
-void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer ignoreCount = 0, Integer runCount = -1) {
+test
+void shouldCompareTestState() {
+    assert(TestState.error > TestState.failure,
+           TestState.failure > TestState.success,
+           TestState.aborted > TestState.skipped);
+}
+
+test
+void shouldUseCustomInstanceProviderAndPostProcessors() {
+    bazWithInstanceProvider.log.clear();
+    
+    value result = createTestRunner([`BazWithInstanceProvider`]).run();
+    assertResultCounts {
+        result;
+        successCount = 2;
+    };
+    
+    value lines = bazWithInstanceProvider.log.string.trimmed.lines.sequence();
+    assertEquals(lines.size, 5);
+    assertEquals(lines[0], "BazInstancePostProcessor1");
+    assertEquals(lines[1], "BazWithInstanceProvider.m1");
+    assertEquals(lines[2], "BazInstancePostProcessor1");
+    assertEquals(lines[3], "BazInstancePostProcessor2");
+    assertEquals(lines[4], "BazWithInstanceProvider.m2");
+}
+
+test
+void shouldRunTestAsync() {
+    void done(TestRunResult result) {
+        // this won't cause test failure, 
+        // becasue we don't have support for async testing yet, 
+        // but at least it will print something to console
+        assert(result.isSuccess);
+    }
+    
+    DefaultTestRunner([`foo`, `Bar`], [], defaultTestFilter, defaultTestComparator).runAsync(done);
+}
+
+void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integer errorCount = 0, Integer failureCount = 0, Integer skippedCount = 0, Integer abortedCount = 0, Integer runCount = -1) {
     try {
         assert(runResult.successCount == successCount, 
-        runResult.errorCount == errorCount, 
-        runResult.failureCount == failureCount, 
-        runResult.ignoreCount == ignoreCount);
+               runResult.errorCount == errorCount, 
+               runResult.failureCount == failureCount, 
+               runResult.skippedCount == skippedCount,
+               runResult.abortedCount == abortedCount);
         
         if( runCount == -1 ) {
             assert(runResult.runCount == successCount + errorCount + failureCount);
@@ -388,13 +454,13 @@ void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integ
             assert(runResult.isSuccess);
         }
     }
-    catch(Exception e) {
+    catch(Throwable e) {
         print(runResult);
         throw e;
     }
 }
 
-void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = success, TestSource? source = null, String? name = null, String? message = null) {
+void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = TestState.success, TestSource? source = null, String? name = null, String? message = null, String? variant = null) {
     try {
         assert(exists r = runResult.results[index], 
         r.state == state);
@@ -419,11 +485,14 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
         if( exists message ) {
             assert(exists e = r.exception, e.message.contains(message));
         }
-        if( state == success ) {
+        if( exists variant ) {
+            assert(exists v = r.description.variant, v == variant);
+        }
+        if( state == TestState.success ) {
             assert(!r.exception exists);
         }
     }
-    catch(Exception e) {
+    catch(Throwable e) {
         print(runResult);
         throw e;
     }

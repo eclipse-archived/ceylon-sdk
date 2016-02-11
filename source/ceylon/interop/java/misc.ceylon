@@ -1,14 +1,20 @@
 import ceylon.interop.java.internal {
     Util
 }
+import ceylon.language {
+    Annotation
+}
+import ceylon.language.meta.declaration {
+    ClassOrInterfaceDeclaration
+}
 
 import java.lang {
     JavaString=String,
     Class,
     StackTraceElement
 }
-import ceylon.language.meta.declaration {
-    ClassOrInterfaceDeclaration
+import ceylon.language.meta.model {
+    ClassOrInterface
 }
 
 "The [[java.lang::String]] underlying the given Ceylon 
@@ -24,13 +30,30 @@ shared Class<Type> javaClass<Type>()
 
 "A Java [[java.lang::Class]] object representing the 
  concrete type of the given [[instance]]."
-shared Class<out Type> javaClassFromInstance<Type>(Type instance) 
+shared Class<out Type> javaClassFromInstance<Type>
+        (Type instance) 
         given Type satisfies Object
         => util.javaClassFromInstance(instance);
 
-"A Java [[java.lang::Class]] object representing the given [[ClassOrInterfaceDeclaration]]."
-shared Class<out Object> javaClassFromDeclaration(ClassOrInterfaceDeclaration declaration) 
+"A Java [[java.lang::Class]] object representing the given 
+ [[ClassOrInterfaceDeclaration]]."
+shared Class<out Object> javaClassFromDeclaration
+        (ClassOrInterfaceDeclaration declaration) 
         => util.javaClassForDeclaration(declaration);
+
+"A Java [[java.lang::Class]] object representing the given 
+ [[ClassOrInterface]]."
+shared Class<out Type> javaClassFromModel<Type>
+        (ClassOrInterface<Type> model)
+        given Type satisfies Object
+        => util.javaClassForModel(model);
+
+"A Java [[java.lang::Class]] object representing the Java
+ annotation type corresponding to the given Ceylon
+ [[annotation class|Type]]."
+shared Class<out Type> javaAnnotationClass<Type>() 
+        given Type satisfies Annotation 
+        => util.javaAnnotationClass<Type>();
 
 "The stack trace information for the given [[Throwable]] as 
  a sequence of Java [[StackTraceElement]]s, or the empty

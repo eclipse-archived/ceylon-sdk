@@ -1,12 +1,6 @@
 
 import ceylon.json {
-    StringTokenizer,
-    ParseException
-}
-import ceylon.test {
-    test,
-    assertEquals,
-    fail
+    StringTokenizer
 }
 import ceylon.json.stream {
     ArrayStartEvent,
@@ -15,6 +9,11 @@ import ceylon.json.stream {
     ObjectStartEvent,
     ObjectEndEvent,
     StreamParser
+}
+import ceylon.test {
+    test,
+    assertEquals,
+    fail
 }
 
 StreamParser parser(String json, Boolean trackKeys=false) => StreamParser(StringTokenizer(json), trackKeys);

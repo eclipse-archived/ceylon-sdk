@@ -5,7 +5,7 @@
  
  Technical details about this element can be found on the
  [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-form-element)"
-shared class Form(action, method = "", acceptCharset = null,
+shared class Form(action, method = null, acceptCharset = null,
             autoComplete = null, encType = null, name = null,
             noValidate = null, target = null,
             String? id = null, CssClass classNames = [],
@@ -30,7 +30,7 @@ shared class Form(action, method = "", acceptCharset = null,
 
     "Specifies the HTTP method to use when
      sending form-data"
-    shared String method; // TODO enumerated type
+    shared String? method; // TODO enumerated type
 
     "Specifies the character encodings that are
      to be used for the form submission."

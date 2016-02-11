@@ -23,7 +23,7 @@ import ceylon.net.http.client {
 	Response
 }
 
-shared class ByteBufferWritter(ByteBuffer byteBuffer, Charset charset) {
+class ByteBufferWriter(ByteBuffer byteBuffer, Charset charset) {
 
     void writeByteToBuffer(ByteBuffer byteBuffer, Byte byte) {
         if (byteBuffer.available < 1) {
@@ -32,12 +32,12 @@ shared class ByteBufferWritter(ByteBuffer byteBuffer, Charset charset) {
         byteBuffer.put(byte);
     }
 
-    shared ByteBufferWritter writeString(String string) {
+    shared ByteBufferWriter writeString(String string) {
         charset.encode(string).each((Byte byte) => writeByteToBuffer(byteBuffer, byte)); 
         return this;
     }
 
-    shared ByteBufferWritter writeByteBuffer(ByteBuffer sourceByteBuffer) {
+    shared ByteBufferWriter writeByteBuffer(ByteBuffer sourceByteBuffer) {
         sourceByteBuffer.each((Byte byte) => writeByteToBuffer(byteBuffer, byte));
         return this;
     }
@@ -48,7 +48,7 @@ shared class FilePart(fieldName, fileName, data) {
     shared String fileName;
     shared ByteBuffer|String data;
 }
-
+//TODO add streamming/socket support and move to ceylon.net.http.client
 shared class MultipartRequest(uri, parameters, files, headers = empty, charset = utf8) {
     // creates a unique boundary based on time stamp
     String boundary = "===" + system.milliseconds.string + "===";
@@ -61,44 +61,44 @@ shared class MultipartRequest(uri, parameters, files, headers = empty, charset =
     Charset charset;
     String crLf = "\r\n";
     
-    void writeParameter(Parameter parameter, ByteBufferWritter bufferWritter) {
-        bufferWritter.writeString("--" + boundary).writeString(crLf);
-        bufferWritter.writeString("Content-Disposition: form-data; name=\"" + parameter.name + "\"").writeString(crLf);
-        bufferWritter.writeString("Content-Type: text/plain; charset=" + charset.name).writeString(crLf);
-        bufferWritter.writeString(crLf);
-        bufferWritter.writeString(parameter.val else "").writeString(crLf);
+    void writeParameter(Parameter parameter, ByteBufferWriter bufferWriter) {
+        bufferWriter.writeString("--" + boundary).writeString(crLf);
+        bufferWriter.writeString("Content-Disposition: form-data; name=\"" + parameter.name + "\"").writeString(crLf);
+        bufferWriter.writeString("Content-Type: text/plain; charset=" + charset.name).writeString(crLf);
+        bufferWriter.writeString(crLf);
+        bufferWriter.writeString(parameter.val else "").writeString(crLf);
     }
     
-    void writeFilePart(FilePart filePart, ByteBufferWritter bufferWritter) {
-        bufferWritter.writeString("--" + boundary).writeString(crLf);
-        bufferWritter.writeString("Content-Disposition: form-data; name=\"" + filePart.fieldName 
+    void writeFilePart(FilePart filePart, ByteBufferWriter bufferWriter) {
+        bufferWriter.writeString("--" + boundary).writeString(crLf);
+        bufferWriter.writeString("Content-Disposition: form-data; name=\"" + filePart.fieldName 
             + "\"; filename=\"" + filePart.fileName + "\"").writeString(crLf);
-        bufferWritter.writeString("Content-Type: application/octet-stream").writeString(crLf);
-        bufferWritter.writeString("Content-Transfer-Encoding: binary").writeString(crLf);
-        bufferWritter.writeString(crLf);
+        bufferWriter.writeString("Content-Type: application/octet-stream").writeString(crLf);
+        bufferWriter.writeString("Content-Transfer-Encoding: binary").writeString(crLf);
+        bufferWriter.writeString(crLf);
         
         if (is String data = filePart.data) {
-            bufferWritter.writeString(data);
+            bufferWriter.writeString(data);
         } else if (is ByteBuffer data = filePart.data) {
-            bufferWritter.writeByteBuffer(data);
+            bufferWriter.writeByteBuffer(data);
         } else {
             throw Exception("Unsupported data type.");
         }
 
-        bufferWritter.writeString(crLf);
+        bufferWriter.writeString(crLf);
     }
 
     ByteBuffer multipartDataProvider() {
         ByteBuffer byteBuffer = newByteBuffer(1024);
-        value bufferWritter = ByteBufferWritter(byteBuffer, charset);
+        value bufferWriter = ByteBufferWriter(byteBuffer, charset);
         
-        parameters.each((Parameter parameter) => writeParameter(parameter, bufferWritter));
+        parameters.each((Parameter parameter) => writeParameter(parameter, bufferWriter));
 
-        files.each((FilePart filePart) => writeFilePart(filePart, bufferWritter));
+        files.each((FilePart filePart) => writeFilePart(filePart, bufferWriter));
 
-        bufferWritter.writeString(crLf);
-        bufferWritter.writeString("--" + boundary + "--");
-        bufferWritter.writeString(crLf);
+        bufferWriter.writeString(crLf);
+        bufferWriter.writeString("--" + boundary + "--");
+        bufferWriter.writeString(crLf);
 
         byteBuffer.flip();
         return byteBuffer;

@@ -9,77 +9,77 @@ import test.ceylon.test.stubs.ignored {
 }
 
 test
-shared void shouldDetectIgnoreOnFunction() {
+void shouldDetectIgnoreOnFunction() {
     value result = createTestRunner([`fooWithIgnore`]).run();
     assertResultCounts {
         result;
         runCount = 0;
-        ignoreCount = 1;
+        skippedCount = 1;
     };
     assertResultContains {
         result;
-        state = ignored;
+        state = TestState.skipped;
         source = `fooWithIgnore`;
         message = "ignore function foo";
     };
 }
 
 test
-shared void shouldDetectIgnoreOnClass() {
+void shouldDetectIgnoreOnClass() {
     value result = createTestRunner([`BarWithIgnore`]).run();
     assertResultCounts {
         result;
         runCount = 0;
-        ignoreCount = 2;
+        skippedCount = 2;
     };
     assertResultContains {
         result;
         index = 0;
-        state = ignored;
+        state = TestState.skipped;
         source = `BarWithIgnore.bar1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = ignored;
+        state = TestState.skipped;
         source = `BarWithIgnore.bar2`;
     };
     assertResultContains {
         result;
         index = 2;
-        state = ignored;
+        state = TestState.skipped;
         source = `BarWithIgnore`;
     };
 }
 
 test
-shared void shouldDetectIgnoreOnPackage() {
+void shouldDetectIgnoreOnPackage() {
     value result = createTestRunner([`bazInIgnoredPackage`]).run();
     assertResultCounts {
         result;
         runCount = 0;
-        ignoreCount = 1;
+        skippedCount = 1;
     };
     assertResultContains {
         result;
-        state = ignored;
+        state = TestState.skipped;
         source = `bazInIgnoredPackage`;
         message = "ignore whole package";
     };
 }
 
 test
-shared void shouldDetectInheritedIgnore() {
+void shouldDetectInheritedIgnore() {
     value result = createTestRunner([`BarWithInheritedIgnore.bar3`]).run();
     assertResultCounts {
         result;
         runCount = 0;
-        ignoreCount = 1;
+        skippedCount = 1;
     };
     assertResultContains {
         result;
         index = 0;
-        state = ignored;
+        state = TestState.skipped;
         source = `BarWithInheritedIgnore.bar3`;
     };
 }

@@ -12,7 +12,7 @@ import ceylon.collection {
 }
 
 test
-shared void shouldFilterEverything() {
+void shouldFilterEverything() {
     value runner = createTestRunner{
         sources = [`foo`, `fooThrowingAssertion`, `fooThrowingAssertion`];
         filter = (TestDescription d)=>false;
@@ -30,7 +30,7 @@ shared void shouldFilterEverything() {
 }
 
 test
-shared void shouldFilterTestsByName() {
+void shouldFilterTestsByName() {
     value runner = createTestRunner{
         sources = [`foo`, `fooThrowingAssertion`, `fooThrowingAssertion`];
         filter = (TestDescription d)=>!d.name.contains("Throwing");
@@ -43,15 +43,15 @@ shared void shouldFilterTestsByName() {
 }
 
 test
-shared void shouldFilterTestsAndFireExcludeEvent() {
+void shouldFilterTestsAndFireExcludeEvent() {
     value excludedList = ArrayList<TestDescription>();
     object excludedListener satisfies TestListener {
-        shared actual void testExclude(TestExcludeEvent event) => excludedList.add(event.description);
+        shared actual void testExcluded(TestExcludedEvent event) => excludedList.add(event.description);
     }
 
     createTestRunner{
         sources = [`foo`, `fooThrowingAssertion`];
-        listeners = [excludedListener];
+        extensions = [excludedListener];
         filter = (TestDescription d)=>!d.name.contains("Throwing");
     };
     

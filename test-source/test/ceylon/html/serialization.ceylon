@@ -19,7 +19,8 @@ import ceylon.html {
     Pre,
     Cite,
     Strong,
-    P
+    P,
+    A
 }
 import ceylon.html.serializer {
     NodeSerializer,
@@ -234,6 +235,15 @@ void testAttributeValue() {
     test(Div { nonstandardAttributes = ["att"->"multi\nline"]; }, "<div att=\"multi\nline\"></div>");
     test(Div { nonstandardAttributes = ["att"->"trailing sp "]; }, "<div att=\"trailing sp \"></div>");
     test(Div { nonstandardAttributes = ["att"->" leading sp"]; }, "<div att=\" leading sp\"></div>");
+}
+
+shared test
+void testEmptyAttribute() {
+    function test(Node actual, String expected)
+            =>  runTest(actual, expected, false, false);
+    
+    test(Div { nonstandardAttributes = ["att"->""]; }, "<div att=\"\"></div>");
+    test(A { href = ""; }, "<a href=\"\"></a>");
 }
 
 shared test

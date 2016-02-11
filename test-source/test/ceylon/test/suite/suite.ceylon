@@ -10,7 +10,7 @@ import test.ceylon.test.stubs {
 }
 
 test
-shared void shouldRunTestSuite1() {
+void shouldRunTestSuite1() {
     value root = createTestRunner([`bazSuite`]).description;
     
     assert(root.children.size==1,
@@ -25,7 +25,7 @@ shared void shouldRunTestSuite1() {
 }
 
 test
-shared void shouldRunTestSuite2() {
+void shouldRunTestSuite2() {
     value result = createTestRunner([`bazSuite`]).run();
     assertResultCounts {
         result;
@@ -34,37 +34,37 @@ shared void shouldRunTestSuite2() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar2`;
     };
     assertResultContains {
         result;
         index = 2;
-        state = success;
+        state = TestState.success;
         source = `Bar`;
     };
     assertResultContains {
         result;
         index = 3;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         result;
         index = 4;
-        state = success;
+        state = TestState.success;
         source = `bazSuite`;
     };
 }
 
 test
-shared void shouldRunTestSuiteNested1() {
+void shouldRunTestSuiteNested1() {
     value root = createTestRunner([`bazSuiteNested`]).description;
     
     assert(root.children.size==1,
@@ -82,7 +82,7 @@ shared void shouldRunTestSuiteNested1() {
 }
 
 test
-shared void shouldRunTestSuiteNested2() {
+void shouldRunTestSuiteNested2() {
     value result = createTestRunner([`bazSuiteNested`]).run();
     assertResultCounts {
         result;
@@ -91,37 +91,37 @@ shared void shouldRunTestSuiteNested2() {
     assertResultContains {
         result;
         index = 0;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar1`;
     };
     assertResultContains {
         result;
         index = 1;
-        state = success;
+        state = TestState.success;
         source = `Bar.bar2`;
     };
     assertResultContains {
         result;
         index = 2;
-        state = success;
+        state = TestState.success;
         source = `Bar`;
     };
     assertResultContains {
         result;
         index = 3;
-        state = success;
+        state = TestState.success;
         source = `foo`;
     };
     assertResultContains {
         result;
         index = 4;
-        state = success;
+        state = TestState.success;
         source = `bazSuite`;
     };
     assertResultContains {
         result;
         index = 5;
-        state = success;
+        state = TestState.success;
         source = `bazSuiteNested`;
     };
 }

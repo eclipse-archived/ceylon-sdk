@@ -8,36 +8,20 @@
    * do classes behave as required?
    * etc.
    
-   The usual way to use this module is to write your tests (which make
-   calls to the declarations under test) as top level functions or
-   as methods of top level classes, annotating them with [[test]]. 
+   ------------------------------------------------------------------
    
-   For example, here is a trivial [[test]] function, which will always succeed.
+   #### GETTING STARTED
+   
+   Tests can be written as top level functions ...
+   
    ```
    test
    void shouldAlwaysSucceed() {}
    ```
    
-   Assertions can be evaluated by using the language's `assert` statement 
-   or with the various `assert...` functions, for example:
-   ```
-   assert(is Hobbit frodo);
-   assert(exists ring);
+   ... or organized inside classes.
    
-   assertNotEquals(frodo, sauron);
-   assertThatException(() => gandalf.castLightnings()).hasType(`NotEnoughMagicPowerException`);
-   ```
    
-   It's also perfectly acceptable to throw 
-   [[AssertionError]] directly.
-   
-   A test function which completes without propagating an exception is 
-   classified as a [[success]]. A test function which propagates 
-   an [[AssertionError]] is classified as a [[failure]]. A test 
-   function which propagates any other type of `Exception` is classified as 
-   an [[error]].
-   
-   Test functions can be grouped together inside a class.
    ```
    class YodaTest() {
    
@@ -52,16 +36,36 @@
        }
    ```
    
-   Or several tests can be combined into [[testSuite]] and then run together.
+   (notice the [[test]] annotation, which helps the framework to discover tests)
+   
+   ------------------------------------------------------------------
+   
+   #### ASSERTIONS
+   
+   Assertions can be evaluated by using the language's `assert` statement 
+   or with the various `assert...` functions, for example:
+   
    ```
-   testSuite({`class YodaTest`,
-              `class DarthVaderTest`,
-              `function starOfDeathTestSuite`})
-   void starwarsTestSuite() {}   
+   assert(is Hobbit frodo);
+   assert(exists ring);
+   
+   assertNotEquals(frodo, sauron);
+   assertThatException(() => gandalf.castLightnings()).hasType(`NotEnoughMagicPowerException`);
    ```
+   
+   A test function which completes without propagating an exception is 
+   classified as a [[success|TestState.success]]. A test function which propagates 
+   an [[AssertionError]] is classified as a [[failure|TestState.failure]]. A test 
+   function which propagates any other type of `Exception` is classified as 
+   an [[error|TestState.error]].
+   
+   ------------------------------------------------------------------
+   
+   #### HOOKS
    
    Common initialization logic can be placed into separate functions, 
    which run [[before|beforeTest]] or [[after|afterTest]] each test.
+   
    ```
    class StarshipTest() {
    
@@ -69,6 +73,14 @@
    
        afterTest void dispose() => starship.shutdownSystems();
    ```
+   
+   Other options how to hook into tests execution, is to implement [[TestListener]] 
+   and react on concrete events. Or if you have to go deeper, there are several 
+   [[ceylon.test.engine.spi::TestExtension]] points.
+   
+   ------------------------------------------------------------------
+   
+   #### DISABLING TESTS
    
    Sometimes you want to temporarily disable a test or a group of tests, 
    this can be done via the [[ignore]] annotation.
@@ -78,15 +90,36 @@
    void shouldBeFasterThanLight() {
    ```
    
-   The most convenient way how to run tests is to use IDE integration
-   or via command line tool `ceylon test`.
+   Sometimes the conditions, if the test can be reliable executed, 
+   are know only in runtime, in that case one of the `assume...` functions 
+   can be used.
+  
+   ------------------------------------------------------------------
    
-   Tests can be also run programmatically, via interface [[TestRunner]] and its factory method [[createTestRunner]], 
-   but this API is usually not necessary to use directly. 
+   #### RUNNING
+   
+   The most convenient way how to run tests is to use IDE integration
+   or via command line tools `ceylon test` and `ceylon test-js`.
+   
+   ~~~~plain
+   $ceylon test com.acme.mymodule
+   ~~~~
+   
+   Tests can be also run programmatically, via interface [[TestRunner]] 
+   and its factory method [[createTestRunner]], but this API is usually 
+   not necessary to use directly.
+   
+   ------------------------------------------------------------------
    
    """
 by ("Tom Bentley", "Tomáš Hradec")
 license ("Apache Software License")
-module ceylon.test "1.2.0" {
-    import ceylon.collection "1.2.0";
+module ceylon.test "1.2.1" {
+    import ceylon.collection "1.2.1";
+    
+    native("jvm") import java.base "7";
+    native("jvm") import org.jboss.modules "1.4.4.Final";
+    native("jvm") import ceylon.file "1.2.1";
+    native("jvm") import ceylon.runtime "1.2.1";
+    
 }

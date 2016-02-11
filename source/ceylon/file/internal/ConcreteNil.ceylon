@@ -14,16 +14,15 @@ import java.nio.file {
 class ConcreteNil(JPath jpath) 
         satisfies Nil {
     
-    shared actual Directory createDirectory(Boolean includingParentDirectories) {
-        if( includingParentDirectories ) {
-            return ConcreteDirectory(newDirectories(jpath));
-        } else {
-            return ConcreteDirectory(newDirectory(jpath));
-        }
-    }
+    createDirectory(Boolean includingParentDirectories) 
+            => if (includingParentDirectories) 
+            then ConcreteDirectory(newDirectories(jpath)) 
+            else ConcreteDirectory(newDirectory(jpath));
     
-    shared actual File createFile(Boolean includingParentDirectories) {
-        if( includingParentDirectories, exists parent = jpath.parent ) {
+    shared actual File createFile
+            (Boolean includingParentDirectories) {
+        if (includingParentDirectories, 
+            exists parent = jpath.parent) {
             newDirectories(parent);
         }
         return ConcreteFile(newFile(jpath));

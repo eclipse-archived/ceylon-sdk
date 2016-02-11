@@ -1,8 +1,9 @@
 import ceylon.test {
     ...
 }
-import ceylon.test.core {
-    IgnoreException
+
+import ceylon.test.engine {
+    TestSkippedException
 }
 
 test
@@ -22,12 +23,17 @@ shared void fooThrowingException() {
 
 test
 shared void fooThrowingIgnoreException() {
-    throw IgnoreException("ignore it!");
+    throw TestSkippedException("ignore it!");
 }
 
 test
 ignore("ignore function foo")
 shared void fooWithIgnore() {}
+
+test
+shared void fooWithAssumption() {
+    assumeTrue(false);
+}
 
 shared void fooWithoutTestAnnotation() {}
 

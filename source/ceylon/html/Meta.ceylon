@@ -6,22 +6,24 @@
  Technical details about this element can be found on the
  [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#meta)"
 see(`class CharsetMeta`)
-shared class Meta(name, content = "", String? id = null)
+shared class Meta(name, content = null, String? id = null)
         extends Element(id) {
 
     "The name (key) of the metadata."
     shared String name;
 
     "The content (value) of the metadata."
-    shared String content;
+    shared String? content;
 
     tag = Tag("meta", emptyTag);
-    
-    shared actual default [<String->Object>*] attributes => concatenate(super.attributes, [
-        "name"->name,
-        "content"->content
-    ]);
 
+    shared actual default [<String->Object>*] attributes {
+        value attrs = AttributeSequenceBuilder();
+        attrs.addAttribute("name", name);
+        attrs.addAttribute("content", content);
+        attrs.addAll(super.attributes);
+        return attrs.sequence();
+    }
 }
 
 "Utility class to easily express a charset metadata for the [[Document]]."

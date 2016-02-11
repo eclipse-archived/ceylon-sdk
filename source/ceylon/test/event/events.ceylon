@@ -2,11 +2,16 @@ import ceylon.language.meta {
     type
 }
 import ceylon.test {
-    ...
+    TestRunner,
+    TestDescription,
+    TestRunResult,
+    TestResult,
+    TestListener
 }
 
-"Event fired by [[TestListener.testRunStart]]."
-shared class TestRunStartEvent(runner, description) {
+
+"Event fired by [[TestListener.testRunStarted]]."
+shared class TestRunStartedEvent(runner, description) {
     
     "The current test runner."
     shared TestRunner runner;
@@ -15,10 +20,12 @@ shared class TestRunStartEvent(runner, description) {
     shared TestDescription description;
     
     shared actual String string => toString(this);
+    
 }
 
-"Event fired by [[TestListener.testRunFinish]]."
-shared class TestRunFinishEvent(runner, result) {
+
+"Event fired by [[TestListener.testRunFinished]]."
+shared class TestRunFinishedEvent(runner, result) {
     
     "The current test runner."
     shared TestRunner runner;
@@ -27,10 +34,12 @@ shared class TestRunFinishEvent(runner, result) {
     shared TestRunResult result;
     
     shared actual String string => toString(this);
+    
 }
 
-"Event fired by [[TestListener.testStart]]."
-shared class TestStartEvent(description, instance = null) {
+
+"Event fired by [[TestListener.testStarted]]."
+shared class TestStartedEvent(description, instance = null) {
     
     "The description of the test."
     shared TestDescription description;
@@ -39,10 +48,12 @@ shared class TestStartEvent(description, instance = null) {
     shared Object? instance;
     
     shared actual String string => toString(this, description);
+    
 }
 
-"Event fired by [[TestListener.testFinish]]."
-shared class TestFinishEvent(result, instance = null) {
+
+"Event fired by [[TestListener.testFinished]]."
+shared class TestFinishedEvent(result, instance = null) {
     
     "The result of the test."
     shared TestResult result;
@@ -51,16 +62,31 @@ shared class TestFinishEvent(result, instance = null) {
     shared Object? instance;
     
     shared actual String string => toString(this, result);
+    
 }
 
-"Event fired by [[TestListener.testIgnore]]."
-shared class TestIgnoreEvent(result) {
+
+"Event fired by [[TestListener.testSkipped]]."
+shared class TestSkippedEvent(result) {
     
     "The result of the test."
     shared TestResult result;
     
     shared actual String string => toString(this, result);
+    
 }
+
+
+"Event fired by [[TestListener.testAborted]]."
+shared class TestAbortedEvent(result) {
+    
+    "The result of the test."
+    shared TestResult result;
+    
+    shared actual String string => toString(this, result);
+    
+}
+
 
 "Event fired by [[TestListener.testError]]."
 shared class TestErrorEvent(result) {
@@ -69,16 +95,20 @@ shared class TestErrorEvent(result) {
     shared TestResult result;
     
     shared actual String string => toString(this, result);
+    
 }
 
-"Event fired by [[TestListener.testExclude]]."
-shared class TestExcludeEvent(description) {
+
+"Event fired by [[TestListener.testExcluded]]."
+shared class TestExcludedEvent(description) {
     
     "The description of the test."
     shared TestDescription description;
     
     shared actual String string => toString(this, description);
+    
 }
+
 
 String toString(Object obj, Object?* attributes) {
     return type(obj).declaration.name + (!attributes.empty then "[" + ", ".join({ for (a in attributes) a?.string else "null" }) + "]" else "");

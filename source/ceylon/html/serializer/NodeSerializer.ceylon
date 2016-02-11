@@ -67,11 +67,8 @@ shared class NodeSerializer(
                 then node.attributes
                 else {};
 
-        // for now, duplicate bug that drops attributes
-        // with empty value
         value nonEmptyAttributes = attributes
-            .map((attribute) => attribute.key->attribute.item.string)
-            .filter((attribute) => !attribute.item.empty);
+            .map((attribute) => attribute.key->attribute.item.string);
 
         htmlSerializer.startElement(node.tag.name, nonEmptyAttributes);
     }

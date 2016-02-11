@@ -1,3 +1,6 @@
+import ceylon.collection {
+    ArrayList
+}
 import ceylon.language.meta {
     type
 }
@@ -5,24 +8,11 @@ import ceylon.language.meta.model {
     Class,
     ClassModel
 }
-
-"Thrown to indicate that two values which should have been \"the 
- same\" (according to some comparison function) were in fact 
- different."
-see (`function assertEquals`, `function assertNotEquals`)
-shared class AssertionComparisonError(
-    "The message describing the problem."
-    String message,
-    actualValue,
-    expectedValue)
-        extends AssertionError(message) {
-    
-    "The actual string value."
-    shared String actualValue;
-    
-    "The expected string value."
-    shared String expectedValue;
+import ceylon.test.engine {
+    AssertionComparisonError,
+    MultipleFailureException
 }
+
 
 "Throws an [[AssertionError]] to fail a test."
 throws (`class AssertionError`, "always")
@@ -31,6 +21,7 @@ shared void fail(
     String? message = null) {
     throw AssertionError(message else "assertion failed");
 }
+
 
 "Fails the test if the _condition_ is false."
 throws (`class AssertionError`, "When _condition_ is false.")
@@ -44,6 +35,7 @@ shared void assertTrue(
     }
 }
 
+
 "Fails the test if the _condition_ is true."
 throws (`class AssertionError`, "When _condition_ is true.")
 shared void assertFalse(
@@ -55,6 +47,7 @@ shared void assertFalse(
         throw AssertionError(message else "assertion failed: expected false");
     }
 }
+
 
 "Fails the test if the given _value_ is not null."
 throws (`class AssertionError`, "When _val_ is not null.")
@@ -68,6 +61,7 @@ shared void assertNull(
     }
 }
 
+
 "Fails the test if the given _value_ is null."
 throws (`class AssertionError`, "When _val_ is null.")
 shared void assertNotNull(
@@ -79,6 +73,7 @@ shared void assertNotNull(
         throw AssertionError(message else "assertion failed: expected not null");
     }
 }
+
 
 "Fails the test if the given values are not equal according to the given compare function."
 throws (`class AssertionComparisonError`, "When _actual_ != _expected_.")
@@ -99,8 +94,9 @@ shared void assertEquals(
     }
 }
 
+
 "Fails the test if the given values are equal according to the given compare function."
-throws (`class AssertionComparisonError`, "When _actual_ == _unexpected_.")
+throws (`class AssertionError`, "When _actual_ == _unexpected_.")
 shared void assertNotEquals(
     "The actual value to be checked."
     Anything actual,
@@ -117,7 +113,45 @@ shared void assertNotEquals(
     }
 }
 
-"Fails the test if expected exception isn't thrown."
+
+"Verify all given assertions and any failures will be reported together.
+ 
+ Example:
+ 
+     assertAll([
+         () => assertEquals(agent.id, \"007\"),
+         () => assertEquals(agent.firstName, \"James\"),
+         () => assertEquals(agent.lastName, \"Bond\")]);
+ 
+"
+throws (`class MultipleFailureException`, "When any assertiones fails.")
+shared void assertAll(
+    "The group of assertions."
+    Anything()[] assertions,
+    "The message describing the problem."
+    String? message = null) {
+    value failures = ArrayList<AssertionError>();
+    for (assertion in assertions) {
+        try {
+            assertion();
+        } catch (AssertionError failure) {
+            failures.add(failure);
+        }
+    }
+    if (!failures.empty) {
+        value description = message else "assertions failed (``failures.size`` of ``assertions.size``) :";
+        throw MultipleFailureException(failures.sequence(), description);
+    }
+}
+
+
+"Fails the test if expected exception isn't thrown.
+ 
+ Example:
+ 
+     assertThatException(() => gandalf.castLightnings()).hasType(\`NotEnoughMagicPowerException\`);
+ 
+"
 throws (`class AssertionError`, "When _exceptionSource()_ doesn't throw an Exception")
 shared ExceptionAssert assertThatException(
     "The checked exception or callback which should throw exception."
@@ -134,6 +168,7 @@ shared ExceptionAssert assertThatException(
         throw AssertionError("assertion failed: expected exception will be thrown");
     }
 }
+
 
 "An assertions applicable to exceptions, see [[assertThatException]]."
 shared class ExceptionAssert(
@@ -187,9 +222,10 @@ shared class ExceptionAssert(
     }
 }
 
+
 "Compares two things. Returns true if both are null or both are non-null and 
  are the same according to [[Object.equals]]."
-shared Boolean equalsCompare(Anything obj1, Anything obj2) {
+Boolean equalsCompare(Anything obj1, Anything obj2) {
     if (exists obj1) {
         if (exists obj2) {
             return obj1 == obj2;
@@ -197,6 +233,7 @@ shared Boolean equalsCompare(Anything obj1, Anything obj2) {
     }
     return obj1 exists == obj2 exists;
 }
+
 
 String nullSafeString(Anything obj) {
     if (exists obj) {

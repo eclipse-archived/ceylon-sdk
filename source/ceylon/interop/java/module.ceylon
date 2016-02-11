@@ -15,6 +15,13 @@
  - [[CeylonIterable]] and [[JavaIterable]] which adapt 
    between Java's [[java.lang::Iterable]] interface and 
    Ceylon's [[Iterable]] interface,
+ - [[CeylonStringIterable]], [[CeylonIntegerIterable]],
+   [[CeylonFloatIterable]], [[CeylonByteIterable]], and
+   [[CeylonBooleanIterable]], which adapt Java 
+   [[java.lang::Iterable]]s of primitive types, 
+ - [[JavaRunnable]] and [[JavaThread]] which adapt Ceylon
+   functions to Java's [[java.lang::Runnable]] and 
+   [[java.lang::Thread]], and
  - [[JavaCloseable]] and [[CeylonDestroyable]] which adapt
    between [[java.lang::AutoCloseable]] and [[Destroyable]].
    
@@ -23,7 +30,7 @@
  an instance of [[java.lang::Class]]."
 by("The Ceylon Team")
 native("jvm")
-module ceylon.interop.java "1.2.0" {
+module ceylon.interop.java "1.2.1" {
     shared import java.base "7";
-    shared import ceylon.collection "1.2.0";
+    shared import ceylon.collection "1.2.1";
 }

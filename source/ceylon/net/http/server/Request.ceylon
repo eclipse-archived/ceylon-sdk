@@ -9,11 +9,11 @@ import ceylon.net.http {
  to a web endpoint."
 by("Matej Lazar")
 shared interface Request {
-
-    "Returns a single parameters with given name. If there
-     are more, the first one is returned. If
-     [[forceFormParsing]] is false (default) and parameter
-     with the same name exists in a query string, posted
+    
+    "Returns a single parameters with given name. If there 
+     are more, the first one is returned. If 
+     [[forceFormParsing]] is false (default) and parameter 
+     with the same name exists in a query string, posted 
      data is not parsed."
     deprecated("Not specifying if the parameter's value should come from the query part
                 in the URL or from the request body is discouraged at this level.

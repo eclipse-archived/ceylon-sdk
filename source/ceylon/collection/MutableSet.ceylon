@@ -56,4 +56,6 @@ shared interface SetMutator<in Element>
      set with no elements."
     shared formal void clear();
     
+    shared formal actual SetMutator<Element> clone();
+    
 }

@@ -76,7 +76,8 @@ shared sealed interface File
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding=null)
+            String? encoding = null,
+            Integer bufferSize = 8192)
                 satisfies AbstractReader {}
     
     "A `Writer` for writing text to this file, after
@@ -86,7 +87,8 @@ shared sealed interface File
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding=null) 
+            String? encoding=null,
+            Integer bufferSize = 8192) 
                 satisfies AbstractWriter {}
     
     "A `Writer` for appending text to this file"
@@ -95,7 +97,8 @@ shared sealed interface File
              `null` indicates that the platform 
              default character encoding should be
              used."
-            String? encoding=null) 
+            String? encoding = null,
+            Integer bufferSize = 8192) 
                 satisfies AbstractWriter {}
     
     "A `Reader` for reading lines of text from this

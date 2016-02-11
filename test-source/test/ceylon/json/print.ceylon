@@ -21,3 +21,12 @@ shared test void testPrint(){
     };
     assertEquals("{\"a\":[\"a\",2,true],\"f\":12.34,\"false\":false,\"i\":12,\"null\":null,\"o\":{\"i\":2},\"s\":\"asd\",\"true\":true}", o2.string);
 }
+
+shared test void testPrintTrickyFloats() {
+    assertEquals(Object{
+        "infinity"-> 1.0/0.0, 
+        "minusInfinity"-> -1.0/0.0,
+        "undefined" -> 0.0/0.0
+    }.string, 
+        """{"infinity":null,"minusInfinity":null,"undefined":null}""");
+}

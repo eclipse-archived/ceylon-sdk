@@ -3,7 +3,7 @@
  
  Technical details about this element can be found on the
  [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-a-element)"
-shared class A(text = "", href = "#", target = null, download = null,
+shared class A(text = "", href = null, target = null, download = null,
             hrefLang = null, rel = null, type = null,
             String? id = null, CssClass classNames = [],
             String? style = null, String? accessKey = null,
@@ -24,7 +24,7 @@ shared class A(text = "", href = "#", target = null, download = null,
     shared actual String text;
 
     "Specifies the URL of the page the link goes to."
-    shared String href;
+    shared String? href;
 
     "If present, must be a valid browsing context name or keyword.
      It gives the name of the browsing context that will be used."
