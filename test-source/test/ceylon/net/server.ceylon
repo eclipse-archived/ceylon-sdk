@@ -709,7 +709,7 @@ void queryParameterTest(String paramKey, String+ paramValues) {
 void readBinaryTest(Byte* bytes) {
     value request = ClientRequest(parse("http://localhost:8080/readBinary"), post);
 
-    request.data = newByteBufferWithData(*bytes);
+    request.data = ByteBuffer(bytes);
 
     value response = request.execute();
     value body = response.contents;
