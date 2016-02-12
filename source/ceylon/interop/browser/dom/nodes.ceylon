@@ -10,7 +10,8 @@ import ceylon.interop.browser.internal {
 // TODO doc
 
 
-
+"A node in the DOM tree.
+ See https://www.w3.org/TR/dom/#interface-node."
 shared dynamic Node satisfies EventTarget {
     shared formal Integer \iELEMENT_NODE;
     shared formal Integer \iATTRIBUTE_NODE; // historical
@@ -65,7 +66,38 @@ shared dynamic Node satisfies EventTarget {
     shared formal Node removeChild(Node child);
 }
 
-shared dynamic Document satisfies Node & GlobalEventHandlers {
+shared dynamic ChildNode {
+    shared formal void remove();
+}
+
+shared dynamic NonElementParentNode {
+    shared formal Element? getElementById(String elementId);
+}
+
+shared dynamic ParentNode {
+    shared formal HTMLCollection children;
+    shared formal Element? firstElementChild;
+    shared formal Element? lastElementChild;
+    shared formal Integer childElementCount;
+    
+    shared formal Element? querySelector(String selectors);
+    shared formal NodeList querySelectorAll(String selectors);
+}
+
+shared dynamic NonDocumentTypeChildNode {
+    shared formal Element? previousElementSibling;
+    shared formal Element? nextElementSibling;
+}
+
+"The Document interface represent any web page loaded in the browser and  
+ serves as an entry point into the web page's content.
+ 
+ See https://www.w3.org/TR/dom/#interface-document"
+shared dynamic Document 
+        satisfies Node 
+                & NonElementParentNode
+                & ParentNode
+                & GlobalEventHandlers {
     shared formal DOMImplementation implementation;
     shared formal String \iURL;
     shared formal String documentURI;
@@ -181,7 +213,7 @@ shared dynamic DOMImplementation {
     shared formal Boolean hasFeature(); // useless; always returns true   
 }
 
-shared dynamic DocumentType satisfies Node {
+shared dynamic DocumentType satisfies Node & ChildNode {
     shared formal String name;
     shared formal String publicId;
     shared formal String systemId;
@@ -191,11 +223,20 @@ shared dynamic XMLDocument satisfies Document {
     
 }
 
-shared dynamic DocumentFragment satisfies Node {
+"DocumentFragment is a \"lightweight\" or \"minimal\" Document object."
+shared dynamic DocumentFragment 
+        satisfies Node
+                & ParentNode
+                & NonElementParentNode {
     
 }
 
-shared dynamic CharacterData satisfies Node {
+"The CharacterData interface extends Node with a set of attributes and methods 
+ for accessing character data in the DOM."
+shared dynamic CharacterData
+        satisfies Node
+                & ChildNode
+                & NonDocumentTypeChildNode {
     shared formal variable String data;
     shared formal Integer length;
     shared formal String substringData(Integer offset, Integer count);
@@ -205,23 +246,37 @@ shared dynamic CharacterData satisfies Node {
     shared formal void replaceData(Integer offset, Integer count, String data);  
 }
 
+"The Text interface inherits from CharacterData and represents the textual 
+ content (termed character data in XML) of an [[Element]] or [[Attr]]."
 shared dynamic Text satisfies CharacterData {
     shared formal Text splitText(Integer offset);
     shared formal String wholeText;
 }
 
+"Creates a new instance of [[Text]]."
 shared Text newText(String text = "") => newTextInternal(text);
 
+"This interface inherits from CharacterData and represents the content of a 
+ comment, i.e., all the characters between the starting '<!--' and ending '-->'."
 shared dynamic Comment satisfies CharacterData {
 }
 
+"Creates a new instance of [[Comment]]."
 shared Comment newComment(String data = "") => newCommentInternal(data);
 
+"The ProcessingInstruction interface represents a \"processing instruction\", 
+ used in XML as a way to keep processor-specific information in the text of the document."
 shared dynamic ProcessingInstruction satisfies CharacterData {
     shared formal String target;
 }
 
-shared dynamic Element satisfies Node {
+"The Element interface represents an element in an HTML or XML document."
+shared dynamic Element
+        satisfies Node 
+                & ChildNode
+                & ParentNode
+                & NonDocumentTypeChildNode {
+
     shared formal String? namespaceURI;
     shared formal String? prefix;
     shared formal String localName;
@@ -252,6 +307,9 @@ shared dynamic Element satisfies Node {
     shared formal void insertAdjacentHTML (String position, String text);
 }
 
+"The Attr interface represents an attribute in an Element object. 
+ Typically the allowable values for the attribute are defined in a schema 
+ associated with the document."
 shared dynamic Attr {
   shared formal String? namespaceURI;
   shared formal String? prefix;
@@ -262,6 +320,8 @@ shared dynamic Attr {
   shared formal Boolean specified; // useless; always returns true
 }
 
+"Objects implementing the NamedNodeMap interface are used to represent 
+ collections of nodes that can be accessed by name."
 shared dynamic NamedNodeMap {
     shared formal Node getNamedItem(String name);
     shared formal Node setNamedItem(Node arg);
@@ -275,12 +335,16 @@ shared dynamic NamedNodeMap {
     shared formal Node removeNamedItemNS(String namespaceURI, String localName);
 }
 
+"A NodeList object is a [collection](https://www.w3.org/TR/dom/#concept-collection)
+ of [[nodes|Node]]."
 shared dynamic NodeList {
     shared formal Node? item(Integer index);
     shared formal Integer length;
     // TODO iterable<Node>;
 }
 
+"An HTMLCollection object is a [collection](https://www.w3.org/TR/dom/#concept-collection)
+ of [[elements|Element]]."
 shared dynamic HTMLCollection {
     shared formal Integer length;
     shared formal Element? item(Integer index);
