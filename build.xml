@@ -28,7 +28,10 @@
     <taskdef resource="aQute/bnd/ant/taskdef.properties"
           classpath="${ceylon.main.dir}/lib/biz.aQute.bnd-2.3.0.jar"/>
 
-    <!-- Local repository -->
+    <taskdef name="bindex" classname="org.osgi.impl.bundle.bindex.ant.BindexTask"
+          classpath="${ceylon.main.dir}/lib/org.osgi.impl.bundle.bindex-2.2.0.jar"/>
+
+	<!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
     
     <path id="ant-tasks">
@@ -385,6 +388,7 @@
             out="${osgi.dist}/tempRepo"
             fork="true">
             <rep url="${basedir}/modules"/>
+            <rep url="${user.home}/.ceylon/cache"/>
             <sourcemodules/>
         </ceylon-copy>
     </target>
@@ -398,12 +402,19 @@
         </foreach>
         <delete dir="${osgi.dist}/tempRepo" failonerror="false" deleteonexit="true"/>
         <makeurl property="rootUrl" file="${osgi.dist}"/>
-        <repoindex name="Ceylon Distribution Bundles"
-            out="${osgi.dist}/repository.xml" 
+        <repoindex name="Ceylon SDK Bundles - R5 OBR format"
+            out="${osgi.dist}/index.xml" 
             compressed="false"
+    	    pretty="true"
             rooturl="${rootUrl}">
             <fileset dir="${osgi.dist.plugins}" includes="*.jar"/>
         </repoindex>
+        <bindex name="Ceylon SDK Bundles - Old OBR format"
+        	quiet="true"
+            repositoryFile="${osgi.dist}/repository.xml" 
+            root="${osgi.dist}">
+            <fileset dir="${osgi.dist.plugins}" includes="*.jar"/>
+        </bindex>
     </target>
 
     <!-- Rule to setup a plugins directory with required bundles -->
@@ -429,6 +440,7 @@
             fork="true">
             <moduleset refid="modules.sdk.jvm"/>
             <rep url="${basedir}/modules"/>
+            <rep url="${user.home}/.ceylon/cache"/>
         </ceylon-p2>
 <!--
         <exec dir="${basedir}" executable="eclipse" failonerror="true">
