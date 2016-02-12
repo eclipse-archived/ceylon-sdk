@@ -14,7 +14,7 @@ shared dynamic HTMLElement satisfies Element & GlobalEventHandlers {
     shared formal void focus();
     shared formal void blur();
     shared formal variable String accessKey;
-    shared formal variable String accessKeyLabel;
+    shared formal variable String? accessKeyLabel;
     shared formal variable String contentEditable;
     shared formal Boolean isContentEditable;
     shared formal variable Boolean spellcheck;

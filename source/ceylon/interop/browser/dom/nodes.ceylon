@@ -179,7 +179,7 @@ shared dynamic Document
     shared formal String queryCommandValue(String commandId);
     
     // special event handler IDL attributes that only apply to Document objects
-    shared formal EventHandler onreadystatechange;
+    shared formal EventHandler? onreadystatechange;
 }
 
 shared interface DocumentReadyState {
