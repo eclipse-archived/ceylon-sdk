@@ -16,7 +16,7 @@ shared dynamic EventTarget {
      is `AT_TARGET`."
     shared formal void addEventListener(String type, EventListener? callback,
         Boolean capture = false);
-
+    
     "Remove the event listener in target’s list of event listeners with the
      same [[type]], [[callback]], and [[capture]]."
     shared formal void removeEventListener(String type, EventListener? callback,
@@ -67,9 +67,11 @@ shared dynamic Event {
     shared formal void initEvent(String type, Boolean bubbles, Boolean cancelable);
 }
 
+"Creates a new instance of [[Event]]."
 shared Event newEvent(String type, EventInit? eventInitDict = null)
-    => newEventInternal(type, eventInitDict);
+        => newEventInternal(type, eventInitDict);
 
+"A dictionary containing attributes related to all events."
 shared class EventInit(bubbles = false, cancelable = false) {
     shared Boolean bubbles;
     shared Boolean cancelable;
@@ -78,75 +80,74 @@ shared class EventInit(bubbles = false, cancelable = false) {
 shared alias DOMTimeStamp => Integer;
 
 shared dynamic GlobalEventHandlers {
-           shared formal EventHandler? onabort;
-           shared formal EventHandler? onblur;
-           shared formal EventHandler? oncancel;
-           shared formal EventHandler? oncanplay;
-           shared formal EventHandler? oncanplaythrough;
-           shared formal EventHandler? onchange;
-           shared formal EventHandler? onclick;
-           shared formal EventHandler? oncuechange;
-           shared formal EventHandler? ondblclick;
-           shared formal EventHandler? ondurationchange;
-           shared formal EventHandler? onemptied;
-           shared formal EventHandler? onended;
-           shared formal OnErrorEventHandler? onerror;
-           shared formal EventHandler? onfocus;
-           shared formal EventHandler? oninput;
-           shared formal EventHandler? oninvalid;
-           shared formal EventHandler? onkeydown;
-           shared formal EventHandler? onkeypress;
-           shared formal EventHandler? onkeyup;
-           shared formal EventHandler? onload;
-           shared formal EventHandler? onloadeddata;
-           shared formal EventHandler? onloadedmetadata;
-           shared formal EventHandler? onloadstart;
-           shared formal EventHandler? onmousedown;
-           shared formal EventHandler? onmouseenter;
-           shared formal EventHandler? onmouseleave;
-           shared formal EventHandler? onmousemove;
-           shared formal EventHandler? onmouseout;
-           shared formal EventHandler? onmouseover;
-           shared formal EventHandler? onmouseup;
-           shared formal EventHandler? onmousewheel;
-           shared formal EventHandler? onpause;
-           shared formal EventHandler? onplay;
-           shared formal EventHandler? onplaying;
-           shared formal EventHandler? onprogress;
-           shared formal EventHandler? onratechange;
-           shared formal EventHandler? onreset;
-           shared formal EventHandler? onresize;
-           shared formal EventHandler? onscroll;
-           shared formal EventHandler? onseeked;
-           shared formal EventHandler? onseeking;
-           shared formal EventHandler? onselect;
-           shared formal EventHandler? onshow;
-           shared formal EventHandler? onstalled;
-           shared formal EventHandler? onsubmit;
-           shared formal EventHandler? onsuspend;
-           shared formal EventHandler? ontimeupdate;
-           shared formal EventHandler? ontoggle;
-           shared formal EventHandler? onvolumechange;
-           shared formal EventHandler? onwaiting;
+    shared formal EventHandler? onabort;
+    shared formal EventHandler? onblur;
+    shared formal EventHandler? oncancel;
+    shared formal EventHandler? oncanplay;
+    shared formal EventHandler? oncanplaythrough;
+    shared formal EventHandler? onchange;
+    shared formal EventHandler? onclick;
+    shared formal EventHandler? oncuechange;
+    shared formal EventHandler? ondblclick;
+    shared formal EventHandler? ondurationchange;
+    shared formal EventHandler? onemptied;
+    shared formal EventHandler? onended;
+    shared formal OnErrorEventHandler? onerror;
+    shared formal EventHandler? onfocus;
+    shared formal EventHandler? oninput;
+    shared formal EventHandler? oninvalid;
+    shared formal EventHandler? onkeydown;
+    shared formal EventHandler? onkeypress;
+    shared formal EventHandler? onkeyup;
+    shared formal EventHandler? onload;
+    shared formal EventHandler? onloadeddata;
+    shared formal EventHandler? onloadedmetadata;
+    shared formal EventHandler? onloadstart;
+    shared formal EventHandler? onmousedown;
+    shared formal EventHandler? onmouseenter;
+    shared formal EventHandler? onmouseleave;
+    shared formal EventHandler? onmousemove;
+    shared formal EventHandler? onmouseout;
+    shared formal EventHandler? onmouseover;
+    shared formal EventHandler? onmouseup;
+    shared formal EventHandler? onmousewheel;
+    shared formal EventHandler? onpause;
+    shared formal EventHandler? onplay;
+    shared formal EventHandler? onplaying;
+    shared formal EventHandler? onprogress;
+    shared formal EventHandler? onratechange;
+    shared formal EventHandler? onreset;
+    shared formal EventHandler? onresize;
+    shared formal EventHandler? onscroll;
+    shared formal EventHandler? onseeked;
+    shared formal EventHandler? onseeking;
+    shared formal EventHandler? onselect;
+    shared formal EventHandler? onshow;
+    shared formal EventHandler? onstalled;
+    shared formal EventHandler? onsubmit;
+    shared formal EventHandler? onsuspend;
+    shared formal EventHandler? ontimeupdate;
+    shared formal EventHandler? ontoggle;
+    shared formal EventHandler? onvolumechange;
+    shared formal EventHandler? onwaiting;
 }
 
 shared alias OnErrorEventHandler => Anything(String|Event, String?, Integer?,
-    Integer?, Anything?);
-
+        Integer?, Anything?);
 
 shared alias OnBeforeUnloadEventHandler => String?(Event);
 
 shared dynamic WindowEventHandlers {
-           shared formal EventHandler? onafterprint;
-           shared formal EventHandler? onbeforeprint;
-           shared formal OnBeforeUnloadEventHandler? onbeforeunload;
-           shared formal EventHandler? onhashchange;
-           shared formal EventHandler? onmessage;
-           shared formal EventHandler? onoffline;
-           shared formal EventHandler? ononline;
-           shared formal EventHandler? onpagehide;
-           shared formal EventHandler? onpageshow;
-           shared formal EventHandler? onpopstate;
-           shared formal EventHandler? onstorage;
-           shared formal EventHandler? onunload;
+    shared formal EventHandler? onafterprint;
+    shared formal EventHandler? onbeforeprint;
+    shared formal OnBeforeUnloadEventHandler? onbeforeunload;
+    shared formal EventHandler? onhashchange;
+    shared formal EventHandler? onmessage;
+    shared formal EventHandler? onoffline;
+    shared formal EventHandler? ononline;
+    shared formal EventHandler? onpagehide;
+    shared formal EventHandler? onpageshow;
+    shared formal EventHandler? onpopstate;
+    shared formal EventHandler? onstorage;
+    shared formal EventHandler? onunload;
 }
