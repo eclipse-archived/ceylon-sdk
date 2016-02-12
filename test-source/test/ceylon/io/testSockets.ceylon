@@ -4,13 +4,16 @@ import ceylon.io {
     newSelector,
     SocketConnector,
     SocketAddress,
-    newSslSocketConnector
+    newSslSocketConnector,
+    byteConsumerToStringConsumer,
+    stringToByteProducer
 }
 import ceylon.buffer {
     ...
 }
 import ceylon.buffer.charset {
-    ...
+    utf8,
+    ascii
 }
 import ceylon.net.uri {
     parse

@@ -33,9 +33,15 @@ shared Anything(ByteBuffer) byteConsumerToStringConsumer
 by ("Stéphane Épardaud")
 shared Anything(ByteBuffer) stringToByteProducer
         (Charset charset, String string) {
+    value encoder = charset.chunkEncoder();
+    variable value firstCall = true;
     void producer(ByteBuffer buffer) {
-        value encoder = charset.chunkEncoder();
-        encoder.convert(buffer, string);
+        if (firstCall) {
+            encoder.convert(buffer, string);
+            firstCall = false;
+        } else {
+            encoder.convert(buffer, empty);
+        }
     }
     return producer;
 }

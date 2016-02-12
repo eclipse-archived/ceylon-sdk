@@ -7,14 +7,14 @@ import ceylon.file {
 }
 import ceylon.io {
     newOpenFile,
-    OpenFile
+    OpenFile,
+    stringToByteProducer
 }
 import ceylon.buffer {
     ByteBuffer
 }
 import ceylon.buffer.charset {
-    utf8,
-    stringToByteProducer
+    utf8
 }
 import ceylon.test {
     assertEquals,
