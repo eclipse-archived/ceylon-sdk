@@ -257,7 +257,7 @@ shared dynamic Text satisfies CharacterData {
 shared Text newText(String text = "") => newTextInternal(text);
 
 "This interface inherits from CharacterData and represents the content of a 
- comment, i.e., all the characters between the starting '<!--' and ending '-->'."
+ comment, i.e., all the characters between the starting '&lt;!--' and ending '--&gt;'."
 shared dynamic Comment satisfies CharacterData {
 }
 
