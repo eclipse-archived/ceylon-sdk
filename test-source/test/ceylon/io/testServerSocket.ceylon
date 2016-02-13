@@ -1,9 +1,9 @@
 import ceylon.io {
-    newServerSocket
-}
-import ceylon.io.charset {
+    newServerSocket,
     byteConsumerToStringConsumer,
-    stringToByteProducer,
+    stringToByteProducer
+}
+import ceylon.buffer.charset {
     ascii
 }
 import ceylon.test {

@@ -1,6 +1,9 @@
 import ceylon.file { Path, File, parsePath }
-import ceylon.io { OpenFile, newOpenFile }
-import ceylon.io.charset { stringToByteProducer, utf8 }
+import ceylon.io { OpenFile, newOpenFile,
+    stringToByteProducer }
+import ceylon.buffer.charset {
+    utf8
+}
 import ceylon.net.uri { parse, Parameter }
 import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { Status, 
@@ -24,8 +27,7 @@ import ceylon.html {
 import ceylon.html.serializer {
     NodeSerializer
 }
-import ceylon.io.buffer { newByteBuffer, ByteBuffer,
-    newByteBufferWithData }
+import ceylon.buffer { ByteBuffer }
 import test.ceylon.net.multipartclient {
     MultipartRequest,
     FilePart
@@ -710,7 +712,7 @@ void queryParameterTest(String paramKey, String+ paramValues) {
 void readBinaryTest(Byte* bytes) {
     value request = ClientRequest(parse("http://localhost:8080/readBinary"), post);
 
-    request.data = newByteBufferWithData(*bytes);
+    request.data = ByteBuffer(bytes);
 
     value response = request.execute();
     value body = response.contents;
@@ -772,7 +774,7 @@ void testAsyncStream() {
 
     value responseReader = response.getReader();
     value buffSize = 100;
-    value buffer = newByteBuffer(buffSize);
+    value buffer = ByteBuffer.ofSize(buffSize);
     MutableList<Byte> content = LinkedList<Byte>();
     variable Integer remaining = parseInteger(response.getSingleHeader("content-length") else "0") else 0;
     print("cointent-size: ``remaining``");
@@ -797,9 +799,9 @@ void testAsyncStream() {
     }
     print("Read in ``system.milliseconds - startTime``ms.");
     
-    ByteBuffer contentBuff = newByteBuffer(content.size);
+    ByteBuffer contentBuff = ByteBuffer.ofSize(content.size);
     for (b in content) {
-        contentBuff.putByte(b);
+        contentBuff.put(b);
     }
     contentBuff.flip();
     value responseContent = utf8.decode(contentBuff);

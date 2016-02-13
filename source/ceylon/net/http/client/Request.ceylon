@@ -7,7 +7,7 @@ import ceylon.io {
     SocketAddress,
     newSslSocketConnector
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ascii,
     Charset,
     utf8
@@ -25,9 +25,8 @@ import ceylon.net.uri {
     Uri,
     Parameter
 }
-import ceylon.io.buffer {
-    ByteBuffer,
-    newByteBuffer
+import ceylon.buffer {
+    ByteBuffer
 }
 
 "Represents an HTTP Request"
@@ -221,23 +220,23 @@ shared class Request(uri,
         String? contentType;
         ByteBuffer requestBodyBuffer;
         if (!parameters.empty && method == post) {
-            requestBodyBuffer = bodyCharset.encode(externalisableParameters);
+            requestBodyBuffer = bodyCharset.encodeBuffer(externalisableParameters);
             contentType = contentTypeFormUrlEncoded;
         } else if (is String d = data) {
-            requestBodyBuffer = bodyCharset.encode(d);
+            requestBodyBuffer = bodyCharset.encodeBuffer(d);
             contentType = dataContentType;
         } else if (is ByteBuffer b = data) {
             requestBodyBuffer = b;
             contentType = dataContentType;
         } else {
-            requestBodyBuffer = newByteBuffer(0);
+            requestBodyBuffer = ByteBuffer.ofSize(0);
             contentType = null;
         }
         
         // prepare the request prefix
         String requestPrefix = prepareRequestPrefix(requestBodyBuffer.available, contentType);
         // convert to a byte buffer. Prefix must be ASCII.
-        ByteBuffer requestPrefixBuffer = ascii.encode(requestPrefix);
+        ByteBuffer requestPrefixBuffer = ascii.encodeBuffer(requestPrefix);
         
         // now open a socket to the host
         value socketAddress = SocketAddress(host, port);

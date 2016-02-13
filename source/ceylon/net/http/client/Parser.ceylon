@@ -6,11 +6,10 @@ import ceylon.collection {
 import ceylon.io {
     FileDescriptor
 }
-import ceylon.io.buffer {
-    newByteBuffer,
+import ceylon.buffer {
     ByteBuffer
 }
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     ascii
 }
 import ceylon.io.readers {
@@ -25,9 +24,9 @@ by("Stéphane Épardaud")
 shared class Parser(FileDescriptor socket) {
     
     variable Integer byte = 0;
-    value buffer = newByteBuffer(1024);
+    value buffer = ByteBuffer.ofSize(1024);
     value reader = FileDescriptorReader(socket);
-    value decoder = ascii.Decoder();
+    value charset = ascii;
     
     variable Integer? status = null;
     variable String? reason = null;
@@ -119,22 +118,21 @@ shared class Parser(FileDescriptor socket) {
             buffer.resize(buffer.capacity + 1024, true);
         }
         // save the byte
-        buffer.putByte(byte.byte);
+        buffer.put(byte.byte);
     }
 
     "Gets the contents of the buffer as ASCII"
     String getString() {
         buffer.flip();
-        decoder.decode(buffer);
-        return decoder.consume();
+        return charset.decode(buffer);
     }
     
     "Throws an exception about an unexpected input read"
     throws(`class Exception`, "All the time")
     Exception unexpected(String expected) {
         // try to read some context for an error
-        ByteBuffer buffer = newByteBuffer(40);
-        buffer.putByte(byte.byte);
+        ByteBuffer buffer = ByteBuffer.ofSize(40);
+        buffer.put(byte.byte);
         socket.read(buffer);
         buffer.flip();
         String line = ascii.decode(buffer);

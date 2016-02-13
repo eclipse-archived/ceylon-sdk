@@ -1,16 +1,16 @@
+import ceylon.buffer {
+    ByteBuffer
+}
 import ceylon.file {
     Resource
 }
 import ceylon.io {
     OpenFile
 }
-import ceylon.io.buffer {
-    ByteBuffer
-}
-import ceylon.io.buffer.impl {
-    ByteBufferImpl
-}
 
+import java.nio {
+    JavaByteBuffer=ByteBuffer
+}
 import java.nio.channels {
     FileChannel {
         javaOpenFileChannel=open
@@ -21,9 +21,9 @@ import java.nio.file {
         javaGetPath=get
     },
     StandardOpenOption {
-        javaCreateOption=CREATE,
-        javaWriteOption=WRITE,
-        javaReadOption=READ
+        javaCreateOption=\iCREATE,
+        javaWriteOption=\iWRITE,
+        javaReadOption=\iREAD
     }
 }
 
@@ -46,13 +46,13 @@ shared class OpenFileImpl(resource)
     assign position => channel.position(position);
 
     shared actual Integer read(ByteBuffer buffer) {
-        assert(is ByteBufferImpl buffer);
-        return channel.read(buffer.underlyingBuffer);
+        assert(is JavaByteBuffer impl = buffer.implementation);
+        return channel.read(impl);
     }
 
     shared actual Integer write(ByteBuffer buffer) {
-        assert(is ByteBufferImpl buffer);
-        return channel.write(buffer.underlyingBuffer);
+        assert(is JavaByteBuffer impl = buffer.implementation);
+        return channel.write(impl);
     }
 
     shared actual Object implementation => channel;

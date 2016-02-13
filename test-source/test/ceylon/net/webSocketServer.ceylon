@@ -3,10 +3,10 @@ import test.ceylon.net.websocketclient { WebSocketClient }
 import ceylon.net.http.server.websocket { WebSocketChannel, CloseReason, WebSocketEndpoint }
 import ceylon.test { assertTrue, assertEquals, test }
 import ceylon.net.http.server { startsWith, started, Status, stopped, newServer }
-import ceylon.io.buffer { ByteBuffer }
+import ceylon.buffer { ByteBuffer }
 import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
-import ceylon.io.charset { utf8 }
+import ceylon.buffer.charset { utf8 }
 import io.netty.handler.codec.http.websocketx { WebSocketHandshakeException }
 
 by("Matej Lazar")
@@ -56,7 +56,7 @@ test void testWebSocketServer() {
             onBinnaryCalled = true;
             String data = utf8.decode(binary);
             print("Server received binary message: ``data``");
-            value encoded = utf8.encode(data.uppercased);
+            value encoded = utf8.encodeBuffer(data.uppercased);
             channel.sendBinary(encoded);
         };}
     );

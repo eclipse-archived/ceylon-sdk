@@ -2,25 +2,22 @@
 import java.nio {
     JByteBuffer=ByteBuffer
 }
-import ceylon.io.buffer {
-    newByteBuffer,
-    ByteBuffer,
-    newByteBufferWithData
+import ceylon.buffer {
+    ByteBuffer
 }
-import java.lang {
-    ByteArray
+import ceylon.interop.java {
+    toByteArray
 }
 
 by("Matej Lazar")
 
 shared ByteBuffer toCeylonByteBuffer(JByteBuffer? jByteBuffer) {
     if (exists jbb = jByteBuffer) {
-        value byteArray = ByteArray(jbb.remaining()); 
-        jbb.get(byteArray);
-        ByteBuffer bb = newByteBufferWithData(*byteArray.byteArray);
+        Array<Byte> cba = toByteArray(jbb.array());
+        ByteBuffer bb = ByteBuffer.ofArray(cba);
         return bb;
     } else {
-        return newByteBuffer(0); 
+        return ByteBuffer.ofSize(0);
     }
 }
 
@@ -30,7 +27,7 @@ shared ByteBuffer mergeBuffers(ByteBuffer* payload) {
         payloadSize = payloadSize + bb.available;
     }
     
-    ByteBuffer buffer = newByteBuffer(payloadSize);
+    ByteBuffer buffer = ByteBuffer.ofSize(payloadSize);
     if (payloadSize == 0) {
         return buffer;
     }
@@ -44,6 +41,6 @@ shared ByteBuffer mergeBuffers(ByteBuffer* payload) {
 
 void addBytes(ByteBuffer toBuffer, ByteBuffer fromBuffer) {
     while (fromBuffer.hasAvailable) {
-        toBuffer.putByte(fromBuffer.getByte());
+        toBuffer.put(fromBuffer.get());
     }
 }

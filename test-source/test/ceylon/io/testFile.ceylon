@@ -7,14 +7,14 @@ import ceylon.file {
 }
 import ceylon.io {
     newOpenFile,
-    OpenFile
+    OpenFile,
+    stringToByteProducer
 }
-import ceylon.io.buffer {
+import ceylon.buffer {
     ByteBuffer
 }
-import ceylon.io.charset {
-    utf8,
-    stringToByteProducer
+import ceylon.buffer.charset {
+    utf8
 }
 import ceylon.test {
     assertEquals,
@@ -42,8 +42,8 @@ test void testFileCreateWriteRead(){
 	OpenFile file2 = newOpenFile(path.resource);
 	assertEquals(0, file2.position);
 	assertEquals(12, file2.size);
-    value decoder = utf8.Decoder();
-	file2.readFully((ByteBuffer buffer) => decoder.decode(buffer));
+    value decoder = utf8.cumulativeDecoder();
+	file2.readFully((ByteBuffer buffer) => decoder.more(buffer));
 	file2.close();
 
 	if(is File f = path.resource){
@@ -51,7 +51,7 @@ test void testFileCreateWriteRead(){
 		f.delete();
 	}
 	
-	String ret = decoder.consume();
+	String ret = decoder.done().string;
 	assertEquals("Hello World\n", ret);
 }
 
@@ -75,8 +75,8 @@ test void testFileCreateWriteReadWithoutReopen(){
 	file.position = 0;
 	assertEquals(0, file.position);
 	assertEquals(12, file.size);
-    value decoder = utf8.Decoder();
-	file.readFully((ByteBuffer buffer) => decoder.decode(buffer));
+    value decoder = utf8.cumulativeDecoder();
+	file.readFully((ByteBuffer buffer) => decoder.more(buffer));
 	file.close();
 
 	if(is File f = path.resource){
@@ -84,7 +84,7 @@ test void testFileCreateWriteReadWithoutReopen(){
 		f.delete();
 	}
 	
-	String ret = decoder.consume();
+	String ret = decoder.done().string;
 	assertEquals("Hello World\n", ret);
 }
 
@@ -114,8 +114,8 @@ test void testFileCreateWriteResetWriteRead(){
 	file.position = 0;
 	assertEquals(0, file.position);
 	assertEquals(12, file.size);
-    value decoder = utf8.Decoder();
-	file.readFully((ByteBuffer buffer) => decoder.decode(buffer));
+    value decoder = utf8.cumulativeDecoder();
+	file.readFully((ByteBuffer buffer) => decoder.more(buffer));
 	file.close();
 
 	if(is File f = path.resource){
@@ -123,7 +123,7 @@ test void testFileCreateWriteResetWriteRead(){
 		f.delete();
 	}
 	
-	String ret = decoder.consume();
+	String ret = decoder.done().string;
 	assertEquals("olleH World\n", ret);
 }
 
@@ -148,8 +148,8 @@ test void testFileTruncate(){
 	file.truncate(5);
 	assertEquals(0, file.position);
 	assertEquals(5, file.size);
-    value decoder = utf8.Decoder();
-	file.readFully((ByteBuffer buffer) => decoder.decode(buffer));
+    value decoder = utf8.cumulativeDecoder();
+	file.readFully((ByteBuffer buffer) => decoder.more(buffer));
 	file.close();
 
 	if(is File f = path.resource){
@@ -157,7 +157,7 @@ test void testFileTruncate(){
 		f.delete();
 	}
 	
-	String ret = decoder.consume();
+	String ret = decoder.done().string;
 	assertEquals("Hello", ret);
 }
 
