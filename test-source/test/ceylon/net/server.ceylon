@@ -6,7 +6,8 @@ import ceylon.net.http.client { ClientRequest=Request }
 import ceylon.net.http.server { Status, 
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
-                                  startsWith, endsWith, Options, stopped, newServer }
+                                  startsWith, endsWith, Options, stopped, newServer,
+                                  template }
 import ceylon.net.http.server.endpoints { serveStaticFile,
     RepositoryEndpoint }
 import ceylon.test { assertEquals, assertTrue, test }
@@ -184,7 +185,7 @@ test void testServer() {
         AsynchronousEndpoint {
             service => serveStaticFile(".");
             path = startsWith("/lazy")
-                    .or(startsWith("/blob")) 
+                    .or(startsWith("/blob"))
                     .or(endsWith(".txt"));
         },
         AsynchronousEndpoint {
@@ -267,6 +268,20 @@ test void testServer() {
             }; 
             acceptMethod = {post};
         },
+        Endpoint {
+            path = template("/template/{val}/x/{other}");
+            service = (Request request, Response response) {
+                String? val = request.pathParameter("val");
+                String? other = request.pathParameter("other");
+                String? template = request.matchedTemplate;
+                assert (exists val);
+                assert (exists other);
+                assert (exists template);
+                response.addHeader(contentType("text/plain", utf8));
+                response.writeString("val=``val``, other=``other``, matched=``template``");
+            };
+            acceptMethod = {get};
+        },
         RepositoryEndpoint {
             root = "/modules";
         }
@@ -312,6 +327,8 @@ test void testServer() {
                 
                 //TODO enable async "streaming" test
                 //testAsyncStream();
+
+                templateTest();
 
                 testMultipartPost();
                 
@@ -728,6 +745,17 @@ void writeStringsTest() {
     //TODO log
     print("Response content: " + responseContent);
     assertTrue(responseContent.contains("foo 10"), "Response does not containg 'foo 10'.");
+}
+
+void templateTest() {
+    value request = ClientRequest(parse("http://localhost:8080/template/xyzzy/x/veramocor"), get);
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertTrue(responseContent.equals("val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}"), "Response does not equals 'val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}'.");
 }
 
 void sessionTest() {

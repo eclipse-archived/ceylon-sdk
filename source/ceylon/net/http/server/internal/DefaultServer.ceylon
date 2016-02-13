@@ -14,7 +14,9 @@ import ceylon.net.http.server {
 	stopping,
 	stopped,
 	InternalException,
-	HttpEndpoint
+	HttpEndpoint,
+	TemplateMatcher,
+	Endpoint
 }
 import ceylon.net.http.server.internal.websocket {
 	CeylonWebSocketHandler,
@@ -92,6 +94,12 @@ import org.xnio.nio {
 import io.undertow.connector {
 	ByteBufferPool
 }
+import io.undertow.predicate {
+	Predicate
+}
+import io.undertow.server.handlers {
+	PathTemplateHandler
+}
 
 by("Matej Lazar")
 shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
@@ -140,14 +148,22 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         notifyListeners(starting);
         //TODO log
         print("Starting on ``socketAddress.address``:``socketAddress.port``");
+        value ceylonRequestHandler = CeylonRequestHandler(options, httpEndpoints);
+
         HttpOpenListener openListener 
                 = HttpOpenListener(
-            		XnioByteBufferPool(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192)), 
-            		omBuilder().set(utBufferPipelinedData,false).map);
+            XnioByteBufferPool(ByteBufferSlicePool(directByteBufferAllocator, 8192, 8192 * 8192)), 
+            omBuilder().set(utBufferPipelinedData,false).map);
         
-        openListener.rootHandler 
-                = getHandlers(options, 
-            			CeylonRequestHandler(options, httpEndpoints));
+        PathTemplateHandler pathTemplateHandler = PathTemplateHandler(CeylonRequestHandler(options, httpEndpoints));
+        for (endpoint in httpEndpoints.endpoints) {
+            if (is TemplateMatcher matcher = endpoint.path) {
+                assert (is Endpoint endpoint);
+                pathTemplateHandler.add(matcher.template, TemplateCeylonRequestHandler(options, endpoint));
+            }
+        }
+        
+        openListener.rootHandler = getHandlers(options, pathTemplateHandler);
         
         OptionMap workerOptions = omBuilder()
                 .set(xnioWorkerIoThreads, JInt(options.workerIoThreads))
