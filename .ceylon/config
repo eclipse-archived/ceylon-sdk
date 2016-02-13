@@ -1,7 +1,6 @@
 [repositories]
 output=./modules
 lookup=./test-deps
-remote=aether
 
 [defaults]
 encoding=UTF-8
@@ -14,6 +13,3 @@ source=./source
 source=./test-source
 resource=./resource
 suppresswarning=ceylonNamespace
-
-[formattool]
-profile=default
