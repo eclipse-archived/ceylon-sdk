@@ -68,7 +68,14 @@ shared interface Request {
     "Get the request URI path.  This is the whole original
      request path."
     shared formal String path;
-    
+
+    "Get the matched template path when using a TemplateEndpoint."
+    shared formal String? matchedTemplate;
+
+    "Get a path parameter corresponding to a path component
+     in curly braces when using a TemplateEndpoint."
+    shared formal String? pathParameter(String name);
+
     "Read the contents of the request as text."
     shared formal String read();
 
@@ -98,5 +105,5 @@ shared interface Request {
     "Returns users http session. If session doesn't exists, 
      a new is created."
     shared formal Session session;
-    
+
 }

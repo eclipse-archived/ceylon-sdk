@@ -63,13 +63,17 @@ import java.lang {
 
 by("Matej Lazar")
 class RequestImpl(HttpServerExchange exchange, 
-    FormParserFactory formParserFactory, endpoint, path, method)
+    FormParserFactory formParserFactory, endpoint, path, method,
+        matchedTemplate = null, pathParameters = emptyMap)
         satisfies Request {
 
     shared HttpEndpoint endpoint;
 
     shared actual String path;
 
+    shared actual String? matchedTemplate;
+    Map<String, String> pathParameters;
+    
     shared actual Method method;
 
     String? getHeader(String name) 
@@ -252,6 +256,10 @@ class RequestImpl(HttpServerExchange exchange,
     shared  actual String? queryParameter(String name)
         => if (nonempty params = queryParametersMap[name])
              then params.first else null;
+
+    shared actual String? pathParameter(String name) {
+        return pathParameters.get(name);
+    }
 
     shared actual UploadedFile[] files(String name) {
         if (exists files = formData.files[name]) {

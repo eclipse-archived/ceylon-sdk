@@ -8,12 +8,29 @@ shared abstract class Matcher() {
      [[endsWith]] and [[and]] are ignored while constructing 
      relative path. [[endsWith]] and [[and]] returns 
      unmodified requestPath."
+    deprecated
     shared default String relativePath(String requestPath)
             => requestPath;
     shared Matcher and(Matcher other) 
             => And(this, other);
     shared Matcher or(Matcher other) 
             => Or(this, other);
+}
+
+"Matcher to leverage Undertow's template mechanism for path templates and path parameters.
+ It should be given to an Endpoint without combining it with other matchers.
+ 
+ Matches a path with path parameters. The parameters are indicated
+ by curly braces in the template, for example /a/{b}/c/{d} Their values can be obtained from
+ the Request via the Request.pathParameter() method."
+shared class TemplateMatcher(shared String template)
+        extends Matcher() {
+	// Don't use it as a conventional matcher!
+	matches(String path) => false;
+	
+	String relativePath(String requestPath) {
+		throw Exception("not supported on TemplateMatcher");
+	}
 }
 
 class StartsWith(String substring) 
@@ -73,3 +90,5 @@ shared Matcher endsWith(String suffix) => EndsWith(suffix);
 
 "Rule matching / (root)."
 shared Matcher isRoot() => IsRoot();
+
+shared TemplateMatcher template(String template) => TemplateMatcher(template);
