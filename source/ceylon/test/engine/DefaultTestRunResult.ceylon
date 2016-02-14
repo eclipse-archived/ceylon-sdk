@@ -72,6 +72,8 @@ shared class DefaultTestRunResult() satisfies TestRunResult {
     
     shared object listener satisfies TestListener {
         
+        order = -1000;
+        
         shared actual void testRunStarted(TestRunStartedEvent event) => startTimeMilliseconds = system.milliseconds;
         
         shared actual void testRunFinished(TestRunFinishedEvent event) => endTimeMilliseconds = system.milliseconds;

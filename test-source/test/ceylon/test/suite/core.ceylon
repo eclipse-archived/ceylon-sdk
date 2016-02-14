@@ -460,10 +460,9 @@ void assertResultCounts(TestRunResult runResult, Integer successCount = 0, Integ
     }
 }
 
-void assertResultContains(TestRunResult runResult, Integer index = 0, TestState state = TestState.success, TestSource? source = null, String? name = null, String? message = null, String? variant = null) {
-    try {
-        assert(exists r = runResult.results[index], 
-        r.state == state);
+void assertResultContains(TestRunResult runResult, Integer index = -1, TestState state = TestState.success, TestSource? source = null, String? name = null, String? message = null, String? variant = null) {
+    void match(TestResult? r) {
+        assert(exists r, r.state == state);
         
         if( exists source ) {
             if( is FunctionDeclaration source ) {
@@ -490,6 +489,24 @@ void assertResultContains(TestRunResult runResult, Integer index = 0, TestState 
         }
         if( state == TestState.success ) {
             assert(!r.exception exists);
+        }
+    }
+    
+    try {
+        if( index == -1 ) {
+            variable Boolean foundMatch = false;
+            for(r in runResult.results ) {
+                try {
+                    match(r);
+                    foundMatch = true;
+                    break;
+                } catch (Throwable e) {
+                    continue;
+                }
+            }
+            assert(foundMatch);
+        } else {
+            match(runResult.results[index]);
         }
     }
     catch(Throwable e) {
