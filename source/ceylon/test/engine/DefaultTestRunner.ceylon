@@ -7,17 +7,16 @@ import ceylon.language.meta.declaration {
 import ceylon.language.meta.model {
     ...
 }
-
-import ceylon.test.annotation {
-    ...
-}
-import ceylon.test.event {
+import ceylon.collection {
     ...
 }
 import ceylon.test {
     ...
 }
-import ceylon.collection {
+import ceylon.test.annotation {
+    ...
+}
+import ceylon.test.event {
     ...
 }
 import ceylon.test.engine.spi {
@@ -67,7 +66,13 @@ shared class DefaultTestRunner(
         verifyCycle();
         
         value result = DefaultTestRunResult();
-        value context = TestExecutionContext.root(this, result, async);
+        value extensionResolver = DefaultTestExtensionResolver();
+        value context = TestExecutionContext.root(this, result, extensionResolver, async);
+        
+        value listeners = findAllListeners(extensionResolver).
+                chain(extensions.narrow<TestListener>()).
+                chain({result.listener}).
+                sort(increasing);
         
         context.registerExtension(DefaultArgumentListResolver());
         context.registerExtension(DefaultTestInstanceProvider());
@@ -77,9 +82,9 @@ shared class DefaultTestRunner(
         
         context.execute(
             () => runningRunners.add(this),
-            () => context.fire().testRunStarted(TestRunStartedEvent(this, description)),
+            () => TestEventEmitter(listeners).testRunStarted(TestRunStartedEvent(this, description)),
             {for(e in executors) () => e.execute(context)},
-            () => context.fire().testRunFinished(TestRunFinishedEvent(this, result)),
+            () => TestEventEmitter(listeners).testRunFinished(TestRunFinishedEvent(this, result)),
             () => runningRunners.remove(this),
             () => done(result)
         );       
@@ -93,6 +98,18 @@ shared class DefaultTestRunner(
                 throw Exception("cycle in TestRunner execution was detected, TestRunner.run() is probably invoked from inside test function");
             }
         }
+    }
+    
+    {TestListener*} findAllListeners(TestExtensionResolver extensionResolver) {
+        value set = HashSet<TestListener>();
+        void visit(TestDescription d) {
+            set.addAll(extensionResolver.resolveExtensions<TestListener>(d));
+            for(child in d.children) {
+                visit(child);
+            }            
+        }
+        visit(description);
+        return set;
     }
     
 }

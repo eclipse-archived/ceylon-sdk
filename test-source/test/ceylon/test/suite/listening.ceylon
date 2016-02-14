@@ -198,15 +198,13 @@ void shouldHandleExceptionDuringHandlingException() {
     };
     assertResultContains {
         runResult;
-        index = 1;
         state = TestState.error;
-        message = "testRunFinished";
+        message = "testError";
     };
     assertResultContains {
         runResult;
-        index = 2;
         state = TestState.error;
-        message = "testError";
+        message = "testRunFinished";
     };
 }
 
@@ -234,9 +232,11 @@ void shouldNotifyListenerSpecifiedViaAnnotation() {
     value result = createTestRunner([`bazWithCustomListener`]).run();
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 2);
-    assertEquals(lines[0], "TestStartedEvent[test.ceylon.test.stubs::bazWithCustomListener]");
-    assertEquals(lines[1], "TestFinishedEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
+    assertEquals(lines.size, 4);
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::bazWithCustomListener]");
+    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::bazWithCustomListener - success]");
+    assertEquals(lines[3], "TestRunFinishedEvent");
     
     assertResultCounts {
         result;
@@ -257,11 +257,13 @@ void shouldNotifyListenerSpecifiedViaAnnotationOnlyOnceEventIfOccurMoreTimes() {
     createTestRunner([`BazWithCustomListener`]).run();
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 4);
-    assertEquals(lines[0], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener]");
-    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
-    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
-    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
+    assertEquals(lines.size, 6);
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener]");
+    assertEquals(lines[2], "TestStartedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1]");
+    assertEquals(lines[3], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener.baz1 - success]");
+    assertEquals(lines[4], "TestFinishedEvent[test.ceylon.test.stubs::BazWithCustomListener - success]");
+    assertEquals(lines[5], "TestRunFinishedEvent");
 }
 
 test
@@ -278,9 +280,11 @@ void shouldNotifyListenerSpecifiedViaAnnotationWithAnonymousTestListener() {
     value result = createTestRunner([`bazWithAnonymousTestListener`]).run();
     
     value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 2);
-    assertEquals(lines[0], "TestStartedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
-    assertEquals(lines[1], "TestFinishedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
+    assertEquals(lines.size, 4);
+    assertEquals(lines[0], "TestRunStartedEvent");
+    assertEquals(lines[1], "TestStartedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener]");
+    assertEquals(lines[2], "TestFinishedEvent[test.ceylon.test.stubs::bazWithAnonymousTestListener - success]");
+    assertEquals(lines[3], "TestRunFinishedEvent");
     
     assertResultCounts {
         result;
@@ -298,11 +302,15 @@ test
 void shouldNotifyListenersWithSpecifiedOrder() {
     void assertLog(String name) {
         value lines = bazTestListenerLog.string.trimmed.lines.sequence();
-        assertEquals(lines.size, 4);
-        assertEquals(lines[0], "TestStartedEvent[``name``]");
-        assertEquals(lines[1], "!! TestStartedEvent[``name``]");
-        assertEquals(lines[2], "TestFinishedEvent[``name`` - success]");
-        assertEquals(lines[3], "!! TestFinishedEvent[``name`` - success]");
+        assertEquals(lines.size, 8);
+        assertEquals(lines[0], "TestRunStartedEvent");
+        assertEquals(lines[1], "!! TestRunStartedEvent");
+        assertEquals(lines[2], "TestStartedEvent[``name``]");
+        assertEquals(lines[3], "!! TestStartedEvent[``name``]");
+        assertEquals(lines[4], "TestFinishedEvent[``name`` - success]");
+        assertEquals(lines[5], "!! TestFinishedEvent[``name`` - success]");
+        assertEquals(lines[6], "TestRunFinishedEvent");
+        assertEquals(lines[7], "!! TestRunFinishedEvent");
     }
     
     bazTestListenerLog.clear();
