@@ -1,6 +1,6 @@
 native("jvm")
 module test.ceylon.transaction "1.2.1" {
-    import ceylon.test "1.2.1";
+    import ceylon.test "1.2.1-1";
     // NB need to use shared import to manually enlist resources
     shared import ceylon.transaction "1.2.1";
 
