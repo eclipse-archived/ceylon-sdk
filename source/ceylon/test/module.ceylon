@@ -114,7 +114,7 @@
    """
 by ("Tom Bentley", "Tomáš Hradec")
 license ("Apache Software License")
-module ceylon.test "1.2.1" {
+module ceylon.test "1.2.1-1" {
     import ceylon.collection "1.2.1";
     
     native("jvm") import java.base "7";
