@@ -98,6 +98,7 @@
         </moduleset>
 	
         <moduleset id="modules.sdk.doc">
+            <module name="ceylon.buffer"/>
             <module name="ceylon.collection"/>
             <module name="ceylon.dbc"/>
             <module name="ceylon.decimal"/>
