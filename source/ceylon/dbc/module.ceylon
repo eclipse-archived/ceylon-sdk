@@ -87,12 +87,12 @@
 by ("Enrique Zamudio")
 license ("Apache Software License 2.0")
 native("jvm")
-module ceylon.dbc "1.2.1" {
-    import ceylon.collection "1.2.1";
-    shared import ceylon.math "1.2.1";
+module ceylon.dbc "1.2.2" {
+    import ceylon.collection "1.2.2";
+    shared import ceylon.math "1.2.2";
     import java.base "7";
-    import ceylon.interop.java "1.2.1";
+    import ceylon.interop.java "1.2.2";
     shared import java.jdbc "7";
-    import ceylon.time "1.2.1";
-    import ceylon.transaction "1.2.1";
+    import ceylon.time "1.2.2";
+    import ceylon.transaction "1.2.2";
 }

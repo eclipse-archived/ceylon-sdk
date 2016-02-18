@@ -12,7 +12,7 @@
    """
 by("Tako Schotanus")
 license("Apache Software License 2.0")
-module ceylon.regex "1.2.1" {
+module ceylon.regex "1.2.2" {
     native("jvm") import java.base "7";
-    native("jvm") import ceylon.interop.java "1.2.1";
+    native("jvm") import ceylon.interop.java "1.2.2";
 }

@@ -35,8 +35,8 @@
    further documentation and examples of use.
 """
 by ("Stéphane Épardaud", "Alex Szczuczko")
-module ceylon.buffer "1.2.1" {
-    import ceylon.collection "1.2.1";
+module ceylon.buffer "1.2.2" {
+    import ceylon.collection "1.2.2";
     native ("jvm") import java.base "7";
-    native ("jvm") import ceylon.interop.java "1.2.1";
+    native ("jvm") import ceylon.interop.java "1.2.2";
 }
