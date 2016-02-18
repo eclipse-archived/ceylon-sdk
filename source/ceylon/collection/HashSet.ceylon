@@ -204,8 +204,7 @@ shared class HashSet<Element>
                     Integer newIndex
                             = storeIndex(cell.element,
                         newStore);
-                    variable value newBucket
-                            = newStore[newIndex];
+                    value newBucket = newStore[newIndex];
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
