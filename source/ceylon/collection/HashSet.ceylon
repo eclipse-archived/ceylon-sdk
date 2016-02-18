@@ -206,10 +206,6 @@ shared class HashSet<Element>
                         newStore);
                     variable value newBucket
                             = newStore[newIndex];
-                    while (exists newCell
-                                = newBucket?.rest) {
-                        newBucket = newCell;
-                    }
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
