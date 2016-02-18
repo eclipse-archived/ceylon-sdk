@@ -10,10 +10,67 @@ import ceylon.test {
 
 shared interface MutableSetTests satisfies SetTests {
 
-    shared actual formal MutableSet<String> createSet({String*} strings);
+    shared actual formal MutableSet<T> createSet<T>({T*} elements) given T satisfies Comparable<T>;
+
+    test shared void doPoorHashTests() {
+        class PoorHash(Integer h, Integer id) satisfies Comparable<PoorHash>{
+            shared actual Integer hash {
+                return h;
+            }
+            shared actual Boolean equals(Object that) {
+                if (is PoorHash that) {
+                    return id == that.id;
+                }
+                return false;
+            }
+            shared actual Comparison compare(PoorHash other) => this.id <=> other.id;
+        }
+        value set = createSet<PoorHash> {};
+        set.add(PoorHash(1, 1));
+        set.add(PoorHash(1, 2));
+        set.add(PoorHash(1, 3));
+        set.add(PoorHash(1, 4));
+
+        set.add(PoorHash(1, 5));
+        set.add(PoorHash(1, 6));
+        set.add(PoorHash(1, 7));
+        set.add(PoorHash(1, 8));
+
+        set.add(PoorHash(1, 9));
+        set.add(PoorHash(1, 10));
+        set.add(PoorHash(1, 11));
+        set.add(PoorHash(1, 12));
+
+        set.add(PoorHash(1, 13));
+        set.add(PoorHash(1, 14));
+        set.add(PoorHash(1 ,15));
+        set.add(PoorHash(1, 16));
+        assertEquals(set.size, 16);
+
+        set.add(PoorHash(1, 1));
+        set.add(PoorHash(1, 2));
+        set.add(PoorHash(1, 3));
+        set.add(PoorHash(1, 4));
+
+        set.add(PoorHash(1, 5));
+        set.add(PoorHash(1, 6));
+        set.add(PoorHash(1, 7));
+        set.add(PoorHash(1, 8));
+
+        set.add(PoorHash(1, 9));
+        set.add(PoorHash(1, 10));
+        set.add(PoorHash(1, 11));
+        set.add(PoorHash(1, 12));
+
+        set.add(PoorHash(1, 13));
+        set.add(PoorHash(1, 14));
+        set.add(PoorHash(1 ,15));
+        set.add(PoorHash(1, 16));
+        assertEquals(set.size, 16);
+    }
 
     test shared void doSetTests() {
-        value set = createSet {};
+        value set = createSet<String> {};
         assertEquals("{}", set.string);
         assertEquals(0, set.size);
         assertEquals(true, set.add("fu"));
