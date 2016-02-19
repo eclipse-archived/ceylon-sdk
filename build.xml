@@ -9,6 +9,7 @@
     
     <property name="osgi" location="${basedir}/osgi" />
     <property name="osgi.p2" location="${osgi}/p2" />
+    <property name="osgi.karaf" location="${osgi}/karaf" />
     <property name="osgi.dist" location="${osgi}/dist" />
     <property name="osgi.build" location="${osgi}/build" />
     <property name="osgi.dist.plugins" location="${osgi.dist}/plugins" />
@@ -321,7 +322,7 @@
         <echo file="${bundleDefinitionFile}">Bundle-SymbolicName: ${CeylonName}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Bundle-Version: ${CeylonVersion}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Export-Package: *${line.separator}</echo>
-        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, *${line.separator}</echo>
+        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, org.apache.activemq.artemis.*;resolution:=optional, *${line.separator}</echo>
         <bndwrap exceptions="true" force="true"  jars="${currentFile}" output="${currentFile}.bnd.jar" definitions="${bundleDefinitionFile}">
         </bndwrap>
         <delete file="${bundleDefinitionFile}"/>
@@ -399,6 +400,16 @@
         </ceylon-copy>
     </target>
     
+    <target name="generateFeatures">
+        <property name="feature.dir" value="${build.dist.features}/${feature.id}_${feature.version}"/>
+        <mkdir dir="${feature.dir}"/>
+        <property name="featureFile" value="${feature.dir}/feature.xml"/>
+        <xslt style="${xslFile}" in="${osgi.dist}/index.xml" out="${featureFile}">
+            <param name="featureId" expression="${feature.id}"/>
+            <param name="featureVersion" expression="${feature.version}"/>
+        </xslt>            
+    </target>
+    
     <target name="osgi-quick" depends="retrieveDependencies">
         <mkdir dir="${osgi.dist.plugins}" />
         <foreach target="copyModuleArchiveForOSGI" param="currentFile">
@@ -421,6 +432,13 @@
             root="${osgi.dist}">
             <fileset dir="${osgi.dist.plugins}" includes="*.jar"/>
         </bindex>
+        <ant target="generateFeatures" inheritall="true">
+            <property name="feature.id" value="ceylon.sdk"/>
+            <property name="feature.version" value="${sdk.version}"/>
+            <property name="xslFile" value="${osgi.karaf}/generateKarafSDKFeature.xsl"/>
+            <property name="feature.dir" value="${osgi.dist}"/>
+            <property name="featureFile" value="${osgi.dist}/karaf-features.xml"/>
+        </ant>
     </target>
 
     <!-- Rule to setup a plugins directory with required bundles -->
@@ -430,11 +448,6 @@
         <mkdir dir="${osgi.build}"/>
         <touch file="${osgi.build}/bundles.info"/>
         <makeurl property="bundlesInfoUrl" file="${osgi.build}/bundles.info"/>
-        <loadfile srcfile="${ceylon.main.dir}/dist/osgi/p2/bundlesToStart" property="bundlesToStart">
-          <filterchain>
-              <striplinebreaks/>
-          </filterchain>
-        </loadfile>
         <ceylon-p2 executable="${ceylon.executable}"
             offline="true"
             verbose="${ceylon.verbosity}"
