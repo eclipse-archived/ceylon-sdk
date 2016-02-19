@@ -11,13 +11,14 @@ import ceylon.test {
 
 shared class TreeSetTest() satisfies MutableSetTests & NaturalOrderIterableTests {
 
-    shared actual MutableSet<String> createSet({String*} strings) => TreeSet {
-        function compare (String x, String y) => x <=> y;
-        elements = strings;
+    shared actual MutableSet<T> createSet<T>({T*} elts) given T satisfies Comparable<T>
+             => TreeSet {
+        function compare (T x, T y) => x <=> y;
+        elements = elts;
     };
 
-    createCategory = createSet;
-    createIterable = createSet;
+    createCategory = createSet<String>;
+    createIterable = createSet<String>;
     
     test shared void elementsAreKeptInOrder() {
         value set = createSet { "A", "B", "C" };
