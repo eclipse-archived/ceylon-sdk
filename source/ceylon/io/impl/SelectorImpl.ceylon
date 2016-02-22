@@ -23,12 +23,13 @@ import java.nio.channels {
 
 class Key(socket = null, onRead = null, onWrite = null, 
           connector = null, onConnect = null,
-          acceptor = null, onAccept = null) {
+          acceptor = null, onAccept = null, onConnectFailure = null) {
     shared variable Callable<Boolean, [FileDescriptor]>? onRead;
     shared variable Callable<Boolean, [FileDescriptor]>? onWrite;
     shared variable FileDescriptor? socket;
     
     shared variable Callable<Anything, [Socket]>? onConnect;
+    shared variable Callable<Anything, [Exception]>? onConnectFailure;
     shared variable SocketConnectorImpl? connector;
     
     shared variable Callable<Boolean, [Socket]>? onAccept;
@@ -78,18 +79,19 @@ shared class SelectorImpl()
     }
 
     shared actual void addConnectListener(SocketConnector connector, 
-        void callback(Socket s)) {
+        void callback(Socket s), Anything(Exception)? failureCallback) {
         assert(is SocketConnectorImpl connector);
         if(exists javaKey = connector.channel.keyFor(javaSelector)) {
             assert(exists key = map[javaKey]);
             // update our key
             key.onConnect = callback;
+            key.onConnectFailure = failureCallback;
             key.connector = connector;
             connector.interestOps(javaKey, 
                 javaKey.interestOps().or(javaConnectOp));
         }else{
             // new key
-            value key = Key { onConnect = callback; connector = connector; };
+            value key = Key { onConnect = callback; onConnectFailure = failureCallback; connector = connector; };
             value newJavaKey = 
                     connector.register(javaSelector, javaConnectOp, key);
             map.put(newJavaKey, key);
@@ -186,8 +188,16 @@ shared class SelectorImpl()
         if(selectedKey.valid && selectedKey.connectable) {
             assert(exists connector = key.connector,
                    exists callback = key.onConnect);
-            // FIXME: check
-            connector.channel.finishConnect();
+            try {
+                connector.channel.finishConnect();
+            } catch(e) {
+                if (exists failureCallback = key.onConnectFailure) {
+                    failureCallback(e);
+                }
+                selectedKey.cancel();
+                map.remove(selectedKey);
+                return;
+            }
             // create a new socket
             value socket = connector.createSocket();
             callback(socket);

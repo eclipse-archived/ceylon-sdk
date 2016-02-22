@@ -32,11 +32,11 @@ shared class SocketConnectorImpl(SocketAddress address)
     shared default Socket createSocket() => SocketImpl(channel);
     
     shared actual void connectAsync(Selector selector, 
-        void connect(Socket socket)) {
+        void connect(Socket socket), Anything(Exception)? connectFailure) {
         channel.configureBlocking(false);
         channel.connect(InetSocketAddress(address.address, 
             address.port));
-        selector.addConnectListener(this, connect);
+        selector.addConnectListener(this, connect, connectFailure);
     }
     
     shared actual void close() => channel.close();
