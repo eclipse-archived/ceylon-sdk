@@ -79,7 +79,7 @@ shared class SelectorImpl()
     }
 
     shared actual void addConnectListener(SocketConnector connector, 
-        void callback(Socket s), Anything(Exception)? failureCallback = null) {
+        void callback(Socket s), Anything(Exception)? failureCallback) {
         assert(is SocketConnectorImpl connector);
         if(exists javaKey = connector.channel.keyFor(javaSelector)) {
             assert(exists key = map[javaKey]);
