@@ -4,6 +4,7 @@ import ceylon.io {
     newSelector,
     SocketConnector,
     SocketAddress,
+    newSocketConnector,
     newSslSocketConnector
 }
 import ceylon.io.buffer {
@@ -14,6 +15,13 @@ import ceylon.io.charset {
 }
 import ceylon.net.uri {
     parse
+}
+import ceylon.test {
+    assertEquals,
+    test
+}
+import ceylon.collection {
+    ArrayList
 }
 
 void readResponse(Socket socket) {
@@ -141,4 +149,26 @@ void testGrrr(){
     //readAndWriteAsync(request, socket);
 
     socket.close();
+}
+
+test void testConnectFailure() {
+    value connectSuccessQueue = ArrayList<Socket>();
+    value connectFailureQueue = ArrayList<Exception>();
+    value connector = newSocketConnector(SocketAddress("127.0.0.1", 12));
+    Selector select = newSelector();
+    connector.connectAsync {
+        selector = select;
+        void connect(Socket socket) {
+            connectSuccessQueue.add(socket);
+        }
+        void connectFailure(Exception exception) {
+            connectFailureQueue.add(exception);
+        }
+    };
+    // run the event loop
+    select.process();
+    connector.close();
+    assertEquals(0, connectSuccessQueue.size);
+    assertEquals(1, connectFailureQueue.size);
+    assertEquals("Connection refused", connectFailureQueue[0]?.message);
 }
