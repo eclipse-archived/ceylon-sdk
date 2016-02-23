@@ -276,7 +276,7 @@
     <target name="dist" depends="compile,doc">
     </target>
 
-    <target name="publish" depends="compile,publish-quick"
+    <target name="publish" depends="dist,publish-quick"
             description="Copies the SDK modules to the user's repository">
     </target>
 
