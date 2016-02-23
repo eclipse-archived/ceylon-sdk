@@ -179,8 +179,8 @@ shared class HashMap<Key, Item>
     Boolean addToStore(Array<Cell<Key->Item>?> store, 
             Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
-        variable value bucket 
-                = store.getFromFirst(index);
+        value headBucket = store.getFromFirst(index);
+        variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element.key == entry.key) {
                 // modify an existing entry
@@ -190,16 +190,16 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, 
-            store.getFromFirst(index)));
+        store.set(index, createCell(entry, headBucket));
         return true;
     }
     
     void checkRehash() {
         if (hashtable.rehash(length, store.size)) {
             // must rehash
-            value newStore = entryStore<Key,Item>
-                    (hashtable.capacity(length));
+            value newStore 
+                    = entryStore<Key,Item>
+                        (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
@@ -210,7 +210,8 @@ shared class HashMap<Key, Item>
                     Integer newIndex = 
                             storeIndex(cell.element.key, 
                                        newStore);
-                    value newBucket = newStore[newIndex];
+                    value newBucket 
+                            = newStore.getFromFirst(newIndex);
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }

@@ -19,8 +19,9 @@ shared class IdentityMap<Key, Item>
     "Performance-related settings for the backing array."
     Hashtable hashtable;
         
-    variable value store = entryStore<Key,Item>
-                (hashtable.initialCapacity);
+    variable value store 
+                = entryStore<Key,Item>
+                    (hashtable.initialCapacity);
     variable Integer length = 0;
     
     // Write
@@ -30,7 +31,8 @@ shared class IdentityMap<Key, Item>
     
     Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
-        variable value bucket = store[index];
+        value headBucket = store.getFromFirst(index);
+        variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element.key === entry.key) {
                 // modify an existing entry
@@ -40,26 +42,28 @@ shared class IdentityMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, store[index]));
+        store.set(index, Cell(entry, headBucket));
         return true;
     }
     
     void checkRehash() {
         if (hashtable.rehash(length, store.size)) {
             // must rehash
-            value newStore = entryStore<Key,Item>
-                    (hashtable.capacity(length));
+            value newStore 
+                    = entryStore<Key,Item>
+                        (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket 
+                        = store.getFromFirst(index);
                 while (exists cell = bucket) {
                     bucket = cell.rest;
-                    Integer newIndex = storeIndex(cell.element.key, newStore);
-                    variable value newBucket = newStore[newIndex];
-                    while (exists newCell = newBucket?.rest) {
-                        newBucket = newCell;
-                    }
+                    Integer newIndex 
+                            = storeIndex(cell.element.key, 
+                                         newStore);
+                    value newBucket 
+                            = newStore.getFromFirst(newIndex);
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
@@ -82,7 +86,8 @@ shared class IdentityMap<Key, Item>
     shared Item? put(Key key, Item item) {
         Integer index = storeIndex(key, store);
         value entry = key->item;
-        variable value bucket = store[index];
+        value headBucket = store.getFromFirst(index);
+        variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element.key === key) {
                 Item oldItem = cell.element.item;
@@ -93,7 +98,7 @@ shared class IdentityMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, store[index]));
+        store.set(index, Cell(entry, headBucket));
         length++;
         checkRehash();
         return null;
@@ -113,7 +118,7 @@ shared class IdentityMap<Key, Item>
     shared Boolean replaceEntry(Key key, 
         Item&Object item, Item newItem) {
         Integer index = storeIndex(key, store);
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             if (cell.element.key === key) {
                 if (exists oldItem = cell.element.item, 
@@ -134,13 +139,13 @@ shared class IdentityMap<Key, Item>
     "Removes a key/value mapping if it exists"
     shared Item? remove(Key key) {
         Integer index = storeIndex(key, store);
-        if (exists head = store[index], 
+        if (exists head = store.getFromFirst(index), 
             head.element.key === key) {
             store.set(index,head.rest);
             length--;
             return head.element.item;
         }
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -166,7 +171,7 @@ shared class IdentityMap<Key, Item>
     
     shared Boolean removeEntry(Key key, Item&Object item) {
         Integer index = storeIndex(key, store);
-        while (exists head = store[index], 
+        while (exists head = store.getFromFirst(index), 
             head.element.key === key) {
             if (exists it = head.element.item, it==item) {
                 store.set(index,head.rest);
@@ -177,7 +182,7 @@ shared class IdentityMap<Key, Item>
                 return false;
             }
         }
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -217,7 +222,7 @@ shared class IdentityMap<Key, Item>
             return null;
         }
         Integer index = storeIndex(key, store);
-        variable value bucket = store[index];
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             if (cell.element.key === key) {
                 return cell.element.item;
@@ -232,7 +237,7 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 ret.add(cell.element.item);
                 bucket = cell.rest;
@@ -247,7 +252,7 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 ret.add(cell.element.key);
                 bucket = cell.rest;
@@ -262,7 +267,7 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (exists keys = ret[cell.car.item]) {
                     keys.add(cell.car.key);
@@ -285,7 +290,7 @@ shared class IdentityMap<Key, Item>
         variable Integer count = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -312,7 +317,7 @@ shared class IdentityMap<Key, Item>
         variable Integer hash = 17;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket = store.getFromFirst(index);
             while (exists cell = bucket) {
                 hash = (hash * 31 + identityHash(cell.element.key))*31;
                 if (exists item = cell.element.item) {
@@ -331,7 +336,8 @@ shared class IdentityMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket 
+                        = store.getFromFirst(index);
                 while (exists cell = bucket) {
                     value thatItem = that.get(cell.element.key);
                     if (exists thisItem = cell.element.item) {
@@ -363,7 +369,7 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            if (exists bucket = store[index]) {
+            if (exists bucket = store.getFromFirst(index)) {
                 clone.store.set(index, bucket.clone()); 
             }
             index++;
@@ -375,7 +381,8 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket 
+                    = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (cell.element.key === key) {
                     return true;
@@ -391,7 +398,8 @@ shared class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket 
+                    = store.getFromFirst(index);
             while (exists cell = bucket) {
                 if (exists it = cell.element.item, 
                         it == element) {

@@ -193,7 +193,9 @@ shared class HashSet<Element>
     void checkRehash() {
         if (hashtable.rehash(length, store.size)) {
             // must rehash
-            value newStore = elementStore<Element>(hashtable.capacity(length));
+            value newStore 
+                    = elementStore<Element>
+                        (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
@@ -203,8 +205,9 @@ shared class HashSet<Element>
                     bucket = cell.rest;
                     Integer newIndex
                             = storeIndex(cell.element,
-                        newStore);
-                    value newBucket = newStore[newIndex];
+                                         newStore);
+                    value newBucket 
+                            = newStore.getFromFirst(newIndex);
                     cell.rest = newBucket;
                     newStore.set(newIndex, cell);
                 }
@@ -261,8 +264,7 @@ shared class HashSet<Element>
             length--;
             return true;
         }
-        variable value bucket
-                = store.getFromFirst(index);
+        variable value bucket = store.getFromFirst(index);
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
