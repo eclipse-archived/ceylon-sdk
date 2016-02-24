@@ -4,6 +4,6 @@
    functions for floating-point numbers, and
  - `ceylon.numeric.integer`&mdash;various common functions for
    integers."
-module ceylon.numeric "1.2.1" {
+module ceylon.numeric "1.2.2" {
     native("jvm") import java.base "7";
 }
