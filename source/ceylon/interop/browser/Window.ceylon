@@ -7,9 +7,10 @@ import ceylon.interop.browser.dom {
     Document
 }
 
-// TODO doc
-
-"See http://www.w3.org/TR/html5/browsers.html#the-window-object"
+"The window object represents a window containing a DOM document; the document
+ property points to the DOM document loaded in that window.
+ 
+ See http://www.w3.org/TR/html5/browsers.html#the-window-object"
 shared dynamic Window satisfies EventTarget & WindowEventHandlers & GlobalEventHandlers {
     
     shared formal WindowProxy window;
@@ -27,7 +28,7 @@ shared dynamic Window satisfies EventTarget & WindowEventHandlers & GlobalEventH
     shared formal BarProp toolbar;
     shared formal variable String status;
     shared formal void close();
-    shared formal Boolean closed;
+    shared formal Boolean? closed;
     shared formal void stop();
     shared formal void focus();
     shared formal void blur();
@@ -44,7 +45,7 @@ shared dynamic Window satisfies EventTarget & WindowEventHandlers & GlobalEventH
     // TODO getter object (DOMString name);
     
     shared formal Navigator navigator;
-    shared formal External external;
+    shared formal External? external;
     shared formal ApplicationCache applicationCache;
     shared formal void alert(String message = "");
     shared formal Boolean confirm(String message = "");
@@ -155,7 +156,7 @@ shared dynamic ApplicationCache satisfies EventTarget {
     
     // updates
     shared formal void update();
-    shared formal void abort();
+//    shared formal void abort();
     shared formal void swapCache();
     
     // events
