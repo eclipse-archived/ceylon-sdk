@@ -72,7 +72,7 @@ class RegexJavascript(expression, global = false, ignoreCase = false, multiLine 
         variable String[] result  = [];
         dynamic i = input;
         dynamic {
-            dynamic y = if (limit >= 0) then i.split(ex, l) else i.split(ex);
+            dynamic y = if (limit >= 0) then i.split(ex, limit) else i.split(ex);
             for (String s in y) {
                 result = result.append([s]);
             }

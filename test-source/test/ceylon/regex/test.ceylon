@@ -153,6 +153,13 @@ shared void testSplit() {
 }
 
 test
+shared void testSplitWithLimit() {
+    value result = regex{expression=" "; global=true;}.split(input,3);
+    print(result);
+    assertEquals(result, ["De", "aap", "is"]);
+}
+
+test
 shared void testTest() {
     assertTrue(regex("a+p").test(input));
     assertTrue(regex{expression="^de.*RD!$"; ignoreCase=true;}.test(input));
@@ -184,6 +191,7 @@ shared void runAll() {
     testReplaceGlobal();
     testReplaceError();
     testSplit();
+    testSplitWithLimit();
     testTest();
     testTestQuoted();
 }
