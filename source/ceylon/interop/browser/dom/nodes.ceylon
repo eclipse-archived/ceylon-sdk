@@ -101,7 +101,7 @@ shared dynamic Document
     shared formal DOMImplementation implementation;
     shared formal String \iURL;
     shared formal String documentURI;
-    shared formal String origin;
+    shared formal String? origin;
     shared formal String compatMode;
     shared formal String characterSet;
     shared formal String contentType;
@@ -215,8 +215,8 @@ shared dynamic DOMImplementation {
 
 shared dynamic DocumentType satisfies Node & ChildNode {
     shared formal String name;
-    shared formal String publicId;
-    shared formal String systemId;
+    shared formal String? publicId;
+    shared formal String? systemId;
 }
 
 shared dynamic XMLDocument satisfies Document {

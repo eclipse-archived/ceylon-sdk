@@ -2,7 +2,7 @@ shared dynamic HTMLElement satisfies Element & GlobalEventHandlers {
     // metadata shared formals
     shared formal variable String title;
     shared formal variable String lang;
-    shared formal variable Boolean translate;
+    shared formal variable Boolean? translate;
     shared formal variable String dir;
     // TODO DOMStringMap
     shared formal dynamic dataset;
