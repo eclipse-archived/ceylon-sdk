@@ -39,7 +39,7 @@ class IsRoot()
 class Equals(String path)
         extends Matcher() {
     matches(String path) 
-            => path in this.path;
+            => path == this.path;
 }
 
 class And(Matcher left, Matcher right) 
