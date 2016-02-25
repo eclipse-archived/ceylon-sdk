@@ -184,8 +184,8 @@ shared class HashMap<Key, Item>
         value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
         while (exists cell = bucket) {
-// TODO consider adding cell.keyHash == keyHash &&            
-            if (cell.element.key == entry.key) {
+            if (cell.keyHash == keyHash
+                && cell.element.key == entry.key) {
                 // modify an existing entry
                 cell.element = entry;
                 return false;
@@ -247,7 +247,8 @@ shared class HashMap<Key, Item>
                 = store.getFromFirst(index);
         variable value bucket = headBucket;
         while (exists cell = bucket) {
-            if (cell.element.key == key) {
+            if (cell.keyHash == keyHash
+                    && cell.element.key == key) {
                 Item oldItem = cell.element.item;
                 // modify an existing entry
                 cell.element = entry;
@@ -268,9 +269,9 @@ shared class HashMap<Key, Item>
         Integer index = storeIndex(keyHash, store);
         variable value bucket 
                 = store.getFromFirst(index);
-        while (exists cell = bucket) {
-// TODO consider comparing hashes            
-            if (cell.element.key == key) {
+        while (exists cell = bucket) {         
+            if (cell.keyHash == keyHash
+                    && cell.element.key == key) {
                 if (exists oldItem = cell.element.item, 
                     oldItem==item) {
                     // modify an existing entry
@@ -299,7 +300,8 @@ shared class HashMap<Key, Item>
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
         if (exists head 
-                = store.getFromFirst(index), 
+                = store.getFromFirst(index),
+            head.keyHash == keyHash,
             head.element.key == key) {
             store.set(index,head.rest);
             deleteCell(head);
@@ -329,7 +331,8 @@ shared class HashMap<Key, Item>
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
         while (exists head 
-                = store.getFromFirst(index), 
+                = store.getFromFirst(index),
+            head.keyHash == keyHash,
             head.element.key == key) {
             if (exists it = head.element.item, 
                 it==item) {
@@ -388,11 +391,10 @@ shared class HashMap<Key, Item>
         }
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
-        //Integer hashCode = key.hash;
         variable value bucket 
                 = store.getFromFirst(index);
         while (exists cell = bucket) {
-            if (//cell.hashCode==hashCode && 
+            if (cell.keyHash == keyHash && 
                 cell.element.key == key) {
                 return cell.element.item;
             }
@@ -408,11 +410,10 @@ shared class HashMap<Key, Item>
         }
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
-        //Integer hashCode = key.hash;
         variable value bucket 
                 = store.getFromFirst(index);
         while (exists cell = bucket) {
-            if (//cell.hashCode==hashCode && 
+            if (cell.keyHash == keyHash && 
                 cell.element.key == key) {
                 return cell.element.item;
             }
@@ -570,7 +571,8 @@ shared class HashMap<Key, Item>
             variable value bucket 
                     = store.getFromFirst(index);
             while (exists cell = bucket) {
-                if (cell.element.key == key) {
+                if (cell.keyHash == keyHash
+                        && cell.element.key == key) {
                     return true;
                 }
                 bucket = cell.rest;
@@ -590,7 +592,8 @@ shared class HashMap<Key, Item>
             variable value bucket 
                     = store.getFromFirst(index);
             while (exists cell = bucket) {
-                if (cell.element.key == key) {
+                if (cell.keyHash == keyHash
+                        && cell.element.key == key) {
                     if (exists item = cell.element.item) {
                         if (exists elementItem 
                                 = entry.item) {

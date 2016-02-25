@@ -179,9 +179,9 @@ shared class HashSet<Element>
         Integer index = storeIndex(elementHash, store);
         value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
-        while (exists cell = bucket) {
-// TODO try adding cell.keyHash == elementHash &&            
-            if (cell.element == element) {
+        while (exists cell = bucket) {            
+            if (cell.keyHash == elementHash
+                    && cell.element == element) {
                 // modify an existing entry
                 cell.element = element;
                 return false;
@@ -259,7 +259,8 @@ shared class HashSet<Element>
     }
     
     shared actual Boolean remove(Element element) {
-        Integer index = storeIndex(hashCode(element), store);
+        value elementHash = hashCode(element);
+        Integer index = storeIndex(elementHash, store);
         if (exists head = store.getFromFirst(index),
             head.element == element) {
             store.set(index, head.rest);
@@ -271,6 +272,7 @@ shared class HashSet<Element>
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
+                rest.keyHash == elementHash,
                 rest.element == element) {
                 cell.rest = rest.rest;
                 deleteCell(rest);
@@ -378,9 +380,9 @@ shared class HashSet<Element>
             Integer index = storeIndex(elementHash, store);
             variable value bucket
                     = store.getFromFirst(index);
-            while (exists cell = bucket) {
-// TODO consider adding cell.keyHash == elementHash &&                
-                if (cell.element == element) {
+            while (exists cell = bucket) {                
+                if (cell.keyHash == elementHash
+                        && cell.element == element) {
                     return true;
                 }
                 bucket = cell.rest;
