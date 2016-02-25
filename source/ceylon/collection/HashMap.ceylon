@@ -136,14 +136,15 @@ shared class HashMap<Key, Item>
             => let (h = key.hash)
                 h.xor(h.rightLogicalShift(16));
     
-    Integer storeIndex(Object key, 
+    Integer storeIndex(Integer keyHash, 
             Array<Cell<Key->Item>?> store)
-            => hashCode(key).and(store.size-1);
+            => keyHash.and(store.size-1);
     
-    Cell<Key->Item> createCell(Key->Item entry, 
+    Cell<Key->Item> createCell(Key->Item entry,
+            Integer keyHash,
             Cell<Key->Item>? rest) {
         if (stability==linked) {
-            value cell = LinkedCell(entry, rest, tip);
+            value cell = LinkedCell(entry, keyHash, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -154,7 +155,7 @@ shared class HashMap<Key, Item>
             return cell;
         }
         else {
-            return Cell(entry, rest);
+            return Cell(entry, keyHash, rest);
         }
     }
     
@@ -178,10 +179,12 @@ shared class HashMap<Key, Item>
     
     Boolean addToStore(Array<Cell<Key->Item>?> store, 
             Key->Item entry) {
-        Integer index = storeIndex(entry.key, store);
+        value keyHash = hashCode(entry.key);
+        Integer index = storeIndex(keyHash, store);
         value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
         while (exists cell = bucket) {
+// TODO consider adding cell.keyHash == keyHash &&            
             if (cell.element.key == entry.key) {
                 // modify an existing entry
                 cell.element = entry;
@@ -190,7 +193,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, headBucket));
+        store.set(index, createCell(entry, keyHash, headBucket));
         return true;
     }
     
@@ -208,7 +211,7 @@ shared class HashMap<Key, Item>
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = 
-                            storeIndex(cell.element.key, 
+                            storeIndex(cell.keyHash, 
                                        newStore);
                     value newBucket 
                             = newStore.getFromFirst(newIndex);
@@ -237,7 +240,8 @@ shared class HashMap<Key, Item>
     // End of initialiser section
     
     shared actual Item? put(Key key, Item item) {
-        Integer index = storeIndex(key, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         value entry = key->item;
         value headBucket 
                 = store.getFromFirst(index);
@@ -252,7 +256,7 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, headBucket));
+        store.set(index, createCell(entry, keyHash, headBucket));
         length++;
         checkRehash();
         return null;
@@ -260,10 +264,12 @@ shared class HashMap<Key, Item>
     
     shared actual Boolean replaceEntry(Key key, 
             Item&Object item, Item newItem) {
-        Integer index = storeIndex(key, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         variable value bucket 
                 = store.getFromFirst(index);
         while (exists cell = bucket) {
+// TODO consider comparing hashes            
             if (cell.element.key == key) {
                 if (exists oldItem = cell.element.item, 
                     oldItem==item) {
@@ -290,7 +296,8 @@ shared class HashMap<Key, Item>
     }
     
     shared actual Item? remove(Key key) {
-        Integer index = storeIndex(key, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         if (exists head 
                 = store.getFromFirst(index), 
             head.element.key == key) {
@@ -319,7 +326,8 @@ shared class HashMap<Key, Item>
     
     shared actual Boolean removeEntry(Key key, 
             Item&Object item) {
-        Integer index = storeIndex(key, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         while (exists head 
                 = store.getFromFirst(index), 
             head.element.key == key) {
@@ -378,7 +386,8 @@ shared class HashMap<Key, Item>
         if (empty) {
             return null;
         }
-        Integer index = storeIndex(key, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         //Integer hashCode = key.hash;
         variable value bucket 
                 = store.getFromFirst(index);
@@ -397,7 +406,8 @@ shared class HashMap<Key, Item>
         if (empty) {
             return default;
         }
-        Integer index = storeIndex(key, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         //Integer hashCode = key.hash;
         variable value bucket 
                 = store.getFromFirst(index);
@@ -555,7 +565,8 @@ shared class HashMap<Key, Item>
             return false;
         }
         else {
-            Integer index = storeIndex(key, store);
+            value keyHash = hashCode(key);
+            Integer index = storeIndex(keyHash, store);
             variable value bucket 
                     = store.getFromFirst(index);
             while (exists cell = bucket) {
@@ -574,7 +585,8 @@ shared class HashMap<Key, Item>
         }
         else if (is Object->Anything entry) {
             value key = entry.key;
-            Integer index = storeIndex(key, store);
+            value keyHash = hashCode(key);
+            Integer index = storeIndex(keyHash, store);
             variable value bucket 
                     = store.getFromFirst(index);
             while (exists cell = bucket) {

@@ -41,7 +41,7 @@ shared class IdentitySet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(element, headBucket));
+        store.set(index, Cell(element, 0, headBucket));
         return true;
     }
     

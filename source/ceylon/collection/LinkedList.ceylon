@@ -16,7 +16,7 @@ shared class LinkedList<Element>
     variable Integer length = 0;
     
     void addToTail(Element element) {
-        value newTail = Cell(element, null);
+        value newTail = Cell(element, 0, null);
         if (exists tail = tail) {
             tail.rest = newTail;
             this.tail = newTail;
@@ -81,7 +81,7 @@ shared class LinkedList<Element>
         else {
             //no need to update the tail in this branch
             if (index == 0) {
-                head = Cell(element, head);
+                head = Cell(element, 0, head);
                 length++;
             }
             else {
@@ -90,7 +90,7 @@ shared class LinkedList<Element>
                 while (exists cell = iter) {
                     value rest = cell.rest;
                     if (++i == index) {
-                        cell.rest = Cell(element, rest);
+                        cell.rest = Cell(element, 0, rest);
                         length++;
                         return;
                     }
@@ -116,7 +116,7 @@ shared class LinkedList<Element>
             //no need to update the tail in this branch
             if (index == 0) {
                 head = reversed.fold(head)
-                    ((rest,element) => Cell(element,rest));
+                    ((rest,element) => Cell(element, 0, rest));
                 length+=reversed.size;
             }
             else {
@@ -126,7 +126,7 @@ shared class LinkedList<Element>
                     value rest = cell.rest;
                     if (++i == index) {
                         cell.rest = reversed.fold(rest)
-                            ((rest,element) => Cell(element,rest));
+                            ((rest,element) => Cell(element, 0, rest));
                         length+=reversed.size;
                         return;
                     }

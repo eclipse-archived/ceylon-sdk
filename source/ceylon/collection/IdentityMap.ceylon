@@ -42,7 +42,7 @@ shared class IdentityMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, headBucket));
+        store.set(index, Cell(entry, 0, headBucket));
         return true;
     }
     
@@ -98,7 +98,7 @@ shared class IdentityMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, headBucket));
+        store.set(index, Cell(entry, 0, headBucket));
         length++;
         checkRehash();
         return null;

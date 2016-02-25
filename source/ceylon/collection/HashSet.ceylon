@@ -134,15 +134,16 @@ shared class HashSet<Element>
             => let (h = key.hash)
                 h.xor(h.rightLogicalShift(16));
     
-    Integer storeIndex(Object elem,
+    Integer storeIndex(Integer elemHash,
         Array<Cell<Element>?> store)
-            => hashCode(elem).and(store.size - 1);
+            => elemHash.and(store.size - 1);
     //=> (elem.hash % store.size).magnitude;
     
     Cell<Element> createCell(Element elem,
+        Integer elemHash,
         Cell<Element>? rest) {
         if (stability == linked) {
-            value cell = LinkedCell(elem, rest, tip);
+            value cell = LinkedCell(elem, elemHash, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -152,7 +153,7 @@ shared class HashSet<Element>
             }
             return cell;
         } else {
-            return Cell(elem, rest);
+            return Cell(elem, elemHash, rest);
         }
     }
     
@@ -174,10 +175,12 @@ shared class HashSet<Element>
     
     Boolean addToStore(Array<Cell<Element>?> store,
         Element element) {
-        Integer index = storeIndex(element, store);
+        value elementHash = hashCode(element);
+        Integer index = storeIndex(elementHash, store);
         value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
         while (exists cell = bucket) {
+// TODO try adding cell.keyHash == elementHash &&            
             if (cell.element == element) {
                 // modify an existing entry
                 cell.element = element;
@@ -186,7 +189,7 @@ shared class HashSet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(element, headBucket));
+        store.set(index, createCell(element, elementHash, headBucket));
         return true;
     }
     
@@ -204,7 +207,7 @@ shared class HashSet<Element>
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex
-                            = storeIndex(cell.element,
+                            = storeIndex(cell.keyHash,
                                          newStore);
                     value newBucket 
                             = newStore.getFromFirst(newIndex);
@@ -256,7 +259,7 @@ shared class HashSet<Element>
     }
     
     shared actual Boolean remove(Element element) {
-        Integer index = storeIndex(element, store);
+        Integer index = storeIndex(hashCode(element), store);
         if (exists head = store.getFromFirst(index),
             head.element == element) {
             store.set(index, head.rest);
@@ -371,10 +374,12 @@ shared class HashSet<Element>
         if (empty) {
             return false;
         } else {
-            Integer index = storeIndex(element, store);
+            value elementHash = hashCode(element);
+            Integer index = storeIndex(elementHash, store);
             variable value bucket
                     = store.getFromFirst(index);
             while (exists cell = bucket) {
+// TODO consider adding cell.keyHash == elementHash &&                
                 if (cell.element == element) {
                     return true;
                 }
