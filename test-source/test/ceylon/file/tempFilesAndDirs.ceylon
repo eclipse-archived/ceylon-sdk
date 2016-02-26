@@ -4,7 +4,8 @@ import ceylon.file {
     Nil,
     Directory,
     lines,
-    temporaryDirectory
+    temporaryDirectory,
+    createZipFileSystem
 }
 import ceylon.test {
     test,
@@ -56,5 +57,41 @@ shared test void tempDirAndFile() {
             assert (exists line = lines(file).first);
             assertEquals(line, "Testing...");
         }
+    }
+}
+
+shared test void tempDirAndFileInZip() {
+    try (tempDir = temporaryDirectory.TemporaryDirectory(null)) {
+        value zipPath = tempDir.path.childPath("testzip.zip");
+
+        "a new temporary directory should be empty"
+        assert (is Nil loc = zipPath.resource);
+
+        value zipSystem = createZipFileSystem(loc);
+
+        "zip file system should have a root path"
+        assert (exists rootPath = zipSystem.rootPaths[0]);
+
+        "the root path of a zip filesystem should be a Directory"
+        assert (is Directory rootDir = rootPath.resource);
+
+        Path tempDirInZipPath;
+        Path tempFilePath;
+        try (tempDirInZip = rootDir.TemporaryDirectory(null)) {
+            tempDirInZipPath = tempDirInZip.path;
+            try (tempFile = tempDirInZip.TemporaryFile(null, null)) {
+                tempFilePath = tempFile.path;
+                try (w = tempFile.Appender()) {
+                    w.write("hello!");
+                }
+                assertEquals (lines(tempFile), ["hello!"],
+                        "read from tempfile in zip fs");
+            }
+            assertTrue(tempFilePath.resource is Nil,
+                    "temp file shouldn't exist after destroy()");
+        }
+        assertTrue(tempDirInZipPath.resource is Nil,
+                "temp dir shouldn't exist after destroy()");
+        zipSystem.close();
     }
 }

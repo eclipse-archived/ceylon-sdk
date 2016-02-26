@@ -1,9 +1,6 @@
 import ceylon.file {
     ...
 }
-import ceylon.file.internal {
-    createTemporaryDirectoryInternal=createTemporaryDirectory
-}
 
 import ceylon.collection {
     ArrayList
@@ -18,7 +15,9 @@ import java.nio.file {
         getOwner,
         setOwner,
         getAttribute,
-        setAttribute
+        setAttribute,
+        createTempDirectory,
+        createTempFile
     },
     DirectoryNotEmptyException,
     NoSuchFileException
@@ -26,11 +25,14 @@ import java.nio.file {
 
 interface JavaNIODirectory satisfies Directory {
 
+    shared actual formal ConcretePath path;
+
     shared actual class TemporaryDirectory(String? prefix)
             extends super.TemporaryDirectory(prefix)
             satisfies JavaNIODirectory {
 
-        Directory delegate = createTemporaryDirectoryInternal(prefix, outer);
+        JavaNIODirectory delegate = ConcreteDirectory(
+                createTempDirectory(outer.path.jpath, prefix));
 
         name => delegate.name;
 
@@ -80,7 +82,8 @@ interface JavaNIODirectory satisfies Directory {
     shared actual class TemporaryFile(String? prefix, String? suffix)
             extends super.TemporaryFile(prefix, suffix) {
 
-        File delegate = createTemporaryFile(prefix, suffix, outer);
+        File delegate = ConcreteFile(
+                createTempFile(outer.path.jpath, prefix, suffix));
 
         contentType => delegate.contentType;
 
