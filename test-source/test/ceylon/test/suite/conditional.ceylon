@@ -7,7 +7,7 @@ import test.ceylon.test.stubs {
 }
 
 test
-shared void shouldSkipTestAccordingToCondition() {
+void shouldSkipTestAccordingToCondition() {
     bazTestConditionCounter = 0;
     bazTestConditionResult = false;
     
@@ -27,7 +27,7 @@ shared void shouldSkipTestAccordingToCondition() {
 }
 
 test
-shared void shouldHandleExceptionInTestCondition() {
+void shouldHandleExceptionInTestCondition() {
     try {
         bazTestConditionResult = null;
         

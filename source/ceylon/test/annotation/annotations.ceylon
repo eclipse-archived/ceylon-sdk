@@ -1,13 +1,18 @@
 import ceylon.language.meta.declaration {
+    FunctionDeclaration,
+    Declaration,
     ClassDeclaration,
     Package,
-    Declaration,
     Module,
-    FunctionDeclaration
+    FunctionOrValueDeclaration,
+    ValueDeclaration
 }
-import ceylon.test {
-    TestDescription,
-    TestCondition
+import ceylon.test.engine.spi {
+    TestCondition,
+    ArgumentListProvider,
+    ArgumentProvider,
+    ArgumentProviderContext,
+    TestExecutionContext
 }
 
 
@@ -25,16 +30,16 @@ shared final annotation class TestSuiteAnnotation(
 
 "Annotation class for [[ceylon.test::testExecutor]]."
 shared final annotation class TestExecutorAnnotation(
-    "The class declaration of [[ceylon.test::TestExecutor]]."
+    "The class declaration of [[ceylon.test.engine.spi::TestExecutor]]."
     shared ClassDeclaration executor)
         satisfies OptionalAnnotation<TestExecutorAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
 
 
-"Annotation class for [[ceylon.test::testListeners]]."
-shared final annotation class TestListenersAnnotation(
-    "The class declarations of [[ceylon.test::TestListener]]s"
-    shared {ClassDeclaration+} listeners)
-        satisfies OptionalAnnotation<TestListenersAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
+"Annotation class for [[ceylon.test::testExtension]]."
+shared final annotation class TestExtensionAnnotation(
+    "The class declarations of [[ceylon.test.engine.spi::TestExtension]]."
+    shared {ClassDeclaration+} extensions)
+        satisfies SequencedAnnotation<TestExtensionAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
 
 
 "Annotation class for [[ceylon.test::beforeTest]]."
@@ -53,7 +58,7 @@ shared final annotation class IgnoreAnnotation(
     shared String reason)
         satisfies OptionalAnnotation<IgnoreAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> & TestCondition {
     
-    shared actual Result evaluate(TestDescription description) => Result(false, reason);
+    shared actual Result evaluate(TestExecutionContext context) => Result(false, reason);
     
 }
 
@@ -63,3 +68,31 @@ shared final annotation class TagAnnotation(
     "One or more tags associated with the test."
     shared String+ tags)
         satisfies SequencedAnnotation<TagAnnotation,FunctionDeclaration|ClassDeclaration|Package|Module> {}
+
+
+"Annotation class for [[ceylon.test::parameters]]."
+shared final annotation class ParametersAnnotation(
+    "The source function or value declaration."
+    shared FunctionOrValueDeclaration source)
+        satisfies OptionalAnnotation<ParametersAnnotation,FunctionOrValueDeclaration> & ArgumentListProvider & ArgumentProvider {
+    
+    shared actual {Anything*} arguments(ArgumentProviderContext context) {
+        switch (source)
+        case (is FunctionDeclaration) {
+            return source.apply<{Anything*},[]>()();
+        }
+        case (is ValueDeclaration) {
+            return source.apply<{Anything*}>().get();
+        }
+    }
+    
+    shared actual {Anything[]*} argumentLists(ArgumentProviderContext context) {
+        value val = arguments(context);
+        if( is Iterable<Anything[], Null> val) {
+            return val;
+        } else {
+            return val.map((Anything e) => [e]); 
+        }
+    }
+    
+}

@@ -10,7 +10,7 @@ import test.ceylon.test.stubs {
 }
 
 test
-shared void shouldRunTestSuite1() {
+void shouldRunTestSuite1() {
     value root = createTestRunner([`bazSuite`]).description;
     
     assert(root.children.size==1,
@@ -25,7 +25,7 @@ shared void shouldRunTestSuite1() {
 }
 
 test
-shared void shouldRunTestSuite2() {
+void shouldRunTestSuite2() {
     value result = createTestRunner([`bazSuite`]).run();
     assertResultCounts {
         result;
@@ -64,7 +64,7 @@ shared void shouldRunTestSuite2() {
 }
 
 test
-shared void shouldRunTestSuiteNested1() {
+void shouldRunTestSuiteNested1() {
     value root = createTestRunner([`bazSuiteNested`]).description;
     
     assert(root.children.size==1,
@@ -82,7 +82,7 @@ shared void shouldRunTestSuiteNested1() {
 }
 
 test
-shared void shouldRunTestSuiteNested2() {
+void shouldRunTestSuiteNested2() {
     value result = createTestRunner([`bazSuiteNested`]).run();
     assertResultCounts {
         result;

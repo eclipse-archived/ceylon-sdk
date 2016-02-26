@@ -37,7 +37,8 @@ shared Integer tx_COMMIT = 1;
 shared Integer tx_ROLLBACK = 2;
 
 variable Integer nextKey = 1;
-String dbloc = "jdbc:h2:ceylondb";
+String tmpdir = process.propertyValue("java.io.tmpdir") else "~";
+String dbloc = "jdbc:h2:" + tmpdir + "/ceylondb";
 
 void init() {
     setProperty("com.arjuna.ats.arjuna.objectstore.objectStoreDir", "tmp");

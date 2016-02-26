@@ -4,12 +4,13 @@ import ceylon.language.meta.model {
 import ceylon.test {
     ...
 }
-import ceylon.test.core {
-    ...
+import ceylon.test.engine {
+    MultipleFailureException,
+    AssertionComparisonError
 }
 
 test
-shared void testFail() {
+void testFail() {
     assertThatException(()=>fail()).
             hasType(`AssertionError`).
             hasMessage("assertion failed");
@@ -20,7 +21,7 @@ shared void testFail() {
 }
 
 test
-shared void testAssertNull() {
+void testAssertNull() {
     assertNull(null);
     assertNull(null, "");
     
@@ -34,7 +35,7 @@ shared void testAssertNull() {
 }
 
 test
-shared void testAssertNotNull() {
+void testAssertNotNull() {
     assertNotNull(true);
     assertNotNull(true, "");
     
@@ -48,7 +49,7 @@ shared void testAssertNotNull() {
 }
 
 test
-shared void testAssertTrue() {
+void testAssertTrue() {
     assertTrue(true);
     assertTrue(true, "");
     
@@ -62,7 +63,7 @@ shared void testAssertTrue() {
 }
 
 test
-shared void testAssertFalse() {
+void testAssertFalse() {
     assertFalse(false);
     assertFalse(false, "");
     
@@ -76,7 +77,7 @@ shared void testAssertFalse() {
 }
 
 test
-shared void testAssertEquals() {
+void testAssertEquals() {
     assertEquals(null, null);
     assertEquals(true, true);
     assertEquals(1, 1);
@@ -115,7 +116,7 @@ shared void testAssertEquals() {
 }
 
 test
-shared void testAssertEqualsCompare() {
+void testAssertEqualsCompare() {
     assertEquals(1, 2, "never false", (Anything o1, Anything o2) => true);
     
     assertThatException(()=>assertEquals(1, 1, "never true", (Anything o1, Anything o2) => false)).
@@ -123,7 +124,7 @@ shared void testAssertEqualsCompare() {
 }
 
 test
-shared void testAssertEqualsException() {
+void testAssertEqualsException() {
     try {
         assertEquals(true, false);
         assert(false);
@@ -135,7 +136,7 @@ shared void testAssertEqualsException() {
 }
 
 test
-shared void testAssertNotEquals() {
+void testAssertNotEquals() {
     assertNotEquals(null, true);
     assertNotEquals(true, false);
     assertNotEquals(1, 2);
@@ -155,7 +156,7 @@ shared void testAssertNotEquals() {
 }
 
 test
-shared void testAssertThatException() {
+void testAssertThatException() {
     assertThatException(OverflowException()).
             hasType(`OverflowException`).
             hasMessage("Numeric overflow").
@@ -213,7 +214,7 @@ shared void testAssertThatException() {
 }
 
 test
-shared void testAssertAll() {
+void testAssertAll() {
     try {
         assertAll([
             () => assertTrue(false),
@@ -229,7 +230,7 @@ shared void testAssertAll() {
 }
 
 test
-shared void testAssertAllPropagateException() {
+void testAssertAllPropagateException() {
     void throwOverflowException() {
         throw OverflowException();
     }

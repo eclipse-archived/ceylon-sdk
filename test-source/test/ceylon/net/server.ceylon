@@ -7,7 +7,8 @@ import ceylon.net.http.server { Status,
                                   started, AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
                                   startsWith, endsWith, Options, stopped, newServer }
-import ceylon.net.http.server.endpoints { serveStaticFile }
+import ceylon.net.http.server.endpoints { serveStaticFile,
+    RepositoryEndpoint }
 import ceylon.test { assertEquals, assertTrue, test }
 import ceylon.collection { LinkedList, MutableList }
 import ceylon.net.http { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
@@ -23,10 +24,11 @@ import ceylon.html {
 import ceylon.html.serializer {
     NodeSerializer
 }
-import ceylon.io.buffer { newByteBuffer, ByteBuffer }
+import ceylon.io.buffer { newByteBuffer, ByteBuffer,
+    newByteBufferWithData }
 import test.ceylon.net.multipartclient {
-	MultipartRequest,
-	FilePart
+    MultipartRequest,
+    FilePart
 }
 
 by("Matej Lazar")
@@ -114,6 +116,42 @@ test void testServer() {
                 response.writeString(request.parameter("čšž") else "");
             };
             path = startsWith("/paramTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.formParameters("aKey").string);
+            };
+            path = startsWith("/formParamsTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.queryParameter("aKey")?.string else "");
+            };
+            path = startsWith("/queryParamTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.queryParameters("aKey").string);
+            };
+            path = startsWith("/queryParamsTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(request.formParameter("aKey")?.string else "");
+            };
+            path = startsWith("/formParamTest");
+        },
+        Endpoint {
+            service => void (Request request, Response response) {
+                value data = request.readBinary();
+                value converted = data.map((Byte element) => element.unsigned);
+                response.writeString(converted.string);
+            };
+            path = startsWith("/readBinary");
         },
         Endpoint {
             service => void (Request request, Response response) {
@@ -228,7 +266,10 @@ test void testServer() {
                 return null;
             }; 
             acceptMethod = {post};
-        }        
+        },
+        RepositoryEndpoint {
+            root = "/modules";
+        }
     };
 
 
@@ -252,9 +293,18 @@ test void testServer() {
                 methodTest();
                 
                 parametersTest("čšž", "ČŠŽ ĐŽ");
+
+                formParametersTest("aKey", "aValue", "val2");
+
+                formParameterTest("aKey", "aValue", "val2");
                 
+                queryParametersTest("aKey", "aValue");
+                queryParameterTest("aKey", "aValue");
+
                 writeStringsTest();
-                
+
+                readBinaryTest(Byte(1), Byte(252), Byte(3), Byte(0), Byte(2));
+
                 //TODO enable session test when client suports it
                 //sessionTest();
                 
@@ -264,6 +314,8 @@ test void testServer() {
                 //testAsyncStream();
 
                 testMultipartPost();
+                
+                moduleTest();
                 
             } finally {
                 cleanUpFile();
@@ -347,6 +399,23 @@ void fileMapperTest() {
     assertEquals(produceFileContent(), fileCnt);
 }
 
+void moduleTest() {
+    value v = language.version;
+    _moduleTest("ceylon/language/" + v + "/ceylon.language-" + v + ".js");
+    _moduleTest("ceylon.language-" + v + ".js");
+}
+
+void _moduleTest(String modurl) {
+    value url = "http://localhost:8080/modules/" + modurl;
+    value fileRequest = ClientRequest(parse(url));
+    value fileResponse = fileRequest.execute();
+    value fileCnt = fileResponse.contents;
+    fileResponse.close();
+    //TODO log trace
+    print("RepositoryEndpoint: read module " + modurl);
+    assertTrue(fileCnt.size > 100000); // It's big so it's probably/hopefully the correct file
+}
+
 void concurentFileRequests(Integer concurentRequests) {
     variable Integer requestNumber = 0;
     
@@ -358,7 +427,7 @@ void concurentFileRequests(Integer concurentRequests) {
     
     value users = LinkedList<Thread>();
 
-    print ("Running ``concurentRequests `` concurent requests.");    
+    print ("Running ``concurentRequests `` concurrent requests.");    
     while(requestNumber < concurentRequests) {
         value userThread = Thread(user);
         users.add(userThread);
@@ -562,6 +631,92 @@ void parametersTest(String paramKey, String paramValue) {
     //TODO log
     print("Response content: " + responseContent);
     assertEquals(paramValue, responseContent);
+}
+
+void formParametersTest(String paramKey, String+ paramValues) {
+    value request = ClientRequest(parse("http://localhost:8080/formParamsTest?``paramKey``=notThis"), post);
+
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.setParameter(Parameter("foo", "valueFoo"));
+    for (String val in paramValues) {
+        request.setParameter(Parameter(paramKey, val));
+    }
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertEquals(responseContent, paramValues.string);
+}
+
+void formParameterTest(String paramKey, String+ paramValues) {
+    value request = ClientRequest(parse("http://localhost:8080/formParamTest?``paramKey``=notThis"), post);
+
+    request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    request.setParameter(Parameter("foo", "valueFoo"));
+    for (String val in paramValues) {
+        request.setParameter(Parameter(paramKey, val));
+    }
+
+    value response = request.execute();
+    value responseContent = response.contents;
+    response.close();
+    //TODO log
+    print("Response content: " + responseContent);
+    assertEquals(responseContent, paramValues.first);
+}
+
+void queryParametersTest(String paramKey, String+ paramValues) {
+	variable String query = "``paramKey``=``paramValues.first``";
+	for (String val in paramValues.rest) {
+		query = query + "&\`\`paramKey\`\`=\`\`paramValues.first\`\`";
+	}
+	print(query);
+	value request = ClientRequest(parse("http://localhost:8080/queryParamsTest?``query``"), post);
+	
+	request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	request.setParameter(Parameter("foo", "valueFoo"));
+	request.setParameter(Parameter(paramKey, "valueBar"));
+	
+	value response = request.execute();
+	value responseContent = response.contents;
+	response.close();
+	//TODO log
+	print("Response content: " + responseContent);
+	assertEquals(responseContent, paramValues.string);
+}
+
+void queryParameterTest(String paramKey, String+ paramValues) {
+	variable String query = "``paramKey``=``paramValues.first``";
+	for (String val in paramValues.rest) {
+		query = query + "&\`\`paramKey\`\`=\`\`paramValues.first\`\`";
+	}
+	print(query);
+	value request = ClientRequest(parse("http://localhost:8080/queryParamTest?``query``"), post);
+	
+	request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	request.setParameter(Parameter("foo", "valueFoo"));
+	request.setParameter(Parameter(paramKey, "valueBar"));
+	
+	value response = request.execute();
+	value responseContent = response.contents;
+	response.close();
+	//TODO log
+	print("Response content: " + responseContent);
+	assertEquals(responseContent, paramValues.first);
+}
+
+void readBinaryTest(Byte* bytes) {
+    value request = ClientRequest(parse("http://localhost:8080/readBinary"), post);
+
+    request.data = newByteBufferWithData(*bytes);
+
+    value response = request.execute();
+    value body = response.contents;
+
+    value expected = bytes.map((Byte b) => b.unsigned);
+    assertEquals(body, expected.string);
 }
 
 void writeStringsTest() {

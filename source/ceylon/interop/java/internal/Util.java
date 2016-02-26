@@ -8,6 +8,7 @@ import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDe
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
 import ceylon.language.meta.declaration.ClassOrInterfaceDeclaration;
+import ceylon.language.meta.model.ClassOrInterface;
 
 @Ceylon(major = 8) 
 @com.redhat.ceylon.compiler.java.metadata.Class
@@ -37,7 +38,8 @@ public final class Util {
                     (TypeDescriptor.Class) $reifiedT;
             if (klass.getTypeArguments().length > 0)
                 throw new RuntimeException("given type has type arguments");
-            return (java.lang.Class<T>) klass.getKlass();
+            // this is already erased
+            return (java.lang.Class<T>) klass.getArrayElementClass();
         } 
         else if ($reifiedT instanceof TypeDescriptor.Member) {
             TypeDescriptor.Member member = 
@@ -55,7 +57,7 @@ public final class Util {
     }
     
     @SuppressWarnings("unchecked")
-    public <T> Class<? extends java.lang.annotation.Annotation>
+    public <T extends java.lang.annotation.Annotation> Class<T>
     javaAnnotationClass(@Ignore TypeDescriptor $reifiedT) {
         if ($reifiedT instanceof TypeDescriptor.Class) {
             TypeDescriptor.Class klass = 
@@ -65,7 +67,7 @@ public final class Util {
             try {
                 Class<?> c = klass.getKlass();
                 String name = c.getName() + "$annotation$";
-                return (Class<? extends java.lang.annotation.Annotation>) 
+                return (Class<T>) 
                         Class.forName(name, true, c.getClassLoader());
             }
             catch (ClassNotFoundException e) {}
@@ -78,9 +80,28 @@ public final class Util {
     	if(decl instanceof ClassOrInterfaceDeclarationImpl){
     		ClassOrInterfaceDeclarationImpl ci = 
     		        (ClassOrInterfaceDeclarationImpl) decl;
-            return ci.getJavaClass();
+            return erase(ci.getJavaClass());
     	}
         throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
+    }
+
+    @SuppressWarnings("unchecked")
+	public <T> java.lang.Class<? extends T> 
+    javaClassForModel(@Ignore TypeDescriptor $reifiedT,
+    		ClassOrInterface<? extends T> model) {
+    	ClassOrInterfaceDeclaration decl = model.getDeclaration();
+    	if(decl instanceof ClassOrInterfaceDeclarationImpl){
+    		ClassOrInterfaceDeclarationImpl ci = 
+    				(ClassOrInterfaceDeclarationImpl) decl;
+    		return (Class<? extends T>) erase(ci.getJavaClass());
+    	}
+    	throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
+    }
+
+    private <T> java.lang.Class<? extends T>
+    erase(java.lang.Class<? extends T> klass){
+      // dirty but keeps the logic in one place
+      return (Class<? extends T>)TypeDescriptor.klass(klass).getArrayElementClass();
     }
 
     public StackTraceElement[] javaStackTrace(Throwable t) {

@@ -1,8 +1,9 @@
 import ceylon.test { ... }
-import ceylon.test.core {
+
+import ceylon.regex { ... }
+import ceylon.test.engine {
     DefaultLoggingListener
 }
-import ceylon.regex { ... }
 
 shared void run() {
     createTestRunner([`module test.ceylon.regex`], [DefaultLoggingListener()]).run();

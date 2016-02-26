@@ -24,13 +24,13 @@ shared class TestState
         priority = 50;
     }
     
-    "A test state is _skipped_, if its condition is not fullfiled, see [[TestCondition]] or e.g [[ignore]] annotation."
+    "A test state is _skipped_, if its condition is not fullfiled, see [[ceylon.test.engine.spi::TestCondition]] or e.g [[ignore]] annotation."
     shared new skipped {
         name = "skipped";
         priority = 10;
     }
 
-    "A test state is _aborted_, if its assumption is not met, see e.g. [[assumeTrue]] and it propagates an [[ceylon.test.core::TestAbortedException]]."
+    "A test state is _aborted_, if its assumption is not met, see e.g. [[assumeTrue]] and it propagates an [[ceylon.test.engine::TestAbortedException]]."
     shared new aborted {
         name = "aborted";
         priority = 20;

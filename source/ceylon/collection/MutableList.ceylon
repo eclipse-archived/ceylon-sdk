@@ -236,7 +236,9 @@ shared interface ListMutator<in Element>
      to leave a list with at most the given size."
     throws (`class AssertionError`, "if `size<0`")
     shared formal void truncate(Integer size);
-
+    
+    shared formal actual ListMutator<Element> clone();
+    
 }
 
 "Converts the indexes of a measure to those of an equivalent 

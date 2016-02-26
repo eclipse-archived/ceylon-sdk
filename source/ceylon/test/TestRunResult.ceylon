@@ -36,4 +36,5 @@ shared interface TestRunResult {
     
     "The detailed results of each test."
     shared formal TestResult[] results;
+    
 }

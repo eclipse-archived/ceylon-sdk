@@ -3,9 +3,6 @@ import ceylon.collection {
     HashSet,
     MutableSet
 }
-import ceylon.interop.java {
-    CeylonIterable
-}
 import ceylon.io {
     Selector,
     Socket,
@@ -17,10 +14,10 @@ import ceylon.io {
 import java.nio.channels {
     JavaSelector=Selector,
     SelectionKey {
-        javaReadOp=OP_READ,
-        javaWriteOp=OP_WRITE,
-        javaConnectOp=OP_CONNECT,
-        javaAcceptOp=OP_ACCEPT
+        javaReadOp=\iOP_READ,
+        javaWriteOp=\iOP_WRITE,
+        javaConnectOp=\iOP_CONNECT,
+        javaAcceptOp=\iOP_ACCEPT
     }
 }
 
@@ -241,7 +238,7 @@ shared class SelectorImpl()
             debug("Select! with `` javaSelector.keys().size() `` keys ");
             // make sure we get out of select if we have SSL sockets with things ready to read
             variable Boolean dataToRead = false;
-            for(selectionKey in CeylonIterable(javaSelector.keys())) {
+            for(selectionKey in javaSelector.keys()) {
                 assert(is Key key = selectionKey.attachment());
                 if(is SslSocketImpl socket = key.socket,
                    socket.dataToRead) {
@@ -258,7 +255,7 @@ shared class SelectorImpl()
             
             // process results
             debug("Got `` javaSelector.selectedKeys().size() `` selected keys");
-            for(selectedKey in CeylonIterable(javaSelector.selectedKeys())) {
+            for(selectedKey in javaSelector.selectedKeys()) {
                 assert(is Key key = selectedKey.attachment());
                 debug("Key available:``selectedKey.acceptable``, connectable: ``selectedKey.connectable``,
                         readable: ``selectedKey.readable``, writable: ``selectedKey.writable``,

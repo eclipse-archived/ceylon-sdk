@@ -2,12 +2,13 @@ import ceylon.test {
     test,
     assertEquals
 }
-import ceylon.test.core {
+
+import ceylon.test.engine {
     TagFilter
 }
 
 test
-shared void shouldFilterByTags() {
+void shouldFilterByTags() {
     void assertTagFilter(String[] filters, String[] tags, Boolean result) {
         assertEquals(TagFilter(filters).filterTestTags(tags), result);
     }

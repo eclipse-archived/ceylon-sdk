@@ -12,7 +12,7 @@ import test.ceylon.test.stubs.beforeafter.sub {
 }
 
 test
-shared void shouldRunCallbacks1() {
+void shouldRunCallbacks1() {
     callbackLogger.clear();
 
     createTestRunner([`fooWithCallbacks`]).run();
@@ -25,7 +25,7 @@ shared void shouldRunCallbacks1() {
 }
 
 test
-shared void shouldRunCallbacks2() {
+void shouldRunCallbacks2() {
     callbackLogger.clear();
 
     createTestRunner([`FooWithCallbacks`]).run();
@@ -40,7 +40,7 @@ shared void shouldRunCallbacks2() {
 }
 
 test
-shared void shouldRunCallbacksWithEqualInstance() {
+void shouldRunCallbacksWithEqualInstance() {
     fooWithCallbacksInstanceInBefore = null;
     fooWithCallbacksInstanceInTest = null;
     fooWithCallbacksInstanceInAfter = null;
@@ -55,7 +55,7 @@ shared void shouldRunCallbacksWithEqualInstance() {
 }
 
 test
-shared void shouldRunCallbacksFromAncestor() {
+void shouldRunCallbacksFromAncestor() {
     callbackLogger.clear();
 
     createTestRunner([`BarWithCallbacks.bar`]).run();
@@ -78,7 +78,7 @@ shared void shouldRunCallbacksFromAncestor() {
 }
 
 test
-shared void shouldRunCallbacksFromAncestorOnExtendedInstance() {
+void shouldRunCallbacksFromAncestorOnExtendedInstance() {
     fooWithCallbacksInstanceInBefore = null;
     fooWithCallbacksInstanceInAfter = null;
 
@@ -90,7 +90,7 @@ shared void shouldRunCallbacksFromAncestorOnExtendedInstance() {
 }
 
 test
-shared void shouldHandleExceptionInBeforeToplevelCallback() {
+void shouldHandleExceptionInBeforeToplevelCallback() {
     callbackLogger.clear();
     fooToplevelBeforeException = true;
     try {
@@ -120,7 +120,7 @@ shared void shouldHandleExceptionInBeforeToplevelCallback() {
 }
 
 test
-shared void shouldHandleExceptionInBeforeMemberCallback() {
+void shouldHandleExceptionInBeforeMemberCallback() {
     callbackLogger.clear();
     fooMemberBeforeException = true;
     try {
@@ -151,7 +151,7 @@ shared void shouldHandleExceptionInBeforeMemberCallback() {
 }
 
 test
-shared void shouldHandleExceptionInAfterToplevelCallback() {
+void shouldHandleExceptionInAfterToplevelCallback() {
     callbackLogger.clear();
     fooToplevelAfterException = true;
     try {
@@ -183,7 +183,7 @@ shared void shouldHandleExceptionInAfterToplevelCallback() {
 }
 
 test
-shared void shouldHandleExceptionInAfterMemberCallback() {
+void shouldHandleExceptionInAfterMemberCallback() {
     callbackLogger.clear();
     fooMemberAfterException = true;
     try {
@@ -215,7 +215,7 @@ shared void shouldHandleExceptionInAfterMemberCallback() {
 }
 
 test
-shared void shouldHandleExceptionsInCallbacks() {
+void shouldHandleExceptionsInCallbacks() {
     callbackLogger.clear();
     fooToplevelBeforeException = true;
     fooToplevelAfterException = true;
@@ -248,7 +248,7 @@ shared void shouldHandleExceptionsInCallbacks() {
 }
 
 test
-shared void shouldVerifyBeforeNonVoid() {
+void shouldVerifyBeforeNonVoid() {
     value runResult = createTestRunner([`BugBeforeNonVoid`]).run();
     assertResultCounts {
         runResult;
@@ -264,23 +264,23 @@ shared void shouldVerifyBeforeNonVoid() {
 }
 
 test
-shared void shouldVerifyBeforeWithParameters() {
+void shouldVerifyBeforeWithParameters() {
     value runResult = createTestRunner([`BugBeforeWithParameters`]).run();
     assertResultCounts {
         runResult;
-        runCount = 0;
+        runCount = 1;
         errorCount = 1;
     };
     assertResultContains {
         runResult;
         state = TestState.error;
         source = `BugBeforeWithParameters.f`;
-        message = "before callback test.ceylon.test.stubs.beforeafter.bugs::BugBeforeWithParameters.before should have no parameters";
+        message = "function test.ceylon.test.stubs.beforeafter.bugs::BugBeforeWithParameters.before has parameter s without specified ArgumentProvider";
     };
 }
 
 test
-shared void shouldVerifyBeforeWithTypeParameters() {
+void shouldVerifyBeforeWithTypeParameters() {
     value runResult = createTestRunner([`BugBeforeWithTypeParameters`]).run();
     assertResultCounts {
         runResult;
@@ -296,7 +296,7 @@ shared void shouldVerifyBeforeWithTypeParameters() {
 }
 
 test
-shared void shouldVerifyAfterNonVoid() {
+void shouldVerifyAfterNonVoid() {
     value runResult = createTestRunner([`BugAfterNonVoid`]).run();
     assertResultCounts {
         runResult;
@@ -312,23 +312,22 @@ shared void shouldVerifyAfterNonVoid() {
 }
 
 test
-shared void shouldVerifyAfterWithParameters() {
+void shouldVerifyAfterWithParameters() {
     value runResult = createTestRunner([`BugAfterWithParameters`]).run();
     assertResultCounts {
         runResult;
-        runCount = 0;
         errorCount = 1;
     };
     assertResultContains {
         runResult;
         state = TestState.error;
         source = `BugAfterWithParameters.f`;
-        message = "after callback test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithParameters.after should have no parameters";
+        message = "function test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithParameters.after has parameter s without specified ArgumentProvider";
     };
 }
 
 test
-shared void shouldVerifyAfterWithTypeParameters() {
+void shouldVerifyAfterWithTypeParameters() {
     value runResult = createTestRunner([`BugAfterWithTypeParameters`]).run();
     assertResultCounts {
         runResult;

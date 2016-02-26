@@ -1,6 +1,17 @@
-import ceylon.test.event {
-    ...
+import ceylon.test.engine.spi {
+    TestExtension
 }
+import ceylon.test.event {
+    TestRunStartedEvent,
+    TestRunFinishedEvent,
+    TestStartedEvent,
+    TestFinishedEvent,
+    TestSkippedEvent,
+    TestAbortedEvent,
+    TestErrorEvent,
+    TestExcludedEvent
+}
+
 
 "Represents a listener which will be notified about events that occur during a test run.
  
@@ -14,14 +25,14 @@ import ceylon.test.event {
  
      TestRunner runner = createTestRunner{
          sources = [`module com.acme`];
-         listeners = [RingingListener()];};
+         extensions = [RingingListener()];};
  
- ... or better declaratively with usage of [[testListeners]] annotation
+ ... or better declaratively with usage of [[testExtension]] annotation
  
-     testListeners({`class RingingListener`})
+     testExtension(`class RingingListener`)
      module com.acme;
 "
-shared interface TestListener {
+shared interface TestListener satisfies TestExtension {
     
     "Called before any tests have been run."
     shared default void testRunStarted(
@@ -63,4 +74,5 @@ shared interface TestListener {
     shared default void testExcluded(
         "The event object."
         TestExcludedEvent event) {}
+    
 }

@@ -4,12 +4,13 @@ import ceylon.test {
     assertThatException,
     test
 }
-import ceylon.test.core {
+
+import ceylon.test.engine {
     TestAbortedException
 }
 
 test
-shared void testAssumeTrue() {
+void testAssumeTrue() {
     assumeTrue(true);
     assumeTrue(true, "");
     
@@ -23,7 +24,7 @@ shared void testAssumeTrue() {
 }
 
 test
-shared void testAssumeFalse() {
+void testAssumeFalse() {
     assumeFalse(false);
     assumeFalse(false, "");
     

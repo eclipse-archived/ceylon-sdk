@@ -96,4 +96,6 @@ shared interface MapMutator<in Key, in Item>
      with no entries."
     shared formal void clear();
     
+    shared formal actual MapMutator<Key,Item> clone();
+    
 }

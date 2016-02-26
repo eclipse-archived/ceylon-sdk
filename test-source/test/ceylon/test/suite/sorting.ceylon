@@ -6,7 +6,7 @@ import test.ceylon.test.stubs {
 }
 
 test
-shared void shouldSortTestsByNameAscending() {
+void shouldSortTestsByNameAscending() {
     value runResult = createTestRunner{
         sources = [`fooThrowingAssertion`, `fooThrowingException`, `foo`];
         comparator = (TestDescription d1, TestDescription d2)=>d1.name.compare(d2.name);
@@ -19,7 +19,7 @@ shared void shouldSortTestsByNameAscending() {
 }
 
 test
-shared void shouldSortTestsByNameDescending() {
+void shouldSortTestsByNameDescending() {
     value runResult = createTestRunner{
         sources = [`fooThrowingAssertion`, `fooThrowingException`, `foo`];
         comparator = (TestDescription d1, TestDescription d2)=> d2.name.compare(d1.name);

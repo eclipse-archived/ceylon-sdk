@@ -17,7 +17,8 @@ import java.lang {
     System {
         getSystemProperty=getProperty
     },
-    JString=String
+    JString=String,
+    JThread=Thread
 }
 import java.util {
     ArrayList,
@@ -84,6 +85,24 @@ test void classTests() {
 
     value klass4 = javaClassFromDeclaration(`interface Numeric`);
     assertEquals("interface ceylon.language.Numeric", klass4.string);
+
+    assertEquals("class java.lang.Object", javaClass<Object>().string);
+    assertEquals("class java.lang.Object", javaClassFromDeclaration(`class Object`).string);
+    assertEquals("class java.lang.Object", javaClassFromModel(`Object`).string);
+
+    assertEquals("class java.lang.Throwable", javaClass<Throwable>().string);
+    assertEquals("class java.lang.Throwable", javaClassFromDeclaration(`class Throwable`).string);
+    assertEquals("class java.lang.Throwable", javaClassFromModel(`Throwable`).string);
+
+    assertEquals("class java.lang.Exception", javaClass<Exception>().string);
+    assertEquals("class java.lang.Exception", javaClassFromDeclaration(`class Exception`).string);
+    assertEquals("class java.lang.Exception", javaClassFromModel(`Exception`).string);
+    // this one is fine since the instance type actually exists
+    assertEquals("class ceylon.language.Exception", javaClassFromInstance(Exception()).string);
+
+    assertEquals("interface java.lang.annotation.Annotation", javaClass<Annotation>().string);
+    assertEquals("interface java.lang.annotation.Annotation", javaClassFromDeclaration(`interface Annotation`).string);
+    assertEquals("interface java.lang.annotation.Annotation", javaClassFromModel(`Annotation`).string);
 }
 
 test void ceylonStringMap() {
@@ -137,4 +156,16 @@ test void bug342() {
     assertNotNull(javaClass<FunctionClass>());
     assertNotNull(javaClass<\IouterObject>());
     assertNotNull(javaClass<\IfunctionObject>());
+}
+
+test void ceylonRunnableThread() {
+    variable Integer i = 0;
+    value t1 = JThread(JavaRunnable(() => i++));
+    t1.start();
+    t1.join();
+    assertEquals { expected = 1; actual = i; };
+    value t2 = JavaThread(() => i++);
+    t2.start();
+    t2.join();
+    assertEquals { expected = 2; actual = i; };
 }

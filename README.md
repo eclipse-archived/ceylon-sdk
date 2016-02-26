@@ -1,3 +1,5 @@
+[![Build Status](https://ci-ceylon.rhcloud.com/buildStatus/icon?job=ceylon-sdk)](https://ci-ceylon.rhcloud.com/job/ceylon-sdk/)
+
 # Ceylon SDK
 
 This repository contains the Ceylon SDK.
