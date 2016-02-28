@@ -2,4 +2,4 @@
  such as DOM nodes, DOMS events, DOM traversal or XMLHttpRequest."
 native("js")
 suppressWarnings("ceylonNamespace")
-module ceylon.interop.browser "1.2.1-1" {}
+module ceylon.interop.browser "1.2.1-2" {}
