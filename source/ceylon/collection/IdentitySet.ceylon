@@ -19,16 +19,16 @@ shared class IdentitySet<Element>
     Hashtable hashtable;
     
     variable value store 
-            = cachingElementStore<Element>
+            = elementStore<Element>
                 (hashtable.initialCapacity);
     variable Integer length = 0;
     
     // Write
     
-    Integer storeIndex(Identifiable elem, Array<CachingCell<Element>?> store)
+    Integer storeIndex(Identifiable elem, Array<Cell<Element>?> store)
             => (identityHash(elem) % store.size).magnitude;
     
-    Boolean addToStore(Array<CachingCell<Element>?> store, Element element) {
+    Boolean addToStore(Array<Cell<Element>?> store, Element element) {
         Integer index = storeIndex(element, store);
         value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
@@ -41,7 +41,7 @@ shared class IdentitySet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, CachingCell(element, 0, headBucket));
+        store.set(index, Cell(element, headBucket));
         return true;
     }
     
@@ -49,7 +49,7 @@ shared class IdentitySet<Element>
         if (hashtable.rehash(length, store.size)) {
             // must rehash
             value newStore 
-                    = cachingElementStore<Element>
+                    = elementStore<Element>
                         (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
@@ -150,7 +150,7 @@ shared class IdentitySet<Element>
     
     size => length;
     
-    iterator() => CachingStoreIterator(store);
+    iterator() => StoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Element element)) {
         variable Integer count = 0;
@@ -185,9 +185,9 @@ shared class IdentitySet<Element>
         variable Integer hash = 17;
         // walk every bucket
         while (index < store.size) {
-            variable CachingCell<Element>? bucket 
+            variable Cell<Element>? bucket 
                     = store.getFromFirst(index);
-            while (exists CachingCell<Element> cell = bucket) {
+            while (exists Cell<Element> cell = bucket) {
                 hash = hash * 31 + identityHash(cell);
                 bucket = cell.rest;
             }
@@ -220,7 +220,7 @@ shared class IdentitySet<Element>
     shared actual IdentitySet<Element> clone() {
         value clone = IdentitySet<Element>();
         clone.length = length;
-        clone.store = cachingElementStore<Element>(store.size);
+        clone.store = elementStore<Element>(store.size);
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
