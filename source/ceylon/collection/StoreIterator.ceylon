@@ -1,5 +1,5 @@
 // FIXME: make this faster with a size check
-class StoreIterator<Element>(Array<Cell<Element>?> store) 
+class CachingStoreIterator<Element>(Array<CachingCell<Element>?> store) 
         satisfies Iterator<Element> {
     variable Integer index = 0;
     variable value bucket = store[index];

@@ -11,12 +11,12 @@ shared class LinkedList<Element>
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
 
-    variable Cell<Element>? head = null;
-    variable Cell<Element>? tail = null;
+    variable CachingCell<Element>? head = null;
+    variable CachingCell<Element>? tail = null;
     variable Integer length = 0;
     
     void addToTail(Element element) {
-        value newTail = Cell(element, 0, null);
+        value newTail = CachingCell(element, 0, null);
         if (exists tail = tail) {
             tail.rest = newTail;
             this.tail = newTail;
@@ -81,7 +81,7 @@ shared class LinkedList<Element>
         else {
             //no need to update the tail in this branch
             if (index == 0) {
-                head = Cell(element, 0, head);
+                head = CachingCell(element, 0, head);
                 length++;
             }
             else {
@@ -90,7 +90,7 @@ shared class LinkedList<Element>
                 while (exists cell = iter) {
                     value rest = cell.rest;
                     if (++i == index) {
-                        cell.rest = Cell(element, 0, rest);
+                        cell.rest = CachingCell(element, 0, rest);
                         length++;
                         return;
                     }
@@ -116,7 +116,7 @@ shared class LinkedList<Element>
             //no need to update the tail in this branch
             if (index == 0) {
                 head = reversed.fold(head)
-                    ((rest,element) => Cell(element, 0, rest));
+                    ((rest,element) => CachingCell(element, 0, rest));
                 length+=reversed.size;
             }
             else {
@@ -126,7 +126,7 @@ shared class LinkedList<Element>
                     value rest = cell.rest;
                     if (++i == index) {
                         cell.rest = reversed.fold(rest)
-                            ((rest,element) => Cell(element, 0, rest));
+                            ((rest,element) => CachingCell(element, 0, rest));
                         length+=reversed.size;
                         return;
                     }
@@ -302,7 +302,7 @@ shared class LinkedList<Element>
 
     shared actual 
     Boolean removeLast(Element&Object element) {
-        variable Cell<Element>? current = null;
+        variable CachingCell<Element>? current = null;
         while (exists cell = head,
                exists elem = cell.element,
                elem==element) {
@@ -413,7 +413,7 @@ shared class LinkedList<Element>
     shared actual 
     Boolean replaceLast
             (Element&Object element, Element replacement) {
-        variable Cell<Element>? last = null;
+        variable CachingCell<Element>? last = null;
         variable value iter = head;
         while (exists cell = iter) {
             if (exists elem = cell.element,
@@ -529,12 +529,12 @@ shared class LinkedList<Element>
         }
     }
 
-    Cell<Element>? advanceBy
-            (Integer cells, Cell<Element>? start) {
+    CachingCell<Element>? advanceBy
+            (Integer cells, CachingCell<Element>? start) {
         if (cells < 0) {
             return null;
         }
-        variable Cell<Element>? result = start;
+        variable CachingCell<Element>? result = start;
         if (exists start, cells > 0) {
             for (i in 1..cells) {
                 result = result?.rest;
@@ -583,7 +583,7 @@ shared class LinkedList<Element>
 
     lastIndex => !empty then length - 1;
 
-    iterator() => CellIterator(head);
+    iterator() => CachingCellIterator(head);
 
     shared actual 
     LinkedList<Element> clone() => copy(this);

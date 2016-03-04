@@ -1,19 +1,19 @@
-"A link in a singly linked list."
-class Cell<Element>(element, keyHash, rest) {
+"A link in a singly linked list with an attribute to cache hash codes."
+class CachingCell<Element>(element, keyHash, rest) {
     "The element belonging to this link."
     shared variable Element element;
     "The hash code of the element (sets) or key (maps) for this cell."
     shared variable Integer keyHash;
     "The next link in the list."
-    shared variable Cell<Element>? rest;
+    shared variable CachingCell<Element>? rest;
     // shallow clone
-    shared Cell<Element> clone()
-            => Cell<Element>(element, keyHash, rest?.clone());
+    shared CachingCell<Element> clone()
+            => CachingCell<Element>(element, keyHash, rest?.clone());
 }
 
-class CellIterator<Element>(iter) 
+class CachingCellIterator<Element>(iter) 
         satisfies Iterator<Element> {
-    variable Cell<Element>? iter;
+    variable CachingCell<Element>? iter;
     
     shared actual Element|Finished next() {
         if (exists iter = iter) {

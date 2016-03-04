@@ -20,16 +20,16 @@ shared class IdentityMap<Key, Item>
     Hashtable hashtable;
         
     variable value store 
-                = entryStore<Key,Item>
+                = cachingEntryStore<Key,Item>
                     (hashtable.initialCapacity);
     variable Integer length = 0;
     
     // Write
     
-    Integer storeIndex(Identifiable key, Array<Cell<Key->Item>?> store)
+    Integer storeIndex(Identifiable key, Array<CachingCell<Key->Item>?> store)
             => (identityHash(key) % store.size).magnitude;
     
-    Boolean addToStore(Array<Cell<Key->Item>?> store, Key->Item entry) {
+    Boolean addToStore(Array<CachingCell<Key->Item>?> store, Key->Item entry) {
         Integer index = storeIndex(entry.key, store);
         value headBucket = store.getFromFirst(index);
         variable value bucket = headBucket;
@@ -42,7 +42,7 @@ shared class IdentityMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, 0, headBucket));
+        store.set(index, CachingCell(entry, 0, headBucket));
         return true;
     }
     
@@ -50,7 +50,7 @@ shared class IdentityMap<Key, Item>
         if (hashtable.rehash(length, store.size)) {
             // must rehash
             value newStore 
-                    = entryStore<Key,Item>
+                    = cachingEntryStore<Key,Item>
                         (hashtable.capacity(length));
             variable Integer index = 0;
             // walk every bucket
@@ -98,7 +98,7 @@ shared class IdentityMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(entry, 0, headBucket));
+        store.set(index, CachingCell(entry, 0, headBucket));
         length++;
         checkRehash();
         return null;
@@ -283,7 +283,7 @@ shared class IdentityMap<Key, Item>
         return ret;
     }*/
     
-    iterator() => StoreIterator(store);
+    iterator() => CachingStoreIterator(store);
     
     shared actual Integer count(Boolean selecting(Key->Item element)) {
         variable Integer index = 0;
@@ -365,7 +365,7 @@ shared class IdentityMap<Key, Item>
     shared actual IdentityMap<Key,Item> clone() {
         value clone = IdentityMap<Key,Item>();
         clone.length = length;
-        clone.store = entryStore<Key,Item>(store.size);
+        clone.store = cachingEntryStore<Key,Item>(store.size);
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
