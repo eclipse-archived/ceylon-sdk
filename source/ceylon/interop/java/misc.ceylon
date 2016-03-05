@@ -1,5 +1,6 @@
 import ceylon.interop.java.internal {
-    Util
+    Util,
+    synchronizeInternal=synchronize
 }
 import ceylon.language {
     Annotation
@@ -67,5 +68,14 @@ shared StackTraceElement[] javaStackTrace(Throwable throwable)
                     util.javaStackTrace(throwable).iterable) 
              if (exists stackElement) 
                 stackElement ];
+
+"Runs the [[do]] callback in a block synchronized on [[on]].
+ 
+     value newCount = synchronize(this, () {
+        return count++;
+     });
+ "
+shared Return synchronize<Return>(Object on, Return do())
+        => synchronizeInternal(on, do);
 
 Util util = Util();
