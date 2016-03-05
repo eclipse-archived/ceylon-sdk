@@ -1,96 +1,107 @@
-"Represents a multiline plain text edit control for
- the element's raw value.
+"
+ The __&lt;textarea&gt;__ element represents a multi-line plain-text editing control.
+ 
+ Example:
+ 
+ <table style='width:100%'>
+     <tr style='vertical-align: top'>
+         <td style='border-style:none'>
+         
+ <pre data-language='ceylon'>
+ TextArea { name=\"comment\"; placeholder=\"Enter text here...\"; };
+ </pre>
+ 
+         </td>
+         <td style='border-style:none'>
+         
+ <pre data-language='html'>
+ &lt;textarea name=\"comment\" placeholder=\"Enter text here...\"&gt;&lt;/textarea&gt;
+ </pre>
+         </td>         
+     </tr>
+ </table>
  
  Technical details about this element can be found on the
- [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-textarea-element)"
-shared class TextArea(text = "", String? name = null,
-            rows = null, cols = null, 
-            maxLength = null, minLength = null,
-            placeholder = null, wrap = null,
-            Boolean? autoFocus = null,
-            Boolean? disabled = null, String? form = null,
-            Boolean? formNoValidate = null,
-            Boolean? readOnly = null, Boolean? required = null,
-            String? id = null, CssClass classNames = [],
-            String? style = null, String? accessKey = null,
-            String? contextMenu = null, TextDirection? dir = null,
-            Boolean? draggable = null, DropZone? dropZone = null,
-            Boolean? inert = null, Boolean? hidden = null,
-            String? lang = null, Boolean? spellcheck = null,
-            Integer? tabIndex = null, String? title = null,
-            Boolean? translate = null, Aria? aria = null,
-            NonstandardAttributes nonstandardAttributes = empty,
-            DataContainer data = empty)
-        extends FormElement(name, autoFocus, disabled, form, formNoValidate,
-            readOnly, required, null, id, classNames, style, accessKey, contextMenu,
-            dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies InlineElement & TextNode {
-
-    shared actual String text;
-
-    "Specifies the visible number of lines in a text area."
-    shared Integer? rows;
-
-    "Specifies the visible width of a text area.
-     **Must** be specified when [[TextArea.wrap]] is [[hard]]"
-    shared Integer? cols;
-
-    "Specifies the maximum number of characters allowed."
-    shared Integer? maxLength;
-
-    "Specifies the minimum number of characters allowed."
-    shared Integer? minLength;
-
-    "Specifies a short hint that describes
-     the expected value of this field."
-    shared String? placeholder;
-
-    "Specifies how the text in a text area is
-     to be wrapped when submitted in a form."
-    shared TextAreaWrap? wrap;
-
-    if (exists wrapMode = wrap, wrapMode == hard) {
-        "The number of columns must be specified when wrap mode is `hard`"
-        assert (exists cols);
-    }
-
-    tag = Tag("textarea");
-    
-    shared actual default [<String->Object>*] attributes {
-        value attrs = AttributeSequenceBuilder();
-        attrs.addAttribute("rows", rows);
-        attrs.addAttribute("cols", cols);
-
-        attrs.addAttribute("maxlength", maxLength);
-        attrs.addAttribute("minlength", minLength);
-
-        attrs.addAttribute("placeholder", placeholder);
-        attrs.addAttribute("wrap", wrap);
-        
-        attrs.addAll(super.attributes);
-
-        return attrs.sequence();
-    }
-
+ [Official W3C reference](https://www.w3.org/TR/html5/grouping-content.html#the-textarea-element).
+"
+tagged("flow", "phrasing", "interactive")
+shared class TextArea(
+    /* GLOBAL ATTRIBUTES - BEGIN */
+    "Attribute defines a unique identifier (ID) which must be unique in the whole document. Its purpose is to identify the element when linking (using a fragment identifier), scripting, or styling (with CSS)."
+    Attribute<String> id = null,
+    "Attribute defines a space-separated list of the classes of the element. Classes allows CSS and JavaScript to select and access specific elements via the class selectors."
+    Attribute<String> clazz = null,
+    "Attribute provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout."
+    Attribute<String> accessKey = null,
+    "Attribute indicates if the element should be editable by the user. If so, the browser modifies its widget to allow editing."
+    Attribute<Boolean> contentEditable = null,
+    "Attribute defines id of an menu element to use as the contextual menu for this element"
+    Attribute<String> contextMenu = null,
+    "Attribute indicates the directionality of the element's text."
+    Attribute<Direction> dir = null,
+    "Attribute indicates whether the element can be dragged."
+    Attribute<Boolean> draggable = null,
+    "Attribute indicates what types of content can be dropped on an element."
+    Attribute<DropZone> dropZone = null,
+    "Attribute indicates that the element is not yet, or is no longer, relevant. For example, it can be used to hide elements of the page that can't be used until the login process has been completed. The browser won't render such elements. This attribute must not be used to hide content that could legitimately be shown."
+    Attribute<Boolean> hidden = null,
+    "Attribute specifies the primary language for the element's contents and for any of the element's attributes that contain text. Its value must be a valid BCP 47 language tag, or the empty string. Setting the attribute to the empty string indicates that the primary language is unknown."
+    Attribute<String> lang = null,
+    "Attribute defines whether the element may be checked for spelling errors."
+    Attribute<Boolean> spellcheck = null,
+    "Attribute contains CSS styling declarations to be applied to the element. Note that it is recommended for styles to be defined in a separate file or files."
+    Attribute<String> style = null,
+    "Attribute indicates if the element can take input focus (is focusable), if it should participate to sequential keyboard navigation, and if so, at what position."
+    Attribute<Integer> tabIndex = null,
+    "Attribute contains a text representing advisory information related to the element it belongs to. Such information can typically, but not necessarily, be presented to the user as a tooltip."
+    Attribute<String> title = null,
+    "Attribute that is used to specify whether an element's attribute values and the values of its text node children are to be translated when the page is localized, or whether to leave them unchanged."
+    Attribute<Boolean> translate = null,
+    /* GLOBAL ATTRIBUTES - END */
+    "Attribute indicates whether the value of the control can be automatically completed by the browser."
+    Attribute<Boolean> autocomplete = null,
+    "Attribute lets you specify that a form control should have input focus when the page loads, unless the user overrides it, for example by typing in a different control."
+    Attribute<Boolean> autofocus = null,
+    "Attribute specifies visible width of the text control, in average character widths. If it is specified, it must be a positive integer. If it is not specified, the default value is 20."
+    Attribute<Integer> cols = null,
+    "Attribute indicates that the user cannot interact with the control."
+    Attribute<Boolean> disabled = null,
+    "Attribute specifies the form element that the button is associated with (its form owner)."
+    Attribute<String> form = null,
+    "Attribute specifies maximum number of characters that the user can enter. If it is not specified, the user can enter an unlimited number of characters."
+    Attribute<Integer> maxlength = null,
+    "Attribute specifies minimum number of characters (Unicode code points) required that the user should enter."
+    Attribute<Integer> minlength = null,
+    "Attribute contains the name of the control."
+    Attribute<String> name = null,
+    "Attribute specifies a hint to the user of what can be entered in the control. Carriage returns or line-feeds within the placeholder text must be treated as line breaks when rendering the hint."
+    Attribute<String> placeholder = null,
+    "Attribute indicates that the user cannot modify the value of the control. Unlike the disabled attribute, the readonly attribute does not prevent the user from clicking or selecting in the control. The value of a read-only control is still submitted with the form."
+    Attribute<Boolean> readonly = null,
+    "Attribute specifies that the user must fill in a value before submitting a form."
+    Attribute<Boolean> required = null,
+    "Attribute specifies number of visible text lines for the control."
+    Attribute<Integer> rows = null,
+    "Attribute indicates how the control wraps text."
+    Attribute<Wrap> wrap = null,
+    "The attributes associated with this element."
+    Attributes attributes = [],
+    "The children of this element."
+    shared actual {Content<String>*} children = [])
+        extends Element("textarea", id, clazz, accessKey, contentEditable, contextMenu, dir, draggable, dropZone, hidden, lang, spellcheck, style, tabIndex, title, translate, 
+                    [attributeEntry("autocomplete", attributeValueOnOff(autocomplete)),
+                     attributeEntry("autofocus", autofocus),
+                     attributeEntry("cols", cols),
+                     attributeEntry("disabled", disabled),
+                     attributeEntry("form", form),
+                     attributeEntry("maxlength", maxlength),
+                     attributeEntry("minlength", minlength),
+                     attributeEntry("name", name),
+                     attributeEntry("placeholder", placeholder),
+                     attributeEntry("readonly", readonly),
+                     attributeEntry("required", required),
+                     attributeEntry("rows", rows),
+                     attributeEntry("wrap", wrap),
+                    *attributes], children)
+        satisfies FlowCategory & PhrasingCategory & InteractiveCategory {
 }
-
-"Specifies how the text in a text area is to be wrapped
- when submitted in a form.
-
- Technical details about this attribute can be found on the
- [Official W3C reference](http://www.w3.org/html/wg/drafts/html/master/forms.html#attr-textarea-wrap)"
-shared abstract class TextAreaWrap(String mode)
-        of hard | soft {
-    string => mode;
-}
-
-"Indicates that the text in the textarea is to have
- newlines added by the user agent so that the text
- is wrapped when it is submitted."
-shared object hard extends TextAreaWrap("hard") {}
-
-"Indicates that the text in the textarea is not to be
- wrapped when it is submitted (though it can still be
- wrapped in the rendering)."
-shared object soft extends TextAreaWrap("soft") {}

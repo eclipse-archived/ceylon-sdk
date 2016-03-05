@@ -1,143 +1,102 @@
-
-"Represents a collection of form-associated elements, some of
- which can represent editable values that can be submitted to
- a server for processing.
+"
+ The __&lt;form&gt;__ element represents a document section that contains 
+ interactive controls to submit information to a web server.
+ 
+ Example:
+ 
+ <table style='width:100%'>
+     <tr style='vertical-align: top'>
+         <td style='width:50%; border-style:none'>
+         
+ <pre data-language='ceylon'>
+ Form { method = FormMethod.post;
+     Label{ \"User name\", Input { id = \"username\"; type = InputType.text; }},
+     Label{ \"Password\", Input { id = \"password\"; type = InputType.password; }},
+     Input{ val = \"Login\"; type = InputType.submit; }
+ };
+ </pre>
+ 
+         </td>
+         <td style='border-style:none'>
+         
+ <pre data-language='html'>
+  &lt;form method=\"post\"&gt;
+     &lt;label&gt;User name &lt;input id=\"username\" type=\"text\"&gt;&lt;/label&gt;
+     &lt;label&gt;Password &lt;input id=\"password\" type=\"password\"&gt;&lt;/label&gt;
+     &lt;input value=\"Login\" type=\"submit\"&gt;
+ &lt;/form&gt;
+ </pre>
+ 
+         </td>         
+     </tr>
+ </table>
  
  Technical details about this element can be found on the
- [Official W3C reference](http://dev.w3.org/html5/spec/Overview.html#the-form-element)"
-shared class Form(action, method = null, acceptCharset = null,
-            autoComplete = null, encType = null, name = null,
-            noValidate = null, target = null,
-            String? id = null, CssClass classNames = [],
-            String? style = null, String? accessKey = null,
-            String? contextMenu = null, TextDirection? dir = null,
-            Boolean? draggable = null, DropZone? dropZone = null,
-            Boolean? inert = null, Boolean? hidden = null,
-            String? lang = null, Boolean? spellcheck = null,
-            Integer? tabIndex = null, String? title = null,
-            Boolean? translate = null, Aria? aria = null,
-            NonstandardAttributes nonstandardAttributes = empty,
-            DataContainer data = empty,
-            children = {})
-        extends BaseElement(id, classNames, style, accessKey, contextMenu,
-            dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies BlockElement & ParentNode<BlockOrInline> {
-
-    "Specifies where to send the form-data
-     when a form is submitted."
-    shared String action;
-
-    "Specifies the HTTP method to use when
-     sending form-data"
-    shared String? method; // TODO enumerated type
-
-    "Specifies the character encodings that are
-     to be used for the form submission."
-    shared String? acceptCharset;
-
-    "Specifies whether a form should have
-     autocomplete on or off."
-    shared Boolean? autoComplete;
-
-    "Specifies how the form-data should be
-     encoded when submitting it to the server
-     (only when [[Form.method]] is post)"
-    shared String? encType;
-
-    "Specifies the name of a form."
-    shared String? name;
-
-    "Specifies that the form should not be
-     validated when submitted."
-    shared Boolean? noValidate;
-
-    "Specifies where to display the response
-     that is received after submitting the form."
-    shared String? target; // TODO enumerated type? look at A.target
-
-    shared actual {<String|BlockOrInline|{String|BlockOrInline*}|Snippet<BlockOrInline>|Null>*} children;
-
-    tag = Tag("form");
-
-    shared actual [<String->Object>*] attributes {
-        value attrs = AttributeSequenceBuilder();
-        attrs.addAttribute("action", action);
-        attrs.addAttribute("method", method);
-        attrs.addAttribute("name", name);
-        attrs.addAll(super.attributes);
-        attrs.addAttribute("accept-charset", acceptCharset);
-        attrs.addOnOffBooleanAttribute("autocomplete", autoComplete);
-        attrs.addAttribute("enctype", encType);
-        attrs.addNamedBooleanAttribute("novalidate", noValidate);
-        attrs.addAttribute("target", target);
-        return attrs.sequence();
-    }
-
-}
-
-"Base class for form control elements."
-shared abstract class FormElement(
-            name = null, autoFocus = null, disabled = null,
-            form = null, formNoValidate = null,
-            readOnly = null, required = null, valueOf = null,
-            String? id = null, CssClass classNames = [],
-            String? style = null, String? accessKey = null,
-            String? contextMenu = null, TextDirection? dir = null,
-            Boolean? draggable = null, DropZone? dropZone = null,
-            Boolean? inert = null, Boolean? hidden = null,
-            String? lang = null, Boolean? spellcheck = null,
-            Integer? tabIndex = null, String? title = null,
-            Boolean? translate = null, Aria? aria = null,
-            NonstandardAttributes nonstandardAttributes = empty,
-            DataContainer data = empty)
-        extends BaseElement(id, classNames, style, accessKey, contextMenu,
-            dir, draggable, dropZone, inert, hidden, lang, spellcheck,
-            tabIndex, title, translate, aria, nonstandardAttributes, data)
-        satisfies InlineElement {
-
-
-    "Gives the name of the form control,
-     as used in form submission."
-    shared String? name;
-
-    "Indicate that a control is to be focused as soon
-     as the page is loaded"
-    shared Boolean? autoFocus;
-
-    "Specifies that this input should be disabled."
-    shared Boolean? disabled;
-
-    "Specifies one or more forms (id) that this
-     input belongs to."
-    shared String? form;
-
-    "Defines that form elements should not be
-     validated when submitted."
-    shared Boolean? formNoValidate;
-
-    "Specifies that this field is read-only."
-    shared Boolean? readOnly;
-
-    "Specifies that this field must be filled out
-     before submitting the form."
-    shared Boolean? required;
-
-    "Specifies the value of this input."
-    shared String? valueOf;
-
-    shared actual default [<String->Object>*] attributes {
-        value attrs = AttributeSequenceBuilder();
-        attrs.addAttribute("name", name);
-        attrs.addAttribute("value", valueOf);
-        attrs.addNamedBooleanAttribute("autofocus", autoFocus);
-        attrs.addNamedBooleanAttribute("disabled", disabled);
-        attrs.addNamedBooleanAttribute("formnovalidate", formNoValidate);
-        attrs.addAttribute("form", form);
-        attrs.addNamedBooleanAttribute("readonly", readOnly);
-        attrs.addNamedBooleanAttribute("required", required);
-        attrs.addAll(super.attributes);
-        return attrs.sequence();
-    }
-
+ [Official W3C reference](https://www.w3.org/TR/html5/document-metadata.html#the-form-element).
+ "
+tagged("flow")
+shared class Form(
+    /* GLOBAL ATTRIBUTES - BEGIN */
+    "Attribute defines a unique identifier (ID) which must be unique in the whole document. Its purpose is to identify the element when linking (using a fragment identifier), scripting, or styling (with CSS)."
+    Attribute<String> id = null,
+    "Attribute defines a space-separated list of the classes of the element. Classes allows CSS and JavaScript to select and access specific elements via the class selectors."
+    Attribute<String> clazz = null,
+    "Attribute provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout."
+    Attribute<String> accessKey = null,
+    "Attribute indicates if the element should be editable by the user. If so, the browser modifies its widget to allow editing."
+    Attribute<Boolean> contentEditable = null,
+    "Attribute defines id of an menu element to use as the contextual menu for this element"
+    Attribute<String> contextMenu = null,
+    "Attribute indicates the directionality of the element's text."
+    Attribute<Direction> dir = null,
+    "Attribute indicates whether the element can be dragged."
+    Attribute<Boolean> draggable = null,
+    "Attribute indicates what types of content can be dropped on an element."
+    Attribute<DropZone> dropZone = null,
+    "Attribute indicates that the element is not yet, or is no longer, relevant. For example, it can be used to hide elements of the page that can't be used until the login process has been completed. The browser won't render such elements. This attribute must not be used to hide content that could legitimately be shown."
+    Attribute<Boolean> hidden = null,
+    "Attribute specifies the primary language for the element's contents and for any of the element's attributes that contain text. Its value must be a valid BCP 47 language tag, or the empty string. Setting the attribute to the empty string indicates that the primary language is unknown."
+    Attribute<String> lang = null,
+    "Attribute defines whether the element may be checked for spelling errors."
+    Attribute<Boolean> spellcheck = null,
+    "Attribute contains CSS styling declarations to be applied to the element. Note that it is recommended for styles to be defined in a separate file or files."
+    Attribute<String> style = null,
+    "Attribute indicates if the element can take input focus (is focusable), if it should participate to sequential keyboard navigation, and if so, at what position."
+    Attribute<Integer> tabIndex = null,
+    "Attribute contains a text representing advisory information related to the element it belongs to. Such information can typically, but not necessarily, be presented to the user as a tooltip."
+    Attribute<String> title = null,
+    "Attribute that is used to specify whether an element's attribute values and the values of its text node children are to be translated when the page is localized, or whether to leave them unchanged."
+    Attribute<Boolean> translate = null,
+    /* GLOBAL ATTRIBUTES - END */
+    "Attribute specifies a space- or comma-delimited list of character encodings that the server accepts."
+    Attribute<String> acceptCharset = null,
+    "Attribute specifies the URI of a program that processes the information submitted by the button. If specified, it overrides the action attribute of the button's form owner."
+    Attribute<String> action = null,
+    "Attribute indicates whether input elements can by default have their values automatically completed by the browser. This setting can be overridden by an autocomplete attribute on an element belonging to the form."
+    Attribute<Boolean> autocomplete = null,
+    "Attribute specifies the type of content that is used to submit the form to the server."
+    Attribute<String>|Attribute<FormEnctype> enctype = null,
+    "Attribute specifies the HTTP method that the browser uses to submit the form."
+    Attribute<String>|Attribute<FormMethod> method = null,
+    "Attribute represents the name of the form."
+    Attribute<String> name = null,
+    "Attribute indicates that the form is not to be validated when submitted. If this attribute is not specified (and therefore the form is validated), this default setting can be overridden by a formnovalidate attribute."
+    Attribute<Boolean> novalidate = null,
+    "Attribute is a name or keyword indicating where to display the response that is received after submitting the form."
+    Attribute<String>|Attribute<FormTarget> target = null,
+    "The attributes associated with this element."
+    Attributes attributes = [],
+    "The children of this element."
+    shared actual {Content<FlowCategory>*} children = [])
+        extends Element("form", id, clazz, accessKey, contentEditable, contextMenu, dir, draggable, dropZone, hidden, lang, spellcheck, style, tabIndex, title, translate, 
+                        [attributeEntry("accept-charset", acceptCharset),
+                         attributeEntry("action", action),
+                         attributeEntry("autocomplete", attributeValueOnOff(autocomplete)),
+                         attributeEntry("enctype", enctype),
+                         attributeEntry("method", method),
+                         attributeEntry("name", name),
+                         attributeEntry("novalidate", novalidate),
+                         attributeEntry("target", target),
+                          *attributes], children)
+        satisfies FlowCategory {
 }

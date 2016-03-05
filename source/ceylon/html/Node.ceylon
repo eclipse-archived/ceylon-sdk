@@ -1,47 +1,58 @@
-import ceylon.html.serializer { NodeSerializer }
-
-"Represents a single node in the `Document` tree.
- This is the **base type** for the entire Document
- Object Model. More detailed info can be found at
- [DOM Level 2 Specification](http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/)"
-see(`interface ParentNode`, `interface TextNode`, `interface Document`)
-shared interface Node {
-
-    "The tag name and type."
-    shared formal Tag tag;
-
+"Represents a _node_ in the HTML document."
+shared abstract class Node(
+    "The name of this node."
+    shared String nodeName,
+    "The attributes associated with this node."
+    shared Attributes attributes = [],
+    "The children of this node."
+    shared default {Content<Node>*} children = [])
+        of Comment | ProcessingInstruction | Element {
+    
+    "A string representing this node and all children."
     shared actual String string {
         value builder = StringBuilder();
-        NodeSerializer(builder.append).serialize(this);
+        renderTemplate(this, builder.append);
         return builder.string;
     }
-
-    shared default [<String->Object>*] attributes => empty;
-
-}
-
-"Marks a [[Node]] implementation as a possible parent of other nodes."
-shared interface ParentNode<out Child>
-        satisfies Node
-            given Child satisfies Node {
-
-    shared formal {<Child|String|{Child|String*}|Snippet<Child>|Null>*} children;
-
-}
-
-"Marks a [[Node]] implementation as a text container."
-shared interface TextNode satisfies Node {
-
-    shared formal String text;
     
 }
 
-"Represents the entire HTML document, this means that it holds
- the entire configuration and content.
- Conceptually, it is the root of the document tree."
-shared interface Document of Html satisfies Node {
 
-    "The Document Type Declaration associated with this document."
-    shared formal Doctype doctype;
+"Alias for node child type. Usually parameterized with _category_ interface 
+ to define permitted node content."
+shared alias Content<Item> => 
+        <CharacterData|<Item&Node>> |
+        <CharacterData|<Item&Node>>() |
+        {<CharacterData|<Item&Node>>*} |
+        {<CharacterData|<Item&Node>>*}() |
+        Null;
 
+
+"Alias for nodes that contains character data."
+shared alias CharacterData => String | Comment | ProcessingInstruction;
+
+
+"Represents a _comment_ in the HTML document, although it is generally not visually shown, 
+ such comments are available to be read in the source view. Comments are represented as 
+ content between &lt;!-- and --&gt;."
+shared class Comment(
+    "The textual data contained in this comment."
+    shared String data)
+        extends Node("#comment") {
+    
+    shared actual {String+} children = { data };
+    
+}
+
+
+"Represents a _processing instruction_."
+shared class ProcessingInstruction(
+    "The target of this processing instruction."
+    shared String target,
+    "The content of this processing instruction."
+    shared String data)
+        extends Node(target) {
+    
+    shared actual [] children = [];
+    
 }

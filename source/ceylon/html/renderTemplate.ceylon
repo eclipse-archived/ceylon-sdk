@@ -1,0 +1,45 @@
+import ceylon.html.internal {
+    HtmlRenderer
+}
+
+
+"""
+   Render given template.
+   
+   Example: render template to string
+   
+       value html = Html { ... };
+       value builder = StringBuilder();
+       renderTemplate(html, builder.append);
+     
+   Example: render template as response of `ceylon.net` server
+   
+       value server = newServer {
+           Endpoint {
+               path = equals("/hello");
+               service = (req, res) {
+                   value html = Html {
+                       Body {
+                           H1 {"Hello ``req.formParameter("name") else "World"``!"}
+                       }
+                   };
+                   renderTemplate(html, res.writeString);
+               };
+           }
+       };
+       server.start();
+     
+"""
+shared void renderTemplate(Node node, void write(String string), RenderingConfiguration configuration = RenderingConfiguration()) {
+    HtmlRenderer(write, configuration).renderTemplate(node);
+}
+
+
+"Represents rendering configuration."
+see(`function renderTemplate`)
+shared class RenderingConfiguration(
+    "Should the result be minified or formatted?" 
+    shared Boolean prettyPrint = true,
+    "Should non-ASCII characters be escaped? If `false`, the document's characterset should be UTF-8."
+    shared Boolean escapeNonAscii = false) {
+}

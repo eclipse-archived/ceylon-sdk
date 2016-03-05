@@ -1,142 +1,59 @@
-
-"Implementations of this class represents a concrete element used
- to display formatted content, to define metadata or to import external
- resources of a [[Document]]. This base class defines the `id`,
- common to all elements."
-shared abstract class Element(id = null)
-        satisfies Node {
-
-    "Document wide identifier. The value should be the name of the id
-     you wish to use and must be unique for the whole document."
-    shared String? id;
-
-    shared actual default [<String->Object>*] attributes {
-        value attrs = AttributeSequenceBuilder();
-        attrs.addAttribute("id", id);
-        return attrs.sequence();
-    }
-
-}
-
-"Implementations of this class represents an element that can be styled
- using CSS."
-shared abstract class StyledElement(String? id, classNames = [], style = null)
-        extends Element(id) {
-
-    "CSS class names."
-    shared CssClass classNames;
-
-    "CSS style properties."
-    shared String? style;
-
-    shared actual default [<String->Object>*] attributes {
-        value attrs = AttributeSequenceBuilder();
-        attrs.addAll(super.attributes);
-        switch (classNames)
-        case (is String[]) {
-            if (!classNames.empty) {
-                attrs.addAttribute("class", " ".join(classNames));
-            }
-        }
-        case (is String) {
-            attrs.addAttribute("class", classNames);
-        }
-        attrs.addAttribute("style", style);
-        return attrs.sequence();
-    }
-
-}
-
-"A default [[Element]] implementation that represents a full featured
- HTML element. It defines all common HTML attributes and event handling."
-shared abstract class BaseElement(String? id = null, CssClass classNames = [],
-            String? style = null, accessKey = null, contextMenu = null,
-            dir = null, draggable = null, dropZone = null,
-            inert = null, hidden = null, lang = null, spellcheck = null,
-            tabIndex = null, title = null, translate = null, aria = null,
-            nonstandardAttributes = empty, data = empty)
-        extends StyledElement(id, classNames, style) {
-
-    "Specifies a shortcut key that can be used to access the element."
-    shared String? accessKey; // TODO static typed KeyStroke?
-
-    "A reference to a menu element id with the contents of this
-     element context menu.
-     **Note** that this property is poorly supported by browsers." // TODO more info here
-    shared String? contextMenu;
-
-    "Specifies the element's text directionality."
-    shared TextDirection? dir;
-
-    "Controls whether or not the element is draggable."
-    shared Boolean? draggable;
-
-    "Defines the behavior when other element is dropped on this element.
-     Note: everytime you define a element as a drop zone, you should also
-     define it's [[BaseElement.title]] attribute for the purpose
-     of non-visual interactions"
-    shared DropZone? dropZone;
-
-    "Indicates that the element is not yet, or is no longer, relevant.
-     The browser/user agent does not display elements that have the
-     hidden attribute present."
-    shared Boolean? hidden;
-
-    "Indicates, when `true`, that the element is to be made inert." // TODO more info
-    shared Boolean? inert;
-
-    "Specifies the primary language for the element's contents and
-     for any of the element's attributes that contain text."
-    shared String? lang; // TODO Locale type?
-
-    "User agents can support the checking of spelling and
-     grammar of editable text."
-    shared Boolean? spellcheck;
-
-    "Controls whether an element is supposed to be focusable, whether
-     it is supposed to be reachable using sequential focus navigation,
-     and what is to be the relative order of the element for the purposes
-     of sequential focus navigation. "
-    shared Integer? tabIndex;
-
-    "Specifies a title. Most browsers will display a tooltip when the
-     cursor hovers over the element."
-    shared String? title;
-
-    "Used to specify whether this element's attribute values its
-     text content are to be translated when the page is localized,
-     or whether to leave them unchanged."
-    shared Boolean? translate;
-
-    shared Aria? aria;
-
-    "Defines any other nonstandard (defined by W3C) attributes."
-    shared NonstandardAttributes nonstandardAttributes;
-
-    "Can be used to hold data-* attributes."
-    shared DataContainer data;
-
-    shared actual default [<String->Object>*] attributes {
-        value attrs = AttributeSequenceBuilder();
-        attrs.addAll(super.attributes);
-        attrs.addAttribute("accesskey", accessKey);
-        attrs.addAttribute("contextmenu", contextMenu);
-        attrs.addAttribute("draggable", draggable);
-        attrs.addAttribute("addne", dropZone);
-        attrs.addAttribute("hidden", hidden);
-        attrs.addAttribute("inert", inert);
-        attrs.addAttribute("lang", lang);
-        attrs.addAttribute("spellcheck", spellcheck);
-        attrs.addAttribute("tabindex", tabIndex);
-        attrs.addAttribute("title", title);
-        attrs.addYesNoBooleanAttribute("translate", translate);
-
-        attrs.addAll(nonstandardAttributes);
-
-        attrs.addAll(data.map((elem) => "data-``elem.key``"->elem.item));
-
-        // TODO append events attributes
-        return attrs.sequence();
-    }
-
+"Represents base class for all HTML elements and defines global attributes."
+shared abstract class Element(
+    "The name of the tag for this element."
+    shared String tagName,
+    /* GLOBAL ATTRIBUTES - BEGIN */
+    "Attribute defines a unique identifier (ID) which must be unique in the whole document. Its purpose is to identify the element when linking (using a fragment identifier), scripting, or styling (with CSS)."
+    shared Attribute<String> id = null,
+    "Attribute defines a space-separated list of the classes of the element. Classes allows CSS and JavaScript to select and access specific elements via the class selectors."
+    shared Attribute<String> clazz = null,
+    "Attribute provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout."
+    shared Attribute<String> accessKey = null,
+    "Attribute indicates if the element should be editable by the user. If so, the browser modifies its widget to allow editing."
+    shared Attribute<Boolean> contentEditable = null,
+    "Attribute defines id of an menu element to use as the contextual menu for this element"
+    shared Attribute<String> contextMenu = null,
+    "Attribute indicates the directionality of the element's text."
+    shared Attribute<Direction> dir = null,
+    "Attribute indicates whether the element can be dragged."
+    shared Attribute<Boolean> draggable = null,
+    "Attribute indicates what types of content can be dropped on an element."
+    shared Attribute<DropZone> dropZone = null,
+    "Attribute indicates that the element is not yet, or is no longer, relevant. For example, it can be used to hide elements of the page that can't be used until the login process has been completed. The browser won't render such elements. This attribute must not be used to hide content that could legitimately be shown."
+    shared Attribute<Boolean> hidden = null,
+    "Attribute specifies the primary language for the element's contents and for any of the element's attributes that contain text. Its value must be a valid BCP 47 language tag, or the empty string. Setting the attribute to the empty string indicates that the primary language is unknown."
+    shared Attribute<String> lang = null,
+    "Attribute defines whether the element may be checked for spelling errors."
+    shared Attribute<Boolean> spellcheck = null,
+    "Attribute contains CSS styling declarations to be applied to the element. Note that it is recommended for styles to be defined in a separate file or files."
+    shared Attribute<String> style = null,
+    "Attribute indicates if the element can take input focus (is focusable), if it should participate to sequential keyboard navigation, and if so, at what position."
+    shared Attribute<Integer> tabIndex = null,
+    "Attribute contains a text representing advisory information related to the element it belongs to. Such information can typically, but not necessarily, be presented to the user as a tooltip."
+    shared Attribute<String> title = null,
+    "Attribute that is used to specify whether an element's attribute values and the values of its text node children are to be translated when the page is localized, or whether to leave them unchanged."
+    shared Attribute<Boolean> translate = null,
+    /* GLOBAL ATTRIBUTES - END */
+    "The attributes associated with this element."
+    Attributes attributes = [],
+    "The children of this element."
+    {Content<Node>*} children = [])
+        extends Node(tagName,
+        [attributeEntry("id", id),
+         attributeEntry("class", clazz),
+         attributeEntry("accesskey", accessKey),
+         attributeEntry("contenteditable", contentEditable),
+         attributeEntry("contextmenu", contextMenu),
+         attributeEntry("dir", dir),
+         attributeEntry("draggable", draggable),
+         attributeEntry("dropzone", dropZone),
+         attributeEntry("hidden", hidden),
+         attributeEntry("lang", lang),
+         attributeEntry("spellcheck", attributeValueTrueFalse(spellcheck)),
+         attributeEntry("style", style),
+         attributeEntry("tabIndex", tabIndex),
+         attributeEntry("title", title),
+         attributeEntry("translate", attributeValueYesNo(translate)),
+        *attributes].select((attribute) => attribute exists),
+        children) {
 }

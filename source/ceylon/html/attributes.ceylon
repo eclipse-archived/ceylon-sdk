@@ -1,54 +1,50 @@
+"Alias for attribute value type."
+shared alias Attribute<Value> => Value?|Value?();
 
-"Useful alias to indicate that a sequence of [[Entry]] can be
- used to add any nonstandard attribute to the element."
-shared alias NonstandardAttributes => [<String->Object>*];
+"Alias for attribute entry."
+shared alias AttributeEntry => <String-><Attribute<String>|Attribute<Boolean>|Attribute<Integer>|Attribute<Float>|Attribute<AttributeValueProvider>>>;
 
-"Useful alias to indicate that a sequence of [[Entry]] can be
- used to add `data-` prefixed attributes to the element."
-shared alias DataContainer => [<String->Object>*];
-
-"Alias to represent a collection of CSS classes."
-shared alias CssClass => String|[String*]; // TODO ceylon-style integration
+"Alias for attribute entries."
+shared alias Attributes => [AttributeEntry?*];
 
 
-"The text directionality.
- For details, check [Official W3C Specification]
- (http://www.w3.org/html/wg/drafts/html/master/dom.html#the-dir-attribute)"
-shared abstract class TextDirection()
-        of leftToRight | rightToLeft | autoDirection {}
-
-"Indicates that the contents of the element are
- explicitly directionally embedded left-to-right text."
-shared object leftToRight extends TextDirection() {
-    string => "ltr";
+"Represents strategy for obtaining attribute value, usually implemented by classes used as enumerated attribute values."
+shared interface AttributeValueProvider {
+    
+    "The attribute value."
+    shared formal String? attributeValue;
+    
+    string => attributeValue else super.string;
+    
 }
 
-"Indicates that the contents of the element are
- explicitly directionally embedded right-to-left text."
-shared object rightToLeft extends TextDirection() {
-    string => "rtl";
+class AttributeBooleanValueProvider(Attribute<Boolean> attributeBoolean, String? trueValue, String? falseValue) satisfies AttributeValueProvider {
+    
+    function valueOf(Boolean? b) => if(exists b) then (if(b) then trueValue else falseValue) else null;
+    
+    shared actual String? attributeValue {
+        switch(attributeBoolean)
+        case (is Boolean) { 
+            return valueOf(attributeBoolean);
+        }
+        case (is Boolean?()) {
+            return valueOf(attributeBoolean());
+        }
+        else {
+            return null;
+        }
+    }
+    
 }
 
-"Indicates that the contents of the element are
- explicitly embedded text, but that the direction
- is to be determined programmatically using the
- contents of the element."
-shared object autoDirection extends TextDirection() {
-    string => "auto";
-}
+AttributeValueProvider? attributeValueYesNo(Attribute<Boolean> attributeBoolean)
+        => if(exists attributeBoolean) then AttributeBooleanValueProvider(attributeBoolean, "yes", "no") else null;
 
- 
-"Defines the behavior of a drop zone element."
-shared abstract class DropZone() of copy | link | move {}
+AttributeValueProvider? attributeValueOnOff(Attribute<Boolean> attributeBoolean)
+        => if(exists attributeBoolean) then AttributeBooleanValueProvider(attributeBoolean, "on", "off") else null;
 
-"Indicates that dropping an accepted item on the element
- will result in a copy of the dragged data."
-shared object copy extends DropZone() {}
+AttributeValueProvider? attributeValueTrueFalse(Attribute<Boolean> attributeBoolean)
+        => if(exists attributeBoolean) then AttributeBooleanValueProvider(attributeBoolean, "true", "false") else null;
 
-"Indicates that dropping an accepted item on the element
- will result in a link to the original data."
-shared object link extends DropZone() {}
-
-"Indicates that dropping an accepted item on the element
- will result in the dragged data being moved to the new location."
-shared object move extends DropZone() {}
+AttributeEntry? attributeEntry(String attributeName, Attribute<String>|Attribute<Boolean>|Attribute<Integer>|Attribute<Float>|Attribute<AttributeValueProvider> attributeValue)
+        => if(exists attributeValue) then attributeName->attributeValue else null;
