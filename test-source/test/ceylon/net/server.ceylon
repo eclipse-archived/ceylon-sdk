@@ -19,13 +19,11 @@ import java.util.concurrent { Semaphore }
 import java.lang { Runnable, Thread {threadSleep = sleep} }
 import ceylon.html {
     Html,
-    html5,
     Head,
     Body,
-    P
-}
-import ceylon.html.serializer {
-    NodeSerializer
+    Title,
+    P,
+    renderTemplate
 }
 import ceylon.buffer { ByteBuffer }
 import test.ceylon.net.multipartclient {
@@ -196,15 +194,15 @@ test void testServer() {
         Endpoint { 
             path = startsWith("/serializer"); 
             void service(Request request, Response response) {
-                NodeSerializer(response.writeString).serialize(
+                renderTemplate(
                     Html {
-                        doctype = html5; 
-                        Head { title = "Hello"; }; 
+                        Head { 
+                            Title { "Hello" } 
+                        }, 
                         Body {
-                            P("Hello!")
-                        };
-                    }
-                );
+                            P{ "Hello!" }
+                        }
+                    }, response.writeString);
             }
         },
         AsynchronousEndpoint { 
