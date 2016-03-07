@@ -17,6 +17,8 @@
    may change when the map is modified. The order itself is 
    not meaningful to a client.
  
+ The stability is `linked` by default.
+ 
  The management of the backing array is controlled by the
  given [[hashtable]]."
 

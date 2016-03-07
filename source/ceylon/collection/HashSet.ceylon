@@ -16,6 +16,8 @@
    may change when the set is modified. The order itself is 
    not meaningful to a client.
  
+ The stability is `linked` by default.
+ 
  The management of the backing array is controlled by the
  given [[hashtable]]."
 by ("Stéphane Épardaud", "Gavin King")
