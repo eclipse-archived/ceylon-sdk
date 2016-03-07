@@ -144,7 +144,8 @@ shared class HashMap<Key, Item>
             Integer keyHash,
             CachingCell<Key->Item>? rest) {
         if (stability==linked) {
-            value cell = LinkedCell(entry, keyHash, rest, tip);
+            value cell 
+                    = LinkedCell(entry, keyHash, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -193,7 +194,8 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, keyHash, headBucket));
+        store.set(index, 
+            createCell(entry, keyHash, headBucket));
         return true;
     }
     
@@ -257,7 +259,8 @@ shared class HashMap<Key, Item>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(entry, keyHash, headBucket));
+        store.set(index, 
+            createCell(entry, keyHash, headBucket));
         length++;
         checkRehash();
         return null;
@@ -422,9 +425,23 @@ shared class HashMap<Key, Item>
         return default;
     }
     
-    first => if (stability==linked) 
+    shared actual <Key->Item>? first 
+            => if (stability==linked) 
                 then head?.element 
                 else store[0]?.element;
+    
+    shared actual <Key->Item>? last {
+        if (stability == linked) {
+            return tip?.element;
+        }
+        else {
+            variable value bucket = store.last;
+            while (exists cell = bucket?.rest) {
+                bucket = cell;
+            }
+            return bucket?.element;
+        }
+    }
     
     /*shared actual Collection<Item> values {
         value ret = LinkedList<Item>();

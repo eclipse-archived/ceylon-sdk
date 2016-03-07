@@ -3,10 +3,12 @@
  -[[rest]] for storage
  -[[next]]/[[previous]] for stable iteration
  
- This allows us to use the same cell object in two different lists which
- have the same elements but different iteration order."
-class LinkedCell<Element>(Element car, Integer keyHash, CachingCell<Element>? cdr, previous) 
-        extends CachingCell<Element>(car, keyHash, cdr) {
+ This allows us to use the same cell object in two different 
+ lists which have the same elements but different iteration 
+ order."
+class LinkedCell<Element>(Element element, Integer keyHash, 
+    CachingCell<Element>? rest, previous) 
+        extends CachingCell<Element>(element, keyHash, rest) {
     shared variable LinkedCell<Element>? next = null;
     shared variable LinkedCell<Element>? previous;
 }

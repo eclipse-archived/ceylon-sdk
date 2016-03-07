@@ -143,7 +143,8 @@ shared class HashSet<Element>
         Integer elemHash,
         CachingCell<Element>? rest) {
         if (stability == linked) {
-            value cell = LinkedCell(elem, elemHash, rest, tip);
+            value cell 
+                    = LinkedCell(elem, elemHash, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -152,7 +153,8 @@ shared class HashSet<Element>
                 head = cell;
             }
             return cell;
-        } else {
+        }
+        else {
             return CachingCell(elem, elemHash, rest);
         }
     }
@@ -162,12 +164,14 @@ shared class HashSet<Element>
             assert (is LinkedCell<Element> cell);
             if (exists last = cell.previous) {
                 last.next = cell.next;
-            } else {
+            }
+            else {
                 head = cell.next;
             }
             if (exists next = cell.next) {
                 next.previous = cell.previous;
-            } else {
+            }
+            else {
                 tip = cell.previous;
             }
         }
@@ -189,7 +193,8 @@ shared class HashSet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, createCell(element, elementHash, headBucket));
+        store.set(index, 
+            createCell(element, elementHash, headBucket));
         return true;
     }
     
@@ -278,7 +283,8 @@ shared class HashSet<Element>
                 deleteCell(rest);
                 length--;
                 return true;
-            } else {
+            }
+            else {
                 bucket = rest;
             }
         }
@@ -375,7 +381,8 @@ shared class HashSet<Element>
     shared actual Boolean contains(Object element) {
         if (empty) {
             return false;
-        } else {
+        }
+        else {
             value elementHash = hashCode(element);
             Integer index = storeIndex(elementHash, store);
             variable value bucket
@@ -441,17 +448,17 @@ shared class HashSet<Element>
         return ret;
     }
     
-    shared actual Element? first
+    shared actual Element? first 
             => if (stability == linked)
-    then head?.element
-    else store.coalesced.first?.element;
+                then head?.element
+                else store.coalesced.first?.element;
     
     shared actual Element? last {
         if (stability == linked) {
             return tip?.element;
-        } else {
-            variable value bucket
-                    = store.coalesced.last;
+        }
+        else {
+            variable value bucket = store.coalesced.last;
             while (exists cell = bucket?.rest) {
                 bucket = cell;
             }
