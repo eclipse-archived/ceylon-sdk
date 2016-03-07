@@ -173,6 +173,10 @@ TestExecutor createExecutor(FunctionDeclaration funcDecl, ClassDeclaration? clas
 }
 
 TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotation suiteAnnotation, Boolean(TestExecutor) filter, Comparison(TestExecutor, TestExecutor) comparator) {
+    if (funcDecl.annotated<TestAnnotation>()) {
+        return ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("function ``funcDecl.qualifiedName`` is annotated ambiguously, there can be only one of these annotation test or testSuite"));
+    }
+    
     value executors = ArrayList<TestExecutor>();
     value sources = ArrayList<TestSource>();
     

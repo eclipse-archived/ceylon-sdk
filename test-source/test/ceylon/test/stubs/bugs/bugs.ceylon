@@ -37,3 +37,12 @@ shared class BugClassOuter() {
         test shared void f() {}
     }
 }
+
+shared Integer i = 0;
+
+testSuite({`value i`})
+shared void bugTestSuiteWithInvalidSource() {}
+
+test
+testSuite({`function bugFunctionWithReturnType`})
+shared void bugTestSuiteWithTestAnnotation() {}

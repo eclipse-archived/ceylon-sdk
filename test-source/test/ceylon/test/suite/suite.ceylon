@@ -8,6 +8,10 @@ import ceylon.test.event {
 import test.ceylon.test.stubs {
     ...
 }
+import test.ceylon.test.stubs.bugs {
+    bugTestSuiteWithInvalidSource,
+    bugTestSuiteWithTestAnnotation
+}
 
 test
 void shouldRunTestSuite1() {
@@ -124,4 +128,35 @@ void shouldRunTestSuiteNested2() {
         state = TestState.success;
         source = `bazSuiteNested`;
     };
+}
+
+test
+void shouldVerifyTestSuiteWithInvalidSource() {
+    value result = createTestRunner([`bugTestSuiteWithInvalidSource`]).run();
+    assertResultCounts {
+        result;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        result;
+        state = TestState.error;
+        message = "declaration test.ceylon.test.stubs.bugs::i is invalid test suite source (only functions, classes, packages and modules are allowed)";
+    };    
+}
+
+test
+void shouldVerifyTestSuiteWithTestAnnotation() {
+    value result = createTestRunner([`bugTestSuiteWithTestAnnotation`]).run();
+    assertResultCounts {
+        result;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        result;
+        state = TestState.error;
+        source = `bugTestSuiteWithTestAnnotation`;
+        message = "function test.ceylon.test.stubs.bugs::bugTestSuiteWithTestAnnotation is annotated ambiguously, there can be only one of these annotation test or testSuite";
+    };    
 }
