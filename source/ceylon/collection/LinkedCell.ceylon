@@ -5,8 +5,8 @@
  
  This allows us to use the same cell object in two different lists which
  have the same elements but different iteration order."
-class LinkedCell<Element>(Element car, Cell<Element>? cdr, previous) 
-        extends Cell<Element>(car, cdr) {
+class LinkedCell<Element>(Element car, Integer keyHash, CachingCell<Element>? cdr, previous) 
+        extends CachingCell<Element>(car, keyHash, cdr) {
     shared variable LinkedCell<Element>? next = null;
     shared variable LinkedCell<Element>? previous;
 }

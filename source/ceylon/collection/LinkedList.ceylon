@@ -116,7 +116,7 @@ shared class LinkedList<Element>
             //no need to update the tail in this branch
             if (index == 0) {
                 head = reversed.fold(head)
-                    ((rest,element) => Cell(element,rest));
+                    ((rest,element) => Cell(element, rest));
                 length+=reversed.size;
             }
             else {
@@ -126,7 +126,7 @@ shared class LinkedList<Element>
                     value rest = cell.rest;
                     if (++i == index) {
                         cell.rest = reversed.fold(rest)
-                            ((rest,element) => Cell(element,rest));
+                            ((rest,element) => Cell(element, rest));
                         length+=reversed.size;
                         return;
                     }
