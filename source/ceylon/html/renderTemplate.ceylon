@@ -28,6 +28,15 @@ import ceylon.html.internal {
            }
        };
        server.start();
+       
+   Example: render template to file via `ceylon.file` module
+   
+       value html = Html { ... };
+       if (is Nil res = home.childPath("hello.html").resource) {
+           try (writer = res.createFile().Overwriter("utf-8")) {
+               renderTemplate(html, writer.write);
+           }
+       }
      
 """
 shared void renderTemplate(Node node, void write(String string), RenderingConfiguration configuration = RenderingConfiguration()) {
