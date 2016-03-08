@@ -50,7 +50,7 @@ void testJSON(Object json) {
 
 test
 void testGETAndParseJSON() {
-    value request = parse("https://api.github.com/repos/ceylon/ceylon-compiler").get();
+    value request = parse("https://api.github.com/repos/ceylon/ceylon").get();
     value response = request.execute();
     print(response);
     assertFalse(response.contents.empty, "Has contents");
