@@ -430,14 +430,14 @@ shared class HashMap<Key, Item>
     shared actual <Key->Item>? first 
             => if (stability==linked) 
                 then head?.element 
-                else store[0]?.element;
+                else store.coalesced.first?.element;
     
     shared actual <Key->Item>? last {
         if (stability == linked) {
             return tip?.element;
         }
         else {
-            variable value bucket = store.last;
+            variable value bucket = store.reversed.coalesced.first;
             while (exists cell = bucket?.rest) {
                 bucket = cell;
             }

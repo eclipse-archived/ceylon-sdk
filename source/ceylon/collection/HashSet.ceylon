@@ -460,7 +460,7 @@ shared class HashSet<Element>
             return tip?.element;
         }
         else {
-            variable value bucket = store.coalesced.last;
+            variable value bucket = store.reversed.coalesced.first;
             while (exists cell = bucket?.rest) {
                 bucket = cell;
             }
