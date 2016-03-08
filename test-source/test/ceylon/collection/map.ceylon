@@ -48,6 +48,18 @@ void doTestMap(MutableMap<String,String> map) {
     assertTrue(clone.definesEvery((71..100).map(toString)));
     assertFalse(clone.definesAny((60..70).map(toString)));
     assertTrue(map.definesEvery((11..100).map(toString)));
+    
+    // first and last
+    map.clear();
+    assertNull(map.first);
+    assertNull(map.last);
+    map.put("a", "a");
+    assertEquals(map.first?.key, "a");
+    assertEquals(map.last?.key, "a");
+    map.put("1", "1");
+    assertNotNull(map.first);
+    assertNotNull(map.last);
+    assertNotEquals(map.first, map.last);
 }
 
 shared test void testMap(){
@@ -56,6 +68,7 @@ shared test void testMap(){
     treeMap.assertInvariants();
     treeMap.clone().assertInvariants();
     doTestMap(HashMap<String,String>());
+    doTestMap(HashMap<String,String> { stability = unlinked; });
 }
 
 shared test void testMapEquality() {
