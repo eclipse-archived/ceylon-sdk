@@ -16,7 +16,7 @@ class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
     keys => map.keys;
     items = map.items;
     
-    equals(Object that) => map.equals(that);    
+    equals(Object that) => map==that;    
     hash => map.hash;
     
     clone() => UnmodifiableMap(map.clone());

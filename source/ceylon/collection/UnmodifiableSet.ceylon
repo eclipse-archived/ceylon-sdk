@@ -31,8 +31,7 @@ class UnmodifiableSet<out Element>(Set<Element> set)
     superset(Set<Object> set) => this.set.superset(set);
     subset(Set<Object> set) => this.set.subset(set);
     
-    equals(Object that) 
-            => set.equals(that);
+    equals(Object that) => set==that;
     hash => set.hash;
     
     clone() => UnmodifiableSet(set.clone());

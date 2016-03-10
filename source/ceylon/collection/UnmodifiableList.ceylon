@@ -26,8 +26,7 @@ class UnmodifiableList<out Element>(List<Element> list)
     spanTo(Integer to)
             => list.spanTo(to);
     
-    equals(Object that) 
-            => list.equals(that);
+    equals(Object that) => list==that;
     hash => list.hash;
     
     clone() => UnmodifiableList(list.clone());
