@@ -1310,3 +1310,52 @@ shared test void testRemainder() {
 shared test void floatTests() {
     assertFalse(exact(0.0, -0.0), "Oops! Test is broken because we can't distinguish 0.0 and -0.0");
 }
+
+shared test void testStatistics() {
+	StatisticsStream stats = StatisticsStream();
+	
+	stats.addValues( 0.0 );
+	assertEquals{
+		expected=0.0;
+		actual=stats.mean;
+		compare=exact;
+	};
+	assertEquals{
+		expected=0.0;
+		actual=stats.min;
+		compare=exact;
+	};
+	assertEquals{
+		expected=0.0;
+		actual=stats.max;
+		compare=exact;
+	};
+	assertEquals{
+		expected=0.0;
+		actual=stats.variance;
+		compare=exact;
+	};
+	
+	stats.clear();
+	stats.addValues( 1.0, -1.0 );
+	assertEquals{
+		expected=0.0;
+		actual=stats.mean;
+		compare=exact;
+	};
+	assertEquals{
+		expected=-1.0;
+		actual=stats.min;
+		compare=exact;
+	};
+	assertEquals{
+		expected=1.0;
+		actual=stats.max;
+		compare=exact;
+	};
+	assertEquals{
+		expected=1.0;
+		actual=stats.variance;
+		compare=exact;
+	};
+}
