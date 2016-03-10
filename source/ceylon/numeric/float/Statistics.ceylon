@@ -3,53 +3,39 @@ import java.util.concurrent.atomic {
 	AtomicReference
 }
 
-
 "Represents results of statistic computation of a stream of values."
-shared class StatisticsSummary (
+class StatisticsSummary (
 	"Minimum of the values that have been statisticaly treated."
 	shared Float min = infinity,
 	"Maximum of the values that have been statisticaly treated."
 	shared Float max = -infinity,
-	"Sum of the values that have been statisticaly treated."
-	shared Float sum = 0.0,
-	"Sum of the squares of the values that have been statisticaly treated."
-	shared Float sumOfSquares = 0.0,
+	"Mean calculated within Welford's method of standard deviation computation."
+	shared Float mean = 0.0,
+	"Second moment used in Welford's method of standard deviation computation."
+	shared Float m2 = 0.0,
 	"The number of the values that have been statisticaly treated."
 	shared Integer size	= 0
 )
 		extends Object()
-		satisfies Summable<StatisticsSummary>
 {
-	
-	"Returns the mean of the values that have been statisticaly treated."
-	shared Float mean => sum/size;
 	
 	"Returns variance of the values that have been statisticaly treated.
 	 The variance is mean((x-mean(x))^2)."
-	see(`value deviation`)
-	shared Float variance => (sumOfSquares-sum*sum/size)/size;
+	see(`value standardDeviation`)
+	shared Float variance => m2/(size-1);
 	
 	"Returns standard deviation of the values that have been statisticaly treated.
 	 Standard deviation is `variance^0.5`."
 	see(`value variance`)
-	shared Float deviation => sqrt(variance);
+	shared Float standardDeviation => sqrt(variance);
 	
-	
-	shared actual StatisticsSummary plus(StatisticsSummary other) 
-		=> StatisticsSummary (
-			if(min<other.min) then min else other.min,
-			if(max>other.max) then max else other.max,
-			sum+other.sum,
-			sumOfSquares+other.sumOfSquares,
-			size+other.size
-		);
 	
 	shared actual Boolean equals(Object that) {
 		if (is StatisticsSummary that) {
 			return min==that.min && 
 				max==that.max && 
-				sum==that.sum && 
-				sumOfSquares==that.sumOfSquares && 
+				mean==that.mean && 
+				m2==that.m2 &&
 				size==that.size;
 		}
 		else {
@@ -61,14 +47,14 @@ shared class StatisticsSummary (
 		variable value hash = 1;
 		hash = 31*hash + min.hash;
 		hash = 31*hash + max.hash;
-		hash = 31*hash + sum.hash;
-		hash = 31*hash + sumOfSquares.hash;
+		hash = 31*hash + mean.hash;
+		hash = 31*hash + m2.hash;
 		hash = 31*hash + size.hash;
 		return hash;
 	}
 	
 	shared actual String string
-			=>	"Summary statistics of size ``size``, max=``max``, min=``min``, mean=``mean``, deviation=``deviation``.";
+			=>	"Summary statistics of size ``size``, max=``max``, min=``min``, mean=``mean``, deviation=``standardDeviation``.";
 	
 }
 
@@ -103,7 +89,7 @@ native("jvm") class StatisticAtomicRef(StatisticsSummary initial) {
 "Computes summary statistics for a stream of data values added using the [[addValues]] method.
  
  Features:
- * Computes [[min]], [[max]], [[sum]], [[mean]], [[deviation]] and [[variance]].  
+ * Computes [[min]], [[max]], [[sum]], [[mean]], [[standardDeviation]] and [[variance]].  
  * The data values are not stored in memory.
  * Thread safe data adding is supported.
  "
@@ -111,29 +97,34 @@ shared class StatisticsStream() {
 	
 	StatisticAtomicRef summaryRef = StatisticAtomicRef(StatisticsSummary());
 	
-	StatisticsSummary calculateFor(Float* values) {
-		variable Float min = infinity;
-		variable Float max = -infinity;
-		variable Float sum = 0.0;
-		variable Float sumOfSquares = 0.0;
+	StatisticsSummary combineWith(StatisticsSummary summary, Float* values) {
+		variable Float min = summary.min;
+		variable Float max = summary.max;
+		variable Float mean = summary.mean;
+		variable Float m2 = if (summary.size<2) then 0.0 else summary.m2;
+		variable Integer n = summary.size;
 		for (item in values) {
+			n ++;
 			if (item<min) {min = item;}
 			if (max<item) {max = item;}
-			sum += item;
-			sumOfSquares += item*item;
+			// Welford's method for mean and variance
+			Float delta = item - mean;
+			mean += delta / n;
+			m2 += delta*(item - mean);
 		}
-		return StatisticsSummary(min, max, sum, sumOfSquares, values.size);
+		return StatisticsSummary(min, max, mean, m2, n);
 	}
 	
-	
+		
 	"Adds values to the statistics data. The data values are not stored in memory.
 	 Allows thread safe data adding."
 	shared void addValues(Float* values) {
-		StatisticsSummary added = calculateFor(*values);
-		while (true) {
-			StatisticsSummary current = summaryRef.get();
-			if (summaryRef.compareAndSet(current, current + added)) {
-				break;
+		if ( !values.empty ) {
+			while (true) {
+				StatisticsSummary current = summaryRef.get();
+				if (summaryRef.compareAndSet(current, combineWith( current, *values))) {
+					break;
+				}
 			}
 		}
 	}
@@ -161,14 +152,6 @@ shared class StatisticsStream() {
 	see(`function addValues`)
 	shared Float max => summary.max;
 	
-	"Returns the sum of the values that have been added."
-	see(`function addValues`)
-	shared Float sum => summary.sum;
-	
-	"Returns the sum of the squares of the values that have been added."
-	see(`function addValues`)
-	shared Float sumOfSquares => summary.sumOfSquares;
-	
 	"Returns the number of the values that have been added."
 	see(`function addValues`)
 	shared Integer size => summary.size;
@@ -180,14 +163,14 @@ shared class StatisticsStream() {
 	"Returns variance of the values that have been added.
 	 The variance is mean((x-mean(x))^2)."
 	see(`function addValues`)
-	see(`value deviation`)
+	see(`value standardDeviation`)
 	shared Float variance => summary.variance;
 	
 	"Returns standard deviation of the values that have been added.
 	 Standard deviation is `variance^0.5`."
 	see(`function addValues`)
 	see(`value variance`)
-	shared Float deviation => summary.deviation;
+	shared Float standardDeviation => summary.standardDeviation;
 	
 	
 	shared actual String string => summary.string;
