@@ -1331,8 +1331,8 @@ shared test void testStatistics() {
 		compare=exact;
 	};
 	assertEquals{
-		expected=0.0;
-		actual=stats.variance;
+		expected=0.0/0.0;
+		actual=stats.standardDeviation;
 		compare=exact;
 	};
 	
@@ -1354,8 +1354,83 @@ shared test void testStatistics() {
 		compare=exact;
 	};
 	assertEquals{
+		expected=sqrt(2.0);
+		actual=stats.standardDeviation;
+		compare=exact;
+	};
+	
+	stats.clear();
+	stats.addValues( 1.0, 2.0, 3.0 );
+	assertEquals{
+		expected=2.0;
+		actual=stats.mean;
+		compare=exact;
+	};
+	assertEquals{
 		expected=1.0;
-		actual=stats.variance;
+		actual=stats.min;
+		compare=exact;
+	};
+	assertEquals{
+		expected=3.0;
+		actual=stats.max;
+		compare=exact;
+	};
+	assertEquals{
+		expected=1.0;
+		actual=stats.standardDeviation;
+		compare=exact;
+	};
+}
+
+shared test void testMean() {
+	assertEquals{
+		expected=0.0;
+		actual=mean({0.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=0.0;
+		actual=mean({-1.0, 1.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=0.5;
+		actual=mean({0.0, 1.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=-0.5;
+		actual=mean({0.0, -1.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=2.0;
+		actual=mean({1.0, 2.0, 3.0});
+		compare=exact;
+	};
+}
+
+
+shared test void testStandardDeviation() {
+	assertEquals{
+		expected=0.0/0.0;
+		actual=standardDeviation({0.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=sqrt(2.0);
+		actual=standardDeviation({-1.0, 1.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=sqrt(2.0);
+		actual=standardDeviation({0.0, 2.0});
+		compare=exact;
+	};
+	assertEquals{
+		expected=1.0;
+		actual=standardDeviation({1.0, 2.0, 3.0});
 		compare=exact;
 	};
 }
