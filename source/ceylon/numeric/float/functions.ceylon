@@ -763,3 +763,40 @@ Float remainder(Float dividend, Float divisor) {
     // effectively, undefined is returned when divisor == 0.
     return dividend - (dividend/divisor).wholePart * divisor;
 }
+
+
+"Returns `[mean value, standard deviation]` of the given stream.  
+ Mean value is `NaN` if stream is empty.  
+ Standard deviation is`NaN` if stream is empty or contains only 1 element."
+shared [Float, Float] meanAndStandardDeviation({Float*} values) {
+	variable value k = 0;
+	variable value m = 0.0;
+	variable value s = 0.0;
+	
+	// Welford’s method
+	for (x in values) {
+		value prev = m;
+		m += (x - m) / ++k;        // m = x first iter
+		s += (x - m) * (x - prev); // s = 0 first iter
+	}
+	
+	return if (k > 1) then [m, sqrt(s / (k - 1))] else if (k == 1) then [m, undefined] else [undefined, undefined];
+}
+
+"Calculates standard deviation of the given stream.  
+ Returns `NaN` if stream is empty or contains only 1 element."
+shared Float standardDeviation({Float*} values) => meanAndStandardDeviation(values)[1];
+
+"Calculates mean value of the given stream.  
+ Returns `NaN` if stream is empty."
+shared Float mean({Float*} values) {
+	variable value k = 0;
+	variable value m = 0.0;
+	
+	// Welford’s method
+	for (x in values) {
+		m += (x - m) / ++k;        // m = x first iter
+	}
+	
+	return if (k > 0) then m else undefined;	
+}
