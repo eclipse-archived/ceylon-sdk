@@ -138,6 +138,17 @@ shared class StatisticsStream() {
 		}
 	}
 	
+	"Resets the statistics stream to initial state (no values added)."
+	shared void clear() {
+		StatisticsSummary empty = StatisticsSummary();
+		while (true) {
+			StatisticsSummary current = summaryRef.get();
+			if (summaryRef.compareAndSet(current, empty)) {
+				break;
+			}
+		}
+	}
+	
 	
 	"Statistics summary of the added data."
 	StatisticsSummary summary => summaryRef.get();
