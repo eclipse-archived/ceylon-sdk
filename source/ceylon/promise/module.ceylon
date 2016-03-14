@@ -182,6 +182,6 @@
    would require a language with dynamic typing."
 by("Julien Viet")
 license("Apache Software License")
-module ceylon.promise "1.2.2" {
+module ceylon.promise "1.2.3" {
   native("jvm") import java.base "7";
 }

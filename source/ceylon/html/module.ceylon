@@ -364,6 +364,6 @@
 """
 by("Tomáš Hradec", "John Vasileff", "Daniel Rochetti")
 suppressWarnings("ceylonNamespace")
-module ceylon.html "1.2.2" {
-    import ceylon.collection "1.2.2";
+module ceylon.html "1.2.3" {
+    import ceylon.collection "1.2.3";
 }

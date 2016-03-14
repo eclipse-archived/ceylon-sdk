@@ -50,4 +50,4 @@
 """
 by("John Vasileff")
 license("Apache Software License")
-module ceylon.random "1.2.2" {}
+module ceylon.random "1.2.3" {}
