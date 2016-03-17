@@ -62,7 +62,7 @@ module ceylon.net "1.2.3" {
     
     shared import ceylon.collection "1.2.3";
     shared import ceylon.io "1.2.3";
-    shared import "com.redhat.ceylon.module-resolver" "1.2.3";
+    shared import "com.redhat.ceylon.module-resolver" "1.2.3.SNAPSHOT";
     import ceylon.file "1.2.3";
     
     // -- java modules --
