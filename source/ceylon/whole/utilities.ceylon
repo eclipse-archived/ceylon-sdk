@@ -7,26 +7,40 @@ Comparison unsignedCompare(Integer first, Integer second)
         else
             smaller;
 
-"The lowest wordsize bits of the return value will contain the remainder,
+"
+ Divide [[n]] by [[d]], interpreting `n` as an unsigned integer.
+
+ The lowest wordsize bits of the return value will contain the remainder,
  the next lowest wordsize bits will contain the quotient.
 
- *Warning*: the quotient and remainder must both fit within 32 bits,
+ *Warning*: the quotient and remainder must both fit within wordBits bits,
  so the following must hold:
 
-     assert(d > n.rightLogicalShift(wordBits));
- "
+     assert (d > n.rightLogicalShift(wordBits));
+     assert (d <= wordMask);
+"
 Integer unsignedDivide(Integer n, Integer d) {
-    // assert(d > n.rightLogicalShift(wordBits));
+    // assert (d > n.rightLogicalShift(wordBits));
+    // assert (d <= wordMask);
 
     variable Integer quotient;
     variable Integer remainder;
 
-    // easy way
     if (n >= 0) {
+        // easy way
         quotient = n / d;
         remainder = n % d;
     }
+    else if (!usesTwosComplementArithmetic) {
+        // platforms without two's complement arithmetic (JavaScript and Dart) can
+        // safely represent n as a positive number, which will have 2*wordBits bits
+        value positiveN = n - minAddressableInteger - minAddressableInteger;
+        quotient = positiveN / d;
+        remainder = positiveN % d;
+    }
     else {
+        // perform unsigned division using two's complement signed integers
+
         // approximate
         quotient = n.rightLogicalShift(1) / d.rightLogicalShift(1);
         remainder = n - quotient * d;
