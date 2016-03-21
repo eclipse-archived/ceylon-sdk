@@ -46,6 +46,30 @@ shared Whole generateWhole(
     }
 }
 
+shared Integer generateInteger(
+        Integer bits,
+        Boolean zero = true,
+        Boolean negative = true,
+        Boolean randomizeBits = true) {
+    assert (1 <= bits <= 63);
+    while (true) {
+        value nBits =
+                if (!randomizeBits)
+                then bits
+                else random.nextInteger(bits) + 1;
+        value result = random.nextBits(nBits);
+        if (zero || !result.zero) {
+            // equal probability for any magnitude
+            // (zero is more likely than either -1 or 1)
+            if (negative && random.nextBoolean()) {
+                return result.negated;
+            } else {
+                return result;
+            }
+        }
+    }
+}
+
 // positive Integer's only
 Integer maxBits = smallest(randomLimits.maxBits, 62);
 

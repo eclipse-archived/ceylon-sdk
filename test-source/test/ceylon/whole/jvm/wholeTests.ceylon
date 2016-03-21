@@ -2,20 +2,19 @@ import ceylon.test {
     assertEquals,
     test
 }
-
-import ceylon.random {
-    DefaultRandom,
-    Random
-}
 import ceylon.whole {
     Whole,
     parseWhole,
-    zero,
     gcd
 }
 
 import java.math {
     BigInteger
+}
+
+import test.ceylon.whole.common {
+    generateWhole,
+    generateInteger
 }
 
 Integer iters = 50_000;
@@ -316,67 +315,6 @@ test shared void wholeTortureFloat() {
                 else 0.0;
         tests = {[generateWhole(56)]}.cycled.take(iters);
     };
-}
-
-Random random = DefaultRandom();
-
-Whole randomWholeBits(variable Integer bits) {
-    variable Whole result = zero;
-    while (bits > 0) {
-        value x = smallest(bits, 32);
-        result = result.leftLogicalShift(x);
-        result = result.plusInteger(random.nextBits(x));
-        bits -= x;
-    }
-    return result;
-}
-
-Whole generateWhole(
-        Integer bits,
-        Boolean zero = true,
-        Boolean negative = true,
-        Boolean randomizeBits = true) {
-    assert (1 <= bits);
-    while (true) {
-        value nBits =
-                if (!randomizeBits)
-                then bits
-                else random.nextInteger(bits) + 1;
-        value result = randomWholeBits(nBits);
-        if (zero || !result.zero) {
-            // equal probability for any magnitude
-            // (zero is more likely than either -1 or 1)
-            if (negative && random.nextBoolean()) {
-                return result.negated;
-            } else {
-                return result;
-            }
-        }
-    }
-}
-
-Integer generateInteger(
-        Integer bits,
-        Boolean zero = true,
-        Boolean negative = true,
-        Boolean randomizeBits = true) {
-    assert (1 <= bits <= 63);
-    while (true) {
-        value nBits =
-                if (!randomizeBits)
-                then bits
-                else random.nextInteger(bits) + 1;
-        value result = random.nextBits(nBits);
-        if (zero || !result.zero) {
-            // equal probability for any magnitude
-            // (zero is more likely than either -1 or 1)
-            if (negative && random.nextBoolean()) {
-                return result.negated;
-            } else {
-                return result;
-            }
-        }
-    }
 }
 
 String basicWW(Whole(Whole)(Whole) f)(Whole a, Whole b)
