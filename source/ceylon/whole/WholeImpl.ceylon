@@ -348,14 +348,13 @@ class WholeImpl satisfies Whole {
         }
         //assert (modulus > package.zero, this != package.zero);
 
-        variable Whole base = this;
-
-        if (exponent.negative) {
-            base = moduloInverse(modulus);
-        }
-        else if (base.negative || base >= modulus) {
-            base = base.modulo(modulus);
-        }
+        value base
+            =   if (exponent.negative) then
+                    moduloInverse(modulus)
+                else if (negative || this >= modulus) then
+                    modulo(modulus)
+                else
+                    this;
 
         return modPowerPositive(base, exponent.magnitude, modulus);
     }

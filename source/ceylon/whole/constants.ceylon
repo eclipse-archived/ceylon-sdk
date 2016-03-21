@@ -26,6 +26,8 @@ Integer wordRadix = 2 ^ wordBits;
 Integer minAddressableInteger = 1.leftLogicalShift(runtime.integerAddressableSize-1);
 Integer maxAddressableInteger = minAddressableInteger.not;
 
+Boolean usesTwosComplementArithmetic = minAddressableInteger == -minAddressableInteger;
+
 MutableWhole mutableZero() => MutableWhole.ofWords(0, wordsOfSize(0));
 MutableWhole mutableOne() => MutableWhole.ofWords(1, wordsOfOne(1));
 MutableWhole mutableNegativeOne() => MutableWhole.ofWords(-1, wordsOfOne(1));

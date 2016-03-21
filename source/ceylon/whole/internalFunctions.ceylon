@@ -669,6 +669,11 @@ Words divide(
             // unsignedDivide below will not overflow
             // wSize/2 for the quotient.
             // (a decimal example would be 899/90)
+
+            // Note that uj01 may be negative if larger than
+            // 2^wBits-1 (due to two's complement overflow),
+            // which is why 'unsignedDivide' may be used below.
+
             variable Integer rj;
             value uj1 = u.get(j-1);
             value uj2 = u.get(j-2);

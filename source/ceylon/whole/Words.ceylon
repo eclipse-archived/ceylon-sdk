@@ -127,6 +127,10 @@ native("jvm") class WordsJVM satisfies Words {
     shared actual
     Words clone()
         =>  using(storage.clone());
+
+    shared actual
+    String string
+        =>  storage.iterable.string;
 }
 
 native("js") class WordsJS satisfies Words {
@@ -184,4 +188,8 @@ native("js") class WordsJS satisfies Words {
     shared actual
     Words clone()
         =>  using(storage.clone());
+
+    shared actual
+    String string
+        =>  storage.string;
 }
