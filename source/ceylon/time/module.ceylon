@@ -3,6 +3,6 @@
  This library is loosely modeled/inspired by the JodaTime/JSR-310 date/time library.
  "
 by ("Diego Coronel", "Roland Tepp")
-module ceylon.time "1.2.3" {
-    import ceylon.collection "1.2.3";
+module ceylon.time "1.2.3.SNAPSHOT" {
+    import ceylon.collection "1.2.3.SNAPSHOT";
 }

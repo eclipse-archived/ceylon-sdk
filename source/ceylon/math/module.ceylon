@@ -36,6 +36,6 @@
  decimal digits."
 by("Tom Bentley")
 native("jvm")
-module ceylon.math "1.2.3" {
+module ceylon.math "1.2.3.SNAPSHOT" {
     import java.base "7";
 }

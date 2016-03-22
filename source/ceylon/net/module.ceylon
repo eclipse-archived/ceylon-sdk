@@ -58,12 +58,12 @@
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 native("jvm")
-module ceylon.net "1.2.3" {
+module ceylon.net "1.2.3.SNAPSHOT" {
     
-    shared import ceylon.collection "1.2.3";
-    shared import ceylon.io "1.2.3";
+    shared import ceylon.collection "1.2.3.SNAPSHOT";
+    shared import ceylon.io "1.2.3.SNAPSHOT";
     shared import "com.redhat.ceylon.module-resolver" "1.2.3.SNAPSHOT";
-    import ceylon.file "1.2.3";
+    import ceylon.file "1.2.3.SNAPSHOT";
     
     // -- java modules --
     
@@ -73,6 +73,6 @@ module ceylon.net "1.2.3" {
 
     import org.jboss.xnio.api "3.3.2.Final";
     import org.jboss.xnio.nio "3.3.2.Final";
-    import ceylon.interop.java "1.2.3";
+    import ceylon.interop.java "1.2.3.SNAPSHOT";
     
 }

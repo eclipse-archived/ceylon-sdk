@@ -1,4 +1,4 @@
-module test.ceylon.collection "1.2.3" {
-    import ceylon.test "1.2.3";
-    import ceylon.collection "1.2.3";
+module test.ceylon.collection "1.2.3.SNAPSHOT" {
+    import ceylon.test "1.2.3.SNAPSHOT";
+    import ceylon.collection "1.2.3.SNAPSHOT";
 }
