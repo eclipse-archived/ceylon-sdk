@@ -510,8 +510,20 @@
     <target name="osgi" depends="compile-jvm,osgi-quick"/>
     <target name="osgi-p2" depends="compile-jvm,osgi-p2-quick"/>
 
+    <target name="compile-test-collection" depends="ceylondefs">
+        <ceylon-compile executable="${ceylon.executable}"
+            src="test-source"
+            out="${test.repo}"
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8"
+            fork="true">
+            <reposet refid="reposet.compile.test"/> 
+            <module name="test.ceylon.collection"/>
+        </ceylon-compile>
+    </target>
+
     <target name="ide" depends="osgi-p2"/>
-    <target name="ide-quick" depends="osgi-p2-quick">
+    <target name="ide-quick" depends="osgi-p2-quick,compile-test-collection">
         <foreach target="updateIdeProxyProject" param="archivePath">
             <path>
                 <fileset dir="${out.repo}" includes="ceylon/collection/**/*.car"/>
