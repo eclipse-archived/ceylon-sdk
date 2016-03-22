@@ -6,8 +6,7 @@ import ceylon.test {
 import ceylon.whole {
     zero,
     Whole,
-    gcd,
-    wholeNumber
+    gcd
 }
 
 Whole multiplyByAdding(variable Whole a, variable Whole b) {
