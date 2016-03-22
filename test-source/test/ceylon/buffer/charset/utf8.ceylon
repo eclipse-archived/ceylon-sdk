@@ -47,4 +47,9 @@ shared class Utf8Tests()
             "Español";
         };
     }
+    
+    test
+    shared void lastCodePoint() {
+        assertEquals("\{#10FFFF}", utf8.decode(utf8.encode("\{#10FFFF}")));
+    }
 }
