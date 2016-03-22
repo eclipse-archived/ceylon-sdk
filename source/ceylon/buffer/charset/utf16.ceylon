@@ -54,7 +54,7 @@ shared object utf16 satisfies Charset {
                 value b2 = cp.and(#FF).byte;
                 output.put(b1);
                 output.put(b2);
-            } else if (cp < #10FFFF) {
+            } else if (cp < #110000) {
                 // two 16-bit values
                 value u = cp - #10000;
                 // keep the high 10 bits
