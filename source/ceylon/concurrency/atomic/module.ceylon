@@ -6,11 +6,12 @@
  2. the preempted thread shares memory space with the other thread
  
  Since the JavaScript backend does not have these two attributes, this module
- is not applicable to it.
+ is not applicable to it. However, no-op implementations are provided for ease
+ of cross-compatibility.
  
  The only element is the [[AtomicReference]] class."
 by ("Alex Szczuczko")
 license ("Apache Software License")
-native ("jvm") module ceylon.concurrency.atomic "1.2.2" {
-    import java.base "7";
+module ceylon.concurrency.atomic "1.2.2" {
+    native ("jvm") import java.base "7";
 }
