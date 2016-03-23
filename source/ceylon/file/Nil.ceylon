@@ -11,4 +11,8 @@ shared sealed interface Nil
      object represents."
     shared formal Directory createDirectory(Boolean includingParentDirectories = false);
     
+    "Create a new symbolic link at the location that this
+     object represents."
+    shared formal Link createSymbolicLink(Path linkedPath,
+            Boolean includingParentDirectories = false);
 }

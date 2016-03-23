@@ -7,7 +7,8 @@ import java.nio.file {
     Files {
         newDirectory=createDirectory,
         newDirectories=createDirectories,
-        newFile=createFile
+        newFile=createFile,
+        newSymbolicLink=createSymbolicLink
     }
 }
 
@@ -28,6 +29,16 @@ class ConcreteNil(JPath jpath)
         return ConcreteFile(newFile(jpath));
     }
     
+    shared actual Link createSymbolicLink
+            (Path linkedPath, Boolean includingParentDirectories) {
+        if (includingParentDirectories,
+            exists parent = jpath.parent) {
+            newDirectories(parent);
+        }
+        assert (is ConcretePath linkedPath);
+        return ConcreteLink(newSymbolicLink(jpath, linkedPath.jpath));
+    }
+
     path => ConcretePath(jpath); 
     
     linkedResource => this;
