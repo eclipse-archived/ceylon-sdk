@@ -140,14 +140,14 @@ class ConcretePath(jpath)
     
     shared actual Resource resource {
         if (isExisting(jpath)) {
-            if (isRegularFile(jpath)) {
+            if (isSymbolicLink(jpath)) {
+                return ConcreteLink(jpath);
+            }
+            else if (isRegularFile(jpath)) {
                 return ConcreteFile(jpath);
             }
             else if (isDirectory(jpath)) {
                 return ConcreteDirectory(jpath);
-            }
-            else if (isSymbolicLink(jpath)) {
-                return ConcreteLink(jpath);
             }
             else {
                 throw Exception("unknown file type: " +
