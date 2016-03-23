@@ -12,6 +12,6 @@
  The only element is the [[AtomicReference]] class."
 by ("Alex Szczuczko")
 license ("Apache Software License")
-module ceylon.concurrency.atomic "1.2.2" {
+module ceylon.concurrency.atomic "1.2.3" {
     native ("jvm") import java.base "7";
 }

@@ -12,8 +12,8 @@
  Basic synchronization classes and a sleep function are also provided."
 by ("Alex Szczuczko")
 license ("Apache Software License")
-native ("jvm") module ceylon.concurrency.blocking "1.2.2" {
+native ("jvm") module ceylon.concurrency.blocking "1.2.3" {
     import java.base "7";
-    import ceylon.concurrency.atomic "1.2.2";
-    shared import ceylon.promise "1.2.1";
+    import ceylon.concurrency.atomic "1.2.3";
+    shared import ceylon.promise "1.2.3";
 }

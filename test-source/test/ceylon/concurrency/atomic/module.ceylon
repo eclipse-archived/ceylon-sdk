@@ -1,4 +1,4 @@
-module test.ceylon.concurrency.atomic "1.2.2" {
-    import ceylon.concurrency.atomic "1.2.2";
-    import ceylon.test "1.2.1";
+module test.ceylon.concurrency.atomic "1.2.3" {
+    import ceylon.concurrency.atomic "1.2.3";
+    import ceylon.test "1.2.3";
 }
