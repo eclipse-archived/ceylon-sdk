@@ -334,8 +334,8 @@ shared class LinkedList<Element>
                 iter = rest;
             }
         }
-        if (exists last=current) {
-            assert (exists cell=head);
+        if (exists last = current) {
+            assert (exists cell = head);
             if (last===cell) {
                 head = last.rest;
             }
@@ -351,6 +351,129 @@ shared class LinkedList<Element>
         }
     }
 
+    shared actual Element? findAndRemoveFirst(
+        Boolean selecting(Element&Object element)) {
+        if (exists cell = head,
+            exists elem = cell.element,
+            selecting(elem)) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+            return elem;
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element,
+                selecting(elem)) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
+                }
+                else {
+                    cell.rest = tail = null;
+                }
+                length--;
+                return elem;
+            }
+            iter = rest;
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndRemoveLast(
+        Boolean selecting(Element&Object element)) {
+        variable Cell<Element>? current = null;
+        while (exists cell = head,
+            exists elem = cell.element,
+            selecting(elem)) {
+            if (exists rest = cell.rest) {
+                current = cell;
+            }
+            else {
+                head = tail = null;
+                length--;
+                return elem;
+            }
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element,
+                selecting(elem)) {
+                if (exists more = rest.rest) {
+                    current = cell;
+                }
+                else {
+                    cell.rest = tail = null;
+                    length--;
+                    return elem;
+                }
+            }
+            else {
+                iter = rest;
+            }
+        }
+        if (exists last = current) {
+            assert (exists cell = head);
+            if (last===cell) {
+                head = last.rest;
+            }
+            else {
+                assert (exists more = last.rest?.rest);
+                cell.rest = more;
+            }
+            length--;
+            return last.element;
+        }
+        else {
+            return null;
+        }
+
+    }
+    
+    shared actual Integer removeWhere(
+        Boolean selecting(Element&Object element)) {
+        variable value result = 0;
+        while (exists cell = head,
+            exists elem = cell.element,
+            selecting(elem)) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+            result++;
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element,
+                selecting(elem)) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
+                }
+                else {
+                    cell.rest = tail = null;
+                }
+                length--;
+                result++;
+            }
+            else {
+                iter = rest;
+            }
+        }
+        return result;
+    }
+    
     shared actual 
     void prune() {
         while (exists cell = head,
@@ -831,4 +954,5 @@ shared class LinkedList<Element>
     front => first;
     
     sequence() => Array(this).sequence();
+    
 }

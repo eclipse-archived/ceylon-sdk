@@ -46,6 +46,32 @@ shared interface MutableList<Element>
         }
     }
     
+    "Remove every element that satisfies the given 
+     [[predicate function|selecting]] from this list, 
+     returning the number of elements that were removed."
+    shared formal Integer removeWhere(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element));
+    
+    "Remove the first element that satisfies the given 
+     [[predicate function|selecting]] from this list, 
+     returning the element, or `null` if no such element was 
+     found in this list."
+    shared formal Element? findAndRemoveFirst(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element));
+    
+    "Remove the last element that satisfies the given 
+     [[predicate function|selecting]] from this list, 
+     returning the element, or `null` if no such element was 
+     found in this list."
+    shared formal Element? findAndRemoveLast(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element));
+    
 }
 
 "Protocol for mutation of a [[MutableList]]."
@@ -136,7 +162,7 @@ shared interface ListMutator<in Element>
     shared formal Boolean removeLast(
             "The non-null value to remove"
             Element&Object element);
-
+    
     "Remove all null elements from this list, leaving a list
      with no null elements."
     shared formal void prune();

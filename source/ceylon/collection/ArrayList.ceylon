@@ -325,7 +325,49 @@ shared class ArrayList<Element>
             return false;
         }
     }
-
+    
+    
+    shared actual Element? findAndRemoveFirst(Boolean selecting(Element&Object element)) {
+        if (exists index 
+                = firstIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Element? findAndRemoveLast(Boolean selecting(Element&Object element)) {
+        if (exists index 
+                = lastIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Integer removeWhere(Boolean selecting(Element&Object element)) {
+        variable value i=0;
+        variable value j=0;
+        while (i<length) {
+            if (exists elem = array[i++]) {
+                if (!selecting(elem)) {
+                    array.set(j++,elem);
+                }
+            }
+            else {
+                array.set(j++, null);
+            }
+        }
+        length=j;
+        while (j<i) {
+            array.set(j++, null);
+        }
+        return i-length;
+    }
+    
+    
     shared actual 
     void prune() {
         variable value i=0;
