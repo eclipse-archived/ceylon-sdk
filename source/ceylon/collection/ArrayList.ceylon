@@ -327,7 +327,8 @@ shared class ArrayList<Element>
     }
     
     
-    shared actual Element? findAndRemoveFirst(Boolean selecting(Element&Object element)) {
+    shared actual Element? findAndRemoveFirst(
+        Boolean selecting(Element&Object element)) {
         if (exists index 
                 = firstIndexWhere(selecting)) {
             return delete(index);
@@ -337,7 +338,8 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual Element? findAndRemoveLast(Boolean selecting(Element&Object element)) {
+    shared actual Element? findAndRemoveLast(
+        Boolean selecting(Element&Object element)) {
         if (exists index 
                 = lastIndexWhere(selecting)) {
             return delete(index);
@@ -347,7 +349,8 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual Integer removeWhere(Boolean selecting(Element&Object element)) {
+    shared actual Integer removeWhere(
+        Boolean selecting(Element&Object element)) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
@@ -401,7 +404,7 @@ shared class ArrayList<Element>
             (Element&Object element, Element replacement) {
         if (exists index 
                 = firstOccurrence(element)) {
-            set(index, replacement);
+            array.set(index, replacement);
             return true;
         }
         else {
@@ -414,7 +417,7 @@ shared class ArrayList<Element>
             (Element&Object element, Element replacement) {
         if (exists index 
                 = lastOccurrence(element)) {
-            set(index, replacement);
+            array.set(index, replacement);
             return true;
         }
         else {
@@ -422,6 +425,48 @@ shared class ArrayList<Element>
         }
     }
 
+    shared actual Element? findAndReplaceFirst(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        if (exists index 
+            = firstIndexWhere(selecting)) {
+            value old = getFromFirst(index);
+            array.set(index, replacement);
+            return old;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Element? findAndReplaceLast(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        if (exists index 
+            = lastIndexWhere(selecting)) {
+            value old = getFromFirst(index);
+            array.set(index, replacement);
+            return old;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual void replaceWhere(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        variable value i=0;
+        while (i<length) {
+            if (exists elem = array[i], 
+                selecting(elem)) {
+                array.set(i, replacement);
+            }
+            i++;
+        }
+    }
+    
+    
     shared actual 
     void infill(Element replacement) {
         variable value i = 0;

@@ -200,4 +200,23 @@ shared class Array({Value*} values = {})
     shared Iterable<Array> arrays 
             => { for (elem in list) checkArray(elem) };
     
+    findAndRemoveFirst(Boolean selecting(Value&LangObject element)) 
+            => list.findAndRemoveFirst(selecting);
+    
+    findAndRemoveLast(Boolean selecting(Value&LangObject element)) 
+            => list.findAndRemoveLast(selecting);
+    
+    findAndReplaceFirst(Boolean selecting(Value&LangObject element), Value replacement) 
+            => list.findAndReplaceFirst(selecting, replacement);
+    
+    findAndReplaceLast(Boolean selecting(Value&LangObject element), Value replacement) 
+            => list.findAndReplaceLast(selecting, replacement);
+    
+    removeWhere(Boolean selecting(Value&LangObject element)) 
+            => list.removeWhere(selecting);
+    
+    replaceWhere(Boolean selecting(Value&LangObject element), Value replacement) 
+            => list.replaceWhere(selecting, replacement);
+    
+    
 }

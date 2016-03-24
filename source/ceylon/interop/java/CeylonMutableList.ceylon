@@ -153,6 +153,38 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         return false;
     }
     
+    shared actual Element? findAndReplaceFirst(
+        Boolean selecting(Element element), 
+        Element replacement) {
+        for (i in 0:size) {
+            value element = list.get(i);
+            if (selecting(element)) {
+                list.set(i,replacement);
+                return element;
+            }
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndReplaceLast(
+        Boolean selecting(Element element), 
+        Element replacement) {
+        for (i in (0:size).reversed) {
+            value element = list.get(i);
+            if (selecting(element)) {
+                list.set(i,replacement);
+                return element;
+            }
+        }
+        return null;
+    }
+    
+    shared actual void replaceWhere(
+        Boolean selecting(Element element), 
+        Element replacement) {
+        
+    }
+    
     shared actual void truncate(Integer size) {
         value iterator = list.iterator();
         variable value i = 0;

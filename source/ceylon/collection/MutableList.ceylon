@@ -54,23 +54,83 @@ shared interface MutableList<Element>
          satisfy."
         Boolean selecting(Element&Object element));
     
+    shared actual default Integer remove(Element&Object element) 
+            => removeWhere(element.equals);
+    
     "Remove the first element that satisfies the given 
      [[predicate function|selecting]] from this list, 
-     returning the element, or `null` if no such element was 
-     found in this list."
+     returning the removed element, or `null` if no such 
+     element was found in this list."
     shared formal Element? findAndRemoveFirst(
         "The predicate function the indexed elements must 
          satisfy."
         Boolean selecting(Element&Object element));
     
+    shared actual default Boolean removeFirst(Element&Object element) 
+            => findAndRemoveFirst(element.equals) exists;
+    
     "Remove the last element that satisfies the given 
      [[predicate function|selecting]] from this list, 
-     returning the element, or `null` if no such element was 
-     found in this list."
+     returning the removed element, or `null` if no such 
+     element was found in this list."
     shared formal Element? findAndRemoveLast(
         "The predicate function the indexed elements must 
          satisfy."
         Boolean selecting(Element&Object element));
+    
+    shared actual default Boolean removeLast(Element&Object element) 
+            => findAndRemoveLast(element.equals) exists;
+    
+    "Replace every element in this list that satisfies the 
+     given [[predicate function|selecting]] with the given 
+     [[replacement]]."
+    shared formal void replaceWhere(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element),
+        "The replacement value"
+        Element replacement);
+    
+    shared actual default void replace(
+        Element&Object element, 
+        Element replacement) 
+            => replaceWhere(element.equals, replacement);
+    
+    "Replace the first element of this list that satisfies 
+     the given [[predicate function|selecting]] with
+     the given [[replacement]], returning the replaced 
+     element, or `null` if no such element was found in this 
+     list."
+    shared formal Element? findAndReplaceFirst(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element),
+        "The replacement value"
+        Element replacement);
+    
+    shared actual default Boolean replaceFirst(
+        Element&Object element, 
+        Element replacement) 
+            => findAndReplaceFirst(element.equals, replacement) 
+                exists;
+    
+    "Replace the last element of this list that satisfies 
+     the given [[predicate function|selecting]] with
+     the given [[replacement]], returning the replaced 
+     element, or `null` if no such element was found in this 
+     list."
+    shared formal Element? findAndReplaceLast(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element),
+        "The replacement value"
+        Element replacement);
+    
+    shared actual default Boolean replaceLast(
+        Element&Object element, 
+        Element replacement) 
+            => findAndReplaceLast(element.equals, replacement) 
+                exists;
     
 }
 
