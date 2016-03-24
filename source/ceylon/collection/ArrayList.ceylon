@@ -247,7 +247,7 @@ shared class ArrayList<Element>
     shared actual 
     Element? delete(Integer index) {
         if (0 <= index < length) {
-            Element? result = array[index];
+            Element? result = array.getFromFirst(index);
             array.copyTo(array, 
                 index+1, index, length-index-1);
             length--;
@@ -264,7 +264,7 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists elem = array[i++]) {
+            if (exists elem = array.getFromFirst(i++)) {
                 if (elem!=element) {
                     array.set(j++,elem);
                 }
@@ -286,7 +286,7 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists elem = array[i++]) {
+            if (exists elem = array.getFromFirst(i++)) {
                 if (!elem in set) {
                     array.set(j++,elem);
                 }
@@ -354,7 +354,7 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists elem = array[i++]) {
+            if (exists elem = array.getFromFirst(i++)) {
                 if (!selecting(elem)) {
                     array.set(j++,elem);
                 }
@@ -376,7 +376,7 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists element = array[i++]) {
+            if (exists element = array.getFromFirst(i++)) {
                 array.set(j++,element);
             }
         }
@@ -392,7 +392,7 @@ shared class ArrayList<Element>
         variable value count = 0;
         variable value i = 0;
         while (i<length) {
-            if (exists elem = array[i], 
+            if (exists elem = array.getFromFirst(i), 
                 elem==element) {
                 array.set(i, replacement);
                 count++;
@@ -462,7 +462,7 @@ shared class ArrayList<Element>
         variable value count = 0;
         variable value i = 0;
         while (i<length) {
-            if (exists elem = array[i], 
+            if (exists elem = array.getFromFirst(i), 
                 selecting(elem)) {
                 array.set(i, replacement);
                 count++;
@@ -477,7 +477,7 @@ shared class ArrayList<Element>
     void infill(Element replacement) {
         variable value i = 0;
         while (i < length) {
-            if (!array[i] exists) {
+            if (!array.getFromFirst(i) exists) {
                 array.set(i, replacement);
             }
             i++;
