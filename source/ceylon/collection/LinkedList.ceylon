@@ -503,17 +503,20 @@ shared class LinkedList<Element>
         }
     }
     
-    shared actual void replaceWhere(
+    shared actual Integer replaceWhere(
         Boolean selecting(Element&Object element), 
         Element replacement) {
+        variable Integer count = 0;
         variable value iter = head;
         while (exists cell = iter) {
             if (exists elem = cell.element,
                 selecting(elem)) {
                 cell.element = replacement;
+                count++;
             }
             iter = cell.rest;
         }
+        return count;
     }
 
     shared actual 

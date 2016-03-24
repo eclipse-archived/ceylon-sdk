@@ -387,21 +387,24 @@ shared class ArrayList<Element>
     }
 
     shared actual 
-    void replace
-            (Element&Object element, Element replacement) {
-        variable value i=0;
+    Integer replace(Element&Object element, 
+        Element replacement) {
+        variable value count = 0;
+        variable value i = 0;
         while (i<length) {
             if (exists elem = array[i], 
                 elem==element) {
                 array.set(i, replacement);
+                count++;
             }
             i++;
         }
+        return count;
     }
 
     shared actual 
-    Boolean replaceFirst
-            (Element&Object element, Element replacement) {
+    Boolean replaceFirst(Element&Object element, 
+        Element replacement) {
         if (exists index 
                 = firstOccurrence(element)) {
             array.set(index, replacement);
@@ -413,8 +416,8 @@ shared class ArrayList<Element>
     }
 
     shared actual 
-    Boolean replaceLast
-            (Element&Object element, Element replacement) {
+    Boolean replaceLast(Element&Object element, 
+        Element replacement) {
         if (exists index 
                 = lastOccurrence(element)) {
             array.set(index, replacement);
@@ -453,17 +456,20 @@ shared class ArrayList<Element>
         }
     }
     
-    shared actual void replaceWhere(
+    shared actual Integer replaceWhere(
         Boolean selecting(Element&Object element), 
         Element replacement) {
-        variable value i=0;
+        variable value count = 0;
+        variable value i = 0;
         while (i<length) {
             if (exists elem = array[i], 
                 selecting(elem)) {
                 array.set(i, replacement);
+                count++;
             }
             i++;
         }
+        return count;
     }
     
     

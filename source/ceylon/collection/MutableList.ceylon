@@ -84,14 +84,14 @@ shared interface MutableList<Element>
     "Replace every element in this list that satisfies the 
      given [[predicate function|selecting]] with the given 
      [[replacement]]."
-    shared formal void replaceWhere(
+    shared formal Integer replaceWhere(
         "The predicate function the indexed elements must 
          satisfy."
         Boolean selecting(Element&Object element),
         "The replacement value"
         Element replacement);
     
-    shared actual default void replace(
+    shared actual default Integer replace(
         Element&Object element, 
         Element replacement) 
             => replaceWhere(element.equals, replacement);
@@ -233,7 +233,7 @@ shared interface ListMutator<in Element>
 
      To replace just one occurrence of the given value, use
      [[replaceFirst]] or [[replaceLast]]."
-    shared formal void replace(
+    shared formal Integer replace(
             "The non-null value to replace"
             Element&Object element,
             "The replacement value"

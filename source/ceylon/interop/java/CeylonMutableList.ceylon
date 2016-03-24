@@ -114,13 +114,16 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         }
     }
     
-    shared actual void replace(Element element, 
+    shared actual Integer replace(Element element, 
         Element replacement) {
+        variable value count = 0;
         for (i in 0:size) {
             if (list.get(i)==element) {
                 list.set(i,replacement);
+                count++;
             }
         }
+        return count;
     }
     
     shared actual void infill(Element replacement) {
@@ -179,10 +182,17 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         return null;
     }
     
-    shared actual void replaceWhere(
+    shared actual Integer replaceWhere(
         Boolean selecting(Element element), 
         Element replacement) {
-        
+        variable value count = 0;
+        for (i in 0:size) {
+            if (selecting(list.get(i))) {
+                list.set(i,replacement);
+                count++;
+            }
+        }
+        return count;
     }
     
     shared actual void truncate(Integer size) {
