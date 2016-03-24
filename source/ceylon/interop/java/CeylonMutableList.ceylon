@@ -47,6 +47,38 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         return false;
     }
     
+    shared actual Element? findAndRemoveFirst(
+        Boolean selecting(Element element)) {
+        for (i in 0:size) {
+            if (selecting(list.get(i))) {
+                return list.remove(i);
+            }
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndRemoveLast(
+        Boolean selecting(Element element)) {
+        for (i in (0:size).reversed) {
+            if (selecting(list.get(i))) {
+                return list.remove(i);
+            }
+        }
+        return null;
+    }
+    
+    shared actual Integer removeWhere(
+        Boolean selecting(Element element)) {
+        variable Integer count = 0;
+        for (i in 0:size) {
+            if (selecting(list.get(i))) {
+                list.remove(i);
+                count++;
+            }
+        }
+        return count;
+    }
+    
     shared actual void deleteMeasure(Integer from, Integer length) {
         value iterator = list.iterator();
         variable value i = 0;
