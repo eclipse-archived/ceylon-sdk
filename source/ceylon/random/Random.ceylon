@@ -1,5 +1,5 @@
 "An interface for random number generators. Satisfying classes must implement
- [[nextBits]], which is used by the default implementaitons of the methods of this
+ [[nextBits]], which is used by the default implementations of the methods of this
  interface."
 by("John Vasileff")
 shared interface Random {
