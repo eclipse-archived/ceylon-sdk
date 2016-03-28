@@ -16,7 +16,23 @@ development environment and compiling and building the latest Ceylon distributio
 take a look at [ceylon](https://github.com/ceylon/ceylon/tree/master/dist#ceylon-distribution).
 
 If after having built the distribution you want to build and test the SDK
-return to `ceylon-sdk` and follow the instructions in the next section.
+return to this project and follow the instructions in the [Build the SDK](#build-the-sdk) section.
+
+### Build a specific version
+
+If you would like to skip the above step about compiling and building Ceylon and you
+would like to build the SDK using an officially released Ceylon distribution you have
+already got installed then that is possible but you will have to check out the same
+version of the SDK that came with the Ceylon release you are using, like this:
+
+    git checkout VERSION
+    
+Where `VERSION` is the exact version of the Ceylon distribution you are running
+(check this by running `ceylon --version` on the command line). After that you just
+follow the instructions in the next section.
+
+*NB: If you are doing this because you found a bug and are trying to fix it then first make
+really sure that the bug wasn't fixed in the latest version of the code!*
 
 ### Build the SDK
 
