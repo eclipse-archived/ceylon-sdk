@@ -102,17 +102,17 @@ shared Integer|Float parseNumber(Tokenizer tokenizer){
     Integer wholePart = parseDigits(tokenizer);
     
     if(tokenizer.hasMore && tokenizer.check('.')){
-        Integer start = tokenizer.position;
-        Integer fractionPart = parseDigits(tokenizer);
-        Integer digits = tokenizer.position - start;
-        Float float = wholePart.float + 
-                (fractionPart.float / (10 ^ digits).float);
-        Float signedFloat = negative then -float else float;
-        Integer? exp1 = parseExponent(tokenizer);
-        if(exists exp1){
-            return signedFloat * (10.float ^ exp1.float);
-        }
-        return signedFloat;
+        // Parsing floats is tricky if you want to get all the corner cases like very small
+        // or very large floats, and get every single digit correct. Rather than re-implement
+        // we will build a string then use the built-in native parseFloat() function.
+        Integer digitsAfterDecimal = parseDigits(tokenizer);
+        Integer? exponent  = parseExponent(tokenizer);
+        String exponentAsString = if (exists exponent) then "e``exponent``" else "";
+        String negativeSign = negative then "-" else "";
+        String floatAsString = "``negativeSign````wholePart``.``digitsAfterDecimal````exponentAsString``";
+        Float? float = parseFloat(floatAsString);
+        assert(exists float); // the structure above guarantees it will be a valid float
+        return float;
     }
     
     Integer signedInteger = 

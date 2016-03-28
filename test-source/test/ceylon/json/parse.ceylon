@@ -835,6 +835,9 @@ shared test void testParse() {
     } catch (ParseException p) {
     }
     
+    assert(is Float n3 = parse("0.6666666666666666"));
+    assertEquals(0.6666666666666666, n3);
+    
     assert(is Object o1 = parse("{}"));
     assertEquals(0, o1.size);
     try {
