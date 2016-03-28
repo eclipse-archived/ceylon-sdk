@@ -8,14 +8,19 @@ The module minor.major version aligns with the Ceylon distribution minor.major
 version that we use to compile/distribute them. The micro version of each module
 can be incremented as needed between Ceylon distribution releases.
 
-Build the compiler and tools
-----------------------------
+### Build the compiler and tools
 
-For setting up the development environment and compiling and building the distribution
+In many cases to be able to build the SDK from the `master` branch you will also need
+the very latest Ceylon distribution from its `master` branch. For setting up the
+development environment and compiling and building the latest Ceylon distribution
 take a look at [ceylon](https://github.com/ceylon/ceylon/tree/master/dist#ceylon-distribution).
 
 If after having built the distribution you want to build and test the SDK
-return to `ceylon-sdk` and run 
+return to `ceylon-sdk` and follow the instructions in the next section.
+
+### Build the SDK
+
+In the root of this project run
 
     ant clean publish
     
