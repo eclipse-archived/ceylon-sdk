@@ -51,7 +51,6 @@ shared void serveStaticFile(
         //TODO log
         //print("Serving file: ``filePath.absolutePath.string``");
         
-        value openFile = newOpenFile(file);
         response.addHeader(contentLength(file.size.string));
         if (exists type = file.contentType) {
             response.addHeader(contentType(type));
@@ -69,6 +68,7 @@ shared void serveStaticFile(
             response.responseStatus = 304;
         }
         else {
+            value openFile = newOpenFile(file);
             sendFile {
                 openFile = openFile;
                 response = response;
