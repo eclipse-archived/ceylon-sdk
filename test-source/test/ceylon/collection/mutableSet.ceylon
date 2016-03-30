@@ -107,7 +107,7 @@ shared interface MutableSetTests satisfies SetTests {
         assertFalse(set.remove("c"));
     }
     
-    "This function is called by [[testCycle]] and [[testRepeat]]."
+    "This function is called by [[testRepeat]]."
     shared actual default void testRepeatFunction(List<String?>(Integer)({String?*}) cycle) {
         assertEquals(cycle(createIterable {})(0), []);
         assertEquals(cycle(createIterable {})(1), []);
