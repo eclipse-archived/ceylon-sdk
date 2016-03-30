@@ -64,5 +64,17 @@ shared class ArrayListTest() satisfies MutableListTests {
         value copy = ArrayList.copy(list);
         assertEquals(copy, Array {false, false});
     }
+    
+    test shared void testSwap() {
+        value list = ArrayList { 1, 2, 3 };
+        list.swap(0, 2);
+        assertEquals(list, [3, 2, 1]);
+    }
+    
+    test shared void testMove() {
+        value list = ArrayList { 1, 2, 3 };
+        list.move(2, 0);
+        assertEquals(list, [3, 1, 2]);
+    }
 
 }

@@ -140,7 +140,7 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=i<length, 0<=j<length);
-        array.swap(i, i);
+        array.swap(i, j);
     }
     
     shared actual default 
@@ -148,7 +148,7 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=i<length, 0<=j<length);
-        array.move(i, i);
+        array.move(i, j);
     }
 
     shared actual
