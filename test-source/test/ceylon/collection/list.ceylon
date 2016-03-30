@@ -1,13 +1,8 @@
-import ceylon.language.meta {
-    type
-}
 import ceylon.test {
     test,
     assertEquals,
     assertNotEquals,
-    assertNull,
-    assertTrue,
-    assertFalse
+    assertNull
 }
 
 shared interface ListTests satisfies RangedTests & CorrespondenceTests & InsertionOrderIterableWithNullsTests {
