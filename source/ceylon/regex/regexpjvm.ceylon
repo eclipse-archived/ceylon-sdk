@@ -50,7 +50,7 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
         String input) {
         // Start the search at lastIndex if the global flag is true.
         Integer searchStartIndex = if (global) then lastIndex else 0;
-        if (searchStartIndex >= 0 && searchStartIndex <= input.size) {
+        if (0 <= searchStartIndex <= javaString(input).length()) {
             Matcher? matcher = pattern.matcher(javaString(input));
             if (exists m=matcher, m.find(searchStartIndex)) {
                 Integer groupCount = m.groupCount();
