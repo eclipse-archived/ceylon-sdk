@@ -7,6 +7,7 @@ native("jvm")
 module com.redhat.ceylon.war "1.2.3" {
     import java.base "7";
     import com.redhat.ceylon.common "1.2.3";
-    import com.redhat.ceylon.tool.provider "1.2.3";
+    import "com.redhat.ceylon.module-loader" "1.2.3";
+    import "com.redhat.ceylon.module-resolver" "1.2.3";
     import javax.servlet "3.1.0";
 }

@@ -9,17 +9,20 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.Collections;
 
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.redhat.ceylon.cmr.api.RepositoryManager;
+import com.redhat.ceylon.cmr.ceylon.CeylonUtils;
+
 import com.redhat.ceylon.common.FileUtil;
-import com.redhat.ceylon.compiler.java.runtime.tools.Backend;
-import com.redhat.ceylon.compiler.java.runtime.tools.CeylonToolProvider;
-import com.redhat.ceylon.compiler.java.runtime.tools.Runner;
-import com.redhat.ceylon.compiler.java.runtime.tools.RunnerOptions;
+
+import com.redhat.ceylon.module.loader.FlatpathModuleLoader;
+import com.redhat.ceylon.module.loader.ModuleNotFoundException;
 
 /**
  * A {@link ServletContextListener} that initializes the Ceylon metamodel for
@@ -60,7 +63,8 @@ public class WarInitializer implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(final ServletContextEvent sce) {
-		this.runner.cleanup();
+		this.moduleLoader.cleanup();
+		this.moduleLoader = null;
 		if (this.tmpRepo != null) {
 			FileUtil.deleteQuietly(this.tmpRepo);
 		}
@@ -72,19 +76,24 @@ public class WarInitializer implements ServletContextListener {
 	}
 
 	public void initialize(final ServletContext context) {
-		if (runner != null) {
+		if (moduleLoader != null) {
 			return;
 		}
 		final File repo = setupRepo(context);
 		final Properties properties = moduleProperties(context);
-		final RunnerOptions options = new RunnerOptions();
 		
-		options.setOffline(true);
-		options.setSystemRepository("flat:" + repo.getAbsolutePath());
+	        RepositoryManager repositoryManager = CeylonUtils.repoManager()
+                  .systemRepo("flat:" + repo.getAbsolutePath())
+                  .offline(true)
+                  .buildManager();
 		
-		this.runner = CeylonToolProvider.getRunner(Backend.Java, options, 
-				properties.getProperty("moduleName"),
-				properties.getProperty("moduleVersion"));
+		this.moduleLoader = new FlatpathModuleLoader(repositoryManager, null, Collections.<String,String>emptyMap(), false);
+	        try {
+        		moduleLoader.loadModule(properties.getProperty("moduleName"),
+                                properties.getProperty("moduleVersion"));
+	        } catch (ModuleNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	protected File setupRepo(final ServletContext context) {
@@ -131,7 +140,7 @@ public class WarInitializer implements ServletContextListener {
 	}
 	
 	private File tmpRepo;
-	private Runner runner;
+	private FlatpathModuleLoader moduleLoader;
 }
 
 
