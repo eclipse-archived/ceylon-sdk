@@ -89,7 +89,8 @@ license ("Apache Software License 2.0")
 native("jvm")
 module ceylon.dbc "1.2.3" {
     import ceylon.collection "1.2.3";
-    shared import ceylon.math "1.2.3";
+    shared import ceylon.decimal "1.2.3";
+    shared import ceylon.whole "1.2.3";
     import java.base "7";
     import ceylon.interop.java "1.2.3";
     shared import java.jdbc "7";
