@@ -186,8 +186,11 @@ class ResponseImpl(HttpServerExchange exchange,
         }
     }
     
-    shared actual Integer responseStatus => exchange.responseCode;
-    assign responseStatus => exchange.setResponseCode(responseStatus);
+    shared actual Integer status => exchange.statusCode;
+    assign status => exchange.setStatusCode(responseStatus);
+    
+    shared actual Integer responseStatus => status;
+    assign responseStatus => status = responseStatus;
     
     shared void responseDone() {
         //Retry to apply headers, if there were no writes, headers were not applied.

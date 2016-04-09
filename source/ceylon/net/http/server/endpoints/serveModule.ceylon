@@ -67,7 +67,7 @@ shared void serveModule(
         serveStaticFile("", (req) => file, options, onSuccess, onError, headers)
             (req, resp, complete);
     } else {
-        resp.responseStatus = 404;
+        resp.status = 404;
         resp.writeString("404 - Not found");
     }
 }

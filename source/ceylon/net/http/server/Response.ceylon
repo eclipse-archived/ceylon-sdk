@@ -47,7 +47,11 @@ shared interface Response {
         void onError(ServerException e));
 
     "The HTTP status code of the response."
+    deprecated("Use [[status]]")
     shared formal variable Integer responseStatus;
+    
+    "The HTTP status code of the response."
+    shared formal variable Integer status;
 
     shared formal void flush();
     shared formal void close();

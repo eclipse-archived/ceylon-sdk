@@ -22,7 +22,7 @@ import ceylon.net.http {
 shared void redirect(String url, 
         RedirectType type=RedirectType.seeOther)
         (Request request, Response response, void complete()) {
-    response.responseStatus = type.statusCode;
+    response.status = type.statusCode;
     response.addHeader(Header("Location", url));
     complete();
 }

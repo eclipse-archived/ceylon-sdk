@@ -87,7 +87,7 @@ shared class WebSocketProtocolHandshakeHandler(
             exchange.upgradeChannel(httpUpgradeListener);
             handshaker.handshake(facade);
         } else {
-            exchange.setResponseCode(404);
+            exchange.setStatusCode(404);
             exchange.endExchange();
             return;
         }

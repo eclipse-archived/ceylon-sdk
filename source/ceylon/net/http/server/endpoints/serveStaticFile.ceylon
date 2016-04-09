@@ -65,7 +65,7 @@ shared void serveStaticFile(
         
         if (exists etag = request.header("If-None-Match"), 
             etag == file.lastModifiedMilliseconds.string) {
-            response.responseStatus = 304;
+            response.status = 304;
         }
         else {
             value openFile = newOpenFile(file);
@@ -89,7 +89,7 @@ shared void serveStaticFile(
         }
         
     } else {
-        response.responseStatus = 404;
+        response.status = 404;
         //TODO log
         print("File ``filePath.absolutePath.string`` does not exist.");
         response.flush();
