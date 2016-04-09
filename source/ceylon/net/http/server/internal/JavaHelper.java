@@ -11,6 +11,7 @@ public class JavaHelper {
         return param.isFile();
     }
 
+    @SuppressWarnings("deprecation")
     public static File paramFile(FormData.FormValue param) {
         return param.getFile();
     }

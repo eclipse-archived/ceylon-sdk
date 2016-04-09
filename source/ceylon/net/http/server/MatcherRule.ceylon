@@ -27,10 +27,6 @@ shared class TemplateMatcher(shared String template)
         extends Matcher() {
 	// Don't use it as a conventional matcher!
 	matches(String path) => false;
-	
-	String relativePath(String requestPath) {
-		throw Exception("not supported on TemplateMatcher");
-	}
 }
 
 class StartsWith(String substring) 
@@ -73,7 +69,8 @@ class Or(Matcher left, Matcher right)
     matches(String path) 
             => left.matches(path) 
             || right.matches(path);
-    relativePath(String requestPath) 
+    suppressWarnings("deprecation")
+    shared actual String relativePath(String requestPath) 
             => left.matches(requestPath) 
             then left.relativePath(requestPath) 
             else right.relativePath(requestPath); 

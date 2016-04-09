@@ -98,10 +98,13 @@ public final class Util {
     	throw new ceylon.language.AssertionError("Unsupported declaration type: "+decl);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> java.lang.Class<? extends T>
     erase(java.lang.Class<? extends T> klass){
       // dirty but keeps the logic in one place
-      return (Class<? extends T>)TypeDescriptor.klass(klass).getArrayElementClass();
+      return (Class<? extends T>)
+              TypeDescriptor.klass(klass)
+                  .getArrayElementClass();
     }
 
     public StackTraceElement[] javaStackTrace(Throwable t) {

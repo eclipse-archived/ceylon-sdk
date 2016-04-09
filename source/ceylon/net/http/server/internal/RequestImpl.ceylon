@@ -241,6 +241,7 @@ class RequestImpl(HttpServerExchange exchange,
                 Please use either [[queryParameters]] or [[formParameters]].")
     shared actual String? parameter(String name, 
             Boolean forceFormParsing) {
+        suppressWarnings("deprecation")
         value params = parameters(name);
         if (nonempty params) {
             return params.first;
@@ -279,7 +280,9 @@ class RequestImpl(HttpServerExchange exchange,
 
     uri => exchange.requestURI;
 
-    relativePath => endpoint.path.relativePath(path);
+    suppressWarnings("deprecation")
+    shared actual String relativePath 
+            => endpoint.path.relativePath(path);
 
     queryString => exchange.queryString;
 

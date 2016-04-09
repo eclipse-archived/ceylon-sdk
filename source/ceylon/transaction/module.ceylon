@@ -112,6 +112,7 @@
        transactionRecoveryManager.registerXAResourceRecoveryDataSource(xaDataSource)
 
    """
+suppressWarnings("doclink")
 by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
 native("jvm")

@@ -108,6 +108,7 @@ object localServer {
             path = startsWith("/getparamecho");
             service = void(ServerRequest request, ServerResponse response) {
                 // Can't simply get all of the request parameters for whatever reason...
+                suppressWarnings("deprecation")
                 value p = request.parameter;
                 value present = { for (name in { "a", "b", "c" }) if (exists v = p(name)) "``name``=``v``" };
                 response.addHeader(contentType("text/plain", utf8));
@@ -119,6 +120,7 @@ object localServer {
             path = startsWith("/postparamecho");
             service = void(ServerRequest request, ServerResponse response) {
                 // Can't simply get all of the request parameters for whatever reason...
+                suppressWarnings("deprecation")
                 value p = request.parameter;
                 value present = { for (name in { "a", "b", "c" }) if (exists v = p(name)) "``name``=``v``" };
                 response.addHeader(contentType("text/plain", utf8));

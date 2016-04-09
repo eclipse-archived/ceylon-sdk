@@ -54,6 +54,7 @@ variable String asyncServiceStatus = "";
 
 test void testServer() {
 
+    suppressWarnings("deprecation")
     function name(Request request) => request.parameter("name") else "world";
     
     void serviceImpl(Request request, Response response) {
@@ -68,6 +69,7 @@ test void testServer() {
         return testFile.string;
     }
 
+    suppressWarnings("deprecation")
     {<Endpoint|AsynchronousEndpoint>+} endpoints => {
         Endpoint {
             service => serviceImpl;
@@ -484,6 +486,7 @@ void cleanUpFile() {
     }
 }
 
+suppressWarnings("deprecation")
 test void testPathMatcher() {
     String requestPath = "/file/myfile.txt";
     
