@@ -18,7 +18,7 @@ shared abstract class WrapperType<ValueType>("Underlying value wrapped by the [[
     "[[Type]] associated with the [[WrapperType]]"
     shared Type<> classType => type(this);
 
-    "Display name of the type (ex WrappedString is \"WrappedString\""
+    "Display name of the type (ex WrappedString is \"WrappedString\")"
     shared String name => displayNameForType(classType);
 
     shared actual default Boolean equals(Object other) {
