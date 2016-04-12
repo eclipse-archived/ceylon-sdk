@@ -4,11 +4,13 @@ import ceylon.collection {
 
 import java.lang {
     IllegalArgumentException,
-    UnsupportedOperationException
+    UnsupportedOperationException,
+    IllegalStateException
 }
 import java.util {
     AbstractList,
-    Collection
+    Collection,
+    Iterator
 }
 
 "A Java [[java.util::List]] that wraps a Ceylon [[List]].
@@ -21,6 +23,29 @@ shared class JavaList<E>(List<E> list)
     shared actual E? get(Integer int) => list.getFromFirst(int);
     
     size() => list.size;
+
+    iterator() => object satisfies Iterator<E> {
+        variable value delegate = JavaIterator(list.iterator());
+        variable value currentIndex = -1;
+
+        hasNext() => delegate.hasNext();
+        
+        shared actual E? next() {
+            currentIndex++;
+            return delegate.next();
+        }
+        
+        shared actual void remove() {
+            if (!is MutableList<E> list) {
+                throw UnsupportedOperationException("not a mutable list");
+            }
+            if (currentIndex < 0) {
+                throw IllegalStateException();
+            }
+            list.delete(currentIndex--);
+            delegate = JavaIterator(list.skip(currentIndex).iterator());
+        }
+    };
 
     shared actual Boolean add(E? e) {
         if (is E e) {

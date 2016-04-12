@@ -1,5 +1,8 @@
 import ceylon.collection {
-    HashMap
+    HashMap,
+    CLinkedList=LinkedList,
+    CArrayList=ArrayList,
+    MutableList
 }
 import ceylon.interop.java {
     ...
@@ -62,6 +65,41 @@ test void collectionTests() {
     
     assertEquals(JavaIterable([]).string, "[]");
     assertEquals(JavaIterable([1]).string, "[1]");
+}
+
+test void javaListIteratorPerformance() {
+    value ll = CLinkedList { *(0:100k) };
+    value javaList = JavaList(ll);
+    value it = javaList.iterator();
+    
+    value start = system.nanoseconds;
+    variable value i = 0;
+    while (it.hasNext()) {
+        i += it.next();
+    }
+    
+    assertEquals(i, 4999950000);
+    assertTrue(system.nanoseconds - start < 1G,
+        "list iteration took more than one second; \
+         non-optimized iterator?");
+}
+
+test void javaListIterator() {
+    value ll = CArrayList { 0, 1, 2 };
+    print ((ll of Anything) is MutableList<Integer>);
+    value javaList = JavaList(ll);
+    value it = javaList.iterator();
+    
+    variable value sum = 0;
+    while (it.hasNext()) {
+        value x = it.next();
+        if (x == 1) {
+            it.remove();
+        }
+        sum += x;
+    }
+    assertEquals(sum, 3, "sum of elements");
+    assertEquals(ll.size, 2, "size after removal");
 }
 
 test void bug264() {
