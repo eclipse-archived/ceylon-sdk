@@ -322,7 +322,7 @@
         <echo file="${bundleDefinitionFile}">Bundle-SymbolicName: ${CeylonName}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Bundle-Version: ${CeylonVersion}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Export-Package: *${line.separator}</echo>
-        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, org.apache.activemq.artemis.*;resolution:=optional, *${line.separator}</echo>
+        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, org.slf4j.*;resolution:=optional, org.jboss.logmanager.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, org.apache.activemq.artemis.*;resolution:=optional, *${line.separator}</echo>
         <bndwrap exceptions="true" force="true"  jars="${currentFile}" output="${currentFile}.bnd.jar" definitions="${bundleDefinitionFile}">
         </bndwrap>
         <delete file="${bundleDefinitionFile}"/>
