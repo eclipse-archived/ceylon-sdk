@@ -407,8 +407,8 @@ shared interface ListMutator<in Element>
     }
 
     "Truncate this list to the given [[size]] by removing
-     elements from the end of the list, if necessary,
-     to leave a list with at most the given size."
+     elements from the end of the list, if necessary, 
+     leaving a list with at most the given size."
     throws (`class AssertionError`, "if `size<0`")
     shared default void truncate(Integer size) 
             => deleteMeasure(size, this.size-size);
