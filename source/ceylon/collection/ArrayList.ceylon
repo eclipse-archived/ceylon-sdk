@@ -720,26 +720,29 @@ shared class ArrayList<Element>
                 length = smallest(from+length, size) - from;
             };
     
-    "Efficiently copy the elements in the segment
-     `sourcePosition:length` of this list to the segment 
+    "Efficiently copy the elements in the measure
+     `sourcePosition:length` of this list to the measure 
      `destinationPosition:length` of the given 
      [[destination]] `ArrayList` or `Array`.
      
-     The given [[length]], [[sourcePosition]], and 
-     [[destinationPosition]] must be non-negative and must 
-     identify meaningful ranges within the two lists, 
-     satisfying:
+     The given [[sourcePosition]] and [[destinationPosition]] 
+     must be non-negative and, together with the given 
+     [[length]], must identify meaningful ranges within the 
+     two lists, satisfying:
      
-     - `size <= sourcePosition+length`, and 
-     - `destination.size <= destinationPosition+length`."
+     - `size >= sourcePosition+length`, and 
+     - `destination.size >= destinationPosition+length`.
+     
+     If the given `length` is not strictly positive, no
+     elements are copied."
     throws (`class AssertionError`, 
-            "if the arguments do not identify a meaningful
-             ranges within the two lists:
-             
-             - if the given [[length]], [[sourcePosition]], 
-               or [[destinationPosition]] is negative, 
-             - if `size < sourcePosition+length`, or 
-             - if `destination.size < destinationPosition+length`.")
+        "if the arguments do not identify meaningful ranges 
+         within the two lists:
+         
+         - if the given [[sourcePosition]] or 
+           [[destinationPosition]] is negative, 
+         - if `size < sourcePosition+length`, or 
+         - if `destination.size < destinationPosition+length`.")
     shared void copyTo(
         "The list into which to copy the elements."
         ArrayList<Element>|Array<Element?> destination,
@@ -754,8 +757,6 @@ shared class ArrayList<Element>
                 = smallest(size - sourcePosition,
                     destination.size - destinationPosition)) {
         
-        "length may not be negative"
-        assert (length>=0);
         "illegal starting position in source list"
         assert (0<=sourcePosition<size-length);
         "illegal starting position in destination list"
