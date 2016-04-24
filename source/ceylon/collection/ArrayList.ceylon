@@ -580,24 +580,15 @@ shared class ArrayList<Element>
     shared void sortInPlace(
         "A comparison function that compares pairs of
          non-null elements of the array."
-        Comparison comparing(Element&Object x, Element&Object y)) {
-        array.sortInPlace((x, y) { 
-            if (exists x, exists y) {
-                return comparing(x, y);
-            }
-            else {
-                if (x exists && !y exists) {
-                    return smaller;
-                }
-                else if (y exists && !x exists) {
-                    return larger;
-                }
-                else {
-                    return equal;
-                }
-            }
-        });
-    }
+        Comparison comparing(Element&Object x, Element&Object y))
+            => array.sortInPlace((x, y)
+                =>   if (exists x, exists y)
+                        then comparing(x, y)
+                else if (x exists, !y exists)
+                        then smaller
+                else if (y exists, !x exists)
+                        then larger
+                else equal);
     
     shared actual
     void each(void step(Element element)) {
@@ -732,7 +723,23 @@ shared class ArrayList<Element>
     "Efficiently copy the elements in the segment
      `sourcePosition:length` of this list to the segment 
      `destinationPosition:length` of the given 
-     [[destination]] `ArrayList` or `Array`."
+     [[destination]] `ArrayList` or `Array`.
+     
+     The given [[length]], [[sourcePosition]], and 
+     [[destinationPosition]] must be non-negative and must 
+     identify meaningful ranges within the two lists, 
+     satisfying:
+     
+     - `size <= sourcePosition+length`, and 
+     - `destination.size <= destinationPosition+length`."
+    throws (`class AssertionError`, 
+            "if the arguments do not identify a meaningful
+             ranges within the two lists:
+             
+             - if the given [[length]], [[sourcePosition]], 
+               or [[destinationPosition]] is negative, 
+             - if `size < sourcePosition+length`, or 
+             - if `destination.size < destinationPosition+length`.")
     shared void copyTo(
         "The list into which to copy the elements."
         ArrayList<Element>|Array<Element?> destination,
