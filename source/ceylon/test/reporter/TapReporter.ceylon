@@ -117,7 +117,10 @@ shared class TapReporter(write = print) satisfies TestListener {
     
     shared actual void testRunStarted(TestRunStartedEvent event) {
         write("TAP version 13");
-        write("1..``event.description.children.size``");
+    }
+    
+    shared actual void testRunFinished(TestRunFinishedEvent event) {
+        write("1..`` count - 1 ``");
     }
     
     shared actual void testFinished(TestFinishedEvent event) => writeProtocol(event);
