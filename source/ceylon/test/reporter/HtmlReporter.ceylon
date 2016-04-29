@@ -2,12 +2,6 @@ import ceylon.collection {
     ArrayList,
     HashMap
 }
-import ceylon.file {
-    current,
-    Nil,
-    File,
-    ExistingResource
-}
 import ceylon.language.meta.declaration {
     Module
 }
@@ -20,6 +14,9 @@ import ceylon.test {
 }
 import ceylon.test.event {
     TestRunFinishedEvent
+}
+import ceylon.test.engine.internal {
+    FileWriter
 }
 
 import java.text {
@@ -36,25 +33,25 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     void generate(TestDescription root, TestRunResult result) {
         value testedModules = findTestedModules(result);
         
-        FileWriter fw;
+        String path;
         if( testedModules.size == 1 ) {
             assert(exists testedModule = testedModules[0]);
-            fw = createFile("reports/``reportSubdir``/results-``testedModule.name``-``testedModule.version``.html");
+            path = "reports/``reportSubdir``/results-``testedModule.name``-``testedModule.version``.html";
         } else {
-            fw = createFile("reports/``reportSubdir``/results.html");
+            path = "reports/``reportSubdir``/results.html";
         }
-        
-        fw.write("<!DOCTYPE html>");
-        fw.write("<html>");
-        generateHead(fw);
-        fw.write("<body>");
-        generateBanner(fw, result);
-        generateSummary(fw, result);
-        generateResultsTable(fw, root, result);
-        fw.write("</body>");
-        generateScript(fw);
-        fw.write("</html>");
-        fw.close();
+        try (fw = FileWriter(path)) {
+            fw.write("<!DOCTYPE html>");
+            fw.write("<html>");
+            generateHead(fw);
+            fw.write("<body>");
+            generateBanner(fw, result);
+            generateSummary(fw, result);
+            generateResultsTable(fw, root, result);
+            fw.write("</body>");
+            generateScript(fw);
+            fw.write("</html>");
+        }
     }
     
     void generateHead(FileWriter fw) {
@@ -241,17 +238,6 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     native
     String formatTime(Integer timeInMilliseconds);
     
-    native
-    FileWriter createFile(String filePath);
-    
-    interface FileWriter {
-        
-        shared formal void write(String content);
-        
-        shared formal void close();
-        
-    }
-    
     native("js")
     String formatTime(Integer timeInMilliseconds) {
         dynamic {
@@ -269,68 +255,6 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
         timeFormat.minimumIntegerDigits = 1;
         
         return timeFormat.format(timeInMilliseconds/1000.0);
-    }
-    
-    native("js")
-    FileWriter createFile(String filePath) {
-        object fileWriter satisfies FileWriter {
-            
-            dynamic stream;
-            dynamic {
-                dynamic pathApi = require("path");
-                dynamic fsApi = require("fs");
-                
-                value pathBuilder = StringBuilder();
-                value pathSegments = filePath.split((Character c) => c.string == pathApi.sep).sequence();
-                for(pathSegment in pathSegments[0..pathSegments.size-2] ) {
-                    pathBuilder.append(pathSegment);
-                    if( !fsApi.existsSync(pathBuilder.string) ) {
-                        fsApi.mkdirSync(pathBuilder.string);
-                    }
-                    pathBuilder.append(pathApi.sep);
-                }
-                assert(exists pathLastSegment = pathSegments.last);
-                pathBuilder.append(pathLastSegment);
-                
-                stream = fsApi.createWriteStream(pathBuilder.string);
-            }
-            
-            shared actual void write(String content) {
-                dynamic {
-                    stream.write(content);
-                }
-            }
-            
-            shared actual void close() {
-                dynamic {
-                    stream.end();
-                }
-            }
-            
-        }
-        return fileWriter;
-    }
-    
-    native("jvm")
-    FileWriter createFile(String filePath) {
-        object fileWriter satisfies FileWriter {
-            File.Overwriter fw;
-            
-            value res = current.childPath(filePath).resource;
-            switch(res)
-            case(is Nil) {
-                fw = res.createFile(true).Overwriter();
-            }
-            case(is ExistingResource) {
-                fw = res.delete().createFile(true).Overwriter();
-            }
-            
-            write(String content) => fw.write(content);
-            
-            close() => fw.close();
-            
-        }
-        return fileWriter;
     }
     
 }
