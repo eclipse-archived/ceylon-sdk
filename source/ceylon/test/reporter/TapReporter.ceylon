@@ -108,12 +108,12 @@ import ceylon.test.engine {
          at com.redhat.ceylon.launcher.Launcher.main(Launcher.java:21)
    ...
  ~~~"
-shared class TapReporter(write) satisfies TestListener {
+shared class TapReporter(write = print, close = noop) satisfies TestListener {
     
-    "A function that logs the given line, for example by writing to standard output.
-     The function is called with a [[null]] argument at the end to signal the end of reporting;
-     this may be used to close an underlying stream if necessary."
-    void write(String? line);
+    "A function that logs the given line, for example [[print]]."
+    void write(String line);
+    "A function that is called at the end of reporting and may, for example, close an underlying stream."
+    void close();
     
     variable Integer count = 1;
     
@@ -123,7 +123,7 @@ shared class TapReporter(write) satisfies TestListener {
     
     shared actual void testRunFinished(TestRunFinishedEvent event) {
         write("1..`` count - 1 ``");
-        write(null); // close stream
+        close();
     }
     
     shared actual void testFinished(TestFinishedEvent event) => writeProtocol(event);
