@@ -28,10 +28,11 @@ native ("jvm") shared class FileWriter(String path) satisfies Destroyable {
 }
 
 native ("js") shared class FileWriter(String path) satisfies Destroyable {
-    dynamic stream;
+    dynamic fsApi;
+    dynamic fd;
     dynamic {
         dynamic pathApi = require("path");
-        dynamic fsApi = require("fs");
+        fsApi = require("fs");
         
         value pathBuilder = StringBuilder();
         value pathSegments = path.split((Character c) => c.string == pathApi.sep).sequence();
@@ -45,22 +46,22 @@ native ("js") shared class FileWriter(String path) satisfies Destroyable {
         assert(exists pathLastSegment = pathSegments.last);
         pathBuilder.append(pathLastSegment);
         
-        stream = fsApi.createWriteStream(pathBuilder.string);
+        fd = fsApi.openSync(pathBuilder.string, "w");
     }
     
     native ("js") shared void write(String text) {
         dynamic {
-            stream.write(text);
+            fs.writeSync(fd, text);
         }
     }
     native ("js") shared void writeLine(String line) {
         dynamic {
-            stream.write(line + operatingSystem.newline);
+            fs.writeSync(fd, line + operatingSystem.newline);
         }
     }
     native ("js") shared actual void destroy(Throwable? error) {
         dynamic {
-            stream.end();
+            fs.close(fd);
         }
     }
 }    
