@@ -55,8 +55,25 @@ shared class Runner() {
         
         if (exists socket) {
             testListeners.add(TestEventPublisher(socket.write));
-        } else if (options.tap) {
-            testListeners.add(TapReporter());
+        } else if (exists tap = options.tap) {
+            void write(String? line);
+            if (tap == "-") {
+                write = void(String? line) {
+                    if (exists line) {
+                        print(line);
+                    }
+                };
+            } else {
+                value writer = FileWriter(tap);
+                write = void(String? line) {
+                    if (exists line) {
+                        writer.writeLine(line);
+                    } else {
+                        writer.destroy(null);
+                    }
+                };
+            }
+            testListeners.add(TapReporter(write));
         } else {
             testListeners.add(TestLoggingListener(options.colorReset, options.colorGreen, options.colorRed));
         }
