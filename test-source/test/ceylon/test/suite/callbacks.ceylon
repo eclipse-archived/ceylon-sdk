@@ -10,46 +10,54 @@ import test.ceylon.test.stubs.beforeafter.bugs {
 import test.ceylon.test.stubs.beforeafter.sub {
     ...
 }
+import test.ceylon.test.stubs.bugs {
+    BugClassWithBeforeTestRunCallback,
+    BugClassWithAfterTestRunCallback
+}
 
 test
 void shouldRunCallbacks1() {
     callbackLogger.clear();
 
-    createTestRunner([`fooWithCallbacks`]).run();
+    createTestRunner([`testWithCallbacks`]).run();
 
     value lines = callbackLogger.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 3);
-    assertEquals(lines[0], "fooToplevelBefore");
-    assertEquals(lines[1], "fooWithCallbacks");
-    assertEquals(lines[2], "fooToplevelAfter");
+    assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "testWithCallbacks",
+            "afterTest1",
+            "afterTestRun1"]);
 }
 
 test
 void shouldRunCallbacks2() {
     callbackLogger.clear();
 
-    createTestRunner([`FooWithCallbacks`]).run();
+    createTestRunner([`TestWithCallbacks`]).run();
 
     value lines = callbackLogger.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 5);
-    assertEquals(lines[0], "fooToplevelBefore");
-    assertEquals(lines[1], "FooWithCallbacks.fooBefore");
-    assertEquals(lines[2], "FooWithCallbacks.foo");
-    assertEquals(lines[3], "FooWithCallbacks.fooAfter");
-    assertEquals(lines[4], "fooToplevelAfter");
+    assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "TestWithCallbacks.beforeTest2",
+            "TestWithCallbacks.test2",
+            "TestWithCallbacks.afterTest2",
+            "afterTest1",
+            "afterTestRun1"]);
 }
 
 test
 void shouldRunCallbacksWithEqualInstance() {
-    fooWithCallbacksInstanceInBefore = null;
-    fooWithCallbacksInstanceInTest = null;
-    fooWithCallbacksInstanceInAfter = null;
+    testWithCallbacksInstanceInBefore = null;
+    testWithCallbacksInstanceInTest = null;
+    testWithCallbacksInstanceInAfter = null;
 
-    createTestRunner([`FooWithCallbacks`]).run();
+    createTestRunner([`TestWithCallbacks`]).run();
 
-    assert(exists i1 = fooWithCallbacksInstanceInBefore, 
-           exists i2 = fooWithCallbacksInstanceInTest, 
-           exists i3 = fooWithCallbacksInstanceInAfter, 
+    assert(exists i1 = testWithCallbacksInstanceInBefore, 
+           exists i2 = testWithCallbacksInstanceInTest, 
+           exists i3 = testWithCallbacksInstanceInAfter, 
            i1 == i2, 
            i2 == i3);
 }
@@ -61,46 +69,77 @@ void shouldRunCallbacksFromAncestor() {
     createTestRunner([`BarWithCallbacks.bar`]).run();
 
     value lines = callbackLogger.string.trimmed.lines.sequence();
-    assertEquals(lines.size, 13);
-    assertEquals(lines[0], "fooToplevelBefore");
-    assertEquals(lines[1], "barToplevelBefore");
-    assertEquals(lines[2], "BarWithCallbacksInterface2.bar2Before");
-    assertEquals(lines[3], "BarWithCallbacksInterface1.bar1Before");
-    assertEquals(lines[4], "FooWithCallbacks.fooBefore");
-    assertEquals(lines[5], "BarWithCallbacks.barBefore");
-    assertEquals(lines[6], "BarWithCallbacks.bar");
-    assertEquals(lines[7], "BarWithCallbacks.barAfter");
-    assertEquals(lines[8], "FooWithCallbacks.fooAfter");
-    assertEquals(lines[9], "BarWithCallbacksInterface1.bar1After");
-    assertEquals(lines[10], "BarWithCallbacksInterface2.bar2After");
-    assertEquals(lines[11], "barToplevelAfter");
-    assertEquals(lines[12], "fooToplevelAfter");
+    assertEquals(lines, [
+        "beforeTestRun1",
+        "beforeTest1",
+        "beforeTest3",
+        "BarWithCallbacksInterface2.bar2Before",
+        "BarWithCallbacksInterface1.bar1Before",
+        "TestWithCallbacks.beforeTest2",
+        "BarWithCallbacks.barBefore",
+        "BarWithCallbacks.bar",
+        "BarWithCallbacks.barAfter",
+        "TestWithCallbacks.afterTest2",
+        "BarWithCallbacksInterface1.bar1After",
+        "BarWithCallbacksInterface2.bar2After",
+        "afterTest3",
+        "afterTest1",
+        "afterTestRun1"]);
 }
 
 test
 void shouldRunCallbacksFromAncestorOnExtendedInstance() {
-    fooWithCallbacksInstanceInBefore = null;
-    fooWithCallbacksInstanceInAfter = null;
+    testWithCallbacksInstanceInBefore = null;
+    testWithCallbacksInstanceInAfter = null;
 
     createTestRunner([`BarWithCallbacks.bar`]).run();
 
-    assert(is BarWithCallbacks i1 = fooWithCallbacksInstanceInBefore, 
-           is BarWithCallbacks i2 = fooWithCallbacksInstanceInAfter, 
+    assert(is BarWithCallbacks i1 = testWithCallbacksInstanceInBefore, 
+           is BarWithCallbacks i2 = testWithCallbacksInstanceInAfter, 
            i1 == i2);
+}
+
+test
+void shouldHandleExceptionInBeforeRunCallback() {
+    callbackLogger.clear();
+    beforeTestRun1Exception = true;
+    try {
+        value runResult = createTestRunner([`testWithCallbacks`]).run();
+        value lines = callbackLogger.string.trimmed.lines.sequence();
+        assertEquals(lines, [
+            "beforeTestRun1",
+            "afterTestRun1"]);
+        
+        assertResultCounts {
+            runResult;
+            runCount = 0;
+            errorCount = 1;
+        };
+        assertResultContains {
+            runResult;
+            state = TestState.error;
+            message = "beforeTestRun1Exception";
+        };
+    }
+    finally {
+        beforeTestRun1Exception = false;
+    }
 }
 
 test
 void shouldHandleExceptionInBeforeToplevelCallback() {
     callbackLogger.clear();
-    fooToplevelBeforeException = true;
+    beforeTest1Exception = true;
     try {
-        value runResult = createTestRunner([`FooWithCallbacks`]).run();
+        value runResult = createTestRunner([`TestWithCallbacks`]).run();
 
         value lines = callbackLogger.string.trimmed.lines.sequence();
-        assertEquals(lines.size, 3);
-        assertEquals(lines[0], "fooToplevelBefore");
-        assertEquals(lines[1], "FooWithCallbacks.fooAfter");
-        assertEquals(lines[2], "fooToplevelAfter");
+        assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "TestWithCallbacks.afterTest2",
+            "afterTest1",
+            "afterTestRun1"]);
 
         assertResultCounts {
             runResult;
@@ -110,28 +149,30 @@ void shouldHandleExceptionInBeforeToplevelCallback() {
         assertResultContains {
             runResult;
             state = TestState.error;
-            source = `FooWithCallbacks.foo`;
-            message = "fooToplevelBeforeException";
+            source = `TestWithCallbacks.test2`;
+            message = "beforeTest1Exception";
         };
     }
     finally {
-        fooToplevelBeforeException = false;
+        beforeTest1Exception = false;
     }
 }
 
 test
 void shouldHandleExceptionInBeforeMemberCallback() {
     callbackLogger.clear();
-    fooMemberBeforeException = true;
+    beforeTest2Exception = true;
     try {
-        value runResult = createTestRunner([`FooWithCallbacks`]).run();
+        value runResult = createTestRunner([`TestWithCallbacks`]).run();
 
         value lines = callbackLogger.string.trimmed.lines.sequence();
-        assertEquals(lines.size, 4);
-        assertEquals(lines[0], "fooToplevelBefore");
-        assertEquals(lines[1], "FooWithCallbacks.fooBefore");
-        assertEquals(lines[2], "FooWithCallbacks.fooAfter");
-        assertEquals(lines[3], "fooToplevelAfter");
+        assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "TestWithCallbacks.beforeTest2",
+            "TestWithCallbacks.afterTest2",
+            "afterTest1",
+            "afterTestRun1"]);
 
         assertResultCounts {
             runResult;
@@ -141,29 +182,31 @@ void shouldHandleExceptionInBeforeMemberCallback() {
         assertResultContains {
             runResult;
             state = TestState.error;
-            source = `FooWithCallbacks.foo`;
-            message = "fooMemberBeforeException";
+            source = `TestWithCallbacks.test2`;
+            message = "beforeTest2Exception";
         };
     }
     finally {
-        fooMemberBeforeException = false;
+        beforeTest2Exception = false;
     }
 }
 
 test
 void shouldHandleExceptionInAfterToplevelCallback() {
     callbackLogger.clear();
-    fooToplevelAfterException = true;
+    afterTest1Exception = true;
     try {
-        value runResult = createTestRunner([`FooWithCallbacks`]).run();
+        value runResult = createTestRunner([`TestWithCallbacks`]).run();
 
         value lines = callbackLogger.string.trimmed.lines.sequence();
-        assertEquals(lines.size, 5);
-        assertEquals(lines[0], "fooToplevelBefore");
-        assertEquals(lines[1], "FooWithCallbacks.fooBefore");
-        assertEquals(lines[2], "FooWithCallbacks.foo");
-        assertEquals(lines[3], "FooWithCallbacks.fooAfter");
-        assertEquals(lines[4], "fooToplevelAfter");
+        assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "TestWithCallbacks.beforeTest2",
+            "TestWithCallbacks.test2",
+            "TestWithCallbacks.afterTest2",
+            "afterTest1",
+            "afterTestRun1"]);
 
         assertResultCounts {
             runResult;
@@ -173,29 +216,31 @@ void shouldHandleExceptionInAfterToplevelCallback() {
         assertResultContains {
             runResult;
             state = TestState.error;
-            source = `FooWithCallbacks.foo`;
-            message = "fooToplevelAfterException";
+            source = `TestWithCallbacks.test2`;
+            message = "afterTest1Exception";
         };
     }
     finally {
-        fooToplevelAfterException = false;
+        afterTest1Exception = false;
     }
 }
 
 test
 void shouldHandleExceptionInAfterMemberCallback() {
     callbackLogger.clear();
-    fooMemberAfterException = true;
+    afterTest2Exception = true;
     try {
-        value runResult = createTestRunner([`FooWithCallbacks`]).run();
+        value runResult = createTestRunner([`TestWithCallbacks`]).run();
 
         value lines = callbackLogger.string.trimmed.lines.sequence();
-        assertEquals(lines.size, 5);
-        assertEquals(lines[0], "fooToplevelBefore");
-        assertEquals(lines[1], "FooWithCallbacks.fooBefore");
-        assertEquals(lines[2], "FooWithCallbacks.foo");
-        assertEquals(lines[3], "FooWithCallbacks.fooAfter");
-        assertEquals(lines[4], "fooToplevelAfter");
+        assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "TestWithCallbacks.beforeTest2",
+            "TestWithCallbacks.test2",
+            "TestWithCallbacks.afterTest2",
+            "afterTest1",
+            "afterTestRun1"]);
         
         assertResultCounts {
             runResult;
@@ -205,29 +250,31 @@ void shouldHandleExceptionInAfterMemberCallback() {
         assertResultContains {
             runResult;
             state = TestState.error;
-            source = `FooWithCallbacks.foo`;
-            message = "fooMemberAfterException";
+            source = `TestWithCallbacks.test2`;
+            message = "afterTest2Exception";
         };
     }
     finally {
-        fooMemberAfterException = false;
+        afterTest2Exception = false;
     }
 }
 
 test
 void shouldHandleExceptionsInCallbacks() {
     callbackLogger.clear();
-    fooToplevelBeforeException = true;
-    fooToplevelAfterException = true;
-    fooMemberAfterException = true;
+    beforeTest1Exception = true;
+    afterTest1Exception = true;
+    afterTest2Exception = true;
     try {
-        value runResult = createTestRunner([`FooWithCallbacks`]).run();
+        value runResult = createTestRunner([`TestWithCallbacks`]).run();
         
         value lines = callbackLogger.string.trimmed.lines.sequence();
-        assertEquals(lines.size, 3);
-        assertEquals(lines[0], "fooToplevelBefore");
-        assertEquals(lines[1], "FooWithCallbacks.fooAfter");
-        assertEquals(lines[2], "fooToplevelAfter");
+        assertEquals(lines, [
+            "beforeTestRun1",
+            "beforeTest1",
+            "TestWithCallbacks.afterTest2",
+            "afterTest1",
+            "afterTestRun1"]);
         
         assertResultCounts {
             runResult;
@@ -237,13 +284,13 @@ void shouldHandleExceptionsInCallbacks() {
         assertResultContains {
             runResult;
             state = TestState.error;
-            source = `FooWithCallbacks.foo`;
+            source = `TestWithCallbacks.test2`;
         };
     }
     finally {
-        fooToplevelBeforeException = false;
-        fooToplevelAfterException = false;
-        fooMemberAfterException = false;
+        beforeTest1Exception = false;
+        afterTest1Exception = false;
+        afterTest2Exception = false;
     }
 }
 
@@ -339,5 +386,39 @@ void shouldVerifyAfterWithTypeParameters() {
         state = TestState.error;
         source = `BugAfterWithTypeParameters.f`;
         message = "after callback test.ceylon.test.stubs.beforeafter.bugs::BugAfterWithTypeParameters.after should have no type parameters";
+    };
+}
+
+test
+void shouldVerifyClassWithBeforeTestRunCallback() {
+    TestRunResult runResult = createTestRunner([`class BugClassWithBeforeTestRunCallback`]).run();
+    
+    assertResultCounts {
+        runResult;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        runResult;
+        state = TestState.error;
+        source = `function BugClassWithBeforeTestRunCallback.f`;
+        message = "class test.ceylon.test.stubs.bugs::BugClassWithBeforeTestRunCallback should not contain before test run callbacks: [beforeTestRunCallback]";
+    };
+}
+
+test
+void shouldVerifyClassWithAfterTestRunCallback() {
+    TestRunResult runResult = createTestRunner([`class BugClassWithAfterTestRunCallback`]).run();
+    
+    assertResultCounts {
+        runResult;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        runResult;
+        state = TestState.error;
+        source = `function BugClassWithAfterTestRunCallback.f`;
+        message = "class test.ceylon.test.stubs.bugs::BugClassWithAfterTestRunCallback should not contain after test run callbacks: [afterTestRunCallback]";
     };
 }

@@ -100,6 +100,8 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
             verifyClassAttributes(classDeclaration);
             verifyClassParameters(classDeclaration);
             verifyClassTypeParameters(classDeclaration);
+            verifyClassDoesNotContainBeforeTestRunCallbacks(classDeclaration);
+            verifyClassDoesNotContainAfterTestRunCallbacks(classDeclaration);
         }
         verifyFunctionAnnotations();
         verifyFunctionTypeParameters();
@@ -132,6 +134,21 @@ shared class DefaultTestExecutor(FunctionDeclaration functionDeclaration, ClassD
     shared default void verifyClassTypeParameters(ClassDeclaration classDeclaration) {
         if (!classDeclaration.typeParameterDeclarations.empty) {
             throw Exception("class ``classDeclaration.qualifiedName`` should have no type parameters");
+        }
+    }
+    
+    shared default void verifyClassDoesNotContainBeforeTestRunCallbacks(ClassDeclaration classDeclaration) {
+        value beforeTestRunCallbacks = classDeclaration.annotatedMemberDeclarations<FunctionDeclaration, BeforeTestRunAnnotation>();
+        if( !beforeTestRunCallbacks.empty ) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should not contain before test run callbacks: ``beforeTestRunCallbacks*.name``" );
+        }
+        
+    }
+    
+    shared default void verifyClassDoesNotContainAfterTestRunCallbacks(ClassDeclaration classDeclaration) {
+        value afterTestRunCallbacks = classDeclaration.annotatedMemberDeclarations<FunctionDeclaration, AfterTestRunAnnotation>();
+        if( !afterTestRunCallbacks.empty ) {
+            throw Exception("class ``classDeclaration.qualifiedName`` should not contain after test run callbacks: ``afterTestRunCallbacks*.name``" );
         }
     }
     

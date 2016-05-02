@@ -117,21 +117,14 @@ void shouldHandleExceptionOnTestRunStarted() {
     value runResult = createTestRunner([`foo`], [throwExceptionOnTestRunStartedListener]).run();
     assertResultCounts {
         runResult;
-        runCount = 1;
+        runCount = 0;
         errorCount = 1;
-        successCount = 1;
     };
     assertResultContains {
         runResult;
         index = 0;
         state = TestState.error;
         message = "testRunStarted";
-    };
-    assertResultContains {
-        runResult;
-        index = 1;
-        state = TestState.success;
-        source = `foo`;
     };
 }
 

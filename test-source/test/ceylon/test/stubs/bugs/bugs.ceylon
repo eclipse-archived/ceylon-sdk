@@ -46,3 +46,13 @@ shared void bugTestSuiteWithInvalidSource() {}
 test
 testSuite({`function bugFunctionWithReturnType`})
 shared void bugTestSuiteWithTestAnnotation() {}
+
+shared class BugClassWithBeforeTestRunCallback() {
+    beforeTestRun shared void beforeTestRunCallback() {}
+    test shared void f() {}
+}
+
+shared class BugClassWithAfterTestRunCallback() {
+    afterTestRun shared void afterTestRunCallback() {}
+    test shared void f() {}
+}

@@ -74,6 +74,17 @@
        afterTest void dispose() => starship.shutdownSystems();
    ```
    
+   Or it is possible to execute custom code, which will be executed only once 
+   [[before/beforeTestRun]] or [[after|afterTestRun]] whole test run.
+   
+    ```
+    beforeTestRun
+    void createUniverse() { ... }
+    
+    afterTestRun
+    void destroyUniverse() { ... }    
+    ``` 
+   
    Other options how to hook into tests execution, is to implement [[TestListener]] 
    and react on concrete events. Or if you have to go deeper, there are several 
    [[ceylon.test.engine.spi::TestExtension]] points.

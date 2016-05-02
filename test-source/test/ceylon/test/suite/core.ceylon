@@ -214,7 +214,7 @@ void shouldRunTestsInModule() {
             runCount = 25;
             successCount = 21;
             failureCount = 1;
-            errorCount = 12;
+            errorCount = 14;
             skippedCount = 8;
             abortedCount = 1;
         };

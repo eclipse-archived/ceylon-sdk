@@ -52,6 +52,16 @@ shared final annotation class AfterTestAnnotation()
         satisfies OptionalAnnotation<AfterTestAnnotation,FunctionDeclaration> {}
 
 
+"Annotation class for [[ceylon.test::beforeTestRun]]."
+shared final annotation class BeforeTestRunAnnotation()
+        satisfies OptionalAnnotation<BeforeTestRunAnnotation,FunctionDeclaration> {}
+
+
+"Annotation class for [[ceylon.test::afterTestRun]]."
+shared final annotation class AfterTestRunAnnotation()
+        satisfies OptionalAnnotation<AfterTestRunAnnotation,FunctionDeclaration> {}
+
+
 "Annotation class for [[ceylon.test::ignore]]."
 shared final annotation class IgnoreAnnotation(
     "Reason why the test is ignored."

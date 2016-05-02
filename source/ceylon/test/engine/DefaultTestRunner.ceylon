@@ -69,9 +69,10 @@ shared class DefaultTestRunner(
         value extensionResolver = DefaultTestExtensionResolver();
         value context = TestExecutionContext.root(this, result, extensionResolver, async);
         
+        value beforeAfterTestRunCallbacksInvoker = BeforeAfterTestRunCallbacksInvoker(); 
         value listeners = findAllListeners(extensionResolver).
                 chain(extensions.narrow<TestListener>()).
-                chain({result.listener}).
+                chain({beforeAfterTestRunCallbacksInvoker, result.listener}).
                 sort(increasing);
         
         context.registerExtension(DefaultArgumentListResolver());
@@ -83,13 +84,17 @@ shared class DefaultTestRunner(
         context.execute(
             () => runningRunners.add(this),
             () => TestEventEmitter(listeners).testRunStarted(TestRunStartedEvent(this, description)),
-            {for(e in executors) () => e.execute(context)},
+            () => if( result.errorCount == 0 && result.failureCount == 0 ) 
+                      then
+                          context.execute({for(e in executors) () => e.execute(context)}) 
+                      else 
+                          noop,
             () => TestEventEmitter(listeners).testRunFinished(TestRunFinishedEvent(this, result)),
             () => runningRunners.remove(this),
             () => done(result)
         );       
         
-        return result;  
+        return result;
     }
     
     void verifyCycle() {
