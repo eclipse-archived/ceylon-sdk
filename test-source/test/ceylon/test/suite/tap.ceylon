@@ -14,7 +14,6 @@ import ceylon.test.engine {
 test
 void shouldWriteTapWhenSuccess() {
     assertTap([`foo`], """TAP version 13
-                          1..1
                           ok 1 - test.ceylon.test.stubs::foo 
                           """);
 }
@@ -22,7 +21,6 @@ void shouldWriteTapWhenSuccess() {
 test
 void shouldWriteTapWhenFailure() {
     assertTap([`fooThrowingAssertion`], """TAP version 13
-                                           1..1
                                            not ok 1 - test.ceylon.test.stubs::fooThrowingAssertion 
                                              ---
                                            """);
@@ -31,18 +29,17 @@ void shouldWriteTapWhenFailure() {
 test
 void shouldWriteTapWhenIgnored() {
     assertTap([`fooWithIgnore`], """TAP version 13
-                                    1..1
                                     not ok 1 - test.ceylon.test.stubs::fooWithIgnore # SKIP skipped
                                       ---
                                       reason: ignore function foo
                                       ...
+                                    1..1
                                     """);
 }
 
 test
 void shouldWriteTapWhenError() {
     assertTap([`fooWithoutTestAnnotation`], """TAP version 13
-                                               1..1
                                                not ok 1 - test.ceylon.test.stubs::fooWithoutTestAnnotation 
                                                """);
 }
