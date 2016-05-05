@@ -1,9 +1,10 @@
 import ceylon.test {
     assertEquals,
-    fail,
     assertTrue,
     assertFalse,
-    test
+    assertThatException,
+    test,
+    parameters
 }
 import ceylon.time {
     time,
@@ -76,249 +77,160 @@ shared test void test_00_00_0_0000() => assertTime(0,0,0,0, 0, 0);
 shared test void test_23_59_59_999() => assertTime(23,59,59,999, 86399, 1439);
 
 shared test void testPlusHours() {
-    assertEquals( midnight.plusHours(15), time( 15, 0, 0, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.plusHours(20), time( 10, 20, 7, 59 ) );
-    assertEquals( time_14h_20m_07s_59ms.plusHours(13), time( 3, 20, 7, 59 ) );
-    assertEquals( time_14h_20m_07s_59ms.plusHours(7), time( 21, 20, 7, 59 ) );
-    assertEquals( time_14h_20m_07s_59ms.plusHours(2), time( 16, 20, 7, 59 ) );
+    assertEquals { expected = midnight.plusHours(15); actual = time( 15, 0, 0, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.plusHours(20); actual = time( 10, 20, 7, 59 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.plusHours(13); actual = time( 3, 20, 7, 59 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.plusHours(7); actual = time( 21, 20, 7, 59 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.plusHours(2); actual = time( 16, 20, 7, 59 ); };
 
     value toTime_13 = time(09, 08, 07, 50).plusHours(28); 
-    assertEquals( 13, toTime_13.hours);
+    assertEquals { expected = 13; actual = toTime_13.hours; };
 }
 
 shared test void testMinusHours() {
-    assertEquals( midnight.minusHours(15), time( 9, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.minusHours(20), time( 18, 20, 7, 59 ) );
+    assertEquals { expected = midnight.minusHours(15); actual = time( 9, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.minusHours(20); actual = time( 18, 20, 7, 59 ); };
 
-    assertEquals( time( 9, 0, 0, 0 ).minusHours(28), time( 5, 0, 0, 0 ) );
+    assertEquals { expected = time( 9, 0, 0, 0 ).minusHours(28); actual = time( 5, 0, 0, 0 ); };
 
     value time_5 = time(09, 08, 07, 0050).minusHours(28); 
-    assertEquals( 5, time_5.hours);
+    assertEquals { expected = 5; actual = time_5.hours; };
 }
 
 shared test void testPlusMinutes() {
-    assertEquals( time( 0, 15, 0, 0 ), midnight.plusMinutes(15) );
-    assertEquals( time( 15, 0, 7, 59 ), time_14h_20m_07s_59ms.plusMinutes(40) );
+    assertEquals { expected = time( 0, 15, 0, 0 ); actual = midnight.plusMinutes(15); };
+    assertEquals { expected = time( 15, 0, 7, 59 ); actual = time_14h_20m_07s_59ms.plusMinutes(40); };
 }
 
 shared test void testMinusMinutes() {
-    assertEquals( time( 23, 45, 0, 0 ), midnight.minusMinutes(15) );
-    assertEquals( time( 13, 59, 7, 59 ), time_14h_20m_07s_59ms.minusMinutes(21) );
+    assertEquals { expected = time( 23, 45, 0, 0 ); actual = midnight.minusMinutes(15); };
+    assertEquals { expected = time( 13, 59, 7, 59 ); actual = time_14h_20m_07s_59ms.minusMinutes(21); };
 }
 
 shared test void testPlusSeconds() {
-    assertEquals( midnight.plusSeconds(15), time( 0, 0, 15, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.plusSeconds(54), time( 14, 21, 1, 59 ) );
+    assertEquals { expected = midnight.plusSeconds(15); actual = time( 0, 0, 15, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.plusSeconds(54); actual = time( 14, 21, 1, 59 ); };
 }
 
 shared test void testMinusSeconds() {
-    assertEquals( midnight.minusSeconds(15), time( 23, 59, 45, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.minusSeconds(21), time( 14, 19, 46, 59 ) );
+    assertEquals { expected = midnight.minusSeconds(15); actual = time( 23, 59, 45, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.minusSeconds(21); actual = time( 14, 19, 46, 59 ); };
 }
 
 shared test void testPlusMilliseconds() {
-    assertEquals( time( 0, 0, 0, 20 ), midnight.plusMilliseconds( 20 ) );
-    assertEquals( time( 14, 20, 8, 0 ), time_14h_20m_07s_59ms.plusMilliseconds( 941 ) );
+    assertEquals { expected = time( 0, 0, 0, 20 ); actual = midnight.plusMilliseconds( 20 ); };
+    assertEquals { expected = time { hours = 14; minutes = 20; seconds = 8; milliseconds = 0; }; actual = time_14h_20m_07s_59ms.plusMilliseconds( 941 ); };
 }
 
 shared test void testMinusMilliseconds() {
-    assertEquals( midnight.minusMilliseconds( 20 ), time( 23, 59, 59, 980 ) );
+    assertEquals { expected = midnight.minusMilliseconds( 20 ); actual = time( 23, 59, 59, 980 ); };
     //assertEquals( time_14h_20m_07s_59ms.minusMilliseconds( 941 ), time( 14, 20, 6, 118 ) );
 }
 
-shared test void testWithHours30() {
-    try {
-        midnight.withHours( 30 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Hours value should be between 0 and 23"));
-    }
-}
+shared test void testWithHours30()
+        => assertThatException(() => midnight.withHours( 30 ))
+            .hasMessage((String message) => message.contains("Hours value should be between 0 and 23"));
 
-shared test void testWithHoursNegative() {
-    try {
-        midnight.withHours( -1 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Hours value should be between 0 and 23"));
-    }
-}
+shared test void testWithHoursNegative()
+        => assertThatException(() => midnight.withHours( -1 ))
+            .hasMessage((String message) => message.contains("Hours value should be between 0 and 23"));
 
 shared test void testWithHours() {
-    assertEquals( midnight.withHours( 20 ), time( 20, 0, 0, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.withHours( 2 ), time( 2, 20, 7, 59 ) );
+    assertEquals { expected = midnight.withHours( 20 ); actual = time( 20, 0, 0, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.withHours( 2 ); actual = time( 2, 20, 7, 59 ); };
 }
 
-shared test void testWithMinutesNegative() {
-    try {
-        midnight.withMinutes( -1 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Minutes value should be between 0 and 59"));
-    }
-}
+shared test void testWithMinutesNegative()
+        => assertThatException(() => midnight.withMinutes( -1 ))
+            .hasMessage((String message) => message.contains("Minutes value should be between 0 and 59"));
 
-shared test void testWithMinutes60() {
-    try {
-        midnight.withMinutes( 60 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Minutes value should be between 0 and 59"));
-    }
-}
+shared test void testWithMinutes60()
+        => assertThatException(() => midnight.withMinutes( 60 ))
+            .hasMessage((String message) => message.contains("Minutes value should be between 0 and 59"));
 
 shared test void testWithMinutes() {
-    assertEquals( midnight.withMinutes( 20 ), time( 0, 20, 0, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.withMinutes( 2 ), time( 14, 2, 7, 59 ) );
+    assertEquals { expected = midnight.withMinutes( 20 ); actual = time( 0, 20, 0, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.withMinutes( 2 ); actual = time( 14, 2, 7, 59 ); };
 }
 
-shared test void testWithSecondsNegative() {
-    try {
-        midnight.withSeconds( -1 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Seconds value should be between 0 and 59"));
-    }
-}
+shared test void testWithSecondsNegative()
+        => assertThatException(() => midnight.withSeconds( -1 ))
+            .hasMessage((String message) => message.contains("Seconds value should be between 0 and 59"));
 
-shared test void testWithSeconds60() {
-    try {
-        midnight.withSeconds( 60 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Seconds value should be between 0 and 59"));
-    }
-}
+shared test void testWithSeconds60()
+        => assertThatException(() => midnight.withSeconds( 60 ))
+            .hasMessage((String message) => message.contains("Seconds value should be between 0 and 59"));
 
 shared test void testWithSeconds() {
-    assertEquals( midnight.withSeconds( 20 ), time( 0, 0, 20, 0 ) );
-    assertEquals( time_14h_20m_07s_59ms.withSeconds( 2 ), time( 14, 20, 2, 59 ) );
+    assertEquals { expected = midnight.withSeconds( 20 ); actual = time( 0, 0, 20, 0 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.withSeconds( 2 ); actual = time( 14, 20, 2, 59 ); };
 }
 
-shared test void testWithMillisecondsNegative() {
-    try {
-        midnight.withMilliseconds( -1 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Milliseconds value should be between 0 and 999"));
-    }
-}
+shared test void testWithMillisecondsNegative()
+        => assertThatException(() => midnight.withMilliseconds( -1 ))
+            .hasMessage((String message) => message.contains("Milliseconds value should be between 0 and 999"));
 
-shared test void testWithMilliseconds1000() {
-    try {
-        midnight.withMilliseconds( 1000 );
-        fail("Should throw exception...");
-    } catch( AssertionError e ) {
-        assertTrue(e.message.contains("Milliseconds value should be between 0 and 999"));
-    }
-}
+shared test void testWithMilliseconds1000()
+        => assertThatException(() => midnight.withMilliseconds( 1000 ))
+            .hasMessage((String message) => message.contains("Milliseconds value should be between 0 and 999"));
 
 shared test void testWithMilliseconds() {
-    assertEquals( midnight.withMilliseconds( 20 ), time( 0, 0, 0, 20 ) );
-    assertEquals( time_14h_20m_07s_59ms.withMilliseconds( 2 ), time( 14, 20, 7, 2 ) );
+    assertEquals { expected = midnight.withMilliseconds( 20 ); actual = time( 0, 0, 0, 20 ); };
+    assertEquals { expected = time_14h_20m_07s_59ms.withMilliseconds( 2 ); actual = time( 14, 20, 7, 2 ); };
 }
 
 shared test void testPredecessor_Time() {
-    assertEquals( midnight.predecessor, time(23,59,59,999) ); 
+    assertEquals { expected = midnight.predecessor; actual = time(23,59,59,999); }; 
 }
 
 shared test void testSuccessor_Time() {
-    assertEquals( midnight.successor, time(0,0,0,001) ); 
+    assertEquals { expected = midnight.successor; actual = time(0,0,0,001); }; 
 }
 
 shared test void testString_Time() {
-    assertEquals( midnight.string, "00:00:00.000");
-    assertEquals( time_14h_20m_07s_59ms.string, "14:20:07.059");
+    assertEquals { expected = midnight.string; actual = "00:00:00.000"; };
+    assertEquals { expected = time_14h_20m_07s_59ms.string; actual = "14:20:07.059"; };
 }
 
-shared test void testPeriodFrom_Time() {
-    Period period = Period{ hours = 9; minutes = 59; seconds = 50; milliseconds = 100;};
-    Time from = time(10, 30, 20, 500);
-    Time to = time(20,30, 10, 600);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFrom_TimeNegative() {
-    Period period = Period{ hours = -9; minutes = -59; seconds = -50; milliseconds = -100;};
-    Time from = time(20,30, 10, 600);
-    Time to = time(10, 30, 20, 500);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromHour_Time() {
-    Period period = Period{ hours = 2;};
-    Time from = time(18, 0);
-    Time to = time(20,0);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromHour_TimeNegative() {
-    Period period = Period{ hours = -2;};
-    Time from = time(20,0);
-    Time to = time(18, 0);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromMinSec_Time() {
-    Period period = Period{ hours = 9; minutes = 59; seconds = 59; milliseconds = 900;};
-    Time from = time(10, 0, 0, 600);
-    Time to = time(20, 0, 0, 500);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromMinSec_TimeNegative() {
-    Period period = Period{ hours = -9; minutes = -59; seconds = -59; milliseconds = -900;};
-    Time from = time(20, 0, 0, 500);
-    Time to = time(10, 0, 0, 600);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromMinuteBefore() {
-    Period period = Period{ hours = 9; minutes = 50; };
-    Time from = time(10, 20);
-    Time to = time(20, 10);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromMinuteBeforeNegative() {
-    Period period = Period{ hours = -9; minutes = -50; };
-    Time from = time(20, 10);
-    Time to = time(10, 20);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromSecondBefore() {
-    Period period = Period{ minutes = 9; seconds = 50; };
-    Time from = time(20, 10, 50);
-    Time to = time(20, 20, 40);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromSecondBeforeNegative() {
-    Period period = Period{ minutes = -9; seconds = -50; };
-    Time from = time(20, 20, 40);
-    Time to = time(20, 10, 50);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromMillisecondBefore() {
-    Period period = Period{ seconds = 9; milliseconds = 900; };
-    Time from = time(20, 20, 40, 500);
-    Time to = time(20, 20, 50, 400);
-    assertFromToTime(period, from, to);
-}
-
-shared test void testPeriodFromMillisecondBeforeNegative() {
-    Period period = Period{ seconds = -9; milliseconds = -900; };
-    Time from = time(20, 20, 50, 400);
-    Time to = time(20, 20, 40, 500);
-    assertFromToTime(period, from, to);
+[[Period, Time, Time]*] periodTests = [
+    [Period{ hours = 9; minutes = 59; seconds = 50; milliseconds = 100;}, time(10, 30, 20, 500), time(20,30, 10, 600)],
+    [Period{ hours = -9; minutes = -59; seconds = -50; milliseconds = -100;}, time(20,30, 10, 600), time(10, 30, 20, 500)],
+    [Period{ hours = 2;}, time(18, 0), time(20,0)],
+    [Period{ hours = -2;}, time(20,0), time(18, 0)],
+    [Period{ hours = 9; minutes = 59; seconds = 59; milliseconds = 900;}, time(10, 0, 0, 600), time(20, 0, 0, 500)],
+    [Period{ hours = -9; minutes = -59; seconds = -59; milliseconds = -900;}, time(20, 0, 0, 500), time(10, 0, 0, 600)],
+    [Period{ hours = 9; minutes = 50; }, time(10, 20),  time(20, 10)],
+    [Period{ hours = -9; minutes = -50; }, time(20, 10), time(10, 20)],
+    [Period{ minutes = 9; seconds = 50; }, time(20, 10, 50), time(20, 20, 40)],
+    [Period{ minutes = -9; seconds = -50; }, time(20, 20, 40), time(20, 10, 50)],
+    [Period{ seconds = 9; milliseconds = 900; }, time(20, 20, 40, 500), time(20, 20, 50, 400)],
+    [Period{ seconds = -9; milliseconds = -900; }, time(20, 20, 50, 400), time(20, 20, 40, 500)]
+];
+parameters (`value periodTests`)
+shared test void testPeriod(Period period, Time from, Time to) {
+    assertEquals{
+        expected = period;
+        actual = to.periodFrom( from );
+    };
+    assertEquals{
+        expected = period;
+        actual = from.periodTo( to );
+    };
+    
+    assertEquals {
+        expected = to;
+        actual = from.plus(period);
+    };
+    assertEquals {
+        expected = from;
+        actual = to.minus(period);
+    };
 }
 
 shared test void testEnumerableTime() {
-    assertEquals(time_14h_20m_07s_59ms.offset(time_14h_20m_07s_59ms), 0);
-    assertEquals(time_14h_20m_07s_59ms.successor.offset(time_14h_20m_07s_59ms), 1);
-    assertEquals(time_14h_20m_07s_59ms.predecessor.offset(time_14h_20m_07s_59ms), - 1);
+    assertEquals { expected = 0; actual = time_14h_20m_07s_59ms.offset(time_14h_20m_07s_59ms); };
+    assertEquals { expected = 1; actual = time_14h_20m_07s_59ms.successor.offset(time_14h_20m_07s_59ms); };
+    assertEquals { expected = - 1; actual = time_14h_20m_07s_59ms.predecessor.offset(time_14h_20m_07s_59ms); };
 }
 
 shared test void testEqualsAndHashTime() {
@@ -337,20 +249,6 @@ shared test void testEqualsAndHashTime() {
     assertFalse(instanceA_2 == instanceB_1);
     assertFalse(instanceA_1.hash == instanceB_1.hash);
     assertFalse(instanceA_2.hash == instanceB_1.hash);
-}
-
-void assertFromToTime( Period period, Time from, Time to ) {
-    assertEquals{
-      expected = period;
-      actual = to.periodFrom( from );
-    };
-    assertEquals{
-      expected = period;
-      actual = from.periodTo( to );
-    };
-
-    assertEquals(to, from.plus(period));
-    assertEquals(from, to.minus(period));
 }
 
 shared void assertTime( Integer hour = 0, Integer minute = 0, Integer second = 0, Integer milli = 0, Integer secondsOfDay = 0, Integer minutesOfDay = 0) {
