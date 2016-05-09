@@ -36,8 +36,6 @@ public final class Util {
         if ($reifiedT instanceof TypeDescriptor.Class) {
             TypeDescriptor.Class klass = 
                     (TypeDescriptor.Class) $reifiedT;
-            if (klass.getTypeArguments().length > 0)
-                throw new RuntimeException("given type has type arguments");
             // this is already erased
             return (java.lang.Class<T>) klass.getArrayElementClass();
         } 
@@ -48,8 +46,6 @@ public final class Util {
             if (m instanceof TypeDescriptor.Class) {
                 TypeDescriptor.Member.Class klass = 
                         (TypeDescriptor.Class) m;
-                if (klass.getTypeArguments().length > 0)
-                    throw new RuntimeException("given type has type arguments");
                 return (java.lang.Class<T>) klass.getKlass();
             }
         }
