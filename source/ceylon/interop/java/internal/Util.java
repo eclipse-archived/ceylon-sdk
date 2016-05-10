@@ -4,6 +4,7 @@ import com.redhat.ceylon.compiler.java.metadata.Ceylon;
 import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.Name;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
+import com.redhat.ceylon.compiler.java.runtime.metamodel.Metamodel;
 import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDeclarationImpl;
 import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
 
@@ -33,23 +34,11 @@ public final class Util {
     @SuppressWarnings("unchecked")
     public <T> java.lang.Class<T> 
     javaClass(@Ignore TypeDescriptor $reifiedT) {
-        if ($reifiedT instanceof TypeDescriptor.Class) {
-            TypeDescriptor.Class klass = 
-                    (TypeDescriptor.Class) $reifiedT;
-            // this is already erased
-            return (java.lang.Class<T>) klass.getArrayElementClass();
-        } 
-        else if ($reifiedT instanceof TypeDescriptor.Member) {
-            TypeDescriptor.Member member = 
-                    (TypeDescriptor.Member) $reifiedT;
-            TypeDescriptor m = member.getMember();
-            if (m instanceof TypeDescriptor.Class) {
-                TypeDescriptor.Member.Class klass = 
-                        (TypeDescriptor.Class) m;
-                return (java.lang.Class<T>) klass.getKlass();
-            }
+        java.lang.Class<T> result = (java.lang.Class)Metamodel.getJavaClass($reifiedT);
+        if (result != null) {
+            return result;
         }
-        throw new ceylon.language.AssertionError("unsupported type");
+        throw new ceylon.language.AssertionError("unsupported type: '" + $reifiedT + "' cannot be represented by a java.lang.Class");
     }
     
     @SuppressWarnings("unchecked")
