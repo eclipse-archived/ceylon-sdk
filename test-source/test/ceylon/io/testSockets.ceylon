@@ -16,7 +16,7 @@ import ceylon.buffer.charset {
     utf8,
     ascii
 }
-import ceylon.net.uri {
+import ceylon.uri {
     parse
 }
 import ceylon.test {

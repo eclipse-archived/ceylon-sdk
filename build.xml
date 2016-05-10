@@ -68,7 +68,10 @@
             <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
-            <module name="ceylon.net"/>
+            <module name="ceylon.http.common"/>
+            <module name="ceylon.http.client"/>
+            <module name="ceylon.http.server"/>
+            <module name="ceylon.uri"/>
             <module name="ceylon.numeric"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
@@ -113,7 +116,10 @@
             <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
-            <module name="ceylon.net"/>
+            <module name="ceylon.http.common"/>
+            <module name="ceylon.http.client"/>
+            <module name="ceylon.http.server"/>
+            <module name="ceylon.uri"/>
             <module name="ceylon.numeric"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
@@ -135,7 +141,9 @@
             <module name="test.ceylon.file"/>
             <module name="test.ceylon.io"/>
             <module name="test.ceylon.json"/>
-            <module name="test.ceylon.net"/>
+            <module name="test.ceylon.uri"/>
+            <module name="test.ceylon.http.client"/>
+            <module name="test.ceylon.http.server"/>
             <module name="test.ceylon.numeric"/>
             <module name="test.ceylon.process"/>
             <module name="test.ceylon.promise"/>

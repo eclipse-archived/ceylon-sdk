@@ -12,7 +12,7 @@ import ceylon.html.internal {
        value builder = StringBuilder();
        renderTemplate(html, builder.append);
      
-   Example: render template as response of `ceylon.net` server
+   Example: render template as response of `ceylon.http.server` server
    
        value server = newServer {
            Endpoint {

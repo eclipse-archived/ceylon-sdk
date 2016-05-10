@@ -21,7 +21,7 @@
    
    #### <a name="what"></a> WHAT DOES IT LOOK LIKE?
    
-   A quick preview shows code example, which starts HTTP server, see module `ceylon.net`, 
+   A quick preview shows code example, which starts HTTP server, see module `ceylon.http.server`, 
    and on each request returns simple HTML5 document with obligatory greeting. Note that 
    the module is not tied with any web framework, it can be used anywhere.
    
