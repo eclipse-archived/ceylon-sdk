@@ -126,7 +126,7 @@ shared Uri parse(String uri) {
     }
 
     {Parameter*} parsePathSegmentParameters(String part)
-        =>  [ for(param in part.split((Character ch) => ch == ';', true, false))
+        =>  [ for(param in part.split { ';'.equals; groupSeparators = false; })
                 parseParameter(param) ];
 
     "Parse a raw (percent-encoded) segment, with optional
@@ -162,7 +162,7 @@ shared Uri parse(String uri) {
             remains = "";
         }
         if(!pathPart.empty) { // else, use default `path` already initialized
-            value parts = pathPart.split((Character ch) => ch == '/', true, false).sequence();
+            value parts = pathPart.split { '/'.equals; groupSeparators = false; }.sequence();
             value absolute = parts.first?.empty else false;
             path = Path {
                 absolute = absolute;
@@ -177,7 +177,7 @@ shared Uri parse(String uri) {
 
     Query parseQueryPart(String queryPart)
         =>  Query {
-                parameters = queryPart.split((Character ch) => ch == '&', true, false)
+                parameters = queryPart.split { '&'.equals; groupSeparators = false; }
                                       .collect(parseParameter);
             };
 
