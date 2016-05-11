@@ -1,6 +1,3 @@
-import ceylon.collection {
-    LinkedList
-}
 "Parses a raw percent-encoded path parameter"
 shared Parameter parseParameter(String part) {
     Integer? sep = part.firstOccurrence('=');
@@ -128,13 +125,9 @@ shared Uri parse(String uri) {
         return remains;
     }
 
-    {Parameter*} parsePathSegmentParameters(String part) {
-        value list = LinkedList<Parameter>();
-        for(param in part.split((Character ch) => ch == ';', true, false)) {
-            list.add(parseParameter(param));
-        }
-        return list;
-    }
+    {Parameter*} parsePathSegmentParameters(String part)
+        =>  [ for(param in part.split((Character ch) => ch == ';', true, false))
+                parseParameter(param) ];
 
     "Parse a raw (percent-encoded) segment, with optional
      parameters to be parsed"
@@ -168,33 +161,25 @@ shared Uri parse(String uri) {
             pathPart = uri;
             remains = "";
         }
-        LinkedList<PathSegment>? segments;
         if(!pathPart.empty) { // else, use default `path` already initialized
-            segments = LinkedList<PathSegment>();
-            assert (exists segments);
-            variable Boolean first = true;
-            variable Boolean absolute = false;
-            for(String part in pathPart.split((Character ch) => ch == '/', true, false)) {
-                if(first && part.empty) {
-                    absolute = true;
-                    first = false;
-                    continue;
-                }
-                first = false;
-                segments.add(parseRawPathSegment(part));
-            }
-            path = Path(absolute, *segments);
+            value parts = pathPart.split((Character ch) => ch == '/', true, false).sequence();
+            value absolute = parts.first?.empty else false;
+            path = Path {
+                absolute = absolute;
+                segments = if (absolute)
+                           then parts.rest.collect(parseRawPathSegment)
+                           else parts.collect(parseRawPathSegment);
+            };
         }
+
         return remains;
     }
 
-    Query parseQueryPart(String queryPart) {
-        value list = LinkedList<Parameter>();
-        for(param in queryPart.split((Character ch) => ch == '&', true, false)) {
-            list.add(parseParameter(param));
-        }
-        return Query(*list);
-    }
+    Query parseQueryPart(String queryPart)
+        =>  Query {
+                parameters = queryPart.split((Character ch) => ch == '&', true, false)
+                                      .collect(parseParameter);
+            };
 
     String parseQuery(String uri) {
         Character? c = uri[0];
