@@ -32,6 +32,29 @@ shared interface Date
 
     "Returns the [[DateRange]] between this and given [[Date]]."
     shared formal DateRange rangeTo( Date other );
+    
+    "Checks if this date is equal to another date.\n
+     Compares this Date with another ensuring that the date both objects refer to is the same."
+    shared actual default Boolean equals(Object other) {
+        if (is Date other) {
+            return    year == other.year 
+                   && month == other.month 
+                   && day == other.day;
+        }
+        return false;
+    }
+    
+    "Implementation compatible with [[equals]] method.\n
+     This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual default Integer hash {
+        value prime = 31;
+        variable value total = 7;
+        
+        total = prime * total + year;
+        total = prime * total + month.integer;
+        total = prime * total + day;
+        return total;
+    }
 
 }
 

@@ -4,7 +4,7 @@ import ceylon.time.internal.math { floorMod }
 
 "Basic implementation of [[Time]] interface, representing an abstract 
  _time of day_ such as _10am_ or _3.20pm_ with a precision of milliseconds."
-shared class TimeOfDay(millisecondsOfDay) satisfies Time {
+shared class TimeOfDay(millisecondsOfDay) extends Object() satisfies Time {
 
     "Number of milliseconds since last midnight."
     shared actual Integer millisecondsOfDay;
@@ -150,21 +150,6 @@ shared class TimeOfDay(millisecondsOfDay) satisfies Time {
         }
 
         return time(hours, minutes, seconds, milliseconds);
-    }
-
-    "Return _true_ if it have same type and milliseconds of day."
-    shared actual Boolean equals( Object other ) {
-        if ( is TimeOfDay other ) {
-            return millisecondsOfDay == other.millisecondsOfDay;
-        }
-        return false;
-    }
-
-    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
-    shared actual Integer hash {
-        value prime = 31;
-        value result = 3;
-        return prime * result + millisecondsOfDay.hash;
     }
 
     "Returns the period between this and the given time.\n
