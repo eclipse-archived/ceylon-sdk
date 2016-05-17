@@ -12,6 +12,9 @@ shared void parseIso8601Tests() {}
 
 shared class ParseISO8601DateTest() {
 
+    /*
+     * Happy cases
+     */
     value expect2014December29 = shuffle(curry(assertEquals))(date(2014, 12, 29));
 
     test shared void it_parses_YYYYMMDD_formatted_date()
@@ -31,6 +34,17 @@ shared class ParseISO8601DateTest() {
 
     test shared void it_parses_YYYY_DDD_formatted_date()
             => expect2014December29(parseDate("2014-363"));
+
+    /*
+     * Failure modes
+     */
+
+    test shared void fail_YYYYMMDD_on_invalid_month_number()
+            => assertNull(parseDate("05042016"));
+     
+    test shared void fail_YYYY_MM_DD_on_invalid_month_number()
+            => assertNull(parseDate("0504-20-16"));
+     
 }
 
 shared class ParseIso8601TimeTest() {
