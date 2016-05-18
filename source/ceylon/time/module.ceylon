@@ -4,5 +4,4 @@
  "
 by ("Diego Coronel", "Roland Tepp")
 module ceylon.time "1.2.3" {
-    import ceylon.collection "1.2.3";
 }
