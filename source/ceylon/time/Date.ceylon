@@ -59,11 +59,9 @@ shared interface Date
 }
 
 "Returns current date according to the provided system clock and time zone."
-shared Date today(Clock clock = systemTime, TimeZone timeZone = tz.system){
-    return clock.instant().date(timeZone);
-}
+shared Date today(Clock clock = systemTime, TimeZone timeZone = tz.system) => clock.instant().date(timeZone);
+
 
 "Returns a date based on the specified year, month and day of month values."
-shared Date date(Integer year, Integer|Month month, Integer day){
-    return gregorianDate(year, month, day);
-}
+shared Date date(Integer year, Integer|Month month, Integer day) => gregorianDate(year, month, day);
+

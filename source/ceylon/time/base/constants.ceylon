@@ -29,11 +29,13 @@ shared object years satisfies UnitOfYear {
 shared object months satisfies UnitOfMonth {
 
     "Ordered list of all months of Gregorian and Julian calendar system from January to December."
-    shared Month[] all = [january, february, march, april, may, june, july, august, september, october, november, december];
+    shared Month[] all = `Month`.caseValues;
 
     "Number of months per year."
-    shared Integer perYear = all.size;
+    shared Integer perYear = 12;
 
+    "Returns month with the specified ordinal number or `null` if provided number is not a valid month number."
+    shared Month? valueOf(Integer number) => all[number - 1];
 }
 
 "Common properties and constraints of _day_ unit."
@@ -44,7 +46,7 @@ shared object days satisfies UnitOfDay {
 
     "Number of days per leap year."
     shared Integer perLeapYear => 366;
-
+    
     "Returns the number of days per month."
     shared Integer perMonth(Month month, Boolean leapYear=false) => month.numberOfDays(leapYear);
 
