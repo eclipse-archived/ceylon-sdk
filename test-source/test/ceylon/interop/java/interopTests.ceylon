@@ -207,3 +207,45 @@ test void ceylonRunnableThread() {
     t2.join();
     assertEquals { expected = 2; actual = i; };
 }
+
+test void mutableListRemoveWhere() {
+    value javaList = ArrayList<Integer>(JavaCollection(1..10));
+    value ceylonList = CeylonMutableList(javaList);
+
+    assertEquals(ceylonList.removeWhere(Integer.even), 5);
+    assertEquals(ceylonList, [1, 3, 5, 7, 9]);
+
+    assertEquals(ceylonList.removeWhere((i) => false), 0);
+    assertEquals(ceylonList, [1, 3, 5, 7, 9]);
+
+    javaList.clear();
+    assertEquals(ceylonList.removeWhere((i) => true), 0);
+}
+
+test void mutableListRemoveFirst() {
+    value javaList = ArrayList<Integer>(JavaCollection(1..10));
+    value ceylonList = CeylonMutableList(javaList);
+
+    assertEquals(ceylonList.findAndRemoveFirst(Integer.even), 2);
+    assertEquals(ceylonList, [1, *(3..10)]);
+
+    assertEquals(ceylonList.findAndRemoveFirst((i) => false), null);
+    assertEquals(ceylonList, [1, *(3..10)]);
+
+    javaList.clear();
+    assertEquals(ceylonList.findAndRemoveFirst((i) => true), null);
+}
+
+test void mutableListRemoveLast() {
+    value javaList = ArrayList<Integer>(JavaCollection(1..5));
+    value ceylonList = CeylonMutableList(javaList);
+
+    assertEquals(ceylonList.findAndRemoveLast(Integer.even), 4);
+    assertEquals(ceylonList, [1, 2, 3, 5]);
+
+    assertEquals(ceylonList.findAndRemoveLast((i) => false), null);
+    assertEquals(ceylonList, [1, 2, 3, 5]);
+
+    javaList.clear();
+    assertEquals(ceylonList.findAndRemoveLast((i) => true), null);
+}

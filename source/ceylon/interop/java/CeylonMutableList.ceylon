@@ -49,9 +49,12 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     
     shared actual Element? findAndRemoveFirst(
         Boolean selecting(Element element)) {
-        for (i in 0:size) {
-            if (selecting(list.get(i))) {
-                return list.remove(i);
+        value it = list.iterator();
+        while (it.hasNext()) {
+            value item = it.next();
+            if (selecting(item)) {
+                it.remove();
+                return item;
             }
         }
         return null;
@@ -59,9 +62,12 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     
     shared actual Element? findAndRemoveLast(
         Boolean selecting(Element element)) {
-        for (i in (0:size).reversed) {
-            if (selecting(list.get(i))) {
-                return list.remove(i);
+        value it = list.listIterator(list.size());
+        while (it.hasPrevious()) {
+            value item = it.previous();
+            if (selecting(item)) {
+                it.remove();
+                return item;
             }
         }
         return null;
@@ -70,9 +76,10 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     shared actual Integer removeWhere(
         Boolean selecting(Element element)) {
         variable Integer count = 0;
-        for (i in 0:size) {
-            if (selecting(list.get(i))) {
-                list.remove(i);
+        value it = list.iterator();
+        while (it.hasNext()) {
+            if (selecting(it.next())) {
+                it.remove();
                 count++;
             }
         }
