@@ -5,6 +5,10 @@ import ceylon.language {
     LangObject=Object
 }
 
+"Alternative name for [[Array]] which avoids collision with
+ ceylon.language::Array."
+shared class JsonArray({Value*} values) => Array(values);
+
 "Represents a JSON Array"
 by("Stéphane Épardaud")
 shared class Array({Value*} values = {}) 

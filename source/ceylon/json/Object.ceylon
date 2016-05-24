@@ -5,6 +5,10 @@ import ceylon.language {
     LangObject=Object
 }
 
+"Alternative name for [[Object]] which avoids collision with
+ ceylon.language::Object."
+shared class JsonObject({<String->Value>*} values) => Object(values);
+
 "Represents a JSON Object"
 by("Stéphane Épardaud")
 shared class Object({<String->Value>*} values = {}) 
