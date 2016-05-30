@@ -534,8 +534,9 @@ shared {String*} graphemes(
 
 "The words and punctuation contained in the given 
  [[string|text]], according to the rules of the given 
- [[locale|tag]]. Any nonwhitespace character not contained 
- in a word is treated as a whole word."
+ [[locale|tag]]. Any non-whitespace character not contained 
+ in a word is treated as a whole word. All whitespace 
+ characters are discarded."
 shared {String*} words(
     "The string"
     String text, 
