@@ -23,6 +23,26 @@ shared interface ZoneDateTime
      **Note:** The resulting [[DateTime]], is a local representation of 
      this date and time stripped of any time zone information."
     shared formal DateTime dateTime;
+    
+    "Returns _true_ if given value is same date, time and timezone."
+    shared actual Boolean equals( Object other ) {
+        if (is ZoneDateTime other) {
+            return instant  == other.instant 
+                && timeZone == other.timeZone;
+        }
+        return false;
+    }
+    
+    "Implementation compatible with [[equals]] method.\n
+     This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 21;
+        result = prime * result + instant.hash;
+        result = prime * result + timeZone.hash;
+        return result;
+    }
+    
 }
 
 "Returns a [[ZoneDateTime]] based on the specified [[TimeZone]], year, month, day of month, hour, minute, second and millisecond values."
