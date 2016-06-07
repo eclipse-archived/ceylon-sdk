@@ -75,7 +75,7 @@
    ```
    
    Or it is possible to execute custom code, which will be executed only once 
-   [[before/beforeTestRun]] or [[after|afterTestRun]] whole test run.
+   [[before|beforeTestRun]] or [[after|afterTestRun]] whole test run.
    
     ```
     beforeTestRun
