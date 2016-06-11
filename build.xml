@@ -82,6 +82,7 @@
             <module name="ceylon.transaction"/>
             <module name="ceylon.unicode"/>
             <module name="ceylon.whole"/>
+            <module name="ceylon.wrapper_type"/>
             <module name="com.redhat.ceylon.war"/>
         </moduleset>
 
@@ -100,6 +101,7 @@
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
             <module name="ceylon.whole"/>
+            <module name="ceylon.wrapper_type"/>
         </moduleset>
 	
         <moduleset id="modules.sdk.doc">
@@ -130,6 +132,7 @@
             <module name="ceylon.transaction"/>
             <module name="ceylon.unicode"/>
             <module name="ceylon.whole"/>
+            <module name="ceylon.wrapper_type"/>
             <module name="com.redhat.ceylon.war"/>
         </moduleset>
 
@@ -160,6 +163,7 @@
             <module name="test.ceylon.transaction"/>
             <module name="test.ceylon.whole.common"/>
             <module name="test.ceylon.whole.jvm"/>
+            <module name="test.ceylon.wrapper_type"/>
         </moduleset>
 
         <moduleset id="modules.test.js">
@@ -175,6 +179,7 @@
             <module name="test.ceylon.locale"/>
             <module name="test.ceylon.regex"/>
             <module name="test.ceylon.whole.common"/>
+            <module name="test.ceylon.wrapper_type"/>
         </moduleset>
     </target>
     
