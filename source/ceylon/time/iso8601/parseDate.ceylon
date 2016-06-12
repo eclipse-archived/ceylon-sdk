@@ -34,7 +34,7 @@ shared Date? parseDate(String input) {
         if (dashes == [4,7],
             exists year  = parseYear(input[0..3]),
             exists month = parseMonth(input[5..6]),
-            exists day   = parseInteger(input[8..9])) {
+            exists day   = parseDayOfMonth(input[8..9], year, month)) {
             
             return date(year, month, day);
         }
@@ -90,6 +90,7 @@ Month? parseMonth(String string) =>
         exists month = months.valueOf(integer))
     then month else null;
 
-Integer parseDay(String string, Integer year, Month month) =>
-    if (exists integer = parseInteger(string), 
-        1 <= integer <= month.numberOfDays())
+Integer? parseDayOfMonth(String string, Integer year, Month month) =>
+    if (exists day = parseInteger(string), 
+        1 <= day <= month.numberOfDays())
+    then day else null;
