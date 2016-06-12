@@ -213,3 +213,30 @@ shared class ParseIso8601PeriodTest() {
     test shared void fail_on_unknown_designator() => assertNull( parsePeriod( "P3G" ) );
     
 }
+
+shared class Bug583() {
+    test shared void it_parses_700_milliseconds() => assertEquals {
+        actual = parseDateTime("20160611T123456.7");
+        expected = dateTime(2016, 06, 11, 12, 34, 56, 700);
+    };
+
+    test shared void it_parses_fractional_hours_025() => assertEquals {
+        actual = parseDateTime("20160611T10.025");
+        expected = dateTime(2016, 06, 11, 10, 01, 30, 000);
+    };
+
+    test shared void it_parses_fractional_hours_01() => assertEquals {
+        actual = parseDateTime("20160611T10.01");
+        expected = dateTime(2016, 06, 11, 10, 00, 36, 000);
+    };
+
+    test shared void it_parses_fractional_minutes() => assertEquals {
+        actual = parseDateTime("20160611T1030.01");
+        expected = dateTime(2016, 06, 11, 10, 30, 00, 600);
+    };
+
+    test shared void it_parses_fractional_minutes_with_colons() => assertEquals {
+        actual = parseDateTime("20160611T10:30.01");
+        expected = dateTime(2016, 06, 11, 10, 30, 00, 600);
+    };
+}

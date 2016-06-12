@@ -3,8 +3,7 @@ import ceylon.time {
     time
 }
 import ceylon.time.base {
-    minutes,
-    seconds
+    milliseconds
 }
 
 """The [[Time]] value of the given [[string representation|String]] 
@@ -27,7 +26,7 @@ import ceylon.time.base {
    """
 shared Time? parseTime(String input) => convertToTime(parseTimeComponents(input));
 
-shared Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
+Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
     if (exists [hh, mm, ss, sss] = timeComponents) {
         if ([24, 00, 00, 000] == [hh, mm, ss, sss]) {
             return time(00, 00);
@@ -41,15 +40,31 @@ shared Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents)
 
 [Integer, Integer, Integer, Integer]? parseTimeComponents(String input) {
     function calculateFraction(Integer magnitude, String fractionPart) 
-            => if (fractionPart.empty)
-               then 00 else let (Float? fraction = parseFloat("0."+fractionPart))
+            => if (fractionPart.empty) then 00
+               else let (Float? fraction = parseFloat("0." + fractionPart))
                     if (exists fraction) then (magnitude * fraction).integer else null;
 
     function parseMilliseconds(String fractionPart)
             => if (fractionPart.empty) then 000 
+               else if (fractionPart.size > 3) then null
                else if (exists sss = parseInteger(fractionPart)) 
-                        then sss else null;
+                        then sss * (10 ^ (3 - fractionPart.size))
+                        else null;
      
+    function fractionalHours(Integer hh, Integer ms)
+            => if (ms == 0)
+               then [hh, 00, 00, 000]
+               else let (value mm = ms / milliseconds.perMinute,
+                         value ss = (ms % milliseconds.perMinute) / milliseconds.perSecond,
+                         value sss = ms - (ss * milliseconds.perSecond) - (mm * milliseconds.perMinute))
+                    [hh, mm, ss, sss];
+    function fractionalMinutes(Integer hh, Integer mm, Integer ms)
+            => if (ms == 0) 
+               then [hh, mm, 00, 000]
+               else let (value ss = ms / milliseconds.perSecond,
+                         value sss = ms % milliseconds.perSecond)
+                    [hh, mm, ss, sss];
+    
     String timePart;
     String fractionPart;
     if (exists i = input.firstIndexWhere((c) => c in ['.', ','])) {
@@ -63,9 +78,9 @@ shared Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents)
     
     if (timePart.size == 2) {
         if (exists hh = parseInteger(timePart),
-            exists mm = calculateFraction(minutes.perHour, fractionPart)) {
-            
-            return [hh, mm, 00, 000];
+            exists ms = calculateFraction(milliseconds.perHour, fractionPart)) {
+
+            return fractionalHours(hh, ms);
         }
     }
     else if (timePart.size == 8) {
@@ -95,18 +110,18 @@ shared Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents)
             
             if (exists hh = parseInteger(timePart[0..1]),
                 exists mm = parseInteger(timePart[3..4]),
-                exists ss = calculateFraction(seconds.perMinute, fractionPart)) {
+                exists ms = calculateFraction(milliseconds.perMinute, fractionPart)) {
                 
-                return [hh, mm, ss, 000];
+                return fractionalMinutes(hh, mm, ms);
             }
         }
     }
     else if (timePart.size == 4) {
         if (exists hh = parseInteger(timePart[0..1]),
             exists mm = parseInteger(timePart[2..3]),
-            exists ss = calculateFraction(seconds.perMinute, fractionPart)) {
-            
-            return [hh, mm, ss, 000];
+            exists ms = calculateFraction(milliseconds.perMinute, fractionPart)) {
+
+            return fractionalMinutes(hh, mm, ms);
         }
     }
     return null;
