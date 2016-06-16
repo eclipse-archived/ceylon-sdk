@@ -65,31 +65,41 @@ shared class DefaultTestRunner(
     TestRunResult runInternal(Boolean async, void done(TestRunResult result)) {
         verifyCycle();
         
-        value result = DefaultTestRunResult();
-        value extensionResolver = DefaultTestExtensionResolver();
-        value context = TestExecutionContext.root(this, result, extensionResolver, async);
-        
         value beforeAfterTestRunCallbacksInvoker = BeforeAfterTestRunCallbacksInvoker(); 
-        value listeners = findAllListeners(extensionResolver).
-                chain(extensions.narrow<TestListener>()).
-                chain({beforeAfterTestRunCallbacksInvoker, result.listener}).
-                sort(increasing);
-        
+        value extensionResolver = DefaultTestExtensionResolver();
+        value result = DefaultTestRunResult();
+        value context = TestExecutionContext.root(this, result, extensionResolver, async);
         context.registerExtension(DefaultArgumentListResolver());
         context.registerExtension(DefaultTestInstanceProvider());
         context.registerExtension(DefaultTestVariantProvider());
         context.registerExtension(result.listener);
         context.registerExtension(*extensions);
         
+        variable {TestListener*} listeners = [];
+        try {
+            listeners = findAllListeners(extensionResolver).
+                    chain(extensions.narrow<TestListener>()).
+                    follow(beforeAfterTestRunCallbacksInvoker).
+                    follow(result.listener).
+                    sort(increasing);
+        }
+        catch(Exception e) {
+            context.fire().testError(TestErrorEvent(TestResult(TestDescription("error resolving listeners"), TestState.error, false, e)));
+            done(result);
+            return result;
+        }
+        
+        value fire = TestEventEmitter(listeners);        
+        
         context.execute(
             () => runningRunners.add(this),
-            () => TestEventEmitter(listeners).testRunStarted(TestRunStartedEvent(this, description)),
-            () => if( result.errorCount == 0 && result.failureCount == 0 ) 
+            () => fire.testRunStarted(TestRunStartedEvent(this, description)),
+            () => if( !result.isFailed )
                       then
                           context.execute({for(e in executors) () => e.execute(context)}) 
                       else 
                           noop,
-            () => TestEventEmitter(listeners).testRunFinished(TestRunFinishedEvent(this, result)),
+            () => fire.testRunFinished(TestRunFinishedEvent(this, result)),
             () => runningRunners.remove(this),
             () => done(result)
         );       

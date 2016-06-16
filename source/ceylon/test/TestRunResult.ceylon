@@ -4,6 +4,9 @@ shared interface TestRunResult {
     "Determine if all executed tests succeeded."
     shared formal Boolean isSuccess;
     
+    "Determine if they are any errors or failures."
+    shared formal Boolean isFailed;
+    
     "The number of executed tests."
     shared formal Integer runCount;
     

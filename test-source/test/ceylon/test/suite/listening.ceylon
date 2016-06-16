@@ -7,6 +7,9 @@ import ceylon.test {
 import ceylon.test.event {
     ...
 }
+import test.ceylon.test.stubs.bugs {
+    BugClassWithBrokenListener
+}
 
 test
 void shouldFireEvents() {
@@ -313,6 +316,23 @@ void shouldNotifyListenersWithSpecifiedOrder() {
     bazTestListenerLog.clear();
     createTestRunner([`bazWithCustomOrderedListeners2`]).run();
     assertLog(`bazWithCustomOrderedListeners2`.declaration.qualifiedName);
+}
+
+test
+void shouldHandleExceptionInListenerConstructor() {
+    value result = createTestRunner([`BugClassWithBrokenListener`]).run();
+    
+    assertResultCounts {
+        result;
+        runCount = 0;
+        errorCount = 1;
+    };
+    assertResultContains {
+        result;
+        index = 0;
+        state = TestState.error;
+        message = "oops!";
+    };
 }
 
 shared object recordingListener satisfies TestListener {

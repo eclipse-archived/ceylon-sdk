@@ -34,6 +34,8 @@ shared class DefaultTestRunResult() satisfies TestRunResult {
     
     shared actual Boolean isSuccess => successCount != 0 && errorCount == 0 && failureCount == 0;
     
+    shared actual Boolean isFailed => errorCount != 0 || failureCount != 0;
+    
     shared actual Integer startTime => startTimeMilliseconds;
     shared actual Integer endTime => endTimeMilliseconds;
     shared actual Integer elapsedTime => endTime - startTime;
@@ -112,6 +114,6 @@ shared class DefaultTestRunResult() satisfies TestRunResult {
                 }
             }
         }
-    }
+    }    
     
 }
