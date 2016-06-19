@@ -1,7 +1,7 @@
 "An identity map implemented as a hash map stored in an 
  [[Array]] of singly linked lists of [[Entry]]s. The hash 
  code of a key is defined by [[identityHash]]. Note that an 
- `IdentitySet` is not a [[Map]], since it does not obey the 
+ `IdentityMap` is not a [[Map]], since it does not obey the
  semantics of a `Map`. In particular, it may contain 
  multiple keys which are equal, as determined by the `==` 
  operator."
