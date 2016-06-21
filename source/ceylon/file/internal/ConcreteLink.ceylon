@@ -17,7 +17,7 @@ import java.nio.file {
 class ConcreteLink(JPath jpath)
         satisfies Link {
     
-    linkedPath => ConcretePath(readSymbolicLink(jpath));
+    linkedPath => ConcretePath(jpath.resolveSibling(readSymbolicLink(jpath)));
     
     path => ConcretePath(jpath); 
     

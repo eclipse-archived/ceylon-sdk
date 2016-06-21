@@ -2,7 +2,9 @@ import ceylon.file {
     Nil,
     temporaryDirectory,
     Directory,
-    File
+    File,
+    Path,
+    parsePath
 }
 import ceylon.test {
     assertTrue,
@@ -53,5 +55,24 @@ shared test void createAndResolveDirectorySymlink() {
 
         link.delete();
         targetDir.delete();
+    }
+}
+
+shared test void relativeLinkedPath() {
+    // tmp/fileA
+    // tmp/linkA -> fileA
+    try (tmpDir = temporaryDirectory.TemporaryDirectory(null)) {
+        value fileAPath = tmpDir.path.childPath("fileA");
+        assert (is Nil nilFileA = fileAPath.resource);
+        nilFileA.createFile();
+
+        value linkAPath = tmpDir.path.childPath("linkA");
+        assert (is Nil nilLinkA = linkAPath.resource);
+        value linkA = nilLinkA.createSymbolicLink(parsePath("fileA"));
+
+        assertEquals(linkA.linkedPath, fileAPath,
+            "resolved Path for relative symbolic link");
+        assertTrue(linkA.linkedResource is File,
+            "resolved Resource for relative symbolic link");
     }
 }
