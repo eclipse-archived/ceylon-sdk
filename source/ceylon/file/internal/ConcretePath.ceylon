@@ -140,14 +140,16 @@ class ConcretePath(jpath)
     
     shared actual Resource resource {
         if (isExisting(jpath)) {
-            if (isSymbolicLink(jpath)) {
-                return ConcreteLink(jpath);
-            }
-            else if (isRegularFile(jpath)) {
+            // prefer ConcreteFile and ConcreteDirectory; only return a ConcreteLink
+            // if it is 1) a link to nowhere, or 2) a link to another link.
+            if (isRegularFile(jpath)) {
                 return ConcreteFile(jpath);
             }
             else if (isDirectory(jpath)) {
                 return ConcreteDirectory(jpath);
+            }
+            else if (isSymbolicLink(jpath)) {
+                return ConcreteLink(jpath);
             }
             else {
                 throw Exception("unknown file type: " +
@@ -158,6 +160,11 @@ class ConcretePath(jpath)
             return ConcreteNil(jpath);
         }
     }
+    
+    shared actual Link? link
+        =>  if (isSymbolicLink(jpath))
+            then ConcreteLink(jpath)
+            else null;
     
     shared actual void visit(Visitor visitor) {
         object fileVisitor satisfies FileVisitor<JPath> {

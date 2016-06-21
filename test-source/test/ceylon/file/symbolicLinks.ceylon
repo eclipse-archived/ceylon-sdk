@@ -1,7 +1,6 @@
 import ceylon.file {
     Nil,
     temporaryDirectory,
-    Link,
     Directory,
     File
 }
@@ -20,8 +19,12 @@ shared test void createAndResolveFileSymlink() {
         assert (is Nil linkNil = linkPath.resource);
         value link = linkNil.createSymbolicLink(targetFile.path);
 
-        assertTrue(linkPath.resource is Link, "The Link must exist");
-        assertEquals(linkPath.resource.path, linkPath, "link path");
+        assertTrue(linkPath.link exists, "The Link must exist");
+        assertTrue(linkPath.resource is File,
+            "resource returns File|Directory if possible");
+        assertEquals(linkPath.link?.path, linkPath, "link path");
+        assertEquals(linkPath.resource.path, linkPath,
+            "link path using resource (don't resolve links when obtaining a resource)");
         assertEquals(link.linkedPath, targetFile.path, "linkedPath");
         assertTrue(link.linkedPath.resource is File, "linked resource is a File");
 
@@ -39,8 +42,12 @@ shared test void createAndResolveDirectorySymlink() {
         assert (is Nil linkNil = linkPath.resource);
         value link = linkNil.createSymbolicLink(targetDir.path);
 
-        assertTrue(linkPath.resource is Link, "The Link must exist");
-        assertEquals(linkPath.resource.path, linkPath, "link path");
+        assertTrue(linkPath.link exists, "The Link must exist");
+        assertTrue(linkPath.resource is Directory,
+            "resource returns File|Directory if possible");
+        assertEquals(linkPath.link?.path, linkPath, "link path");
+        assertEquals(linkPath.resource.path, linkPath,
+            "link path using resource (don't resolve links when obtaining a resource)");
         assertEquals(link.linkedPath, targetDir.path, "linkedPath");
         assertTrue(link.linkedPath.resource is Directory, "linked resource is a Directory");
 
