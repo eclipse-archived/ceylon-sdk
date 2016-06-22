@@ -24,14 +24,13 @@ class ConcreteLink(JPath jpath)
     
     path => ConcretePath(jpath); 
     
-    shared actual Resource linkedResource {
+    shared actual File|Directory|Nil linkedResource {
         if (isDirectory(jpath) || isRegularFile(jpath) || isNotExisting(jpath)) {
             // this link ultimately resolves to a file, directory, or nil,
             // so there is no risk of infinite recursion.
             return linkedPath.resource.linkedResource;
         }
-        // return the next link in the cycle
-        return linkedPath.resource;
+        throw Exception("unable to resolve link '``this``' due to cycle.");
     }
     
     readAttribute(Attribute attribute) 

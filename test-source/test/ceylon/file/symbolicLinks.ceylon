@@ -9,7 +9,8 @@ import ceylon.file {
 import ceylon.test {
     assertTrue,
     test,
-    assertEquals
+    assertEquals,
+    assertThatException
 }
 
 shared test void createAndResolveFileSymlink() {
@@ -98,8 +99,7 @@ shared test void circularLinks() {
         assertTrue(linkAPath.resource is Link,
             "symlink resource that is not ultimately a File|Dir is a Link");
 
-        assertEquals(linkAPath.resource.linkedResource.path, linkBPath,
-            "linkedResource for circular symlink is the *next* symlink in the cycle");
+        assertThatException(() => linkAPath.resource.linkedResource);
 
         assertEquals(linkAPath.resource.path, linkAPath,
             "a resource's path is its path");
