@@ -3,8 +3,8 @@ import ceylon.file {
     temporaryDirectory,
     Directory,
     File,
-    Path,
-    parsePath
+    parsePath,
+    Link
 }
 import ceylon.test {
     assertTrue,
@@ -74,5 +74,63 @@ shared test void relativeLinkedPath() {
             "resolved Path for relative symbolic link");
         assertTrue(linkA.linkedResource is File,
             "resolved Resource for relative symbolic link");
+    }
+}
+
+shared test void circularLinks() {
+    // Resolve circularLinks as Links, not Nil
+    // tmp/linkA -> linkB
+    // tmp/linkB -> linkC
+    // tmp/linkC -> linkA
+    try (tmpDir = temporaryDirectory.TemporaryDirectory(null)) {
+        value linkAPath = tmpDir.path.childPath("linkA");
+        assert (is Nil nilLinkA = linkAPath.resource);
+        nilLinkA.createSymbolicLink(parsePath("linkB"));
+
+        value linkBPath = tmpDir.path.childPath("linkB");
+        assert (is Nil nilLinkB = linkBPath.resource);
+        nilLinkB.createSymbolicLink(parsePath("linkC"));
+
+        value linkCPath = tmpDir.path.childPath("linkC");
+        assert (is Nil nilLinkC = linkCPath.resource);
+        nilLinkC.createSymbolicLink(parsePath("linkA"));
+
+        assertTrue(linkAPath.resource is Link,
+            "symlink resource that is not ultimately a File|Dir is a Link");
+
+        assertEquals(linkAPath.resource.linkedResource.path, linkBPath,
+            "linkedResource for circular symlink is the *next* symlink in the cycle");
+
+        assertEquals(linkAPath.resource.path, linkAPath,
+            "a resource's path is its path");
+    }
+}
+
+shared test void linksToNothing() {
+    // Ultimately resolve links to Nil
+    // tmp/linkA -> linkB
+    // tmp/linkB -> nilC
+    // (tmp/nilC doesn't exist)
+    try (tmpDir = temporaryDirectory.TemporaryDirectory(null)) {
+        value linkAPath = tmpDir.path.childPath("linkA");
+        assert (is Nil nilLinkA = linkAPath.resource);
+        nilLinkA.createSymbolicLink(parsePath("linkB"));
+
+        value linkBPath = tmpDir.path.childPath("linkB");
+        assert (is Nil nilLinkB = linkBPath.resource);
+        nilLinkB.createSymbolicLink(parsePath("nilC"));
+
+        value nilCPath = tmpDir.path.childPath("nilC");
+
+        assertTrue(linkAPath.resource is Link,
+            "symlink resource that is not ultimately a File|Dir is a Link");
+
+        assertTrue(linkAPath.resource.linkedResource is Nil,
+            "a non-circular symlink that does not ultimately resolves to a file|dir
+             should have a Nil linkedResource for the ultimate path.");
+
+        assertEquals(linkAPath.resource.linkedResource.path, nilCPath,
+            "a non-circular symlink that does not ultimately resolves to a file|dir
+             should have a Nil linkedResource for the ultimate path.");
     }
 }

@@ -156,6 +156,11 @@ class ConcretePath(jpath)
                         jpath.string);
             }
         }
+        else if (isSymbolicLink(jpath)) {
+            // a symbolic link that does not ultimately resolve
+            // to a file or directory.
+            return ConcreteLink(jpath);
+        }
         else {
             return ConcreteNil(jpath);
         }
