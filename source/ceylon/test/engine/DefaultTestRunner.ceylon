@@ -131,8 +131,8 @@ shared class DefaultTestRunner(
 
 alias TestCandidate => [FunctionDeclaration, ClassDeclaration?]|ErrorTestExecutor;
 
-TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filter, Comparison(TestExecutor, TestExecutor) comparator) {
-    TestCandidate[] candidates = findCandidates(sources);
+TestExecutor[] createExecutors({TestSource*} sources, Boolean(TestExecutor) filter, Comparison(TestExecutor, TestExecutor) comparator) {
+    {TestCandidate*} candidates = findCandidates(sources);
     
     value executors = ArrayList<TestExecutor>();
     value executorsWithClasses = ArrayList<[ClassDeclaration, ArrayList<TestExecutor>]>();
@@ -152,7 +152,7 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
                 value executor = createExecutor(funcDecl, classDecl);
                 if (filter(executor)) {
                     if (exists classDecl) {
-                        value executorsWithClass = executorsWithClasses.sequence().find(([ClassDeclaration, ArrayList<TestExecutor>] elem) => elem[0] == classDecl);
+                        value executorsWithClass = executorsWithClasses.find(([ClassDeclaration, ArrayList<TestExecutor>] elem) => elem[0] == classDecl);
                         if (exists executorsWithClass) {
                             executorsWithClass[1].add(executor);
                         } else {
@@ -172,11 +172,11 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
     }
     
     for (executorsWithClass in executorsWithClasses) {
-        value sorted = executorsWithClass[1].sequence().sort(comparator);
+        value sorted = executorsWithClass[1].sort(comparator);
         executors.add(GroupTestExecutor(TestDescription(executorsWithClass[0].qualifiedName, null, executorsWithClass[0], sorted*.description), sorted));
     }
     
-    return executors.sequence().sort(comparator);
+    return executors.sort(comparator);
 }
 
 TestExecutor createExecutor(FunctionDeclaration funcDecl, ClassDeclaration? classDecl) {
@@ -209,7 +209,7 @@ TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotati
         }
     }
     
-    executors.addAll(createExecutors(sources.sequence(), filter, comparator));
+    executors.addAll(createExecutors(sources, filter, comparator));
     
     if (executors.empty) {
         return ErrorTestExecutor(TestDescription(funcDecl.qualifiedName, funcDecl), Exception("test suite ``funcDecl.qualifiedName`` does not contains any tests"));
@@ -218,7 +218,7 @@ TestExecutor createSuiteExecutor(FunctionDeclaration funcDecl, TestSuiteAnnotati
     }
 }
 
-TestCandidate[] findCandidates(TestSource[] sources) {
+{TestCandidate*} findCandidates({TestSource*} sources) {
     value candidates = ArrayList<TestCandidate>();
     for (source in sources) {
         if (is Module source) {
@@ -238,7 +238,7 @@ TestCandidate[] findCandidates(TestSource[] sources) {
             findCandidatesInTypeLiteral(candidates, source);
         }
     }
-    return candidates.sequence();
+    return candidates;
 }
 
 void findCandidatesInModule(ArrayList<TestCandidate> candidates, Module mod) {
