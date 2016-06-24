@@ -54,7 +54,7 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
             Matcher? matcher = pattern.matcher(javaString(input));
             if (exists m=matcher, m.find(searchStartIndex)) {
                 Integer groupCount = m.groupCount();
-                Array<String> groups = Array<String>.ofSize(1 + groupCount, "");
+                value groups = Array<String?>.ofSize(1 + groupCount, "");
                 for (value group in 0 : groupCount+1) {
                     groups.set(group, m.group(group));
                 }

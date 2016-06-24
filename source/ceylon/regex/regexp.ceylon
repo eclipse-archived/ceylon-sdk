@@ -151,7 +151,7 @@ shared class MatchResult(start, end, matched, groups) {
     "The matched string"
     shared String matched;
     "A sequence of matched groups or [[Empty]]"
-    shared String[] groups;
+    shared String?[] groups;
     
     shared actual String string => "MatchResult[``start``-``end`` '``matched``' ``groups``]";
 }

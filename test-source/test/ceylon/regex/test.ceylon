@@ -173,6 +173,14 @@ shared void testTestQuoted() {
     assertTrue(regex(quote(" (mouw): ")).test(input));
 }
 
+test
+shared void testTestUnusedGroup() {
+    // See issue ceylon/ceylon-sdk#586
+    value result = regex("^('.*')$|^(\".*\")$").findAll("'title'");
+    print(result);
+    assertEquals(result.string, "[MatchResult[0-7 ''title'' ['title', <null>]]]");
+}
+
 shared void runAll() {
     testCreateNoFlags();
     testCreateWithFlags();
@@ -194,4 +202,5 @@ shared void runAll() {
     testSplitWithLimit();
     testTest();
     testTestQuoted();
+    testTestUnusedGroup();
 }
