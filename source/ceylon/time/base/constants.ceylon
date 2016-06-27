@@ -1,20 +1,20 @@
 import ceylon.time.internal.math { floorDiv }
 
 "Represents units of Date"
-shared interface UnitOfDate of UnitOfYear|UnitOfMonth|UnitOfDay{}
-shared interface UnitOfYear  satisfies UnitOfDate{}
-shared interface UnitOfMonth satisfies UnitOfDate{}
-shared interface UnitOfDay   satisfies UnitOfDate{}
+shared interface UnitOfDate of UnitOfYear | UnitOfMonth | UnitOfDay{}
+shared abstract class UnitOfYear()  of years  satisfies UnitOfDate{}
+shared abstract class UnitOfMonth() of months satisfies UnitOfDate{}
+shared abstract class UnitOfDay()   of days   satisfies UnitOfDate{}
 
 "Represents units of Time"
-shared interface UnitOfTime of UnitOfHour|UnitOfMinute|UnitOfSecond|UnitOfMillisecond{}
-shared interface UnitOfHour satisfies UnitOfTime{}
-shared interface UnitOfMinute satisfies UnitOfTime{}
-shared interface UnitOfSecond satisfies UnitOfTime{}
-shared interface UnitOfMillisecond satisfies UnitOfTime{}
+shared interface UnitOfTime of UnitOfHour | UnitOfMinute | UnitOfSecond | UnitOfMillisecond{}
+shared abstract class UnitOfHour()        of hours        satisfies UnitOfTime{}
+shared abstract class UnitOfMinute()      of minutes      satisfies UnitOfTime{}
+shared abstract class UnitOfSecond()      of seconds      satisfies UnitOfTime{}
+shared abstract class UnitOfMillisecond() of milliseconds satisfies UnitOfTime{}
 
 "Common properties and constraints of _year_ unit."
-shared object years satisfies UnitOfYear {
+shared object years extends UnitOfYear() {
 
     "The minimum supported year for instances of `Date`, -283_457."
     // the least that can be represented by an Instant
@@ -26,7 +26,7 @@ shared object years satisfies UnitOfYear {
 }
 
 "Common properties and constraints of months."
-shared object months satisfies UnitOfMonth {
+shared object months extends UnitOfMonth() {
 
     "Ordered list of all months of Gregorian and Julian calendar system from January to December."
     shared Month[] all = `Month`.caseValues;
@@ -39,7 +39,7 @@ shared object months satisfies UnitOfMonth {
 }
 
 "Common properties and constraints of _day_ unit."
-shared object days satisfies UnitOfDay {
+shared object days extends UnitOfDay() {
 
     "Number of days per normal year."
     shared Integer perYear => 365;
@@ -76,7 +76,7 @@ shared object days satisfies UnitOfDay {
 }
 
 "Common properties of _hour_ time unit."
-shared object hours satisfies UnitOfHour {
+shared object hours extends UnitOfHour() {
 
     "Number of hours per day."
     shared Integer perDay = 24;
@@ -84,7 +84,7 @@ shared object hours satisfies UnitOfHour {
 }
 
 "Common properties of _minute_ time unit."
-shared object minutes satisfies UnitOfMinute {
+shared object minutes extends UnitOfMinute() {
 
     "Number of minutes per hour."
     shared Integer perHour = 60;
@@ -94,7 +94,7 @@ shared object minutes satisfies UnitOfMinute {
 }
 
 "Common properties of _second_ time unit."
-shared object seconds satisfies UnitOfSecond {
+shared object seconds extends UnitOfSecond() {
 
     "Number of seconds per minute."
     shared Integer perMinute = 60;
@@ -107,7 +107,7 @@ shared object seconds satisfies UnitOfSecond {
 }
 
 "Common properties of _millisecond_ time unit."
-shared object milliseconds satisfies UnitOfMillisecond {
+shared object milliseconds extends UnitOfMillisecond() {
 
     "Number of milliseconds per second."
     shared Integer perSecond = 1000;
