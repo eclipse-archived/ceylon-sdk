@@ -137,7 +137,6 @@ shared class ParseIso8601PeriodTest() {
         expected = Period { months = 1; };
     };
     
-    ignore("Not implemented")
     test shared void accept_Weeks_period() => assertEquals {
         actual = parsePeriod( "P1W" );
         expected = Period { days = 7; };

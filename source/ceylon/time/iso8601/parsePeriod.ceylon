@@ -1,6 +1,7 @@
 import ceylon.time {
     Period, zero
 }
+alias State => Integer;
 shared Period? parsePeriod(String string) {
     if (exists first = string.first, first == 'P',
         !string.rest.empty) {
@@ -14,6 +15,12 @@ shared Period? parsePeriod(String string) {
                 integer = integer*10 + (ch.integer - '0'.integer);
                 continue;
             }
+			if (ch == 'W', state < 1) {
+				period = period.withDays(7 * integer);
+				integer = 0;
+				state = 7;
+				continue;
+			}
             if (ch == 'Y', state < 1) {
                 period = period.withYears(integer);
                 integer = 0;
