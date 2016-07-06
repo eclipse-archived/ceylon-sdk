@@ -16,7 +16,7 @@ test void testWebSocketServer() {
 
     variable Boolean onOpenCalled = false;
     variable Boolean onTextCalled = false;
-    variable Boolean onBinnaryCalled = false;
+    variable Boolean onBinaryCalled = false;
     variable Boolean onCloseCalled = false;
     variable Integer messagesReceived = 0;
     
@@ -53,7 +53,7 @@ test void testWebSocketServer() {
             channel.sendText(text.uppercased);
         };
         onBinary = void (WebSocketChannel channel, ByteBuffer binary) {
-            onBinnaryCalled = true;
+            onBinaryCalled = true;
             String data = utf8.decode(binary);
             print("Server received binary message: ``data``");
             value encoded = utf8.encodeBuffer(data.uppercased);
@@ -77,10 +77,10 @@ test void testWebSocketServer() {
 
                     client.waitForClose();
 
-                    assertTrue(onOpenCalled, "Endpoints methond onOpen was not called");
-                    assertTrue(onTextCalled, "Endpoints methond onText was not called");
-                    assertTrue(onBinnaryCalled, "Endpoints methond onBinnar was not called");
-                    assertTrue(onCloseCalled, "Endpoints methond onClose was not called");
+                    assertTrue(onOpenCalled, "Endpoints method onOpen was not called");
+                    assertTrue(onTextCalled, "Endpoints method onText was not called");
+                    assertTrue(onBinaryCalled, "Endpoints method onBinary was not called");
+                    assertTrue(onCloseCalled, "Endpoints method onClose was not called");
 
                     value client2 = WebSocketClient(URI("ws://localhost:8080/notfoundwebsocket"));
                     variable String exception = "";
