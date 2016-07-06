@@ -187,7 +187,7 @@ class ResponseImpl(HttpServerExchange exchange,
     }
     
     shared actual Integer status => exchange.statusCode;
-    assign status => exchange.setStatusCode(responseStatus);
+    assign status => exchange.setStatusCode(status);
     
     shared actual Integer responseStatus => status;
     assign responseStatus => status = responseStatus;
