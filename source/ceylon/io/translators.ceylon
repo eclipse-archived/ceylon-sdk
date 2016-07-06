@@ -34,11 +34,12 @@ by ("Stéphane Épardaud")
 shared Anything(ByteBuffer) stringToByteProducer
         (Charset charset, String string) {
     value encoder = charset.chunkEncoder();
-    variable value firstCall = true;
+    variable value read = 0;
+    variable value firstTime = true;
     void producer(ByteBuffer buffer) {
-        if (firstCall) {
-            encoder.convert(buffer, string);
-            firstCall = false;
+        if (firstTime || !encoder.done) {
+            read += encoder.convert(buffer, string[read...]);
+            firstTime = false;
         } else {
             encoder.convert(buffer, empty);
         }
