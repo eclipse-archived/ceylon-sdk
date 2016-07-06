@@ -185,3 +185,35 @@ test void testZipProviderMismatchException(){
 		}
 	}
 }
+
+shared test
+void writeLargeStringToFile() {
+    // generate a string bigger than the buffer used by writeFrom() 
+    StringBuilder sb = StringBuilder();
+    for (i in 0:430) {
+        value x = sb.size;
+        sb.append((i*10).string);
+        for (j in 0:10-(sb.size-x)-1) {
+            sb.appendCharacter('.');
+        }
+        sb.appendCharacter('\n');
+    }
+    // write that string to a file
+    value str = sb.string;
+    variable OpenFile file = newOpenFile(parsePath("test.ceylon.io.writeLargeStringToFile.txt").resource);
+    file.writeFrom(stringToByteProducer(utf8, str));
+    file.close();
+    
+    // now read it back
+    value decoder = utf8.cumulativeDecoder();
+    file = newOpenFile(parsePath("test.ceylon.io.writeLargeStringToFile.txt").resource);
+    file.readFully(decoder.more);
+    value got = decoder.done().string;
+    file.close();
+    
+    // they should be the same, right?
+    assertEquals{
+        expected = str;
+        actual = got;
+    };
+}
