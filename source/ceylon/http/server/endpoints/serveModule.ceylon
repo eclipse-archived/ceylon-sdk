@@ -74,6 +74,7 @@ shared void serveModule(
 
 ArtifactContext? getArtifactContext(String path) {
     try {
+        String? namespace = null;
         // path == "ceylon.language-1.2.0.js" or
         // path == "ceylon/language/1.2.0/ceylon.language-1.2.0.js"
         value parts = path.split('/'.equals).sequence();
@@ -87,7 +88,7 @@ ArtifactContext? getArtifactContext(String path) {
             if (exists p) {
                 value name = fileName[0..p-1];
                 value version = fileName[p+1..fileName.size-suffix.size-1];
-                return ArtifactContext(name, version, suffix);
+                return ArtifactContext(namespace, name, version, suffix);
             }
         } else if (parts.size >= 3) {
             // parts == [ceylon, language, 1.2.0, ceylon.language-1.2.0.js]
@@ -96,7 +97,7 @@ ArtifactContext? getArtifactContext(String path) {
             value version = parts[parts.size - 2] else "";
             value suffix = getSuffixFromFilename(parts.last);
             if (fileName == name + "-" + version + suffix) {
-                return ArtifactContext(name, version, suffix);
+                return ArtifactContext(namespace, name, version, suffix);
             }
         }
     } catch (Exception ex) { }
