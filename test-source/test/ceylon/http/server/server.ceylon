@@ -336,6 +336,8 @@ test void testServer() {
                 
                 moduleTest();
                 
+            } catch (Throwable t) {
+                firstException = t;
             } finally {
                 cleanUpFile();
                 server.stop();
@@ -356,6 +358,9 @@ test void testServer() {
     };
 
     waitTestToComplete();
+    if (exists t = firstException) {
+        throw t;
+    }
 }
 
 void executeEchoTest(String name) {
@@ -869,3 +874,4 @@ void waitTestToComplete() {
 void testCompleted() {
     mutex.release();
 }
+variable Throwable? firstException = null; 
