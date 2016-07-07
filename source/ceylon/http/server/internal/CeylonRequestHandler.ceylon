@@ -46,10 +46,10 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints)
                     ResponseImpl(exc, options.defaultCharset);
             try {
                 String requestPath = exc.requestPath;
-                Method method = parseMethod(exc.requestMethod.string.uppercased);
                 {EndpointBase*} endpointsMatchingPath = endpoints.getEndpointMatchingPath(requestPath);
                 
                 if (endpointsMatchingPath.size > 0) {
+                    Method method = parseMethod(exc.requestMethod.string.uppercased);
                     {HttpEndpoint*} httpEndpoints = filterHttpEndpoints(endpointsMatchingPath);
                     {HttpEndpoint*} matchingEndpoints = filterSupportedMethod(httpEndpoints, method);
                     if (is HttpEndpoint endpoint = matchingEndpoints.first) {
