@@ -830,15 +830,19 @@ shared class TestServer() extends ServerTest() {
         value response = request.execute();
         value responseContent = response.contents;
         //TODO log
-        print("Response content: " + responseContent);
+        
+        value setCookie = response.headersByName["set-cookie"]?.values?.first else "";
+        
         assertEquals { 
             expected = "1"; 
             actual = responseContent; 
         };
         response.close();
     
+        value cookieName = setCookie[0..(setCookie.firstIndexWhere((ch) => ch == ';') else 0)-1 ];
+        request.setHeader("Cookie", cookieName);
         value response2 = request.execute();
-        value responseContent2 = response.contents;
+        value responseContent2 = response2.contents;
         //TODO log
         print("Response content: " + responseContent2);
         assertEquals { 
