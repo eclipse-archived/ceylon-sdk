@@ -36,7 +36,7 @@ shared class Parser(FileDescriptor socket) {
     "[[List]] of headers parsed."
     shared LinkedList<Header> headers = LinkedList<Header>();
     
-    "[[Map]] of headers parsed, by name."
+    "[[Map]] of headers parsed, by *lowercased* name."
     shared MutableMap<String,Header> headersByName 
             = HashMap<String,Header>();
     
