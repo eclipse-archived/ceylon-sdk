@@ -9,6 +9,8 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
     
     value bufferedText = StringBuilder();
     value elementStack = LinkedList<String>();
+    variable value presOnStack = 0;
+    value prettyPrint => configuration.prettyPrint && presOnStack == 0;
     variable value lastOutputWasStartOrEndTag = true;
     variable value previousStartOrEndTagWasBlock = false;
     variable [String, {<String->Object>*}]? bufferedStartElement = null;
@@ -133,10 +135,12 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
             flushText();
             assert(exists elementName = elementStack.pop());
             printIndent(elementName, false);
+            // only update presOnStack after we've emitted any indent
+            presOnStack -= elementName == "pre" then 1 else 0;
             write("</" + escape(elementName, name) + ">");
             lastOutputWasStartOrEndTag = true;
         }
-        if (configuration.prettyPrint && elementStack.empty) {
+        if (prettyPrint && elementStack.empty) {
             write("\n");
         }
     }
@@ -153,14 +157,14 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
         // * don't indent after character data
         // * indent only block element tags and non-block element tags
         //   immediately following a start or end tag of a block element
-        if (configuration.prettyPrint
+        if (prettyPrint
             && !(isOpenTag && elementStack.empty)
                 && lastOutputWasStartOrEndTag
                 && (previousStartOrEndTagWasBlock
             || indentElements.contains(elementName.lowercased))) {
             write("\n" + " ".repeat(elementStack.size * 2));
         }
-        previousStartOrEndTagWasBlock = configuration.prettyPrint
+        previousStartOrEndTagWasBlock = prettyPrint
                 && indentElements.contains(elementName.lowercased);
     }
     
@@ -202,10 +206,11 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
                     // http://www.w3.org/TR/html5/syntax.html#start-tags
                     write("></" + escape(elementName, package.name) + ">");
                 }
-                previousStartOrEndTagWasBlock = configuration.prettyPrint
+                previousStartOrEndTagWasBlock = prettyPrint
                         && indentElements.contains(elementName.lowercased);
             } else {
                 write(">");
+                presOnStack += elementName == "pre" then 1 else 0;
                 elementStack.push(elementName);
             }
             bufferedStartElement = null;
