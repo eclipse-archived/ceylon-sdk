@@ -19,6 +19,9 @@ shared class Header(name, String* initialValues) {
     for(val in initialValues) {
         values.add(val);
     }
+    
+    shared actual String string =>
+            "`` name ``: `` ",".join(values) ``";
 }
 
 shared Header contentType(String contentType, Charset? charset = null) {
