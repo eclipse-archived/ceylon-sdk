@@ -8,12 +8,23 @@ import ceylon.buffer {
 import ceylon.interop.java {
     toByteArray
 }
+import java.lang {
+    ByteArray
+}
 
 by("Matej Lazar")
 
 shared ByteBuffer toCeylonByteBuffer(JByteBuffer? jByteBuffer) {
     if (exists jbb = jByteBuffer) {
-        Array<Byte> cba = toByteArray(jbb.array());
+        Array<Byte> cba;
+        if (jbb.hasArray()) {
+            cba = toByteArray(jbb.array());
+        } else {
+            cba = Array<Byte>.ofSize(jbb.limit(), 0.byte);
+            for (ii in 0: jbb.limit()) {
+                cba.set(ii, jbb.get(ii));
+            }
+        }
         ByteBuffer bb = ByteBuffer.ofArray(cba);
         return bb;
     } else {
@@ -21,7 +32,7 @@ shared ByteBuffer toCeylonByteBuffer(JByteBuffer? jByteBuffer) {
     }
 }
 
-shared ByteBuffer mergeBuffers(ByteBuffer* payload) {
+shared ByteBuffer mergeBuffers({ByteBuffer*} payload) {
     variable Integer payloadSize = 0;
     for (ByteBuffer bb in payload) {
         payloadSize = payloadSize + bb.available;

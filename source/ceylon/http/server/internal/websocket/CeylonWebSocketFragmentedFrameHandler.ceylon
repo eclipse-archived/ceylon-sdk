@@ -48,9 +48,9 @@ class CeylonWebSocketFragmentedFrameHandler(
         Pooled<ObjectArray<JByteBuffer>> data = bufferedBinaryMessage.data;
         try {
             ObjectArray<JByteBuffer> jByteBufferArray = data.resource;
-            {ByteBuffer*} bbArray = jByteBufferArray.iterable
-                    .map((JByteBuffer? element) => toCeylonByteBuffer(element));
-            ByteBuffer binary = mergeBuffers(*bbArray);
+            ByteBuffer binary = mergeBuffers{ 
+                for (jbb in jByteBufferArray.iterable) toCeylonByteBuffer(jbb)
+            };
             webSocketEndpoint.onBinary(webSocketChannel, binary, messageChannel.finalFragment);
         } catch (Exception e) {
             //TODO handle exception
