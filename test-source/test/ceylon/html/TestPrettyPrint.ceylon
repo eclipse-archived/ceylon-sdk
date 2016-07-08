@@ -102,6 +102,16 @@ shared class TestPrettyPrint() {
         );
     }
     
+    test
+    shared void dontPrettifyWithinPre() {
+        assertHtml(
+            Div{ Pre { Code {"foo" } } },
+            "<div>
+               <pre><code>foo</code></pre>
+             </div>\n"
+        );
+    }
+    
     void assertHtml(Node node, String expected) 
             => assertEquals(node.string, expected);
     
