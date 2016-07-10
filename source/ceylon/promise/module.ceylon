@@ -40,7 +40,7 @@
  the _rejected_ state:
  
      Promise<Document> promise = queryDocumentById(id);
-     promise.onComplete {
+     promise.completed {
          (d) => print(\"Got the document: \" + d.title);
          (e) => print(\"Document was not received: \" + e.message);
      };
@@ -90,27 +90,27 @@
  
  ## Chaining promises
  
- When composition is needed the method [[Completion.map]]
+ When chaining is needed the method [[Completion.map]]
  should be used instead of the [[Completion.completed]]
  method. 
  
  When invoking the [[Completion.map]] method the 
  `onFulfilled` and `onRejected` callbacks can return a value. 
- The `compose()` method returns a new promise that will be 
+ The `map()` method returns a new promise that will be
  fulfilled with the value of the callback. This promise will 
  be rejected if the callback invocation fails.
  
  For example:
  
-     Promise<Integer> promiseOfInteger = promiseOfInteger();
-     Promise<String> promiseOfString = promiseOfInteger.compose((i) => i.string);
-     promiseOfString.compose((s) => print(\"Completed with \" + s));
+     Promise<Integer> promiseOfInteger = newPromiseOfInteger();
+     Promise<String> promiseOfString = promiseOfInteger.map(Integer.string);
+     promiseOfString.map((s) => print(\"Completed with \" + s));
  
  Or, more concisely:
  
-     promiseOfInteger()
-         .compose((i) => i.string)
-         .compose((s) => print(\"Completed with \" + s));
+     newPromiseOfInteger()
+         .map(Integer.string)
+         .map((s) => print(\"Completed with \" + s));
  
  ## Composing promises
  
@@ -119,9 +119,9 @@
  promises is fulfilled. If one of the promise is rejected 
  then the composed promise is rejected.
  
-     Promise<String> promiseOfInteger = promiseOfString();
-     Promise<Integer> promiseOfString = promiseOfInteger();
-     (promiseOfInteger.and(promiseOfString)).completed {
+     Promise<String> promiseOfString = newPromiseOfString();
+     Promise<Integer> promiseOfInteger = newPromiseOfInteger();
+     (promiseOfString.and(promiseOfInteger)).completed {
          (i, s) => print(\"All fulfilled\");
          (e) => print(\"One failed\");
      };
@@ -131,7 +131,7 @@
  - The order of the parameters in the callback is in reverse 
    order in which the corresponding promises are chained.
  - The return type of combined promise is not [[Promise]] 
-   but [[Completable]].
+   but [[Completion]].
  
  ## The `onComplete()` method
  
@@ -156,15 +156,15 @@
  [[Deferred]] can be transitioned with a promise instead of a 
  value:
  
-     Deferred<String> deferred1 = getDeferred1();
-     Deferred<String> deferred2 = getDeferred2();
-     deferred1.fulfill(deferred2);
+     Deferred<String> deferred = getDeferred();
+     Promise<String> promise = getPromise();
+     deferred.fulfill(promise);
  
- Similarly the callback may return a promise instead of a 
- value:
+ Similarly, with [[Promise.flatMap]], a callback may return a promise
+ instead of a value:
  
      Deferred<String> deferred = Deferred<String>();
-     promise.compose((s) => deferred.promise);
+     Promise<String> promise2 = promise.flatMap((s) => deferred.promise);
  
  ## Thread safety
  
@@ -176,7 +176,8 @@
  This module is loosely based upon the A+ specification,
  with the following differences:
  
- - The `then()` method is split between [[Completion.map]] that returns an object and [[Completion.flatMap]] that can return a Promise
+ - The `then()` method is split between [[Completion.map]] that returns
+   an object and [[Completion.flatMap]] that can return a Promise
  - The _Promise Resolution Procedure_ is implemented for 
    objects or promises but not for _thenables_ since that 
    would require a language with dynamic typing."
