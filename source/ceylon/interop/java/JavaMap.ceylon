@@ -1,6 +1,9 @@
 import ceylon.collection {
     MutableMap
 }
+import ceylon.language {
+    CEntry=Entry
+}
 
 import java.lang {
     UnsupportedOperationException,
@@ -62,8 +65,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
             => object extends AbstractSet<K>() {
             
             iterator() => JavaIterator<K>(
-                map.map((key->item) => key)
-                        .iterator());
+                map.map(CEntry.key).iterator());
             
             contains(Object? key) 
                     => if (exists key) 
@@ -75,15 +77,14 @@ shared class JavaMap<K,V>(Map<K,V> map)
             empty => map.empty;
         };
     
-    shared actual JSet<JEntry<K,V>> entrySet()
+    entrySet()
         => object extends AbstractSet<JEntry<K,V>>() {
         
             iterator() => JavaIterator<JEntry<K,V>>(
-                map.map(JavaEntry<K,V>)
-                        .iterator());
+                map.map(JavaEntry).iterator());
         
             contains(Object? entry)
-                    => if (is Entry<out Anything,out Anything> entry,
+                    => if (is JEntry<out Anything,out Anything> entry,
                            exists key = entry.key,
                            exists val = entry.\ivalue,
                            exists it = map[key])
@@ -95,21 +96,16 @@ shared class JavaMap<K,V>(Map<K,V> map)
             empty => map.empty;
         };
         
-    shared actual JavaCollection<V> values() 
-        => JavaCollection(map.items);
+    values() => JavaCollection(map.items);
     
-    shared actual Boolean containsKey(Object? k) {
-        if (exists k) {
-            return map.defines(k);
-        }
-        else {
-            return false;
-        }
-    }
+    containsKey(Object? k) 
+            => if (exists k) 
+            then map.defines(k) 
+            else false;
     
     shared actual V? put(K? k, V? v) {
         if (exists k, exists v) {
-            if (is MutableMap<K,V> map) {
+            if (is MutableMap<in K,V> map) {
                 return map.put(k,v);
             }
             else {
@@ -123,7 +119,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
     
     shared actual V? remove(Object? k) {
         if (is K k) {
-            if (is MutableMap<K,V> map) {
+            if (is MutableMap<in K,out V> map) {
                 return map.remove(k);
             }
             else {
@@ -135,9 +131,10 @@ shared class JavaMap<K,V>(Map<K,V> map)
         }
     }
     
+    //TODO: put these back in once we can depend on Java 8!
     /*shared actual Boolean remove(Object? k, Object? v) {
         if (is K k, is V v) {
-            if (is MutableMap<K,V> map) {
+            if (is MutableMap<in K, in V> map) {
                 return map.removeEntry(k, v);
             }
             else {
@@ -151,7 +148,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
     
     shared actual Boolean replace(K? k, V? v, V? v1) {
         if (exists k, exists v, exists v1) {
-            if (is MutableMap<K,V> map) {
+            if (is MutableMap<in K,in V> map) {
                 return map.replaceEntry(k,v,v1);
             }
             else {
@@ -164,7 +161,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
     }*/
     
     shared actual void clear() {
-        if (is MutableMap<K,V> map) {
+        if (is MutableMap<out Anything, out Anything> map) {
             map.clear();
         }
         else {
