@@ -58,18 +58,45 @@ shared class JavaMap<K,V>(Map<K,V> map)
         given K satisfies Object 
         given V satisfies Object {
     
-    shared actual JSet<JEntry<K,V>> entrySet() {
-        object result
-                extends AbstractSet<JEntry<K,V>>() {
-            shared actual JavaIterator<JEntry<K,V>> iterator() {
-                value entries = map.map<JEntry<K,V>>(JavaEntry<K,V>);
-                return JavaIterator(entries.iterator());
-            }
+    shared actual JSet<K> keySet()
+            => object extends AbstractSet<K>() {
+            
+            iterator() => JavaIterator<K>(
+                map.map((key->item) => key)
+                        .iterator());
+            
+            contains(Object? key) 
+                    => if (exists key) 
+                    then map.defines(key)
+                    else false;
+            
             size() => map.size;
             
-        }
-        return result;
-    }
+            empty => map.empty;
+        };
+    
+    shared actual JSet<JEntry<K,V>> entrySet()
+        => object extends AbstractSet<JEntry<K,V>>() {
+        
+            iterator() => JavaIterator<JEntry<K,V>>(
+                map.map(JavaEntry<K,V>)
+                        .iterator());
+        
+            contains(Object? entry)
+                    => if (is Entry<out Anything,out Anything> entry,
+                           exists key = entry.key,
+                           exists val = entry.\ivalue,
+                           exists it = map[key])
+                    then val == it
+                    else false;
+        
+            size() => map.size;
+        
+            empty => map.empty;
+        };
+        
+    shared actual JavaCollection<V> values() 
+        => JavaCollection(map.items);
     
     shared actual Boolean containsKey(Object? k) {
         if (exists k) {
