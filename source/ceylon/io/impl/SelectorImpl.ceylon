@@ -13,12 +13,7 @@ import ceylon.io {
 
 import java.nio.channels {
     JavaSelector=Selector,
-    SelectionKey {
-        javaReadOp=\iOP_READ,
-        javaWriteOp=\iOP_WRITE,
-        javaConnectOp=\iOP_CONNECT,
-        javaAcceptOp=\iOP_ACCEPT
-    }
+    SelectionKey
 }
 
 class Key(socket = null, onRead = null, onWrite = null, 
@@ -50,11 +45,11 @@ shared class SelectorImpl()
             // update our key
             key.onRead = callback;
             key.socket = socket;
-            socket.interestOps(javaKey, javaKey.interestOps().or(javaReadOp));
+            socket.interestOps(javaKey, javaKey.interestOps().or(SelectionKey.opRead));
         }else{
             // new key
             value key = Key{onRead = callback; socket = socket;};
-            value newJavaKey = socket.register(javaSelector, javaReadOp, key);
+            value newJavaKey = socket.register(javaSelector, SelectionKey.opRead, key);
             map.put(newJavaKey, key);
         }
     }
@@ -68,12 +63,12 @@ shared class SelectorImpl()
             key.onWrite = callback;
             key.socket = socket;
             socket.interestOps(javaKey, 
-                javaKey.interestOps().or(javaWriteOp));
+                javaKey.interestOps().or(SelectionKey.opWrite));
         }else{
             // new key
             value key = Key { onWrite = callback; socket = socket; } ;
             value newJavaKey = 
-                    socket.register(javaSelector, javaWriteOp, key);
+                    socket.register(javaSelector, SelectionKey.opWrite, key);
             map.put(newJavaKey, key);
         }
     }
@@ -88,7 +83,7 @@ shared class SelectorImpl()
             key.onConnectFailure = failureCallback;
             key.connector = connector;
             connector.interestOps(javaKey, 
-                javaKey.interestOps().or(javaConnectOp));
+                javaKey.interestOps().or(SelectionKey.opConnect));
         }else{
             // new key
             value key = Key {
@@ -97,7 +92,7 @@ shared class SelectorImpl()
                 connector = connector;
             };
             value newJavaKey = 
-                    connector.register(javaSelector, javaConnectOp, key);
+                    connector.register(javaSelector, SelectionKey.opConnect, key);
             map.put(newJavaKey, key);
         }
     }
@@ -111,12 +106,12 @@ shared class SelectorImpl()
             key.onAccept = callback;
             key.acceptor = acceptor;
             acceptor.interestOps(javaKey, 
-                javaKey.interestOps().or(javaAcceptOp));
+                javaKey.interestOps().or(SelectionKey.opAccept));
         }else{
             // new key
             value key = Key { onAccept = callback; acceptor = acceptor; };
             value newJavaKey = 
-                    acceptor.register(javaSelector, javaAcceptOp, key);
+                    acceptor.register(javaSelector, SelectionKey.opAccept, key);
             map.put(newJavaKey, key);
         }
     }
@@ -148,7 +143,7 @@ shared class SelectorImpl()
                 if(key.onWrite exists) {
                     // drop the reading bits
                     debug("Dropping read interest");
-                    socket.interestOps(selectedKey, selectedKey.interestOps().xor(javaReadOp));
+                    socket.interestOps(selectedKey, selectedKey.interestOps().xor(SelectionKey.opRead));
                     key.onRead = null;
                 }else{
                     debug("Cancelling key");
@@ -176,7 +171,7 @@ shared class SelectorImpl()
                     if(key.onRead exists) {
                         // drop the reading bits
                         debug("Dropping write interest");
-                        socket.interestOps(selectedKey, selectedKey.interestOps().xor(javaWriteOp));
+                        socket.interestOps(selectedKey, selectedKey.interestOps().xor(SelectionKey.opWrite));
                         key.onWrite = null;
                     }else{
                         debug("Cancelling key");
@@ -209,7 +204,7 @@ shared class SelectorImpl()
             if(key.onRead exists || key.onWrite exists) {
                 // drop the connect bits
                 debug("Dropping connect interest");
-                connector.interestOps(selectedKey, selectedKey.interestOps().xor(javaConnectOp));
+                connector.interestOps(selectedKey, selectedKey.interestOps().xor(SelectionKey.opConnect));
                 key.onConnect = null;
                 key.connector = null;
             }else{
@@ -234,7 +229,7 @@ shared class SelectorImpl()
                 if(key.onRead exists || key.onWrite exists) {
                     // drop the connect bits
                     debug("Dropping connect interest");
-                    connector.interestOps(selectedKey, selectedKey.interestOps().xor(javaConnectOp));
+                    connector.interestOps(selectedKey, selectedKey.interestOps().xor(SelectionKey.opConnect));
                     key.onConnect = null;
                     key.connector = null;
                 }else{
