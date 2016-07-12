@@ -2,9 +2,6 @@ import ceylon.collection {
     MutableList,
     LinkedList
 }
-import ceylon.io {
-    SocketAddress
-}
 import ceylon.http.server {
     Server,
     Options,
@@ -25,11 +22,12 @@ import ceylon.http.server.internal.websocket {
 import ceylon.http.server.websocket {
     WebSocketBaseEndpoint
 }
+import ceylon.io {
+    SocketAddress
+}
 
 import io.undertow {
-    UndertowOptions {
-        utBufferPipelinedData=\iBUFFER_PIPELINED_DATA
-    }
+    UndertowOptions
 }
 import io.undertow.server {
     HttpHandler,
@@ -72,20 +70,9 @@ import org.xnio {
     OptionMap {
         omBuilder=builder
     },
-    XnioOptions=Options {
-        xnioWorkerIoThreads=\iWORKER_IO_THREADS,
-        xnioConnectionLowWatter=\iCONNECTION_LOW_WATER,
-        xnioConnectionHighWatter=\iCONNECTION_HIGH_WATER,
-        xnioWorkerTaskCoreThreads=\iWORKER_TASK_CORE_THREADS,
-        xnioWorkerTaskMaxThreads=\iWORKER_TASK_MAX_THREADS,
-        xnioTcpNoDelay=\iTCP_NODELAY,
-        xnioReuseAddress=\iREUSE_ADDRESSES,
-        xnioCork=\iCORK
-    },
+    XnioOptions=Options,
     ByteBufferSlicePool,
-    BufferAllocator {
-        directByteBufferAllocator=\iDIRECT_BYTE_BUFFER_ALLOCATOR
-    },
+    BufferAllocator,
     ChannelListeners {
         clOpenListenerAdapter=openListenerAdapter
     }
@@ -146,9 +133,9 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         value openListener
                 = HttpOpenListener(
                     XnioByteBufferPool(
-                        ByteBufferSlicePool(directByteBufferAllocator, 
+                        ByteBufferSlicePool(BufferAllocator.directByteBufferAllocator,
                             8192, 8192 * 8192)),
-                    omBuilder().set(utBufferPipelinedData,false).map);
+                    omBuilder().set(UndertowOptions.bufferPipelinedData,false).map);
         
         value pathTemplateHandler
                 = PathTemplateHandler(
@@ -166,23 +153,23 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
                 = getHandlers(options, pathTemplateHandler);
         
         OptionMap workerOptions = omBuilder()
-                .set(xnioWorkerIoThreads, 
+                .set(XnioOptions.workerIoThreads,
                     JInt(options.workerIoThreads))
-                .set(xnioConnectionLowWatter, 
+                .set(XnioOptions.connectionLowWater,
                     JInt(options.connectionLowWatter))
-                .set(xnioConnectionHighWatter,
+                .set(XnioOptions.connectionHighWater,
                     JInt(options.connectionHighWatter))
-                .set(xnioWorkerTaskCoreThreads, 
+                .set(XnioOptions.workerTaskCoreThreads,
                     JInt(options.workerTaskCoreThreads))
-                .set(xnioWorkerTaskMaxThreads, 
+                .set(XnioOptions.workerTaskMaxThreads,
                     JInt(options.workerTaskMaxThreads))
-                .set(xnioTcpNoDelay, true)
-                .set(xnioCork, true)
+                .set(XnioOptions.tcpNodelay, true)
+                .set(XnioOptions.cork, true)
                 .map;
         
         OptionMap serverOptions = omBuilder()
-                .set(xnioTcpNoDelay, true)
-                .set(xnioReuseAddress, true)
+                .set(XnioOptions.tcpNodelay, true)
+                .set(XnioOptions.reuseAddresses, true)
                 .map;
         
         worker = NioXnioProvider().instance.createWorker(workerOptions);

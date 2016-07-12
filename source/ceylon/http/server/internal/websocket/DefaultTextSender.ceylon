@@ -26,7 +26,7 @@ by("Matej Lazar")
 class DefaultFragmentedTextSender(DefaultWebSocketChannel channel) 
         satisfies FragmentedTextSender {
 
-    value fragmentedChannel = channel.underlyingChannel.send(WebSocketFrameType.\iTEXT);
+    value fragmentedChannel = channel.underlyingChannel.send(WebSocketFrameType.text);
     
     shared actual void sendText(String text, Boolean finalFrame) {
         value wsChannel = fragmentedChannel.webSocketChannel;

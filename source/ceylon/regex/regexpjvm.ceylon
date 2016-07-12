@@ -29,12 +29,12 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
     shared actual variable Integer lastIndex = 0;
     
     Integer patternFlags {
-        variable Integer f = Pattern.\iUNIX_LINES;
+        variable Integer f = Pattern.unixLines;
         if (ignoreCase) {
-            f = f.or(Pattern.\iCASE_INSENSITIVE).or(Pattern.\iUNICODE_CASE);
+            f = f.or(Pattern.caseInsensitive).or(Pattern.unicodeCase);
         }
         if (multiLine) {
-            f = f.or(Pattern.\iMULTILINE);
+            f = f.or(Pattern.multiline);
         }
         return f;
     }

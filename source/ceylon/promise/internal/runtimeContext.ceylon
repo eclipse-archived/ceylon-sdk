@@ -1,8 +1,18 @@
 import ceylon.promise {
-  ExecutionContext
+    ExecutionContext
 }
-import java.util.concurrent { TimeUnit { SECONDS }, SynchronousQueue, ThreadPoolExecutor, ThreadFactory }
-import java.lang { Runnable, Integer_=Integer, Thread, Runtime }
+
+import java.lang {
+    Runnable,
+    Thread,
+    Runtime
+}
+import java.util.concurrent {
+    TimeUnit,
+    SynchronousQueue,
+    ThreadPoolExecutor,
+    ThreadFactory
+}
 
 native
 shared object runtimeContext satisfies ExecutionContext {
@@ -14,7 +24,10 @@ native("jvm")
 shared object runtimeContext satisfies ExecutionContext {
   
   // Equivalent to Executors.newCachedThreadPool
-  ThreadPoolExecutor executor = ThreadPoolExecutor(0, Integer_.\iMAX_VALUE, 60, TimeUnit.\iSECONDS, SynchronousQueue<Runnable>());
+  value executor
+          = ThreadPoolExecutor(0, runtime.maxIntegerValue,
+                60, TimeUnit.seconds,
+                SynchronousQueue<Runnable>());
   value wrappedThreadFactory = executor.threadFactory;
   executor.threadFactory = object satisfies ThreadFactory {
     shared actual Thread newThread(Runnable runnable) {
@@ -27,7 +40,7 @@ shared object runtimeContext satisfies ExecutionContext {
   Thread shutdownHook = Thread(object satisfies Runnable {
     shared actual void run() {
       executor.shutdown();
-      executor.awaitTermination(90, TimeUnit.\iSECONDS);
+      executor.awaitTermination(90, TimeUnit.seconds);
     }
   });
   shutdownHook.name = "ceylon-execution-context-shutdown-hook";

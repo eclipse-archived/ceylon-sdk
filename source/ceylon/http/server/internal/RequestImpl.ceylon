@@ -5,13 +5,6 @@ import ceylon.collection {
 import ceylon.file {
     parsePath
 }
-import ceylon.interop.java {
-    javaByteArray,
-    toByteArray
-}
-import ceylon.io {
-    SocketAddress
-}
 import ceylon.http.common {
     Method,
     contentTypeMultipartFormData
@@ -30,6 +23,13 @@ import ceylon.http.server.internal {
         paramValue
     }
 }
+import ceylon.interop.java {
+    javaByteArray,
+    toByteArray
+}
+import ceylon.io {
+    SocketAddress
+}
 
 import io.undertow.server {
     HttpServerExchange
@@ -39,16 +39,12 @@ import io.undertow.server.handlers.form {
     FormParserFactory
 }
 import io.undertow.server.session {
-    SessionManager {
-        smAttachmentKey=\iATTACHMENT_KEY
-    },
+    SessionManager,
     UtSession=Session,
     SessionCookieConfig
 }
 import io.undertow.util {
-    Headers {
-        headerConntentType=\iCONTENT_TYPE
-    },
+    Headers,
     HttpString
 }
 
@@ -79,7 +75,7 @@ class RequestImpl(HttpServerExchange exchange,
     String? getHeader(String name) 
             => exchange.requestHeaders.getFirst(HttpString(name));
 
-    contentType => getHeader(headerConntentType.string);
+    contentType => getHeader(Headers.contentType.string);
 
     header(String name) => getHeader(name);
     
@@ -133,7 +129,7 @@ class RequestImpl(HttpServerExchange exchange,
 
     FormData buildFormData() {
         // multipart/form-data parsing requires blocking mode
-        String? contentType = exchange.requestHeaders.getFirst(HttpString(headerConntentType.string));
+        String? contentType = exchange.requestHeaders.getFirst(HttpString(Headers.contentType.string));
         if (is String contentType) {
             if (contentType.startsWith(contentTypeMultipartFormData)) {
                 exchange.startBlocking();
@@ -299,8 +295,8 @@ class RequestImpl(HttpServerExchange exchange,
     }
     
     shared actual Session session {
-        SessionManager sessionManager 
-                = exchange.getAttachment(smAttachmentKey);
+        value sessionManager
+                = exchange.getAttachment(SessionManager.attachmentKey);
 
         //TODO configurable session cookie
         value sessionCookieConfig = SessionCookieConfig();

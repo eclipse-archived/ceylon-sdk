@@ -9,7 +9,7 @@ import java.nio.file {
         deletePath=delete,
         isDirectory,
         isRegularFile,
-        isNotExisting=\inotExists,
+        notExists,
         getOwner,
         setOwner,
         getAttribute,
@@ -25,7 +25,7 @@ class ConcreteLink(JPath jpath)
     path => ConcretePath(jpath); 
     
     shared actual File|Directory|Nil linkedResource {
-        if (isDirectory(jpath) || isRegularFile(jpath) || isNotExisting(jpath)) {
+        if (isDirectory(jpath) || isRegularFile(jpath) || notExists(jpath)) {
             // this link ultimately resolves to a file, directory, or nil,
             // so there is no risk of infinite recursion.
             return linkedPath.resource.linkedResource;

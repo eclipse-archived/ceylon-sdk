@@ -1,9 +1,8 @@
-import ceylon.file {
-    ...
-}
-
 import ceylon.collection {
     ArrayList
+}
+import ceylon.file {
+    ...
 }
 
 import java.io {
@@ -20,11 +19,7 @@ import java.nio.file {
         newPath=get
     },
     FileVisitor,
-    FileVisitResult {
-        CONTINUE,
-        TERMINATE,
-        SKIP_SUBTREE
-    },
+    FileVisitResult,
     FileSystems {
         defaultFileSystem=default
     },
@@ -175,13 +170,15 @@ class ConcretePath(jpath)
         object fileVisitor satisfies FileVisitor<JPath> {
             value result {
                 return visitor.terminated 
-                        then \iTERMINATE else \iCONTINUE;
+                        then FileVisitResult.terminate
+                        else FileVisitResult.\icontinue;
             }
             shared actual FileVisitResult preVisitDirectory(JPath? t, 
                     BasicFileAttributes? basicFileAttributes) {
                 if (exists t) {
                     return visitor.beforeDirectory(ConcreteDirectory(t)) 
-                            then result else \iSKIP_SUBTREE;
+                            then result
+                            else FileVisitResult.skipSubtree;
                 }
                 return result;
             }

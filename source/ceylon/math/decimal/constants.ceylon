@@ -9,13 +9,13 @@ import java.math {
 }
 
 "A `Decimal` instance representing zero."
-shared Decimal zero = DecimalImpl(BigDecimal.\iZERO);
+shared Decimal zero = DecimalImpl(BigDecimal.zero);
 
 "A `Decimal` instance representing one."
-shared Decimal one = DecimalImpl(BigDecimal.\iONE);
+shared Decimal one = DecimalImpl(BigDecimal.one);
 
 "A `Decimal` instance representing ten."
-shared Decimal ten = DecimalImpl(BigDecimal.\iTEN);
+shared Decimal ten = DecimalImpl(BigDecimal.ten);
 
 Decimal intMax = decimalNumber(maxInt);
 Decimal intMin = decimalNumber(minInt);

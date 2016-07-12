@@ -26,7 +26,7 @@ by("Matej Lazar")
 class DefaultFragmentedBinarySender(DefaultWebSocketChannel channel)
         satisfies FragmentedBinarySender {
 
-    value fragmentedChannel = channel.underlyingChannel.send(WebSocketFrameType.\iBINARY);
+    value fragmentedChannel = channel.underlyingChannel.send(WebSocketFrameType.binary);
 
     shared actual void sendBinary(ByteBuffer binary, Boolean finalFrame) {
         value wsChannel = fragmentedChannel.webSocketChannel;

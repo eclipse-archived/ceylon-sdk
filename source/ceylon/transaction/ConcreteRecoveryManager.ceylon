@@ -2,7 +2,7 @@ import ceylon.transaction.internal {
     RecoveryHelper
 }
 import com.arjuna.ats.arjuna.common {
-    \IrecoveryPropertyManager {
+    recoveryPropertyManager {
         recoveryEnvironmentBean
     }
 }

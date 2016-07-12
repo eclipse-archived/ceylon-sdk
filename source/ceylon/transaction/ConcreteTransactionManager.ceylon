@@ -4,7 +4,7 @@ import ceylon.interop.java {
 
 import com.arjuna.ats.jdbc {
     TransactionalDriver {
-        xadsPropertyName=XADataSource
+        xadsPropertyName=xaDataSource
     }
 }
 import com.arjuna.ats.jdbc.common {
@@ -266,14 +266,11 @@ class ConcreteTransactionManager()
         return ConcreteTransaction();
     }
 
-    shared actual Transaction? currentTransaction {
-        if (exists ut = userTransaction) {
-            if (ut.status != JavaStatus.\iSTATUS_NO_TRANSACTION) {
-                return ConcreteTransaction();
-            }
-        }
-        return null;
-    }
+    currentTransaction
+            => if (exists ut = userTransaction,
+                   ut.status != JavaStatus.statusNoTransaction)
+            then ConcreteTransaction()
+            else null;
 
     transactionActive => currentTransaction exists;
 

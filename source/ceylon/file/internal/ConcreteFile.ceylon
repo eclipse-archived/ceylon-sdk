@@ -39,15 +39,8 @@ import java.nio.file {
         newInputStream,
         newOutputStream
     },
-    StandardCopyOption {
-        REPLACE_EXISTING,
-        COPY_ATTRIBUTES
-    },
-    StandardOpenOption {
-        WRITE,
-        APPEND,
-        TRUNCATE_EXISTING
-    }
+    StandardCopyOption,
+    StandardOpenOption
 }
 import java.nio.file.attribute {
     FileTime {
@@ -66,19 +59,20 @@ class ConcreteFile(JPath jpath)
     
     copy(Nil target, Boolean copyAttributes) =>
             ConcreteFile( copyPath(jpath, asJPath(target.path, jpath),
-                    *(copyAttributes then [\iCOPY_ATTRIBUTES] else [])) );
+                    *(copyAttributes then [StandardCopyOption.copyAttributes] else [])) );
     
     copyOverwriting(File|Nil target, Boolean copyAttributes) =>
             ConcreteFile( copyPath(jpath, asJPath(target.path, jpath),
-                    *(copyAttributes then [\iREPLACE_EXISTING, \iCOPY_ATTRIBUTES ]
-                                     else [\iREPLACE_EXISTING])) );
+                    *(copyAttributes then [StandardCopyOption.replaceExisting,
+                                           StandardCopyOption.copyAttributes]
+                                     else [StandardCopyOption.replaceExisting])) );
     
     move(Nil target) =>
-            ConcreteFile( movePath(jpath, asJPath(target.path, jpath)) );
+            ConcreteFile(movePath(jpath, asJPath(target.path, jpath)));
     
     moveOverwriting(File|Nil target) =>
-            ConcreteFile( movePath(jpath, asJPath(target.path, jpath),
-                    \iREPLACE_EXISTING) );            
+            ConcreteFile(movePath(jpath, asJPath(target.path, jpath),
+                StandardCopyOption.replaceExisting) );
     
     createLink(Nil target) =>
             ConcreteFile(newLink(asJPath(target.path, jpath), jpath));
@@ -174,8 +168,9 @@ class ConcreteFile(JPath jpath)
         value charset = parseCharset(encoding);
         
         value stream = 
-                newOutputStream(jpath, \iWRITE, 
-                    \iTRUNCATE_EXISTING);
+                newOutputStream(jpath,
+                    StandardOpenOption.write,
+                    StandardOpenOption.truncateExisting);
         
         value writer = 
                 BufferedWriter(
@@ -211,7 +206,9 @@ class ConcreteFile(JPath jpath)
         value charset = parseCharset(encoding);
         
         value stream = 
-                newOutputStream(jpath, \iWRITE, \iAPPEND);
+                newOutputStream(jpath,
+                    StandardOpenOption.write,
+                    StandardOpenOption.append);
         
         value writer = 
                 BufferedWriter(

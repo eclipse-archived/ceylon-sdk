@@ -51,13 +51,13 @@ class TemplateCeylonRequestHandler(Options options, Endpoint endpoint)
                 
                 // if method matches {
                 // TODO check method
-                value jParams = exc.getAttachment(PathTemplateMatch.\iATTACHMENT_KEY).parameters;
+                value jParams = exc.getAttachment(PathTemplateMatch.attachmentKey).parameters;
                 RequestImpl request = RequestImpl { 
                     exchange = exc; 
                     formParserFactory = formParserFactory;
                     endpoint = endpoint;
                     path = requestPath;
-                    matchedTemplate = exc.getAttachment(PathTemplateMatch.\iATTACHMENT_KEY).matchedTemplate;
+                    matchedTemplate = exc.getAttachment(PathTemplateMatch.attachmentKey).matchedTemplate;
                     pathParameters = makeCeylonStringMap(jParams);
                     method = method;
                 };

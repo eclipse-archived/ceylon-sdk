@@ -6,10 +6,10 @@ import java.lang {
  mathematical constant \{#0001D452}, the 
  base of the natural logarithm."
 see(`function exp`,`function log`)
-shared Float e => Math.\iE;
+shared Float e => Math.e;
 
 "The Float which best approximates the 
  mathematical constant \{#03C0}, the ratio 
  of the circumference of a circle to its 
  diameter."
-shared Float pi => Math.\iPI;
+shared Float pi => Math.pi;

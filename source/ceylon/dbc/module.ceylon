@@ -78,7 +78,7 @@
    [[java.sql::Types]]):
    
        sql.Update("update table set col=? where key=?")
-          .execute(SqlNull(Types.\iINTEGER));
+          .execute(SqlNull(Types.integer));
    
    If a column is null on a result row, it will be 
    represented as a `SqlNull` instance under the column's 
