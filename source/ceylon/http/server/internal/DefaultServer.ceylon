@@ -55,10 +55,8 @@ import io.undertow.server.session {
 }
 
 import java.lang {
+    Runtime,
     JInt=Integer,
-    Runtime {
-        jRuntime=runtime
-    },
     JThread=Thread
 }
 import java.net {
@@ -67,15 +65,11 @@ import java.net {
 
 import org.xnio {
     XnioWorker,
-    OptionMap {
-        omBuilder=builder
-    },
+    OptionMap,
     XnioOptions=Options,
     ByteBufferSlicePool,
     BufferAllocator,
-    ChannelListeners {
-        clOpenListenerAdapter=openListenerAdapter
-    }
+    ChannelListeners
 }
 import org.xnio.nio {
     NioXnioProvider
@@ -135,7 +129,9 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
                     XnioByteBufferPool(
                         ByteBufferSlicePool(BufferAllocator.directByteBufferAllocator,
                             8192, 8192 * 8192)),
-                    omBuilder().set(UndertowOptions.bufferPipelinedData,false).map);
+                    OptionMap.builder()
+                        .set(UndertowOptions.bufferPipelinedData,false)
+                        .map);
         
         value pathTemplateHandler
                 = PathTemplateHandler(
@@ -152,7 +148,8 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         openListener.rootHandler 
                 = getHandlers(options, pathTemplateHandler);
         
-        OptionMap workerOptions = omBuilder()
+        value workerOptions
+                = OptionMap.builder()
                 .set(XnioOptions.workerIoThreads,
                     JInt(options.workerIoThreads))
                 .set(XnioOptions.connectionLowWater,
@@ -167,7 +164,8 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
                 .set(XnioOptions.cork, true)
                 .map;
         
-        OptionMap serverOptions = omBuilder()
+        value serverOptions
+                = OptionMap.builder()
                 .set(XnioOptions.tcpNodelay, true)
                 .set(XnioOptions.reuseAddresses, true)
                 .map;
@@ -178,7 +176,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
             w.createStreamConnectionServer(
                 InetSocketAddress(socketAddress.address, 
                                   socketAddress.port), 
-                clOpenListenerAdapter(openListener), 
+                ChannelListeners.openListenerAdapter(openListener),
                 serverOptions)
                     .resumeAccepts();
         } else {
@@ -190,7 +188,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
             run = outer.stop;
         }
         shutdownThread.daemon = false;
-        jRuntime.addShutdownHook(shutdownThread);
+        Runtime.runtime.addShutdownHook(shutdownThread);
         
         //TODO log
         print("Httpd started.");
