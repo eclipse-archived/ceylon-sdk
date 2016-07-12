@@ -1,15 +1,13 @@
 
-import java.nio {
-    JByteBuffer=ByteBuffer
-}
 import ceylon.buffer {
     ByteBuffer
 }
 import ceylon.interop.java {
     toByteArray
 }
-import java.lang {
-    ByteArray
+
+import java.nio {
+    JByteBuffer=ByteBuffer
 }
 
 by("Matej Lazar")

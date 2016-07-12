@@ -2,7 +2,7 @@ import java.net { URI }
 import test.ceylon.http.server.websocketclient { WebSocketClient }
 import ceylon.http.server.websocket { WebSocketChannel, CloseReason, WebSocketEndpoint }
 import ceylon.test { assertTrue, assertEquals, test }
-import ceylon.http.server { startsWith, started, Status, stopped, newServer }
+import ceylon.http.server { startsWith }
 import ceylon.buffer { ByteBuffer }
 import io.netty.channel.nio { NioEventLoopGroup }
 import io.netty.channel { EventLoopGroup }
