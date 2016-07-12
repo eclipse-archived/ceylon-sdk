@@ -91,7 +91,11 @@ shared class SelectorImpl()
                 javaKey.interestOps().or(javaConnectOp));
         }else{
             // new key
-            value key = Key { onConnect = callback; onConnectFailure = failureCallback; connector = connector; };
+            value key = Key {
+                onConnect = callback;
+                onConnectFailure = failureCallback;
+                connector = connector;
+            };
             value newJavaKey = 
                     connector.register(javaSelector, javaConnectOp, key);
             map.put(newJavaKey, key);

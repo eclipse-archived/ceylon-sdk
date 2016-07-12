@@ -34,7 +34,7 @@ shared class ServerSocketImpl(SocketAddress? bindAddress,
     assert(is InetSocketAddress socketAddress = channel.localAddress);
     localAddress = SocketAddress(socketAddress.hostString, socketAddress.port);
 
-    shared actual Socket accept() => SocketImpl(channel.accept());
+    accept() => SocketImpl(channel.accept());
 
     shared actual void acceptAsync(Selector selector, 
             Boolean accept(Socket socket)) {
@@ -43,7 +43,7 @@ shared class ServerSocketImpl(SocketAddress? bindAddress,
         selector.addAcceptListener(this, accept);
     }
 
-    shared actual void close() => channel.close();
+    close() => channel.close();
     
     shared default SelectionKey register(JavaSelector selector, 
         Integer ops, Object attachment)

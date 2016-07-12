@@ -189,7 +189,7 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
             current = this;
             intoNew = () {
                 // copy
-                JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
+                value dest = allocateJavaByteBuffer(newSize);
                 dest.put(buf);
                 // change buffer
                 buf = dest;

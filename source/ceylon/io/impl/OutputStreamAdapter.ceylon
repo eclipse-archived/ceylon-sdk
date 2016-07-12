@@ -19,7 +19,7 @@ import java.nio.channels {
 shared class OutputStreamAdapter(OutputStream stream) satisfies WritableFileDescriptor {
     WritableByteChannel channel = Channels.newChannel(stream);
     
-    shared actual void close() => channel.close();
+    close() => channel.close();
     
     shared actual Integer write(ByteBuffer buffer) {
         assert (is JavaByteBuffer implementation = buffer.implementation);

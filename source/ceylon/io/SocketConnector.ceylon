@@ -23,7 +23,8 @@ shared sealed interface SocketConnector{
      socket is connected."
     see(`interface Selector`)
     shared formal void connectAsync(Selector selector, 
-        void connect(Socket socket), Anything(Exception)? connectFailure = null);
+        void connect(Socket socket),
+        Anything(Exception)? connectFailure = null);
 
     "Closes this socket connector."
     shared formal void close();
