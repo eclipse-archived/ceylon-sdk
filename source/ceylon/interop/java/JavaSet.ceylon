@@ -1,13 +1,14 @@
-import java.util {
-    AbstractSet,
-    Collection
-}
 import ceylon.collection {
     MutableSet
 }
+
 import java.lang {
     UnsupportedOperationException,
     IllegalArgumentException
+}
+import java.util {
+    AbstractSet,
+    Collection
 }
 
 "A Java [[java.util::Set]] that wraps a Ceylon [[Set]]. This 

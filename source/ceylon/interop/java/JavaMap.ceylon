@@ -1,21 +1,14 @@
 import ceylon.collection {
     MutableMap
 }
-import ceylon.language {
-    CEntry=Entry
-}
 
 import java.lang {
     UnsupportedOperationException,
     IllegalArgumentException
 }
 import java.util {
-    JSet=Set,
     AbstractSet,
-    AbstractMap,
-    JMap=Map {
-        JEntry=Entry
-    }
+    AbstractMap
 }
 
 "A Java [[java.util::Map]] that wraps a Ceylon [[Map]]. This 
@@ -27,11 +20,12 @@ shared class JavaMap<K,V>(Map<K,V> map)
         given K satisfies Object 
         given V satisfies Object {
     
-    shared actual JSet<K> keySet()
+    keySet()
             => object extends AbstractSet<K>() {
             
             iterator() => JavaIterator<K>(
-                map.map(CEntry.key).iterator());
+                map.map((e) => e.key)
+                    .iterator());
             
             contains(Object? key) 
                     => if (exists key) 
@@ -44,13 +38,14 @@ shared class JavaMap<K,V>(Map<K,V> map)
         };
     
     entrySet()
-        => object extends AbstractSet<JEntry<K,V>>() {
+        => object extends AbstractSet<Entry<K,V>>() {
         
-            iterator() => JavaIterator<JEntry<K,V>>(
-                map.map((e) => SimpleImmutableEntry(e.key, e.item)).iterator());
+            iterator() => JavaIterator<Entry<K,V>>(
+                map.map((e) => SimpleImmutableEntry(e.key, e.item))
+                    .iterator());
         
             contains(Object? entry)
-                    => if (is JEntry<out Anything,out Anything> entry,
+                    => if (is Entry<out Anything,out Anything> entry,
                            exists key = entry.key,
                            exists val = entry.\ivalue,
                            exists it = map[key])
