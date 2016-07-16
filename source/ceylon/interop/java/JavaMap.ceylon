@@ -18,40 +18,6 @@ import java.util {
     }
 }
 
-class JavaEntry<K,V>(K->V entry) 
-        extends Object()
-        satisfies JEntry<K,V> 
-        given K satisfies Object 
-        given V satisfies Object {
-    
-    key => entry.key;
-    \ivalue => entry.item;
-    //assign \ivalue {
-    //    throw UnsupportedOperationException();
-    //}
-    shared actual V setValue(V? v) {
-        throw UnsupportedOperationException();
-    }
-    
-    shared actual Boolean equals(Object that) {
-        if (is JEntry<out Anything,out Anything> that,
-            exists thatKey = that.key,
-            exists thatValue = that.\ivalue) {
-            return key==thatKey && 
-                    \ivalue==thatValue;
-        }
-        else {
-            return false;
-        }
-    }
-
-    shared actual Integer hash
-        // Calculate hash per java.util.Map.Entry contract, and
-        // defeat bit shifting described in
-        // https://github.com/ceylon/ceylon-compiler/issues/1334
-        =>  key.hash.xor(\ivalue.hash).and(#ffffffff);
-}
-
 "A Java [[java.util::Map]] that wraps a Ceylon [[Map]]. This 
  map is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
@@ -81,7 +47,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
         => object extends AbstractSet<JEntry<K,V>>() {
         
             iterator() => JavaIterator<JEntry<K,V>>(
-                map.map(JavaEntry).iterator());
+                map.map((e) => SimpleImmutableEntry(e.key, e.item)).iterator());
         
             contains(Object? entry)
                     => if (is JEntry<out Anything,out Anything> entry,
