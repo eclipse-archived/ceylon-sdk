@@ -14,7 +14,8 @@ import ceylon.buffer {
 }
 import ceylon.buffer.charset {
     utf8,
-    ascii
+    ascii,
+    utf16
 }
 import ceylon.uri {
     parse
@@ -25,6 +26,9 @@ import ceylon.test {
 }
 import ceylon.collection {
     ArrayList
+}
+import ceylon.buffer.base {
+    base64StringStandard
 }
 
 void readResponse(Socket socket) {
@@ -75,8 +79,9 @@ void writeRequestInPipeline(String request, Socket socket) {
     value requestBuffer = ByteBuffer.ofSize(200);
     value encoder = ascii.chunkEncoder();
     value input = CharacterBuffer(request);
+    value iter = input.iterator();
     while(input.hasAvailable || !encoder.done){
-        encoder.convert(requestBuffer, input);
+        encoder.convert(requestBuffer, iter.next);
         // flip and flush the request buffer
         requestBuffer.flip();
         // write it all, blocking
@@ -174,4 +179,102 @@ test void testConnectFailure() {
     assertEquals(0, connectSuccessQueue.size);
     assertEquals(1, connectFailureQueue.size);
     assertEquals("Connection refused", connectFailureQueue[0]?.message);
+}
+
+shared void chunkCharsetBuffer() {
+    value s = utf8.encode("aä");
+    value dec = utf8.chunkDecoder();
+    value buf = CharacterBuffer.ofSize(1);
+    value iter = s.iterator();
+    assert(dec.convert(buf, iter.next) == 1);
+    assert (!buf.hasAvailable); // did read
+    buf.flip();
+    assert (buf.get() == 'a');
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 2); // needed 2 bytes
+    assert (!buf.hasAvailable); // did read
+    buf.flip();
+    assert (buf.get() == 'ä');
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 0);
+    assert (buf.hasAvailable); // no more
+}
+
+shared void chunkCharsetSingle() {
+    value s = utf16.encode("aä");
+    value dec = utf16.chunkDecoder();
+    value iter = s.iterator();
+    assert (dec.convertToSingle(iter.next) == 'a');
+    assert (dec.convertToSingle(iter.next) == 'ä');
+    assert (dec.convertToSingle(iter.next) == finished);
+}
+
+shared void chunkBase64EncodeBuffer() {
+    value s = { 4.byte, 199.byte };
+    value dec = base64StringStandard.chunkEncoder();
+    value buf = CharacterBuffer.ofSize(1);
+    value iter = s.iterator();
+    assert(dec.convert(buf, iter.next) == 1);
+    assert (!buf.hasAvailable);
+    buf.flip();
+    assert (buf.get() == 'B');
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 1);
+    assert (!buf.hasAvailable);
+    buf.flip();
+    assert (buf.get() == 'M');
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 0);
+    assert (!buf.hasAvailable);
+    buf.flip();
+    assert (buf.get() == 'c');
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 0);
+    assert (!buf.hasAvailable);
+    buf.flip();
+    assert (buf.get() == '=');
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 0);
+    assert (buf.hasAvailable);
+    assert(dec.convert(buf, iter.next) == 0);
+}
+
+shared  void chunkBase64EncodeSingle() {
+    value s = { 4.byte, 199.byte };
+    value dec = base64StringStandard.chunkEncoder();
+    value iter = s.iterator();
+    assert (dec.convertToSingle(iter.next) == 'B');
+    assert (dec.convertToSingle(iter.next) == 'M');
+    assert (dec.convertToSingle(iter.next) == 'c');
+    assert (dec.convertToSingle(iter.next) == '=');
+    assert (dec.convertToSingle(iter.next) == finished);
+}
+
+shared void chunkBase64DecodeBuffer() {
+    value s = "AB==";
+    value dec = base64StringStandard.chunkDecoder();
+    value buf = ByteBuffer.ofSize(1);
+    value iter = s.iterator();
+    assert(dec.convert(buf, iter.next) == 2);
+    assert (!buf.hasAvailable); // did read
+    buf.flip();
+    assert (buf.get() == 0.byte);
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 1); // needed 2 bytes
+    assert (!buf.hasAvailable); // did read
+    buf.flip();
+    assert (buf.get() == 16.byte);
+    buf.clear();
+    assert(dec.convert(buf, iter.next) == 1);
+    assert (buf.hasAvailable); // no more
+    assert(dec.convert(buf, iter.next) == 0);
+}
+
+shared void chunkBase64DecodeSingle() {
+    value s = "AB==";
+    value dec = base64StringStandard.chunkDecoder();
+    value iter = s.iterator();
+    assert (dec.convertToSingle(iter.next) == 0.byte);
+    assert (dec.convertToSingle(iter.next) == 16.byte);
+    assert (dec.convertToSingle(iter.next) == finished);
 }

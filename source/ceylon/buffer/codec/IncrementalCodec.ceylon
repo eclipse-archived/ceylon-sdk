@@ -11,9 +11,8 @@ shared interface PieceConvert<ToSingle, FromSingle> {
     shared default {ToSingle*} done() => empty;
 }
 
-shared class ChunkConvert<ToMutable, FromImmutable, ToSingle, FromSingle>(converter, error)
-        given ToMutable satisfies Buffer<ToSingle>
-        given FromImmutable satisfies {FromSingle*} {
+shared class ChunkConvert<ToMutable, ToSingle, FromSingle>(converter, error)
+        given ToMutable satisfies Buffer<ToSingle> {
     PieceConvert<ToSingle,FromSingle>(ErrorStrategy) converter;
     ErrorStrategy error;
     
@@ -23,8 +22,10 @@ shared class ChunkConvert<ToMutable, FromImmutable, ToSingle, FromSingle>(conver
     shared Boolean done => remainder.empty;
     
     "Converts in portions dictated by the size of the output buffer, which will
-     not be resized."
-    shared Integer convert(ToMutable output, FromImmutable input) {
+     not be resized.
+     
+     The return value is the number of input units read during the call."
+    shared Integer convert(ToMutable output, <FromSingle|Finished>() provider) {
         // If there is remainder, write that first
         while (output.hasAvailable, exists element = remainder.pop()) {
             output.put(element);
@@ -33,14 +34,27 @@ shared class ChunkConvert<ToMutable, FromImmutable, ToSingle, FromSingle>(conver
             return 0;
         }
         
-        // Don't use each() as we might need to stop before all of input is read
         variable Integer readCount = 0;
-        for (inputElement in input) {
-            readCount++;
-            value elements = pieceConverter.more(inputElement).iterator();
+        while (true) {
+            Iterator<ToSingle> elements;
+            value inputElement = provider();
+            if (is Finished inputElement) {
+                elements = pieceConverter.done().iterator();
+            }
+            else {
+                readCount++;
+                elements = pieceConverter.more(inputElement).iterator();
+            }
             while (is ToSingle element = elements.next()) {
                 if (output.hasAvailable) {
                     output.put(element);
+                    if (!output.hasAvailable) {
+                        // Output is full, append to the remainder
+                        while (is ToSingle remaining = elements.next()) {
+                            remainder.offer(remaining);
+                        }
+                        return readCount;
+                    }
                 } else {
                     // Output is full, append to the remainder
                     remainder.offer(element);
@@ -50,8 +64,41 @@ shared class ChunkConvert<ToMutable, FromImmutable, ToSingle, FromSingle>(conver
                     return readCount;
                 }
             }
+            if (is Finished inputElement) {
+                return readCount;
+            }
         }
-        return readCount;
+    }
+
+    shared ToSingle|Finished convertToSingle(<FromSingle|Finished>() provider) {
+        // If there is remainder, write that first
+        if (exists element = remainder.pop()) {
+            return element;
+        }
+
+        while (true) {
+            Iterator<ToSingle> elements;
+            value inputElement = provider();
+            if (is Finished inputElement) {
+                elements = pieceConverter.done().iterator();
+            }
+            else {
+                elements = pieceConverter.more(inputElement).iterator();
+            }
+
+            value element = elements.next();
+            if (!is Finished element) {
+                while (!is Finished remaining = elements.next()) {
+                    // append to the remainder
+                    remainder.offer(remaining);
+                }
+                return element;
+            }
+            
+            if (is Finished inputElement) {
+                return finished;
+            }
+        }
     }
 }
 
@@ -135,17 +182,17 @@ shared interface IncrementalCodec<ToMutable, ToImmutable, ToSingle,
      not be resized."
     throws (`class EncodeException`,
         "When an error is encountered and [[error]] == [[strict]]")
-    shared ChunkConvert<ToMutable,{FromSingle*},ToSingle,FromSingle> chunkEncoder
+    shared ChunkConvert<ToMutable,ToSingle,FromSingle> chunkEncoder
             (ErrorStrategy error = strict)
-            => ChunkConvert<ToMutable,{FromSingle*},ToSingle,FromSingle>(pieceEncoder, error);
+            => ChunkConvert<ToMutable,ToSingle,FromSingle>(pieceEncoder, error);
     
     "Decodes in portions dictated by the size of the output buffer, which will
      not be resized."
     throws (`class DecodeException`,
         "When an error is encountered and [[error]] == [[strict]]")
-    shared ChunkConvert<FromMutable,{ToSingle*},FromSingle,ToSingle> chunkDecoder
+    shared ChunkConvert<FromMutable,FromSingle,ToSingle> chunkDecoder
             (ErrorStrategy error = strict)
-            => ChunkConvert<FromMutable,{ToSingle*},FromSingle,ToSingle>(pieceDecoder, error);
+            => ChunkConvert<FromMutable,FromSingle,ToSingle>(pieceDecoder, error);
     
     "Encode into a new buffer as portions arrive and return the buffer when the
      input is complete. [[inputSize]] can be used to hint the expected total
