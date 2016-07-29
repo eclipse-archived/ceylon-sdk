@@ -42,9 +42,9 @@
    then the above is the only thing you need to know to add
    logging. But given the fact that this logging module does
    _not_ actually define any infrastructure for log message
-   output your application must at some point during startup
-   register a [[LogWriter]] function by calling [[addLogWriter]],
-   passing a log writer function, for example:
+   output, your application must at some point during startup
+   register a [[LogWriter]] function by calling [[addLogWriter]]
+   and passing it a log writer function. For example:
    
        addLogWriter(writeSimpleLog);
    
