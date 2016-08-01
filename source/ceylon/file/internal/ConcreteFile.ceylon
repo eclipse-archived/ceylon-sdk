@@ -155,9 +155,11 @@ class ConcreteFile(JPath jpath)
             value byteArray = ByteArray(max);
             value size = stream.read(byteArray);
             return 
-                if (size==max) 
-                then (sequence(byteArray.byteArray) else []) 
-                else [ for (b in byteArray.iterable) b ];
+                if (size<0)
+                    then []
+                else if (size==max)
+                    then (sequence(byteArray.byteArray) else [])
+                else byteArray.iterable.take(size).sequence();
         }
         
     }
