@@ -28,11 +28,19 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
         case (is Element) {
             visitElement(node);
         }
+        case (is Raw) {
+            visitRaw(node);
+        }
     }
     
     void visitComment(Comment node) {
         flush();
         write("<!-- `` node.data `` -->"); // escape?
+    }
+    
+    void visitRaw(Raw node) {
+        flush();
+        write(node.data);
     }
     
     void visitProcessingInstruction(ProcessingInstruction node) {

@@ -67,7 +67,11 @@ shared class TestExamples() {
         assertHtml(
             Div { () => {"foo", Span {"bar"}, "baz" } },
             "<div>foo<span>bar</span>baz</div>\n"
-        );        
+        );
+        assertHtml(
+            Div { "Raw HTML:", Raw("<div></div>") },
+            "<div>Raw HTML:<div></div></div>\n"
+        );
     }
     
     test
