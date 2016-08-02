@@ -44,7 +44,7 @@ shared class Comment(
     
 }
 
-"Represents _raw HTML_."
+"Represents _raw HTML_. Raw content is not escaped."
 shared class Raw(
 	"The raw HTML content"
 	shared String data) 
