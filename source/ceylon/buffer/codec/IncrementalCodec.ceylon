@@ -45,12 +45,12 @@ shared class ChunkConvert<ToMutable, ToSingle, FromSingle>(converter, error)
                 readCount++;
                 elements = pieceConverter.more(inputElement).iterator();
             }
-            while (is ToSingle element = elements.next()) {
+            while (!is Finished element = elements.next()) {
                 if (output.hasAvailable) {
                     output.put(element);
                     if (!output.hasAvailable) {
                         // Output is full, append to the remainder
-                        while (is ToSingle remaining = elements.next()) {
+                        while (!is Finished remaining = elements.next()) {
                             remainder.offer(remaining);
                         }
                         return readCount;
@@ -58,7 +58,7 @@ shared class ChunkConvert<ToMutable, ToSingle, FromSingle>(converter, error)
                 } else {
                     // Output is full, append to the remainder
                     remainder.offer(element);
-                    while (is ToSingle remaining = elements.next()) {
+                    while (!is Finished remaining = elements.next()) {
                         remainder.offer(remaining);
                     }
                     return readCount;
