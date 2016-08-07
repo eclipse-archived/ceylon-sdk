@@ -34,15 +34,9 @@ by ("Stéphane Épardaud")
 shared Anything(ByteBuffer) stringToByteProducer
         (Charset charset, String string) {
     value encoder = charset.chunkEncoder();
-    variable value read = 0;
-    variable value firstTime = true;
+    value chars = string.iterator().next;
     void producer(ByteBuffer buffer) {
-        if (firstTime || !encoder.done) {
-            read += encoder.convert(buffer, string[read...]);
-            firstTime = false;
-        } else {
-            encoder.convert(buffer, empty);
-        }
+        encoder.convert(buffer, chars, true);
     }
     return producer;
 }
