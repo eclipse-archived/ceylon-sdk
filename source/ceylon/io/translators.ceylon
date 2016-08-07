@@ -36,7 +36,7 @@ shared Anything(ByteBuffer) stringToByteProducer
     value encoder = charset.chunkEncoder();
     value chars = string.iterator().next;
     void producer(ByteBuffer buffer) {
-        encoder.convert(buffer, chars);
+        encoder.convert(buffer, chars, true);
     }
     return producer;
 }

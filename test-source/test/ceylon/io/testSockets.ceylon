@@ -80,7 +80,7 @@ void writeRequestInPipeline(String request, Socket socket) {
     value encoder = ascii.chunkEncoder();
     value input = CharacterBuffer(request);
     value provider = input.iterator().next;
-    while(0 != encoder.convert(requestBuffer, provider)) {
+    while(0 != encoder.convert(requestBuffer, provider, true)) {
         // flip and flush the request buffer
         requestBuffer.flip();
         // write it all, blocking

@@ -24,7 +24,10 @@ shared class ChunkConvert<ToMutable, ToSingle, FromSingle>(converter, error)
      not be resized.
      
      The return value is the number of input units read during the call."
-    shared Integer convert(ToMutable output, <FromSingle|Finished>() provider) {
+    shared Integer convert(ToMutable output, <FromSingle|Finished>() provider,
+            "`true` if the given [[provider]] contains all remaining
+             input that will be fed to this `ChunkConverter`"
+            Boolean endOfInput = false) {
         // If there is remainder, write that first
         while (output.hasAvailable, exists element = remainder.pop()) {
             output.put(element);
@@ -38,7 +41,12 @@ shared class ChunkConvert<ToMutable, ToSingle, FromSingle>(converter, error)
             Iterator<ToSingle> elements;
             value inputElement = provider();
             if (is Finished inputElement) {
-                elements = pieceConverter.done().iterator();
+                if (endOfInput) {
+                    elements = pieceConverter.done().iterator();
+                }
+                else {
+                    elements = emptyIterator;
+                }
             }
             else {
                 readCount++;
