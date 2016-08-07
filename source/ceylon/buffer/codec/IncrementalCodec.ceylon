@@ -19,7 +19,6 @@ shared class ChunkConvert<ToMutable, ToSingle, FromSingle>(converter, error)
     value pieceConverter = converter(error);
     
     value remainder = LinkedList<ToSingle>();
-    shared Boolean done => remainder.empty;
     
     "Converts in portions dictated by the size of the output buffer, which will
      not be resized.
