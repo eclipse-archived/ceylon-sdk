@@ -1,7 +1,3 @@
-import ceylon.interop.java {
-    toByteArray
-}
-
 import java.nio {
     JavaByteBuffer=ByteBuffer {
         allocateJavaByteBuffer=allocate
@@ -197,6 +193,6 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
         };
     }
     
-    shared actual native ("jvm") Array<Byte> array => toByteArray(buf.array());
+    shared actual native ("jvm") Array<Byte> array => buf.array().byteArray;
     shared actual native ("jvm") Object? implementation => buf;
 }

@@ -189,4 +189,11 @@ shared abstract class BufferTests<Element>() {
         buffer.get();
         assertEquals(buffer.visible, Array(threeSizeSample.skip(1)));
     }
+    
+    test
+    shared void sharedArray() {
+        value buffer = bufferOfSize(1);
+        oneSizeSample.copyTo(buffer.array);
+        assertEquals(buffer.array, oneSizeSample);
+    }
 }
