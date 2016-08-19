@@ -758,9 +758,9 @@ shared class ArrayList<Element>
                     destination.size - destinationPosition)) {
         
         "illegal starting position in source list"
-        assert (0<=sourcePosition<size-length);
+        assert (0<=sourcePosition<=size-length);
         "illegal starting position in destination list"
-        assert (0<=destinationPosition<destination.size-length);
+        assert (0<=destinationPosition<=destination.size-length);
         
         array.copyTo { 
             length = length; 
