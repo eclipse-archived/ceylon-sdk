@@ -36,6 +36,10 @@ public final class javaObjectArray_ {
     public static <T> T[] javaObjectArray(@Ignore TypeDescriptor $reifiedT, 
             @TypeInfo("ceylon.language::Array<T|ceylon.language::Null>") 
             @Name("array") Array<T> array){
+        TypeDescriptor t = $reifiedT;
+        while (t instanceof TypeDescriptor.Member) {
+            t = ((TypeDescriptor.Member) t).getMember();
+        }
         if (!($reifiedT instanceof TypeDescriptor.Class)) {
             throw new AssertionError("Invalid array element type: "+$reifiedT.toString());
         }
