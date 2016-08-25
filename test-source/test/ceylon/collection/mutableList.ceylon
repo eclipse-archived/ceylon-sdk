@@ -27,7 +27,7 @@ shared interface MutableListTests satisfies ListTests {
         assertTrue(!list.contains("stef"));
         assertEquals("fu", list[0]);
         assertEquals("bar", list[1]);
-        list.set(0, "foo");
+        list[0] = "foo";
         assertEquals("{ foo, bar }", list.string);
         assertEquals(2, list.size);
         assertTrue(list.contains("foo"));
@@ -253,7 +253,7 @@ shared interface MutableListTests satisfies ListTests {
         list.add(null);
         assertEquals(list.reversed, [null, "B", "A"]);
         assertEquals(list, ["A", "B", null]);
-        list.set(0, "C");
+        list[0] = "C";
         assertEquals(list.reversed, [null, "B", "C"]);
         assertEquals(list, ["C", "B", null]);
     }

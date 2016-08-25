@@ -217,7 +217,7 @@ shared interface MutableList<Element>
 "Protocol for mutation of a [[MutableList]]."
 see (`interface MutableList`)
 shared interface ListMutator<in Element>
-        satisfies List<Anything> {
+        satisfies List<Anything> & IndexedCorrespondenceMutator<Element> {
 
     "Add the given [[element]] to the end of this list,
      incrementing the [[length|List.size]] of the list."
@@ -236,7 +236,7 @@ shared interface ListMutator<in Element>
     throws (`class AssertionError`,
             "if the given index is out of bounds, that
              is, if `index<0` or if `index>lastIndex`")
-    shared formal void set(Integer index, Element element);
+    shared actual formal void set(Integer index, Element element);
 
     "Insert the given [[element]] at the specified [[index]],
      incrementing the [[length|List.size]] of the list."

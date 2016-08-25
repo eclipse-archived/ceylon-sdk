@@ -26,14 +26,14 @@ shared interface MutableMap<Key, Item>
 "Protocol for mutation of a [[MutableMap]]."
 see (`interface MutableMap`)
 shared interface MapMutator<in Key, in Item>
-        satisfies Map<Object, Anything>
+        satisfies Map<Object, Anything> & KeyedCorrespondenceMutator<Key, Item>
         given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 
      entry for the given [[key]], and returning the previous 
      value associated with the given `key`, if any, or 
      `null` if no existing entry was overwritten."
-    shared formal Anything put(Key key, Item item);
+    shared actual formal Anything put(Key key, Item item);
     
     "Add the given [[entries]] to this map, overwriting any 
      existing entries with the same keys."
