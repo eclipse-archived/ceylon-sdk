@@ -52,4 +52,18 @@ shared class Utf8Tests()
     shared void lastCodePoint() {
         assertEquals("\{#10FFFF}", utf8.decode(utf8.encode("\{#10FFFF}")));
     }
+    
+    test
+    shared void nonReiterableInput593() {
+        class It<Element>({Element*} elements) satisfies Iterable<Element> {
+            variable value expired = false;
+            shared actual Iterator<Element> iterator() {
+                assert(!expired);
+                expired = true;
+                return elements.iterator();
+            }
+        }
+        assertEquals(utf8.encode(It("E".repeat(1500))), {69.byte}.repeat(1500).sequence());
+        assertEquals(utf8.decode(It({69.byte}.repeat(1500))), "E".repeat(1500));
+    }
 }
