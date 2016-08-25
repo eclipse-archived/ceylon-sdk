@@ -1,7 +1,11 @@
+import ceylon.buffer {
+    ByteBuffer
+}
+import ceylon.buffer.charset {
+    utf8
+}
 import ceylon.file {
     File,
-    Path,
-    parsePath,
     Nil,
     createZipFileSystem,
     temporaryDirectory
@@ -11,18 +15,9 @@ import ceylon.io {
     OpenFile,
     stringToByteProducer
 }
-import ceylon.buffer {
-    ByteBuffer
-}
-import ceylon.buffer.charset {
-    utf8
-}
 import ceylon.test {
     assertEquals,
     test
-}
-import ceylon.language.meta {
-    type
 }
 
 test void testFileCreateWriteRead(){
