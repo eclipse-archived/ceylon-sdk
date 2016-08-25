@@ -82,6 +82,22 @@ void wholeFormatTests() {
     } catch (AssertionError ex) {
         // OK
     }
+    assertEquals(formatWhole(wholeNumber(1), 10, ','), "1", "formatWhole() grouping #1");
+    assertEquals(formatWhole(wholeNumber(100), 10, ','), "100", "formatWhole() grouping #2");
+    assertEquals(formatWhole(wholeNumber(1_000), 10, ','), "1,000", "formatWhole() grouping #3");
+    assertEquals(formatWhole(wholeNumber(100_000), 10, ','), "100,000", "formatWhole() grouping #4");
+    assertEquals(formatWhole(wholeNumber(1_000_000), 10, ','), "1,000,000", "formatWhole() grouping #5");
+    assertEquals(formatWhole(wholeNumber(#f), 16, ' '), "f", "formatWhole() grouping #6");
+    assertEquals(formatWhole(wholeNumber(#ffff), 16, ' '), "ffff", "formatWhole() grouping #7");
+    assertEquals(formatWhole(wholeNumber(#f_ffff), 16, ' '), "f ffff", "formatWhole() grouping #8");
+    assertEquals(formatWhole(wholeNumber(#ffff_ffff), 16, ' '), "ffff ffff", "formatWhole() grouping #9");
+    assertEquals(formatWhole(wholeNumber(#f_ffff_ffff), 16, ' '), "f ffff ffff", "formatWhole() grouping #10");
+    assertEquals(formatWhole(wholeNumber($1), 2, ' '), "1", "formatWhole() grouping #11");
+    assertEquals(formatWhole(wholeNumber($1111), 2, ' '), "1111", "formatWhole() grouping #12");
+    assertEquals(formatWhole(wholeNumber($1_1111), 2, ' '), "1 1111", "formatWhole() grouping #13");
+    assertEquals(formatWhole(wholeNumber($1111_1111), 2, ' '), "1111 1111", "formatWhole() grouping #14");
+    assertEquals(formatWhole(wholeNumber($1_1111_1111), 2, ' '), "1 1111 1111", "formatWhole() grouping #15");
+    assertEquals(formatWhole(wholeNumber(1_000_000), 11, ','), "623351", "formatWhole() grouping #16");
 }
 
 test shared

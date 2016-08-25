@@ -1,18 +1,54 @@
 shared
-String formatWhole(Whole whole, Integer radix = 10) {
+String formatWhole(
+        "The number value to format."
+        Whole whole,
+        "The base, between 2 and 36 inclusive."
+        Integer radix = 10,
+        "If not `null`, `groupingSeparator` will be used to
+         separate each group of three digits if `radix` is 10,
+         or each group of four digits if `radix` is 2 or 16.
+
+         `groupingSeparator` may not be '-', a digit as
+         defined by the Unicode general category *Nd*, or a
+         letter as defined by the Unicode general categories
+         *Lu, Ll, Lt, Lm, and Lo*."
+        Character? groupingSeparator = null) {
     assert (minRadix <= radix <= maxRadix);
     assert (is WholeImpl whole);
 
+    if (exists groupingSeparator) {
+        "groupingSeparator may not be '-', a digit, or a letter."
+        assert (!groupingSeparator.digit
+                && !groupingSeparator.letter
+                && !groupingSeparator == '-');
+    }
+
     // TODO better would be whole.integerRepresentable
     if (whole.safelyAddressable) {
-        return formatInteger(whole.integer, radix);
+        return formatInteger(whole.integer, radix, groupingSeparator);
     }
 
     if (whole.zero) {
         return "0";
     }
 
+    value groupingSize =
+            if (!groupingSeparator exists)
+                then 0
+            else if (radix == 10)
+                then 3
+            else if (radix == 2 || radix == 16)
+                then 4
+            else 0;
+
+    value groupingChar =
+            if (exists groupingSeparator,
+                groupingSize != 0)
+            then groupingSeparator
+            else 'X';
+
     value toRadix = wholeNumber(radix);
+    variable value digitNumber = 0;
     variable value digits = StringBuilder();
 
     variable Whole x = whole.magnitude;
@@ -28,6 +64,11 @@ String formatWhole(Whole whole, Integer radix = 10) {
         }
         else {
             assert (false);
+        }
+        if (groupingSize != 0
+                && groupingSize.divides(digitNumber++)
+                && digitNumber != 1) {
+            digits = digits.appendCharacter(groupingChar);
         }
         digits.appendCharacter(c);
         x = qr.first;
