@@ -34,71 +34,74 @@ import ceylon.interop.java.internal {
 
 
 "The [[BooleanArray]], that is, the Java `boolean[]` array, 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared BooleanArray javaBooleanArray(Array<Boolean>|Array<Bool> array)
         => booleanArray(array);
 
 "The [[ByteArray]], that is, the Java `byte[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared ByteArray javaByteArray(Array<Byte>|Array<Bits> array)
         => byteArray(array);
 
 "The [[ShortArray]], that is, the Java `short[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to 
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared ShortArray javaShortArray(Array<Short> array)
         => shortArray(array);
 
 "The [[IntArray]], that is, the Java `int[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to 
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared IntArray javaIntArray(Array<Character>|Array<Int> array)
         => intArray(array);
 
 "The [[LongArray]], that is, the Java `long[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to 
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared LongArray javaLongArray(Array<Integer>|Array<Long> array)
         => longArray(array);
 
 "The [[FloatArray]], that is, the Java `float[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared FloatArray javaFloatArray(Array<Single> array)
         => floatArray(array);
 
 "The [[DoubleArray]], that is, the Java `double[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared DoubleArray javaDoubleArray(Array<Float>|Array<Double> array)
         => doubleArray(array);
 
 "The [[CharArray]], that is, the Java `char[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared CharArray javaCharArray(Array<Char> array)
         => charArray(array);
 
 "The [[ObjectArray]], that is, the Java `Object[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
+throws (`class AssertionError`,
+        "if [[Element]] is a union or intersection type,
+         or the bottom type `Nothing`")
 shared ObjectArray<Element> javaObjectArray<Element>(Array<Element?> array)
         given Element satisfies Object
         => objectArray(array);
 
 "The [[string array|ObjectArray]], that is, the Java 
- `String[]` array underyling the given Ceylon [[array]]. 
+ `String[]` array underlying the given Ceylon [[array]]. 
  Changes made to this Java array will be reflected in the 
  given [[Array]] and vice versa."
 shared ObjectArray<JavaString> javaStringArray(Array<String> array)
@@ -385,8 +388,11 @@ shared DoubleArray createJavaDoubleArray({Float*} elements)
 shared ObjectArray<JavaString> createJavaStringArray({String*} elements)
         => javaStringArray(Array(elements));
 
-"Create a new [[ObjectArray]], that is, a Java `Object[]`
- array, with the given elements."
-shared ObjectArray<T> createJavaObjectArray<T>({T?*} elements)
-        given T satisfies Object
+"Create a new [[ObjectArray]], that is, a Java array that is
+ a subtype of `Object[]`, with the given elements."
+throws (`class AssertionError`,
+    "if [[Element]] is a union or intersection type,
+     or the bottom type `Nothing`")
+shared ObjectArray<Element> createJavaObjectArray<Element>({Element?*} elements)
+        given Element satisfies Object
         => javaObjectArray(Array(elements));
