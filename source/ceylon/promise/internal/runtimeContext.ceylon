@@ -5,7 +5,8 @@ import ceylon.promise {
 import java.lang {
     Runnable,
     Thread,
-    Runtime
+    Runtime,
+    JInteger=Integer
 }
 import java.util.concurrent {
     TimeUnit,
@@ -25,7 +26,7 @@ shared object runtimeContext satisfies ExecutionContext {
   
   // Equivalent to Executors.newCachedThreadPool
   value executor
-          = ThreadPoolExecutor(0, runtime.maxIntegerValue,
+          = ThreadPoolExecutor(0, JInteger.maxValue,
                 60, TimeUnit.seconds,
                 SynchronousQueue<Runnable>());
   value wrappedThreadFactory = executor.threadFactory;
