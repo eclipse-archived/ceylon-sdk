@@ -16,7 +16,7 @@ class FormDataBuilder() {
             => getPostedFileValues(name).add(val);
     
     ArrayList<String> getPostedParameterValues(String name) {
-        variable ArrayList<String>? builder = parameters[name];
+        value builder = parameters[name];
         if (exists b = builder) {
             return b;
         } else {
@@ -27,7 +27,7 @@ class FormDataBuilder() {
     }
     
     ArrayList<UploadedFile> getPostedFileValues(String name) {
-        variable ArrayList<UploadedFile>? builder = files[name];
+        value builder = files[name];
         if (exists b = builder) {
             return b;
         } else {
