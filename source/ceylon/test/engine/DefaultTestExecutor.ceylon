@@ -370,7 +370,7 @@ object callbackCache {
             return cached;
         }
         value callbacks = doFindCallbacks(declaration, callbackType);
-        cache.put(key, callbacks);
+        cache[key] = callbacks;
         return callbacks;
     }
     

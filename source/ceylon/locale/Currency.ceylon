@@ -39,14 +39,14 @@ HashMap<String,Currency> parseCurrencies(Iterator<String> lines) {
         assert (is String symbol = langCols.next());
         assert (is String digits = langCols.next(), 
             exists fractionalDigits=parseInteger(digits));
-        currencies.put(code,
-            Currency {
+        currencies[code]
+            = Currency {
                 code = code;
                 numericCode = numericCode;
                 displayName = name;
                 symbol = symbol;
                 fractionalDigits = fractionalDigits;
-            });
+            };
     }
     return currencies;
 }

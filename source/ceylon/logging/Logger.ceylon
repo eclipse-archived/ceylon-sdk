@@ -107,7 +107,7 @@ shared variable Logger(Category) logger
     }
     else {
         value logger = LoggerImpl(category); 
-        loggers.put(category.name, logger);
+        loggers[category.name] = logger;
         return logger;
     }
 };

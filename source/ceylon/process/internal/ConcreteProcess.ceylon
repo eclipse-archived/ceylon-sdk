@@ -41,8 +41,8 @@ shared class ConcreteProcess(
     value builder = ProcessBuilder(command, *arguments);
     builder.directory(JFile(path.string));
     for (e in environment) {
-        builder.environment()
-                .put(JString(e.key), JString(e.item));
+        builder.environment()[JString(e.key)]
+                = JString(e.item);
     }
     
     redirectInput(inputOrNone, builder);

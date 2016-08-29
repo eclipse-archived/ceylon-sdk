@@ -21,7 +21,7 @@ class FormDataBuilder() {
             return b;
         } else {
             value b = ArrayList<String>();
-            parameters.put(name, b);
+            parameters[name] = b;
             return b;
         }
     }
@@ -32,7 +32,7 @@ class FormDataBuilder() {
             return b;
         } else {
             value b = ArrayList<UploadedFile>();
-            files.put(name, b);
+            files[name] = b;
             return b;
         }
     }
@@ -42,11 +42,11 @@ class FormDataBuilder() {
         value filesSequence = HashMap<String, UploadedFile[]>();
         
         for (key->parameterValues in parameters) {
-            parametersSequence.put(key, parameterValues.sequence());
+            parametersSequence[key] = parameterValues.sequence();
         }
         
         for (key->fileValues in files) {
-            filesSequence.put(key, fileValues.sequence());
+            filesSequence[key] = fileValues.sequence();
         }
         
         

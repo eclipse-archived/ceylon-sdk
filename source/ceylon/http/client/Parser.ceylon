@@ -351,7 +351,7 @@ shared class Parser(FileDescriptor socket) {
         }else{
             value newHeader = Header(name, contents);
             headers.add(newHeader);
-            headersByName.put(name.lowercased, newHeader);
+            headersByName[name.lowercased] = newHeader;
         }
     }
     

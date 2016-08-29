@@ -50,7 +50,7 @@ shared class SelectorImpl()
             // new key
             value key = Key{onRead = callback; socket = socket;};
             value newJavaKey = socket.register(javaSelector, SelectionKey.opRead, key);
-            map.put(newJavaKey, key);
+            map[newJavaKey] = key;
         }
     }
 
@@ -69,7 +69,7 @@ shared class SelectorImpl()
             value key = Key { onWrite = callback; socket = socket; } ;
             value newJavaKey = 
                     socket.register(javaSelector, SelectionKey.opWrite, key);
-            map.put(newJavaKey, key);
+            map[newJavaKey] = key;
         }
     }
 
@@ -93,7 +93,7 @@ shared class SelectorImpl()
             };
             value newJavaKey = 
                     connector.register(javaSelector, SelectionKey.opConnect, key);
-            map.put(newJavaKey, key);
+            map[newJavaKey] = key;
         }
     }
 
@@ -112,7 +112,7 @@ shared class SelectorImpl()
             value key = Key { onAccept = callback; acceptor = acceptor; };
             value newJavaKey = 
                     acceptor.register(javaSelector, SelectionKey.opAccept, key);
-            map.put(newJavaKey, key);
+            map[newJavaKey] = key;
         }
     }
 

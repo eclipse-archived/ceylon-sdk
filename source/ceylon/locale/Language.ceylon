@@ -74,7 +74,7 @@ HashMap<Character,String> parseCaseMappings(Iterator<String> lines) {
     if (!is Finished line = lines.next(), !line.empty) {
         for (col in columns(line)) {
             assert (exists col, exists ch=col.first);
-            caseMappings.put(ch, col.spanFrom(2));
+            caseMappings[ch] = col.spanFrom(2);
         }
     }
     return caseMappings;
@@ -93,8 +93,8 @@ HashMap<String,Language> parseLanguages(Iterator<String> lines) {
         assert (is String langDisplayLanguage = langCols.next());
         assert (is String? langDisplayCountry = langCols.next());
         assert (is String? langDisplayVariant = langCols.next());
-        languages.put(langTag, 
-            Language {
+        languages[langTag]
+            = Language {
                 tag = langTag;
                 languageCode = langLanguageCode;
                 countryCode = langCountryCode;
@@ -103,7 +103,7 @@ HashMap<String,Language> parseLanguages(Iterator<String> lines) {
                 displayLanguage = langDisplayLanguage;
                 displayCountry = langDisplayCountry;
                 displayVariant = langDisplayVariant;
-            });
+            };
     }
     return languages;
 }

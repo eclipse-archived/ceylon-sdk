@@ -168,7 +168,7 @@ MutableMap<String,Sql> getSqlHelper({String+} bindings) {
     value sqlMap = HashMap<String,Sql>();
     for (dsName in bindings) {
         Sql sql = Sql(newConnectionFromXADataSourceWithCredentials(createDataSource(dbloc), "sa", "sa"));
-        sqlMap.put(dsName, sql);
+        sqlMap[dsName] = sql;
         initDb(sql);
     }
     return sqlMap;

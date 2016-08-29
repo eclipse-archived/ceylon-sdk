@@ -175,7 +175,7 @@ class RequestImpl(HttpServerExchange exchange,
                 value paramValue = valuesIt.next(); 
                 sequenceBuilder.add(paramValue.string);
             }
-            queryParameters.put(key.string, sequenceBuilder.sequence());
+            queryParameters[key.string] = sequenceBuilder.sequence();
         }
         return queryParameters;
     }

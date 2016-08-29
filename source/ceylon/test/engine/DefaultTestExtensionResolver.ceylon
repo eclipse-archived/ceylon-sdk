@@ -67,12 +67,12 @@ shared class DefaultTestExtensionResolver() satisfies TestExtensionResolver {
         else {
             if( extensionClass.anonymous ) {
                 assert(is TestExtension extension = extensionClass.objectValue?.get());
-                extensionCache.put(extensionClass, extension);
+                extensionCache[extensionClass] = extension;
                 return extension;
             }
             else {
                 assert (is TestExtension extension = extensionClass.instantiate());
-                extensionCache.put(extensionClass, extension);
+                extensionCache[extensionClass] = extension;
                 return extension;
             }
         }

@@ -119,7 +119,7 @@ class ConcreteTransactionManager()
     shared actual Connection 
     newConnectionFromXADataSource(XADataSource dataSource) {
         Properties dbProperties = Properties();
-        dbProperties.put(xadsPropertyName, dataSource);
+        dbProperties[xadsPropertyName] = dataSource;
         return getConnection(txDriverUrl, dbProperties);
     }
 
@@ -128,11 +128,11 @@ class ConcreteTransactionManager()
             XADataSource dataSource, 
             [String, String] userNameAndPassword) {
         Properties dbProperties = Properties();
-        dbProperties.put(JavaString(TransactionalDriver.userName), 
-            JavaString(userNameAndPassword[0]));
-        dbProperties.put(JavaString(TransactionalDriver.password), 
-            JavaString(userNameAndPassword[1]));
-        dbProperties.put(xadsPropertyName, dataSource);
+        dbProperties[JavaString(TransactionalDriver.userName)]
+            = JavaString(userNameAndPassword[0]);
+        dbProperties[JavaString(TransactionalDriver.password)]
+            = JavaString(userNameAndPassword[1]);
+        dbProperties[xadsPropertyName] = dataSource;
         return getConnection(txDriverUrl, dbProperties);
     }
 
