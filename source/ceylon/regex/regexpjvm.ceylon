@@ -15,8 +15,13 @@
  * the License.
  */
 
-import java.util.regex { Pattern, Matcher }
-import ceylon.interop.java { javaString }
+import ceylon.interop.java {
+    javaString
+}
+
+import java.util.regex {
+    Pattern
+}
 
 native("jvm")
 class RegexJava(expression, global = false, ignoreCase = false, multiLine = false)
@@ -51,17 +56,17 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
         // Start the search at lastIndex if the global flag is true.
         Integer searchStartIndex = if (global) then lastIndex else 0;
         if (0 <= searchStartIndex <= javaString(input).length()) {
-            Matcher? matcher = pattern.matcher(javaString(input));
-            if (exists m=matcher, m.find(searchStartIndex)) {
+            if (exists m = pattern.matcher(javaString(input)),
+                m.find(searchStartIndex)) {
                 Integer groupCount = m.groupCount();
                 value groups = Array<String?>.ofSize(1 + groupCount, "");
                 for (value group in 0 : groupCount+1) {
-                    groups.set(group, m.group(group));
+                    groups[group] = m.group(group);
                 }
                 if (global) {
                     lastIndex = m.end();
                 }
-                String matched = groups.get(0) else "";
+                String matched = groups[0] else "";
                 return MatchResult(m.start(), m.end(), matched, groups.sequence().rest);
             }
         }
@@ -85,7 +90,7 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
             }
             result = Array<String>.ofSize(resultLength, "");
             for (value i in 0 : resultLength) {
-                result.set(i, input.measure(i, i + 1));
+                result[i] = input.measure(i, i + 1);
             }
         } else {
             value tmpResult = pattern.split(javaString(input), if (limit < 0) then -1 else (limit + 1));
@@ -97,7 +102,7 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
             value realSize = if (tmpResult.size > limit && limit >= 0) then limit else tmpResult.size;
             Array<String> realResult = Array<String>.ofSize(realSize, "");
             for (value i in 0 : realSize) {
-                realResult.set(i, tmpResult.get(i).string);
+                realResult[i] = tmpResult.get(i).string;
             }
             result = realResult;
         }

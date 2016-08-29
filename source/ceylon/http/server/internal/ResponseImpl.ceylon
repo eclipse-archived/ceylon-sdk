@@ -249,7 +249,7 @@ class ResponseImpl(HttpServerExchange exchange,
             value bytes = ByteArray(byteBuffer.available);
             variable Integer i = 0;
             while(byteBuffer.hasAvailable) {
-                bytes.set(i++, byteBuffer.get());
+                bytes[i++] = byteBuffer.get();
             }
             return wrapByteBuffer(bytes);
         }

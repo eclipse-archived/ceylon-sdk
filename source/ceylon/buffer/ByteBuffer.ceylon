@@ -78,7 +78,7 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
     }
     
     shared actual native ("js") Byte get() {
-        value byte = buf.get(position);
+        value byte = buf[position];
         if (exists byte) {
             position++;
             return byte;
@@ -90,7 +90,7 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
         if (position > limit) {
             throw BufferOverflowException("No space at position ``position``");
         }
-        buf.set(position, element);
+        buf[position] = element;
         position++;
     }
     

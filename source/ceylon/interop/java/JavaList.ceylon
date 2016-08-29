@@ -20,8 +20,7 @@ import java.util {
 shared class JavaList<E>(List<E> list) 
         extends AbstractList<E>() {
     
-    get(Integer int)
-            => list.getFromFirst(int);
+    get(Integer int) => list[int];
     
     size() => list.size;
 

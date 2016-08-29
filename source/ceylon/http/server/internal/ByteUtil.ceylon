@@ -20,7 +20,7 @@ shared ByteBuffer toCeylonByteBuffer(JByteBuffer? jByteBuffer) {
         } else {
             cba = Array<Byte>.ofSize(jbb.limit(), 0.byte);
             for (ii in 0: jbb.limit()) {
-                cba.set(ii, jbb.get(ii));
+                cba[ii] = jbb.get(ii);
             }
         }
         ByteBuffer bb = ByteBuffer.ofArray(cba);

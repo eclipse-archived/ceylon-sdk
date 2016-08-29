@@ -41,7 +41,7 @@ shared Whole? parseWhole(
     variable Integer digitIndex = 0;
     variable Integer index = start;
     while (index < length) {
-        assert (exists ch = string.getFromFirst(index));
+        assert (exists ch = string[index]);
 
         if (index + 1 == length &&
                 radix == 10 &&

@@ -30,7 +30,7 @@ shared class IdentitySet<Element>
     
     Boolean addToStore(Array<Cell<Element>?> store, Element element) {
         Integer index = storeIndex(element, store);
-        value headBucket = store.getFromFirst(index);
+        value headBucket = store[index];
         variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.element === element) {
@@ -41,7 +41,7 @@ shared class IdentitySet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, Cell(element, headBucket));
+        store[index] = Cell(element, headBucket);
         return true;
     }
     
@@ -55,16 +55,16 @@ shared class IdentitySet<Element>
             // walk every bucket
             while (index < store.size) {
                 variable value bucket 
-                        = store.getFromFirst(index);
+                        = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex 
                             = storeIndex(cell.element, 
                                          newStore);
                     value newBucket 
-                            = newStore.getFromFirst(newIndex);
+                            = newStore[newIndex];
                     cell.rest = newBucket;
-                    newStore.set(newIndex, cell);
+                    newStore[newIndex] = cell;
                 }
                 index++;
             }
@@ -104,13 +104,13 @@ shared class IdentitySet<Element>
     
     shared Boolean remove(Element element) {
         Integer index = storeIndex(element, store);
-        if (exists head = store.getFromFirst(index), 
+        if (exists head = store[index],
             head.element === element) {
-            store.set(index,head.rest);
+            store[index] = head.rest;
             length--;
             return true;
         }
-        variable value bucket = store.getFromFirst(index);
+        variable value bucket = store[index];
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -141,7 +141,7 @@ shared class IdentitySet<Element>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            store.set(index++, null);
+            store[index++] = null;
         }
         length = 0;
     }
@@ -158,7 +158,7 @@ shared class IdentitySet<Element>
         // walk every bucket
         while (index < store.size) {
             variable value bucket 
-                    = store.getFromFirst(index);
+                    = store[index];
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -186,7 +186,7 @@ shared class IdentitySet<Element>
         // walk every bucket
         while (index < store.size) {
             variable Cell<Element>? bucket 
-                    = store.getFromFirst(index);
+                    = store[index];
             while (exists Cell<Element> cell = bucket) {
                 hash = hash * 31 + identityHash(cell);
                 bucket = cell.rest;
@@ -203,7 +203,7 @@ shared class IdentitySet<Element>
             // walk every bucket
             while (index < store.size) {
                 variable value bucket 
-                        = store.getFromFirst(index);
+                        = store[index];
                 while (exists cell = bucket) {
                     if (!that.contains(cell.element)) {
                         return false;
@@ -224,8 +224,8 @@ shared class IdentitySet<Element>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            if (exists bucket = store.getFromFirst(index)) {
-                clone.store.set(index, bucket.clone()); 
+            if (exists bucket = store[index]) {
+                clone.store[index] = bucket.clone();
             }
             index++;
         }
@@ -238,7 +238,7 @@ shared class IdentitySet<Element>
             // walk every bucket
             while (index < store.size) {
                 variable value bucket 
-                        = store.getFromFirst(index);
+                        = store[index];
                 while (exists cell = bucket) {
                     if (cell.element === element) {
                         return true;

@@ -54,8 +54,7 @@ shared class CharacterBuffer extends Buffer<Character> {
     }
     
     shared actual Character get() {
-        value char = buf.get(position);
-        if (exists char) {
+        if (exists char = buf[position]) {
             position++;
             return char;
         } else {
@@ -66,7 +65,7 @@ shared class CharacterBuffer extends Buffer<Character> {
         if (position > limit) {
             throw BufferOverflowException("No space at position ``position``");
         }
-        buf.set(position, element);
+        buf[position] = element;
         position++;
     }
     

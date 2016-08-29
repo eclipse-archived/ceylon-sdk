@@ -52,7 +52,7 @@ ObjectArray<TrustManager> makeObjectArray({TrustManager*} items) {
     value ret = ObjectArray<TrustManager>(seq.size);
     variable Integer i = 0;
     for(item in seq) {
-        ret.set(i++, item);
+        ret[i++] = item;
     }
     return ret;
 }

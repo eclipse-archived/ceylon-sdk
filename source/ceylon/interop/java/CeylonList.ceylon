@@ -14,7 +14,7 @@ shared class CeylonList<out Element>(JList<out Element> list)
         given Element satisfies Object {
     
     getFromFirst(Integer index)
-            => (0 <= index < size) then list.get(index);
+            => 0 <= index < size then list.get(index);
     
     size => list.size();
     

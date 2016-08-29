@@ -123,7 +123,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.integerArray;
@@ -134,7 +134,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.integerArray;
@@ -151,7 +151,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i));
+            result[i] = array[i];
             i++;
         }
         return result.integerArray;
@@ -161,7 +161,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i));
+            result[i] = array[i];
             i++;
         }
         return result.integerArray;
@@ -190,7 +190,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         value result = DoubleArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.floatArray;
@@ -207,7 +207,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         value result = DoubleArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i));
+            result[i] = array[i];
             i++;
         }
         return result.floatArray;
@@ -235,7 +235,7 @@ shared Array<Byte> toByteArray(ByteArrayLike array) {
         value result = ByteArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.byteArray;
@@ -271,7 +271,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i)?.string);
+            result[i] = array[i]?.string;
             i++;
         }
         javaArray = result;
@@ -281,7 +281,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.getFromFirst(i)?.string);
+            result[i] = array[i]?.string;
             i++;
         }
         javaArray = result;
@@ -291,7 +291,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.getFromFirst(i)?.string);
+            result[i] = array[i]?.string;
             i++;
         }
         javaArray = result;
@@ -317,7 +317,10 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, javaString(array.get(i)));
+            result[i]
+                = if (exists s = array[i])
+                then javaString(s)
+                else null;
             i++;
         }
         return result;
@@ -327,8 +330,8 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            if (exists element = array.getFromFirst(i)) {
-                result.set(i, javaString(element));
+            if (exists element = array[i]) {
+                result[i] = javaString(element);
             }
             i++;
         }
@@ -339,8 +342,8 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            if (exists element = array.getFromFirst(i)) {
-                result.set(i, javaString(element));
+            if (exists element = array[i]) {
+                result[i] = javaString(element);
             }
             i++;
         }

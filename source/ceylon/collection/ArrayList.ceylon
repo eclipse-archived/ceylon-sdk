@@ -123,7 +123,7 @@ shared class ArrayList<Element>
     shared actual 
     void add(Element element) {
         grow(1);
-        array.set(length++, element);
+        array[length++] = element;
     }
 
     shared actual 
@@ -131,7 +131,7 @@ shared class ArrayList<Element>
         value sequence = elements.sequence();
         grow(sequence.size);
         for (element in sequence) {
-            array.set(length++, element);
+            array[length++] = element;
         }
     }
     
@@ -172,14 +172,13 @@ shared class ArrayList<Element>
 
     getFromFirst(Integer index) 
             => if (0 <= index < length)
-            then array.getFromFirst(index)
+            then array[index]
             else null;
     
     shared actual 
     Boolean contains(Object element) {
         for (index in 0:size) {
-            if (exists elem 
-                    = array.getFromFirst(index)) {
+            if (exists elem = array[index]) {
                 if (elem==element) {
                     return true;
                 }
@@ -194,8 +193,7 @@ shared class ArrayList<Element>
         variable value index = 0;
         shared actual Finished|Element next() {
             if (index<length) {
-                if (exists next 
-                        = array.getFromFirst(index++)) {
+                if (exists next = array[index++]) {
                     return next;
                 }
                 else {
@@ -220,7 +218,7 @@ shared class ArrayList<Element>
                 index, index+1, length-index);
         }
         length++;
-        array.set(index, element);
+        array[index] = element;
     }
     
     shared actual 
@@ -238,7 +236,7 @@ shared class ArrayList<Element>
             }
             variable value i = index;
             for (element in sequence) {
-                array.set(i++, element);
+                array[i++] = element;
             }
             length+=size;
         }
@@ -247,11 +245,11 @@ shared class ArrayList<Element>
     shared actual 
     Element? delete(Integer index) {
         if (0 <= index < length) {
-            Element? result = array.getFromFirst(index);
-            array.copyTo(array, 
+            value result = array[index];
+            array.copyTo(array,
                 index+1, index, length-index-1);
             length--;
-            array.set(length, null);
+            array[length] = null;
             return result;
         }
         else {
@@ -264,18 +262,18 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists elem = array.getFromFirst(i++)) {
+            if (exists elem = array[i++]) {
                 if (elem!=element) {
-                    array.set(j++,elem);
+                    array[j++] = elem;
                 }
             }
             else {
-                array.set(j++, null);
+                array[j++] = null;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
         return i-length;
     }
@@ -286,18 +284,18 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists elem = array.getFromFirst(i++)) {
+            if (exists elem = array[i++]) {
                 if (!elem in set) {
-                    array.set(j++,elem);
+                    array[j++] = elem;
                 }
             }
             else {
-                array.set(j++, null);
+                array[j++] = null;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
         return i-length;
     }
@@ -354,18 +352,18 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists elem = array.getFromFirst(i++)) {
+            if (exists elem = array[i++]) {
                 if (!selecting(elem)) {
-                    array.set(j++,elem);
+                    array[j++] = elem;
                 }
             }
             else {
-                array.set(j++, null);
+                array[j++] = null;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
         return i-length;
     }
@@ -376,13 +374,13 @@ shared class ArrayList<Element>
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists element = array.getFromFirst(i++)) {
-                array.set(j++,element);
+            if (exists element = array[i++]) {
+                array[j++] = element;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
     }
 
@@ -392,9 +390,9 @@ shared class ArrayList<Element>
         variable value count = 0;
         variable value i = 0;
         while (i<length) {
-            if (exists elem = array.getFromFirst(i), 
+            if (exists elem = array[i],
                 elem==element) {
-                array.set(i, replacement);
+                array[i] = replacement;
                 count++;
             }
             i++;
@@ -407,7 +405,7 @@ shared class ArrayList<Element>
         Element replacement) {
         if (exists index 
                 = firstOccurrence(element)) {
-            array.set(index, replacement);
+            array[index] = replacement;
             return true;
         }
         else {
@@ -420,7 +418,7 @@ shared class ArrayList<Element>
         Element replacement) {
         if (exists index 
                 = lastOccurrence(element)) {
-            array.set(index, replacement);
+            array[index] = replacement;
             return true;
         }
         else {
@@ -434,7 +432,7 @@ shared class ArrayList<Element>
         if (exists index 
             = firstIndexWhere(selecting)) {
             value old = getFromFirst(index);
-            array.set(index, replacement);
+            array[index] = replacement;
             return old;
         }
         else {
@@ -448,7 +446,7 @@ shared class ArrayList<Element>
         if (exists index 
             = lastIndexWhere(selecting)) {
             value old = getFromFirst(index);
-            array.set(index, replacement);
+            array[index] = replacement;
             return old;
         }
         else {
@@ -462,9 +460,9 @@ shared class ArrayList<Element>
         variable value count = 0;
         variable value i = 0;
         while (i<length) {
-            if (exists elem = array.getFromFirst(i), 
+            if (exists elem = array[i],
                 selecting(elem)) {
-                array.set(i, replacement);
+                array[i] = replacement;
                 count++;
             }
             i++;
@@ -477,8 +475,8 @@ shared class ArrayList<Element>
     void infill(Element replacement) {
         variable value i = 0;
         while (i < length) {
-            if (!array.getFromFirst(i) exists) {
-                array.set(i, replacement);
+            if (!array[i] exists) {
+                array[i] = replacement;
             }
             i++;
         }
@@ -489,7 +487,7 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=index<length);
-        array.set(index,element);
+        array[index] = element;
     }
 
     shared actual 
@@ -514,7 +512,7 @@ shared class ArrayList<Element>
                 fstTrailing, start, length - fstTrailing);
             variable value i = length-len;
             while (i < length) {
-                array.set(i++, null);
+                array[i++] = null;
             }
             length -= len;
         }
@@ -532,7 +530,7 @@ shared class ArrayList<Element>
         if (size < length) {
             variable value i = size;
             while (i < length) {
-                array.set(i++, null);
+                array[i++] = null;
             }
             length = size;
         }

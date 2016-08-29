@@ -31,7 +31,9 @@ shared String decodePercentEncoded(String str) {
                 Byte first = array.get(r);
                 if(++r < array.size) {
                     Byte second = array.get(r);
-                    array.set(w, (16 * fromHex(first.unsigned) + fromHex(second.unsigned)).byte);
+                    array[w]
+                        = (16 * fromHex(first.unsigned)
+                        + fromHex(second.unsigned)).byte;
                 }else{
                     throw Exception("Missing second hex number");
                 }
@@ -39,7 +41,7 @@ shared String decodePercentEncoded(String str) {
                 throw Exception("Missing first hex number");
             }
         }else{
-            array.set(w, char);
+            array[w] = char;
         }
         r++;
         w++;
