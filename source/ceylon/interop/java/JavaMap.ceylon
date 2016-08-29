@@ -59,15 +59,20 @@ shared class JavaMap<K,V>(Map<K,V> map)
         
     values() => JavaCollection(map.items);
     
-    containsKey(Object? k) 
-            => if (exists k) 
-            then map.defines(k) 
+    containsKey(Object? k)
+            => if (exists k)
+            then map.defines(k)
             else false;
-    
+
+    get(Object? key)
+            => if (exists key)
+            then map.get(key)
+            else null;
+
     shared actual V? put(K? k, V? v) {
         if (exists k, exists v) {
             if (is MutableMap<in K,V> map) {
-                return map.put(k,v);
+                return map[k] = v;
             }
             else {
                 throw UnsupportedOperationException("not a mutable map");

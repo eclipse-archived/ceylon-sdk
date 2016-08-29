@@ -48,6 +48,22 @@ shared class JavaList<E>(List<E> list)
         }
     };
 
+    shared actual E? set(Integer index, E? e) {
+        if (is E e) {
+            if (is MutableList<in E> list) {
+                value result = list[index];
+                list[index] = e;
+                return result;
+            }
+            else {
+                throw UnsupportedOperationException("not a mutable list");
+            }
+        }
+        else {
+            throw IllegalArgumentException("list may not have null elements");
+        }
+    }
+
     shared actual Boolean add(E? e) {
         if (is E e) {
             if (is MutableList<in E> list) {
