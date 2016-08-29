@@ -4,7 +4,7 @@
  [[comparator function|compare]]."
 see (`function naturalOrderTreeMap`)
 by ("Gavin King")
-shared class TreeMap<Key, Item>
+shared serializable class TreeMap<Key, Item>
         satisfies MutableMap<Key,Item>
                   & SortedMap<Key,Item>
                   & Ranged<Key,Key->Item,TreeMap<Key,Item>>

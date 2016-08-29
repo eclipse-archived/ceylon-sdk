@@ -2,7 +2,7 @@
  hiding the underlying `List` implementation from clients, 
  and preventing attempts to narrow to [[MutableList]]."
 by ("Gavin King")
-class UnmodifiableList<out Element>(List<Element> list) 
+serializable class UnmodifiableList<out Element>(List<Element> list) 
         satisfies List<Element> {
 
     getFromFirst(Integer index) => list.getFromFirst(index);

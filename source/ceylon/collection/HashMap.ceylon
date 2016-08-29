@@ -23,7 +23,7 @@
  given [[hashtable]]."
 
 by ("Stéphane Épardaud")
-shared class HashMap<Key, Item>
+shared serializable class HashMap<Key, Item>
         satisfies MutableMap<Key, Item>
         given Key satisfies Object {
     

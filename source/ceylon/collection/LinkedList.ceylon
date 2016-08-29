@@ -7,7 +7,7 @@
    element of the list and the back of the queue is the
    last element of the list."
 by("Stéphane Épardaud")
-shared class LinkedList<Element>
+shared serializable class LinkedList<Element>
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
 

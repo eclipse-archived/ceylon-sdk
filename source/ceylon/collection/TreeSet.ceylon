@@ -4,7 +4,7 @@
  [[comparator function|compare]]."
 see (`function naturalOrderTreeSet`)
 by ("Gavin King")
-shared class TreeSet<Element>
+shared serializable class TreeSet<Element>
         satisfies MutableSet<Element>
                   & SortedSet<Element>
                   & Ranged<Element,Element,TreeSet<Element>>

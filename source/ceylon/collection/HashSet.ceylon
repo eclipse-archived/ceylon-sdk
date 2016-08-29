@@ -21,7 +21,7 @@
  The management of the backing array is controlled by the
  given [[hashtable]]."
 by ("Stéphane Épardaud", "Gavin King")
-shared class HashSet<Element>
+shared serializable class HashSet<Element>
         satisfies MutableSet<Element>
         given Element satisfies Object {
     

@@ -11,7 +11,7 @@
  capacity is the product of the needed capacity and the
  given [[growthFactor]]."
 by ("Loic Rouchon")
-shared class PriorityQueue<Element>(compare, initialCapacity = 0,
+shared serializable class PriorityQueue<Element>(compare, initialCapacity = 0,
             growthFactor = 1.5, elements = {})
         satisfies Collection<Element> & Queue<Element>
         given Element satisfies Object {

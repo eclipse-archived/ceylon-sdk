@@ -6,7 +6,7 @@
  multiple keys which are equal, as determined by the `==` 
  operator."
 by ("Gavin King")
-shared class IdentityMap<Key, Item>
+shared serializable class IdentityMap<Key, Item>
         (hashtable=Hashtable(), entries = {})
         satisfies {<Key->Item>*} & 
                   Collection<Key->Item> &

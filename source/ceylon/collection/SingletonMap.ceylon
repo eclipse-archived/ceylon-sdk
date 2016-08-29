@@ -1,7 +1,7 @@
 "A [[Map]] with exactly one [[entry]]."
 see (`class SingletonSet`,
      `class Singleton`)
-shared class SingletonMap<Key, Item>(shared Key->Item entry)
+shared serializable class SingletonMap<Key, Item>(shared Key->Item entry)
         satisfies Map<Key, Item>
         given Key satisfies Object {
     

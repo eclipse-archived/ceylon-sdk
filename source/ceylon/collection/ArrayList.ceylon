@@ -14,7 +14,7 @@
  capacity is the product of the current capacity and the
  given [[growthFactor]]."
 by ("Gavin King")
-shared class ArrayList<Element>
+shared serializable class ArrayList<Element>
         satisfies MutableList<Element> &
                   SearchableList<Element> &
                   Stack<Element> & Queue<Element> {

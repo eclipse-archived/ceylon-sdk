@@ -6,7 +6,7 @@
  multiple elements which are equal, as determined by the
  `==` operator."
 by ("Gavin King")
-shared class IdentitySet<Element>
+shared serializable class IdentitySet<Element>
         (hashtable=Hashtable(), elements = {})
         satisfies {Element*} & 
                   Collection<Element>
