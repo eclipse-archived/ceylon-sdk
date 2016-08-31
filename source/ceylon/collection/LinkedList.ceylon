@@ -387,7 +387,8 @@ shared serializable class LinkedList<Element>
     }
     
     shared actual 
-    void prune() {
+    Integer prune() {
+        variable value originalLength = length;
         while (exists cell = head,
             !cell.element exists) {
             if (exists rest = cell.rest) {
@@ -415,6 +416,7 @@ shared serializable class LinkedList<Element>
                 iter = rest;
             }
         }
+        return originalLength - length;
     }
 
     /*shared actual 

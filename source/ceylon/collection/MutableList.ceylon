@@ -68,16 +68,19 @@ shared interface MutableList<Element>
         return count;
     }
     
-    shared actual default void prune() {
+    shared actual default Integer prune() {
         variable value index = 0;
+        variable value removed = 0;
         while (index<size) {
             if (!getFromFirst(index) exists) {
+                removed++;
                 delete(index);
             }
             else {
                 index++;
             }
         }
+        return removed;
     }
     
     shared actual default Integer remove(Element&Object element) 
@@ -304,8 +307,9 @@ shared interface ListMutator<in Element>
             Element&Object element);
     
     "Remove all null elements from this list, leaving a list
-     with no null elements."
-    shared formal void prune();
+     with no null elements, returning the number of elements
+     removed."
+    shared formal Integer prune();
 
     "Replace all occurrences of the given [[value|element]]
      in this list with the given [[replacement

@@ -249,3 +249,15 @@ test void mutableListRemoveLast() {
     javaList.clear();
     assertEquals(ceylonList.findAndRemoveLast((i) => true), null);
 }
+
+test void mutableListPrune() {
+    value javaList = ArrayList<String>();
+    javaList.add("A");
+    javaList.add(null);
+    javaList.add("B");
+    javaList.add(null);
+    value list = CeylonMutableList(javaList);
+    assertEquals(list.prune(), 2, "prune count 1");
+    assertEquals(list.prune(), 0, "prune count 2");
+    assertEquals(list, ["A", "B"]);
+}
