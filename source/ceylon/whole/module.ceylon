@@ -8,7 +8,7 @@
      Whole n = i**j + j;
      print(n); //prints 1728000000000000000000000000000000000003"
 by("Tom Bentley", "John Vasileff")
-module ceylon.whole "1.2.3" {
+module ceylon.whole "1.3.0" {
     native("jvm") import java.base "7";
-    native("jvm") import ceylon.interop.java "1.2.3";
+    native("jvm") import ceylon.interop.java "1.3.0";
 }

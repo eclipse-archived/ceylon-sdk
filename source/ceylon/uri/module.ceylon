@@ -13,6 +13,6 @@
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 native("jvm")
-module ceylon.uri "1.2.3" {
+module ceylon.uri "1.3.0" {
     import java.base "7";
 }

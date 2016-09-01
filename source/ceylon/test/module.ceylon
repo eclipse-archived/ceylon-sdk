@@ -223,12 +223,12 @@
    """
 by ("Tom Bentley", "Tomáš Hradec")
 license ("Apache Software License")
-module ceylon.test "1.2.3" {
-    import ceylon.collection "1.2.3";
+module ceylon.test "1.3.0" {
+    import ceylon.collection "1.3.0";
     
     native("jvm") import java.base "7";
     native("jvm") import org.jboss.modules "1.4.4.Final";
-    native("jvm") import ceylon.file "1.2.3";
-    native("jvm") import ceylon.runtime "1.2.3";
+    native("jvm") import ceylon.file "1.3.0";
+    native("jvm") import ceylon.runtime "1.3.0";
     
 }
