@@ -112,13 +112,16 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         }
     }
     
-    shared actual void prune() {
+    shared actual Integer prune() {
         value iterator = list.iterator();
+        variable value removed = 0;
         while (iterator.hasNext()) {
             if (!iterator.next() exists) {
+                removed++;
                 iterator.remove();
             }
         }
+        return removed;
     }
     
     shared actual Integer replace(Element element, 

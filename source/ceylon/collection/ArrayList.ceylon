@@ -370,7 +370,7 @@ shared serializable class ArrayList<Element>
     
     
     shared actual 
-    void prune() {
+    Integer prune() {
         variable value i=0;
         variable value j=0;
         while (i<length) {
@@ -378,10 +378,12 @@ shared serializable class ArrayList<Element>
                 array[j++] = element;
             }
         }
+        value removed = i - j;
         length=j;
         while (j<i) {
             array[j++] = null;
         }
+        return removed;
     }
 
     shared actual 

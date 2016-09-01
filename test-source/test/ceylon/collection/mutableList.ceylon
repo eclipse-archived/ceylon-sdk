@@ -320,6 +320,13 @@ shared interface MutableListTests satisfies ListTests {
         assertTrue(list.replaceLast("C", "c"), "can replaceLast");
         assertEquals(list.sequence(), ["a", "b", "c"], "replaceLast");
     }
+    
+    test shared void testPrune() {
+        value list = createList { "A", null, "B", null };
+        assertEquals(list.prune(), 2, "prune count 1");
+        assertEquals(list.prune(), 0, "prune count 2");
+        assertEquals(list, ["A", "B"]);
+    }
 
 }
 
