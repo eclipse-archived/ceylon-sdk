@@ -19,7 +19,7 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     add(Element element) => list.add(element);
     
     set(Integer index, Element element) 
-            => list.set(index, element);
+            => list[index] = element;
     
     insert(Integer index, Element element) 
             => list.add(index, element);
@@ -39,7 +39,8 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     
     shared actual Boolean removeLast(Element element) {
         for (i in (0:size).reversed) {
-            if (list.get(i)==element) {
+            if (exists e = list[i],
+                e==element) {
                 list.remove(i);
                 return true;
             }
@@ -128,8 +129,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         Element replacement) {
         variable value count = 0;
         for (i in 0:size) {
-            if (list.get(i)==element) {
-                list.set(i,replacement);
+            if (exists e = list[i],
+                e==element) {
+                list[i] = replacement;
                 count++;
             }
         }
@@ -138,8 +140,8 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     
     shared actual void infill(Element replacement) {
         for (i in 0:size) {
-            if (!list.get(i) exists) {
-                list.set(i,replacement);
+            if (!list[i] exists) {
+                list[i] = replacement;
             }
         }
     }
@@ -147,8 +149,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     shared actual Boolean replaceFirst(Element element, 
         Element replacement) {
         for (i in 0:size) {
-            if (list.get(i)==element) {
-                list.set(i,replacement);
+            if (exists e = list[i],
+                e==element) {
+                list[i] = replacement;
                 return true;
             }
         }
@@ -158,8 +161,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     shared actual Boolean replaceLast(Element element, 
         Element replacement) {
         for (i in (0:size).reversed) {
-            if (list.get(i)==element) {
-                list.set(i,replacement);
+            if (exists e = list[i],
+                e==element) {
+                list[i] = replacement;
                 return true;
             }
         }
@@ -170,9 +174,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         Boolean selecting(Element element), 
         Element replacement) {
         for (i in 0:size) {
-            value element = list.get(i);
-            if (selecting(element)) {
-                list.set(i,replacement);
+            if (exists element = list[i],
+                selecting(element)) {
+                list[i] = replacement;
                 return element;
             }
         }
@@ -183,9 +187,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         Boolean selecting(Element element), 
         Element replacement) {
         for (i in (0:size).reversed) {
-            value element = list.get(i);
-            if (selecting(element)) {
-                list.set(i,replacement);
+            if (exists element = list[i],
+                selecting(element)) {
+                list[i] = replacement;
                 return element;
             }
         }
@@ -197,8 +201,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         Element replacement) {
         variable value count = 0;
         for (i in 0:size) {
-            if (selecting(list.get(i))) {
-                list.set(i,replacement);
+            if (exists element = list[i],
+                selecting(element)) {
+                list[i] = replacement;
                 count++;
             }
         }

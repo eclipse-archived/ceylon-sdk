@@ -14,7 +14,7 @@ shared class CeylonMutableMap<Key, Item>(JMap<Key, Item> map)
         given Key satisfies Object 
         given Item satisfies Object {
     
-    put(Key key, Item item) => map.put(key, item);
+    put(Key key, Item item) => map[key] = item;
     
     remove(Key key) => map.remove(key);
     

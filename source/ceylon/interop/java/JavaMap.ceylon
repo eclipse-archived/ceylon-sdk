@@ -66,7 +66,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
 
     get(Object? key)
             => if (exists key)
-            then map.get(key)
+            then map[key]
             else null;
 
     shared actual V? put(K? k, V? v) {
