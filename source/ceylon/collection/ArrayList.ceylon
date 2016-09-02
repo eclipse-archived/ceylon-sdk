@@ -89,7 +89,7 @@ shared serializable class ArrayList<Element>
     "growth factor must be at least 1.0"
     assert (growthFactor >= 1.0);
 
-    Array<Element?> store(Integer capacity)
+    function store(Integer capacity)
             => Array<Element?>.ofSize(capacity, null);
 
     size => length;
