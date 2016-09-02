@@ -568,11 +568,17 @@ shared serializable class ArrayList<Element>
     back => last;
 
     front => first;
-    
-    shared actual 
+
+    shared actual
     ArrayList<Element> clone() => ArrayList.copy(this);
-    
-    "Sorts the elements in this list according to the 
+
+    find(Boolean selecting(Element&Object element))
+            => array.find(selecting);
+
+    findLast(Boolean selecting(Element&Object element))
+            => array.findLast(selecting);
+
+    "Sorts the elements in this list according to the
      order induced by the given 
      [[comparison function|comparing]]. Null elements are 
      sorted to the end of the list. This operation modifies 
@@ -651,23 +657,15 @@ shared serializable class ArrayList<Element>
             });
         }
     }
-    
+
     shared actual
-    Element? find(Boolean selecting(Element&Object element)) 
-            => array.find(selecting);
-    
-    shared actual
-    Element? findLast(Boolean selecting(Element&Object element)) 
-            => array.findLast(selecting);
-    
-    shared actual 
     Result|Element|Null reduce<Result>(
         Result accumulating(Result|Element partial, 
                             Element element)) {
         if (is Element null) {
             return array.take(length)
-                    .reduce<Result>((partial, element) 
-                    => accumulating(partial else null, 
+                    .reduce<Result>((partial, element)
+                    => accumulating(partial else null,
                                     element else null));
         }
         else {
@@ -698,7 +696,7 @@ shared serializable class ArrayList<Element>
     
     lastOccurrence(Element element, Integer from, Integer length) 
             => if (exists result 
-                    = array.lastOccurrence{
+                    = array.lastOccurrence {
                         element = element;
                         from = largest(from, array.size-size);
                         length = length;
