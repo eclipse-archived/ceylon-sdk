@@ -425,6 +425,9 @@
                 <fileset dir="${osgi.dist}/tempRepo" includes="**/*.?ar"/>
             </path>
         </foreach>
+        <copy todir="${osgi.dist.plugins}">
+            <fileset dir="${ceylon.main.dir}/dist/osgi/build/dist/plugins" includes="org.jboss.logmanager_*.jar"/>
+        </copy>
         <delete dir="${osgi.dist}/tempRepo" failonerror="false" deleteonexit="true"/>
         <makeurl property="rootUrl" file="${osgi.dist}"/>
         <repoindex name="Ceylon SDK Bundles - R5 OBR format"
