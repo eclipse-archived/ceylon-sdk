@@ -70,7 +70,7 @@ shared class JavaSet<E>(Set<E> set)
         if (is MutableSet<in E> set) {
             variable Boolean result = false;
             for (e in set.clone()) { //TODO: is the clone really necessary?
-                if (!collection.contains(e)) {
+                if (!e in collection) {
                     set.remove(e);
                     result = true;
                 }

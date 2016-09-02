@@ -132,7 +132,7 @@ shared class JavaList<E>(List<E> list)
             variable Boolean result = false;
             for (e in list.clone()) { //TODO: is the clone really necessary?
                 if (exists e, //TODO: what to do with nulls, this is sorta wrong?
-                    !collection.contains(e)) {
+                    !e in collection) {
                     list.removeFirst(e);
                     result = true;
                 }
