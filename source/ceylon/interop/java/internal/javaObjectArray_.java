@@ -40,12 +40,12 @@ public final class javaObjectArray_ {
         while (t instanceof TypeDescriptor.Member) {
             t = ((TypeDescriptor.Member) t).getMember();
         }
-        if (!($reifiedT instanceof TypeDescriptor.Class)) {
-            throw new AssertionError("Invalid array element type: "+$reifiedT.toString());
+        if (!(t instanceof TypeDescriptor.Class)) {
+            throw new AssertionError("Invalid array element type: " + t.toString());
         }
         Object result = array.toArray();
         if (!(result instanceof java.lang.Object[])) {
-            throw new AssertionError("Invalid source array type: "+ result);
+            throw new AssertionError("Invalid source array type: " + result);
         }
         return (T[]) result;
     }
