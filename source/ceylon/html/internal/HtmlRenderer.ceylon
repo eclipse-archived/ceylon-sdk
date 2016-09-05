@@ -41,6 +41,7 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
     void visitRaw(Raw node) {
         flush();
         write(node.data);
+        lastOutputWasStartOrEndTag = false;
     }
     
     void visitProcessingInstruction(ProcessingInstruction node) {
@@ -178,7 +179,7 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
     
     void flush() {
         flushText();
-        flushStartElement(true);
+        flushStartElement();
     }
     
     void flushText() {
