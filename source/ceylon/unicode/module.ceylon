@@ -14,7 +14,7 @@
    `Character`."
 by("Tom Bentley")
 native("jvm")
-module ceylon.unicode "1.2.3" {
+module ceylon.unicode "1.3.0" {
     shared import java.base "7";
-    import ceylon.interop.java "1.2.3";
+    import ceylon.interop.java "1.3.0";
 }

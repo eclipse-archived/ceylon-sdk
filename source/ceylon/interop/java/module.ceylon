@@ -30,7 +30,7 @@
  an instance of [[java.lang::Class]]."
 by("The Ceylon Team")
 native("jvm")
-module ceylon.interop.java "1.2.3" {
+module ceylon.interop.java "1.3.0" {
     shared import java.base "7";
-    shared import ceylon.collection "1.2.3";
+    shared import ceylon.collection "1.3.0";
 }

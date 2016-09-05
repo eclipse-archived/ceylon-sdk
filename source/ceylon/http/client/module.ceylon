@@ -13,9 +13,9 @@
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 native("jvm")
-module ceylon.http.client "1.2.3" {
-    shared import ceylon.http.common "1.2.3";
-    shared import ceylon.collection "1.2.3";
-    shared import ceylon.io "1.2.3";
-    shared import ceylon.uri "1.2.3";
+module ceylon.http.client "1.3.0" {
+    shared import ceylon.http.common "1.3.0";
+    shared import ceylon.collection "1.3.0";
+    shared import ceylon.io "1.3.0";
+    shared import ceylon.uri "1.3.0";
 }

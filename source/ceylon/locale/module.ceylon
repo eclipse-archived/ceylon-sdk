@@ -34,7 +34,7 @@
  [[currencies|Locale.currencies]] in that locale.
  
  [BCP 47]: http://tools.ietf.org/html/rfc4647"
-module ceylon.locale "1.2.3" {
-    shared import ceylon.collection "1.2.3";
-    shared import ceylon.time "1.2.3";
+module ceylon.locale "1.3.0" {
+    shared import ceylon.collection "1.3.0";
+    shared import ceylon.time "1.3.0";
 }
