@@ -8,7 +8,7 @@ import java.lang {
  This class can be used to wrap a `java.util::Map` if the
  Java map is first wrapped with [[CeylonMap]]:
 
-        CeylonStringMap(CeylonMap(javaMap))
+     CeylonStringMap(CeylonMap(javaMap))
 "
 shared
 class CeylonStringMap<out Item>(Map<JString, Item> map)

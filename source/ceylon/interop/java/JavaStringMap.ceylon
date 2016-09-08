@@ -3,7 +3,9 @@ import java.lang {
 }
 
 "A [[Map]] with keys of type `java.lang::String` that wraps 
- a `Map` with keys of type `String`."
+ a `Map` with keys of type `String`.
+
+     JavaMap(JavaStringMap(ceylonMap))"
 shared class JavaStringMap<Item>(Map<String,Item> map)
         satisfies Map<JString,Item> {
 
