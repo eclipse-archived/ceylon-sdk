@@ -111,7 +111,7 @@ shared ObjectArray<JavaString> javaStringArray(Array<String> array)
  `Array<Integer>`."
 shared alias IntegerArrayLike 
         => Array<Short> | Array<Int> | Array<Long>
-        | ShortArray   | IntArray   | LongArray;
+         | ShortArray   | IntArray   | LongArray;
 
 "Create a new `Array<Integer>` with the same elements as the
  given [[array]]."
@@ -178,7 +178,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
  `Array<Float>`."
 shared alias FloatArrayLike 
         => Array<Single> | Array<Double>
-        |  FloatArray    | DoubleArray;
+         | FloatArray    | DoubleArray;
 
 "Create a new `Array<Float>` with the same elements as the
  given [[array]]."
@@ -256,8 +256,8 @@ shared Array<Byte> toByteArray(ByteArrayLike array) {
  `Array<String?>`."
 shared alias StringArrayLike 
         => ObjectArray<JavaString>
-        |  Array<JavaString?>
-        | Array<JavaString>;
+         | Array<JavaString?>
+         | Array<JavaString>;
 
 "Create a new Ceylon string array, that is, an 
  `Array<String?>` with the same elements as the
@@ -303,8 +303,8 @@ shared Array<String?> toStringArray(StringArrayLike array) {
  `ObjectArray<JavaString>`."
 shared alias JavaStringArrayLike
         => ObjectArray<String>
-        |  Array<String>
-        | Array<String?>;
+         | Array<String>
+         | Array<String?>;
 
 "Create a new Java [[string array|ObjectArray]], that is,
  a Java `String[]`, with the same elements as the given 
