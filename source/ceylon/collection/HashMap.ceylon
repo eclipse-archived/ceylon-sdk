@@ -115,7 +115,7 @@ shared serializable class HashMap<Key, Item>
         if (stability == unlinked) {
             entries = {};
             length = hashMap.length;
-            variable small value index = 0;
+            variable Integer index = 0;
             // walk every bucket
             while (index < hashMap.store.size) {
                 if (exists bucket
@@ -133,26 +133,21 @@ shared serializable class HashMap<Key, Item>
     }
     
     // Write
-
-    small function hashCode(Object key)
+    
+    function hashCode(Object key) 
             => let (h = key.hash)
                 h.xor(h.rightLogicalShift(16));
-
-    small function storeIndex(small Integer keyHash,
+    
+    Integer storeIndex(Integer keyHash, 
             Array<CachingCell<Key->Item>?> store)
             => keyHash.and(store.size-1);
     
     CachingCell<Key->Item> createCell(Key->Item entry,
-            small Integer keyHash,
+            Integer keyHash,
             CachingCell<Key->Item>? rest) {
         if (stability==linked) {
             value cell 
-                    = LinkedCell {
-                        element = entry;
-                        keyHash = keyHash;
-                        rest = rest;
-                        previous = tip;
-                    };
+                    = LinkedCell(entry, keyHash, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -187,8 +182,8 @@ shared serializable class HashMap<Key, Item>
     
     Boolean addToStore(Array<CachingCell<Key->Item>?> store, 
             Key->Item entry) {
-        small value keyHash = hashCode(entry.key);
-        small value index = storeIndex(keyHash, store);
+        value keyHash = hashCode(entry.key);
+        Integer index = storeIndex(keyHash, store);
         value headBucket = store[index];
         variable value bucket = headBucket;
         while (exists cell = bucket) {
@@ -212,10 +207,11 @@ shared serializable class HashMap<Key, Item>
             value newStore 
                     = cachingEntryStore<Key,Item>
                         (hashtable.capacity(length));
-            variable small value index = 0;
+            variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket 
+                        = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = 
@@ -248,10 +244,11 @@ shared serializable class HashMap<Key, Item>
     // End of initialiser section
     
     shared actual Item? put(Key key, Item item) {
-        small value keyHash = hashCode(key);
-        small value index = storeIndex(keyHash, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         value entry = key->item;
-        value headBucket = store[index];
+        value headBucket 
+                = store[index];
         variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.keyHash == keyHash
@@ -273,9 +270,10 @@ shared serializable class HashMap<Key, Item>
     
     shared actual Boolean replaceEntry(Key key, 
             Item&Object item, Item newItem) {
-        small value keyHash = hashCode(key);
-        small value index = storeIndex(keyHash, store);
-        variable value bucket = store[index];
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
+        variable value bucket 
+                = store[index];
         while (exists cell = bucket) {         
             if (cell.keyHash == keyHash
                     && cell.element.key == key) {
@@ -304,9 +302,10 @@ shared serializable class HashMap<Key, Item>
     }
     
     shared actual Item? remove(Key key) {
-        small value keyHash = hashCode(key);
-        small value index = storeIndex(keyHash, store);
-        if (exists head = store[index],
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
+        if (exists head 
+                = store[index],
             head.keyHash == keyHash,
             head.element.key == key) {
             store[index] = head.rest;
@@ -314,7 +313,8 @@ shared serializable class HashMap<Key, Item>
             length--;
             return head.element.item;
         }
-        variable value bucket = store[index];
+        variable value bucket 
+                = store[index];
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -333,9 +333,10 @@ shared serializable class HashMap<Key, Item>
     
     shared actual Boolean removeEntry(Key key, 
             Item&Object item) {
-        small value keyHash = hashCode(key);
-        small value index = storeIndex(keyHash, store);
-        while (exists head = store[index],
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
+        while (exists head 
+                = store[index],
             head.keyHash == keyHash,
             head.element.key == key) {
             if (exists it = head.element.item, 
@@ -348,7 +349,8 @@ shared serializable class HashMap<Key, Item>
                 return false;
             }
         }
-        variable value bucket = store[index];
+        variable value bucket 
+                = store[index];
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -372,7 +374,7 @@ shared serializable class HashMap<Key, Item>
     }
     
     shared actual void clear() {
-        variable small value index = 0;
+        variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
             store[index++] = null;
@@ -392,8 +394,8 @@ shared serializable class HashMap<Key, Item>
         if (empty) {
             return null;
         }
-        small value keyHash = hashCode(key);
-        small value index = storeIndex(keyHash, store);
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
         variable value bucket 
                 = store[index];
         while (exists cell = bucket) {
@@ -411,9 +413,10 @@ shared serializable class HashMap<Key, Item>
         if (empty) {
             return default;
         }
-        small value keyHash = hashCode(key);
-        small value index = storeIndex(keyHash, store);
-        variable value bucket = store[index];
+        value keyHash = hashCode(key);
+        Integer index = storeIndex(keyHash, store);
+        variable value bucket 
+                = store[index];
         while (exists cell = bucket) {
             if (cell.keyHash == keyHash && 
                 cell.element.key == key) {
@@ -444,7 +447,7 @@ shared serializable class HashMap<Key, Item>
     
     /*shared actual Collection<Item> values {
         value ret = LinkedList<Item>();
-        variable small value index = 0;
+        variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
             variable value bucket = store[index);
@@ -459,7 +462,7 @@ shared serializable class HashMap<Key, Item>
     
     shared actual Set<Key> keys {
         value ret = HashSet<Key>();
-        variable small value index = 0;
+        variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
             variable value bucket = store[index);
@@ -474,7 +477,7 @@ shared serializable class HashMap<Key, Item>
     
     shared actual Map<Item,Set<Key>> inverse {
         value ret = HashMap<Item,MutableSet<Key>>();
-        variable small value index = 0;
+        variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
             variable value bucket = store[index);
@@ -499,8 +502,8 @@ shared serializable class HashMap<Key, Item>
     
     shared actual Integer count
             (Boolean selecting(Key->Item element)) {
-        variable small value index = 0;
-        variable small value count = 0;
+        variable Integer index = 0;
+        variable Integer count = 0;
         // walk every bucket
         while (index < store.size) {
             variable value bucket 
@@ -527,11 +530,12 @@ shared serializable class HashMap<Key, Item>
     }
     
     shared actual Integer hash {
-        variable small value index = 0;
-        variable small value hash = 0;
+        variable Integer index = 0;
+        variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket 
+                    = store[index];
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -544,7 +548,7 @@ shared serializable class HashMap<Key, Item>
     shared actual Boolean equals(Object that) {
         if (is Map<Object,Anything> that,
             size == that.size) {
-            variable small value index = 0;
+            variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
                 variable value bucket 
@@ -581,9 +585,10 @@ shared serializable class HashMap<Key, Item>
             return false;
         }
         else {
-            small value keyHash = hashCode(key);
-            small value index = storeIndex(keyHash, store);
-            variable value bucket = store[index];
+            value keyHash = hashCode(key);
+            Integer index = storeIndex(keyHash, store);
+            variable value bucket 
+                    = store[index];
             while (exists cell = bucket) {
                 if (cell.keyHash == keyHash
                         && cell.element.key == key) {
@@ -601,9 +606,10 @@ shared serializable class HashMap<Key, Item>
         }
         else if (is Object->Anything entry) {
             value key = entry.key;
-            small value keyHash = hashCode(key);
-            small value index = storeIndex(keyHash, store);
-            variable value bucket = store[index];
+            value keyHash = hashCode(key);
+            Integer index = storeIndex(keyHash, store);
+            variable value bucket 
+                    = store[index];
             while (exists cell = bucket) {
                 if (cell.keyHash == keyHash
                         && cell.element.key == key) {

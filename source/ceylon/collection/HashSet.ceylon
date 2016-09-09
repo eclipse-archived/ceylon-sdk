@@ -113,7 +113,7 @@ shared serializable class HashSet<Element>
         if (stability == unlinked) {
             elements = {};
             length = hashSet.length;
-            variable small value index = 0;
+            variable Integer index = 0;
             // walk every bucket
             while (index < hashSet.store.size) {
                 if (exists bucket
@@ -132,26 +132,21 @@ shared serializable class HashSet<Element>
     
     // Write
     
-    small function hashCode(Object key)
+    function hashCode(Object key)
             => let (h = key.hash)
                 h.xor(h.rightLogicalShift(16));
     
-    small function storeIndex(small Integer elemHash,
+    Integer storeIndex(Integer elemHash,
         Array<CachingCell<Element>?> store)
             => elemHash.and(store.size - 1);
     //=> (elem.hash % store.size).magnitude;
     
     CachingCell<Element> createCell(Element elem,
-        small Integer elemHash,
+        Integer elemHash,
         CachingCell<Element>? rest) {
         if (stability == linked) {
             value cell 
-                    = LinkedCell {
-                        element = elem;
-                        keyHash = elemHash;
-                        rest = rest;
-                        previous = tip;
-                    };
+                    = LinkedCell(elem, elemHash, rest, tip);
             if (exists last = tip) {
                 last.next = cell;
             }
@@ -186,8 +181,8 @@ shared serializable class HashSet<Element>
     
     Boolean addToStore(Array<CachingCell<Element>?> store,
         Element element) {
-        small value elementHash = hashCode(element);
-        small value index = storeIndex(elementHash, store);
+        value elementHash = hashCode(element);
+        Integer index = storeIndex(elementHash, store);
         value headBucket = store[index];
         variable value bucket = headBucket;
         while (exists cell = bucket) {            
@@ -211,13 +206,14 @@ shared serializable class HashSet<Element>
             value newStore 
                     = cachingElementStore<Element>
                         (hashtable.capacity(length));
-            variable small value index = 0;
+            variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket
+                        = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
-                    small value newIndex
+                    Integer newIndex
                             = storeIndex(cell.keyHash,
                                          newStore);
                     value newBucket 
@@ -270,8 +266,8 @@ shared serializable class HashSet<Element>
     }
     
     shared actual Boolean remove(Element element) {
-        small value elementHash = hashCode(element);
-        small value index = storeIndex(elementHash, store);
+        value elementHash = hashCode(element);
+        Integer index = storeIndex(elementHash, store);
         if (exists head = store[index],
             head.element == element) {
             store[index] = head.rest;
@@ -298,7 +294,7 @@ shared serializable class HashSet<Element>
     }
     
     shared actual void clear() {
-        variable small value index = 0;
+        variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
             store[index++] = null;
@@ -318,11 +314,12 @@ shared serializable class HashSet<Element>
     
     shared actual Integer count
             (Boolean selecting(Element element)) {
-        variable small value count = 0;
-        variable small value index = 0;
+        variable Integer count = 0;
+        variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket
+                    = store[index];
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -345,11 +342,12 @@ shared serializable class HashSet<Element>
     }
     
     shared actual Integer hash {
-        variable small value index = 0;
-        variable small value hash = 0;
+        variable Integer index = 0;
+        variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket = store[index];
+            variable value bucket
+                    = store[index];
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -362,10 +360,11 @@ shared serializable class HashSet<Element>
     shared actual Boolean equals(Object that) {
         if (is Set<Object> that,
             size == that.size) {
-            variable small value index = 0;
+            variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket = store[index];
+                variable value bucket
+                        = store[index];
                 while (exists cell = bucket) {
                     if (!that.contains(cell.element)) {
                         return false;
@@ -386,9 +385,10 @@ shared serializable class HashSet<Element>
             return false;
         }
         else {
-            small value elementHash = hashCode(element);
-            small value index = storeIndex(elementHash, store);
-            variable value bucket = store[index];
+            value elementHash = hashCode(element);
+            Integer index = storeIndex(elementHash, store);
+            variable value bucket
+                    = store[index];
             while (exists cell = bucket) {                
                 if (cell.keyHash == elementHash
                         && cell.element == element) {
