@@ -11,7 +11,9 @@ import ceylon.http.server { Status,
                                   Endpoint, Response, Request, 
                                   startsWith, endsWith, Options, stopped, newServer,
                                   template,
-    Server }
+    Server,
+    stopping,
+    starting }
 import ceylon.http.server.endpoints { serveStaticFile,
     RepositoryEndpoint }
 import ceylon.test { assertEquals, assertTrue, test,
@@ -39,20 +41,30 @@ import ceylon.http.server.websocket {
 }
 
 shared abstract class ServerTest() {
-    Semaphore serverStarted = Semaphore(0);
-    Semaphore serverStopped = Semaphore(0);
-    void waitServerStarted() {
-        serverStarted.acquire();
+
+    variable Status? lastStatus = null;
+    variable Boolean successfullyStarted = false;
+
+    Semaphore startingLock = Semaphore(0);
+
+    Boolean waitServerStarted() {
+        startingLock.acquire();
+        return successfullyStarted;
     }
-    void waitServerStopped() {
-        //serverStarted.acquire();
-    }
-    void notifyServerStarted(Status status) {
+
+    void notifyStatusUpdate(Status status) {
         if (status == started) {
-            serverStarted.release();
-        }
-        if (status == stopped) {
-            //serverStopped.release();
+            successfullyStarted = true;
+            startingLock.release();
+        } else if (status == stopped) {
+            startingLock.release();
+            if (exists last = lastStatus) {
+                if (last == starting) {
+                    throw AssertionError("Server failed to start.");
+                } else if (last != stopping) {
+                    throw AssertionError("Unexpected server stop.");
+                }
+            }
         }
     }
     
@@ -64,7 +76,7 @@ shared abstract class ServerTest() {
     shared void startServerBeforeTest() {
         
         value server = newServer(endpoints);
-        server.addListener(notifyServerStarted);
+        server.addListener(notifyStatusUpdate);
         
         server.startInBackground {
             serverOptions = Options {
@@ -72,22 +84,19 @@ shared abstract class ServerTest() {
                 workerTaskMaxThreads=2;
             };
         };
-        waitServerStarted();
+        value successfullyStarted = waitServerStarted();
+        if (!successfullyStarted) {
+            throw AssertionError("Server failed to start.");
+        }
         this.server = server;
     }
     
     afterTest
     shared void stopServerAfterTest() {
-        //waitTestToComplete();
         if (exists s=server) {
             s.stop();
-            waitServerStopped();
         }
-        //if (exists t = firstException) {
-        //    throw t;
-        //}
     }
-
 }
 
 by("Matej Lazar")
@@ -252,7 +261,7 @@ shared class TestServer() extends ServerTest() {
                         request.session.put("count", ci2);
                         response.writeString(ci2.string);
                     } else {
-                        AssertionError("Invalid object type retreived from session");
+                        throw AssertionError("Invalid object type retreived from session");
                     }
                 } else {
                     request.session.put("count", Integer(1));
