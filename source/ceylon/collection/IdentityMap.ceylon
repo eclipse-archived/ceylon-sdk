@@ -55,8 +55,7 @@ shared serializable class IdentityMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex 
@@ -173,7 +172,8 @@ shared serializable class IdentityMap<Key, Item>
         Integer index = storeIndex(key, store);
         while (exists head = store[index],
             head.element.key === key) {
-            if (exists it = head.element.item, it==item) {
+            if (exists it = head.element.item,
+                it==item) {
                 store[index] = head.rest;
                 length--;
                 return true;
@@ -187,7 +187,8 @@ shared serializable class IdentityMap<Key, Item>
             value rest = cell.rest;
             if (exists rest,
                 rest.element.key === key) {
-                if (exists it = rest.element.item, it==item) {
+                if (exists it = rest.element.item,
+                    it==item) {
                     cell.rest = rest.rest;
                     length--;
                     return true;
@@ -336,8 +337,7 @@ shared serializable class IdentityMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     value thatItem = that.get(cell.element.key);
                     if (exists thisItem = cell.element.item) {
@@ -381,8 +381,7 @@ shared serializable class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket 
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (cell.element.key === key) {
                     return true;
@@ -398,8 +397,7 @@ shared serializable class IdentityMap<Key, Item>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket 
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (exists it = cell.element.item, 
                         it == element) {

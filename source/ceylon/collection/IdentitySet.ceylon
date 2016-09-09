@@ -54,8 +54,7 @@ shared serializable class IdentitySet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex 
@@ -93,7 +92,7 @@ shared serializable class IdentitySet<Element>
     
     shared Boolean addAll({Element*} elements) {
         variable Boolean ret = false;
-        for (Element elem in elements) {
+        for (elem in elements) {
             ret ||= add(elem);
         }
         if (ret) {
@@ -202,8 +201,7 @@ shared serializable class IdentitySet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     if (!that.contains(cell.element)) {
                         return false;
@@ -237,8 +235,7 @@ shared serializable class IdentitySet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     if (cell.element === element) {
                         return true;
