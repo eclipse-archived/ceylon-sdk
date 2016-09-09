@@ -209,8 +209,7 @@ shared serializable class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex
@@ -318,8 +317,7 @@ shared serializable class HashSet<Element>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -346,8 +344,7 @@ shared serializable class HashSet<Element>
         variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -363,8 +360,7 @@ shared serializable class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     if (!that.contains(cell.element)) {
                         return false;
@@ -387,8 +383,7 @@ shared serializable class HashSet<Element>
         else {
             value elementHash = hashCode(element);
             Integer index = storeIndex(elementHash, store);
-            variable value bucket
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {                
                 if (cell.keyHash == elementHash
                         && cell.element == element) {

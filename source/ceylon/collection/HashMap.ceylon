@@ -210,8 +210,7 @@ shared serializable class HashMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex = 
@@ -247,8 +246,7 @@ shared serializable class HashMap<Key, Item>
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
         value entry = key->item;
-        value headBucket 
-                = store[index];
+        value headBucket = store[index];
         variable value bucket = headBucket;
         while (exists cell = bucket) {
             if (cell.keyHash == keyHash
@@ -272,8 +270,7 @@ shared serializable class HashMap<Key, Item>
             Item&Object item, Item newItem) {
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
-        variable value bucket 
-                = store[index];
+        variable value bucket = store[index];
         while (exists cell = bucket) {         
             if (cell.keyHash == keyHash
                     && cell.element.key == key) {
@@ -313,8 +310,7 @@ shared serializable class HashMap<Key, Item>
             length--;
             return head.element.item;
         }
-        variable value bucket 
-                = store[index];
+        variable value bucket = store[index];
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -349,8 +345,7 @@ shared serializable class HashMap<Key, Item>
                 return false;
             }
         }
-        variable value bucket 
-                = store[index];
+        variable value bucket = store[index];
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -396,8 +391,7 @@ shared serializable class HashMap<Key, Item>
         }
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
-        variable value bucket 
-                = store[index];
+        variable value bucket = store[index];
         while (exists cell = bucket) {
             if (cell.keyHash == keyHash && 
                 cell.element.key == key) {
@@ -415,8 +409,7 @@ shared serializable class HashMap<Key, Item>
         }
         value keyHash = hashCode(key);
         Integer index = storeIndex(keyHash, store);
-        variable value bucket 
-                = store[index];
+        variable value bucket = store[index];
         while (exists cell = bucket) {
             if (cell.keyHash == keyHash && 
                 cell.element.key == key) {
@@ -506,8 +499,7 @@ shared serializable class HashMap<Key, Item>
         variable Integer count = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket 
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -534,8 +526,7 @@ shared serializable class HashMap<Key, Item>
         variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket 
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -551,8 +542,7 @@ shared serializable class HashMap<Key, Item>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket 
-                        = store[index];
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     value thatItem = that[cell.element.key];
                     if (exists thisItem 
@@ -587,8 +577,7 @@ shared serializable class HashMap<Key, Item>
         else {
             value keyHash = hashCode(key);
             Integer index = storeIndex(keyHash, store);
-            variable value bucket 
-                    = store[index];
+            variable value bucket= store[index];
             while (exists cell = bucket) {
                 if (cell.keyHash == keyHash
                         && cell.element.key == key) {
@@ -608,8 +597,7 @@ shared serializable class HashMap<Key, Item>
             value key = entry.key;
             value keyHash = hashCode(key);
             Integer index = storeIndex(keyHash, store);
-            variable value bucket 
-                    = store[index];
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (cell.keyHash == keyHash
                         && cell.element.key == key) {
