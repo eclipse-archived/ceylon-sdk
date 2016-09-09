@@ -29,7 +29,7 @@ serializable class CachingCell<Element>(element, keyHash, rest) {
     shared variable Element element;
     "The hash code of the element (sets) or key (maps) for 
      this cell."
-    shared variable Integer keyHash;
+    shared variable small Integer keyHash;
     "The next link in the list."
     shared variable CachingCell<Element>? rest;
     // shallow clone
