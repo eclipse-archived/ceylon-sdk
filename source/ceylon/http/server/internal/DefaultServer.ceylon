@@ -13,7 +13,8 @@ import ceylon.http.server {
     InternalException,
     HttpEndpoint,
     TemplateMatcher,
-    Endpoint
+    Endpoint,
+    ServerException
 }
 import ceylon.http.server.internal.websocket {
     CeylonWebSocketHandler,
@@ -73,6 +74,9 @@ import org.xnio {
 }
 import org.xnio.nio {
     NioXnioProvider
+}
+import java.io {
+    IOException
 }
 
 by("Matej Lazar")
@@ -173,12 +177,18 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         worker = NioXnioProvider().instance.createWorker(workerOptions);
         
         if (exists w = worker) {
-            w.createStreamConnectionServer(
-                InetSocketAddress(socketAddress.address, 
-                                  socketAddress.port), 
-                ChannelListeners.openListenerAdapter(openListener),
-                serverOptions)
-                    .resumeAccepts();
+            try {
+                w.createStreamConnectionServer(
+                    InetSocketAddress(socketAddress.address,
+                                      socketAddress.port),
+                    ChannelListeners.openListenerAdapter(openListener),
+                    serverOptions)
+                        .resumeAccepts();
+            } catch (IOException e) {
+                print("Failed to start server.");
+                notifyListeners(stopped);
+                throw ServerException("Failed to start server.", e);
+            }
         } else {
             throw InternalException("Missing xnio worker!");
         }
@@ -201,8 +211,8 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
     
     shared actual void startInBackground(SocketAddress socketAddress, 
             Options options) {
-        object extends JThread() { 
-            run() => outer.start(socketAddress, options); 
+        object extends JThread() {
+            run() => outer.start(socketAddress, options);
         }.start();
     }
     
