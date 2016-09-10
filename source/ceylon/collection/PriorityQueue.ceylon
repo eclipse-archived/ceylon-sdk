@@ -92,7 +92,8 @@ shared serializable class PriorityQueue<Element>(compare, initialCapacity = 0,
         return element;
     }
     
-    Comparison compareIndexes(Integer first, Integer second) => compare(elt(first), elt(second));
+    Comparison compareIndexes(Integer first, Integer second)
+            => compare(elt(first), elt(second));
     
     void swap(Integer first, Integer second) {
         value element = array[first];
