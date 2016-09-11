@@ -155,6 +155,7 @@ shared class TestServer() extends ServerTest() {
         }
     }
 
+    suppressWarnings("deprecation")
     shared actual {<Endpoint|AsynchronousEndpoint>+} endpoints => {
         Endpoint {
             service => serviceImpl;
@@ -326,7 +327,7 @@ shared class TestServer() extends ServerTest() {
                 }
             },
             Endpoint { 
-                path = startsWith("/multipartPost"); 
+                path = startsWith("/multipartPost");
                 service = (Request request, Response response) {
                     variable String responseString = "";
                     if(exists uploadedFile = request.file("file1")) {
