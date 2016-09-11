@@ -45,7 +45,7 @@ shared abstract class ServerTest() {
     variable Status? lastStatus = null;
     variable Boolean successfullyStarted = false;
 
-    Semaphore startingLock = Semaphore(0);
+    value startingLock = Semaphore(0);
 
     Boolean waitServerStarted() {
         startingLock.acquire();
@@ -123,7 +123,7 @@ shared class TestServer() extends ServerTest() {
     FilePart filePart2 = FilePart("file2", "file2.txt", produceFileContent());
     
     "Number of concurent requests"
-    Integer numberOfUsers=10;
+    Integer numberOfUsers = 10;
     Integer requestsPerUser = 10;
     
     variable String asyncServiceStatus = "";
@@ -162,98 +162,98 @@ shared class TestServer() extends ServerTest() {
             path = startsWith("/echo"); //TODO endpoint overriding, first matching should be used
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.header("Content-Type") else "");
-            };
+            }
             path = startsWith("/headerTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.method.string);
-            };
+            }
             path = startsWith("/methodTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 print("``request.method`` ``request.uri``");
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.method.string);
-            };
+            }
             path = startsWith("/acceptMethodTest");
             acceptMethod = {post, get};
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString("post");
-            };
+            }
             path = startsWith("/acceptMethodTestSameUrl");
             acceptMethod = {post};
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString("get");
-            };
+            }
             path = startsWith("/acceptMethodTestSameUrl");
             acceptMethod = {get};
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.parameter("čšž") else "");
-            };
+            }
             path = startsWith("/paramTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.formParameters("aKey").string);
-            };
+            }
             path = startsWith("/formParamsTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.queryParameter("aKey")?.string else "");
-            };
+            }
             path = startsWith("/queryParamTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.queryParameters("aKey").string);
-            };
+            }
             path = startsWith("/queryParamsTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(request.formParameter("aKey")?.string else "");
-            };
+            }
             path = startsWith("/formParamTest");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 value data = request.readBinary();
-                value converted = data.map((Byte element) => element.unsigned);
+                value converted = data.map((element) => element.unsigned);
                 response.writeString(converted.string);
-            };
+            }
             path = startsWith("/readBinary");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 for (i in 0..10) {
                     response.writeString("foo ``i``\n");
                 }
-            };
+            }
             path = startsWith("/writeStrings");
         },
         Endpoint {
-            service => void (Request request, Response response) {
+            void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
                 variable Object? count = request.session.get("count");
                 if (exists Object c = count) {
@@ -268,7 +268,7 @@ shared class TestServer() extends ServerTest() {
                     request.session.put("count", Integer(1));
                     response.writeString(1.string);
                 }
-            };
+            }
             path = startsWith("/session");
         },
         AsynchronousEndpoint {
@@ -290,7 +290,7 @@ shared class TestServer() extends ServerTest() {
                             Title { "Hello" } 
                         }, 
                         Body {
-                            P{ "Hello!" }
+                            P { "Hello!" }
                         }
                     }, response.writeString);
                 }
@@ -330,18 +330,18 @@ shared class TestServer() extends ServerTest() {
                 path = startsWith("/multipartPost");
                 service = (Request request, Response response) {
                     variable String responseString = "";
-                    if(exists uploadedFile = request.file("file1")) {
+                    if (exists uploadedFile = request.file("file1")) {
                         print("Server got file: ``uploadedFile.file``");
                         value openfile = newOpenFile(uploadedFile.file.resource);
-                        openfile.readFully(void (ByteBuffer buffer) {
+                        openfile.readFully((buffer) {
                             responseString += utf8.decode(buffer);
                         });
                     }
                     
-                    if(exists uploadedFile = request.file("file2")) {
+                    if (exists uploadedFile = request.file("file2")) {
                         print("Server got file: ``uploadedFile.file``");
                         value openfile = newOpenFile(uploadedFile.file.resource);
-                        openfile.readFully(void (ByteBuffer buffer) {
+                        openfile.readFully((buffer) {
                             responseString += utf8.decode(buffer);
                         });
                     }
@@ -497,7 +497,7 @@ shared class TestServer() extends ServerTest() {
         value users = LinkedList<Thread>();
     
         print ("Running ``concurentRequests `` concurrent requests.");    
-        while(requestNumber < concurentRequests) {
+        while (requestNumber < concurentRequests) {
             value userThread = Thread(user);
             users.add(userThread);
             userThread.start();
@@ -728,7 +728,7 @@ shared class TestServer() extends ServerTest() {
     
         request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         request.setParameter(Parameter("foo", "valueFoo"));
-        for (String val in paramValues) {
+        for (val in paramValues) {
             request.setParameter(Parameter(paramKey, val));
         }
     
@@ -745,7 +745,7 @@ shared class TestServer() extends ServerTest() {
     
     void queryParametersTest(String paramKey, String+ paramValues) {
         variable String query = "``paramKey``=``paramValues.first``";
-        for (String val in paramValues.rest) {
+        for (val in paramValues.rest) {
             query = query + "&\`\`paramKey\`\`=\`\`paramValues.first\`\`";
         }
         print(query);
@@ -773,7 +773,7 @@ shared class TestServer() extends ServerTest() {
     
     void queryParameterTest(String paramKey, String+ paramValues) {
         variable String query = "``paramKey``=``paramValues.first``";
-        for (String val in paramValues.rest) {
+        for (val in paramValues.rest) {
             query = query + "&\`\`paramKey\`\`=\`\`paramValues.first\`\`";
         }
         print(query);
@@ -802,7 +802,7 @@ shared class TestServer() extends ServerTest() {
         value response = request.execute();
         value body = response.contents;
     
-        value expected = bytes.map((Byte b) => b.unsigned);
+        value expected = bytes.map((b) => b.unsigned);
         assertEquals { 
             actual = body; 
             expected = expected.string; 
