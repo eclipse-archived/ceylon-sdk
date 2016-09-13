@@ -73,8 +73,8 @@ HashMap<Character,String> parseCaseMappings(Iterator<String> lines) {
     value caseMappings = HashMap<Character,String>();
     if (!is Finished line = lines.next(), !line.empty) {
         for (col in columns(line)) {
-            assert (exists col, exists ch=col.first);
-            caseMappings[ch] = col.spanFrom(2);
+            assert (exists col, exists ch = col[0]);
+            caseMappings[ch] = col[2...];
         }
     }
     return caseMappings;
