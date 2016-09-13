@@ -29,7 +29,8 @@ import java.util {
     LinkedHashSet,
     TreeSet,
     LinkedList,
-    Date
+    Date,
+    JavaHashMap=HashMap
 }
 
 test void stringTests() {
@@ -155,6 +156,15 @@ test void ceylonStringMap() {
     assertTrue(csMap.keys.contains("two"));
     assertEquals(csMap.keys.size, 2);
     assertEquals(CeylonStringMap(emptyMap).size, 0);
+}
+
+test void ceylonMutableMap() {
+    value javaMap = JavaHashMap<String, Integer>();
+    value ceylonMap = CeylonMutableMap(javaMap);
+
+    assertEquals(1, ceylonMap["x"] = 1);
+    assertEquals(1, ceylonMap.put("x", 2));
+    assertEquals(2, ceylonMap.put("x", 3));
 }
 
 test void ceylonStringMutableMap() {
