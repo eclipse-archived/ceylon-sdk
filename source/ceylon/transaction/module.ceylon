@@ -117,8 +117,9 @@ by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
 native("jvm")
 module ceylon.transaction "1.3.0" {    
-    shared import org.jboss.narayana.jta "5.2.7.Final";
+    shared import org.jboss.narayana.jta "5.2.7-1.Final";
     shared import java.jdbc "7";
+    shared import javax.transaction "7";
     import javax.naming "7";
     import java.base "7";
     import ceylon.interop.java "1.3.0";
