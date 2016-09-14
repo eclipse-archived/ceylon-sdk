@@ -303,12 +303,11 @@ shared class TestServer() extends ServerTest() {
                     value startTime = system.milliseconds;
                     String source = request.sourceAddress.address;
                     String responseHello = "Hello ``source`` ";
-                    String content = "xxxxxxxxxxoooooooooo";
                     StringBuilder sb = StringBuilder();
                     sb.append(responseHello);
-                    for (i in 0..1000) { //generate some more content
-                        sb.append(content);
-                    }
+                    // On Linux the max write buffer size for sockets is 4M so let's take 8M
+                    value arr = Array<Character>.ofSize(8M, 'x');
+                    sb.append(String(arr));
                     String responseString = sb.string;
                     response.addHeader(contentLength(responseString.size.string));
                     
@@ -891,7 +890,7 @@ shared class TestServer() extends ServerTest() {
         };
     
         value responseReader = response.getReader();
-        value buffSize = 100;
+        value buffSize = 4k;
         value buffer = ByteBuffer.ofSize(buffSize);
         MutableList<Byte> content = LinkedList<Byte>();
         variable Integer remaining = parseInteger(response.getSingleHeader("content-length") else "0") else 0;
@@ -920,8 +919,9 @@ shared class TestServer() extends ServerTest() {
         }
         print("Read in ``system.milliseconds - startTime``ms.");
         
-        ByteBuffer contentBuff = ByteBuffer.ofSize(content.size);
-        for (b in content) {
+        // we only test the start and 4M makes a large buffer so let's only take the first 100
+        ByteBuffer contentBuff = ByteBuffer.ofSize(100);
+        for (b in content.initial(100)) {
             contentBuff.put(b);
         }
         contentBuff.flip();
