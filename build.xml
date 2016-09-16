@@ -348,6 +348,7 @@
     </target>
     
     <target name="copyModuleArchiveForOSGI">
+    	<echo>In ${currentFile}</echo>
         <loadproperties>
             <zipentry zipfile="${currentFile}" name="META-INF/MANIFEST.MF"/>
              <filterchain>
@@ -361,12 +362,12 @@
         <basename property="module.jar.name" file="${currentFile}"/>
         <propertyregex property="CeylonName"
               input="${module.jar.name}"
-              regexp="(.+)-([^\-]+)\.(j|c)ar"
+              regexp="(.+)-(\d+\.\d+(\.\d+(\.[^\.]+)?)?)\.(j|c)ar"
               replace="\1">
         </propertyregex>
         <propertyregex property="CeylonVersion"
         input="${module.jar.name}"
-        regexp="(.+)-([^\-]+)\.(j|c)ar"
+        regexp="(.+)-(\d+\.\d+(\.\d+(\.[^\.]+)?)?)\.(j|c)ar"
         replace="\2">
         </propertyregex>
         <if>
@@ -422,7 +423,9 @@
         <mkdir dir="${osgi.dist.plugins}" />
         <foreach target="copyModuleArchiveForOSGI" param="currentFile">
             <path>
-                <fileset dir="${osgi.dist}/tempRepo" includes="**/*.?ar"/>
+                <fileset dir="${osgi.dist}/tempRepo" 
+                	includes="**/*.?ar"
+                	excludes="**/com.redhat.ceylon.*.?ar"/>
             </path>
         </foreach>
         <copy todir="${osgi.dist.plugins}">

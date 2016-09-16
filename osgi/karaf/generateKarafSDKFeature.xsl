@@ -21,7 +21,7 @@
                  <xsl:for-each select="/*[local-name()='repository']/*[local-name()='resource']">
                      <xsl:variable name="bundleName" select="./*[(local-name()='capability') and (@namespace='osgi.identity')]/*[(local-name()='attribute') and (@name='osgi.identity')]/@value"/>      
                      <xsl:variable name="url" select="./*[(local-name()='capability') and (@namespace='osgi.content')]/*[(local-name()='attribute') and (@name='url')]/@value"/>      
-                     <xsl:if test="$bundleName != 'com.redhat.ceylon.war' and $bundleName != 'ceylon.test' and $bundleName != 'javax.servlet'">
+                     <xsl:if test="not(starts-with($bundleName, 'com.redhat.ceylon')) and $bundleName != 'ceylon.test' and $bundleName != 'javax.servlet'">
                         <bundle>
                             <xsl:value-of select="$urlPrefix"/>/<xsl:value-of select="$url"/>
                         </bundle>
