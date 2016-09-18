@@ -3,8 +3,8 @@
 by("Stéphane Épardaud")
 see (`class HashSet`)
 shared interface MutableSet<Element>
-        satisfies Set<Element> &
-                  SetMutator<Element>
+        satisfies Set<Element>
+                & SetMutator<Element>
         given Element satisfies Object {
     
     shared actual formal MutableSet<Element> clone();

@@ -3,8 +3,8 @@
 see (`class HashMap`)
 by("Stéphane Épardaud")
 shared interface MutableMap<Key, Item>
-        satisfies Map<Key, Item> &
-                  MapMutator<Key, Item>
+        satisfies Map<Key, Item>
+                & MapMutator<Key, Item>
         given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 
@@ -32,7 +32,8 @@ shared interface MutableMap<Key, Item>
 "Protocol for mutation of a [[MutableMap]]."
 see (`interface MutableMap`)
 shared interface MapMutator<in Key, in Item>
-        satisfies Map<Object, Anything> & KeyedCorrespondenceMutator<Key, Item>
+        satisfies Map<Object, Anything>
+                & KeyedCorrespondenceMutator<Key, Item>
         given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 

@@ -3,8 +3,8 @@
 see (`class LinkedList`, `class ArrayList`)
 by("Stéphane Épardaud")
 shared interface MutableList<Element>
-        satisfies List<Element> &
-                  ListMutator<Element> {
+        satisfies List<Element>
+                & ListMutator<Element> {
 
     "Remove the element at the specified [[index]],
      returning the removed element, if any, or `null` if
@@ -220,7 +220,8 @@ shared interface MutableList<Element>
 "Protocol for mutation of a [[MutableList]]."
 see (`interface MutableList`)
 shared interface ListMutator<in Element>
-        satisfies List<Anything> & IndexedCorrespondenceMutator<Element> {
+        satisfies List<Anything>
+                & IndexedCorrespondenceMutator<Element> {
 
     "Add the given [[element]] to the end of this list,
      incrementing the [[length|List.size]] of the list."
