@@ -19,7 +19,7 @@
    """
 by("Tako Schotanus")
 license("Apache Software License 2.0")
-module ceylon.regex "1.3.0" {
+module ceylon.regex "1.3.1" {
     native("jvm") import java.base "7";
-    native("jvm") import ceylon.interop.java "1.3.0";
+    native("jvm") import ceylon.interop.java "1.3.1";
 }
