@@ -55,7 +55,7 @@ shared object arrayEnd extends ArrayEndEvent() {
 }
 
 "A key encountered when processing JSON data"
-shared sealed class KeyEvent(key) {
+shared class KeyEvent(key) {
     shared String key;
     shared actual String string => "\"``key``\":";
 }
