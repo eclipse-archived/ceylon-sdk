@@ -396,18 +396,24 @@ shared interface ListMutator<in Element>
 
     "Remove every element with an index in the spanned range
      `from..to`."
-    shared default void deleteSpan(Integer from, Integer to) {
-        for (index in from..to) {
-            delete(index);
-        }
-    }
+    shared default void deleteSpan(Integer from, Integer to)
+        =>  deleteMeasure {
+                from = smallest(from, to);
+                length = (to - from).magnitude + 1;
+            };
 
     "Remove every element with an index in the measured
      range `from:length`. If `length<=0`, no elements are
      removed."
-    shared default void deleteMeasure(Integer from, Integer length) {
-        for (index in from:length) {
-            delete(index);
+    shared default void deleteMeasure(
+            variable Integer from, variable Integer length) {
+        if (from < 0) {
+            length += from;
+            from = 0;
+        }
+        length = smallest(length, size - from);
+        while (length-- > 0) {
+            delete(from);
         }
     }
 
@@ -415,8 +421,10 @@ shared interface ListMutator<in Element>
      elements from the end of the list, if necessary, 
      leaving a list with at most the given size."
     throws (`class AssertionError`, "if `size<0`")
-    shared default void truncate(Integer size) 
-            => deleteMeasure(size, this.size-size);
+    shared default void truncate(Integer size) {
+        assert (size >= 0);
+        deleteMeasure(size, this.size-size);
+    }
     
     shared formal actual ListMutator<Element> clone();
     
