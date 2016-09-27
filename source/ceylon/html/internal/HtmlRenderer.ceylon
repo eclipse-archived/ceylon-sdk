@@ -14,6 +14,7 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
     variable value lastOutputWasStartOrEndTag = true;
     variable value previousStartOrEndTagWasBlock = false;
     variable [String, {<String->Object>*}]? bufferedStartElement = null;
+    value indentSize = configuration.indentSize;
     
     shared void renderTemplate(Node root) => visit(root);
     
@@ -171,7 +172,7 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
                 && lastOutputWasStartOrEndTag
                 && (previousStartOrEndTagWasBlock
             || indentElements.contains(elementName.lowercased))) {
-            write("\n" + " ".repeat(elementStack.size * 2));
+            write("\n" + " ".repeat(elementStack.size * indentSize));
         }
         previousStartOrEndTagWasBlock = prettyPrint
                 && indentElements.contains(elementName.lowercased);

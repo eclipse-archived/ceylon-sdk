@@ -50,5 +50,7 @@ shared class RenderingConfiguration(
     "Should the result be minified or formatted?" 
     shared Boolean prettyPrint = true,
     "Should non-ASCII characters be escaped? If `false`, the document's characterset should be UTF-8."
-    shared Boolean escapeNonAscii = false) {
+    shared Boolean escapeNonAscii = false,
+    "When `prettyPrint==true`, the number of spaces that an indentation level is worth."
+    shared Integer indentSize = 2) {
 }
