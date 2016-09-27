@@ -52,5 +52,7 @@ shared class RenderingConfiguration(
     "Should non-ASCII characters be escaped? If `false`, the document's characterset should be UTF-8."
     shared Boolean escapeNonAscii = false,
     "When `prettyPrint==true`, the number of spaces that an indentation level is worth."
-    shared Integer indentSize = 2) {
+    shared Integer indentSize = 2,
+    "Should void elements such as `<br>` and `<hr>` be closed, for exampe, `<br />`?"
+    shared Boolean closeVoidElements = false) {
 }

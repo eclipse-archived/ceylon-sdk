@@ -111,6 +111,40 @@ shared class TestPrettyPrint() {
              </div>\n"
         );
     }
+
+    test
+    shared void closeVoidElementsDefault() {
+        value config = RenderingConfiguration { };
+        value builder = StringBuilder();
+        value node = Div { Br(),Hr(),Br() };
+        renderTemplate(node, builder.append, config);
+        assertEquals {
+            expected = builder.string; 
+            actual = 
+               "<div>
+                  <br>
+                  <hr>
+                  <br>
+                </div>\n";
+        };
+    }
+
+    test
+    shared void closeVoidElementsTrue() {
+        value config = RenderingConfiguration { closeVoidElements = true; };
+        value builder = StringBuilder();
+        value node = Div { Br(),Hr(),Br() };
+        renderTemplate(node, builder.append, config);
+        assertEquals {
+            expected = builder.string; 
+            actual = 
+               "<div>
+                  <br />
+                  <hr />
+                  <br />
+                </div>\n";
+        };
+    }
     
     void assertHtml(Node node, String expected) 
             => assertEquals(node.string, expected);

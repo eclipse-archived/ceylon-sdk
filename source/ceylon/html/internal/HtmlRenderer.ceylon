@@ -208,6 +208,9 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
             }
             if (end) {
                 if (voidElements.contains(elementName.lowercased)) {
+                    if (configuration.closeVoidElements) {
+                        write(" /");
+                    }
                     write(">");
                 }
                 else {
