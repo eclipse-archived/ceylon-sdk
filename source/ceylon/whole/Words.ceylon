@@ -1,9 +1,6 @@
 import java.lang {
     LongArray
 }
-import ceylon.interop.java {
-    createJavaLongArray
-}
 
 native Words wordsOfSize(Integer size);
 
@@ -89,7 +86,7 @@ native("jvm") class WordsJVM satisfies Words {
 
     shared
     new ofOne(Integer word) {
-        storage = createJavaLongArray { word };
+        storage = LongArray(1, word);
     }
 
     shared
@@ -98,7 +95,7 @@ native("jvm") class WordsJVM satisfies Words {
             extends ofSize(wordsSize + 1) {
         assert (is WordsJVM words);
         words.storage.copyTo(storage, 0, 0, wordsSize);
-        storage.set(wordsSize, other);
+        storage[wordsSize] = other;
     }
 
     shared actual
@@ -118,11 +115,11 @@ native("jvm") class WordsJVM satisfies Words {
 
     shared actual
     void set(Integer index, Integer word)
-        =>  storage.set(index, word);
+        =>  storage[index] = word;
 
     shared actual
     Integer get(Integer index)
-        =>  storage.get(index);
+        =>  storage[index];
 
     shared actual
     Words clone()
@@ -147,7 +144,7 @@ native("js") class WordsJS satisfies Words {
 
     shared
     new ofOne(Integer word) {
-        storage = Array<Integer> { word };
+        storage = Array.ofSize(1, word);
     }
 
     shared
@@ -156,7 +153,7 @@ native("js") class WordsJS satisfies Words {
             extends ofSize(wordsSize + 1) {
         assert (is WordsJS words);
         words.storage.copyTo(storage, 0, 0, wordsSize);
-        storage.set(wordsSize, other);
+        storage[wordsSize] = other;
     }
 
     shared actual
@@ -176,12 +173,11 @@ native("js") class WordsJS satisfies Words {
 
     shared actual
     void set(Integer index, Integer word)
-        =>  storage.set(index, word);
+        =>  storage[index] = word;
 
     shared actual
     Integer get(Integer index) {
-        assert (exists result =
-                storage.getFromFirst(index));
+        assert (exists result = storage[index]);
         return result;
     }
 

@@ -34,71 +34,74 @@ import ceylon.interop.java.internal {
 
 
 "The [[BooleanArray]], that is, the Java `boolean[]` array, 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared BooleanArray javaBooleanArray(Array<Boolean>|Array<Bool> array)
         => booleanArray(array);
 
 "The [[ByteArray]], that is, the Java `byte[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared ByteArray javaByteArray(Array<Byte>|Array<Bits> array)
         => byteArray(array);
 
 "The [[ShortArray]], that is, the Java `short[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to 
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared ShortArray javaShortArray(Array<Short> array)
         => shortArray(array);
 
 "The [[IntArray]], that is, the Java `int[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to 
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared IntArray javaIntArray(Array<Character>|Array<Int> array)
         => intArray(array);
 
 "The [[LongArray]], that is, the Java `long[]` array 
- underyling the given Ceylon [[array]].  Changes made to 
+ underlying the given Ceylon [[array]].  Changes made to 
  this Java array will be reflected in the given [[Array]] 
  and vice versa."
 shared LongArray javaLongArray(Array<Integer>|Array<Long> array)
         => longArray(array);
 
 "The [[FloatArray]], that is, the Java `float[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared FloatArray javaFloatArray(Array<Single> array)
         => floatArray(array);
 
 "The [[DoubleArray]], that is, the Java `double[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared DoubleArray javaDoubleArray(Array<Float>|Array<Double> array)
         => doubleArray(array);
 
 "The [[CharArray]], that is, the Java `char[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
 shared CharArray javaCharArray(Array<Char> array)
         => charArray(array);
 
 "The [[ObjectArray]], that is, the Java `Object[]` array 
- underyling the given Ceylon [[array]]. Changes made to this
+ underlying the given Ceylon [[array]]. Changes made to this
  Java array will be reflected in the given [[Array]] and 
  vice versa."
+throws (`class AssertionError`,
+        "if [[Element]] is a union or intersection type,
+         or the bottom type `Nothing`")
 shared ObjectArray<Element> javaObjectArray<Element>(Array<Element?> array)
         given Element satisfies Object
         => objectArray(array);
 
 "The [[string array|ObjectArray]], that is, the Java 
- `String[]` array underyling the given Ceylon [[array]]. 
+ `String[]` array underlying the given Ceylon [[array]]. 
  Changes made to this Java array will be reflected in the 
  given [[Array]] and vice versa."
 shared ObjectArray<JavaString> javaStringArray(Array<String> array)
@@ -108,7 +111,7 @@ shared ObjectArray<JavaString> javaStringArray(Array<String> array)
  `Array<Integer>`."
 shared alias IntegerArrayLike 
         => Array<Short> | Array<Int> | Array<Long>
-        | ShortArray   | IntArray   | LongArray;
+         | ShortArray   | IntArray   | LongArray;
 
 "Create a new `Array<Integer>` with the same elements as the
  given [[array]]."
@@ -120,7 +123,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.integerArray;
@@ -131,7 +134,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.integerArray;
@@ -148,7 +151,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i));
+            result[i] = array[i];
             i++;
         }
         return result.integerArray;
@@ -158,7 +161,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         value result = LongArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i));
+            result[i] = array[i];
             i++;
         }
         return result.integerArray;
@@ -175,7 +178,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
  `Array<Float>`."
 shared alias FloatArrayLike 
         => Array<Single> | Array<Double>
-        |  FloatArray    | DoubleArray;
+         | FloatArray    | DoubleArray;
 
 "Create a new `Array<Float>` with the same elements as the
  given [[array]]."
@@ -187,7 +190,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         value result = DoubleArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.floatArray;
@@ -204,7 +207,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         value result = DoubleArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i));
+            result[i] = array[i];
             i++;
         }
         return result.floatArray;
@@ -232,7 +235,7 @@ shared Array<Byte> toByteArray(ByteArrayLike array) {
         value result = ByteArray(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, nativeArray.get(i));
+            result[i] = nativeArray[i];
             i++;
         }
         return result.byteArray;
@@ -253,8 +256,8 @@ shared Array<Byte> toByteArray(ByteArrayLike array) {
  `Array<String?>`."
 shared alias StringArrayLike 
         => ObjectArray<JavaString>
-        |  Array<JavaString?>
-        | Array<JavaString>;
+         | Array<JavaString?>
+         | Array<JavaString>;
 
 "Create a new Ceylon string array, that is, an 
  `Array<String?>` with the same elements as the
@@ -268,7 +271,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.get(i)?.string);
+            result[i] = array[i]?.string;
             i++;
         }
         javaArray = result;
@@ -278,7 +281,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.getFromFirst(i)?.string);
+            result[i] = array[i]?.string;
             i++;
         }
         javaArray = result;
@@ -288,7 +291,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         value result = ObjectArray<String>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, array.getFromFirst(i)?.string);
+            result[i] = array[i]?.string;
             i++;
         }
         javaArray = result;
@@ -300,8 +303,8 @@ shared Array<String?> toStringArray(StringArrayLike array) {
  `ObjectArray<JavaString>`."
 shared alias JavaStringArrayLike
         => ObjectArray<String>
-        |  Array<String>
-        | Array<String?>;
+         | Array<String>
+         | Array<String?>;
 
 "Create a new Java [[string array|ObjectArray]], that is,
  a Java `String[]`, with the same elements as the given 
@@ -314,7 +317,10 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            result.set(i, javaString(array.get(i)));
+            result[i]
+                = if (exists s = array[i])
+                then javaString(s)
+                else null;
             i++;
         }
         return result;
@@ -324,8 +330,8 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            if (exists element = array.getFromFirst(i)) {
-                result.set(i, javaString(element));
+            if (exists element = array[i]) {
+                result[i] = javaString(element);
             }
             i++;
         }
@@ -336,8 +342,8 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
         while (i<size) {
-            if (exists element = array.getFromFirst(i)) {
-                result.set(i, javaString(element));
+            if (exists element = array[i]) {
+                result[i] = javaString(element);
             }
             i++;
         }
@@ -385,8 +391,11 @@ shared DoubleArray createJavaDoubleArray({Float*} elements)
 shared ObjectArray<JavaString> createJavaStringArray({String*} elements)
         => javaStringArray(Array(elements));
 
-"Create a new [[ObjectArray]], that is, a Java `Object[]`
- array, with the given elements."
-shared ObjectArray<T> createJavaObjectArray<T>({T?*} elements)
-        given T satisfies Object
+"Create a new [[ObjectArray]], that is, a Java array that is
+ a subtype of `Object[]`, with the given elements."
+throws (`class AssertionError`,
+    "if [[Element]] is a union or intersection type,
+     or the bottom type `Nothing`")
+shared ObjectArray<Element> createJavaObjectArray<Element>({Element?*} elements)
+        given Element satisfies Object
         => javaObjectArray(Array(elements));

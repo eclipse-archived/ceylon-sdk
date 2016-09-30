@@ -3,7 +3,8 @@ String htmlEscape(
         String raw, EscapableType type,
         Boolean escapeNonAscii, String? forTag=null) {
 
-    if (is \Iname type) {
+    switch (type)
+    case (is \Iname) {
         assert(name.isValid(raw));
         if (escapeNonAscii && raw.any((c)
                 => !asciiCharacterRange.contains(c))) {
@@ -12,7 +13,7 @@ String htmlEscape(
         }
         // return; names don't have CRLF
         return raw;
-    } else if (is \IrawText type) {
+    } case (is \IrawText) {
         assert (exists forTag);
         value lowerRaw = raw.lowercased;
         value lowerTag = forTag.lowercased;
@@ -35,6 +36,7 @@ String htmlEscape(
         }
         // don't return yet, continue with CRLF normalization
     }
+    else {}
 
     // CRLF normalization not necessary per
     // http://www.w3.org/TR/html5/syntax.html#newlines

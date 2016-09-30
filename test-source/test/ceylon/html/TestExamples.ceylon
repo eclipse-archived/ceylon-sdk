@@ -41,7 +41,55 @@ shared class TestExamples() {
              </html>\n"
         );
     }
-    
+
+    test
+    shared void elementWithCommentOnly() {
+        assertHtml {
+            P { Comment { data = "Foo"; } };
+            "<p><!-- Foo -->\n</p>\n";
+        };
+    }
+
+    test
+    shared void elementWithCommentFirst() {
+        assertHtml {
+            P { Comment { data = "Foo"; }, "Bar" };
+            "<p><!-- Foo -->Bar</p>\n";
+        };
+    }
+
+    test
+    shared void elementWithCommentLast() {
+        assertHtml {
+            P { "Bar", Comment { data = "Foo"; } };
+            "<p>Bar<!-- Foo --></p>\n";
+        };
+    }
+
+    test
+    shared void elementWithRawOnly() {
+        assertHtml {
+            P { Raw { "Foo"; } };
+            "<p>Foo</p>\n";
+        };
+    }
+
+    test
+    shared void elementWithRawFirst() {
+        assertHtml {
+            P { Raw { "Foo"; }, "Bar" };
+            "<p>FooBar</p>\n";
+        };
+    }
+
+    test
+    shared void elementWithRawLast() {
+        assertHtml {
+            P { "Bar", Raw { "Foo"; } };
+            "<p>BarFoo</p>\n";
+        };
+    }
+
     test
     shared void mixedContent() {
         assertHtml(
@@ -67,7 +115,11 @@ shared class TestExamples() {
         assertHtml(
             Div { () => {"foo", Span {"bar"}, "baz" } },
             "<div>foo<span>bar</span>baz</div>\n"
-        );        
+        );
+        assertHtml(
+            Div { "Raw HTML:", Raw("<div></div>") },
+            "<div>Raw HTML:<div></div></div>\n"
+        );
     }
     
     test

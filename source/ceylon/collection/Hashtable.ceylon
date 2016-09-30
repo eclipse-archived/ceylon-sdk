@@ -11,7 +11,7 @@
    given [[loadFactor]].
  - The new capacity is the product of the current capacity 
    and the given [[growthFactor]]."
-shared class Hashtable(
+shared serializable class Hashtable(
     initialCapacity=16, 
     loadFactor=0.75, 
     growthFactor=2.0

@@ -6,13 +6,13 @@ import ceylon.test {
 }
 
 beforeTest
-shared void barToplevelBefore() {
-    callbackLogger.append("barToplevelBefore").appendNewline();
+shared void beforeTest3() {
+    callbackLogger.append("beforeTest3").appendNewline();
 }
 
 afterTest
-shared void barToplevelAfter() {
-    callbackLogger.append("barToplevelAfter").appendNewline();
+shared void afterTest3() {
+    callbackLogger.append("afterTest3").appendNewline();
 }
 
 shared interface BarWithCallbacksInterface1 satisfies BarWithCallbacksInterface2 {
@@ -43,7 +43,7 @@ shared interface BarWithCallbacksInterface2 {
     
 }
 
-shared class BarWithCallbacks() extends FooWithCallbacks() satisfies BarWithCallbacksInterface1 {
+shared class BarWithCallbacks() extends TestWithCallbacks() satisfies BarWithCallbacksInterface1 {
     
     beforeTest
     shared void barBefore() {

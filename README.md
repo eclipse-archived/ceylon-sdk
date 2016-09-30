@@ -4,18 +4,39 @@
 
 This repository contains the Ceylon SDK.
 
-The module minor.major version aligns with the Ceylon distribution minor.major
+The module major.minor version aligns with the Ceylon distribution major.minor
 version that we use to compile/distribute them. The micro version of each module
 can be incremented as needed between Ceylon distribution releases.
 
-Build the compiler and tools
-----------------------------
+### Build the compiler and tools
 
-For setting up the development environment and compiling and building the distribution
-take a look at [ceylon-dist](https://github.com/ceylon/ceylon-dist#ceylon-distribution).
+In many cases to be able to build the SDK from the `master` branch you will also need
+the very latest Ceylon distribution from its `master` branch. For setting up the
+development environment and compiling and building the latest Ceylon distribution
+take a look at [ceylon](https://github.com/ceylon/ceylon/tree/master/dist#ceylon-distribution).
 
 If after having built the distribution you want to build and test the SDK
-return to `ceylon-sdk` and run 
+return to this project and follow the instructions in the [Build the SDK](#build-the-sdk) section.
+
+### Build a specific version
+
+If you would like to skip the above step about compiling and building Ceylon and you
+would like to build the SDK using an officially released Ceylon distribution you have
+already got installed then that is possible but you will have to check out the same
+version of the SDK that came with the Ceylon release you are using, like this:
+
+    git checkout VERSION
+    
+Where `VERSION` is the exact version of the Ceylon distribution you are running
+(check this by running `ceylon --version` on the command line). After that you just
+follow the instructions in the next section.
+
+*NB: If you are doing this because you found a bug and are trying to fix it then first make
+really sure that the bug wasn't fixed in the latest version of the code!*
+
+### Build the SDK
+
+In the root of this project run
 
     ant clean publish
     

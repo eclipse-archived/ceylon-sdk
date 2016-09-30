@@ -36,10 +36,18 @@ public final class javaObjectArray_ {
     public static <T> T[] javaObjectArray(@Ignore TypeDescriptor $reifiedT, 
             @TypeInfo("ceylon.language::Array<T|ceylon.language::Null>") 
             @Name("array") Array<T> array){
-        if(array.toArray() instanceof java.lang.Object[]){
-            return (T[]) array.toArray();
+        TypeDescriptor t = $reifiedT;
+        while (t instanceof TypeDescriptor.Member) {
+            t = ((TypeDescriptor.Member) t).getMember();
         }
-        throw new AssertionError("Invalid source array type: "+array.toArray());
+        if (!(t instanceof TypeDescriptor.Class)) {
+            throw new AssertionError("Invalid array element type: " + t.toString());
+        }
+        Object result = array.toArray();
+        if (!(result instanceof java.lang.Object[])) {
+            throw new AssertionError("Invalid source array type: " + result);
+        }
+        return (T[]) result;
     }
 
 }

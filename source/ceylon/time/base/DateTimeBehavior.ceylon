@@ -8,6 +8,7 @@ see (`interface DateTime`,
 shared interface DateTimeBehavior<Element, out DateType, out TimeType> of Element
        satisfies DateBehavior<Element>
                & TimeBehavior<Element>
+               & ReadableDateTime
        given Element satisfies ReadableDateTime 
        given DateType satisfies ReadableDate
        given TimeType satisfies ReadableTime {

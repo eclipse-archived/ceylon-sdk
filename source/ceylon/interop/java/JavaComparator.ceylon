@@ -36,12 +36,10 @@ class JavaComparator<Element>(compareElements, nulls=smaller)
             else
                 equal; // both are null
 
-    shared actual
-    Integer compare(Element? first, Element? second)
+    compare(Element? first, Element? second)
         =>  toInteger(ceylonCompare(first, second));
 
-    shared actual
-    Boolean equals(Object that)
+    equals(Object that)
         =>  (super of Basic).equals(that);
 
 }

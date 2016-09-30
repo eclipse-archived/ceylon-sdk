@@ -3,18 +3,24 @@
 see (`class HashMap`)
 by("Stéphane Épardaud")
 shared interface MutableMap<Key, Item>
-        satisfies Map<Key, Item> &
-                  MapMutator<Key, Item>
+        satisfies Map<Key, Item>
+                & MapMutator<Key, Item>
         given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 
      entry for the given [[key]], and returning the previous 
-     value associated with the given `key`, if any, or 
-     `null` if no existing entry was overwritten."
+     item associated with the given `key`, if any, or
+     `null` if no existing entry was overwritten.
+
+     Note that, while `map.put(key, item)` is often written
+     as `map[key] = item`, the two expressions are not
+     equivalent, since `put()` returns the item _previously_
+     associated with `key`, whereas an assignment expression
+     always evaluates to the newly assigned value."
     shared formal actual Item? put(Key key, Item item);
     
     "Remove the entry associated with the given [[key]], if 
-     any, from this map, returning the value no longer 
+     any, from this map, returning the item no longer
      associated with the given `key`, if any, or `null` if
      there was no entry associated with the given `key`."
     shared formal actual Item? remove(Key key);
@@ -27,13 +33,20 @@ shared interface MutableMap<Key, Item>
 see (`interface MutableMap`)
 shared interface MapMutator<in Key, in Item>
         satisfies Map<Object, Anything>
+                & KeyedCorrespondenceMutator<Key, Item>
         given Key satisfies Object {
     
     "Add an entry to this map, overwriting any existing 
      entry for the given [[key]], and returning the previous 
-     value associated with the given `key`, if any, or 
-     `null` if no existing entry was overwritten."
-    shared formal Anything put(Key key, Item item);
+     item associated with the given `key`, if any, or
+     `null` if no existing entry was overwritten.
+
+     Note that, while `map.put(key, item)` is often written
+     as `map[key] = item`, the two expressions are not
+     equivalent, since `put()` returns the item _previously_
+     associated with `key`, whereas an assignment expression
+     always evaluates to the newly assigned value."
+    shared actual formal Anything put(Key key, Item item);
     
     "Add the given [[entries]] to this map, overwriting any 
      existing entries with the same keys."

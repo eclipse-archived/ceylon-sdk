@@ -317,8 +317,8 @@ void shouldRunParameterizedCallback() {
     };
     
     assert(paramCollector.sequence() == 
-        ["before_test.ceylon.test.stubs::parameterizedTests.parameterizedTest(1)", "before_0", 1, "after_0", 
-         "before_test.ceylon.test.stubs::parameterizedTests.parameterizedTest(2)", "before_0", 2, "after_0"]);
+        ["before_test.ceylon.test.stubs::parameterizedTests.parameterizedTest(1)", 1, "after_0", 
+         "before_test.ceylon.test.stubs::parameterizedTests.parameterizedTest(2)", 2, "after_0"]);
 }
 
 test
@@ -436,12 +436,6 @@ void shouldVerifyParameterizedCallbackWithMultipleArgLists() {
     assertResultContains {
         result;
         index = 0;
-        state = TestState.error;
-        message = "parameterized callback test.ceylon.test.stubs::parameterizedTests.parameterizedBeforeCallback failed, argument provider returned multiple argument lists";
-    };
-    assertResultContains {
-        result;
-        index = 1;
         state = TestState.error;
         message = "parameterized callback test.ceylon.test.stubs::parameterizedTests.parameterizedAfterCallback failed, argument provider returned multiple argument lists";
     };

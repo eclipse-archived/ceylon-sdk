@@ -60,7 +60,7 @@ shared object utf8 satisfies Charset {
                 output.put(b1);
                 output.put(b2);
                 output.put(b3);
-            } else if (cp < #10FFFF) {
+            } else if (cp < #110000) {
                 // four bytes
                 value b1 = cp.and($111000000000000000000).rightLogicalShift(18).or($11110000).byte;
                 value b2 = cp.and($111111000000000000).rightLogicalShift(12).or($10000000).byte;

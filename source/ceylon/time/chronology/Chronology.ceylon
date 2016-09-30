@@ -57,6 +57,7 @@ shared interface Chronology<Fields>
  
  *Note:* This interface is meant to convey a Calendar that has some sort of leap year syntax."
 shared interface LeapYear<Self, Fields> of Self
+       satisfies Chronology<Fields>
        given Self satisfies Chronology<Fields>
        given Fields satisfies Anything[] {
 

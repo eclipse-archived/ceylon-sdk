@@ -65,31 +65,46 @@ shared class DefaultTestRunner(
     TestRunResult runInternal(Boolean async, void done(TestRunResult result)) {
         verifyCycle();
         
-        value result = DefaultTestRunResult();
+        value beforeAfterTestRunCallbacksInvoker = BeforeAfterTestRunCallbacksInvoker(); 
         value extensionResolver = DefaultTestExtensionResolver();
+        value result = DefaultTestRunResult();
         value context = TestExecutionContext.root(this, result, extensionResolver, async);
-        
-        value listeners = findAllListeners(extensionResolver).
-                chain(extensions.narrow<TestListener>()).
-                chain({result.listener}).
-                sort(increasing);
-        
         context.registerExtension(DefaultArgumentListResolver());
         context.registerExtension(DefaultTestInstanceProvider());
         context.registerExtension(DefaultTestVariantProvider());
         context.registerExtension(result.listener);
         context.registerExtension(*extensions);
         
+        variable {TestListener*} listeners = [];
+        try {
+            listeners = findAllListeners(extensionResolver).
+                    chain(extensions.narrow<TestListener>()).
+                    follow(beforeAfterTestRunCallbacksInvoker).
+                    follow(result.listener).
+                    sort(increasing);
+        }
+        catch(Exception e) {
+            context.fire().testError(TestErrorEvent(TestResult(TestDescription("error resolving listeners"), TestState.error, false, e)));
+            done(result);
+            return result;
+        }
+        
+        value fire = TestEventEmitter(listeners);        
+        
         context.execute(
             () => runningRunners.add(this),
-            () => TestEventEmitter(listeners).testRunStarted(TestRunStartedEvent(this, description)),
-            {for(e in executors) () => e.execute(context)},
-            () => TestEventEmitter(listeners).testRunFinished(TestRunFinishedEvent(this, result)),
+            () => fire.testRunStarted(TestRunStartedEvent(this, description)),
+            () => if( !result.isFailed )
+                      then
+                          context.execute({for(e in executors) () => e.execute(context)}) 
+                      else 
+                          noop,
+            () => fire.testRunFinished(TestRunFinishedEvent(this, result)),
             () => runningRunners.remove(this),
             () => done(result)
         );       
         
-        return result;  
+        return result;
     }
     
     void verifyCycle() {

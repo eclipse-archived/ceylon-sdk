@@ -1,5 +1,6 @@
 "Common behavior of objects representing a period."
-shared interface PeriodBehavior<Self> of Self 
+shared interface PeriodBehavior<Self> of Self
+       satisfies ReadablePeriod 
        given Self satisfies PeriodBehavior<Self>
                              & ReadablePeriod {
 

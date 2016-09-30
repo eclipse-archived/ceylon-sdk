@@ -13,11 +13,11 @@ import java.math {
 
 "A `Whole` instance representing zero."
 shared Whole zero => zeroImpl;
-WholeImpl zeroImpl = WholeImpl(BigInteger.\iZERO);
+WholeImpl zeroImpl = WholeImpl(BigInteger.zero);
 
 "A `Whole` instance representing one."
 shared Whole one => oneImpl;
-WholeImpl oneImpl = WholeImpl(BigInteger.\iONE);
+WholeImpl oneImpl = WholeImpl(BigInteger.one);
 
 "A `Whole` instance representing two."
 shared Whole two = wholeNumber(2);

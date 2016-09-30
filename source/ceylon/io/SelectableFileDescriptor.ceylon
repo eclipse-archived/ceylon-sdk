@@ -24,7 +24,7 @@ shared sealed interface SelectableFileDescriptor
             void consume(ByteBuffer buffer), 
             ByteBuffer buffer = newBuffer()) {
         blocking = false;
-        Boolean readData(FileDescriptor socket) {
+        selector.addConsumer(this, (socket) {
             buffer.clear();
             if(socket.read(buffer) >= 0) {
                 buffer.flip();
@@ -35,8 +35,7 @@ shared sealed interface SelectableFileDescriptor
                 // EOF
                 return false;
             }
-        }
-        selector.addConsumer(this, readData);
+        });
     }
 
     "Register a writing listener to the given [[selector]]. 

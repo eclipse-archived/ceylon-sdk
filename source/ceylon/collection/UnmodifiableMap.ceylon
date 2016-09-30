@@ -2,7 +2,7 @@
  hiding the underlying `Map` implementation from clients, 
  and preventing attempts to narrow to [[MutableMap]]."
 by ("Gavin King")
-class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
+serializable class UnmodifiableMap<out Key,out Item>(Map<Key,Item> map)
         satisfies Map<Key,Item>
         given Key satisfies Object {
 

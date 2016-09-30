@@ -305,6 +305,9 @@ shared dynamic Element
     shared formal variable String innerHTML;
     shared formal variable String outerHTML;
     shared formal void insertAdjacentHTML (String position, String text);
+
+    shared formal variable Integer? scrollTop;
+    shared formal variable Integer? scrollHeight;
 }
 
 "The Attr interface represents an attribute in an Element object. 

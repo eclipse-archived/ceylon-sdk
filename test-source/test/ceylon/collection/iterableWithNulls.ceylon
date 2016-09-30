@@ -5,7 +5,6 @@ import ceylon.test {
     assertEquals,
     assertFalse
 }
-import ceylon.collection { ArrayList }
 
 shared interface IterableWithNullElementsTests satisfies IterableTests {
     
@@ -246,18 +245,6 @@ shared interface IterableWithNullElementsTests satisfies IterableTests {
         assertEquals(cycle(createIterableWithNulls {null})(1), [null]);
         assertEquals(cycle(createIterableWithNulls {"a", null, "c"})(3),
             createIterableWithNulls({"a", null, "c", "a", null, "c", "a", null, "c"}));
-    }
-    
-    List<Integer> nullIndexes({Anything*} iterable) {
-        value nullIndexes = ArrayList<Integer>();
-        variable Integer index = 0;
-        for (item in iterable) {
-            if (item is Null) {
-                nullIndexes.add(index);
-            }
-            index++;
-        }
-        return nullIndexes.sequence();
     }
     
 }

@@ -1,7 +1,3 @@
-import ceylon.interop.java {
-    toByteArray
-}
-
 import java.nio {
     JavaByteBuffer=ByteBuffer {
         allocateJavaByteBuffer=allocate
@@ -82,7 +78,7 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
     }
     
     shared actual native ("js") Byte get() {
-        value byte = buf.get(position);
+        value byte = buf[position];
         if (exists byte) {
             position++;
             return byte;
@@ -94,7 +90,7 @@ shared native ("js") class ByteBuffer extends Buffer<Byte> {
         if (position > limit) {
             throw BufferOverflowException("No space at position ``position``");
         }
-        buf.set(position, element);
+        buf[position] = element;
         position++;
     }
     
@@ -189,7 +185,7 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
             current = this;
             intoNew = () {
                 // copy
-                JavaByteBuffer dest = allocateJavaByteBuffer(newSize);
+                value dest = allocateJavaByteBuffer(newSize);
                 dest.put(buf);
                 // change buffer
                 buf = dest;
@@ -197,6 +193,6 @@ shared native ("jvm") class ByteBuffer extends Buffer<Byte> {
         };
     }
     
-    shared actual native ("jvm") Array<Byte> array => toByteArray(buf.array());
+    shared actual native ("jvm") Array<Byte> array => buf.array().byteArray;
     shared actual native ("jvm") Object? implementation => buf;
 }

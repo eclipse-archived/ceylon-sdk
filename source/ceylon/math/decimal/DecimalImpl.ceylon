@@ -60,8 +60,8 @@ final class DecimalImpl(BigDecimal num)
         } else {
             assert (false);
         }
-        return DividedWithRemainder(DecimalImpl(array[0] else BigDecimal.\iZERO), 
-                DecimalImpl(array[1] else BigDecimal.\iZERO));
+        return DividedWithRemainder(DecimalImpl(array[0] else BigDecimal.zero),
+                DecimalImpl(array[1] else BigDecimal.zero));
     }
 
     "The precision of this decimal."

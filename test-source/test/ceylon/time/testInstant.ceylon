@@ -36,36 +36,34 @@ shared class InstantTest() {
     Instant feb_13_2013_18_00_42_0057 = now( fixedTime(1360778442057) );
     
     shared test void dateReturnsCorrectDateValue() =>
-            assertEquals(feb_13_2013_18_00_42_0057.date(timeZone.utc), date(2013, february, 13));
+            assertEquals { expected = date(2013, february, 13); actual = feb_13_2013_18_00_42_0057.date(timeZone.utc); };
     
     shared test void timeReturnsCorrectTimeValue() => 
-            assertEquals(feb_13_2013_18_00_42_0057.time(timeZone.utc), time(18, 0, 42, 57));
+            assertEquals { expected = time(18, 0, 42, 57); actual = feb_13_2013_18_00_42_0057.time(timeZone.utc); };
     
-    shared test void equalsToSameInstant() {
-        assert(Instant(1360778442057) == feb_13_2013_18_00_42_0057);
-    }
+    shared test void equalsToSameInstant() =>
+            assertEquals { expected = feb_13_2013_18_00_42_0057; actual = Instant(1360778442057); };
     
-    shared test void sameHashForSameInstant() {
-        assert(Instant(1360778442057).hash == feb_13_2013_18_00_42_0057.hash);
-    }
+    shared test void sameHashForSameInstant() =>
+            assertEquals { expected = feb_13_2013_18_00_42_0057.hash; actual = Instant(1360778442057).hash; };
     
     shared test void stringPrintsISODateInUTC() {
-        assertEquals( "2013-02-13T18:00:42.057Z", Instant(1360778442057).string );
-        assertEquals( "2013-10-30T15:16:55.000Z", Instant(1383146215000).string );
+        assertEquals { expected = "2013-02-13T18:00:42.057Z"; actual = Instant(1360778442057).string; };
+        assertEquals { expected = "2013-10-30T15:16:55.000Z"; actual = Instant(1383146215000).string; };
     }
     
     shared test void plusPeriod_UTC() {
         value period = Period { years = 2; months = 1;};
         value actual = feb_13_2013_18_00_42_0057.plus(period);
-        assertEquals(date(2015,march, 13), actual.date(timeZone.utc) );
-        assertEquals(time(18, 0, 42, 57), actual.time(timeZone.utc) );
+        assertEquals { expected = date(2015,march, 13); actual = actual.date(timeZone.utc); };
+        assertEquals { expected = time(18, 0, 42, 57); actual = actual.time(timeZone.utc); };
     }
     
     shared test void minusPeriod_UTC() {
         value period = Period { years = 2; months = 1; days = 3;};
         value actual = feb_13_2013_18_00_42_0057.minus(period);
-        assertEquals(date(2011,january, 10), actual.date(timeZone.utc));
-        assertEquals(time(18, 0, 42, 57), actual.time(timeZone.utc));
+        assertEquals { expected = date(2011,january, 10); actual = actual.date(timeZone.utc); };
+        assertEquals { expected = time(18, 0, 42, 57); actual = actual.time(timeZone.utc); };
     }
     
     shared test void durationTo() {
@@ -73,7 +71,7 @@ shared class InstantTest() {
         value twoDaysAfter = Instant(feb_13_2013_18_00_42_0057.millisecondsOfEpoch + twoDaysduration );
         value duration = feb_13_2013_18_00_42_0057.durationTo( twoDaysAfter );
         
-        assertEquals( twoDaysduration, duration.milliseconds );
+        assertEquals { expected = twoDaysduration; actual = duration.milliseconds; };
     }
     
     shared test void durationFrom() {
@@ -81,20 +79,20 @@ shared class InstantTest() {
         value twoDaysBefore = Instant(feb_13_2013_18_00_42_0057.millisecondsOfEpoch - twoDaysduration );
         value duration =  feb_13_2013_18_00_42_0057.durationFrom(twoDaysBefore);
         
-        assertEquals( twoDaysduration, duration.milliseconds );
+        assertEquals { expected = twoDaysduration; actual = duration.milliseconds; };
     }
     
     shared test void enumerableIsBasedOnOffset() {
-        assert(feb_13_2013_18_00_42_0057.offset(feb_13_2013_18_00_42_0057) == 0);
-        assert(feb_13_2013_18_00_42_0057.successor.offset(feb_13_2013_18_00_42_0057) == 1);
-        assert(feb_13_2013_18_00_42_0057.predecessor.offset(feb_13_2013_18_00_42_0057) == -1);
+        assertEquals { expected = 0; actual = feb_13_2013_18_00_42_0057.offset(feb_13_2013_18_00_42_0057); };
+        assertEquals { expected = 1; actual = feb_13_2013_18_00_42_0057.successor.offset(feb_13_2013_18_00_42_0057); };
+        assertEquals { expected = -1; actual = feb_13_2013_18_00_42_0057.predecessor.offset(feb_13_2013_18_00_42_0057); };
     }
 
     
     shared test void enumerablePredecessor() {
-        assertEquals(feb_13_2013_18_00_42_0057.predecessor, feb_13_2013_18_00_42_0057.minus(oneMillisecond));
+        assertEquals { expected = feb_13_2013_18_00_42_0057.predecessor; actual = feb_13_2013_18_00_42_0057.minus(oneMillisecond); };
     }
     shared test void enumerableSuccessor() {
-        assertEquals(feb_13_2013_18_00_42_0057.successor, feb_13_2013_18_00_42_0057.plus(oneMillisecond));
+        assertEquals { expected = feb_13_2013_18_00_42_0057.successor; actual = feb_13_2013_18_00_42_0057.plus(oneMillisecond); };
     }
 }

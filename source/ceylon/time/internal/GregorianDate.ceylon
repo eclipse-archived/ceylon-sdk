@@ -3,8 +3,10 @@ import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, 
 import ceylon.time.chronology { impl=gregorian }
 
 "Default implementation of a gregorian calendar"
-shared class GregorianDate( Integer dayOfEra )
-      extends AbstractDate( dayOfEra ) {
+shared class GregorianDate( dayOfEra ) extends Object() satisfies Date {
+	
+	"Every [[Date]] implementation should indicate it´s own _day of era_ based in it´s own chronology."
+	shared actual Integer dayOfEra;
 
     "Returns year of this gregorian date."
     shared actual Integer year => impl.yearFrom( dayOfEra );
@@ -299,6 +301,11 @@ shared class GregorianDate( Integer dayOfEra )
             months = positive then mm else -mm;
             days = positive then dd else -dd;
         }; 
+    }
+    
+    "Dates from same chronology can be compared if they have same _day of era_."
+    shared actual Comparison compare(Date other) {
+        return dayOfEra <=> other.dayOfEra;
     }
 
     "Returns the period between this and the given date.

@@ -85,25 +85,25 @@ shared test void testComparable_friday_Weekday() {
 }
 
 shared test void testOrdinal_Weekday() {
-    value data_1982_12_13 = date( 1982, december, 13);
-    value data_1983_01_01 = date( 1983, january, 1 );
-    variable value dow = data_1982_12_13.dayOfWeek;
-    for ( Date date in data_1982_12_13..data_1983_01_01 ) {
-        assertEquals( date.dayOfWeek, dow++ );
+    value date_1982_12_13 = date( 1982, december, 13);
+    value date_1983_01_01 = date( 1983, january, 1 );
+    variable value dow = date_1982_12_13.dayOfWeek;
+    for ( Date date in date_1982_12_13..date_1983_01_01 ) {
+        assertEquals { actual = date.dayOfWeek; expected = dow++; };
     }
 }
 
 shared test void testParseDayOfWeek() {
-    assertEquals(sunday, parseDayOfWeek("sunday"));
-    assertEquals(monday, parseDayOfWeek("monday"));
-    assertEquals(tuesday, parseDayOfWeek("tuesday"));
-    assertEquals(wednesday, parseDayOfWeek("wednesday"));
-    assertEquals(thursday, parseDayOfWeek("thursday"));
-    assertEquals(friday, parseDayOfWeek("friday"));
-    assertEquals(saturday, parseDayOfWeek("saturday"));
+    assertEquals { expected = sunday; actual = parseDayOfWeek("sunday"); };
+    assertEquals { expected = monday; actual = parseDayOfWeek("monday"); };
+    assertEquals { expected = tuesday; actual = parseDayOfWeek("tuesday"); };
+    assertEquals { expected = wednesday; actual = parseDayOfWeek("wednesday"); };
+    assertEquals { expected = thursday; actual = parseDayOfWeek("thursday"); };
+    assertEquals { expected = friday; actual = parseDayOfWeek("friday"); };
+    assertEquals { expected = saturday; actual = parseDayOfWeek("saturday"); };
 
-    assertEquals(null, parseDayOfWeek("saturdayyy"));
-    assertEquals(monday, parseDayOfWeek("MoNdAy"));
+    assertEquals { expected = null; actual = parseDayOfWeek("saturdayyy"); };
+    assertEquals { expected = monday; actual = parseDayOfWeek("MoNdAy"); };
 }
 
 // Range test

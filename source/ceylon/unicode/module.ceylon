@@ -4,8 +4,9 @@
  
  - [[uppercase]] and [[lowercase]] change the case of a
    `String` according to the rules of a certain locale,
- - [[graphemes]] allows iteration of the Unicode graphemes
-   in a `String`,
+ - [[graphemes]], [[words]], and [[sentences]] allow 
+   iteration of the Unicode graphemes, words, and sentences
+   in a `String`, according to locale-specific rules,
  - [[characterName]] returns the Unicode character name of
    a character, and
  - [[generalCategory]] and [[directionality]] return the
@@ -13,7 +14,7 @@
    `Character`."
 by("Tom Bentley")
 native("jvm")
-module ceylon.unicode "1.2.3.SNAPSHOT" {
+module ceylon.unicode "1.3.1-SNAPSHOT" {
     shared import java.base "7";
-    import ceylon.interop.java "1.2.3.SNAPSHOT";
+    import ceylon.interop.java "1.3.1-SNAPSHOT";
 }

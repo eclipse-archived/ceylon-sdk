@@ -78,7 +78,7 @@
    [[java.sql::Types]]):
    
        sql.Update("update table set col=? where key=?")
-          .execute(SqlNull(Types.\iINTEGER));
+          .execute(SqlNull(Types.integer));
    
    If a column is null on a result row, it will be 
    represented as a `SqlNull` instance under the column's 
@@ -87,12 +87,13 @@
 by ("Enrique Zamudio")
 license ("Apache Software License 2.0")
 native("jvm")
-module ceylon.dbc "1.2.3.SNAPSHOT" {
-    import ceylon.collection "1.2.3.SNAPSHOT";
-    shared import ceylon.math "1.2.3.SNAPSHOT";
+module ceylon.dbc "1.3.1-SNAPSHOT" {
+    import ceylon.collection "1.3.1-SNAPSHOT";
+    shared import ceylon.decimal "1.3.1-SNAPSHOT";
+    shared import ceylon.whole "1.3.1-SNAPSHOT";
     import java.base "7";
-    import ceylon.interop.java "1.2.3.SNAPSHOT";
+    import ceylon.interop.java "1.3.1-SNAPSHOT";
     shared import java.jdbc "7";
-    import ceylon.time "1.2.3.SNAPSHOT";
-    import ceylon.transaction "1.2.3.SNAPSHOT";
+    import ceylon.time "1.3.1-SNAPSHOT";
+    import ceylon.transaction "1.3.1-SNAPSHOT";
 }

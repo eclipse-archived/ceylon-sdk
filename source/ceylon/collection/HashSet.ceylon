@@ -21,7 +21,7 @@
  The management of the backing array is controlled by the
  given [[hashtable]]."
 by ("Stéphane Épardaud", "Gavin King")
-shared class HashSet<Element>
+shared serializable class HashSet<Element>
         satisfies MutableSet<Element>
         given Element satisfies Object {
     
@@ -117,8 +117,8 @@ shared class HashSet<Element>
             // walk every bucket
             while (index < hashSet.store.size) {
                 if (exists bucket
-                        = hashSet.store.getFromFirst(index)) {
-                    store.set(index, bucket.clone());
+                        = hashSet.store[index]) {
+                    store[index] = bucket.clone();
                 }
                 index++;
             }
@@ -183,7 +183,7 @@ shared class HashSet<Element>
         Element element) {
         value elementHash = hashCode(element);
         Integer index = storeIndex(elementHash, store);
-        value headBucket = store.getFromFirst(index);
+        value headBucket = store[index];
         variable value bucket = headBucket;
         while (exists cell = bucket) {            
             if (cell.keyHash == elementHash
@@ -195,8 +195,8 @@ shared class HashSet<Element>
             bucket = cell.rest;
         }
         // add a new entry
-        store.set(index, 
-            createCell(element, elementHash, headBucket));
+        store[index]
+            = createCell(element, elementHash, headBucket);
         return true;
     }
     
@@ -209,17 +209,16 @@ shared class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket
-                        = store.getFromFirst(index);
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     bucket = cell.rest;
                     Integer newIndex
                             = storeIndex(cell.keyHash,
                                          newStore);
                     value newBucket 
-                            = newStore.getFromFirst(newIndex);
+                            = newStore[newIndex];
                     cell.rest = newBucket;
-                    newStore.set(newIndex, cell);
+                    newStore[newIndex] = cell;
                 }
                 index++;
             }
@@ -268,14 +267,14 @@ shared class HashSet<Element>
     shared actual Boolean remove(Element element) {
         value elementHash = hashCode(element);
         Integer index = storeIndex(elementHash, store);
-        if (exists head = store.getFromFirst(index),
+        if (exists head = store[index],
             head.element == element) {
-            store.set(index, head.rest);
+            store[index] = head.rest;
             deleteCell(head);
             length--;
             return true;
         }
-        variable value bucket = store.getFromFirst(index);
+        variable value bucket = store[index];
         while (exists cell = bucket) {
             value rest = cell.rest;
             if (exists rest,
@@ -297,7 +296,7 @@ shared class HashSet<Element>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            store.set(index++, null);
+            store[index++] = null;
         }
         length = 0;
         head = null;
@@ -318,8 +317,7 @@ shared class HashSet<Element>
         variable Integer index = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket
-                    = store.getFromFirst(index);
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 if (selecting(cell.element)) {
                     count++;
@@ -346,8 +344,7 @@ shared class HashSet<Element>
         variable Integer hash = 0;
         // walk every bucket
         while (index < store.size) {
-            variable value bucket
-                    = store.getFromFirst(index);
+            variable value bucket = store[index];
             while (exists cell = bucket) {
                 hash += cell.element.hash;
                 bucket = cell.rest;
@@ -363,8 +360,7 @@ shared class HashSet<Element>
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
-                variable value bucket
-                        = store.getFromFirst(index);
+                variable value bucket = store[index];
                 while (exists cell = bucket) {
                     if (!that.contains(cell.element)) {
                         return false;
@@ -387,8 +383,7 @@ shared class HashSet<Element>
         else {
             value elementHash = hashCode(element);
             Integer index = storeIndex(elementHash, store);
-            variable value bucket
-                    = store.getFromFirst(index);
+            variable value bucket = store[index];
             while (exists cell = bucket) {                
                 if (cell.keyHash == elementHash
                         && cell.element == element) {

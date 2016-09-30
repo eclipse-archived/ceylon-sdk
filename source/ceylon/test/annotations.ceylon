@@ -5,7 +5,9 @@ import ceylon.language.meta.declaration {
 }
 import ceylon.test.annotation {
     AfterTestAnnotation,
+    AfterTestRunAnnotation,
     BeforeTestAnnotation,
+    BeforeTestRunAnnotation,
     TestAnnotation,
     TestSuiteAnnotation,
     TestExecutorAnnotation,
@@ -73,7 +75,6 @@ shared annotation TestExtensionAnnotation testExtension(
 
 "Marks a function which will be run before each test in its scope.
  It allow to place common initialization logic into separate place.
- Only nullary functions should be annotated with `beforeTest`.
  
      class StarshipTest() {
  
@@ -89,7 +90,6 @@ shared annotation BeforeTestAnnotation beforeTest()
 
 "Marks a function which will be run after each test in its scope.
  It allow to place common initialization logic into separate place.
- Only nullary functions should be annotated with `afterTest`.
  
      class StarshipTest() {
  
@@ -101,6 +101,26 @@ shared annotation BeforeTestAnnotation beforeTest()
  "
 shared annotation AfterTestAnnotation afterTest()
         => AfterTestAnnotation();
+
+
+"Marks a toplevel function which will be executed once before all tests, 
+ before the test run starts.
+ 
+     beforeTestRun
+     void startEmbeddedDatabase() { ... }
+"
+shared annotation BeforeTestRunAnnotation beforeTestRun()
+        => BeforeTestRunAnnotation();
+
+
+"Marks a toplevel function which will be executed once after all tests, 
+ after the test run is finished.
+ 
+     afterTestRun
+     void stopEmbeddedDatabase() { ... }
+"
+shared annotation AfterTestRunAnnotation afterTestRun()
+        => AfterTestRunAnnotation();
 
 
 "Marks a test or group of tests which should not be executed,

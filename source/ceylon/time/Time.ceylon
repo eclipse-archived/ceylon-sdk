@@ -39,6 +39,21 @@ shared interface Time
 
     "Returns the [[TimeRange]] between this and given Time."
     shared formal TimeRange rangeTo( Time other );
+    
+    "Two `Time`s are considered equals if they the same _milliseconds of day_."
+    shared actual default Boolean equals( Object other ) {
+        if ( is Time other ) {
+            return millisecondsOfDay == other.millisecondsOfDay;
+        }
+        return false;
+    }
+    
+    "Implementation compatible with [[equals]] method.\n
+     This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual Integer hash {
+        return millisecondsOfDay.hash;
+    }
+    
 }
 
 "Creates new instance of [[Time]]."

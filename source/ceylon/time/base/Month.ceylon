@@ -7,13 +7,13 @@ shared abstract class Month(integer)
         | august | september | october | november | december
        satisfies Ordinal<Month> & Comparable<Month> & Enumerable<Month>{
 
-        "Ordinal number of the month of year.
-         Where:\n
-            january  = 1\n
-            february = 2\n
-            ...\n
-            december = 12"
-        shared Integer integer;
+    "Ordinal number of the month of year.
+        Where:\n
+        january  = 1\n
+        february = 2\n
+        ...\n
+        december = 12"
+    shared Integer integer;
 
     "Returns number of days in this month."
     shared default Integer numberOfDays(Boolean leapYear = false) {
@@ -53,7 +53,7 @@ shared abstract class Month(integer)
         shared Integer years;
     }
 
-    "Adds number of months to this month and returns the result of 
+    "Adds number of months to this month and returns the result 
      as new month value and number of times the operation overflowed."
     shared Overflow add(Integer numberOfMonths){
         value next = (integer - 1 + numberOfMonths);
@@ -73,7 +73,7 @@ shared abstract class Month(integer)
      "
     shared actual default Integer offset(Month other)
             => let (diff = integer - other.integer)
-               if (diff<0) then diff + months.all.size else diff;
+               if (diff<0) then diff + 12 else diff;
     
     "returns `n`-th neighbour of this _day of week_.
      

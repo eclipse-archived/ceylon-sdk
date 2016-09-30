@@ -41,8 +41,8 @@ shared class ConcreteProcess(
     value builder = ProcessBuilder(command, *arguments);
     builder.directory(JFile(path.string));
     for (e in environment) {
-        builder.environment()
-                .put(JString(e.key), JString(e.item));
+        builder.environment()[JString(e.key)]
+                = JString(e.item);
     }
     
     redirectInput(inputOrNone, builder);
@@ -78,7 +78,7 @@ shared class ConcreteProcess(
 void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
     switch (inputOrNone)
     case (stdin) {
-        builder.redirectInput(Redirect.\iINHERIT);
+        builder.redirectInput(Redirect.inherit);
     }
     case (is FileInput) {
         builder.redirectInput(JFile(inputOrNone.path.string));
@@ -89,7 +89,7 @@ void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
 void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
     switch (outputOrNone)
     case (stdout) {
-        builder.redirectOutput(Redirect.\iINHERIT);
+        builder.redirectOutput(Redirect.inherit);
     }
     case (is AppendFileOutput) {
         builder.redirectOutput(Redirect.appendTo(JFile(outputOrNone.path.string)));
@@ -103,7 +103,7 @@ void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
 void redirectError(Error? errorOrNone, ProcessBuilder builder) {
     switch (errorOrNone)
     case (stderr) {
-        builder.redirectError(Redirect.\iINHERIT);
+        builder.redirectError(Redirect.inherit);
     }
     case (is AppendFileOutput) {
         builder.redirectError(Redirect.appendTo(JFile(errorOrNone.path.string)));

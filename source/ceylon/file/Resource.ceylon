@@ -7,7 +7,10 @@ shared interface Resource
     "The path of the file, link, or directory."
     shared formal Path path;
     
-    "If this resource is a link, resolve the link."
+    "If this resource is a link, fully resolve the link."
+    throws(`class Exception`,
+           "if the link cannot be fully resolved due to \
+            a cycle")
     shared formal File|Directory|Nil linkedResource;
     
 }

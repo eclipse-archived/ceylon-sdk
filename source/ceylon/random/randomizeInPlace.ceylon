@@ -5,9 +5,9 @@ shared void randomizeInPlace<Element>(
     value size = elements.size;
     for (i in 0:size - 1) {
         value j = random.nextInteger(size - i) + i;
-        assert(exists oldi = elements.getFromFirst(i));
-        assert(exists oldj = elements.getFromFirst(j));
-        elements.set(i, oldj);
-        elements.set(j, oldi);
+        assert (exists oldi = elements[i]);
+        assert (exists oldj = elements[j]);
+        elements[i] = oldj;
+        elements[j] = oldi;
     }
 }

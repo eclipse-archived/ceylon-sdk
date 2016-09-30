@@ -79,7 +79,7 @@ class StreamState(parent, last, keys) {
     
         class OrderParser() {
             
-            late variable Peek<Event> stream;
+            late variable LookAhead<Event> stream;
            
             String missingKey(String container, String key) {
                 return "``container``: '``key``' missing at line ``stream.line``'";
@@ -205,7 +205,7 @@ class StreamState(parent, last, keys) {
             }
             
             shared Order|String parse(String json) {
-                stream = Peek(StreamParser(StringTokenizer(json)));
+                stream = LookAhead(StreamParser(StringTokenizer(json)));
                 return parseOrder();
             }
         }

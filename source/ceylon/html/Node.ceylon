@@ -6,7 +6,7 @@ shared abstract class Node(
     shared Attributes attributes = [],
     "The children of this node."
     shared default {Content<Node>*} children = [])
-        of Comment | ProcessingInstruction | Element {
+        of Comment | Raw | ProcessingInstruction | Element {
     
     "A string representing this node and all children."
     shared actual String string {
@@ -29,7 +29,7 @@ shared alias Content<Item> =>
 
 
 "Alias for nodes that contains character data."
-shared alias CharacterData => String | Comment | ProcessingInstruction;
+shared alias CharacterData => String | Raw | Comment | ProcessingInstruction;
 
 
 "Represents a _comment_ in the HTML document, although it is generally not visually shown, 
@@ -44,6 +44,14 @@ shared class Comment(
     
 }
 
+"Represents _raw HTML_. Raw content is not escaped."
+shared class Raw(
+	"The raw HTML content"
+	shared String data) 
+    extends Node("raw") {
+    
+    shared actual {String+} children = { data };
+}
 
 "Represents a _processing instruction_."
 shared class ProcessingInstruction(

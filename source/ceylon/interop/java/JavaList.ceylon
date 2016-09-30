@@ -4,11 +4,13 @@ import ceylon.collection {
 
 import java.lang {
     IllegalArgumentException,
-    UnsupportedOperationException
+    UnsupportedOperationException,
+    IllegalStateException
 }
 import java.util {
     AbstractList,
-    Collection
+    Collection,
+    Iterator
 }
 
 "A Java [[java.util::List]] that wraps a Ceylon [[List]].
@@ -18,13 +20,53 @@ import java.util {
 shared class JavaList<E>(List<E> list) 
         extends AbstractList<E>() {
     
-    shared actual E? get(Integer int) => list.getFromFirst(int);
+    get(Integer int) => list[int];
     
     size() => list.size;
 
+    iterator() => object satisfies Iterator<E> {
+        variable value delegate 
+                = JavaIterator(list.iterator());
+        variable value currentIndex = -1;
+
+        hasNext() => delegate.hasNext();
+        
+        shared actual E? next() {
+            currentIndex++;
+            return delegate.next();
+        }
+        
+        shared actual void remove() {
+            if (!is MutableList<out Anything> list) {
+                throw UnsupportedOperationException("not a mutable list");
+            }
+            if (currentIndex < 0) {
+                throw IllegalStateException();
+            }
+            list.delete(currentIndex--);
+            delegate = JavaIterator(list.skip(currentIndex).iterator());
+        }
+    };
+
+    shared actual E? set(Integer index, E? e) {
+        if (is E e) {
+            if (is MutableList<in E> list) {
+                value result = list[index];
+                list[index] = e;
+                return result;
+            }
+            else {
+                throw UnsupportedOperationException("not a mutable list");
+            }
+        }
+        else {
+            throw IllegalArgumentException("list may not have null elements");
+        }
+    }
+
     shared actual Boolean add(E? e) {
         if (is E e) {
-            if (is MutableList<E> list) {
+            if (is MutableList<in E> list) {
                 list.add(e);
                 return true;
             }
@@ -39,7 +81,7 @@ shared class JavaList<E>(List<E> list)
     
     shared actual void add(Integer index, E? e) {
         if (is E e) {
-            if (is MutableList<E> list) {
+            if (is MutableList<in E> list) {
                 list.insert(index, e);
             }
             else {
@@ -53,7 +95,7 @@ shared class JavaList<E>(List<E> list)
     
     shared actual Boolean remove(Object? e) {
         if (is E e) {
-            if (is MutableList<E> list) {
+            if (is MutableList<in E> list) {
                 if (exists e) {
                     return list.removeFirst(e);
                 }
@@ -71,7 +113,7 @@ shared class JavaList<E>(List<E> list)
     }
     
     shared actual Boolean removeAll(Collection<out Object> collection) {
-        if (is MutableList<E> list) {
+        if (is MutableList<in E> list) {
             variable Boolean result = false;
             for (e in collection) {
                 if (is E e, list.removeFirst(e)) {
@@ -86,11 +128,11 @@ shared class JavaList<E>(List<E> list)
     }
     
     shared actual Boolean retainAll(Collection<out Object> collection) {
-        if (is MutableList<E> list) {
+        if (is MutableList<in E> list) {
             variable Boolean result = false;
             for (e in list.clone()) { //TODO: is the clone really necessary?
                 if (exists e, //TODO: what to do with nulls, this is sorta wrong?
-                    !collection.contains(e)) {
+                    !e in collection) {
                     list.removeFirst(e);
                     result = true;
                 }
@@ -103,7 +145,7 @@ shared class JavaList<E>(List<E> list)
     }
     
     shared actual void clear() {
-        if (is MutableList<E> list) {
+        if (is MutableList<out Anything> list) {
             list.clear();
         }
         else {

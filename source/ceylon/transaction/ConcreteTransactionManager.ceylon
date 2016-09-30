@@ -4,7 +4,7 @@ import ceylon.interop.java {
 
 import com.arjuna.ats.jdbc {
     TransactionalDriver {
-        xadsPropertyName=XADataSource
+        xadsPropertyName=xaDataSource
     }
 }
 import com.arjuna.ats.jdbc.common {
@@ -119,7 +119,7 @@ class ConcreteTransactionManager()
     shared actual Connection 
     newConnectionFromXADataSource(XADataSource dataSource) {
         Properties dbProperties = Properties();
-        dbProperties.put(xadsPropertyName, dataSource);
+        dbProperties[xadsPropertyName] = dataSource;
         return getConnection(txDriverUrl, dbProperties);
     }
 
@@ -128,11 +128,11 @@ class ConcreteTransactionManager()
             XADataSource dataSource, 
             [String, String] userNameAndPassword) {
         Properties dbProperties = Properties();
-        dbProperties.put(JavaString(TransactionalDriver.userName), 
-            JavaString(userNameAndPassword[0]));
-        dbProperties.put(JavaString(TransactionalDriver.password), 
-            JavaString(userNameAndPassword[1]));
-        dbProperties.put(xadsPropertyName, dataSource);
+        dbProperties[JavaString(TransactionalDriver.userName)]
+            = JavaString(userNameAndPassword[0]);
+        dbProperties[JavaString(TransactionalDriver.password)]
+            = JavaString(userNameAndPassword[1]);
+        dbProperties[xadsPropertyName] = dataSource;
         return getConnection(txDriverUrl, dbProperties);
     }
 
@@ -266,14 +266,11 @@ class ConcreteTransactionManager()
         return ConcreteTransaction();
     }
 
-    shared actual Transaction? currentTransaction {
-        if (exists ut = userTransaction) {
-            if (ut.status != JavaStatus.\iSTATUS_NO_TRANSACTION) {
-                return ConcreteTransaction();
-            }
-        }
-        return null;
-    }
+    currentTransaction
+            => if (exists ut = userTransaction,
+                   ut.status != JavaStatus.statusNoTransaction)
+            then ConcreteTransaction()
+            else null;
 
     transactionActive => currentTransaction exists;
 

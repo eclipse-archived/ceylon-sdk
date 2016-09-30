@@ -1,7 +1,7 @@
 "A [[Set]] with exactly one [[element]]."
 see (`class SingletonMap`,
      `class Singleton`)
-shared class SingletonSet<Element>(shared Element element)
+shared serializable class SingletonSet<Element>(shared Element element)
         satisfies Set<Element>
         given Element satisfies Object {
     

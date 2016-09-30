@@ -11,14 +11,14 @@ class RoundingImpl(Integer precision, Mode mode)
     
     JRoundingMode jmode;
     switch(mode)
-    case (floor) { jmode = JRoundingMode.\iFLOOR; }
-    case (ceiling) { jmode = JRoundingMode.\iCEILING; }
-    case (up) { jmode = JRoundingMode.\iUP; }
-    case (down) { jmode = JRoundingMode.\iDOWN; }
-    case (halfUp) { jmode = JRoundingMode.\iHALF_UP; }
-    case (halfDown) { jmode = JRoundingMode.\iHALF_DOWN; }
-    case (halfEven) { jmode = JRoundingMode.\iHALF_EVEN; }
-    case (unnecessary) { jmode = JRoundingMode.\iUNNECESSARY; }
+    case (floor) { jmode = JRoundingMode.floor; }
+    case (ceiling) { jmode = JRoundingMode.ceiling; }
+    case (up) { jmode = JRoundingMode.up; }
+    case (down) { jmode = JRoundingMode.down; }
+    case (halfUp) { jmode = JRoundingMode.halfUp; }
+    case (halfDown) { jmode = JRoundingMode.halfDown; }
+    case (halfEven) { jmode = JRoundingMode.halfEven; }
+    case (unnecessary) { jmode = JRoundingMode.unnecessary; }
 
     shared actual MathContext implementation = 
             MathContext(precision, jmode);

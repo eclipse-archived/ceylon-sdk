@@ -19,7 +19,7 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     add(Element element) => list.add(element);
     
     set(Integer index, Element element) 
-            => list.set(index, element);
+            => list[index] = element;
     
     insert(Integer index, Element element) 
             => list.add(index, element);
@@ -39,12 +39,52 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     
     shared actual Boolean removeLast(Element element) {
         for (i in (0:size).reversed) {
-            if (list.get(i)==element) {
+            if (exists e = list[i],
+                e==element) {
                 list.remove(i);
                 return true;
             }
         }
         return false;
+    }
+    
+    shared actual Element? findAndRemoveFirst(
+        Boolean selecting(Element element)) {
+        value it = list.iterator();
+        while (it.hasNext()) {
+            value item = it.next();
+            if (selecting(item)) {
+                it.remove();
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndRemoveLast(
+        Boolean selecting(Element element)) {
+        value it = list.listIterator(list.size());
+        while (it.hasPrevious()) {
+            value item = it.previous();
+            if (selecting(item)) {
+                it.remove();
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    shared actual Integer removeWhere(
+        Boolean selecting(Element element)) {
+        variable Integer count = 0;
+        value it = list.iterator();
+        while (it.hasNext()) {
+            if (selecting(it.next())) {
+                it.remove();
+                count++;
+            }
+        }
+        return count;
     }
     
     shared actual void deleteMeasure(Integer from, Integer length) {
@@ -73,28 +113,35 @@ shared class CeylonMutableList<Element>(JList<Element> list)
         }
     }
     
-    shared actual void prune() {
+    shared actual Integer prune() {
         value iterator = list.iterator();
+        variable value removed = 0;
         while (iterator.hasNext()) {
             if (!iterator.next() exists) {
+                removed++;
                 iterator.remove();
             }
         }
+        return removed;
     }
     
-    shared actual void replace(Element element, 
+    shared actual Integer replace(Element element, 
         Element replacement) {
+        variable value count = 0;
         for (i in 0:size) {
-            if (list.get(i)==element) {
-                list.set(i,replacement);
+            if (exists e = list[i],
+                e==element) {
+                list[i] = replacement;
+                count++;
             }
         }
+        return count;
     }
     
     shared actual void infill(Element replacement) {
         for (i in 0:size) {
-            if (!list.get(i) exists) {
-                list.set(i,replacement);
+            if (!list[i] exists) {
+                list[i] = replacement;
             }
         }
     }
@@ -102,8 +149,9 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     shared actual Boolean replaceFirst(Element element, 
         Element replacement) {
         for (i in 0:size) {
-            if (list.get(i)==element) {
-                list.set(i,replacement);
+            if (exists e = list[i],
+                e==element) {
+                list[i] = replacement;
                 return true;
             }
         }
@@ -113,12 +161,53 @@ shared class CeylonMutableList<Element>(JList<Element> list)
     shared actual Boolean replaceLast(Element element, 
         Element replacement) {
         for (i in (0:size).reversed) {
-            if (list.get(i)==element) {
-                list.set(i,replacement);
+            if (exists e = list[i],
+                e==element) {
+                list[i] = replacement;
                 return true;
             }
         }
         return false;
+    }
+    
+    shared actual Element? findAndReplaceFirst(
+        Boolean selecting(Element element), 
+        Element replacement) {
+        for (i in 0:size) {
+            if (exists element = list[i],
+                selecting(element)) {
+                list[i] = replacement;
+                return element;
+            }
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndReplaceLast(
+        Boolean selecting(Element element), 
+        Element replacement) {
+        for (i in (0:size).reversed) {
+            if (exists element = list[i],
+                selecting(element)) {
+                list[i] = replacement;
+                return element;
+            }
+        }
+        return null;
+    }
+    
+    shared actual Integer replaceWhere(
+        Boolean selecting(Element element), 
+        Element replacement) {
+        variable value count = 0;
+        for (i in 0:size) {
+            if (exists element = list[i],
+                selecting(element)) {
+                list[i] = replacement;
+                count++;
+            }
+        }
+        return count;
     }
     
     shared actual void truncate(Integer size) {

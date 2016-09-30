@@ -12,9 +12,9 @@ import com.arjuna.ats.jta.recovery.XAResourceRecovery;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 
 public class RecoveryHelper implements XAResourceRecoveryHelper, XAResourceRecovery {
-    private String _binding;
-    private String _user;
-    private String _password;
+//    private String _binding;
+//    private String _user;
+//    private String _password;
     private XAConnection _connection;
     private XADataSource _dataSource;
     private LocalConnectionEventListener _connectionEventListener;
@@ -26,9 +26,9 @@ public class RecoveryHelper implements XAResourceRecoveryHelper, XAResourceRecov
 
     public RecoveryHelper(XADataSource dataSource, String bindingOrURL, String user, String password) {
         this._dataSource = dataSource;
-        this._binding = bindingOrURL;
-        this._user = user;
-        this._password = password;
+//        this._binding = bindingOrURL;
+//        this._user = user;
+//        this._password = password;
 
         _hasMoreResources        = false;
         _connectionEventListener = new LocalConnectionEventListener();

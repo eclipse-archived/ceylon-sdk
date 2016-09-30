@@ -23,7 +23,7 @@ shared Map<Group,[Element+]> group<Group, Element>
         else {
             value list = ArrayList<Element>();
             list.add(element);
-            map.put(group, list);
+            map[group] = list;
         }
     }
     [Element+] mapping(Group group, ArrayList<Element> list) { 

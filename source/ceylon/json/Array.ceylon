@@ -5,6 +5,10 @@ import ceylon.language {
     LangObject=Object
 }
 
+"Alternative name for [[Array]] which avoids collision with
+ ceylon.language::Array."
+shared class JsonArray({Value*} values) => Array(values);
+
 "Represents a JSON Array"
 by("Stéphane Épardaud")
 shared class Array({Value*} values = {}) 
@@ -199,5 +203,24 @@ shared class Array({Value*} values = {})
         "If one element in this array is not an [[Array]].")
     shared Iterable<Array> arrays 
             => { for (elem in list) checkArray(elem) };
+    
+    findAndRemoveFirst(Boolean selecting(Value&LangObject element)) 
+            => list.findAndRemoveFirst(selecting);
+    
+    findAndRemoveLast(Boolean selecting(Value&LangObject element)) 
+            => list.findAndRemoveLast(selecting);
+    
+    findAndReplaceFirst(Boolean selecting(Value&LangObject element), Value replacement) 
+            => list.findAndReplaceFirst(selecting, replacement);
+    
+    findAndReplaceLast(Boolean selecting(Value&LangObject element), Value replacement) 
+            => list.findAndReplaceLast(selecting, replacement);
+    
+    removeWhere(Boolean selecting(Value&LangObject element)) 
+            => list.removeWhere(selecting);
+    
+    replaceWhere(Boolean selecting(Value&LangObject element), Value replacement) 
+            => list.replaceWhere(selecting, replacement);
+    
     
 }

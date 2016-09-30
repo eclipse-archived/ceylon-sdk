@@ -9,7 +9,9 @@ class Workaround {
     static void loadModule(String modName, String modVersion) {
         try {
             CeylonModuleLoader cml = (CeylonModuleLoader) Module.getCallerModuleLoader();
-            cml.loadModuleSynchronous(modName, modVersion);
+            if( cml != null ) {
+                cml.loadModuleSynchronous(modName, modVersion);
+            }
         } catch (ModuleLoadException e) {
             throw new RuntimeException(e);
         }

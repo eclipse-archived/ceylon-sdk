@@ -34,14 +34,9 @@ by ("Stéphane Épardaud")
 shared Anything(ByteBuffer) stringToByteProducer
         (Charset charset, String string) {
     value encoder = charset.chunkEncoder();
-    variable value firstCall = true;
+    value chars = string.iterator().next;
     void producer(ByteBuffer buffer) {
-        if (firstCall) {
-            encoder.convert(buffer, string);
-            firstCall = false;
-        } else {
-            encoder.convert(buffer, empty);
-        }
+        encoder.convert(buffer, chars, true);
     }
     return producer;
 }

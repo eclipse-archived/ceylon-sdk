@@ -4,7 +4,8 @@ import ceylon.collection {
 import ceylon.test {
     test,
     assertEquals,
-    assertTrue
+    assertTrue,
+    assertThatException
 }
 
 shared class ArrayListTest() satisfies MutableListTests {
@@ -64,5 +65,30 @@ shared class ArrayListTest() satisfies MutableListTests {
         value copy = ArrayList.copy(list);
         assertEquals(copy, Array {false, false});
     }
+    
+    test shared void testSwap() {
+        value list = ArrayList { 1, 2, 3 };
+        list.swap(0, 2);
+        assertEquals(list, [3, 2, 1]);
+    }
+    
+    test shared void testMove() {
+        value list = ArrayList { 1, 2, 3 };
+        list.move(2, 0);
+        assertEquals(list, [3, 1, 2]);
+    }
+    
+    test shared void testCopyTo() {
+        value list1 = ArrayList { 1, 2, 3 };
+        value list2 = ArrayList { 0, 0, 0 };
 
+        list1.copyTo(list2);
+        assertEquals(list2, [1, 2, 3]);
+
+        list1.copyTo(list2, 0, 1, 2);
+        assertEquals(list2, [1, 1, 2]);
+
+        assertThatException(() => list1.copyTo(list2, 1, 0, 3));
+        assertThatException(() => list1.copyTo(list2, 0, 1, 3));
+    }
 }

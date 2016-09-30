@@ -143,11 +143,6 @@ shared void parameterizedCustomArgumentProvider(customArgumentProvider Object o)
 shared object parameterizedTests {
     
     beforeTest
-    shared void parameterizedBeforeCallback(customArgumentProvider Integer n) {
-        paramCollector.add("before_"+n.string);        
-    }
-    
-    beforeTest
     shared void parameterizedBeforeCallbackWithTestDescription(TestDescription d) {
         paramCollector.add("before_"+d.string);
     }

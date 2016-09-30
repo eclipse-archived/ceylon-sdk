@@ -60,9 +60,19 @@ shared sealed interface Path
     shared formal Boolean root;
     
     "Obtain a `Resource` representing the file or
-     directory located at this path."
+     directory located at this path.
+     
+     If a symbolic link exists at this path, and
+     the symbolic link ultimately points to a file
+     or directory, a `File` or `Directory` resource
+     will be returned rather than a `Link` resource."
     shared formal Resource resource;
     
+    "Obtain a `Link` representing the symbolic link
+     located at this path, or `null` if a symbolic
+     link does not exist at this path."
+    shared formal Link? link;
+
     "The `System` this is a path in."
     shared formal System system;
     

@@ -21,7 +21,7 @@ import ceylon.time.timezone {
 
  This means that making some operations like _plusDays_ takes into 
  account the result Instant generated to reapply all the rules of the current TimeZone."
-shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies ZoneDateTime {
+shared class GregorianZonedDateTime(instant, timeZone = tz.system) extends Object() satisfies ZoneDateTime {
 
     "TimeZone to be applied in this implementation."
     shared actual TimeZone timeZone;
@@ -276,28 +276,6 @@ shared class GregorianZonedDateTime(instant, timeZone = tz.system) satisfies Zon
     "Returns ISO-8601 formatted String representation of this _time of day_.\n
      Reference: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC"
     shared actual String string => "``instant.dateTime(timeZone).string````timeZone.string``";
-
-    "Returns _true_ if given value is same type, date and time."
-    shared actual Boolean equals( Object other ) {
-        if (is GregorianZonedDateTime other) {
-            if (this === other){
-                return true;
-            }
-        
-            return instant == other.instant 
-                && timeZone == other.timeZone;
-        }
-        return false;
-    }
-
-    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
-    shared default actual Integer hash {
-        value prime = 31;
-        variable Integer result = 21;
-        result = prime * result + instant.hash;
-        result = prime * result + timeZone.hash;
-        return result;
-    }
 
     "Fix [[DateTime]] zone absence."
     GregorianZonedDateTime adjust( DateTime resolved ) {

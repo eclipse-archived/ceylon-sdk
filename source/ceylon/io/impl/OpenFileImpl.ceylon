@@ -20,11 +20,7 @@ import java.nio.file {
     Paths {
         javaGetPath=get
     },
-    StandardOpenOption {
-        javaCreateOption=\iCREATE,
-        javaWriteOption=\iWRITE,
-        javaReadOption=\iREAD
-    }
+    StandardOpenOption
 }
 
 shared class OpenFileImpl(resource) 
@@ -33,8 +29,10 @@ shared class OpenFileImpl(resource)
     shared actual Resource resource;
 
 	FileChannel channel = 
-			javaOpenFileChannel(javaGetPath(resource.path.string), 
-		            javaCreateOption, javaWriteOption, javaReadOption);
+			javaOpenFileChannel(javaGetPath(resource.path.string),
+                StandardOpenOption.create,
+                StandardOpenOption.write,
+                StandardOpenOption.read);
     
     close() => channel.close();
 
