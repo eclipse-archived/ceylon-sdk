@@ -10,8 +10,7 @@ import java.lang {
 
      CeylonStringMap(CeylonMap(javaMap))
 "
-shared
-class CeylonStringMap<out Item>(Map<JString, Item> map)
+shared class CeylonStringMap<out Item>(Map<JString, Item> map)
         satisfies Map<String, Item> {
 
     shared actual default CeylonStringMap<Item> clone()

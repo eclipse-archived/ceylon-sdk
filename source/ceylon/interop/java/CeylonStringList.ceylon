@@ -10,7 +10,8 @@ import java.lang {
 
      CeylonStringList(CeylonList(javaList))
 "
-class CeylonStringList(List<JString> list) satisfies List<String> {
+shared class CeylonStringList(List<JString> list)
+        satisfies List<String> {
 
     getFromFirst(Integer index)
             => if (exists string = list[index])

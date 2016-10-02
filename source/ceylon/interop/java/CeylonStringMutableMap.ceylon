@@ -14,8 +14,8 @@ import java.lang {
 
         CeylonStringMutableMap(CeylonMutableMap(javaMap))
 "
-shared
-class CeylonStringMutableMap<Item>(MutableMap<JString, Item> map)
+shared class CeylonStringMutableMap<Item>
+    (MutableMap<JString, Item> map)
         extends CeylonStringMap<Item>(map)
         satisfies MutableMap<String, Item> {
 
