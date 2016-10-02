@@ -13,7 +13,8 @@ import java.lang {
  Java list is first wrapped with [[CeylonMutableList]]:
 
         CeylonStringMutableList(CeylonMutableList(javaList))
-"
+
+ If the given list is not a [[MutableList]], use [[CeylonStringList]]."
 shared class CeylonStringMutableList(MutableList<JString> list)
         extends CeylonStringList(list)
         satisfies MutableList<String> {

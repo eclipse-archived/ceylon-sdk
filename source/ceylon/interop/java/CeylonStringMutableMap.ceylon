@@ -13,7 +13,8 @@ import java.lang {
  Java map is first wrapped with [[CeylonMutableMap]]:
 
         CeylonStringMutableMap(CeylonMutableMap(javaMap))
-"
+
+ If the given list is not a [[MutableMap]], use [[CeylonStringMap]]."
 shared class CeylonStringMutableMap<Item>
     (MutableMap<JString, Item> map)
         extends CeylonStringMap<Item>(map)

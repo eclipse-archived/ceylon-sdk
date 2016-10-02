@@ -2,14 +2,16 @@ import java.lang {
     JString=String
 }
 
-"A [[List]] with keys of type `String` that wraps a [[List]]
+"A [[List]] with keys of type `String` that wraps a `List`
  with keys of type `java.lang::String`.
 
  This class can be used to wrap a `java.util::List` if the
  Java map is first wrapped with [[CeylonList]]:
 
      CeylonStringList(CeylonList(javaList))
-"
+
+ If the given list is a [[ceylon.collection::MutableList]],
+ use [[CeylonStringMutableList]]."
 shared class CeylonStringList(List<JString> list)
         satisfies List<String> {
 
