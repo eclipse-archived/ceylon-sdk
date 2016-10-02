@@ -12,7 +12,7 @@ import java.lang {
  This class can be used to wrap a `java.util::List` if the
  Java list is first wrapped with [[CeylonMutableList]]:
 
-        CeylonStringMutableMap(CeylonMutableMap(javaMap))
+        CeylonStringMutableList(CeylonMutableList(javaList))
 "
 shared class CeylonStringMutableList(MutableList<JString> list)
         extends CeylonStringList(list)
