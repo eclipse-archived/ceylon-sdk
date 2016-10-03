@@ -12,7 +12,6 @@
 
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
-native("jvm")
 module ceylon.uri "1.3.1-SNAPSHOT" {
-    import java.base "7";
+    import ceylon.buffer "1.3.1-SNAPSHOT";
 }

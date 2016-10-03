@@ -250,3 +250,15 @@ test void testBug46(){
     Uri withPath6 = uri.with{path = emptyPath;};
     assertEquals("http://ceylon-lang.org", withPath6.string);
 }
+
+shared void run() {
+    testDecomposition();
+    testComposition();
+    testInvalidPort();
+    testInvalidPort2();
+    testDecoding();
+    testUriBuilding();
+    testBug46();
+
+    print("test.ceylon.uri tests finished");
+}

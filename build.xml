@@ -99,6 +99,7 @@
             <module name="ceylon.regex"/>
             <module name="ceylon.test"/>
             <module name="ceylon.time"/>
+            <module name="ceylon.uri"/>
             <module name="ceylon.whole"/>
         </moduleset>
 	
@@ -174,6 +175,7 @@
             <module name="test.ceylon.time"/>
             <module name="test.ceylon.locale"/>
             <module name="test.ceylon.regex"/>
+            <module name="test.ceylon.uri"/>
             <module name="test.ceylon.whole.common"/>
         </moduleset>
     </target>

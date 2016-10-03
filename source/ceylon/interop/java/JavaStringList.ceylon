@@ -6,7 +6,8 @@ import java.lang {
  a `List` with keys of type `String`.
 
      JavaList(JavaStringList(ceylonList))"
-class JavaStringList(List<String> list) satisfies List<JString> {
+shared class JavaStringList(List<String> list)
+        satisfies List<JString> {
 
     getFromFirst(Integer index)
             => if (exists string = list[index])

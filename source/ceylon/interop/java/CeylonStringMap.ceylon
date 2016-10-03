@@ -2,16 +2,17 @@ import java.lang {
     JString=String
 }
 
-"A [[Map]] with keys of type `String` that wraps a [[Map]] 
+"A [[Map]] with keys of type `String` that wraps a `Map`
  with keys of type `java.lang::String`.
 
  This class can be used to wrap a `java.util::Map` if the
  Java map is first wrapped with [[CeylonMap]]:
 
      CeylonStringMap(CeylonMap(javaMap))
-"
-shared
-class CeylonStringMap<out Item>(Map<JString, Item> map)
+
+ If the given map is a [[ceylon.collection::MutableMap]],
+ use [[CeylonStringMutableMap]]."
+shared class CeylonStringMap<out Item>(Map<JString, Item> map)
         satisfies Map<String, Item> {
 
     shared actual default CeylonStringMap<Item> clone()

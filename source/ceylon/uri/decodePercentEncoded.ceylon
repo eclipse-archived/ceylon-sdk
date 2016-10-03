@@ -1,6 +1,5 @@
-import java.lang {
-    JString=String,
-    ByteArray
+import ceylon.buffer.charset {
+    ascii, utf8
 }
 
 Integer fromHex(Integer hex) {
@@ -20,31 +19,29 @@ Integer fromHex(Integer hex) {
 by("Stéphane Épardaud")
 shared String decodePercentEncoded(String str) {
     Byte percent = '%'.integer.byte;
-    ByteArray array = JString(str).getBytes("ASCII");
+    value array = Array(ascii.encode(str));
     variable Integer r = 0;
     variable Integer w = 0;
     while(r < array.size) {
-        Byte char = array.get(r);
+        assert (exists char = array[r]);
         if(char == percent) {
             // must read the next two items
-            if(++r < array.size) {
-                Byte first = array.get(r);
-                if(++r < array.size) {
-                    Byte second = array.get(r);
+            if (exists first = array[++r]) {
+                if (exists second = array[++r]) {
                     array[w]
                         = (16 * fromHex(first.unsigned)
                         + fromHex(second.unsigned)).byte;
-                }else{
+                } else {
                     throw Exception("Missing second hex number");
                 }
-            }else{
+            } else {
                 throw Exception("Missing first hex number");
             }
-        }else{
+        } else {
             array[w] = char;
         }
         r++;
         w++;
     }
-    return JString(array, 0, w, "UTF-8").string;
+    return utf8.decode(array.take(w));
 }
