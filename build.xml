@@ -362,9 +362,9 @@
               </filterchain>
         </loadproperties>
         <basename property="module.jar.name" file="${currentFile}"/>
-    	<pathconvert property="unixPath" targetos="unix">
-    		<path location="${currentFile}"/>
-    	</pathconvert>
+        <pathconvert property="unixPath" targetos="unix">
+            <path location="${currentFile}"/>
+        </pathconvert>
         <propertyregex property="CeylonVersion"
               input="${unixPath}"
               regexp=".+/([^/]+)/[^/]+\.(j|c)ar"
