@@ -16,7 +16,7 @@ shared Map<Element,Integer> frequencies<Element>
             counter.count++;
         }
         else {
-            map.put(element, Counter(1));
+            map[element] = Counter(1);
         }
     }
     return map.mapItems((e, c) => c.count);

@@ -1,5 +1,6 @@
 "Common behavior for date types."
-shared interface DateBehavior<Element> of Element 
+shared interface DateBehavior<Element> of Element
+       satisfies ReadableDate 
        given Element satisfies ReadableDate {
 
     "Returns a copy of this period with the specified year."

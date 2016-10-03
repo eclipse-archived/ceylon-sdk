@@ -14,7 +14,7 @@
  capacity is the product of the current capacity and the
  given [[growthFactor]]."
 by ("Gavin King")
-shared class ArrayList<Element>
+shared serializable class ArrayList<Element>
         satisfies MutableList<Element> &
                   SearchableList<Element> &
                   Stack<Element> & Queue<Element> {
@@ -89,7 +89,7 @@ shared class ArrayList<Element>
     "growth factor must be at least 1.0"
     assert (growthFactor >= 1.0);
 
-    Array<Element?> store(Integer capacity)
+    function store(Integer capacity)
             => Array<Element?>.ofSize(capacity, null);
 
     size => length;
@@ -123,7 +123,7 @@ shared class ArrayList<Element>
     shared actual 
     void add(Element element) {
         grow(1);
-        array.set(length++, element);
+        array[length++] = element;
     }
 
     shared actual 
@@ -131,7 +131,7 @@ shared class ArrayList<Element>
         value sequence = elements.sequence();
         grow(sequence.size);
         for (element in sequence) {
-            array.set(length++, element);
+            array[length++] = element;
         }
     }
     
@@ -140,7 +140,7 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=i<length, 0<=j<length);
-        array.swap(i, i);
+        array.swap(i, j);
     }
     
     shared actual default 
@@ -148,7 +148,7 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=i<length, 0<=j<length);
-        array.move(i, i);
+        array.move(i, j);
     }
 
     shared actual
@@ -172,14 +172,13 @@ shared class ArrayList<Element>
 
     getFromFirst(Integer index) 
             => if (0 <= index < length)
-            then array.getFromFirst(index)
+            then array[index]
             else null;
     
     shared actual 
     Boolean contains(Object element) {
         for (index in 0:size) {
-            if (exists elem 
-                    = array.getFromFirst(index)) {
+            if (exists elem = array[index]) {
                 if (elem==element) {
                     return true;
                 }
@@ -194,8 +193,7 @@ shared class ArrayList<Element>
         variable value index = 0;
         shared actual Finished|Element next() {
             if (index<length) {
-                if (exists next 
-                        = array.getFromFirst(index++)) {
+                if (exists next = array[index++]) {
                     return next;
                 }
                 else {
@@ -220,7 +218,7 @@ shared class ArrayList<Element>
                 index, index+1, length-index);
         }
         length++;
-        array.set(index, element);
+        array[index] = element;
     }
     
     shared actual 
@@ -238,7 +236,7 @@ shared class ArrayList<Element>
             }
             variable value i = index;
             for (element in sequence) {
-                array.set(i++, element);
+                array[i++] = element;
             }
             length+=size;
         }
@@ -247,11 +245,11 @@ shared class ArrayList<Element>
     shared actual 
     Element? delete(Integer index) {
         if (0 <= index < length) {
-            Element? result = array[index];
-            array.copyTo(array, 
+            value result = array[index];
+            array.copyTo(array,
                 index+1, index, length-index-1);
             length--;
-            array.set(length, null);
+            array[length] = null;
             return result;
         }
         else {
@@ -266,16 +264,16 @@ shared class ArrayList<Element>
         while (i<length) {
             if (exists elem = array[i++]) {
                 if (elem!=element) {
-                    array.set(j++,elem);
+                    array[j++] = elem;
                 }
             }
             else {
-                array.set(j++, null);
+                array[j++] = null;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
         return i-length;
     }
@@ -288,16 +286,16 @@ shared class ArrayList<Element>
         while (i<length) {
             if (exists elem = array[i++]) {
                 if (!elem in set) {
-                    array.set(j++,elem);
+                    array[j++] = elem;
                 }
             }
             else {
-                array.set(j++, null);
+                array[j++] = null;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
         return i-length;
     }
@@ -325,41 +323,91 @@ shared class ArrayList<Element>
             return false;
         }
     }
-
-    shared actual 
-    void prune() {
+    
+    
+    shared actual Element? findAndRemoveFirst(
+        Boolean selecting(Element&Object element)) {
+        if (exists index 
+                = firstIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Element? findAndRemoveLast(
+        Boolean selecting(Element&Object element)) {
+        if (exists index 
+                = lastIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Integer removeWhere(
+        Boolean selecting(Element&Object element)) {
         variable value i=0;
         variable value j=0;
         while (i<length) {
-            if (exists element = array[i++]) {
-                array.set(j++,element);
+            if (exists elem = array[i++]) {
+                if (!selecting(elem)) {
+                    array[j++] = elem;
+                }
+            }
+            else {
+                array[j++] = null;
             }
         }
         length=j;
         while (j<i) {
-            array.set(j++, null);
+            array[j++] = null;
         }
+        return i-length;
+    }
+    
+    
+    shared actual 
+    Integer prune() {
+        variable value i=0;
+        variable value j=0;
+        while (i<length) {
+            if (exists element = array[i++]) {
+                array[j++] = element;
+            }
+        }
+        value removed = i - j;
+        length=j;
+        while (j<i) {
+            array[j++] = null;
+        }
+        return removed;
     }
 
     shared actual 
-    void replace
-            (Element&Object element, Element replacement) {
-        variable value i=0;
+    Integer replace(Element&Object element, 
+        Element replacement) {
+        variable value count = 0;
+        variable value i = 0;
         while (i<length) {
-            if (exists elem = array[i], 
+            if (exists elem = array[i],
                 elem==element) {
-                array.set(i, replacement);
+                array[i] = replacement;
+                count++;
             }
             i++;
         }
+        return count;
     }
 
     shared actual 
-    Boolean replaceFirst
-            (Element&Object element, Element replacement) {
+    Boolean replaceFirst(Element&Object element, 
+        Element replacement) {
         if (exists index 
                 = firstOccurrence(element)) {
-            set(index, replacement);
+            array[index] = replacement;
             return true;
         }
         else {
@@ -368,11 +416,11 @@ shared class ArrayList<Element>
     }
 
     shared actual 
-    Boolean replaceLast
-            (Element&Object element, Element replacement) {
+    Boolean replaceLast(Element&Object element, 
+        Element replacement) {
         if (exists index 
                 = lastOccurrence(element)) {
-            set(index, replacement);
+            array[index] = replacement;
             return true;
         }
         else {
@@ -380,12 +428,57 @@ shared class ArrayList<Element>
         }
     }
 
+    shared actual Element? findAndReplaceFirst(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        if (exists index 
+            = firstIndexWhere(selecting)) {
+            value old = getFromFirst(index);
+            array[index] = replacement;
+            return old;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Element? findAndReplaceLast(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        if (exists index 
+            = lastIndexWhere(selecting)) {
+            value old = getFromFirst(index);
+            array[index] = replacement;
+            return old;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Integer replaceWhere(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        variable value count = 0;
+        variable value i = 0;
+        while (i<length) {
+            if (exists elem = array[i],
+                selecting(elem)) {
+                array[i] = replacement;
+                count++;
+            }
+            i++;
+        }
+        return count;
+    }
+    
+    
     shared actual 
     void infill(Element replacement) {
         variable value i = 0;
         while (i < length) {
             if (!array[i] exists) {
-                array.set(i, replacement);
+                array[i] = replacement;
             }
             i++;
         }
@@ -396,7 +489,7 @@ shared class ArrayList<Element>
         "index may not be negative or greater than the
          last index in the list"
         assert (0<=index<length);
-        array.set(index,element);
+        array[index] = element;
     }
 
     shared actual 
@@ -421,7 +514,7 @@ shared class ArrayList<Element>
                 fstTrailing, start, length - fstTrailing);
             variable value i = length-len;
             while (i < length) {
-                array.set(i++, null);
+                array[i++] = null;
             }
             length -= len;
         }
@@ -439,7 +532,7 @@ shared class ArrayList<Element>
         if (size < length) {
             variable value i = size;
             while (i < length) {
-                array.set(i++, null);
+                array[i++] = null;
             }
             length = size;
         }
@@ -475,11 +568,17 @@ shared class ArrayList<Element>
     back => last;
 
     front => first;
-    
-    shared actual 
+
+    shared actual
     ArrayList<Element> clone() => ArrayList.copy(this);
-    
-    "Sorts the elements in this list according to the 
+
+    find(Boolean selecting(Element&Object element))
+            => array.find(selecting);
+
+    findLast(Boolean selecting(Element&Object element))
+            => array.findLast(selecting);
+
+    "Sorts the elements in this list according to the
      order induced by the given 
      [[comparison function|comparing]]. Null elements are 
      sorted to the end of the list. This operation modifies 
@@ -487,24 +586,15 @@ shared class ArrayList<Element>
     shared void sortInPlace(
         "A comparison function that compares pairs of
          non-null elements of the array."
-        Comparison comparing(Element&Object x, Element&Object y)) {
-        array.sortInPlace((x, y) { 
-            if (exists x, exists y) {
-                return comparing(x, y);
-            }
-            else {
-                if (x exists && !y exists) {
-                    return smaller;
-                }
-                else if (y exists && !x exists) {
-                    return larger;
-                }
-                else {
-                    return equal;
-                }
-            }
-        });
-    }
+        Comparison comparing(Element&Object x, Element&Object y))
+            => array.sortInPlace((x, y)
+                =>   if (exists x, exists y)
+                        then comparing(x, y)
+                else if (x exists, !y exists)
+                        then smaller
+                else if (y exists, !x exists)
+                        then larger
+                else equal);
     
     shared actual
     void each(void step(Element element)) {
@@ -567,23 +657,15 @@ shared class ArrayList<Element>
             });
         }
     }
-    
+
     shared actual
-    Element? find(Boolean selecting(Element&Object element)) 
-            => array.find(selecting);
-    
-    shared actual
-    Element? findLast(Boolean selecting(Element&Object element)) 
-            => array.findLast(selecting);
-    
-    shared actual 
     Result|Element|Null reduce<Result>(
         Result accumulating(Result|Element partial, 
                             Element element)) {
         if (is Element null) {
             return array.take(length)
-                    .reduce<Result>((partial, element) 
-                    => accumulating(partial else null, 
+                    .reduce<Result>((partial, element)
+                    => accumulating(partial else null,
                                     element else null));
         }
         else {
@@ -614,7 +696,7 @@ shared class ArrayList<Element>
     
     lastOccurrence(Element element, Integer from, Integer length) 
             => if (exists result 
-                    = array.lastOccurrence{
+                    = array.lastOccurrence {
                         element = element;
                         from = largest(from, array.size-size);
                         length = length;
@@ -636,10 +718,29 @@ shared class ArrayList<Element>
                 length = smallest(from+length, size) - from;
             };
     
-    "Efficiently copy the elements in the segment
-     `sourcePosition:length` of this list to the segment 
+    "Efficiently copy the elements in the measure
+     `sourcePosition:length` of this list to the measure 
      `destinationPosition:length` of the given 
-     [[destination]] `ArrayList` or `Array`."
+     [[destination]] `ArrayList` or `Array`.
+     
+     The given [[sourcePosition]] and [[destinationPosition]] 
+     must be non-negative and, together with the given 
+     [[length]], must identify meaningful ranges within the 
+     two lists, satisfying:
+     
+     - `size >= sourcePosition+length`, and 
+     - `destination.size >= destinationPosition+length`.
+     
+     If the given `length` is not strictly positive, no
+     elements are copied."
+    throws (`class AssertionError`, 
+        "if the arguments do not identify meaningful ranges 
+         within the two lists:
+         
+         - if the given [[sourcePosition]] or 
+           [[destinationPosition]] is negative, 
+         - if `size < sourcePosition+length`, or 
+         - if `destination.size < destinationPosition+length`.")
     shared void copyTo(
         "The list into which to copy the elements."
         ArrayList<Element>|Array<Element?> destination,
@@ -654,12 +755,10 @@ shared class ArrayList<Element>
                 = smallest(size - sourcePosition,
                     destination.size - destinationPosition)) {
         
-        "length may not be negative"
-        assert (length>=0);
         "illegal starting position in source list"
-        assert (0<=sourcePosition<size-length);
+        assert (0<=sourcePosition<=size-length);
         "illegal starting position in destination list"
-        assert (0<=destinationPosition<destination.size-length);
+        assert (0<=destinationPosition<=destination.size-length);
         
         array.copyTo { 
             length = length; 

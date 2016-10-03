@@ -13,11 +13,11 @@ import ceylon.interop.java {
 import ceylon.language.meta.model {
     Type
 }
-import ceylon.math.decimal {
+import ceylon.decimal {
     Decimal,
     parseDecimal
 }
-import ceylon.math.whole {
+import ceylon.whole {
     parseWhole
 }
 import ceylon.time {

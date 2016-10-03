@@ -38,21 +38,21 @@ shared class OffsetZoneDateTimeTest() {
     
     
     shared test void utcTimeHasNoOffset() =>
-            assertEquals(september2_12am.zoneDateTime( timeZone.utc ).time, time(12, 00));
+            assertEquals { expected = september2_12am.zoneDateTime( timeZone.utc ).time; actual = time(12, 00); };
     shared test void utcDateIsNotAffected() =>
-            assertEquals(september2_12am.zoneDateTime( timeZone.utc ).date, date(2013, september, 2));
+            assertEquals { expected = september2_12am.zoneDateTime( timeZone.utc ).date; actual = date(2013, september, 2); };
 
     
     shared test void positiveOffsetAffectsTime() =>
-            assertEquals(september2_12am.zoneDateTime( timeZone.offset(+3) ).time, time(15, 00));
+            assertEquals { expected = september2_12am.zoneDateTime( timeZone.offset(+3) ).time; actual = time(15, 00); };
     shared test void positiveOffsetCanAffectDate() =>
-            assertEquals(september2_22am.zoneDateTime( timeZone.offset(+3) ).date, date(2013, september, 3));
+            assertEquals { expected = september2_22am.zoneDateTime( timeZone.offset(+3) ).date; actual = date(2013, september, 3); };
 
     
     shared test void negativeOffsetAffectsTime() =>
-            assertEquals(september2_12am.zoneDateTime( timeZone.offset(-4) ).time, time(8, 00));
+            assertEquals { expected = september2_12am.zoneDateTime( timeZone.offset(-4) ).time; actual = time(8, 00); };
     shared test void negativeOffsetCanAffectDate() =>
-            assertEquals(september2_02am.zoneDateTime( timeZone.offset(-4) ).date, date(2013, september, 1));
+            assertEquals { expected = september2_02am.zoneDateTime( timeZone.offset(-4) ).date; actual = date(2013, september, 1); };
     
 }
 

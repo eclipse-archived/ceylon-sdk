@@ -34,6 +34,26 @@ shared interface DateTime
 
     "Returns an instant from this [[DateTime]]."
     shared formal Instant instant(TimeZone timeZone = tz.system);
+    
+    "Two `DateTime`s are considered equals if they represent the same 
+     [[Date]] and [[Time]]."
+    shared actual default Boolean equals(Object other) {
+        if (is DateTime other) {
+            return date == other.date 
+                && time == other.time;
+        }
+        return false;
+    }
+    
+    "Implementation compatible with [[equals]] method.\n
+     This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared default actual Integer hash {
+        value prime = 31;
+        variable Integer result = 11;
+        result = prime * result + date.hash;
+        result = prime * result + time.hash;
+        return result;
+    }
 
 }
  

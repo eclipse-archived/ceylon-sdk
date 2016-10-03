@@ -1,73 +1,77 @@
-import java.lang {
-    JSystem = System {
-        jgetSystemProperty=getProperty 
-    },
-    JChar = Character {
-        getName,
-        getType,
-        getDirectionality,
-        
-        dirARABIC_NUMBER = DIRECTIONALITY_ARABIC_NUMBER,
-        dirBOUNDARY_NEUTRAL = DIRECTIONALITY_BOUNDARY_NEUTRAL,
-        dirCOMMON_NUMBER_SEPARATOR=DIRECTIONALITY_COMMON_NUMBER_SEPARATOR,
-        dirEUROPEAN_NUMBER=DIRECTIONALITY_EUROPEAN_NUMBER,
-        dirEUROPEAN_NUMBER_SEPARATOR=DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR,
-        dirEUROPEAN_NUMBER_TERMINATOR=DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR,
-        dirLEFT_TO_RIGHT=DIRECTIONALITY_LEFT_TO_RIGHT,
-        dirLEFT_TO_RIGHT_EMBEDDING=DIRECTIONALITY_LEFT_TO_RIGHT_EMBEDDING,
-        dirLEFT_TO_RIGHT_OVERRIDE=DIRECTIONALITY_LEFT_TO_RIGHT_OVERRIDE,
-        dirNONSPACING_MARK=DIRECTIONALITY_NONSPACING_MARK,
-        dirOTHER_NEUTRALS=DIRECTIONALITY_OTHER_NEUTRALS,
-        dirPARAGRAPH_SEPARATOR=DIRECTIONALITY_PARAGRAPH_SEPARATOR,
-        dirPOP_DIRECTIONAL_FORMAT=DIRECTIONALITY_POP_DIRECTIONAL_FORMAT,
-        dirRIGHT_TO_LEFT=DIRECTIONALITY_RIGHT_TO_LEFT,
-        dirRIGHT_TO_LEFT_ARABIC=DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC,
-        dirRIGHT_TO_LEFT_EMBEDDING=DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING,
-        dirRIGHT_TO_LEFT_OVERRIDE=DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE,
-        dirSEGMENT_SEPARATOR=DIRECTIONALITY_SEGMENT_SEPARATOR,
-        dirUNDEFINED=DIRECTIONALITY_UNDEFINED,
-        dirWHITESPACE=DIRECTIONALITY_WHITESPACE,
-        // General categories
-        gcCOMBINING_SPACING_MARK = COMBINING_SPACING_MARK,
-        gcCONNECTOR_PUNCTUATION = CONNECTOR_PUNCTUATION,
-        gcCONTROL = CONTROL,
-        gcCURRENCY_SYMBOL = CURRENCY_SYMBOL,
-        gcDASH_PUNCTUATION = DASH_PUNCTUATION,
-        gcDECIMAL_DIGIT_NUMBER = DECIMAL_DIGIT_NUMBER,
-        gcENCLOSING_MARK = ENCLOSING_MARK,
-        gcEND_PUNCTUATION = END_PUNCTUATION,
-        gcFINAL_QUOTE_PUNCTUATION = FINAL_QUOTE_PUNCTUATION,
-        gcFORMAT = FORMAT,
-        gcINITIAL_QUOTE_PUNCTUATION = INITIAL_QUOTE_PUNCTUATION,
-        gcLETTER_NUMBER = LETTER_NUMBER,
-        gcLINE_SEPARATOR = LINE_SEPARATOR,
-        gcLOWERCASE_LETTER = LOWERCASE_LETTER,
-        gcMATH_SYMBOL = MATH_SYMBOL,
-        gcMODIFIER_LETTER = MODIFIER_LETTER,
-        gcMODIFIER_SYMBOL = MODIFIER_SYMBOL,
-        gcNON_SPACING_MARK = NON_SPACING_MARK,
-        gcOTHER_LETTER = OTHER_LETTER,
-        gcOTHER_NUMBER = OTHER_NUMBER,
-        gcOTHER_PUNCTUATION = OTHER_PUNCTUATION,
-        gcOTHER_SYMBOL = OTHER_SYMBOL,
-        gcPARAGRAPH_SEPARATOR = PARAGRAPH_SEPARATOR,
-        gcPRIVATE_USE = PRIVATE_USE,
-        gcSPACE_SEPARATOR = SPACE_SEPARATOR,
-        gcSTART_PUNCTUATION = START_PUNCTUATION,
-        gcSURROGATE = SURROGATE,
-        gcTITLECASE_LETTER = TITLECASE_LETTER,
-        gcUNASSIGNED = UNASSIGNED,
-        gcUPPERCASE_LETTER = UPPERCASE_LETTER
-    }
-}
 import ceylon.interop.java {
     javaString
 }
-import java.util {
-    Locale
+
+import java.lang {
+    JSystem=System {
+        jgetSystemProperty=getProperty
+    },
+    JChar=Character {
+        getName,
+        getType,
+        getDirectionality,
+        dirARABIC_NUMBER=directionalityArabicNumber,
+        dirBOUNDARY_NEUTRAL=directionalityBoundaryNeutral,
+        dirCOMMON_NUMBER_SEPARATOR=directionalityCommonNumberSeparator,
+        dirEUROPEAN_NUMBER=directionalityEuropeanNumber,
+        dirEUROPEAN_NUMBER_SEPARATOR=directionalityEuropeanNumberSeparator,
+        dirEUROPEAN_NUMBER_TERMINATOR=directionalityEuropeanNumberTerminator,
+        dirLEFT_TO_RIGHT=directionalityLeftToRight,
+        dirLEFT_TO_RIGHT_EMBEDDING=directionalityLeftToRightEmbedding,
+        dirLEFT_TO_RIGHT_OVERRIDE=directionalityLeftToRightOverride,
+        dirNONSPACING_MARK=directionalityNonspacingMark,
+        dirOTHER_NEUTRALS=directionalityOtherNeutrals,
+        dirPARAGRAPH_SEPARATOR=directionalityParagraphSeparator,
+        dirPOP_DIRECTIONAL_FORMAT=directionalityPopDirectionalFormat,
+        dirRIGHT_TO_LEFT=directionalityRightToLeft,
+        dirRIGHT_TO_LEFT_ARABIC=directionalityRightToLeftArabic,
+        dirRIGHT_TO_LEFT_EMBEDDING=directionalityRightToLeftEmbedding,
+        dirRIGHT_TO_LEFT_OVERRIDE=directionalityRightToLeftOverride,
+        dirSEGMENT_SEPARATOR=directionalitySegmentSeparator,
+        dirUNDEFINED=directionalityUndefined,
+        dirWHITESPACE=directionalityWhitespace,
+        gcCOMBINING_SPACING_MARK=combiningSpacingMark,
+        gcCONNECTOR_PUNCTUATION=connectorPunctuation,
+        gcCONTROL=control,
+        gcCURRENCY_SYMBOL=currencySymbol,
+        gcDASH_PUNCTUATION=dashPunctuation,
+        gcDECIMAL_DIGIT_NUMBER=decimalDigitNumber,
+        gcENCLOSING_MARK=enclosingMark,
+        gcEND_PUNCTUATION=endPunctuation,
+        gcFINAL_QUOTE_PUNCTUATION=finalQuotePunctuation,
+        gcFORMAT=format,
+        gcINITIAL_QUOTE_PUNCTUATION=initialQuotePunctuation,
+        gcLETTER_NUMBER=letterNumber,
+        gcLINE_SEPARATOR=lineSeparator,
+        gcLOWERCASE_LETTER=lowercaseLetter,
+        gcMATH_SYMBOL=mathSymbol,
+        gcMODIFIER_LETTER=modifierLetter,
+        gcMODIFIER_SYMBOL=modifierSymbol,
+        gcNON_SPACING_MARK=nonSpacingMark,
+        gcOTHER_LETTER=otherLetter,
+        gcOTHER_NUMBER=otherNumber,
+        gcOTHER_PUNCTUATION=otherPunctuation,
+        gcOTHER_SYMBOL=otherSymbol,
+        gcPARAGRAPH_SEPARATOR=paragraphSeparator,
+        gcPRIVATE_USE=privateUse,
+        gcSPACE_SEPARATOR=spaceSeparator,
+        gcSTART_PUNCTUATION=startPunctuation,
+        gcSURROGATE=surrogate,
+        gcTITLECASE_LETTER=titlecaseLetter,
+        gcUNASSIGNED=unassigned,
+        gcUPPERCASE_LETTER=uppercaseLetter
+    }
 }
 import java.text {
-    BreakIterator
+    BreakIterator {
+        done,
+        getSentenceInstance,
+        getWordInstance,
+        getCharacterInstance
+    }
+}
+import java.util {
+    Locale
 }
 
 "The version of the Unicode standard being used, or `null` 
@@ -510,18 +514,83 @@ shared {String*} graphemes(
         => object satisfies {String*} {
     iterator() => object satisfies Iterator<String> {
         value breakIterator = 
-                BreakIterator.getCharacterInstance(locale(tag));
+                getCharacterInstance(locale(tag));
         breakIterator.setText(text);
+        value str = javaString(text);
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();
-            if (end==BreakIterator.\iDONE) {
+            if (end==done) {
                 return finished;
             }
             else {
-                value result = text[start..end-1];
+                value result = str.substring(start, end);
                 start = end;
                 return result;
+            }
+        }
+    };
+};
+
+"The words and punctuation contained in the given 
+ [[string|text]], according to the rules of the given 
+ [[locale|tag]]. Any non-whitespace character not contained 
+ in a word is treated as a whole word. All whitespace 
+ characters are discarded."
+shared {String*} words(
+    "The string"
+    String text, 
+    "The IETF BCP 47 language tag string of the locale." 
+    String tag = system.locale) 
+        => object satisfies {String*} {
+    iterator() => object satisfies Iterator<String> {
+        value breakIterator = 
+                getWordInstance(locale(tag));
+        breakIterator.setText(text);
+        value str = javaString(text);
+        variable value start = breakIterator.first();
+        shared actual String|Finished next() {
+            value end = breakIterator.next();
+            if (end==done) {
+                return finished;
+            }
+            else {
+                value result = str.substring(start, end);
+                start = end;
+                return result.every(Character.whitespace)
+                    then next() else result;
+            }
+        }
+    };
+};
+
+"The sentences contained in the given [[string|text]],
+ according to the rules of the given [[locale|tag]].
+ Whitespace is trimmed from the beginning and end of each
+ sentence, but whitespace contained within the sentence is 
+ not normalized."
+shared {String*} sentences(
+    "The string"
+    String text, 
+    "The IETF BCP 47 language tag string of the locale." 
+    String tag = system.locale) 
+        => object satisfies {String*} {
+    iterator() => object satisfies Iterator<String> {
+        value breakIterator = 
+                getSentenceInstance(locale(tag));
+        breakIterator.setText(text);
+        value str = javaString(text);
+        variable value start = breakIterator.first();
+        shared actual String|Finished next() {
+            value end = breakIterator.next();
+            if (end==done) {
+                return finished;
+            }
+            else {
+                value result = str.substring(start, end).trimmed;
+                start = end;
+                return result.empty 
+                    then next() else result;
             }
         }
     };

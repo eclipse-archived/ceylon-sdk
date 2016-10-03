@@ -30,7 +30,7 @@ class IncomingPipe(OutputStream stream)
         value byteArray = ByteArray(bytes.size);
         variable value i=0;
         for (b in bytes) {
-            byteArray.set(i++, b);
+            byteArray[i++] = b;
         }
         stream.write(byteArray);
     }

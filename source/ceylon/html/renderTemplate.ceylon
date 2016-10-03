@@ -12,7 +12,7 @@ import ceylon.html.internal {
        value builder = StringBuilder();
        renderTemplate(html, builder.append);
      
-   Example: render template as response of `ceylon.net` server
+   Example: render template as response of `ceylon.http.server` server
    
        value server = newServer {
            Endpoint {
@@ -50,5 +50,9 @@ shared class RenderingConfiguration(
     "Should the result be minified or formatted?" 
     shared Boolean prettyPrint = true,
     "Should non-ASCII characters be escaped? If `false`, the document's characterset should be UTF-8."
-    shared Boolean escapeNonAscii = false) {
+    shared Boolean escapeNonAscii = false,
+    "When `prettyPrint==true`, the number of spaces that an indentation level is worth."
+    shared Integer indentSize = 2,
+    "Should void elements such as `<br>` and `<hr>` be closed, for exampe, `<br />`?"
+    shared Boolean closeVoidElements = false) {
 }

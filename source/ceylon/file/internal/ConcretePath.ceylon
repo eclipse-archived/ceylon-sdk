@@ -1,9 +1,8 @@
-import ceylon.file {
-    ...
-}
-
 import ceylon.collection {
     ArrayList
+}
+import ceylon.file {
+    ...
 }
 
 import java.io {
@@ -20,11 +19,7 @@ import java.nio.file {
         newPath=get
     },
     FileVisitor,
-    FileVisitResult {
-        CONTINUE,
-        TERMINATE,
-        SKIP_SUBTREE
-    },
+    FileVisitResult,
     FileSystems {
         defaultFileSystem=default
     },
@@ -140,6 +135,8 @@ class ConcretePath(jpath)
     
     shared actual Resource resource {
         if (isExisting(jpath)) {
+            // prefer ConcreteFile and ConcreteDirectory; only return a ConcreteLink
+            // if it is 1) a link to nowhere, or 2) a link to another link.
             if (isRegularFile(jpath)) {
                 return ConcreteFile(jpath);
             }
@@ -154,22 +151,34 @@ class ConcretePath(jpath)
                         jpath.string);
             }
         }
+        else if (isSymbolicLink(jpath)) {
+            // a symbolic link that does not ultimately resolve
+            // to a file or directory.
+            return ConcreteLink(jpath);
+        }
         else {
             return ConcreteNil(jpath);
         }
     }
     
+    shared actual Link? link
+        =>  if (isSymbolicLink(jpath))
+            then ConcreteLink(jpath)
+            else null;
+    
     shared actual void visit(Visitor visitor) {
         object fileVisitor satisfies FileVisitor<JPath> {
             value result {
                 return visitor.terminated 
-                        then \iTERMINATE else \iCONTINUE;
+                        then FileVisitResult.terminate
+                        else FileVisitResult.\icontinue;
             }
             shared actual FileVisitResult preVisitDirectory(JPath? t, 
                     BasicFileAttributes? basicFileAttributes) {
                 if (exists t) {
                     return visitor.beforeDirectory(ConcreteDirectory(t)) 
-                            then result else \iSKIP_SUBTREE;
+                            then result
+                            else FileVisitResult.skipSubtree;
                 }
                 return result;
             }

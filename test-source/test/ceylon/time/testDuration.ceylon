@@ -1,18 +1,16 @@
 import ceylon.test {
     assertEquals,
-    test
+    test,
+    parameters
 }
 import ceylon.time {
     Duration
 }
 
-shared test void testScalableDuration() {
-    //Rules suggested by scalable interface
-    Duration duration = Duration(1000);    
-    assertEquals(Duration(1000),   1 ** duration);
-    assertEquals(Duration(-1000), -1 ** duration);
-    assertEquals(Duration(0),      0 ** duration);
-    assertEquals(Duration(2000),   2 ** duration);
-
-    assertEquals( Duration(4000), 4 ** duration);
-}
+[[Duration, Integer]*] scalableDurationTests = [
+    for (i in { -1, 0, 1, 2, 4 })
+        [Duration(i*1000), i]
+];
+parameters (`value scalableDurationTests`)
+shared test void testScalableDuration(Duration expectedDuration, Integer scale)
+        => assertEquals { expected = expectedDuration; actual = scale ** Duration(1000); };

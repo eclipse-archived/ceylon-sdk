@@ -7,7 +7,7 @@
    element of the list and the back of the queue is the
    last element of the list."
 by("Stéphane Épardaud")
-shared class LinkedList<Element>
+shared serializable class LinkedList<Element>
         satisfies MutableList<Element> &
                   Stack<Element> & Queue<Element> {
 
@@ -192,43 +192,6 @@ shared class LinkedList<Element>
     }
 
     shared actual 
-    Integer remove(Element&Object element) {
-        variable value result = 0;
-        while (exists cell = head,
-            exists elem = cell.element,
-            elem==element) {
-            if (exists rest = cell.rest) {
-                head = rest;
-            }
-            else {
-                head = tail = null;
-            }
-            length--;
-            result++;
-        }
-        variable value iter = head;
-        while (exists cell = iter) {
-            value rest = cell.rest;
-            if (exists rest,
-                exists elem = rest.element,
-                elem==element) {
-                if (exists more = rest.rest) {
-                    cell.rest = more;
-                }
-                else {
-                    cell.rest = tail = null;
-                }
-                length--;
-                result++;
-            }
-            else {
-                iter = rest;
-            }
-        }
-        return result;
-    }
-
-    shared actual 
     Integer removeAll({<Element&Object>*} elements) {
         Category<> set = HashSet { *elements };
         variable value result = 0;
@@ -266,6 +229,43 @@ shared class LinkedList<Element>
         return result;
     }
 
+    /*shared actual 
+    Integer remove(Element&Object element) {
+        variable value result = 0;
+        while (exists cell = head,
+            exists elem = cell.element,
+            elem==element) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+            result++;
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element,
+                elem==element) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
+                }
+                else {
+                    cell.rest = tail = null;
+                }
+                length--;
+                result++;
+            }
+            else {
+                iter = rest;
+            }
+        }
+        return result;
+    }
+    
     shared actual 
     Boolean removeFirst(Element&Object element) {
         if (exists cell = head,
@@ -302,57 +302,93 @@ shared class LinkedList<Element>
 
     shared actual 
     Boolean removeLast(Element&Object element) {
-        variable Cell<Element>? current = null;
-        while (exists cell = head,
-               exists elem = cell.element,
-               elem==element) {
+        //...
+    }*/
+
+    shared actual Element? findAndRemoveFirst(
+        Boolean selecting(Element&Object element)) {
+        if (exists cell = head,
+            exists elem = cell.element,
+            selecting(elem)) {
             if (exists rest = cell.rest) {
-                current = cell;
+                head = rest;
             }
             else {
                 head = tail = null;
-                length--;
-                return true;
             }
+            length--;
+            return elem;
         }
         variable value iter = head;
         while (exists cell = iter) {
             value rest = cell.rest;
             if (exists rest,
                 exists elem = rest.element,
-                elem==element) {
+                selecting(elem)) {
                 if (exists more = rest.rest) {
-                    current = cell;
+                    cell.rest = more;
                 }
                 else {
                     cell.rest = tail = null;
-                    length--;
-                    return true;
                 }
+                length--;
+                return elem;
+            }
+            iter = rest;
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndRemoveLast(
+        Boolean selecting(Element&Object element)) {
+        if (exists index = lastIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Integer removeWhere(
+        Boolean selecting(Element&Object element)) {
+        variable value result = 0;
+        while (exists cell = head,
+            exists elem = cell.element,
+            selecting(elem)) {
+            if (exists rest = cell.rest) {
+                head = rest;
+            }
+            else {
+                head = tail = null;
+            }
+            length--;
+            result++;
+        }
+        variable value iter = head;
+        while (exists cell = iter) {
+            value rest = cell.rest;
+            if (exists rest,
+                exists elem = rest.element,
+                selecting(elem)) {
+                if (exists more = rest.rest) {
+                    cell.rest = more;
+                }
+                else {
+                    cell.rest = tail = null;
+                }
+                length--;
+                result++;
             }
             else {
                 iter = rest;
             }
         }
-        if (exists last=current) {
-            assert (exists cell=head);
-            if (last===cell) {
-                head = last.rest;
-            }
-            else {
-                assert (exists more = last.rest?.rest);
-                cell.rest = more;
-            }
-            length--;
-            return true;
-        }
-        else {
-            return false;
-        }
+        return result;
     }
-
+    
     shared actual 
-    void prune() {
+    Integer prune() {
+        variable value originalLength = length;
         while (exists cell = head,
             !cell.element exists) {
             if (exists rest = cell.rest) {
@@ -380,11 +416,12 @@ shared class LinkedList<Element>
                 iter = rest;
             }
         }
+        return originalLength - length;
     }
 
-    shared actual 
-    void replace
-            (Element&Object element, Element replacement) {
+    /*shared actual 
+    void replace(Element&Object element, 
+        Element replacement) {
         variable value iter = head;
         while (exists cell = iter) {
             if (exists elem = cell.element,
@@ -396,8 +433,8 @@ shared class LinkedList<Element>
     }
 
     shared actual 
-    Boolean replaceFirst
-            (Element&Object element, Element replacement) {
+    Boolean replaceFirst(Element&Object element, 
+        Element replacement) {
         variable value iter = head;
         while (exists cell = iter) {
             if (exists elem = cell.element,
@@ -411,8 +448,8 @@ shared class LinkedList<Element>
     }
 
     shared actual 
-    Boolean replaceLast
-            (Element&Object element, Element replacement) {
+    Boolean replaceLast(Element&Object element, 
+        Element replacement) {
         variable Cell<Element>? last = null;
         variable value iter = head;
         while (exists cell = iter) {
@@ -429,6 +466,59 @@ shared class LinkedList<Element>
         else {
             return false;
         }
+    }*/
+    
+    shared actual Element? findAndReplaceFirst(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        variable value iter = head;
+        while (exists cell = iter) {
+            if (exists elem = cell.element,
+                selecting(elem)) {
+                cell.element = replacement;
+                return elem;
+            }
+            iter = cell.rest;
+        }
+        return null;
+    }
+    
+    shared actual Element? findAndReplaceLast(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        variable Cell<Element>? last = null;
+        variable value iter = head;
+        while (exists cell = iter) {
+            if (exists elem = cell.element,
+                selecting(elem)) {
+                last = cell;
+            }
+            iter = cell.rest;
+        }
+        if (exists cell = last) {
+            value result = cell.element;
+            cell.element = replacement;
+            return result;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual Integer replaceWhere(
+        Boolean selecting(Element&Object element), 
+        Element replacement) {
+        variable Integer count = 0;
+        variable value iter = head;
+        while (exists cell = iter) {
+            if (exists elem = cell.element,
+                selecting(elem)) {
+                cell.element = replacement;
+                count++;
+            }
+            iter = cell.rest;
+        }
+        return count;
     }
 
     shared actual 
@@ -831,4 +921,5 @@ shared class LinkedList<Element>
     front => first;
     
     sequence() => Array(this).sequence();
+    
 }

@@ -11,4 +11,13 @@ shared sealed interface Nil
      object represents."
     shared formal Directory createDirectory(Boolean includingParentDirectories = false);
     
+    "Create a new symbolic link at the location that this
+     object represents."
+    throws (`class Exception`,
+        "If symbolic links are not supported on the [[System]]
+         associated with this [[Resource]].")
+    shared formal Link createSymbolicLink(
+            "The target of the symbolic link."
+            Path linkedPath,
+            Boolean includingParentDirectories = false);
 }

@@ -1,1 +1,1 @@
-package test.ceylon.collection;
+shared package test.ceylon.collection;

@@ -17,7 +17,7 @@ void doTestMap(MutableMap<String,String> map) {
     assertEquals("{ fu->gee }", map.string);
     assertEquals(1, map.size);
     assertTrue(map.defines("fu"), "c");
-    map.put("stef", "epardaud");
+    map["stef"] = "epardaud";
     assertEquals(2, map.size);
     assertTrue(map.defines("fu"), "d");
     assertTrue(map.defines("stef"), "e");
@@ -33,7 +33,7 @@ void doTestMap(MutableMap<String,String> map) {
     
     // clone test
     for (number in 1..100) {
-        map.put(number.string, "#" + number.string);
+        map[number.string] = "#" + number.string;
     }
     value clone = map.clone();
     assertEquals(map, clone);
@@ -53,10 +53,10 @@ void doTestMap(MutableMap<String,String> map) {
     map.clear();
     assertNull(map.first);
     assertNull(map.last);
-    map.put("a", "a");
+    map["a"] = "a";
     assertEquals(map.first?.key, "a");
     assertEquals(map.last?.key, "a");
-    map.put("1", "1");
+    map["1"] = "1";
     assertNotNull(map.first);
     assertNotNull(map.last);
     assertNotEquals(map.first, map.last);

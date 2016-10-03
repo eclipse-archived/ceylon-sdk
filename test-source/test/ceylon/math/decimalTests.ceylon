@@ -123,6 +123,7 @@ test void divided() {
     assertEquals(decimalNumber(2), decimalNumber(4.0).divided(decimalNumber(2)), "4.0.divided(2)", strictly);
     assertEquals(decimalNumber(2), decimalNumber(4.0) / decimalNumber(2), "4.0/2", strictly);
     try {
+        suppressWarnings("unusedDeclaration")
         Decimal oneThird = decimalNumber(1) / decimalNumber(3);
         fail("1/3");
     } catch (ArithmeticException e) {
@@ -147,6 +148,7 @@ test void power() {
     assertEquals(decimalNumber(8), decimalNumber(2)^3, "2^3");
     assertEquals(parseOrFail("0.25"), parseOrFail("0.5")^2, "0.5^2");
     try {
+        suppressWarnings("unusedDeclaration")
         Decimal d = decimalNumber(2)^(-2);
         fail();
     } catch (AssertionError e) {

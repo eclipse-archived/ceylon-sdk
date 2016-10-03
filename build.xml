@@ -68,7 +68,10 @@
             <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
-            <module name="ceylon.net"/>
+            <module name="ceylon.http.common"/>
+            <module name="ceylon.http.client"/>
+            <module name="ceylon.http.server"/>
+            <module name="ceylon.uri"/>
             <module name="ceylon.numeric"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
@@ -113,7 +116,10 @@
             <module name="ceylon.locale"/>
             <module name="ceylon.logging"/>
             <module name="ceylon.math"/>
-            <module name="ceylon.net"/>
+            <module name="ceylon.http.common"/>
+            <module name="ceylon.http.client"/>
+            <module name="ceylon.http.server"/>
+            <module name="ceylon.uri"/>
             <module name="ceylon.numeric"/>
             <module name="ceylon.process"/>
             <module name="ceylon.promise"/>
@@ -135,7 +141,9 @@
             <module name="test.ceylon.file"/>
             <module name="test.ceylon.io"/>
             <module name="test.ceylon.json"/>
-            <module name="test.ceylon.net"/>
+            <module name="test.ceylon.uri"/>
+            <module name="test.ceylon.http.client"/>
+            <module name="test.ceylon.http.server"/>
             <module name="test.ceylon.numeric"/>
             <module name="test.ceylon.process"/>
             <module name="test.ceylon.promise"/>
@@ -318,11 +326,12 @@
     
 
     <target name="addRequiredOSGIHeaders">
+        <echo>Adding / overriding OSGI metadata in ${currentFile}</echo>
         <tempfile property="bundleDefinitionFile"/>
         <echo file="${bundleDefinitionFile}">Bundle-SymbolicName: ${CeylonName}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Bundle-Version: ${CeylonVersion}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Export-Package: *${line.separator}</echo>
-        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, org.apache.activemq.artemis.*;resolution:=optional, *${line.separator}</echo>
+        <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, org.slf4j.*;resolution:=optional, org.jboss.logmanager.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, org.apache.activemq.artemis.*;resolution:=optional, *${line.separator}</echo>
         <bndwrap exceptions="true" force="true"  jars="${currentFile}" output="${currentFile}.bnd.jar" definitions="${bundleDefinitionFile}">
         </bndwrap>
         <delete file="${bundleDefinitionFile}"/>
@@ -351,16 +360,21 @@
               </filterchain>
         </loadproperties>
         <basename property="module.jar.name" file="${currentFile}"/>
-        <propertyregex property="CeylonName"
-              input="${module.jar.name}"
-              regexp="(.+)-([^\-]+)\.(j|c)ar"
+    	<pathconvert property="unixPath" targetos="unix">
+    		<path location="${currentFile}"/>
+    	</pathconvert>
+        <propertyregex property="CeylonVersion"
+              input="${unixPath}"
+              regexp=".+/([^/]+)/[^/]+\.(j|c)ar"
               replace="\1">
         </propertyregex>
-        <propertyregex property="CeylonVersion"
+        <propertyregex property="CeylonName"
         input="${module.jar.name}"
-        regexp="(.+)-([^\-]+)\.(j|c)ar"
-        replace="\2">
+        regexp="(.+)-${CeylonVersion}\.(j|c)ar"
+        replace="\1">
         </propertyregex>
+        <echo>Ceylon name: ${CeylonName}</echo>
+        <echo>Ceylon version: ${CeylonVersion}</echo>
         <if>
             <or>
                 <not>
@@ -414,9 +428,14 @@
         <mkdir dir="${osgi.dist.plugins}" />
         <foreach target="copyModuleArchiveForOSGI" param="currentFile">
             <path>
-                <fileset dir="${osgi.dist}/tempRepo" includes="**/*.?ar"/>
+                <fileset dir="${osgi.dist}/tempRepo" 
+                	includes="**/*.?ar"
+                	excludes="**/com.redhat.ceylon.*.?ar"/>
             </path>
         </foreach>
+        <copy todir="${osgi.dist.plugins}">
+            <fileset dir="${ceylon.main.dir}/dist/osgi/build/dist/plugins" includes="org.jboss.logmanager_*.jar"/>
+        </copy>
         <delete dir="${osgi.dist}/tempRepo" failonerror="false" deleteonexit="true"/>
         <makeurl property="rootUrl" file="${osgi.dist}"/>
         <repoindex name="Ceylon SDK Bundles - R5 OBR format"
@@ -510,8 +529,20 @@
     <target name="osgi" depends="compile-jvm,osgi-quick"/>
     <target name="osgi-p2" depends="compile-jvm,osgi-p2-quick"/>
 
+    <target name="compile-test-collection" depends="ceylondefs">
+        <ceylon-compile executable="${ceylon.executable}"
+            src="test-source"
+            out="${test.repo}"
+            verbose="${ceylon.verbosity}"
+            encoding="UTF-8"
+            fork="true">
+            <reposet refid="reposet.compile.test"/> 
+            <module name="test.ceylon.collection"/>
+        </ceylon-compile>
+    </target>
+
     <target name="ide" depends="osgi-p2"/>
-    <target name="ide-quick" depends="osgi-p2-quick">
+    <target name="ide-quick" depends="osgi-p2-quick,compile-test-collection">
         <foreach target="updateIdeProxyProject" param="archivePath">
             <path>
                 <fileset dir="${out.repo}" includes="ceylon/collection/**/*.car"/>

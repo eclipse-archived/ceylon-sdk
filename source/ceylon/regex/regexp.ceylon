@@ -19,6 +19,7 @@
  for the current backend. See the documentation for the `Regex`
  object itself for more information.
  "
+throws(`class RegexException`)
 shared native Regex regex(
         "The regular expression to be used for all operations"
         String expression,
@@ -33,15 +34,16 @@ shared native Regex regex(
 """A class for cross-platform regular expressions modeled on Javascript's
    `RegExp`, plus some extra methods like Java's and Javascript `String`'s
    `replace` and `split` methods (taking a `RegExp` parameter) that are missing
-   from Ceylon's version of [[String]].
+   from Ceylon's version of [[String]]. To create an instance of this class
+   use the toplevel function [[regex]].
    
    Example usage:
    
-       value re = Regex("[0-9]+ years");
+       Regex re = regex("[0-9]+ years");
        assert(re.test("90 years old"));
        print(re.replace("90 years old", "very"));
        
-    There are a few small incompatibilities between the two implementations.
+   There are a few small incompatibilities between the two implementations.
    Java-specific constructs in the regular expression syntax (e.g. [a-z&&[^bc]],
    (?<=foo), \A, \Q) work only on the JVM backend, while the Javascript-specific
    constructs $` and $' in the replacement expression work only on the Javascript
@@ -49,6 +51,7 @@ shared native Regex regex(
    exist small differences between the different browser implementations,
    be sure to test thoroughly, especially when using more advanced features.
    """
+throws(`class RegexException`)
 shared sealed abstract class Regex(expression, global = false, ignoreCase = false, multiLine = false) {
     "The regular expression to be used for all operations"
     shared String expression;
@@ -60,10 +63,11 @@ shared sealed abstract class Regex(expression, global = false, ignoreCase = fals
      just the beginning or end of the entire input string"
     shared Boolean multiLine;
     
+    "The zero-based position at which to start the next match"
     shared formal variable Integer lastIndex;
     
     """Applies the regular expression to the given string. This call affects the
-       value returned by {@link #getLastIndex()} if the global flag is set.
+       value returned by [[lastIndex]] if the global flag is set.
        Produces a [[match result|MatchResult]] if the string matches, else `null`.
        """
     shared formal MatchResult? find(
@@ -108,15 +112,14 @@ shared sealed abstract class Regex(expression, global = false, ignoreCase = fals
              If negative, there is no limit"
             Integer limit=-1);
     
-    /**
-     * Determines if the regular expression matches the given string. This call
-     * affects the value returned by {@link #getLastIndex()} if the global flag is
-     * set. Equivalent to: {@code exec(input) != null}
-     *
-     * @param input the string to apply the regular expression to
-     * @return whether the regular expression matches the given string.
-     */
-    shared default Boolean test(String input) {
+    """
+       Determines if the regular expression matches the given string. This call
+       affects the value returned by [[lastIndex]] if the global flag is
+       set. Equivalent to: `exec(input) != null`
+       """
+    shared default Boolean test(
+            "the string to apply the regular expression to"
+            String input) {
         return find(input) exists;
     }
     
@@ -151,11 +154,13 @@ shared class MatchResult(start, end, matched, groups) {
     "The matched string"
     shared String matched;
     "A sequence of matched groups or [[Empty]]"
-    shared String[] groups;
+    shared String?[] groups;
     
     shared actual String string => "MatchResult[``start``-``end`` '``matched``' ``groups``]";
 }
 
+"An exception that can be thrown when the [[Regex]] object couldn't be created
+ or when an error occurred in any of its methods"
 shared class RegexException(String? description=null, Throwable? cause=null)
         extends Exception(description, cause) {}
 

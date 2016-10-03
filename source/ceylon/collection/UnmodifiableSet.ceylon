@@ -2,7 +2,7 @@
  hiding the underlying `Set` implementation from clients, 
  and preventing attempts to narrow to [[MutableSet]]."
 by ("Gavin King")
-class UnmodifiableSet<out Element>(Set<Element> set)
+serializable class UnmodifiableSet<out Element>(Set<Element> set)
         satisfies Set<Element>
         given Element satisfies Object {
     

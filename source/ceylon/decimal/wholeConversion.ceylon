@@ -9,14 +9,14 @@ import java.math {
 
 BigInteger toBigInteger(Whole whole) {
     if (whole.zero) {
-        return BigInteger.\iZERO;
+        return BigInteger.zero;
     }
     else if (whole.unit) {
-        return BigInteger.\iONE;
+        return BigInteger.one;
     }
     else {
         variable value wholeMagnitude = whole.magnitude;
-        variable value result = BigInteger.\iZERO;
+        variable value result = BigInteger.zero;
         variable value shift = 0;
         while (!wholeMagnitude.zero) {
             value x = BigInteger.valueOf(

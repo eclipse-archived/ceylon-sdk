@@ -38,9 +38,9 @@ shared abstract class Emitter(Boolean pretty) satisfies Visitor {
                 indent();
             }
             if (top < 0) {
-                state.set(state.size-1, top-1);
+                state[state.size-1] = top-1;
             } else {
-                state.set(state.size-1, top+1);
+                state[state.size-1] = top+1;
             }
         }
     }

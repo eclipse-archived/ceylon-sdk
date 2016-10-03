@@ -55,8 +55,8 @@ class RegexJavascript(expression, global = false, ignoreCase = false, multiLine 
                 dynamic end = result.index + result[0].size;
                 dynamic matched = result[0];
                 result.shift();
-                variable String[] groups  = [];
-                for (String s in result) {
+                variable String?[] groups  = [];
+                for (String? s in result) {
                     groups = groups.append([s]);
                 }
                 return MatchResult(start, end, matched, groups);

@@ -5,7 +5,7 @@ import ceylon.time.internal.math { floorDiv, floorMod }
 import ceylon.time.timezone { TimeZone, timeZone }
 
 "Default implementation of a gregorian calendar"
-shared class GregorianDateTime( date, time ) 
+shared class GregorianDateTime( date, time ) extends Object()
     satisfies DateTime {
 
     "Returns [[Date]] representation of current _date and time_."
@@ -341,28 +341,6 @@ shared class GregorianDateTime( date, time )
     shared actual Instant instant( TimeZone timeZone ) {
         value instant = Instant(unixTime.timeFromFixed(dayOfEra) + millisecondsOfDay);
         return Instant( instant.millisecondsOfEpoch - timeZone.offset(instant) );
-    }
-
-    "Returns _true_ if given value is same type, date and time."
-    shared actual Boolean equals( Object other ) {
-        if (is GregorianDateTime other) {
-            if (this === other){
-                return true;
-            }
-
-            return date == other.date 
-                && time == other.time;
-        }
-        return false;
-    }
-
-    "This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
-    shared default actual Integer hash {
-        value prime = 31;
-        variable Integer result = 11;
-        result = prime * result + date.hash;
-        result = prime * result + time.hash;
-        return result;
     }
 
     "Returns ISO-8601 formatted String representation of this _Date and Time of day_.\n

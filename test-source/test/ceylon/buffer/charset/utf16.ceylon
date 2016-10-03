@@ -107,4 +107,9 @@ shared class Utf16Tests() {
             );
         };
     }
+    
+    test
+    shared void lastCodePoint() {
+        assertEquals("\{#10FFFF}", utf16.decode(utf16.encode("\{#10FFFF}")));
+    }
 }

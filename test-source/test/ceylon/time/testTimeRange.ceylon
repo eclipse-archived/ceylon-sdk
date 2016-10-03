@@ -43,7 +43,7 @@ shared test void testEqualsAndHashTimeRange() {
 }
 
 shared test void testStepTime() {
-    assertEquals(milliseconds, firstQuarterDay.step);
+    assertEquals { expected = milliseconds; actual = firstQuarterDay.step; };
 }
 
 shared test void testAnyExistTime() {
@@ -83,51 +83,51 @@ shared test void testIntervalTimeReverse() {
 
 shared test void testGapTime() {
     TimeRange gap = time(6,0,0,1).rangeTo(time(17,59,59,999));
-    assertEquals(gap, firstQuarterDay.gap(lastQuarterDay));    
+    assertEquals { expected = gap; actual = firstQuarterDay.gap(lastQuarterDay); };    
 }
 
 shared test void testOverlapTime() {
     TimeRange halfFirstQuarter = time(0,0).rangeTo(time(3,0));
     TimeRange overlap = time(0,0).rangeTo(time(3,0));
 
-    assertEquals(overlap, firstQuarterDay.overlap(halfFirstQuarter));
+    assertEquals { expected = overlap; actual = firstQuarterDay.overlap(halfFirstQuarter); };
 }
 
 shared test void testStepMillisReverseTime() {
     TimeRange seconds = time(0,0,59).rangeTo(time(0,0,50));
-    assertEquals( 9 * milliseconds.perSecond + 1, seconds.size);
-    assertEquals( time(0,0,59), seconds.first);
-    assertEquals( time(0,0,50), seconds.last);
+    assertEquals { expected = 9 * milliseconds.perSecond + 1; actual = seconds.size; };
+    assertEquals { expected = time(0,0,59); actual = seconds.first; };
+    assertEquals { expected = time(0,0,50); actual = seconds.last; };
 }
 
 shared test void testStepSecondsReverseTime() {
     TimeRange interval = time(0,3).rangeTo(time(0,0)).stepBy(seconds);
-    assertEquals( 3 * seconds.perMinute +1, interval.size);
-    assertEquals( time(0,3), interval.first);
-    assertEquals( time(0,0), interval.last);
+    assertEquals { expected = 3 * seconds.perMinute +1; actual = interval.size; };
+    assertEquals { expected = time(0,3); actual = interval.first; };
+    assertEquals { expected = time(0,0); actual = interval.last; };
 }
 
 shared test void testStepMinutesReverseTime() {
     TimeRange interval = firstQuarterDayReverse.stepBy(minutes);
-    assertEquals( 6 * minutes.perHour +1, interval.size);
-    assertEquals( time(6,0), interval.first);
-    assertEquals( time(0,0), interval.last);
+    assertEquals { expected = 6 * minutes.perHour +1; actual = interval.size; };
+    assertEquals { expected = time(6,0); actual = interval.first; };
+    assertEquals { expected = time(0,0); actual = interval.last; };
 }
 
 shared test void testContainsTime() {
-    assertEquals(true, time(0,1) in firstQuarterDay);
+    assertTrue(time(0,1) in firstQuarterDay);
 }
 
 shared test void testGapTimeEmpty() {
     TimeRange noGap = time(2, 0).rangeTo(time(12, 0));
     
-    assertEquals(empty, firstQuarterDay.gap(noGap));
+    assertEquals { expected = empty; actual = firstQuarterDay.gap(noGap); };
 }
 
 shared test void testOverlapTimeEmpty() {
     TimeRange noOverlap = time(9, 0).rangeTo(time(12, 0));
 
-    assertEquals(empty, firstQuarterDay.overlap(noOverlap));
+    assertEquals { expected = empty; actual = firstQuarterDay.overlap(noOverlap); };
 }
 
 shared test void testGapRulesABSmallerCD_Time() {
@@ -288,20 +288,20 @@ shared test void testOverlapRulesABHigherCD_Time() {
 
 void assertIntervalTime( Time start, Time end, Period period, Duration? duration = null )  {
     value range = start.rangeTo(end);
-    assertEquals(period, range.period);
+    assertEquals { expected = period; actual = range.period; };
 
-    assertEquals( end, start.plus(period) );
-    assertEquals( start, end.minus(period) );
+    assertEquals { expected = end; actual = start.plus(period); };
+    assertEquals { expected = start; actual = end.minus(period); };
 
-    assertEquals( start, range.first );
-    assertEquals( end, range.last );
+    assertEquals { expected = start; actual = range.first; };
+    assertEquals { expected = end; actual = range.last; };
 
     if( exists duration ) {
-        assertEquals(duration, range.duration);
+        assertEquals { expected = duration; actual = range.duration; };
     }
 }
 
 test void testTimeRangeString() {
-    assertEquals( "09:10:11.000/11:00:00.999", TimeRange(time(9, 10, 11), time(11, 0, 0, 999)).string );
-    assertEquals( "23:00:00.000/00:00:00.000", TimeRange(time(23, 0), time(0, 0)).string );
+    assertEquals { expected = "09:10:11.000/11:00:00.999"; actual = TimeRange(time(9, 10, 11), time(11, 0, 0, 999)).string; };
+    assertEquals { expected = "23:00:00.000/00:00:00.000"; actual = TimeRange(time(23, 0), time(0, 0)).string; };
 }

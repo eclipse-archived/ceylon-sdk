@@ -1,5 +1,5 @@
 native("jvm")
-module test.ceylon.unicode "1.2.3.SNAPSHOT" {
-    import ceylon.test "1.2.3.SNAPSHOT";
-    import ceylon.unicode "1.2.3.SNAPSHOT";
+module test.ceylon.unicode "1.3.1-SNAPSHOT" {
+    import ceylon.test "1.3.1-SNAPSHOT";
+    import ceylon.unicode "1.3.1-SNAPSHOT";
 }

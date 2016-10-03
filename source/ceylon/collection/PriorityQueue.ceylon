@@ -11,7 +11,7 @@
  capacity is the product of the needed capacity and the
  given [[growthFactor]]."
 by ("Loic Rouchon")
-shared class PriorityQueue<Element>(compare, initialCapacity = 0,
+shared serializable class PriorityQueue<Element>(compare, initialCapacity = 0,
             growthFactor = 1.5, elements = {})
         satisfies Collection<Element> & Queue<Element>
         given Element satisfies Object {
@@ -62,7 +62,7 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
     
     void add(Element element) {
         grow(1);
-        array.set(length, element);
+        array[length] = element;
         length++;
     }
     
@@ -92,12 +92,13 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
         return element;
     }
     
-    Comparison compareIndexes(Integer first, Integer second) => compare(elt(first), elt(second));
+    Comparison compareIndexes(Integer first, Integer second)
+            => compare(elt(first), elt(second));
     
     void swap(Integer first, Integer second) {
         value element = array[first];
-        array.set(first, array[second]);
-        array.set(second, element);
+        array[first] = array[second];
+        array[second] = element;
     }
     
     void bubbleUp(Integer index) {
@@ -139,7 +140,7 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
         if (haveKnownSize(elements)) {
             variable Integer index = 0;
             for (element in elements) {
-                array.set(index++, element);
+                array[index++] = element;
             }
         } else {
             for (element in elements) {
@@ -186,8 +187,8 @@ shared class PriorityQueue<Element>(compare, initialCapacity = 0,
     shared actual Element? accept() {
         value element = front;
         if (length > 0) {
-            array.set(0, last);
-            array.set(--length, null);
+            array[0] = last;
+            array[--length] = null;
             bubbleDown(0);
         }
         return element;

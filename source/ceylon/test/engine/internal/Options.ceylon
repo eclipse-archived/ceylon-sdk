@@ -7,9 +7,9 @@ class Options {
     shared String[] modules;
     shared String[] tests;
     shared String[] tags;
-    shared Boolean tap;
     shared Boolean report;
     shared Integer? port;
+    shared String? tap;
     shared String? colorReset;
     shared String? colorGreen;
     shared String? colorRed;
@@ -20,9 +20,9 @@ class Options {
         value testArgs = ArrayList<String>();
         value tagArgs = ArrayList<String>();
         variable value prev = "";
-        variable value tapArg = false;
         variable value reportArg = false;
         variable Integer? portArg = null;
+        variable String? tapArg = null;
         variable String? colorResetArg = process.propertyValue("``colorKeyPrefix``.reset");
         variable String? colorGreenArg = process.propertyValue("``colorKeyPrefix``.green");
         variable String? colorRedArg = process.propertyValue("``colorKeyPrefix``.red");
@@ -51,7 +51,10 @@ class Options {
                 portArg = p;
             }
             if (arg == "--tap") {
-                tapArg = true;
+                tapArg = "-";
+            }
+            if (arg.startsWith("--tap=")) {
+                tapArg = arg["--tap=".size...];
             }
             if (arg == "--report") {
                 reportArg = true;

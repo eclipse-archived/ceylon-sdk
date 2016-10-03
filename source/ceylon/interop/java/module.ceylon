@@ -1,7 +1,13 @@
 "A set of adaptors for types belonging to the Java language
  or Java SDK. Includes:
  
- - a set of functions for converting between Ceylon's 
+ - a set of functions for instantiating Java array types
+   given a stream of values, for example,
+   [[createJavaIntArray]], [[createJavaFloatArray]],
+   [[createJavaByteArray]], [[createJavaBooleanArray]],
+   [[createJavaObjectArray]], and
+   [[createJavaStringArray]],
+ - a set of functions for converting between Ceylon's
    [[Array]] class and Java array types, for example,
    [[javaIntArray]], [[javaFloatArray]], [[javaByteArray]],
    [[javaBooleanArray]], [[javaObjectArray]], and
@@ -18,19 +24,20 @@
  - [[CeylonStringIterable]], [[CeylonIntegerIterable]],
    [[CeylonFloatIterable]], [[CeylonByteIterable]], and
    [[CeylonBooleanIterable]], which adapt Java 
-   [[java.lang::Iterable]]s of primitive types, 
+   [[java.lang::Iterable]]s of primitive types,
+ - [[CeylonStringList]], [[CeylonStringMap]],
+   [[JavaStringList]], and [[JavaStringMap]], which
+   adapt maps and lists containing strings, and
  - [[JavaRunnable]] and [[JavaThread]] which adapt Ceylon
    functions to Java's [[java.lang::Runnable]] and 
-   [[java.lang::Thread]], and
- - [[JavaCloseable]] and [[CeylonDestroyable]] which adapt
-   between [[java.lang::AutoCloseable]] and [[Destroyable]].
+   [[java.lang::Thread]].
    
  In addition, the functions [[javaClass]] and 
  [[javaClassFromInstance]] allow Ceylon programs to obtain
  an instance of [[java.lang::Class]]."
 by("The Ceylon Team")
 native("jvm")
-module ceylon.interop.java "1.2.3.SNAPSHOT" {
+module ceylon.interop.java "1.3.1-SNAPSHOT" {
     shared import java.base "7";
-    shared import ceylon.collection "1.2.3.SNAPSHOT";
+    shared import ceylon.collection "1.3.1-SNAPSHOT";
 }

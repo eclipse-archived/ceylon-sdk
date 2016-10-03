@@ -7,6 +7,9 @@ import java.nio.file {
     Files {
         readSymbolicLink,
         deletePath=delete,
+        isDirectory,
+        isRegularFile,
+        notExists,
         getOwner,
         setOwner,
         getAttribute,
@@ -17,11 +20,18 @@ import java.nio.file {
 class ConcreteLink(JPath jpath)
         satisfies Link {
     
-    linkedPath => ConcretePath(readSymbolicLink(jpath));
+    linkedPath => ConcretePath(jpath.resolveSibling(readSymbolicLink(jpath)));
     
     path => ConcretePath(jpath); 
     
-    linkedResource => linkedPath.resource.linkedResource;
+    shared actual File|Directory|Nil linkedResource {
+        if (isDirectory(jpath) || isRegularFile(jpath) || notExists(jpath)) {
+            // this link ultimately resolves to a file, directory, or nil,
+            // so there is no risk of infinite recursion.
+            return linkedPath.resource.linkedResource;
+        }
+        throw Exception("unable to resolve link '``this``' due to cycle.");
+    }
     
     readAttribute(Attribute attribute) 
             => getAttribute(jpath, attributeName(attribute));

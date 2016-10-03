@@ -12,6 +12,9 @@ shared void parseIso8601Tests() {}
 
 shared class ParseISO8601DateTest() {
 
+    /*
+     * Happy cases
+     */
     value expect2014December29 = shuffle(curry(assertEquals))(date(2014, 12, 29));
 
     test shared void it_parses_YYYYMMDD_formatted_date()
@@ -31,7 +34,18 @@ shared class ParseISO8601DateTest() {
 
     test shared void it_parses_YYYY_DDD_formatted_date()
             => expect2014December29(parseDate("2014-363"));
+
+    /*
+     * Failure modes
+     */
+
+    test shared void fail_YYYYMMDD_on_invalid_month_number()
+            => assertNull(parseDate("05042016"));
+     
+    test shared void fail_YYYY_MM_DD_on_invalid_month_number()
+            => assertNull(parseDate("0504-20-16"));
 }
+
 
 shared class ParseIso8601TimeTest() {
     
@@ -123,7 +137,6 @@ shared class ParseIso8601PeriodTest() {
         expected = Period { months = 1; };
     };
     
-    ignore("Not implemented")
     test shared void accept_Weeks_period() => assertEquals {
         actual = parsePeriod( "P1W" );
         expected = Period { days = 7; };
@@ -198,4 +211,31 @@ shared class ParseIso8601PeriodTest() {
     
     test shared void fail_on_unknown_designator() => assertNull( parsePeriod( "P3G" ) );
     
+}
+
+shared class Bug583() {
+    test shared void it_parses_700_milliseconds() => assertEquals {
+        actual = parseDateTime("20160611T123456.7");
+        expected = dateTime(2016, 06, 11, 12, 34, 56, 700);
+    };
+
+    test shared void it_parses_fractional_hours_025() => assertEquals {
+        actual = parseDateTime("20160611T10.025");
+        expected = dateTime(2016, 06, 11, 10, 01, 30, 000);
+    };
+
+    test shared void it_parses_fractional_hours_01() => assertEquals {
+        actual = parseDateTime("20160611T10.01");
+        expected = dateTime(2016, 06, 11, 10, 00, 36, 000);
+    };
+
+    test shared void it_parses_fractional_minutes() => assertEquals {
+        actual = parseDateTime("20160611T1030.01");
+        expected = dateTime(2016, 06, 11, 10, 30, 00, 600);
+    };
+
+    test shared void it_parses_fractional_minutes_with_colons() => assertEquals {
+        actual = parseDateTime("20160611T10:30.01");
+        expected = dateTime(2016, 06, 11, 10, 30, 00, 600);
+    };
 }

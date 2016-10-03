@@ -39,7 +39,7 @@ shared class SocketConnectorImpl(SocketAddress address)
         selector.addConnectListener(this, connect, connectFailure);
     }
     
-    shared actual void close() => channel.close();
+    close() => channel.close();
     
     shared default SelectionKey register(JavaSelector selector, 
         Integer ops, Object attachment)

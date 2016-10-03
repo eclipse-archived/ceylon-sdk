@@ -29,7 +29,7 @@ import ceylon.time.base {
     april
 }
 
-DateTime data_1982_12_13_09_08_07_0050 = dateTime {
+DateTime date_1982_12_13_09_08_07_0050 = dateTime {
     year = 1982; month = december; day = 13;
     hours = 9; minutes = 8; seconds = 7; milliseconds = 50;
 };
@@ -68,96 +68,96 @@ shared test void testEqualsAndHashDateTime() {
 }
 
 shared test void testPlusYears() {
-    assertEquals( 2000, data_1982_12_13_09_08_07_0050.plusYears(18).year);
+    assertEquals { expected = 2000; actual = date_1982_12_13_09_08_07_0050.plusYears(18).year; };
 }
 
 shared test void testMinusYears() {
-    assertEquals( 1964, data_1982_12_13_09_08_07_0050.minusYears(18).year);
+    assertEquals { expected = 1964; actual = date_1982_12_13_09_08_07_0050.minusYears(18).year; };
 }
 
 shared test void testPlusMonths() {
-    assertEquals( january, data_1982_12_13_09_08_07_0050.plusMonths(1).month);
+    assertEquals { expected = january; actual = date_1982_12_13_09_08_07_0050.plusMonths(1).month; };
 }
 
 shared test void testMinusMonths() {
-    assertEquals( november, data_1982_12_13_09_08_07_0050.minusMonths(1).month);
+    assertEquals { expected = november; actual = date_1982_12_13_09_08_07_0050.minusMonths(1).month; };
 }
 
 shared test void testPlusDays() {
-    assertEquals( 15, data_1982_12_13_09_08_07_0050.plusDays(2).day);
+    assertEquals { expected = 15; actual = date_1982_12_13_09_08_07_0050.plusDays(2).day; };
 }
 
 shared test void testMinusDays() {
-    assertEquals( 9, data_1982_12_13_09_08_07_0050.minusDays(4).day);
+    assertEquals { expected = 9; actual = date_1982_12_13_09_08_07_0050.minusDays(4).day; };
 }
 
 shared test void testPlusHours_DateTime() {
-    assertEquals( 18, data_1982_12_13_09_08_07_0050.plusHours(9).hours);
+    assertEquals { expected = 18; actual = date_1982_12_13_09_08_07_0050.plusHours(9).hours; };
 
-    value data_1982_12_14_13 = data_1982_12_13_09_08_07_0050.plusHours(28); 
-    assertEquals( 13, data_1982_12_14_13.hours);
-    assertEquals( 14, data_1982_12_14_13.day);
+    value date_1982_12_14_13 = date_1982_12_13_09_08_07_0050.plusHours(28); 
+    assertEquals { expected = 13; actual = date_1982_12_14_13.hours; };
+    assertEquals { expected = 14; actual = date_1982_12_14_13.day; };
 }
 
 shared test void testMinusHours_DateTime() {
-    assertEquals( 2, data_1982_12_13_09_08_07_0050.minusHours(7).hours);
+    assertEquals { expected = 2; actual = date_1982_12_13_09_08_07_0050.minusHours(7).hours; };
 
-    value data_1982_12_12_5 = data_1982_12_13_09_08_07_0050.minusHours(28);
-    assertEquals( 5, data_1982_12_12_5.hours);
-    assertEquals( 12, data_1982_12_12_5.day);
+    value date_1982_12_12_5 = date_1982_12_13_09_08_07_0050.minusHours(28);
+    assertEquals { expected = 5; actual = date_1982_12_12_5.hours; };
+    assertEquals { expected = 12; actual = date_1982_12_12_5.day; };
 }
 
 shared test void testPlusMinutes_DateTime() {
-    assertEquals( 15, data_1982_12_13_09_08_07_0050.plusMinutes(7).minutes);
+    assertEquals { expected = 15; actual = date_1982_12_13_09_08_07_0050.plusMinutes(7).minutes; };
 
-    value data_1982_12_13_10_3 = data_1982_12_13_09_08_07_0050.plusMinutes(55);
-    assertEquals( 3, data_1982_12_13_10_3.minutes);
-    assertEquals( 10, data_1982_12_13_10_3.hours);
+    value date_1982_12_13_10_3 = date_1982_12_13_09_08_07_0050.plusMinutes(55);
+    assertEquals { expected = 3; actual = date_1982_12_13_10_3.minutes; };
+    assertEquals { expected = 10; actual = date_1982_12_13_10_3.hours; };
 }
 
 shared test void testMinusMinutes_DateTime() {
-    assertEquals( 15, data_1982_12_13_09_08_07_0050.plusMinutes(7).minutes);
+    assertEquals { expected = 15; actual = date_1982_12_13_09_08_07_0050.plusMinutes(7).minutes; };
 
-    value data_1982_12_13_8_15 = data_1982_12_13_09_08_07_0050.minusMinutes(53);
-    assertEquals( 15, data_1982_12_13_8_15.minutes);
-    assertEquals( 8, data_1982_12_13_8_15.hours);    
+    value date_1982_12_13_8_15 = date_1982_12_13_09_08_07_0050.minusMinutes(53);
+    assertEquals { expected = 15; actual = date_1982_12_13_8_15.minutes; };
+    assertEquals { expected = 8; actual = date_1982_12_13_8_15.hours; };    
 }
 
 shared test void testPlusSeconds_DateTime() {
-    assertEquals( 16, data_1982_12_13_09_08_07_0050.plusSeconds(9).seconds);
+    assertEquals { expected = 16; actual = date_1982_12_13_09_08_07_0050.plusSeconds(9).seconds; };
 
-    value data_1982_12_13_9_9_15 = data_1982_12_13_09_08_07_0050.plusSeconds(53+15);
-    assertEquals( 15, data_1982_12_13_9_9_15.seconds);
-    assertEquals( 9, data_1982_12_13_9_9_15.minutes);
+    value date_1982_12_13_9_9_15 = date_1982_12_13_09_08_07_0050.plusSeconds(53+15);
+    assertEquals { expected = 15; actual = date_1982_12_13_9_9_15.seconds; };
+    assertEquals { expected = 9; actual = date_1982_12_13_9_9_15.minutes; };
 }
 
 shared test void testMinusSeconds_DateTime() {
-    assertEquals( 15, data_1982_12_13_09_08_07_0050.plusMinutes(7).minutes);
+    assertEquals { expected = 15; actual = date_1982_12_13_09_08_07_0050.plusMinutes(7).minutes; };
 
-    value data_1982_12_13_9_7_4 = data_1982_12_13_09_08_07_0050.minusSeconds(7+56);
-    assertEquals( 4, data_1982_12_13_9_7_4.seconds);
-    assertEquals( 7, data_1982_12_13_9_7_4.minutes);
+    value date_1982_12_13_9_7_4 = date_1982_12_13_09_08_07_0050.minusSeconds(7+56);
+    assertEquals { expected = 4; actual = date_1982_12_13_9_7_4.seconds; };
+    assertEquals { expected = 7; actual = date_1982_12_13_9_7_4.minutes; };
 }
 
 shared test void testPlusMillis_DateTime() {
-    assertEquals( 150, data_1982_12_13_09_08_07_0050.plusMilliseconds(100).milliseconds);
+    assertEquals { expected = 150; actual = date_1982_12_13_09_08_07_0050.plusMilliseconds(100).milliseconds; };
 
-    value data_1982_12_13_9_8_15_300 = data_1982_12_13_09_08_07_0050.plusMilliseconds(950+7300);
-    assertEquals( 300, data_1982_12_13_9_8_15_300.milliseconds);
-    assertEquals( 15, data_1982_12_13_9_8_15_300.seconds);
+    value date_1982_12_13_9_8_15_300 = date_1982_12_13_09_08_07_0050.plusMilliseconds(950+7300);
+    assertEquals { expected = 300; actual = date_1982_12_13_9_8_15_300.milliseconds; };
+    assertEquals { expected = 15; actual = date_1982_12_13_9_8_15_300.seconds; };
 }
 
 shared test void testMinusMilliseconds_DateTime() {
-    assertEquals( 950, data_1982_12_13_09_08_07_0050.minusMilliseconds(100).milliseconds);
+    assertEquals { expected = 950; actual = date_1982_12_13_09_08_07_0050.minusMilliseconds(100).milliseconds; };
 
-    value data_1982_12_13_9_8_4_100 = data_1982_12_13_09_08_07_0050.minusMilliseconds(50+2900);
-    assertEquals( 100, data_1982_12_13_9_8_4_100.milliseconds);
-    assertEquals( 4, data_1982_12_13_9_8_4_100.seconds);
+    value date_1982_12_13_9_8_4_100 = date_1982_12_13_09_08_07_0050.minusMilliseconds(50+2900);
+    assertEquals { expected = 100; actual = date_1982_12_13_9_8_4_100.milliseconds; };
+    assertEquals { expected = 4; actual = date_1982_12_13_9_8_4_100.seconds; };
 }
 
 shared test void testWithDay40_DateTime() {
     try {
-        data_1982_12_13_09_08_07_0050.withDay(40);
+        date_1982_12_13_09_08_07_0050.withDay(40);
         fail("Should throw exception...");
     } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
@@ -166,7 +166,7 @@ shared test void testWithDay40_DateTime() {
 
 shared test void testWithDay0_DateTime() {
     try {
-        data_1982_12_13_09_08_07_0050.withDay(0);
+        date_1982_12_13_09_08_07_0050.withDay(0);
         fail("Should throw exception...");
     } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
@@ -175,7 +175,7 @@ shared test void testWithDay0_DateTime() {
 
 shared test void testWithDayNegative_DateTime() {
     try {
-        data_1982_12_13_09_08_07_0050.withDay(-10);
+        date_1982_12_13_09_08_07_0050.withDay(-10);
         fail("Should throw exception...");
     } catch( AssertionError e ) {
         assertTrue(e.message.contains("Invalid date"));
@@ -197,7 +197,7 @@ shared test void testWithDay29FebLeap_DateTime() {
 
 shared test void testPredecessor_DateTime() {
     assertEquals{ 
-        actual = data_1982_12_13_09_08_07_0050.predecessor; 
+        actual = date_1982_12_13_09_08_07_0050.predecessor; 
         expected = dateTime { 
             year = 1982; month = december; day = 13; 
             hours = 9; minutes = 8; seconds = 7; milliseconds = 49;
@@ -207,7 +207,7 @@ shared test void testPredecessor_DateTime() {
 
 shared test void testSuccessor_DateTime() {
     assertEquals{ 
-        actual = data_1982_12_13_09_08_07_0050.successor; 
+        actual = date_1982_12_13_09_08_07_0050.successor; 
         expected = dateTime {
             year = 1982; month = december; day = 13; 
             hours = 9; minutes = 8; seconds = 7; milliseconds = 51;
@@ -373,20 +373,20 @@ shared test void testPeriodNextStepByMs_DateTime() {
     value from = dateTime(2013, april, 19, 17, 59,59);
     value to = dateTime(2013, april, 19, 18, 0);
 
-    assertEquals( 1001, from.rangeTo(to).size );
+    assertEquals { expected = 1001; actual = from.rangeTo(to).size; };
 }
 
 shared test void testPeriodPreviousStepByMs_DateTime() {
     value from = dateTime(2013, april, 19, 18, 0);
     value to = dateTime(2013, april, 19, 17, 59,59);
 
-    assertEquals( 1001, from.rangeTo(to).size );
+    assertEquals { expected = 1001; actual = from.rangeTo(to).size; };
 }
 
 shared test void testEnumerableDateTime() {
-    assertEquals(data_1982_12_13_09_08_07_0050.offset(data_1982_12_13_09_08_07_0050), 0);
-    assertEquals(data_1982_12_13_09_08_07_0050.successor.offset(data_1982_12_13_09_08_07_0050), 1);
-    assertEquals(data_1982_12_13_09_08_07_0050.predecessor.offset(data_1982_12_13_09_08_07_0050), - 1);
+    assertEquals(date_1982_12_13_09_08_07_0050.offset(date_1982_12_13_09_08_07_0050), 0);
+    assertEquals(date_1982_12_13_09_08_07_0050.successor.offset(date_1982_12_13_09_08_07_0050), 1);
+    assertEquals(date_1982_12_13_09_08_07_0050.predecessor.offset(date_1982_12_13_09_08_07_0050), - 1);
 }
 
 shared test void testPeriodFromNewYear_DateTimeNegative() {
@@ -410,10 +410,10 @@ shared test void testPeriodTimeStep() {
 }
 
 shared test void testStringDateTime() {
-    assertEquals("1982-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.string);
-    assertEquals("0000-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.withYear(0).string);
-    assertEquals("0010-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.withYear(10).string);
-    assertEquals("0100-12-13T09:08:07.050", data_1982_12_13_09_08_07_0050.withYear(100).string);
+    assertEquals { expected = "1982-12-13T09:08:07.050"; actual = date_1982_12_13_09_08_07_0050.string; };
+    assertEquals { expected = "0000-12-13T09:08:07.050"; actual = date_1982_12_13_09_08_07_0050.withYear(0).string; };
+    assertEquals { expected = "0010-12-13T09:08:07.050"; actual = date_1982_12_13_09_08_07_0050.withYear(10).string; };
+    assertEquals { expected = "0100-12-13T09:08:07.050"; actual = date_1982_12_13_09_08_07_0050.withYear(100).string; };
 }
 
 void assertFromToDateTime( Period period, DateTime from, DateTime to ) {
@@ -426,20 +426,26 @@ void assertFromToDateTime( Period period, DateTime from, DateTime to ) {
       actual = from.periodTo( to );
     };
 
-    assertEquals(to, from.plus(period));
-    assertEquals(from, to.minus(period));
+    assertEquals {
+        expected = to;
+        actual = from.plus(period);
+    };
+    assertEquals {
+        expected = from;
+        actual = to.minus(period);
+    };
 }
 
 void assertGregorianDateTime( Integer year, Month month, Integer day, DayOfWeek dayOfWeek, Boolean leapYear = false, 
                               Integer hour = 0, Integer minute = 0, Integer second = 0, Integer milli = 0) {
     value actual = dateTime(year, month, day, hour, minute, second, milli);
-    assertEquals(year, actual.year);
-    assertEquals(month, actual.month);
-    assertEquals(day, actual.day);
-    assertEquals(dayOfWeek, actual.dayOfWeek);
-    assertEquals(leapYear, actual.leapYear);
-    assertEquals(hour, actual.hours);
-    assertEquals(minute, actual.minutes);
-    assertEquals(second, actual.seconds);
-    assertEquals(milli, actual.milliseconds);
+    assertEquals(actual.year, year);
+    assertEquals(actual.month, month);
+    assertEquals(actual.day, day);
+    assertEquals(actual.dayOfWeek, dayOfWeek);
+    assertEquals(actual.leapYear, leapYear);
+    assertEquals(actual.hours, hour);
+    assertEquals(actual.minutes, minute);
+    assertEquals(actual.seconds, second);
+    assertEquals(actual.milliseconds, milli);
 }

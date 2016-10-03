@@ -1,13 +1,14 @@
-import java.util {
-    AbstractSet,
-    Collection
-}
 import ceylon.collection {
     MutableSet
 }
+
 import java.lang {
     UnsupportedOperationException,
     IllegalArgumentException
+}
+import java.util {
+    AbstractSet,
+    Collection
 }
 
 "A Java [[java.util::Set]] that wraps a Ceylon [[Set]]. This 
@@ -24,7 +25,7 @@ shared class JavaSet<E>(Set<E> set)
     
     shared actual Boolean add(E? e) {
         if (exists e) {
-            if (is MutableSet<E> set) {
+            if (is MutableSet<in E> set) {
                 return set.add(e);
             }
             else {
@@ -38,7 +39,7 @@ shared class JavaSet<E>(Set<E> set)
     
     shared actual Boolean remove(Object? e) {
         if (is E e) {
-            if (is MutableSet<E> set) {
+            if (is MutableSet<in E> set) {
                 return set.remove(e);
             }
             else {
@@ -51,7 +52,7 @@ shared class JavaSet<E>(Set<E> set)
     }
     
     shared actual Boolean removeAll(Collection<out Object> collection) {
-        if (is MutableSet<E> set) {
+        if (is MutableSet<in E> set) {
             variable Boolean result = false;
             for (e in collection) {
                 if (is E e, set.remove(e)) {
@@ -66,10 +67,10 @@ shared class JavaSet<E>(Set<E> set)
     }
     
     shared actual Boolean retainAll(Collection<out Object> collection) {
-        if (is MutableSet<E> set) {
+        if (is MutableSet<in E> set) {
             variable Boolean result = false;
             for (e in set.clone()) { //TODO: is the clone really necessary?
-                if (!collection.contains(e)) {
+                if (!e in collection) {
                     set.remove(e);
                     result = true;
                 }
@@ -82,7 +83,7 @@ shared class JavaSet<E>(Set<E> set)
     }
     
     shared actual void clear() {
-        if (is MutableSet<E> set) {
+        if (is MutableSet<out Anything> set) {
             set.clear();
         }
         else {

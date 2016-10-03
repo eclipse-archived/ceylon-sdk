@@ -13,11 +13,19 @@ Buf convertBuffer<Buf, To, From>(input, error, converter, ofSize, averageSize, m
     Integer(Integer) averageSize;
     Integer(Integer) maximumSize;
     
-    value size = input.size;
-    value into = ofSize(averageSize(size));
+    value isList = input is List<Anything>;
+    value initialSize =
+            if (isList)
+            then averageSize(input.size)
+            else 256;
+    value into = ofSize(initialSize);
     void add(To element) {
         if (!into.hasAvailable) {
-            into.resize(maximumSize(size), true);
+            value newSize =
+                if (isList)
+                then maximumSize(input.size)
+                else (into.capacity * 1.5).integer;
+            into.resize(newSize, true);
         }
         into.put(element);
     }

@@ -59,7 +59,7 @@ class ConcreteSystem(FileSystem fs)
 shared System createSystem(String uriString, <String->String>* properties) {
     value map = HashMap<JString,Object>();
     for (entry in properties) {
-        map.put(JString(entry.key), JString(entry.item));
+        map[JString(entry.key)] = JString(entry.item);
     }
     value fs = newFileSystem(newURI(uriString), map);
     return ConcreteSystem(fs);

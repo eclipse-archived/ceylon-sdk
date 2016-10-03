@@ -1,5 +1,8 @@
 import ceylon.collection {
-    HashMap
+    HashMap,
+    CLinkedList=LinkedList,
+    CArrayList=ArrayList,
+    MutableList
 }
 import ceylon.interop.java {
     ...
@@ -26,7 +29,8 @@ import java.util {
     LinkedHashSet,
     TreeSet,
     LinkedList,
-    Date
+    Date,
+    JavaHashMap=HashMap
 }
 
 test void stringTests() {
@@ -62,6 +66,41 @@ test void collectionTests() {
     
     assertEquals(JavaIterable([]).string, "[]");
     assertEquals(JavaIterable([1]).string, "[1]");
+}
+
+test void javaListIteratorPerformance() {
+    value ll = CLinkedList { *(0:100k) };
+    value javaList = JavaList(ll);
+    value it = javaList.iterator();
+    
+    value start = system.nanoseconds;
+    variable value i = 0;
+    while (it.hasNext()) {
+        i += it.next();
+    }
+    
+    assertEquals(i, 4999950000);
+    assertTrue(system.nanoseconds - start < 1G,
+        "list iteration took more than one second; \
+         non-optimized iterator?");
+}
+
+test void javaListIterator() {
+    value ll = CArrayList { 0, 1, 2 };
+    print ((ll of Anything) is MutableList<Integer>);
+    value javaList = JavaList(ll);
+    value it = javaList.iterator();
+    
+    variable value sum = 0;
+    while (it.hasNext()) {
+        value x = it.next();
+        if (x == 1) {
+            it.remove();
+        }
+        sum += x;
+    }
+    assertEquals(sum, 3, "sum of elements");
+    assertEquals(ll.size, 2, "size after removal");
 }
 
 test void bug264() {
@@ -119,6 +158,15 @@ test void ceylonStringMap() {
     assertEquals(CeylonStringMap(emptyMap).size, 0);
 }
 
+test void ceylonMutableMap() {
+    value javaMap = JavaHashMap<String, Integer>();
+    value ceylonMap = CeylonMutableMap(javaMap);
+
+    assertEquals(1, ceylonMap["x"] = 1);
+    assertEquals(1, ceylonMap.put("x", 2));
+    assertEquals(2, ceylonMap.put("x", 3));
+}
+
 test void ceylonStringMutableMap() {
     value jsMap = HashMap { javaString("one") -> 1 };
     value csMap = CeylonStringMutableMap(jsMap);
@@ -168,4 +216,58 @@ test void ceylonRunnableThread() {
     t2.start();
     t2.join();
     assertEquals { expected = 2; actual = i; };
+}
+
+test void mutableListRemoveWhere() {
+    value javaList = ArrayList<Integer>(JavaCollection(1..10));
+    value ceylonList = CeylonMutableList(javaList);
+
+    assertEquals(ceylonList.removeWhere(Integer.even), 5);
+    assertEquals(ceylonList, [1, 3, 5, 7, 9]);
+
+    assertEquals(ceylonList.removeWhere((i) => false), 0);
+    assertEquals(ceylonList, [1, 3, 5, 7, 9]);
+
+    javaList.clear();
+    assertEquals(ceylonList.removeWhere((i) => true), 0);
+}
+
+test void mutableListRemoveFirst() {
+    value javaList = ArrayList<Integer>(JavaCollection(1..10));
+    value ceylonList = CeylonMutableList(javaList);
+
+    assertEquals(ceylonList.findAndRemoveFirst(Integer.even), 2);
+    assertEquals(ceylonList, [1, *(3..10)]);
+
+    assertEquals(ceylonList.findAndRemoveFirst((i) => false), null);
+    assertEquals(ceylonList, [1, *(3..10)]);
+
+    javaList.clear();
+    assertEquals(ceylonList.findAndRemoveFirst((i) => true), null);
+}
+
+test void mutableListRemoveLast() {
+    value javaList = ArrayList<Integer>(JavaCollection(1..5));
+    value ceylonList = CeylonMutableList(javaList);
+
+    assertEquals(ceylonList.findAndRemoveLast(Integer.even), 4);
+    assertEquals(ceylonList, [1, 2, 3, 5]);
+
+    assertEquals(ceylonList.findAndRemoveLast((i) => false), null);
+    assertEquals(ceylonList, [1, 2, 3, 5]);
+
+    javaList.clear();
+    assertEquals(ceylonList.findAndRemoveLast((i) => true), null);
+}
+
+test void mutableListPrune() {
+    value javaList = ArrayList<String>();
+    javaList.add("A");
+    javaList.add(null);
+    javaList.add("B");
+    javaList.add(null);
+    value list = CeylonMutableList(javaList);
+    assertEquals(list.prune(), 2, "prune count 1");
+    assertEquals(list.prune(), 0, "prune count 2");
+    assertEquals(list, ["A", "B"]);
 }

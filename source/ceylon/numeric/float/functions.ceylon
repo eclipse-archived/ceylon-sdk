@@ -459,8 +459,8 @@ Float atan2(Float y, Float x) {
 }
 
 "Returns the length of the hypotenuse of a right angle
- triangle with other sides having lengths `x` and `y`.
- This method may be more accurate than computing
+ triangle with other sides having lengths `x` and `y`. This 
+ function may be more accurate than computing
  `sqrt(x^2 + x^2)` directly.
 
  * `hypot(x,y)` where `x` and/or `y` is `+infinity` or
@@ -488,9 +488,8 @@ Float hypot(Float x, Float y) {
     }
 }
 
-"The positive square root of the given number. This
- method may be faster and/or more accurate than
- `num^0.5`.
+"The positive square root of the given number. This function 
+ may be faster and/or more accurate than `num^0.5`.
 
  * `sqrt(x)` for any x < 0 is `undefined`,
  * `sqrt(-0)` is `-0`,
@@ -515,7 +514,7 @@ Float sqrt(Float num) {
     }
 }
 
-"The cube root of the given number. This method may be
+"The cube root of the given number. This function may be
  faster and/or more accurate than `num^(1.0/3.0)`.
 
  * `cbrt(-infinity)` is `-infinity`,
@@ -628,7 +627,7 @@ Float halfEven(Float num) {
 
 "The smaller of the two arguments.
 
- * `smallest(-1,+0)` is `-0`
+ * `smallest(-0,+0)` is `-0`
  * `smallest(undefined, x)` is `undefined`
  * `smallest(x, x)` is `x`
  * `smallest(+infinity,x) is `x`
@@ -636,20 +635,17 @@ Float halfEven(Float num) {
  "
 shared see(`function largest`)
 Float smallest(Float x, Float y)
-    =>  if (x.strictlyNegative && y.strictlyPositive) then
-            x
-        else if (x.strictlyPositive && y.strictlyNegative) then
-            y
-        else if (x.undefined || y.undefined) then
-            undefined
-        else if (x.smallerThan(y)) then
-            x
-        else
-            y;
+    =>  if (x.strictlyNegative && y.strictlyPositive) 
+            then x
+        else if (x.strictlyPositive && y.strictlyNegative) 
+            then y
+        else if (x.undefined || y.undefined) 
+            then undefined
+        else if (x<y) then x else y;
 
 "The larger of the two arguments.
 
- * `largest(-1,+0)` is `+0`
+ * `largest(-0,+0)` is `+0`
  * `largest(undefined, x)` is `undefined`
  * `largest(x, x)` is `x`
  * `largest(+infinity,x) is `+infinity`
@@ -657,27 +653,30 @@ Float smallest(Float x, Float y)
  "
 shared see(`function smallest`)
 Float largest(Float x, Float y)
-    =>  if (x.strictlyNegative && y.strictlyPositive) then
-            y
-        else if (x.strictlyPositive && y.strictlyNegative) then
-            x
-        else if (x.undefined || y.undefined) then
-            undefined
-        else if (x.largerThan(y)) then
-            x
-        else
-            y;
+    =>  if (x.strictlyNegative && y.strictlyPositive) 
+            then y
+        else if (x.strictlyPositive && y.strictlyNegative) 
+            then x
+        else if (x.undefined || y.undefined) 
+            then undefined
+        else if (x>y) then x else y;
 
-"The largest [[Float]] in the given stream, or `null`
- if the stream is empty."
-shared Float|Absent max<Absent>
-        (Iterable<Float,Absent> values)
+"The largest [[Float]] in the given stream, or `null` if the 
+ stream is empty. Returns an undefined value if the stream 
+ contains an [[undefined value|Float.undefined]]."
+shared 
+Float|Absent max<Absent>(Iterable<Float,Absent> values)
         given Absent satisfies Null {
     value first = values.first;
     if (exists first) {
         variable value max = first;
         for (x in values) {
-            if (x>max) {
+            if (x.undefined) {
+                return undefined;
+            }
+            if (x>max || 
+                x.strictlyPositive && 
+                max.strictlyNegative) {
                 max = x;
             }
         }
@@ -686,16 +685,22 @@ shared Float|Absent max<Absent>
     return first;
 }
 
-"The smallest [[Float]] in the given stream, or `null`
- if the stream is empty."
-shared Float|Absent min<Absent>
-        (Iterable<Float,Absent> values)
+"The smallest [[Float]] in the given stream, or `null` if 
+ the stream is empty. Returns an undefined value if the 
+ stream contains an [[undefined value|Float.undefined]]."
+shared 
+Float|Absent min<Absent>(Iterable<Float,Absent> values)
         given Absent satisfies Null {
     value first = values.first;
     if (exists first) {
         variable value min = first;
         for (x in values) {
-            if (x<min) {
+            if (x.undefined) {
+                return undefined;
+            }
+            if (x<min ||
+                x.strictlyNegative && 
+                min.strictlyPositive) {
                 min = x;
             }
         }
@@ -704,8 +709,8 @@ shared Float|Absent min<Absent>
     return first;
 }
 
-"The sum of the values in the given stream, or
- `0.0` if the stream is empty."
+"The sum of the values in the given stream, or `0.0` if the 
+ stream is empty."
 shared
 Float sum({Float*} values) {
     variable Float sum=0.0;
@@ -715,8 +720,8 @@ Float sum({Float*} values) {
     return sum;
 }
 
-"The product of the values in the given stream, or
- `1.0` if the stream is empty."
+"The product of the values in the given stream, or `1.0` if 
+ the stream is empty."
 shared
 Float product({Float*} values) {
     variable Float product=1.0;
@@ -741,25 +746,32 @@ Float scalb(Float x, Integer n)
     // http://jsperf.com/scale-pow2/5
     =>  x * 2.0 ^ n;
 
-"The remainder, after dividing the [[dividend]] by the [[divisor]]. This function is
- defined as:
+"The remainder, after dividing the [[dividend]] by the 
+ [[divisor]]. This function is defined as:
 
      dividend - n * divisor
 
- where `n` is the whole part of `dividend / divisor`. The result will have the
- same sign as the `dividend`.
+ where `n` is the whole part of `dividend / divisor`. The 
+ result will have the same sign as the `dividend`.
 
  * `remainder(infinity, divisor)` is `undefined`,
  * `remainder(dividend, 0.0)` is `undefined`,
- * `remainder(dividend, infinity)` is `dividend` for non-infinite dividends."
+ * `remainder(dividend, infinity)` is `dividend` for 
+   non-infinite dividends."
 shared
 Float remainder(Float dividend, Float divisor) {
-    if (dividend == 0.0 && divisor != 0.0 && !divisor.undefined) {
-        return if (dividend.strictlyNegative) then -0.0 else 0.0;
+    if (dividend==0.0 && divisor!=0.0 
+            && !divisor.undefined) {
+        return dividend.strictlyNegative 
+            then -0.0 else 0.0;
     }
-    if (divisor.infinite && !dividend.infinite) {
+    else if (divisor.infinite && !dividend.infinite) {
         return dividend;
     }
-    // effectively, undefined is returned when divisor == 0.
-    return dividend - (dividend/divisor).wholePart * divisor;
+    else {
+        // effectively, undefined is returned 
+        // when divisor == 0.
+        return dividend 
+                - (dividend/divisor).wholePart * divisor;
+    }
 }

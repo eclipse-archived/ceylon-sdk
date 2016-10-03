@@ -214,14 +214,14 @@ void shouldRunTestsInModule() {
             runCount = 25;
             successCount = 21;
             failureCount = 1;
-            errorCount = 12;
+            errorCount = 7;
             skippedCount = 8;
             abortedCount = 1;
         };
     }
     
     function filter(TestDescription d) {
-        return !d.name.contains("parameterized");
+        return !d.name.contains("parameterized") && ((d.functionDeclaration?.containingPackage?.name else "") != "test.ceylon.test.stubs.bugs");
     }
     
     value result1 = createTestRunner([`module test.ceylon.test.stubs`], [], filter).run();

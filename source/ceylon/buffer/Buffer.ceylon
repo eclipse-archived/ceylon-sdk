@@ -165,8 +165,8 @@ shared abstract class Buffer<Element>()
             value thisArray = this.array;
             value thatArray = that.array;
             for (offset in 0:numVisible) {
-                value thisElement = thisArray.get(thisPosition + offset);
-                value thatElement = thatArray.get(thatPosition + offset);
+                value thisElement = thisArray[thisPosition + offset];
+                value thatElement = thatArray[thatPosition + offset];
                 assert (exists thisElement, exists thatElement);
                 if (thisElement != thatElement) {
                     return false;

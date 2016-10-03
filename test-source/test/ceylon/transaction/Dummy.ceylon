@@ -46,7 +46,7 @@ shared class DummyXAResource() satisfies XAResource {
         }
         case (halt) {
             recoveryXids = ObjectArray<Xid>(1);
-            recoveryXids.set(0, xid);
+            recoveryXids[0] = xid;
             Runtime.runtime.halt(1);
         }
         case (none) {}

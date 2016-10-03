@@ -32,15 +32,36 @@ shared interface Date
 
     "Returns the [[DateRange]] between this and given [[Date]]."
     shared formal DateRange rangeTo( Date other );
+    
+    "Checks if this date is equal to another date.\n
+     Compares this Date with another ensuring that the date both objects refer to is the same."
+    shared actual default Boolean equals(Object other) {
+        if (is Date other) {
+            return    year == other.year 
+                   && month == other.month 
+                   && day == other.day;
+        }
+        return false;
+    }
+    
+    "Implementation compatible with [[equals]] method.\n
+     This implementation respect the constraint that if `x==y` then `x.hash==y.hash`."
+    shared actual default Integer hash {
+        value prime = 31;
+        variable value total = 7;
+        
+        total = prime * total + year;
+        total = prime * total + month.integer;
+        total = prime * total + day;
+        return total;
+    }
 
 }
 
 "Returns current date according to the provided system clock and time zone."
-shared Date today(Clock clock = systemTime, TimeZone timeZone = tz.system){
-    return clock.instant().date(timeZone);
-}
+shared Date today(Clock clock = systemTime, TimeZone timeZone = tz.system) => clock.instant().date(timeZone);
+
 
 "Returns a date based on the specified year, month and day of month values."
-shared Date date(Integer year, Integer|Month month, Integer day){
-    return gregorianDate(year, month, day);
-}
+shared Date date(Integer year, Integer|Month month, Integer day) => gregorianDate(year, month, day);
+

@@ -3,8 +3,8 @@
 see (`class LinkedList`, `class ArrayList`)
 by("Stéphane Épardaud")
 shared interface MutableList<Element>
-        satisfies List<Element> &
-                  ListMutator<Element> {
+        satisfies List<Element>
+                & ListMutator<Element> {
 
     "Remove the element at the specified [[index]],
      returning the removed element, if any, or `null` if
@@ -46,12 +46,182 @@ shared interface MutableList<Element>
         }
     }
     
+    "Remove every element that satisfies the given 
+     [[predicate function|selecting]] from this list, 
+     returning the number of elements that were removed."
+    shared default Integer removeWhere(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element)) {
+        variable value index = 0;
+        variable value count = 0;
+        while (index<size) {
+            if (exists elem = getFromFirst(index),
+                selecting(elem)) {
+                delete(index);
+                count++;
+            }
+            else {
+                index++;
+            }
+        }
+        return count;
+    }
+    
+    shared actual default Integer prune() {
+        variable value index = 0;
+        variable value removed = 0;
+        while (index<size) {
+            if (!getFromFirst(index) exists) {
+                removed++;
+                delete(index);
+            }
+            else {
+                index++;
+            }
+        }
+        return removed;
+    }
+    
+    shared actual default Integer remove(Element&Object element) 
+            => removeWhere(element.equals);
+    
+    "Remove the first element that satisfies the given 
+     [[predicate function|selecting]] from this list, 
+     returning the removed element, or `null` if no such 
+     element was found in this list."
+    shared default Element? findAndRemoveFirst(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element)) {
+        if (exists index = firstIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual default Boolean removeFirst(Element&Object element) 
+            => findAndRemoveFirst(element.equals) exists;
+    
+    "Remove the last element that satisfies the given 
+     [[predicate function|selecting]] from this list, 
+     returning the removed element, or `null` if no such 
+     element was found in this list."
+    shared default Element? findAndRemoveLast(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element)) {
+        if (exists index = lastIndexWhere(selecting)) {
+            return delete(index);
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual default Boolean removeLast(Element&Object element) 
+            => findAndRemoveLast(element.equals) exists;
+    
+    "Replace every element in this list that satisfies the 
+     given [[predicate function|selecting]] with the given 
+     [[replacement]]."
+    shared default Integer replaceWhere(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element),
+        "The replacement value"
+        Element replacement) {
+        variable value index = 0;
+        variable value count = 0;
+        while (index<size) {
+            if (exists elem = getFromFirst(index),
+                selecting(elem)) {
+                set(index, replacement);
+                count++;
+            }
+            index++;
+        }
+        return count;
+    }
+    
+    shared actual default void infill(Element replacement) {
+        variable value index = 0;
+        while (index<size) {
+            if (!getFromFirst(index) exists) {
+                set(index, replacement);
+            }
+            index++;
+        }
+    }
+    
+    shared actual default Integer replace(
+        Element&Object element, 
+        Element replacement) 
+            => replaceWhere(element.equals, replacement);
+    
+    "Replace the first element of this list that satisfies 
+     the given [[predicate function|selecting]] with
+     the given [[replacement]], returning the replaced 
+     element, or `null` if no such element was found in this 
+     list."
+    shared default Element? findAndReplaceFirst(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element),
+        "The replacement value"
+        Element replacement) {
+        if (exists index = firstIndexWhere(selecting)) {
+            value element = getFromFirst(index);
+            set(index, replacement);
+            return element;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual default Boolean replaceFirst(
+        Element&Object element, 
+        Element replacement) 
+            => findAndReplaceFirst(element.equals, replacement) 
+                exists;
+    
+    "Replace the last element of this list that satisfies 
+     the given [[predicate function|selecting]] with
+     the given [[replacement]], returning the replaced 
+     element, or `null` if no such element was found in this 
+     list."
+    shared default Element? findAndReplaceLast(
+        "The predicate function the indexed elements must 
+         satisfy."
+        Boolean selecting(Element&Object element),
+        "The replacement value"
+        Element replacement) {
+        if (exists index = lastIndexWhere(selecting)) {
+            value element = getFromFirst(index);
+            set(index, replacement);
+            return element;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    shared actual default Boolean replaceLast(
+        Element&Object element, 
+        Element replacement) 
+            => findAndReplaceLast(element.equals, replacement) 
+                exists;
+    
 }
 
 "Protocol for mutation of a [[MutableList]]."
 see (`interface MutableList`)
 shared interface ListMutator<in Element>
-        satisfies List<Anything> {
+        satisfies List<Anything>
+                & IndexedCorrespondenceMutator<Element> {
 
     "Add the given [[element]] to the end of this list,
      incrementing the [[length|List.size]] of the list."
@@ -70,7 +240,7 @@ shared interface ListMutator<in Element>
     throws (`class AssertionError`,
             "if the given index is out of bounds, that
              is, if `index<0` or if `index>lastIndex`")
-    shared formal void set(Integer index, Element element);
+    shared actual formal void set(Integer index, Element element);
 
     "Insert the given [[element]] at the specified [[index]],
      incrementing the [[length|List.size]] of the list."
@@ -136,10 +306,11 @@ shared interface ListMutator<in Element>
     shared formal Boolean removeLast(
             "The non-null value to remove"
             Element&Object element);
-
+    
     "Remove all null elements from this list, leaving a list
-     with no null elements."
-    shared formal void prune();
+     with no null elements, returning the number of elements
+     removed."
+    shared formal Integer prune();
 
     "Replace all occurrences of the given [[value|element]]
      in this list with the given [[replacement
@@ -147,7 +318,7 @@ shared interface ListMutator<in Element>
 
      To replace just one occurrence of the given value, use
      [[replaceFirst]] or [[replaceLast]]."
-    shared formal void replace(
+    shared formal Integer replace(
             "The non-null value to replace"
             Element&Object element,
             "The replacement value"
@@ -211,7 +382,7 @@ shared interface ListMutator<in Element>
     
     "Remove every element from this list, leaving an empty
      list with no elements."
-    shared formal void clear();
+    shared default void clear() => deleteMeasure(0, size);
 
     "Remove the element with index `0` from this list,
      returning the removed element, or `null` if there was
@@ -225,17 +396,35 @@ shared interface ListMutator<in Element>
 
     "Remove every element with an index in the spanned range
      `from..to`."
-    shared formal void deleteSpan(Integer from, Integer to);
+    shared default void deleteSpan(Integer from, Integer to)
+        =>  deleteMeasure {
+                from = smallest(from, to);
+                length = (to - from).magnitude + 1;
+            };
 
     "Remove every element with an index in the measured
-     range `from:length`."
-    shared formal void deleteMeasure(Integer from, Integer length);
+     range `from:length`. If `length<=0`, no elements are
+     removed."
+    shared default void deleteMeasure(
+            variable Integer from, variable Integer length) {
+        if (from < 0) {
+            length += from;
+            from = 0;
+        }
+        length = smallest(length, size - from);
+        while (length-- > 0) {
+            delete(from);
+        }
+    }
 
     "Truncate this list to the given [[size]] by removing
-     elements from the end of the list, if necessary,
-     to leave a list with at most the given size."
+     elements from the end of the list, if necessary, 
+     leaving a list with at most the given size."
     throws (`class AssertionError`, "if `size<0`")
-    shared formal void truncate(Integer size);
+    shared default void truncate(Integer size) {
+        assert (size >= 0);
+        deleteMeasure(size, this.size-size);
+    }
     
     shared formal actual ListMutator<Element> clone();
     

@@ -65,7 +65,7 @@ Float chiSquared(
     variable value sampleCount = 0;
     for (sample in samples) {
         value bucketIndex = sample / bucketSize;
-        counts.set(bucketIndex, (counts[bucketIndex] else 0) + 1);
+        counts[bucketIndex] = (counts[bucketIndex] else 0) + 1;
         sampleCount++;
     }
     value expected = sampleCount.float / buckets;

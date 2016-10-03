@@ -32,16 +32,16 @@ shared Date? parseDate(String input) {
     
     if (input.size == 10) {
         if (dashes == [4,7],
-            exists Integer year  = parseInteger(input[0..3]),
-            exists Integer month = parseInteger(input[5..6]),
-            exists Integer day   = parseInteger(input[8..9])) {
+            exists year  = parseYear(input[0..3]),
+            exists month = parseMonth(input[5..6]),
+            exists day   = parseDayOfMonth(input[8..9], year, month)) {
             
             return date(year, month, day);
         }
         else if (dashes == [4,8], exists ch = input[5], ch == 'W',
-                 exists Integer year = parseInteger(input[0..3]),
-                 exists Integer week = parseInteger(input[6..7]),
-                 exists Integer day  = parseInteger(input[9..9])) {
+                 exists year = parseYear(input[0..3]),
+                 exists week = parseInteger(input[6..7]),
+                 exists day  = parseInteger(input[9..9])) {
             
             return date(year, 1, 1).withWeekOfYear(week)
                                    .withDayOfWeek(dayOfWeek(day));
@@ -50,31 +50,31 @@ shared Date? parseDate(String input) {
     else if (input.size == 8) {
         if (nonempty dashes) {
             if (dashes == [4],
-                exists Integer year      = parseInteger(input[0..3]),
-                exists Integer dayOfYear = parseInteger(input[5..7])) {
+                exists year      = parseYear(input[0..3]),
+                exists dayOfYear = parseInteger(input[5..7])) {
                 
                 return date(year, 1, 1).withDayOfYear(dayOfYear);
             }
         }
         // dashes is empty
         else if (exists ch = input[4], ch == 'W',
-                 exists Integer year = parseInteger(input[0..3]),
-                 exists Integer week = parseInteger(input[5..6]),
-                 exists Integer day  = parseInteger(input[7..7])) {
+                 exists year = parseYear(input[0..3]),
+                 exists week = parseInteger(input[5..6]),
+                 exists day  = parseInteger(input[7..7])) {
             
             return date(year, 1, 1).withWeekOfYear(week)
                                    .withDayOfWeek(dayOfWeek(day));
         }
-        else if (exists Integer year  = parseInteger(input[0..3]),
-                 exists Integer month = parseInteger(input[4..5]),
-                 exists Integer day   = parseInteger(input[6..7])) {
+        else if (exists year  = parseYear(input[0..3]),
+                 exists month = parseMonth(input[4..5]),
+                 exists day   = parseInteger(input[6..7])) {
             
             return date(year, month, day);
         }
     }
     else if (input.size == 7, dashes.empty,
-             exists Integer year      = parseInteger(input[0..3]),
-             exists Integer dayOfYear = parseInteger(input[4..6])) {
+             exists year      = parseYear(input[0..3]),
+             exists dayOfYear = parseInteger(input[4..6])) {
         
         return date(year, 1, 1).withDayOfYear(dayOfYear);
     }
@@ -82,3 +82,15 @@ shared Date? parseDate(String input) {
     // if we get here, this is most likely not in any format we recognize
     return null;
 }
+
+Integer?(String) parseYear = parseInteger;
+
+Month? parseMonth(String string) =>
+    if (exists integer = parseInteger(string),
+        exists month = months.valueOf(integer))
+    then month else null;
+
+Integer? parseDayOfMonth(String string, Integer year, Month month) =>
+    if (exists day = parseInteger(string), 
+        1 <= day <= month.numberOfDays())
+    then day else null;
