@@ -5,11 +5,10 @@ see (`interface DateTime`,
      `interface ReadableDateTime`,
      `interface ReadableDate`,
      `interface ReadableTime`)
-shared interface DateTimeBehavior<Element, out DateType, out TimeType> of Element
+shared interface DateTimeBehavior<Element, out DateType, out TimeType>
        satisfies DateBehavior<Element>
                & TimeBehavior<Element>
-               & ReadableDateTime
-       given Element satisfies ReadableDateTime 
+       given Element satisfies ReadableDateTime
        given DateType satisfies ReadableDate
        given TimeType satisfies ReadableTime {
 

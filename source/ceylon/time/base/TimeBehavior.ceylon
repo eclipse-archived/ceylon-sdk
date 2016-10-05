@@ -1,6 +1,5 @@
 "Common behavior for the types that represent time."
-shared interface TimeBehavior<Element> of Element
-       satisfies ReadableTime
+shared interface TimeBehavior<Element>
        given Element satisfies ReadableTime {
 
     "Returns a copy of this period with the specified amount of hours.\n
