@@ -14,3 +14,4 @@ source=./source
 source=./test-source
 resource=./resource
 suppresswarning=ceylonNamespace
+target=7
