@@ -155,7 +155,7 @@ shared object percentEncoder {
                 value bytes = charset.encode(c.string);
                 for (byte in bytes) {
                     encoded.appendCharacter('%');
-                    encoded.append(formatInteger(byte.unsigned, 16)
+                    encoded.append(Integer.format(byte.unsigned, 16)
                         .uppercased.pad(2, '0'));
                 }
             }

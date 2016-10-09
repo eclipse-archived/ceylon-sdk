@@ -38,7 +38,7 @@ HashMap<String,Currency> parseCurrencies(Iterator<String> lines) {
         assert (is String name = langCols.next());
         assert (is String symbol = langCols.next());
         assert (is String digits = langCols.next(), 
-            exists fractionalDigits=parseInteger(digits));
+            is Integer fractionalDigits = Integer.parse(digits));
         currencies[code]
             = Currency {
                 code = code;

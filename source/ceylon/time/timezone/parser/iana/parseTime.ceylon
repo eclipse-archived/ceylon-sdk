@@ -24,22 +24,22 @@ shared alias Signal => Integer;
     value position = atTime.startsWith("-") then 1 else 0;
     
     if(! atTime.firstOccurrence(':') exists ) {
-        assert(exists hours = parseInteger(atTime.spanFrom(position)));
+        assert(is Integer hours = Integer.parse(atTime.spanFrom(position)));
         return [AtWallClockTime(adjustToEndOfDayIfNecessary(hours, 0)), signal];
     }
     
     value indexes = atTime.indexesWhere(':'.equals).sequence();
     
     assert( exists firstIndex = indexes[0] );
-    assert( exists hours = parseInteger(atTime.span(position, firstIndex-1)));
-    assert( exists minutes = parseInteger(atTime.span(firstIndex +1,firstIndex  + 2 )));
+    assert( is Integer hours = Integer.parse(atTime.span(position, firstIndex-1)));
+    assert( is Integer minutes = Integer.parse(atTime.span(firstIndex +1,firstIndex  + 2 )));
     variable value partialTime = adjustToEndOfDayIfNecessary( hours, minutes ); 
     AtTime ruleDefinition;
     if( indexes.size == 1 ) {
         ruleDefinition = atTimeDefinition(partialTime, atTime.spanFrom(firstIndex + 3));
     } else {
         assert( exists secondIndex = indexes[1] );  
-        assert( exists seconds = parseInteger(atTime.span(secondIndex + 1 ,secondIndex  + 2 ))); 
+        assert( is Integer seconds = Integer.parse(atTime.span(secondIndex + 1 ,secondIndex  + 2 )));
         
         partialTime = partialTime.plusSeconds(seconds);   
         ruleDefinition = atTimeDefinition(partialTime, atTime.spanFrom(secondIndex + 3));

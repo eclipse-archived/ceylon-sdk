@@ -45,7 +45,7 @@ class CeylonWebSocketAbstractFrameHandler(
     }
     
     void onCloseMessage(CloseMessage cm, UtWebSocketChannel channel) {
-        if (cm.isValid(cm.code)) {
+        if (CloseMessage.isValid(cm.code)) {
             webSocketEndpoint.onClose(webSocketChannel, CloseReason(cm.code, cm.reason));
         } else {
             webSocketEndpoint.onClose(webSocketChannel, NoReason());

@@ -322,7 +322,7 @@ shared sealed class Formats(
             
         Integer day;
         if (exists dayBit = bits[dayIndex]) {
-            if (exists d = parseInteger(dayBit)) {
+            if (is Integer d = Integer.parse(dayBit)) {
                 day = d;
             }
             else {
@@ -335,7 +335,7 @@ shared sealed class Formats(
         
         Integer month;
         if (exists monthBit = bits[monthIndex]) {
-            if (exists m = parseInteger(monthBit)) {
+            if (is Integer m = Integer.parse(monthBit)) {
                 month = m;
             }
             else if (exists m = monthNames.locate(monthBit.equalsIgnoringCase)) {
@@ -354,7 +354,7 @@ shared sealed class Formats(
         
         Integer year;
         if (exists yearBit = bits[yearIndex]) {
-            if (exists y = parseInteger(yearBit)) {
+            if (is Integer y = Integer.parse(yearBit)) {
                 if (exists twoDigitCutoffYear, y<100) {
                     year = let (century = twoDigitCutoffYear/100,
                                 cutoff = twoDigitCutoffYear%100)
@@ -420,7 +420,7 @@ shared sealed class Formats(
         
         Integer hour;
         if (exists hourBit = bits[0]) {
-            if (exists d = parseInteger(hourBit)) {
+            if (is Integer d = Integer.parse(hourBit)) {
                 hour = d;
             }
             else {
@@ -433,7 +433,7 @@ shared sealed class Formats(
         
         Integer minute;
         if (exists minuteBit = bits[1]) {
-            if (exists m = parseInteger(minuteBit)) {
+            if (is Integer m = Integer.parse(minuteBit)) {
                 minute = m;
             }
             else {
@@ -446,7 +446,7 @@ shared sealed class Formats(
         
         Integer second;
         if (exists secondBit = bits[2]) {
-            if (exists y = parseInteger(secondBit)) {
+            if (is Integer y = Integer.parse(secondBit)) {
                 second = y;
             }
             else {
@@ -459,7 +459,7 @@ shared sealed class Formats(
         
         Integer millis;
         if (exists msBit = bits[3]) {
-            if (exists y = parseInteger(msBit)) {
+            if (is Integer y = Integer.parse(msBit)) {
                 millis = y;
             }
             else {

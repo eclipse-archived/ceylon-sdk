@@ -893,7 +893,13 @@ shared class TestServer() extends ServerTest() {
         value buffSize = 4k;
         value buffer = ByteBuffer.ofSize(buffSize);
         MutableList<Byte> content = LinkedList<Byte>();
-        variable Integer remaining = parseInteger(response.getSingleHeader("content-length") else "0") else 0;
+        value header
+                = response.getSingleHeader("content-length")
+                else "0";
+        variable Integer remaining
+                = if (is Integer len = Integer.parse(header))
+                then len
+                else 0;
         print("cointent-size: ``remaining``");
         variable Integer loops = 0;
         while (true) {

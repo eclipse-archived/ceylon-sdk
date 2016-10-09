@@ -47,7 +47,7 @@ class Options {
                 colorRedArg = arg;
             }
             if (arg.startsWith("--port")) {
-                assert (exists p = parseInteger(arg[7...]));
+                assert (is Integer p = Integer.parse(arg[7...]));
                 portArg = p;
             }
             if (arg == "--tap") {

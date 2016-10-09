@@ -19,7 +19,7 @@ import ceylon.time.base {
 shared ZoneUntil parseUntil([String*] token) {
     variable Date result = date(0, january, 1);
     if( exists yearText = token[0], yearText != "") {
-        assert(exists year = parseInteger(yearText));
+        assert(is Integer year = Integer.parse(yearText));
         result = result.withYear(year);
     } else {
         return untilPresent;

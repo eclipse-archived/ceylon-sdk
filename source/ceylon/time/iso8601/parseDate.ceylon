@@ -28,7 +28,7 @@ import ceylon.time.base {
    There is no support for abbreviated 2 digit format or year values larger than 4 digits.
    """
 shared Date? parseDate(String input) {
-    value dashes = input.indexesWhere(function(c) => c == '-').sequence();
+    value dashes = input.indexesWhere('-'.equals).sequence();
     
     if (input.size == 10) {
         if (dashes == [4,7],
@@ -40,8 +40,8 @@ shared Date? parseDate(String input) {
         }
         else if (dashes == [4,8], exists ch = input[5], ch == 'W',
                  exists year = parseYear(input[0..3]),
-                 exists week = parseInteger(input[6..7]),
-                 exists day  = parseInteger(input[9..9])) {
+                 exists week = parseWeek(input[6..7]),
+                 exists day  = parseDay(input[9..9])) {
             
             return date(year, 1, 1).withWeekOfYear(week)
                                    .withDayOfWeek(dayOfWeek(day));
@@ -51,7 +51,7 @@ shared Date? parseDate(String input) {
         if (nonempty dashes) {
             if (dashes == [4],
                 exists year      = parseYear(input[0..3]),
-                exists dayOfYear = parseInteger(input[5..7])) {
+                exists dayOfYear = parseDay(input[5..7])) {
                 
                 return date(year, 1, 1).withDayOfYear(dayOfYear);
             }
@@ -59,22 +59,22 @@ shared Date? parseDate(String input) {
         // dashes is empty
         else if (exists ch = input[4], ch == 'W',
                  exists year = parseYear(input[0..3]),
-                 exists week = parseInteger(input[5..6]),
-                 exists day  = parseInteger(input[7..7])) {
+                 exists week = parseWeek(input[5..6]),
+                 exists day  = parseDay(input[7..7])) {
             
             return date(year, 1, 1).withWeekOfYear(week)
                                    .withDayOfWeek(dayOfWeek(day));
         }
         else if (exists year  = parseYear(input[0..3]),
                  exists month = parseMonth(input[4..5]),
-                 exists day   = parseInteger(input[6..7])) {
+                 exists day   = parseDay(input[6..7])) {
             
             return date(year, month, day);
         }
     }
     else if (input.size == 7, dashes.empty,
              exists year      = parseYear(input[0..3]),
-             exists dayOfYear = parseInteger(input[4..6])) {
+             exists dayOfYear = parseDay(input[4..6])) {
         
         return date(year, 1, 1).withDayOfYear(dayOfYear);
     }
@@ -83,7 +83,13 @@ shared Date? parseDate(String input) {
     return null;
 }
 
-Integer?(String) parseYear = parseInteger;
+Integer? parseInteger(String string)
+        => if (is Integer result = Integer.parse(string))
+        then result else null;
+
+Integer? parseWeek(String string) => parseInteger(string);
+Integer? parseDay(String string) => parseInteger(string);
+Integer? parseYear(String string) => parseInteger(string);
 
 Month? parseMonth(String string) =>
     if (exists integer = parseInteger(string),
@@ -91,6 +97,6 @@ Month? parseMonth(String string) =>
     then month else null;
 
 Integer? parseDayOfMonth(String string, Integer year, Month month) =>
-    if (exists day = parseInteger(string), 
+    if (exists day = parseInteger(string),
         1 <= day <= month.numberOfDays())
     then day else null;

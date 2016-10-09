@@ -204,7 +204,7 @@ shared class Response(status, reason, major, minor,
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13
 
         if(exists header = getSingleHeader("Content-Length"),
-           exists int = parseInteger(header)) {
+           is Integer int = Integer.parse(header)) {
             // Spec says that negative numbers should not count
             return int >= 0 then int;
         }

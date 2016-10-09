@@ -110,7 +110,7 @@ shared Integer|Float parseNumber(Tokenizer tokenizer){
         String exponentAsString = if (exists exponent) then "e``exponent``" else "";
         String negativeSign = negative then "-" else "";
         String floatAsString = "``negativeSign````wholePart``.``digitsAfterDecimal````exponentAsString``";
-        Float? float = parseFloat(floatAsString);
+        Float? float = if (is Float f = Float.parse(floatAsString)) then f else null;
         assert(exists float); // the structure above guarantees it will be a valid float
         return float;
     }

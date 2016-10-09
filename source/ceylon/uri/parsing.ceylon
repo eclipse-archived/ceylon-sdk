@@ -81,7 +81,9 @@ shared Uri parse(String uri) {
             }
         }
         if(exists portString) {
-            authorityPort = parseInteger(portString);
+            authorityPort
+                    = if (is Integer port = Integer.parse(portString))
+                    then port else null;
             if(exists Integer port = authorityPort) {
                 if(port < 0) {
                     throw InvalidUriException("Invalid port number: "+portString);

@@ -25,7 +25,11 @@ String formatWhole(
 
     // TODO better would be whole.integerRepresentable
     if (whole.safelyAddressable) {
-        return formatInteger(whole.integer, radix, groupingSeparator);
+        return Integer.format {
+            integer = whole.integer;
+            radix = radix;
+            groupingSeparator = groupingSeparator;
+        };
     }
 
     if (whole.zero) {

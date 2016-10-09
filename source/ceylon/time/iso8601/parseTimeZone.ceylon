@@ -35,17 +35,17 @@ shared TimeZone? parseTimeZone( String offset ) {
         value rest = offset[1...];
         
         if (rest.size == 5,
-            exists hh = parseInteger(rest[...1]),
-            exists mm = parseInteger(rest[3...])) {
+            is Integer hh = Integer.parse(rest[...1]),
+            is Integer mm = Integer.parse(rest[3...])) {
             return offsetTimeZone(hh, mm);
         }   
         else if (rest.size == 4,
-            exists hh = parseInteger(rest[...1]),
-            exists mm = parseInteger(rest[2...])) {
+            is Integer hh = Integer.parse(rest[...1]),
+            is Integer mm = Integer.parse(rest[2...])) {
             return offsetTimeZone(hh, mm);
         }   
         else if (rest.size == 2,
-            exists hh = parseInteger(rest[...1])) {
+            is Integer hh = Integer.parse(rest[...1])) {
             return offsetTimeZone(hh, 0);
         }      
     }

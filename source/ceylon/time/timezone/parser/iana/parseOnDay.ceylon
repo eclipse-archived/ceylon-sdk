@@ -30,6 +30,9 @@ shared OnDay parseOnDay(String token) {
     if (token.startsWith("last")) {
         result = [null, findDayOfWeek(token.spanFrom(4)), larger];
     } else {
+        function parseInteger(String string)
+            => if (is Integer int = Integer.parse(string))
+            then int else null;
         value gtIdx = token.firstInclusion(">=");
         value stIdx = token.firstInclusion("<=");
         if (exists gtIdx , gtIdx > 0) {

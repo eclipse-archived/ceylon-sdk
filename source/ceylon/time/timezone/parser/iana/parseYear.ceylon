@@ -11,6 +11,6 @@ Integer parseYear(String year, Integer defaultYear) {
         return defaultYear;
     }
     
-    assert(exists resultYear = parseInteger(year) );
+    assert(is Integer resultYear = Integer.parse(year) );
     return  resultYear;
 }

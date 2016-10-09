@@ -40,16 +40,20 @@ Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
 
 [Integer, Integer, Integer, Integer]? parseTimeComponents(String input) {
     function calculateFraction(Integer magnitude, String fractionPart) 
-            => if (fractionPart.empty) then 00
-               else let (Float? fraction = parseFloat("0." + fractionPart))
-                    if (exists fraction) then (magnitude * fraction).integer else null;
+            => if (fractionPart.empty)
+                    then 00
+               else if (is Float fraction = Float.parse("0." + fractionPart))
+                    then (magnitude * fraction).integer
+               else null;
 
     function parseMilliseconds(String fractionPart)
-            => if (fractionPart.empty) then 000 
-               else if (fractionPart.size > 3) then null
-               else if (exists sss = parseInteger(fractionPart)) 
-                        then sss * (10 ^ (3 - fractionPart.size))
-                        else null;
+            => if (fractionPart.empty)
+                    then 000
+               else if (fractionPart.size > 3)
+                    then null
+               else if (is Integer sss = Integer.parse(fractionPart))
+                    then sss * (10 ^ (3 - fractionPart.size))
+               else null;
      
     function fractionalHours(Integer hh, Integer ms)
             => if (ms == 0)
@@ -77,7 +81,7 @@ Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
     }
     
     if (timePart.size == 2) {
-        if (exists hh = parseInteger(timePart),
+        if (is Integer hh = Integer.parse(timePart),
             exists ms = calculateFraction(milliseconds.perHour, fractionPart)) {
 
             return fractionalHours(hh, ms);
@@ -87,9 +91,9 @@ Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
         if (timePart.occursAt(2, ':'),
             timePart.occursAt(5, ':')) {
             
-            if (exists hh  = parseInteger(timePart[0..1]),
-                exists mm  = parseInteger(timePart[3..4]),
-                exists ss  = parseInteger(timePart[6..7]),
+            if (is Integer hh = Integer.parse(timePart[0..1]),
+                is Integer mm = Integer.parse(timePart[3..4]),
+                is Integer ss = Integer.parse(timePart[6..7]),
                 exists sss = parseMilliseconds(fractionPart)) {
                 
                 return [hh, mm, ss, sss];
@@ -97,9 +101,9 @@ Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
         }
     }
     else if (timePart.size == 6) {
-        if (exists hh  = parseInteger(timePart[0..1]),
-            exists mm  = parseInteger(timePart[2..3]),
-            exists ss  = parseInteger(timePart[4..5]),
+        if (is Integer hh = Integer.parse(timePart[0..1]),
+            is Integer mm = Integer.parse(timePart[2..3]),
+            is Integer ss = Integer.parse(timePart[4..5]),
             exists sss = parseMilliseconds(fractionPart)) {
             
             return [hh, mm, ss, sss];
@@ -108,8 +112,8 @@ Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
     else if (timePart.size == 5) {
         if (timePart.occursAt(2, ':')) {
             
-            if (exists hh = parseInteger(timePart[0..1]),
-                exists mm = parseInteger(timePart[3..4]),
+            if (is Integer hh = Integer.parse(timePart[0..1]),
+                is Integer mm = Integer.parse(timePart[3..4]),
                 exists ms = calculateFraction(milliseconds.perMinute, fractionPart)) {
                 
                 return fractionalMinutes(hh, mm, ms);
@@ -117,8 +121,8 @@ Time? convertToTime([Integer, Integer, Integer, Integer]? timeComponents) {
         }
     }
     else if (timePart.size == 4) {
-        if (exists hh = parseInteger(timePart[0..1]),
-            exists mm = parseInteger(timePart[2..3]),
+        if (is Integer hh = Integer.parse(timePart[0..1]),
+            is Integer mm = Integer.parse(timePart[2..3]),
             exists ms = calculateFraction(milliseconds.perMinute, fractionPart)) {
 
             return fractionalMinutes(hh, mm, ms);
