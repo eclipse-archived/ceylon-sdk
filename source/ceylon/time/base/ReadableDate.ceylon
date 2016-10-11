@@ -10,13 +10,7 @@ see(`interface Date`,
     `interface Time`,
     `interface DateTime`,
     `interface ZoneDateTime`)
-shared interface ReadableDate {
-
-    "The year of the date."
-    shared formal Integer year;
-
-    "Month of the year value of the date."
-    shared formal Month month;
+shared interface ReadableDate satisfies ReadableYear & ReadableMonth {
 
     "Day of month value of the date."
     shared formal Integer day;
@@ -32,8 +26,5 @@ shared interface ReadableDate {
 
     "Number of calendar days since ERA."
     shared formal Integer dayOfEra;
-
-    "True if the year of the date is a leap year."
-    shared formal Boolean leapYear;
 
 }
