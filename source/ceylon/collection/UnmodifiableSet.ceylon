@@ -10,7 +10,7 @@ serializable class UnmodifiableSet<out Element>(Set<Element> set)
     
     size => set.size;
     
-    contains(Object element) => set.contains(element);
+    contains(Object element) => element in set;
     
     shared actual Set<Element> complement<Other>(Set<Other> set)
             given Other satisfies Object 

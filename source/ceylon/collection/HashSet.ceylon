@@ -362,7 +362,7 @@ shared serializable class HashSet<Element>
             while (index < store.size) {
                 variable value bucket = store[index];
                 while (exists cell = bucket) {
-                    if (!that.contains(cell.element)) {
+                    if (!cell.element in that) {
                         return false;
                     }
                     bucket = cell.rest;

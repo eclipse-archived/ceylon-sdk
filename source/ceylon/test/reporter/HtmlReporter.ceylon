@@ -12,11 +12,11 @@ import ceylon.test {
     TestListener,
     TestState
 }
-import ceylon.test.event {
-    TestRunFinishedEvent
-}
 import ceylon.test.engine.internal {
     FileWriter
+}
+import ceylon.test.event {
+    TestRunFinishedEvent
 }
 
 import java.text {
@@ -227,7 +227,7 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
         value testedModules = ArrayList<Module>();
         for(r in result.results) {
             if( exists m = r.description.functionDeclaration?.containingModule ) {
-                if( !testedModules.contains(m) ) {
+                if( !m in testedModules ) {
                     testedModules.add(m);
                 }
             }

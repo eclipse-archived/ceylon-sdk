@@ -85,9 +85,8 @@ object escapableRawText satisfies EscapableType {
 
 \Itext | \IrawText | \IescapableRawText typeForElement(String element)
     =>  let (lower = element.lowercased)
-        if (rawTextElements.contains(lower)) then
-            rawText
-        else if (escapableRawTextElements.contains(lower)) then
-            escapableRawText
-        else
-            text;
+        if (lower in rawTextElements)
+            then rawText
+        else if (lower in escapableRawTextElements)
+            then escapableRawText
+        else text;

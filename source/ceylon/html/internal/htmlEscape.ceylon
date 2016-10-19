@@ -6,8 +6,7 @@ String htmlEscape(
     switch (type)
     case (is \Iname) {
         assert(name.isValid(raw));
-        if (escapeNonAscii && raw.any((c)
-                => !asciiCharacterRange.contains(c))) {
+        if (escapeNonAscii && raw.any((c) => !c in asciiCharacterRange)) {
             throw Exception(
                 "Unescapable non-ascii character found in tag name '``raw``'.");
         }
@@ -18,19 +17,19 @@ String htmlEscape(
         value lowerRaw = raw.lowercased;
         value lowerTag = forTag.lowercased;
         // make sure doesn't contain something like "</script"
-        if (lowerRaw.contains("</" + lowerTag)) {
+        if (("</" + lowerTag) in lowerRaw) {
             throw Exception(
                 "Unescapable string '</``forTag``' found in rawText content.");
         }
         // disallow comments (if necessary, a comment node type should be created)
-        if (raw.contains("<!--")) {
+        if ("<!--" in raw) {
             throw Exception(
                 "Unescapable string '<!--' found in rawText content.");
         }
         // make sure only ascii chars are present if escapeNonAscii is true
         if (escapeNonAscii && raw.any((c)
-                => !asciiCharacterRange.contains(c)
-                        && c != '\r' && c != '\n' && c != '\t')) {
+                    => !c in asciiCharacterRange
+                    && c != '\r' && c != '\n' && c != '\t')) {
             throw Exception(
                 "Unescapable non-ascii character found in rawText content.");
         }

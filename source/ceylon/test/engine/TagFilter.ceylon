@@ -31,12 +31,12 @@ shared class TagFilter({String*} filters) {
         for (filter in filters) {
             if (filter.startsWith("!")) {
                 excludeTags++;
-                if (testTags.contains(filter.spanFrom(1))) {
+                if (filter[1...] in testTags) {
                     excludeVote++;
                 }
             } else {
                 includeTags++;
-                if (testTags.contains(filter)) {
+                if (filter in testTags) {
                     includeVote++;
                 }
             }

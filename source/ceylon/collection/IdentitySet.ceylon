@@ -203,7 +203,7 @@ shared serializable class IdentitySet<Element>
             while (index < store.size) {
                 variable value bucket = store[index];
                 while (exists cell = bucket) {
-                    if (!that.contains(cell.element)) {
+                    if (!cell.element in that) {
                         return false;
                     }
                     bucket = cell.rest;
@@ -279,7 +279,7 @@ shared serializable class IdentitySet<Element>
             given Other satisfies Identifiable {
         value ret = IdentitySet<Element>();
         for (elem in this) {
-            if (!set.contains(elem)) {
+            if (!elem in set) {
                 ret.add(elem);
             }
         }
@@ -291,7 +291,7 @@ shared serializable class IdentitySet<Element>
             given Other satisfies Identifiable {
         value ret = IdentitySet<Element|Other>();
         for (elem in this) {
-            if (!set.contains(elem)) {
+            if (!elem in set) {
                 ret.add(elem);
             }
         }
@@ -308,7 +308,7 @@ shared serializable class IdentitySet<Element>
             given Other satisfies Identifiable {
         value ret = IdentitySet<Element&Other>();
         for (elem in this) {
-            if (set.contains(elem), is Other elem) {
+            if (elem in set, is Other elem) {
                 ret.add(elem);
             }
         }

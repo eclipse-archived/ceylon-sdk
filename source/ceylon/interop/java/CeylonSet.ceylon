@@ -20,7 +20,7 @@ shared class CeylonSet<out Element>(JSet<out Element> set)
             given Other satisfies Object {
         value complement = HashSet<Element>();
         for (e in this) {
-            if (!set.contains(e)) {
+            if (!e in set) {
                 complement.add(e);
             }
         }
@@ -32,7 +32,7 @@ shared class CeylonSet<out Element>(JSet<out Element> set)
             given Other satisfies Object {
         value exclusiveUnion = HashSet<Element|Other>();
         for (e in this) {
-            if (!set.contains(e)) {
+            if (!e in set) {
                 exclusiveUnion.add(e);
             }
         }
@@ -49,7 +49,7 @@ shared class CeylonSet<out Element>(JSet<out Element> set)
             given Other satisfies Object {
         value intersection = HashSet<Element&Other>();
         for (e in this) {
-            if (is Other e, set.contains(e)) {
+            if (is Other e, e in set) {
                 intersection.add(e);
             }
         }

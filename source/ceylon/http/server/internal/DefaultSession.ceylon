@@ -19,7 +19,7 @@ class DefaultSession(UtSession utSession)
             => utSession.getAttribute(key);
     
     defines(String key)
-            => utSession.attributeNames.contains(javaString(key));
+            => javaString(key) in utSession.attributeNames;
     
     put(String key, Object item) 
             => utSession.setAttribute(key, item);

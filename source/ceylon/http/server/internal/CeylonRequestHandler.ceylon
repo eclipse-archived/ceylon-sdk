@@ -1,3 +1,6 @@
+import ceylon.collection {
+    LinkedList
+}
 import ceylon.http.common {
     Method,
     allow,
@@ -21,9 +24,6 @@ import io.undertow.server.handlers.form {
     FormParserFactory {
         formParserFactoryBuilder=builder
     }
-}
-import ceylon.collection {
-    LinkedList
 }
 
 by("Matej Lazar")
@@ -120,33 +120,25 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints)
     }
 
     """Returns endpoints matching method. If method is not defined on endpoint it accepts all methods."""
-    {HttpEndpoint*} filterSupportedMethod({HttpEndpoint*} endpoints, Method method) {
-        return endpoints.filter((endpoint) {
-            if (endpoint.acceptMethod.size > 0) {
-                return endpoint.acceptMethod.contains(method);
-            } else {
-                return true;
-            }
-        });
-    }
+    {HttpEndpoint*} filterSupportedMethod({HttpEndpoint*} endpoints, Method method)
+            => endpoints.filter((endpoint)
+                => if (endpoint.acceptMethod.size > 0)
+                then method in endpoint.acceptMethod
+                else true);
 
-    {HttpEndpoint*} filterHttpEndpoints({EndpointBase*} endpoints) {
-        value httpEndpoints = LinkedList<HttpEndpoint>();
-        for (EndpointBase endoint in endpoints) {
-            if (is HttpEndpoint endoint) {
-                httpEndpoints.add(endoint);
-            }
-        }
-        return httpEndpoints;
-    }
+    {HttpEndpoint*} filterHttpEndpoints({EndpointBase*} endpoints)
+            => LinkedList<HttpEndpoint> {
+                for (endpoint in endpoints)
+                if (is HttpEndpoint endpoint)
+                endpoint
+            };
 
-    {Method*} getAllAcceptedMethods({HttpEndpoint*} endpoints) {
-        value acceptedMethods = LinkedList<Method>();
-        for (HttpEndpoint endoint in endpoints) {
-            acceptedMethods.addAll(endoint.acceptMethod);
-        }
-        return acceptedMethods;
-    }
+    {Method*} getAllAcceptedMethods({HttpEndpoint*} endpoints)
+            => LinkedList<Method> {
+                for (endpoint in endpoints)
+                for (method in endpoint.acceptMethod)
+                method
+            };
 
     void endExchange(JHttpServerExchange? httpServerExchange) {
         if (exists httpServerExchange) {

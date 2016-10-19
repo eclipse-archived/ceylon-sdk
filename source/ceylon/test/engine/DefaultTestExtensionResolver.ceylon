@@ -60,8 +60,8 @@ shared class DefaultTestExtensionResolver() satisfies TestExtensionResolver {
     }
     
     TestExtension resolveExtensionInstance(ClassDeclaration extensionClass) {
-        if (extensionCache.keys.contains(extensionClass)) {
-            assert (exists extension = extensionCache.get(extensionClass));
+        if (extensionClass in extensionCache) {
+            assert (exists extension = extensionCache[extensionClass]);
             return extension;
         }
         else {

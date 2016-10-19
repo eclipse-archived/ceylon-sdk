@@ -43,7 +43,7 @@ shared class TestEventEmitter({TestListener*} listeners) satisfies TestListener 
     
     void fire(Anything(TestListener) handler, Boolean propagateException = false, TestListener* problematicListeners) {
         for (listener in listeners) {
-            if (!problematicListeners.contains(listener)) {
+            if (!listener in problematicListeners) {
                 try {
                     handler(listener);
                 }

@@ -171,11 +171,11 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
             && !(isOpenTag && elementStack.empty)
                 && lastOutputWasStartOrEndTag
                 && (previousStartOrEndTagWasBlock
-            || indentElements.contains(elementName.lowercased))) {
+            || elementName.lowercased in indentElements)) {
             write("\n" + " ".repeat(elementStack.size * indentSize));
         }
         previousStartOrEndTagWasBlock = prettyPrint
-                && indentElements.contains(elementName.lowercased);
+                && elementName.lowercased in indentElements;
     }
     
     void flush() {
@@ -207,7 +207,7 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
                         + "\"");
             }
             if (end) {
-                if (voidElements.contains(elementName.lowercased)) {
+                if (elementName.lowercased in voidElements) {
                     if (configuration.closeVoidElements) {
                         write(" /");
                     }
@@ -220,7 +220,7 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
                     write("></" + escape(elementName, package.name) + ">");
                 }
                 previousStartOrEndTagWasBlock = prettyPrint
-                        && indentElements.contains(elementName.lowercased);
+                        && elementName.lowercased in indentElements;
             } else {
                 write(">");
                 presOnStack += elementName == "pre" then 1 else 0;
