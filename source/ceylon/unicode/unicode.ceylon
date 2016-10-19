@@ -516,7 +516,7 @@ shared {String*} graphemes(
         value breakIterator = 
                 getCharacterInstance(locale(tag));
         breakIterator.setText(text);
-        value str = javaString(text);
+        value str = javaString(text); //BreakIterator indexes by Java char
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();
@@ -547,7 +547,7 @@ shared {String*} words(
         value breakIterator = 
                 getWordInstance(locale(tag));
         breakIterator.setText(text);
-        value str = javaString(text);
+        value str = javaString(text); //BreakIterator indexes by Java char
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();
@@ -579,7 +579,7 @@ shared {String*} sentences(
         value breakIterator = 
                 getSentenceInstance(locale(tag));
         breakIterator.setText(text);
-        value str = javaString(text);
+        value str = javaString(text); //BreakIterator indexes by Java char
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();
