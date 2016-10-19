@@ -1,14 +1,16 @@
+import ceylon.collection {
+    HashMap,
+    HashSet
+}
+import ceylon.language.meta {
+    typeLiteral
+}
 import ceylon.language.meta.declaration {
     ClassDeclaration,
     InterfaceDeclaration
 }
-import ceylon.test.engine.spi {
-    TestExtension,
-    TestExtensionResolver
-}
-import ceylon.collection {
-    HashMap,
-    HashSet
+import ceylon.language.meta.model {
+    Interface
 }
 import ceylon.test {
     TestDescription
@@ -16,11 +18,9 @@ import ceylon.test {
 import ceylon.test.annotation {
     TestExtensionAnnotation
 }
-import ceylon.language.meta {
-    typeLiteral
-}
-import ceylon.language.meta.model {
-    Interface
+import ceylon.test.engine.spi {
+    TestExtension,
+    TestExtensionResolver
 }
 
 "Default implementation of [[TestExtensionResolver]]."
@@ -60,7 +60,7 @@ shared class DefaultTestExtensionResolver() satisfies TestExtensionResolver {
     }
     
     TestExtension resolveExtensionInstance(ClassDeclaration extensionClass) {
-        if (extensionClass in extensionCache) {
+        if( extensionCache.defines(extensionClass) ) {
             assert (exists extension = extensionCache[extensionClass]);
             return extension;
         }
