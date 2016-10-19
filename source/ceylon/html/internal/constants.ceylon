@@ -1,7 +1,4 @@
-import ceylon.collection {
-    unmodifiableSet,
-    HashSet
-}
+
 
 Range<Character> asciiCharacterRange = ' '..'~';
 
@@ -37,34 +34,29 @@ Range<Character> asciiCharacterRange = ' '..'~';
     *xmlNameStartCharRanges];
 
 // http://www.w3.org/TR/html5/syntax.html#elements-0
-Set<String> voidElements = unmodifiableSet(HashSet {
+Set<String> voidElements = set {
         "area", "base", "br", "col", "embed", "hr",
         "img", "input", "keygen", "link", "meta",
-        "param", "source", "track", "wbr" });
+        "param", "source", "track", "wbr" };
 
 // http://www.w3.org/TR/html5/syntax.html#elements-0
-Set<String> rawTextElements = unmodifiableSet(HashSet {
-        "script", "style" });
+Set<String> rawTextElements = set {
+        "script", "style" };
 
 // http://www.w3.org/TR/html5/syntax.html#elements-0
-Set<String> escapableRawTextElements = unmodifiableSet(HashSet {
-        "textarea", "title" });
+Set<String> escapableRawTextElements = set {
+        "textarea", "title" };
 
-Set<String> blockElements = unmodifiableSet(HashSet {
+Set<String> blockElements = set {
         "address", "article", "aside", "audio", "blockquote", "canvas",
         "dd", "div", "dl", "fieldset", "figcaption", "figure", "footer",
         "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup",
         "hr", "li", "main", "nav", "noscript", "ol", "output", "p", "pre",
-        "section", "table", "tfoot", "tr", "ul", "video" });
+        "section", "table", "tfoot", "tr", "ul", "video" };
 
-Set<String> metadataElements = unmodifiableSet(HashSet {
+Set<String> metadataElements = set {
         "base", "command", "link", "meta", "noscript",
-        "script", "style", "title" });
+        "script", "style", "title" };
 
-Set<String> indentElements = (function() {
-        value set = HashSet<String>();
-        set.addAll(blockElements);
-        set.addAll(metadataElements);
-        set.addAll({ "html", "head", "body" });
-        return unmodifiableSet(set);
-    })();
+Set<String> indentElements = blockElements | metadataElements
+                           | set { "html", "head", "body" };
