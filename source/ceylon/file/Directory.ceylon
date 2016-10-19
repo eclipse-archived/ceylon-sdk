@@ -1,6 +1,3 @@
-import ceylon.collection {
-    ArrayList
-}
 import ceylon.file.internal {
     temporaryDirectoryInternal=temporaryDirectory
 }
@@ -92,15 +89,9 @@ shared sealed interface Directory
 "The `Directory`s representing the root directories of
  the default file system."
 see(`value defaultSystem`)
-shared Directory[] rootDirectories {
-    value sb = ArrayList<Directory>();
-    for (p in rootPaths) {
-        if (is Directory r=p.resource) {
-            sb.add(r);
-        }
-    }
-    return sb.sequence();
-}
+shared Directory[] rootDirectories
+    =>  [ for (p in rootPaths)
+          if (is Directory r=p.resource) r];
 
 "The system default temporary directory."
 shared Directory temporaryDirectory = temporaryDirectoryInternal();
