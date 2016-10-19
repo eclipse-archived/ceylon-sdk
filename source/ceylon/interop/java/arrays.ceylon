@@ -374,7 +374,7 @@ shared ShortArray createJavaShortArray({Integer*} elements)
 "Create a new [[ByteArray]], that is, a Java `byte[]`
  array, with the given elements."
 shared ByteArray createJavaByteArray({Byte*} elements)
-        => javaByteArray(Array { for (i in elements) i });
+        => javaByteArray(Array(elements));
 
 "Create a new [[FloatArray]], that is, a Java `float[]`
  array, with the given elements."
