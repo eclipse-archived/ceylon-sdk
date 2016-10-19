@@ -1,14 +1,11 @@
 import ceylon.html {
     ...
 }
-import ceylon.collection {
-    LinkedList
-}
 
 shared class HtmlRenderer(void write(String string), RenderingConfiguration configuration) {
     
     value bufferedText = StringBuilder();
-    value elementStack = LinkedList<String>();
+    value elementStack = Stack<String>();
     variable value presOnStack = 0;
     value prettyPrint => configuration.prettyPrint && presOnStack == 0;
     variable value lastOutputWasStartOrEndTag = true;
@@ -235,4 +232,33 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
         return htmlEscape(raw, type, configuration.escapeNonAscii, elementStack.top);
     }
     
+}
+
+class Stack<Element>()
+        given Element satisfies Object {
+    variable {Element*} elements = {};
+    variable value elementsSize = 0;
+
+    shared Integer size => elementsSize;
+    shared Boolean empty => size == 0;
+
+    "The element currently at the top of the stack, or null
+     if the stack is empty."
+    shared Element? top => elements.first;
+
+    "Remove and return the element at the top of the stack."
+    shared Element? pop() {
+        value result = elements.first;
+        elements = elements.rest;
+        if (result exists) {
+            elementsSize--;
+        }
+        return result;
+    }
+
+    "Push a new element onto the top of the stack."
+    shared void push(Element element) {
+        elements = elements.follow(element);
+        elementsSize++;
+    }
 }
