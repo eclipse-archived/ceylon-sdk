@@ -195,9 +195,9 @@ class RequestImpl(HttpServerExchange exchange,
             Boolean forceFormParse) {
 
         value mergedParams = ArrayList<String>();
-        if (queryParametersMap.keys.contains(name)) {
+        if (name in queryParametersMap.keys) {
             if (exists params = queryParametersMap[name]) {
-                if (forceFormParse || initialized(lazyFormData)) {
+                if (forceFormParse || lazyFormData exists) {
                     mergedParams.addAll(params);
                 } else {
                     return params;
@@ -294,10 +294,4 @@ class RequestImpl(HttpServerExchange exchange,
         }
     }
 
-    Boolean initialized(Object? obj) { 
-        if (exists obj) {
-            return true;
-        }
-        return false;
-    }
 }
