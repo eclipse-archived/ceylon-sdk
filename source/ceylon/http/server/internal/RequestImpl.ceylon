@@ -53,9 +53,6 @@ import java.io {
     InputStreamReader,
     ByteArrayOutputStream
 }
-import java.lang {
-    JString=String
-}
 
 by("Matej Lazar")
 class RequestImpl(HttpServerExchange exchange, 
@@ -140,12 +137,8 @@ class RequestImpl(HttpServerExchange exchange,
         
         value utFormData = getUtFormData();
         
-        value formDataIt = utFormData.iterator();
-        while (formDataIt.hasNext()) {
-            JString key = formDataIt.next(); 
-            value valuesIt = utFormData.get(key.string).iterator();
-            while (valuesIt.hasNext()) {
-                value parameterValue = valuesIt.next();
+        for (key in utFormData) {
+            for (parameterValue in utFormData.get(key.string)) {
                 if (paramIsFile(parameterValue)) {
                     value uploadedFile = UploadedFile { 
                         file = parsePath(paramFile(parameterValue).absolutePath);
@@ -164,15 +157,10 @@ class RequestImpl(HttpServerExchange exchange,
     Map<String, String[]> readQueryParameters() {
         value queryParameters = HashMap<String, String[]>();
         value utQueryParameters = exchange.queryParameters;
-        
-        value it = utQueryParameters.keySet().iterator();
-        while (it.hasNext()) {
-            JString key = it.next();
-            value values = utQueryParameters.get(key); 
-            value valuesIt = values.iterator();
+        //TODO: is there a good reason we don't iterate the entrySet() here?
+        for (key in utQueryParameters.keySet()) {
             value sequenceBuilder = ArrayList<String>();
-            while (valuesIt.hasNext()) {
-                value paramValue = valuesIt.next(); 
+            for (paramValue in utQueryParameters.get(key)) {
                 sequenceBuilder.add(paramValue.string);
             }
             queryParameters[key.string] = sequenceBuilder.sequence();
@@ -196,18 +184,9 @@ class RequestImpl(HttpServerExchange exchange,
         => if (nonempty params = formData.parameters[name])
             then params.first else null;
 
-    shared actual String[] headers(String name) {
-        value headers = exchange.requestHeaders.get(HttpString(name));
-        value sequenceBuilder = ArrayList<String>();
-        
-        value it = headers.iterator();
-        while (it.hasNext()) {
-            value header = it.next();
-            sequenceBuilder.add(header.string);
-        }
-        
-        return sequenceBuilder.sequence();
-    }
+    shared actual String[] headers(String name)
+            => [ for (header in exchange.requestHeaders.get(HttpString(name)))
+                 header.string ];
 
 	deprecated("Not specifying if the parameter's values should come from the query part
 	            in the URL or from the request body is discouraged at this level.

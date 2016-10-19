@@ -2,10 +2,6 @@ import ceylon.file {
     ...
 }
 
-import ceylon.collection {
-    ArrayList
-}
-
 import java.nio.file {
     JPath=Path,
     Files {
@@ -204,15 +200,9 @@ class ConcreteDirectory(JPath jpath)
         satisfies JavaNIODirectory {
     
     shared actual {Path*} childPaths(String filter) {
-        //TODO: efficient impl
-        value sb = ArrayList<Path>();
-        value stream = newDirectoryStream(jpath, filter);
-        value iter = stream.iterator();
-        while (iter.hasNext()) {
-            sb.add(ConcretePath(iter.next()));
+        try (stream = newDirectoryStream(jpath, filter)) {
+            return [for (path in stream) ConcretePath(path)];
         }
-        stream.close();
-        return sb.sequence();
     }
     
     path => ConcretePath(jpath); 

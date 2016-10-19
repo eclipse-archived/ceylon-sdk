@@ -2,10 +2,6 @@ import ceylon.file {
     ...
 }
 
-import ceylon.collection {
-    ArrayList
-}
-
 import java.lang {
     JString=String
 }
@@ -33,26 +29,12 @@ class ConcreteSystem(FileSystem fs)
     
     writeable => !fs.readOnly;
     
-    parsePath(String pathString) =>
-            ConcretePath(fs.getPath(pathString));
+    parsePath(String pathString)
+            => ConcretePath(fs.getPath(pathString));
      
-    shared actual Path[] rootPaths {
-        value sb = ArrayList<Path>();
-        value iter = fs.rootDirectories.iterator();
-        while (iter.hasNext()) {
-            sb.add(ConcretePath(iter.next()));
-        }
-        return sb.sequence();
-    }
+    rootPaths => [for (path in fs.rootDirectories) ConcretePath(path)];
     
-    shared actual Store[] stores {
-        value sb = ArrayList<Store>();
-        value iter = fs.fileStores.iterator();
-        while (iter.hasNext()) {
-            sb.add(ConcreteStore(iter.next()));
-        }
-        return sb.sequence();
-    }
+    stores => [for (store in fs.fileStores) ConcreteStore(store)];
     
 }
 
@@ -61,6 +43,5 @@ shared System createSystem(String uriString, <String->String>* properties) {
     for (entry in properties) {
         map[JString(entry.key)] = JString(entry.item);
     }
-    value fs = newFileSystem(newURI(uriString), map);
-    return ConcreteSystem(fs);
+    return ConcreteSystem(newFileSystem(newURI(uriString), map));
 }

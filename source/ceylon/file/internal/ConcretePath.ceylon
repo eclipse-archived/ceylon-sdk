@@ -1,6 +1,3 @@
-import ceylon.collection {
-    ArrayList
-}
 import ceylon.file {
     ...
 }
@@ -41,23 +38,14 @@ shared Path parsePath(String pathString) =>
 shared Path parseURI(String uriString) =>
         ConcretePath(newPath(newURI(uriString)));
 
-shared Path[] rootPaths {
-    value sb = ArrayList<Path>();
-    value iter = defaultFileSystem.rootDirectories.iterator();
-    while (iter.hasNext()) {
-        sb.add(ConcretePath(iter.next()));
-    }
-    return sb.sequence();
-}
+shared Path[] rootPaths
+        => [ for (path in defaultFileSystem.rootDirectories)
+             ConcretePath(path) ];
 
-JPath asJPath(String|Path path, JPath systemPath) {
-    if (is ConcretePath path) {
-        return path.jpath;
-    }
-    else {
-        return systemPath.fileSystem.getPath(path.string);
-    }
-}
+JPath asJPath(String|Path path, JPath systemPath)
+        => if (is ConcretePath path)
+        then path.jpath
+        else systemPath.fileSystem.getPath(path.string);
 
 class ConcretePath(jpath)
         satisfies Path {
@@ -100,34 +88,19 @@ class ConcretePath(jpath)
     
     uriString => jpath.toUri().string;
     
-    shared actual Path[] elementPaths {
-        value sb = ArrayList<Path>();
-        value iter = jpath.iterator();
-        while (iter.hasNext()){
-            sb.add(ConcretePath(iter.next()));
-        }
-        return sb.sequence();
-    }
+    shared actual Path[] elementPaths
+            => [for (path in jpath) ConcretePath(path)];
     
-    shared actual String[] elements {
-        value sb = ArrayList<String>();
-        value iter = jpath.iterator();
-        while (iter.hasNext()){
-            sb.add(iter.next().string);
-        }
-        return sb.sequence();
-    }
+    shared actual String[] elements
+            => [for (path in jpath) path.string];
     
-    compare(Path other) => jpath.compareTo(asJPath(other, jpath))<=>0;
+    compare(Path other)
+            => jpath.compareTo(asJPath(other, jpath)) <=> 0;
     
-    shared actual Boolean equals(Object that) {
-        if (is Path that) {
-            return asJPath(that, jpath)==jpath;
-        }
-        else {
-            return false;
-        }
-    }
+    equals(Object that)
+            => if (is Path that)
+            then asJPath(that, jpath)==jpath
+            else false;
     
     hash => jpath.hash;
     
