@@ -1,3 +1,9 @@
+import ceylon.file {
+    File
+}
+import ceylon.http.common {
+    Header
+}
 import ceylon.http.server {
     Request,
     Response,
@@ -9,12 +15,6 @@ import com.redhat.ceylon.cmr.api {
     ArtifactContext {
         getSuffixFromFilename
     }
-}
-import ceylon.http.common {
-    Header
-}
-import ceylon.file {
-    File
 }
 
 """Service function for sending Ceylon modules to the client. _Must_ be attached
@@ -53,19 +53,28 @@ shared void serveModule(
         (Request req, Response resp, void complete()) {
 
     // Make sure the root path ends with a slash
-    value root = if (contextRoot.endsWith("/")) then contextRoot else contextRoot + "/";
+    value root
+            = contextRoot.endsWith("/")
+            then contextRoot
+            else contextRoot + "/";
     
     // req.path == "/modules/ceylon.language-1.2.0.js" or
     // req.path == "/modules/ceylon/language/1.2.0/ceylon.language-1.2.0.js"
     // first we strip the context root and the leading slash
-    value path = req.path.spanFrom(root.size);
-    
-    ArtifactContext? ac = getArtifactContext(path);
-    if (req.path.startsWith(root),
-            exists ac,
+    value reqPath = req.path;
+    value path = reqPath[root.size...];
+
+    if (reqPath.startsWith(root),
+            exists ac = getArtifactContext(path),
             exists file = findArtifactPath(manager, ac)) {
-        serveStaticFile("", (req) => file, options, onSuccess, onError, headers)
-            (req, resp, complete);
+        serveStaticFile {
+            externalPath = "";
+            fileMapper(Request req) => file;
+            options = options;
+            onSuccess = onSuccess;
+            onError = onError;
+            headers = headers;
+        }(req, resp, complete);
     } else {
         resp.status = 404;
         resp.writeString("404 - Not found");
@@ -74,33 +83,35 @@ shared void serveModule(
 
 ArtifactContext? getArtifactContext(String path) {
     try {
-        String? namespace = null;
+        String? namespace = null; //TODO!!
         // path == "ceylon.language-1.2.0.js" or
         // path == "ceylon/language/1.2.0/ceylon.language-1.2.0.js"
         value parts = path.split('/'.equals).sequence();
-        
+        value size = parts.size;
+
         value fileName = parts.last else "";
-        
-        if (parts.size == 1) {
+
+        if (size == 1) {
             // parts == [ceylon.language-1.2.0.js]
-            value suffix = getSuffixFromFilename(fileName);
-            value p = fileName.firstInclusion("-");
-            if (exists p) {
+            if (exists p = fileName.firstOccurrence('-')) {
+                assert (exists suffix = getSuffixFromFilename(fileName));
                 value name = fileName[0..p-1];
                 value version = fileName[p+1..fileName.size-suffix.size-1];
                 return ArtifactContext(namespace, name, version, suffix);
             }
-        } else if (parts.size >= 3) {
+        }
+        else if (size >= 3) {
             // parts == [ceylon, language, 1.2.0, ceylon.language-1.2.0.js]
-            value name = ".".join(parts[0..parts.size-3]);
+            value name = ".".join(parts[0..size-3]);
             // name == "ceylon.language"
-            value version = parts[parts.size - 2] else "";
-            value suffix = getSuffixFromFilename(parts.last);
+            value version = parts[size - 2] else "";
+            assert (exists suffix = getSuffixFromFilename(parts.last));
             if (fileName == name + "-" + version + suffix) {
                 return ArtifactContext(namespace, name, version, suffix);
             }
         }
-    } catch (Exception ex) { }
+    }
+    catch (ex) { }
     return null;
 }
 
@@ -112,6 +123,7 @@ String? findArtifactPath(RepositoryManager manager,
             artifact.file) {
         return artifact.absolutePath;
     }
-    
-    return null;
+    else {
+        return null;
+    }
 }
