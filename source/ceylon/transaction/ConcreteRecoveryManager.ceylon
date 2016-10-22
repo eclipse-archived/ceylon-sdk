@@ -49,9 +49,11 @@ class ConcreteRecoveryManager()
 
             print("Will recover transaction logs located under " + objectStoreDir);
         }
-        else {
-            value dir = getProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", ".");
+        else if (exists dir = getProperty("com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.objectStoreDir", ".")) {
             print("Will recover transaction logs located under " + dir);
+        }
+        else {
+            print("No transaction logs");
         }
 
         if (!rm exists) {

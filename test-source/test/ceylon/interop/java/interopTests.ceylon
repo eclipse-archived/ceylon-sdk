@@ -93,7 +93,7 @@ test void javaListIterator() {
     
     variable value sum = 0;
     while (it.hasNext()) {
-        value x = it.next();
+        assert (exists x = it.next());
         if (x == 1) {
             it.remove();
         }

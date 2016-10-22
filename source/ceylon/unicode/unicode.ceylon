@@ -76,14 +76,14 @@ import java.util {
 
 "The version of the Unicode standard being used, or `null` 
  if this information was not available."
-shared String? unicodeVersion 
-        => let (jreVersion = 
-                    jgetSystemProperty("java.version")) 
-             if (jreVersion.startsWith("1.7")) 
-                then "6.0.0" 
-        else if (jreVersion.startsWith("1.8")) 
-                then "6.2.0"
-        else null;
+shared String? unicodeVersion {
+    value jreVersion
+            = jgetSystemProperty("java.version")
+            else "";
+    return if (jreVersion.startsWith("1.7")) then "6.0.0"
+    else if (jreVersion.startsWith("1.8")) then "6.2.0"
+    else null;
+}
 
 "Enumerates the *Directionalities* defined by the Unicode 
  specification."
