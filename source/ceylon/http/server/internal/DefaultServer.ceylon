@@ -131,7 +131,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
         value openListener
                 = HttpOpenListener(
                     XnioByteBufferPool(
-                        ByteBufferSlicePool(BufferAllocator<Nothing>.directByteBufferAllocator,
+                        ByteBufferSlicePool(BufferAllocator.directByteBufferAllocator,
                             8192, 8192 * 8192)),
                     OptionMap.builder()
                         .set(UndertowOptions.bufferPipelinedData,false)
