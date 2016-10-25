@@ -98,19 +98,18 @@ Integer parseHex(Tokenizer tokenizer){
 "Parse a number, consuming any initial whitepsace."
 shared Integer|Float parseNumber(Tokenizer tokenizer){
     tokenizer.eatSpaces();
-    Boolean negative = tokenizer.check('-');
-    Integer wholePart = parseDigits(tokenizer);
-    
+    value negative = tokenizer.check('-');
+    value wholePartString = parseDigits(tokenizer, true);
+    assert (is Integer wholePart = Integer.parse(wholePartString));
+
     if(tokenizer.hasMore && tokenizer.check('.')){
-        // Parsing floats is tricky if you want to get all the corner cases like very small
-        // or very large floats, and get every single digit correct. Rather than re-implement
-        // we will build a string then use the built-in native parseFloat() function.
-        Integer digitsAfterDecimal = parseDigits(tokenizer);
-        Integer? exponent  = parseExponent(tokenizer);
-        String exponentAsString = if (exists exponent) then "e``exponent``" else "";
-        String negativeSign = negative then "-" else "";
-        String floatAsString = "``negativeSign````wholePart``.``digitsAfterDecimal````exponentAsString``";
-        Float? float = if (is Float f = Float.parse(floatAsString)) then f else null;
+        value digitsAfterDecimal = parseDigits(tokenizer, false);
+        value exponent = parseExponent(tokenizer);
+        value exponentAsString = if (exists exponent) then "e``exponent``" else "";
+        value negativeSign = negative then "-" else "";
+        value floatAsString = "``negativeSign````wholePart``.\
+                               ``digitsAfterDecimal````exponentAsString``";
+        value float = if (is Float f = Float.parse(floatAsString)) then f else null;
         assert(exists float); // the structure above guarantees it will be a valid float
         return float;
     }
@@ -123,19 +122,25 @@ shared Integer|Float parseNumber(Tokenizer tokenizer){
     }
     return signedInteger;
 }
-Integer parseDigits(Tokenizer tokenizer){
+String parseDigits(Tokenizer tokenizer, Boolean requireNonZeroFirstChar) {
     Character c = tokenizer.eatChar();
     if(!tokenizer.isDigit(c)){
         throw ParseException(
             "Expected digit, got: `` c ``", 
             tokenizer.line, tokenizer.column);
     }
-    variable Integer digits = parseDigit(c);
-    while(tokenizer.hasMore && tokenizer.isDigit(tokenizer.character())){
-        digits *= 10;
-        digits += parseDigit(tokenizer.eatChar());
+    if (requireNonZeroFirstChar && c == '0' && tokenizer.hasMore
+            && tokenizer.isDigit(tokenizer.character())) {
+        throw ParseException(
+            "Expected non-zero digit, got: `` c ``", 
+            tokenizer.line, tokenizer.column);
     }
-    return digits;
+    value buf = StringBuilder();
+    buf.appendCharacter(c);
+    while(tokenizer.hasMore && tokenizer.isDigit(tokenizer.character())) {
+        buf.appendCharacter(tokenizer.eatChar());
+    }
+    return buf.string;
 }
 Integer parseDigit(Character c)
         => c.integer - '0'.integer;
@@ -150,7 +155,8 @@ Integer? parseExponent(Tokenizer tokenizer){
         }else{
             negativeExponent = false;
         }
-        Integer exponentPart = parseDigits(tokenizer);
+        assert (is Integer exponentPart
+            = Integer.parse(parseDigits(tokenizer, false)));
         return negativeExponent 
         then -exponentPart 
         else exponentPart;

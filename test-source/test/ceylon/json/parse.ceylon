@@ -838,6 +838,34 @@ shared test void testParse() {
     assert(is Float n3 = parse("0.6666666666666666"));
     assertEquals(0.6666666666666666, n3);
     
+    assert(is Float n4 = parse("1.01"));
+    assertEquals(1.01, n4);
+
+    assert(is Float n5 = parse("1.001"));
+    assertEquals(1.001, n5);
+
+    // per http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf
+    // A number is represented in base 10 with no superfluous leading zero
+    assertThatException(()=>parse("01")).hasType(`ParseException`);
+    assertThatException(()=>parse("001")).hasType(`ParseException`);
+    assertThatException(()=>parse("01.1")).hasType(`ParseException`);
+    assertThatException(()=>parse("001.1")).hasType(`ParseException`);
+
+    assertThatException(()=>parse("-01")).hasType(`ParseException`);
+    assertThatException(()=>parse("-001")).hasType(`ParseException`);
+    assertThatException(()=>parse("-01.1")).hasType(`ParseException`);
+    assertThatException(()=>parse("-001.1")).hasType(`ParseException`);
+
+    assert(is Float n6 = parse("0.01"));
+    assertEquals(0.01, n6);
+    assert(is Float n7 = parse("-0.01"));
+    assertEquals(-0.01, n7);
+
+    assert(is Integer n8 = parse("0"));
+    assertEquals(0, n8);
+    assert(is Integer n9 = parse("-0"));
+    assertEquals(0, n9);
+
     assert(is Object o1 = parse("{}"));
     assertEquals(0, o1.size);
     try {
