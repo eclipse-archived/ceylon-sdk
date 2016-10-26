@@ -100,7 +100,7 @@ shared Integer|Float parseNumber(Tokenizer tokenizer){
     tokenizer.eatSpaces();
     value negative = tokenizer.check('-');
     value wholePartString = parseDigits(tokenizer, true);
-    assert (is Integer wholePart = Integer.parse(wholePartString));
+    assert (exists wholePart = parseInteger(wholePartString));
 
     if(tokenizer.hasMore && tokenizer.check('.')){
         value digitsAfterDecimal = parseDigits(tokenizer, false);
@@ -109,7 +109,7 @@ shared Integer|Float parseNumber(Tokenizer tokenizer){
         value negativeSign = negative then "-" else "";
         value floatAsString = "``negativeSign````wholePart``.\
                                ``digitsAfterDecimal````exponentAsString``";
-        value float = if (is Float f = Float.parse(floatAsString)) then f else null;
+        value float = parseFloat(floatAsString);
         assert(exists float); // the structure above guarantees it will be a valid float
         return float;
     }
@@ -155,8 +155,8 @@ Integer? parseExponent(Tokenizer tokenizer){
         }else{
             negativeExponent = false;
         }
-        assert (is Integer exponentPart
-            = Integer.parse(parseDigits(tokenizer, false)));
+        assert (exists exponentPart
+            = parseInteger(parseDigits(tokenizer, false)));
         return negativeExponent 
         then -exponentPart 
         else exponentPart;
