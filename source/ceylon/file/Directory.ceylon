@@ -45,9 +45,9 @@ shared sealed interface Directory
     "A new temporary [[Directory]]. `TemporaryDirectory`s may be used within resource
      expressions:
 
-     try (tempDirectory = temporaryDirectory.TemporaryDirectory()) {
-         // ...
-     }
+         try (tempDirectory = temporaryDirectory.TemporaryDirectory()) {
+             // ...
+         }
 
      If possible, a `TemporaryDirectory` will be deleted upon invocation of its
      [[destroy()]] method."
