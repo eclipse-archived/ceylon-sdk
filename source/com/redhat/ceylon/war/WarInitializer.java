@@ -22,7 +22,7 @@ import com.redhat.ceylon.cmr.ceylon.CeylonUtils;
 import com.redhat.ceylon.common.FileUtil;
 
 import com.redhat.ceylon.module.loader.FlatpathModuleLoader;
-import com.redhat.ceylon.module.loader.ModuleNotFoundException;
+import com.redhat.ceylon.cmr.ceylon.loader.ModuleNotFoundException;
 
 /**
  * A {@link ServletContextListener} that initializes the Ceylon metamodel for
