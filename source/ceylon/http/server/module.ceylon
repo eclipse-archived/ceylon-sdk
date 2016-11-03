@@ -43,9 +43,9 @@
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 native("jvm")
-module ceylon.http.server "1.3.1-SNAPSHOT" {
+module ceylon.http.server "2.0.0-SNAPSHOT" {
     
-    shared import ceylon.http.common "1.3.1-SNAPSHOT";
+    shared import ceylon.http.common "2.0.0-SNAPSHOT";
     shared import ceylon.collection "1.3.1-SNAPSHOT";
     shared import ceylon.io "1.3.1-SNAPSHOT";
     shared import "com.redhat.ceylon.module-resolver" "1.3.1-SNAPSHOT";
