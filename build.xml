@@ -63,6 +63,7 @@
             <module name="ceylon.file"/>
             <module name="ceylon.html"/>
             <module name="ceylon.interop.java"/>
+            <module name="ceylon.interop.spring"/>
             <module name="ceylon.io"/>
             <module name="ceylon.json"/>
             <module name="ceylon.locale"/>
@@ -112,6 +113,7 @@
             <module name="ceylon.html"/>
             <module name="ceylon.interop.browser"/>
             <module name="ceylon.interop.java"/>
+            <module name="ceylon.interop.spring"/>
             <module name="ceylon.io"/>
             <module name="ceylon.json"/>
             <module name="ceylon.locale"/>
