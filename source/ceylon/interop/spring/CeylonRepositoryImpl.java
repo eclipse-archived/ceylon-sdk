@@ -14,6 +14,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of {@link CeylonRepository}.
+ *
+ * @param <T> the entity type
+ * @param <ID> the identifier type
+ */
 @Transactional(readOnly = true)
 @TypeParameters({@TypeParameter(value = "T"), @TypeParameter(value="ID")})
 @SuppressWarnings("unchecked")
