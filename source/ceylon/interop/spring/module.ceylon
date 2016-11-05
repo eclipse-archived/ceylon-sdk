@@ -6,16 +6,19 @@
      shared interface OrgRepository
              satisfies CeylonRepository<Org,Integer> {}
 
- Then, enable [[CeylonRepositoryImpl]] like this:
+ Then, enable [[CeylonRepositoryImpl]] by annotating your
+ `configuration` or `springBootApplication` class like
+ this:
 
-     configuration
+     springBootApplication
      enableJpaRepositories {
          repositoryBaseClass
              = `class CeylonRepositoryImpl`;
      }
-     class MyApplicationConfiguration() {}"
+     shared class MySpringApplication() {}"
 by("Gavin King")
 native("jvm")
+see (`interface CeylonRepository`)
 module ceylon.interop.spring "1.3.1-SNAPSHOT" {
     shared import java.base "7";
 
