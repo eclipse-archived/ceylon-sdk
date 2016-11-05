@@ -2,6 +2,8 @@ package ceylon.interop.spring;
 
 import ceylon.language.Integer;
 import ceylon.language.String;
+import com.redhat.ceylon.common.NonNull;
+import com.redhat.ceylon.common.Nullable;
 import com.redhat.ceylon.compiler.java.metadata.Ignore;
 import com.redhat.ceylon.compiler.java.metadata.TypeParameter;
 import com.redhat.ceylon.compiler.java.metadata.TypeParameters;
@@ -15,52 +17,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of {@link CeylonRepository}.
+ * JPA-based implementation of {@link CeylonRepository}.
  *
- * @param <T> the entity type
- * @param <ID> the identifier type
+ * Performs type conversion on identifiers of type
+ * {@link ceylon.language.Integer} and
+ * {@link ceylon.language.String}.
+ *
+ * @param <Entity> the entity type
+ * @param <Id> the identifier type
  */
 @Transactional(readOnly = true)
-@TypeParameters({@TypeParameter(value = "T"), @TypeParameter(value="ID")})
+@TypeParameters({@TypeParameter(value = "Entity",
+                                satisfies = "ceylon.language::Object"),
+                 @TypeParameter(value = "Id",
+                                satisfies = "ceylon.language::Object")})
 @SuppressWarnings("unchecked")
-public class CeylonRepositoryImpl<T,ID extends Serializable>
-        extends SimpleJpaRepository<T,ID>
-        implements CeylonRepository<T,ID> {
+public class CeylonRepositoryImpl<Entity, Id extends Serializable>
+        extends SimpleJpaRepository<Entity, Id>
+        implements CeylonRepository<Entity, Id> {
 
-    public CeylonRepositoryImpl(JpaEntityInformation entityInformation, EntityManager entityManager) {
+    public CeylonRepositoryImpl(JpaEntityInformation entityInformation,
+                                EntityManager entityManager) {
         super(entityInformation, entityManager);
     }
 
-    @Override @Ignore
-    public void delete(ID id) {
+    @Override @Ignore @Transactional
+    public void delete(@NonNull Id id) {
         super.delete(toJavaId(id));
     }
 
     @Override @Ignore
-    public boolean exists(ID id) {
+    public boolean exists(@NonNull Id id) {
         return super.exists(toJavaId(id));
     }
 
-    @Override @Ignore
-    public T getOne(ID id) {
+    @Override @Ignore @NonNull
+    public Entity getOne(@NonNull Id id) {
         return super.getOne(toJavaId(id));
     }
 
-    @Override @Ignore
-    public T findOne(ID id) {
+    @Override @Ignore @Nullable
+    public Entity findOne(@NonNull Id id) {
         return super.findOne(toJavaId(id));
     }
 
-    @Override @Ignore
-    public List<T> findAll(Iterable<ID> ids) {
-        List<ID> javaIds = new ArrayList<ID>();
-        for (ID id: ids) {
+    @Override @Ignore @NonNull
+    public List<Entity> findAll(@NonNull Iterable<Id> ids) {
+        List<Id> javaIds = new ArrayList<Id>();
+        for (Id id: ids) {
             javaIds.add(toJavaId(id));
         }
         return super.findAll(javaIds);
     }
 
-    private ID toJavaId(ID id) {
+    @NonNull private Id toJavaId(@NonNull Id id) {
         Object javaId;
         if (id instanceof Integer) {
             javaId = ((Integer) id).longValue();
@@ -71,6 +81,6 @@ public class CeylonRepositoryImpl<T,ID extends Serializable>
         else {
             javaId = id;
         }
-        return (ID) javaId;
+        return (Id) javaId;
     }
 }
