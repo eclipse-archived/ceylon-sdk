@@ -5,6 +5,10 @@ import ceylon.collection {
 import ceylon.dbc {
     newConnectionFromDataSource
 }
+import ceylon.decimal {
+    Decimal,
+    parseDecimal
+}
 import ceylon.interop.java {
     toIntegerArray,
     createJavaObjectArray,
@@ -12,13 +16,6 @@ import ceylon.interop.java {
 }
 import ceylon.language.meta.model {
     Type
-}
-import ceylon.decimal {
-    Decimal,
-    parseDecimal
-}
-import ceylon.whole {
-    parseWhole
 }
 import ceylon.time {
     today,
@@ -32,6 +29,9 @@ import ceylon.time.internal {
     GregorianDate,
     TimeOfDay
 }
+import ceylon.whole {
+    parseWhole
+}
 
 import java.io {
     ByteArrayInputStream
@@ -41,6 +41,7 @@ import java.lang {
     JInteger=Integer,
     JLong=Long,
     JFloat=Float,
+    JDouble=Double,
     JString=String,
     ObjectArray,
     ByteArray
@@ -59,7 +60,7 @@ import java.sql {
     SqlTime=Time,
     SqlDate=Date,
     Statement {
-        returnGeneratedKeys=RETURN_GENERATED_KEYS
+        returnGeneratedKeys
     },
     Connection
 }
@@ -719,10 +720,12 @@ shared class Sql(newConnection) {
         else {
             //TODO optimize these conversions
             switch (x)
-            case (is JBoolean) { v = x.booleanValue(); }
-            case (is JInteger) { v = x.intValue(); }
-            case (is JLong) { v = x.longValue(); }
             case (is JString) { v = x.string; }
+            case (is JBoolean) { v = x.booleanValue(); }
+            case (is JInteger) { v = x.longValue(); }
+            case (is JLong) { v = x.longValue(); }
+            case (is JFloat) { v = x.doubleValue(); }
+            case (is JDouble) { v = x.doubleValue(); }
             case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
             case (is BigInteger) { v = parseWhole(x.string); }
             case (is SqlTimestamp) { v = Instant(x.time).dateTime(); }
@@ -730,7 +733,7 @@ shared class Sql(newConnection) {
             case (is SqlDate) { v = Instant(x.time).date(); }
             // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
             case (is UUID) { v = x; }
-            case (is ByteArray) {v = x.byteArray; }
+            case (is ByteArray) { v = x.byteArray; }
             else { v = x; }
         }
 
