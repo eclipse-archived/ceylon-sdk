@@ -63,6 +63,7 @@
             <module name="ceylon.file"/>
             <module name="ceylon.html"/>
             <module name="ceylon.interop.java"/>
+            <module name="ceylon.interop.persistence"/>
             <module name="ceylon.interop.spring"/>
             <module name="ceylon.io"/>
             <module name="ceylon.json"/>
