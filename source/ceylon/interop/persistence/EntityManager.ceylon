@@ -46,14 +46,14 @@ shared class EntityManager(entityManager)
     shared FlushModeType flushMode => entityManager.flushMode;
     assign flushMode => entityManager.flushMode = flushMode;
 
-    shared Entity? find<Entity>(Object primaryKey, LockModeType? lockMode = null)
+    shared Entity? find<Entity>(Class<Entity> entity, Object primaryKey, LockModeType? lockMode = null)
             given Entity satisfies Object
             => let (pk = toJava(primaryKey))
             if (exists lockMode)
             then entityManager.find(javaClass<Entity>(), pk, lockMode)
             else entityManager.find(javaClass<Entity>(), pk);
 
-    shared Entity reference<Entity>(Object primaryKey)
+    shared Entity reference<Entity>(Class<Entity> entity, Object primaryKey)
             given Entity satisfies Object
             => entityManager.getReference(javaClass<Entity>(),
                                           toJava(primaryKey));
