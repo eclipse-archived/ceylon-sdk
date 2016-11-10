@@ -1,285 +1,223 @@
-import ceylon.interop.java {
-    javaClass,
-    CeylonStringMap,
-    CeylonMap
-}
 import ceylon.language.meta.model {
     Class
 }
 
+import java.lang {
+    JClass=Class,
+    JString=String
+}
 import java.util {
-    Calendar,
-    Date
+    Map,
+    List
 }
 
 import javax.persistence {
     JEntityManager=EntityManager,
-    JQuery=Query,
     LockModeType,
     FlushModeType,
     EntityTransaction,
-    TemporalType
+    EntityGraph,
+    StoredProcedureQuery,
+    EntityManagerFactory
+}
+import javax.persistence.criteria {
+    CriteriaQuery,
+    CriteriaUpdate,
+    CriteriaDelete,
+    CriteriaBuilder
+}
+import javax.persistence.metamodel {
+    Metamodel
 }
 
+shared alias Properties => Map<JString,Object>;
+
 shared class EntityManager(entityManager)
-        satisfies Category<> {
+        satisfies CeylonicEntityManager {
 
     shared JEntityManager entityManager;
-
-    shared Boolean open => entityManager.open;
-
-    shared void close() => entityManager.close();
-
-    shared void clear() => entityManager.clear();
 
     shared actual Boolean contains(Object entity)
             => entityManager.contains(entity);
 
-    shared LockModeType lockMode(Object entity)
-            => entityManager.getLockMode(false);
+    shared actual void clear() => entityManager.clear();
 
-    shared void detach(Object entity)
-            => entityManager.detach(entity);
+    shared actual void close() => entityManager.close();
 
-    shared void flush() => entityManager.flush();
-
-    shared FlushModeType flushMode => entityManager.flushMode;
-    assign flushMode => entityManager.flushMode = flushMode;
-
-    shared Entity? find<Entity>(Class<Entity> entity, Object primaryKey, LockModeType? lockMode = null)
+    shared actual EntityGraph<Entity> createEntityGraph<Entity>(Class<Entity> rootType)
             given Entity satisfies Object
-            => let (pk = toJava(primaryKey))
-            if (exists lockMode)
-            then entityManager.find(javaClass<Entity>(), pk, lockMode)
-            else entityManager.find(javaClass<Entity>(), pk);
+            => entityManager.createEntityGraph(javaClass(rootType));
 
-    shared Entity reference<Entity>(Class<Entity> entity, Object primaryKey)
+    shared actual EntityGraph<Entity> createEntityGraph<Entity>(JClass<Entity> rootType)
             given Entity satisfies Object
-            => entityManager.getReference(javaClass<Entity>(),
-                                          toJava(primaryKey));
+            => entityManager.createEntityGraph(rootType);
 
-    shared void lock(Object entity, LockModeType lockMode)
+    shared actual EntityGraph<out Object> createEntityGraph(String graphName)
+            => entityManager.createEntityGraph(graphName);
+
+    shared actual Query createNamedQuery(String name)
+            => Query(entityManager.createNamedQuery(name));
+
+    shared actual TypedQuery<Result> createNamedQuery<Result>(String name, Class<Result> resultClass)
+            given Result satisfies Object
+            => newTypedQuery(javaClass(resultClass), entityManager.createNamedQuery(name, javaClass(resultClass)));
+
+    shared actual TypedQuery<Result> createNamedQuery<Result>(String name, JClass<Result> resultClass)
+            given Result satisfies Object
+            => newTypedQuery(resultClass, entityManager.createNamedQuery(name, resultClass));
+
+    shared actual StoredProcedureQuery createNamedStoredProcedureQuery(String name)
+            //TODO: WRAP IT!
+            => entityManager.createNamedStoredProcedureQuery(name);
+
+    shared actual Query createNativeQuery(String sqlString)
+            => Query(entityManager.createNativeQuery(sqlString));
+
+    shared actual Query createNativeQuery(String sqlString, JClass<out Object> resultClass)
+            => Query(entityManager.createNativeQuery(sqlString, resultClass));
+
+    shared actual Query createNativeQuery(String sqlString, String resultSetMapping)
+            => Query(entityManager.createNativeQuery(sqlString, resultSetMapping));
+
+    shared actual Query createQuery(String qlString)
+            => Query(entityManager.createQuery(qlString));
+
+    shared actual TypedQuery<Result> createQuery<Result>(CriteriaQuery<Result> criteriaQuery)
+            given Result satisfies Object
+            => newTypedQuery(criteriaQuery.resultType, entityManager.createQuery(criteriaQuery));
+
+    shared actual Query createQuery(CriteriaUpdate<out Object> updateQuery)
+            => Query(entityManager.createQuery(updateQuery));
+
+    shared actual Query createQuery(CriteriaDelete<out Object> deleteQuery)
+            => Query(entityManager.createQuery(deleteQuery));
+
+    shared actual TypedQuery<Result> createQuery<Result>(String qlString, Class<Result> resultClass)
+            given Result satisfies Object
+            => newTypedQuery(javaClass(resultClass), entityManager.createQuery(qlString, javaClass(resultClass)));
+
+    shared actual TypedQuery<Result> createQuery<Result>(String qlString, JClass<Result> resultClass)
+            given Result satisfies Object
+            => newTypedQuery(resultClass, entityManager.createQuery(qlString, resultClass));
+
+    shared actual StoredProcedureQuery createStoredProcedureQuery(String procedureName)
+            => entityManager.createStoredProcedureQuery(procedureName);
+
+    shared actual StoredProcedureQuery createStoredProcedureQuery(String procedureName, String?* resultSetMappings)
+            => entityManager.createStoredProcedureQuery(procedureName, *resultSetMappings);
+
+    shared actual StoredProcedureQuery createStoredProcedureQuery(String procedureName, JClass<out Object>?* resultClasses)
+            => entityManager.createStoredProcedureQuery(procedureName, *resultClasses);
+
+    shared actual CriteriaBuilder criteriaBuilder => entityManager.criteriaBuilder;
+
+    shared actual Object delegate => entityManager.delegate;
+
+    shared actual void detach(Object entity) => entityManager.detach(entity);
+
+    shared actual EntityManagerFactory entityManagerFactory => entityManager.entityManagerFactory;
+
+    shared actual Entity find<Entity>(Class<Entity> entityClass, Object primaryKey)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(javaClass(entityClass), toJava(primaryKey));
+
+    shared actual Entity find<Entity>(Class<Entity> entityClass, Object primaryKey, Properties properties)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(javaClass(entityClass), toJava(primaryKey), properties);
+
+    shared actual Entity find<Entity>(Class<Entity> entityClass, Object primaryKey, LockModeType lockMode)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(javaClass(entityClass), toJava(primaryKey), lockMode);
+
+    shared actual Entity find<Entity>(Class<Entity> entityClass, Object primaryKey, LockModeType lockMode, Properties properties)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(javaClass(entityClass), toJava(primaryKey), lockMode, properties);
+
+    shared actual Entity find<Entity>(JClass<Entity> entityClass, Object primaryKey)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(entityClass, toJava(primaryKey));
+
+    shared actual Entity find<Entity>(JClass<Entity> entityClass, Object primaryKey, Properties properties)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(entityClass, toJava(primaryKey), properties);
+
+    shared actual Entity find<Entity>(JClass<Entity> entityClass, Object primaryKey, LockModeType lockMode)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(entityClass, toJava(primaryKey), lockMode);
+
+    shared actual Entity find<Entity>(JClass<Entity> entityClass, Object primaryKey, LockModeType lockMode, Properties properties)
+            given Entity satisfies Object
+            => entityManager.find<Entity>(entityClass, toJava(primaryKey), lockMode, properties);
+
+    shared actual void flush() => entityManager.flush();
+
+    shared actual variable FlushModeType flushMode = entityManager.flushMode;
+
+    shared actual EntityGraph<out Object> getEntityGraph(String graphName)
+            => entityManager.getEntityGraph(graphName);
+
+    shared actual List<EntityGraph<in Entity>> getEntityGraphs<Entity>(Class<Entity> entityClass)
+            given Entity satisfies Object
+            => entityManager.getEntityGraphs(javaClass(entityClass));
+
+    shared actual List<EntityGraph<in Entity>> getEntityGraphs<Entity>(JClass<Entity> entityClass)
+            given Entity satisfies Object
+            => entityManager.getEntityGraphs(entityClass);
+
+    shared actual LockModeType getLockMode(Object entity)
+            => entityManager.getLockMode(entity);
+
+    shared actual Entity getReference<Entity>(Class<Entity> entityClass, Object primaryKey)
+            given Entity satisfies Object
+            => entityManager.getReference(javaClass(entityClass), toJava(primaryKey));
+
+    shared actual Entity getReference<Entity>(JClass<Entity> entityClass, Object primaryKey)
+            given Entity satisfies Object
+            => entityManager.getReference(entityClass, toJava(primaryKey));
+
+    shared actual void joinTransaction() => entityManager.joinTransaction();
+
+    shared actual Boolean joinedToTransaction => entityManager.joinedToTransaction;
+
+    shared actual void lock(Object entity, LockModeType lockMode)
             => entityManager.lock(entity, lockMode);
 
-    shared Entity merge<Entity>(Entity entity)
+    shared actual void lock(Object entity, LockModeType lockMode, Properties properties)
+            => entityManager.lock(entity, lockMode, properties);
+
+    shared actual Entity merge<Entity>(Entity entity)
             given Entity satisfies Object
             => entityManager.merge(entity);
 
-    shared void persist(Object entity)
-            => entityManager.persist(entity);
+    shared actual Metamodel metamodel => entityManager.metamodel;
 
-    shared void refresh(Object entity, LockModeType? lockMode = null) {
-        if (exists lockMode) {
-            entityManager.refresh(entity, lockMode);
-        }
-        else {
-            entityManager.refresh(entity);
-        }
-    }
+    shared actual Boolean open => entityManager.open;
 
-    shared void remove(Object entity)
-            => entityManager.remove(entity);
+    shared actual void persist(Object entity) => entityManager.persist(entity);
 
-    shared void setProperty(String propertyName, Object propertyValue)
-            => entityManager.setProperty(propertyName,
-                                         toJava(propertyValue));
+    shared actual Properties properties => entityManager.properties;
 
-    shared Map<String,Object> properties
-            => CeylonStringMap(CeylonMap(entityManager.properties)
-                    .mapItems((_,item) => toCeylonNotNull(item)));
+    shared actual void refresh(Object entity) => entityManager.refresh(entity);
 
-    shared EntityTransaction transaction
-            => entityManager.transaction;
+    shared actual void refresh(Object entity, Properties properties)
+            => entityManager.refresh(entity);
 
-    shared void joinTransaction()
-            => entityManager.joinTransaction();
+    shared actual void refresh(Object entity, LockModeType lockMode)
+            => entityManager.refresh(entity, lockMode);
 
-    shared Boolean joinedToTransaction
-            => entityManager.joinedToTransaction;
+    shared actual void refresh(Object entity, LockModeType lockMode, Properties properties)
+            => entityManager.refresh(entity, lockMode, properties);
 
-    T setup<T>(T query,
-            Integer? maxResults, Integer? firstResult,
-            LockModeType? lockMode, FlushModeType? flushMode)
-            given T satisfies JQuery {
-        if (exists maxResults) {
-            query.setMaxResults(maxResults);
-        }
-        if (exists firstResult) {
-            query.setFirstResult(firstResult);
-        }
-        if (exists lockMode) {
-            query.setLockMode(lockMode);
-        }
-        if (exists flushMode) {
-            query.setFlushMode(flushMode);
-        }
-        return query;
-    }
+    shared actual void remove(Object entity) => entityManager.remove(entity);
 
-    shared class Query<Type>
-            (Class<Type> resultType, String query,
-                maxResults = null, firstResult = null,
-                lockMode = null, flushMode = null)
-            extends BaseQuery<Type>
-                (setup(entityManager.createQuery(query, javaClass<Type>()),
-                        //TODO: use javaClassFromModel(entity) when #6682 is fixed
-                    maxResults, firstResult, lockMode, flushMode))
-            given Type satisfies Object {
+    shared actual void setProperty(String propertyName, Object propertyValue)
+            => entityManager.setProperty(propertyName, toJava(propertyValue));
 
-        Integer? maxResults;
-        Integer? firstResult;
-        LockModeType? lockMode;
-        FlushModeType? flushMode;
+    shared actual EntityTransaction transaction => entityManager.transaction;
 
-        shared actual Query<Type> setHint(String hintName, Object hintValue) {
-            super.setHint(hintName, hintValue);
-            return this;
-        }
-        shared actual Query<Type> setArgument(parameter, argument) {
-            Integer|String parameter;
-            Anything argument;
+    shared actual Delegate unwrap<Delegate>(JClass<Delegate> delegateClass)
+            given Delegate satisfies Object
+            => entityManager.unwrap(delegateClass);
 
-            super.setArgument(parameter, argument);
-            return this;
-        }
-        shared actual Query<Type> setTemporalArgument(parameter, temporalType, argument) {
-            Integer|String parameter;
-            TemporalType temporalType;
-            Calendar|Date argument;
-
-            super.setTemporalArgument(parameter, temporalType, argument);
-            return this;
-        }
-        shared actual Query<Type> withArguments(Anything* arguments) {
-            super.withArguments(*arguments);
-            return this;
-        }
-        shared actual Query<Type> withNamedArguments(<String->Anything>* arguments) {
-            super.withNamedArguments(*arguments);
-            return this;
-        }
-
-    }
-
-    shared class NamedQuery<Type>
-            (Class<Type> resultType, String name,
-                maxResults = null, firstResult = null,
-                lockMode = null, flushMode = null)
-            extends BaseQuery<Type>
-                (setup(entityManager.createNamedQuery(name, javaClass<Type>()),
-                    maxResults, firstResult, lockMode, flushMode))
-            given Type satisfies Object {
-
-        Integer? maxResults;
-        Integer? firstResult;
-        LockModeType? lockMode;
-        FlushModeType? flushMode;
-
-        shared actual NamedQuery<Type> setHint(String hintName, Object hintValue) {
-            super.setHint(hintName, hintValue);
-            return this;
-        }
-        shared actual NamedQuery<Type> setArgument(parameter, argument) {
-            Integer|String parameter;
-            Anything argument;
-            super.setArgument(parameter, argument);
-            return this;
-        }
-        shared actual NamedQuery<Type> setTemporalArgument(parameter, temporalType, argument) {
-            Integer|String parameter;
-            TemporalType temporalType;
-            Calendar|Date argument;
-
-            super.setTemporalArgument(parameter, temporalType, argument);
-            return this;
-        }
-        shared actual NamedQuery<Type> withArguments(Anything* arguments) {
-            super.withArguments(*arguments);
-            return this;
-        }
-        shared actual NamedQuery<Type> withNamedArguments(<String->Anything>* arguments) {
-            super.withNamedArguments(*arguments);
-            return this;
-        }
-
-    }
-
-    shared class NativeQuery<Type>
-            (Class<Type> resultType, String sqlQuery,
-                String? resultSetMapping = null,
-                maxResults = null, firstResult = null,
-                lockMode = null, flushMode = null)
-            extends BaseQuery<Type>
-                (setup(if (exists resultSetMapping)
-                        then entityManager.createNativeQuery(sqlQuery, resultSetMapping)
-                        else entityManager.createNativeQuery(sqlQuery, javaClass<Type>()),
-                    maxResults, firstResult, lockMode, flushMode))
-            given Type satisfies Object {
-
-        Integer? maxResults;
-        Integer? firstResult;
-        LockModeType? lockMode;
-        FlushModeType? flushMode;
-
-        shared actual NativeQuery<Type> setHint(String hintName, Object hintValue) {
-            super.setHint(hintName, hintValue);
-            return this;
-        }
-        shared actual NativeQuery<Type> setArgument(parameter, argument) {
-            Integer|String parameter;
-            Anything argument;
-
-            super.setArgument(parameter, argument);
-            return this;
-        }
-        shared actual NativeQuery<Type> setTemporalArgument(parameter, temporalType, argument) {
-            Integer|String parameter;
-            TemporalType temporalType;
-            Calendar|Date argument;
-
-            super.setTemporalArgument(parameter, temporalType, argument);
-            return this;
-        }
-        shared actual NativeQuery<Type> withArguments(Anything* arguments) {
-            super.withArguments(*arguments);
-            return this;
-        }
-        shared actual NativeQuery<Type> withNamedArguments(<String->Anything>* arguments) {
-            super.withNamedArguments(*arguments);
-            return this;
-        }
-
-    }
-
-    /*
-        shared EntityGraph<out Object> entityGraph(String graphName)
-                => entityManager.getEntityGraph(graphName);
-
-        shared List<EntityGraph<in Type>> entityGraphs<Type>()
-                given Type satisfies Object
-                => CeylonList(entityManager.getEntityGraphs(javaClass<Type>()));
-
-        shared EntityGraph<Type> createEntityGraph<Type>()
-                given Type satisfies Object
-                => entityManager.createEntityGraph(javaClass<Type>());
-
-        shared EntityGraph<out Object> createNamedEntityGraph(String graphName)
-                => entityManager.createEntityGraph(graphName);
-
-    */
-
-    //    shared Metamodel metamodel => entityManager.metamodel;
-
-    //    shared TypedQuery<Type> createQuery<Type>(CriteriaQuery<Type>? criteriaQuery)
-    //            given Type satisfies Object => nothing;
-    //
-    //    shared Query createQuery(CriteriaUpdate<out Object>? updateQuery) => nothing;
-    //
-    //    shared Query createQuery(CriteriaDelete<out Object>? deleteQuery) => nothing;
-
-    //    shared StoredProcedureQuery createStoredProcedureQuery(String? procedureName) => nothing;
-    //
-    //    shared StoredProcedureQuery createStoredProcedureQuery(String? procedureName, String?* resultSetMappings) => nothing;
-
-    //    shared CriteriaBuilder criteriaBuilder => entityManager.criteriaBuilder;
 }
+
