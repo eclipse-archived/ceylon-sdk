@@ -178,8 +178,8 @@ shared class TypedQuery<Result>(JTypedQuery<Result> query)
 
     shared actual Result singleResult => query.singleResult;
 
-    shared actual TypedQuery<Result> setParameter<P>(Parameter<P> param, P? arg)
-            given P satisfies Object {
+    shared actual TypedQuery<Result> setParameter<Argument>(Parameter<Argument> param, Argument? arg)
+            given Argument satisfies Object {
         query.setParameter(param.name, toJava(arg));
         return this;
     }
