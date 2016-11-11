@@ -1,3 +1,9 @@
+import ceylon.interop.persistence {
+    Util {
+        javaClass,
+        newTypedQuery
+    }
+}
 import ceylon.language.meta.model {
     Class
 }
