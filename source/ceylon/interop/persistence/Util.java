@@ -3,24 +3,36 @@ package ceylon.interop.persistence;
 import ceylon.language.meta.model.Class;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
 import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDeclarationImpl;
-import com.redhat.ceylon.compiler.java.runtime.model.TypeDescriptor;
-
-import javax.persistence.TypedQuery;
 
 public class Util {
 
-    //TODO: use javaClassFromModel(entity) when #6682 is fixed
-    static <Type> java.lang.Class<Type> javaClass(@TypeInfo("ceylon.language.meta.model::Class<Type>") Class type) {
-        return (java.lang.Class<Type>)
-                ((ClassOrInterfaceDeclarationImpl) type.getDeclaration())
-                        .getJavaClass();
-    }
-
-    //TODO: add a createWithJavaClass() function to ceylon.interop.java
-    @TypeInfo("ceylon.interop.persistence::TypedQuery<Type>")
-    static <Type> ceylon.interop.persistence.TypedQuery<Type> newTypedQuery(java.lang.Class<Type> type,
-                                                                            TypedQuery<Type> query) {
-        return new ceylon.interop.persistence.TypedQuery<Type>(TypeDescriptor.klass(type), query);
+    static <Type> java.lang.Class<Type> javaClass(
+            @TypeInfo("ceylon.language.meta.model::Class<Type>")
+                    Class type) {
+        ClassOrInterfaceDeclarationImpl declaration
+                = (ClassOrInterfaceDeclarationImpl)
+                        type.getDeclaration();
+        java.lang.Class javaClass = declaration.getJavaClass();
+        //convert Ceylon "primitive" classes to Java wrapper classes
+        if (javaClass.equals(ceylon.language.Integer.class)) {
+            javaClass = Long.class;
+        }
+        if (javaClass.equals(ceylon.language.Float.class)) {
+            javaClass = Double.class;
+        }
+        else if (javaClass.equals(ceylon.language.String.class)) {
+            javaClass = String.class;
+        }
+        else if (javaClass.equals(ceylon.language.Boolean.class)) {
+            javaClass = Boolean.class;
+        }
+        else if (javaClass.equals(ceylon.language.Byte.class)) {
+            javaClass = Byte.class;
+        }
+        else if (javaClass.equals(ceylon.language.Character.class)) {
+            javaClass = Integer.class;
+        }
+        return (java.lang.Class<Type>) javaClass;
     }
 
 }

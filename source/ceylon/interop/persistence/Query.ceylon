@@ -1,13 +1,17 @@
-import java.lang {
-    Class,
-    JString=String
+import ceylon.interop.java {
+    CeylonStringMap,
+    CeylonMap,
+    CeylonSet,
+    CeylonList
 }
+import ceylon.language.meta.model {
+    Class
+}
+
 import java.util {
-    Map,
-    Set,
-    List,
     Calendar,
-    Date
+    Date,
+    JList=List
 }
 
 import javax.persistence {
@@ -19,208 +23,192 @@ import javax.persistence {
     TemporalType
 }
 
+shared alias Hints => Map<String,Object>;
+
 shared class Query(JQuery query)
-        satisfies JQuery {
+        => TypedQuery<>.withoutResultClass(query);
 
-    shared actual Integer executeUpdate() => query.executeUpdate();
+shared class TypedQuery<out Result=Object>
+        given Result satisfies Object {
 
-    shared actual Integer firstResult => query.firstResult;
+    shared JQuery query;
 
-    shared actual FlushModeType flushMode => query.flushMode;
+    shared new (JTypedQuery<Result> query)  {
+        this.query = query;
+    }
 
-    shared actual Parameter<out Object> getParameter(String name)
-            => query.getParameter(name);
+    shared new withResultClass(Class<Result> resultClass, JQuery query) {
+        this.query = query;
+    }
 
-    shared actual Parameter<Argument> getParameter<Argument>(String name, Class<Argument> type)
-            given Argument satisfies Object
-            => query.getParameter(name, type);
+    shared new withoutResultClass(JQuery query) {
+        this.query = query;
+    }
 
-    shared actual Parameter<out Object> getParameter(Integer position)
-            => query.getParameter(position);
+    suppressWarnings("uncheckedTypeArguments")
+    shared List<Result> resultList {
+        assert (is JList<Result> resultList = query.resultList);
+        return CeylonList(resultList);
+    }
 
-    shared actual Parameter<Argument> getParameter<Argument>(Integer position, Class<Argument> type)
-            given Argument satisfies Object
-            => query.getParameter(position, type);
+    shared Result singleResult {
+        assert (is Result result = query.singleResult);
+        return result;
+    }
 
-    shared actual Argument? getParameterValue<Argument>(Parameter<Argument> param)
-            given Argument satisfies Object
-            => query.getParameterValue(param); //TODO: type conversion!
+    shared Integer executeUpdate() => query.executeUpdate();
 
-    shared actual Object? getParameterValue(String name)
-            => toCeylon(query.getParameterValue(name));
+    shared Integer maxResults => query.maxResults;
+    assign maxResults => setMaxResults(maxResults);
 
-    shared actual Object? getParameterValue(Integer position)
-            => toCeylon(query.getParameterValue(position));
+    shared TypedQuery<Result> setMaxResults(Integer maxResults) {
+        query.setMaxResults(maxResults);
+        return this;
+    }
 
-    shared actual Map<JString,Object> hints => query.hints;
+    shared Integer firstResult => query.firstResult;
+    assign firstResult => setFirstResult(firstResult);
 
-    shared actual Boolean isBound(Parameter<out Object> param)
-            => query.isBound(param);
-
-    shared actual LockModeType lockMode => query.lockMode;
-
-    shared actual Integer maxResults => query.maxResults;
-
-    shared actual Set<Parameter<out Object>> parameters => query.parameters;
-
-    shared actual default List<out Object> resultList => query.resultList;
-
-    shared actual default Object singleResult => query.singleResult;
-
-    shared actual default Query setFirstResult(Integer startPosition) {
+    shared TypedQuery<Result> setFirstResult(Integer startPosition) {
         query.setFirstResult(startPosition);
         return this;
     }
 
-    shared actual default Query setFlushMode(FlushModeType? flushMode) {
+    shared LockModeType lockMode => query.lockMode;
+    assign lockMode => setLockMode(lockMode);
+
+    shared TypedQuery<Result> setLockMode(LockModeType lockMode) {
+        query.setLockMode(lockMode);
+        return this;
+    }
+
+    shared FlushModeType flushMode => query.flushMode;
+    assign flushMode => setFlushMode(flushMode);
+
+    shared TypedQuery<Result> setFlushMode(FlushModeType flushMode) {
         query.setFlushMode(flushMode);
         return this;
     }
 
-    shared actual default Query setHint(String hintName, Object? hintValue) {
+    shared Hints hints => CeylonStringMap(CeylonMap(query.hints));
+
+    shared TypedQuery<Result> setHint(String hintName, Object? hintValue) {
         query.setHint(hintName, toJava(hintValue));
         return this;
     }
 
-    shared actual default Query setLockMode(LockModeType? lockMode) {
-        query.setLockMode(lockMode);
-        return this;
-    }
+    shared Parameter<out Object> getParameter(Integer|String parameter)
+            => switch(parameter)
+            case (is Integer) query.getParameter(parameter)
+            case (is String) query.getParameter(parameter);
 
-    shared actual default Query setMaxResults(Integer maxResults) {
-        query.setMaxResults(maxResults);
-        return this;
-    }
-
-    shared actual default Query setParameter<Argument>(Parameter<Argument> param, Argument? arg)
+    shared Parameter<Argument> getTypedParameter<Argument>(
+        Integer|String parameter, Class<Argument> type)
             given Argument satisfies Object {
-        query.setParameter(param.name, toJava(arg));
-        return this;
+        value javaClass = Util.javaClass(type);
+        return
+            switch (parameter)
+            case (is Integer)
+                query.getParameter(parameter, javaClass)
+            case (is String)
+                query.getParameter(parameter, javaClass);
     }
 
-    shared actual default Query setParameter(Parameter<Calendar> param, Calendar? arg, TemporalType temporalType) {
-        query.setParameter(param, arg, temporalType);
-        return this;
-    }
-
-    shared actual default Query setParameter(Parameter<Date> param, Date? arg, TemporalType temporalType) {
-        query.setParameter(param, arg, temporalType);
-        return this;
-    }
-
-    shared actual default Query setParameter(String name, Object? arg) {
-        query.setParameter(name, toJava(arg));
-        return this;
-    }
-
-    shared actual default Query setParameter(String name, Calendar? arg, TemporalType temporalType) {
-        query.setParameter(name, arg, temporalType);
-        return this;
-    }
-
-    shared actual default Query setParameter(String name, Date? arg, TemporalType temporalType) {
-        query.setParameter(name, arg, temporalType);
-        return this;
-    }
-
-    shared actual default Query setParameter(Integer position, Object? arg) {
-        query.setParameter(position, toJava(arg));
-        return this;
-    }
-
-    shared actual default Query setParameter(Integer position, Calendar? arg, TemporalType temporalType) {
-        query.setParameter(position, arg, temporalType);
-        return this;
-    }
-
-    shared actual default Query setParameter(Integer position, Date? arg, TemporalType temporalType) {
-        query.setParameter(position, arg, temporalType);
-        return this;
-    }
-
-    shared actual Delegate unwrap<Delegate>(Class<Delegate> delegateClass)
-            given Delegate satisfies Object
-            => query.unwrap(delegateClass);
-
-}
-
-shared class TypedQuery<Result>(JTypedQuery<Result> query)
-        extends Query(query)
-        satisfies JTypedQuery<Result>
-        given Result satisfies Object {
-
-    shared actual List<Result> resultList => query.resultList;
-
-    shared actual TypedQuery<Result> setFirstResult(Integer startPosition) {
-        query.setFirstResult(startPosition);
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setFlushMode(FlushModeType? flushMode) {
-        query.setFlushMode(flushMode);
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setHint(String hintName, Object? hintValue) {
-        query.setHint(hintName, hintValue);
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setLockMode(LockModeType? lockMode) {
-        query.setLockMode(lockMode);
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setMaxResults(Integer maxResults) {
-        query.setMaxResults(maxResults);
-        return this;
-    }
-
-    shared actual Result singleResult => query.singleResult;
-
-    shared actual TypedQuery<Result> setParameter<Argument>(Parameter<Argument> param, Argument? arg)
+    shared Argument? getTypedParameterArgument<Argument>(
+        Parameter<Argument> parameter)
             given Argument satisfies Object {
-        query.setParameter(param.name, toJava(arg));
+        assert (is Argument argument = toCeylon(query.getParameterValue(parameter)));
+        return argument;
+    }
+
+    shared Object? getParameterArgument(Integer|String parameter)
+            => switch (parameter)
+            case (is Integer)
+                toCeylon(query.getParameterValue(parameter))
+            case (is String)
+                toCeylon(query.getParameterValue(parameter));
+
+    shared Set<Parameter<out Object>> parameters
+            => CeylonSet(query.parameters);
+
+    shared Boolean isBound(Parameter<out Object> parameter)
+            => query.isBound(parameter);
+
+    shared TypedQuery<Result> setTypedParameter<Argument>(
+        Parameter<Argument> parameter, Argument? argument)
+            given Argument satisfies Object {
+        query.setParameter(parameter.name, toJava(argument));
         return this;
     }
 
-    shared actual TypedQuery<Result> setParameter(Parameter<Calendar> param, Calendar? arg, TemporalType temporalType) {
-        query.setParameter(param, arg, temporalType);
+    shared TypedQuery<Result> setParameter(
+        String|Integer parameter, Object? argument) {
+        switch (parameter)
+        case (is String) {
+            query.setParameter(parameter, toJava(argument));
+        }
+        case (is Integer) {
+            query.setParameter(parameter, toJava(argument));
+
+        }
         return this;
     }
 
-    shared actual TypedQuery<Result> setParameter(Parameter<Date> param, Date? arg, TemporalType temporalType) {
-        query.setParameter(param, arg, temporalType);
+    //TODO: handle ceylon.time types!!!
+
+    suppressWarnings("uncheckedTypeArguments")
+    shared TypedQuery<Result> setTemporalTypedParameter<Type>(
+        Parameter<Type> parameter, Type argument,
+        TemporalType temporalType)
+            given Type of Calendar|Date {
+        switch(argument)
+        case (is Date) {
+            assert (is Parameter<Date> parameter);
+            query.setParameter(parameter, argument, temporalType);
+        }
+        case (is Calendar) {
+            assert (is Parameter<Calendar> parameter);
+            query.setParameter(parameter, argument, temporalType);
+        }
         return this;
     }
 
-    shared actual TypedQuery<Result> setParameter(String name, Object? arg) {
-        query.setParameter(name, toJava(arg));
+    shared TypedQuery<Result> setTemporalParameter(
+        Integer|String parameter, Date|Calendar argument,
+        TemporalType temporalType) {
+        switch(argument)
+        case (is Date) {
+            switch (parameter)
+            case (is Integer) {
+                query.setParameter(parameter, argument, temporalType);
+            }
+            case (is String) {
+                query.setParameter(parameter, argument, temporalType);
+            }
+        }
+        case (is Calendar) {
+            switch (parameter)
+            case (is Integer) {
+                query.setParameter(parameter, argument, temporalType);
+            }
+            case (is String) {
+                query.setParameter(parameter, argument, temporalType);
+            }
+        }
         return this;
     }
 
-    shared actual TypedQuery<Result> setParameter(String name, Calendar? arg, TemporalType temporalType) {
-        query.setParameter(name, arg, temporalType);
+    shared TypedQuery<Result> setPositionalArguments(Object* arguments) {
+        for (index->arg in arguments.indexed) {
+            setParameter(index, arg);
+        }
         return this;
     }
 
-    shared actual TypedQuery<Result> setParameter(String name, Date? arg, TemporalType temporalType) {
-        query.setParameter(name, arg, temporalType);
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setParameter(Integer position, Object? arg) {
-        query.setParameter(position, toJava(arg));
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setParameter(Integer position, Calendar? arg, TemporalType temporalType) {
-        query.setParameter(position, arg, temporalType);
-        return this;
-    }
-
-    shared actual TypedQuery<Result> setParameter(Integer position, Date? arg, TemporalType temporalType) {
-        query.setParameter(position, arg, temporalType);
+    shared TypedQuery<Result> setNamedArguments(<String->Object>* arguments) {
+        for (param->arg in arguments) {
+            setParameter(param, arg);
+        }
         return this;
     }
 
