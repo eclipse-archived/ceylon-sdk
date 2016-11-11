@@ -45,21 +45,23 @@ shared class TypedQuery<out Result=Object>
         this.query = query;
     }
 
-    suppressWarnings("uncheckedTypeArguments")
-    shared List<Result> resultList {
-        assert (is JList<Result> resultList = query.resultList);
-        return CeylonList(resultList);
-    }
-
-    shared Result singleResult {
+    shared Result getSingleResult() {
         assert (is Result result = query.singleResult);
         return result;
+    }
+
+    shared List<Result> getResults() => CeylonList(getResultList());
+
+    suppressWarnings("uncheckedTypeArguments")
+    shared JList<out Result> getResultList() {
+        assert (is JList<out Result> resultList = query.resultList);
+        return resultList;
     }
 
     shared Integer executeUpdate() => query.executeUpdate();
 
     shared Integer maxResults => query.maxResults;
-    assign maxResults => setMaxResults(maxResults);
+//    assign maxResults => setMaxResults(maxResults);
 
     shared TypedQuery<Result> setMaxResults(Integer maxResults) {
         query.setMaxResults(maxResults);
@@ -67,7 +69,7 @@ shared class TypedQuery<out Result=Object>
     }
 
     shared Integer firstResult => query.firstResult;
-    assign firstResult => setFirstResult(firstResult);
+//    assign firstResult => setFirstResult(firstResult);
 
     shared TypedQuery<Result> setFirstResult(Integer startPosition) {
         query.setFirstResult(startPosition);
@@ -75,7 +77,7 @@ shared class TypedQuery<out Result=Object>
     }
 
     shared LockModeType lockMode => query.lockMode;
-    assign lockMode => setLockMode(lockMode);
+//    assign lockMode => setLockMode(lockMode);
 
     shared TypedQuery<Result> setLockMode(LockModeType lockMode) {
         query.setLockMode(lockMode);
@@ -83,7 +85,7 @@ shared class TypedQuery<out Result=Object>
     }
 
     shared FlushModeType flushMode => query.flushMode;
-    assign flushMode => setFlushMode(flushMode);
+//    assign flushMode => setFlushMode(flushMode);
 
     shared TypedQuery<Result> setFlushMode(FlushModeType flushMode) {
         query.setFlushMode(flushMode);
