@@ -36,7 +36,12 @@ really sure that the bug wasn't fixed in the latest version of the code!*
 
 ### Build the SDK
 
-In the root of this project run
+First make sure that your Ceylon environment is set up properly by either typing
+`ceylon --version` and making sure it returns the version of the Ceylon compiler you want
+to use or by setting the `CEYLON_HOME` environment variable to point to the directory where
+Ceylon is installed.
+
+Then in the root of this project run
 
     ant clean publish
     
