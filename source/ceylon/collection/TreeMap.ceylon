@@ -22,6 +22,9 @@ shared serializable class TreeMap<Key, Item>
     "Alternatively, a node to clone."
     Node? nodeToClone;
     
+    "Current number of nodes"
+    variable Integer _size = 0;
+    
     "Create a new `TreeMap` with the given 
      [[comparator function|compare]] and [[entries]]."
     shared new (
@@ -122,36 +125,28 @@ shared serializable class TreeMap<Key, Item>
             return stringBuilder.string;
         }
         
-        shared Integer size {
-            variable Integer size = 1;
-            if (exists left = this.left) {
-                size+=left.size;
-            }
-            if (exists right = this.right) {
-                size+=right.size;
-            }
-            return size;
-        }
-        
     }
     
-    Node copyNode(Node node) {
+    [Node, Integer] copyNodeAndCalculateSize(Node node) {
         value copy = Node {
             key = node.key;
             item = node.item;
             red = node.red;
         };
+        variable Integer size = 1;
         if (exists left = node.left) {
-            value leftCopy = copyNode(left);
+            value [leftCopy, leftSize] = copyNodeAndCalculateSize(left);
             leftCopy.parent = copy;
             copy.left = leftCopy;
+            size += leftSize;
         }
         if (exists right = node.right) {
-            value rightCopy = copyNode(right);
+            value [rightCopy, rightSize] = copyNodeAndCalculateSize(right);
             rightCopy.parent = copy;
             copy.right = rightCopy;
+            size += rightSize;
         }
-        return copy;
+        return [copy, size];
     }
     
     Boolean isRed(Node? node) 
@@ -370,11 +365,14 @@ shared serializable class TreeMap<Key, Item>
             root = newNode;
         }
         balanceAfterInsert(newNode);
+        _size++;
         return null;
     }
     
-    root = if (exists nodeToClone) 
-           then copyNode(nodeToClone) else null;
+    value rootAndSize = if (exists nodeToClone) 
+           then copyNodeAndCalculateSize(nodeToClone) else [null, 0];
+    root = rootAndSize[0];
+    _size = rootAndSize[1];
 
     for (key->item in entries) {
         put(key, item);
@@ -502,6 +500,7 @@ shared serializable class TreeMap<Key, Item>
                 node = result;
             }
             removeCases.removeNodeWithAtMostOneChild(node);
+            _size--;
             return result.item;
         }
         else {
@@ -525,6 +524,7 @@ shared serializable class TreeMap<Key, Item>
                 node = result;
             }
             removeCases.removeNodeWithAtMostOneChild(node);
+            _size--;
             return true;
         }
         else {
@@ -695,9 +695,12 @@ shared serializable class TreeMap<Key, Item>
         }
     }
     
-    clear() => root=null;
+    shared actual void clear() {
+        root=null;
+        _size = 0;
+    }
     
-    size => root?.size else 0;
+    size => _size;
     
     first => if (exists node = root?.leftmostChild) 
                 then node.key->node.item 

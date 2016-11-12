@@ -5,6 +5,8 @@ import ceylon.test {
     ...
 }
 
+TreeMap<String, String> createTreeMap() => TreeMap<String,String>((String x, String y)=>x<=>y);
+
 void doTestMap(MutableMap<String,String> map) {
     assertEquals("{}", map.string);
     assertEquals(0, map.size);
@@ -36,6 +38,7 @@ void doTestMap(MutableMap<String,String> map) {
         map[number.string] = "#" + number.string;
     }
     value clone = map.clone();
+    assertEquals(clone.size, 100);
     assertEquals(map, clone);
     map.remove("10");
     assertTrue(map.definesEvery((1..9).map(toString)));
@@ -63,7 +66,7 @@ void doTestMap(MutableMap<String,String> map) {
 }
 
 shared test void testMap(){
-    value treeMap = TreeMap<String,String>((String x, String y)=>x<=>y);
+    value treeMap = createTreeMap();
     doTestMap(treeMap);
     treeMap.assertInvariants();
     treeMap.clone().assertInvariants();
@@ -86,6 +89,75 @@ shared test void testMapEquality() {
 
     assertEquals(naturalOrderTreeMap{}, HashMap{});
     assertEquals(naturalOrderTreeMap{"a"->1, "b"->2}, HashMap{"b"->2, "a"->1});
+}
+    
+test shared void initialSizeIs0() {
+    value map = createTreeMap();
+    assertEquals(map.size, 0);
+}
+
+test shared void treeMapSizeIs1AfterAnEntryIsPut() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    assertEquals(map.size, 1);
+}
+
+test shared void treeMapSizeRemainsAfterReplacingExistingEntry() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    map.replaceEntry("foo", "bar", "baz");
+    assertEquals(map.size, 1);
+}
+
+test shared void treeMapSizeRemainsAfterReplacingNonExistingEntry() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    map.replaceEntry("shoo", "bar", "baz");
+    assertEquals(map.size, 1);
+}
+    
+test shared void treeMapSizeRemainsAfterUsingCopyConstructor() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    value copy = TreeMap.copy(map);
+    assertEquals(copy.size, 1);
+}
+    
+test shared void treeMapSizeIs0AfterAnEntryIsPutAndThenRemoved() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    map.remove("foo");
+    assertEquals(map.size, 0);
+}
+    
+test shared void treeMapSizeRemainsAfterRemovingNonExistentKey() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    map.remove("baz");
+    assertEquals(map.size, 1);
+}
+    
+test shared void treeMapSizeIs1AfterTwoEntriesWithSameKeyArePut() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    map["foo"] = "baz";
+    assertEquals(map.size, 1);
+}
+    
+test shared void treeMapSizeIs2AfterTwoEntriesWithNonEqualKeysArePut() {
+    value map = createTreeMap();
+    map["foo"] = "bar";
+    map["baz"] = "bar";
+    assertEquals(map.size, 2);
+}
+
+test shared void treeMapSizeIsCorrectAfterSpan() {
+    value map = createTreeMap();
+    map["a"] = "foo";
+    map["b"] = "foo";
+    map["c"] = "foo";
+    value span = map["a".."b"];
+    assertEquals(span.size, 2);
 }
 
 test shared void testTreeMapSpan() {
