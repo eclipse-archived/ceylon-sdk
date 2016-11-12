@@ -1,11 +1,28 @@
 <project name="Ceylon SDK" basedir="." default="test">
 
     <property file="build.properties" />
+
+    <!-- Try to determine where Ceylon is installed -->
+    <condition property="batExt" value=".bat">
+        <os family="windows" />
+    </condition>
+    <property name="batExt" value=""/>
+    <exec executable="ceylon${batExt}" outputproperty="ceylon.home" failifexecutionfails="false">
+        <arg value="--show-home" />
+    </exec>
+    <property environment="env"/>
+    <property name="ceylon.home" value="${basedir}/../ceylon/dist/dist" />
+    <property name="env.CEYLON_HOME" value="${ceylon.home}"/>
+    <property name="ceylon.install.dir" value="${env.CEYLON_HOME}"/>
+
     <property name="ceylon.verbosity" value="false"/>
-    <property name="ceylon.executable" value="${ceylon.main.dir}/dist/dist/bin/ceylon"/>
+    <property name="ceylon.executable" value="${ceylon.install.dir}/bin/ceylon"/>
     <property name="out.repo" location="${basedir}/modules"/>
     <property name="deps.repo" location="${basedir}/test-deps"/>
     <property name="test.repo" location="${basedir}/modules"/>
+    <property name="lib.dir" location="${basedir}/lib"/>
+
+    <property name="ceylon.ant.lib" location="${ceylon.install.dir}/lib/ceylon-ant.jar"/>
     
     <property name="osgi" location="${basedir}/osgi" />
     <property name="osgi.p2" location="${osgi}/p2" />
@@ -17,21 +34,21 @@
     
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
-            <pathelement location="${ceylon.main.dir}/lib/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${lib.dir}/ant-contrib-1.0b3.jar"/>
         </classpath>
     </taskdef>
 
     <taskdef resource="taskdef.properties">
         <classpath>
-            <pathelement path="${ceylon.main.dir}/lib/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
+            <pathelement path="${lib.dir}/org.osgi.impl.bundle.repoindex.ant-2.1.2.jar" />
         </classpath>
     </taskdef>
 
     <taskdef resource="aQute/bnd/ant/taskdef.properties"
-          classpath="${ceylon.main.dir}/lib/biz.aQute.bnd-2.3.0.jar"/>
+          classpath="${lib.dir}/biz.aQute.bnd-2.3.0.jar"/>
 
     <taskdef name="bindex" classname="org.osgi.impl.bundle.bindex.ant.BindexTask"
-          classpath="${ceylon.main.dir}/lib/org.osgi.impl.bundle.bindex-2.2.0.jar"/>
+          classpath="${lib.dir}/org.osgi.impl.bundle.bindex-2.2.0.jar"/>
 
 	<!-- Local repository -->
     <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
