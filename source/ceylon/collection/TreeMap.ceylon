@@ -43,6 +43,7 @@ shared serializable class TreeMap<Key, Item>
         compare = treeMap.compare;
         entries = {};
         nodeToClone = treeMap.root;
+        _size = treeMap.size;
     }
     
     class Node {
@@ -127,26 +128,23 @@ shared serializable class TreeMap<Key, Item>
         
     }
     
-    [Node, Integer] copyNodeAndCalculateSize(Node node) {
+    Node copyNode(Node node) {
         value copy = Node {
             key = node.key;
             item = node.item;
             red = node.red;
         };
-        variable Integer size = 1;
         if (exists left = node.left) {
-            value [leftCopy, leftSize] = copyNodeAndCalculateSize(left);
+            value leftCopy = copyNode(left);
             leftCopy.parent = copy;
             copy.left = leftCopy;
-            size += leftSize;
         }
         if (exists right = node.right) {
-            value [rightCopy, rightSize] = copyNodeAndCalculateSize(right);
+            value rightCopy = copyNode(right);
             rightCopy.parent = copy;
             copy.right = rightCopy;
-            size += rightSize;
         }
-        return [copy, size];
+        return copy;
     }
     
     Boolean isRed(Node? node) 
@@ -369,10 +367,8 @@ shared serializable class TreeMap<Key, Item>
         return null;
     }
     
-    value rootAndSize = if (exists nodeToClone) 
-           then copyNodeAndCalculateSize(nodeToClone) else [null, 0];
-    root = rootAndSize[0];
-    _size = rootAndSize[1];
+    root = if (exists nodeToClone)
+        then copyNode(nodeToClone) else null;
 
     for (key->item in entries) {
         put(key, item);
