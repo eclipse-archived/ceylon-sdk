@@ -28,6 +28,7 @@ shared alias Hints => Map<String,Object>;
 shared class Query(JQuery query)
         => TypedQuery<>.withoutResultClass(query);
 
+"Interface used to control query execution."
 shared class TypedQuery<out Result=Object>
         given Result satisfies Object {
 
@@ -45,65 +46,90 @@ shared class TypedQuery<out Result=Object>
         this.query = query;
     }
 
+    "Execute a query that returns a single result."
     shared Result getSingleResult() {
         assert (is Result result = query.singleResult);
         return result;
     }
 
+    "Execute a query and return the query results as a `List`."
     shared List<Result> getResults() => CeylonList(getResultList());
 
+    "Execute a query and return the query results as a Java `List`."
     suppressWarnings("uncheckedTypeArguments")
     shared JList<out Result> getResultList() {
         assert (is JList<out Result> resultList = query.resultList);
         return resultList;
     }
 
+    "Execute an update or delete statement."
     shared Integer executeUpdate() => query.executeUpdate();
 
+    "The maximum number of results to retrieve."
     shared Integer maxResults => query.maxResults;
 //    assign maxResults => setMaxResults(maxResults);
 
+    "Set the maximum number of results to retrieve."
     shared TypedQuery<Result> setMaxResults(Integer maxResults) {
         query.setMaxResults(maxResults);
         return this;
     }
 
+    "The position of the first result to retrieve."
     shared Integer firstResult => query.firstResult;
 //    assign firstResult => setFirstResult(firstResult);
 
+    "Set the position of the first result to retrieve."
     shared TypedQuery<Result> setFirstResult(Integer startPosition) {
         query.setFirstResult(startPosition);
         return this;
     }
 
+    "The lock mode type to be used for the query execution."
     shared LockModeType lockMode => query.lockMode;
 //    assign lockMode => setLockMode(lockMode);
 
+    "Set the lock mode type to be used for the query execution."
     shared TypedQuery<Result> setLockMode(LockModeType lockMode) {
         query.setLockMode(lockMode);
         return this;
     }
 
+    "The flush mode type to be used for the query execution.
+     The flush mode type applies to the query regardless of the
+     flush mode type in use for the entity manager."
     shared FlushModeType flushMode => query.flushMode;
 //    assign flushMode => setFlushMode(flushMode);
 
+    "Set the flush mode type to be used for the query execution.
+     The flush mode type applies to the query regardless of the
+     flush mode type in use for the entity manager."
     shared TypedQuery<Result> setFlushMode(FlushModeType flushMode) {
         query.setFlushMode(flushMode);
         return this;
     }
 
+    "Get the properties and hints and associated values that are
+     in effect for the query instance."
     shared Hints hints => CeylonStringMap(CeylonMap(query.hints));
 
+    "Set a query property or hint."
     shared TypedQuery<Result> setHint(String hintName, Object? hintValue) {
         query.setHint(hintName, toJava(hintValue));
         return this;
     }
 
+    "Get the parameter object corresponding to the declared positional
+     or named parameter with the given position or name. This method is
+     not required to be supported for native queries."
     shared Parameter<out Object> getParameter(Integer|String parameter)
             => switch(parameter)
             case (is Integer) query.getParameter(parameter)
             case (is String) query.getParameter(parameter);
 
+    "Get the parameter object corresponding to the declared parameter
+     of the given name and type. This method is required to be
+     supported for criteria queries only."
     shared Parameter<Argument> getTypedParameter<Argument>(
         Integer|String parameter, Class<Argument> type)
             given Argument satisfies Object {
@@ -116,13 +142,16 @@ shared class TypedQuery<out Result=Object>
                 query.getParameter(parameter, javaClass);
     }
 
+    "Return the argument bound to the parameter."
     shared Argument? getTypedParameterArgument<Argument>(
         Parameter<Argument> parameter)
             given Argument satisfies Object {
-        assert (is Argument argument = toCeylon(query.getParameterValue(parameter)));
+        assert (is Argument argument
+                = toCeylon(query.getParameterValue(parameter)));
         return argument;
     }
 
+    "Return the argument bound to the positional or named parameter."
     shared Object? getParameterArgument(Integer|String parameter)
             => switch (parameter)
             case (is Integer)
@@ -130,19 +159,32 @@ shared class TypedQuery<out Result=Object>
             case (is String)
                 toCeylon(query.getParameterValue(parameter));
 
+    "Get the parameter objects corresponding to the declared
+     parameters of the query. Returns empty set if the query
+     has no parameters. This method is not required to be
+     supported for native queries."
     shared Set<Parameter<out Object>> parameters
             => CeylonSet(query.parameters);
 
+    "Determine whether an argument has been bound to the
+     parameter."
     shared Boolean isBound(Parameter<out Object> parameter)
             => query.isBound(parameter);
 
+    "Bind an argument to a named parameter."
     shared TypedQuery<Result> setTypedParameter<Argument>(
         Parameter<Argument> parameter, Argument? argument)
             given Argument satisfies Object {
-        query.setParameter(parameter.name, toJava(argument));
+        if (exists name = parameter.name) {
+            query.setParameter(name, toJava(argument));
+        }
+        else if (exists pos = parameter.position) {
+            query.setParameter(pos.longValue(), toJava(argument));
+        }
         return this;
     }
 
+    "Bind an argument to a positional or named parameter."
     shared TypedQuery<Result> setParameter(
         String|Integer parameter, Object? argument) {
         switch (parameter)
@@ -158,6 +200,7 @@ shared class TypedQuery<out Result=Object>
 
     //TODO: handle ceylon.time types!!!
 
+    "Bind an argument to a parameter of temporal type."
     suppressWarnings("uncheckedTypeArguments")
     shared TypedQuery<Result> setTemporalTypedParameter<Type>(
         Parameter<Type> parameter, Type argument,
@@ -175,6 +218,8 @@ shared class TypedQuery<out Result=Object>
         return this;
     }
 
+    "Bind an argument to a positional or named parameter
+     of temporal type."
     shared TypedQuery<Result> setTemporalParameter(
         Integer|String parameter, Date|Calendar argument,
         TemporalType temporalType) {
@@ -200,6 +245,7 @@ shared class TypedQuery<out Result=Object>
         return this;
     }
 
+    "Bind arguments to all positional parameters."
     shared TypedQuery<Result> setPositionalArguments(Object* arguments) {
         for (index->arg in arguments.indexed) {
             setParameter(index, arg);
@@ -207,6 +253,7 @@ shared class TypedQuery<out Result=Object>
         return this;
     }
 
+    "Bind arguments to all named parameters."
     shared TypedQuery<Result> setNamedArguments(<String->Object>* arguments) {
         for (param->arg in arguments) {
             setParameter(param, arg);
