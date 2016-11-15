@@ -151,6 +151,7 @@ shared class EntityManager(entityManager)
     shared Query createNativeMappedQuery(String sqlQuery, String resultSetMapping)
             => Query(entityManager.createNativeQuery(sqlQuery, resultSetMapping));
 
+    "Create an instance of [[Query]] for executing a native SQL query."
     shared TypedQuery<Result> createNativeTypedQuery<Result>(String sqlQuery,
         Class<Result> resultClass)
             given Result satisfies Object
@@ -158,6 +159,8 @@ shared class EntityManager(entityManager)
                     entityManager.createNativeQuery(sqlQuery,
                     javaClass(resultClass)));
 
+    "An instance of `CriteriaBuilder` for the creating `CriteriaQuery`
+     objects."
     shared CriteriaBuilder criteriaBuilder => entityManager.criteriaBuilder;
 
     "Create an instance of [[TypedQuery]] for executing a criteria query."
@@ -176,14 +179,26 @@ shared class EntityManager(entityManager)
 
     //TODO: wrapper for StoredProcedureQuery!!!!
 
+    "Create an instance of `StoredProcedureQuery` for executing a
+     stored procedure in the database."
     shared StoredProcedureQuery createNamedStoredProcedureQuery(String name)
             => entityManager.createNamedStoredProcedureQuery(name);
 
+    "Create an instance of `StoredProcedureQuery` for executing a
+     stored procedure in the database. Parameters must be registered
+     before the stored procedure can be executed. The [[resultSetMapping]]
+     arguments must be specified in the order in which the result sets
+     will be returned by the stored procedure invocation."
     shared StoredProcedureQuery createStoredProcedureMappedQuery(
         String procedureName, String* resultSetMappings)
             => entityManager.createStoredProcedureQuery(procedureName,
                     *resultSetMappings);
 
+    "Create an instance of `StoredProcedureQuery` for executing a
+     stored procedure in the database. Parameters must be registered
+     before the stored procedure can be executed. The [[resultClass]]
+     arguments must be specified in the order in which the result sets
+     will be returned by the stored procedure invocation."
     shared StoredProcedureQuery createStoredProcedureQuery(
         String procedureName, Class<Object>* resultClasses)
             => entityManager.createStoredProcedureQuery(procedureName,
