@@ -55,10 +55,9 @@ module ceylon.http.server "2.0.0-SNAPSHOT" {
     
     import java.base "7";
     
-    import io.undertow.core "1.3.5.Final";
+    import io.undertow.core "1.4.4.Final";
 
-    import org.jboss.xnio.api "3.3.2.Final";
-    import org.jboss.xnio.nio "3.3.2.Final";
+    import org.jboss.xnio.nio "3.3.6.Final";
     import ceylon.interop.java "1.3.1-SNAPSHOT";
     
 }
