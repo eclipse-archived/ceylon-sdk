@@ -1,3 +1,28 @@
+"Provides a Ceylonic [[EntityManger]] for use with the
+ Java Persistence API. An `EntityManager` may be
+ instantiated directly, given an instance of
+ [[javax.persistence.EntityManager|javax.persistence::EntityManager]].
+
+     value emf = Persistence.createEntityManagerFactory(\"example\");
+     value em = EntityManger(emf.createEntityManager());
+
+ The `EntityManager` provides all the same operations
+ as `javax.persistence.EntityManager`, but:
+
+ 1. is slightly more typesafe, and
+ 2. accepts [[Integer]], [[Float]], [[String]],
+    [[Character]], and [[Boolean]], arguments to
+    [[EntityManager.find]],
+    [[EntityManager.getReference]] and
+    [[Query.setParameter]].
+
+ Note: it's perfectly possible to directly use the
+ `javax.persistence.EntityManager` from Ceylon, but in
+ that case, it's necessary to explicitly convert
+ arguments to [[Long]], [[Double]],
+ [[java.lang.String|java.lang::String]],
+ [[java.lang.Character|java.lang::Character]], or
+ [[java.lang.Boolean|java.lang::Boolean]]."
 native ("jvm")
 module ceylon.interop.persistence "1.3.1-SNAPSHOT" {
     shared import maven:"org.hibernate.javax.persistence:hibernate-jpa-2.1-api" "1.0.0.Final";
