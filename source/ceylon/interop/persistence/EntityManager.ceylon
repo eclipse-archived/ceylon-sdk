@@ -33,23 +33,30 @@ import javax.persistence.metamodel {
     Metamodel
 }
 
+"A [[Map]] associating string keys with items."
 shared alias Properties => Map<String,Object>;
 
 "Interface used to interact with the persistence context.
+ This interface is based closely upon
+ [[javax.persistence.EntityManager|javax.persistence::EntityManager]],
+ but automatically manages conversions between Ceylon types
+ and corresponding Java types, without the need for JPA
+ `AttributeConverter`s.
 
  An `EntityManager` instance is associated with a persistence
- context. A persistence context is a set of entity instances in
- which for any persistent entity identity there is a unique
+ context. A persistence context is a set of entity instances
+ in which for any persistent entity identity there is a unique
  entity instance. Within the persistence context, the entity
  instances and their lifecycle are managed. The `EntityManager`
- API is used to create and remove persistent entity instances, to
- find entities by their primary key, and to query over entities.
+ API is used to create and remove persistent entity instances,
+ to find entities by their primary key, and to query over
+ entities.
 
- The set of entities that can be managed by a given `EntityManager`
- instance is defined by a persistence unit. A persistence unit
- defines the set of all classes that are related or grouped by the
- application, and which must be colocated in their mapping to a
- single database."
+ The set of entities that can be managed by a given
+ `EntityManager` instance is defined by a persistence unit.
+ A persistence unit defines the set of all classes that are
+ related or grouped by the application, and which must be
+ colocated in their mapping to a single database."
 shared class EntityManager(entityManager)
         satisfies Category<> {
 
@@ -60,266 +67,332 @@ shared class EntityManager(entityManager)
      `true` unless the entity manager has already been closed."
     shared Boolean open => entityManager.open;
 
-    "Close an application-managed entity manager. After the close
-     method has been invoked, all methods on the `EntityManager`
-     instance and any `Query` and `TypedQuery` objects obtained
-     from it will throw the `IllegalStateException` except for
-     [[properties]], [[transaction]], and [[open]] (which will
-     return false). If this method is called when the entity
-     manager is associated with an active transaction, the
-     persistence context remains managed until the transaction
-     completes."
+    "Close an application-managed entity manager. After the
+     close method has been invoked, all methods on the
+     `EntityManager` instance and any `TypedQuery` objects
+     obtained from it will throw the `IllegalStateException`
+     except for [[properties]], [[transaction]], and [[open]]
+     (which will return false). If this method is called when
+     the entity manager is associated with an active
+     transaction, the persistence context remains managed
+     until the transaction completes."
     shared void close() => entityManager.close();
 
-    "Check if the instance is a managed entity instance belonging
-     to the current persistence context."
+    "Check if the instance is a managed entity instance
+     belonging to the current persistence context."
     shared actual Boolean contains(Object entity)
             => entityManager.contains(entity);
 
-    "Clear the persistence context, causing all managed entities to
-     become detached. Changes made to entities that have not been
-     flushed to the database will not be persisted."
+    "Clear the persistence context, causing all managed
+     entities to become detached. Changes made to entities
+     that have not been flushed to the database will not be
+     persisted."
     shared void clear() => entityManager.clear();
 
-    "Synchronize the persistence context to the underlying database."
-    shared variable FlushModeType flushMode = entityManager.flushMode;
+    "The flush mode that applies to all objects contained in
+     the persistence context."
+    shared FlushModeType flushMode => entityManager.flushMode;
+    assign flushMode => entityManager.flushMode = flushMode;
 
+    "Synchronize the persistence context to the underlying
+     database, by actually executing SQL DML statements."
     shared void flush() => entityManager.flush();
 
-    "Indicate to the entity manager that a JTA transaction is active.
-     This method should be called on a JTA application managed entity
-     manager that was created outside the scope of the active
-     transaction to associate it with the current JTA transaction."
-    shared EntityTransaction transaction => entityManager.transaction;
+    "Return the resource-level `EntityTransaction` object.
+     The `EntityTransaction` instance may be used serially
+     to begin and commit multiple transactions.."
+    shared EntityTransaction transaction
+            => entityManager.transaction;
 
-    shared void joinTransaction() => entityManager.joinTransaction();
+    "Indicate to the entity manager that a JTA transaction
+     is active. This method should be called on a JTA
+     application managed entity manager that was created
+     outside the scope of the active transaction to associate
+     it with the current JTA transaction."
+    shared void joinTransaction()
+            => entityManager.joinTransaction();
 
-    "Determine whether the entity manager is joined to the current
-     transaction. Returns `false` if the entity manager is not joined
-     to the current transaction or if no transaction is active."
-    shared Boolean joinedToTransaction => entityManager.joinedToTransaction;
+    "Determine whether the entity manager is joined to the
+     current transaction. Returns `false` if the entity
+     manager is not joined to the current transaction or if
+     no transaction is active."
+    shared Boolean joinedToTransaction
+            => entityManager.joinedToTransaction;
 
-    "Return an instance of the `Metamodel` interface for access to the
-     metamodel of the persistence unit."
+    "Return an instance of the `Metamodel` interface for
+     access to the metamodel of the persistence unit."
     shared Metamodel metamodel => entityManager.metamodel;
 
-    "Get the properties and hints and associated values that are in
-     effect for this entity manager."
+    "Get the properties and hints and associated values that
+     are in effect for this entity manager."
     shared Properties properties
-            => CeylonStringMap(CeylonMap(entityManager.properties));
+            => CeylonStringMap(CeylonMap(
+                    entityManager.properties));
 
     "Set an entity manager property or hint."
-    shared void setProperty(String propertyName, Object propertyValue)
-            => entityManager.setProperty(propertyName, toJava(propertyValue));
+    shared void setProperty(String propertyName,
+        Object propertyValue)
+            => entityManager.setProperty(propertyName,
+                    toJava(propertyValue));
 
-    "Create an instance of [[Query]] for executing a Java Persistence
-     query language statement."
+    "Create an instance of [[Query]] for executing a Java
+     Persistence query language statement."
     shared Query createQuery(String query)
             => Query(entityManager.createQuery(query));
 
-    "Create an instance of [[TypedQuery]] for executing a Java Persistence
-     query language statement. The select list of the query must contain
-     only a single item, which must be assignable to the type specified
-     by the [[resultClass]] argument."
-    shared TypedQuery<Result> createTypedQuery<Result>(String query,
-        Class<Result> resultClass)
+    "Create an instance of [[TypedQuery]] for executing a
+     Java Persistence query language statement. The select
+     list of the query must contain exactly one item, which
+     must be assignable to the type specified by the
+     [[resultClass]] argument."
+    shared TypedQuery<Result> createTypedQuery<Result>(
+        String query, Class<Result> resultClass)
             given Result satisfies Object
             => TypedQuery(entityManager.createQuery(query,
                     javaClass(resultClass)));
 
-    "Create an instance of Query for executing a named query (in the Java
-     Persistence query language or in native SQL)."
+    "Create an instance of [[Query]] for executing a named
+     query (in the Java Persistence query language or in
+     native SQL)."
     shared Query createNamedQuery(String name)
             => Query(entityManager.createNamedQuery(name));
 
-    "Create an instance of [[TypedQuery]] for executing a Java Persistence
-     query language named query. The select list of the query must contain
-     only a single item, which must be assignable to the type specified by
-     the [[resultClass]] argument."
-    shared TypedQuery<Result> createNamedTypedQuery<Result>(String name,
-        Class<Result> resultClass)
+    "Create an instance of [[TypedQuery]] for executing a
+     Java Persistence query language named query. The select
+     list of the query must contain exactly one item, which
+     must be assignable to the type specified by the
+     [[resultClass]] argument."
+    shared TypedQuery<Result> createNamedTypedQuery<Result>(
+        String name, Class<Result> resultClass)
             given Result satisfies Object
             => TypedQuery(entityManager.createNamedQuery(name,
                     javaClass(resultClass)));
 
-    "Create an instance of [[Query]] for executing a native SQL statement,
-     e.g., for update or delete."
+    "Create an instance of [[Query]] for executing a native
+     SQL DML statement, that is, an insert, update, or delete."
     shared Query createNativeQuery(String sqlQuery)
             => Query(entityManager.createNativeQuery(sqlQuery));
 
-    "Create an instance of [[Query]] for executing a native SQL query."
-    shared Query createNativeMappedQuery(String sqlQuery, String resultSetMapping)
-            => Query(entityManager.createNativeQuery(sqlQuery, resultSetMapping));
+    "Create an instance of [[Query]] for executing a native
+     SQL query."
+    shared Query createNativeMappedQuery(String sqlQuery,
+        String resultSetMapping)
+            => Query(entityManager.createNativeQuery(sqlQuery,
+                    resultSetMapping));
 
-    "Create an instance of [[Query]] for executing a native SQL query."
-    shared TypedQuery<Result> createNativeTypedQuery<Result>(String sqlQuery,
-        Class<Result> resultClass)
+    "Create an instance of [[TypedQuery]] for executing a
+     native SQL query."
+    shared TypedQuery<Result> createNativeTypedQuery<Result>(
+        String sqlQuery, Class<Result> resultClass)
             given Result satisfies Object
             => TypedQuery.withResultClass(resultClass,
                     entityManager.createNativeQuery(sqlQuery,
-                    javaClass(resultClass)));
+                        javaClass(resultClass)));
 
-    "An instance of `CriteriaBuilder` for the creating `CriteriaQuery`
-     objects."
-    shared CriteriaBuilder criteriaBuilder => entityManager.criteriaBuilder;
+    "An instance of `CriteriaBuilder` for the creating
+     `CriteriaQuery` objects."
+    shared CriteriaBuilder criteriaBuilder
+            => entityManager.criteriaBuilder;
 
-    "Create an instance of [[TypedQuery]] for executing a criteria query."
+    "Create an instance of [[TypedQuery]] for executing a
+     criteria query."
     shared TypedQuery<Result> createCriteriaQuery<Result>(
         CriteriaQuery<Result> criteriaQuery)
             given Result satisfies Object
             => TypedQuery(entityManager.createQuery(criteriaQuery));
 
-    "Create an instance of [[Query]] for executing a criteria update query."
-    shared Query createUpdateQuery(CriteriaUpdate<out Object> updateQuery)
+    "Create an instance of [[Query]] for executing a criteria
+     update query."
+    shared Query createUpdateQuery(
+        CriteriaUpdate<out Object> updateQuery)
             => Query(entityManager.createQuery(updateQuery));
 
-    "Create an instance of [[Query]] for executing a criteria delete query."
-    shared Query createDeleteQuery(CriteriaDelete<out Object> deleteQuery)
+    "Create an instance of [[Query]] for executing a criteria
+     delete query."
+    shared Query createDeleteQuery(
+        CriteriaDelete<out Object> deleteQuery)
             => Query(entityManager.createQuery(deleteQuery));
 
     //TODO: wrapper for StoredProcedureQuery!!!!
 
-    "Create an instance of `StoredProcedureQuery` for executing a
-     stored procedure in the database."
-    shared StoredProcedureQuery createNamedStoredProcedureQuery(String name)
+    "Create an instance of `StoredProcedureQuery` for
+     executing a stored procedure in the database."
+    shared StoredProcedureQuery createNamedStoredProcedureQuery(
+        String name)
             => entityManager.createNamedStoredProcedureQuery(name);
 
-    "Create an instance of `StoredProcedureQuery` for executing a
-     stored procedure in the database. Parameters must be registered
-     before the stored procedure can be executed. The [[resultSetMapping]]
-     arguments must be specified in the order in which the result sets
-     will be returned by the stored procedure invocation."
+    "Create an instance of `StoredProcedureQuery` for
+     executing a stored procedure in the database. Parameters
+     must be registered before the stored procedure can be
+     executed. The [[resultSetMappings]] arguments must be
+     specified in the order in which the result sets will be
+     returned by the stored procedure invocation."
     shared StoredProcedureQuery createStoredProcedureMappedQuery(
         String procedureName, String* resultSetMappings)
-            => entityManager.createStoredProcedureQuery(procedureName,
-                    *resultSetMappings);
+            => entityManager.createStoredProcedureQuery(
+                    procedureName, *resultSetMappings);
 
-    "Create an instance of `StoredProcedureQuery` for executing a
-     stored procedure in the database. Parameters must be registered
-     before the stored procedure can be executed. The [[resultClass]]
-     arguments must be specified in the order in which the result sets
-     will be returned by the stored procedure invocation."
+    "Create an instance of `StoredProcedureQuery` for
+     executing a stored procedure in the database. Parameters
+     must be registered before the stored procedure can be
+     executed. The [[resultClasses]] arguments must be
+     specified in the order in which the result sets will be
+     returned by the stored procedure invocation."
     shared StoredProcedureQuery createStoredProcedureQuery(
         String procedureName, Class<Object>* resultClasses)
-            => entityManager.createStoredProcedureQuery(procedureName,
+            => entityManager.createStoredProcedureQuery(
+                    procedureName,
                     for (rc in resultClasses)
-                    javaClassFromModel(rc));
+                        javaClassFromModel(rc));
 
-    "Find by primary key and lock, using the specified properties. Search
-     for an entity of the specified class and primary key and lock it
-     with respect to the specified lock type. If the entity instance is
-     contained in the persistence context, it is returned from there.
+    "Find by [[primary key|primaryKey]], with the given
+     [[lock mode|lockMode]], using the specified
+     [[properties]]. Search for an entity of the specified
+     [[class|entityClass]] and primary key and lock it with
+     respect to the specified lock type. If the entity
+     instance is contained in the persistence context, it is
+     returned from there.
 
-     If the entity is found within the persistence context and the lock
-     mode type is pessimistic and the entity has a version attribute, the
-     persistence provider must perform optimistic version checks when
-     obtaining the database lock. If these checks fail, the
+     If the entity is found within the persistence context
+     and the lock mode type is pessimistic and the entity has
+     a version attribute, the persistence provider must
+     perform optimistic version checks when obtaining the
+     database lock. If these checks fail, the
      `OptimisticLockException` will be thrown.
 
-     If the lock mode type is pessimistic and the entity instance is found
-     but cannot be locked:
+     If the lock mode type is pessimistic and the entity
+     instance is found but cannot be locked:
 
-     - the `PessimisticLockException` will be thrown if the database locking
-       failure causes transaction-level rollback
-     - the `LockTimeoutException` will be thrown if the database locking
-       failure causes only statement-level rollback."
-    shared Entity find<Entity>(Class<Entity> entityClass, Object primaryKey,
-                LockModeType lockMode = LockModeType.none,
-                Properties properties = emptyMap)
+     - the `PessimisticLockException` will be thrown if the
+       database locking failure causes transaction-level
+       rollback
+     - the `LockTimeoutException` will be thrown if the
+       database locking failure causes only statement-level
+       rollback."
+    shared Entity find<Entity>(Class<Entity> entityClass,
+        Object primaryKey,
+        LockModeType lockMode = LockModeType.none,
+        Properties properties = emptyMap)
             given Entity satisfies Object
-            => entityManager.find(javaClass(entityClass), toJava(primaryKey),
-                    lockMode, JavaMap(JavaStringMap(properties)));
+            => entityManager.find(javaClass(entityClass),
+                    toJava(primaryKey), lockMode,
+                    JavaMap(JavaStringMap(properties)));
 
-    "Get an instance, whose state may be lazily fetched. If the requested
-     instance does not exist in the database, the `EntityNotFoundException`
-     is thrown when the instance state is first accessed. (The persistence
-     provider runtime is permitted to throw the `EntityNotFoundException`
-     when `getReference()` is called.) The application should not expect
-     that the instance state will be available upon detachment, unless it
-     was accessed by the application while the entity manager was open."
-    shared Entity getReference<Entity>(Class<Entity> entityClass, Object primaryKey)
+    "Get an instance, whose state may be lazily fetched. If
+     the requested instance does not exist in the database,
+     the `EntityNotFoundException` is thrown when the
+     instance state is first accessed. (The persistence
+     provider runtime is permitted to throw the
+     `EntityNotFoundException` when `getReference()` is
+     called.) The application should not expect that the
+     instance state will be available upon detachment,
+     unless it was accessed by the application while the
+     entity manager was open."
+    shared Entity getReference<Entity>(
+        Class<Entity> entityClass, Object primaryKey)
             given Entity satisfies Object
-            => entityManager.getReference(javaClass(entityClass), toJava(primaryKey));
+            => entityManager.getReference(
+                    javaClass(entityClass),
+                    toJava(primaryKey));
 
-    "Remove the given entity from the persistence context, causing a managed
-     entity to become detached. Unflushed changes made to the entity if any
-     (including removal of the entity), will not be synchronized to the
-     database. Entities which previously referenced the detached entity will
-     continue to reference it."
-    shared void detach(Object entity) => entityManager.detach(entity);
+    "Remove the given entity from the persistence context,
+     causing a managed entity to become detached. Unflushed
+     changes made to the entity if any (including removal of
+     the entity), will not be synchronized to the database.
+     Entities which previously referenced the detached entity
+     will continue to reference it."
+    shared void detach(Object entity)
+            => entityManager.detach(entity);
 
     "Make an instance managed and persistent."
-    shared void persist(Object entity) => entityManager.persist(entity);
+    shared void persist(Object entity)
+            => entityManager.persist(entity);
 
-    "Merge the state of the given entity into the current persistence context."
+    "Merge the state of the given entity into the current
+     persistence context."
     shared Entity merge<Entity>(Entity entity)
             given Entity satisfies Object
             => entityManager.merge(entity);
 
     "Remove the entity instance."
-    shared void remove(Object entity) => entityManager.remove(entity);
+    shared void remove(Object entity)
+            => entityManager.remove(entity);
 
-    "Refresh the state of the instance from the database, overwriting changes
-     made to the entity, if any, and lock it with respect to given lock mode
-     type and with specified properties.
+    "Refresh the state of the instance from the database,
+     overwriting changes made to the entity, if any, and
+     lock it with respect to given lock mode type and with
+     specified properties.
 
-     If the lock mode type is pessimistic and the entity instance is found
-     but cannot be locked:
+     If the lock mode type is pessimistic and the entity
+     instance is found but cannot be locked:
 
-     - the `PessimisticLockException` will be thrown if the database locking
-       failure causes transaction-level rollback
-     - the `LockTimeoutException` will be thrown if the database locking
-       failure causes only statement-level rollback."
+     - the `PessimisticLockException` will be thrown if the
+       database locking failure causes transaction-level
+       rollback
+     - the `LockTimeoutException` will be thrown if the
+       database locking failure causes only statement-level
+       rollback."
     shared void refresh(Object entity,
-                LockModeType lockMode = LockModeType.none,
-                Properties properties = emptyMap)
+        LockModeType lockMode = LockModeType.none,
+        Properties properties = emptyMap)
             => entityManager.refresh(entity, lockMode,
                     JavaMap(JavaStringMap(properties)));
 
-    "Lock an entity instance that is contained in the persistence context with
-     the specified lock mode type and with specified properties.
+    "Lock an entity instance that is contained in the
+     persistence context with the specified lock mode type
+     and with specified properties.
 
-     If a pessimistic lock mode type is specified and the entity contains a
-     version attribute, the persistence provider must also perform optimistic
-     version checks when obtaining the database lock. If these checks fail,
-     the OptimisticLockException will be thrown.
+     If a pessimistic lock mode type is specified and the
+     entity contains a version attribute, the persistence
+     provider must also perform optimistic version checks
+     when obtaining the database lock. If these checks fail,
+     the `OptimisticLockException` will be thrown.
 
-     If the lock mode type is pessimistic and the entity instance is found
-     but cannot be locked:
+     If the lock mode type is pessimistic and the entity
+     instance is found but cannot be locked:
 
-     - the `PessimisticLockException` will be thrown if the database locking
-       failure causes transaction-level rollback
-     - the `LockTimeoutException` will be thrown if the database locking failure
-       causes only statement-level rollback."
+     - the `PessimisticLockException` will be thrown if the
+       database locking failure causes transaction-level
+       rollback
+     - the `LockTimeoutException` will be thrown if the
+       database locking failure causes only statement-level
+       rollback."
     shared void lock(Object entity,
-                LockModeType lockMode,
-                Properties properties = emptyMap)
+        LockModeType lockMode,
+        Properties properties = emptyMap)
             => entityManager.lock(entity, lockMode,
                     JavaMap(JavaStringMap(properties)));
     "Get the current lock mode for the entity instance."
     shared LockModeType getLockMode(Object entity)
             => entityManager.getLockMode(entity);
 
-    "Return a named `EntityGraph`. The returned `EntityGraph` should be
-     considered immutable."
-    shared EntityGraph<out Object> getEntityGraph(String graphName)
+    "Return a named `EntityGraph`. The returned `EntityGraph`
+     should be considered immutable."
+    shared EntityGraph<out Object> getEntityGraph(
+        String graphName)
             => entityManager.getEntityGraph(graphName);
 
-    "Return all named EntityGraphs that have been defined for the
-     provided class type."
-    shared List<EntityGraph<in Entity>> getEntityGraphs<Entity>(Class<Entity> entityClass)
+    "Return all named `EntityGraph`s that have been defined
+     for the provided class type."
+    shared List<EntityGraph<in Entity>> getEntityGraphs<Entity>(
+        Class<Entity> entityClass)
             given Entity satisfies Object
-            => CeylonList(entityManager.getEntityGraphs(javaClass(entityClass)));
+            => CeylonList(entityManager.getEntityGraphs(
+                    javaClass(entityClass)));
 
-    "Return a mutable `EntityGraph` that can be used to dynamically
-     create an `EntityGraph`."
-    shared EntityGraph<Entity> createEntityGraph<Entity>(Class<Entity> rootType)
+    "Return a mutable `EntityGraph` that can be used to
+     dynamically create an `EntityGraph`."
+    shared EntityGraph<Entity> createEntityGraph<Entity>(
+        Class<Entity> rootType)
             given Entity satisfies Object
-            => entityManager.createEntityGraph(javaClass(rootType));
+            => entityManager.createEntityGraph(
+                    javaClass(rootType));
 
-    "Return a mutable copy of the named `EntityGraph`. If there is no
-     entity graph with the specified name, `null` is returned."
-    shared EntityGraph<out Object>? createNamedEntityGraph(String graphName)
+    "Return a mutable copy of the named `EntityGraph`. If
+     there is no entity graph with the specified name, `null`
+     is returned."
+    shared EntityGraph<out Object>? createNamedEntityGraph(
+        String graphName)
             => entityManager.createEntityGraph(graphName);
 
 }

@@ -1,13 +1,13 @@
-"Provides a Ceylonic [[EntityManger]] for use with the
- Java Persistence API. An `EntityManager` may be
- instantiated directly, given an instance of
+"Provides a Ceylonic [[EntityManager]] for use with the Java
+ Persistence API. An `EntityManager` may be instantiated
+ directly, given an instance of
  [[javax.persistence.EntityManager|javax.persistence::EntityManager]].
 
      value emf = Persistence.createEntityManagerFactory(\"example\");
      value em = EntityManger(emf.createEntityManager());
 
- The `EntityManager` provides all the same operations
- as `javax.persistence.EntityManager`, but:
+ The `EntityManager` provides all the same operations as
+ `javax.persistence.EntityManager`, but:
 
  1. is slightly more typesafe, and
  2. accepts [[Integer]], [[Float]], [[String]],
@@ -17,9 +17,10 @@
     [[Query.setParameter]].
 
  Note: it's perfectly possible to directly use the
- `javax.persistence.EntityManager` from Ceylon, but in
- that case, it's necessary to explicitly convert
- arguments to [[Long]], [[Double]],
+ `javax.persistence.EntityManager` from Ceylon, but in that
+ case, it's necessary to explicitly convert arguments to
+ [[java.lang.Long|java.lang::Long]],
+ [[java.lang.Double|java.lang::Double]],
  [[java.lang.String|java.lang::String]],
  [[java.lang.Character|java.lang::Character]], or
  [[java.lang.Boolean|java.lang::Boolean]]."

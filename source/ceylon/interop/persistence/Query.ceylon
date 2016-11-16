@@ -23,12 +23,15 @@ import javax.persistence {
     TemporalType
 }
 
-shared alias Hints => Map<String,Object>;
-
 shared class Query(JQuery query)
         => TypedQuery<>.withoutResultClass(query);
 
-"Interface used to control query execution."
+"Interface used to control query execution. This interface
+ is based closely upon
+ [[javax.persistence.TypedQuery|javax.persistence::TypedQuery]],
+ but automatically manages conversions between Ceylon types
+ and corresponding Java types, without the need for JPA
+ `AttributeConverter`s."
 shared class TypedQuery<out Result=Object>
         given Result satisfies Object {
 
@@ -52,17 +55,22 @@ shared class TypedQuery<out Result=Object>
         return result;
     }
 
-    "Execute a query and return the query results as a `List`."
-    shared List<Result> getResults() => CeylonList(getResultList());
+    "Execute a query and return the query results as a
+     [[List]]."
+    shared List<Result> getResults()
+            => CeylonList(getResultList());
 
-    "Execute a query and return the query results as a Java `List`."
+    "Execute a query and return the query results as a
+     [[Java `List`|JList]]."
     suppressWarnings("uncheckedTypeArguments")
     shared JList<out Result> getResultList() {
-        assert (is JList<out Result> resultList = query.resultList);
+        assert (is JList<out Result> resultList
+                = query.resultList);
         return resultList;
     }
 
-    "Execute an update or delete statement."
+    "Execute an update or delete statement. Returns the
+     number of affected rows."
     shared Integer executeUpdate() => query.executeUpdate();
 
     "The maximum number of results to retrieve."
@@ -96,22 +104,24 @@ shared class TypedQuery<out Result=Object>
     }
 
     "The flush mode type to be used for the query execution.
-     The flush mode type applies to the query regardless of the
-     flush mode type in use for the entity manager."
+     The flush mode type applies to the query regardless of
+     the flush mode type in use for the entity manager."
     shared FlushModeType flushMode => query.flushMode;
 //    assign flushMode => setFlushMode(flushMode);
 
-    "Set the flush mode type to be used for the query execution.
-     The flush mode type applies to the query regardless of the
-     flush mode type in use for the entity manager."
+    "Set the flush mode type to be used for the query
+     execution. The flush mode type applies to the query
+     regardless of the flush mode type in use for the entity
+     manager."
     shared TypedQuery<Result> setFlushMode(FlushModeType flushMode) {
         query.setFlushMode(flushMode);
         return this;
     }
 
-    "Get the properties and hints and associated values that are
-     in effect for the query instance."
-    shared Hints hints => CeylonStringMap(CeylonMap(query.hints));
+    "Get the properties and hints and associated values that
+     are in effect for the query instance."
+    shared Properties hints
+            => CeylonStringMap(CeylonMap(query.hints));
 
     "Set a query property or hint."
     shared TypedQuery<Result> setHint(String hintName, Object? hintValue) {
@@ -119,17 +129,18 @@ shared class TypedQuery<out Result=Object>
         return this;
     }
 
-    "Get the parameter object corresponding to the declared positional
-     or named parameter with the given position or name. This method is
-     not required to be supported for native queries."
+    "Get the parameter object corresponding to the declared
+     positional or named parameter with the given position
+     or name. This method is not required to be supported
+     for native queries."
     shared Parameter<out Object> getParameter(Integer|String parameter)
             => switch(parameter)
             case (is Integer) query.getParameter(parameter)
             case (is String) query.getParameter(parameter);
 
-    "Get the parameter object corresponding to the declared parameter
-     of the given name and type. This method is required to be
-     supported for criteria queries only."
+    "Get the parameter object corresponding to the declared
+     parameter of the given name and type. This method is
+     required to be supported for criteria queries only."
     shared Parameter<Argument> getTypedParameter<Argument>(
         Integer|String parameter, Class<Argument> type)
             given Argument satisfies Object {
@@ -142,7 +153,7 @@ shared class TypedQuery<out Result=Object>
                 query.getParameter(parameter, javaClass);
     }
 
-    "Return the argument bound to the parameter."
+    "Return the argument bound to the given parameter."
     shared Argument? getTypedParameterArgument<Argument>(
         Parameter<Argument> parameter)
             given Argument satisfies Object {
@@ -151,7 +162,8 @@ shared class TypedQuery<out Result=Object>
         return argument;
     }
 
-    "Return the argument bound to the positional or named parameter."
+    "Return the argument bound to the given positional or
+     named parameter."
     shared Object? getParameterArgument(Integer|String parameter)
             => switch (parameter)
             case (is Integer)
@@ -160,18 +172,18 @@ shared class TypedQuery<out Result=Object>
                 toCeylon(query.getParameterValue(parameter));
 
     "Get the parameter objects corresponding to the declared
-     parameters of the query. Returns empty set if the query
-     has no parameters. This method is not required to be
-     supported for native queries."
+     parameters of the query. Returns an empty set if the
+     query has no parameters. This method is not required to
+     be supported for native queries."
     shared Set<Parameter<out Object>> parameters
             => CeylonSet(query.parameters);
 
     "Determine whether an argument has been bound to the
-     parameter."
+     given parameter."
     shared Boolean isBound(Parameter<out Object> parameter)
             => query.isBound(parameter);
 
-    "Bind an argument to a named parameter."
+    "Bind an argument to the given parameter."
     shared TypedQuery<Result> setTypedParameter<Argument>(
         Parameter<Argument> parameter, Argument? argument)
             given Argument satisfies Object {
@@ -184,7 +196,8 @@ shared class TypedQuery<out Result=Object>
         return this;
     }
 
-    "Bind an argument to a positional or named parameter."
+    "Bind an argument to the given positional or named
+     parameter."
     shared TypedQuery<Result> setParameter(
         String|Integer parameter, Object? argument) {
         switch (parameter)
@@ -200,7 +213,8 @@ shared class TypedQuery<out Result=Object>
 
     //TODO: handle ceylon.time types!!!
 
-    "Bind an argument to a parameter of temporal type."
+    "Bind an argument to the given parameter of temporal
+     type."
     suppressWarnings("uncheckedTypeArguments")
     shared TypedQuery<Result> setTemporalTypedParameter<Type>(
         Parameter<Type> parameter, Type argument,
@@ -218,8 +232,8 @@ shared class TypedQuery<out Result=Object>
         return this;
     }
 
-    "Bind an argument to a positional or named parameter
-     of temporal type."
+    "Bind an argument to the given positional or named
+     parameter of temporal type."
     shared TypedQuery<Result> setTemporalParameter(
         Integer|String parameter, Date|Calendar argument,
         TemporalType temporalType) {
