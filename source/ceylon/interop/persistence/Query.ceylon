@@ -4,6 +4,11 @@ import ceylon.interop.java {
     CeylonSet,
     CeylonList
 }
+import ceylon.interop.persistence {
+    Util {
+        javaClass
+    }
+}
 import ceylon.language.meta.model {
     Class
 }
@@ -20,14 +25,16 @@ import javax.persistence {
     FlushModeType,
     Parameter,
     LockModeType,
-    TemporalType
+    TemporalType,
+    ParameterMode,
+    StoredProcedureQuery,
+    NoResultException
 }
 
 shared class Query(JQuery query)
         => TypedQuery<>.withoutResultClass(query);
 
-"Interface used to control query execution. This interface
- is based closely upon
+"Used to control query execution. Based closely on
  [[javax.persistence.TypedQuery|javax.persistence::TypedQuery]],
  but automatically manages conversions between Ceylon types
  and corresponding Java types, without the need for JPA
@@ -50,8 +57,8 @@ shared class TypedQuery<out Result=Object>
     }
 
     "Execute a query that returns a single result."
-    shared Result getSingleResult() {
-        assert (is Result result = query.singleResult);
+    shared Result? getSingleResult() {
+        assert (is Result? result = query.singleResult);
         return result;
     }
 
@@ -72,6 +79,26 @@ shared class TypedQuery<out Result=Object>
     "Execute an update or delete statement. Returns the
      number of affected rows."
     shared Integer executeUpdate() => query.executeUpdate();
+
+    "Execute a stored procedure or SQL DML query, returning
+     the outcome as a `QueryResults`."
+    shared QueryResults execute() {
+        Boolean hasResults;
+        Integer updateCount;
+        if (is StoredProcedureQuery query) {
+            hasResults = query.execute();
+            updateCount = -1;
+        }
+        else {
+            updateCount = query.executeUpdate();
+            hasResults = false;
+        }
+        return QueryResults {
+            query = query;
+            hasResults = hasResults;
+            count = updateCount;
+        };
+    }
 
     "The maximum number of results to retrieve."
     shared Integer maxResults => query.maxResults;
@@ -273,6 +300,114 @@ shared class TypedQuery<out Result=Object>
             setParameter(param, arg);
         }
         return this;
+    }
+
+    "Register a named or positional parameter for a stored
+     procedure call."
+    shared TypedQuery<Result> registerParameter(
+        Integer|String parameter, Class<Object> type,
+        ParameterMode mode) {
+        assert (is StoredProcedureQuery query);
+        switch (parameter)
+        case (is Integer) {
+            query.registerStoredProcedureParameter(parameter,
+                    javaClass(type), mode);
+        }
+        case (is String) {
+            query.registerStoredProcedureParameter(parameter,
+                    javaClass(type), mode);
+        }
+        return this;
+    }
+
+}
+
+"Used to obtain the results of a stored procedure query."
+shared class QueryResults(query, hasResults, count) {
+
+    shared JQuery query;
+    variable Boolean hasResults;
+    Integer count;
+
+    "Retrieve a value passed back from the procedure through
+     an INOUT or OUT parameter. For portability, all results
+     corresponding to result sets and update counts must be
+     retrieved before the values of output parameters."
+    shared Object? getOutputParameterValue(Integer|String parameter) {
+        assert (is StoredProcedureQuery query);
+        return
+            switch (parameter)
+            case (is Integer)
+                query.getOutputParameterValue(parameter)
+            case (is String)
+                query.getOutputParameterValue(parameter);
+    }
+
+    "Return `true` if the query has multiple results, and
+     the next result corresponds to a result set, and `false`
+     if it is an update count or if there  are no results
+     other than through INOUT and OUT parameters, if any, or
+     if this is not a stored procedure query."
+    shared Boolean hasMoreResults
+            => if (is StoredProcedureQuery query)
+            then hasResults || query.hasMoreResults()
+            else false;
+
+    "Return the update count if the query has been executed,
+     or `null` if there is no pending result or if the next
+     result is not an update count, or if this is not a
+     stored procedure query."
+    shared Integer? updateCount {
+        if (is StoredProcedureQuery query) {
+            value updateCount = query.updateCount;
+            return updateCount>=0 then updateCount;
+        }
+        else {
+            return count;
+        }
+    }
+
+    "Return the next query results as a single result, or
+     `null` if there are no more results."
+    shared Anything getSingleResult() {
+        if (is StoredProcedureQuery query) {
+            try {
+                value result = query.singleResult;
+                hasResults = false;
+                return result;
+            }
+            catch (NoResultException nre) {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+    "Return the next query results as a [[List]], or `null`
+     if there are no more results."
+    shared List<>? getResults()
+            => if (exists results = getResultList())
+            then CeylonList(results)
+            else null;
+
+    "Return the next query results as a [[Java `List`|JList]],
+     or `null` if there are no more results."
+    shared JList<out Object>? getResultList() {
+        if (is StoredProcedureQuery query) {
+            try {
+                value resultList = query.resultList;
+                hasResults = false;
+                return resultList;
+            }
+            catch (NoResultException nre) {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
     }
 
 }
