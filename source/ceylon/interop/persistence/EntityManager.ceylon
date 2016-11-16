@@ -20,8 +20,7 @@ import javax.persistence {
     LockModeType,
     FlushModeType,
     EntityTransaction,
-    EntityGraph,
-    StoredProcedureQuery
+    EntityGraph
 }
 import javax.persistence.criteria {
     CriteriaQuery,
@@ -36,8 +35,7 @@ import javax.persistence.metamodel {
 "A [[Map]] associating string keys with items."
 shared alias Properties => Map<String,Object>;
 
-"Interface used to interact with the persistence context.
- This interface is based closely upon
+"Used to interact with a persistence context. Based closely on
  [[javax.persistence.EntityManager|javax.persistence::EntityManager]],
  but automatically manages conversions between Ceylon types
  and corresponding Java types, without the need for JPA
@@ -72,8 +70,8 @@ shared class EntityManager(entityManager)
      `EntityManager` instance and any `TypedQuery` objects
      obtained from it will throw the `IllegalStateException`
      except for [[properties]], [[transaction]], and [[open]]
-     (which will return false). If this method is called when
-     the entity manager is associated with an active
+     (which will return false). If this method is called
+     when the entity manager is associated with an active
      transaction, the persistence context remains managed
      until the transaction completes."
     shared void close() => entityManager.close();
@@ -213,37 +211,35 @@ shared class EntityManager(entityManager)
         CriteriaDelete<out Object> deleteQuery)
             => Query(entityManager.createQuery(deleteQuery));
 
-    //TODO: wrapper for StoredProcedureQuery!!!!
-
-    "Create an instance of `StoredProcedureQuery` for
-     executing a stored procedure in the database."
-    shared StoredProcedureQuery createNamedStoredProcedureQuery(
+    "Create an instance of [[Query]] for executing a stored
+     procedure in the database."
+    shared Query createNamedStoredProcedureQuery(
         String name)
-            => entityManager.createNamedStoredProcedureQuery(name);
+            => Query(entityManager.createNamedStoredProcedureQuery(name));
 
-    "Create an instance of `StoredProcedureQuery` for
-     executing a stored procedure in the database. Parameters
-     must be registered before the stored procedure can be
-     executed. The [[resultSetMappings]] arguments must be
-     specified in the order in which the result sets will be
-     returned by the stored procedure invocation."
-    shared StoredProcedureQuery createStoredProcedureMappedQuery(
+    "Create an instance of [[Query]] for executing a stored
+     procedure in the database. Parameters must be registered
+     before the stored procedure can be executed. The
+     [[resultSetMappings]] arguments must be specified in the
+     order in which the result sets will be returned by the
+     stored procedure invocation."
+    shared Query createStoredProcedureMappedQuery(
         String procedureName, String* resultSetMappings)
-            => entityManager.createStoredProcedureQuery(
-                    procedureName, *resultSetMappings);
+            => Query(entityManager.createStoredProcedureQuery(
+                    procedureName, *resultSetMappings));
 
-    "Create an instance of `StoredProcedureQuery` for
-     executing a stored procedure in the database. Parameters
-     must be registered before the stored procedure can be
-     executed. The [[resultClasses]] arguments must be
-     specified in the order in which the result sets will be
-     returned by the stored procedure invocation."
-    shared StoredProcedureQuery createStoredProcedureQuery(
-        String procedureName, Class<Object>* resultClasses)
-            => entityManager.createStoredProcedureQuery(
+    "Create an instance of [[Query]] for executing a stored
+     procedure in the database. Parameters must be registered
+     before the stored procedure can be executed. The
+     [[resultClasses]] arguments must be specified in the
+     order in which the result sets will be returned by the
+     stored procedure invocation."
+    shared Query createStoredProcedureQuery(
+    String procedureName, Class<Object>* resultClasses)
+            => Query(entityManager.createStoredProcedureQuery(
                     procedureName,
                     for (rc in resultClasses)
-                        javaClassFromModel(rc));
+                        javaClassFromModel(rc)));
 
     "Find by [[primary key|primaryKey]], with the given
      [[lock mode|lockMode]], using the specified
@@ -254,8 +250,8 @@ shared class EntityManager(entityManager)
      returned from there.
 
      If the entity is found within the persistence context
-     and the lock mode type is pessimistic and the entity has
-     a version attribute, the persistence provider must
+     and the lock mode type is pessimistic and the entity
+     has a version attribute, the persistence provider must
      perform optimistic version checks when obtaining the
      database lock. If these checks fail, the
      `OptimisticLockException` will be thrown.
@@ -265,7 +261,7 @@ shared class EntityManager(entityManager)
 
      - the `PessimisticLockException` will be thrown if the
        database locking failure causes transaction-level
-       rollback
+       rollback,
      - the `LockTimeoutException` will be thrown if the
        database locking failure causes only statement-level
        rollback."
@@ -328,7 +324,7 @@ shared class EntityManager(entityManager)
 
      - the `PessimisticLockException` will be thrown if the
        database locking failure causes transaction-level
-       rollback
+       rollback,
      - the `LockTimeoutException` will be thrown if the
        database locking failure causes only statement-level
        rollback."
@@ -353,7 +349,7 @@ shared class EntityManager(entityManager)
 
      - the `PessimisticLockException` will be thrown if the
        database locking failure causes transaction-level
-       rollback
+       rollback,
      - the `LockTimeoutException` will be thrown if the
        database locking failure causes only statement-level
        rollback."
