@@ -10,7 +10,7 @@
  performing the whole computation with an implicit rounding
  strategy."
 native("jvm")
-module ceylon.decimal "1.3.1-SNAPSHOT" {
-    shared import ceylon.whole "1.3.1-SNAPSHOT";
+module ceylon.decimal "1.3.2-SNAPSHOT" {
+    shared import ceylon.whole "1.3.2-SNAPSHOT";
     import java.base "7";
 }
