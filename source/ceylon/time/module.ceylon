@@ -3,5 +3,5 @@
  This library is loosely modeled/inspired by the JodaTime/JSR-310 date/time library.
  "
 by ("Diego Coronel", "Roland Tepp")
-module ceylon.time "1.3.1-SNAPSHOT" {
+module ceylon.time "1.3.1" {
 }
