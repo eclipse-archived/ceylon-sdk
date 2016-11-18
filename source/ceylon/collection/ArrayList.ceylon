@@ -28,8 +28,12 @@ shared serializable class ArrayList<Element>
 
     "The underlying array."
     variable Array<Element?> array;
-    
-    "Create a new `ArrayList` with the given initial 
+
+    "The number of slots of the backing array that actually
+     hold elements of this list."
+    variable Integer length;
+
+    "Create a new `ArrayList` with the given initial
      [[elements]]."
     shared new (
         "The initial size of the backing array."
@@ -42,6 +46,7 @@ shared serializable class ArrayList<Element>
         this.initialCapacity = initialCapacity;
         this.growthFactor = growthFactor;
         array = Array<Element?>(elements);
+        length = array.size;
     }
     
     "Create a new `ArrayList` with the same initial elements 
@@ -55,6 +60,7 @@ shared serializable class ArrayList<Element>
         this.initialCapacity = arrayList.size;
         this.growthFactor = growthFactor;
         array = arrayList.array.clone();
+        length = arrayList.size;
     }
     
     "Create a new `ArrayList` of the given [[size]], 
@@ -74,11 +80,8 @@ shared serializable class ArrayList<Element>
         this.initialCapacity = size<0 then 0 else size;
         this.growthFactor = growthFactor;
         array = Array<Element?>.ofSize(size, element);
+        length = size;
     }
-    
-    "The number of slots of the backing array that actually 
-     hold elements of this list."
-    variable Integer length = array.size;
     
     "initial capacity cannot be negative"
     assert (initialCapacity >= 0);
