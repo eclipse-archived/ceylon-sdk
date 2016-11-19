@@ -11,18 +11,18 @@
         <arg value="--show-home" />
     </exec>
     <property environment="env"/>
-    <property name="ceylon.home" value="${basedir}/../ceylon/dist/dist" />
-    <property name="env.CEYLON_HOME" value="${ceylon.home}"/>
-    <property name="ceylon.install.dir" value="${env.CEYLON_HOME}"/>
+    <condition property="ceylon.home" value="${env.CEYLON_HOME}" else="${basedir}/../ceylon/dist/dist">
+        <isset property="env.CEYLON_HOME" />
+    </condition>
 
     <property name="ceylon.verbosity" value="false"/>
-    <property name="ceylon.executable" value="${ceylon.install.dir}/bin/ceylon"/>
+    <property name="ceylon.executable" value="${ceylon.home}/bin/ceylon"/>
     <property name="out.repo" location="${basedir}/modules"/>
     <property name="deps.repo" location="${basedir}/test-deps"/>
     <property name="test.repo" location="${basedir}/modules"/>
     <property name="lib.dir" location="${basedir}/lib"/>
 
-    <property name="ceylon.ant.lib" location="${ceylon.install.dir}/lib/ceylon-ant.jar"/>
+    <property name="ceylon.ant.lib" value="${ceylon.home}/lib/ceylon-ant.jar" />
     
     <property name="osgi" location="${basedir}/osgi" />
     <property name="osgi.p2" location="${osgi}/p2" />
