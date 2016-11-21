@@ -265,7 +265,7 @@ shared class EntityManager(entityManager)
      - the `LockTimeoutException` will be thrown if the
        database locking failure causes only statement-level
        rollback."
-    shared Entity find<Entity>(Class<Entity> entityClass,
+    shared Entity? find<Entity>(Class<Entity> entityClass,
         Object primaryKey,
         LockModeType lockMode = LockModeType.none,
         Properties properties = emptyMap)
