@@ -289,7 +289,7 @@ shared class TypedQuery<out Result=Object>
     "Bind arguments to all positional parameters."
     shared TypedQuery<Result> setPositionalArguments(Object* arguments) {
         for (index->arg in arguments.indexed) {
-            setParameter(index, arg);
+            setParameter(index+1, arg);
         }
         return this;
     }
