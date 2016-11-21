@@ -20,7 +20,8 @@ import javax.persistence {
     LockModeType,
     FlushModeType,
     EntityTransaction,
-    EntityGraph
+    EntityGraph,
+    EntityManagerFactory
 }
 import javax.persistence.criteria {
     CriteriaQuery,
@@ -55,11 +56,24 @@ shared alias Properties => Map<String,Object>;
  A persistence unit defines the set of all classes that are
  related or grouped by the application, and which must be
  colocated in their mapping to a single database."
-shared class EntityManager(entityManager)
-        satisfies Category<> {
+shared class EntityManager
+        satisfies Category<> & Destroyable {
 
     "The underlying JPA entity manager."
     shared JEntityManager entityManager;
+
+    shared new (JEntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    shared new create(EntityManagerFactory entityManagerFactory,
+            Properties properties = emptyMap) {
+        entityManager =
+                properties.empty
+                then entityManagerFactory.createEntityManager()
+                else entityManagerFactory.createEntityManager(
+                        JavaMap(JavaStringMap(properties)));
+    }
 
     "Determine whether the entity manager is open, returning
      `true` unless the entity manager has already been closed."
@@ -75,6 +89,8 @@ shared class EntityManager(entityManager)
      transaction, the persistence context remains managed
      until the transaction completes."
     shared void close() => entityManager.close();
+
+    shared actual void destroy(Throwable? error) => close();
 
     "Check if the instance is a managed entity instance
      belonging to the current persistence context."
