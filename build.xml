@@ -132,6 +132,7 @@
             <module name="ceylon.interop.browser"/>
             <module name="ceylon.interop.java"/>
             <module name="ceylon.interop.spring"/>
+            <module name="ceylon.interop.persistence"/>
             <module name="ceylon.io"/>
             <module name="ceylon.json"/>
             <module name="ceylon.locale"/>
