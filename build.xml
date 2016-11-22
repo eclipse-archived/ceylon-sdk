@@ -355,6 +355,12 @@
         <echo file="${bundleDefinitionFile}" append="true">Bundle-Version: ${CeylonVersion}${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Export-Package: *${line.separator}</echo>
         <echo file="${bundleDefinitionFile}" append="true">Import-Package: org.apache.log4j.*;resolution:=optional, org.slf4j.*;resolution:=optional, org.jboss.logmanager.*;resolution:=optional, javax.enterprise.*;resolution:=optional, javax.interceptor.*;resolution:=optional, javax.resource.spi.*;resolution:=optional, org.apache.webdav.*;resolution:=optional, javax.inject.*;resolution:=optional, org.hornetq.core.journal.*;resolution:=optional, sun.misc.*;resolution:=optional, org.apache.commons.httpclient;resolution:=optional, org.apache.activemq.artemis.*;resolution:=optional, *${line.separator}</echo>
+        <if> 
+            <equals arg1="${CeylonName}" arg2="org.jboss.xnio.nio"/>
+            <then>
+                <echo file="${bundleDefinitionFile}" append="true">Require-Bundle: org.jboss.xnio.api;bundle-version=${CeylonVersion};visibility:=reexport${line.separator}</echo>
+            </then>
+        </if>
         <bndwrap exceptions="true" force="true"  jars="${currentFile}" output="${currentFile}.bnd.jar" definitions="${bundleDefinitionFile}">
         </bndwrap>
         <delete file="${bundleDefinitionFile}"/>
@@ -417,9 +423,21 @@
                 <property name="CheckedBundleVersion" value="${Bundle-Version}"/>
             </else>
         </if>
-        <copy file="${currentFile}" 
-            tofile="${osgi.dist.plugins}/${CheckedBundleSymbolicName}_${CheckedBundleVersion}.jar" 
-            overwrite="true"/>
+    	<property name="bundleFileName" value="${CheckedBundleSymbolicName}_${CheckedBundleVersion}.jar"/>
+    	<if>
+    		<or>
+                <contains string="${bundleFileName}" substring="ceylon.interop.spring_"/>
+                <contains string="${bundleFileName}" substring="ceylon.interop.persistence_"/>
+    		</or>
+    		<then>
+    			<echo>Ignoring bundle: ${bundleFileName}</echo>
+			</then>
+    		<else>
+    	        <copy file="${currentFile}" 
+    	            tofile="${osgi.dist.plugins}/${bundleFileName}" 
+    	            overwrite="true"/>
+    		</else>
+    	</if>
     </target>
     
     <target name="retrieveDependencies" depends="ceylondefs">
@@ -433,7 +451,7 @@
             fork="true">
             <rep url="${basedir}/modules"/>
             <rep url="${user.home}/.ceylon/cache"/>
-            <sourcemodules/>
+            <sourcemodules dir="${basedir}/source"/>
         </ceylon-copy>
     </target>
     
@@ -449,17 +467,30 @@
     
     <target name="osgi-quick" depends="retrieveDependencies">
         <mkdir dir="${osgi.dist.plugins}" />
-        <foreach target="copyModuleArchiveForOSGI" param="currentFile">
+        <pathconvert pathsep="&#xA;" property="distribRepoBase">
+        	<path location="${ceylon.main.dir}/dist/dist/repo"/>
+    	</pathconvert>
+        <echo file="${osgi.dist}/distribRepoBase.txt">${distribRepoBase}</echo>
+    	<fileset id="distributionArchivesSet" dir="${distribRepoBase}"
+    		includes="**/*.?ar"/>
+    	<pathconvert pathsep="&#xA;" property="distributionArchivesProp" refid="distributionArchivesSet">
+    		<map from="${distribRepoBase}/" to=""/>
+    	</pathconvert>
+    	<echo file="${osgi.dist}/excludes.txt">${distributionArchivesProp}</echo>
+        <foreach target="copyModuleArchiveForOSGI" param="currentFile" >
             <path>
-                <fileset dir="${osgi.dist}/tempRepo" 
-                	includes="**/*.?ar"
-                	excludes="**/com.redhat.ceylon.*.?ar"/>
+                <fileset dir="${osgi.dist}/tempRepo">
+                	<include name="**/*.?ar"/>
+                	<exclude name="**/com.redhat.ceylon.*.?ar"/>
+                    <excludesfile name="${osgi.dist}/excludes.txt"/>
+                </fileset>
             </path>
         </foreach>
         <copy todir="${osgi.dist.plugins}">
             <fileset dir="${ceylon.main.dir}/dist/osgi/build/dist/plugins" includes="org.jboss.logmanager_*.jar"/>
         </copy>
-        <delete dir="${osgi.dist}/tempRepo" failonerror="false" deleteonexit="true"/>
+<!--        <delete dir="${osgi.dist}/tempRepo" failonerror="false" deleteonexit="true"/> -->
+<!--        <delete dir="${osgi.dist}/excludes.txt" failonerror="false" deleteonexit="true"/> -->
         <makeurl property="rootUrl" file="${osgi.dist}"/>
         <repoindex name="Ceylon SDK Bundles - R5 OBR format"
             out="${osgi.dist}/index.xml" 
