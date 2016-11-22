@@ -53,6 +53,8 @@ shared dynamic Window satisfies EventTarget & WindowEventHandlers & GlobalEventH
     shared formal void print();
     shared formal Integer setInterval(Anything() f, Integer millis, Anything* params);
     shared formal void clearInterval(Integer id);
+    shared formal Integer setTimeout(Anything() f, Integer millis, Anything* params);
+    shared formal void clearTimeout(Integer id);
 }
 
 shared alias WindowProxy => Window;
