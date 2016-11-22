@@ -51,6 +51,8 @@ shared dynamic Window satisfies EventTarget & WindowEventHandlers & GlobalEventH
     shared formal Boolean confirm(String message = "");
     shared formal String? prompt(String message = "", String default = "");
     shared formal void print();
+    shared formal Integer setInterval(Anything() f, Integer millis, Anything* params);
+    shared formal void clearInterval(Integer id);
 }
 
 shared alias WindowProxy => Window;
