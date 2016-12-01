@@ -86,7 +86,7 @@ ArtifactContext? getArtifactContext(String path) {
         String? namespace = null; //TODO!!
         // path == "ceylon.language-1.2.0.js" or
         // path == "ceylon/language/1.2.0/ceylon.language-1.2.0.js"
-        value parts = path.split('/'.equals).sequence();
+        value parts = path.split('/'.equals, true, false).sequence();
         value size = parts.size;
 
         value fileName = parts.last else "";
@@ -96,7 +96,7 @@ ArtifactContext? getArtifactContext(String path) {
             if (exists p = fileName.firstOccurrence('-')) {
                 assert (exists suffix = getSuffixFromFilename(fileName));
                 value name = fileName[0..p-1];
-                value version = fileName[p+1..fileName.size-suffix.size-1];
+                value version = fileName[p+1:fileName.size-name.size-suffix.size-1];
                 return ArtifactContext(namespace, name, version, suffix);
             }
         }
@@ -123,7 +123,14 @@ String? findArtifactPath(RepositoryManager manager,
             artifact.file) {
         return artifact.absolutePath;
     }
-    else {
-        return null;
+    else if (!context.namespace exists) {
+        // Try again with the NPM namespace
+        context.namespace = "npm";
+        if (exists artifact = manager.getArtifact(context),
+                artifact.\iexists(),
+                artifact.file) {
+            return artifact.absolutePath;
+        }
     }
+    return null;
 }
