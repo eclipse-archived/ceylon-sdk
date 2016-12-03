@@ -8,10 +8,12 @@ import java.util {
 }
 
 "A Ceylon [[MutableSet]] that wraps a [[java.util::Set]]."
-shared class CeylonMutableSet<Element>(JSet<Element> set)
+shared class CeylonMutableSet<Element>(set)
         extends CeylonSet<Element>(set)
         satisfies MutableSet<Element> 
         given Element satisfies Object {
+
+    JSet<Element> set;
 
     add(Element element) => set.add(element);
     

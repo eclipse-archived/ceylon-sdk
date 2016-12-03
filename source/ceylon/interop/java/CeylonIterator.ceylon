@@ -9,8 +9,16 @@ shared class CeylonIterator<T>(JIterator<out T> iterator)
 
     shared actual T|Finished next() {
         if (iterator.hasNext()) {
-            return iterator.next();
-        } else {
+            if (exists next = iterator.next()) {
+                return next;
+            }
+            else {
+                "Java iterator returned null"
+                assert (is T null);
+                return null;
+            }
+        }
+        else {
             return finished;
         }
     }

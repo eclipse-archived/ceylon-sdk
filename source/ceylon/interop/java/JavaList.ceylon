@@ -1,5 +1,5 @@
 import ceylon.collection {
-    MutableList
+    ListMutator
 }
 
 import java.lang {
@@ -17,7 +17,7 @@ import java.util {
  This list is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
-shared class JavaList<E>(List<E> list) 
+shared class JavaList<E>(List<E?> list)
         extends AbstractList<E>() {
     
     get(Integer int) => list[int];
@@ -37,7 +37,7 @@ shared class JavaList<E>(List<E> list)
         }
         
         shared actual void remove() {
-            if (!is MutableList<out Anything> list) {
+            if (!is ListMutator<Nothing> list) {
                 throw UnsupportedOperationException("not a mutable list");
             }
             if (currentIndex < 0) {
@@ -49,8 +49,8 @@ shared class JavaList<E>(List<E> list)
     };
 
     shared actual E? set(Integer index, E? e) {
-        if (is E e) {
-            if (is MutableList<in E> list) {
+        if (exists e) {
+            if (is ListMutator<E> list) {
                 value result = list[index];
                 list[index] = e;
                 return result;
@@ -60,28 +60,50 @@ shared class JavaList<E>(List<E> list)
             }
         }
         else {
-            throw IllegalArgumentException("list may not have null elements");
+            if (is ListMutator<Null> list) {
+                value result = list[index];
+                list[index] = null;
+                return result;
+            }
+            else {
+                if (list is ListMutator<Nothing>) {
+                    throw IllegalArgumentException("list may not have null elements");
+                }
+                else {
+                    throw UnsupportedOperationException("not a mutable list");
+                }
+            }
         }
     }
 
     shared actual Boolean add(E? e) {
-        if (is E e) {
-            if (is MutableList<in E> list) {
+        if (exists e) {
+            if (is ListMutator<E> list) {
                 list.add(e);
-                return true;
             }
             else {
                 throw UnsupportedOperationException("not a mutable list");
             }
         }
         else {
-            throw IllegalArgumentException("list may not have null elements");
+            if (is ListMutator<Null> list) {
+                list.add(null);
+            }
+            else {
+                if (list is ListMutator<Nothing>) {
+                    throw IllegalArgumentException("list may not have null elements");
+                }
+                else {
+                    throw UnsupportedOperationException("not a mutable list");
+                }
+            }
         }
+        return true;
     }
     
     shared actual void add(Integer index, E? e) {
-        if (is E e) {
-            if (is MutableList<in E> list) {
+        if (exists e) {
+            if (is ListMutator<E> list) {
                 list.insert(index, e);
             }
             else {
@@ -89,13 +111,23 @@ shared class JavaList<E>(List<E> list)
             }
         }
         else {
-            throw IllegalArgumentException("list may not have null elements");
+            if (is ListMutator<Null> list) {
+                list.insert(index, null);
+            }
+            else {
+                if (list is ListMutator<Nothing>) {
+                    throw IllegalArgumentException("list may not have null elements");
+                }
+                else {
+                    throw UnsupportedOperationException("not a mutable list");
+                }
+            }
         }
     }
     
     shared actual Boolean remove(Object? e) {
-        if (is E e) {
-            if (is MutableList<in E> list) {
+        if (is ListMutator<E> list) {
+            if (is E? e) {
                 if (exists e) {
                     return list.removeFirst(e);
                 }
@@ -104,16 +136,16 @@ shared class JavaList<E>(List<E> list)
                 }
             }
             else {
-                throw UnsupportedOperationException("not a mutable list");
+                return false;
             }
         }
         else {
-            return false;
+            throw UnsupportedOperationException("not a mutable list");
         }
     }
     
     shared actual Boolean removeAll(Collection<out Object> collection) {
-        if (is MutableList<in E> list) {
+        if (is ListMutator<E> list) {
             variable Boolean result = false;
             for (e in collection) {
                 if (is E e, list.removeFirst(e)) {
@@ -128,7 +160,7 @@ shared class JavaList<E>(List<E> list)
     }
     
     shared actual Boolean retainAll(Collection<out Object> collection) {
-        if (is MutableList<in E> list) {
+        if (is ListMutator<E> list) {
             variable Boolean result = false;
             for (e in list.clone()) { //TODO: is the clone really necessary?
                 if (exists e, //TODO: what to do with nulls, this is sorta wrong?
@@ -145,7 +177,7 @@ shared class JavaList<E>(List<E> list)
     }
     
     shared actual void clear() {
-        if (is MutableList<out Anything> list) {
+        if (is ListMutator<Nothing> list) {
             list.clear();
         }
         else {

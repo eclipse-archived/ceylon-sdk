@@ -1,5 +1,5 @@
 import ceylon.collection {
-    MutableSet
+    SetMutator
 }
 
 import java.lang {
@@ -15,7 +15,7 @@ import java.util {
  set is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
-shared class JavaSet<E>(Set<E> set) 
+shared class JavaSet<E>(Set<E> set)
         extends AbstractSet<E>() 
         given E satisfies Object {
     
@@ -24,35 +24,35 @@ shared class JavaSet<E>(Set<E> set)
     size() => set.size;
     
     shared actual Boolean add(E? e) {
-        if (exists e) {
-            if (is MutableSet<in E> set) {
+        if (is SetMutator<E> set) {
+            if (exists e) {
                 return set.add(e);
             }
             else {
-                throw UnsupportedOperationException("not a mutable set");
+                throw IllegalArgumentException("set may not have null elements");
             }
         }
         else {
-            throw IllegalArgumentException("set may not have null elements");
+            throw UnsupportedOperationException("not a mutable set");
         }
     }
     
     shared actual Boolean remove(Object? e) {
-        if (is E e) {
-            if (is MutableSet<in E> set) {
+        if (is SetMutator<E> set) {
+            if (is E e) {
                 return set.remove(e);
             }
             else {
-                throw UnsupportedOperationException("not a mutable set");
+                return false;
             }
         }
         else {
-            return false;
+            throw UnsupportedOperationException("not a mutable set");
         }
     }
     
     shared actual Boolean removeAll(Collection<out Object> collection) {
-        if (is MutableSet<in E> set) {
+        if (is SetMutator<E> set) {
             variable Boolean result = false;
             for (e in collection) {
                 if (is E e, set.remove(e)) {
@@ -67,7 +67,7 @@ shared class JavaSet<E>(Set<E> set)
     }
     
     shared actual Boolean retainAll(Collection<out Object> collection) {
-        if (is MutableSet<in E> set) {
+        if (is SetMutator<E> set) {
             variable Boolean result = false;
             for (e in set.clone()) { //TODO: is the clone really necessary?
                 if (!e in collection) {
@@ -83,7 +83,7 @@ shared class JavaSet<E>(Set<E> set)
     }
     
     shared actual void clear() {
-        if (is MutableSet<out Anything> set) {
+        if (is SetMutator<Nothing> set) {
             set.clear();
         }
         else {
