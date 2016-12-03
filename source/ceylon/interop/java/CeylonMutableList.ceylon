@@ -10,11 +10,22 @@ import java.util {
     }
 }
 
-"A Ceylon [[MutableList]] that wraps a [[java.util::List]]."
-shared class CeylonMutableList<Element>(JList<Element> list)
+"A Ceylon [[MutableList]] that wraps a [[java.util::List]].
+
+ If the given [[list]] contains null elements, an optional
+ [[Element]] type must be explicitly specified, for example:
+
+     CeylonMutableList<String?>(javaStringList)
+
+ If a non-optional `Element` type is specified, an
+ [[AssertionError]] will occur whenever a null value is
+ encountered while iterating the list."
+shared class CeylonMutableList<Element>(list)
         extends CeylonList<Element>(list)
         satisfies MutableList<Element> 
         given Element satisfies Object {
+
+    JList<Element> list;
 
     add(Element element) => list.add(element);
     

@@ -3,11 +3,21 @@ import java.util {
     HashMap
 }
 
-"A Ceylon [[Map]] that wraps a [[java.util::Map]]."
-shared class CeylonMap<out Key, out Item>(JMap<out Key, out Item> map)
+"A Ceylon [[Map]] that wraps a [[java.util::Map]].
+
+ If the given [[map]] contains null elements, an optional
+ [[Item]] type must be explicitly specified, for example:
+
+     CeylonMap<String,Object?>(javaStringObjectMap)
+
+ If a non-optional `Item` type is specified, an
+ [[AssertionError]] will occur whenever a null item is
+ encountered while iterating the map."
+shared class CeylonMap<out Key, out Item>(map)
         satisfies Map<Key, Item> 
-        given Key satisfies Object 
-        given Item satisfies Object {
+        given Key satisfies Object {
+
+    JMap<out Key, out Item> map;
     
     get(Object key) => map.get(key);
     
@@ -19,9 +29,22 @@ shared class CeylonMap<out Key, out Item>(JMap<out Key, out Item> map)
 
     items => CeylonCollection(map.values());
 
-    iterator() 
+    function ceylonEntry(JMap.Entry<out Key, out Item> entry) {
+        "Java map entry with null key"
+        assert (exists key = entry.key);
+        if (exists item = entry.\ivalue) {
+            return key -> item;
+        }
+        else {
+            "Java map entry with null item"
+            assert (is Item null);
+            return key -> null;
+        }
+    }
+
+    iterator()
             => CeylonIterable(map.entrySet())
-                .map((entry) => entry.key->entry.\ivalue)
+                .map(ceylonEntry)
                 .iterator();
 
     shared actual default Map<Key, Item> clone()

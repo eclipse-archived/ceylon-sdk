@@ -1,5 +1,5 @@
 import ceylon.collection {
-    MutableMap
+    MapMutator
 }
 
 import java.lang {
@@ -15,7 +15,7 @@ import java.util {
  map is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
-shared class JavaMap<K,V>(Map<K,V> map)
+shared class JavaMap<K,V>(Map<K,V?> map)
         extends AbstractMap<K,V>() 
         given K satisfies Object 
         given V satisfies Object {
@@ -70,30 +70,49 @@ shared class JavaMap<K,V>(Map<K,V> map)
             else null;
 
     shared actual V? put(K? k, V? v) {
-        if (exists k, exists v) {
-            if (is MutableMap<in K,V> map) {
-                return map[k] = v;
+        if (exists k) {
+            value old = map[k];
+            if (exists v) {
+                if (is MapMutator<K,V> map) {
+                    map[k] = v;
+                }
+                else {
+                    throw UnsupportedOperationException("not a mutable map");
+                }
             }
             else {
-                throw UnsupportedOperationException("not a mutable map");
+                if (is MapMutator<K,Null> map) {
+                    map[k] = null;
+                }
+                else {
+                    if (map is MapMutator<Nothing,Nothing>) {
+                        throw IllegalArgumentException("map may not have null items");
+                    }
+                    else {
+                        throw UnsupportedOperationException("not a mutable map");
+                    }
+                }
             }
+            return old;
         }
         else {
-            throw IllegalArgumentException("map may not have null keys or items");
+            throw IllegalArgumentException("map may not have null keys");
         }
     }
     
     shared actual V? remove(Object? k) {
-        if (is K k) {
-            if (is MutableMap<in K,out V> map) {
-                return map.remove(k);
+        if (is MapMutator<K,Nothing> map) {
+            if (is K k) {
+                value old = map[k];
+                map.remove(k);
+                return old;
             }
             else {
-                throw UnsupportedOperationException("not a mutable map");
+                return null;
             }
         }
         else {
-            return null;
+            throw UnsupportedOperationException("not a mutable map");
         }
     }
     
@@ -127,7 +146,7 @@ shared class JavaMap<K,V>(Map<K,V> map)
     }*/
     
     shared actual void clear() {
-        if (is MutableMap<out Anything, out Anything> map) {
+        if (is MapMutator<Nothing,Nothing> map) {
             map.clear();
         }
         else {

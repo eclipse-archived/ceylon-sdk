@@ -6,7 +6,7 @@ import java.util {
  [[Collection]]. This collection is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
-shared class JavaCollection<E>(Collection<E> collection)
+shared class JavaCollection<E>(Collection<E?> collection)
         extends AbstractCollection<E>() {
     
     iterator() => JavaIterator(collection.iterator());

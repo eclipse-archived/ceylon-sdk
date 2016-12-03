@@ -7,12 +7,22 @@ import java.util {
     ArrayList
 }
 
-"A Ceylon [[List]] that wraps a [[java.util::List]]."
-shared class CeylonList<out Element>(JList<out Element> list)
+"A Ceylon [[List]] that wraps a [[java.util::List]].
+
+ If the given [[list]] contains null elements, an optional
+ [[Element]] type must be explicitly specified, for example:
+
+     CeylonList<String?>(javaStringList)
+
+ If a non-optional `Element` type is specified, an
+ [[AssertionError]] will occur whenever a null value is
+ encountered while iterating the list."
+shared class CeylonList<out Element>(list)
         extends CeylonCollection<Element>(list)
-        satisfies List<Element> 
-        given Element satisfies Object {
-    
+        satisfies List<Element> {
+
+    JList<out Element> list;
+
     getFromFirst(Integer index)
             => if (0 <= index < size)
             then list[index]
