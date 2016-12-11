@@ -95,7 +95,7 @@ Integer parseHex(Tokenizer tokenizer){
         tokenizer.line, tokenizer.column);
 }
 
-"Parse a number, consuming any initial whitepsace."
+"Parse a number, consuming any initial whitespace."
 shared Integer|Float parseNumber(Tokenizer tokenizer){
     tokenizer.eatSpaces();
     value negative = tokenizer.check('-');
