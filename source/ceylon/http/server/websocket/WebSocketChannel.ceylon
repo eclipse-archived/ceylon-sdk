@@ -68,4 +68,6 @@ shared interface WebSocketChannel {
 
     shared formal String requestPath;
 
+    "A stream of 'peer' web socket connections that were created from the same endpoint."
+    shared formal {WebSocketChannel*} peerConnections;
 }

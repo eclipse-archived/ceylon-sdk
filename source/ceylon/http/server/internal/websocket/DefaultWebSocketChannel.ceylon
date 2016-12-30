@@ -92,4 +92,7 @@ class DefaultWebSocketChannel(WebSocketHttpExchange exchange,
                 CloseMessage(reason.code, reason.reason else "").toByteBuffer(),
                 channel,
                 wrapCallbackSend(onCompletion, onError, this));
+    
+    peerConnections 
+            => {for (conn in channel.peerConnections) DefaultWebSocketChannel(exchange, conn) };
 }
