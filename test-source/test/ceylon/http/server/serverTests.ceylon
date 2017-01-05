@@ -370,6 +370,21 @@ shared class TestServer() extends ServerTest() {
                 };
                 acceptMethod = {get};
             },
+            AsynchronousEndpoint {
+                path = template("/asynctemplate/{val}/x/{other}");
+                service = (Request request, Response response, void complete()) {
+                    String? val = request.pathParameter("val");
+                    String? other = request.pathParameter("other");
+                    String? template = request.matchedTemplate;
+                    assert (exists val);
+                    assert (exists other);
+                    assert (exists template);
+                    response.addHeader(contentType("text/plain", utf8));
+                    response.writeString("val=``val``, other=``other``, matched=``template``");
+                    complete();
+                };
+                acceptMethod = {get};
+            },
             RepositoryEndpoint {
                 root = "/modules";
             }
@@ -831,6 +846,17 @@ shared class TestServer() extends ServerTest() {
         //TODO log
         print("Response content: " + responseContent);
         assertTrue(responseContent.equals("val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}"), "Response does not equals 'val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}'.");
+    }
+    
+    shared test void asyncTemplateTest() {
+        value request = ClientRequest(parse("http://localhost:8080/asynctemplate/ceylon/x/java"), get);
+        
+        value response = request.execute();
+        value responseContent = response.contents;
+        response.close();
+        //TODO log
+        print("Response content: " + responseContent);
+        assertTrue(responseContent.equals("val=ceylon, other=java, matched=/asynctemplate/{val}/x/{other}"), "Response does not equals 'val=xyzzy, other=veramocor, matched=/template/{val}/x/{other}'.");
     }
     
     shared test void sessionTest() {

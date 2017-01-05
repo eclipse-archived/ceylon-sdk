@@ -13,7 +13,6 @@ import ceylon.http.server {
     InternalException,
     HttpEndpoint,
     TemplateMatcher,
-    Endpoint,
     ServerException
 }
 import ceylon.http.server.internal.websocket {
@@ -55,6 +54,9 @@ import io.undertow.server.session {
     SessionCookieConfig
 }
 
+import java.io {
+    IOException
+}
 import java.lang {
     Runtime,
     JInt=Integer,
@@ -74,9 +76,6 @@ import org.xnio {
 }
 import org.xnio.nio {
     NioXnioProvider
-}
-import java.io {
-    IOException
 }
 
 by("Matej Lazar")
@@ -143,7 +142,7 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
                         httpEndpoints));
         for (endpoint in httpEndpoints.endpoints) {
             if (is TemplateMatcher matcher = endpoint.path) {
-                assert (is Endpoint endpoint);
+                assert(is HttpEndpoint endpoint);
                 pathTemplateHandler.add(matcher.template, 
                     TemplateCeylonRequestHandler(options, endpoint));
             }

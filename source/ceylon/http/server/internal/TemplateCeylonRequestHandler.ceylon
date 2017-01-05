@@ -10,7 +10,9 @@ import ceylon.http.server {
 	InternalException,
 	Request,
 	Endpoint,
-	TemplateMatcher
+	TemplateMatcher,
+    HttpEndpoint,
+    AsynchronousEndpoint
 }
 
 import io.undertow.server {
@@ -33,7 +35,7 @@ import java.util {
 	JMap=Map
 }
 
-class TemplateCeylonRequestHandler(Options options, Endpoint endpoint)
+class TemplateCeylonRequestHandler(Options options, HttpEndpoint endpoint)
          satisfies HttpHandler {
 
 	assert (is TemplateMatcher templateMatcher = endpoint.path);
@@ -90,12 +92,15 @@ class TemplateCeylonRequestHandler(Options options, Endpoint endpoint)
         
     }
 
-    void invokeEndpoint(Endpoint endpoint, 
+    void invokeEndpoint(HttpEndpoint endpoint, 
         Request request, ResponseImpl response, 
         JHttpServerExchange exchange ) {
 
-        exchange.dispatch(SynchronousInvoker(endpoint, 
-                request, response));
+        value invoker = if (is Endpoint endpoint) 
+        then SynchronousInvoker(endpoint, request, response)
+        else AsynchronousInvoker(endpoint, request, response);
+
+        exchange.dispatch(invoker);
     }
 
     class SynchronousInvoker(Endpoint endpoint, 
@@ -106,6 +111,18 @@ class TemplateCeylonRequestHandler(Options options, Endpoint endpoint)
             endpoint.service(request, response);
             response.responseDone();
             endExchange(httpServerExchange);
+        }
+    }
+    
+    class AsynchronousInvoker(AsynchronousEndpoint endpoint, 
+        Request request, ResponseImpl response) 
+            satisfies HttpHandler {
+        
+        shared actual void handleRequest(JHttpServerExchange? httpServerExchange) {
+            endpoint.service(request, response, () {
+                response.responseDone();
+                endExchange(httpServerExchange);
+            });
         }
     }
     
