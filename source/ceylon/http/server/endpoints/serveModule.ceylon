@@ -89,7 +89,7 @@ ArtifactContext? getArtifactContext(String path) {
         value parts = path.split('/'.equals, true, false).sequence();
         value size = parts.size;
 
-        value fileName = parts.last else "";
+        value fileName = parts.last;
 
         if (size == 1) {
             // parts == [ceylon.language-1.2.0.js]

@@ -121,7 +121,6 @@ shared interface Random {
 
         value elements = stream.sequence();
         if (!nonempty elements) {
-            assert (is Iterable<Element, Absent> elements);
             return elements;
         }
         return package.stream(() => nextElement(elements));

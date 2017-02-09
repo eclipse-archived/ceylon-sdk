@@ -165,7 +165,7 @@ shared Uri parse(String uri) {
         }
         if(!pathPart.empty) { // else, use default `path` already initialized
             value parts = pathPart.split { '/'.equals; groupSeparators = false; }.sequence();
-            value absolute = parts.first?.empty else false;
+            value absolute = parts.first.empty;
             path = Path {
                 absolute = absolute;
                 segments = if (absolute)

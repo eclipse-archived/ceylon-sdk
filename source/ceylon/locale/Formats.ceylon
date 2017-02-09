@@ -401,23 +401,18 @@ shared sealed class Formats(
         
         String[] bits;
         Boolean adjust;
-        if (nonempty bitsWithAmPm) {
-            value last = bitsWithAmPm.last;
-            value eqPm = pm.equalsIgnoringCase(last);
-            value eqAm = am.equalsIgnoringCase(last);
-            if (eqPm || eqAm) {
-                bits = bitsWithAmPm[0:bitsWithAmPm.size-1];
-                adjust = eqPm;
-            }
-            else {
-                bits = bitsWithAmPm;
-                adjust = false;
-            }
+        value last = bitsWithAmPm.last;
+        value eqPm = pm.equalsIgnoringCase(last);
+        value eqAm = am.equalsIgnoringCase(last);
+        if (eqPm || eqAm) {
+            bits = bitsWithAmPm[0:bitsWithAmPm.size-1];
+            adjust = eqPm;
         }
         else {
-            return null;
+            bits = bitsWithAmPm;
+            adjust = false;
         }
-        
+
         Integer hour;
         if (exists hourBit = bits[0]) {
             if (is Integer d = Integer.parse(hourBit)) {

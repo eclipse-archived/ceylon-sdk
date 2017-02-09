@@ -43,8 +43,7 @@ native ("js") shared class FileWriter(String path) satisfies Destroyable {
             }
             pathBuilder.append(pathApi.sep);
         }
-        assert(exists pathLastSegment = pathSegments.last);
-        pathBuilder.append(pathLastSegment);
+        pathBuilder.append(pathSegments.last);
         
         fd = fsApi.openSync(pathBuilder.string, "w");
     }

@@ -61,10 +61,9 @@ shared class Response(status, reason, major, minor,
             value params = contentTypeLine.split(';'.equals).rest;
             for(param in params) {
                 value trimmed = param.trimmed;
-                if(nonempty keyValue = trimmed.split('='.equals).sequence()) {
-                    if(keyValue.first == "charset") {
-                        return keyValue[1];
-                    }
+                value [first, *rest] = trimmed.split('='.equals).sequence();
+                if(first == "charset") {
+                    return rest[0];
                 }
             }
         }
