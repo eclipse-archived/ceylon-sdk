@@ -24,7 +24,7 @@ import java.text {
 }
 
 "A [[TestListener]] that generate simple HTML report about test execution."
-shared class HtmlReporter(String reportSubdir) satisfies TestListener {
+shared class HtmlReporter(String reportSubdir, String? reportsDir) satisfies TestListener {
     
     shared actual void testRunFinished(TestRunFinishedEvent event) {
         generate(event.runner.description, event.result);
@@ -33,12 +33,13 @@ shared class HtmlReporter(String reportSubdir) satisfies TestListener {
     void generate(TestDescription root, TestRunResult result) {
         value testedModules = findTestedModules(result);
         
+        value parentPath = reportsDir else "reports/``reportSubdir``";
         String path;
         if( testedModules.size == 1 ) {
             assert(exists testedModule = testedModules[0]);
-            path = "reports/``reportSubdir``/results-``testedModule.name``-``testedModule.version``.html";
+            path = "``parentPath``/results-``testedModule.name``-``testedModule.version``.html";
         } else {
-            path = "reports/``reportSubdir``/results.html";
+            path = "``parentPath``/results.html";
         }
         try (fw = FileWriter(path)) {
             fw.write("<!DOCTYPE html>");

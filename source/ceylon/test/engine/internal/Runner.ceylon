@@ -13,7 +13,8 @@ import ceylon.test {
 }
 import ceylon.test.reporter {
     HtmlReporter,
-    TapReporter
+    TapReporter,
+    XmlJUnitReporter
 }
 import ceylon.test.engine {
     TagFilter,
@@ -69,7 +70,10 @@ shared class Runner() {
             testListeners.add(TestLoggingListener(options.colorReset, options.colorGreen, options.colorRed));
         }
         if (options.report) {
-            testListeners.add(HtmlReporter(getHtmlReportSubdir()));
+            testListeners.add(HtmlReporter(getHtmlReportSubdir(), options.reportsDir));
+        }
+        if (options.xmlJUnitReport) {
+            testListeners.add(XmlJUnitReporter(getHtmlReportSubdir(), options.reportsDir));
         }
         
         return testListeners.sequence();

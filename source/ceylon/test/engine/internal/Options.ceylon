@@ -8,6 +8,8 @@ class Options {
     shared String[] tests;
     shared String[] tags;
     shared Boolean report;
+    shared String? reportsDir;
+    shared Boolean xmlJUnitReport;
     shared Integer? port;
     shared String? tap;
     shared String? colorReset;
@@ -21,6 +23,8 @@ class Options {
         value tagArgs = ArrayList<String>();
         variable value prev = "";
         variable value reportArg = false;
+        variable String? reportsDirArg = null;
+        variable value xmlJUnitReportArg = false;
         variable Integer? portArg = null;
         variable String? tapArg = null;
         variable String? colorResetArg = process.propertyValue("``colorKeyPrefix``.reset");
@@ -36,6 +40,9 @@ class Options {
             }
             if (prev == "--tag") {
                 tagArgs.add(arg);
+            }
+            if (prev == "--reports-dir") {
+                reportsDirArg = arg;
             }
             if (prev == "--``colorKeyPrefix``.reset") {
                 colorResetArg = arg;
@@ -59,6 +66,9 @@ class Options {
             if (arg == "--report") {
                 reportArg = true;
             }
+            if (arg == "--xml-junit-report") {
+                xmlJUnitReportArg = true;
+            }
             
             prev = arg;
         }
@@ -68,6 +78,8 @@ class Options {
         tags = tagArgs.sequence();
         tap = tapArg;
         report = reportArg;
+        reportsDir = reportsDirArg;
+        xmlJUnitReport = xmlJUnitReportArg;
         port = portArg;
         colorReset = colorResetArg;
         colorGreen = colorGreenArg;
