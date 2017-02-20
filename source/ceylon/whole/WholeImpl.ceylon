@@ -428,6 +428,24 @@ class WholeImpl satisfies Whole {
     }
 
     shared actual
+    Float nearestFloat {
+        if (zero) {
+            return 0.0;
+        }
+        else if (wordsSize == 1 ||
+                 bitLengthUnsigned <= 53) {
+            value abs = integerForWordsNaive(wordsSize, words).float;
+            return if (negative)
+                   then -abs
+                   else abs;
+        }
+        else {
+            assert (is Float result = Float.parse(string));
+            return result;
+        }
+    }
+
+    shared actual
     Whole not
         =>  if (zero) then
                 package.negativeOne

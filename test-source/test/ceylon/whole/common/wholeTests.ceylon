@@ -387,6 +387,19 @@ test shared
 void wholeConversionTests() {
     assertEquals(2, wholeNumber(2).integer, "2.integer");
     assertEquals(2.0, wholeNumber(2).float, "2.float");
+
+    assertTrue(wholeNumber(0).nearestFloat == 0.0, "nearestFloat 0.0");
+    assertTrue(wholeNumber(5).nearestFloat == 5.0, "nearestFloat 5.0");
+    assertTrue(wholeNumber(-5).nearestFloat == -5.0, "nearestFloat -5.0");
+    assertTrue(wholeNumber(1).leftLogicalShift(55).nearestFloat == 36028797018963968.0, "nearestFloat 2^55");
+    assertTrue(wholeNumber(1).leftLogicalShift(55).negated.nearestFloat == -36028797018963968.0, "nearestFloat -2^55");
+
+    assertTrue(wholeNumber(2).times(wholeNumber(10).powerOfInteger(307)).nearestFloat == 2.0e+307, "nearestFloat 2e307");
+    assertTrue(wholeNumber(-2).times(wholeNumber(10).powerOfInteger(307)).nearestFloat == -2.0e+307, "nearestFloat -2e307");
+    assertTrue(wholeNumber(2).times(wholeNumber(10).powerOfInteger(308)).nearestFloat.infinite, "nearestFloat +Infinity");
+    assertTrue(wholeNumber(2).times(wholeNumber(10).powerOfInteger(308)).nearestFloat.positive, "nearestFloat +Infinity");
+    assertTrue(wholeNumber(-2).times(wholeNumber(10).powerOfInteger(308)).nearestFloat.infinite, "nearestFloat -Infinity");
+    assertTrue(wholeNumber(-2).times(wholeNumber(10).powerOfInteger(308)).nearestFloat.negative, "nearestFloat -Infinity");
 }
 
 test shared

@@ -46,12 +46,41 @@ interface Whole
     Integer integer;
 
     "The number, represented as a [[Float]], if such a
-     representation is possible."
+     representation is possible.
+
+     - Any number with [[magnitude]] smaller than
+       [[runtime.maxExactIntegralFloat]] (2<sup>53</sup>)
+       has such a representation.
+     - For larger numbers on the JVM platform, an
+       [[OverflowException]] is thrown. If this behavior is
+       not desired, use [[nearestFloat]] instead."
     throws (`class OverflowException`,
         "if the number cannot be represented as a `Float`
-         without loss of precision")
+         without loss of precision, that is, if
+
+             this.magnitude>runtime.maxExactIntegralFloat
+
+         (Note that [[nearestFloat]] does not produce an
+         exception in this case.)")
+    see (`value runtime.maxExactIntegralFloat`,
+         `value nearestFloat`)
     shared formal
     Float float;
+
+    "The nearest [[Float]] to this number.
+
+     - For any number with [[magnitude]] smaller than
+       [[runtime.maxExactIntegralFloat]] (2<sup>53</sup>),
+       this is a `Float` with the exact same mathematical
+       value (and the same value as [[float]]).
+     - For large values, the `Float`s are less dense than
+       the `Whole`s so there may be loss of precision.
+
+     This method never throws an [[OverflowException]]."
+    see (`value float`)
+    since("1.3.2")
+    shared formal
+    Float nearestFloat;
 
     "The distance between this whole and the other whole"
     throws(`class OverflowException`,
