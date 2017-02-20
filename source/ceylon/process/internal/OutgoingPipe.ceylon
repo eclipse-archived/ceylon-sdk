@@ -27,6 +27,6 @@ class OutgoingPipe(InputStream stream)
             if (size<0)
                 then []
             else if (size==max)
-                then (sequence(byteArray.byteArray) else [])
+                then byteArray.byteArray.sequence()
             else byteArray.iterable.take(size).sequence();
 }
