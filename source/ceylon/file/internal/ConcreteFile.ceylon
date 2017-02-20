@@ -151,17 +151,15 @@ class ConcreteFile(JPath jpath)
         
         readLine() => reader.readLine();
         
-        shared actual Byte[] readBytes(Integer max) {
-            value byteArray = ByteArray(max);
-            value size = stream.read(byteArray);
-            return 
-                if (size<0)
+        readBytes(Integer max)
+                => let (byteArray = ByteArray(max),
+                        size = stream.read(byteArray))
+                if (size==0)
                     then []
                 else if (size==max)
                     then byteArray.byteArray.sequence()
                 else byteArray.iterable.take(size).sequence();
-        }
-        
+
     }
     
     shared actual class Overwriter(String? encoding, 
