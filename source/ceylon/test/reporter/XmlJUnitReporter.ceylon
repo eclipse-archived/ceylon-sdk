@@ -1,6 +1,8 @@
 import ceylon.collection {
-    ArrayList,
-    HashMap
+    ArrayList
+}
+import ceylon.language.meta {
+    type
 }
 import ceylon.language.meta.declaration {
     Module
@@ -19,14 +21,9 @@ import ceylon.test.event {
     TestRunFinishedEvent
 }
 
-import java.text {
-    NumberFormat
-}
 import java.lang {
-    System, JString = String
-}
-import ceylon.language.meta {
-    type
+    System,
+    JString=String
 }
 
 "A [[TestListener]] that generate JUnit XML report about test execution."
