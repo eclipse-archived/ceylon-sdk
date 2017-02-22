@@ -54,7 +54,7 @@
  the `waitForExit()` method of `Process`."
 by("Gavin King")
 native("jvm")
-module ceylon.process "1.3.2-SNAPSHOT" {
+module ceylon.process maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
     shared import ceylon.file "1.3.2-SNAPSHOT";
     import java.base "7";
 }

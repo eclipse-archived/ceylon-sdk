@@ -50,4 +50,4 @@
 """
 by("John Vasileff")
 license("Apache Software License")
-module ceylon.random "1.3.2-SNAPSHOT" {}
+module ceylon.random maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {}

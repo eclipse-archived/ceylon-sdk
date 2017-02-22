@@ -87,7 +87,7 @@
 by ("Enrique Zamudio")
 license ("Apache Software License 2.0")
 native("jvm")
-module ceylon.dbc "1.3.2-SNAPSHOT" {
+module ceylon.dbc maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
     import ceylon.collection "1.3.2-SNAPSHOT";
     shared import ceylon.decimal "1.3.2-SNAPSHOT";
     shared import ceylon.whole "1.3.2-SNAPSHOT";

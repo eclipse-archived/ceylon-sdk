@@ -6,7 +6,7 @@
 by("Stéphane Épardaud")
 license("Apache Software License")
 native("jvm")
-module ceylon.io "1.3.2-SNAPSHOT" {
+module ceylon.io maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
     shared import ceylon.buffer "1.3.2-SNAPSHOT";
     shared import ceylon.file "1.3.2-SNAPSHOT";
     import ceylon.collection "1.3.2-SNAPSHOT";
