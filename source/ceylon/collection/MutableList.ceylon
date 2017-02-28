@@ -2,7 +2,7 @@
  replacement of its elements."
 see (`class LinkedList`, `class ArrayList`)
 by("Stéphane Épardaud")
-shared interface MutableList<Element>
+shared interface MutableList<Element=Anything>
         satisfies List<Element>
                 & ListMutator<Element> {
 
@@ -219,7 +219,7 @@ shared interface MutableList<Element>
 
 "Protocol for mutation of a [[MutableList]]."
 see (`interface MutableList`)
-shared interface ListMutator<in Element>
+shared interface ListMutator<in Element=Anything>
         satisfies List<Anything>
                 & IndexedCorrespondenceMutator<Element> {
 

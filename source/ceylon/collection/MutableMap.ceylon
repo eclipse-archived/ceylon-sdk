@@ -2,7 +2,7 @@
  existing entries."
 see (`class HashMap`)
 by("Stéphane Épardaud")
-shared interface MutableMap<Key, Item>
+shared interface MutableMap<Key=Object, Item=Anything>
         satisfies Map<Key, Item>
                 & MapMutator<Key, Item>
         given Key satisfies Object {
@@ -31,7 +31,7 @@ shared interface MutableMap<Key, Item>
 
 "Protocol for mutation of a [[MutableMap]]."
 see (`interface MutableMap`)
-shared interface MapMutator<in Key, in Item>
+shared interface MapMutator<in Key=Object, in Item=Anything>
         satisfies Map<Object, Anything>
                 & KeyedCorrespondenceMutator<Key, Item>
         given Key satisfies Object {

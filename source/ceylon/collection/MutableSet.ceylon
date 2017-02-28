@@ -2,7 +2,7 @@
  of existing elements."
 by("Stéphane Épardaud")
 see (`class HashSet`)
-shared interface MutableSet<Element>
+shared interface MutableSet<Element=Object>
         satisfies Set<Element>
                 & SetMutator<Element>
         given Element satisfies Object {
@@ -13,7 +13,7 @@ shared interface MutableSet<Element>
 
 "Protocol for mutation of a [[MutableSet]]."
 see (`interface MutableSet`)
-shared interface SetMutator<in Element>
+shared interface SetMutator<in Element=Object>
         satisfies Set<Object>
         given Element satisfies Object {
     
