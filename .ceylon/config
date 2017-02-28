@@ -14,4 +14,6 @@ source=./source
 source=./test-source
 resource=./resource
 suppresswarning=ceylonNamespace
+
+[compiler.jvm]
 target=7
