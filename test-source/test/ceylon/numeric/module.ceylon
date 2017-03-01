@@ -1,4 +1,4 @@
-module test.ceylon.numeric "1.3.2-SNAPSHOT" {
-    import ceylon.test "1.3.2-SNAPSHOT";
-    import ceylon.numeric "1.3.2-SNAPSHOT";
+module test.ceylon.numeric "**NEW_VERSION**-SNAPSHOT" {
+    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
+    import ceylon.numeric "**NEW_VERSION**-SNAPSHOT";
 }

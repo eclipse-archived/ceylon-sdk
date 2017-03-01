@@ -36,6 +36,6 @@
  decimal digits."
 by("Tom Bentley")
 native("jvm")
-module ceylon.math maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
+module ceylon.math maven:"org.ceylon-lang" "**NEW_VERSION**-SNAPSHOT" {
     import java.base "7";
 }

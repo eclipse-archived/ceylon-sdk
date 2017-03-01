@@ -34,7 +34,7 @@
  [[currencies|Locale.currencies]] in that locale.
  
  [BCP 47]: http://tools.ietf.org/html/rfc4647"
-module ceylon.locale maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
-    shared import ceylon.collection "1.3.2-SNAPSHOT";
-    shared import ceylon.time "1.3.2-SNAPSHOT";
+module ceylon.locale maven:"org.ceylon-lang" "**NEW_VERSION**-SNAPSHOT" {
+    shared import ceylon.collection "**NEW_VERSION**-SNAPSHOT";
+    shared import ceylon.time "**NEW_VERSION**-SNAPSHOT";
 }

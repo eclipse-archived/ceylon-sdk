@@ -1,5 +1,5 @@
-module test.ceylon.html "1.3.2-SNAPSHOT" {
-    import ceylon.html "1.3.2-SNAPSHOT";
-    import ceylon.test "1.3.2-SNAPSHOT";
-    import ceylon.collection "1.3.2-SNAPSHOT";
+module test.ceylon.html "**NEW_VERSION**-SNAPSHOT" {
+    import ceylon.html "**NEW_VERSION**-SNAPSHOT";
+    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
+    import ceylon.collection "**NEW_VERSION**-SNAPSHOT";
 }

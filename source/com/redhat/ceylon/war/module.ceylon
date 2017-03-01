@@ -4,10 +4,10 @@
  WAR when it is created - you should never need to import
  this module directly."
 native("jvm")
-module com.redhat.ceylon.war "1.3.2-SNAPSHOT" {
+module com.redhat.ceylon.war "**NEW_VERSION**-SNAPSHOT" {
     import java.base "7";
-    import com.redhat.ceylon.common "1.3.2-SNAPSHOT";
-    import "com.redhat.ceylon.module-loader" "1.3.2-SNAPSHOT";
-    import "com.redhat.ceylon.module-resolver" "1.3.2-SNAPSHOT";
+    import com.redhat.ceylon.common "**NEW_VERSION**-SNAPSHOT";
+    import "com.redhat.ceylon.module-loader" "**NEW_VERSION**-SNAPSHOT";
+    import "com.redhat.ceylon.module-resolver" "**NEW_VERSION**-SNAPSHOT";
     import javax.servlet "3.1.0";
 }

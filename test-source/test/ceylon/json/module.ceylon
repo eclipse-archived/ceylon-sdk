@@ -1,4 +1,4 @@
-module test.ceylon.json "1.3.2-SNAPSHOT" {
-    import ceylon.test "1.3.2-SNAPSHOT";
-    import ceylon.json "1.3.2-SNAPSHOT";
+module test.ceylon.json "**NEW_VERSION**-SNAPSHOT" {
+    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
+    import ceylon.json "**NEW_VERSION**-SNAPSHOT";
 }

@@ -364,4 +364,4 @@
 """
 by("Tomáš Hradec", "John Vasileff", "Daniel Rochetti")
 suppressWarnings("ceylonNamespace")
-module ceylon.html maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {}
+module ceylon.html maven:"org.ceylon-lang" "**NEW_VERSION**-SNAPSHOT" {}
