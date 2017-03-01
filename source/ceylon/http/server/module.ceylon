@@ -43,13 +43,13 @@
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
 native("jvm")
-module ceylon.http.server maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
+module ceylon.http.server maven:"org.ceylon-lang" "1.3.2" {
     
-    shared import ceylon.http.common "1.3.2-SNAPSHOT";
-    shared import ceylon.collection "1.3.2-SNAPSHOT";
-    shared import ceylon.io "1.3.2-SNAPSHOT";
-    shared import "com.redhat.ceylon.module-resolver" "1.3.2-SNAPSHOT";
-    import ceylon.file "1.3.2-SNAPSHOT";
+    shared import ceylon.http.common "1.3.2";
+    shared import ceylon.collection "1.3.2";
+    shared import ceylon.io "1.3.2";
+    shared import "com.redhat.ceylon.module-resolver" "1.3.2";
+    import ceylon.file "1.3.2";
     
     // -- java modules --
     
@@ -58,6 +58,6 @@ module ceylon.http.server maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
     import io.undertow.core "1.4.4.Final";
 
     import org.jboss.xnio.nio "3.3.6.Final";
-    import ceylon.interop.java "1.3.2-SNAPSHOT";
+    import ceylon.interop.java "1.3.2";
     
 }

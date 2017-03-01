@@ -113,6 +113,6 @@
  "
 by("Gavin King")
 native("jvm")
-module ceylon.file maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
+module ceylon.file maven:"org.ceylon-lang" "1.3.2" {
     import java.base "7";
 }

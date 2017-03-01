@@ -183,6 +183,6 @@
    would require a language with dynamic typing."
 by("Julien Viet")
 license("Apache Software License")
-module ceylon.promise maven:"org.ceylon-lang" "1.3.2-SNAPSHOT" {
+module ceylon.promise maven:"org.ceylon-lang" "1.3.2" {
   native("jvm") import java.base "7";
 }
