@@ -1,6 +1,6 @@
 "The `test.ceylon.test.suite` module contains tests for `ceylon.test` module."
-module test.ceylon.test.suite "**NEW_VERSION**-SNAPSHOT" {
-    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
-    import ceylon.collection "**NEW_VERSION**-SNAPSHOT";
-    import test.ceylon.test.stubs "**NEW_VERSION**-SNAPSHOT";
+module test.ceylon.test.suite "1.3.3-SNAPSHOT" {
+    import ceylon.test "1.3.3-SNAPSHOT";
+    import ceylon.collection "1.3.3-SNAPSHOT";
+    import test.ceylon.test.stubs "1.3.3-SNAPSHOT";
 }

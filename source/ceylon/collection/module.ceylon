@@ -46,5 +46,5 @@
 
 by("Stéphane Épardaud")
 license("Apache Software License")
-module ceylon.collection maven:"org.ceylon-lang" "**NEW_VERSION**-SNAPSHOT" {
+module ceylon.collection maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
 }

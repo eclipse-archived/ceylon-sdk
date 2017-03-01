@@ -37,7 +37,7 @@
  an instance of [[java.lang::Class]]."
 by("The Ceylon Team")
 native("jvm")
-module ceylon.interop.java maven:"org.ceylon-lang" "**NEW_VERSION**-SNAPSHOT" {
+module ceylon.interop.java maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     shared import java.base "7";
-    shared import ceylon.collection "**NEW_VERSION**-SNAPSHOT";
+    shared import ceylon.collection "1.3.3-SNAPSHOT";
 }

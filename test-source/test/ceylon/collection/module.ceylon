@@ -1,4 +1,4 @@
-module test.ceylon.collection "**NEW_VERSION**-SNAPSHOT" {
-    shared import ceylon.test "**NEW_VERSION**-SNAPSHOT";
-    shared import ceylon.collection "**NEW_VERSION**-SNAPSHOT";
+module test.ceylon.collection "1.3.3-SNAPSHOT" {
+    shared import ceylon.test "1.3.3-SNAPSHOT";
+    shared import ceylon.collection "1.3.3-SNAPSHOT";
 }

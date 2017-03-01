@@ -1,6 +1,6 @@
 native("jvm")
-module test.ceylon.decimal "**NEW_VERSION**-SNAPSHOT" {
-    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
-    import ceylon.decimal "**NEW_VERSION**-SNAPSHOT";
+module test.ceylon.decimal "1.3.3-SNAPSHOT" {
+    import ceylon.test "1.3.3-SNAPSHOT";
+    import ceylon.decimal "1.3.3-SNAPSHOT";
     import java.base "7";
 }

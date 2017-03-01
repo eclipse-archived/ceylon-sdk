@@ -1,5 +1,5 @@
 native("jvm")
-module test.ceylon.file "**NEW_VERSION**-SNAPSHOT" {
-    import ceylon.file "**NEW_VERSION**-SNAPSHOT";
-    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
+module test.ceylon.file "1.3.3-SNAPSHOT" {
+    import ceylon.file "1.3.3-SNAPSHOT";
+    import ceylon.test "1.3.3-SNAPSHOT";
 }

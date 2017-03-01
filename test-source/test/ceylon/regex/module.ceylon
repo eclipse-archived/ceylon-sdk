@@ -1,4 +1,4 @@
-module test.ceylon.regex "**NEW_VERSION**-SNAPSHOT" {
-    import ceylon.test "**NEW_VERSION**-SNAPSHOT";
-    import ceylon.regex "**NEW_VERSION**-SNAPSHOT";
+module test.ceylon.regex "1.3.3-SNAPSHOT" {
+    import ceylon.test "1.3.3-SNAPSHOT";
+    import ceylon.regex "1.3.3-SNAPSHOT";
 }
