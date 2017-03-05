@@ -15,3 +15,22 @@ shared test void testLinesEmpty() {
         assertEquals(lines(file), []);
     }
 }
+
+shared test void testReadBytes() {
+    value str = "Testing...\n2\n3";
+    value strBytes = str.collect((c) => c.integer.byte);
+    try (file = temporaryDirectory.TemporaryFile(null, null)) {
+        try (writer = file.Overwriter()) {
+            writer.writeBytes(strBytes);
+        }
+        variable {Byte*} readBytes = {};
+        try (reader = file.Reader()) {
+            while (nonempty bytes = reader.readBytes(5)) {
+                readBytes = readBytes.chain(bytes);
+            }
+        }
+        value readStr = String(readBytes.map((b) => b.unsigned.character));
+        assertEquals(readStr, str);
+        assertEquals(readBytes.sequence(), strBytes);
+    }
+}

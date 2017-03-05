@@ -154,7 +154,7 @@ class ConcreteFile(JPath jpath)
         readBytes(Integer max)
                 => let (byteArray = ByteArray(max),
                         size = stream.read(byteArray))
-                if (size==0)
+                if (size<=0)
                     then []
                 else if (size==max)
                     then byteArray.byteArray.sequence()
