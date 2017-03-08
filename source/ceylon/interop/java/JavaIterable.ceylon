@@ -3,8 +3,8 @@ import java.lang {
 }
 
 "A Java [[JIterable]] that wraps a Ceylon [[Iterable]]."
-shared class JavaIterable<T>(Iterable<T> iter) 
-        satisfies JIterable<T> {
+shared class JavaIterable<Element>(Iterable<Element?> iter)
+        satisfies JIterable<Element> {
 
     iterator() => JavaIterator(iter.iterator());
 
