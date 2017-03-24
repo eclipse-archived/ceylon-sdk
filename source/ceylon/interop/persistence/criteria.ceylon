@@ -560,7 +560,7 @@ shared class Criteria(manager) {
     CriteriaBuilder builder = manager.criteriaBuilder;
     CriteriaQuery<Object> criteriaQuery = builder.createQuery();
 
-    shared Root<T> root<T>(Class<T> entity)
+    shared Root<T> from<T>(Class<T> entity)
             given T satisfies Object
             => Root(criteriaQuery.from(entity));
 
