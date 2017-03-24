@@ -203,6 +203,10 @@ shared class EntityManager
                     entityManager.createNativeQuery(sqlQuery,
                         javaClass(resultClass)));
 
+    "An instance of [[Criteria]] for creating and executing
+     criteria queries."
+    shared Criteria createCriteria() => Criteria(entityManager);
+
     "An instance of `CriteriaBuilder` for the creating
      `CriteriaQuery` objects."
     shared CriteriaBuilder criteriaBuilder
