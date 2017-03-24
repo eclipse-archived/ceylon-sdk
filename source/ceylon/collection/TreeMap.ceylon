@@ -794,5 +794,4 @@ shared serializable class TreeMap<Key, Item>
 shared TreeMap<Key,Item> naturalOrderTreeMap<Key,Item>
         ({<Key->Item>*} entries)
         given Key satisfies Comparable<Key>
-        given Item satisfies Object
         => TreeMap((Key x, Key y) => x<=>y, entries);
