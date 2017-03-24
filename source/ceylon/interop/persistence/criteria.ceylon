@@ -560,34 +560,55 @@ shared class Criteria(manager) {
     CriteriaBuilder builder = manager.criteriaBuilder;
     CriteriaQuery<Object> criteriaQuery = builder.createQuery();
 
+    variable Predicate? _where = null;
+    variable Grouping? _groupBy = null;
+    variable Predicate? _having = null;
+    variable Order? _orderBy = null;
+
     shared Root<T> from<T>(Class<T> entity)
             given T satisfies Object
             => Root(criteriaQuery.from(entity));
 
+    shared Criteria where(Predicate where) {
+        _where = where;
+        return this;
+    }
+
+    shared Criteria groupBy(Predicate groupBy) {
+        _groupBy = groupBy;
+        return this;
+    }
+
+    shared Criteria having(Predicate having) {
+        _having = having;
+        return this;
+    }
+
+    shared Criteria orderBy(Order orderBy) {
+        _orderBy = orderBy;
+        return this;
+    }
+
     suppressWarnings("uncheckedTypeArguments")
-    shared TypedQuery<R> query<R>(select, where=null, groupBy=null, having=null, orderBy=null)
+    shared TypedQuery<R> select<R>(select)
             given R satisfies Object {
 
         Selection<R> select;
-        Predicate? where;
-        Grouping? groupBy;
-        Predicate? having;
-        Order? orderBy;
 
         assert (is CriteriaSelection<R> s
                 = select.criteriaSelection(builder));
         criteriaQuery.select(s);
         criteriaQuery.distinct(select.distinct);
-        if (exists where) {
+        if (exists where=_where) {
             criteriaQuery.where(where.criteriaExpression(builder));
         }
-        if (exists groupBy) {
+        if (exists groupBy=_groupBy) {
             criteriaQuery.groupBy(*groupBy.criteriaExpressions(builder));
         }
-        if (exists having) {
+        if (exists having=_having) {
             criteriaQuery.where(having.criteriaExpression(builder));
         }
-        if (exists orderBy) {
+        if (exists orderBy=_orderBy) {
             criteriaQuery.orderBy(*orderBy.criteriaOrder(builder));
         }
 
