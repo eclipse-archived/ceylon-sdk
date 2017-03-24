@@ -22,12 +22,14 @@ import javax.persistence.criteria {
     CriteriaExpression=Expression,
     CriteriaSelection=Selection,
     CriteriaBuilder,
-    CriteriaPredicate=Predicate
+    CriteriaPredicate=Predicate,
+    CriteriaOrder=Order
 }
 
 shared sealed interface Selection<out T> {
     shared formal CriteriaSelection<out Object>
         criteriaSelection(CriteriaBuilder builder);
+    shared default Boolean distinct => false;
 }
 
 shared Selection<T> construct<T,A>(Class<T,A> type, Selection<A> select)
@@ -39,18 +41,67 @@ shared Selection<T> construct<T,A>(Class<T,A> type, Selection<A> select)
                             .compoundSelectionItems);
 };
 
-shared sealed interface Expression<T> satisfies Selection<T> {
-    shared formal CriteriaExpression<out Object> criteriaExpression(
-            CriteriaBuilder builder);
+shared sealed interface Grouping {
+    shared formal CriteriaExpression<out Object>[]
+        criteriaExpressions(CriteriaBuilder builder);
+}
+
+shared sealed interface Expression<T>
+        satisfies Selection<T>
+                & Grouping {
+
+    shared formal CriteriaExpression<out Object>
+        criteriaExpression(CriteriaBuilder builder);
+
     criteriaSelection(CriteriaBuilder builder)
             => criteriaExpression(builder);
+
+    criteriaExpressions(CriteriaBuilder builder)
+            => [criteriaExpression(builder)];
+
 }
+
+shared Grouping group(Grouping* groupings)
+        => object satisfies Grouping {
+    criteriaExpressions(CriteriaBuilder builder)
+            => [for (g in groupings)
+                for (cg in g.criteriaExpressions(builder))
+                cg];
+};
 
 shared sealed interface Predicate
         satisfies Expression<Boolean> {
     shared actual formal CriteriaPredicate
         criteriaExpression(CriteriaBuilder builder);
 }
+
+shared sealed interface Order {
+    shared formal CriteriaOrder[] criteriaOrder(CriteriaBuilder builder);
+}
+
+shared Order asc<T>(Expression<T?>|Expression<T> expression)
+        given T of Integer | Float | String
+                satisfies Comparable<T>
+        => object satisfies Order {
+    criteriaOrder(CriteriaBuilder builder)
+            => [builder.asc(expression.criteriaExpression(builder))];
+};
+
+shared Order desc<T>(Expression<T?>|Expression<T> expression)
+        given T of Integer | Float | String
+                satisfies Comparable<T>
+        => object satisfies Order {
+    criteriaOrder(CriteriaBuilder builder)
+            => [builder.desc(expression.criteriaExpression(builder))];
+};
+
+shared Order order(Order* orders)
+        => object satisfies Order {
+    criteriaOrder(CriteriaBuilder builder)
+            => [for (o in orders)
+                for (co in o.criteriaOrder(builder))
+                co];
+};
 
 shared sealed class Enumeration<out E,out F,out R>(selections)
         satisfies Selection<Tuple<E,F,R>>
@@ -81,7 +132,7 @@ shared abstract class From<out T>(criteriaFrom)
             given S satisfies Object
             => Join(criteriaFrom.join<T,S>(attribute.declaration.name));
 
-    shared Expression<S> att<S>(Attribute<T,S,Nothing> attribute)
+    shared Expression<S> get<S>(Attribute<T,S,Nothing> attribute)
             => object satisfies Expression<S> {
         criteriaExpression(CriteriaBuilder builder)
                 => criteriaFrom.get(attribute.declaration.name);
@@ -111,15 +162,20 @@ shared Predicate like(Expression<String> expression, String pattern)
     }
 };
 
-shared Expression<String> concat(Expression<String> left, Expression<String> right)
+shared Expression<String> concat(Expression<String>+ expressions)
         => object satisfies Expression<String> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
+        value [first, *rest] = expressions;
         assert (is StringExpression x
-                = left.criteriaExpression(builder));
-        assert (is StringExpression y
-                = right.criteriaExpression(builder));
-        return builder.concat(x, y);
+                = first.criteriaExpression(builder));
+        variable value result = x;
+        for (next in rest) {
+            assert (is StringExpression y
+                    = next.criteriaExpression(builder));
+            result = builder.concat(result, y);
+        }
+        return result;
     }
 };
 
@@ -127,6 +183,7 @@ alias NumericExpression => CriteriaExpression<JNumber>;
 
 shared Expression<T> neg<T>(Expression<T> expression)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -138,6 +195,7 @@ shared Expression<T> neg<T>(Expression<T> expression)
 
 shared Expression<T> abs<T>(Expression<T> expression)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -149,6 +207,7 @@ shared Expression<T> abs<T>(Expression<T> expression)
 
 shared Expression<T> sqrt<T>(Expression<T> expression)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -158,34 +217,120 @@ shared Expression<T> sqrt<T>(Expression<T> expression)
     }
 };
 
-shared Expression<T> sum<T>(Expression<T> left, Expression<T> right)
+shared Expression<T> sqr<T>(Expression<T> expression)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
-                = left.criteriaExpression(builder));
-        assert (is NumericExpression y
-                = right.criteriaExpression(builder));
-        return builder.sum(x, y);
+                = expression.criteriaExpression(builder));
+        return builder.prod(x,x);
     }
 };
 
-shared Expression<T> prod<T>(Expression<T> left, Expression<T> right)
+shared Expression<T> scale<T>(T factor, Expression<T> expression)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
-                = left.criteriaExpression(builder));
+                = expression.criteriaExpression(builder));
         assert (is NumericExpression y
-                = right.criteriaExpression(builder));
-        return builder.prod(x, y);
+                = lit(factor).criteriaExpression(builder));
+        return builder.prod(y,x);
+    }
+};
+shared Expression<T> max<T>(Expression<T> expression)
+        given T of Integer | Float
+                satisfies Object
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is NumericExpression x
+                = expression.criteriaExpression(builder));
+        return builder.max(x);
+    }
+};
+
+shared Expression<T> min<T>(Expression<T> expression)
+        given T of Integer | Float
+                satisfies Object
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is NumericExpression x
+                = expression.criteriaExpression(builder));
+        return builder.max(x);
+    }
+};
+
+shared Expression<T> avg<T>(Expression<T> expression)
+        given T of Integer | Float
+                satisfies Object
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is NumericExpression x
+                = expression.criteriaExpression(builder));
+        return builder.avg(x);
+    }
+};
+
+shared Expression<T> sum<T>(Expression<T> expression)
+        given T of Integer | Float
+                satisfies Object
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is NumericExpression x
+                = expression.criteriaExpression(builder));
+        return builder.sum(x);
+    }
+};
+
+shared Expression<T> add<T>(Expression<T>+ expressions)
+        given T of Integer | Float
+                satisfies Object
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        value [first, *rest] = expressions;
+        assert (is NumericExpression x
+                = first.criteriaExpression(builder));
+        variable value result = x;
+        for (next in rest) {
+            assert (is NumericExpression y
+                    = next.criteriaExpression(builder));
+            result = builder.sum(result, y);
+        }
+        return result;
+    }
+};
+
+shared Expression<T> mult<T>(Expression<T>+ expressions)
+        given T of Integer | Float
+                satisfies Object
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        value [first, *rest] = expressions;
+        assert (is NumericExpression x
+                = first.criteriaExpression(builder));
+        variable value result = x;
+        for (next in rest) {
+            assert (is NumericExpression y
+                    = next.criteriaExpression(builder));
+            result = builder.prod(result, y);
+        }
+        return result;
     }
 };
 
 shared Expression<T> diff<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -197,8 +342,9 @@ shared Expression<T> diff<T>(Expression<T> left, Expression<T> right)
     }
 };
 
-shared Expression<T> quot<T>(Expression<T> left, Expression<T> right)
+shared Expression<T> div<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float
+                satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -224,29 +370,40 @@ shared Expression<Integer> mod(Expression<Integer> left, Expression<Integer> rig
     }
 };
 
-shared Predicate not<T>(Predicate expression)
-        given T satisfies Object
+shared Predicate not(Predicate expression)
         => object satisfies Predicate {
     criteriaExpression(CriteriaBuilder builder)
             => builder.not(expression.criteriaExpression(builder));
 };
 
-shared Predicate or<T>(Predicate left, Predicate right)
-        given T satisfies Object
+shared Predicate or(Predicate+ predicates)
         => object satisfies Predicate {
-    criteriaExpression(CriteriaBuilder builder)
-            => builder.or(
-                left.criteriaExpression(builder),
-                right.criteriaExpression(builder));
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        value [first, *rest] = predicates;
+        variable value result
+                = first.criteriaExpression(builder);
+        for (next in rest) {
+            return builder.or(result,
+                next.criteriaExpression(builder));
+        }
+        return result;
+    }
 };
 
-shared Predicate and<T>(Predicate left, Predicate right)
-        given T satisfies Object
+shared Predicate and(Predicate+ predicates)
         => object satisfies Predicate {
-    criteriaExpression(CriteriaBuilder builder)
-            => builder.or(
-                left.criteriaExpression(builder),
-                right.criteriaExpression(builder));
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        value [first, *rest] = predicates;
+        variable value result
+                = first.criteriaExpression(builder);
+        for (next in rest) {
+            return builder.and(result,
+                next.criteriaExpression(builder));
+        }
+        return result;
+    }
 };
 
 alias BooleanExpression => CriteriaExpression<JBoolean>;
@@ -271,15 +428,13 @@ shared Predicate isFalse(Expression<Boolean> expression)
     }
 };
 
-shared Predicate isNull<T>(Expression<T?> expression)
-        given T satisfies Object
+shared Predicate isNull(Expression<out Anything> expression)
         => object satisfies Predicate {
     criteriaExpression(CriteriaBuilder builder)
             => builder.isNull(expression.criteriaExpression(builder));
 };
 
-shared Predicate isNotNull<T>(Expression<T?> expression)
-        given T satisfies Object
+shared Predicate isNotNull(Expression<out Anything> expression)
         => object satisfies Predicate {
     criteriaExpression(CriteriaBuilder builder)
             => builder.isNotNull(expression.criteriaExpression(builder));
@@ -307,7 +462,7 @@ alias ComparableExpression
         => CriteriaExpression<JComparable<in Object>>;
 
 shared Predicate lt<T>(Expression<T> left, Expression<T> right)
-        given T of Integer|Float|String //TODO: |Date
+        given T of Integer | Float | String //TODO: |Date
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -323,7 +478,7 @@ shared Predicate lt<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Predicate le<T>(Expression<T> left, Expression<T> right)
-        given T of Integer|Float|String //TODO: |Date
+        given T of Integer | Float | String //TODO: |Date
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -339,7 +494,7 @@ shared Predicate le<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Predicate gt<T>(Expression<T> left, Expression<T> right)
-        given T of Integer|Float|String //TODO: |Date
+        given T of Integer | Float | String //TODO: |Date
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -355,7 +510,7 @@ shared Predicate gt<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Predicate ge<T>(Expression<T> left, Expression<T> right)
-        given T of Integer|Float|String //TODO: |Date
+        given T of Integer | Float | String //TODO: |Date
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -371,7 +526,7 @@ shared Predicate ge<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Expression<T> lit<T>(T literal)
-        given T of Integer|Float|String|Boolean
+        given T of Integer | Float | String | Boolean
                 satisfies Object
         => object satisfies Expression<T> {
     criteriaExpression(CriteriaBuilder builder)
@@ -379,7 +534,7 @@ shared Expression<T> lit<T>(T literal)
 };
 
 shared Expression<T> param<T>(Class<T> type, String? name = null)
-        given T of Integer|Float|String|Boolean
+        given T of Integer | Float | String | Boolean
                 satisfies Object
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(CriteriaBuilder builder) {
@@ -393,6 +548,12 @@ shared Expression<T> param<T>(Class<T> type, String? name = null)
     }
 };
 
+shared Selection<R> distinct<R>(Selection<R> selection)
+        => object satisfies Selection<R> {
+    criteriaSelection = selection.criteriaSelection;
+    distinct => true;
+};
+
 shared class Criteria(manager) {
     
     EntityManager manager;
@@ -404,19 +565,30 @@ shared class Criteria(manager) {
             => Root(criteriaQuery.from(entity));
 
     suppressWarnings("uncheckedTypeArguments")
-    shared TypedQuery<R> query<R>(select, distinct=true, where = null)
+    shared TypedQuery<R> query<R>(select, where=null, groupBy=null, having=null, orderBy=null)
             given R satisfies Object {
 
         Selection<R> select;
-        Boolean distinct;
         Predicate? where;
+        Grouping? groupBy;
+        Predicate? having;
+        Order? orderBy;
 
         assert (is CriteriaSelection<R> s
                 = select.criteriaSelection(builder));
         criteriaQuery.select(s);
-        criteriaQuery.distinct(distinct);
+        criteriaQuery.distinct(select.distinct);
         if (exists where) {
             criteriaQuery.where(where.criteriaExpression(builder));
+        }
+        if (exists groupBy) {
+            criteriaQuery.groupBy(*groupBy.criteriaExpressions(builder));
+        }
+        if (exists having) {
+            criteriaQuery.where(having.criteriaExpression(builder));
+        }
+        if (exists orderBy) {
+            criteriaQuery.orderBy(*orderBy.criteriaOrder(builder));
         }
 
         return TypedQuery<R>.withoutResultClass {
