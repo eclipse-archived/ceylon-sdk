@@ -574,8 +574,18 @@ shared class Criteria(manager) {
         return this;
     }
 
+    shared Criteria whereAll(Predicate+ where) {
+        _where = and(*where);
+        return this;
+    }
+
     shared Criteria groupBy(Predicate groupBy) {
         _groupBy = groupBy;
+        return this;
+    }
+
+    shared Criteria groupByAll(Predicate+ groupBy) {
+        _groupBy = group(*groupBy);
         return this;
     }
 
@@ -584,8 +594,18 @@ shared class Criteria(manager) {
         return this;
     }
 
+    shared Criteria havingAll(Predicate+ having) {
+        _having = and(*having);
+        return this;
+    }
+
     shared Criteria orderBy(Order orderBy) {
         _orderBy = orderBy;
+        return this;
+    }
+
+    shared Criteria orderByAll(Order+ orderBy) {
+        _orderBy = order(*orderBy);
         return this;
     }
 
