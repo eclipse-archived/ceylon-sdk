@@ -8,6 +8,7 @@ import javax.persistence.criteria {
 
 //projection
 
+suppressWarnings("unusedDeclaration")
 shared sealed interface Selection<out T> {
     shared formal CriteriaSelection<out Object>
     criteriaSelection(CriteriaBuilder builder);
