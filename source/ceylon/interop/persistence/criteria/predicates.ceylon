@@ -1,10 +1,5 @@
-import java.lang {
-    JBoolean=Boolean
-}
-
 import javax.persistence.criteria {
     CriteriaPredicate=Predicate,
-    CriteriaExpression=Expression,
     CriteriaBuilder
 }
 
@@ -43,18 +38,6 @@ shared Predicate and(Predicate+ predicates)
                 next.criteriaExpression(builder));
         }
         return result;
-    }
-};
-
-alias BooleanExpression => CriteriaExpression<JBoolean>;
-
-shared Predicate predicate(Expression<Boolean> expression)
-        => object satisfies Predicate {
-    shared actual CriteriaPredicate criteriaExpression(
-            CriteriaBuilder builder) {
-        assert (is BooleanExpression x
-                = expression.criteriaExpression(builder));
-        return builder.isTrue(x);
     }
 };
 

@@ -1,3 +1,12 @@
+import ceylon.interop.persistence.util {
+    toJava
+}
+
+import java.lang {
+    JNumber=Number,
+    JBoolean=Boolean
+}
+
 import javax.persistence.criteria {
     CriteriaPredicate=Predicate,
     CriteriaExpression=Expression,
@@ -22,13 +31,15 @@ shared sealed interface Expression<T>
     shared Predicate equalTo(T val)
             => object satisfies Predicate {
         criteriaExpression(CriteriaBuilder builder)
-                => builder.equal(outer.criteriaExpression(builder), val);
+                => builder.equal(outer.criteriaExpression(builder),
+                    toJava(val));
     };
 
     shared Predicate notEqualTo(T val)
             => object satisfies Predicate {
         criteriaExpression(CriteriaBuilder builder)
-                => builder.notEqual(outer.criteriaExpression(builder), val);
+                => builder.notEqual(outer.criteriaExpression(builder),
+                    toJava(val));
     };
 
     shared Predicate inValues(T+ values)
@@ -36,7 +47,7 @@ shared sealed interface Expression<T>
         shared actual CriteriaPredicate criteriaExpression(CriteriaBuilder builder) {
             value result = builder.\iin(outer.criteriaExpression(builder));
             for (v in values) {
-                result.\ivalue(v);
+                result.\ivalue(toJava(v));
             }
             return result;
         }
@@ -60,14 +71,15 @@ shared sealed interface Expression<T>
         shared actual function criteriaExpression(CriteriaBuilder builder) {
             assert (is CriteriaExpression<Object> x
                     = outer.criteriaExpression(builder));
-            return builder.nullif(x,val of Object?);
+            return builder.nullif(x,toJava(val));
         }
     };
 
     shared Expression<T&Object> coalesce(T&Object val)
             => object satisfies Expression<T&Object> {
         criteriaExpression(CriteriaBuilder builder)
-                => builder.coalesce(outer.criteriaExpression(builder),val);
+                => builder.coalesce(outer.criteriaExpression(builder),
+                    toJava(val));
     };
 
 }
@@ -78,3 +90,59 @@ shared sealed interface Predicate
     criteriaExpression(CriteriaBuilder builder);
 }
 
+shared Predicate predicate(Expression<Boolean> expression)
+        => object satisfies Predicate {
+    suppressWarnings("uncheckedTypeArguments")
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is CriteriaExpression<JBoolean> x
+                = expression.criteriaExpression(builder));
+        return builder.isTrue(x);
+    }
+};
+
+shared sealed interface Numeric<T>
+        satisfies Expression<T>
+        given T of Integer | Float
+                satisfies Number<T> {
+    function numericExpression(CriteriaBuilder builder) {
+        assert (is NumericExpression result = criteriaExpression(builder));
+        return result;
+    }
+    shared Numeric<T> plus(T t)
+            => object satisfies Numeric<T> {
+        shared actual function criteriaExpression(CriteriaBuilder builder) {
+            assert (is JNumber y = toJava(t));
+            return builder.sum(numericExpression(builder), y);
+        }
+    };
+    shared Numeric<T> minus(T t)
+            => object satisfies Numeric<T> {
+        shared actual function criteriaExpression(CriteriaBuilder builder) {
+            assert (is JNumber y = toJava(t));
+            return builder.diff(numericExpression(builder), y);
+        }
+    };
+    shared Numeric<T> times(T t)
+            => object satisfies Numeric<T> {
+        shared actual function criteriaExpression(CriteriaBuilder builder) {
+            assert (is JNumber y = toJava(t));
+            return builder.prod(numericExpression(builder), y);
+        }
+    };
+    shared Numeric<T> divide(T t)
+            => object satisfies Numeric<T> {
+        shared actual function criteriaExpression(CriteriaBuilder builder) {
+            assert (is JNumber y = toJava(t));
+            return builder.quot(numericExpression(builder), y);
+        }
+    };
+}
+
+shared Numeric<T> numeric<T>(Expression<T> expression)
+        given T of Integer | Float
+                satisfies Number<T>
+        => object satisfies Numeric<T> {
+    criteriaExpression(CriteriaBuilder builder)
+            => expression.criteriaExpression(builder);
+};

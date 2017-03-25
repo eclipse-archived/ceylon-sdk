@@ -60,19 +60,19 @@ shared Expression<T> sqr<T>(Expression<T> expression)
     }
 };
 
-shared Expression<T> scale<T>(T factor, Expression<T> expression)
-        given T of Integer | Float
-                satisfies Object
-        => object satisfies Expression<T> {
-    shared actual function criteriaExpression(
-            CriteriaBuilder builder) {
-        assert (is NumericExpression x
-                = expression.criteriaExpression(builder));
-        assert (is NumericExpression y
-                = lit(factor).criteriaExpression(builder));
-        return builder.prod(y,x);
-    }
-};
+//shared Expression<T> scale<T>(T factor, Expression<T> expression)
+//        given T of Integer | Float
+//                satisfies Object
+//        => object satisfies Expression<T> {
+//    shared actual function criteriaExpression(
+//            CriteriaBuilder builder) {
+//        assert (is NumericExpression x
+//                = expression.criteriaExpression(builder));
+//        assert (is NumericExpression y
+//                = lit(factor).criteriaExpression(builder));
+//        return builder.prod(y,x);
+//    }
+//};
 
 shared Expression<T> add<T>(Expression<T>+ expressions)
         given T of Integer | Float
