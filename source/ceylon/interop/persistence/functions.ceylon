@@ -84,6 +84,42 @@ shared Expression<Integer> locate(Expression<String> expression, String pattern,
     }
 };
 
+shared Expression<Integer> trim(Expression<String> expression, Character? character=null)
+        => object satisfies Expression<Integer> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return if (exists character)
+            then builder.trim(character,x)
+            else builder.trim(x);
+    }
+};
+
+shared Expression<Integer> trimLeading(Expression<String> expression, Character? character=null)
+        => object satisfies Expression<Integer> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return if (exists character)
+        then builder.trim(CriteriaBuilder.Trimspec.leading,character,x)
+        else builder.trim(CriteriaBuilder.Trimspec.leading,x);
+    }
+};
+
+shared Expression<Integer> trimTrailing(Expression<String> expression, Character? character=null)
+        => object satisfies Expression<Integer> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return if (exists character)
+        then builder.trim(CriteriaBuilder.Trimspec.trailing,character,x)
+        else builder.trim(CriteriaBuilder.Trimspec.trailing,x);
+    }
+};
+
 shared Expression<Integer> length(Expression<String> expression)
         => object satisfies Expression<Integer> {
     shared actual function criteriaExpression(
