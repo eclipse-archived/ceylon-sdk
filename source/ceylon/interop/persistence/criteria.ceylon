@@ -10,6 +10,14 @@ import java.lang {
     JComparable=Comparable,
     JNumber=Number
 }
+import java.sql {
+    Date,
+    Time,
+    Timestamp
+}
+import java.util {
+    JDate=Date
+}
 
 import javax.persistence {
     EntityManager
@@ -462,7 +470,7 @@ alias ComparableExpression
         => CriteriaExpression<JComparable<in Object>>;
 
 shared Predicate lt<T>(Expression<T> left, Expression<T> right)
-        given T of Integer | Float | String //TODO: |Date
+        given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -478,7 +486,7 @@ shared Predicate lt<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Predicate le<T>(Expression<T> left, Expression<T> right)
-        given T of Integer | Float | String //TODO: |Date
+        given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -494,7 +502,7 @@ shared Predicate le<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Predicate gt<T>(Expression<T> left, Expression<T> right)
-        given T of Integer | Float | String //TODO: |Date
+        given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -510,7 +518,7 @@ shared Predicate gt<T>(Expression<T> left, Expression<T> right)
 };
 
 shared Predicate ge<T>(Expression<T> left, Expression<T> right)
-        given T of Integer | Float | String //TODO: |Date
+        given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
     suppressWarnings("uncheckedTypeArguments")
@@ -545,6 +553,54 @@ shared Expression<T> param<T>(Class<T> type, String? name = null)
         else {
             return builder.parameter(paramClass);
         }
+    }
+};
+
+shared Expression<Date> currentDate
+        => object satisfies Expression<Date> {
+    criteriaExpression(CriteriaBuilder builder)
+            => builder.currentDate();
+};
+shared Expression<Time> currentTime
+        => object satisfies Expression<Time> {
+    criteriaExpression(CriteriaBuilder builder)
+            => builder.currentTime();
+};
+shared Expression<Timestamp> currentTimestamp
+        => object satisfies Expression<Timestamp> {
+    criteriaExpression(CriteriaBuilder builder)
+            => builder.currentTimestamp();
+};
+
+shared Predicate after<T>(Expression<T> left, Expression<T> right)
+        given T of Date | Time | Timestamp
+                satisfies JDate
+        => object satisfies Predicate {
+    suppressWarnings("uncheckedTypeArguments")
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (
+            is ComparableExpression x
+                    = left.criteriaExpression(builder),
+            is ComparableExpression y
+                    = right.criteriaExpression(builder));
+        return builder.greaterThan(x,y);
+    }
+};
+
+shared Predicate before<T>(Expression<T> left, Expression<T> right)
+        given T of Date | Time | Timestamp
+                satisfies JDate
+        => object satisfies Predicate {
+    suppressWarnings("uncheckedTypeArguments")
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (
+            is ComparableExpression x
+                    = left.criteriaExpression(builder),
+            is ComparableExpression y
+                    = right.criteriaExpression(builder));
+        return builder.lessThan(x,y);
     }
 };
 
