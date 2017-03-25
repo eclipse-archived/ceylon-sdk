@@ -11,23 +11,33 @@ import javax.persistence.criteria {
 
 alias StringExpression => CriteriaExpression<JString>;
 
-shared Predicate like(Expression<String> expression, String pattern)
+shared Predicate like(Expression<String> expression, String pattern, Character? escape=null)
         => object satisfies Predicate {
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
                 = expression.criteriaExpression(builder));
-        return builder.like(x, pattern);
+        if (exists escape) {
+            return builder.like(x, pattern, escape);
+        }
+        else {
+            return builder.like(x, pattern);
+        }
     }
 };
 
-shared Predicate notLike(Expression<String> expression, String pattern)
+shared Predicate notLike(Expression<String> expression, String pattern, Character? escape=null)
         => object satisfies Predicate {
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
                 = expression.criteriaExpression(builder));
-        return builder.notLike(x, pattern);
+        if (exists escape) {
+            return builder.notLike(x, pattern, escape);
+        }
+        else {
+            return builder.notLike(x, pattern);
+        }
     }
 };
 
