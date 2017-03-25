@@ -184,6 +184,58 @@ shared Predicate like(Expression<String> expression, String pattern)
     }
 };
 
+shared Predicate notLike(Expression<String> expression, String pattern)
+        => object satisfies Predicate {
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return builder.notLike(x, pattern);
+    }
+};
+
+shared Expression<Integer> locate(Expression<String> expression, String pattern, Integer position=0)
+        => object satisfies Expression<Integer> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return position>0
+            then builder.locate(x, pattern, position)
+            else builder.locate(x, pattern);
+    }
+};
+
+shared Expression<Integer> length(Expression<String> expression)
+        => object satisfies Expression<Integer> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return builder.length(x);
+    }
+};
+
+shared Expression<String> upper(Expression<String> expression)
+        => object satisfies Expression<String> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return builder.upper(x);
+    }
+};
+
+shared Expression<String> lower(Expression<String> expression)
+        => object satisfies Expression<String> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return builder.lower(x);
+    }
+};
+
 shared Expression<String> concat(Expression<String>+ expressions)
         => object satisfies Expression<String> {
     shared actual function criteriaExpression(
@@ -196,6 +248,20 @@ shared Expression<String> concat(Expression<String>+ expressions)
             assert (is StringExpression y
                     = next.criteriaExpression(builder));
             result = builder.concat(result, y);
+        }
+        return result;
+    }
+};
+
+shared Expression<T?> coalesce<T>(Expression<T?>+ expressions)
+        => object satisfies Expression<T?> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        value [first, *rest] = expressions;
+        variable value result = first.criteriaExpression(builder);
+        for (next in rest) {
+            result = builder.coalesce(result,
+                next.criteriaExpression(builder));
         }
         return result;
     }
@@ -264,9 +330,22 @@ shared Expression<T> scale<T>(T factor, Expression<T> expression)
         return builder.prod(y,x);
     }
 };
+
+shared Expression<Integer> count(Expression<out Anything> expression)
+        => object satisfies Expression<Integer> {
+    criteriaExpression(CriteriaBuilder builder)
+            => builder.count(expression.criteriaExpression(builder));
+};
+
+shared Expression<Integer> countDistinct(Expression<out Anything> expression)
+        => object satisfies Expression<Integer> {
+    criteriaExpression(CriteriaBuilder builder)
+            => builder.countDistinct(expression.criteriaExpression(builder));
+};
+
 shared Expression<T> max<T>(Expression<T> expression)
         given T of Integer | Float
-                satisfies Object
+                satisfies Number<T>
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -278,7 +357,7 @@ shared Expression<T> max<T>(Expression<T> expression)
 
 shared Expression<T> min<T>(Expression<T> expression)
         given T of Integer | Float
-                satisfies Object
+                satisfies Number<T>
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
@@ -290,13 +369,57 @@ shared Expression<T> min<T>(Expression<T> expression)
 
 shared Expression<T> avg<T>(Expression<T> expression)
         given T of Integer | Float
-                satisfies Object
+                satisfies Number<T>
         => object satisfies Expression<T> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
                 = expression.criteriaExpression(builder));
         return builder.avg(x);
+    }
+};
+
+shared Expression<String> greatest(Expression<String> expression)
+        => object satisfies Expression<String> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return builder.greatest(x);
+    }
+};
+
+shared Expression<String> least(Expression<String> expression)
+        => object satisfies Expression<String> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        return builder.greatest(x);
+    }
+};
+
+shared Expression<T> latest<T>(Expression<T> expression)
+        given T of Date | Time | Timestamp
+                satisfies JDate
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is ComparableExpression x
+                = expression.criteriaExpression(builder));
+        return builder.greatest(x);
+    }
+};
+
+shared Expression<T> earliest<T>(Expression<T> expression)
+        given T of Date | Time | Timestamp
+                satisfies JDate
+        => object satisfies Expression<T> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is ComparableExpression x
+                = expression.criteriaExpression(builder));
+        return builder.least(x);
     }
 };
 
@@ -482,6 +605,23 @@ shared Predicate ne<T>(Expression<T> left, Expression<T> right)
 
 alias ComparableExpression
         => CriteriaExpression<JComparable<in Object>>;
+
+shared Predicate between<T>(Expression<T> expression, Expression<T> lowerBound, Expression<T> upperBound)
+        given T of Integer | Float | String
+                satisfies Comparable<T>
+        => object satisfies Predicate {
+    suppressWarnings("uncheckedTypeArguments")
+    shared actual CriteriaPredicate criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is ComparableExpression x
+                    = expression.criteriaExpression(builder),
+            is ComparableExpression l
+                    = lowerBound.criteriaExpression(builder),
+            is ComparableExpression u
+                    = upperBound.criteriaExpression(builder));
+        return builder.between(x,l, u);
+    }
+};
 
 shared Predicate lt<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float | String
