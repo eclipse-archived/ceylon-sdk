@@ -53,8 +53,8 @@ shared Expression<Integer> locate(Expression<String> expression, String pattern,
     }
 };
 
-shared Expression<Integer> trim(Expression<String> expression, Character? character=null)
-        => object satisfies Expression<Integer> {
+shared Expression<String> trim(Expression<String> expression, Character? character=null)
+        => object satisfies Expression<String> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -65,8 +65,8 @@ shared Expression<Integer> trim(Expression<String> expression, Character? charac
     }
 };
 
-shared Expression<Integer> trimLeading(Expression<String> expression, Character? character=null)
-        => object satisfies Expression<Integer> {
+shared Expression<String> trimLeading(Expression<String> expression, Character? character=null)
+        => object satisfies Expression<String> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -77,8 +77,8 @@ shared Expression<Integer> trimLeading(Expression<String> expression, Character?
     }
 };
 
-shared Expression<Integer> trimTrailing(Expression<String> expression, Character? character=null)
-        => object satisfies Expression<Integer> {
+shared Expression<String> trimTrailing(Expression<String> expression, Character? character=null)
+        => object satisfies Expression<String> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -86,6 +86,21 @@ shared Expression<Integer> trimTrailing(Expression<String> expression, Character
         return if (exists character)
         then builder.trim(CriteriaBuilder.Trimspec.trailing,character,x)
         else builder.trim(CriteriaBuilder.Trimspec.trailing,x);
+    }
+};
+
+shared Expression<String> substring(Expression<String> expression, Integer from, Integer? length=null)
+        => object satisfies Expression<String> {
+    shared actual function criteriaExpression(
+            CriteriaBuilder builder) {
+        assert (is StringExpression x
+                = expression.criteriaExpression(builder));
+        if (exists length) {
+            return builder.substring(x, from, length);
+        }
+        else {
+            return builder.substring(x, from);
+        }
     }
 };
 
