@@ -12,7 +12,7 @@ import java.lang {
 alias NumericExpression => CriteriaExpression<JNumber>;
 alias IntegerExpression => CriteriaExpression<JInteger>;
 
-shared Expression<T> neg<T>(Expression<T> expression)
+shared Expression<T> negative<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
@@ -93,7 +93,7 @@ shared Expression<T> add<T>(Expression<T>+ expressions)
     }
 };
 
-shared Expression<T> mult<T>(Expression<T>+ expressions)
+shared Expression<T> multiply<T>(Expression<T>+ expressions)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
@@ -112,7 +112,7 @@ shared Expression<T> mult<T>(Expression<T>+ expressions)
     }
 };
 
-shared Expression<T> diff<T>(Expression<T> left, Expression<T> right)
+shared Expression<T> subtract<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
@@ -126,7 +126,7 @@ shared Expression<T> diff<T>(Expression<T> left, Expression<T> right)
     }
 };
 
-shared Expression<T> div<T>(Expression<T> left, Expression<T> right)
+shared Expression<T> divide<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
@@ -140,7 +140,7 @@ shared Expression<T> div<T>(Expression<T> left, Expression<T> right)
     }
 };
 
-shared Expression<Integer> mod(Expression<Integer> left, Expression<Integer> right)
+shared Expression<Integer> remainder(Expression<Integer> left, Expression<Integer> right)
         => object satisfies Expression<Integer> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {

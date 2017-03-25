@@ -9,7 +9,7 @@ import javax.persistence.criteria {
 
 //Equality:
 
-shared Predicate eq<T>(Expression<T> left, Expression<T> right)
+shared Predicate equal<T>(Expression<T> left, Expression<T> right)
         given T satisfies Object
         => object satisfies Predicate {
     criteriaExpression(CriteriaBuilder builder)
@@ -18,7 +18,7 @@ shared Predicate eq<T>(Expression<T> left, Expression<T> right)
         right.criteriaExpression(builder));
 };
 
-shared Predicate ne<T>(Expression<T> left, Expression<T> right)
+shared Predicate notEqual<T>(Expression<T> left, Expression<T> right)
         given T satisfies Object
         => object satisfies Predicate {
     criteriaExpression(CriteriaBuilder builder)
@@ -48,7 +48,7 @@ shared Predicate between<T>(Expression<T> expression, Expression<T> lowerBound, 
     }
 };
 
-shared Predicate lt<T>(Expression<T> left, Expression<T> right)
+shared Predicate less<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
@@ -64,7 +64,7 @@ shared Predicate lt<T>(Expression<T> left, Expression<T> right)
     }
 };
 
-shared Predicate le<T>(Expression<T> left, Expression<T> right)
+shared Predicate lessOrEqual<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
@@ -80,7 +80,7 @@ shared Predicate le<T>(Expression<T> left, Expression<T> right)
     }
 };
 
-shared Predicate gt<T>(Expression<T> left, Expression<T> right)
+shared Predicate greater<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {
@@ -96,7 +96,7 @@ shared Predicate gt<T>(Expression<T> left, Expression<T> right)
     }
 };
 
-shared Predicate ge<T>(Expression<T> left, Expression<T> right)
+shared Predicate greaterOrEqual<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float | String
                 satisfies Comparable<T>
         => object satisfies Predicate {

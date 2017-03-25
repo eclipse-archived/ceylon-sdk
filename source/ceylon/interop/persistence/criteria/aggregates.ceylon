@@ -60,7 +60,7 @@ shared Expression<T> sum<T>(Expression<T> expression)
     }
 };
 
-shared Expression<T> avg<T>(Expression<T> expression)
+shared Expression<T> average<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Number<T>
         => object satisfies Expression<T> {

@@ -46,11 +46,9 @@ shared Predicate and(Predicate+ predicates)
     }
 };
 
-//Predicates:
-
 alias BooleanExpression => CriteriaExpression<JBoolean>;
 
-shared Predicate isTrue(Expression<Boolean> expression)
+shared Predicate predicate(Expression<Boolean> expression)
         => object satisfies Predicate {
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
@@ -60,12 +58,3 @@ shared Predicate isTrue(Expression<Boolean> expression)
     }
 };
 
-shared Predicate isFalse(Expression<Boolean> expression)
-        => object satisfies Predicate {
-    shared actual CriteriaPredicate criteriaExpression(
-            CriteriaBuilder builder) {
-        assert (is BooleanExpression x
-                = expression.criteriaExpression(builder));
-        return builder.isFalse(x);
-    }
-};
