@@ -31,7 +31,8 @@ import javax.persistence.criteria {
     CriteriaSelection=Selection,
     CriteriaBuilder,
     CriteriaPredicate=Predicate,
-    CriteriaOrder=Order
+    CriteriaOrder=Order,
+    CriteriaJoinType=JoinType
 }
 
 shared sealed interface Selection<out T> {
@@ -128,6 +129,19 @@ shared sealed class Enumeration<out E,out F,out R>(selections)
 shared Enumeration<T,T,[]> with<T>(Selection<T> selection)
         => Enumeration<T,T,[]>(selection);
 
+shared class JoinType {
+    shared CriteriaJoinType type;
+    shared new inner {
+        type => CriteriaJoinType.inner;
+    }
+    shared new left {
+        type => CriteriaJoinType.left;
+    }
+    shared new right {
+        type => CriteriaJoinType.right;
+    }
+}
+
 shared abstract class From<out T>(criteriaFrom)
         of Root<T>
          | Join<Anything,T>
@@ -136,9 +150,9 @@ shared abstract class From<out T>(criteriaFrom)
 
     CriteriaFrom<out Anything,T> criteriaFrom;
 
-    shared Join<T,S> join<S>(Attribute<T,S|Collection<S>> attribute)
+    shared Join<T,S> join<S>(Attribute<T,S|Collection<S>> attribute, JoinType type=JoinType.inner)
             given S satisfies Object
-            => Join(criteriaFrom.join<T,S>(attribute.declaration.name));
+            => Join(criteriaFrom.join<T,S>(attribute.declaration.name, type.type));
 
     shared Expression<S> get<S>(Attribute<T,S,Nothing> attribute)
             => object satisfies Expression<S> {
