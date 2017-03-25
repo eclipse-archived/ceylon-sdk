@@ -5,6 +5,9 @@ import ceylon.language.meta.model {
 import javax.persistence {
     EntityManager
 }
+import ceylon.interop.persistence {
+    TypedQuery
+}
 
 shared class Criteria(shared EntityManager manager) {
     

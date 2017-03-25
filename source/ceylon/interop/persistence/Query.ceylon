@@ -4,10 +4,12 @@ import ceylon.interop.java {
     CeylonSet,
     CeylonList
 }
-import ceylon.interop.persistence {
+import ceylon.interop.persistence.util {
     Util {
         javaClass
-    }
+    },
+    toJava,
+    toCeylon
 }
 import ceylon.language.meta.model {
     Class

@@ -1,4 +1,4 @@
-package ceylon.interop.persistence;
+package ceylon.interop.persistence.util;
 
 import ceylon.language.meta.model.Class;
 import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
@@ -6,7 +6,7 @@ import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDe
 
 public class Util {
 
-    static <Type> java.lang.Class<Type> javaClass(
+    public static <Type> java.lang.Class<Type> javaClass(
             @TypeInfo("ceylon.language.meta.model::Class<Type>")
                     Class type) {
         ClassOrInterfaceDeclarationImpl declaration

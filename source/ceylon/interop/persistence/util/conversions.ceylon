@@ -9,17 +9,17 @@ import java.lang {
     JBoolean=Boolean
 }
 
-Object? toCeylon(Anything something)
+shared Object? toCeylon(Anything something)
         => if (exists something)
         then toCeylonNotNull(something)
         else null;
 
-Object? toJava(Anything something)
+shared Object? toJava(Anything something)
         => if (exists something)
         then toJavaNotNull(something)
         else null;
 
-Object toJavaNotNull(Object something)
+shared Object toJavaNotNull(Object something)
         => switch (something)
         case (is String) JString(something)
         case (is Integer) JLong(something)
@@ -29,7 +29,7 @@ Object toJavaNotNull(Object something)
         case (is Boolean) JBoolean(something)
         else something;
 
-Object toCeylonNotNull(Object something)
+shared Object toCeylonNotNull(Object something)
         => switch (something)
         case (is JString) something.string
         case (is JInteger|JLong) something.longValue()

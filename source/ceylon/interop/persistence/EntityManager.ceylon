@@ -6,10 +6,11 @@ import ceylon.interop.java {
     CeylonMap,
     CeylonList
 }
-import ceylon.interop.persistence {
+import ceylon.interop.persistence.util {
     Util {
         javaClass
-    }
+    },
+    toJava
 }
 import ceylon.language.meta.model {
     Class
@@ -31,6 +32,9 @@ import javax.persistence.criteria {
 }
 import javax.persistence.metamodel {
     Metamodel
+}
+import ceylon.interop.persistence.criteria {
+    Criteria
 }
 
 "A [[Map]] associating string keys with items."
