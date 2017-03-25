@@ -44,9 +44,14 @@ shared abstract class FetchParent<out T>(criteriaFetchParent)
 
     shared CriteriaFetchParent<out Anything,out T> criteriaFetchParent;
 
-    shared Fetch<T,S> fetch<S>(Attribute<T,S|Collection<S>> attribute, JoinType type=JoinType.inner)
+    shared Fetch<T,S> fetch<S>(Attribute<T,S> attribute, JoinType type=JoinType.inner)
             given S satisfies Object
             => Fetch(criteriaFetchParent.fetch<T,S>(attribute.declaration.name, type.type));
+
+    shared Fetch<T,S> fetchCollection<S>(Attribute<T,Collection<S>> attribute, JoinType type=JoinType.inner)
+            given S satisfies Object
+            => Fetch(criteriaFetchParent.fetch<T,S>(attribute.declaration.name, type.type));
+
 }
 
 shared abstract class From<out T>(criteriaFrom)
@@ -79,7 +84,7 @@ shared abstract class From<out T>(criteriaFrom)
             given V satisfies Object
             => ListJoin(criteriaFrom.joinList<T,V>(attribute.declaration.name, type.type));
 
-    shared Expression<S> get<S>(Attribute<T,S,Nothing> attribute)
+    shared Expression<S> get<S>(Attribute<T,S> attribute)
             => object satisfies Expression<S> {
         criteriaExpression(CriteriaBuilder builder)
                 => criteriaFrom.get(attribute.declaration.name);
