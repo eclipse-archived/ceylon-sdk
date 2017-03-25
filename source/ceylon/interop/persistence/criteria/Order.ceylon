@@ -32,4 +32,3 @@ shared Order order(Order* orders)
                 for (co in o.criteriaOrder(builder))
                 co];
 };
-

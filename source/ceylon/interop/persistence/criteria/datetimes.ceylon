@@ -13,21 +13,26 @@ import javax.persistence.criteria {
 
 //Dates and times:
 
-shared Expression<Date> currentDate
-        => object satisfies Expression<Date> {
-    criteriaExpression(CriteriaBuilder builder)
-            => builder.currentDate();
-};
-shared Expression<Time> currentTime
-        => object satisfies Expression<Time> {
-    criteriaExpression(CriteriaBuilder builder)
-            => builder.currentTime();
-};
-shared Expression<Timestamp> currentTimestamp
-        => object satisfies Expression<Timestamp> {
-    criteriaExpression(CriteriaBuilder builder)
-            => builder.currentTimestamp();
-};
+shared object current {
+
+    shared Expression<Date> date
+            => object satisfies Expression<Date> {
+        criteriaExpression(CriteriaBuilder builder)
+                => builder.currentDate();
+    };
+
+    shared Expression<Time> time
+            => object satisfies Expression<Time> {
+        criteriaExpression(CriteriaBuilder builder)
+                => builder.currentTime();
+    };
+
+    shared Expression<Timestamp> timestamp
+            => object satisfies Expression<Timestamp> {
+        criteriaExpression(CriteriaBuilder builder)
+                => builder.currentTimestamp();
+    };
+}
 
 shared Predicate after<T>(Expression<T> left, Expression<T> right)
         given T of Date | Time | Timestamp
