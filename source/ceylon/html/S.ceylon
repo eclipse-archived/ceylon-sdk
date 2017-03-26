@@ -1,5 +1,5 @@
 "
- The __&lt;i&gt;__ element renders text with a strikethrough, or a line through it. 
+ The __&lt;s&gt;__ element renders text with a strikethrough, or a line through it. 
  Use it to represent things that are no longer relevant or no longer accurate.
  
  Technical details about this element can be found on the
