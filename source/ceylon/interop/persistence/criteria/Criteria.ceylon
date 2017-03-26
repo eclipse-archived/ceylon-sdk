@@ -14,52 +14,44 @@ shared class Criteria(shared EntityManager manager) {
     value builder = manager.criteriaBuilder;
     value criteriaQuery = builder.createQuery();
 
-    variable Predicate? _where = null;
-    variable Grouping? _groupBy = null;
-    variable Predicate? _having = null;
-    variable Order? _orderBy = null;
+    variable Predicate? whereClause = null;
+    variable Grouping? groupByClause = null;
+    variable Predicate? havingClause = null;
+    variable Order? orderByClause = null;
 
     shared Root<T> from<T>(Class<T> entity)
             given T satisfies Object
             => Root(criteriaQuery.from(entity));
 
-    shared Criteria where(Predicate where) {
-        _where = where;
+    shared Criteria where(Predicate+ where) {
+        whereClause
+                = if (where.rest nonempty)
+                then and(*where)
+                else where[0];
         return this;
     }
 
-    shared Criteria whereAll(Predicate+ where) {
-        _where = and(*where);
+    shared Criteria groupBy(Predicate+ groupBy) {
+        groupByClause
+                = if (groupBy.rest nonempty)
+                then group(*groupBy)
+                else groupBy[0];
         return this;
     }
 
-    shared Criteria groupBy(Predicate groupBy) {
-        _groupBy = groupBy;
+    shared Criteria having(Predicate+ having) {
+        havingClause
+                = if (having.rest nonempty)
+                then and(*having)
+                else having[0];
         return this;
     }
 
-    shared Criteria groupByAll(Predicate+ groupBy) {
-        _groupBy = group(*groupBy);
-        return this;
-    }
-
-    shared Criteria having(Predicate having) {
-        _having = having;
-        return this;
-    }
-
-    shared Criteria havingAll(Predicate+ having) {
-        _having = and(*having);
-        return this;
-    }
-
-    shared Criteria orderBy(Order orderBy) {
-        _orderBy = orderBy;
-        return this;
-    }
-
-    shared Criteria orderByAll(Order+ orderBy) {
-        _orderBy = order(*orderBy);
+    shared Criteria orderBy(Order+ orderBy) {
+        orderByClause
+                = if (orderBy.rest nonempty)
+                then order(*orderBy)
+                else orderBy[0];
         return this;
     }
 
@@ -70,16 +62,16 @@ shared class Criteria(shared EntityManager manager) {
 
         criteriaQuery.select(select.criteriaSelection(builder));
         criteriaQuery.distinct(select.distinct);
-        if (exists where=_where) {
+        if (exists where=whereClause) {
             criteriaQuery.where(where.criteriaExpression(builder));
         }
-        if (exists groupBy=_groupBy) {
+        if (exists groupBy=groupByClause) {
             criteriaQuery.groupBy(*groupBy.criteriaExpressions(builder));
         }
-        if (exists having=_having) {
+        if (exists having=havingClause) {
             criteriaQuery.where(having.criteriaExpression(builder));
         }
-        if (exists orderBy=_orderBy) {
+        if (exists orderBy=orderByClause) {
             criteriaQuery.orderBy(*orderBy.criteriaOrder(builder));
         }
 
