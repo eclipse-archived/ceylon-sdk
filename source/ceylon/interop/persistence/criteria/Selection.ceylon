@@ -20,8 +20,9 @@ shared Selection<T> construct<T,A>(Class<T,A> type, Selection<A> select)
         => object satisfies Selection<T> {
     criteriaSelection(CriteriaBuilder builder)
             => builder.construct(type,
-                *select.criteriaSelection(builder)
-                                .compoundSelectionItems);
+                //TOOD: use spread operator!
+                for (x in select.criteriaSelection(builder)
+                                .compoundSelectionItems) x);
 };
 
 shared sealed class Enumeration<out E,out F,out R>(selections)
@@ -40,6 +41,21 @@ shared sealed class Enumeration<out E,out F,out R>(selections)
 
 shared Enumeration<T,T,[]> with<T>(Selection<T> selection)
         => Enumeration<T,T,[]>(selection);
+
+shared Selection<[A,B]> with2<A,B>(Selection<A> first, Selection<B> second)
+        => with(second).with(first);
+
+shared Selection<[A,B,C]> with3<A,B,C>(Selection<A> first, Selection<B> second, Selection<C> third)
+        => with(third).with(second).with(first);
+
+shared Selection<[A,B,C,D]> with4<A,B,C,D>(Selection<A> first, Selection<B> second, Selection<C> third, Selection<D> fourth)
+        => with(fourth).with(third).with(second).with(first);
+
+shared Selection<[A,B,C,D,E]> with5<A,B,C,D,E>(Selection<A> first, Selection<B> second, Selection<C> third, Selection<D> fourth, Selection<E> fifth)
+        => with(fifth).with(fourth).with(third).with(second).with(first);
+
+shared Selection<[A,B,C,D,E,F]> with6<A,B,C,D,E,F>(Selection<A> first, Selection<B> second, Selection<C> third, Selection<D> fourth, Selection<E> fifth, Selection<F> sixth)
+        => with(sixth).with(fifth).with(fourth).with(third).with(second).with(first);
 
 shared Selection<R> distinct<R>(Selection<R> selection)
         => object satisfies Selection<R> {
