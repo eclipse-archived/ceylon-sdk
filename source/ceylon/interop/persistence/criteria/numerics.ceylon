@@ -16,6 +16,7 @@ shared Expression<T> negative<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -28,6 +29,7 @@ shared Expression<T> abs<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -40,6 +42,7 @@ shared Expression<T> sqrt<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -52,6 +55,7 @@ shared Expression<T> sqr<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -78,6 +82,7 @@ shared Expression<T> add<T>(Expression<T>+ expressions)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         value [first, *rest] = expressions;
@@ -97,6 +102,7 @@ shared Expression<T> multiply<T>(Expression<T>+ expressions)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         value [first, *rest] = expressions;
@@ -116,6 +122,7 @@ shared Expression<T> subtract<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -130,6 +137,7 @@ shared Expression<T> divide<T>(Expression<T> left, Expression<T> right)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -142,6 +150,7 @@ shared Expression<T> divide<T>(Expression<T> left, Expression<T> right)
 
 shared Expression<Integer> remainder(Expression<Integer> left, Expression<Integer> right)
         => object satisfies Expression<Integer> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is IntegerExpression x

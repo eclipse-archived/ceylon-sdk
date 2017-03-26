@@ -13,6 +13,7 @@ alias StringExpression => CriteriaExpression<JString>;
 
 shared Predicate like(Expression<String> expression, String pattern, Character? escape=null)
         => object satisfies Predicate {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -28,6 +29,7 @@ shared Predicate like(Expression<String> expression, String pattern, Character? 
 
 shared Predicate notLike(Expression<String> expression, String pattern, Character? escape=null)
         => object satisfies Predicate {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -43,6 +45,7 @@ shared Predicate notLike(Expression<String> expression, String pattern, Characte
 
 shared Expression<Integer> locate(Expression<String> expression, String pattern, Integer position=0)
         => object satisfies Expression<Integer> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -55,6 +58,7 @@ shared Expression<Integer> locate(Expression<String> expression, String pattern,
 
 shared Expression<String> trim(Expression<String> expression, Character? character=null)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -67,6 +71,7 @@ shared Expression<String> trim(Expression<String> expression, Character? charact
 
 shared Expression<String> trimLeading(Expression<String> expression, Character? character=null)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -79,6 +84,7 @@ shared Expression<String> trimLeading(Expression<String> expression, Character? 
 
 shared Expression<String> trimTrailing(Expression<String> expression, Character? character=null)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -91,6 +97,7 @@ shared Expression<String> trimTrailing(Expression<String> expression, Character?
 
 shared Expression<String> substring(Expression<String> expression, Integer from, Integer? length=null)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -106,6 +113,7 @@ shared Expression<String> substring(Expression<String> expression, Integer from,
 
 shared Expression<Integer> length(Expression<String> expression)
         => object satisfies Expression<Integer> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -116,6 +124,7 @@ shared Expression<Integer> length(Expression<String> expression)
 
 shared Expression<String> upper(Expression<String> expression)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -126,6 +135,7 @@ shared Expression<String> upper(Expression<String> expression)
 
 shared Expression<String> lower(Expression<String> expression)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -136,6 +146,7 @@ shared Expression<String> lower(Expression<String> expression)
 
 shared Expression<String> concat(Expression<String>+ expressions)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         value [first, *rest] = expressions;

@@ -105,6 +105,7 @@ shared sealed interface Numeric<T>
         satisfies Expression<T>
         given T of Integer | Float
                 satisfies Number<T> {
+    suppressWarnings("uncheckedTypeArguments")
     function numericExpression(CriteriaBuilder builder) {
         assert (is NumericExpression result = criteriaExpression(builder));
         return result;

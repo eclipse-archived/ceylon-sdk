@@ -28,6 +28,7 @@ shared Expression<T> max<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Number<T>
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -40,6 +41,7 @@ shared Expression<T> min<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Number<T>
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -52,6 +54,7 @@ shared Expression<T> sum<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Object
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -64,6 +67,7 @@ shared Expression<T> average<T>(Expression<T> expression)
         given T of Integer | Float
                 satisfies Number<T>
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is NumericExpression x
@@ -74,6 +78,7 @@ shared Expression<T> average<T>(Expression<T> expression)
 
 shared Expression<String> greatest(Expression<String> expression)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -84,6 +89,7 @@ shared Expression<String> greatest(Expression<String> expression)
 
 shared Expression<String> least(Expression<String> expression)
         => object satisfies Expression<String> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is StringExpression x
@@ -96,6 +102,7 @@ shared Expression<T> latest<T>(Expression<T> expression)
         given T of Date | Time | Timestamp
                 satisfies JDate
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is ComparableExpression x
@@ -108,6 +115,7 @@ shared Expression<T> earliest<T>(Expression<T> expression)
         given T of Date | Time | Timestamp
                 satisfies JDate
         => object satisfies Expression<T> {
+    suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
         assert (is ComparableExpression x
