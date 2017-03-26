@@ -12,7 +12,7 @@ import ceylon.interop.persistence.util {
 
 //Constant values:
 
-shared Expression<T> lit<T>(T literal)
+shared Expression<T> literal<T>(T literal)
         given T of Integer | Float | String | Boolean
                 satisfies Object
         => object satisfies Expression<T> {
@@ -20,7 +20,7 @@ shared Expression<T> lit<T>(T literal)
             => builder.literal(toJava(literal));
 };
 
-shared Expression<T> param<T>(Class<T> type, String? name = null)
+shared Expression<T> parameter<T>(Class<T> type, String? name = null)
         given T of Integer | Float | String | Boolean
                 satisfies Object
         => object satisfies Expression<T> {
