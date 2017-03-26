@@ -1,6 +1,5 @@
 import javax.persistence.criteria {
-    CriteriaBuilder,
-    CriteriaExpression=Expression
+    CriteriaBuilder
 }
 
 //Functions for handling null values:
@@ -19,7 +18,7 @@ shared Expression<T?> coalesce<T>(Expression<T?>+ expressions)
     }
 };
 
-shared Expression<T?> nullIf<T>(Expression<T> expression, Expression<T> val)
+/*shared Expression<T?> nullIf<T>(Expression<T> expression, Expression<T> val)
         given T satisfies Object
         => object satisfies Expression<T?> {
     suppressWarnings("uncheckedTypeArguments")
@@ -30,5 +29,5 @@ shared Expression<T?> nullIf<T>(Expression<T> expression, Expression<T> val)
                 = val.criteriaExpression(builder));
         return builder.nullif(x,y);
     }
-};
+};*/
 
