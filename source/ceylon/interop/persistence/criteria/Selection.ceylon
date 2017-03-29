@@ -20,9 +20,8 @@ shared Selection<T> construct<T,A>(Class<T,A> type, Selection<A> select)
         => object satisfies Selection<T> {
     criteriaSelection(CriteriaBuilder builder)
             => builder.construct(type,
-                //TOOD: use spread operator!
-                for (x in select.criteriaSelection(builder)
-                                .compoundSelectionItems) x);
+                 *select.criteriaSelection(builder)
+                                .compoundSelectionItems);
 };
 
 shared sealed class Enumeration<out E,out F,out R>(selections)
