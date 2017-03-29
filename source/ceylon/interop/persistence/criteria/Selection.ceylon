@@ -31,8 +31,8 @@ shared sealed class Enumeration<out E,out F,out R>(selections)
     Selection<E>* selections;
 
     criteriaSelection(CriteriaBuilder builder)
-            => builder.tuple(for (s in selections)
-                    s.criteriaSelection(builder));
+            => builder.tuple(*selections
+                    *.criteriaSelection(builder));
 
     shared Enumeration<T|E,T,Tuple<E,F,R>> with<T>(Selection<T> selection)
             => Enumeration<T|E,T,Tuple<E,F,R>>(selection, *selections);
