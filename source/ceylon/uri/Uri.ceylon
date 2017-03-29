@@ -1,4 +1,4 @@
-"The URI class. See [RCF 3986][rfc3986] for specifications.
+"The URI class. See [RFC 3986][rfc3986] for specifications.
 
  [rfc3986]: http://tools.ietf.org/html/rfc3986"
 by("Stéphane Épardaud")
