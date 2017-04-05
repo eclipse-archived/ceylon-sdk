@@ -73,10 +73,20 @@ shared class Ol(
     "Attribute that is used to specify whether an element's attribute values and the values of its text node children are to be translated when the page is localized, or whether to leave them unchanged."
     Attribute<Boolean> translate = null,
     /* GLOBAL ATTRIBUTES - END */
+    "Attribute that reverses the order of the list item identifiers, when present."
+    Attribute<Boolean> reversed = null,
+    "Attribute that indicates the value of the first list item identifier. When not present, the default behavior is to start at `1`."
+    Attribute<Integer> start = null,
+    "Attribute that indicates what type of identifiers this list will use. When not present, the default behavior is [[OlType.decimal]]."
+    Attribute<OlType> type = null,
     "The attributes associated with this element."
     Attributes attributes = [],
     "The children of this element."
     shared actual {Content<Li>*} children = [])
-        extends Element("ol", id, clazz, accessKey, contentEditable, contextMenu, dir, draggable, dropZone, hidden, lang, spellcheck, style, tabIndex, title, translate, attributes, children)
+        extends Element("ol", id, clazz, accessKey, contentEditable, contextMenu, dir, draggable, dropZone, hidden, lang, spellcheck, style, tabIndex, title, translate,
+                    [attributeEntry("reversed", reversed),
+                     attributeEntry("start", start),
+                     attributeEntry("type", type),
+                    *attributes], children)
         satisfies FlowCategory {
 }
