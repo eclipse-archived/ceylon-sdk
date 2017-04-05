@@ -26,11 +26,13 @@
    [[CeylonBooleanIterable]], which adapt Java 
    [[java.lang::Iterable]]s of primitive types,
  - [[CeylonStringList]], [[CeylonStringMap]],
-   [[JavaStringList]], and [[JavaStringMap]], which
-   adapt maps and lists containing strings, and
+   [[JavaStringList]], and [[JavaStringMap]], which adapt
+   maps and lists containing strings,
  - [[JavaRunnable]] and [[JavaThread]] which adapt Ceylon
    functions to Java's [[java.lang::Runnable]] and 
-   [[java.lang::Thread]].
+   [[java.lang::Thread]], and
+ - [[Finalizable]], which allows a Ceylon object to respond
+   to JVM finalization.
    
  In addition, the functions [[javaClass]] and 
  [[javaClassFromInstance]] allow Ceylon programs to obtain
