@@ -85,7 +85,7 @@ shared class Object({<String->Value>*} values = {})
             return val;
         }
         case (is Integer){
-            return val.float;
+            return val.nearestFloat;
         }
         else {
             throw InvalidTypeException(
@@ -182,7 +182,7 @@ shared class Object({<String->Value>*} values = {})
             return val;
         }
         case (is Integer){
-            return val.float;
+            return val.nearestFloat;
         }
         else {
             throw InvalidTypeException(
