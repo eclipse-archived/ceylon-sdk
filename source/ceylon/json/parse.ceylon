@@ -108,8 +108,15 @@ shared Integer|Float parseNumber(Tokenizer tokenizer){
         assert (is Float float = Float.parse(floatString));
         return float;
     } else {
-        assert (is Integer integer = Integer.parse(wholePart));
-        return integer;
+        value integer = Integer.parse(wholePart);
+        if (is Integer integer) {
+            return integer;
+        } else {
+            // It must be too large or too small to be represented
+            // as an Integer. Return a Float instead.
+            assert (is Float float = Float.parse(wholePart));
+            return float;
+        }
     }
 }
 String parseDigits(Tokenizer tokenizer, Boolean requireNonZeroFirstChar,
