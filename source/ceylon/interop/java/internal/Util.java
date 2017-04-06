@@ -34,7 +34,7 @@ public final class Util {
     @SuppressWarnings("unchecked")
     public <T> java.lang.Class<T> 
     javaClass(@Ignore TypeDescriptor $reifiedT) {
-        java.lang.Class<T> result = (java.lang.Class)Metamodel.getJavaClass($reifiedT);
+        java.lang.Class<T> result = (java.lang.Class<T>) Metamodel.getJavaClass($reifiedT);
         if (result != null) {
             return result;
         }
