@@ -9,11 +9,6 @@ import ceylon.decimal {
     Decimal,
     parseDecimal
 }
-import ceylon.interop.java {
-    toIntegerArray,
-    createJavaObjectArray,
-    javaByteArray
-}
 import ceylon.language.meta.model {
     Type
 }
@@ -225,19 +220,19 @@ shared class Sql(newConnection) {
         }
 
         stmt.setArray(position, 
-            connection.get().createSqlArray(createJavaObjectArray<Object>(array), sqlArrayType));
+            connection.get().createSqlArray(ObjectArray<Object>.with(array), sqlArrayType));
     }
     
     void setBinaryStream(Integer position, ByteArray|Array<Byte> array, PreparedStatement stmt ) {
         ByteArray byteArray;
         
         switch (array)
-            case (is ByteArray) {
-                byteArray = array;
-            }
-            case (is Array<Byte>) {
-                byteArray = javaByteArray(array);
-            }
+        case (is ByteArray) {
+            byteArray = array;
+        }
+        case (is Array<Byte>) {
+            byteArray = ByteArray.from(array);
+        }
 
         stmt.setBinaryStream(position, ByteArrayInputStream(byteArray), byteArray.size); 
     }
@@ -380,7 +375,7 @@ shared class Sql(newConnection) {
                             .prepareStatement(sql);
                     value result = ArrayList<Integer>();
                     void runBatch()
-                            => result.addAll(toIntegerArray(stmt.executeBatch()));
+                            => result.addAll(stmt.executeBatch().iterable);
                     variable value count=0;
                     try {                    
                         for (arguments in batchArguments) {
@@ -470,7 +465,7 @@ shared class Sql(newConnection) {
                             .prepareStatement(sql);
                     value result = ArrayList<Integer>();
                     void runBatch()
-                            => result.addAll(toIntegerArray(stmt.executeBatch()));
+                            => result.addAll(stmt.executeBatch().iterable);
                     variable value count=0;
                     try {                    
                         for (arguments in batchArguments) {

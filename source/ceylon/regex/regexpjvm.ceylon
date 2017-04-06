@@ -15,10 +15,11 @@
  * the License.
  */
 
-import ceylon.interop.java {
-    javaString
+import java.lang {
+    Types {
+        nativeString
+    }
 }
-
 import java.util.regex {
     Pattern
 }
@@ -55,8 +56,8 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
         String input) {
         // Start the search at lastIndex if the global flag is true.
         Integer searchStartIndex = if (global) then lastIndex else 0;
-        if (0 <= searchStartIndex <= javaString(input).length()) {
-            if (exists m = pattern.matcher(javaString(input)),
+        if (0 <= searchStartIndex <= nativeString(input).length()) {
+            if (exists m = pattern.matcher(nativeString(input)),
                 m.find(searchStartIndex)) {
                 Integer groupCount = m.groupCount();
                 value groups = Array<String?>.ofSize(1 + groupCount, "");
@@ -93,7 +94,7 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
                 result[i] = input.measure(i, i + 1);
             }
         } else {
-            value tmpResult = pattern.split(javaString(input), if (limit < 0) then -1 else (limit + 1));
+            value tmpResult = pattern.split(nativeString(input), if (limit < 0) then -1 else (limit + 1));
             // If we have a limit we chop off the unsplit part of
             // the string which has been put in result[limit].
             // Javascript split does not return it.
@@ -147,21 +148,21 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
         String input,
         String replacement) {
         // Replace \ in the replacement with \\ to escape it for Java replace.
-        variable String rep = _REPLACEMENT_BACKSLASH.matcher(javaString(replacement))
+        variable String rep = _REPLACEMENT_BACKSLASH.matcher(nativeString(replacement))
                 .replaceAll(_REPLACEMENT_BACKSLASH_FOR_JAVA);
         // Replace the Javascript-ese $& in the replacement with Java-ese $0, but
         // watch out for $$&, which should stay $$&, to be changed to \$& below.
-        rep = _REPLACEMENT_DOLLAR_AMPERSAND.matcher(javaString(rep)).replaceAll(
+        rep = _REPLACEMENT_DOLLAR_AMPERSAND.matcher(nativeString(rep)).replaceAll(
             _REPLACEMENT_DOLLAR_AMPERSAND_FOR_JAVA);
         // Test for Javascript-ese $` and $', which we do not support in the pure
         // Java version.
-        if (_REPLACEMENT_DOLLAR_APOSTROPHE.matcher(javaString(rep)).find()) {
+        if (_REPLACEMENT_DOLLAR_APOSTROPHE.matcher(nativeString(rep)).find()) {
             throw RegexException("$` and $' replacements are not supported");
         }
         // Replace the Javascript-ese $$ in the replacement with Java-ese \$.
-        rep = _REPLACEMENT_DOLLAR_DOLLAR.matcher(javaString(rep)).replaceAll(
+        rep = _REPLACEMENT_DOLLAR_DOLLAR.matcher(nativeString(rep)).replaceAll(
             _REPLACEMENT_DOLLAR_DOLLAR_FOR_JAVA);
-        return if (global) then pattern.matcher(javaString(input)).replaceAll(rep)
-        else pattern.matcher(javaString(input)).replaceFirst(rep);
+        return if (global) then pattern.matcher(nativeString(input)).replaceAll(rep)
+        else pattern.matcher(nativeString(input)).replaceFirst(rep);
     }
 }

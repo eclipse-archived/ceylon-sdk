@@ -92,7 +92,6 @@ module ceylon.dbc maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     shared import ceylon.decimal "1.3.3-SNAPSHOT";
     shared import ceylon.whole "1.3.3-SNAPSHOT";
     import java.base "7";
-    import ceylon.interop.java "1.3.3-SNAPSHOT";
     shared import java.jdbc "7";
     import ceylon.time "1.3.3-SNAPSHOT";
     import ceylon.transaction "1.3.3-SNAPSHOT";

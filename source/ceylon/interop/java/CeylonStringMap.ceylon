@@ -1,5 +1,8 @@
 import java.lang {
-    JString=String
+    JString=String,
+    Types {
+        nativeString
+    }
 }
 
 "A [[Map]] with keys of type `String` that wraps a `Map`
@@ -22,14 +25,14 @@ shared class CeylonStringMap<out Item>(Map<JString, Item> map)
         // don't forward non-Strings; otherwise, what to do
         // when the arg is java.lang.String?
         => if (is String key)
-           then map.defines(javaString(key))
+           then map.defines(nativeString(key))
            else false;
 
     get(Object key)
         // don't forward non-Strings; otherwise, what to do
         // when the arg is java.lang.String?
         => if (is String key)
-           then map[javaString(key)]
+           then map[nativeString(key)]
            else null;
 
     iterator()

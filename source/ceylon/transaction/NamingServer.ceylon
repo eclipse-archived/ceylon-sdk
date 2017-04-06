@@ -1,7 +1,3 @@
-import ceylon.interop.java {
-    javaClassFromInstance
-}
-
 import com.arjuna.ats.jta.common {
     jtaPropertyManager {
         jtaEnvironmentBean
@@ -23,7 +19,10 @@ import java.lang {
     Runtime {
         javaRuntime=runtime
     },
-    Runnable
+    Runnable,
+    Types {
+        classForInstance
+    }
 }
 import java.util {
     Set,
@@ -62,7 +61,7 @@ class NamingServer(bindAddress = "localhost", port = 1099) {
         value previousClassLoader 
                 = currentThread().contextClassLoader;
         value namingBeanClassLoader 
-                = javaClassFromInstance(namingBean).classLoader;
+                = classForInstance(namingBean).classLoader;
         try {
             currentThread().contextClassLoader = namingBeanClassLoader;
             jndiServer.namingInfo = namingBean;

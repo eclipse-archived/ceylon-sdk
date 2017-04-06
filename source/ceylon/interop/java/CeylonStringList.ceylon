@@ -1,5 +1,8 @@
 import java.lang {
-    JString=String
+    JString=String,
+    Types {
+        nativeString
+    }
 }
 
 "A [[List]] with keys of type `String` that wraps a `List`
@@ -22,7 +25,7 @@ shared class CeylonStringList(List<JString> list)
 
     contains(Object element)
             => if (is String element)
-            then javaString(element) in list
+            then nativeString(element) in list
             else false;
 
     lastIndex => list.lastIndex;

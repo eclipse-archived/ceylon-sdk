@@ -38,5 +38,4 @@ by ("Stéphane Épardaud", "Alex Szczuczko")
 module ceylon.buffer maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     import ceylon.collection "1.3.3-SNAPSHOT";
     native ("jvm") import java.base "7";
-    native ("jvm") import ceylon.interop.java "1.3.3-SNAPSHOT";
 }

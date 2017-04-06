@@ -1,10 +1,12 @@
 import ceylon.interop.java {
-    javaClassFromModel,
     JavaMap,
     JavaStringMap,
     CeylonStringMap,
     CeylonMap,
     CeylonList
+}
+import ceylon.interop.persistence.criteria {
+    Criteria
 }
 import ceylon.interop.persistence.util {
     Util {
@@ -14,6 +16,12 @@ import ceylon.interop.persistence.util {
 }
 import ceylon.language.meta.model {
     Class
+}
+
+import java.lang {
+    Types {
+        classForModel
+    }
 }
 
 import javax.persistence {
@@ -32,9 +40,6 @@ import javax.persistence.criteria {
 }
 import javax.persistence.metamodel {
     Metamodel
-}
-import ceylon.interop.persistence.criteria {
-    Criteria
 }
 
 "A [[Map]] associating string keys with items."
@@ -263,7 +268,7 @@ shared class EntityManager
             => Query(entityManager.createStoredProcedureQuery(
                     procedureName,
                     for (rc in resultClasses)
-                        javaClassFromModel(rc)));
+                        classForModel(rc)));
 
     "Find by [[primary key|primaryKey]], with the given
      [[lock mode|lockMode]], using the specified

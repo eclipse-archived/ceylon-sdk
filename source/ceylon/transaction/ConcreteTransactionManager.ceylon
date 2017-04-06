@@ -1,7 +1,3 @@
-import ceylon.interop.java {
-    javaClass
-}
-
 import com.arjuna.ats.jdbc {
     TransactionalDriver {
         xadsPropertyName=xaDataSource
@@ -16,7 +12,10 @@ import com.arjuna.ats.jdbc.common {
 import java.lang {
     Runtime,
     Thread,
-    JavaString=String
+    JavaString=String,
+    Types {
+        classForType
+    }
 }
 import java.sql {
     DriverManager {
@@ -74,7 +73,7 @@ class ConcreteTransactionManager()
             try {
                 Thread.currentThread()
                         .contextClassLoader
-                            = javaClass<TransactionManager>()
+                            = classForType<TransactionManager>()
                                     .classLoader;
 
                 replacedJndiProperties

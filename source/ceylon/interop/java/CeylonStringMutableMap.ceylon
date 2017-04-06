@@ -3,7 +3,10 @@ import ceylon.collection {
 }
 
 import java.lang {
-    JString=String
+    JString=String,
+    Types {
+        nativeString
+    }
 }
 
 "A [[MutableMap]] with keys of type `ceylon.language::String`
@@ -26,8 +29,8 @@ shared class CeylonStringMutableMap<Item>
         => CeylonStringMutableMap(map.clone());
 
     put(String key, Item item)
-        => map.put(javaString(key), item);
+        => map.put(nativeString(key), item);
 
     remove(String key)
-        => map.remove(javaString(key));
+        => map.remove(nativeString(key));
 }

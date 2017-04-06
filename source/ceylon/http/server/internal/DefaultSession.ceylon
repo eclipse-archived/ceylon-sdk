@@ -1,12 +1,15 @@
-import ceylon.interop.java {
-    javaString
-}
 import ceylon.http.server {
     Session
 }
 
 import io.undertow.server.session {
     UtSession=Session
+}
+
+import java.lang {
+    Types {
+        nativeString
+    }
 }
 
 by("Matej Lazar")
@@ -19,7 +22,7 @@ class DefaultSession(UtSession utSession)
             => utSession.getAttribute(key);
     
     defines(String key)
-            => javaString(key) in utSession.attributeNames;
+            => nativeString(key) in utSession.attributeNames;
     
     put(String key, Object item) 
             => utSession.setAttribute(key, item);

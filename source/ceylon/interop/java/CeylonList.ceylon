@@ -1,7 +1,3 @@
-import ceylon.interop.java {
-    CeylonIterator
-}
-
 import java.util {
     JList=List,
     ArrayList

@@ -1,6 +1,3 @@
-import ceylon.interop.java {
-	CeylonSet
-}
 import ceylon.http.common {
 	Method,
 	parseMethod
@@ -82,15 +79,12 @@ class TemplateCeylonRequestHandler(Options options, HttpEndpoint endpoint)
         }
     }
 
+    //TODO: use CeylonStringMap in ceylon.interop.java?
     Map<String, String> makeCeylonStringMap(JMap<JString, JString> jMap)
-    {
-        value cEntries = CeylonSet(jMap.entrySet()).map(
-            (JMap<out Object, out Object>.Entry<JString, JString> jEntry)
-                    => jEntry.key.string -> jEntry.\ivalue.string
-        );
-        return map(cEntries);
-        
-    }
+            => map {
+                for (jEntry in jMap.entrySet())
+                jEntry.key.string -> jEntry.\ivalue.string
+            };
 
     void invokeEndpoint(HttpEndpoint endpoint, 
         Request request, ResponseImpl response, 

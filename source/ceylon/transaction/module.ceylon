@@ -122,5 +122,4 @@ module ceylon.transaction maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     shared import javax.transaction "7";
     import javax.naming "7";
     import java.base "7";
-    import ceylon.interop.java "1.3.3-SNAPSHOT";
 }

@@ -33,6 +33,7 @@ import java.util {
     JavaHashMap=HashMap
 }
 
+suppressWarnings("deprecation")
 test void stringTests() {
     value val = javaString(getSystemProperty("user.home"));
     assertFalse(val.empty);
@@ -111,6 +112,7 @@ test void bug264() {
     LinkedList<Date>().addAll(JavaCollection<Date>([]));
 }
 
+suppressWarnings("deprecation")
 test void classTests() {
     Integer x = 5;
     value klass1 = javaClassFromInstance(x);
@@ -144,6 +146,7 @@ test void classTests() {
     assertEquals("interface java.lang.annotation.Annotation", javaClassFromModel(`Annotation`).string);
 }
 
+suppressWarnings("deprecation")
 test void ceylonStringMap() {
     value jsMap = HashMap { javaString("one") -> 1, javaString("two") -> 2 };
     value csMap = CeylonStringMap(jsMap);
@@ -167,6 +170,7 @@ test void ceylonMutableMap() {
     assertEquals(2, ceylonMap.put("x", 3));
 }
 
+suppressWarnings("deprecation")
 test void ceylonStringMutableMap() {
     value jsMap = HashMap { javaString("one") -> 1 };
     value csMap = CeylonStringMutableMap(jsMap);
@@ -188,6 +192,7 @@ test void ceylonStringMutableMap() {
     assertNull(jsMap.get(javaString("two")));
 }
 
+suppressWarnings("deprecation")
 test void bug342() {
     class OuterClass() {
         shared class InnerClass() {

@@ -1,5 +1,8 @@
 import java.lang {
-    JString=String
+    JString=String,
+    Types {
+        nativeString
+    }
 }
 
 "A [[Map]] with keys of type `java.lang::String` that wraps 
@@ -28,7 +31,7 @@ shared class JavaStringMap<Item>(Map<String,Item> map)
     
     iterator()
         => { for (key->item in map)
-                javaString(key)->item
+                nativeString(key)->item
            }.iterator();
     
     size => map.size;

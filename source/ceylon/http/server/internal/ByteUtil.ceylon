@@ -2,9 +2,6 @@
 import ceylon.buffer {
     ByteBuffer
 }
-import ceylon.interop.java {
-    toByteArray
-}
 
 import java.nio {
     JByteBuffer=ByteBuffer
@@ -16,7 +13,7 @@ shared ByteBuffer toCeylonByteBuffer(JByteBuffer? jByteBuffer) {
     if (exists jbb = jByteBuffer) {
         Array<Byte> cba;
         if (jbb.hasArray()) {
-            cba = toByteArray(jbb.array());
+            cba = jbb.array().byteArray;
         } else {
             cba = Array<Byte>.ofSize(jbb.limit(), 0.byte);
             for (ii in 0: jbb.limit()) {

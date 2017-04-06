@@ -23,10 +23,6 @@ import ceylon.http.server.internal {
         paramValue
     }
 }
-import ceylon.interop.java {
-    javaByteArray,
-    toByteArray
-}
 import ceylon.io {
     SocketAddress
 }
@@ -52,6 +48,9 @@ import java.io {
     BufferedReader,
     InputStreamReader,
     ByteArrayOutputStream
+}
+import java.lang {
+    ByteArray
 }
 
 by("Matej Lazar")
@@ -99,7 +98,7 @@ class RequestImpl(HttpServerExchange exchange,
         exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
-            value buf = javaByteArray(Array<Byte>.ofSize(4096, Byte(0)));
+            value buf = ByteArray(4096);
             value byteArrayOutputStream = ByteArrayOutputStream();
             variable Integer n;
             while ((n = inputStream.read(buf)) >= 0) {
@@ -107,7 +106,7 @@ class RequestImpl(HttpServerExchange exchange,
             }
             value x = byteArrayOutputStream.toByteArray();
             // FIXME not good: this copies the final content a second time!
-            return toByteArray(x).sequence();
+            return x.byteArray.sequence();
         }
         finally {
             inputStream.close();

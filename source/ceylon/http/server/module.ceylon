@@ -58,6 +58,5 @@ module ceylon.http.server maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     import io.undertow.core "1.4.4.Final";
 
     import org.jboss.xnio.nio "3.3.6.Final";
-    import ceylon.interop.java "1.3.3-SNAPSHOT";
-    
+
 }

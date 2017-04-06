@@ -1,3 +1,16 @@
+import ceylon.interop.java.internal {
+    booleanArray=javaBooleanArray,
+    byteArray=javaByteArray,
+    charArray=javaCharArray,
+    doubleArray=javaDoubleArray,
+    floatArray=javaFloatArray,
+    intArray=javaIntArray,
+    longArray=javaLongArray,
+    shortArray=javaShortArray,
+    objectArray=javaObjectArray,
+    stringArray=javaStringArray
+}
+
 import java.lang {
     Char=Character,
     Bool=Boolean,
@@ -16,20 +29,10 @@ import java.lang {
     LongArray,
     ObjectArray,
     BooleanArray,
-    CharArray
-}
-
-import ceylon.interop.java.internal {
-    booleanArray=javaBooleanArray,
-    byteArray=javaByteArray,
-    charArray=javaCharArray,
-    doubleArray=javaDoubleArray,
-    floatArray=javaFloatArray,
-    intArray=javaIntArray,
-    longArray=javaLongArray,
-    shortArray=javaShortArray,
-    objectArray=javaObjectArray,
-    stringArray=javaStringArray
+    CharArray,
+    Types {
+        nativeString
+    }
 }
 
 
@@ -319,7 +322,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         while (i<size) {
             result[i]
                 = if (exists s = array[i])
-                then javaString(s)
+                then nativeString(s)
                 else null;
             i++;
         }
@@ -331,7 +334,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         variable value i=0;
         while (i<size) {
             if (exists element = array[i]) {
-                result[i] = javaString(element);
+                result[i] = nativeString(element);
             }
             i++;
         }
@@ -343,7 +346,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         variable value i=0;
         while (i<size) {
             if (exists element = array[i]) {
-                result[i] = javaString(element);
+                result[i] = nativeString(element);
             }
             i++;
         }

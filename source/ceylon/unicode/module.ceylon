@@ -16,5 +16,4 @@ by("Tom Bentley")
 native("jvm")
 module ceylon.unicode maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     shared import java.base "7";
-    import ceylon.interop.java "1.3.3-SNAPSHOT";
 }

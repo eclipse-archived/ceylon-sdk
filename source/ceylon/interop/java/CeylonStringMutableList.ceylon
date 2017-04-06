@@ -3,7 +3,10 @@ import ceylon.collection {
 }
 
 import java.lang {
-    JString=String
+    JString=String,
+    Types {
+        nativeString
+    }
 }
 
 "A [[MutableList]] with elements of type `ceylon.language::String`
@@ -19,15 +22,15 @@ shared class CeylonStringMutableList(MutableList<JString> list)
         extends CeylonStringList(list)
         satisfies MutableList<String> {
 
-    add(String element) => list.add(javaString(element));
+    add(String element) => list.add(nativeString(element));
 
     delete(Integer index) => list.delete(index)?.string;
 
     insert(Integer index, String element)
-            => list.insert(index, javaString(element));
+            => list.insert(index, nativeString(element));
 
     set(Integer index, String element)
-            => list.set(index, javaString(element));
+            => list.set(index, nativeString(element));
 
     shared actual CeylonStringMutableList clone()
             => CeylonStringMutableList(list.clone());

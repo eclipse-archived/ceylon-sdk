@@ -1,8 +1,7 @@
-import ceylon.interop.java {
-    javaString
-}
-
 import java.lang {
+    Types {
+        nativeString
+    },
     JSystem=System {
         jgetSystemProperty=getProperty
     },
@@ -492,7 +491,7 @@ shared String uppercase(
     String string,
     "The IETF BCP 47 language tag string of the locale." 
     String tag = system.locale) 
-        => javaString(string).toUpperCase(locale(tag));
+        => nativeString(string).toUpperCase(locale(tag));
 
 "Convert the given [[string]] to lowercase according to the
  rules of the locale with the given [[language tag|tag]]."
@@ -501,7 +500,7 @@ shared String lowercase(
     String string,
     "The IETF BCP 47 language tag string of the locale." 
     String tag = system.locale) 
-        => javaString(string).toLowerCase(locale(tag));
+        => nativeString(string).toLowerCase(locale(tag));
 
 "The graphemes contained in the given [[string|text]]. In
  general, a Unicode `String` contains fewer graphemes than
@@ -516,7 +515,7 @@ shared {String*} graphemes(
         value breakIterator = 
                 getCharacterInstance(locale(tag));
         breakIterator.setText(text);
-        value str = javaString(text); //BreakIterator indexes by Java char
+        value str = nativeString(text); //BreakIterator indexes by Java char
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();
@@ -547,7 +546,7 @@ shared {String*} words(
         value breakIterator = 
                 getWordInstance(locale(tag));
         breakIterator.setText(text);
-        value str = javaString(text); //BreakIterator indexes by Java char
+        value str = nativeString(text); //BreakIterator indexes by Java char
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();
@@ -579,7 +578,7 @@ shared {String*} sentences(
         value breakIterator = 
                 getSentenceInstance(locale(tag));
         breakIterator.setText(text);
-        value str = javaString(text); //BreakIterator indexes by Java char
+        value str = nativeString(text); //BreakIterator indexes by Java char
         variable value start = breakIterator.first();
         shared actual String|Finished next() {
             value end = breakIterator.next();

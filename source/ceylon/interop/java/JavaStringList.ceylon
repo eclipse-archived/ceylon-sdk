@@ -1,5 +1,8 @@
 import java.lang {
-    JString=String
+    JString=String,
+    Types {
+        nativeString
+    }
 }
 
 "A [[List]] with keys of type `java.lang::String` that wraps
@@ -11,7 +14,7 @@ shared class JavaStringList(List<String> list)
 
     getFromFirst(Integer index)
             => if (exists string = list[index])
-            then javaString(string)
+            then nativeString(string)
             else null;
 
     contains(Object element)

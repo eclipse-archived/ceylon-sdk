@@ -12,5 +12,4 @@ module ceylon.io maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     import ceylon.collection "1.3.3-SNAPSHOT";
     import java.base "7";
     import java.tls "7";
-    import ceylon.interop.java "1.3.3-SNAPSHOT";
 }

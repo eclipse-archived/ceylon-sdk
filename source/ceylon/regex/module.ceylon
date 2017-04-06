@@ -21,5 +21,4 @@ by("Tako Schotanus")
 license("Apache Software License 2.0")
 module ceylon.regex maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     native("jvm") import java.base "7";
-    native("jvm") import ceylon.interop.java "1.3.3-SNAPSHOT";
 }

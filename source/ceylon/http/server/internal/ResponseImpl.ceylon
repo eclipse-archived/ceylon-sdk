@@ -2,9 +2,6 @@ import ceylon.collection {
     MutableList,
     LinkedList
 }
-import ceylon.interop.java {
-    javaByteArray
-}
 import ceylon.buffer {
     ByteBuffer
 }
@@ -84,7 +81,7 @@ class ResponseImpl(HttpServerExchange exchange,
 
     shared actual void writeBytes(Array<Byte> bytes) {
         applyHeadersToExchange();
-        writeJByteBuffer(wrapByteBuffer(javaByteArray(bytes)));
+        writeJByteBuffer(wrapByteBuffer(ByteArray.from(bytes)));
     }
     
     shared actual void writeBytesAsynchronous(
@@ -93,7 +90,7 @@ class ResponseImpl(HttpServerExchange exchange,
             void onError(ServerException e)) {
 
         applyHeadersToExchange();
-        writeJByteBufferAsynchronous(wrapByteBuffer(javaByteArray(bytes)), 
+        writeJByteBufferAsynchronous(wrapByteBuffer(ByteArray.from(bytes)),
             IoCallbackWrapper(onCompletion, onError));
     }
     
