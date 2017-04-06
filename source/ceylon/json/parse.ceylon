@@ -98,32 +98,35 @@ Integer parseHex(Tokenizer tokenizer){
 "Parse a number, consuming any initial whitespace."
 shared Integer|Float parseNumber(Tokenizer tokenizer){
     tokenizer.eatSpaces();
-    value negative = tokenizer.check('-');
-    value wholePartString = parseDigits(tokenizer, true);
-    assert (is Integer wholePart = Integer.parse(wholePartString));
+    value wholePart = parseDigits(tokenizer, true, true);
+    value decimalPart = tokenizer.hasMore && tokenizer.check('.')
+            then "." + parseDigits(tokenizer, false, false);
+    value exponentPart = parseExponent(tokenizer);
 
-    if(tokenizer.hasMore && tokenizer.check('.')){
-        value digitsAfterDecimal = parseDigits(tokenizer, false);
-        value exponent = parseExponent(tokenizer);
-        value exponentAsString = if (exists exponent) then "e``exponent``" else "";
-        value negativeSign = negative then "-" else "";
-        value floatAsString = "``negativeSign````wholePart``.\
-                               ``digitsAfterDecimal````exponentAsString``";
-        value float = if (is Float f = Float.parse(floatAsString)) then f else null;
-        assert(exists float); // the structure above guarantees it will be a valid float
+    if (decimalPart exists || exponentPart exists) {
+        value floatString = wholePart + (decimalPart else "") + (exponentPart else "");
+        assert (is Float float = Float.parse(floatString));
         return float;
+    } else {
+        value integer = Integer.parse(wholePart);
+        if (is Integer integer) {
+            return integer;
+        } else {
+            // It must be too large or too small to be represented
+            // as an Integer. Return a Float instead.
+            assert (is Float float = Float.parse(wholePart));
+            return float;
+        }
     }
-    
-    Integer signedInteger = 
-            negative then -wholePart else wholePart;
-    Integer? exp2 = parseExponent(tokenizer);
-    if(exists exp2){
-        return signedInteger.float * (10.float ^ exp2.float);
-    }
-    return signedInteger;
 }
-String parseDigits(Tokenizer tokenizer, Boolean requireNonZeroFirstChar) {
-    Character c = tokenizer.eatChar();
+String parseDigits(Tokenizer tokenizer, Boolean requireNonZeroFirstChar,
+        Boolean allowNegative) {
+    variable value c = tokenizer.eatChar();
+    variable value negative = false;
+    if (allowNegative && c == '-') {
+        negative = true;
+        c = tokenizer.eatChar();
+    }
     if(!tokenizer.isDigit(c)){
         throw ParseException(
             "Expected digit, got: `` c ``", 
@@ -136,6 +139,9 @@ String parseDigits(Tokenizer tokenizer, Boolean requireNonZeroFirstChar) {
             tokenizer.line, tokenizer.column);
     }
     value buf = StringBuilder();
+    if (negative) {
+        buf.appendCharacter('-');
+    }
     buf.appendCharacter(c);
     while(tokenizer.hasMore && tokenizer.isDigit(tokenizer.character())) {
         buf.appendCharacter(tokenizer.eatChar());
@@ -144,22 +150,13 @@ String parseDigits(Tokenizer tokenizer, Boolean requireNonZeroFirstChar) {
 }
 Integer parseDigit(Character c)
         => c.integer - '0'.integer;
-Integer? parseExponent(Tokenizer tokenizer){
+String? parseExponent(Tokenizer tokenizer){
     if(tokenizer.hasMore && (tokenizer.check('e')
         || tokenizer.check('E'))) {
-        Boolean negativeExponent;
-        if(tokenizer.check('-')){
-            negativeExponent = true;
-        }else if(tokenizer.check('+')){
-            negativeExponent = false;
-        }else{
-            negativeExponent = false;
-        }
+        tokenizer.check('+'); // ignore leading '+'
         assert (is Integer exponentPart
-            = Integer.parse(parseDigits(tokenizer, false)));
-        return negativeExponent 
-        then -exponentPart 
-        else exponentPart;
+            = Integer.parse(parseDigits(tokenizer, false, true)));
+        return "E" + exponentPart.string; 
     }
     return null;
 }
