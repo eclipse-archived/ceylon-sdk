@@ -866,6 +866,10 @@ shared test void testParse() {
     assert(is Integer n9 = parse("-0"));
     assertEquals(0, n9);
 
+    assertEquals(parse("-100"), -100);
+    assertEquals(parse(runtime.minIntegerValue.string), runtime.minIntegerValue);
+    assertEquals(parse(runtime.maxIntegerValue.string), runtime.maxIntegerValue);
+
     assert(is Object o1 = parse("{}"));
     assertEquals(0, o1.size);
     try {
