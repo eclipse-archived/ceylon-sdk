@@ -709,6 +709,19 @@ Float|Absent min<Absent>(Iterable<Float,Absent> values)
     return first;
 }
 
+"The mean of the values in the given stream, or `0.0` if the
+ stream is empty."
+shared
+Float mean({Float*} values) {
+    variable Float sum=0.0;
+    variable Integer count=0;
+    for (x in values) {
+        sum+=x;
+        count++;
+    }
+    return sum / count;
+}
+
 "The sum of the values in the given stream, or `0.0` if the 
  stream is empty."
 shared
