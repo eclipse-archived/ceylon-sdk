@@ -44,6 +44,19 @@ shared Integer|Absent min<Absent>
     return first;
 }
 
+"The mean of the values in the given stream, or an undefined
+ value if the stream is empty."
+shared
+Float mean({Integer*} values) {
+    variable Integer sum=0;
+    variable Integer count=0;
+    for (x in values) {
+        sum+=x;
+        count++;
+    }
+    return sum.float / count;
+}
+
 "The sum of the values in the given stream, or
  `0` if the stream is empty."
 shared
