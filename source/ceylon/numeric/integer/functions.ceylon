@@ -54,7 +54,7 @@ Float mean({Integer*} values) {
         sum+=x;
         count++;
     }
-    return sum.float / count;
+    return sum.nearestFloat / count;
 }
 
 "The sum of the values in the given stream, or
