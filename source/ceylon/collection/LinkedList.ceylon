@@ -897,10 +897,11 @@ shared serializable class LinkedList<Element>
     }
     
     shared actual 
-    Result[] collect<Result>(
+    [Result+]|[] collect<Result>(
             "The transformation applied to the elements."
             Result collecting(Element element))
-            => [for (element in this) collecting(element)];
+            => [for (element in this) collecting(element)]
+                    of [Result+]|[];
 
     first => head?.element;
 
