@@ -58,10 +58,16 @@ shared class TypedQuery<out Result=Object>
         this.query = query;
     }
 
-    "Execute a query that returns a single result."
+    "Execute a query that returns a single result, returning
+     the result, or `null` if there are no results."
     shared Result? getSingleResult() {
-        assert (is Result? result = query.singleResult);
-        return result;
+        try {
+            assert (is Result? result = query.singleResult);
+            return result;
+        }
+        catch (NoResultException nre) {
+            return null;
+        }
     }
 
     "Execute a query and return the query results as a
