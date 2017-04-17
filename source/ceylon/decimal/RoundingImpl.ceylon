@@ -8,17 +8,16 @@ import java.math {
 
 class RoundingImpl(Integer precision, Mode mode) 
         extends Rounding(precision, mode) {
-    
-    JRoundingMode jmode;
-    switch(mode)
-    case (floor) { jmode = JRoundingMode.floor; }
-    case (ceiling) { jmode = JRoundingMode.ceiling; }
-    case (up) { jmode = JRoundingMode.up; }
-    case (down) { jmode = JRoundingMode.down; }
-    case (halfUp) { jmode = JRoundingMode.halfUp; }
-    case (halfDown) { jmode = JRoundingMode.halfDown; }
-    case (halfEven) { jmode = JRoundingMode.halfEven; }
-    case (unnecessary) { jmode = JRoundingMode.unnecessary; }
+    value jmode
+            = switch(mode)
+            case (floor) JRoundingMode.floor
+            case (ceiling) JRoundingMode.ceiling
+            case (up) JRoundingMode.up
+            case (down) JRoundingMode.down
+            case (halfUp) JRoundingMode.halfUp
+            case (halfDown) JRoundingMode.halfDown
+            case (halfEven) JRoundingMode.halfEven
+            case (unnecessary) JRoundingMode.unnecessary;
 
     shared actual MathContext implementation = 
             MathContext(precision, jmode);
