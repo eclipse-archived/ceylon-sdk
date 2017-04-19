@@ -190,4 +190,4 @@ shared Locale systemLocale {
 
 Locale? systemLocaleCache = locale(system.locale);
 
-Module localeModule = `module ceylon.locale`;
+Module localeModule = `module`;
