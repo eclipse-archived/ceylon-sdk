@@ -55,7 +55,7 @@ shared void visit(subject, visitor, sortedKeys=false) {
     case (is Object) {
         visitor.onStartObject();
         
-        value items = sortedKeys then subject else subject.sort(compareKeys);
+        value items = sortedKeys then subject.sort(compareKeys) else subject;
         for (key->child in items) {
             visitor.onKey(key);
             visit(child, visitor);
