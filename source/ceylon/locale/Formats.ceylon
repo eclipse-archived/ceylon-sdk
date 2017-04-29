@@ -166,9 +166,10 @@ shared sealed class Formats(
     }
     
     function twelveHour(Integer hour)
-              => if (hour==0) then [12,ampm[0]]
-            else if (hour<=12) then [hour,ampm[0]]
-            else [hour-12,ampm[1]];
+            => let (modHour = hour % 12) [
+                modHour == 0 then 12 else modHour,
+                hour < 12 then ampm[0] else ampm[1]
+            ];
     
     String formatTimeToken(String token, 
         ReadableTime time, TimeZone? timeZone=null) {
