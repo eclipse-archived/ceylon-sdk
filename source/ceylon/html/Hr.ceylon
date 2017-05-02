@@ -44,7 +44,7 @@ shared class Hr(
     /* GLOBAL ATTRIBUTES - END */
     "The attributes associated with this element."
     Attributes attributes = [])
-        extends Element("hr") 
+        extends Element("hr", id, clazz, accessKey, contentEditable, contextMenu, dir, draggable, dropZone, hidden, lang, spellcheck, style, tabIndex, title, translate, attributes) 
         satisfies FlowCategory {
     "This element has no children."
     shared actual [] children = [];

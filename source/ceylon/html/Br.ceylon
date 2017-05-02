@@ -67,7 +67,7 @@ shared class Br(
     /* GLOBAL ATTRIBUTES - END */
     "The attributes associated with this element."
     Attributes attributes = [])
-        extends Element("br") 
+        extends Element("br", id, clazz, accessKey, contentEditable, contextMenu, dir, draggable, dropZone, hidden, lang, spellcheck, style, tabIndex, title, translate, attributes) 
         satisfies FlowCategory & PhrasingCategory {
     "This element has no children."
     shared actual [] children = [];
