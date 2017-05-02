@@ -144,7 +144,7 @@ class RegexJava(expression, global = false, ignoreCase = false, multiLine = fals
     // \\\$ ---> Pattern replacement unescape in replacement preprocessing --> \$
     String _REPLACEMENT_DOLLAR_DOLLAR_FOR_JAVA = """\\\$""";
     
-    shared actual String replace(
+    shared actual String replaceDollarSignPattern(
         String input,
         String replacement) {
         // Replace \ in the replacement with \\ to escape it for Java replace.

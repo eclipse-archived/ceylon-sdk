@@ -123,10 +123,12 @@ shared sealed abstract class Regex(expression, global = false, ignoreCase = fals
         return find(input) exists;
     }
     
-    """Returns the input string with the part(s) matching the regular expression
-       replaced with the replacement string. If the global flag is set, replaces
-       all matches of the regular expression. Otherwise, replaces the first match
-       of the regular expression. As per Javascript semantics, backslashes in the
+    """Returns the [[input]] string with the part(s) matching the regular expression
+       replaced with the [[replacement]] string or the value returned by the
+       replacement function. If the global flag is set, replaces all matches of the
+       regular expression. Otherwise, replaces the first match of the regular expression.
+       
+       When using a replacement string, as per Javascript semantics, backslashes in the
        replacement string get no special treatment, but the replacement string can
        use the following special patterns:
        
@@ -137,12 +139,46 @@ shared sealed abstract class Regex(expression, global = false, ignoreCase = fals
        
        Note: "$`" and "$'" are *not* supported in the pure Java implementation,
        and throw an exception.
+       
+       When using a replacement function, if the replacement function accepts a
+       [[String]] parameter, this function will pass it the
+       [[string that matched|MatchResult.matched]]. If the replacement function
+       accepts a [[MatchResult]] parameter, this function will pass it the entire
+       [[MatchResult]] instance.
        """
-    shared formal String replace(
+    shared default String replace(
             "the string in which the regular expression is to be searched"
             String input,
-            "the replacement string"
-            String replacement);
+            "the replacement string or function"
+            String|String(String)|String(MatchResult) replacement) {
+        value output = StringBuilder();
+        variable value lastEnd = 0;
+        value matches = global
+            then findAll(input)
+            else (if (exists match = find(input)) then [match] else empty);
+        
+        for (match in matches) {
+            output.append(input.substring(lastEnd, match.start));
+            
+            if (is String replacement) {
+                output.append(replaceDollarSignPattern(match.matched, replacement));
+            }
+            else if (is String(String) replacement) {
+                output.append(replacement(match.matched));
+            } else {
+                output.append(replacement(match));
+            }
+            
+            lastEnd = match.end;
+        }
+        
+        output.append(input.substring(lastEnd));
+        
+        return output.string;
+    }
+    
+    "Replaces dollar sign patterns as described in the documentation for [[replace]]."
+    shared formal String replaceDollarSignPattern(String input, String replacement);
 }
 
 "The result of a call to [[Regex.find]]"
