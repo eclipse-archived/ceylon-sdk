@@ -146,6 +146,25 @@ shared void testReplaceError() {
 }
 
 test
+shared void testReplaceFunctionString() {
+    value result = regex{expression="aap"; global=true;}.replace(input, String.reversed);
+    print(result);
+    assertEquals(result, "De paa is uit de (mouw): het was een broodje paa! Ben ik mooi in de paa gelogeerd!");
+}
+
+test
+shared void testReplaceFunctionMatchResult() {
+    function swapGroups(MatchResult match) {
+        assert (exists firstGroup = match.groups[0], exists secondGroup = match.groups[1]);
+        
+        return secondGroup + firstGroup;
+    }
+    value result = regex{expression="(oo)(\\w+)"; global=true;}.replace(input, swapGroups);
+    print(result);
+    assertEquals(result, "De aap is uit de (mouw): het was een brdjeoo aap! Ben ik mioo in de aap gelogeerd!");
+}
+
+test
 shared void testSplit() {
     value result = regex{expression=" "; global=true;}.split(input);
     print(result);
@@ -198,6 +217,8 @@ shared void runAll() {
     testReplace();
     testReplaceGlobal();
     testReplaceError();
+    testReplaceFunctionString();
+    testReplaceFunctionMatchResult();
     testSplit();
     testSplitWithLimit();
     testTest();
