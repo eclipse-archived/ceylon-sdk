@@ -80,7 +80,7 @@ class RegexJavascript(expression, global = false, ignoreCase = false, multiLine 
         return result;
     }
     
-    shared actual String replace(
+    shared actual String replaceDollarSignPattern(
         String input,
         String replacement) {
         dynamic i = input;
