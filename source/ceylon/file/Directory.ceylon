@@ -91,7 +91,8 @@ shared sealed interface Directory
 see(`value defaultSystem`)
 shared Directory[] rootDirectories
     =>  [ for (p in rootPaths)
-          if (is Directory r=p.resource) r];
+          if (is Directory r=p.resource)
+          r ];
 
 "The system default temporary directory."
 shared Directory temporaryDirectory = temporaryDirectoryInternal();
