@@ -6,7 +6,8 @@ import ceylon.language.meta {
 }
 import ceylon.language.meta.model {
     Class,
-    ClassModel
+    ClassModel,
+    ClassOrInterface
 }
 import ceylon.test.engine {
     AssertionComparisonError,
@@ -219,6 +220,21 @@ shared class ExceptionAssert(
             throw AssertionError("assertion failed: expected exception without cause, but has ``cause``");
         }
         return this;
+    }
+}
+
+"Fails the test if the given value does not satisfy the provided ClassOrInterface"
+throws (`class AssertionError`, "When _actual_ does not satisfy _expected_.")
+shared void assertIs(
+        "The actual value to be checked."
+        Anything val,
+        "The class or interface to be satisfied."
+        ClassOrInterface<> expected,
+        "The message describing the problem."
+        String? message = null){
+    if (!expected.typeOf(val)){
+        type(val);
+        throw AssertionError(message else "assertion failed: expected type not satisfied. expected <``expected``> but was <``type(val)``>");
     }
 }
 
