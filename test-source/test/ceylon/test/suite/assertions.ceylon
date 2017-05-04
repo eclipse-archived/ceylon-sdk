@@ -230,6 +230,22 @@ void testAssertAll() {
 }
 
 test
+void testAssertIs() {
+    assertIs(1,  `Integer` );
+    assertIs(false,  `Boolean` );
+    assertIs(0..1,  `Range<Integer>` );
+    assertThatException(
+        ()=>assertIs(1,`Boolean`)).
+        hasType(`AssertionError`).
+        hasMessage("assertion failed: expected type not satisfied. expected <ceylon.lang:Boolean> but was <ceylon.lang:Integer>");
+    assertThatException(
+        ()=>assertIs(false,`Integer`,"Hold this message")).
+        hasType(`AssertionError`).
+        hasMessage("Hold this message");
+}
+
+
+test
 void testAssertAllPropagateException() {
     void throwOverflowException() {
         throw OverflowException();
