@@ -19,7 +19,7 @@ shared test void testPrint(){
             values=["a", 2, true];
         }
     };
-    assertEquals("{\"a\":[\"a\",2,true],\"f\":12.34,\"false\":false,\"i\":12,\"null\":null,\"o\":{\"i\":2},\"s\":\"asd\",\"true\":true}", o2.string);
+    assertEquals(o2.string, """{"s":"asd","i":12,"f":12.34,"true":true,"false":false,"null":null,"o":{"i":2},"a":["a",2,true]}""");
 }
 
 shared test void testPrintTrickyFloats() {
