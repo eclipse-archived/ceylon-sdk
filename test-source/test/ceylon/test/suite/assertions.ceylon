@@ -237,7 +237,7 @@ void testAssertIs() {
     assertThatException(
         ()=>assertIs(1,`Boolean`)).
         hasType(`AssertionError`).
-        hasMessage("assertion failed: expected type not satisfied. expected <ceylon.lang:Boolean> but was <ceylon.lang:Integer>");
+        hasMessage("assertion failed: expected type not satisfied. expected <ceylon.language::Boolean> but was <ceylon.language::Integer>");
     assertThatException(
         ()=>assertIs(false,`Integer`,"Hold this message")).
         hasType(`AssertionError`).
