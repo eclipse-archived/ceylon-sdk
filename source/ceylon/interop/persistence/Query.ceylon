@@ -241,7 +241,6 @@ shared class TypedQuery<out Result=Object>
         }
         case (is Integer) {
             query.setParameter(parameter, toJava(argument));
-
         }
         return this;
     }
