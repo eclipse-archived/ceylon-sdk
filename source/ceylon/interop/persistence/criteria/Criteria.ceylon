@@ -1,16 +1,36 @@
+import ceylon.interop.persistence {
+    TypedQuery
+}
+import ceylon.interop.persistence.util {
+    toJavaNotNull
+}
 import ceylon.language.meta.model {
     Class
+}
+
+import java.lang {
+    JLong=Long,
+    JDouble=Double,
+    JString=String,
+    JBoolean=Boolean
+}
+import java.util {
+    ArrayList
 }
 
 import javax.persistence {
     EntityManager
 }
-import ceylon.interop.persistence {
-    TypedQuery
+import javax.persistence.criteria {
+    CriteriaBuilder,
+    ParameterExpression
 }
 
 shared class Criteria(shared EntityManager manager) {
-    
+
+    value parameterArguments
+            = ArrayList<ParameterExpression<Object>->Object>();
+
     value builder = manager.criteriaBuilder;
     value criteriaQuery = builder.createQuery();
 
@@ -75,8 +95,35 @@ shared class Criteria(shared EntityManager manager) {
             criteriaQuery.orderBy(*orderBy.criteriaOrder(builder));
         }
 
-        return TypedQuery<R>.withoutResultClass {
-            manager.createQuery(criteriaQuery);
+        value query = manager.createQuery(criteriaQuery);
+        for (parameter->argument in parameterArguments) {
+            query.setParameter(parameter, argument);
+        }
+        return TypedQuery<R>.withoutResultClass(query);
+    }
+
+    shared Expression<T> parameter<T>(T argument)
+            given T of Integer | Float | String | Boolean
+                    satisfies Object {
+
+        value parameter
+                = switch (argument)
+                case (is Integer)
+                    builder.parameter<Object>(`JLong`)
+                case (is Float)
+                    builder.parameter<Object>(`JDouble`)
+                case (is String)
+                    builder.parameter<Object>(`JString`)
+                case (is Boolean)
+                    builder.parameter<Object>(`JBoolean`);
+
+        parameterArguments.add(parameter->toJavaNotNull(argument));
+
+        return object satisfies Expression<T> {
+            criteriaExpression(CriteriaBuilder builder)
+                    => parameter;
         };
     }
+
+
 }
