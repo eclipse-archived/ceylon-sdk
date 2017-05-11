@@ -19,11 +19,11 @@
  Note: it's perfectly possible to directly use the
  `javax.persistence.EntityManager` from Ceylon, but in that
  case, it's necessary to explicitly convert arguments to
- [[java.lang.Long|java.lang::Long]],
- [[java.lang.Double|java.lang::Double]],
- [[java.lang.String|java.lang::String]],
- [[java.lang.Character|java.lang::Character]], or
- [[java.lang.Boolean|java.lang::Boolean]]."
+ [[`java.lang.Long`|java.lang::Long]],
+ [[`java.lang.Double`|java.lang::Double]],
+ [[`java.lang.String`|java.lang::String]],
+ [[`java.lang.Character`|java.lang::Character]], or
+ [[`java.lang.Boolean`|java.lang::Boolean]]."
 native ("jvm")
 module ceylon.interop.persistence maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
     shared import maven:"org.hibernate.javax.persistence:hibernate-jpa-2.1-api" "1.0.0.Final";
