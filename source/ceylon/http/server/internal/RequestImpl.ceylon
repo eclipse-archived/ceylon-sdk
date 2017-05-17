@@ -68,6 +68,9 @@ class RequestImpl(HttpServerExchange exchange,
     
     shared actual Method method;
 
+    variable String? bodyStr = null;
+    variable Byte[]? bodyBinary = null;
+
     String? getHeader(String name) 
             => exchange.requestHeaders.getFirst(HttpString(name));
 
@@ -77,6 +80,9 @@ class RequestImpl(HttpServerExchange exchange,
     
     shared actual String read() {
         exchange.startBlocking();
+        if (is String bodyStrRead = bodyStr) {
+            return bodyStrRead;
+        }
         value inputStream = exchange.inputStream;
         try {
             value inputStreamReader = 
@@ -87,7 +93,9 @@ class RequestImpl(HttpServerExchange exchange,
             while (exists line = reader.readLine()) {
                 builder.append(line).appendNewline();
             }
-            return builder.string;
+            bodyStr = builder.string;
+            assert (is String bodyStrRead = bodyStr);
+            return bodyStrRead;
         }
         finally {
             inputStream.close();
@@ -95,6 +103,9 @@ class RequestImpl(HttpServerExchange exchange,
     }
 
     shared actual Byte[] readBinary() {
+        if (is Byte[] bodyBinaryRead = bodyBinary) {
+            return bodyBinaryRead;
+        }
         exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
@@ -106,7 +117,9 @@ class RequestImpl(HttpServerExchange exchange,
             }
             value x = byteArrayOutputStream.toByteArray();
             // FIXME not good: this copies the final content a second time!
-            return x.byteArray.sequence();
+            bodyBinary = x.byteArray.sequence();
+            assert (is Byte[] bodyBinaryRead = bodyBinary);
+            return bodyBinaryRead;
         }
         finally {
             inputStream.close();
