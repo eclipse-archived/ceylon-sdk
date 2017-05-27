@@ -741,15 +741,15 @@ shared serializable class TreeMap<Key, Item>
     
     shared void assertInvariants() {
         assertBlackRoot();
-        assertColors();
-        assertBlackNodesInPaths();
+        assertColors(root);
+        assertBlackNodesInPaths(root);
     }
     
     void assertBlackRoot() {
         assert (!isRed(root));
     }
     
-    void assertColors(Node? node=root) {
+    void assertColors(Node? node) {
         if (exists node) {
             if (isRed(node)) {
                 assert (!isRed(node.left));
@@ -761,7 +761,7 @@ shared serializable class TreeMap<Key, Item>
         }
     }
     
-    Integer? assertBlackNodesInPaths(node=root, blackCount=0,
+    Integer? assertBlackNodesInPaths(node, blackCount=0,
             pathBlackCount=null) {
         Node? node;
         variable Integer blackCount;
