@@ -569,7 +569,7 @@ shared serializable class TreeMap<Key, Item>
         return false;
     }
     
-    class NodeIterator(current)
+    class NodeIterator (current = root?.leftmostChild)
             satisfies Iterator<Key->Item> {
         variable Node? current;
         shared actual <Key->Item>|Finished next() {
@@ -599,7 +599,7 @@ shared serializable class TreeMap<Key, Item>
         }
     }
     
-    class ReverseNodeIterator(current)
+    class ReverseNodeIterator(current = root?.rightmostChild)
             satisfies Iterator<Key->Item> {
         variable Node? current;
         shared actual <Key->Item>|Finished next() {
@@ -629,7 +629,7 @@ shared serializable class TreeMap<Key, Item>
         }
     }
     
-    iterator() => NodeIterator(root?.leftmostChild);
+    iterator() => NodeIterator();
     
     get(Object key) 
             => if (is Key key) 
