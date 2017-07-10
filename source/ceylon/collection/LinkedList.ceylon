@@ -797,14 +797,16 @@ shared serializable class LinkedList<Element>
 
     shared actual 
     Boolean equals(Object that) {
-        if (is List<Anything> that,
-            length == that.size) {
+        if (is LinkedList<Anything> that, this===that) {
+            return true;
+        }
+        else if (is List<> that, that.size==length) {
             variable value iter = head;
             variable value iter2 = that.iterator();
             while (exists cell = iter) {
-                if (!is Finished thatElement 
+                if (!is Finished thatElement
                         = iter2.next()) {
-                    value thisElement=cell.element;
+                    value thisElement = cell.element;
                     if (exists thatElement) {
                         if (exists thisElement,
                             thisElement==thatElement) {
@@ -830,7 +832,9 @@ shared serializable class LinkedList<Element>
             }
             return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
     
     shared actual 
