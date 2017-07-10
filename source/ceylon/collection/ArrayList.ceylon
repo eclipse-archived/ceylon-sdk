@@ -558,6 +558,10 @@ shared serializable class ArrayList<Element>
         if (is ArrayList<Anything> that, this===that) {
             return true;
         }
+        else if (is LinkedList<Anything> that) {
+            //prefer LinkedList's algorithm
+            return that==this;
+        }
         else if (is List<> that, that.size==length) {
             for (index in 0:length) {
                 value thisElement
