@@ -105,12 +105,10 @@ shared class Array({Value*} values = {})
     
     hash => list.hash;
     
-    shared actual Boolean equals(LangObject that) {
-        if(is Array that){
-            return that === this || list == that.list;
-        }
-        return false;
-    }
+    equals(LangObject that)
+            => if(is Array that)
+            then this === that || list == that.list
+            else list == that;
     
     // auto-casting
     

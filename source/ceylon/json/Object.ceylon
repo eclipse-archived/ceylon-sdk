@@ -51,13 +51,10 @@ shared class Object({<String->Value>*} values = {})
     
     hash => contents.hash;
     
-    shared actual Boolean equals(LangObject that) {
-        if(is Object that){
-            return this === that || 
-                    contents == that.contents;
-        }
-        return false;
-    }
+    equals(LangObject that)
+            => if(is Object that)
+            then this === that || contents == that.contents
+            else contents == that;
     
     // auto-casting
     
