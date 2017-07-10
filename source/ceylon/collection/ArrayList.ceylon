@@ -553,8 +553,10 @@ shared serializable class ArrayList<Element>
     
     lastIndex => length >= 1 then length - 1;
 
-    equals(Object that) 
-            => (super of List<Element>).equals(that);
+    equals(Object that)
+            => if (is ArrayList<Anything> that, this===that)
+            then true
+            else (super of List<Element>).equals(that);
 
     hash => (super of List<Element>).hash;
 

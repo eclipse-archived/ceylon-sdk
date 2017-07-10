@@ -332,32 +332,36 @@ shared serializable class IdentityMap<Key, Item>
     }
     
     shared actual Boolean equals(Object that) {
-        if (is IdentityMap<Object,Object> that,
-            size == that.size) {
-            variable Integer index = 0;
-            // walk every bucket
-            while (index < store.size) {
-                variable value bucket = store[index];
-                while (exists cell = bucket) {
-                    value thatItem = that.get(cell.element.key);
-                    if (exists thisItem = cell.element.item) {
-                        if (exists thatItem) {
-                            if (thatItem != thisItem) {
+        if (is IdentityMap<Object,Object> that) {
+            if (this===that) {
+                return true;
+            }
+            if (size == that.size) {
+                variable Integer index = 0;
+                // walk every bucket
+                while (index < store.size) {
+                    variable value bucket = store[index];
+                    while (exists cell = bucket) {
+                        value thatItem = that.get(cell.element.key);
+                        if (exists thisItem = cell.element.item) {
+                            if (exists thatItem) {
+                                if (thatItem != thisItem) {
+                                    return false;
+                                }
+                            }
+                            else {
                                 return false;
                             }
                         }
-                        else {
+                        else if (thatItem exists) {
                             return false;
                         }
+                        bucket = cell.rest;
                     }
-                    else if (thatItem exists) {
-                        return false;
-                    }
-                    bucket = cell.rest;
+                    index++;
                 }
-                index++;
+                return true;
             }
-            return true;
         }
         return false;
     }

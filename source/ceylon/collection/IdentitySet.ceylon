@@ -196,21 +196,25 @@ shared serializable class IdentitySet<Element>
     }
     
     shared actual Boolean equals(Object that) {
-        if (is IdentitySet<Object> that,
-            size == that.size) {
-            variable Integer index = 0;
-            // walk every bucket
-            while (index < store.size) {
-                variable value bucket = store[index];
-                while (exists cell = bucket) {
-                    if (!cell.element in that) {
-                        return false;
-                    }
-                    bucket = cell.rest;
-                }
-                index++;
+        if (is IdentitySet<Object> that) {
+            if (this===that) {
+                return true;
             }
-            return true;
+            if (size == that.size) {
+                variable Integer index = 0;
+                // walk every bucket
+                while (index < store.size) {
+                    variable value bucket = store[index];
+                    while (exists cell = bucket) {
+                        if (!cell.element in that) {
+                            return false;
+                        }
+                        bucket = cell.rest;
+                    }
+                    index++;
+                }
+                return true;
+            }
         }
         return false;
     }

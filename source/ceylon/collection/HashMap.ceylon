@@ -537,6 +537,10 @@ shared serializable class HashMap<Key, Item>
     }
     
     shared actual Boolean equals(Object that) {
+        if (is HashMap<Anything,Anything> that,
+            this===that) {
+            return true;
+        }
         if (is Map<Object,Anything> that,
             size == that.size) {
             variable Integer index = 0;

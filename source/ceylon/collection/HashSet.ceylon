@@ -355,6 +355,10 @@ shared serializable class HashSet<Element>
     }
     
     shared actual Boolean equals(Object that) {
+        if (is HashSet<Anything> that,
+            this===that) {
+            return true;
+        }
         if (is Set<Object> that,
             size == that.size) {
             variable Integer index = 0;
