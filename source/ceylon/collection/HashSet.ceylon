@@ -359,8 +359,7 @@ shared serializable class HashSet<Element>
             this===that) {
             return true;
         }
-        if (is Set<Object> that,
-            size == that.size) {
+        else if (is Set<> that, that.size==length) {
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
@@ -375,7 +374,9 @@ shared serializable class HashSet<Element>
             }
             return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
     
     shared actual HashSet<Element> clone() => copy(this);

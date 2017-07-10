@@ -541,8 +541,7 @@ shared serializable class HashMap<Key, Item>
             this===that) {
             return true;
         }
-        if (is Map<Object,Anything> that,
-            size == that.size) {
+        else if (is Map<> that, that.size==length) {
             variable Integer index = 0;
             // walk every bucket
             while (index < store.size) {
@@ -569,7 +568,9 @@ shared serializable class HashMap<Key, Item>
             }
             return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
     
     shared actual HashMap<Key,Item> clone() => copy(this);
