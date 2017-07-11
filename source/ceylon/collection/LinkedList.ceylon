@@ -797,43 +797,37 @@ shared serializable class LinkedList<Element>
 
     shared actual 
     Boolean equals(Object that) {
-        if (is LinkedList<Anything> that, this===that) {
-            return true;
-        }
-        else if (is List<> that, that.size==length) {
-            variable value iter = head;
-            variable value iter2 = that.iterator();
-            while (exists cell = iter) {
-                if (!is Finished thatElement
-                        = iter2.next()) {
-                    value thisElement = cell.element;
-                    if (exists thatElement) {
-                        if (exists thisElement,
-                            thisElement==thatElement) {
-                            iter = cell.rest;
-                        }
-                        else {
-                            return false;
-                        }
+        if (is LinkedList<Anything> that) {
+            if (this===that) {
+                return true;
+            }
+            if (this.length!=that.length) {
+                return false;
+            }
+            variable value thisIter = this.head;
+            variable value thatIter = that.head;
+            while (exists thisCell = thisIter,
+                   exists thatCell = thatIter) {
+                value thisElement = thisCell.element;
+                value thatElement = thatCell.element;
+                if (exists thisElement) {
+                    if (!exists thatElement) {
+                        return false;
                     }
-                    else {
-                        if (exists thisElement) {
-                            return false;
-                        }
-                        else {
-                            iter = cell.rest;
-                        }
+                    else if (thisElement!=thatElement) {
+                        return false;
                     }
-
                 }
-                else {
+                else if (thatElement exists) {
                     return false;
                 }
+                thisIter = thisCell.rest;
+                thatIter = thatCell.rest;
             }
             return true;
         }
         else {
-            return false;
+            return (super of List<>).equals(that);
         }
     }
     

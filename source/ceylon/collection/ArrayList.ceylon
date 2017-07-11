@@ -553,32 +553,28 @@ shared serializable class ArrayList<Element>
     
     lastIndex => length >= 1 then length - 1;
 
-    shared actual
-    Boolean equals(Object that) {
-        if (is ArrayList<Anything> that, this===that) {
-            return true;
-        }
-        else if (is LinkedList<Anything> that) {
-            //prefer LinkedList's algorithm
-            return that==this;
-        }
-        else if (is List<> that, that.size==length) {
+    shared actual Boolean equals(Object that) {
+        if (is ArrayList<Anything> that) {
+            if (this===that) {
+                return true;
+            }
+            if (this.length!=that.length) {
+                return false;
+            }
             for (index in 0:length) {
                 value thisElement
-                        = array.getFromFirst(index);
+                        = this.array.getFromFirst(index);
                 value thatElement
-                        = that.getFromFirst(index);
+                        = that.array.getFromFirst(index);
                 if (exists thisElement) {
-                    if (exists thatElement) {
-                        if (thisElement!=thatElement) {
-                            return false;
-                        }
+                    if (!exists thatElement) {
+                        return false;
                     }
-                    else {
+                    else if (thisElement!=thatElement) {
                         return false;
                     }
                 }
-                else if (exists thatElement) {
+                else if (thatElement exists) {
                     return false;
                 }
             }
@@ -587,12 +583,11 @@ shared serializable class ArrayList<Element>
             }
         }
         else {
-            return false;
+            return (super of List<>).equals(that);
         }
     }
 
-    shared actual
-    Integer hash => (super of List<Element>).hash;
+    shared actual Integer hash => (super of List<>).hash;
 
     push(Element element) => add(element);
 
