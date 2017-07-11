@@ -781,14 +781,12 @@ shared serializable class LinkedList<Element>
 
     shared actual 
     Integer hash {
-        variable Integer hash = 17;
+        variable value hash = 1;
         variable value iter = head;
         while (exists cell = iter) {
+            hash *= 31;
             if (exists car = cell.element) {
-                hash = hash * 31 + car.hash;
-            }
-            else {
-                hash = hash * 31;
+                hash += car.hash;
             }
             iter = cell.rest;
         }

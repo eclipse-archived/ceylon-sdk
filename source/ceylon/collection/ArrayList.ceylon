@@ -553,7 +553,8 @@ shared serializable class ArrayList<Element>
     
     lastIndex => length >= 1 then length - 1;
 
-    shared actual Boolean equals(Object that) {
+    shared actual
+    Boolean equals(Object that) {
         if (is ArrayList<Anything> that) {
             if (this===that) {
                 return true;
@@ -587,7 +588,17 @@ shared serializable class ArrayList<Element>
         }
     }
 
-    shared actual Integer hash => (super of List<>).hash;
+    shared actual
+    Integer hash {
+        variable value hash = 1;
+        for (index in 0:length) {
+            hash *= 31;
+            if (exists elem = array.getFromFirst(index)) {
+                hash += elem.hash;
+            }
+        }
+        return hash;
+    }
 
     push(Element element) => add(element);
 
