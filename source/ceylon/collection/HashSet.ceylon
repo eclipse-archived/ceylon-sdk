@@ -340,8 +340,8 @@ shared serializable class HashSet<Element>
     }
     
     shared actual Integer hash {
-        variable Integer index = 0;
-        variable Integer hash = 0;
+        variable value index = 0;
+        variable value hash = 0;
         // walk every bucket
         while (index < store.size) {
             variable value bucket = store[index];
@@ -360,7 +360,7 @@ shared serializable class HashSet<Element>
             return true;
         }
         else if (is Set<> that, that.size==length) {
-            variable Integer index = 0;
+            variable value index = 0;
             // walk every bucket
             while (index < store.size) {
                 variable value bucket = store[index];

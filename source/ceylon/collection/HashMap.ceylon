@@ -522,8 +522,8 @@ shared serializable class HashMap<Key, Item>
     }
     
     shared actual Integer hash {
-        variable Integer index = 0;
-        variable Integer hash = 0;
+        variable value index = 0;
+        variable value hash = 0;
         // walk every bucket
         while (index < store.size) {
             variable value bucket = store[index];
@@ -542,7 +542,7 @@ shared serializable class HashMap<Key, Item>
             return true;
         }
         else if (is Map<> that, that.size==length) {
-            variable Integer index = 0;
+            variable value index = 0;
             // walk every bucket
             while (index < store.size) {
                 variable value bucket = store[index];
