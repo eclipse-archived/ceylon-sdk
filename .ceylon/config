@@ -8,6 +8,8 @@ encoding=UTF-8
 overrides=overrides.xml
 flatclasspath=false
 autoexportmavendependencies=false
+offline=false
+fullyexportmavendependencies=false
 
 [compiler]
 source=./source
