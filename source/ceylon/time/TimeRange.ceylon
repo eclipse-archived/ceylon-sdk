@@ -11,7 +11,7 @@ import ceylon.time.internal { _gap = gap, _overlap = overlap }
  * Allows customized way to iterate as navigate between values by [[UnitOfTime]] cases
  "
 see(`interface Range`)
-shared class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, UnitOfTime> {
+shared serializable class TimeRange( from, to, step = milliseconds ) satisfies Range<Time, UnitOfTime> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as

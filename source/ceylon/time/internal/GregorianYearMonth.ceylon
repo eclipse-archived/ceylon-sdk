@@ -9,7 +9,7 @@ import ceylon.time.chronology {
     impl=gregorian
 }
 
-shared class GregorianYearMonth(year, month) extends Object() satisfies YearMonth {
+shared serializable class GregorianYearMonth(year, month) extends Object() satisfies YearMonth {
 
     shared actual Integer year;
 

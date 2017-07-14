@@ -15,7 +15,7 @@ shared Instant now(Clock? clock = null) {
  
  An instant represents a single point in time irrespective of 
  any time-zone offsets or geographical locations."
-shared class Instant(millisecondsOfEpoch)
+shared serializable class Instant(millisecondsOfEpoch)
     satisfies ReadableInstant & Comparable<Instant> & Enumerable<Instant> {
 
     "Internal value of an instant as a number of milliseconds since
