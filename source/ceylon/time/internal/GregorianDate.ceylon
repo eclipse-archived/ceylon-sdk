@@ -3,7 +3,7 @@ import ceylon.time.base { DayOfWeek, weekdayOf=dayOfWeek, monthOf, Month, days, 
 import ceylon.time.chronology { impl=gregorian }
 
 "Default implementation of a gregorian calendar"
-shared class GregorianDate( dayOfEra ) extends Object() satisfies Date {
+shared serializable class GregorianDate( dayOfEra ) extends Object() satisfies Date {
 	
 	"Every [[Date]] implementation should indicate it´s own _day of era_ based in it´s own chronology."
 	shared actual Integer dayOfEra;

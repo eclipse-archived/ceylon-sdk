@@ -11,7 +11,7 @@ import ceylon.time.internal { _gap = gap, _overlap = overlap }
  * Allows customized way to iterate as navigate between values by [[UnitOfDate]] cases
  "
 see(`interface Range`)
-shared class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate> {
+shared serializable class DateRange( from, to, step = days ) satisfies Range<Date, UnitOfDate> {
 
     "The first Element returned by the iterator, if any.
      This should always produce the same value as

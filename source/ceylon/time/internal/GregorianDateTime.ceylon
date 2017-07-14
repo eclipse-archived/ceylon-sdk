@@ -5,7 +5,7 @@ import ceylon.time.internal.math { floorDiv, floorMod }
 import ceylon.time.timezone { TimeZone, timeZone }
 
 "Default implementation of a gregorian calendar"
-shared class GregorianDateTime( date, time ) extends Object()
+shared serializable class GregorianDateTime( date, time ) extends Object()
     satisfies DateTime {
 
     "Returns [[Date]] representation of current _date and time_."

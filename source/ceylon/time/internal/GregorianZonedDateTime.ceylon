@@ -21,7 +21,7 @@ import ceylon.time.timezone {
 
  This means that making some operations like _plusDays_ takes into 
  account the result Instant generated to reapply all the rules of the current TimeZone."
-shared class GregorianZonedDateTime(instant, timeZone = tz.system) extends Object() satisfies ZoneDateTime {
+shared serializable class GregorianZonedDateTime(instant, timeZone = tz.system) extends Object() satisfies ZoneDateTime {
 
     "TimeZone to be applied in this implementation."
     shared actual TimeZone timeZone;

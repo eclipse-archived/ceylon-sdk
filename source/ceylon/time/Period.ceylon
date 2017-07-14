@@ -7,7 +7,7 @@ import ceylon.time.base {
 
  A period is a human-scale description of an amount of time.
  "
-shared class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, milliseconds=0)
+shared serializable class Period(years=0, months=0, days=0, hours=0, minutes=0, seconds=0, milliseconds=0)
        satisfies ReadablePeriod & ReadableTimePeriod & ReadableDatePeriod
                & PeriodBehavior<Period>
                & Comparable<Period>
