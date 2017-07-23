@@ -5,7 +5,8 @@ import ceylon.collection {
 import java.lang {
     IllegalArgumentException,
     UnsupportedOperationException,
-    IllegalStateException
+    IllegalStateException,
+    overloaded
 }
 import java.util {
     AbstractList,
@@ -76,7 +77,7 @@ shared class JavaList<E>(List<E?> list)
         }
     }
 
-    shared actual Boolean add(E? e) {
+    shared actual overloaded Boolean add(E? e) {
         if (exists e) {
             if (is ListMutator<E> list) {
                 list.add(e);
@@ -101,7 +102,7 @@ shared class JavaList<E>(List<E?> list)
         return true;
     }
     
-    shared actual void add(Integer index, E? e) {
+    shared actual overloaded void add(Integer index, E? e) {
         if (exists e) {
             if (is ListMutator<E> list) {
                 list.insert(index, e);
