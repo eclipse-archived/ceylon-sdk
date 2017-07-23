@@ -17,7 +17,6 @@ shared class TestResult(description, state, combined = false, exception = null, 
     "The total elapsed time in milliseconds."
     shared Integer elapsedTime;
     
-    shared actual String string
-            => "``description`` - ``state```` (exception exists) then " (`` exception?.string else "" ``)" else "" ``";
+    string => "``description`` - ``state```` (exception exists) then " (`` exception?.string else "" ``)" else "" ``";
     
 }

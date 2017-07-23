@@ -1,6 +1,10 @@
 "The result state of test execution."
 shared class TestState 
-        of success | failure | error | skipped | aborted 
+        of success
+         | failure
+         | error
+         | skipped
+         | aborted
         satisfies Comparable<TestState> {
     
     String name;

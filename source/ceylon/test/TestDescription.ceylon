@@ -38,24 +38,23 @@ shared class TestDescription {
             extends create(name, null, null, functionDeclaration, classDeclaration, children) {}
     
     "Returns new description, derived from this one with specified variant."
-    shared TestDescription forVariant(String variant, Integer variantIndex) {
-        return create(name, variant, variantIndex, functionDeclaration, classDeclaration, children);
-    }
+    shared TestDescription forVariant(String variant, Integer variantIndex)
+            => create(name, variant, variantIndex, functionDeclaration, classDeclaration, children);
     
     shared actual Boolean equals(Object that) {
         if (is TestDescription that) {
             return name == that.name
-                    && equalsCompare(variant, that.variant)
-                    && equalsCompare(variantIndex, that.variantIndex)
-                    && equalsCompare(functionDeclaration, that.functionDeclaration)
-                    && equalsCompare(classDeclaration, that.classDeclaration)
-                    && children == that.children;
+                && equalsCompare(variant, that.variant)
+                && equalsCompare(variantIndex, that.variantIndex)
+                && equalsCompare(functionDeclaration, that.functionDeclaration)
+                && equalsCompare(classDeclaration, that.classDeclaration)
+                && children == that.children;
         }
         return false;
     }
     
-    shared actual Integer hash => name.hash;
+    hash => name.hash;
     
-    shared actual String string => name + (variant else "");
+    string => name + (variant else "");
     
 }
