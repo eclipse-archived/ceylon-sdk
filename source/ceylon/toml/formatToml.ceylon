@@ -87,6 +87,17 @@ shared String formatToml(Map<String, Object> tomlTable)
         emitBasicString(item);
     }
 
+    "Is the character in the Unicode 'private use' category?"
+    function privateUse(Character char)
+        =>     '\{#E000}' <= char <= '\{#F8FF}'
+            || '\{#0F0000}' <= char <= '\{#0FFFFD}'
+            || '\{#100000}' <= char <= '\{#10FFFD}';
+
+    "Is the character in the Unicode 'control' category?"
+    function control(Character char)
+        =>     '\{#00}' <= char <= '\{#1f}'
+            || '\{#7f}' <= char <= '\{#9f}';
+
     void emitBasicString(String item, StringBuilder sb = this.sb) {
         sb.appendCharacter('"');
         for (char in item) {
@@ -98,9 +109,15 @@ shared String formatToml(Map<String, Object> tomlTable)
             case ('\{#0d}') { sb.append("\\r"); }
             case ('\{#22}') { sb.append("\\\""); }
             case ('\{#5c}') { sb.append("\\\\"); }
-            else if (char < '\{#20}') {
-                sb.append("\\u");
-                sb.append(char.integer.string.padLeading(4, '0'));
+            else if (privateUse(char) || control(char)) {
+                if (char <= '\{#ffff}') {
+                    sb.append("\\u");
+                    sb.append(char.integer.string.padLeading(4, '0'));
+                }
+                else {
+                    sb.append("\\U");
+                    sb.append(char.integer.string.padLeading(8, '0'));
+                }
             }
             else {
                 sb.appendCharacter(char);
