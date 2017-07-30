@@ -161,7 +161,7 @@
             zoneDateTime, timeZone
         }
         import ceylon.toml {
-            TomlTable, TomlArray
+            TomlTable, TomlArray, formatToml
         }
 
         shared void run() {
