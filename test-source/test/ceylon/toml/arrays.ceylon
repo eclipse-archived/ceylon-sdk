@@ -1,5 +1,5 @@
 import ceylon.test {
-    test, assertTrue
+    test, assertTrue, ignore
 }
 import ceylon.toml {
     parseToml, TomlParseException, TomlArray
@@ -37,6 +37,21 @@ shared object arrays {
     shared test void mixedArraysOk()    
         =>  checkValue("[ [0], [1.0] ]", TomlArray { TomlArray { 0 }, TomlArray { 1.0 } });
 
+    ignore
+    shared test void trickyMixedArray()
+        =>  assertTrue {
+                parseToml {
+                    // elements in the array for k2 are mixed
+                    // { k1->{ k2->{ 0, { k3->1 } } } }
+                    """
+                        [k1]
+                        k2 = [0]
+                        [[k1.k2]]
+                        k3 = 1
+                    """;
+                } is TomlParseException;
+            };
+
     shared void test() {
         empty();
         emptyComma();
@@ -47,5 +62,6 @@ shared object arrays {
         tooManyCommasTrailing();
         mixedArrays();
         mixedArraysOk();
+        trickyMixedArray();
     }
 }
