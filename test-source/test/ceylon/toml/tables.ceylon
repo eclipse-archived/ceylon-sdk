@@ -1,5 +1,5 @@
 import ceylon.test {
-    test, assertEquals, assertTrue
+    test, assertEquals, assertTrue, ignore
 }
 import ceylon.toml {
     parseToml, TomlParseException
@@ -217,6 +217,20 @@ shared object tables {
         };
     }
 
+    ignore
+    shared test void redefineKey()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        [k1.k2]
+                        k3 = 1
+                        [k1]
+                        k2 = 0 # should error
+                        k2 = 1 # should error
+                     """;
+                } is TomlParseException;
+            };
+
     shared void test() {
         empty();
         oneTable();
@@ -227,5 +241,6 @@ shared object tables {
         addToTableInArray();
         addToTableInArray2();
         addToTableInArrayError();
+        redefineKey();
     }
 }
