@@ -52,6 +52,9 @@ shared object arrays {
                 } is TomlParseException;
             };
 
+    shared test void spacelessArrayOfArray()
+        =>  checkValue("[[1]]", TomlArray { TomlArray { 1 } });
+
     shared void test() {
         empty();
         emptyComma();
@@ -63,5 +66,6 @@ shared object arrays {
         mixedArrays();
         mixedArraysOk();
         trickyMixedArray();
+        spacelessArrayOfArray();
     }
 }

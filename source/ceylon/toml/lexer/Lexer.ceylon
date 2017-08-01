@@ -25,14 +25,14 @@ shared class Lexer({Character*} characters) {
         case ('+') { return t.newToken(plus); }
         case ('[') {
             return t.newToken {
-                if (t.accept('['))
+                if (mode == LexerMode.key && t.accept('['))
                 then doubleOpenBracket
                 else openBracket;
             };
         }
         case (']') {
             return t.newToken {
-                if (t.accept(']'))
+                if (mode == LexerMode.key && t.accept(']'))
                 then doubleCloseBracket
                 else closeBracket;
             };
