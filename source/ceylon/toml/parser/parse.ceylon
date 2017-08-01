@@ -629,6 +629,15 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         TomlArray array;
         switch (obj = container.get(path.last))
         case (is TomlArray) {
+            if (exists first = obj.first) {
+                value firstType = elementTypeOf(first);
+                if (firstType != TomlValueType.table) {
+                    throw error(openToken,
+                        "cannot add a Table to an array containing a value of type \
+                         '``firstType``' for the key '``".".join(path)``'; Array \
+                         data types may not be mixed");
+                }
+            }
             array = obj;
         }
         case (is Null) {

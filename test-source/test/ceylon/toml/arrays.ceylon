@@ -37,7 +37,6 @@ shared object arrays {
     shared test void mixedArraysOk()    
         =>  checkValue("[ [0], [1.0] ]", TomlArray { TomlArray { 0 }, TomlArray { 1.0 } });
 
-    ignore
     shared test void trickyMixedArray()
         =>  assertTrue {
                 parseToml {
