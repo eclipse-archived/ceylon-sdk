@@ -8,7 +8,7 @@ import ceylon.time.timezone {
     ZoneDateTime
 }
 import ceylon.toml.internal {
-    Producer
+    TomlValueType, elementTypeOf, Producer
 }
 
 "Generate a TOML document from the given `Map`. For added type safety, it is recommended
@@ -130,15 +130,23 @@ shared String formatToml(Map<String, Object> tomlTable)
     }
 
     void emitArrayValue(List<Anything> array) {
-        // TODO error if not homogeneous
-        variable value first = true;
+        variable TomlValueType? arrayElementType = null;
         sb.append("[ ");
         for (item in array) {
-            if (!first) {
-                sb.append(", ");
+            if (!is TomlValue | Map<Anything, Anything> | List<Anything> item) {
+                throw error("not a valid TOML value type '``className(item)``'");
+            }
+            value elementType = elementTypeOf(item);
+            if (exists aet = arrayElementType) {
+                if (!elementType == aet) {
+                    throw error(
+                        "found value of type '``elementType``' but expected '``aet``'; \
+                         Array data types may not be mixed");
+                }
+                sb.append(", "); // not first
             }
             else {
-                first = false;
+                arrayElementType = elementType;
             }
             emitValue(item);
         }

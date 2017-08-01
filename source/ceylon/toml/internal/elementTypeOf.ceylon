@@ -8,7 +8,7 @@ import ceylon.time {
     Time, Date, DateTime
 }
 
-shared TomlValueType elementTypeOf(TomlValue | Map<String, Object> | List<Object> tv)
+shared TomlValueType elementTypeOf(TomlValue | Map<Anything, Anything> | List<Anything> tv)
     =>  switch (tv)
         case (is Boolean) TomlValueType.boolean
         case (is Float) TomlValueType.float
