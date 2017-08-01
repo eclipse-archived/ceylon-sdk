@@ -11,6 +11,9 @@ import ceylon.time {
     Time, Date, DateTime,
     time, date, dateTime
 }
+import ceylon.toml.internal {
+    TomlValueType, elementTypeOf
+}
 import ceylon.toml.lexer {
     ...
 }
@@ -195,13 +198,26 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
     }
 
     TomlArray parseTomlArray() {
-        // TODO disallow heterogenous arrays
-        //      (have parseValue return a type descriptor?)
         value array = TomlArray();
         consume(openBracket, "expected '[' to start an array");
+        variable TomlValueType? arrayElementType = null;
         while (!check(closeBracket)) {
             acceptRun([comment, newline]);
-            array.add(parseValue());
+            value tokenForError = peek();
+            value element = parseValue();
+            value elementType = elementTypeOf(element);
+            if (exists aet = arrayElementType) {
+                if (!aet == elementType) {
+                    // log the error, but don't throw; continue parsing
+                    error(tokenForError,
+                        "found value of type '``elementType``' but expected '``aet``'; \
+                         Array data types may not be mixed");
+                }
+            }
+            else {
+                arrayElementType = elementType;
+            }
+            array.add(element);
             acceptRun([comment, newline]);
             // trailing comma ok
             if (!accept(comma)) {
