@@ -12,7 +12,7 @@ import ceylon.time {
     time, date, dateTime
 }
 import ceylon.toml.internal {
-    TomlValueType, elementTypeOf
+    TomlValueType, elementTypeOf, Producer
 }
 import ceylon.toml.lexer {
     ...
@@ -699,7 +699,3 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         }
     }
 }.get();
-
-interface Producer<T> {
-    shared formal T get();
-}

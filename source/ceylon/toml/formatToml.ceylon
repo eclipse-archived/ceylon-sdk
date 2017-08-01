@@ -7,6 +7,9 @@ import ceylon.time {
 import ceylon.time.timezone {
     ZoneDateTime
 }
+import ceylon.toml.internal {
+    Producer
+}
 
 "Generate a TOML document from the given `Map`. For added type safety, it is recommended
  that the argument be a [[TomlTable]], although any `Map` with valid content can be used.
@@ -276,10 +279,6 @@ shared String formatToml(Map<String, Object> tomlTable)
         return sb.string;
     }
 }.get();
-
-interface Producer<T> {
-    shared formal T get();
-}
 
 Boolean(Character) isValidKeyCharacter = set(
     concatenate('a'..'z', 'A'..'Z', '0'..'9', "_-")
