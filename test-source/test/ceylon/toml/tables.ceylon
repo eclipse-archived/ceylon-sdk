@@ -217,7 +217,6 @@ shared object tables {
         };
     }
 
-    ignore
     shared test void redefineKey()
         =>  assertTrue {
                 parseToml {
@@ -226,6 +225,16 @@ shared object tables {
                         k3 = 1
                         [k1]
                         k2 = 0 # should error
+                     """;
+                } is TomlParseException;
+            };
+
+    shared test void redefineKey2()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        [k1]
+                        k2 = 0
                         k2 = 1 # should error
                      """;
                 } is TomlParseException;

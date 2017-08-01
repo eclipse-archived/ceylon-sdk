@@ -656,7 +656,12 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         case (comment) { advance(); }
         case (newline) { advance(); }
         case (bareKey | basicString | literalString) {
-            currentTable.putAll { parseKeyValuePair() };
+            value tokenForError = peek();
+            value entry = parseKeyValuePair();
+            if (currentTable.defines(entry.key)) {
+                throw error(tokenForError, "value for ``entry.key`` already defined");
+            }
+            currentTable.put(entry.key, entry.item);
             accept(comment);
             if (!endOfFile && !accept(newline)) {
                 throw badTokenError(peek(),
