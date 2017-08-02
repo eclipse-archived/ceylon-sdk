@@ -21,7 +21,6 @@ shared class Tokenizer({Character*} input,
             String description,
             Integer line = startLine,
             Integer column = startColumn) {
-        // FIXME improve error handling!!!
         value sb = StringBuilder();
         sb.append(description);
         sb.append(" at ``line``:``column``");
