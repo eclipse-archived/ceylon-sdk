@@ -26,6 +26,8 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
     variable Token | Finished | Null nextToken = null;
     variable value currentTable = result;
     value createdButNotDefined = IdentitySet<TomlTable>();
+    "Arrays defined like `fruit = [...]`"
+    value staticallyDefinedArrays = IdentitySet<TomlArray>();
 
     String formatToken(Token token)
         =>  if (token.type == newline) then "newline"
@@ -197,7 +199,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         }
     }
 
-    TomlArray parseTomlArray() {
+    TomlArray parseArray() {
         value array = TomlArray();
         consume(openBracket, "expected '[' to start an array");
         variable TomlValueType? arrayElementType = null;
@@ -485,7 +487,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         case (multilineBasicString) { return parseMultilineBasicString(); }
         case (literalString) { return parseLiteralString(); }
         case (multilineLiteralString) { return parseMultilineLiteralString(); }
-        case (openBracket) { return parseTomlArray(); }
+        case (openBracket) { return parseArray(); }
         case (openBrace) { return parseInlineTable(); }
         case (trueKeyword) { advance(); return true; }
         case (falseKeyword) { advance(); return false; }
@@ -501,7 +503,11 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
     String->TomlValue parseKeyValuePair() {
         value key = lexer.inMode(LexerMode.key, parseKey);
         consume(equal, "expected '='");
-        return key -> lexer.inMode(LexerMode.val, parseValue);
+        value item = lexer.inMode(LexerMode.val, parseValue);
+        if (is TomlArray item) {
+            staticallyDefinedArrays.add(item);
+        }
+        return key -> item;
     }
 
     [String*] parseKeyPath() {
@@ -613,6 +619,12 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
                 table.put(pathPart, newTable);
                 return newTable;
             }
+            else if (is TomlArray obj, obj in staticallyDefinedArrays) {
+                // TODO properly format/escape path in error msg
+                throw error(openToken,
+                        "a statically defined array already exists for the key \
+                         '``".".join(path.take(index+1))``'");
+            }
             else if (is TomlArray obj, is TomlTable last = obj.last) {
                 // for [[whatever.key1.key2]] following [[whatever.key1]]
                 // just add to the last table in the array
@@ -629,6 +641,12 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         TomlArray array;
         switch (obj = container.get(path.last))
         case (is TomlArray) {
+            if (obj in staticallyDefinedArrays) {
+                // TODO properly format/escape path in error msg
+                throw error(openToken,
+                        "a statically defined array already exists for the key \
+                         '``".".join(path)``'");
+            }
             if (exists first = obj.first) {
                 value firstType = elementTypeOf(first);
                 if (firstType != TomlValueType.table) {

@@ -1,12 +1,11 @@
 import ceylon.test {
-    test, assertEquals
+    test, assertEquals, assertTrue
 }
 import ceylon.toml {
-    parseToml
+    parseToml, TomlParseException
 }
 
 shared object arrayOfTables {
-    // TODO tests for errors
 
     shared test void empty() {
         assertEquals {
@@ -277,6 +276,89 @@ shared object arrayOfTables {
         };
     }
 
+    "Attempting to append to a statically defined array, even if that array is empty or
+     of compatible type, must produce an error at parse time."
+    shared test void cantAppend()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        # INVALID TOML DOC
+                        fruit = []
+
+                        [[fruit]] # Not allowed
+                     """;
+                } is TomlParseException;
+            };
+
+    shared test void canAppend()
+        =>  assertEquals {
+                actual = parseToml {
+                     """
+                        [[fruit]]
+                        a=1
+                        [[fruit]]
+                        b=2
+                     """;
+                };
+                expected = map {
+                    "fruit" -> [
+                        map { "a" -> 1 },
+                        map { "b" -> 2 }
+                    ]
+                };
+            };
+
+    shared test void cantAppend2()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        fruit = []
+
+                        [[fruit.whatever]]
+                     """;
+                } is TomlParseException;
+            };
+
+    shared test void canAppend2()
+        =>  assertEquals {
+                actual = parseToml {
+                     """
+                        [[fruit]]
+                        a=1
+                        [[fruit.whatever]]
+                        b=2
+                     """;
+                };
+                expected = map {
+                    "fruit" -> [
+                        map {
+                            "a" -> 1,
+                            "whatever" -> [ map { "b" -> 2 } ]
+                        }
+                    ]
+                };
+            };
+
+    "Attempting to define a normal table with the same name as an already established
+     array must produce an error at parse time."
+    shared test void tableNameAlreadyUsed()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        # INVALID TOML DOC
+                        [[fruit]]
+                        name = "apple"
+
+                        [[fruit.variety]]
+                            name = "red delicious"
+
+                        # This table conflicts with the previous table
+                        [fruit.variety]
+                            name = "granny smith"
+                     """;
+                } is TomlParseException;
+            };
+
     shared void test() {
         empty();
         notEmpty();
@@ -286,5 +368,9 @@ shared object arrayOfTables {
         addToTableInArray();
         addToTableInArray2();
         addToTableInArray22();
+        cantAppend();
+        canAppend();
+        cantAppend2();
+        canAppend2();
     }
 }
