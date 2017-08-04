@@ -95,7 +95,6 @@ shared class Lexer({Character*} characters) {
             case ('_') { return t.newToken(underscore); }
             case ('e') { return t.newToken(exponentCharacter); }
             case ('E') { return t.newToken(exponentCharacter); }
-            case ('z') { return t.newToken(zuluCharacter); }
             case ('Z') { return t.newToken(zuluCharacter); }
             case ('T') { return t.newToken(timeCharacter); }
             case ('t' | 'f') {

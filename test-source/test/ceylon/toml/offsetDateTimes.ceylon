@@ -1,12 +1,14 @@
 import ceylon.test {
-    test
+    test, assertTrue
 }
 import ceylon.time.iso8601 {
     parseZoneDateTime
 }
+import ceylon.toml {
+    parseToml, TomlParseException
+}
 
 shared object offsetDateTimes {
-    // TODO error conditions
 
     shared test void zulu() {
         checkValue {
@@ -20,7 +22,7 @@ shared object offsetDateTimes {
     }
 
     shared test void offsets() {
-        // FIXME ceylon.time doesn't allow offsets < -12:00, but should that be supported?
+        // TODO ceylon.time doesn't allow offsets < -12:00, but should that be supported?
         checkValue {
             input = "0000-01-01T00:00:00-00:00";
             expected = parseZoneDateTime("0000-01-01T00:00:00+00:00");
@@ -67,8 +69,24 @@ shared object offsetDateTimes {
         };
     }
 
+    shared test void badZone1()
+        =>  assertTrue(parseToml("key = 2017-07-05T12:00:00z") is TomlParseException);
+
+    shared test void badZone2()
+        =>  assertTrue(parseToml("key = 2017-07-05T12:00:0012:00") is TomlParseException);
+
+    shared test void badZone3()
+        =>  assertTrue(parseToml("key = 2017-07-05T12:00:00+12:0") is TomlParseException);
+
+    shared test void badZone4()
+        =>  assertTrue(parseToml("key = 2017-07-05T12:00:00+1") is TomlParseException);
+
     shared void test() {
         zulu();
         offsets();
+        badZone1();
+        badZone2();
+        badZone3();
+        badZone4();
     }
 }

@@ -1,8 +1,11 @@
 import ceylon.test {
-    test
+    test, assertTrue
 }
 import ceylon.time {
     time
+}
+import ceylon.toml {
+    parseToml, TomlParseException
 }
 
 shared object times {
@@ -33,8 +36,32 @@ shared object times {
         checkValue { input = "10:10:00.789"; expected = time(10, 10, 00, 789); };
     }
 
+    shared test void truncatedTime1()
+        =>  assertTrue(parseToml("key = 07:32:00.") is TomlParseException);
+
+    shared test void truncatedTime2()
+        =>  assertTrue(parseToml("key = 07:32:0") is TomlParseException);
+
+    shared test void truncatedTime3()
+        =>  assertTrue(parseToml("key = 07:32:") is TomlParseException);
+
+    shared test void truncatedTime4()
+        =>  assertTrue(parseToml("key = 07:32") is TomlParseException);
+
+    shared test void truncatedTime5()
+        =>  assertTrue(parseToml("key = 07:3") is TomlParseException);
+
+    shared test void truncatedTime6()
+        =>  assertTrue(parseToml("key = 07:") is TomlParseException);
+
     shared void test() {
         simpleTimes();
         timesWithMillis();
+        truncatedTime1();
+        truncatedTime2();
+        truncatedTime3();
+        truncatedTime4();
+        truncatedTime5();
+        truncatedTime6();
     }
 }
