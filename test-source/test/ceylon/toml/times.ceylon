@@ -9,7 +9,6 @@ import ceylon.toml {
 }
 
 shared object times {
-    // TODO error conditions
 
     shared test void simpleTimes() {
         checkValue { input = "00:00:00"; expected = time(00, 00, 00); };

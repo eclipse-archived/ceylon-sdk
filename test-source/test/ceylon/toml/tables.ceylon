@@ -6,7 +6,6 @@ import ceylon.toml {
 }
 
 shared object tables {
-    // TODO tests for errors, like redefining tables
 
     shared test void empty() {
         assertEquals {
@@ -240,6 +239,94 @@ shared object tables {
                 } is TomlParseException;
             };
 
+    shared test void tablePartsSpaces()
+        =>  assertEquals {
+                actual = parseToml {
+                    """[ a . b . c ]
+                        d = 1
+                    """;
+                };
+                expected = map {
+                    "a" -> map {
+                        "b" -> map {
+                            "c" -> map {
+                                "d" -> 1
+                            }
+                        }
+                    }
+                };
+            };
+
+    "As long as a super-table hasn't been directly defined and hasn't defined a
+     specific key, you may still write to it."
+    shared test void writeToUndefined()
+        =>  assertEquals {
+                actual = parseToml {
+                     """
+                        [a.b]
+                        c = 1
+
+                        [a]
+                        d = 2
+                    """;
+                };
+                expected = map {
+                    "a" -> map {
+                        "b" -> map {
+                            "c" -> 1
+                        },
+                        "d" -> 2
+                    }
+                };
+            };
+
+    "You cannot define any key or table more than once. Doing so is invalid."
+    shared test void cannotDefineMoreThanOnce1()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        # DO NOT DO THIS
+
+                        [a]
+                        b = 1
+
+                        [a]
+                        c = 2  
+                     """;
+                } is TomlParseException;
+            };
+
+    shared test void cannotDefineMoreThanOnce2()
+        =>  assertTrue {
+                parseToml {
+                     """
+                        # DO NOT DO THIS EITHER
+
+                        [a]
+                        b = 1
+
+                        [a.b]
+                        c = 2
+                     """;
+                } is TomlParseException;
+            };
+
+    "All table names must be non-empty."
+    shared test void emptyTableaName1()
+        =>  assertTrue(parseToml("[]") is TomlParseException);
+
+    shared test void emptyTableaName2()
+        =>  assertTrue(parseToml("[a.]") is TomlParseException);
+
+    shared test void emptyTableaName3()
+        =>  assertTrue(parseToml("[a..b] ") is TomlParseException);
+
+    shared test void emptyTableaName4()
+        =>  assertTrue(parseToml("[.b]") is TomlParseException);
+
+    shared test void emptyTableaName5()
+        =>  assertTrue(parseToml("[.]") is TomlParseException);
+
     shared void test() {
         empty();
         oneTable();
@@ -251,5 +338,14 @@ shared object tables {
         addToTableInArray2();
         addToTableInArrayError();
         redefineKey();
+        tablePartsSpaces();
+        writeToUndefined();
+        cannotDefineMoreThanOnce1();
+        cannotDefineMoreThanOnce2();
+        emptyTableaName1();
+        emptyTableaName2();
+        emptyTableaName3();
+        emptyTableaName4();
+        emptyTableaName5();
     }
 }

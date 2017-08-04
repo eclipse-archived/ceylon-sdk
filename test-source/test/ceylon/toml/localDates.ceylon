@@ -9,7 +9,6 @@ import ceylon.toml {
 }
 
 shared object localDates {
-    // TODO error conditions
 
     shared test void simple() {
         checkValue { input = "0000-01-01"; expected = date(0, 1, 1); };
