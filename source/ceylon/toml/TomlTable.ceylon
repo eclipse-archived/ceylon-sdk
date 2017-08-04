@@ -8,9 +8,11 @@ import ceylon.time.timezone {
     ZoneDateTime
 }
 
+"A TOML Table."
 shared class TomlTable satisfies MutableMap<String, TomlValue> {
     HashMap<String, TomlValue> delegate;
 
+    "Create a new [[TomlTable]] containing the given [[entries]]."
     shared new ({<String->TomlValue>*} entries = []) {
         delegate = HashMap<String, TomlValue> { *entries };
     }

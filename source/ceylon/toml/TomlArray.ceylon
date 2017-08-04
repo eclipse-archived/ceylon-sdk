@@ -2,9 +2,11 @@ import ceylon.collection {
     MutableList, ArrayList
 }
 
+"A TOML Array."
 shared class TomlArray satisfies MutableList<TomlValue> {
     ArrayList<TomlValue> delegate;
 
+    "Create a new [[TomlArray]] containing the given [[elements]]."
     shared new ({TomlValue*} elements = []) {
         delegate = ArrayList { *elements };
     }
