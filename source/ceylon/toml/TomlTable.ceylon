@@ -9,7 +9,7 @@ import ceylon.time.timezone {
 }
 
 "A TOML Table."
-shared class TomlTable satisfies MutableMap<String, TomlValue> {
+shared final class TomlTable satisfies MutableMap<String, TomlValue> {
     HashMap<String, TomlValue> delegate;
 
     "Create a new [[TomlTable]] containing the given [[entries]]."
@@ -256,7 +256,7 @@ shared class TomlTable satisfies MutableMap<String, TomlValue> {
     // workaround https://github.com/ceylon/ceylon-sdk/issues/675
     // and https://github.com/ceylon/ceylon/issues/7131
     // equals(Object other) => delegate.equals(other);
-    shared actual default Boolean equals(Object that) {
+    shared actual Boolean equals(Object that) {
         if (is Map<Object,Anything> that,
             that.size==size) {
             for (key -> thisItem in this) {
