@@ -7,7 +7,7 @@
     obvious semantics. TOML is designed to map unambiguously to a hash table. TOML should
     be easy to parse into data structures in a wide variety of languages.
 
-    # Exampe TOML Document
+    # Example TOML Document
 
     ```toml
     # This is a TOML document.
