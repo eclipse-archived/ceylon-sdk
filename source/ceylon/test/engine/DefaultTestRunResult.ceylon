@@ -32,9 +32,9 @@ shared class DefaultTestRunResult() satisfies TestRunResult {
     shared actual Integer abortedCount => abortedCounter;
     shared actual Integer excludedCount => excludedCounter;
     
-    shared actual Boolean isSuccess => successCount != 0 && errorCount == 0 && failureCount == 0;
+    shared actual Boolean isSuccess => errorCount == 0 && failureCount == 0;
     
-    shared actual Boolean isFailed => errorCount != 0 || failureCount != 0;
+    shared actual Boolean isFailed => !isSuccess;
     
     shared actual Integer startTime => startTimeMilliseconds;
     shared actual Integer endTime => endTimeMilliseconds;
