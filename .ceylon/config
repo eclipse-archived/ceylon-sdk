@@ -1,21 +1,21 @@
 [repositories]
-output=./modules
-lookup=./modules
-lookup=./test-deps
+lookup=test-deps
 
 [defaults]
 encoding=UTF-8
-overrides=overrides.xml
+offline=false
 flatclasspath=false
 autoexportmavendependencies=false
-offline=false
 fullyexportmavendependencies=false
 
 [compiler]
-source=./source
-source=./test-source
-resource=./resource
+source=source
+source=test-source
+resource=resource
 suppresswarning=ceylonNamespace
 
 [compiler.jvm]
 target=7
+
+[formattool]
+profile=default
