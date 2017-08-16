@@ -118,11 +118,9 @@ class RequestImpl(HttpServerExchange exchange,
 
     FormData buildFormData() {
         // multipart/form-data parsing requires blocking mode
-        String? contentType = exchange.requestHeaders.getFirst(HttpString(Headers.contentType.string));
-        if (is String contentType) {
-            if (contentType.startsWith(contentTypeMultipartFormData)) {
-                exchange.startBlocking();
-            }
+        if (exists contentType = exchange.requestHeaders.getFirst(Headers.contentType),
+            contentType.startsWith(contentTypeMultipartFormData)) {
+            exchange.startBlocking();
         }
         
         value formDataBuilder = FormDataBuilder();
@@ -138,8 +136,7 @@ class RequestImpl(HttpServerExchange exchange,
                     };
                     formDataBuilder.addFile(key.string, uploadedFile);
                 } else {
-                    formDataBuilder.addParameter(key.string, 
-                        parameterValue.\ivalue);
+                    formDataBuilder.addParameter(key.string, parameterValue.\ivalue);
                 }
             }
         }
@@ -225,9 +222,8 @@ class RequestImpl(HttpServerExchange exchange,
         => if (nonempty params = queryParametersMap[name])
              then params.first else null;
 
-    shared actual String? pathParameter(String name) {
-        return pathParameters.get(name);
-    }
+    shared actual String? pathParameter(String name)
+            => pathParameters.get(name);
 
     shared actual UploadedFile[] files(String name) {
         if (exists files = formData.files[name]) {
@@ -236,14 +232,8 @@ class RequestImpl(HttpServerExchange exchange,
         return [];
     }
 
-    shared actual UploadedFile? file(String name) {
-        UploadedFile[] uploadedFiles = files(name);
-        if (nonempty uploadedFiles) {
-            return uploadedFiles.first;
-        } else {
-            return null;
-        }
-    }
+    shared actual UploadedFile? file(String name)
+            => files(name).first;
 
     uri => exchange.requestURI;
 
@@ -272,12 +262,9 @@ class RequestImpl(HttpServerExchange exchange,
         //TODO configurable session cookie
         value sessionCookieConfig = SessionCookieConfig();
 
-        variable UtSession? utSession = 
-                sessionManager.getSession(exchange, sessionCookieConfig);
-
-        if (!utSession exists) {
-            utSession = sessionManager.createSession(exchange, sessionCookieConfig);
-        }
+        UtSession? utSession =
+                sessionManager.getSession(exchange, sessionCookieConfig)
+                else sessionManager.createSession(exchange, sessionCookieConfig);
 
         if (exists s = utSession) {
             return DefaultSession(s);
@@ -287,3 +274,4 @@ class RequestImpl(HttpServerExchange exchange,
     }
 
 }
+

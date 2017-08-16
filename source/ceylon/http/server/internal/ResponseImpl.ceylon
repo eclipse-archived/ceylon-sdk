@@ -169,7 +169,7 @@ class ResponseImpl(HttpServerExchange exchange,
         }
         variable Boolean headerExists = false;
         for (h in headers) {
-            if (h.name.lowercased.equals(header.name.lowercased)) {
+            if (h.name.equalsIgnoringCase(header.name)) {
                 for (val in header.values) {
                     //TODO log trace print("Adding value [``val``] to header [``header.name``].");
                     h.values.add(val);
@@ -209,7 +209,7 @@ class ResponseImpl(HttpServerExchange exchange,
     
     Charset findCharset() {
         for (header in headers) {
-            if (header.name.lowercased.equals("content-type")) {
+            if (header.name.equalsIgnoringCase("content-type")) {
                 return parseCharset(header);
             }
         }
