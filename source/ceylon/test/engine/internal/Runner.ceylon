@@ -23,7 +23,7 @@ import ceylon.test.engine {
 
 
 shared class Runner() {
-    
+
     value options = Options.parse();
     value socket = connectSocket(options.port);
     
@@ -125,27 +125,20 @@ shared class Runner() {
     
     native
     void initializeTestedModules();
-    
+
     native("jvm")
     void initializeTestedModules() {
-        void loadModule(String modName, String modVersion) {
-            /*
-             workaround until issue https://github.com/ceylon/ceylon/issues/5763 will be solved
-             the final code should looks like...
-             
-             ```
-             ​import ceylon.modules.jboss.runtime { CeylonModuleLoader }
-             
-             assert(is CeylonModuleLoader loader = ceylonModuleLoader);
-             loader.loadModuleSynchronous(modName, modVersion);
-             ```
-             
-             */
-            Workaround.loadModule(modName, modVersion);
+        import ceylon.modules.jboss.runtime {
+            CeylonModuleLoader
         }
-        
+        import org.jboss.modules {
+            Module
+        }
+
+        assert(is CeylonModuleLoader loader = Module.callerModuleLoader);
+
         for (value mod in options.modules) {
-            loadModule(*parseModuleNameAndVersion(mod));
+            loader.loadModuleSynchronous(*parseModuleNameAndVersion(mod));
         }
     }
     
