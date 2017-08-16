@@ -82,6 +82,7 @@ shared StackTraceElement[] javaStackTrace(Throwable throwable)
      });
 
  This is an alternative to direct use of the annotation
- [[java.lang::synchronized]]."
+ [[java.lang::synchronized]], allowing synchronization on
+ a given [[object|on]]."
 shared Return synchronize<Return>(Object on, Return do())
         => synchronizeInternal(on, do);
