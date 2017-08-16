@@ -16,13 +16,6 @@ import ceylon.http.server {
     HttpEndpoint,
     UploadedFile
 }
-import ceylon.http.server.internal {
-    JavaHelper {
-        paramIsFile,
-        paramFile,
-        paramValue
-    }
-}
 import ceylon.io {
     SocketAddress
 }
@@ -138,15 +131,15 @@ class RequestImpl(HttpServerExchange exchange,
         
         for (key in utFormData) {
             for (parameterValue in utFormData.get(key.string)) {
-                if (paramIsFile(parameterValue)) {
+                if (parameterValue.isFile()) {
                     value uploadedFile = UploadedFile { 
-                        file = parsePath(paramFile(parameterValue).absolutePath);
+                        file = parsePath(parameterValue.path.toAbsolutePath().string);
                         fileName = parameterValue.fileName;
                     };
                     formDataBuilder.addFile(key.string, uploadedFile);
                 } else {
                     formDataBuilder.addParameter(key.string, 
-                        paramValue(parameterValue));
+                        parameterValue.\ivalue);
                 }
             }
         }
