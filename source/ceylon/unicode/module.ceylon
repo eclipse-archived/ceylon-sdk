@@ -14,6 +14,6 @@
    `Character`."
 by("Tom Bentley")
 native("jvm")
-module ceylon.unicode maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
+module ceylon.unicode maven:"org.ceylon-lang" "1.3.3" {
     shared import java.base "7";
 }

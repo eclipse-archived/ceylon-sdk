@@ -35,7 +35,7 @@
    further documentation and examples of use.
 """
 by ("Stéphane Épardaud", "Alex Szczuczko")
-module ceylon.buffer maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
-    import ceylon.collection "1.3.3-SNAPSHOT";
+module ceylon.buffer maven:"org.ceylon-lang" "1.3.3" {
+    import ceylon.collection "1.3.3";
     native ("jvm") import java.base "7";
 }

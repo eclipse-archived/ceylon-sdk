@@ -188,7 +188,7 @@
         }
      ```
  """
-module ceylon.toml "1.3.3-SNAPSHOT" {
-    shared import ceylon.time "1.3.3-SNAPSHOT";
-    shared import ceylon.collection "1.3.3-SNAPSHOT";
+module ceylon.toml "1.3.3" {
+    shared import ceylon.time "1.3.3";
+    shared import ceylon.collection "1.3.3";
 }
