@@ -12,6 +12,6 @@
 
 by("Stéphane Épardaud", "Matej Lazar")
 license("Apache Software License")
-module ceylon.uri maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
-    import ceylon.buffer "1.3.3-SNAPSHOT";
+module ceylon.uri maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
+    import ceylon.buffer "1.3.4-SNAPSHOT";
 }

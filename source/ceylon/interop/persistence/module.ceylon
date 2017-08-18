@@ -25,8 +25,8 @@
  [[`java.lang.Character`|java.lang::Character]], or
  [[`java.lang.Boolean`|java.lang::Boolean]]."
 native ("jvm")
-module ceylon.interop.persistence maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
+module ceylon.interop.persistence maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     shared import maven:org.hibernate.javax.persistence:"hibernate-jpa-2.1-api" "1.0.0.Final";
-    shared import ceylon.interop.java "1.3.3-SNAPSHOT";
+    shared import ceylon.interop.java "1.3.4-SNAPSHOT";
     shared import java.jdbc "7";
 }

@@ -8,6 +8,6 @@
      Whole n = i**j + j;
      print(n); //prints 1728000000000000000000000000000000000003"
 by("Tom Bentley", "John Vasileff")
-module ceylon.whole maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
+module ceylon.whole maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     native("jvm") import java.base "7";
 }

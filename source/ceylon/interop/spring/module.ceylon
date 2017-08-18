@@ -19,7 +19,7 @@
 by("Gavin King")
 native("jvm")
 see (`interface CeylonRepository`)
-module ceylon.interop.spring maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
+module ceylon.interop.spring maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     shared import java.base "7";
 
 //    shared import maven:org.springframework.boot:"spring-boot-starter-web" "1.3.8.RELEASE";

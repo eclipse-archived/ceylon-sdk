@@ -116,7 +116,7 @@ suppressWarnings("doclink")
 by ("Mike Musgrove", "Stéphane Épardaud", "Gavin King")
 license ("Apache Software License 2.0")
 native("jvm")
-module ceylon.transaction maven:"org.ceylon-lang" "1.3.3-SNAPSHOT" {
+module ceylon.transaction maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     shared import org.jboss.narayana.jta "5.2.7.Final-1";
     shared import java.jdbc "7";
     shared import javax.transaction "7";
