@@ -223,7 +223,7 @@
    """
 by ("Tom Bentley", "Tomáš Hradec")
 license ("Apache Software License")
-module ceylon.test maven:"org.ceylon-lang" "1.3.3" {
+module ceylon.test maven:"org.ceylon-lang" "1.3.3.1" {
     import ceylon.collection "1.3.3";
     
     native("jvm") import java.base "7";
