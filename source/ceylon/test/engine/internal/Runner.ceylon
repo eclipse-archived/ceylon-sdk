@@ -135,10 +135,12 @@ shared class Runner() {
             Module
         }
 
-        assert(is CeylonModuleLoader loader = Module.callerModuleLoader);
+        if(exists loader = Module.callerModuleLoader){
+            assert(is CeylonModuleLoader loader);
 
-        for (value mod in options.modules) {
-            loader.loadModuleSynchronous(*parseModuleNameAndVersion(mod));
+            for (value mod in options.modules) {
+                loader.loadModuleSynchronous(*parseModuleNameAndVersion(mod));
+            }
         }
     }
     
