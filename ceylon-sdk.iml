@@ -29,14 +29,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="com.redhat.ceylon.eclipse.ui.cpcontainer.RUNTIME_CONTAINER/default" level="application" />
     <orderEntry type="library" name="com.redhat.ceylon.eclipse.ui.cpcontainer.CEYLON_CONTAINER/default" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: ceylon.language/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: ceylon.runtime/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.cli/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.common/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.langtools.classfile/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.model/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.module-loader/1.3.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.module-resolver/1.3.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: ceylon.language/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: ceylon.runtime/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.cli/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.common/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.langtools.classfile/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.model/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.module-loader/1.3.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.module-resolver/1.3.4-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: io.netty/4.0.2.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: io.undertow.core/1.4.4.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: javax.servlet/3.1.0" level="project" />
@@ -50,8 +50,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.jboss.narayana.jta/5.2.7.Final-1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.jboss.xnio.api/3.3.6.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.jboss.xnio.nio/3.3.6.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework.data:spring-data-commons/1.12.4.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework.data:spring-data-jpa/1.10.4.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework:spring-tx/4.2.8.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework.data:spring-data-commons/1.13.6.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework.data:spring-data-jpa/1.11.6.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework:spring-tx/4.3.10.RELEASE" level="project" />
   </component>
 </module>
