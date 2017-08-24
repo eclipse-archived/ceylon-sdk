@@ -657,7 +657,7 @@ class WholeImpl satisfies Whole {
         variable value v3 = v;
 
         while (!v3.zero) {
-            value [q, t3] = u3.quotientAndRemainder(v3);
+            let ([q, t3] = u3.quotientAndRemainder(v3));
             value t1 = u1 - v1 * q;
             u1 = v1;
             u3 = v3;

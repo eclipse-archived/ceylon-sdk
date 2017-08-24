@@ -19,7 +19,7 @@ DayOfWeek findDayOfWeek(String dayOfWeek) {
  P.S.: This is a good case to add this feature to Time. something like:
        time(1,0).period"
 Period toPeriod([AtTime, Signal] signedTime) {
-    value [atTime, signal] = signedTime;
+    let ([atTime, signal] = signedTime);
     return Period {
         hours = atTime.time.hours * signal;
         minutes = atTime.time.minutes * signal;

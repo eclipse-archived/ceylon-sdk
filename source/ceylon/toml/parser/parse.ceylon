@@ -569,7 +569,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
             throw badTokenError(openToken, "table name must not be empty");
         }
         currentTable = path.indexed.fold(this.result)((table, pathEntry) {
-            value index -> pathPart = pathEntry;
+            let (index -> pathPart = pathEntry);
             switch (obj = table.get(pathPart))
             case (is TomlTable) {
                 return obj;
@@ -608,7 +608,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
             throw badTokenError(openToken, "table name must not be empty");
         }
         value container = path.indexed.exceptLast.fold(this.result)((table, pathEntry) {
-            value index -> pathPart = pathEntry;
+            let (index -> pathPart = pathEntry);
             switch (obj = table.get(pathPart))
             case (is TomlTable) {
                 return obj;

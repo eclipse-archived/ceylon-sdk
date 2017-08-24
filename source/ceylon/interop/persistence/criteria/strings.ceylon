@@ -149,7 +149,7 @@ shared Expression<String> concat(Expression<String>+ expressions)
     suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
-        value [first, *rest] = expressions;
+        let ([first, *rest] = expressions);
         assert (is StringExpression x
                 = first.criteriaExpression(builder));
         variable value result = x;

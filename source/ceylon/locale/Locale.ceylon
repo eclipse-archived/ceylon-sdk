@@ -161,8 +161,8 @@ shared Locale? locale(String tag) {
                 resource.textContent()
                         .lines.iterator();
         
-        value [language,currency] 
-                = parseLanguage(lines, tag);
+        let ([language,currency]
+                = parseLanguage(lines, tag));
         
         return Locale {
             language = language;

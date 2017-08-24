@@ -61,7 +61,7 @@ shared class Response(status, reason, major, minor,
             value params = contentTypeLine.split(';'.equals).rest;
             for(param in params) {
                 value trimmed = param.trimmed;
-                value [first, *rest] = trimmed.split('='.equals).sequence();
+                let ([first, *rest] = trimmed.split('='.equals).sequence());
                 if(first == "charset") {
                     return rest[0];
                 }

@@ -497,8 +497,8 @@ shared serializable class ArrayList<Element>
 
     shared actual 
     List<Element> span(Integer from, Integer to) {
-        value [start, len, reversed]
-                = spanToMeasure(from, to, length);
+        let ([start, len, reversed]
+                = spanToMeasure(from, to, length));
         value result = ArrayList {
             initialCapacity = len; 
             growthFactor = growthFactor; 
@@ -509,8 +509,8 @@ shared serializable class ArrayList<Element>
 
     shared actual 
     void deleteSpan(Integer from, Integer to) {
-        value [start, len, _]
-                = spanToMeasure(from, to, length);
+        let ([start, len, _]
+                = spanToMeasure(from, to, length));
         if (start < length && len > 0) {
             value fstTrailing = start + len;
             array.copyTo(array, 
