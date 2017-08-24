@@ -63,7 +63,7 @@ void checkTimesAndDivided(Whole a, Whole b, Boolean withRemainder) {
     }
 
     value c = a * b + remainder;
-    value [q, r] = c.quotientAndRemainder(b);
+    let ([q, r] = c.quotientAndRemainder(b));
 
     value message = "``a``, ``b``";
     assertEquals(remainder, r, message);

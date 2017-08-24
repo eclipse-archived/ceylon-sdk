@@ -15,7 +15,7 @@ shared Predicate or(Predicate+ predicates)
         => object satisfies Predicate {
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
-        value [first, *rest] = predicates;
+        let ([first, *rest] = predicates);
         variable value result
                 = first.criteriaExpression(builder);
         for (next in rest) {
@@ -30,7 +30,7 @@ shared Predicate and(Predicate+ predicates)
         => object satisfies Predicate {
     shared actual CriteriaPredicate criteriaExpression(
             CriteriaBuilder builder) {
-        value [first, *rest] = predicates;
+        let ([first, *rest] = predicates);
         variable value result
                 = first.criteriaExpression(builder);
         for (next in rest) {

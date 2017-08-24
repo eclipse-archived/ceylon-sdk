@@ -445,7 +445,7 @@ void runTest<RawArgs, Args, Result>
         (RawArgs test,
          String? description)
         given Args satisfies [Anything*] {
-    value [result, *args] = transform(test);
+    let ([result, *args] = transform(test));
     assertEquals(op(*args), result,
             "``args`` ``label`` ``description else ""``");
 }

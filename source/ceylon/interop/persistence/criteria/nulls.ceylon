@@ -8,7 +8,7 @@ shared Expression<T?> coalesce<T>(Expression<T?>+ expressions)
         => object satisfies Expression<T?> {
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
-        value [first, *rest] = expressions;
+        let ([first, *rest] = expressions);
         variable value result = first.criteriaExpression(builder);
         for (next in rest) {
             result = builder.coalesce(result,

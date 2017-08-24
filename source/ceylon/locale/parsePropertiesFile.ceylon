@@ -29,7 +29,7 @@ void parsePropertiesFile(String textContent,
                 !first in "!#", //ignore comments
             exists index //split key/value on = or :
                 = line.firstIndexWhere("=:".contains)) {
-            value [key, definition] = line.slice(index);
+            let ([key, definition] = line.slice(index));
             builder.clear();
             variable value trimming = true;
             value chars = definition.iterator();

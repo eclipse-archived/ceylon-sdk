@@ -586,16 +586,16 @@ shared serializable class LinkedList<Element>
 
     shared actual 
     List<Element> span(Integer from, Integer to) {
-        value [start, len, reversed] 
-                = spanToMeasure(from, to, length);
+        let ([start, len, reversed]
+                = spanToMeasure(from, to, length));
         value result = LinkedList(skip(start).take(len));
         return reversed then result.reversed else result;
     }
     
     shared actual 
     void deleteSpan(Integer from, Integer to)  {
-        value [start, len, _] 
-                = spanToMeasure(from, to, length);
+        let ([start, len, _]
+                = spanToMeasure(from, to, length));
         if (start < length && len > 0) {
             value keepHead = start > 0;
             value lastPreMeasureCell 

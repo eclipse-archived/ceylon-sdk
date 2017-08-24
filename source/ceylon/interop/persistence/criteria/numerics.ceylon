@@ -85,7 +85,7 @@ shared Expression<T> add<T>(Expression<T>+ expressions)
     suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
-        value [first, *rest] = expressions;
+        let ([first, *rest] = expressions);
         assert (is NumericExpression x
                 = first.criteriaExpression(builder));
         variable value result = x;
@@ -105,7 +105,7 @@ shared Expression<T> multiply<T>(Expression<T>+ expressions)
     suppressWarnings("uncheckedTypeArguments")
     shared actual function criteriaExpression(
             CriteriaBuilder builder) {
-        value [first, *rest] = expressions;
+        let ([first, *rest] = expressions);
         assert (is NumericExpression x
                 = first.criteriaExpression(builder));
         variable value result = x;
