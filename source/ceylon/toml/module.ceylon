@@ -188,6 +188,7 @@
         }
      ```
  """
+suppressWarnings("doclink")
 module ceylon.toml maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     shared import ceylon.time "1.3.4-SNAPSHOT";
     shared import ceylon.collection "1.3.4-SNAPSHOT";
