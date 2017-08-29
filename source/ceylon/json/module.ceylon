@@ -4,7 +4,7 @@
    Sample usage for parsing and accessing JSON:
    
        import ceylon.json {
-           parse, Object = Object
+           parse, Object
        }
    
        String getAuthor(String json){
