@@ -33,12 +33,12 @@ HashMap<String,Currency> parseCurrencies(Iterator<String> lines) {
     while (!is Finished currencyLine = lines.next(), 
            !currencyLine.empty) {
         value langCols = columns(currencyLine).iterator();
-        assert (is String code = langCols.next(),
-                is String numericCode = langCols.next(),
-                is String name = langCols.next(),
-                is String symbol = langCols.next(),
-                is String digits = langCols.next(),
-                is Integer fractionalDigits = Integer.parse(digits));
+        assert (is String code = langCols.next());
+        assert (is String numericCode = langCols.next());
+        assert (is String name = langCols.next());
+        assert (is String symbol = langCols.next());
+        assert (is String digits = langCols.next(), 
+            is Integer fractionalDigits = Integer.parse(digits));
         currencies[code]
             = Currency {
                 code = code;

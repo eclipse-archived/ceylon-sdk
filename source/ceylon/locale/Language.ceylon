@@ -46,15 +46,15 @@ shared sealed class Language(tag,
     
     assert (!is Finished firstLine = lines.next());
     value cols = columns(firstLine).iterator();
-    assert (is String loc = cols.next(), loc==tag,
-            is String languageCode = cols.next(),
-            is String? countryCode = cols.next(),
-            is String? variant = cols.next(),
-            is String displayName = cols.next(),
-            is String displayLanguage = cols.next(),
-            is String? displayCountry = cols.next(),
-            is String? displayVariant = cols.next(),
-            is String? currencyCode = cols.next());
+    assert (is String loc = cols.next(), loc==tag);
+    assert (is String languageCode = cols.next());
+    assert (is String? countryCode = cols.next());
+    assert (is String? variant = cols.next());
+    assert (is String displayName = cols.next());
+    assert (is String displayLanguage = cols.next());
+    assert (is String? displayCountry = cols.next());
+    assert (is String? displayVariant = cols.next());
+    assert (is String? currencyCode = cols.next());
     
     value language = Language {
         tag = tag;
@@ -85,14 +85,14 @@ HashMap<String,Language> parseLanguages(Iterator<String> lines) {
     while (!is Finished langLine = lines.next(), 
            !langLine.empty) {
         value langCols = columns(langLine).iterator();
-        assert (is String langTag = langCols.next(),
-                is String langLanguageCode = langCols.next(),
-                is String? langCountryCode = langCols.next(),
-                is String? langVariant = langCols.next(),
-                is String langDisplayName = langCols.next(),
-                is String langDisplayLanguage = langCols.next(),
-                is String? langDisplayCountry = langCols.next(),
-                is String? langDisplayVariant = langCols.next());
+        assert (is String langTag = langCols.next());
+        assert (is String langLanguageCode = langCols.next());
+        assert (is String? langCountryCode = langCols.next());
+        assert (is String? langVariant = langCols.next());
+        assert (is String langDisplayName = langCols.next());
+        assert (is String langDisplayLanguage = langCols.next());
+        assert (is String? langDisplayCountry = langCols.next());
+        assert (is String? langDisplayVariant = langCols.next());
         languages[langTag]
             = Language {
                 tag = langTag;
