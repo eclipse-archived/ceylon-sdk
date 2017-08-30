@@ -46,14 +46,24 @@ shared sealed class Language(tag,
     
     assert (!is Finished firstLine = lines.next());
     value cols = columns(firstLine).iterator();
+
+    "language tag should be ``tag``"
     assert (is String loc = cols.next(), loc==tag);
+    "missing language code for ``tag``"
     assert (is String languageCode = cols.next());
+    "missing (optional) language country code for ``tag``"
     assert (is String? countryCode = cols.next());
+    "missing (optional) language variant for ``tag``"
     assert (is String? variant = cols.next());
+    "missing language display name for ``tag``"
     assert (is String displayName = cols.next());
+    "missing language country language for ``tag``"
     assert (is String displayLanguage = cols.next());
+    "missing (optional) language display country for ``tag``"
     assert (is String? displayCountry = cols.next());
+    "missing (optional) language country variant for ``tag``"
     assert (is String? displayVariant = cols.next());
+    "missing (optional) language currency code for ``tag``"
     assert (is String? currencyCode = cols.next());
     
     value language = Language {
@@ -85,14 +95,24 @@ HashMap<String,Language> parseLanguages(Iterator<String> lines) {
     while (!is Finished langLine = lines.next(), 
            !langLine.empty) {
         value langCols = columns(langLine).iterator();
+
+        "missing language tag"
         assert (is String langTag = langCols.next());
+        "missing language code for ``langTag``"
         assert (is String langLanguageCode = langCols.next());
+        "missing (optional) language country code for ``langTag``"
         assert (is String? langCountryCode = langCols.next());
+        "missing (optional) language variant for ``langTag``"
         assert (is String? langVariant = langCols.next());
+        "missing language display name for ``langTag``"
         assert (is String langDisplayName = langCols.next());
+        "missing language display language for ``langTag``"
         assert (is String langDisplayLanguage = langCols.next());
+        "missing (optional) language display country for ``langTag``"
         assert (is String? langDisplayCountry = langCols.next());
+        "missing (optional) language display variant for ``langTag``"
         assert (is String? langDisplayVariant = langCols.next());
+
         languages[langTag]
             = Language {
                 tag = langTag;
