@@ -35,7 +35,7 @@ import java.nio.file.attribute {
 shared Path parsePath(String pathString) =>
         ConcretePath(newPath(pathString));
 
-shared Path parseURI(String uriString) =>
+shared Path parseUri(String uriString) =>
         ConcretePath(newPath(newURI(uriString)));
 
 shared Path[] rootPaths

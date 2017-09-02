@@ -1,6 +1,6 @@
 import ceylon.file.internal {
     parsePathInternal=parsePath,
-    parseURIInternal=parseURI,
+    parseUriInternal=parseUri,
     rootPathsInternal=rootPaths
 }
 
@@ -110,7 +110,14 @@ shared Path parsePath(String pathString) => parsePathInternal(pathString);
  the path belongs to. The scheme `file:` refers
  to the default file system."
 see(`interface System`)
-shared Path parseURI(String uriString) => parseURIInternal(uriString);
+shared Path parseUri(String uriString) => parseUriInternal(uriString);
+
+"Obtain a `Path` given the string representation
+ of a URI. The scheme determines the file system
+ the path belongs to. The scheme `file:` refers
+ to the default file system."
+deprecated("Use [[parseUri]]")
+shared Path parseURI(String uriString) => parseUri(uriString);
 
 "The `Path` representing the user home directory."
 shared Path home = parsePath(getProperty("user.home"));
