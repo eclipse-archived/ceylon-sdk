@@ -128,6 +128,7 @@
    
        logger = (Category category)
            => JDKLoggerImpl(JDKLogger.getLogger(category.qualifiedName));"""
+label("Ceylon Logging API")
 module ceylon.logging maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     import ceylon.collection "1.3.4-SNAPSHOT";
 }

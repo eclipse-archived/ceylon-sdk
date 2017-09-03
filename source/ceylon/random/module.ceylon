@@ -50,4 +50,5 @@
 """
 by("John Vasileff")
 license("Apache Software License")
+label("Ceylon Random Number Generation API")
 module ceylon.random maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {}

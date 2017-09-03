@@ -87,6 +87,7 @@
 by ("Enrique Zamudio")
 license ("Apache Software License 2.0")
 native("jvm")
+label("Ceylon Relational Database Access API")
 module ceylon.dbc maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     import ceylon.collection "1.3.4-SNAPSHOT";
     shared import ceylon.decimal "1.3.4-SNAPSHOT";

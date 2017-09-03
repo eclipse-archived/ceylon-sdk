@@ -223,6 +223,7 @@
    """
 by ("Tom Bentley", "Tomáš Hradec")
 license ("Apache Software License")
+label("Ceylon Automated Testing Framework")
 module ceylon.test maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     import ceylon.collection "1.3.4-SNAPSHOT";
     

@@ -364,4 +364,5 @@
 """
 by("Tomáš Hradec", "John Vasileff", "Daniel Rochetti")
 suppressWarnings("ceylonNamespace")
+label("Ceylon HTML Templating Framework")
 module ceylon.html maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {}

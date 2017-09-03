@@ -113,6 +113,7 @@
  "
 by("Gavin King")
 native("jvm")
+label("Ceylon Hierarchical Filesystem API")
 module ceylon.file maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     import java.base "7";
 }

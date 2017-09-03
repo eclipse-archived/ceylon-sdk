@@ -46,5 +46,6 @@
 
 by("Stéphane Épardaud")
 license("Apache Software License")
+label("Ceylon Mutable Collections Framework")
 module ceylon.collection maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
 }

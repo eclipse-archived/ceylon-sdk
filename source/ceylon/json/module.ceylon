@@ -64,6 +64,7 @@
  """
 by("Stéphane Épardaud", "Tom Bentley")
 license("Apache Software License")
+label("Ceylon JSON Processing API")
 module ceylon.json maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     shared import ceylon.collection "1.3.4-SNAPSHOT";
 }
