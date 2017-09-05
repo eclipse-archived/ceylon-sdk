@@ -80,7 +80,7 @@ void redirectInput(Input? inputOrNone, ProcessBuilder builder) {
     case (stdin) {
         builder.redirectInput(Redirect.inherit);
     }
-    case (is FileInput) {
+    case (FileInput) {
         builder.redirectInput(JFile(inputOrNone.path.string));
     }
     else {}
@@ -91,10 +91,10 @@ void redirectOutput(Output? outputOrNone, ProcessBuilder builder) {
     case (stdout) {
         builder.redirectOutput(Redirect.inherit);
     }
-    case (is AppendFileOutput) {
+    case (AppendFileOutput) {
         builder.redirectOutput(Redirect.appendTo(JFile(outputOrNone.path.string)));
     }
-    case (is OverwriteFileOutput) {
+    case (OverwriteFileOutput) {
         builder.redirectOutput(Redirect.to(JFile(outputOrNone.path.string)));
     }
     else {}
@@ -105,10 +105,10 @@ void redirectError(Error? errorOrNone, ProcessBuilder builder) {
     case (stderr) {
         builder.redirectError(Redirect.inherit);
     }
-    case (is AppendFileOutput) {
+    case (AppendFileOutput) {
         builder.redirectError(Redirect.appendTo(JFile(errorOrNone.path.string)));
     }
-    case (is OverwriteFileOutput) {
+    case (OverwriteFileOutput) {
         builder.redirectError(Redirect.to(JFile(errorOrNone.path.string)));
     }
     else {}

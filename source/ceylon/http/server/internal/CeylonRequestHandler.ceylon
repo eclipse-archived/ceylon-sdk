@@ -85,11 +85,11 @@ shared class CeylonRequestHandler(Options options, Endpoints endpoints)
             Request request, ResponseImpl response, 
             JHttpServerExchange exchange ) {
         switch (endpoint)
-        case (is AsynchronousEndpoint) {
+        case (AsynchronousEndpoint) {
             exchange.dispatch(AsyncInvoker(endpoint, 
                 request, response));
         }
-        case (is Endpoint) {
+        case (Endpoint) {
             exchange.dispatch(SynchronousInvoker(endpoint, 
                 request, response));
         }

@@ -169,8 +169,8 @@ shared void forEachLine(File file, void do(String line)) {
  otherwise."
 shared File createFileIfNil(File|Nil res) { 
     switch (res)
-    case (is File) { return res; }
-    case (is Nil) { return res.createFile(); }
+    case (File) { return res; }
+    case (Nil) { return res.createFile(); }
 }
 
 "Copy lines from [[one file|from]] to [[a second file|to]],

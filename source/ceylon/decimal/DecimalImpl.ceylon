@@ -16,7 +16,7 @@ final class DecimalImpl(BigDecimal num)
                                            Rounding? rounding) {
         assert (is DecimalImpl other);
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             return DecimalImpl(implementation
                     .divideToIntegralValue(other.implementation,
                             rounding.implementation));
@@ -32,7 +32,7 @@ final class DecimalImpl(BigDecimal num)
                                            Rounding? rounding) {
         assert (is DecimalImpl other);
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             return DecimalImpl(implementation
                     .remainder(other.implementation,
                             rounding.implementation));
@@ -49,7 +49,7 @@ final class DecimalImpl(BigDecimal num)
         assert (is DecimalImpl other);
         Array<BigDecimal?> array;
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             array = implementation
                     .divideAndRemainder(other.implementation,
             rounding.implementation).array;
@@ -108,7 +108,7 @@ final class DecimalImpl(BigDecimal num)
                                          Rounding? rounding) {
         assert (is DecimalImpl other);
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             return DecimalImpl(implementation
                     .divide(other.implementation,
             rounding.implementation));
@@ -155,7 +155,7 @@ final class DecimalImpl(BigDecimal num)
                                        Rounding? rounding) {
          assert (is DecimalImpl other);
          switch (rounding)
-         case (is RoundingImpl) {
+         case (RoundingImpl) {
              return DecimalImpl(implementation
                      .subtract(other.implementation,
                              rounding.implementation));
@@ -189,7 +189,7 @@ final class DecimalImpl(BigDecimal num)
                                       Rounding? rounding) {
         assert (is DecimalImpl other);
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             return DecimalImpl(implementation
                     .add(other.implementation,
                             rounding.implementation));
@@ -216,7 +216,7 @@ final class DecimalImpl(BigDecimal num)
     shared actual Decimal powerRounded(Integer other,
                                        Rounding? rounding) {
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             return DecimalImpl(implementation
                     .pow(other, rounding.implementation));
         } case (null) {
@@ -243,7 +243,7 @@ final class DecimalImpl(BigDecimal num)
                                        Rounding? rounding) {
         assert (is DecimalImpl other);
         switch (rounding)
-        case (is RoundingImpl) {
+        case (RoundingImpl) {
             return DecimalImpl(implementation
                     .multiply(other.implementation,
             rounding.implementation));

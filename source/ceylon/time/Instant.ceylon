@@ -25,10 +25,10 @@ shared serializable class Instant(millisecondsOfEpoch)
     "Adds a period to this instant."
     shared Instant plus(Duration|Period other){
         switch(other)
-        case(is Duration){
+        case(Duration){
             return Instant(this.millisecondsOfEpoch + other.milliseconds);
         }
-        case(is Period){
+        case(Period){
             return dateTime().plus(other).instant();
         }
     }
@@ -36,10 +36,10 @@ shared serializable class Instant(millisecondsOfEpoch)
     "Subtracts a period to this instant."
     shared Instant minus(Duration|Period other){
         switch(other)
-        case(is Duration){
+        case(Duration){
             return Instant(this.millisecondsOfEpoch - other.milliseconds);
         }
-        case(is Period){
+        case(Period){
             return dateTime().minus(other).instant();
         }
     }

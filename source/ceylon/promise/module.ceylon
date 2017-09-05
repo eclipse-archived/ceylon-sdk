@@ -143,8 +143,8 @@
      promise.onComplete {
          void (Document|Throwable result) {
              switch (result)
-             case (is Document) { print(\"Fulfilled\"); }
-             case (is Throwable) { print(\"Rejected\"); }
+             case (Document) { print(\"Fulfilled\"); }
+             case (Throwable) { print(\"Rejected\"); }
          };
       };
  

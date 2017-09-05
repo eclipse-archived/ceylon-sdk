@@ -89,8 +89,8 @@ Boolean realInts = runtime.integerAddressableSize == 64;
 shared
 Float nearestFloat(Integer | Float x)
     =>  switch (x)
-        case (is Float) x
-        case (is Integer) x.nearestFloat;
+        case (Float) x
+        case (Integer) x.nearestFloat;
 
 shared
 [Float, Float]? meanAndVarianceStdDevs(max, uniformSamples) {

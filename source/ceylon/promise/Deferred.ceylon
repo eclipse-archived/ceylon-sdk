@@ -157,21 +157,21 @@ shared class Deferred<Value>(context = globalExecutionContext)
             while (true) {
                 value current = state.get();
                 switch (current)
-                case (is Null) {
+                case (Null) {
                     State next = ListenerState(onFulfilledCallback, 
                         onRejectedCallback);
                     if (state.compareAndSet(current, next)) {
                         break;
                     }
                 }
-                case (is ListenerState) {
+                case (ListenerState) {
                     State next = ListenerState(onFulfilledCallback, 
                         onRejectedCallback, current);
                     if (state.compareAndSet(current, next)) {
                         break;
                     }
                 }
-                case (is PromiseState) {
+                case (PromiseState) {
                     current.promise.map(onFulfilledCallback, 
                         onRejectedCallback);
                     break;
@@ -185,20 +185,20 @@ shared class Deferred<Value>(context = globalExecutionContext)
         while (true) {
             value current = state.get();    
             switch (current) 
-            case (is Null) {
+            case (Null) {
                 PromiseState next = PromiseState(promise);	
                 if (state.compareAndSet(current, next)) {
                     break;  	
                 }
             }
-            case (is ListenerState) {
+            case (ListenerState) {
                 PromiseState next = PromiseState(promise);	
                 if (state.compareAndSet(current, next)) {
                     current.update(promise);
                     break;  	
                 }
             }
-            case (is PromiseState) {
+            case (PromiseState) {
                 break;
             }
         }

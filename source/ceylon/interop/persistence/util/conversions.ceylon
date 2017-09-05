@@ -21,20 +21,20 @@ shared Object? toJava(Anything something)
 
 shared Object toJavaNotNull(Object something)
         => switch (something)
-        case (is String) JString(something)
-        case (is Integer) JLong(something)
-        case (is Float) JDouble(something)
-        case (is Character) JInteger(something.integer)
-        case (is Byte) JByte(something)
-        case (is Boolean) JBoolean(something)
+        case (String) JString(something)
+        case (Integer) JLong(something)
+        case (Float) JDouble(something)
+        case (Character) JInteger(something.integer)
+        case (Byte) JByte(something)
+        case (Boolean) JBoolean(something)
         else something;
 
 shared Object toCeylonNotNull(Object something)
         => switch (something)
-        case (is JString) something.string
-        case (is JInteger|JLong) something.longValue()
-        case (is JFloat|JDouble) something.doubleValue()
-        case (is JCharacter) something.charValue()
-        case (is JByte) something.byteValue()
-        case (is JBoolean) something.booleanValue()
+        case (JString) something.string
+        case (JInteger|JLong) something.longValue()
+        case (JFloat|JDouble) something.doubleValue()
+        case (JCharacter) something.charValue()
+        case (JByte) something.byteValue()
+        case (JBoolean) something.booleanValue()
         else something;

@@ -176,10 +176,10 @@ shared String formatToml(Map<String, Object> tomlTable)
 
     void emitValue(Anything item) {
         switch (item)
-        case (is String) {
+        case (String) {
             emitStringValue(item);
         }
-        case (is Float) {
+        case (Float) {
             if (item.infinite) {
                 throw error("infinite floating point values not allowed");
             }
@@ -188,7 +188,7 @@ shared String formatToml(Map<String, Object> tomlTable)
             }
             sb.append(item.string);
         }
-        case (is Integer | Boolean) {
+        case (Integer | Boolean) {
             sb.append(item.string);
         }
         else if (is Time | Date | DateTime | ZoneDateTime item) {

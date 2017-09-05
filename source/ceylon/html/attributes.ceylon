@@ -24,10 +24,10 @@ class AttributeBooleanValueProvider(Attribute<Boolean> attributeBoolean, String?
     
     shared actual String? attributeValue {
         switch(attributeBoolean)
-        case (is Boolean) { 
+        case (Boolean) {
             return valueOf(attributeBoolean);
         }
-        case (is Boolean?()) {
+        case (Boolean?()) {
             return valueOf(attributeBoolean());
         }
         else {

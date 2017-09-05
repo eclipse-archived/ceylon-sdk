@@ -107,7 +107,7 @@ class StreamState(parent, last, keys) {
                 variable Integer? quantity = null;
                 while(true) {
                     switch(event=stream.next())
-                    case (is KeyEvent) {
+                    case (KeyEvent) {
                         switch(key=event.key) 
                         case ("sku") {
                             if (is String s = stream.next()) {
@@ -133,7 +133,7 @@ class StreamState(parent, last, keys) {
                             return unexpectedKey("Item", key);
                         }
                     }
-                    case (is ObjectEndEvent) {
+                    case (ObjectEndEvent) {
                         if (exists s=sku) {
                             if (exists q=quantity) {
                                 return Item(s, q);
@@ -158,7 +158,7 @@ class StreamState(parent, last, keys) {
                 value items = ArrayList<Item>();
                 while(true) {
                     switch(event=stream.next())
-                    case (is KeyEvent) {
+                    case (KeyEvent) {
                         switch(key=event.key) 
                         case ("address") {
                             if (is String s = stream.next()) {
@@ -179,10 +179,10 @@ class StreamState(parent, last, keys) {
                             }
                             while (stream.peek() is ObjectStartEvent) {
                                 switch (item=parseItem())
-                                case (is String) {
+                                case (String) {
                                     return item;
                                 }
-                                case (is Item) {
+                                case (Item) {
                                     items.add(item);
                                 }
                             }
@@ -192,7 +192,7 @@ class StreamState(parent, last, keys) {
                             return unexpectedKey("Order", key);
                         }
                     }
-                    case (is ObjectEndEvent) {
+                    case (ObjectEndEvent) {
                         if (exists a=address) {
                             return Order(a, items.sequence());
                         }
@@ -373,7 +373,7 @@ shared class StreamParser(input, trackKeys=false)
         value last = state.last;
         state.num++;
         switch (yielding)
-        case (is ObjectStartEvent) {
+        case (ObjectStartEvent) {
             if (is KeyEvent last) {
                 if (exists p = state.parent) {
                     state = p;
@@ -383,13 +383,13 @@ shared class StreamParser(input, trackKeys=false)
             }
             state = pushState(state, yielding);
         }
-        case (is KeyEvent) {
+        case (KeyEvent) {
             if (!is ObjectStartEvent last) {
                 throw ParseException("Key not expected", input.line, input.column);
             }
             state = pushState(state, yielding);
         }
-        case (is ObjectEndEvent) {
+        case (ObjectEndEvent) {
             if (is ObjectStartEvent last) {
                 if (exists p=state.parent) {
                     state = p;
@@ -401,7 +401,7 @@ shared class StreamParser(input, trackKeys=false)
                     input.line, input.column);
             }
         }
-        case (is ArrayStartEvent) {
+        case (ArrayStartEvent) {
             if (is KeyEvent last) {
                 if (exists p = state.parent) {
                     state = p;
@@ -411,7 +411,7 @@ shared class StreamParser(input, trackKeys=false)
             }
             state = pushState(state, yielding);
         }
-        case (is ArrayEndEvent) {
+        case (ArrayEndEvent) {
             if (is ArrayStartEvent last) {
                 if (exists p=state.parent) {
                     state = p;
@@ -423,7 +423,7 @@ shared class StreamParser(input, trackKeys=false)
                     input.line, input.column);
             }
         }
-        case (is String|Float|Integer|Boolean|Null) {
+        case (String|Float|Integer|Boolean|Null) {
             if (is KeyEvent last) {
                 if (exists p = state.parent) {
                     state = p;

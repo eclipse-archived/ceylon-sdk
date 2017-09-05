@@ -43,10 +43,10 @@ shared object systemTime satisfies Clock {
 "Gets a clock that always returns the same instant in the UTC time-zone."
 shared Clock fixedTime(Instant|Integer instant) {
     switch(instant)
-    case (is Instant){
+    case (Instant){
         return FixedInstant(instant);
     }
-    case (is Integer){
+    case (Integer){
         return FixedMilliseconds(instant);
     }
 }

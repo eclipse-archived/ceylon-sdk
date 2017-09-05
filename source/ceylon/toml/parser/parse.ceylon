@@ -309,7 +309,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
 
         if (!fractionalPart exists && !exponent exists) {
             switch (i = Integer.parse(wholePart))
-            case (is Integer) {
+            case (Integer) {
                 return i;
             }
             else {
@@ -322,7 +322,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
                     + "." + (fractionalPart else "0")
                     + (exponent else "");
             switch (f = Float.parse(floatString))
-            case (is Float) {
+            case (Float) {
                 return f;
             }
             else {
@@ -571,10 +571,10 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         currentTable = path.indexed.fold(this.result)((table, pathEntry) {
             let (index -> pathPart = pathEntry);
             switch (obj = table.get(pathPart))
-            case (is TomlTable) {
+            case (TomlTable) {
                 return obj;
             }
-            case (is Null) {
+            case (Null) {
                 value newTable = TomlTable();
                 createdButNotDefined.add(newTable);
                 table.put(pathPart, newTable);
@@ -610,10 +610,10 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         value container = path.indexed.exceptLast.fold(this.result)((table, pathEntry) {
             let (index -> pathPart = pathEntry);
             switch (obj = table.get(pathPart))
-            case (is TomlTable) {
+            case (TomlTable) {
                 return obj;
             }
-            case (is Null) {
+            case (Null) {
                 value newTable = TomlTable();
                 createdButNotDefined.add(newTable);
                 table.put(pathPart, newTable);
@@ -640,7 +640,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         });
         TomlArray array;
         switch (obj = container.get(path.last))
-        case (is TomlArray) {
+        case (TomlArray) {
             if (obj in staticallyDefinedArrays) {
                 // TODO properly format/escape path in error msg
                 throw error(openToken,
@@ -658,7 +658,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
             }
             array = obj;
         }
-        case (is Null) {
+        case (Null) {
             array = TomlArray();
             container.put(path.last, array);
         }

@@ -72,8 +72,8 @@ shared DayOfWeek[] weekdays = [ sunday, monday, tuesday, wednesday, thursday, fr
 "Returns [[DayOfWeek]] from the input."
 shared DayOfWeek dayOfWeek(Integer|DayOfWeek dayOfWeek){
     switch(dayOfWeek)
-    case (is DayOfWeek) { return dayOfWeek; }
-    case (is Integer) {
+    case (DayOfWeek) { return dayOfWeek; }
+    case (Integer) {
         assert (0 <= dayOfWeek < 7);
         assert (exists DayOfWeek dow = weekdays[dayOfWeek]);
         return dow;

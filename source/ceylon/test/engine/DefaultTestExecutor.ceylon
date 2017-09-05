@@ -339,7 +339,7 @@ FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDecl
         }
     }
     switch (declaration)
-    case (is ClassOrInterfaceDeclaration){
+    case (ClassOrInterfaceDeclaration){
         value callbacks = HashMap<Character, HashSet<FunctionDeclaration>> {
             entries = { 'c'-> HashSet<FunctionDeclaration>(),
                         'i' -> HashSet<FunctionDeclaration>(),
@@ -352,7 +352,7 @@ FunctionDeclaration[] doFindCallbacks<CallbackType>(Package|ClassOrInterfaceDecl
         });
         return concatenate(callbacks['c'] else {}, callbacks['i'] else {}, callbacks['p'] else {});
     }
-    case (is Package) {
+    case (Package) {
         return declaration.annotatedMembers<FunctionDeclaration,CallbackType>();
     }
 }

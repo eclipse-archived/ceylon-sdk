@@ -92,10 +92,10 @@ shared class DefaultServer({<HttpEndpoint|WebSocketBaseEndpoint>*} endpoints)
 
     for (endpoint in endpoints) {
         switch (endpoint)
-        case (is HttpEndpoint) {
+        case (HttpEndpoint) {
             httpEndpoints.add(endpoint);
         }
-        case (is WebSocketBaseEndpoint) {
+        case (WebSocketBaseEndpoint) {
             webSocketHandler.addEndpoint(endpoint);
         }
     }

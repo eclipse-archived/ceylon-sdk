@@ -170,8 +170,8 @@ shared class TypedQuery<out Result=Object>
      for native queries."
     shared Parameter<out Object> getParameter(Integer|String parameter)
             => switch(parameter)
-            case (is Integer) query.getParameter(parameter)
-            case (is String) query.getParameter(parameter);
+            case (Integer) query.getParameter(parameter)
+            case (String) query.getParameter(parameter);
 
     "Get the parameter object corresponding to the declared
      parameter of the given name and type. This method is
@@ -182,9 +182,9 @@ shared class TypedQuery<out Result=Object>
         value javaClass = Util.javaClass(type);
         return
             switch (parameter)
-            case (is Integer)
+            case (Integer)
                 query.getParameter(parameter, javaClass)
-            case (is String)
+            case (String)
                 query.getParameter(parameter, javaClass);
     }
 
@@ -201,9 +201,9 @@ shared class TypedQuery<out Result=Object>
      named parameter."
     shared Object? getParameterArgument(Integer|String parameter)
             => switch (parameter)
-            case (is Integer)
+            case (Integer)
                 toCeylon(query.getParameterValue(parameter))
-            case (is String)
+            case (String)
                 toCeylon(query.getParameterValue(parameter));
 
     "Get the parameter objects corresponding to the declared
@@ -236,10 +236,10 @@ shared class TypedQuery<out Result=Object>
     shared TypedQuery<Result> setParameter(
         String|Integer parameter, Object? argument) {
         switch (parameter)
-        case (is String) {
+        case (String) {
             query.setParameter(parameter, toJava(argument));
         }
-        case (is Integer) {
+        case (Integer) {
             query.setParameter(parameter, toJava(argument));
         }
         return this;
@@ -255,11 +255,11 @@ shared class TypedQuery<out Result=Object>
         TemporalType temporalType)
             given Type of Calendar|Date {
         switch(argument)
-        case (is Date) {
+        case (Date) {
             assert (is Parameter<Date> parameter);
             query.setParameter(parameter, argument, temporalType);
         }
-        case (is Calendar) {
+        case (Calendar) {
             assert (is Parameter<Calendar> parameter);
             query.setParameter(parameter, argument, temporalType);
         }
@@ -272,21 +272,21 @@ shared class TypedQuery<out Result=Object>
         Integer|String parameter, Date|Calendar argument,
         TemporalType temporalType) {
         switch(argument)
-        case (is Date) {
+        case (Date) {
             switch (parameter)
-            case (is Integer) {
+            case (Integer) {
                 query.setParameter(parameter, argument, temporalType);
             }
-            case (is String) {
+            case (String) {
                 query.setParameter(parameter, argument, temporalType);
             }
         }
-        case (is Calendar) {
+        case (Calendar) {
             switch (parameter)
-            case (is Integer) {
+            case (Integer) {
                 query.setParameter(parameter, argument, temporalType);
             }
-            case (is String) {
+            case (String) {
                 query.setParameter(parameter, argument, temporalType);
             }
         }
@@ -316,11 +316,11 @@ shared class TypedQuery<out Result=Object>
         ParameterMode mode) {
         assert (is StoredProcedureQuery query);
         switch (parameter)
-        case (is Integer) {
+        case (Integer) {
             query.registerStoredProcedureParameter(parameter,
                     javaClass(type), mode);
         }
-        case (is String) {
+        case (String) {
             query.registerStoredProcedureParameter(parameter,
                     javaClass(type), mode);
         }
@@ -344,9 +344,9 @@ shared class QueryResults(query, hasResults, count) {
         assert (is StoredProcedureQuery query);
         return
             switch (parameter)
-            case (is Integer)
+            case (Integer)
                 query.getOutputParameterValue(parameter)
-            case (is String)
+            case (String)
                 query.getOutputParameterValue(parameter);
     }
 

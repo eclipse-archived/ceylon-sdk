@@ -811,9 +811,9 @@ shared serializable class ArrayList<Element>
             destinationPosition = destinationPosition; 
             destination = 
                     switch (destination)
-                    case (is Array<Element?>)
+                    case (Array<Element?>)
                         destination
-                    case (is ArrayList<Element>)
+                    case (ArrayList<Element>)
                         destination.array;
         }; 
     }

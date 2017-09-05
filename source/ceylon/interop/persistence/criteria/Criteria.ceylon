@@ -108,13 +108,13 @@ shared class Criteria(shared EntityManager manager) {
 
         value parameter
                 = switch (argument)
-                case (is Integer)
+                case (Integer)
                     builder.parameter<Object>(`JLong`)
-                case (is Float)
+                case (Float)
                     builder.parameter<Object>(`JDouble`)
-                case (is String)
+                case (String)
                     builder.parameter<Object>(`JString`)
-                case (is Boolean)
+                case (Boolean)
                     builder.parameter<Object>(`JBoolean`);
 
         parameterArguments.add(parameter->toJavaNotNull(argument));

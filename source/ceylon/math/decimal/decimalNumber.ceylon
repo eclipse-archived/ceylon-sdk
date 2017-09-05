@@ -14,7 +14,7 @@ shared Decimal decimalNumber(Whole|Integer|Float number,
                              Rounding? rounding = null) {
     BigDecimal val;
     switch(number)
-    case(is Whole) {
+    case(Whole) {
         if (is RoundingImpl rounding) {
             Object? bi = number.implementation;
             if (is BigInteger bi) {
@@ -31,14 +31,14 @@ shared Decimal decimalNumber(Whole|Integer|Float number,
             }
         }
     }
-    case(is Integer) {
+    case(Integer) {
         if (is RoundingImpl rounding) {
             val = BigDecimal(number, rounding.implementation);
         } else {
             val = BigDecimal(number);
         }
     }
-    case(is Float) {
+    case(Float) {
         if (is RoundingImpl rounding) {
             val = BigDecimal(number, rounding.implementation);
         } else {

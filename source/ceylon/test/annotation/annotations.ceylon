@@ -88,10 +88,10 @@ shared final annotation class ParametersAnnotation(
     
     shared actual {Anything*} arguments(ArgumentProviderContext context) {
         switch (source)
-        case (is FunctionDeclaration) {
+        case (FunctionDeclaration) {
             return source.apply<{Anything*},[]>()();
         }
-        case (is ValueDeclaration) {
+        case (ValueDeclaration) {
             return source.apply<{Anything*}>().get();
         }
     }

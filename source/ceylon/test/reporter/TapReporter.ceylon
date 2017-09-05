@@ -141,25 +141,25 @@ shared class TapReporter(write = print, close = noop) satisfies TestListener {
         String? reason;
         
         switch (event)
-        case (is TestFinishedEvent) {
+        case (TestFinishedEvent) {
             result = event.result;
             exception = event.result.exception;
             elapsed = event.result.elapsedTime;
             reason = null;
         }
-        case (is TestSkippedEvent) {
+        case (TestSkippedEvent) {
             result = event.result;
             reason = result.exception?.message;
             exception = null;
             elapsed = null;
         }
-        case (is TestAbortedEvent) {
+        case (TestAbortedEvent) {
             result = event.result;
             reason = result.exception?.message;
             exception = null;
             elapsed = null;
         }
-        case (is TestErrorEvent) {
+        case (TestErrorEvent) {
             result = event.result;
             exception = event.result.exception;
             elapsed = null;

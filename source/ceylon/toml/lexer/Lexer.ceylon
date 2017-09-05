@@ -214,8 +214,8 @@ Boolean anyCharacter
         (Character c)
     =>  patterns.any((p)
         =>  switch (p)
-            case (is Character) c == p
-            case (is {Anything*}) c in p
+            case (Character) c == p
+            case ({Anything*}) c in p
             else p(c));
 
 Boolean(Character) isBareKeyCharacter

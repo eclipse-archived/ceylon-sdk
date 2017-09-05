@@ -116,25 +116,25 @@ shared abstract class Printer(Boolean pretty = false){
     "Prints a JSON value"
     shared default void printValue(Value val){
         switch(val)
-        case (is String){
+        case (String){
             printString(val);
         }
-        case (is Integer){
+        case (Integer){
             printNumber(val);
         }
-        case (is Float){
+        case (Float){
             printNumber(val);
         }
-        case (is Boolean){
+        case (Boolean){
             printBoolean(val);
         }
-        case (is Object){
+        case (Object){
             printObject(val);
         }
-        case (is Array){
+        case (Array){
             printArray(val);
         }
-        case (is Null){
+        case (Null){
             printNull();
         }
     }

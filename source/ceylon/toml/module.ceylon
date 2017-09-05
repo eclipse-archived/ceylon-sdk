@@ -135,14 +135,14 @@
 
     String tomlDocument = ...;
     switch (result = parseToml(tomlDocument))
-    case (is TomlParseException) {
+    case (TomlParseException) {
         printAll {
             separator = "\n";
             result.errors.map((e) => "error: ``e``");
         };
         print("\n``result.errors.size`` errors\n");
     }
-    case (is TomlTable) {
+    case (TomlTable) {
         // process(result);
     }
     ```

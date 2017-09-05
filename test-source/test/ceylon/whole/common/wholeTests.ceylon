@@ -452,8 +452,8 @@ void runTest<RawArgs, Args, Result>
 
 Whole toWhole(Integer|String val)
     =>  switch (val)
-        case (is Integer) wholeNumber(val)
-        case (is String) parseWholeOrFail(val);
+        case (Integer) wholeNumber(val)
+        case (String) parseWholeOrFail(val);
 
 [Out, Out] mapTuple2<In, Out>
         (Out(In) collecting)

@@ -17,28 +17,28 @@ Value parse(String json) {
 Value buildValue(Iterator<Event>&Positioned events) {
     value event = events.next();
     switch (event)
-    case(is String|Integer|Float|Boolean|Null) {
+    case(String|Integer|Float|Boolean|Null) {
         return event;
     }
-    case(is ObjectStartEvent) {
+    case(ObjectStartEvent) {
         return buildObject(events);
     }
-    case(is KeyEvent) {
+    case(KeyEvent) {
         "unexpected key"
         assert(false);
     }
-    case(is ObjectEndEvent) {
+    case(ObjectEndEvent) {
         "unexpected object end"
         assert(false);
     }
-    case(is ArrayStartEvent) {
+    case(ArrayStartEvent) {
         return buildArray(events);
     }
-    case(is ArrayEndEvent) {
+    case(ArrayEndEvent) {
         "unexpected array end"
         assert(false);
     }
-    case(is Finished) {
+    case(Finished) {
         "unexpected end of input"
         assert(false);
     }
@@ -50,37 +50,37 @@ JsonObject buildObject(Iterator<Event>&Positioned events) {
     while (true) {
         value event = events.next();
         switch (event)
-        case(is String|Integer|Float|Boolean|Null) {
+        case(String|Integer|Float|Boolean|Null) {
             "no key in object"
             assert(exists k=key);
             result.put(k, event);
             key = null;
         }
-        case(is ObjectStartEvent) {
+        case(ObjectStartEvent) {
             "no key in object"
             assert(exists k=key);
             result.put(k, buildObject(events));
             key = null;
         }
-        case(is KeyEvent) {
+        case(KeyEvent) {
             "two consecutive keys in object"
             assert(!key exists);
             key = event.key;
         }
-        case(is ObjectEndEvent) {
+        case(ObjectEndEvent) {
             return result;
         }
-        case(is ArrayStartEvent) {
+        case(ArrayStartEvent) {
             "no key in object"
             assert(exists k=key);
             result.put(k, buildArray(events));
             key = null;
         }
-        case(is ArrayEndEvent) {
+        case(ArrayEndEvent) {
             "object ended by array end"
             assert(false);
         }
-        case(is Finished) {
+        case(Finished) {
             "unexpected end of input"
             assert(false);
         }
@@ -91,27 +91,27 @@ JsonArray buildArray(Iterator<Event>&Positioned events) {
     while (true) {
         value event = events.next();
         switch (event)
-        case(is String|Integer|Float|Boolean|Null) {
+        case(String|Integer|Float|Boolean|Null) {
             result.add(event);
         }
-        case(is ObjectStartEvent) {
+        case(ObjectStartEvent) {
             result.add(buildObject(events));
         }
-        case(is KeyEvent) {
+        case(KeyEvent) {
             "key unexpected in array"
             assert(false);
         }
-        case(is ObjectEndEvent) {
+        case(ObjectEndEvent) {
             "array ended by object end"
             assert(false);
         }
-        case(is ArrayStartEvent) {
+        case(ArrayStartEvent) {
             result.add(buildArray(events));
         }
-        case(is ArrayEndEvent) {
+        case(ArrayEndEvent) {
             return result;
         }
-        case(is Finished) {
+        case(Finished) {
             "unexpected end of input"
             assert(false);
         }

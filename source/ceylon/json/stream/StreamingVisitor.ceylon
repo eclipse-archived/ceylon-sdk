@@ -11,28 +11,28 @@ import ceylon.collection {
 shared void streamToVisitor(Iterator<Event> stream, Visitor visitor) {
     while (!is Finished event=stream.next()) {
         switch(event)
-        case (is ObjectStartEvent) {
+        case (ObjectStartEvent) {
             visitor.onStartObject();
         }
-        case (is KeyEvent) {
+        case (KeyEvent) {
             visitor.onKey(event.key);
         }
-        case (is ObjectEndEvent) {
+        case (ObjectEndEvent) {
             visitor.onEndObject();
         }
-        case (is ArrayStartEvent) {
+        case (ArrayStartEvent) {
             visitor.onStartArray();
         }
-        case (is ArrayEndEvent) {
+        case (ArrayEndEvent) {
             visitor.onEndArray();
         }
-        case (is String) {
+        case (String) {
             visitor.onString(event);
         }
-        case (is Boolean) {
+        case (Boolean) {
             visitor.onBoolean(event);
         }
-        case (is Integer|Float) {
+        case (Integer|Float) {
             visitor.onNumber(event);
         }
         case (null) {
@@ -73,24 +73,24 @@ shared class StreamingVisitor(JsonValue root) satisfies Iterator<Event> {
         if (exists p = stack.pop()) {
             value n = p.next();
             switch(n)
-            case (is String|Boolean|Integer|Float|Null) {
+            case (String|Boolean|Integer|Float|Null) {
                 return n;
             }
-            case (is JsonObject) {
+            case (JsonObject) {
                 stack.push(PushIterator(n.iterator()));
                 return objectStart;
             } 
-            case (is JsonArray) {
+            case (JsonArray) {
                 stack.push(PushIterator(n.iterator()));
                 return arrayStart;
             }
-            case (is String->JsonValue) {
+            case (String->JsonValue) {
                 p.push(n.item);
                 return KeyEvent(n.key);
             }
-            case (is Finished) {
+            case (Finished) {
                 switch (p)
-                case (is Iterator<String|Boolean|Integer|Float|JsonObject|JsonArray|Null>) {
+                case (Iterator<String|Boolean|Integer|Float|JsonObject|JsonArray|Null>) {
                     return arrayEnd;
                 }
                 else {

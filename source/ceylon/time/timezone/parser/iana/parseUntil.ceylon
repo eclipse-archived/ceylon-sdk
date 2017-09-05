@@ -32,13 +32,13 @@ shared ZoneUntil parseUntil([String*] token) {
     if( exists dayText = token[2], dayText != "") {
         value parsed = parseOnDay(dayText);
         switch(parsed)
-        case(is OnFixedDay){
+        case(OnFixedDay){
             result = result.withDay(parsed.fixedDate);
         }
-        case(is OnFirstOfMonth){
+        case(OnFirstOfMonth){
             result = result.withDay(parsed.date(result.year, result.month).day);
         }
-        case(is OnLastOfMonth){
+        case(OnLastOfMonth){
             result = result.withDay(parsed.date(result.year, result.month).day);
         }
     }

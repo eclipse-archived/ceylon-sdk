@@ -78,10 +78,10 @@ shared class Object({<String->Value>*} values = {})
          is not [[Float]].")
     shared Float getFloat(String key){
         switch (val = get(key))
-        case(is Float){
+        case(Float){
             return val;
         }
-        case (is Integer){
+        case (Integer){
             return val.nearestFloat;
         }
         else {
@@ -175,10 +175,10 @@ shared class Object({<String->Value>*} values = {})
         case (null) {
             return null;
         }
-        case(is Float){
+        case(Float){
             return val;
         }
-        case (is Integer){
+        case (Integer){
             return val.nearestFloat;
         }
         else {

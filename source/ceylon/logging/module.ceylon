@@ -92,11 +92,11 @@
 
        File file;
        switch (resource = parsePath("log.txt").resource)
-       case (is ExistingResource) {
+       case (ExistingResource) {
            assert (is File resource);
            file = resource;
        }
-       case (is Nil) {
+       case (Nil) {
            file = resource.createFile();
        }
        

@@ -133,9 +133,9 @@ shared sealed class Locale(language, formats,
         String name = "Messages") {
         value resource =
             switch (component)
-            case (is Module)
+            case (Module)
                 search(component, name)
-            case (is Package)
+            case (Package)
                 component.container
                     .resourceByPath(path(component, name));
         value map = HashMap<String, String>();

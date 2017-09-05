@@ -17,16 +17,16 @@ shared class HtmlRenderer(void write(String string), RenderingConfiguration conf
     
     void visit(Node node) {
         switch (node)
-        case (is Comment) {
+        case (Comment) {
             visitComment(node);
         }
-        case (is ProcessingInstruction) {
+        case (ProcessingInstruction) {
             visitProcessingInstruction(node);
         }
-        case (is Element) {
+        case (Element) {
             visitElement(node);
         }
-        case (is Raw) {
+        case (Raw) {
             visitRaw(node);
         }
     }

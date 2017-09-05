@@ -44,8 +44,8 @@ shared interface Logger {
     "Evaluate the given message, producing a [[String]]."
     shared String render(Message message) {
         switch (message)
-        case (is String) { return message; }
-        case (is String()) { return message(); }
+        case (String) { return message; }
+        case (String()) { return message(); }
     }
     
     "Determines if log messages with the given priority will

@@ -16,10 +16,10 @@ shared class DeferredTest() extends AsyncTestBase() {
     promise.map(onFulfilled, fail);
     for (action in actions) {
       switch (action)
-      case (is String) {
+      case (String) {
         deferred.fulfill(action);
       }
-      case (is Exception) {
+      case (Exception) {
         deferred.reject(action);
       }
     }
@@ -50,10 +50,10 @@ shared class DeferredTest() extends AsyncTestBase() {
     promise.map((String s) => fail("Was not expecting a fulfill"), onRejected);
     for (action in actions) {
       switch (action)
-      case (is String) {
+      case (String) {
         deferred.fulfill(action);
       }
-      case (is Exception) {
+      case (Exception) {
         deferred.reject(action);
       }
     }

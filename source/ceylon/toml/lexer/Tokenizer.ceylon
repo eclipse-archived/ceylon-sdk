@@ -71,8 +71,8 @@ shared class Tokenizer({Character*} input,
 
     Boolean check(Character c, Character | {Character*} | Boolean(Character) valid)
         =>  switch (valid)
-            case (is Character) c == valid
-            case (is Iterable<Anything>) c in valid
+            case (Character) c == valid
+            case (Iterable<Anything>) c in valid
             else valid(c);
 
     shared Boolean accept(Character | {Character*} | Boolean(Character) valid) {

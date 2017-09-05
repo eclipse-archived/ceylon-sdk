@@ -200,12 +200,12 @@ shared class ExceptionAssert(
         "The expected message or message predicate."
         String|Boolean(String) messageCondition) {
         switch (messageCondition)
-        case (is String) {
+        case (String) {
             if (exception.message != messageCondition) {
                 throw AssertionError("assertion failed: expected exception with message ``messageCondition``, but has ``exception.message``");
             }
         }
-        case (is Boolean(String)) {
+        case (Boolean(String)) {
             if (!messageCondition(exception.message)) {
                 throw AssertionError("assertion failed: expected different exception message than ``exception.message``");
             }

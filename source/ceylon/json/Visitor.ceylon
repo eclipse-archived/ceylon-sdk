@@ -52,7 +52,7 @@ shared void visit(subject, visitor, sortedKeys=false) {
     Boolean sortedKeys;
     
     switch(subject)
-    case (is Object) {
+    case (Object) {
         visitor.onStartObject();
         
         value items = sortedKeys then subject.sort(compareKeys) else subject;
@@ -62,23 +62,23 @@ shared void visit(subject, visitor, sortedKeys=false) {
         }
         visitor.onEndObject();
     }
-    case (is Array) {
+    case (Array) {
         visitor.onStartArray();
         for (element in subject) {
             visit(element, visitor);
         }
         visitor.onEndArray();
     }
-    case (is String) {
+    case (String) {
         visitor.onString(subject);
     }
-    case (is Float|Integer) {
+    case (Float|Integer) {
         visitor.onNumber(subject);
     }
-    case (is Boolean) {
+    case (Boolean) {
         visitor.onBoolean(subject);
     }
-    case (is Null) {
+    case (Null) {
         visitor.onNull();
     }
 }

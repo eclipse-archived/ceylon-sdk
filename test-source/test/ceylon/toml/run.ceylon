@@ -9,7 +9,7 @@ shared void run() {
         sb.appendCharacter('\n');
     }
     switch (result = parseToml(sb.string))
-    case (is TomlTable) {
+    case (TomlTable) {
         print(result);
     }
     else {

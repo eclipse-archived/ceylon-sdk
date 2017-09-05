@@ -25,13 +25,13 @@ shared class DefaultTestVariantProvider() satisfies TestVariantProvider {
     
     String stringify(Anything item) {
         switch(item)
-        case(is Null) {
+        case(Null) {
              return "<null>";
         }
-        case(is String) {
+        case(String) {
             return "\"``item``\"";
         }
-        case(is Character) {
+        case(Character) {
             return "'``item``'";
         }
         else {

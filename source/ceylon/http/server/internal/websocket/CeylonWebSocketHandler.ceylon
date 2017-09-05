@@ -66,10 +66,10 @@ shared class CeylonWebSocketHandler()
             WebSocketBaseEndpoint endpoint,
             WebSocketChannel webSocketChannel) {
         switch (endpoint)
-        case (is WebSocketEndpoint) {
+        case (WebSocketEndpoint) {
             return CeylonWebSocketFrameHandler(endpoint, webSocketChannel);
         }
-        case (is WebSocketFragmentedEndpoint) {
+        case (WebSocketFragmentedEndpoint) {
             return CeylonWebSocketFragmentedFrameHandler(endpoint, webSocketChannel);
         }
     }

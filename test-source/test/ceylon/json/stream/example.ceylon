@@ -69,7 +69,7 @@ class OrderParser() {
         variable Integer? quantity = null;
         while(true) {
             switch(event=stream.next())
-            case (is KeyEvent) {
+            case (KeyEvent) {
                 switch(key=event.key) 
                 case ("sku") {
                     if (is String s = stream.next()) {
@@ -95,7 +95,7 @@ class OrderParser() {
                     return unexpectedKey("Item", key);
                 }
             }
-            case (is ObjectEndEvent) {
+            case (ObjectEndEvent) {
                 if (exists s=sku) {
                     if (exists q=quantity) {
                         return Item(s, q);
@@ -120,7 +120,7 @@ class OrderParser() {
         value items = ArrayList<Item>();
         while(true) {
             switch(event=stream.next())
-            case (is KeyEvent) {
+            case (KeyEvent) {
                 switch(key=event.key) 
                 case ("address") {
                     if (is String s = stream.next()) {
@@ -141,10 +141,10 @@ class OrderParser() {
                     }
                     while (stream.peek(1) is ObjectStartEvent) {
                         switch (item=parseItem())
-                        case (is String) {
+                        case (String) {
                             return item;
                         }
-                        case (is Item) {
+                        case (Item) {
                             items.add(item);
                         }
                     }
@@ -154,7 +154,7 @@ class OrderParser() {
                     return unexpectedKey("Order", key);
                 }
             }
-            case (is ObjectEndEvent) {
+            case (ObjectEndEvent) {
                 if (exists a=address) {
                     return Order(a, items.sequence());
                 }

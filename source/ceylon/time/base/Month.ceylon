@@ -99,8 +99,8 @@ Integer[] firstDayOfMonth = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 3
  If the input value is a [[Month]], the input value is returned as is."
 shared Month monthOf(Integer|Month month){
     switch (month)
-    case (is Month) { return month; }
-    case (is Integer) {
+    case (Month) { return month; }
+    case (Integer) {
         "Invalid month."
         assert ( january.integer <= month <= december.integer );
         assert ( exists m = months.all[month-1] );

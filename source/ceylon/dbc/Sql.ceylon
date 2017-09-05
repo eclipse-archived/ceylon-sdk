@@ -92,92 +92,93 @@ shared class Sql(newConnection) {
         variable value i=1;
         for (argument in arguments) {
             switch (argument)
-            case (is Integer) { 
+            case (Integer) {
                 stmt.setLong(i,argument); 
             }
-            case (is Boolean) { 
+            case (Boolean) {
                 stmt.setBoolean(i,argument); 
             }
-            case (is String)  { 
+            case (String)  {
                 stmt.setString(i,argument); 
             }
-            case (is Decimal) {
+            case (Decimal) {
                 assert (is BigDecimal bd = argument.implementation);
                 stmt.setBigDecimal(i,bd); 
             }
-            case (is JDate) {
-                if (is SqlTimestamp argument) {
+            case (JDate) {
+                switch (argument)
+                case (SqlTimestamp) {
                     stmt.setTimestamp(i, argument);
-                } 
-                else if (is SqlTime argument) {
+                }
+                case (SqlTime) {
                     stmt.setTime(i, argument);
                 }
-                else if (is SqlDate argument) {
+                case (SqlDate) {
                     stmt.setDate(i, argument);
                 }
                 else {
                     stmt.setTimestamp(i, SqlTimestamp(argument.time));
                 }
             }
-            case (is Float) { 
+            case (Float) {
                 stmt.setDouble(i, argument); 
             }
-            case (is SqlNull) { 
+            case (SqlNull) {
                 stmt.setNull(i, argument.sqlType); 
             }
-            case (is GregorianDateTime) {
+            case (GregorianDateTime) {
                 stmt.setTimestamp(i, 
                     SqlTimestamp(argument.instant().millisecondsOfEpoch));
             }
-            case (is GregorianDate) {
+            case (GregorianDate) {
                 stmt.setDate(i, 
                     SqlDate(argument.at(TimeOfDay(0)).instant().millisecondsOfEpoch));
             }
-            case (is TimeOfDay) {
+            case (TimeOfDay) {
                 stmt.setTime(i, 
                     SqlTime(today().at(argument).instant().millisecondsOfEpoch));
             }
             // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
-            case(is UUID) {
+            case(UUID) {
                 stmt.setObject(i, argument);
             }
-            case(is ObjectArray<Object>) {
+            case(ObjectArray<Object>) {
                 stmt.setArray(i, connection.get().createSqlArray( argument, sqlArrayType(argument)));
             }
-            case(is Array<String>) {
+            case(Array<String>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<Integer>) {
+            case(Array<Integer>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<UUID>) {
+            case(Array<UUID>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<Date>) {
+            case(Array<Date>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<Boolean>) {
+            case(Array<Boolean>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<Float>) {
+            case(Array<Float>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<Time>) {
+            case(Array<Time>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<DateTime>) {
+            case(Array<DateTime>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<GregorianDate>) {
+            case(Array<GregorianDate>) {
                 setArray(i, argument, stmt);
             }
-            case(is Array<TimeOfDay>) {
+            case(Array<TimeOfDay>) {
                 setArray(i, argument, stmt);
             }
-            case(is ByteArray) {
+            case(ByteArray) {
                 setBinaryStream(i, argument, stmt);
             }
-            case(is Array<Byte>) {
+            case(Array<Byte>) {
                 setBinaryStream(i, argument, stmt);
             }
             //TODO reader, inputStream, byte array
@@ -227,10 +228,10 @@ shared class Sql(newConnection) {
         ByteArray byteArray;
         
         switch (array)
-        case (is ByteArray) {
+        case (ByteArray) {
             byteArray = array;
         }
-        case (is Array<Byte>) {
+        case (Array<Byte>) {
             byteArray = ByteArray.from(array);
         }
 
@@ -238,74 +239,77 @@ shared class Sql(newConnection) {
     }
 
     String sqlArrayType(ObjectArray<Object> argument) {
-        if (is ObjectArray<String> argument) {
+        
+        switch (argument)
+        case (ObjectArray<String>) {
             return "varchar";
         }
 
-        if (is ObjectArray<JString> argument) {
+        else case (ObjectArray<JString>) {
             return "varchar";
         }
 
-        if (is ObjectArray<Integer> argument) {
+        else case (ObjectArray<Integer>) {
             return "integer";
         }
 
-        if (is ObjectArray<JInteger> argument) {
+        else case (ObjectArray<JInteger>) {
             return "integer";
         }
 
-        if (is ObjectArray<JBoolean> argument) {
+        else case (ObjectArray<JBoolean>) {
             return "boolean";
         }
 
-        if (is ObjectArray<Boolean> argument) {
+        else case (ObjectArray<Boolean>) {
             return "boolean";
         }
 
-        if (is ObjectArray<JFloat> argument) {
+        else case (ObjectArray<JFloat>) {
             return "float";
         }
 
-        if (is ObjectArray<Float> argument) {
+        else case (ObjectArray<Float>) {
             return "float";
         }
 
-        if (is ObjectArray<SqlTimestamp> argument) {
+        else case (ObjectArray<SqlTimestamp>) {
             return "timestamp";
         }
 
-        if (is ObjectArray<SqlTime> argument) {
+        else case (ObjectArray<SqlTime>) {
             return "time";
         }
 
-        if (is ObjectArray<SqlDate> argument) {
+        else case (ObjectArray<SqlDate>) {
             return "date";
         }
 
-        if (is ObjectArray<JDate> argument) {
+        else case (ObjectArray<JDate>) {
             return "timestamp";
         }
 
-        if (is ObjectArray<GregorianDateTime> argument) {
+        else case (ObjectArray<GregorianDateTime>) {
             return "timestamp";
         }
 
-        if (is ObjectArray<GregorianDate> argument) {
+        else case (ObjectArray<GregorianDate>) {
             return "date";
         }
 
-        if (is ObjectArray<TimeOfDay> argument) {
+        else case (ObjectArray<TimeOfDay>) {
             return "time";
         }
 
         // This is a special case not part of JDBCTypes but is supported by H2 and PostgreSQL.
-        if (is ObjectArray<UUID> argument) {
+        else case (ObjectArray<UUID>) {
             return "uuid";
         }
 
         // TODO:  All other possible array types
-
-        throw Exception("Unsupported array data type");
+        else {
+            throw Exception("Unsupported array data type");
+        }
     }
     
     CallableStatement prepareCall(ConnectionStatus conn, String sql, {Object*} arguments) {
@@ -708,28 +712,27 @@ shared class Sql(newConnection) {
         // Can't put this in the switch statement because Array is an interface so there will be a disjoint
         // types error with the other types in the switch statement below.
         if (is SqlArray x) {
-            value javaArray = x.array;
-            assert(is ObjectArray<Object> javaArray);
+            assert (is ObjectArray<Object> javaArray = x.array);
             v = javaArray.array.sequence();
         }
         else {
             //TODO optimize these conversions
-            switch (x)
-            case (is JString) { v = x.string; }
-            case (is JBoolean) { v = x.booleanValue(); }
-            case (is JInteger) { v = x.longValue(); }
-            case (is JLong) { v = x.longValue(); }
-            case (is JFloat) { v = x.doubleValue(); }
-            case (is JDouble) { v = x.doubleValue(); }
-            case (is BigDecimal) { v = parseDecimal(x.toPlainString()); }
-            case (is BigInteger) { v = parseWhole(x.string); }
-            case (is SqlTimestamp) { v = Instant(x.time).dateTime(); }
-            case (is SqlTime) { v = Instant(x.time).time(); }
-            case (is SqlDate) { v = Instant(x.time).date(); }
+            v = switch (x)
+            case (JString) x.string
+            case (JBoolean) x.booleanValue()
+            case (JInteger) x.longValue()
+            case (JLong) x.longValue()
+            case (JFloat) x.doubleValue()
+            case (JDouble) x.doubleValue()
+            case (BigDecimal) parseDecimal(x.toPlainString())
+            case (BigInteger) parseWhole(x.string)
+            case (SqlTimestamp) Instant(x.time).dateTime()
+            case (SqlTime) Instant(x.time).time()
+            case (SqlDate) Instant(x.time).date()
             // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
-            case (is UUID) { v = x; }
-            case (is ByteArray) { v = x.byteArray; }
-            else { v = x; }
+            case (UUID) x
+            case (ByteArray) x.byteArray
+            else x;
         }
 
         return columnName -> (v else SqlNull(meta.getColumnType(idx)));

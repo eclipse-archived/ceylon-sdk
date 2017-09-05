@@ -4,7 +4,7 @@ String htmlEscape(
         Boolean escapeNonAscii, String? forTag=null) {
 
     switch (type)
-    case (is \Iname) {
+    case (\Iname) {
         assert(name.isValid(raw));
         if (escapeNonAscii && raw.any((c) => !c in asciiCharacterRange)) {
             throw Exception(
@@ -12,7 +12,7 @@ String htmlEscape(
         }
         // return; names don't have CRLF
         return raw;
-    } case (is \IrawText) {
+    } case (\IrawText) {
         assert (exists forTag);
         value lowerRaw = raw.lowercased;
         value lowerTag = forTag.lowercased;

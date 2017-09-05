@@ -15,10 +15,10 @@ native ("jvm") shared class FileWriter(String path) satisfies Destroyable {
     File.Overwriter fw;
     value res = current.childPath(path).resource;
     switch(res)
-    case(is Nil) {
+    case(Nil) {
         fw = res.createFile(true).Overwriter();
     }
-    case(is ExistingResource) {
+    case(ExistingResource) {
         fw = res.delete().createFile(true).Overwriter();
     }
     

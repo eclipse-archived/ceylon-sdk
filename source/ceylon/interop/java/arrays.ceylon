@@ -120,7 +120,7 @@ shared alias IntegerArrayLike
  given [[array]]."
 shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
     switch (array)
-    case (is Array<Short>) {
+    case (Array<Short>) {
         value size = array.size;
         value nativeArray = javaShortArray(array);
         value result = LongArray(size);
@@ -131,7 +131,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         }
         return result.integerArray;
     }
-    case (is Array<Int>) {
+    case (Array<Int>) {
         value size = array.size;
         value nativeArray = javaIntArray(array);
         value result = LongArray(size);
@@ -142,14 +142,14 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         }
         return result.integerArray;
     }
-    case (is Array<Long>) {
+    case (Array<Long>) {
         value size = array.size;
         value nativeArray = javaLongArray(array);
         value result = LongArray(size);
         nativeArray.copyTo(result);
         return result.integerArray;
     }
-    case (is ShortArray) {
+    case (ShortArray) {
         value size = array.size;
         value result = LongArray(size);
         variable value i=0;
@@ -159,7 +159,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         }
         return result.integerArray;
     }
-    case (is IntArray) {
+    case (IntArray) {
         value size = array.size;
         value result = LongArray(size);
         variable value i=0;
@@ -169,7 +169,7 @@ shared Array<Integer> toIntegerArray(IntegerArrayLike array) {
         }
         return result.integerArray;
     }
-    case (is LongArray) {
+    case (LongArray) {
         value size = array.size;
         value result = LongArray(size);
         array.copyTo(result);
@@ -187,7 +187,7 @@ shared alias FloatArrayLike
  given [[array]]."
 shared Array<Float> toFloatArray(FloatArrayLike array) {
     switch (array)
-    case (is Array<Single>) {
+    case (Array<Single>) {
         value size = array.size;
         value nativeArray = javaFloatArray(array);
         value result = DoubleArray(size);
@@ -198,14 +198,14 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         }
         return result.floatArray;
     }
-    case (is Array<Double>) {
+    case (Array<Double>) {
         value size = array.size;
         value nativeArray = javaDoubleArray(array);
         value result = DoubleArray(size);
         nativeArray.copyTo(result);
         return result.floatArray;
     }
-    case (is FloatArray) {
+    case (FloatArray) {
         value size = array.size;
         value result = DoubleArray(size);
         variable value i=0;
@@ -215,7 +215,7 @@ shared Array<Float> toFloatArray(FloatArrayLike array) {
         }
         return result.floatArray;
     }
-    case (is DoubleArray) {
+    case (DoubleArray) {
         value size = array.size;
         value result = DoubleArray(size);
         array.copyTo(result);
@@ -232,7 +232,7 @@ shared alias ByteArrayLike
  given [[array]]."
 shared Array<Byte> toByteArray(ByteArrayLike array) {
     switch (array)
-    case (is Array<Bits>) {
+    case (Array<Bits>) {
         value size = array.size;
         value nativeArray = javaByteArray(array);
         value result = ByteArray(size);
@@ -243,7 +243,7 @@ shared Array<Byte> toByteArray(ByteArrayLike array) {
         }
         return result.byteArray;
     }
-    case (is ByteArray) {
+    case (ByteArray) {
         value size = array.size;
         value result = ByteArray(size);
         array.copyTo(result);
@@ -269,7 +269,7 @@ see (`function toJavaStringArray`)
 shared Array<String?> toStringArray(StringArrayLike array) {
     ObjectArray<String> javaArray;
     switch (array)
-    case (is ObjectArray<JavaString>) {
+    case (ObjectArray<JavaString>) {
         value size = array.size;
         value result = ObjectArray<String>(size);
         variable value i=0;
@@ -279,7 +279,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         }
         javaArray = result;
     }
-    case (is Array<JavaString?>) {
+    case (Array<JavaString?>) {
         value size = array.size;
         value result = ObjectArray<String>(size);
         variable value i=0;
@@ -289,7 +289,7 @@ shared Array<String?> toStringArray(StringArrayLike array) {
         }
         javaArray = result;
     }
-    case (is Array<JavaString>) {
+    case (Array<JavaString>) {
         value size = array.size;
         value result = ObjectArray<String>(size);
         variable value i=0;
@@ -315,7 +315,7 @@ shared alias JavaStringArrayLike
 see (`function toStringArray`)
 shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
     switch (array)
-    case (is ObjectArray<String>) {
+    case (ObjectArray<String>) {
         value size = array.size;
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
@@ -328,7 +328,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         }
         return result;
     }
-    case (is Array<String?>) {
+    case (Array<String?>) {
         value size = array.size;
         value result = ObjectArray<JavaString>(size);
         variable value i=0;
@@ -340,7 +340,7 @@ shared ObjectArray<JavaString> toJavaStringArray(JavaStringArrayLike array) {
         }
         return result;
     }
-    case (is Array<String>) {
+    case (Array<String>) {
         value size = array.size;
         value result = ObjectArray<JavaString>(size);
         variable value i=0;

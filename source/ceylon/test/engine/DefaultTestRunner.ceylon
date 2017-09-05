@@ -139,7 +139,7 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
     
     for (candidate in candidates) {
         switch (candidate)
-        case (is [FunctionDeclaration, ClassDeclaration?]) {
+        case ([FunctionDeclaration, ClassDeclaration?]) {
             value funcDecl = candidate[0];
             value classDecl = candidate[1];
             
@@ -166,7 +166,7 @@ TestExecutor[] createExecutors(TestSource[] sources, Boolean(TestExecutor) filte
                 }
             }
         }
-        case (is ErrorTestExecutor) {
+        case (ErrorTestExecutor) {
             executors.add(candidate);
         }
     }

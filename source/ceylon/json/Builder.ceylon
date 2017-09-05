@@ -31,7 +31,7 @@ shared class Builder() satisfies Visitor {
     void addToCurrent(Value v) {
         value current = stack.last;
         switch(current)
-        case (is Object) {
+        case (Object) {
             if (exists ck=currentKey) {
                 if (exists old = current.put(ck, v)) {
                     throw AssertionError("duplicate key ``ck``");
@@ -42,10 +42,10 @@ shared class Builder() satisfies Visitor {
                 assert(false);
             }
         }
-        case (is Array) {
+        case (Array) {
             current.add(v);
         }
-        case (is Null) {
+        case (Null) {
             
         }
         else {
