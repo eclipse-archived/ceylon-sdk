@@ -6,7 +6,8 @@ import java.sql {
     SqlArray=Array
 }
 
-class ConnectionStatus(Connection() connectionSource) {
+class ConnectionStatus(Connection() connectionSource)
+    satisfies Obtainable {
 
     variable Connection? conn=null;
     variable value use=0;
@@ -27,8 +28,10 @@ class ConnectionStatus(Connection() connectionSource) {
         throw;
     }
 
+    shared actual void obtain() {}
+
     "Closes the connection if it's not being used anymore."
-    shared void close() {
+    shared actual void release(Throwable? error) {
         if (exists c=conn) {
 			use--;
             if (use==0) { 
@@ -68,4 +71,5 @@ class ConnectionStatus(Connection() connectionSource) {
         assert (exists existingConn=conn);
         return existingConn.createArrayOf(typeName, objectArray);
     }
+
 }

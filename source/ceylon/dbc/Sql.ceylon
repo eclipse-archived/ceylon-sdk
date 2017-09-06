@@ -105,6 +105,9 @@ shared class Sql(newConnection) {
                 assert (is BigDecimal bd = argument.implementation);
                 stmt.setBigDecimal(i,bd); 
             }
+            case (BigDecimal) {
+                stmt.setBigDecimal(i,argument);
+            }
             case (JDate) {
                 switch (argument)
                 case (SqlTimestamp) {
@@ -139,179 +142,87 @@ shared class Sql(newConnection) {
                     SqlTime(today().at(argument).instant().millisecondsOfEpoch));
             }
             // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
-            case(UUID) {
+            case (UUID) {
                 stmt.setObject(i, argument);
             }
-            case(ObjectArray<Object>) {
-                stmt.setArray(i, connection.get().createSqlArray( argument, sqlArrayType(argument)));
+            case (ByteArray) {
+                stmt.setBinaryStream(i,
+                    ByteArrayInputStream(argument),
+                    argument.size);
             }
-            case(Array<String>) {
-                setArray(i, argument, stmt);
+            case (Array<Byte>) {
+                stmt.setBinaryStream(i,
+                    ByteArrayInputStream(argument),
+                    argument.size);
             }
-            case(Array<Integer>) {
-                setArray(i, argument, stmt);
+            case (ObjectArray<Object>) {
+                value sqlArray =
+                        connection.get()
+                            .createSqlArray(argument,
+                                sqlArrayTypeForJavaArray(argument));
+                stmt.setArray(i, sqlArray);
             }
-            case(Array<UUID>) {
-                setArray(i, argument, stmt);
+            else case (Array<out Object>) {
+                value sqlArray =
+                        connection.get()
+                            .createSqlArray(ObjectArray.with(argument),
+                                sqlArrayTypeForArray(argument));
+                stmt.setArray(i, sqlArray);
             }
-            case(Array<Date>) {
-                setArray(i, argument, stmt);
+
+            //TODO reader, inputStream
+            else {
+                stmt.setObject(i, argument);
             }
-            case(Array<Boolean>) {
-                setArray(i, argument, stmt);
-            }
-            case(Array<Float>) {
-                setArray(i, argument, stmt);
-            }
-            case(Array<Time>) {
-                setArray(i, argument, stmt);
-            }
-            case(Array<DateTime>) {
-                setArray(i, argument, stmt);
-            }
-            case(Array<GregorianDate>) {
-                setArray(i, argument, stmt);
-            }
-            case(Array<TimeOfDay>) {
-                setArray(i, argument, stmt);
-            }
-            case(ByteArray) {
-                setBinaryStream(i, argument, stmt);
-            }
-            case(Array<Byte>) {
-                setBinaryStream(i, argument, stmt);
-            }
-            //TODO reader, inputStream, byte array
-            else { stmt.setObject(i,argument); }
             i++;
         }
     }
 
-    void setArray<in ArrayType>(Integer position, Array<ArrayType> array, PreparedStatement stmt) 
-            given ArrayType satisfies Object { 
-        Type<ArrayType> type = `ArrayType`;
-        
-        String sqlArrayType;
+    String sqlArrayTypeForArray(Array<out Object> argument)
+            => switch (argument)
+            case (Array<String>) "varchar"
+            case (Array<Integer>) "integer"
+            case (Array<Decimal>) "decimal"
+            case (Array<BigDecimal>) "decimal"
+            case (Array<UUID>) "uuid"
+            case (Array<Date>) "date"
+            case (Array<Boolean>) "boolean"
+            case (Array<Float>) "float"
+            case (Array<Time>) "time"
+            case (Array<DateTime>) "timestamp"
+            case (Array<GregorianDate>) "date"
+            case (Array<TimeOfDay>) "time"
+            case (Array<SqlTimestamp>) "timestamp"
+            case (Array<SqlDate>) "date"
+            case (Array<SqlTime>) "time"
+            else unknown();
 
-        if (type.exactly(`String`)) {
-            sqlArrayType = "varchar";
-        } else if (type.exactly(`Integer`)) {
-            sqlArrayType = "integer";
-        } else if (type.exactly(`Decimal`)) {
-            sqlArrayType = "decimal";
-        } else if (type.exactly(`Boolean`)) {
-            sqlArrayType = "boolean";
-        } else if (type.exactly(`Float`)) {
-            sqlArrayType = "float";
-        } else if (type.exactly(`Date`)) {
-            sqlArrayType = "date";
-        } else if (type.exactly(`Time`)) {
-            sqlArrayType = "time";
-        } else if (type.exactly(`DateTime`)) {
-            sqlArrayType = "timestamp";
-        } else if (type.exactly(`GregorianDate`)) {
-            sqlArrayType = "date";
-        } else if (type.exactly(`TimeOfDay`)) {
-            sqlArrayType = "time";
-        // This is a special case not part of JDBCTypes but is supported by H2 and PostgreSQL.
-        } else if (type.exactly(`UUID`)) {
-            sqlArrayType = "uuid";
-        } else {
-            throw Exception("Unknown or unsupported array type for SQL array conversion: ``array``");
-        }
+    String sqlArrayTypeForJavaArray(ObjectArray<Object> argument)
+            => switch (argument)
+            case (ObjectArray<String>) "varchar"
+            else case (ObjectArray<JString>) "varchar"
+            else case (ObjectArray<Integer>) "integer"
+            else case (ObjectArray<JInteger>) "integer"
+            else case (ObjectArray<JBoolean>) "boolean"
+            else case (ObjectArray<Boolean>) "boolean"
+            else case (ObjectArray<JFloat>) "float"
+            else case (ObjectArray<Float>) "float"
+            else case (ObjectArray<Decimal>) "decimal"
+            else case (ObjectArray<BigDecimal>) "decimal"
+            else case (ObjectArray<SqlTimestamp>) "timestamp"
+            else case (ObjectArray<SqlTime>) "time"
+            else case (ObjectArray<SqlDate>) "date"
+            else case (ObjectArray<JDate>) "timestamp"
+            else case (ObjectArray<GregorianDateTime>) "timestamp"
+            else case (ObjectArray<GregorianDate>) "date"
+            else case (ObjectArray<TimeOfDay>) "time"
+            else case (ObjectArray<UUID>) "uuid"
+            else unknown();
 
-        stmt.setArray(position, 
-            connection.get().createSqlArray(ObjectArray<Object>.with(array), sqlArrayType));
-    }
-    
-    void setBinaryStream(Integer position, ByteArray|Array<Byte> array, PreparedStatement stmt ) {
-        ByteArray byteArray;
-        
-        switch (array)
-        case (ByteArray) {
-            byteArray = array;
-        }
-        case (Array<Byte>) {
-            byteArray = ByteArray.from(array);
-        }
-
-        stmt.setBinaryStream(position, ByteArrayInputStream(byteArray), byteArray.size); 
+    String unknown() {
+        throw Exception("Unsupported array data type");
     }
 
-    String sqlArrayType(ObjectArray<Object> argument) {
-        
-        switch (argument)
-        case (ObjectArray<String>) {
-            return "varchar";
-        }
-
-        else case (ObjectArray<JString>) {
-            return "varchar";
-        }
-
-        else case (ObjectArray<Integer>) {
-            return "integer";
-        }
-
-        else case (ObjectArray<JInteger>) {
-            return "integer";
-        }
-
-        else case (ObjectArray<JBoolean>) {
-            return "boolean";
-        }
-
-        else case (ObjectArray<Boolean>) {
-            return "boolean";
-        }
-
-        else case (ObjectArray<JFloat>) {
-            return "float";
-        }
-
-        else case (ObjectArray<Float>) {
-            return "float";
-        }
-
-        else case (ObjectArray<SqlTimestamp>) {
-            return "timestamp";
-        }
-
-        else case (ObjectArray<SqlTime>) {
-            return "time";
-        }
-
-        else case (ObjectArray<SqlDate>) {
-            return "date";
-        }
-
-        else case (ObjectArray<JDate>) {
-            return "timestamp";
-        }
-
-        else case (ObjectArray<GregorianDateTime>) {
-            return "timestamp";
-        }
-
-        else case (ObjectArray<GregorianDate>) {
-            return "date";
-        }
-
-        else case (ObjectArray<TimeOfDay>) {
-            return "time";
-        }
-
-        // This is a special case not part of JDBCTypes but is supported by H2 and PostgreSQL.
-        else case (ObjectArray<UUID>) {
-            return "uuid";
-        }
-
-        // TODO:  All other possible array types
-        else {
-            throw Exception("Unsupported array data type");
-        }
-    }
-    
     CallableStatement prepareCall(ConnectionStatus conn, String sql, {Object*} arguments) {
         value stmt = conn.connection().prepareCall(sql);
         setParameters(stmt, arguments);
@@ -324,16 +235,9 @@ shared class Sql(newConnection) {
         "Execute this statement with the given [[arguments]] 
          to its parameters."
         shared void execute(Object* arguments) {
-            value connectionStatus = connection.get();
-            try {
-                value stmt = prepareStatement(connectionStatus, sql, arguments);
-                try {
-                    stmt.execute();
-                } finally {
-                    stmt.close();
-                }
-            } finally {
-                connectionStatus.close();
+            try (connectionStatus = connection.get(),
+                 stmt = prepareStatement(connectionStatus, sql, arguments)) {
+                stmt.execute();
             }
         }
     }
@@ -345,16 +249,9 @@ shared class Sql(newConnection) {
          to its parameters, returning the number of affected 
          rows."
         shared Integer execute(Object* arguments) {
-            value connectionStatus = connection.get();
-            try {
-                value stmt = prepareStatement(connectionStatus, sql, arguments);
-                try {
-                    return stmt.executeUpdate();
-                } finally {
-                    stmt.close();
-                }
-            } finally {
-                connectionStatus.close();
+            try (connectionStatus = connection.get(),
+                 stmt = prepareStatement(connectionStatus, sql, arguments)) {
+                return stmt.executeUpdate();
             }
         }
         
@@ -373,34 +270,26 @@ shared class Sql(newConnection) {
                 assert (batchArguments.fold(true) 
                     ((consistent, args) => 
                         consistent && args.size==firstArgs.size));
-                value connectionStatus = connection.get();
-                try {
-                    value stmt = connectionStatus.connection()
-                            .prepareStatement(sql);
+
+                try (connectionStatus = connection.get(),
+                     stmt = connectionStatus.connection()
+                            .prepareStatement(sql)) {
                     value result = ArrayList<Integer>();
                     void runBatch()
                             => result.addAll(stmt.executeBatch().iterable);
                     variable value count=0;
-                    try {                    
-                        for (arguments in batchArguments) {
-                            setParameters(stmt, arguments);
-                            stmt.addBatch();
-                            if (++count>maxBatchSize) {
-                                runBatch();
-                                count=0;
-                            }
-                        }
-                        if (count!=0) {
+                    for (arguments in batchArguments) {
+                        setParameters(stmt, arguments);
+                        stmt.addBatch();
+                        if (++count>maxBatchSize) {
                             runBatch();
+                            count=0;
                         }
-                        return result.sequence();
                     }
-                    finally {
-                        stmt.close();
+                    if (count!=0) {
+                        runBatch();
                     }
-                }
-                finally {
-                    connectionStatus.close();
+                    return result.sequence();
                 }
             }
             else {
@@ -418,33 +307,20 @@ shared class Sql(newConnection) {
          to its parameters, returning number of rows 
          inserted, and the generated keys, if any."
         shared [Integer,Row[]] execute(Object* arguments) {
-            value connectionStatus = connection.get();
-            try {
-                value stmt = connectionStatus.connection()
-                        .prepareStatement(sql, returnGeneratedKeys);
-                try {
-                    setParameters(stmt, arguments);
-                    value updateCount = stmt.executeUpdate();
-                    value resultSet = stmt.generatedKeys;
-                    try {
-                        value meta = resultSet.metaData;
-                        value range = 1..meta.columnCount;
-                        value builder = ArrayList<Row>();
-                        while (resultSet.next()) {
-                            builder.add(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
-                        }
-                        return [updateCount, builder.sequence()];
+            try (connectionStatus = connection.get(),
+                 stmt = connectionStatus.connection()
+                        .prepareStatement(sql, returnGeneratedKeys)) {
+                setParameters(stmt, arguments);
+                value updateCount = stmt.executeUpdate();
+                try (resultSet = stmt.generatedKeys) {
+                    value meta = resultSet.metaData;
+                    value range = 1..meta.columnCount;
+                    value builder = ArrayList<Row>();
+                    while (resultSet.next()) {
+                        builder.add(HashMap { for (i in range) columnEntry(resultSet, meta, i) });
                     }
-                    finally {
-                        resultSet.close();
-                    }
+                    return [updateCount, builder.sequence()];
                 }
-                finally {
-                    stmt.close();
-                }
-            }
-            finally {
-                connectionStatus.close();
             }
         }
         
@@ -463,34 +339,26 @@ shared class Sql(newConnection) {
                 assert (batchArguments.fold(true) 
                     ((consistent, args) => 
                         consistent && args.size==firstArgs.size));
-                value connectionStatus = connection.get();
-                try {
-                    value stmt = connectionStatus.connection()
-                            .prepareStatement(sql);
+
+                try (connectionStatus = connection.get(),
+                     stmt = connectionStatus.connection()
+                            .prepareStatement(sql)) {
                     value result = ArrayList<Integer>();
                     void runBatch()
                             => result.addAll(stmt.executeBatch().iterable);
                     variable value count=0;
-                    try {                    
-                        for (arguments in batchArguments) {
-                            setParameters(stmt, arguments);
-                            stmt.addBatch();
-                            if (++count>maxBatchSize) {
-                                runBatch();
-                                count=0;
-                            }
-                        }
-                        if (count!=0) {
+                    for (arguments in batchArguments) {
+                        setParameters(stmt, arguments);
+                        stmt.addBatch();
+                        if (++count>maxBatchSize) {
                             runBatch();
+                            count=0;
                         }
-                        //TODO: generated keys?
                     }
-                    finally {
-                        stmt.close();
+                    if (count!=0) {
+                        runBatch();
                     }
-                }
-                finally {
-                    connectionStatus.close();
+                    //TODO: generated keys?
                 }
             }
         }
@@ -506,16 +374,9 @@ shared class Sql(newConnection) {
          to its parameters, returning the number of affected 
          rows."
         shared Integer execute(Object* arguments) {
-            value connectionStatus = connection.get();
-            try {
-                value stmt = prepareCall(connectionStatus, sql, arguments);
-                try {
-                    return stmt.executeUpdate();
-                } finally {
-                    stmt.close();
-                }
-            } finally {
-                connectionStatus.close();
+            try (connectionStatus = connection.get(),
+                 stmt = prepareCall(connectionStatus, sql, arguments)) {
+                return stmt.executeUpdate();
             }
         }
     }
@@ -557,10 +418,10 @@ shared class Sql(newConnection) {
             value rows = execute(*arguments);
             "SQL query must return a single row containing a 
              single value of the given type"
-            assert(exists row = rows[0], 
-                   rows.size == 1, 
-                   row.size == 1, 
-                   is Value v = row.items.first);
+            assert (exists row = rows[0],
+                    rows.size == 1,
+                    row.size == 1,
+                    is Value v = row.items.first);
             return v;
         }        
         
@@ -577,42 +438,34 @@ shared class Sql(newConnection) {
              }"
         shared class Results(Object* arguments) 
                 satisfies Destroyable & {Row*} {
-            variable ConnectionStatus connectionStatus=connection.get();
+            variable ConnectionStatus connectionStatus = connection.get();
             variable PreparedStatement preparedStatement;
             variable {Object*} resultSets; //TODO: should be ResultSet, nasty hack to work around backend bug!
             try {
-                preparedStatement=prepareStatement(connectionStatus, sql, arguments);
+                preparedStatement = prepareStatement(connectionStatus, sql, arguments);
                 if (exists maxRows = limit) {
                     preparedStatement.maxRows=maxRows;
                 }
-                resultSets={}; //TODO: should be ResultSet, nasty hack to work around backend bug!
+                resultSets = {}; //TODO: should be ResultSet, nasty hack to work around backend bug!
             } catch (Exception e) {
                 try {
-                    connectionStatus.close();
+                    connectionStatus.release(null);
                 } catch (Exception e2) {
                     e.addSuppressed(e2);
                 }
                 throw e;
             }
             
-            shared actual Iterator<Row> iterator() {
-                object iterator
-                        satisfies Iterator<Row> {
-                    value resultSet = preparedStatement.executeQuery();
-                    resultSets = resultSets.follow(resultSet);
-                    value meta = resultSet.metaData;
-                    value range = 1..meta.columnCount;
-                    shared actual Row|Finished next() {
-                        if (resultSet.next()) {
-                            return HashMap { for (i in range) columnEntry(resultSet, meta, i) };
-                        }
-                        else {
-                            return finished;
-                        }
-                    }
-                }
-                return iterator;
-            }
+            shared actual Iterator<Row> iterator()
+                    => object satisfies Iterator<Row> {
+                        value resultSet = preparedStatement.executeQuery();
+                        resultSets = resultSets.follow(resultSet);
+                        value meta = resultSet.metaData;
+                        value range = 1..meta.columnCount;
+                        next() => resultSet.next()
+                                then HashMap { for (i in range) columnEntry(resultSet, meta, i) }
+                                else finished;
+                    };
             
             shared actual void destroy(Throwable? exception) {
                 for (resultSet in this.resultSets) {
@@ -628,7 +481,7 @@ shared class Sql(newConnection) {
                 }
                 catch (e) {}
                 try {
-                    connectionStatus.close();
+                    connectionStatus.release(null);
                 }
                 catch (e) {}
             
@@ -652,7 +505,7 @@ shared class Sql(newConnection) {
     shared class Transaction() satisfies Destroyable {
         variable value rollback = false;
         
-        variable ConnectionStatus connectionStatus=connection.get();
+        variable ConnectionStatus connectionStatus = connection.get();
         try {
             connectionStatus.beginTransaction();
         } catch (Exception e) {
@@ -662,7 +515,7 @@ shared class Sql(newConnection) {
                 e.addSuppressed(e2);
             }
             try {
-                connectionStatus.close();
+                connectionStatus.release(null);
             } catch (Exception e2) {
                 e.addSuppressed(e2);
             }
@@ -684,7 +537,7 @@ shared class Sql(newConnection) {
                 }
             }
             finally {
-                connectionStatus.close();
+                connectionStatus.release(null);
             }
         }
         
@@ -706,36 +559,35 @@ shared class Sql(newConnection) {
      index."
     String->Object columnEntry(ResultSet rs, ResultSetMetaData meta, Integer idx) {
         String columnName = meta.getColumnLabel(idx).lowercased;
-        Object? x = rs.getObject(idx);
-        Object? v;
+        Object? result = rs.getObject(idx);
+        Object? item;
         
-        // Can't put this in the switch statement because Array is an interface so there will be a disjoint
-        // types error with the other types in the switch statement below.
-        if (is SqlArray x) {
-            assert (is ObjectArray<Object> javaArray = x.array);
-            v = javaArray.array.sequence();
+        if (is SqlArray result) {
+            assert (is ObjectArray<Object> javaArray = result.array);
+            item = javaArray.array.sequence();
         }
         else {
             //TODO optimize these conversions
-            v = switch (x)
-            case (JString) x.string
-            case (JBoolean) x.booleanValue()
-            case (JInteger) x.longValue()
-            case (JLong) x.longValue()
-            case (JFloat) x.doubleValue()
-            case (JDouble) x.doubleValue()
-            case (BigDecimal) parseDecimal(x.toPlainString())
-            case (BigInteger) parseWhole(x.string)
-            case (SqlTimestamp) Instant(x.time).dateTime()
-            case (SqlTime) Instant(x.time).time()
-            case (SqlDate) Instant(x.time).date()
-            // UUID conversion works in the else also, this is a placeholder in case Ceylon gets a native UUID type.
-            case (UUID) x
-            case (ByteArray) x.byteArray
-            else x;
+            item = switch (result)
+            case (JString) result.string
+            case (JBoolean) result.booleanValue()
+            case (JInteger) result.longValue()
+            case (JLong) result.longValue()
+            case (JFloat) result.doubleValue()
+            case (JDouble) result.doubleValue()
+            case (BigDecimal) parseDecimal(result.toPlainString())
+            case (BigInteger) parseWhole(result.string)
+            case (SqlTimestamp) Instant(result.time).dateTime()
+            case (SqlTime) Instant(result.time).time()
+            case (SqlDate) Instant(result.time).date()
+            // UUID conversion works in the else also, this is a
+            // placeholder in case Ceylon gets a native UUID type.
+            case (UUID) result
+            case (ByteArray) result.byteArray
+            else result;
         }
 
-        return columnName -> (v else SqlNull(meta.getColumnType(idx)));
+        return columnName -> (item else SqlNull(meta.getColumnType(idx)));
     }
 }
 
