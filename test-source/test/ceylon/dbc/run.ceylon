@@ -13,7 +13,7 @@ import org.h2.jdbcx {
 JdbcDataSource createDataSource() {
     value tmpdir = process.propertyValue("java.io.tmpdir") else "~";
     value ds = JdbcDataSource();
-    ds.url = "jdbc:h2:" + tmpdir + "/test";
+    ds.url = "jdbc:h2:``tmpdir``/test";
     ds.user = "sa";
     ds.password = "sa";
     return ds;
