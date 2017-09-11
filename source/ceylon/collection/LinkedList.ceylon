@@ -115,8 +115,8 @@ shared serializable class LinkedList<Element>
             reversed.reverseInPlace();
             //no need to update the tail in this branch
             if (index == 0) {
-                head = reversed.fold(head)
-                    ((rest,element) => Cell(element, rest));
+                head = reversed.fold(head,
+                    (rest,element) => Cell(element, rest));
                 length+=reversed.size;
             }
             else {
@@ -125,8 +125,8 @@ shared serializable class LinkedList<Element>
                 while (exists cell = iter) {
                     value rest = cell.rest;
                     if (++i == index) {
-                        cell.rest = reversed.fold(rest)
-                            ((rest,element) => Cell(element, rest));
+                        cell.rest = reversed.fold(rest,
+                            (rest,element) => Cell(element, rest));
                         length+=reversed.size;
                         return;
                     }

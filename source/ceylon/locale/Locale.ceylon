@@ -53,7 +53,7 @@ shared sealed class Locale(language, formats,
      converted to uppercase according to the rules of this
      locale."
     shared String uppercase(String string)
-            => uppercaseMappings.fold(string)((str, mapping) 
+            => uppercaseMappings.fold(string, (str, mapping)
             => str.replace(mapping.key.string, mapping.item))
                 .uppercased;
     
@@ -61,7 +61,7 @@ shared sealed class Locale(language, formats,
      converted to lowercase according to the rules of this
      locale."
     shared String lowercase(String string) 
-            => lowercaseMappings.fold(string)((str, mapping) 
+            => lowercaseMappings.fold(string, (str, mapping)
             => str.replace(mapping.key.string, mapping.item))
                 .lowercased;
     

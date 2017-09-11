@@ -267,8 +267,8 @@ shared class Sql(newConnection) {
             "maximum batch size must be strictly positive"
             assert (maxBatchSize>0);
             if (exists firstArgs = batchArguments.first) {
-                assert (batchArguments.fold(true) 
-                    ((consistent, args) => 
+                assert (batchArguments.fold(true,
+                    (consistent, args) =>
                         consistent && args.size==firstArgs.size));
 
                 try (connectionStatus = connection.get(),
@@ -336,8 +336,8 @@ shared class Sql(newConnection) {
             "maximum batch size must be strictly positive"
             assert (maxBatchSize>0);
             if (exists firstArgs = batchArguments.first) {
-                assert (batchArguments.fold(true) 
-                    ((consistent, args) => 
+                assert (batchArguments.fold(true,
+                    (consistent, args) =>
                         consistent && args.size==firstArgs.size));
 
                 try (connectionStatus = connection.get(),
