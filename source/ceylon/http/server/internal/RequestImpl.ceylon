@@ -43,7 +43,8 @@ import java.io {
     ByteArrayOutputStream
 }
 import java.lang {
-    ByteArray
+    ByteArray,
+    JString = String
 }
 
 by("Matej Lazar")
@@ -67,27 +68,13 @@ class RequestImpl(HttpServerExchange exchange,
     contentType => getHeader(Headers.contentType.string);
 
     header(String name) => getHeader(name);
-    
-    shared actual String read() {
-        exchange.startBlocking();
-        value inputStream = exchange.inputStream;
-        try {
-            value inputStreamReader = 
-                    InputStreamReader(inputStream, 
-                        exchange.requestCharset);
-            value reader = BufferedReader(inputStreamReader);
-            value builder = StringBuilder();
-            while (exists line = reader.readLine()) {
-                builder.append(line).appendNewline();
-            }
-            return builder.string;
-        }
-        finally {
-            inputStream.close();
-        }
-    }
 
-    shared actual Byte[] readBinary() {
+    variable ByteArray? bodyBinary = null;
+
+    ByteArray readBinaryBuffer() {
+        if (is ByteArray bodyBinaryRead = bodyBinary) {
+            return bodyBinaryRead;
+        }
         exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
@@ -97,13 +84,22 @@ class RequestImpl(HttpServerExchange exchange,
             while ((n = inputStream.read(buf)) >= 0) {
                 byteArrayOutputStream.write(buf, 0, n);
             }
-            value x = byteArrayOutputStream.toByteArray();
-            // FIXME not good: this copies the final content a second time!
-            return x.byteArray.sequence();
+            bodyBinary = byteArrayOutputStream.toByteArray();
+            assert (is ByteArray bodyBinaryRead = bodyBinary);
+            return bodyBinaryRead;
         }
         finally {
             inputStream.close();
         }
+    }
+
+    shared actual Byte[] readBinary() {
+        // FIXME not good: this copies the final content a second time!
+        return readBinaryBuffer().byteArray.sequence();
+    }
+
+    shared actual String read() {
+        return JString(readBinaryBuffer(), exchange.requestCharset).string;
     }
 
     UtFormData getUtFormData() {
