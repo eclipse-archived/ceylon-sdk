@@ -4,6 +4,9 @@ import ceylon.io {
 import ceylon.http.common {
     Method
 }
+import ceylon.locale {
+    Locale
+}
 
 "Defines an object to provide client request information 
  to a web endpoint."
@@ -101,6 +104,20 @@ shared interface Request {
     
     "Returns request content type, read from header."
     shared formal String? contentType;
+    
+    "Returns the preferred [[Locale]] that the client
+     accepts content in, based on the Accept-Language header.
+     If the client request doesn't provide an Accept-Language header,
+     this method returns the default locale for the server."
+    shared formal Locale locale;
+    
+    "Returns sequence of [[Locale]] objects indicating,
+     in decreasing order starting with the preferred locale, the locales
+     that are acceptable to the client based on the Accept-Language header.
+     If the client request doesn't provide an Accept-Language header,
+     this method returns sequence containing one [[Locale]],
+     the default locale for the server."
+    shared formal [Locale+] locales;
     
     "Returns users http session. If session doesn't exists, 
      a new is created."
