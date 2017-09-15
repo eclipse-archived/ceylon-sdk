@@ -102,13 +102,14 @@ class RequestImpl(HttpServerExchange exchange,
 
     shared actual Locale locale => getLocales().first;
 
+    shared actual String requestCharset => exchange.requestCharset;
+
     shared actual String read() {
         exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
             value inputStreamReader = 
-                    InputStreamReader(inputStream, 
-                        exchange.requestCharset);
+                    InputStreamReader(inputStream, requestCharset);
             value reader = BufferedReader(inputStreamReader);
             value builder = StringBuilder();
             while (exists line = reader.readLine()) {

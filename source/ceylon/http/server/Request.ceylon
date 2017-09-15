@@ -60,7 +60,11 @@ shared interface Request {
     "Get the HTTP request method.
      {OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT}"
     shared formal Method method;
-    
+
+    "Returns the request charset. If none was explicitly specified it will return
+     *ISO-8859-1*, which is the default charset for HTTP requests."
+    shared formal String requestCharset;
+
     "Get the request URI scheme. {http, https}"
     shared formal String scheme;
     
