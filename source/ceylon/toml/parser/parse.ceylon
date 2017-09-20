@@ -568,16 +568,15 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         if (!nonempty path) {
             throw badTokenError(openToken, "table name must not be empty");
         }
-        currentTable = path.indexed.fold(this.result, (table, pathEntry) {
-            let (index -> pathPart = pathEntry);
-            switch (obj = table.get(pathPart))
+        currentTable = path.indexed.fold(this.result, (table, index -> pathPart) {
+            switch (obj = table[pathPart])
             case (TomlTable) {
                 return obj;
             }
             case (Null) {
                 value newTable = TomlTable();
                 createdButNotDefined.add(newTable);
-                table.put(pathPart, newTable);
+                table[pathPart] = newTable;
                 return newTable;
             }
             else if (is TomlArray obj, is TomlTable last = obj.last) {
@@ -607,16 +606,15 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         if (!nonempty path) {
             throw badTokenError(openToken, "table name must not be empty");
         }
-        value container = path.indexed.exceptLast.fold(this.result, (table, pathEntry) {
-            let (index -> pathPart = pathEntry);
-            switch (obj = table.get(pathPart))
+        value container = path.indexed.exceptLast.fold(this.result, (table, index -> pathPart) {
+            switch (obj = table[pathPart])
             case (TomlTable) {
                 return obj;
             }
             case (Null) {
                 value newTable = TomlTable();
                 createdButNotDefined.add(newTable);
-                table.put(pathPart, newTable);
+                table[pathPart] = newTable;
                 return newTable;
             }
             else if (is TomlArray obj, obj in staticallyDefinedArrays) {
@@ -639,7 +637,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
             }
         });
         TomlArray array;
-        switch (obj = container.get(path.last))
+        switch (obj = container[path.last])
         case (TomlArray) {
             if (obj in staticallyDefinedArrays) {
                 // TODO properly format/escape path in error msg
@@ -660,7 +658,7 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         }
         case (Null) {
             array = TomlArray();
-            container.put(path.last, array);
+            container[path.last] = array;
         }
         else {
             // TODO properly format/escape path in error msg
@@ -684,11 +682,11 @@ shared [TomlTable, ParseException*] parse({Character*} input) =>
         case (newline) { advance(); }
         case (bareKey | basicString | literalString) {
             value tokenForError = peek();
-            value entry = parseKeyValuePair();
-            if (currentTable.defines(entry.key)) {
-                throw error(tokenForError, "value for ``entry.key`` already defined");
+            let (key -> item = parseKeyValuePair());
+            if (currentTable.defines(key)) {
+                throw error(tokenForError, "value for ``key`` already defined");
             }
-            currentTable.put(entry.key, entry.item);
+            currentTable[key] = item;
             accept(comment);
             if (!endOfFile && !accept(newline)) {
                 throw badTokenError(peek(),
