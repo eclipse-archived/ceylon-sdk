@@ -338,6 +338,7 @@ shared serializable class HashMap<Key, Item>
             if (exists it = head.element.item, 
                 it==item) {
                 store[index] = head.rest;
+                deleteCell(head);
                 length--;
                 return true;
             }

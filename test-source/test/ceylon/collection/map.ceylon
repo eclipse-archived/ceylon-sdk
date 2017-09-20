@@ -335,3 +335,18 @@ test shared void testMapBug301(){
     assertEquals(map.size, 1);
     assertEquals({ for (item in map) item }.sequence(), ["b"->"b"]);
 }
+
+test shared void testMapBug690(){
+    value map = HashMap<String, String>();
+    map.put("a", "a");
+    map.removeEntry("a", "a");
+    assertTrue(map.iterator().next() is Finished);
+
+    value map2 = HashMap<String, String>();
+    map2.put("a", "a");
+    map2.put("b", "b");
+    map2.removeEntry("a", "a");
+    map2.removeEntry("b", "b");
+    assertTrue(map.iterator().next() is Finished);
+
+}
