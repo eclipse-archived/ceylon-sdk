@@ -289,5 +289,5 @@ shared String formatToml(Map<String, Object> tomlTable)
 }.get();
 
 Boolean(Character) isValidKeyCharacter = set(
-    concatenate('a'..'z', 'A'..'Z', '0'..'9', "_-")
+    expand { 'a'..'z', 'A'..'Z', '0'..'9', "_-" }
 ).contains;
