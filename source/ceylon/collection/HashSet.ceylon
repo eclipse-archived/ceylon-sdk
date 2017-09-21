@@ -330,13 +330,22 @@ shared serializable class HashSet<Element>
     }
     
     shared actual void each(void step(Element element)) {
-        store.each((bucket) {
-                variable value iter = bucket;
-                while (exists cell = iter) {
-                    step(cell.element);
-                    iter = cell.rest;
-                }
-            });
+        if (stability == linked) {
+            variable value cell = head;
+            while (exists currentCell = cell) {
+                step(currentCell.element);
+                cell = currentCell.next;
+            }
+        }
+        else {
+            store.each((bucket) {
+                    variable value iter = bucket;
+                    while (exists cell = iter) {
+                        step(cell.element);
+                        iter = cell.rest;
+                    }
+                });
+        }
     }
     
     shared actual Integer hash {

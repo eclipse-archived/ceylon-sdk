@@ -348,5 +348,11 @@ test shared void testMapBug690(){
     map2.removeEntry("a", "a");
     map2.removeEntry("b", "b");
     assertTrue(map.iterator().next() is Finished);
+}
 
+test shared void testMapLinkedStabilityEach() {
+    value a = ArrayList<Integer>();
+    value m = HashMap { 1->null, 3->null, 2->null };
+    m.each((k->v) => a.add(k));
+    assert (a == [1,3,2]);
 }

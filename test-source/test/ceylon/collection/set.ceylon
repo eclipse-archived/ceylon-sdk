@@ -105,3 +105,10 @@ shared interface SetTests satisfies IterableTests {
     }
 
 }
+
+test shared void testSetLinkedStabilityEach() {
+    value a = ArrayList<Integer>();
+    value s = HashSet { 1, 3, 2 };
+    s.each((v) => a.add(v));
+    assert (a == [1,3,2]);
+}
