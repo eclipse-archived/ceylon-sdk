@@ -39,6 +39,9 @@ import test.ceylon.http.server.multipartclient {
 import ceylon.http.server.websocket {
     WebSocketEndpoint
 }
+import ceylon.locale {
+    Locale
+}
 
 shared abstract class ServerTest() {
 
@@ -167,6 +170,33 @@ shared class TestServer() extends ServerTest() {
                 response.writeString(request.header("Content-Type") else "");
             }
             path = startsWith("/headerTest");
+        },
+        //Pure i18n test. Prints message to response in first accepted language or in default if first is not supported.
+        Endpoint {
+            void service(Request request, Response response) {
+                value messages = request.locale.messages(`module`, "LocaleTestMessages");
+                assert (is String message = messages.get("message"));
+                response.addHeader(contentType("text/plain", utf8));
+                response.writeString(message);
+            }
+            path = startsWith("/localeTest");
+        },
+        //Rich i18n test. Prints message to response in first supported language from accepted list or default if no is supported.
+        Endpoint {
+            void service(Request request, Response response) {
+                variable Map<String,String> messages;
+                for (Locale locale in request.locales) {
+                    messages = locale.messages(`module`, "LocaleTestMessages");
+                    assert (is String languagetag = messages.get("languagetag"));
+                    if (languagetag != "default") {
+                        break;
+                    }
+                }
+                response.addHeader(contentType("text/plain", utf8));
+                assert (is String message = messages.get("message"));
+                response.writeString(message);
+            }
+            path = startsWith("/localesTest");
         },
         Endpoint {
             void service(Request request, Response response) {
@@ -468,6 +498,52 @@ shared class TestServer() extends ServerTest() {
             expected = produceFileContent(); 
             actual = fileCnt; 
         };
+    }
+    
+    void assertResponseForAcceptLanguage(String url, String languageTagsChain, String expectedResponse) {
+        value request = ClientRequest(parse(url));
+        request.setHeader("Accept-Language", languageTagsChain);
+
+        value response = request.execute();
+
+        value msg = response.contents;
+        //TODO log debug
+        print("Received contents: ``msg``");
+
+        response.close();
+
+        assertEquals {
+            expected = expectedResponse;
+            actual = msg;
+        };
+    }
+    //Pure i18n test. Server prints message to response in first accepted language or in default if first is not supported.
+    shared test void localeTest() {
+        String url = "http://localhost:8080/localeTest";
+        //Case 1: one language that is supported
+        assertResponseForAcceptLanguage(url, "de-DE", "Nachricht");
+        //Case 2: two languages, first is supported
+        assertResponseForAcceptLanguage(url, "ru-RU,en;q=0.5", "Сообщение");
+        //Case 3: unsupported language
+        assertResponseForAcceptLanguage(url, "fr-FR", "Message");
+        //Case 4: first language is unsupported, second is supported, but default is returned
+        assertResponseForAcceptLanguage(url, "fr-FR,ru-RU;q=0.5", "Message");
+    }
+    //Rich i18n test. Server prints message to response in first supported language from accepted list or in default no is supported.
+    shared test void localesTest() {
+        String url = "http://localhost:8080/localesTest";
+        //Case 1: one language that is supported
+        assertResponseForAcceptLanguage(url, "de-DE", "Nachricht");
+        //Case 2: two languages, first is supported
+        assertResponseForAcceptLanguage(url, "ru-RU,en;q=0.5", "Сообщение");
+        //Case 3: unsupported language
+        assertResponseForAcceptLanguage(url, "fr-FR", "Message");
+        //Case 4: two unsupported languages
+        assertResponseForAcceptLanguage(url, "fr-FR,es-ES;q=0.5", "Message");
+        //Case 5: first language is unsupported, second is supported and returned
+        assertResponseForAcceptLanguage(url, "fr-FR,ru-RU;q=0.5", "Сообщение");
+        //Case 6: second and third languages are supported, second is returned
+        assertResponseForAcceptLanguage(url, "fr-FR,en-US;q=0.7,ru-RU;q=0.3", "Message");
     }
     
     shared test void moduleTest() {
