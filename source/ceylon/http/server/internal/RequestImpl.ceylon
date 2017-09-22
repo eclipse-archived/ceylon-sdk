@@ -91,11 +91,10 @@ class RequestImpl(HttpServerExchange exchange,
                 }
             }
         }
-        if (locales.empty) {
-            return [systemLocale];
-        } else {
-            assert (is [Locale+] localesSequence = locales.sequence());
+        if (nonempty localesSequence = locales.sequence()) {
             return localesSequence;
+        } else {
+            return [systemLocale];
         }
     }
     shared actual [Locale+] locales => getLocales();
