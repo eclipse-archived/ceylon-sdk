@@ -22,7 +22,7 @@ import ceylon.test { assertEquals, assertTrue, test,
 import ceylon.collection { LinkedList, MutableList }
 import ceylon.http.common { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
 import java.util.concurrent { Semaphore }
-import java.lang { Runnable, Thread {threadSleep = sleep} }
+import java.lang { Runnable, Thread {threadSleep = sleep}, JString = String }
 import ceylon.html {
     Html,
     Head,
@@ -40,7 +40,11 @@ import ceylon.http.server.websocket {
     WebSocketEndpoint
 }
 import ceylon.locale {
-    Locale
+    Locale,
+    systemLocale
+}
+import ceylon.buffer.base {
+    base64StringStandard
 }
 
 shared abstract class ServerTest() {
@@ -267,6 +271,22 @@ shared class TestServer() extends ServerTest() {
         },
         Endpoint {
             void service(Request request, Response response) {
+                response.writeString(request.requestCharset);
+            }
+            path = startsWith("/printCharset");
+        },
+        Endpoint {
+            void service(Request request, Response response) {
+                //NOTE: test fails with request.read() because of '\n' appears at the end of the line
+                ByteBuffer dataRaw = ByteBuffer(request.readBinary());
+                String data = JString(dataRaw.array, request.requestCharset).string;
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(data);
+            }
+            path = startsWith("/printBody");
+        },
+        Endpoint {
+            void service(Request request, Response response) {
                 value data = request.readBinary();
                 value converted = data.map((element) => element.unsigned);
                 response.writeString(converted.string);
@@ -440,6 +460,31 @@ shared class TestServer() extends ServerTest() {
         };
     }
     
+    shared test void bodyEncodingTest() {
+        Map<String,String> messages = systemLocale.messages(`module`, "CharsetTestMessages");
+
+        void runBodyEncodingTest(String charsetName) {
+            assert (is String base64 = messages.get(charsetName + "base64"));
+
+            value printCharsetRequest = ClientRequest(parse("http://localhost:8080/printCharset"), post);
+            printCharsetRequest.setHeader("Content-Type", "text/plain; charset=" + charsetName);
+            printCharsetRequest.data = ByteBuffer(base64StringStandard.decode(base64));
+            value printCharsetResponse = printCharsetRequest.execute();
+            assertEquals(printCharsetResponse.contents, charsetName);
+
+
+            value readRequest = ClientRequest(parse("http://localhost:8080/printBody"), post);
+            readRequest.setHeader("Content-Type", "text/plain; charset=" + charsetName);
+            readRequest.data = ByteBuffer(base64StringStandard.decode(base64));
+            value readResponse = readRequest.execute();
+            assertEquals(readResponse.contents, messages.get("stringoriginal"));
+        }
+
+        runBodyEncodingTest("utf8");
+        runBodyEncodingTest("cp1251");
+        runBodyEncodingTest("cp866");
+    }
+
     shared test void headerTest() {
         String contentType = "application/x-www-form-urlencoded";
         
