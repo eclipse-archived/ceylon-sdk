@@ -95,5 +95,4 @@ module ceylon.dbc maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     import java.base "7";
     shared import java.jdbc "7";
     import ceylon.time "1.3.4-SNAPSHOT";
-    import ceylon.transaction "1.3.4-SNAPSHOT";
 }
