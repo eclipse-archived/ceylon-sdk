@@ -48,6 +48,7 @@ module ceylon.http.server maven:"org.ceylon-lang" "1.3.4-SNAPSHOT" {
     
     shared import ceylon.http.common "1.3.4-SNAPSHOT";
     shared import ceylon.collection "1.3.4-SNAPSHOT";
+    shared import ceylon.locale "1.3.4-SNAPSHOT";
     shared import ceylon.io "1.3.4-SNAPSHOT";
     shared import "com.redhat.ceylon.module-resolver" "1.3.4-SNAPSHOT";
     import ceylon.file "1.3.4-SNAPSHOT";

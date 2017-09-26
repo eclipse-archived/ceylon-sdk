@@ -22,7 +22,7 @@ import ceylon.test { assertEquals, assertTrue, test,
 import ceylon.collection { LinkedList, MutableList }
 import ceylon.http.common { contentType, trace, connect, Method, parseMethod, post, get, put, delete, Header, contentLength}
 import java.util.concurrent { Semaphore }
-import java.lang { Runnable, Thread {threadSleep = sleep} }
+import java.lang { Runnable, Thread {threadSleep = sleep}, JString = String }
 import ceylon.html {
     Html,
     Head,
@@ -38,6 +38,13 @@ import test.ceylon.http.server.multipartclient {
 }
 import ceylon.http.server.websocket {
     WebSocketEndpoint
+}
+import ceylon.locale {
+    Locale,
+    systemLocale
+}
+import ceylon.buffer.base {
+    base64StringStandard
 }
 
 shared abstract class ServerTest() {
@@ -168,6 +175,33 @@ shared class TestServer() extends ServerTest() {
             }
             path = startsWith("/headerTest");
         },
+        //Pure i18n test. Prints message to response in first accepted language or in default if first is not supported.
+        Endpoint {
+            void service(Request request, Response response) {
+                value messages = request.locale.messages(`module`, "LocaleTestMessages");
+                assert (is String message = messages.get("message"));
+                response.addHeader(contentType("text/plain", utf8));
+                response.writeString(message);
+            }
+            path = startsWith("/localeTest");
+        },
+        //Rich i18n test. Prints message to response in first supported language from accepted list or default if no is supported.
+        Endpoint {
+            void service(Request request, Response response) {
+                variable Map<String,String> messages;
+                for (Locale locale in request.locales) {
+                    messages = locale.messages(`module`, "LocaleTestMessages");
+                    assert (is String languagetag = messages.get("languagetag"));
+                    if (languagetag != "default") {
+                        break;
+                    }
+                }
+                response.addHeader(contentType("text/plain", utf8));
+                assert (is String message = messages.get("message"));
+                response.writeString(message);
+            }
+            path = startsWith("/localesTest");
+        },
         Endpoint {
             void service(Request request, Response response) {
                 response.addHeader(contentType("text/html", utf8));
@@ -234,6 +268,22 @@ shared class TestServer() extends ServerTest() {
                 response.writeString(request.formParameter("aKey")?.string else "");
             }
             path = startsWith("/formParamTest");
+        },
+        Endpoint {
+            void service(Request request, Response response) {
+                response.writeString(request.requestCharset);
+            }
+            path = startsWith("/printCharset");
+        },
+        Endpoint {
+            void service(Request request, Response response) {
+                //NOTE: test fails with request.read() because of '\n' appears at the end of the line
+                ByteBuffer dataRaw = ByteBuffer(request.readBinary());
+                String data = JString(dataRaw.array, request.requestCharset).string;
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(data);
+            }
+            path = startsWith("/printBody");
         },
         Endpoint {
             void service(Request request, Response response) {
@@ -410,6 +460,31 @@ shared class TestServer() extends ServerTest() {
         };
     }
     
+    shared test void bodyEncodingTest() {
+        Map<String,String> messages = systemLocale.messages(`module`, "CharsetTestMessages");
+
+        void runBodyEncodingTest(String charsetName) {
+            assert (is String base64 = messages.get(charsetName + "base64"));
+
+            value printCharsetRequest = ClientRequest(parse("http://localhost:8080/printCharset"), post);
+            printCharsetRequest.setHeader("Content-Type", "text/plain; charset=" + charsetName);
+            printCharsetRequest.data = ByteBuffer(base64StringStandard.decode(base64));
+            value printCharsetResponse = printCharsetRequest.execute();
+            assertEquals(printCharsetResponse.contents, charsetName);
+
+
+            value readRequest = ClientRequest(parse("http://localhost:8080/printBody"), post);
+            readRequest.setHeader("Content-Type", "text/plain; charset=" + charsetName);
+            readRequest.data = ByteBuffer(base64StringStandard.decode(base64));
+            value readResponse = readRequest.execute();
+            assertEquals(readResponse.contents, messages.get("stringoriginal"));
+        }
+
+        runBodyEncodingTest("utf8");
+        runBodyEncodingTest("cp1251");
+        runBodyEncodingTest("cp866");
+    }
+
     shared test void headerTest() {
         String contentType = "application/x-www-form-urlencoded";
         
@@ -468,6 +543,52 @@ shared class TestServer() extends ServerTest() {
             expected = produceFileContent(); 
             actual = fileCnt; 
         };
+    }
+    
+    void assertResponseForAcceptLanguage(String url, String languageTagsChain, String expectedResponse) {
+        value request = ClientRequest(parse(url));
+        request.setHeader("Accept-Language", languageTagsChain);
+
+        value response = request.execute();
+
+        value msg = response.contents;
+        //TODO log debug
+        print("Received contents: ``msg``");
+
+        response.close();
+
+        assertEquals {
+            expected = expectedResponse;
+            actual = msg;
+        };
+    }
+    //Pure i18n test. Server prints message to response in first accepted language or in default if first is not supported.
+    shared test void localeTest() {
+        String url = "http://localhost:8080/localeTest";
+        //Case 1: one language that is supported
+        assertResponseForAcceptLanguage(url, "de-DE", "Nachricht");
+        //Case 2: two languages, first is supported
+        assertResponseForAcceptLanguage(url, "ru-RU,en;q=0.5", "Сообщение");
+        //Case 3: unsupported language
+        assertResponseForAcceptLanguage(url, "fr-FR", "Message");
+        //Case 4: first language is unsupported, second is supported, but default is returned
+        assertResponseForAcceptLanguage(url, "fr-FR,ru-RU;q=0.5", "Message");
+    }
+    //Rich i18n test. Server prints message to response in first supported language from accepted list or in default no is supported.
+    shared test void localesTest() {
+        String url = "http://localhost:8080/localesTest";
+        //Case 1: one language that is supported
+        assertResponseForAcceptLanguage(url, "de-DE", "Nachricht");
+        //Case 2: two languages, first is supported
+        assertResponseForAcceptLanguage(url, "ru-RU,en;q=0.5", "Сообщение");
+        //Case 3: unsupported language
+        assertResponseForAcceptLanguage(url, "fr-FR", "Message");
+        //Case 4: two unsupported languages
+        assertResponseForAcceptLanguage(url, "fr-FR,es-ES;q=0.5", "Message");
+        //Case 5: first language is unsupported, second is supported and returned
+        assertResponseForAcceptLanguage(url, "fr-FR,ru-RU;q=0.5", "Сообщение");
+        //Case 6: second and third languages are supported, second is returned
+        assertResponseForAcceptLanguage(url, "fr-FR,en-US;q=0.7,ru-RU;q=0.3", "Message");
     }
     
     shared test void moduleTest() {

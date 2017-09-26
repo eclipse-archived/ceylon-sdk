@@ -19,6 +19,11 @@ import ceylon.http.server {
 import ceylon.io {
     SocketAddress
 }
+import ceylon.locale {
+    Locale,
+    systemLocale,
+    createLocale=locale
+}
 
 import io.undertow.server {
     HttpServerExchange
@@ -34,7 +39,8 @@ import io.undertow.server.session {
 }
 import io.undertow.util {
     Headers,
-    HttpString
+    HttpString,
+    QValueParser
 }
 
 import java.io {
@@ -67,14 +73,42 @@ class RequestImpl(HttpServerExchange exchange,
     contentType => getHeader(Headers.contentType.string);
 
     header(String name) => getHeader(name);
-    
+
+    [Locale+] getLocales() {
+        value acceptLanguage = exchange.requestHeaders.get(Headers.acceptLanguage.string);
+        if (!exists acceptLanguage) {
+            return [systemLocale];
+        }
+        if (acceptLanguage.empty) {
+            return [systemLocale];
+        }
+        value parsedResults = QValueParser.parse(acceptLanguage);
+        ArrayList<Locale> locales = ArrayList<Locale>();
+        for (qvalueResult in parsedResults) {
+            for (res in qvalueResult) {
+                if (is Locale nextLocale = createLocale(res.\ivalue.string)) {
+                    locales.add(nextLocale);
+                }
+            }
+        }
+        if (nonempty localesSequence = locales.sequence()) {
+            return localesSequence;
+        } else {
+            return [systemLocale];
+        }
+    }
+    shared actual [Locale+] locales => getLocales();
+
+    shared actual Locale locale => getLocales().first;
+
+    shared actual String requestCharset => exchange.requestCharset;
+
     shared actual String read() {
         exchange.startBlocking();
         value inputStream = exchange.inputStream;
         try {
             value inputStreamReader = 
-                    InputStreamReader(inputStream, 
-                        exchange.requestCharset);
+                    InputStreamReader(inputStream, requestCharset);
             value reader = BufferedReader(inputStreamReader);
             value builder = StringBuilder();
             while (exists line = reader.readLine()) {
