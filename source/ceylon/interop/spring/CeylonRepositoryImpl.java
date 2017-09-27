@@ -2,11 +2,11 @@ package ceylon.interop.spring;
 
 import ceylon.language.Integer;
 import ceylon.language.String;
-import com.redhat.ceylon.common.NonNull;
-import com.redhat.ceylon.common.Nullable;
-import com.redhat.ceylon.compiler.java.metadata.Ignore;
-import com.redhat.ceylon.compiler.java.metadata.TypeParameter;
-import com.redhat.ceylon.compiler.java.metadata.TypeParameters;
+import org.eclipse.ceylon.common.NonNull;
+import org.eclipse.ceylon.common.Nullable;
+import org.eclipse.ceylon.compiler.java.metadata.Ignore;
+import org.eclipse.ceylon.compiler.java.metadata.TypeParameter;
+import org.eclipse.ceylon.compiler.java.metadata.TypeParameters;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;

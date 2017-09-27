@@ -1,8 +1,8 @@
 package ceylon.interop.persistence.util;
 
 import ceylon.language.meta.model.Class;
-import com.redhat.ceylon.compiler.java.metadata.TypeInfo;
-import com.redhat.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDeclarationImpl;
+import org.eclipse.ceylon.compiler.java.metadata.TypeInfo;
+import org.eclipse.ceylon.compiler.java.runtime.metamodel.decl.ClassOrInterfaceDeclarationImpl;
 
 public class Util {
 

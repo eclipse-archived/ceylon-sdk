@@ -157,7 +157,7 @@ shared test void testMapDefines() {
         "ceylon.net" -> 0,
         "ceylon.process" -> 0,
         "ceylon.unicode" -> 0,
-        "com.redhat.ceylon.test" -> 0,
+        "org.eclipse.ceylon.test" -> 0,
         "test.ceylon.dbc" -> 0,
         "test.ceylon.file" -> 0,
         "test.ceylon.interop.java" -> 0,

@@ -41,6 +41,7 @@ shared class Runner() {
         
         if (options.tests.empty) {
             for (value mod in options.modules) {
+print("find 0 "+mod.string);
                 assert (exists m = modules.find(*parseModuleNameAndVersion(mod)));
                 testSources.add(m);
             }
@@ -88,6 +89,7 @@ shared class Runner() {
     }
     
     [String, String] parseModuleNameAndVersion(String mod) {
+print("parse module name "+mod);
         assert (exists i = mod.firstInclusion("/"));
         value name = mod[0 .. i-1];
         value version = mod[i+1 ...];
@@ -147,6 +149,7 @@ shared class Runner() {
     native("js")
     void initializeTestedModules() {
         for (value mod in options.modules) {
+print("find 1 "+mod.string);
             assert (exists m = modules.find(*parseModuleNameAndVersion(mod)));
         }
     }

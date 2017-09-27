@@ -1,9 +1,9 @@
 package ceylon.interop.spring;
 
-import com.redhat.ceylon.common.NonNull;
-import com.redhat.ceylon.common.Nullable;
-import com.redhat.ceylon.compiler.java.metadata.TypeParameter;
-import com.redhat.ceylon.compiler.java.metadata.TypeParameters;
+import org.eclipse.ceylon.common.NonNull;
+import org.eclipse.ceylon.common.Nullable;
+import org.eclipse.ceylon.compiler.java.metadata.TypeParameter;
+import org.eclipse.ceylon.compiler.java.metadata.TypeParameters;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package com.redhat.ceylon.war;
+package org.eclipse.ceylon.war;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,13 +16,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.redhat.ceylon.cmr.api.RepositoryManager;
-import com.redhat.ceylon.cmr.ceylon.CeylonUtils;
+import org.eclipse.ceylon.cmr.api.RepositoryManager;
+import org.eclipse.ceylon.cmr.ceylon.CeylonUtils;
 
-import com.redhat.ceylon.common.FileUtil;
+import org.eclipse.ceylon.common.FileUtil;
 
-import com.redhat.ceylon.module.loader.FlatpathModuleLoader;
-import com.redhat.ceylon.cmr.ceylon.loader.ModuleNotFoundException;
+import org.eclipse.ceylon.module.loader.FlatpathModuleLoader;
+import org.eclipse.ceylon.cmr.ceylon.loader.ModuleNotFoundException;
 
 /**
  * A {@link ServletContextListener} that initializes the Ceylon metamodel for

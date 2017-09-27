@@ -10,7 +10,7 @@ import ceylon.http.server {
     ServerException
 }
 
-import com.redhat.ceylon.cmr.api {
+import org.eclipse.ceylon.cmr.api {
     RepositoryManager,
     ArtifactContext {
         getSuffixFromFilename

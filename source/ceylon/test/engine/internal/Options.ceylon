@@ -15,7 +15,7 @@ class Options {
     shared String? colorReset;
     shared String? colorGreen;
     shared String? colorRed;
-    String colorKeyPrefix = "com.redhat.ceylon.common.tool.terminal.color";
+    String colorKeyPrefix = "org.eclipse.ceylon.common.tool.terminal.color";
     
     shared new parse() {
         value moduleArgs = ArrayList<String>();

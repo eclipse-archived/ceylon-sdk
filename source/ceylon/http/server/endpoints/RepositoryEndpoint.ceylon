@@ -7,10 +7,10 @@ import ceylon.http.server {
     Response,
     startsWith
 }
-import com.redhat.ceylon.cmr.api {
+import org.eclipse.ceylon.cmr.api {
     RepositoryManager
 }
-import com.redhat.ceylon.cmr.ceylon {
+import org.eclipse.ceylon.cmr.ceylon {
     CeylonUtils
 }
 
@@ -28,7 +28,7 @@ Anything(Request, Response, Anything()) moduleService(
 """Endpoint for serving Ceylon modules from repositories.
    
    By default this will serve modules obtained from a standard
-   [[com.redhat.ceylon.cmr.api::RepositoryManager]] on the
+   [[org.eclipse.ceylon.cmr.api::RepositoryManager]] on the
    given root path. Meaning that when the root path is
    `/modules` a request for
    `/modules/ceylon/math/2.0/ceylon.math-2.0.js` will look
@@ -56,7 +56,7 @@ by("Bastien Jansen", "Tako Schotanus")
 shared class RepositoryEndpoint(
         "The root path associated with the endpoint"
         String root,
-        "Optional [[com.redhat.ceylon.cmr.api::RepositoryManager]] to use for
+        "Optional [[org.eclipse.ceylon.cmr.api::RepositoryManager]] to use for
          looking up the requested modules"
         RepositoryManager repoManager = defaultRepoManager) 
         extends AsynchronousEndpoint(startsWith(root), moduleService(root, repoManager), { get }) {
