@@ -277,13 +277,20 @@ shared class TestServer() extends ServerTest() {
         },
         Endpoint {
             void service(Request request, Response response) {
-                //NOTE: test fails with request.read() because of '\n' appears at the end of the line
                 ByteBuffer dataRaw = ByteBuffer(request.readBinary());
                 String data = JString(dataRaw.array, request.requestCharset).string;
                 response.addHeader(contentType("text/html", utf8));
                 response.writeString(data);
             }
             path = startsWith("/printBody");
+        },
+        Endpoint {
+            void service(Request request, Response response) {
+                String data = request.read();
+                response.addHeader(contentType("text/html", utf8));
+                response.writeString(data);
+            }
+            path = startsWith("/readString");
         },
         Endpoint {
             void service(Request request, Response response) {
@@ -473,7 +480,15 @@ shared class TestServer() extends ServerTest() {
             assertEquals(printCharsetResponse.contents, charsetName);
 
 
-            value readRequest = ClientRequest(parse("http://localhost:8080/printBody"), post);
+            //test binary reading
+            value printBodyRequest = ClientRequest(parse("http://localhost:8080/printBody"), post);
+            printBodyRequest.setHeader("Content-Type", "text/plain; charset=" + charsetName);
+            printBodyRequest.data = ByteBuffer(base64StringStandard.decode(base64));
+            value printBodyResponse = printBodyRequest.execute();
+            assertEquals(printBodyResponse.contents, messages.get("stringoriginal"));
+
+            //test text reading
+            value readRequest = ClientRequest(parse("http://localhost:8080/readString"), post);
             readRequest.setHeader("Content-Type", "text/plain; charset=" + charsetName);
             readRequest.data = ByteBuffer(base64StringStandard.decode(base64));
             value readResponse = readRequest.execute();
