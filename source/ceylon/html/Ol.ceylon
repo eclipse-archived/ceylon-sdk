@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) {date} Red Hat Inc. and/or its affiliates and others
+ *
+ * This program and the accompanying materials are made available under the 
+ * terms of the Apache License, Version 2.0 which is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0 
+ ********************************************************************************/
 "
  The __&lt;ol&gt;__ element represents an ordered list of items. Typically, 
  ordered-list items are displayed with a preceding numbering, which can be of 

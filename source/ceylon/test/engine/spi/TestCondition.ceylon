@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) {date} Red Hat Inc. and/or its affiliates and others
+ *
+ * This program and the accompanying materials are made available under the 
+ * terms of the Apache License, Version 2.0 which is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0 
+ ********************************************************************************/
 "Represents a contract for annotation, which serves as condition, that has to be 
  fullfiled to execute test, in other case the test execution is [[ceylon.test::TestState.skipped]].
  The [[ceylon.test::ignore]] annotation is one simple implementation of this mechanism.

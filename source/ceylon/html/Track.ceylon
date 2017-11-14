@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) {date} Red Hat Inc. and/or its affiliates and others
+ *
+ * This program and the accompanying materials are made available under the 
+ * terms of the Apache License, Version 2.0 which is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0 
+ ********************************************************************************/
 "
  The __&lt;track&gt;__ element is used as a child of the media elements &lt;audio&gt; and &lt;video&gt;. 
  It lets you specify timed text tracks (or time-based data), for example to automatically handle subtitles. 
