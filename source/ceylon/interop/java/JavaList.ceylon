@@ -15,6 +15,7 @@ import java.lang {
     IllegalArgumentException,
     UnsupportedOperationException,
     IllegalStateException,
+    IndexOutOfBoundsException,
     overloaded
 }
 import java.util {
@@ -30,7 +31,17 @@ import java.util {
 shared class JavaList<E>(List<E?> list)
         extends AbstractList<E>() {
     
-    get(Integer int) => list[int];
+    void checkIndex(Integer int, Boolean forInsert) {
+        if (!forInsert && !0 <= int < list.size
+                || forInsert && !0 <= int <= list.size) {
+            throw IndexOutOfBoundsException("Index: ``int``, Size: ``list.size``");
+        }
+    }
+
+    shared actual E? get(Integer int) {
+        checkIndex(int, false);
+        return list[int];
+    }
     
     size() => list.size;
 
@@ -59,6 +70,7 @@ shared class JavaList<E>(List<E?> list)
     };
 
     shared actual E? set(Integer index, E? e) {
+       checkIndex(index, false);
         if (exists e) {
             if (is ListMutator<E> list) {
                 value result = list[index];
@@ -112,6 +124,7 @@ shared class JavaList<E>(List<E?> list)
     }
     
     shared actual overloaded void add(Integer index, E? e) {
+        checkIndex(index, true);
         if (exists e) {
             if (is ListMutator<E> list) {
                 list.insert(index, e);

@@ -13,7 +13,8 @@ import ceylon.test {
     test,
     assertTrue,
     assertNull,
-    assertNotNull
+    assertNotNull,
+    assertThatException
 }
 
 import java.lang {
@@ -21,7 +22,8 @@ import java.lang {
         getSystemProperty=getProperty
     },
     JString=String,
-    JThread=Thread
+    JThread=Thread,
+    IndexOutOfBoundsException
 }
 import java.util {
     ArrayList,
@@ -275,4 +277,28 @@ test void mutableListPrune() {
     assertEquals(list.prune(), 2, "prune count 1");
     assertEquals(list.prune(), 0, "prune count 2");
     assertEquals(list, ["A", "B"]);
+}
+
+test void javaListIndexBoundsCheck() {
+    value cList = CArrayList { 0, 1, 2 };
+    value jList = JavaList(cList);
+
+    // get
+    assertThatException(() => jList.get(-1)).hasType(`IndexOutOfBoundsException`);
+    assertEquals(jList.get(0), 0);
+    assertEquals(jList.get(1), 1);
+    assertEquals(jList.get(2), 2);
+    assertThatException(() => jList.get(3)).hasType(`IndexOutOfBoundsException`);
+
+    // set
+    assertThatException(() => jList.set(-1, -1)).hasType(`IndexOutOfBoundsException`);
+    assertEquals(jList.set(0, 10), 0);
+    assertEquals(jList.set(2, 12), 2);
+    assertThatException(() => jList.set(3, 3)).hasType(`IndexOutOfBoundsException`);
+
+    // add
+    assertThatException(() => jList.add(-1, -1)).hasType(`IndexOutOfBoundsException`);
+    assertThatException(() => jList.add(4, 4)).hasType(`IndexOutOfBoundsException`);
+    jList.add(3, 3);
+    jList.add(4, 4);
 }
