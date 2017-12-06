@@ -1,0 +1,393 @@
+fr-FR | fr | FR |  | French (France) | French | France |  | EUR
+AM | PM
+janvier | février | mars | avril | mai | juin | juillet | août | septembre | octobre | novembre | décembre
+janv. | févr. | mars | avr. | mai | juin | juil. | août | sept. | oct. | nov. | déc.
+dimanche | lundi | mardi | mercredi | jeudi | vendredi | samedi
+dim. | lun. | mar. | mer. | jeu. | ven. | sam.
+dd/MM/yy | d MMM yyyy | d MMMM yyyy
+HH:mm | HH:mm:ss | HH:mm:ss z
+#,##0 | #,##0.### | #,##0 % | #,##0.00 ¤
+
+ar-AE | ar | AE |  | arabe (Emirats Arabes Unis) | arabe | Emirats Arabes Unis | 
+ar-JO | ar | JO |  | arabe (Jordanie) | arabe | Jordanie | 
+ar-SY | ar | SY |  | arabe (Syrie) | arabe | Syrie | 
+hr-HR | hr | HR |  | croate (Croatie) | croate | Croatie | 
+fr-BE | fr | BE |  | français (Belgique) | français | Belgique | 
+es-PA | es | PA |  | espagnol (Panama) | espagnol | Panama | 
+mt-MT | mt | MT |  | maltais (Malte) | maltais | Malte | 
+es-VE | es | VE |  | espagnol (Vénézuela) | espagnol | Vénézuela | 
+bg | bg |  |  | bulgare | bulgare |  | 
+zh-TW | zh | TW |  | chinois (Taiwan) | chinois | Taiwan | 
+it | it |  |  | italien | italien |  | 
+ko | ko |  |  | coréen | coréen |  | 
+uk | uk |  |  | ukrainien | ukrainien |  | 
+lv | lv |  |  | letton | letton |  | 
+da-DK | da | DK |  | danois (Danemark) | danois | Danemark | 
+es-PR | es | PR |  | espagnol (Porto Rico) | espagnol | Porto Rico | 
+vi-VN | vi | VN |  | vietnamien (Vietnam) | vietnamien | Vietnam | 
+en-US | en | US |  | anglais (Etats-Unis) | anglais | Etats-Unis | 
+sr-ME | sr | ME |  | serbe (Monténégro) | serbe | Monténégro | 
+sv-SE | sv | SE |  | suédois (Suède) | suédois | Suède | 
+es-BO | es | BO |  | espagnol (Bolivie) | espagnol | Bolivie | 
+en-SG | en | SG |  | anglais (Singapour) | anglais | Singapour | 
+ar-BH | ar | BH |  | arabe (Bahreïn) | arabe | Bahreïn | 
+pt | pt |  |  | portugais | portugais |  | 
+ar-SA | ar | SA |  | arabe (Arabie Saoudite) | arabe | Arabie Saoudite | 
+sk | sk |  |  | slovaque | slovaque |  | 
+ar-YE | ar | YE |  | arabe (Yémen) | arabe | Yémen | 
+hi-IN | hi | IN |  | hindi (Inde) | hindi | Inde | 
+ga | ga |  |  | irlandais | irlandais |  | 
+en-MT | en | MT |  | anglais (Malte) | anglais | Malte | 
+fi-FI | fi | FI |  | finnois (Finlande) | finnois | Finlande | 
+et | et |  |  | estonien | estonien |  | 
+sv | sv |  |  | suédois | suédois |  | 
+cs | cs |  |  | tchèque | tchèque |  | 
+sr-Latn-BA | sr | BA |  | serbe (Latin,Bosnie-Herzégovine) | serbe | Bosnie-Herzégovine | 
+el | el |  |  | grec | grec |  | 
+uk-UA | uk | UA |  | ukrainien (Ukraine) | ukrainien | Ukraine | 
+hu | hu |  |  | hongrois | hongrois |  | 
+fr-CH | fr | CH |  | français (Suisse) | français | Suisse | 
+id | in |  |  | indonésien | indonésien |  | 
+es-AR | es | AR |  | espagnol (Argentine) | espagnol | Argentine | 
+ar-EG | ar | EG |  | arabe (Egypte) | arabe | Egypte | 
+ja-JP-u-ca-japanese-x-lvariant-JP | ja | JP | JP | japonais (Japon,JP) | japonais | Japon | JP
+es-SV | es | SV |  | espagnol (El Salvador) | espagnol | El Salvador | 
+pt-BR | pt | BR |  | portugais (Brésil) | portugais | Brésil | 
+be | be |  |  | biélorusse | biélorusse |  | 
+is-IS | is | IS |  | islandais (Islande) | islandais | Islande | 
+cs-CZ | cs | CZ |  | tchèque (République Tchèque) | tchèque | République Tchèque | 
+es | es |  |  | espagnol | espagnol |  | 
+pl-PL | pl | PL |  | polonais (Pologne) | polonais | Pologne | 
+tr | tr |  |  | turc | turc |  | 
+ca-ES | ca | ES |  | catalan (Espagne) | catalan | Espagne | 
+sr-CS | sr | CS |  | serbe (Serbie et Monténégro) | serbe | Serbie et Monténégro | 
+ms-MY | ms | MY |  | malais (Malaisie) | malais | Malaisie | 
+hr | hr |  |  | croate | croate |  | 
+lt | lt |  |  | lithuanien | lithuanien |  | 
+es-ES | es | ES |  | espagnol (Espagne) | espagnol | Espagne | 
+es-CO | es | CO |  | espagnol (Colombie) | espagnol | Colombie | 
+bg-BG | bg | BG |  | bulgare (Bulgarie) | bulgare | Bulgarie | 
+sq | sq |  |  | albanais | albanais |  | 
+fr | fr |  |  | français | français |  | 
+ja | ja |  |  | japonais | japonais |  | 
+sr-BA | sr | BA |  | serbe (Bosnie-Herzégovine) | serbe | Bosnie-Herzégovine | 
+is | is |  |  | islandais | islandais |  | 
+es-PY | es | PY |  | espagnol (Paraguay) | espagnol | Paraguay | 
+de | de |  |  | allemand | allemand |  | 
+es-EC | es | EC |  | espagnol (Equateur) | espagnol | Equateur | 
+es-US | es | US |  | espagnol (Etats-Unis) | espagnol | Etats-Unis | 
+ar-SD | ar | SD |  | arabe (Soudan) | arabe | Soudan | 
+en | en |  |  | anglais | anglais |  | 
+ro-RO | ro | RO |  | roumain (Roumanie) | roumain | Roumanie | 
+en-PH | en | PH |  | anglais (Philippines) | anglais | Philippines | 
+ca | ca |  |  | catalan | catalan |  | 
+ar-TN | ar | TN |  | arabe (Tunisie) | arabe | Tunisie | 
+sr-Latn-ME | sr | ME |  | serbe (Latin,Monténégro) | serbe | Monténégro | 
+es-GT | es | GT |  | espagnol (Guatemala) | espagnol | Guatemala | 
+sl | sl |  |  | slovène | slovène |  | 
+ko-KR | ko | KR |  | coréen (Corée du Sud) | coréen | Corée du Sud | 
+el-CY | el | CY |  | grec (Chypre) | grec | Chypre | 
+es-MX | es | MX |  | espagnol (Mexique) | espagnol | Mexique | 
+ru-RU | ru | RU |  | russe (Russie) | russe | Russie | 
+es-HN | es | HN |  | espagnol (Honduras) | espagnol | Honduras | 
+zh-HK | zh | HK |  | chinois (Hong-Kong) | chinois | Hong-Kong | 
+nn-NO | no | NO | NY | norvégien (Norvège,Nynorsk) | norvégien | Norvège | Nynorsk
+hu-HU | hu | HU |  | hongrois (Hongrie) | hongrois | Hongrie | 
+th-TH | th | TH |  | thaï (Thaïlande) | thaï | Thaïlande | 
+ar-IQ | ar | IQ |  | arabe (Irak) | arabe | Irak | 
+es-CL | es | CL |  | espagnol (Chili) | espagnol | Chili | 
+fi | fi |  |  | finnois | finnois |  | 
+ar-MA | ar | MA |  | arabe (Maroc) | arabe | Maroc | 
+ga-IE | ga | IE |  | irlandais (Irlande) | irlandais | Irlande | 
+mk | mk |  |  | macédonien | macédonien |  | 
+tr-TR | tr | TR |  | turc (Turquie) | turc | Turquie | 
+et-EE | et | EE |  | estonien (Estonie) | estonien | Estonie | 
+ar-QA | ar | QA |  | arabe (Qatar) | arabe | Qatar | 
+sr-Latn | sr |  |  | serbe (Latin) | serbe |  | 
+pt-PT | pt | PT |  | portugais (Portugal) | portugais | Portugal | 
+fr-LU | fr | LU |  | français (Luxembourg) | français | Luxembourg | 
+ar-OM | ar | OM |  | arabe (Oman) | arabe | Oman | 
+th | th |  |  | thaï | thaï |  | 
+sq-AL | sq | AL |  | albanais (Albanie) | albanais | Albanie | 
+es-DO | es | DO |  | espagnol (République Dominicaine) | espagnol | République Dominicaine | 
+es-CU | es | CU |  | espagnol (Cuba) | espagnol | Cuba | 
+ar | ar |  |  | arabe | arabe |  | 
+ru | ru |  |  | russe | russe |  | 
+en-NZ | en | NZ |  | anglais (Nouvelle-Zélande) | anglais | Nouvelle-Zélande | 
+sr-RS | sr | RS |  | serbe (Serbie) | serbe | Serbie | 
+de-CH | de | CH |  | allemand (Suisse) | allemand | Suisse | 
+es-UY | es | UY |  | espagnol (Uruguay) | espagnol | Uruguay | 
+ms | ms |  |  | malais | malais |  | 
+el-GR | el | GR |  | grec (Grèce) | grec | Grèce | 
+he-IL | iw | IL |  | hébreu (Israël) | hébreu | Israël | 
+en-ZA | en | ZA |  | anglais (Afrique du Sud) | anglais | Afrique du Sud | 
+th-TH-u-nu-thai-x-lvariant-TH | th | TH | TH | thaï (Thaïlande,TH) | thaï | Thaïlande | TH
+hi | hi |  |  | hindi | hindi |  | 
+fr-FR | fr | FR |  | français (France) | français | France | 
+de-AT | de | AT |  | allemand (Autriche) | allemand | Autriche | 
+nl | nl |  |  | néerlandais | néerlandais |  | 
+no-NO | no | NO |  | norvégien (Norvège) | norvégien | Norvège | 
+en-AU | en | AU |  | anglais (Australie) | anglais | Australie | 
+vi | vi |  |  | vietnamien | vietnamien |  | 
+nl-NL | nl | NL |  | néerlandais (Pays-Bas) | néerlandais | Pays-Bas | 
+fr-CA | fr | CA |  | français (Canada) | français | Canada | 
+lv-LV | lv | LV |  | letton (Lettonie) | letton | Lettonie | 
+de-LU | de | LU |  | allemand (Luxembourg) | allemand | Luxembourg | 
+es-CR | es | CR |  | espagnol (Costa Rica) | espagnol | Costa Rica | 
+ar-KW | ar | KW |  | arabe (Koweit) | arabe | Koweit | 
+sr | sr |  |  | serbe | serbe |  | 
+ar-LY | ar | LY |  | arabe (Libye) | arabe | Libye | 
+mt | mt |  |  | maltais | maltais |  | 
+it-CH | it | CH |  | italien (Suisse) | italien | Suisse | 
+da | da |  |  | danois | danois |  | 
+de-DE | de | DE |  | allemand (Allemagne) | allemand | Allemagne | 
+ar-DZ | ar | DZ |  | arabe (Algérie) | arabe | Algérie | 
+sk-SK | sk | SK |  | slovaque (Slovaquie) | slovaque | Slovaquie | 
+lt-LT | lt | LT |  | lithuanien (Lithuanie) | lithuanien | Lithuanie | 
+it-IT | it | IT |  | italien (Italie) | italien | Italie | 
+en-IE | en | IE |  | anglais (Irlande) | anglais | Irlande | 
+zh-SG | zh | SG |  | chinois (Singapour) | chinois | Singapour | 
+ro | ro |  |  | roumain | roumain |  | 
+en-CA | en | CA |  | anglais (Canada) | anglais | Canada | 
+nl-BE | nl | BE |  | néerlandais (Belgique) | néerlandais | Belgique | 
+no | no |  |  | norvégien | norvégien |  | 
+pl | pl |  |  | polonais | polonais |  | 
+zh-CN | zh | CN |  | chinois (Chine) | chinois | Chine | 
+ja-JP | ja | JP |  | japonais (Japon) | japonais | Japon | 
+de-GR | de | GR |  | allemand (Grèce) | allemand | Grèce | 
+sr-Latn-RS | sr | RS |  | serbe (Latin,Serbie) | serbe | Serbie | 
+he | iw |  |  | hébreu | hébreu |  | 
+en-IN | en | IN |  | anglais (Inde) | anglais | Inde | 
+ar-LB | ar | LB |  | arabe (Liban) | arabe | Liban | 
+es-NI | es | NI |  | espagnol (Nicaragua) | espagnol | Nicaragua | 
+zh | zh |  |  | chinois | chinois |  | 
+mk-MK | mk | MK |  | macédonien (Macédoine) | macédonien | Macédoine | 
+be-BY | be | BY |  | biélorusse (Biélo-Russie) | biélorusse | Biélo-Russie | 
+sl-SI | sl | SI |  | slovène (Slovénie) | slovène | Slovénie | 
+es-PE | es | PE |  | espagnol (Pérou) | espagnol | Pérou | 
+id-ID | in | ID |  | indonésien (Indonésie) | indonésien | Indonésie | 
+en-GB | en | GB |  | anglais (Royaume-Uni) | anglais | Royaume-Uni | 
+
+LAK | 418 | kip loatien | LAK | 2
+STD | 678 | dobra santoméen | STD | 2
+LKR | 144 | roupie srilankaise | LKR | 2
+IRR | 364 | rial iranien | IRR | 2
+MVR | 462 | rufiyaa maldivienne | MVR | 2
+AZM | 31 | manat azéri (1993-2006) | AZM | 2
+ZMK | 894 | kwacha zambien | ZMK | 2
+KPW | 408 | won nord-coréen | KPW | 2
+AFN | 971 | afghani | AFN | 2
+ZWL | 932 | Zimbabwean Dollar (2009) | ZWL | 2
+HRK | 191 | kuna croate | HRK | 2
+PGK | 598 | kina papouan-néo-guinéen | PGK | 2
+XTS | 963 | (devise de test) | XTS | -1
+SOS | 706 | shilling somalien | SOS | 2
+KZT | 398 | tenge kazakh | KZT | 2
+BIF | 108 | franc burundais | BIF | 0
+MDL | 498 | leu moldave | MDL | 2
+SDD | 736 | dinar soudanais | SDD | 2
+NPR | 524 | roupie népalaise | NPR | 2
+MRO | 478 | ouguiya mauritanien | MRO | 2
+MUR | 480 | roupie mauricienne | MUR | 2
+RUB | 643 | rouble russe | RUB | 2
+TMM | 795 | manat turkmène | TMM | 2
+XUA | 965 | ADB Unit of Account | XUA | -1
+CHF | 756 | franc suisse | CHF | 2
+KGS | 417 | som kirghize | KGS | 2
+XCD | 951 | dollar des Caraïbes orientales | XCD | 2
+MOP | 446 | pataca macanaise | MOP | 2
+VEB | 862 | bolivar | VEB | 2
+USN | 997 | dollar des Etats-Unis (jour suivant) | USN | 2
+SDG | 938 | livre soudanaise | SDG | 2
+GRD | 300 | drachme grecque | GRD | 0
+BND | 96 | dollar brunéien | BND | 2
+SYP | 760 | livre syrienne | SYP | 2
+LSL | 426 | loti lesothan | LSL | 2
+CZK | 203 | couronne tchèque | CZK | 2
+PAB | 590 | balboa panaméen | PAB | 2
+BGN | 975 | nouveau lev bulgare | BGN | 2
+CAD | 124 | dollar canadien | CAD | 2
+RUR | 810 | rouble russe (1991–1998) | RUR | 2
+THB | 764 | baht thaïlandais | THB | 2
+HKD | 344 | dollar de Hong Kong | HKD | 2
+AYM | 945 | AYM | AYM | 2
+XBB | 956 | unité monétaire européenne | XBB | -1
+FKP | 238 | livre des Falkland | FKP | 2
+XAG | 961 | argent | XAG | -1
+GYD | 328 | dollar du Guyana | GYD | 2
+AZN | 944 | manat azéri | AZN | 2
+INR | 356 | roupie indienne | INR | 2
+SLL | 694 | leone sierra-léonais | SLL | 2
+TZS | 834 | shilling tanzanien | TZS | 2
+BEF | 56 | franc belge | BEF | 0
+RSD | 941 | dinar serbe | RSD | 2
+BBD | 52 | dollar barbadien | BBD | 2
+BYR | 974 | rouble biélorusse | BYR | 0
+CVE | 132 | escudo capverdien | CVE | 2
+JPY | 392 | yen japonais | JPY | 0
+EGP | 818 | livre égyptienne | EGP | 2
+BOV | 984 | mvdol bolivien | BOV | 2
+SBD | 90 | dollar des îles Salomon | SBD | 2
+SIT | 705 | tolar slovène | SIT | 2
+AED | 784 | dirham des Émirats arabes unis | AED | 2
+TTD | 780 | dollar trinidadien | TTD | 2
+UGX | 800 | shilling ougandais | UGX | 0
+FJD | 242 | dollar fidjien | FJD | 2
+SGD | 702 | dollar de Singapour | SGD | 2
+KMF | 174 | franc comorien | KMF | 0
+VND | 704 | dông vietnamien | VND | 0
+GHC | 288 | cédi | GHC | 2
+HNL | 340 | lempira hondurien | HNL | 2
+ATS | 40 | schilling autrichien | ATS | 2
+ZWR | 935 | Zimbabwean Dollar (2008) | ZWR | 2
+VUV | 548 | vatu vanuatuan | VUV | 0
+NLG | 528 | florin néerlandais | NLG | 2
+CRC | 188 | colón costaricain | CRC | 2
+DKK | 208 | couronne danoise | DKK | 2
+PEN | 604 | nouveau sol péruvien | PEN | 2
+SRD | 968 | dollar surinamais | SRD | 2
+GNF | 324 | franc guinéen | GNF | 0
+TND | 788 | dinar tunisien | TND | 3
+QAR | 634 | rial qatari | QAR | 2
+TRL | 792 | livre turque | TRL | 0
+ZWN | 942 | ZWN | ZWN | 2
+ARS | 32 | peso argentin | ARS | 2
+MGA | 969 | ariary malgache | MGA | 2
+NOK | 578 | couronne norvégienne | NOK | 2
+CYP | 196 | livre chypriote | CYP | 2
+PYG | 600 | guaraní paraguayen | PYG | 0
+MNT | 496 | tugrik mongol | MNT | 2
+FIM | 246 | mark finlandais | FIM | 2
+YUM | 891 | dinar yougoslave Noviy | YUM | 2
+ISK | 352 | couronne islandaise | ISK | 0
+SKK | 703 | couronne slovaque | SKK | 2
+LRD | 430 | dollar libérien | LRD | 2
+SEK | 752 | couronne suédoise | SEK | 2
+FRF | 250 | franc français | F | 2
+CSD | 891 | dinar serbo-monténégrin | CSD | 2
+GIP | 292 | livre de Gibraltar | GIP | 2
+KES | 404 | shilling kényan | KES | 2
+TJS | 972 | somoni tadjik | TJS | 2
+XOF | 952 | franc CFA (BCEAO) | XOF | 0
+USS | 998 | dollar des Etats-Unis (jour même) | USS | 2
+NAD | 516 | dollar namibien | NAD | 2
+YER | 886 | rial yéménite | YER | 2
+RWF | 646 | franc rwandais | RWF | 0
+XAU | 959 | or | XAU | -1
+BOB | 68 | boliviano | BOB | 2
+SRG | 740 | florin surinamais | SRG | 2
+GBP | 826 | livre sterling | GBP | 2
+XFU | 0 | franc UIC | XFU | -1
+HTG | 332 | gourde haïtienne | HTG | 2
+MWK | 454 | kwacha malawite | MWK | 2
+WST | 882 | tala samoan | WST | 2
+NZD | 554 | dollar néo-zélandais | NZD | 2
+VEF | 937 | bolivar fuerte vénézuélien | VEF | 2
+GHS | 936 | cédi ghanéen | GHS | 2
+JOD | 400 | dinar jordanien | JOD | 3
+JMD | 388 | dollar jamaïcain | JMD | 2
+MYR | 458 | ringgit malais | MYR | 2
+RON | 946 | leu roumain | RON | 2
+BGL | 100 | lev bulgare (1962–1999) | BGL | 2
+NGN | 566 | naira nigérian | NGN | 2
+BTN | 64 | ngultrum bouthanais | BTN | 2
+ITL | 380 | lire italienne | ITL | 0
+ZMW | 967 | ZMW | ZMW | 2
+COP | 170 | peso colombien | COP | 2
+KRW | 410 | won sud-coréen | KRW | 0
+AUD | 36 | dollar australien | AUD | 2
+ZWD | 716 | dollar zimbabwéen | ZWD | 2
+MGF | 450 | franc malgache | MGF | 0
+USD | 840 | dollar des États-Unis | USD | 2
+XPD | 964 | palladium | XPD | -1
+ZAR | 710 | rand sud-africain | ZAR | 2
+DEM | 276 | mark allemand | DEM | 2
+EUR | 978 | euro | € | 2
+LYD | 434 | dinar lybien | LYD | 3
+BHD | 48 | dinar bahreïni | BHD | 3
+ERN | 232 | nafka érythréen | ERN | 2
+SSP | 728 | South Sudanese Pound | SSP | 2
+XXX | 999 | devise inconnue ou non valide | XXX | -1
+AWG | 533 | florin arubais | AWG | 2
+BYB | 112 | nouveau rouble biélorusse (1994-1999) | BYB | 0
+XPF | 953 | franc CFP | XPF | 0
+HUF | 348 | forint hongrois | HUF | 2
+BWP | 72 | pula botswanais | BWP | 2
+ETB | 230 | birr éthiopien | ETB | 2
+BZD | 84 | dollar bélizéen | BZD | 2
+XAF | 950 | franc CFA (BEAC) | XAF | 0
+SCR | 690 | roupie des Seychelles | SCR | 2
+LTL | 440 | litas lituanien | LTL | 2
+DJF | 262 | franc djiboutien | DJF | 0
+TOP | 776 | pa’anga tongan | TOP | 2
+KYD | 136 | dollar des îles Caïmanes | KYD | 2
+MZN | 943 | metical mozambicain | MZN | 2
+DOP | 214 | peso dominicain | DOP | 2
+ROL | 946 | ancien leu roumain | ROL | 2
+ADP | 20 | peseta andorrane | ADP | 0
+SHP | 654 | livre de Sainte-Hélène | SHP | 2
+IEP | 372 | livre irlandaise | IEP | 2
+XBA | 955 | unité européenne composée | XBA | -1
+ILS | 376 | nouveau shekel israélien | ILS | 2
+PTE | 620 | escudo portugais | PTE | 0
+CUP | 192 | peso cubain | CUP | 2
+CLP | 152 | peso chilien | CLP | 0
+PKR | 586 | roupie pakistanaise | PKR | 2
+SVC | 222 | colón salvadorien | SVC | 2
+XPT | 962 | platine | XPT | -1
+TWD | 901 | nouveau dollar taïwanais | TWD | 2
+LVL | 428 | lats letton | LVL | 2
+OMR | 512 | rial omani | OMR | 3
+TRY | 949 | nouvelle livre turque | TRY | 2
+LUF | 442 | franc luxembourgeois | LUF | 0
+MTL | 470 | lire maltaise | MTL | 2
+XDR | 960 | droit de tirage spécial | XDR | -1
+MAD | 504 | dirham marocain | MAD | 2
+EEK | 233 | couronne estonienne | EEK | 2
+NIO | 558 | córdoba oro nicaraguayen | NIO | 2
+BRL | 986 | réal brésilien | BRL | 2
+IQD | 368 | dinar irakien | IQD | 3
+TPE | 626 | escudo timorais | TPE | 0
+MZM | 508 | métical | MZM | 2
+BDT | 50 | taka bangladeshi | BDT | 2
+GMD | 270 | dalasi gambien | GMD | 2
+KHR | 116 | riel cambodgien | KHR | 2
+GEL | 981 | lari géorgien | GEL | 2
+CLF | 990 | unité d’investissement chilienne | CLF | 0
+AFA | 4 | afghani (1927–2002) | AFA | 2
+ESP | 724 | peseta espagnole | ESP | 0
+PLN | 985 | zloty polonais | PLN | 2
+UAH | 980 | hryvnia ukrainienne | UAH | 2
+IDR | 360 | roupie indonésienne | IDR | 2
+PHP | 608 | peso philippin | PHP | 2
+DZD | 12 | dinar algérien | DZD | 2
+TMT | 934 | nouveau manat turkmène | TMT | 2
+CDF | 976 | franc congolais | CDF | 2
+SAR | 682 | rial saoudien | SAR | 2
+AMD | 51 | dram arménien | AMD | 2
+UZS | 860 | sum ouzbek | UZS | 2
+LBP | 422 | livre libanaise | LBP | 2
+XFO | 0 | franc or | XFO | -1
+BMD | 60 | dollar bermudien | BMD | 2
+MMK | 104 | kyat myanmarais | MMK | 2
+MXN | 484 | peso mexicain | MXN | 2
+AOA | 973 | kwanza angolais | AOA | 2
+XBD | 958 | unité de compte européenne (XBD) | XBD | -1
+BAM | 977 | mark convertible bosniaque | BAM | 2
+UYU | 858 | peso uruguayen | UYU | 2
+GWP | 624 | peso bissau-guinéen | GWP | 2
+ALL | 8 | lek albanais | ALL | 2
+BSD | 44 | dollar bahaméen | BSD | 2
+CNY | 156 | yuan renminbi chinois | CNY | 2
+GTQ | 320 | quetzal guatémaltèque | GTQ | 2
+MKD | 807 | denar macédonien | MKD | 2
+SZL | 748 | lilangeni swazi | SZL | 2
+XSU | 994 | Sucre | XSU | -1
+KWD | 414 | dinar koweïtien | KWD | 3
+XBC | 957 | unité de compte européenne (XBC) | XBC | -1
+MXV | 979 | unité de conversion mexicaine (UDI) | MXV | 2
+CUC | 931 | peso cubain convertible | CUC | 2
+ANG | 532 | florin antillais | ANG | 2
+
+
+
