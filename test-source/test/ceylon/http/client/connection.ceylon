@@ -39,11 +39,11 @@ import ceylon.buffer.charset {
 }
 
 void testJSON(Object json) {
-    assertTrue(json.size > 60, "Object size");
+    assertTrue(json.size > 30, "Object size: "+json.size.string);
     assertEquals("http://ceylon-lang.org", json["homepage"], "Homepage");
     
     if (is Object owner = json["owner"]) {
-        assertEquals("ceylon", owner["login"], "Owner name");
+        assertEquals("eclipse", owner["login"], "Owner name");
     } else {
         fail("owner is not Object");
     }
@@ -51,7 +51,7 @@ void testJSON(Object json) {
 
 test
 void testGETAndParseJSON() {
-    value request = httpGet(parse("https://api.github.com/repos/ceylon/ceylon"));
+    value request = httpGet(parse("https://api.github.com/repos/eclipse/ceylon"));
     value response = request.execute();
     print(response);
     assertFalse(response.contents.empty, "Has contents");
