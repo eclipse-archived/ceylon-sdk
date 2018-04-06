@@ -19,6 +19,9 @@ import java.util {
     AbstractSet,
     AbstractMap
 }
+import java.io {
+    Serializable
+}
 
 "A Java [[java.util::Map]] that wraps a Ceylon [[Map]]. This 
  map is unmodifiable, throwing 
@@ -26,6 +29,7 @@ import java.util {
  methods."
 shared class JavaMap<K,V>(Map<K,V?> map)
         extends AbstractMap<K,V>() 
+        satisfies Serializable
         given K satisfies Object 
         given V satisfies Object {
     

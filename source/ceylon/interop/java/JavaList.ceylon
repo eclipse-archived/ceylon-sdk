@@ -23,13 +23,17 @@ import java.util {
     Collection,
     Iterator
 }
+import java.io {
+    Serializable
+}
 
 "A Java [[java.util::List]] that wraps a Ceylon [[List]].
  This list is unmodifiable, throwing 
  [[java.lang::UnsupportedOperationException]] from mutator 
  methods."
 shared class JavaList<E>(List<E?> list)
-        extends AbstractList<E>() {
+        extends AbstractList<E>()
+        satisfies Serializable {
     
     void checkIndex(Integer int, Boolean forInsert) {
         if (!forInsert && !0 <= int < list.size
