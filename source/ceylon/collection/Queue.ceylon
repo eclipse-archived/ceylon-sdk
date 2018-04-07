@@ -23,7 +23,8 @@
  may be the last element of the list."
 see (`class LinkedList`, `class ArrayList`,
      `interface Stack`)
-shared interface Queue<Element> {
+shared interface Queue<Element>
+        satisfies Collection<Element> {
     
     "Add a new element to the back of the queue."
     shared formal void offer(Element element);

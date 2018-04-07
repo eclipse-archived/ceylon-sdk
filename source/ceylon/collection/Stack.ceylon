@@ -22,7 +22,8 @@
  the last element of the list."
 see (`class LinkedList`, `class ArrayList`,
      `interface Queue`)
-shared interface Stack<Element> {
+shared interface Stack<Element>
+        satisfies Collection<Element> {
     
     "Push a new element onto the top of the stack."
     shared formal void push(Element element);
