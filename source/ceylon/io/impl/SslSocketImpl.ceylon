@@ -438,6 +438,10 @@ class SslSocketImpl(SocketChannel socket)
                     }
                 }
             }
+            else {
+                //HandshakeStatus.NEED_UNWRAP_AGAIN since JDK 9
+                throw Exception("HandshakeStatus.NEED_UNWRAP_AGAIN not yet supported");
+            }
         }
     }
 
