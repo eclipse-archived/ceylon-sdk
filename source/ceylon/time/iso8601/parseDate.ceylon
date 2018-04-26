@@ -106,6 +106,7 @@ Month? parseMonth(String string) =>
     then month else null;
 
 Integer? parseDayOfMonth(String string, Integer year, Month month) =>
+    let (value ym = yearMonth(year, month))
     if (exists day = parseInteger(string),
-        1 <= day <= month.numberOfDays())
+        1 <= day <= month.numberOfDays(ym.leapYear))
     then day else null;

@@ -15,25 +15,25 @@ shared class ParseISO8601DateTest() {
     /*
      * Happy cases
      */
-    value expect2014December29 = shuffle(curry(assertEquals))(date(2014, 12, 29));
+    value expectDecember29_2014 = shuffle(curry(assertEquals))(date(2014, 12, 29));
 
     test shared void it_parses_YYYYMMDD_formatted_date()
-            => expect2014December29(parseDate("20141229"));
+            => expectDecember29_2014(parseDate("20141229"));
 
     test shared void it_parses_YYYY_MM_DD_formatted_date()
-            => expect2014December29(parseDate("2014-12-29"));
+            => expectDecember29_2014(parseDate("2014-12-29"));
 
     test shared void it_parses_YYYYWwwD_formatted_date()
-            => expect2014December29(parseDate("2015W011"));
+            => expectDecember29_2014(parseDate("2015W011"));
 
     test shared void it_parses_YYYY_Www_D_formatted_date()
-            => expect2014December29(parseDate("2015-W01-1"));
+            => expectDecember29_2014(parseDate("2015-W01-1"));
 
     test shared void it_parses_YYYYDDD_formatted_date()
-            => expect2014December29(parseDate("2014363"));
+            => expectDecember29_2014(parseDate("2014363"));
 
     test shared void it_parses_YYYY_DDD_formatted_date()
-            => expect2014December29(parseDate("2014-363"));
+            => expectDecember29_2014(parseDate("2014-363"));
 
     /*
      * Failure modes
@@ -46,6 +46,41 @@ shared class ParseISO8601DateTest() {
             => assertNull(parseDate("0504-20-16"));
 }
 
+shared class ParseISO8601LeapYearTest() {
+
+    /*
+     * Happy cases
+     */
+    value expectFebruary29_2016 = shuffle(curry(assertEquals))(date(2016, 2, 29));
+
+    test shared void it_parses_YYYYMMDD_formatted_date()
+            => expectFebruary29_2016(parseDate("20160229"));
+
+    test shared void it_parses_YYYY_MM_DD_formatted_date()
+            => expectFebruary29_2016(parseDate("2016-02-29"));
+
+    test shared void it_parses_YYYYWwwD_formatted_date()
+            => expectFebruary29_2016(parseDate("2016W094"));
+
+    test shared void it_parses_YYYY_Www_D_formatted_date()
+            => expectFebruary29_2016(parseDate("2016-W09-4"));
+
+    test shared void it_parses_YYYYDDD_formatted_date()
+            => expectFebruary29_2016(parseDate("2016060"));
+
+    test shared void it_parses_YYYY_DDD_formatted_date()
+            => expectFebruary29_2016(parseDate("2016-060"));
+
+    /*
+     * Failure modes
+     */    
+    test shared void fail_YYYYMMDD_not_a_leapYear()
+            => assertNull(parseDate("20170229"));
+
+    test shared void fail_YYYY_MM_DD_not_a_leapYear()
+            => assertNull(parseDate("2017-02-29"));
+
+}
 
 shared class ParseIso8601TimeTest() {
     
