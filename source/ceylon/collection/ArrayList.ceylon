@@ -362,8 +362,8 @@ shared serializable class ArrayList<Element>
     shared actual Integer removeWhere(
         Boolean selecting(Element&Object element)) {
         variable value i=0;
-        variable value j=size;
-        while (i<size) {
+        variable value j=length;
+        while (i<length) {
             if (exists elem = array[i++]) {
                 if (selecting(elem)) {
                     j=i-1;
