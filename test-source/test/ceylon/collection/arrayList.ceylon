@@ -91,4 +91,39 @@ shared class ArrayListTest() satisfies MutableListTests {
         assertThatException(() => list1.copyTo(list2, 1, 0, 3));
         assertThatException(() => list1.copyTo(list2, 0, 1, 3));
     }
+    
+    test shared void testRemoveWhere() {
+        """Executes the given `mutate()` function for each of the following inputs:
+
+           0..10
+           null,0..10
+           0,null,1..10
+           0..10,null
+
+           The `expected` parameter should contain the expected outcome for the first input in the above list. The
+           expected outcome is automatically updated to contain the null at the correct position for the other inputs.
+           For the third input with null at index 1, the `expectedNullIndexThatWasAtIndexOne` indicates the index where
+           in the output the null value is expected to be.
+           """
+        void testWith(void mutate(ArrayList<Integer?> a), List<Integer> expected, Integer expectedNullIndexThatWasAtIndexOne) {
+            for (Anything(ArrayList<Integer?>, Integer) nullInjector in [
+                        (ArrayList<Integer?> i, Integer nullIndex) => null,
+                        (ArrayList<Integer?> i, Integer nullIndex) => i.insert(0, null),
+                        (ArrayList<Integer?> i, Integer nullIndex) => i.insert(nullIndex, null),
+                        (ArrayList<Integer?> i, Integer nullIndex) => i.add(null)
+            ]) {
+                value actual = ArrayList<Integer?> { elements = 0..10; };
+                nullInjector(actual, 1);
+                mutate(actual);
+                value expectedCopy = ArrayList<Integer?> { elements = expected; };
+                nullInjector(expectedCopy, expectedNullIndexThatWasAtIndexOne);
+                assertEquals(actual, expectedCopy);
+            }
+        }
+        testWith((x) => x.removeWhere((x) => x < 5), 5..10, 0);
+        testWith((x) => x.removeWhere((x) => x > 5), 0..5, 1);
+        testWith((x) => x.removeWhere((x) => x < 15), [], 0);
+        testWith((x) => x.removeWhere((x) => x > 15), 0..10, 1);
+        testWith((x) => x.removeWhere((x) => x > 3 && x < 7), (0..3).append(7..10), 1);
+    }
 }
