@@ -52,7 +52,8 @@ shared native Regex regex(
    be sure to test thoroughly, especially when using more advanced features.
    """
 throws(`class RegexException`)
-shared sealed abstract class Regex(expression, global = false, ignoreCase = false, multiLine = false) {
+shared sealed abstract class Regex(expression, global = false, ignoreCase = false, multiLine = false)
+        satisfies Category<String> {
     "The regular expression to be used for all operations"
     shared String expression;
     "For returning all matches instead of only the first"
@@ -123,6 +124,8 @@ shared sealed abstract class Regex(expression, global = false, ignoreCase = fals
         return find(input) exists;
     }
     
+    contains(String element) => test(element);
+
     """Returns the [[input]] string with the part(s) matching the regular expression
        replaced with the [[replacement]] string or the value returned by the
        replacement function. If the global flag is set, replaces all matches of the

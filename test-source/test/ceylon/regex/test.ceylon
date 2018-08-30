@@ -186,6 +186,13 @@ shared void testTest() {
 }
 
 test
+shared void testContainsAkaInOperator() {
+    assertTrue(input in regex("a+p"));
+    assertTrue(input in regex{expression="^de.*RD!$"; ignoreCase=true;});
+    assertTrue("90 years old" in regex("[0-9]+ years"));
+}
+
+test
 shared void testTestQuoted() {
     assertFalse(regex(" (mouw): ").test(input));
     print(quote(" (mouw): "));
