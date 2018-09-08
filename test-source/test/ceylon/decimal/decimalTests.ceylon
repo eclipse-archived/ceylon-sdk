@@ -38,6 +38,12 @@ test void instantiationAndEquality() {
     assertTrue(decimalNumber(1) != decimalNumber(2), "1!=2");
 }
 
+test void equalsOtherType() {
+    assertTrue(zero == zero);
+    assertFalse(zero == 0);
+    assertFalse(zero == "0");
+}
+
 test void parse() {
     print("parseDecimal");
     assertEquals(one, parseDecimal("1"), "parseDecimal(1)");

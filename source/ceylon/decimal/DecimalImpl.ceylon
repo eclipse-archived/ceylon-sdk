@@ -129,7 +129,9 @@ final class DecimalImpl(BigDecimal num)
         }
     }
     shared actual Boolean equals(Object that) {
-        assert (is DecimalImpl that);
+        if (!is DecimalImpl that) {
+            return false;
+        }
         return implementation===that.implementation
                 || implementation.compareTo(that.implementation)==0;
     }
