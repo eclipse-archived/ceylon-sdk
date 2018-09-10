@@ -20,7 +20,7 @@ shared serializable class Period(years=0, months=0, days=0, hours=0, minutes=0, 
        satisfies ReadablePeriod & ReadableTimePeriod & ReadableDatePeriod
                & PeriodBehavior<Period>
                & Comparable<Period>
-               & Summable<Period>
+               & Invertible<Period>
                & Scalable<Integer, Period> {
 
     "The number of years."
@@ -322,6 +322,8 @@ shared serializable class Period(years=0, months=0, days=0, hours=0, minutes=0, 
             seconds = scale * seconds;
             milliseconds = scale * milliseconds;
     };
+    
+    shared actual Period negated => scale(-1);
 
 }
 
