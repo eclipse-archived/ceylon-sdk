@@ -42,7 +42,15 @@ shared native Regex regex(
        Regex re = regex("[0-9]+ years");
        assert(re.test("90 years old"));
        print(re.replace("90 years old", "very"));
-       
+
+   A regular expression can also be seen as a (potentially unlimited) set of
+   `String`s (that match the regex). Hence `Regex` implements the `Category`
+   interface, and you can use e.g. the `in` operator to check whether a string
+   is *in* the set of strings matched by the regular expression like so:
+
+       Regex re = regex("[0-9]+ years");
+       assert("90 years old" in re);
+
    There are a few small incompatibilities between the two implementations.
    Java-specific constructs in the regular expression syntax (e.g. [a-z&&[^bc]],
    (?<=foo), \A, \Q) work only on the JVM backend, while the Javascript-specific
@@ -52,7 +60,8 @@ shared native Regex regex(
    be sure to test thoroughly, especially when using more advanced features.
    """
 throws(`class RegexException`)
-shared sealed abstract class Regex(expression, global = false, ignoreCase = false, multiLine = false) {
+shared sealed abstract class Regex(expression, global = false, ignoreCase = false, multiLine = false)
+        satisfies Category<String> {
     "The regular expression to be used for all operations"
     shared String expression;
     "For returning all matches instead of only the first"
@@ -123,6 +132,8 @@ shared sealed abstract class Regex(expression, global = false, ignoreCase = fals
         return find(input) exists;
     }
     
+    contains(String element) => test(element);
+
     """Returns the [[input]] string with the part(s) matching the regular expression
        replaced with the [[replacement]] string or the value returned by the
        replacement function. If the global flag is set, replaces all matches of the
