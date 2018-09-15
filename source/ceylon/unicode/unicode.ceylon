@@ -82,6 +82,8 @@ import java.util {
     Locale
 }
 
+import ceylon.unicode { Directionality { ... } }
+
 "The version of the Unicode standard being used, or `null` 
  if this information was not available."
 shared String? unicodeVersion {
@@ -95,7 +97,7 @@ shared String? unicodeVersion {
 
 "Enumerates the *Directionalities* defined by the Unicode 
  specification."
-shared abstract class Directionality(code)
+shared class Directionality
         of arabicNumber 
          | boundaryNeutral
          | commonNumberSeparator
@@ -121,49 +123,55 @@ shared abstract class Directionality(code)
      by the Unicode specification."
     shared String code;
     
+    abstract new withCode(String code) {
+        this.code=code;
+    }
+    
+    shared new arabicNumber  
+            extends withCode("AN") {}
+    shared new boundaryNeutral  
+            extends withCode("BN") {}
+    shared new commonNumberSeparator  
+            extends withCode("CS") {}
+    shared new europeanNumber  
+            extends withCode("EN") {}
+    shared new europeanNumberSeparator  
+            extends withCode("ES") {}
+    shared new europeanNumberTerminator  
+            extends withCode("ET") {}
+    shared new leftToRight  
+            extends withCode("L") {}
+    shared new leftToRightEmbedding  
+            extends withCode("LRE") {}
+    shared new leftToRightOverride  
+            extends withCode("LRO") {}
+    shared new nonspacingMark  
+            extends withCode("NSM") {}
+    shared new otherNeutrals  
+            extends withCode("ON") {}
+    shared new paragraphSeparator  
+            extends withCode("B") {}
+    shared new popDirectionalFormat  
+            extends withCode("PDF") {}
+    shared new rightToLeft  
+            extends withCode("R") {}
+    shared new rightToLeftArabic  
+            extends withCode("AL") {}
+    shared new rightToLeftEmbedding  
+            extends withCode("RLE") {}
+    shared new rightToLeftOverride  
+            extends withCode("RLO") {}
+    shared new segmentSeparator  
+            extends withCode("S") {}
+    shared new undefined  
+            extends withCode("") {}
+    shared new whitespace  
+            extends withCode("WS") {}
+
     string => code;
     
 }
-shared object arabicNumber  
-        extends Directionality("AN") {}
-shared object boundaryNeutral  
-        extends Directionality("BN") {}
-shared object commonNumberSeparator  
-        extends Directionality("CS") {}
-shared object europeanNumber  
-        extends Directionality("EN") {}
-shared object europeanNumberSeparator  
-        extends Directionality("ES") {}
-shared object europeanNumberTerminator  
-        extends Directionality("ET") {}
-shared object leftToRight  
-        extends Directionality("L") {}
-shared object leftToRightEmbedding  
-        extends Directionality("LRE") {}
-shared object leftToRightOverride  
-        extends Directionality("LRO") {}
-shared object nonspacingMark  
-        extends Directionality("NSM") {}
-shared object otherNeutrals  
-        extends Directionality("ON") {}
-shared object paragraphSeparator  
-        extends Directionality("B") {}
-shared object popDirectionalFormat  
-        extends Directionality("PDF") {}
-shared object rightToLeft  
-        extends Directionality("R") {}
-shared object rightToLeftArabic  
-        extends Directionality("AL") {}
-shared object rightToLeftEmbedding  
-        extends Directionality("RLE") {}
-shared object rightToLeftOverride  
-        extends Directionality("RLO") {}
-shared object segmentSeparator  
-        extends Directionality("S") {}
-shared object undefined  
-        extends Directionality("") {}
-shared object whitespace  
-        extends Directionality("WS") {}
+
 
 "The directionality of the given character."
 shared Directionality directionality(Character character) 
@@ -233,165 +241,197 @@ shared abstract class GeneralCategory(code, description)
 
 "Enumerates the general categories in the *Letter* major 
  class."
-shared abstract class Letter(String code, String description)  
-        of letterLowercase
-         | letterModifier
-         | letterOther
-         | letterTitlecase
-         | letterUppercase 
-        extends GeneralCategory(code, description) {
+shared class Letter 
+        of lowercase
+         | modifier
+         | other
+         | titlecase
+         | uppercase 
+        extends GeneralCategory {
+
+    abstract new with(String code, String description) 
+        extends GeneralCategory(code, description) {}
+
+    "The General category for `Ll`"
+    shared new lowercase 
+            extends with("Ll", "Letter, lowercase") {}
+    "The General category for `Lm`"
+    shared new modifier 
+            extends with("Lm", "Letter, modifier") {}
+    "The General category for `Lo`"
+    shared new other  
+            extends with("Lo", "Letter, other") {}
+    "The General category for `Lt`"
+    shared new titlecase  
+            extends with("Lt", "Letter, titlecase") {}
+    "The General category for `Lu`"
+    shared new uppercase  
+            extends with("Lu", "Letter, unassigned") {}
+
 }
-"The General category for `Ll`"
-shared object letterLowercase 
-        extends Letter("Ll", "Letter, lowercase") {}
-"The General category for `Lm`"
-shared object letterModifier 
-        extends Letter("Lm", "Letter, modifier") {}
-"The General category for `Lo`"
-shared object letterOther  
-        extends Letter("Lo", "Letter, other") {}
-"The General category for `Lt`"
-shared object letterTitlecase  
-        extends Letter("Lt", "Letter, titlecase") {}
-"The General category for `Lu`"
-shared object letterUppercase  
-        extends Letter("Lu", "Letter, unassigned") {}
 
 "Enumerates the general categories in the *Mark* major 
  class."
-shared abstract class Mark(String code, String description)
-        of markCombiningSpacing
-         | markEnclosing
-         | markNonspacing
-        extends GeneralCategory(code, description) {
+shared class Mark
+        of combiningSpacing
+         | enclosing
+         | nonspacing
+        extends GeneralCategory {
+    
+    abstract new with(String code, String description)
+            extends GeneralCategory(code, description) {}
+
+    "The General category for `Mc`"
+    shared new combiningSpacing  
+            extends with("Mc", "Mark, spacing combining") {}
+    "The General category for `Me`"
+    shared new enclosing  
+            extends with("Me", "Mark, enclosing") {}
+    "The General category for `Mn`"
+    shared new nonspacing  
+            extends with("Mn", "Mark, nonspacing") {}
 }
-"The General category for `Mc`"
-shared object markCombiningSpacing  
-        extends Mark("Mc", "Mark, spacing combining") {}
-"The General category for `Me`"
-shared object markEnclosing  
-        extends Mark("Me", "Mark, enclosing") {}
-"The General category for `Mn`"
-shared object markNonspacing  
-        extends Mark("Mn", "Mark, nonspacing") {}
 
 "Enumerates the general categories in the *Number* major 
  class."
-shared abstract class Number(String code, String description)
-        of numberDecimalDigit
-         | numberLetter
-         | numberOther
-        extends GeneralCategory(code, description) {
+shared class Number
+        of decimalDigit
+         | letter
+         | other
+        extends GeneralCategory {
+
+    abstract new with(String code, String description)
+            extends GeneralCategory(code, description) {}
+
+    "The General category for `Nd`"
+    shared new decimalDigit  
+            extends with("Nd", "Number, decimal digit") {}
+    "The General category for `Nl`"
+    shared new letter  
+            extends with("Nl", "Number, letter") {}
+    "The General category for `No`"
+    shared new other  
+            extends with("No", "Number, other") {}
 }
-"The General category for `Nd`"
-shared object numberDecimalDigit  
-        extends Number("Nd", "Number, decimal digit") {}
-"The General category for `Nl`"
-shared object numberLetter  
-        extends Number("Nl", "Number, letter") {}
-"The General category for `No`"
-shared object numberOther  
-        extends Number("No", "Number, other") {}
 
 "Enumerates the general categories in the *Other* major 
  class."
-shared abstract class Other(String code, String description)  
-        of otherControl
-         | otherFormat
-         | otherPrivateUse
-         | otherSurrogate
-         | otherUnassigned
-        extends GeneralCategory(code, description) {
+shared class Other  
+        of control
+         | format
+         | privateUse
+         | surrogate
+         | unassigned
+        extends GeneralCategory {
+
+    abstract new with(String code, String description)
+            extends GeneralCategory(code, description) {}
+
+    "The General category for `Cc`"
+    shared new control  
+            extends with("Cc", "Other, control") {}
+    "The General category for `Cf`"
+    shared new format  
+            extends with("Cf", "Other, format") {}
+    "The General category for `Co`"
+    shared new privateUse  
+            extends with("Co", "Control, private use") {}
+    "The General category for `Cs`"
+    shared new surrogate  
+            extends with("Cs", "Other, surrogate") {}
+    "The General category for `Cn`"
+    shared new unassigned  
+            extends with("Cn", "Other, not assigned") {}
+
 }
-"The General category for `Cc`"
-shared object otherControl  
-        extends Other("Cc", "Other, control") {}
-"The General category for `Cf`"
-shared object otherFormat  
-        extends Other("Cf", "Other, format") {}
-"The General category for `Co`"
-shared object otherPrivateUse  
-        extends Other("Co", "Control, private use") {}
-"The General category for `Cs`"
-shared object otherSurrogate  
-        extends Other("Cs", "Other, surrogate") {}
-"The General category for `Cn`"
-shared object otherUnassigned  
-        extends Other("Cn", "Other, not assigned") {}
 
 "Enumerates the general categories in the *Punctuation* 
  major class."
-shared abstract class Punctuation(String code, String description)
-        of punctuationConnector
-         | punctuationDash
-         | punctuationClose
-         | punctuationFinalQuote
-         | punctuationInitialQuote
-         | punctuationOther
-         | punctuationOpen
-        extends GeneralCategory(code, description) {
+shared class Punctuation
+        of connector 
+         | dash
+         | close
+         | finalQuote
+         | initialQuote
+         | other
+         | open
+        extends GeneralCategory {
+
+    abstract new with(String code, String description)
+            extends GeneralCategory(code, description) {}
+
+
+    "The General category for `Pe`"
+    shared new close  
+            extends with("Pe", "Punctuation, close") {}
+    "The General category for `Pc`"
+    shared new connector  
+            extends with("Pc", "Punctuaton, connector") {}
+    "The General category for `Pd`"
+    shared new dash  
+            extends with("Pd", "Punctuation, dash") {}
+    "The General category for `Pf`"
+    shared new finalQuote  
+            extends with("Pf", "Punctuation, final quote") {}
+    "The General category for `Pi`"
+    shared new initialQuote  
+            extends with("Pi", "Punctuation, initial quote") {}
+    "The General category for `Ps`"
+    shared new open  
+            extends with("Ps", "Punctuation, open") {}
+    "The General category for `Po`"
+    shared new other  
+            extends with("Po", "Punctuation, other") {}
+
 }
-"The General category for `Pe`"
-shared object punctuationClose  
-        extends Punctuation("Pe", "Punctuation, close") {}
-"The General category for `Pc`"
-shared object punctuationConnector  
-        extends Punctuation("Pc", "Punctuaton, connector") {}
-"The General category for `Pd`"
-shared object punctuationDash  
-        extends Punctuation("Pd", "Punctuation, dash") {}
-"The General category for `Pf`"
-shared object punctuationFinalQuote  
-        extends Punctuation("Pf", "Punctuation, final quote") {}
-"The General category for `Pi`"
-shared object punctuationInitialQuote  
-        extends Punctuation("Pi", "Punctuation, initial quote") {}
-"The General category for `Ps`"
-shared object punctuationOpen  
-        extends Punctuation("Ps", "Punctuation, open") {}
-"The General category for `Po`"
-shared object punctuationOther  
-        extends Punctuation("Po", "Punctuation, other") {}
 
 "Enumerates the general categories in the *Separator* major 
  class."
-shared abstract class Separator(String code, String description) 
-        of separatorLine
-         | separatorParagraph
-         | separatorSpace 
-        extends GeneralCategory(code, description) {
+shared class Separator 
+        of line
+         | paragraph
+         | space 
+        extends GeneralCategory {
+
+    abstract new with(String code, String description)
+            extends GeneralCategory(code, description) {}
+
+    "The General category for `Zl`"
+    shared new line  
+            extends with("Zl", "Separator, line") {}
+    "The General category for `Zp`"
+    shared new paragraph  
+            extends with("Zp", "Space, paragraph") {}
+    "The General category for `Zs`"
+    shared new space  
+            extends with("Zs", "Separator, space") {}
 }
-"The General category for `Zl`"
-shared object separatorLine  
-        extends Separator("Zl", "Separator, line") {}
-"The General category for `Zp`"
-shared object separatorParagraph  
-        extends Separator("Zp", "Space, paragraph") {}
-"The General category for `Zs`"
-shared object separatorSpace  
-        extends Separator("Zs", "Separator, space") {}
 
 "Enumerates the general categories in the *Symbol* major 
  class."
-shared abstract class Symbol(String code, String description)
-        of symbolCurrency
-         | symbolMath
-         | symbolModifier
-         | symbolOther
-        extends GeneralCategory(code, description) {
+shared class Symbol
+        of currency
+         | math
+         | modifier
+         | other
+        extends GeneralCategory {
+
+    abstract new with(String code, String description)
+            extends GeneralCategory(code, description) {}
+
+    "The General category for `Sc`"
+    shared new currency  
+            extends with("Sc", "Symbol, currency") {}
+    "The General category for `Sm`"
+    shared new math  
+            extends with("Sm", "Symbol, math") {}
+    "The General category for `Sk`"
+    shared new modifier  
+            extends with("Sk", "Symbol, modifier") {}
+    "The General category for `So`"
+    shared new other  
+            extends with("So", "Symbol, other") {}
 }
-"The General category for `Sc`"
-shared object symbolCurrency  
-        extends Symbol("Sc", "Symbol, currency") {}
-"The General category for `Sm`"
-shared object symbolMath  
-        extends Symbol("Sm", "Symbol, math") {}
-"The General category for `Sk`"
-shared object symbolModifier  
-        extends Symbol("Sk", "Symbol, modifier") {}
-"The General category for `So`"
-shared object symbolOther  
-        extends Symbol("So", "Symbol, other") {}
 
 "Determine if the given integer [[code point|codePoint]] is
  assigned a Unicode character."
@@ -410,66 +450,66 @@ shared Boolean privateUse(Integer codePoint)
 shared GeneralCategory generalCategory(Character character)
         => let (gc = getType(character.integer).byte)
              if (gc == gcCOMBINING_SPACING_MARK)
-                then markCombiningSpacing
+                then Mark.combiningSpacing
         else if (gc == gcCONNECTOR_PUNCTUATION) 
-                then punctuationConnector 
+                then Punctuation.connector 
         else if (gc == gcCONTROL) 
-                then otherControl 
+                then Other.control 
         else if (gc == gcCURRENCY_SYMBOL) 
-                then symbolCurrency 
+                then Symbol.currency 
         else if (gc == gcDASH_PUNCTUATION) 
-                then punctuationDash 
+                then Punctuation.dash 
         else if (gc == gcDECIMAL_DIGIT_NUMBER) 
-                then numberDecimalDigit 
+                then Number.decimalDigit 
         else if (gc == gcENCLOSING_MARK) 
-                then markEnclosing 
+                then Mark.enclosing 
         else if (gc == gcEND_PUNCTUATION) 
-                then punctuationClose 
+                then Punctuation.close 
         else if (gc == gcFINAL_QUOTE_PUNCTUATION) 
-                then punctuationFinalQuote 
+                then Punctuation.finalQuote 
         else if (gc == gcFORMAT) 
-                then otherFormat 
+                then Other.format 
         else if (gc == gcINITIAL_QUOTE_PUNCTUATION) 
-                then punctuationInitialQuote 
+                then Punctuation.initialQuote 
         else if (gc == gcLETTER_NUMBER) 
-                then numberLetter 
+                then Number.letter 
         else if (gc == gcLINE_SEPARATOR) 
-                then separatorLine 
+                then Separator.line 
         else if (gc == gcLOWERCASE_LETTER) 
-                then letterLowercase 
+                then Letter.lowercase 
         else if (gc == gcMATH_SYMBOL) 
-                then symbolMath 
+                then Symbol.math 
         else if (gc == gcMODIFIER_LETTER) 
-                then letterModifier 
+                then Letter.modifier 
         else if (gc == gcMODIFIER_SYMBOL) 
-                then symbolModifier 
+                then Symbol.modifier 
         else if (gc == gcNON_SPACING_MARK) 
-                then markNonspacing 
+                then Mark.nonspacing 
         else if (gc == gcOTHER_LETTER) 
-                then letterOther 
+                then Letter.other 
         else if (gc == gcOTHER_NUMBER) 
-                then numberOther 
+                then Number.other 
         else if (gc == gcOTHER_PUNCTUATION) 
-                then punctuationOther 
+                then Punctuation.other 
         else if (gc == gcOTHER_SYMBOL) 
-                then symbolOther 
+                then Symbol.other 
         else if (gc == gcPARAGRAPH_SEPARATOR) 
-                then separatorParagraph 
+                then Separator.paragraph 
         else if (gc == gcPRIVATE_USE) 
-                then otherPrivateUse 
+                then Other.privateUse 
         else if (gc == gcSPACE_SEPARATOR) 
-                then separatorSpace 
+                then Separator.space 
         else if (gc == gcSTART_PUNCTUATION) 
-                then punctuationOpen 
+                then Punctuation.open 
         else if (gc == gcSURROGATE) 
-                then otherSurrogate 
+                then Other.surrogate 
         else if (gc == gcTITLECASE_LETTER) 
-                then letterTitlecase 
+                then Letter.titlecase 
         else if (gc == gcUNASSIGNED) 
-                then otherUnassigned 
+                then Other.unassigned 
         else if (gc == gcUPPERCASE_LETTER) 
-                then letterUppercase
-        else otherUnassigned;
+                then Letter.uppercase
+        else Other.unassigned;
 
 "The Unicode name of the given character."
 shared String characterName(Character character) {

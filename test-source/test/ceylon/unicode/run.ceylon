@@ -27,16 +27,16 @@ test void testCharacterName() {
 }
 
 test void testGeneralCategory() {
-    assertEquals(letterUppercase, generalCategory('A'));
-    assertEquals(separatorSpace, generalCategory(' '));
-    assertEquals(numberDecimalDigit, generalCategory('\{ARABIC-INDIC DIGIT ONE}'));
+    assertEquals(Letter.uppercase, generalCategory('A'));
+    assertEquals(Separator.space, generalCategory(' '));
+    assertEquals(Number.decimalDigit, generalCategory('\{ARABIC-INDIC DIGIT ONE}'));
 }
 
 test void testDirectionality() {
-    assertEquals(leftToRight, directionality('A'));
-    assertEquals(europeanNumber, directionality('1'));
-    assertEquals(paragraphSeparator, directionality('\n'));
-    assertEquals(arabicNumber, directionality('\{ARABIC-INDIC DIGIT ONE}'));
+    assertEquals(Directionality.leftToRight, directionality('A'));
+    assertEquals(Directionality.europeanNumber, directionality('1'));
+    assertEquals(Directionality.paragraphSeparator, directionality('\n'));
+    assertEquals(Directionality.arabicNumber, directionality('\{ARABIC-INDIC DIGIT ONE}'));
 }
 
 test void testGraphemes() {
