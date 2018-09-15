@@ -20,8 +20,7 @@ import ceylon.http.server {
     startsWith,
     ServerRequest=Request,
     ServerResponse=Response,
-    Status,
-    started
+    Status
 }
 import java.util.concurrent {
     Semaphore
@@ -140,7 +139,7 @@ object localServer {
         }
     };
     server.addListener(void(Status status) {
-            if (status == started) {
+            if (status == Status.started) {
                 runningSync.release();
             }
         });
