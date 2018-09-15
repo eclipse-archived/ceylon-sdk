@@ -47,9 +47,12 @@ shared sealed interface Server {
     shared formal void addWebSocketEndpoint(WebSocketBaseEndpoint endpoint);
 
     "Registers a status change listener.
-     Listeners are called on status changes. 
-     Statuses are: [[starting]], [[started]], 
-     [[stopping]], [[stopped]]."
+     Listeners are called on [[status|Status]] changes. 
+     Statuses are: 
+     [[starting|Status.starting]], 
+     [[started|Status.started]], 
+     [[stopping|Status.stopping]], 
+     [[stopped|Status.stopped]]."
     shared formal void addListener(void listener(Status status));
 
 }

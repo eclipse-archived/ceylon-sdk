@@ -14,11 +14,7 @@ import ceylon.collection {
 import ceylon.http.server {
     Server,
     Options,
-    Status,
-    starting,
-    started,
-    stopping,
-    stopped,
+    Status { ... },
     InternalException,
     HttpEndpoint,
     TemplateMatcher,

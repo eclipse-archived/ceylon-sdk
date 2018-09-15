@@ -24,24 +24,32 @@ import ceylon.buffer.codec {
     resetStrategy=reset
 }
 
-abstract class Base64PieceEncoderState()
+import ceylon.buffer.base {
+    Base64PieceEncoderState { ... },
+    Base64PieceDecoderState { ... }
+}
+
+final class Base64PieceEncoderState
         of
     b64EncodeFirst |
     b64EncodeSecond |
-    b64EncodeThird {}
-object b64EncodeFirst extends Base64PieceEncoderState() {}
-object b64EncodeSecond extends Base64PieceEncoderState() {}
-object b64EncodeThird extends Base64PieceEncoderState() {}
-abstract class Base64PieceDecoderState()
+    b64EncodeThird {
+    shared new b64EncodeFirst {}
+    shared new b64EncodeSecond {}
+    shared new b64EncodeThird {}
+}
+
+final class Base64PieceDecoderState
         of
     b64DecodeFirst |
     b64DecodeSecond |
     b64DecodeThird |
-    b64DecodeFourth {}
-object b64DecodeFirst extends Base64PieceDecoderState() {}
-object b64DecodeSecond extends Base64PieceDecoderState() {}
-object b64DecodeThird extends Base64PieceDecoderState() {}
-object b64DecodeFourth extends Base64PieceDecoderState() {}
+    b64DecodeFourth {
+    shared new b64DecodeFirst {}
+    shared new b64DecodeSecond {}
+    shared new b64DecodeThird {}
+    shared new b64DecodeFourth {}
+}
 
 shared sealed abstract class Base64<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
         satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,List<Byte>,Byte>

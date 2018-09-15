@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0 
  ********************************************************************************/
-shared class TomlValueType
+shared final class TomlValueType
         of table | array | time | date | dateTime| zoneDateTime
             | boolean | float | integer | str {
 

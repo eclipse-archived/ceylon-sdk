@@ -8,22 +8,25 @@
  * SPDX-License-Identifier: Apache-2.0 
  ********************************************************************************/
 "The status of a [[Server]]."
-shared abstract class Status() 
-        of starting | started | stopping | stopped {}
+shared final class Status
+        of starting | started | stopping | stopped {
+    
+    shared actual String string;
+    
+    shared new starting {
+        string => "starting";
+    }
+    
+    shared new started {
+        string => "started";
+    }
+    
+    shared new stopping {
+        string => "stopping";
+    }
+    
+    shared new stopped {
+         string => "stopped";
+    }
 
-shared object starting extends Status() {
-    shared actual String string => "starting";
 }
-
-shared object started extends Status() {
-    shared actual String string => "started";
-}
-
-shared object stopping extends Status() {
-    shared actual String string => "stopping";
-}
-
-shared object stopped extends Status() {
-    shared actual String string => "stopped";
-}
-

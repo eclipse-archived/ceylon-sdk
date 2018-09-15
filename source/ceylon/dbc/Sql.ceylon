@@ -18,9 +18,6 @@ import ceylon.decimal {
     Decimal,
     parseDecimal
 }
-import ceylon.language.meta.model {
-    Type
-}
 import ceylon.time {
     today,
     Instant,

@@ -24,20 +24,26 @@ import ceylon.buffer.codec {
     resetStrategy=reset
 }
 
-abstract class Base32PieceEncoderState()
+import ceylon.buffer.base {
+    Base32PieceEncoderState { ... },
+    Base32PieceDecoderState { ... }
+}
+
+final class Base32PieceEncoderState
         of
     b32EncodeFirst |
     b32EncodeSecond |
     b32EncodeThird |
     b32EncodeFourth |
-    b32EncodeFifth {}
-object b32EncodeFirst extends Base32PieceEncoderState() {}
-object b32EncodeSecond extends Base32PieceEncoderState() {}
-object b32EncodeThird extends Base32PieceEncoderState() {}
-object b32EncodeFourth extends Base32PieceEncoderState() {}
-object b32EncodeFifth extends Base32PieceEncoderState() {}
+    b32EncodeFifth {
+    shared new b32EncodeFirst {}
+    shared new b32EncodeSecond {}
+    shared new b32EncodeThird {}
+    shared new b32EncodeFourth {}
+    shared new b32EncodeFifth {}
+}
 
-abstract class Base32PieceDecoderState()
+final class Base32PieceDecoderState
         of
     b32DecodeFirst |
     b32DecodeSecond |
@@ -46,15 +52,16 @@ abstract class Base32PieceDecoderState()
     b32DecodeFifth |
     b32DecodeSixth |
     b32DecodeSeventh |
-    b32DecodeEighth {}
-object b32DecodeFirst extends Base32PieceDecoderState() {}
-object b32DecodeSecond extends Base32PieceDecoderState() {}
-object b32DecodeThird extends Base32PieceDecoderState() {}
-object b32DecodeFourth extends Base32PieceDecoderState() {}
-object b32DecodeFifth extends Base32PieceDecoderState() {}
-object b32DecodeSixth extends Base32PieceDecoderState() {}
-object b32DecodeSeventh extends Base32PieceDecoderState() {}
-object b32DecodeEighth extends Base32PieceDecoderState() {}
+    b32DecodeEighth {
+    shared new b32DecodeFirst {}
+    shared new b32DecodeSecond {}
+    shared new b32DecodeThird {}
+    shared new b32DecodeFourth {}
+    shared new b32DecodeFifth {}
+    shared new b32DecodeSixth {}
+    shared new b32DecodeSeventh {}
+    shared new b32DecodeEighth {}
+}
 
 shared sealed abstract class Base32<ToMutable, ToImmutable, ToSingle>(toMutableOfSize)
         satisfies IncrementalCodec<ToMutable,ToImmutable,ToSingle,ByteBuffer,List<Byte>,Byte>

@@ -6,14 +6,12 @@ import ceylon.buffer.charset {
 }
 import ceylon.uri { parse, Parameter }
 import ceylon.http.client { ClientRequest=Request }
-import ceylon.http.server { Status, 
-                                  started, AsynchronousEndpoint, 
+import ceylon.http.server { Status  { ... }, 
+                                  AsynchronousEndpoint, 
                                   Endpoint, Response, Request, 
-                                  startsWith, endsWith, Options, stopped, newServer,
+                                  startsWith, endsWith, Options, newServer,
                                   template,
-    Server,
-    stopping,
-    starting }
+    Server }
 import ceylon.http.server.endpoints { serveStaticFile,
     RepositoryEndpoint }
 import ceylon.test { assertEquals, assertTrue, test,
