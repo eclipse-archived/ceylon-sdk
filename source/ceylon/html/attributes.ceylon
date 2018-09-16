@@ -29,20 +29,15 @@ shared interface AttributeValueProvider {
 
 class AttributeBooleanValueProvider(Attribute<Boolean> attributeBoolean, String? trueValue, String? falseValue) satisfies AttributeValueProvider {
     
-    function valueOf(Boolean? b) => if(exists b) then (if(b) then trueValue else falseValue) else null;
+    function valueOf(Boolean? b) 
+            => if(exists b) 
+            then (if(b) then trueValue else falseValue) 
+            else null;
     
-    shared actual String? attributeValue {
-        switch(attributeBoolean)
-        case (Boolean) {
-            return valueOf(attributeBoolean);
-        }
-        case (Boolean?()) {
-            return valueOf(attributeBoolean());
-        }
-        else {
-            return null;
-        }
-    }
+    attributeValue 
+            => switch(attributeBoolean) 
+            case (Boolean) valueOf(attributeBoolean) 
+            case (Boolean?()) valueOf(attributeBoolean()) else null;
     
 }
 
