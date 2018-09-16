@@ -9,38 +9,81 @@
  ********************************************************************************/
 "A strategy for rounding the result of an operation
  on two `Decimal`s."
-shared abstract class Mode() 
+shared final class Mode
         of floor | ceiling | 
            halfUp | halfDown | halfEven | 
-           down | up | unnecessary {}
+           down | up | unnecessary {
+    
+    shared actual String string;
+    
+    "Round towards negative infinity."
+    shared new floor {
+        string=>"floor";
+    }
+    
+    "Round towards positive infinity."
+    shared new ceiling {
+        string=>"ceiling";
+    }
+    
+    "Round towards the nearest neighbour, or round up if 
+     there are two nearest neighbours."
+    shared new halfUp {
+        string=>"halfUp";
+    }
+    
+    "Round towards the nearest neighbour, or round down if 
+     there are two nearest neighbours."
+    shared new halfDown {
+        string=>"halfDown";
+    }
+    
+    "Round towards the nearest neighbour, or round towards 
+     the even neighbour if there are two nearest neighbours."
+    shared new halfEven {
+        string=>"halfEven";
+    }
+    
+    "Round towards zero."
+    shared new down {
+        string=>"down";
+    }
+    
+    "Round away from zero."
+    shared new up {
+        string=>"up";
+    }
+    
+    "Asserts that rounding will not be required causing an 
+     exception to be thrown if it is."
+    shared new unnecessary {
+        string=>"unnecessary";
+    }
+}
 
-"Round towards negative infinity."
-shared object floor extends Mode() {}
+deprecated("Use [[Mode.floor]]")
+shared Mode floor => Mode.floor;
 
-"Round towards positive infinity."
-shared object ceiling extends Mode() {}
+deprecated("Use [[Mode.ceiling]]")
+shared Mode ceiling => Mode.ceiling;
 
-"Round towards the nearest neighbour, or round up if 
- there are two nearest neighbours."
-shared object halfUp extends Mode() {}
+deprecated("Use [[Mode.halfUp]]")
+shared Mode halfUp => Mode.halfUp;
 
-"Round towards the nearest neighbour, or round down if 
- there are two nearest neighbours."
-shared object halfDown extends Mode() {}
+deprecated("Use [[Mode.halfDown]]")
+shared Mode halfDown => Mode.halfDown;
 
-"Round towards the nearest neighbour, or round towards 
- the even neighbour if there are two nearest neighbours."
-shared object halfEven extends Mode() {}
+deprecated("Use [[Mode.halfEven]]")
+shared Mode halfEven => Mode.halfEven;
 
-"Round towards zero."
-shared object down extends Mode() {}
+deprecated("Use [[Mode.down]]")
+shared Mode down => Mode.down;
 
-"Round away from zero."
-shared object up extends Mode() {}
+deprecated("Use [[Mode.up]]")
+shared Mode up => Mode.up;
 
-"Asserts that rounding will not be required causing an 
- exception to be thrown if it is."
-shared object unnecessary extends Mode() {}
+deprecated("Use [[Mode.unnecessary]]")
+shared Mode unnecessary => Mode.unnecessary;
 
 "The rounding currently being used implicitly by the `Decimal` 
  operators `+`, `-`, `*`, `/` and `^` (or equivalently, the 
@@ -84,5 +127,5 @@ shared Rounding round(Integer precision, Mode mode)
         => RoundingImpl(precision, mode);
 
 "Unlimited precision."
-shared Rounding unlimitedPrecision = RoundingImpl(0, halfUp);
+shared Rounding unlimitedPrecision = RoundingImpl(0, Mode.halfUp);
 

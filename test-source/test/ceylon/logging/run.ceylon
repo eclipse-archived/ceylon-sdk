@@ -2,14 +2,8 @@ import ceylon.logging {
     logger,
     Logger,
     addLogWriter,
-    Priority,
-    Category,
-    fatal,
-    error,
-    warn,
-    info,
-    debug,
-    trace
+    Priority { ... },
+    Category
 }
 import ceylon.test {
     test
@@ -25,15 +19,13 @@ import java.util.logging {
 Logger myLogger = logger(`package ceylon.logging`);
 
 JLogger jdkLogger = getLogger(`package ceylon.logging`.qualifiedName);
-Level jdkLevel(Priority priority) {
-    switch (priority)
-    case (fatal) { return Level.\iSEVERE; }
-    case (error) { return Level.\iSEVERE; }
-    case (warn) { return Level.\iWARNING; }
-    case (info) { return Level.\iINFO; }
-    case (debug) { return Level.\iFINE; }
-    case (trace) { return Level.\iFINER; }
-}
+Level jdkLevel(Priority priority) 
+        => switch (priority)
+        case (fatal|error) Level.severe
+        case (warn) Level.warning
+        case (info) Level.info
+        case (debug) Level.fine
+        case (trace) Level.finer;
 
 test void run() {
     //jdkLogger.level=jdkLevel(info);

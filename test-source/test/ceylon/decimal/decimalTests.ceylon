@@ -1,4 +1,4 @@
-import ceylon.decimal { Decimal, round, halfUp, parseDecimal, decimalNumber, zero, one, implicitlyRounded }
+import ceylon.decimal { Decimal, Mode { ... }, zero, one, parseDecimal, decimalNumber, round, implicitlyRounded }
 
 import ceylon.test { ... }
 

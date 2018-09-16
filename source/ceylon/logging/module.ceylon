@@ -77,7 +77,7 @@
        addLogWriter {
            void log(Priority p, Category c, String m, Throwable? t) {
                value print 
-                       = p <= info 
+                       = p <= Priority.info 
                        then process.write
                        else process.writeError;
                value instant = now();

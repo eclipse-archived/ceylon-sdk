@@ -73,32 +73,32 @@ shared interface Logger {
     "Send a [[ceylon.logging::fatal]] log message."
     shared void fatal(Message message,
                     Throwable? throwable=null) 
-            => log(package.fatal, message, throwable);
+            => log(Priority.fatal, message, throwable);
     
     "Send an [[ceylon.logging::error]] log message."
     shared void error(Message message,
                     Throwable? throwable=null) 
-            => log(package.error, message, throwable);
+            => log(Priority.error, message, throwable);
     
     "Send a [[ceylon.logging::warn]] log message."
     shared void warn(Message message,
                     Throwable? throwable=null) 
-            => log(package.warn, message, throwable);
+            => log(Priority.warn, message, throwable);
     
     "Send an [[ceylon.logging::info]] log message."
     shared void info(Message message,
                     Throwable? throwable=null) 
-            => log(package.info, message, throwable);
+            => log(Priority.info, message, throwable);
     
     "Send a [[ceylon.logging::debug]] log message."
     shared void debug(Message message,
                     Throwable? throwable=null)
-            => log(package.debug, message, throwable);
+            => log(Priority.debug, message, throwable);
     
     "Send a [[ceylon.logging::trace]] log message."
     shared void trace(Message message,
                     Throwable? throwable=null)
-            => log(package.trace, message, throwable);
+            => log(Priority.trace, message, throwable);
     
 }
 

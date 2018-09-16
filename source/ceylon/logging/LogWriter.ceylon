@@ -46,7 +46,7 @@ shared void writeSimpleLog(
     Priority priority, Category category, 
     String message, Throwable? throwable) {
     value print 
-            = priority <= info 
+            = priority <= Priority.info 
             then process.write
             else process.writeError;
     print("[``system.milliseconds``] ``priority.string`` ``message``");

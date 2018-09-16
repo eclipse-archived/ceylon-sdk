@@ -7,6 +7,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0 
  ********************************************************************************/
-shared abstract class Stability() of unlinked|linked {}
-shared object unlinked extends Stability() {}
-shared object linked extends Stability() {}
+shared final class Stability of unlinked|linked {
+    shared actual String string;
+    shared new unlinked { string=>"unlinked"; }
+    shared new linked { string=>"linked"; }
+}
+
+deprecated("use [[Stability.unlinked]]")
+shared Stability unlinked => Stability.unlinked;
+
+deprecated("use [[Stability.linked]]")
+shared Stability linked => Stability.linked;

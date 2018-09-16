@@ -68,7 +68,7 @@ shared test void testMap(){
     treeMap.assertInvariants();
     treeMap.clone().assertInvariants();
     doTestMap(HashMap<String,String>());
-    doTestMap(HashMap<String,String> { stability = unlinked; });
+    doTestMap(HashMap<String,String> { stability = Stability.unlinked; });
 }
 
 shared test void testMapEquality() {
@@ -316,7 +316,7 @@ test shared void testMapClone() {
     assertEquals(map.clone().size, 2);
     assertEquals(map.clone().string, "{ 1->foo, 2->bar }");
     assertEquals([for (e in map.clone()) e], [1->"foo", 2->"bar"]);
-    value linkedMap = HashMap<Integer,String>(linked);
+    value linkedMap = HashMap<Integer,String>(Stability.linked);
     linkedMap.put(1, "foo");
     linkedMap.put(2, "bar");
     linkedMap.put(3, "baz");

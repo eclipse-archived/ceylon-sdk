@@ -17,6 +17,7 @@ import java.math {
 
 class RoundingImpl(Integer precision, Mode mode) 
         extends Rounding(precision, mode) {
+    import ceylon.decimal { Mode {...} }
     value jmode
             = switch(mode)
             case (floor) JRoundingMode.floor

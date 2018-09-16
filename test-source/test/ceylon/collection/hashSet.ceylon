@@ -1,6 +1,6 @@
 import ceylon.collection {
     HashSet,
-    unlinked,
+    Stability,
     MutableSet
 }
 import ceylon.test {
@@ -37,7 +37,7 @@ shared class HashSetTest() satisfies MutableSetTests & InsertionOrderIterableTes
 shared class UnlinkedHashSetTest() satisfies MutableSetTests & HashOrderIterableTests {
 
     shared actual MutableSet<T> createSet<T>({T*} elts) given T satisfies Object
-            => HashSet { stability = unlinked; elements = elts; };
+            => HashSet { stability = Stability.unlinked; elements = elts; };
 
     createCategory = createSet<String>;
     createIterable = createSet<String>;

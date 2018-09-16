@@ -7,6 +7,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0 
  ********************************************************************************/
+import ceylon.collection { Stability { ... } }
+
 "A [[MutableMap]] implemented as a hash map stored in an 
  [[Array]] of singly linked lists of 
  [[ceylon.language::Entry]]s. Each entry is assigned an 
