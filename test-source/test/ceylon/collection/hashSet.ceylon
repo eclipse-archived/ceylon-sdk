@@ -34,10 +34,13 @@ shared class HashSetTest() satisfies MutableSetTests & InsertionOrderIterableTes
     }
 }
 
-shared class UnlinkedHashSetTest() satisfies MutableSetTests & HashOrderIterableTests {
+shared class UnlinkedHashSetTest() 
+        satisfies MutableSetTests & HashOrderIterableTests {
 
-    shared actual MutableSet<T> createSet<T>({T*} elts) given T satisfies Object
-            => HashSet { stability = Stability.unlinked; elements = elts; };
+    shared actual MutableSet<T> createSet<T>({T*} elts) 
+            given T satisfies Comparable<T>
+            => HashSet { stability = Stability.unlinked; 
+                         elements = elts; };
 
     createCategory = createSet<String>;
     createIterable = createSet<String>;
