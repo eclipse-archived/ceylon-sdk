@@ -81,4 +81,4 @@ shared Priority trace => Priority.trace;
  This priority is inherited by all other loggers which do 
  not have a priority explicitly assigned to 
  [[Logger.priority]]."
-shared variable Priority defaultPriority = package.info;
+shared variable Priority defaultPriority = Priority.info;
