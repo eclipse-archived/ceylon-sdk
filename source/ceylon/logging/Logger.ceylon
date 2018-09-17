@@ -126,12 +126,12 @@ MutableMap<String,Logger> loggers = HashMap<String,Logger>();
 class LoggerImpl(shared actual Category category) 
         satisfies Logger {
     variable Priority? explicitPriority = null;
-    shared actual Priority priority {
-        return explicitPriority else defaultPriority;
-    }
-    assign priority {
-        explicitPriority = priority;
-    }
+    
+    shared actual Priority priority 
+            => explicitPriority else defaultPriority;
+    assign priority 
+            => explicitPriority = priority;
+    
     shared actual void log(Priority priority, 
             Message message, 
             Throwable? throwable) {
