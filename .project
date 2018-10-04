@@ -16,7 +16,7 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>com.redhat.ceylon.eclipse.ui.ceylonBuilder</name>
+			<name>org.eclipse.ceylon.ide.eclipse.ui.ceylonBuilder</name>
 			<arguments>
 				<dictionary>
 					<key>compileJs</key>
@@ -26,7 +26,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>com.redhat.ceylon.eclipse.ui.ceylonNature</nature>
+		<nature>org.eclipse.ceylon.ide.eclipse.ui.ceylonNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
