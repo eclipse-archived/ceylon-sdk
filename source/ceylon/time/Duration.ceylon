@@ -10,10 +10,20 @@
 import ceylon.time.base { ReadableDuration }
 
 "Duration specifies a discreet amount of milliseconds between two instances of time."
-shared serializable class Duration(milliseconds) satisfies ReadableDuration & Scalable<Integer, Duration> {
+shared serializable class Duration satisfies ReadableDuration
+        & Comparable<Duration>
+        & Summable<Duration>
+        & Scalable<Integer, Duration>
+        & Invertible<Duration> {
+    
+    shared static Duration zero = Duration(0);
 
     "Number of milliseconds of this duration."
     shared actual Integer milliseconds;
+    
+    shared new(Integer milliseconds) {
+        this.milliseconds = milliseconds;
+    }
 
     "Returns this duration as a period of milliseconds."
     shared Period period => Period { milliseconds = milliseconds; }; 
@@ -35,6 +45,14 @@ shared serializable class Duration(milliseconds) satisfies ReadableDuration & Sc
         value result = 3;
         return prime * result + milliseconds.hash;
     }
+    
+    shared actual Comparison compare(Duration other) => milliseconds.compare(other.milliseconds);
+    
+    shared actual Duration plus(Duration other) => Duration(milliseconds.plus(other.milliseconds));
+    
+    shared actual Duration negated => Duration(milliseconds.negated);
+    
+    shared actual Duration minus(Duration other) => Duration(milliseconds.minus(other.milliseconds));
 
     "Returns a new [[Duration]] with it´s milliseconds scaled."
     shared actual Duration scale(Integer scale) => Duration( scale * milliseconds );
