@@ -13,12 +13,13 @@ import ceylon.collection {
 }
 import ceylon.language.meta.declaration {
     Module,
-    Package
+    Package,
+    ClassDeclaration
 }
 
 "A topic to which a log message relates."
 see (`value logger`, `value Logger.category`)
-shared alias Category => Module|Package;
+shared alias Category => Module|Package|ClassDeclaration;
 
 "An object that sends log messages relating to a particular
  [[topic|category]]. A `Logger` instance for a [[Category]] 
