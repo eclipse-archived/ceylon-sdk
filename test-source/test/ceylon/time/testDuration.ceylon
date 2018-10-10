@@ -34,4 +34,4 @@ shared test void testCompare()
         => assertEquals (Comparison.greater, Duration(3450) <=> Duration(456));
                 
 shared test void testCompare()
-        => assertEquals (Comparison.equal, Duration(345) <=> Duration(346));
+        => assertEquals (Comparison.equal, Duration(345) <=> Duration(345));
