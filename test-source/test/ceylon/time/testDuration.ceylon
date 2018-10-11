@@ -13,25 +13,25 @@ import ceylon.time {
 ];
 parameters (`value scalableDurationTests`)
 shared test void testScalableDuration(Duration expectedDuration, Integer scale)
-        => assertEquals { expected = expectedDuration; actual = scale ** Duration(1000); };
+        => assertEquals { actual = scale ** Duration(1000); expected = expectedDuration; };
 
 shared test void testPlus()
-        => assertEquals (Duration(-4567) + Duration(4567), Duration.zero);
+        => assertEquals { actual = Duration(-4567) + Duration(4567); expected= Duration.zero; };
 
 shared test void testInv()
-        => assertEquals (-Duration(99), Duration(-99));
+        => assertEquals { actual = -Duration(99); expected= Duration(-99); };
 
 shared test void testInvZero()
-        => assertEquals (-Duration.zero, Duration.zero);
+        => assertEquals { actual = -Duration.zero; expected= Duration.zero; };
 
 shared test void testMinus()
-        => assertEquals (Duration(4567) - Duration(4567), Duration.zero);
+        => assertEquals { actual = Duration(4567) - Duration(4567); expected= Duration.zero; };
         
 shared test void testCompare()
-        => assertEquals (Duration(345) <=> Duration(4567), Comparison.smaller);
+        => assertEquals { actual = Duration(345) <=> Duration(4567); expected= Comparison.smaller; };
             
 shared test void testCompare()
-        => assertEquals (Duration(3450) <=> Duration(456), Comparison.greater);
+        => assertEquals { actual = Duration(3450) <=> Duration(456); expected= Comparison.greater; };
                 
 shared test void testCompare()
-        => assertEquals (Duration(345) <=> Duration(345), Comparison.equal);
+        => assertEquals { actual = Duration(345) <=> Duration(345); expected= Comparison.equal; };
