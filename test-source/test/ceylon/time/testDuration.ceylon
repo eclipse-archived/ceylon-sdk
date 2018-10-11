@@ -16,22 +16,22 @@ shared test void testScalableDuration(Duration expectedDuration, Integer scale)
         => assertEquals { expected = expectedDuration; actual = scale ** Duration(1000); };
 
 shared test void testPlus()
-        => assertEquals (Duration.zero, Duration(-4567) + Duration(4567));
+        => assertEquals (Duration(-4567) + Duration(4567), Duration.zero);
 
 shared test void testInv()
-        => assertEquals (Duration(-99), -Duration(99));
+        => assertEquals (-Duration(99), Duration(-99));
 
 shared test void testInvZero()
-        => assertEquals (Duration.zero, -Duration.zero);
+        => assertEquals (-Duration.zero, Duration.zero);
 
 shared test void testMinus()
-        => assertEquals (Duration.zero, Duration(4567) - Duration(4567));
+        => assertEquals (Duration(4567) - Duration(4567), Duration.zero);
         
 shared test void testCompare()
-        => assertEquals (Comparison.smaller, Duration(345) <=> Duration(4567));
+        => assertEquals (Duration(345) <=> Duration(4567), Comparison.smaller);
             
 shared test void testCompare()
-        => assertEquals (Comparison.greater, Duration(3450) <=> Duration(456));
+        => assertEquals (Duration(3450) <=> Duration(456), Comparison.greater);
                 
 shared test void testCompare()
-        => assertEquals (Comparison.equal, Duration(345) <=> Duration(345));
+        => assertEquals (Duration(345) <=> Duration(345), Comparison.equal);
